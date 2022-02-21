@@ -84,7 +84,7 @@ CREATE TABLE `contratti` (
   KEY `id_emittente` (`id_emittente`),
   KEY `id_destinatario` (`id_destinatario`),
   KEY `id_progetto` (`id_progetto`),
-  KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `id_tipologia_qualifica`, `id_tipologia_durata`, `id_tipologia_orario`, `id_agenzia`, `id_progetto`),
+  KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`),
   CONSTRAINT `contratti_ibfk_01_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_contratti` (`id`),
   CONSTRAINT `contratti_ibfk_02_nofollow` FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`),
   CONSTRAINT `contratti_ibfk_03_nofollow` FOREIGN KEY (`id_destinatario`) REFERENCES `anagrafica` (`id`),
@@ -95,7 +95,7 @@ CREATE TABLE `contratti` (
 
 --| 202202150050
 CREATE TABLE IF NOT EXISTS `rinnovi` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `id_contratto` int(11) DEFAULT NULL,
   `id_licenza` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
@@ -115,9 +115,9 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   KEY `indice` ( `id_contratto`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
   UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
   UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`),
-  CONSTRAINT `rinnovi_ibfk_01_nofollow` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`),
-  CONSTRAINT `rinnovi_ibfk_02_nofollow` FOREIGN KEY (`id_licenza`) REFERENCES `licenze` (`id`),
-  CONSTRAINT `rinnovi_ibfk_03_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`),
+  CONSTRAINT `rinnovi_ibfk` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`),
+  CONSTRAINT `rinnovi_ibfk` FOREIGN KEY (`id_licenza`) REFERENCES `licenze` (`id`),
+  CONSTRAINT `rinnovi_ibfk` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`),
   CONSTRAINT `rinnovi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   CONSTRAINT `rinnovi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

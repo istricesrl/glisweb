@@ -667,6 +667,24 @@ ALTER TABLE `continenti`
 -- tipologia: tabella di supporto
 ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000007200
+
+-- contratti
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+ALTER TABLE `contratti`
+  ADD KEY `id_tipologia` (`id_tipologia`),
+  ADD KEY `id_emittente` (`id_emittente`),
+  ADD KEY `id_destinatario` (`id_destinatario`),
+  ADD KEY `id_progetto` (`id_progetto`),
+  ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`);
+
+--| 030000007201
+
+-- contratti
+-- tipologia: tabella gestita
+ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000008000
 
 -- coupon
@@ -2130,6 +2148,25 @@ ALTER TABLE `reparti`
 -- tipologia: tabella gestita
 ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000031500
+
+-- rinnovi
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 12:59 Chiara GDL
+ALTER TABLE `rinnovi`
+	ADD	KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_licenza` (`id_licenza`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `indice` ( `id_contratto`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`);
+
+--| 030000031501
+
+-- rinnovi
+-- tipologia: tabella gestita
+ALTER TABLE `rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+	
 --| 030000032000
 
 -- risorse
@@ -2640,6 +2677,28 @@ ALTER TABLE `tipologie_contatti`
 -- tipologie_contatti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000050900
+
+-- tipologie_contratti
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:47 Chiara GDL
+ALTER TABLE `tipologie_contratti` 
+	ADD UNIQUE KEY `unica` (`nome`),
+  	ADD KEY `ordine` (`ordine`),
+  	ADD KEY `nome` (`nome`),
+  	ADD KEY `se_tesseramento`(`se_tesseramento`),
+  	ADD KEY `se_abbonamento`(`se_abbonamento`),
+  	ADD KEY `se_iscrizione`(`se_iscrizione`),
+  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`);
+
+--| 030000050901
+
+-- tipologie_contratti
+-- tipologia: tabella gestita
+ALTER TABLE `tipologie_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000052600
 

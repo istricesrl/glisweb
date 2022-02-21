@@ -364,6 +364,55 @@
     reparti_view.id_account_aggiornamento   | -
     reparti_view.__label__                  | etichetta descrittiva del reparto
 
+    rinnovi
+    -------
+    Questa tabella *gestita* contiene i rinnovi dei contratti e dei progetti
+ 
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    rinnovi.id                                  | l'ID della risorsa
+    rinnovi.id_contratto                        | l'ID del contratto a cui il rinnovo fa riferimento
+    rinnovi.id_licenza                          | l'ID della licenza a cui il rinnovo fa riferimento
+    rinnovi.id_progetto                         | l'ID del progetto a cui il rinnovo fa riferimento
+    rinnovi.data_inizio                         | la data in cui il rinnovo ha inizio
+    rinnovi.data_fine                           | la data in cui il rinnovo termina
+    rinnovi.codice                              | codice del rinnovo
+    rinnovi.note                                | note del rinnovo
+    rinnovi.se_automatico                       | flag che indica se il rinnovo è automatico in base ad una data pianificazione
+    rinnovi.id_account_inserimento              | l'ID dell'account che ha inserito la riga
+    rinnovi.timestamp_inserimento               | la timestamp dell'inserimento della riga
+    rinnovi.id_account_aggiornamento            | l'ID dell'ultimo account che ha modificato la riga
+    rinnovi.timestamp_aggiornamento             | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|------------------
+    rinnovi_ibfk_01                     | id_contratto              | contratti.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    rinnovi_ibfk_02                     | id_licenza                | licenze.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    rinnovi_ibfk_03                     | id_progetto               | progetti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    rinnovi_ibfk_98_nofollow            | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    rinnovi_ibfk_99_nofollow            | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *rinnovi_view* relativa alla tabella *rinnovi* presenta le seguenti colonne:
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    rinnovi_view.id                             | -
+    rinnovi_view.id_contratto                   | -
+    rinnovi_view.contratto                      | nome descrittivo del contratto
+    rinnovi_view.id_licenza                     | -
+    rinnovi_view.licenza                        | nome della licenza
+    rinnovi_view.id_progetto                    | -
+    rinnovi_view.progetto                       | nome del progetto
+    rinnovi_view.data_inizio                    | -
+    rinnovi_view.data_fine                      | -
+    rinnovi_view.codice                         | -
+    rinnovi_view.se_automatico                  | -
+    rinnovi_view.id_account_inserimento         | -
+    rinnovi_view.id_account_aggiornamento       | -
+    rinnovi_view.__label__                      | etichetta del rinnovo
+
     risorse
     -------
     Questa tabella *gestita* contiene le risorse documentali, intese come documenti o parti di documenti di varia natura

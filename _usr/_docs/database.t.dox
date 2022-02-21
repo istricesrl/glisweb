@@ -349,6 +349,49 @@
     tipologie_contatti_view.id_account_aggiornamento        | -
     tipologie_contatti_view.__label__                       | etichetta descrittiva della tipologia
 
+    tipologie_contratti
+    ------------------
+    Questa tabbella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *contratti*
+    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_contratti.id                          | l'ID della tipologia
+    tipologie_contratti.ordine                      | campo di ordinamento
+    tipologie_contratti.nome                        | il nome della tipologia
+    tipologie_contratti.html_entity                 | entità HTML che rappresenta visivamente la tipologia
+    tipologie_contratti.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_contratti.se_abbonamento              | flag che indica se la tipologia rappresenta un abbonamento
+    tipologie_contratti.se_iscrizione               | flag che indica se la tipologia rappresenta un'iscrizione
+    tipologie_contratti.se_tesseramento             | flag che indica se la tipologia rappresenta un tesseramento
+    tipologie_contratti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
+    tipologie_contratti.timestamp_inserimento       | la timestamp dell'inserimento della riga
+    tipologie_contratti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
+    tipologie_contratti.timestamp_aggiornamento     | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------------|-------------------------------|-------------------------------|----------------------
+    tipologie_contratti_ibfk_98_nofollow    | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_contratti_ibfk_99_nofollow    | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *tipologie_contratti_view* relativa alla tabella *tipologie_contratti* presenta le seguenti colonne:
+    
+    colonna                                                 | descrizione
+    --------------------------------------------------------|---------------------------------------------------------------------------------------
+    tipologie_contratti_view.id                             | -
+    tipologie_contratti_view.id_genitore                    | -
+    tipologie_contratti_view.ordine                         | -
+    tipologie_contratti_view.nome                           | -
+    tipologie_contratti_view.html_entity                    | -
+    tipologie_contratti_view.font_awesome                   | -
+    tipologie_contratti.se_abbonamento                      | - 
+    tipologie_contratti.se_iscrizione                       | -
+    tipologie_contratti.se_tesseramento                     | -
+    tipologie_contratti_view.id_account_inserimento         | -
+    tipologie_contratti_view.id_account_aggiornamento       | -
+    tipologie_contratti_view.__label__                      | etichetta descrittiva della tipologia
+
     tipologie_documenti
     -------------------
     Questa tabbella *assistita* contiene le tipologie che definiscono gli oggetti contenuti nella tabella *documenti*.

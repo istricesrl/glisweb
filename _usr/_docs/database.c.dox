@@ -724,6 +724,69 @@
     continenti_view.nome                       | -
     continenti_view.__label__                  | l'etichetta descrittiva del continente
 
+    contratti
+    ---------
+    questa tabella *gestita* contiene i contratti
+
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    contratti.id                        | l'ID del contratto
+	contratti.id_tipologia              | l'ID della tipologia contratti
+	contratti.id_emittente              | l'ID dell'anagrafica emittente del contratto
+	contratti.id_destinatario           | l'ID dell'anagrafica destinataria del contratto
+	contratti.id_progetto               | l'ID del progetto a cui il contratto si riferisce
+	contratti.nome                      | il nome eidentificativo del contratto
+    contratti.note                      | note del contatto
+	contratti.id_account_inserimento    | l'ID dell'account che ha inserito la riga
+    contratti.timestamp_inserimento     | la timestamp dell'inserimento della riga
+    contratti.id_account_aggiornamento  | l'ID dell'ultimo account che ha modificato la riga
+    contratti.timestamp_aggiornamento   | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati         | comportamento
+    --------------------------------------------|-------------------------------|-----------------------------------|------------------
+    contratti_ibfk_01_nofollow                  | id_tipologia                  | tipologie_contratti.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_02_nofollow                  | id_emittente                  | anagrafica.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_03_nofollow                  | id_destinatario               | anagrafica.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_04_nofollow                  | id_progetto                   | progetti.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_98_nofollow                  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+    contratti_ibfk_99_nofollow                  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *contratti_view* relativa alla tabella *contratti* presenta le seguenti colonne:
+
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    contratti_view.id                           | -
+	contratti_view.id_tipologia                 | -
+    contratti_view.tipologia                    | la tipologia del contratto
+	contratti_view.id_emittente                 | -
+	contratti_view.emittente                    | la denominazione anagrafica dell'emittente del contratto
+	contratti_view.id_destinatario              | -
+	contratti_view.destinatario                 | la denominazione anagrafica del destinataria del contratto
+	contratti_view.id_progetto                  | -
+	contratti_view.progetto                     | -
+	contratti_view.nome                         | -
+	contratti_view.id_account_inserimento       | -
+	contratti_view.id_account_aggiornamento     | -
+	contratti_view.__label__                    | l'etichetta descrittiva del contratto
+
+    alla tabella contratti corrispondono le seguenti viste virtuali
+
+    vista                           | descrizione
+    --------------------------------|-------------------------
+    contratti_attivi_view           | contratti per cui è un presente un rinnovo attivo
+    contratti_archiviati_view       | contratti per cui NON è un presente un rinnovo attivo
+    abbonamenti_view                | contratti la cui tipologia ha il flag se_abbonamento = 1
+    abbonamenti_attivi_view         | contratti la cui tipologia ha il flag se_abbonamento = 1 e per cui è un presente un rinnovo attivo
+    abbonamenti_archiviati_view     | contratti la cui tipologia ha il flag se_abbonamento = 1 e per cui NON è un presente un rinnovo attivo
+    iscrizioni_view                 | contratti la cui tipologia ha il flag se_isctizione = 1
+    iscrizioni_attivi_view          | contratti la cui tipologia ha il flag se_isctizione = 1 e per cui è un presente un rinnovo attivo
+    iscrizioni_archiviati_view      | contratti la cui tipologia ha il flag se_isctizione = 1 e per cui NON è un presente un rinnovo attivo
+    tesseramenti_view               | contratti la cui tipologia ha il flag se_tesseramento = 1
+    tesseramenti_attivi_view        | contratti la cui tipologia ha il flag se_tesseramento = 1 e per cui è un presente un rinnovo attivo
+    tesseramenti_archiviati_view    | contratti la cui tipologia ha il flag se_tesseramento = 1 e per cui NON è un presente un rinnovo attivo
+
     coupon
     ------
     Questa tabella *gestita* contiene i coupon promozionali che possono essere associati ad alcune tipologie di documenti amministrativi

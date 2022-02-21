@@ -674,6 +674,25 @@ CREATE TABLE IF NOT EXISTS `continenti` (
   `nome` char(32) COLLATE utf8_general_ci NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000007200
+
+-- contratti
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+CREATE TABLE `contratti` (
+  `id` int NOT NULL,
+  `id_tipologia` int DEFAULT NULL,
+  `id_emittente` int DEFAULT NULL,
+  `id_destinatario` int NOT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000008000
 
 -- coupon
@@ -1953,6 +1972,27 @@ CREATE TABLE IF NOT EXISTS `reparti` (
   `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000031500
+
+-- rinnovi
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 12:59 Chiara GDL
+CREATE TABLE IF NOT EXISTS `rinnovi` (
+  `id` int(11) NOT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `id_licenza` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `codice` char(64) DEFAULT NULL,
+  `note` text,
+  `se_automatico` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000032000
 
 -- risorse
@@ -2411,6 +2451,26 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000050900
+
+-- tipologie_contratti
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:47 Chiara GDL
+CREATE TABLE `tipologie_contratti` (
+  `id` int NOT NULL,
+  `ordine` int DEFAULT NULL,
+  `nome` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_tesseramento` INT(1) NULL DEFAULT NULL,
+  `se_abbonamento` INT(1) NULL DEFAULT NULL,
+  `se_iscrizione` INT(1) NULL DEFAULT NULL,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+  ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000052600
 

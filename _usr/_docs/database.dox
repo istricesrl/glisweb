@@ -85,6 +85,8 @@
     tipologie_attivita              | 050400    | ricorsiva     | tipologie     | contiene le tipologie delle attività
     tipologie_chiavi                | 050600    | ricorsiva     | tipologie     | contiene le tipologie delle chiavi
     tipologie_contatti              | 050800    | ricorsiva     | tipologie     | contiene le tipologie di contatti
+    tipologie_contratti             | 050900    | base          | tipologie     | contiene le tipologie di contratti
+    tipologie_documenti             | 052600    | base          | tipologie     | contiene le tipologie di documenti
     tipologie_indirizzi             | 053000    | ricorsiva     | tipologie     | contiene le tipologie di indirizzi
     tipologie_licenze               | 053200    | ricorsiva     | tipologie     | contiene le tipologie delle licenze
     tipologie_mastri                | 053400    | ricorsiva     | tipologie     | contiene le tipologie di mastri
@@ -127,6 +129,7 @@
     chiavi                          | 004800    | base          | principale    | contiene le chiavi
     contatti                        | 006700    | base          | principale    | contiene i contatti
     contenuti                       | 006900    | base          | contenuti     | contiene i testi
+    contratti                       | 007200    | base          | principale    | contiene i contratti
     coupon                          | 008000    | base          | principale    | contiene i coupon
     coupon_categorie_prodotti       | 008200    | relazione     | principale    | mette in relazione coupon e categorie_prodotti
     coupon_listini                  | 008400    | relazione     | principale    | mette in relazione coupon e listini
@@ -175,6 +178,7 @@
     progetti_categorie              | 027400    | relazione     | principale    | mette in relazione progetti e categorie_progetti
     pubblicazioni                   | 028400    | base          | principale    | contiene le pubblicazioni
     redirect                        | 029400    | base          | principale    | contiene i redirect HTTP
+    rinnovi                         | 031500    | base          | secondaria    | contiene i rinnovi dei contratti
     risorse                         | 032000    | base          | principale    | contiene le risorse
     risorse_anagrafica              | 032200    | relazione     | principale    | mette in relazione risorse e anagrafica
     risorse_categorie               | 032400    | relazione     | principale    | mette in relazione risorse e categorie_risorse
@@ -210,7 +214,7 @@
     ------------|-----------|----------------------------------------------------------
     BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, liste, liste_mail, luoghi, mail, mail_out, mail_sent, mailing, mailing_liste, mailing_mail, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | contatti, tipologie_contatti
-    PRODUZIONE  | 1000      | categorie_progetti, pianificazioni, progetti, progetti_anagrafica, progetti_categorie, relazioni_progetti, ruoli_anagrafica, tipologie_progetti, todo
+    PRODUZIONE  | 1000      | categorie_progetti, contratti,pianificazioni, progetti, progetti_anagrafica, progetti_categorie, relazioni_progetti, rinnovi, ruoli_anagrafica, tipologie_contratti,tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
@@ -254,6 +258,7 @@
     contatti                        | CONTATTI
     contenuti                       | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     continenti                      | BASE
+    contratti                       | PRODUZIONE
     coupon                          | COUPON
     coupon_categorie_prodotti       | COUPON
     coupon_listini                  | COUPON
@@ -318,6 +323,7 @@
     relazioni_progetti              | PRODUZIONE
     relazioni_software              | SOFTWARE
     reparti                         | DOCUMENTI, CASSE
+    rinnovi                         | PRODUZIONE
     risorse                         | RISORSE
     risorse_anagrafica              | RISORSE
     risorse_categorie               | RISORSE
@@ -342,6 +348,7 @@
     tipologie_attivita              | ATTIVITA
     tipologie_chiavi                | SOFTWARE
     tipologie_contatti              | CONTATTI
+    tipologie_contratti             | PRODUZIONE
     tipologie_documenti             | DOCUMENTI, CASSE
     tipologie_indirizzi             | BASE
     tipologie_licenze               | SOFTWARE
