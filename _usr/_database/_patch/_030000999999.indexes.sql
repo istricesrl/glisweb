@@ -2732,9 +2732,10 @@ ALTER TABLE `tipologie_indirizzi`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `numerazione`(`numerazione`)
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`numerazione`);
 
 --| 030000053001
 

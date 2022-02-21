@@ -1098,9 +1098,15 @@ ON DUPLICATE KEY UPDATE
 	se_prodotto = VALUES(se_prodotto),
 	se_servizio= VALUES(se_servizio);
 
+--| 202202210428
+ALTER TABLE `tipologie_documenti`
+DROP INDEX `indice`;
+
 --| 202202210430
 ALTER TABLE `tipologie_documenti`
-ADD `numerazione` char(1) DEFAULT NULL AFTER `codice`;
+ADD `numerazione` char(1) DEFAULT NULL AFTER `codice`,
+ADD KEY `numerazione`(`numerazione`),
+ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`numerazione`);
 
 --| 202202210440
 INSERT INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `numerazione`, `nome`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `stampa_xml`, `stampa_pdf`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
