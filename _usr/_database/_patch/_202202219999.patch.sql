@@ -1041,5 +1041,61 @@ ON DUPLICATE KEY UPDATE
 	se_quantita = VALUES( se_quantita )
 ;
 
+--| 202202210400
+ALTER TABLE `tipologie_prodotti`
+ADD `se_volume` tinyint(1) DEFAULT NULL AFTER `se_servizio`,
+ADD `se_capacita` tinyint(1) DEFAULT NULL AFTER `se_volume`,
+ADD `se_peso` tinyint(1) DEFAULT NULL AFTER `se_capacita`;
+
+--| 202202210410
+CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
+	SELECT
+		tipologie_prodotti.id,
+		tipologie_prodotti.id_genitore,
+		tipologie_prodotti.ordine,
+		tipologie_prodotti.nome,
+		tipologie_prodotti.html_entity,
+		tipologie_prodotti.font_awesome,
+		tipologie_prodotti.se_colori,
+		tipologie_prodotti.se_taglie,
+		tipologie_prodotti.se_dimensioni,
+		tipologie_prodotti.se_imballo,
+		tipologie_prodotti.se_spedizione,
+		tipologie_prodotti.se_trasporto,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
+		tipologie_prodotti.se_volume,
+		tipologie_prodotti.se_capacita,
+		tipologie_prodotti.se_peso,
+		tipologie_prodotti.id_account_inserimento,
+		tipologie_prodotti.id_account_aggiornamento,
+		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
+	FROM tipologie_prodotti
+;
+
+--| 202202210420
+INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_colori`, `se_taglie`, `se_dimensioni`, `se_volume`, `se_capacita`, `se_peso`, `se_imballo`, `se_spedizione`, `se_trasporto`, `se_prodotto`, `se_servizio`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'servizio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	NULL,	NULL,	NULL),
+(3,	1,	NULL,	'alimentare (peso)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	1,	NULL,	'alimentare (volume)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	1,	NULL,	'alimentare (pezzo)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL)
+ON DUPLICATE KEY UPDATE
+	id_genitore = VALUES( id_genitore ),
+	ordine = VALUES( ordine ),
+	nome = VALUES(nome),
+	html_entity = VALUES(html_entity),
+	font_awesome = VALUES(font_awesome),
+	se_colori = VALUES(se_colori),
+	se_taglie = VALUES(se_taglie),
+	se_dimensioni = VALUES(se_dimensioni),
+	se_volume = VALUES(se_volume),
+	se_capacita = VALUES(se_capacita),
+	se_peso = VALUES(se_peso),
+	se_imballo = VALUES(se_imballo),
+	se_spedizione = VALUES(se_spedizione),
+	se_trasporto = VALUES(se_trasporto),
+	se_prodotto = VALUES(se_prodotto),
+	se_servizio= VALUES(se_servizio);
 
 --| FINE

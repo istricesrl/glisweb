@@ -5735,6 +5735,9 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.se_trasporto,
 		tipologie_prodotti.se_prodotto,
 		tipologie_prodotti.se_servizio,
+		tipologie_prodotti.se_volume,
+		tipologie_prodotti.se_capacita,
+		tipologie_prodotti.se_peso,
 		tipologie_prodotti.id_account_inserimento,
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
