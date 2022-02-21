@@ -3054,9 +3054,14 @@ ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-19 13:02 Fabio Mosti
 ALTER TABLE `udm`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_genitore`,`sigla`),
-	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`conversione`,`nome`,`sigla`,`se_lunghezza`,`se_peso`,`se_quantita`);
+	ADD UNIQUE KEY `unica` (`id_base`,`sigla`),
+	ADD KEY `id_base` (`id_base`),
+	ADD KEY `se_volume`(`se_volume`),
+	ADD KEY `se_massa`(`se_massa`),
+	ADD KEY `se_tempo`(`se_tempo`),
+	ADD KEY `se_lunghezza`(`se_lunghezza`),
+	ADD KEY `se_quantita`(`se_quantita`),
+	ADD KEY `indice` (`id`,`id_base`,`conversione`,`nome`,`sigla`,`se_tempo`,`se_lunghezza`,`se_volume`,`se_quantita`);
 
 --| 030000062001
 

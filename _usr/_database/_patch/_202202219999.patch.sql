@@ -961,13 +961,85 @@ CREATE OR REPLACE VIEW `tipologie_luoghi_view` AS
 		tipologie_luoghi.nome,
 		tipologie_luoghi.html_entity,
 		tipologie_luoghi.font_awesome,
-		tipologie_luoghi.se_magazzino,
-		tipologie_luoghi.se_conto,
-		tipologie_luoghi.se_registro,
 		tipologie_luoghi.id_account_inserimento,
 		tipologie_luoghi.id_account_aggiornamento,
 		tipologie_luoghi_path( tipologie_luoghi.id ) AS __label__
 	FROM tipologie_luoghi
 ;
+
+--| 202202210350
+ALTER TABLE `udm`
+CHANGE `id_genitore` `id_base` int NULL AFTER `id`,
+ADD `se_volume` INT(1) NULL AFTER `se_lunghezza`,
+ADD `se_massa` INT(1) NULL AFTER `se_volume`,
+ADD `se_tempo` INT(1) NULL AFTER `se_massa`,
+ADD KEY `se_volume`(`se_volume`),
+ADD KEY `se_massa`(`se_massa`),
+ADD KEY `se_tempo`(`se_tempo`);
+
+--| 202202210360
+ALTER TABLE `udm` DROP COLUMN `se_peso`;
+
+--| 202202210370
+ALTER TABLE `udm` DROP INDEX `indice`;
+
+--| 202202210381
+ALTER TABLE `udm`
+ADD KEY `indice` (`id`,`id_base`,`conversione`,`nome`,`sigla`,`se_tempo`,`se_lunghezza`,`se_volume`,`se_quantita`);
+
+--| 202202210390
+CREATE OR REPLACE VIEW udm_view AS
+	SELECT
+		udm.id,
+		coalesce( udm.id_base, udm.id ) AS id_base,
+		coalesce( udm.conversione, 1 ) AS conversione,
+		udm.nome,
+		udm.sigla,
+		udm.se_lunghezza,
+		udm.se_volume,
+		udm.se_massa,
+		udm.se_tempo,
+		udm.se_quantita,
+		udm.sigla AS __label__
+	FROM udm
+;
+
+--| 202202210395
+INSERT INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_massa`, `se_tempo`, `se_quantita`) VALUES
+(1,	NULL,	NULL,	'pezzi',	'pz.',	'unità di misura usata genericamente per misurare le quantità',	NULL,	NULL,	NULL,	NULL,	1),
+(2,	NULL,	1,	'millimetro',	'mm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
+(3,	2,	10,	'centimetro',	'cm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
+(4,	2,	100,	'decimetro',	'dm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
+(5,	2,	1000,	'metro',	'm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
+(6,	2,	10000,	'decametro',	'dam',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
+(7,	2,	100000,	'ettometro',	'hm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
+(8,	2,	1000000,	'kilometro',	'km',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	1,	'milligrammo',	'mg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
+(10,	9,	10,	'centigrammo',	'cg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
+(11,	9,	100,	'decigrammo',	'dg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
+(12,	9,	1000,	'grammo',	'gr',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
+(13,	9,	10000,	'decagrammo',	'dag',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
+(14,	9,	100000,	'ettogrammo',	'hg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
+(15,	9,	1000000,	'kilogrammo',	'kg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
+(16,	NULL,	1,	'millilitro',	'ml',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
+(17,	16,	10,	'centilitro',	'cl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
+(18,	16,	100,	'decilitro',	'dl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
+(19,	16,	1000,	'litro',	'l',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
+(20,	16,	10000,	'decalitro',	'dal',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
+(21,	16,	100000,	'ettolitro',	'hl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
+(22,	16,	1000000,	'kilolitro',	'kl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL)
+ON DUPLICATE KEY UPDATE
+	id_base = VALUES( id_base ),
+	conversione = VALUES( conversione ),
+	nome = VALUES( nome ),
+	sigla = VALUES( sigla ),
+	note = VALUES( note ),
+	se_lunghezza = VALUES( se_lunghezza ),
+	se_volume = VALUES( se_volume ),
+	se_massa = VALUES( se_massa ),
+	se_tempo = VALUES( se_tempo ),
+	se_quantita = VALUES( se_quantita )
+;
+
 
 --| FINE

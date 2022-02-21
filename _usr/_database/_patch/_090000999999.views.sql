@@ -5599,9 +5599,6 @@ CREATE OR REPLACE VIEW `tipologie_luoghi_view` AS
 		tipologie_luoghi.nome,
 		tipologie_luoghi.html_entity,
 		tipologie_luoghi.font_awesome,
-		tipologie_luoghi.se_magazzino,
-		tipologie_luoghi.se_conto,
-		tipologie_luoghi.se_registro,
 		tipologie_luoghi.id_account_inserimento,
 		tipologie_luoghi.id_account_aggiornamento,
 		tipologie_luoghi_path( tipologie_luoghi.id ) AS __label__
@@ -5977,12 +5974,14 @@ DROP TABLE IF EXISTS `udm_view`;
 CREATE OR REPLACE VIEW udm_view AS
 	SELECT
 		udm.id,
-		coalesce( udm.id_genitore, udm.id ) AS id_genitore,
+		coalesce( udm.id_base, udm.id ) AS id_base,
 		coalesce( udm.conversione, 1 ) AS conversione,
 		udm.nome,
 		udm.sigla,
 		udm.se_lunghezza,
-		udm.se_peso,
+		udm.se_volume,
+		udm.se_massa,
+		udm.se_tempo,
 		udm.se_quantita,
 		udm.sigla AS __label__
 	FROM udm

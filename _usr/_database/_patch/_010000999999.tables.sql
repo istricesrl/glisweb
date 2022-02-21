@@ -2819,13 +2819,15 @@ CREATE TABLE IF NOT EXISTS `todo` (
 -- verifica: 2021-10-19 12:59 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `udm` (
   `id` int(11) NOT NULL,
-  `id_genitore` int(11) DEFAULT NULL,
+  `id_base` int(11) DEFAULT NULL,
   `conversione` float DEFAULT NULL,
   `nome` char(32) NOT NULL,
   `sigla` char(8) DEFAULT NULL,
   `note` text,
   `se_lunghezza` int(1) DEFAULT NULL,
-  `se_peso` int(1) DEFAULT NULL,
+  `se_volume` int(1) DEFAULT NULL,
+  `se_massa` int(1) DEFAULT NULL,
+  `se_tempo` int(1) DEFAULT NULL,
   `se_quantita` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

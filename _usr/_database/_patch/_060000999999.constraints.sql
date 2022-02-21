@@ -1460,7 +1460,7 @@ ALTER TABLE `todo`
 -- tipologia: tabella di supporto
 -- verifica: 2021-10-19 13:06 Fabio Mosti
 ALTER TABLE `udm`
-    ADD CONSTRAINT `udm_ibfk_01_nofollow`       FOREIGN KEY (`id_genitore`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `udm_ibfk_01_nofollow`       FOREIGN KEY (`id_base`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
 --| 060000062600
 
