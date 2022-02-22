@@ -1,0 +1,119 @@
+
+/* stili di base */
+
+body {
+    background-color: #ffffff;
+    font-family: Helvetica, Verdana, FontAwesome;
+    font-size: 1.0em;
+}
+
+header {
+    background-color: #aaaaaa;
+    font-size: 1.8em;
+}
+
+header nav.navbar {
+    padding: 0px;
+}
+
+header a,
+header a:visited {
+    color: #333333;
+}
+
+header a:hover,
+header a:active {
+    color: #666666;
+    text-decoration: none;
+}
+
+main > div.row > div {
+    margin-top: 1em;
+}
+
+main > div.row {
+    margin-bottom: 1em;
+}
+
+header a,
+header a:visited {
+    color: #333333;
+}
+
+header a:hover,
+header a:active {
+    color: #666666;
+    text-decoration: underline;
+}
+
+header nav.navbar-light li.nav-item > a.nav-link,
+header nav.navbar-light li.nav-item > a.nav-link:visited {
+    color: #333333;
+    font-weight: bold;
+    transition: background-color 100ms linear;
+    padding: 0.15em 0.75em;
+}
+
+header nav.navbar-light li.nav-item.current > a.nav-link {
+    background-color: #333333;
+    color: #ffffff;
+    text-decoration: none;
+}
+
+header nav.navbar-light li.nav-item.active > a.nav-link,
+header nav.navbar-light li.nav-item > a.nav-link:hover,
+header nav.navbar-light li.nav-item > a.nav-link:active {
+    background-color: #333333;
+    color: #ffffff;
+    text-decoration: none;
+    transition: background-color 100ms linear;
+}
+
+div.subnav a,
+div.subnav a:visited,
+div.subnav a:hover,
+div.subnav a:active {
+    color: #333333;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+div.subnav a:hover .media,
+div.subnav a:active .media {
+    background-color: #eeeeee;
+}
+
+div.subnav .media {
+    border: 2px solid #dddddd;
+    border-radius: 5px;
+}
+
+div.subnav .media-left {
+    padding: 10px;
+    padding-right: 5px;
+}
+
+div.subnav .media-left i {
+    font-size: 3.0em;
+}
+
+div.subnav .media-body {
+    padding: 10px;
+}
+
+div.subnav h5 {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 0px;
+}
+
+div.subnav p {
+    font-size: .9em;
+    margin: 0px;
+}
+
+#form-login {
+    width: 20%;
+    min-width: 280px;
+    margin: auto;
+}
