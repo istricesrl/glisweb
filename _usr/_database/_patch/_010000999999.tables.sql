@@ -225,28 +225,33 @@ CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
 -- articoli
 -- tipologia: tabella gestita
 -- verifica: 2021-05-25 10:45 Fabio Mosti
-CREATE TABLE IF NOT EXISTS `articoli` (
+CREATE TABLE `articoli` (
   `id` char(32) NOT NULL,
   `id_prodotto` char(32) NOT NULL,
-  `ordine` int(11) DEFAULT NULL,
+  `ordine` int DEFAULT NULL,
   `ean` char(32) DEFAULT NULL,
   `isbn` char(32) DEFAULT NULL,
-  `id_reparto` int(11) DEFAULT NULL,
-  `id_taglia` int(11) DEFAULT NULL,
-  `id_colore` int(11) DEFAULT NULL,
-  `larghezza` int(11) DEFAULT NULL,
-  `lunghezza` int(11) DEFAULT NULL,
-  `altezza` int(11) DEFAULT NULL,
-  `peso` int(11) DEFAULT NULL,
-  `volume` int(11) DEFAULT NULL,
-  `capacita` int(11) DEFAULT NULL,
-  `durata` int(11) DEFAULT NULL,
+  `id_reparto` int DEFAULT NULL,
+  `id_taglia` int DEFAULT NULL,
+  `id_colore` int DEFAULT NULL,
+  `larghezza` decimal(7,2) DEFAULT NULL,
+  `lunghezza` decimal(7,2) DEFAULT NULL,
+  `altezza` decimal(7,2) DEFAULT NULL,
+  `id_udm_dimensioni` int DEFAULT NULL,
+  `peso` decimal(7,2) DEFAULT NULL,
+  `id_udm_peso` int DEFAULT NULL,
+  `volume` decimal(7,2) DEFAULT NULL,
+  `id_udm_volume` int DEFAULT NULL,
+  `capacita` decimal(7,2) DEFAULT NULL,
+  `id_udm_capacita` int DEFAULT NULL,
+  `durata` decimal(7,2) DEFAULT NULL,
+  `id_udm_durata` int DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
 
 --| 010000001600
 

@@ -619,8 +619,13 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		articoli.lunghezza,
 		articoli.altezza,
 		articoli.peso,
+        articoli.id_udm_peso,
 		articoli.volume,
+        articoli.id_udm_volume,
 		articoli.capacita,
+        articoli.id_udm_capacita,
+        articoli.durata,
+        articoli.id_udm_durata,
 		articoli.nome,
 		concat(
 			articoli.id_prodotto,
