@@ -155,7 +155,7 @@ if [ -f "$FILE" ]; then
     echo "nessun placeholder rimasto da sostituire"
 
     if [[ -n "$PROTOCOL" ]] && [[ -n "$HOST" ]] && [[ -n "$DOMAIN" ]]; then
-		./_src/_sh/_gw.crontab.install.sh install $PROTOCOL $HOST.$DOMAIN
+		./_src/_sh/_crontab.install.sh install $PROTOCOL $HOST.$DOMAIN
     else
 		echo "ATTENZIONE installare il crontab manualmente"
     fi
@@ -163,10 +163,10 @@ if [ -f "$FILE" ]; then
 #	read -p "vuoi creare il database MySQL (s/n)? " SN
 
 #	if [ "$SN" == "s" ]; then
-#		./_src/_sh/_gw.mysql.install.sh $MYSQLIP $MYSQLPORT $MYSQLDB $MYSQLUSER $MYSQLPW
+#		./_src/_sh/_mysql.install.sh $MYSQLIP $MYSQLPORT $MYSQLDB $MYSQLUSER $MYSQLPW
 #	fi
 
-    ./_src/_sh/_gw.permissions.reset.sh
+    ./_src/_sh/_lamp.permissions.reset.sh
 
 elif [ -n "$1" ]; then
 

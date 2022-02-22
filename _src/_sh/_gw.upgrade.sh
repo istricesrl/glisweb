@@ -76,7 +76,7 @@ else
         composer update
 
         ## permessi
-        ./_src/_sh/_gw.permissions.reset.sh
+        ./_src/_sh/_lamp.permissions.reset.sh
 
         ## pulizia
         clear

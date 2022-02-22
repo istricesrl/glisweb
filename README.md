@@ -44,11 +44,11 @@ tabelle necessarie al suo funzionamento.
 Se potete accedere via SSH al server su cui volete installare GlisWeb, allora l'installazione risulterà più lineare.
 Sarà sufficiente scaricare il framework come sopra, ma direttamente nella document root del sito su cui volete
 installarlo, installare le dipendenze con composer e lanciare lo script shell allegato al framework
-(_src/_sh/_gw.mysql.install.sh) per caricare il database. Lo script è interattivo e vi chiederà i dati del server
+(_src/_sh/_mysql.install.sh) per caricare il database. Lo script è interattivo e vi chiederà i dati del server
 di database per eseguire gli script SQL allegati al framework.
 
 Se avete appena installato (o non avete ancora installato) i server web e database, potreste trovare utile lo script di
-setup dell'ambiente (_src/_sh/_gw.environment.setup.sh) che vi aiuterà a installare e configurare i servizi necessari
+setup dell'ambiente (_src/_sh/_lamp.setup.sh) che vi aiuterà a installare e configurare i servizi necessari
 a far funzionare GlisWeb.
 
 Un esempio di sequenza di comandi per l'installazione potrebbe essere la seguente, come più ampiamente illustrato nella
@@ -62,8 +62,8 @@ documentazione ufficiale per gli sviluppatori all'indirizzo https://glisweb.istr
     rm -rf .github
     rm -f .gitignore
     rm -f develop.zip
-    _src/_sh/_gw.permissions.reset.sh
-    _src/_sh/_gw.mysql.install.sh
+    _src/_sh/_lamp.permissions.reset.sh
+    _src/_sh/_mysql.install.sh
     _src/_sh/_gw.config.sh base
     composer update
 
@@ -97,7 +97,7 @@ desiderate creare un database per il framework, e infine vi proporrà di avviare
 Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
 che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
 verrà letto automaticamente dal framework. Per qualsiasi dubbio fate riferimento alla documentazione in _usr/_docs/
-oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_gw.doxygen.build.sh) in modo
+oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_doxygen.build.sh) in modo
 da poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _usr/_docs/_build/html/.
 
 ## esempi

@@ -61,7 +61,7 @@
     }
     \endcode
 
-    Per generare l'hash di una password si può utilizzare lo script _src/_sh/_gw.password.hash.sh.
+    Per generare l'hash di una password si può utilizzare lo script _src/_sh/_password.hash.sh.
 
     Il login tramite JWT avviene inviando una stringa JWT valida tramite $_REQUEST['jwt']; la stringa JWT valida può essere generata tramite la funzione getJwt(); l'invio
     di questa stringa, posto che contenga un ID e un username validi per il sito (vedi _usr/_examples/_jwt/_jwt.write.01.php) innesca automaticamente il login.
