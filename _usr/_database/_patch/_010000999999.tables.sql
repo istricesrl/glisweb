@@ -296,7 +296,6 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,
   `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
-  `id_documento` int(11) DEFAULT NULL,
   `ore` decimal(5,2) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text,

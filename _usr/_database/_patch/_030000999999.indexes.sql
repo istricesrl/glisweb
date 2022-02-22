@@ -673,6 +673,7 @@ ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
 ALTER TABLE `contratti`
+ADD PRIMARY KEY (`id`),
   ADD KEY `id_tipologia` (`id_tipologia`),
   ADD KEY `id_emittente` (`id_emittente`),
   ADD KEY `id_destinatario` (`id_destinatario`),
@@ -1376,7 +1377,7 @@ ALTER TABLE `mailing_mail`
 	ADD KEY `token` (`token`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE `unica_mail` (`id_mailing`, `id_mail`)
+	ADD UNIQUE `unica_mail` (`id_mailing`, `id_mail`),
 	ADD KEY `indice` (`id`,`id_mailing`, `id_mail`, `id_mail_out`, `token` );
 
 --| 030000019101
@@ -2154,6 +2155,7 @@ ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 12:59 Chiara GDL
 ALTER TABLE `rinnovi`
+	ADD PRIMARY KEY (`id`), 
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
@@ -2711,6 +2713,7 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `numerazione`(`numerazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
@@ -2732,10 +2735,9 @@ ALTER TABLE `tipologie_indirizzi`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
-	ADD KEY `numerazione`(`numerazione`)
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`numerazione`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
 --| 030000053001
 
