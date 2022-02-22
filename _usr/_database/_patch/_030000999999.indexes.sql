@@ -232,6 +232,7 @@ ALTER TABLE `articoli`
 	ADD KEY `id_reparto` (`id_reparto`),
  	ADD KEY `id_taglia` (`id_taglia`), 
  	ADD KEY `id_colore` (`id_colore`), 
+	ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),
 	ADD KEY `id_udm_peso` (`id_udm_peso`),
 	ADD KEY `id_udm_volume` (`id_udm_volume`),
 	ADD KEY `id_udm_capacita`(`id_udm_capacita`),

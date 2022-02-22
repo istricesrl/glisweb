@@ -516,6 +516,7 @@
     articoli.larghezza                          | la larghezza dell'articolo, in millimetri
     articoli.lunghezza                          | la lunghezza dell'articolo, in millimetri
     articoli.altezza                            | l'altezza dell'articolo, in millimetri
+    articoli.id_udm_dimensioni                  | l'ID dell'udm dell'altezza
     articoli.peso                               | il peso dell'articolo, in grammi
     articoli.id_udm_peso                        | l'ID dell'udm del peso
     articoli.volume                             | il volume dell'articolo in millimetri cubi
@@ -537,10 +538,11 @@
     articoli_ibfk_01_nofollow                   | id_prodotto                   | prodotti.id                       | ON DELETE CASCADE ON UPDATE CASCADE
     articoli_ibfk_02_nofollow                   | id_reparto                    | reparti.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     articoli_ibfk_03_nofollow                   | id_colore                     | colori.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    articoli_ibfk_04_nofollow                   | id_udm_peso                   | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
-    articoli_ibfk_05_nofollow                   | id_udm_volume                 | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
-    articoli_ibfk_06_nofollow                   | id_udm_capacita               | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
-    articoli_ibfk_07_nofollow                   | id_udm_durata                 | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_04_nofollow                   | id_udm_dimensioni             | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_05_nofollow                   | id_udm_peso                   | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_06_nofollow                   | id_udm_volume                 | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_07_nofollow                   | id_udm_capacita               | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    articoli_ibfk_08_nofollow                   | id_udm_durata                 | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
     articoli_ibfk_98_nofollow                   | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     articoli_ibfk_99_nofollow                   | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -559,6 +561,7 @@
     articoli_view.larghezza                           | -
     articoli_view.lunghezza                           | -
     articoli_view.altezza                             | - 
+    articoli_view.id_udm_dimensioni                   | -
     articoli_view.peso                                | -
     articoli_view.id_udm_peso                         | -
     articoli_view.volume                              | -

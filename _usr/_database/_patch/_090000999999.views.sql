@@ -618,6 +618,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		articoli.larghezza,
 		articoli.lunghezza,
 		articoli.altezza,
+        articoli.id_udm_dimensioni,
 		articoli.peso,
         articoli.id_udm_peso,
 		articoli.volume,
