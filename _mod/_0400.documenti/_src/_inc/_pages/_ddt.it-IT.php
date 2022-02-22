@@ -28,6 +28,7 @@
 			'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.magazzini.form.php' ),
+			'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'ddt.magazzini.form',
 															'ddt.magazzini.form.righe',
@@ -47,7 +48,7 @@
 			'etc'			=> array( 'tabs'	=> $p['ddt.magazzini.form']['etc']['tabs'] )
 		);
 
-		// gestione ddt_righe
+		// gestione righe ddt
 		$p['ddt.magazzini.righe.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe DDT' ),

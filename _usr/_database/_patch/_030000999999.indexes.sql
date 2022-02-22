@@ -1885,9 +1885,31 @@ ALTER TABLE `progetti_categorie`
 
 --| 030000027401
 
--- progetti_anagrafica
+-- progetti_categorie
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000027800
+
+-- progetti_matricole
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 15:00 Fabio Mosti
+ALTER TABLE `progetti_matricole`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_categoria`,`id_ruolo`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_progetto`,`id_categoria`,`ordine`,`id_ruolo`);
+
+--| 030000027801
+
+-- progetti_matricole
+-- tipologia: tabella gestita
+ALTER TABLE `progetti_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000028000
 
@@ -2354,6 +2376,23 @@ ALTER TABLE `ruoli_indirizzi`
 -- ruoli_indirizzi
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000034900
+
+-- ruoli_matricole
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 10:46 Fabio Mosti
+ALTER TABLE `ruoli_matricole`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`);
+
+--| 030000034901
+
+-- ruoli_matricole
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000035000
 

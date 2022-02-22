@@ -1706,27 +1706,27 @@ CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
 -- verifica: 2021-10-08 13:52 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `progetti` (
   `id` char(32) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
-  `id_cliente` int(11) NOT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
-  `note` text,
+  `note` text DEFAULT NULL,
   `entrate_previste` decimal(16,2) DEFAULT NULL,
   `ore_previste` decimal(16,2) DEFAULT NULL,
   `costi_previsti` decimal(16,2) DEFAULT NULL,
-  `note_previsioni` text,
+  `note_previsioni` text DEFAULT NULL,
   `entrate_accettazione` decimal(16,2) DEFAULT NULL,
   `data_accettazione` DATE DEFAULT NULL,
-  `note_accettazione` text,
+  `note_accettazione` text DEFAULT NULL,
   `data_chiusura` DATE DEFAULT NULL,
-  `note_chiusura` text,
+  `note_chiusura` text DEFAULT NULL,
   `entrate_totali` decimal(16,2) DEFAULT NULL,
   `ore_totali` decimal(16,2) DEFAULT NULL,
   `uscite_totali` decimal(16,2) DEFAULT NULL,
-  `note_totali` text,
+  `note_totali` text DEFAULT NULL,
   `data_archiviazione` DATE DEFAULT NULL,
-  `note_archiviazione` text,
+  `note_archiviazione` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1760,6 +1760,23 @@ CREATE TABLE IF NOT EXISTS `progetti_categorie` (
   `id` int(11) NOT NULL,
   `id_progetto` char(32) NOT NULL,
   `id_categoria` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000027800
+
+-- progetti_matricole
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 14:58 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `progetti_matricole` (
+  `id` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_matricola` int(11) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
@@ -2149,6 +2166,19 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
   `se_sede_operativa` int(1) DEFAULT NULL,
   `se_residenza` int(1) DEFAULT NULL,
   `se_domicilio` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000034900
+
+-- ruoli_matricole
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 10:45 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000035000
@@ -2638,19 +2668,23 @@ CREATE TABLE IF NOT EXISTS `tipologie_popup` (
 -- verifica: 2021-10-15 17:34 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `id` int(11) NOT NULL,
-  `id_genitore` int(11) DEFAULT NULL,
-  `ordine` int(11) DEFAULT NULL,
+  `id_genitore` int DEFAULT NULL,
+  `ordine` int DEFAULT NULL,
   `nome` char(64) NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_colori` tinyint(1) DEFAULT NULL,
   `se_taglie` tinyint(1) DEFAULT NULL,
   `se_dimensioni` tinyint(1) DEFAULT NULL,
+  `se_volume` tinyint(1) DEFAULT NULL,
+  `se_capacita` tinyint(1) DEFAULT NULL,
+  `se_peso` tinyint(1) DEFAULT NULL,
   `se_imballo` tinyint(1) DEFAULT NULL,
   `se_spedizione` tinyint(1) DEFAULT NULL,
   `se_trasporto` tinyint(1) DEFAULT NULL,
   `se_prodotto` tinyint(1) DEFAULT NULL,
   `se_servizio` tinyint(1) DEFAULT NULL,
+
   `se_volume` tinyint(1) DEFAULT NULL,
   `se_capacita` tinyint(1) DEFAULT NULL,
   `se_peso` tinyint(1) DEFAULT NULL,

@@ -235,6 +235,14 @@
 				echo '[WARN] applicare manualmente la patch: ' . basename( $fail ) . PHP_EOL;
 			}
 */
+			$myerr = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM __patch__ WHERE note_esecuzione != "OK"' );
+
+			if( $myerr > 0 ) {
+				echo( '[WARN] errori trovati sulla tabella di patch' . PHP_EOL );
+			} else {
+				echo( '[ OK ] nessun errore trovato sulla tabella di patch' . PHP_EOL );
+			}
+
 		} else {
 			echo( '[FAIL] connessione assente' . PHP_EOL );
 	    }

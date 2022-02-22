@@ -49,6 +49,7 @@
 			'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.form',
+															'fatture.amministrazione.form.relazioni',
 															'fatture.amministrazione.form.righe',
 															'fatture.amministrazione.form.pagamenti',
 															'fatture.amministrazione.form.chiusura',
@@ -60,6 +61,18 @@
 		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 			arrayInsertSeq( 'fatture.amministrazione.form', $p['fatture.amministrazione.form']['etc']['tabs'], 'fatture.amministrazione.form.attivita' );
 		}
+
+		// gestione relazioni fatture
+		$p['fatture.amministrazione.form.relazioni'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'riferimenti fattura' ),
+			'h1'			=> array( $l		=> 'riferimenti' ),
+			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.relazioni.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.relazioni.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
+		);
 
 		// gestione righe fatture
 		$p['fatture.amministrazione.form.righe'] = array(
@@ -109,7 +122,7 @@
 				'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.righe.form']['etc']['tabs'] )
 		);
 
-		// gestione tools proforma
+		// gestione chiusura fatture
 		$p['fatture.amministrazione.form.chiusura'] = array(
 			'sitemap'		=> false,
 			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
@@ -236,6 +249,19 @@
 			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['fatture.passive.amministrazione.righe.form']['etc']['tabs'] )
+		);
+
+		// gestione chiusura fatture passive
+		$p['fatture.passive.amministrazione.form.chiusura'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'chiusura' ),
+			'h1'			=> array( $l		=> 'chiusura' ),
+			'parent'		=> array( 'id'		=> 'fatture.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.passive.amministrazione.form.chiusura.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.passive.amministrazione.form.tools.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['fatture.passive.amministrazione.form']['etc']['tabs'] )
 		);
 
 		// gestione tools fatture passive

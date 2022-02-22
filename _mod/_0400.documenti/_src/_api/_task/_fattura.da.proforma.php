@@ -60,7 +60,10 @@
                         ),
                         'f' => array(
                             'id_tipologia' => 1,
-                            'numero' => $default['numero']
+                            'nome' => NULL,
+                            'sezionale' => NULL,
+                            'numero' => NULL,
+                            'data' => NULL
                         )
                     )
                 )

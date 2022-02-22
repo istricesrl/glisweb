@@ -27,9 +27,9 @@
 	$ct['view']['table'] = 'documenti_articoli';
 
     // id della vista
-   # $ct['view']['id'] = md5( $ct['view']['table'] );
+   	// $ct['view']['id'] = md5( $ct['view']['table'] );
 
-        // pagina per la gestione degli oggetti esistenti
+    // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'ddt.magazzini.righe.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
     $ct['view']['open']['field'] = 'id';

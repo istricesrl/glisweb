@@ -389,7 +389,7 @@
 
     // controllo scrittura
     if( ! is_writeable( DIR_BASE ) ) {
-        die( 'la cartella di installazione non è scrivibile, lanciare _gw.permissions.reset.sh' );
+        die( 'la cartella di installazione non è scrivibile, lanciare _lamp.permissions.reset.sh' );
     }
 
     // costanti per l'encoding

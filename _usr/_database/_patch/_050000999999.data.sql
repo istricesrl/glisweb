@@ -534,6 +534,15 @@ REPLACE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se
 (4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
 
+--| 050000034900
+
+-- ruoli_matricole
+-- tipologia: tabella standard
+-- verifica: 2021-10-12 10:45 Fabio Mosti
+REPLACE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	'attrezzatura',	    '',	    ''),
+(2,	'prodotto',	    '',	    '');
+
 --| 050000035000
 
 -- ruoli_prodotti
@@ -992,18 +1001,17 @@ ON DUPLICATE KEY UPDATE
 	se_trasporto = VALUES(se_trasporto),
 	se_prodotto = VALUES(se_prodotto),
 	se_servizio= VALUES(se_servizio);
-	
+
 --| 050000055000
 
 -- tipologie_progetti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT IGNORE INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'contratto',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'pacchetto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'progetto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	NULL,	'forfait',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_colori`, `se_taglie`, `se_dimensioni`, `se_volume`, `se_capacita`, `se_peso`, `se_imballo`, `se_spedizione`, `se_trasporto`, `se_prodotto`, `se_servizio`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'servizio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	NULL,	NULL,	NULL),
+(3,	1,	NULL,	'alimentare (peso)',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	1,	NULL,	'alimentare (volume)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055400
 
