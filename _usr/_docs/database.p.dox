@@ -206,31 +206,35 @@
 
     colonna                                     | descrizione
     --------------------------------------------|---------------------------------------------------------------------------------------
-    pianificazioni.id                           | l'ID della pianificazione
-    pianificazioni.id_progetto                  | l'ID del progetto cui si riferisce la pianificazione
-    pianificazioni.id_todo                      | l'ID della todo cui si riferisce la pianificazione
-    pianificazioni.id_attivita                  | l'ID dell'attività cui si riferisce la pianificazione
-    pianificazioni.nome                         | nome della pianificazione
-    pianificazioni.note                         | note aggiuntive sulla pianificazione
-    pianificazioni.id_periodicita               | l'ID della periodicità di ripetizione
-    pianificazioni.cadenza                      | intero che definisce la quantità relativa alla periodicità
-    pianificazioni.se_lunedi                    | flag che indica se nella periodicità settimanale dev'essere utilizzato il lunedì
-    pianificazioni.se_martedi                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il martedì
-    pianificazioni.se_mercoledi                 | flag che indica se nella periodicità settimanale dev'essere utilizzato il mercoledì
-    pianificazioni.se_giovedi                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il giovedì
-    pianificazioni.se_venerdi                   | flag che indica se nella periodicità settimanale dev'essere utilizzato il venerdì
-    pianificazioni.se_sabato                    | flag che indica se nella periodicità settimanale dev'essere utilizzato il sabato
-    pianificazioni.se_domenica                  | flag che indica se nella periodicità settimanale dev'essere utilizzata la domenica
-    pianificazioni.schema_ripetizione           | valore che indica la strategia di ripetizione per le periodicità mensili e annuali
-    pianificazioni.data_elaborazione            | data dell'ultima attività di creazione delle entità pianificate
-    pianificazioni.giorni_estensione            | numero di giorni per cui va spostata in avanti la data di fine quando la pianificazione viene allungata.
-    pianificazioni.data_fine                    | data fino alla quale vengono create le entità pianificate
-    pianificazioni.workspace                    | memoria di lavoro della pianificazione in formato JSON
-    pianificazioni.token                        | token per il lock software della riga nelle elaborazioni automatiche
-    pianificazioni.id_account_inserimento       | l'ID dell'account che ha inserito la riga
-    pianificazioni.timestamp_inserimento        | la timestamp dell'inserimento della riga
-    pianificazioni.id_account_aggiornamento     | l'ID dell'ultimo account che ha modificato la riga
-    pianificazioni.timestamp_aggiornamento      | la timestamp dell'ultimo aggiornamento della riga
+    pianificazioni.id                               | l'ID della pianificazione
+    pianificazioni.id_progetto                      | l'ID del progetto cui si riferisce la pianificazione
+    pianificazioni.id_todo                          | l'ID della todo cui si riferisce la pianificazione
+    pianificazioni.id_attivita                      | l'ID dell'attività cui si riferisce la pianificazione
+    pianificazioni.nome                             | nome della pianificazione
+    pianificazioni.note                             | note aggiuntive sulla pianificazione
+    pianificazioni.id_periodicita                   | l'ID della periodicità di ripetizione
+    pianificazioni.cadenza                          | intero che definisce la quantità relativa alla periodicità
+    pianificazioni.se_lunedi                        | flag che indica se nella periodicità settimanale dev'essere utilizzato il lunedì
+    pianificazioni.se_martedi                       | flag che indica se nella periodicità settimanale dev'essere utilizzato il martedì
+    pianificazioni.se_mercoledi                     | flag che indica se nella periodicità settimanale dev'essere utilizzato il mercoledì
+    pianificazioni.se_giovedi                       | flag che indica se nella periodicità settimanale dev'essere utilizzato il giovedì
+    pianificazioni.se_venerdi                       | flag che indica se nella periodicità settimanale dev'essere utilizzato il venerdì
+    pianificazioni.se_sabato                        | flag che indica se nella periodicità settimanale dev'essere utilizzato il sabato
+    pianificazioni.se_domenica                       flag che indica se nella periodicità settimanale dev'essere utilizzata la domenica
+    pianificazioni.schema_ripetizione               | valore che indica la strategia di ripetizione per le periodicità mensili e annuali
+    pianificazioni.data_elaborazione                | data dell'ultima attività di creazione delle entità pianificate
+    pianificazioni.giorni_estensione                | numero di giorni per cui va spostata in avanti la data di fine quando la pianificazione viene allungata.
+    pianificazioni.data_fine                        | data fino alla quale vengono create le entità pianificate
+    pianificazioni.entita                           | entita che la pianificazione genera 'todo','attivita','rinnovi','documenti','documenti_articoli','pagamenti'
+	pianificazioni.model_id_luogo                   | l'ID del luogo della pianificazione
+	pianificazioni.model_ora_inizio_programmazione  | ora inizio della pianificazione todo
+	pianificazioni.model_ora_fine_programmazione    | ora fine della pianificazione todo
+    pianificazioni.workspace                        | memoria di lavoro della pianificazione in formato JSON
+    pianificazioni.token                            | token per il lock software della riga nelle elaborazioni automatiche
+    pianificazioni.id_account_inserimento           | l'ID dell'account che ha inserito la riga
+    pianificazioni.timestamp_inserimento            | la timestamp dell'inserimento della riga
+    pianificazioni.id_account_aggiornamento         | l'ID dell'ultimo account che ha modificato la riga
+    pianificazioni.timestamp_aggiornamento          | la timestamp dell'ultimo aggiornamento della riga
 
     La relazione fra i campi *id_periodicita* e *cadenza* è che il secondo indica ogni quante unità di tempo specificate
     dal primo dev'essere replicata l'entità sorgente. Se ad esempio è indicata una periodicità giornaliera con cadenza tre,
@@ -257,37 +261,42 @@
     pianificazioni_ibfk_02                        | id_todo                       | todo.id                           | ON DELETE NO ACTION ON UPDATE NO ACTION
     pianificazioni_ibfk_03                        | id_attivita                   | attivita.id                       | ON DELETE CASCADE ON UPDATE CASCADE
     pianificazioni_ibfk_04_nofollow               | id_periodicita                | periodicita.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    pianificazioni_ibfk_05_nofollow               | model_id_luogo                | luoghi.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
     pianificazioni_ibfk_98_nofollow               | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     pianificazioni_ibfk_99_nofollow               | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *pianificazioni_view* relativa alla tabella *pianificazioni* presenta le seguenti colonne:
 
-    colonna                                         | descrizione
-    ------------------------------------------------|---------------------------------------------------------------------------------------
-    pianificazioni_view.id                          | -
-    pianificazioni_view.id_progetto                 | -
-    pianificazioni_view.id_todo                     | -
-    pianificazioni_view.id_attivita                 | -
-    pianificazioni_view.nome                        | -
-    pianificazioni_view.id_periodicita              | -
-    pianificazioni_view.periodicita                 | la periodicità della pianificazione
-    pianificazioni_view.cadenza                     | -
-    pianificazioni_view.se_lunedi                   | -
-    pianificazioni_view.se_martedi                  | -
-    pianificazioni_view.se_mercoledi                | -
-    pianificazioni_view.se_giovedi                  | -
-    pianificazioni_view.se_venerdi                  | -
-    pianificazioni_view.se_sabato                   | -
-    pianificazioni_view.se_domenica                 | -
-    pianificazioni_view.schema_ripetizione          | -
-    pianificazioni_view.data_elaborazione           | -
-    pianificazioni_view.giorni_estensione           | -
-    pianificazioni_view.data_fine                   | -
-    pianificazioni_view.workspace                   | -
-    pianificazioni_view.token                       | -
-    pianificazioni_view.id_account_inserimento      | -
-    pianificazioni_view.id_account_aggiornamento    | -
-    pianificazioni_view.__label__                   | etichetta descrittiva della pianificazione
+    colonna                                             | descrizione
+    ----------------------------------------------------|---------------------------------------------------------------------------------------
+    pianificazioni_view.id                              | -
+    pianificazioni_view.id_progetto                     | -
+    pianificazioni_view.id_todo                         | -
+    pianificazioni_view.id_attivita                     | -
+    pianificazioni_view.nome                            | -
+    pianificazioni_view.id_periodicita                  | -
+    pianificazioni_view.periodicita                     | la periodicità della pianificazione
+    pianificazioni_view.cadenza                         | -
+    pianificazioni_view.se_lunedi                       | -
+    pianificazioni_view.se_martedi                      | -
+    pianificazioni_view.se_mercoledi                    | -
+    pianificazioni_view.se_giovedi                      | -
+    pianificazioni_view.se_venerdi                      | -
+    pianificazioni_view.se_sabato                       | -
+    pianificazioni_view.se_domenica                     | -
+    pianificazioni_view.schema_ripetizione              | -
+    pianificazioni_view.data_elaborazione               | -
+    pianificazioni_view.giorni_estensione               | -
+    pianificazioni_view.data_fine                       | -
+    pianificazioni_view.entita                          | -
+	pianificazioni_view.model_id_luogo                  | -
+	pianificazioni_view.model_ora_inizio_programmazione | -
+	pianificazioni_view.model_ora_fine_programmazione   | -
+    pianificazioni_view.workspace                       | -
+    pianificazioni_view.token                           | -
+    pianificazioni_view.id_account_inserimento          | -
+    pianificazioni_view.id_account_aggiornamento        | -
+    pianificazioni_view.__label__                       | etichetta descrittiva della pianificazione
 
     popup
     -----
