@@ -37,6 +37,10 @@ else
     # se è specificata una branch di aggiornamento
     if [[ -n "$1" ]]; then
 
+        # faccio il backup della cartella corrente
+        rm -rf ../backup.tar.gz
+        tar -cvzf ../backup.tar.gz .
+
         # branch da scaricare
         BRANCH=$1
 
@@ -72,7 +76,14 @@ else
         composer update
 
         ## permessi
-        ./_src/_sh/_gw.permissions.reset.sh
+        ./_src/_sh/_lamp.permissions.reset.sh
+
+        ## pulizia
+        clear
+
+        ## conferma
+        # TODO verificare davvero che sia andato tutto bene
+        echo "aggiornamento del framework effettuato con successo"
 
     else
 

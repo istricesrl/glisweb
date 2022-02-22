@@ -58,6 +58,18 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM udm_view' );
 
+        $ct['etc']['select']['udm_massa'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'], 
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM udm_view WHERE se_massa' );
+
+            $ct['etc']['select']['udm_volume'] = mysqlCachedIndexedQuery(
+                $cf['memcache']['index'],
+                $cf['memcache']['connection'], 
+                $cf['mysql']['connection'], 
+                'SELECT id, __label__ FROM udm_view WHERE se_volume' );
+    
     // tendina reparti
 	$ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
 	    $cf['cache']['index'],
@@ -65,6 +77,7 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM reparti_view' );    
 
+/*
     if( isset( $_REQUEST['__preset__']['articoli']['id_prodotto']  ) ){
         // unità di misura di default
         $ct['etc']['value']['udm'] = mysqlSelectValue(
@@ -87,6 +100,10 @@
             'SELECT tipologie_prodotti.* FROM tipologie_prodotti LEFT JOIN prodotti ON prodotti.id_tipologia = tipologie_prodotti.id WHERE prodotti.id = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] ) ));
     }
+*/
+
+    // macro di default per l'entità articoli
+    require DIR_MOD . '_4100.prodotti/_src/_inc/_macro/_articoli.form.default.php';
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

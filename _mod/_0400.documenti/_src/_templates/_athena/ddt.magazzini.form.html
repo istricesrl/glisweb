@@ -36,7 +36,7 @@
 
             {# CAMPI HIDDEN DI BASE #}
             <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-            <input type="hidden" id="id_tipologia" name="{{ table }}[id_tipologia]" value="4">
+            <input type="hidden" id="documenti_id_tipologia" name="{{ table }}[id_tipologia]" value="4">
             <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
             <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
             <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]"
@@ -55,18 +55,24 @@
                         {{ frm.date( table, '', '', 'data', '', '', request, 'now'|date('Y-m-d'), '', '1' ) }}
                     </div>
                     <div class="col-4 col-md-1">
-                        <span class="label-top">numero</span>
-                        {{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
-                    </div>
-                    <div class="col-4 col-md-1">
                         <span class="label-top">sezionale</span>
                         {{ frm.inputRequired( table, '', '', 'sezionale', '', '', request ) }}
                     </div>
-                    <div class="col">
+                    {% if not request[ table ].numero %}
+                    <div class="col-12 col-md-auto">
+                        {{ frm.button(  'OTTIENI NUMERO' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroFattura(\'documenti_numero\',$(\'#documenti_id_emittente\').val(),$(\'#documenti_sezionale\').val(),$(\'#documenti_id_tipologia\').val());','ottieni in modo automatico il progressivo' ) }}
+                    </div>
+                    {% endif %}
+                    <div class="col-4 col-md-1">
+                        <span class="label-top">numero</span>
+                        {{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
+                    </div>
+                    <div class="col-4 col-md">
                         <span class="label-top">nome</span>
-                        {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+                        {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
                     </div>
                 </div>
+
                 <div class="form-group form-row">
                     <div class="col-12">
                     <span class="label-top">note</span>

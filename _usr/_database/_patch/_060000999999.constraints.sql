@@ -916,6 +916,18 @@ ALTER TABLE `progetti_categorie`
     ADD CONSTRAINT `progetti_categorie_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_categorie_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 060000027800
+
+-- progetti_matricole
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 15:05 Fabio Mosti
+ALTER TABLE `progetti_matricole`
+    ADD CONSTRAINT `progetti_matricole_ibfk_01`             FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `progetti_matricole_ibfk_02_nofollow`    FOREIGN KEY (`id_categoria`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `progetti_matricole_ibfk_03_nofollow`    FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_matricole` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `progetti_matricole_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `progetti_matricole_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 --| 060000028000
 
 -- provincie
@@ -1132,6 +1144,14 @@ ALTER TABLE `ruoli_immagini`
 -- verifica: 2021-10-12 10:57 Fabio Mosti
 ALTER TABLE `ruoli_indirizzi`
     ADD CONSTRAINT `ruoli_indirizzi_ibfk_01`    FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000034900
+
+-- ruoli_matricole
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 10:57 Fabio Mosti
+ALTER TABLE `ruoli_matricole`
+    ADD CONSTRAINT `ruoli_matricole_ibfk_01`    FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_matricole` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| 060000035000
 

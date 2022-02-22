@@ -2347,16 +2347,7 @@ CREATE OR REPLACE VIEW job_view AS
 		from_unixtime( job.timestamp_completamento, '%Y-%m-%d %H:%i' ) AS data_ora_completamento,
 		job.id_account_inserimento,
 		job.id_account_aggiornamento,
-		concat(
-			job.nome,
-			' ',
-			coalesce(
-				concat( job.corrente, ' su ', job.totale, ' fatto' ),
-				'non ancora avviato'
-			),
-			' ',
-			job.job
-		) AS __label__
+		job.nome AS __label__
 	FROM job
 ;
 
@@ -4031,6 +4022,39 @@ CREATE OR REPLACE VIEW progetti_categorie_view AS
 		LEFT JOIN progetti ON progetti.id = progetti_categorie.id_progetto
 ;
 
+--| 090000027800
+
+-- progetti_matricole_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_matricole_view`;
+
+--| 090000027801
+
+-- progetti_matricole_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-08 15:07 Fabio Mosti
+CREATE OR REPLACE VIEW progetti_matricole_view AS
+	SELECT
+		progetti_matricole.id,
+		progetti_matricole.id_progetto,
+		progetti.nome AS progetto,
+		progetti_matricole.id_matricola,
+		matricole.matricola AS matricola,
+		progetti_matricole.id_ruolo,
+		ruoli_matricole_path( progetti_matricole.id_ruolo ) AS ruolo,
+		progetti_matricole.ordine,
+		progetti_matricole.id_account_inserimento,
+		progetti_matricole.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			progetti.nome,
+			matricole.matricola
+		) AS __label__
+	FROM progetti_matricole
+		LEFT JOIN progetti ON progetti.id = progetti_matricole.id_progetto
+		LEFT JOIN matricole ON matricole.id = progetti_matricole.id_matricola
+;
+
 --| 090000028000
 
 -- provincie_view
@@ -4898,6 +4922,28 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS
     	ruoli_indirizzi.se_domicilio,
 	 	ruoli_indirizzi_path( ruoli_indirizzi.id ) AS __label__
 	FROM ruoli_indirizzi
+;
+
+--| 090000034900
+
+-- ruoli_matricole_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_matricole_view`;
+
+--| 090000034901
+
+-- ruoli_matricole_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-12 11:23 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_matricole_view AS
+	SELECT
+		ruoli_matricole.id,
+		ruoli_matricole.id_genitore,
+		ruoli_matricole.nome,
+    	ruoli_matricole.html_entity,
+    	ruoli_matricole.font_awesome,
+	 	ruoli_matricole_path( ruoli_matricole.id ) AS __label__
+	FROM ruoli_matricole
 ;
 
 --| 090000035000

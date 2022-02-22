@@ -252,7 +252,30 @@
     // - - - /DatiGeneraliDocumento
 	$xml->endElement();
 
-    // - - /DatiGenerali
+	// ciclo sulle fatture collegate
+	foreach( $dcl AS $dc ) {
+
+		// - - - DatiFattureCollegate
+
+		// - - - - RiferimentoNumeroLinea
+
+		// - - - - IdDocumento
+
+		// - - - - Data
+
+		// - - - /DatiFattureCollegate
+
+	}
+
+	// ciclo sui DDT collegati
+	// TODO
+	// - - - DatiDDT
+	// - - - - NumeroDDT
+	// - - - - DataDDT
+	// - - - - RiferimentoNumeroLinea
+	// - - - /DatiDDT
+
+	// - - /DatiGenerali
 	$xml->endElement();
 
     // - - DatiBeniServizi

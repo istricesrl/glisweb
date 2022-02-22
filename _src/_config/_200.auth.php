@@ -121,7 +121,11 @@
 	    'INVIO_ANAGRAFICA_ARCHIVIUM' => array(
             'id' => NULL,
             'nome' => 'inviare una anagrafica ad Archivium'
-	    )
+        ),
+        'CANCELLAZIONE_RICORSIVA' => array(
+            'id' => NULL,
+            'nome' => 'cancellare ricorsivamente oggetti dal database'
+        )
 	);
 
     // account di default della piattaforma

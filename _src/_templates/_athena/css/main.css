@@ -184,6 +184,16 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     height: 31px;
 }
 
+/* stili delle dashboard */
+
+.dashboard-table-clickable td.clickable {
+    cursor: pointer;
+}
+
+.dashboard-table-clickable td.clickable:hover {
+    background-color: #eeeeee;
+}
+
 /* stili dei form */
 
 .col.col-form-label,
@@ -415,6 +425,7 @@ select.font-awesome {
 
 .btn-sm {
     font-size: 1em;
+    height: 31px;
 }
 
 .btn-lg {
@@ -957,4 +968,10 @@ div.combobox-container > .spinner-border {
     width: 1.5em;
     top: 0.5em;
     display: none;
+}
+
+/* stile dei modal */
+
+.modal p {
+    margin: 0px;
 }

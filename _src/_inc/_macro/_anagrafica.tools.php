@@ -13,8 +13,11 @@
 	$ct['page']['contents']['metros'] = array(
 	    'esportazioni' => array(
 		'label' => 'esportazioni'
-	    )
-	);
+		),
+	    'importazioni' => array(
+			'label' => 'importazioni'
+			)
+		);
 
     // esportazione contatti anagrafica
 	$ct['page']['contents']['metro']['esportazioni'][] = array(
@@ -32,6 +35,15 @@
 	    'fa' => 'fa-file-excel-o',
 	    'title' => 'esportazione indirizzario',
 	    'text' => 'esporta gli indirizzi dei contatti anagrafici in formato CSV'
+	);
+
+    // importazione contatti anagrafica
+	$ct['page']['contents']['metro']['importazioni'][] = array(
+	    'modal' => array( 'id' => 'importa_contatti', 'include' => 'inc/anagrafica.tools.modal.import.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-upload',
+	    'title' => 'importazione anagrafiche',
+	    'text' => 'importa contatti anagrafici in formato CSV'
 	);
 
     // categorie anagrafica

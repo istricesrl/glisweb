@@ -44,8 +44,10 @@
 			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.php' ),
+			'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.form',
+															'proforma.amministrazione.form.relazioni',
 															'proforma.amministrazione.form.righe',
 															'proforma.amministrazione.form.pagamenti',
 															'proforma.amministrazione.form.chiusura',
@@ -53,10 +55,22 @@
 															'proforma.amministrazione.form.tools' ) )
 		);
 
+		// gestione relazioni proforma
+		$p['proforma.amministrazione.form.relazioni'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'riferimenti fattura' ),
+			'h1'			=> array( $l		=> 'riferimenti' ),
+			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.relazioni.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.form.relazioni.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.form']['etc']['tabs'] )
+		);
+
 		// gestione righe proforma
 		$p['proforma.amministrazione.form.righe'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe_fatture' ),
+			'title'			=> array( $l		=> 'righe proforma' ),
 			'h1'			=> array( $l		=> 'righe' ),
 			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.righe.html' ),

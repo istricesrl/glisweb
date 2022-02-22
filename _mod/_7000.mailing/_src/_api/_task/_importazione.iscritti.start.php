@@ -22,7 +22,7 @@
             array( 's' => 1 ),
             array( 's' => json_encode(
                 array(
-                    'file' => 'tmp/upload/csv/iscritti/'.basename( $_REQUEST['file'] )
+                    'file' => 'var/contenuti/upload/'.basename( $_REQUEST['file'] )
                 )
             ) )
         )

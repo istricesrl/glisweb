@@ -54,6 +54,12 @@
             ),
             'ddt_passivi' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'note_credito' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'relazioni_documenti' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);

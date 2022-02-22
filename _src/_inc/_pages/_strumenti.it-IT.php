@@ -175,10 +175,23 @@
 		'macro'		=> array( '_src/_inc/_macro/_job.view.php' ),
 		'parent'		=> array( 'id'		=> 'strumenti' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'job.view',) ),
+		'etc'		=> array( 'tabs'	=> array(	'job.view', 'job.tools' ) ),
 		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'job' ),
 																		'priority'	=> '960' ) ) )
 		);
+
+    // tools job
+	$p['job.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'job.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( '_src/_inc/_macro/_job.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['job.view']['etc']['tabs'] )
+	);
 
 	// gestione job
 	$p['job.form'] = array(
@@ -218,10 +231,22 @@
 		'parent'		=> array( 'id'		=> 'task.view' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'task.form',
-
+													'task.form.tools'
 													) ),
 	);
 
+    // gestione strumenti mail in uscita
+	$p['task.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'strumenti task' ),
+	    'h1'		=> array( $l		=> 'strumenti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_task.form.tools.php' ),
+	    'parent'		=> array( 'id'		=> 'task.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['task.form']['etc']['tabs'] )
+	);
 
 /*
     // pagina gestione cron

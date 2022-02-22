@@ -14,7 +14,11 @@
 	{% elseif obj.modal %}
 	<a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
 	{% elseif obj.ws %}
+	{% if obj.confirm %}
+	<a href="#" onclick="if( confirm('sei sicuro?') ){ $(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});}">
+	{% else %}
 	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
+	{% endif %}
 	{% endif %}
 	    <div class="media">
 		<div class="media-left">

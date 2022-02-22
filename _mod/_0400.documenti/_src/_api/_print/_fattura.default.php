@@ -17,10 +17,11 @@
      $doc = mysqlSelectRow(
         $cf['mysql']['connection'],
 	    'SELECT documenti.*,  '.
-	    'tipologie_documenti.codice AS codice_tipologia, condizioni_pagamento.codice AS condizioni_pagamento '.
+	    'tipologie_documenti.codice AS codice_tipologia, condizioni_pagamento.codice AS codice_pagamento '.
 	    'FROM documenti '.
 	    'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
-        'LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
+        'INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizioni_pagamento '.
+
 	    'WHERE documenti.id = ?',
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
@@ -50,10 +51,11 @@
      */
 
     // TODO
-    if( empty($doc['condizioni_pagamento']) ){
-        $doc['condizioni_pagamento'] = 'TP02';
-    }
-        /**
+
+    $doc['condizioni_pagamento'] = $doc['codice_pagamento'];
+
+    /**
+
      * NOTA condizioni di pagamento
      * TP01 Pagamento a rate: viene impostato un pagamento a rate dove è possibile impostare una sola rata, nel caso infatti in cui il cliente non abbia saldato la fattura al momento dell’emissione o sia necessario indicare dei dati Bancari, attraverso questo tipo di pagamento sarà possibile impostare tali dati.
      * TP02 Pagamento completo: va impostato nel caso in cui il pagamento sia stato già completato;
@@ -267,6 +269,23 @@
 
     // indirizzo fiscale
     $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
+
+    // documenti collegati
+    // TODO selezionare in base al ruolo
+    // TODO selezionare solo le fatture
+    // TODO fare la UNION in $dcl anche delle relazioni fra righe (una riga di nota di credito può far riferimento a una o più righe di fattura specifiche e non all'intera fattura)
+    $dcl = mysqlSelectRow(
+        $cf['mysql']['connection'],
+        'SELECT documenti_view.* '.
+        'FROM relazioni_documenti '.
+        'INNER JOIN documenti_view ON documenti_view.id = relazioni_documenti.id_documento_collegato '.
+        'WHERE relazioni_documenti.id_documento = ?',
+        array( array( 's' => $doc['id'] ) )
+    );
+
+    // TODO DDT collegati
+    // cercare i DDT
+    // compilare la sezione <DatiDDT>
 
     // nome del file
 	$outFileName =

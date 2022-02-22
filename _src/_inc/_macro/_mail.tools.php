@@ -34,34 +34,47 @@
 	);
 
 	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM mail_sent LIMIT 1' ) > 0 ) {
-	    $ct['page']['contents']['metro']['mail'][] = array(
+
+        $ct['page']['contents']['metro']['mail'][] = array(
 		'ws' => $base . 'mail.queue.clean.sent',
+        'confirm' => true,
 		'icon' => NULL,
 		'fa' => 'fa-envelope-o',
 		'title' => 'svuotamento coda mail inviate',
 		'text' => 'cancella la coda delle mail inviate'
 	    );
-	    timerCheck( $cf['speed'], '-> mail in uscita' );
-	}
+
+        timerCheck( $cf['speed'], '-> mail in uscita' );
+
+    }
 
 	if( mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM mail_out LIMIT 1' ) > 0 ) {
-	    $ct['page']['contents']['metro']['mail'][] = array(
+
+        $ct['page']['contents']['metro']['mail'][] = array(
 		'ws' => $base . 'mail.queue.clean.out',
+        'confirm' => true,
 		'icon' => NULL,
 		'fa' => 'fa-exclamation-triangle',
 		'title' => 'svuotamento coda mail in uscita',
 		'text' => 'cancella la coda delle mail in uscita senza inviare'
 		);
-		if( ! empty( $cf['smtp']['server'] ) ) {
-	    $ct['page']['contents']['metro']['mail'][] = array(
-		'ws' => $base . 'mail.queue.send?hard=1',
-		'icon' => NULL,
-		'fa' => 'fa-share-square-o',
-		'title' => 'elabora coda mail in uscita',
-		'text' => 'forza elaborazione della coda delle mail in uscita'
-	    );
-		}
-	}
+
+        timerCheck( $cf['speed'], '-> mail inviate' );
+
+        if( ! empty( $cf['smtp']['server'] ) ) {
+
+            $ct['page']['contents']['metro']['mail'][] = array(
+            'ws' => $base . 'mail.queue.send?hard=1',
+            'icon' => NULL,
+            'fa' => 'fa-share-square-o',
+            'title' => 'elabora coda mail in uscita',
+            'text' => 'forza elaborazione della coda delle mail in uscita'
+            );
+
+        }
+
+    }
+
 
     // debug
 	// print_r( $_SESSION );
