@@ -1,8 +1,8 @@
 
 {# FILE PER LA GENERAZIONE DEL TAG <noscript> DEL PIXEL DI FACEBOOK #}
 
-{% if facebook.pixel.id %}
+{% if facebook.profile.pixel.id %}
 <noscript>
-    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ facebook.pixel.id }}&ev=PageView&noscript=1">
+    <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ facebook.profile.pixel.id }}&ev=PageView&noscript=1">
 </noscript>
 {% endif %}

@@ -10,8 +10,22 @@
  */
 
 // seleziono le sottocategorie
-if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empty($cf['contents']['page']['metadata']['id_categoria_prodotti'])) {
+if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! empty($cf['contents']['page']['metadata']['id_categoria_prodotti'] ) ) {
 
+	// cerco le categorie fra i figli della pagina
+	foreach( $cf['contents']['page']['children']['id'] as $child ) {
+		if( isset( $cf['contents']['pages'][ $child ]['metadata']['id_prodotto'] ) ) {
+			$cf['contents']['page']['contents']['prodotti'][] = $child;
+
+		} else {
+			print_r( $cf['contents']['pages'][ $child ]['metadata'] );
+		}
+
+
+	}
+
+
+	/*
 	// parametri di base
 	$params = array(
 		#1			array( 's' => $ct['page']['metadati']['id_categoria_prodotti'] ),
@@ -259,7 +273,7 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 	#		print_r($params);
 	//		echo "record con limit: " . count($ct['page']['contents']['prodotti']) . PHP_EOL;
 	//		echo "record totali" . $totpg;
-
+*/
 
 	// TODO
 	// ciclo su $ct['page']['contents']['prodotti'] per creare il sotto array di articoli
@@ -307,7 +321,7 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 		}
 
 */
-
+/*
 	// SDF costruisco l'array delle categorie (corrente e figlie) per la pagina
 	$ct['etc']['categorie'] = mysqlQuery(
 		$cf['mysql']['connection'],
@@ -345,7 +359,7 @@ if (isset($cf['contents']['page']['metadata']['id_categoria_prodotti']) && !empt
 			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti'])
 		)
 	);
-
+*/
 	// print_r($ct['etc']['taglie']);
 }
 	

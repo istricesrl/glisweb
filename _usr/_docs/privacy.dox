@@ -7,6 +7,31 @@
     introduzione
     ============
 
+    inserimento dei dati
+    --------------------
+
+    [...] i dati del titolare:
+
+    \code{.json}
+    "privacy": {
+        "titolare": {
+            "cap": "",
+            "cf": "",
+            "citta": "",
+            "denominazione": "",
+            "indirizzo": "",
+            "mail": "",
+            "piva": "",
+            "provincia": "",
+            "telefono": ""
+        }
+    }
+    \endcode
+
+    [...] configurare le finalità del trattamento:
+
+
+
     la pagina delle policy
     ======================
 

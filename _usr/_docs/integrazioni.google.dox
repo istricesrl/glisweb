@@ -1,0 +1,32 @@
+/*!
+
+    \page facebook integrazioni con Google
+
+    Panoramica delle integrazioni di Google con il framework.
+
+    introduzione
+    ============
+
+    Google Tag Manager
+    ------------------
+
+    integrazione con Google Analytics
+    =================================
+
+    [...] configurazione del profilo Analytics nel file config.json:
+
+    \code{.json}
+    "google": {
+        "profiles": {
+            "PROD": {
+                "analytics": {
+                    "ua": "<CODICE-GOOGLE-ANALYTICS>",
+                    "anonymous": true
+                }
+            }
+        }
+    }
+    \endcode
+
+
+*/
