@@ -1,0 +1,77 @@
+/*!
+
+    \page chartjs integrazioni con ChartJs
+
+    Panoramica delle integrazioni di ChartJs con il framework.
+
+    introduzione
+    ============
+    ChartJs è una libreria per la realizzazione di grafici con un aspetto molto accattivante, ed è utilizzata dal framework per la presentazione visiva dei dati. L'integrazione di un grafico
+    in una pagina viene fatta combinando la creazione di un elemento contenitore nella pagina, che si fa a livello di contenuti o di schema, con la definizione dei dati da rappresentare, che
+    si fa invece a livello di macro.
+
+    Per ulteriori approfondimenti sulla libreria ChartJs si veda il sito https://www.chartjs.org/.
+
+    creazione dell'elemento contenitore
+    ===================================
+
+    [...] qualcosa del tipo:
+
+    \code{.html}
+    <canvas id="<idGrafico>" width="400" height="400"></canvas>
+    \endcode
+
+    preparazione dei dati
+    =====================
+
+    [...] definire l'array $cf['page']['contents']['chartjs'], in cui le chiavi costituiscono l'ID del grafico e il sotto array contiene i dati per la sua popolazione, ad esempio:
+
+    \code{.php}
+    $cf['page']['contents']['chartjs'] = array(
+        'graficoEsempio' => array(
+            'type' => 'bar',
+            'data' => array(),
+            'options' => array()
+        )
+    );
+    \endcode
+
+    [...] l'array definito nel PHP mappa la struttura Javascript di creazione del grafico, ad esempio:
+
+    PHP                                                     | Javascript
+    --------------------------------------------------------|-------------------------------------------------------
+    $cf['page']['contents']['chartjs'] = array(             |
+        'graficoEsempio' => array(                          |   const config = {
+            'type' => 'bar',                                |       type: 'bar',
+            'data' => array( [...] ),                       |       data: data,
+            'options' => array(                             |       options: {
+                'scales' => array(                          |           scales: {
+                    'y' => array(                           |               y: {
+                        'beginAtZero' => true               |                   beginAtZero: true
+                    )                                       |               }
+                )                                           |           }
+            )                                               |       }
+        )                                                   |   };
+    );                                                      |
+
+    [...] la chiave type definisce in particolare il tipo di grafico da costruire, e a seconda del valore che si utilizza può cambiare leggermente la forma del resto dell'array di definizione.
+
+    [...] i valori per la chiave type sono:
+
+    tipo                        | descrizione
+    ----------------------------|------------------------------------------
+    bar                         |
+    bubble                      |
+    doughnut                    |
+    pie                         |
+    line                        |
+    polarArea                   |
+    radar                       |
+    scatter                     |
+
+    Una volta definito l'aspetto generale del grafico, è necessario impostare i dati; questo si fa con il sotto array data che dev'essere strutturato a sua volta secondo il tipo di grafico che si
+    desidera rappresentare. Qui, per comodità, la struttura del PHP e quella del Javascript differiscono; mentre nel PHP le serie di dati sono rappresentate da un array associativo con le etichette
+    in chiave e i dati in serie, a loro volta presentati come oggetti strutturati (valore, colore di sfondo, colore della linea), in Javascript queste entità (etichette, valori, colori di sfondo
+    e colori di linea) sono rappresentati come array separati.
+
+*/

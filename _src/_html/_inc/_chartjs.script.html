@@ -3,28 +3,30 @@
 
 <script>
 
-    {% for chartType, chartDef in contents.chartjs %}
-    {% for chartId, chartCf in chartDef %}
-    var {{ chartId }}Ctx = document.getElementById('{{ chartId }}').getContext('2d');
-    var {{ chartId }} = new Chart( {{ chartId }}Ctx, {
-	type: '{{ chartType }}',
-	data: {
-	    labels: [{% for label, dati in chartCf.data %}'{{ label }}'{% if not loop.last %},{% endif %}{% endfor %}],
-	    datasets: [{% for dsName, dsData in chartCf.dataset %}{
-		label: '{{ dsName }}',
-		data: [{% for dValue in dsData.data %}'{{ dValue.value }}'{% if not loop.last %},{% endif %}{% endfor %}],
-		backgroundColor: {% if dsData.options.bgColor %}'{{ dsData.options.bgColor }}'{% else %}[{% for dValue in dsData.data %}'{{ dValue.bgColor }}'{% if not loop.last %},{% endif %}{% endfor %}]{% endif %},
-		borderColor: {% if dsData.options.bdColor %}'{{ dsData.options.bdColor }}'{% else %}[{% for dValue in dsData.data %}'{{ dValue.bdColor }}'{% if not loop.last %},{% endif %}{% endfor %}]{% endif %},
-		{% for optName,optValue in dsData.options %}
-		{% if optName not in 'bdColor bgColor' %}
-		{{ optName }}: {% if optValue == false %}false{% else %}'{{ optValue }}'{% endif %}{% if not loop.last %},{% endif %}
-		{% endif %}
+	window.addEventListener('load', function () {
+
+		{% for chartId, chartCf in page.contents.chartjs %}
+		var {{ chartId }}Ctx = document.getElementById('{{ chartId }}').getContext('2d');
+		var {{ chartId }} = new Chart( {{ chartId }}Ctx, {
+		type: '{{ chartCf.type }}',
+		data: {
+			labels: [{% for label in chartCf.data.labels %}'{{ label }}'{% if not loop.last %},{% endif %}{% endfor %}],
+			datasets: [{% for dsName, dsData in chartCf.data.datasets %}{
+			label: '{{ dsName }}',
+			data: [{% for dValue in dsData.data %}'{{ dValue.value }}'{% if not loop.last %},{% endif %}{% endfor %}],
+			backgroundColor: {% if dsData.options.bgColor %}'{{ dsData.options.bgColor }}'{% else %}[{% for dValue in dsData.data %}'{{ dValue.bgColor }}'{% if not loop.last %},{% endif %}{% endfor %}]{% endif %},
+			borderColor: {% if dsData.options.bdColor %}'{{ dsData.options.bdColor }}'{% else %}[{% for dValue in dsData.data %}'{{ dValue.bdColor }}'{% if not loop.last %},{% endif %}{% endfor %}]{% endif %},
+			{% for optName,optValue in dsData.options %}
+			{% if optName not in 'bdColor bgColor' %}
+			{{ optName }}: {% if optValue == false %}false{% else %}'{{ optValue }}'{% endif %}{% if not loop.last %},{% endif %}
+			{% endif %}
+			{% endfor %}
+			}{% if not loop.last %},{% endif %}{% endfor %}]
+		},
+		options: {{ chartCf.options|json_encode|raw }}
+		});
 		{% endfor %}
-	    }{% if not loop.last %},{% endif %}{% endfor %}]
-	},
-	options: {{ chartCf.options|raw }}
-    });
-    {% endfor %}
-    {% endfor %}
+
+	});
 
 </script>
