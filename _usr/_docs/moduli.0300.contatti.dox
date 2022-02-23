@@ -30,6 +30,64 @@
     La presenza nella $_REQUEST della chiave riservata __contatti__ fa saltare al pacchetto dati la controller di default, e innesca il lavoro del modulo contatti
     che si svolge essenzialmente nel file _mod/_0300.contatti/_src/_config/_750.controller.php.
 
+    gestione di default
+    -------------------
+
+    [...] un modulo del tipo:
+
+    \code{.html}
+    <form method="post" action="">
+        <input type="text" name="__contatti__[default][nome]">
+        <input type="text" name="__contatti__[default][mail]">
+        <input type="submit">
+    </form>
+    \endcode
+
+    [...] modificare la configurazione di default del modulo come segue:
+
+    \code{.json}
+    "contatti": {
+        "default": {
+            "mail": {
+                "interna": {
+                    "destinatari":
+                        { "webmaster": "webmaster@sito.bho" }
+                }
+            }
+        }
+    }
+    \endcode
+
+    [...] personalizzare il template di ringraziamento di default:
+
+    \code{.json}
+    "mail": {
+        "tpl": {
+            "DEFAULT_RINGRAZIAMENTO_CONTATTI": {
+                "it-IT": {
+                    "from": { "GlisWeb": "noreply@glisweb.videoarts.eu" },
+                    "oggetto": "grazie per la tua richiesta!",
+                    "testo": "grazie per averci contattati! ti ricontatteremo il prima possibile"
+                }
+            }
+        }
+    }
+    \endcode
+
+    [...] personalizzare soltanto il mittente della mail di default:
+
+    \code{.json}
+    "mail": {
+        "tpl": {
+            "DEFAULT_CONTATTI": {
+                "it-IT": {
+                    "from": { "GlisWeb": "noreply@glisweb.videoarts.eu" }
+                }
+            }
+        }
+    }
+    \endcode
+
     gestione dei dati in arrivo
     ===========================
 
@@ -48,8 +106,7 @@
     {{ ct.site.name[ ct.localization.language.ietf ] }}
     \endcode
 
-    definizione del template delle mail
-    -----------------------------------
+    [...] definizione del template delle mail:
 
     \code{php}
 	$cf['contatti']['default'] = array(
