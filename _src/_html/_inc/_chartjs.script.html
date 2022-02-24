@@ -13,7 +13,7 @@
 			labels: [{% for label in chartCf.data.labels %}'{{ label }}'{% if not loop.last %},{% endif %}{% endfor %}],
 			datasets: [{% for dsName, dsData in chartCf.data.datasets %}{
 			label: '{{ dsName }}',
-			data: [{% for dValue in dsData.data %}'{{ dValue.value }}'{% if not loop.last %},{% endif %}{% endfor %}],
+			data: [{% for label in chartCf.data.labels %}{% set dValue = dsData.data[ label ] %}'{{ dValue.value }}'{% if not loop.last %},{% endif %}{% endfor %}],
 			backgroundColor: {% if dsData.options.bgColor %}'{{ dsData.options.bgColor }}'{% else %}[{% for dValue in dsData.data %}'{{ dValue.bgColor }}'{% if not loop.last %},{% endif %}{% endfor %}]{% endif %},
 			borderColor: {% if dsData.options.bdColor %}'{{ dsData.options.bdColor }}'{% else %}[{% for dValue in dsData.data %}'{{ dValue.bdColor }}'{% if not loop.last %},{% endif %}{% endfor %}]{% endif %},
 			{% for optName,optValue in dsData.options %}
