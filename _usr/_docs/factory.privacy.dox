@@ -1,0 +1,130 @@
+/*!
+
+    \page privacy privacy e cookie del framework
+
+    Panoramica della gestione della privacy e dei cookien del framework.
+
+    introduzione
+    ============
+    Il framework implementa un robusto sistema di gestione della privacy che supporta gli sviluppatori sia nella realizzazione di siti tecnicamente a norma rispetto alle disposizioni
+    vigenti in materia di protezione dei dati personali, sia nella corretta gestione degli aspetti formali e burocratici relativi alla materia.
+
+    GlisWeb è molto attento ai temi legati alla privacy e alla sicurezza, e la mancata configurazione base per la privacy viene segnalata come errore nel controllo di stato di funzionamento
+    del framework.
+
+    Per comprendere come il framework tratta la materia, è necessario considerare separatamente le varie parti che compongono la gestione complessiva della privacy degli utenti, che
+    sono la configurazione del titolare e degli altri soggetti incaricati del trattamento, la gestione dei form, la gestione dei cookies, la gestione delle autorizzazioni, e la pagina
+    informativa.
+
+    il titolare del trattamento dei dati
+    ====================================
+    Il titolare del trattamento dei dati è "la persona fisica o giuridica, l'autorità pubblica, il servizio o altro organismo che, singolarmente o insieme ad altri, determina le
+    finalità e i mezzi del trattamento di dati personali" (art. 4. par. 1, n. 7 GDPR). In sostanza il titolare è colui che tratta i dati senza ricevere istruzioni da altri, colui
+    cioè che decide come e perché devono essere trattati i dati. Questa informazione è inserita nella configurazione del framework sotto la chiave privacy, ad esempio nel file config.json:
+
+    \code{.json}
+    "privacy": {
+        "titolare": {
+        "cap": "",
+        "cf": "",
+        "citta": "",
+        "denominazione": "",
+        "finalita": { "it-IT": "" },
+        "indirizzo": "",
+        "mail": "",
+        "motivazione": { "it-IT": "" },
+        "piva": "",
+        "provincia": "",
+        "telefono": ""
+        }
+    }
+    \endcode
+
+    Si noti che la definizione del titolare del trattamento è necessaria affinché lo schema 
+
+    il data protection officer (DPO)
+    --------------------------------
+
+    i responsabili del trattamento dei dati
+    ---------------------------------------
+
+    finalità generali del trattamento
+    =================================
+
+
+
+    gestione dei cookies
+    ====================
+    Il sistema di gestione dei cookies del framework implementa con grande precisione il dettato della normativa, e in mancanza di autorizzazione da parte dell'utente non vengono rilasciati
+    cookies salvo quelli tecnici per cui non è prevista autorizzazione. Il consenso per i cookies è granulare, e l'utente ha facoltà di gestirlo in autonomia tramite la pagina della policy.
+
+    La configurazione dei cookies prevede da un lato la loro definizione sotto la chiave secondaria cookies della chiave privacy, tramite la quale il sistema determina se è necessario
+    generare il banner di richiesta del consenso, e nel caso quali autorizzazioni richiedervi; dall'altro, la registrazione dei consensi prestati o negati dall'utente dev'essere poi gestita
+    a livello di codice per produrre o omettere i vari cookies in base a quanto definito dall'utente.
+
+    [...] dichiarazione di un cookie analitico non anonimo di terze parti:
+
+    \code{.json}
+    "cookie": {
+      "terzi": {
+        "analitici": {
+          "pincopallo": {
+            "anonimo": false,
+            "nome": { "it-IT": "" },
+            "policy": { "it-IT": "" },
+            "motivazione": { "it-IT": "" },
+            "conservazione": { "it-IT": "" }
+          }
+        }
+      }
+    }
+    \endcode
+
+    configurazioni aggiunte automaticamente
+    ---------------------------------------
+
+
+    stile del banner di richiesta del consenso
+    ------------------------------------------
+
+
+
+    scrittura e lettura dei consensi dei cookie
+    -------------------------------------------
+
+
+    [...] _src/_config/_720.privacy.php e _src/_config/_920.privacy.php
+
+
+
+
+
+
+    form e finalità specifiche del trattamento
+    ==========================================
+
+    [...] si veda anche \ref moduli.0300 "la documentazione del modulo contatti"
+
+
+
+    aggiunta delle caselle di controllo ai form
+    -------------------------------------------
+
+
+
+    la pagina delle policy
+    ======================
+
+
+
+
+    impostazione del template
+    -------------------------
+
+    \code{php}
+    $cf['contents']['pages']['privacy']['template'] = array(
+        'path'	=> '_src/_templates/_aurora/', 'schema' => 'default.html'
+    );
+    \endcode
+
+*/

@@ -98,6 +98,42 @@
     efficiente in caso di progetti estesi, ma se si tratta di poche pagine allora anche questa strategia
     potrebbe avere un senso, e ha il vantaggio di consentirvi un approccio più graduale al framework.
 
+    organizzazione della documentazione
+    ===================================
+
+    database.dox e database.*.dox
+    -----------------------------
+
+    deploy.dox e deploy.*.dox
+    -------------------------
+
+    factory.dox e factory.*.dox
+    ---------------------------
+
+    faq.dox
+    -------
+
+    framework.dox e framework.*.dox
+    -------------------------------
+
+    mainpage.dox
+    ------------
+
+    moduli.dox e moduli.*.dox
+    -------------------------
+
+    raccomandazioni.dox
+    -------------------
+
+    templates.dox e templates.*.dox
+    -------------------------------
+
+    esempi e casi d'uso
+    ===================
+
+    la cartella _usr/_examples/
+    ---------------------------
+
     licenza
     =======
     Questo software è di proprietà intellettuale di Fabio Mosti <fabio.mosti@istricesrl.it>; viene concesso

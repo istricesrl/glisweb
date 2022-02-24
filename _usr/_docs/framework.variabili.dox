@@ -720,48 +720,75 @@
     --------------
     Questa chiave contiene tutte le informazioni necessarie a comporre automaticamente l'informativa per la privacy del sito.
 
-    chiave                                   | descrizione
-    -----------------------------------------|---------------------------------------------------------------------------------------
-    privacy.cookie                           | array di informazioni sui cookie
-    privacy.dpo                              | dettagli sul DPO
-    privacy.dpo.cap                          | CAP della sede del DPO
-    privacy.dpo.cf                           | codice fiscale del DPO
-    privacy.dpo.citta                        | città della sede del DPO
-    privacy.dpo.denominazione                | denominazione del DPO
-    privacy.dpo.indirizzo                    | indirizzo della sede del DPO
-    privacy.dpo.mail                         | mail del DPO
-    privacy.dpo.piva                         | partita IVA del DPO
-    privacy.dpo.provincia                    | provincia della sede del DPO
-    privacy.dpo.telefono                     | telefono della sede del DPO
-    privacy.finalita                         | array di informazioni sulle finalità
-    privacy.finalita.<f>                     | informazioni sulla finalità <f>
-    privacy.finalita.<f>.descrizione         | descrizioni della finalità <f>
-    privacy.finalita.<f>.descrizione.<l>     | descrizione della finalità <f> nella lingua <l>
-    privacy.responsabili                     | array dei dettagli dei responsabili del trattamento
-    privacy.responsabili.<r>                 | dettagli del responsabile <r> del trattamento
-    privacy.responsabili.<r>.cap             | CAP della sede del responsabile <r> del trattamento
-    privacy.responsabili.<r>.cf              | codice fiscale del responsabile <r> del trattamento
-    privacy.responsabili.<r>.citta           | città della sede del responsabile <r> del trattamento
-    privacy.responsabili.<r>.denominazione   | denominazione del responsabile <r> del trattamento
-    privacy.responsabili.<r>.finalita        | finalità della nomina del responsabile <r> del trattamento
-    privacy.responsabili.<r>.finalita.<l>    | finalità della nomina del responsabile <r> del trattamento nella lingua <l>
-    privacy.responsabili.<r>.indirizzo       | indirizzo della sede del responsabile <r> del trattamento
-    privacy.responsabili.<r>.mail            | mail del responsabile <r> del trattamento
-    privacy.responsabili.<r>.motivazione     | motivazioni della nomina del responsabile <r> del trattamento
-    privacy.responsabili.<r>.motivazione.<l> | motivazione della nomina del responsabile <r> del trattamento nella lingua <l>
-    privacy.responsabili.<r>.piva            | partita IVA del responsabile <r> del trattamento
-    privacy.responsabili.<r>.provincia       | provincia della sede del responsabile <r> del trattamento
-    privacy.responsabili.<r>.telefono        | telefono della sede del responsabile <r> del trattamento
-    privacy.titolare                         | dettagli sul titolare del trattamento
-    privacy.titolare.cap                     | CAP della sede del titolare del trattamento
-    privacy.titolare.cf                      | codice fiscale del titolare del trattamento
-    privacy.titolare.citta                   | città della sede del titolare del trattamento
-    privacy.titolare.denominazione           | denominazione del titolare del trattamento
-    privacy.titolare.indirizzo               | indirizzo della sede del titolare del trattamento
-    privacy.titolare.mail                    | mail del titolare del trattamento
-    privacy.titolare.piva                    | partita IVA del titolare del trattamento
-    privacy.titolare.provincia               | provincia della sede del titolare del trattamento
-    privacy.titolare.telefono                | telefono della sede del titolare del trattamento
+    chiave                                                      | descrizione
+    ------------------------------------------------------------|---------------------------------------------------------------------------------------
+    privacy.cookie                                              | array di informazioni sui cookie
+    privacy.cookie.propri                                       | informazioni sui cookie interni al sito
+    privacy.cookie.propri.tecnici                               | dichiarazione dell'uso di cookie tecnici interni al sito
+    privacy.cookie.propri.analitici                             | dichiarazione dell'uso di cookie analitici interni al sito
+    privacy.cookie.propri.profilazione                          | dichiarazione dell'uso di cookie di profilazione interni al sito
+    privacy.cookie.terzi                                        | informazioni sui cookie di terze parti
+    privacy.cookie.terzi.tecnici                                | array dei cookie tecnici di terze parti
+    privacy.cookie.terzi.analitici                              | array dei cookie analitici di terze parti
+    privacy.cookie.terzi.analitici.<k>                          | dettagli del cookie analitici di terze parti <k>
+    privacy.cookie.terzi.analitici.<k>.anonimo                  | valore che inidca se il cookie analitici di terze parti <k> è anonimo
+    privacy.cookie.terzi.analitici.<k>.nome                     | nome del cookie analitico di terze parti <k>
+    privacy.cookie.terzi.analitici.<k>.nome.<l>                 | nome del cookie analitico di terze parti <k> nella lingua <l>
+    privacy.cookie.terzi.analitici.<k>.policy                   | link alla policy del cookie analitico di terze parti <k>
+    privacy.cookie.terzi.analitici.<k>.policy.<l>               | link alla policy del cookie analitico di terze parti <k> nella lingua <l>
+    privacy.cookie.terzi.analitici.<k>.motivazione              | motivazione del cookie analitico di terze parti <k>
+    privacy.cookie.terzi.analitici.<k>.motivazione.<l>          | motivazione del cookie analitico di terze parti <k> nella lingua <l>
+    privacy.cookie.terzi.analitici.<k>.conservazione            | modalità di conservazione del cookie analitico di terze parti <k>
+    privacy.cookie.terzi.analitici.<k>.conservazione.<l>        | modalità di conservazione del cookie analitico di terze parti <k> nella lingua <l>
+    privacy.cookie.terzi.profilazione                           | array dei cookie di profilazione di terze parti
+    privacy.cookie.terzi.profilazione.<k>                       | dettagli del cookie di profilazione di terze parti <k>
+    privacy.cookie.terzi.profilazione.<k>.nome                  | nome del cookie di profilazione di terze parti <k>
+    privacy.cookie.terzi.profilazione.<k>.nome.<l>              | nome del cookie di profilazione di terze parti <k> nella lingua <l>
+    privacy.cookie.terzi.profilazione.<k>.policy                | link alla policy del cookie di profilazione di terze parti <k>
+    privacy.cookie.terzi.profilazione.<k>.policy.<l>            | link alla policy del cookie di profilazione di terze parti <k> nella lingua <l>
+    privacy.cookie.terzi.profilazione.<k>.motivazione           | motivazione del cookie di profilazione di terze parti <k>
+    privacy.cookie.terzi.profilazione.<k>.motivazione.<l>       | motivazione del cookie di profilazione di terze parti <k> nella lingua <l>
+    privacy.cookie.terzi.profilazione.<k>.conservazione         | modalità di conservazione del cookie di profilazione di terze parti <k>
+    privacy.cookie.terzi.profilazione.<k>.conservazione.<l>     | modalità di conservazione del cookie di profilazione di terze parti <k> nella lingua <l>
+    privacy.dpo                                                 | dettagli sul DPO
+    privacy.dpo.cap                                             | CAP della sede del DPO
+    privacy.dpo.cf                                              | codice fiscale del DPO
+    privacy.dpo.citta                                           | città della sede del DPO
+    privacy.dpo.denominazione                                   | denominazione del DPO
+    privacy.dpo.indirizzo                                       | indirizzo della sede del DPO
+    privacy.dpo.mail                                            | mail del DPO
+    privacy.dpo.piva                                            | partita IVA del DPO
+    privacy.dpo.provincia                                       | provincia della sede del DPO
+    privacy.dpo.telefono                                        | telefono della sede del DPO
+    privacy.finalita                                            | array di informazioni sulle finalità
+    privacy.finalita.<f>                                        | informazioni sulla finalità <f>
+    privacy.finalita.<f>.descrizione                            | descrizioni della finalità <f>
+    privacy.finalita.<f>.descrizione.<l>                        | descrizione della finalità <f> nella lingua <l>
+    privacy.responsabili                                        | array dei dettagli dei responsabili del trattamento
+    privacy.responsabili.<r>                                    | dettagli del responsabile <r> del trattamento
+    privacy.responsabili.<r>.cap                                | CAP della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.cf                                 | codice fiscale del responsabile <r> del trattamento
+    privacy.responsabili.<r>.citta                              | città della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.denominazione                      | denominazione del responsabile <r> del trattamento
+    privacy.responsabili.<r>.finalita                           | finalità della nomina del responsabile <r> del trattamento
+    privacy.responsabili.<r>.finalita.<l>                       | finalità della nomina del responsabile <r> del trattamento nella lingua <l>
+    privacy.responsabili.<r>.indirizzo                          | indirizzo della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.mail                               | mail del responsabile <r> del trattamento
+    privacy.responsabili.<r>.motivazione                        | motivazioni della nomina del responsabile <r> del trattamento
+    privacy.responsabili.<r>.motivazione.<l>                    | motivazione della nomina del responsabile <r> del trattamento nella lingua <l>
+    privacy.responsabili.<r>.piva                               | partita IVA del responsabile <r> del trattamento
+    privacy.responsabili.<r>.provincia                          | provincia della sede del responsabile <r> del trattamento
+    privacy.responsabili.<r>.telefono                           | telefono della sede del responsabile <r> del trattamento
+    privacy.titolare                                            | dettagli sul titolare del trattamento
+    privacy.titolare.cap                                        | CAP della sede del titolare del trattamento
+    privacy.titolare.cf                                         | codice fiscale del titolare del trattamento
+    privacy.titolare.citta                                      | città della sede del titolare del trattamento
+    privacy.titolare.denominazione                              | denominazione del titolare del trattamento
+    privacy.titolare.indirizzo                                  | indirizzo della sede del titolare del trattamento
+    privacy.titolare.mail                                       | mail del titolare del trattamento
+    privacy.titolare.piva                                       | partita IVA del titolare del trattamento
+    privacy.titolare.provincia                                  | provincia della sede del titolare del trattamento
+    privacy.titolare.telefono                                   | telefono della sede del titolare del trattamento
 
     La compilazione automatica della malleveria della privacy è effettuata tramite il file _src/_inc/_contents/_privacy.<l>.html
     nelle varie lingue. Vedi \ref cartelle "la documentazione relativa alle cartelle del framework" per ulteriori dettagli
@@ -769,7 +796,7 @@
 
     L'array $cf['privacy'] viene integrato da $cx['privacy'] e da $cf['site']['privacy'] (che a sua volta è integrato da
     $cx in quanto $cx['site'] integra $cf['site']), ed è linkato a $ct['privacy'], per ulteriori dettagli vedi
-    _src/_config/_920.privacy.php.
+    _src/_config/_090.privacy.php.
 
     $cf['redirect']
     ---------------

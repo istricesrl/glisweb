@@ -23,6 +23,21 @@
     // debug
 	// print_r( $cf['google'] );
 
+    // se è stato inviato un modulo di consenso
+	if( isset( $_REQUEST['__cookie__'] ) ) {
+
+	    // registro il consenso nel cookie dei consensi
+		$cf['privacy']['cookie'][ $_REQUEST['__cookie__']['owner'] ][ $_REQUEST['__cookie__']['type'] ][ $_REQUEST['__cookie__']['name'] ]['consenso'] = $_REQUEST['__cookie__']['value'];
+
+	    // setto il cookie
+		setcookie( 'privacy', serialize( $cf['privacy']['cookie'] ), time()+60*60*24*30 );
+
+	    // TODO log del consenso
+		// @todo implementare il log dei consensi
+
+	}
+
+	/*
     // aggiustamenti automatici ai cookie per Google Tag Manager
 	if( isset( $cf['google']['gtm']['profile'] ) ) {
 	    $k = ( ( $cf['google']['gtm']['profile']['anonymous'] == true ) ? 'anonimi' : 'identificativi' );
@@ -49,25 +64,7 @@
 	    );
 	}
 
-    // recupero i consensi dai cookie
-	if( isset( $_COOKIE['privacy'] ) ) {
-	    $cf['privacy']['cookie'] = array_replace_recursive( unserialize( $_COOKIE['privacy'] ), $cf['privacy']['cookie'] );
-	}
-
-    // se è stato inviato un modulo di consenso
-	if( isset( $_REQUEST['__cookie__'] ) ) {
-
-	    // registro il consenso nel cookie dei consensi
-		$cf['privacy']['cookie'][ $_REQUEST['__cookie__']['owner'] ][ $_REQUEST['__cookie__']['type'] ]['identificativi'][ $_REQUEST['__cookie__']['name'] ]['consenso'] = $_REQUEST['__cookie__']['value'];
-
-	    // setto il cookie
-		setcookie( 'privacy', serialize( $cf['privacy']['cookie'] ), time()+60*60*24*30 );
-
-	    // TODO log del consenso
-		// @todo implementare il log dei consensi
-
-	}
-
+*/
     // debug
 	// print_r( $cf['privacy']['cookie'] );
 	// print_r( $_REQUEST['__cookie__'] );
