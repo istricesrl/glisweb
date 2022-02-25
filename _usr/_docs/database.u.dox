@@ -15,13 +15,15 @@
    colonna                          | descrizione
    ---------------------------------|---------------------------------------------------------------------------------------
    udm.id                           | l'ID dell'unità di misura
-   udm.id_genitore                  | l'ID dell'unità di misura superiore
+   udm.id_base                      | l'ID dell'unità di misura superiore
    udm.conversione                  | il tasso di conversione nell'unità di misura superiore
    udm.nome                         | il nome per esteso dell'unità di misura
    udm.sigla                        | la sigla standard dell'unità di misura
    udm.note                         | note aggiuntive sull'unità di misura
    udm.se_lunghezza                 | flag che indica se l'unità di misura riguarda la lunghezza
-   udm.se_peso                      | flag che indica se l'unità di misura riguarda il peso
+   udm.se_volume                    | flag che indica se l'unità di misura riguarda il volume
+   udm.se_massa                     | flag che indica se l'unità di misura riguarda la massa
+   udm.se_tempo                     | flag che indica se l'unità di misura riguarda il tempo
    udm.se_quantita                  | flag che indica se l'unità di misura riguarda la quantità
 
    La tabella ha le seguenti chiavi esterne:
@@ -40,7 +42,9 @@
    udm_view.nome                       | -
    udm_view.sigla                      | -
    udm_view.se_lunghezza               | -
-   udm_view.se_peso                    | -
+   udm_view.se_volume                  | -
+   udm_view.se_massa                   | -
+   udm_view.se_tempo                   | -
    udm_view.se_quantita                | -
    udm_view.__label__                  | etichetta descrittiva dell'unità di misura
 

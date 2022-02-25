@@ -47,6 +47,7 @@
             <fieldset>
                 <legend>dati generali <small>{{ legend }}</small></legend>
 
+
                 <div class="form-group form-row">
                     <div class="col-auto col-md-auto">
                         <span class="label-top">data</span>
@@ -92,9 +93,11 @@
                     <div class="col-12 col-md-8">
                         <span class="label-top">sede mittente</span>
                         {{ frm.selectBox( table, '', '', 'id_sede_emittente', '', etc.select.id_sedi_emittente, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_emittente' , page, pages, ietf ) }}
+
                     </div>
                     {% endif %}
                 </div>
+
 
                 <legend>dati destinatario</legend>
                 <div class="form-group form-row">
@@ -109,6 +112,7 @@
                     </div>
                     {% endif %}
                 </div>
+
 
                 {% if '4180.coupon' in mods.active.array %}
                 <legend>variazioni</legend>
@@ -146,8 +150,10 @@
                     {% endif %}
                 </div>
                 {% endif %}
+
             
             </fieldset>
+
 
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">

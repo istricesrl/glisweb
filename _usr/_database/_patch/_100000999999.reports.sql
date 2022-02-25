@@ -74,6 +74,51 @@ FROM mastri
 ) AS movimenti
 GROUP BY id, nome, id_articolo, articolo, id_matricola, matricola, data_scadenza;
 
+
+--| 100000020500
+
+-- __report_immagini_da_scalare__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_immagini_da_scalare__`;
+
+--| 100000020501
+-- __report_immagini_da_scalare__
+-- tipologia: report
+CREATE OR REPLACE VIEW __report_immagini_da_scalare__ AS
+	SELECT immagini.* FROM immagini
+	INNER JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
+	WHERE ( immagini.timestamp_scalamento IS NULL OR immagini.timestamp_scalamento < immagini.timestamp_aggiornamento OR immagini.timestamp_aggiornamento IS NULL )
+	ORDER BY immagini.timestamp_scalamento ASC, ruoli_immagini.ordine_scalamento ASC, immagini.ordine ASC
+;
+
+--| 100000020550
+
+-- __report_immagini_scalate__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_immagini_scalate__`;
+
+--| 100000020551
+
+-- __report_immagini_scalate__
+-- tipologia: report
+CREATE OR REPLACE VIEW __report_immagini_scalate__ AS
+SELECT
+	sum(
+	if( 
+		( timestamp_scalamento IS NOT NULL OR timestamp_scalamento >= timestamp_aggiornamento )
+		AND timestamp_aggiornamento IS NOT NULL, 1, 0) 
+	) AS scalate,
+	sum(
+	if(
+		timestamp_scalamento IS NULL OR timestamp_scalamento < timestamp_aggiornamento OR timestamp_aggiornamento IS NULL, 1, 0)
+	) AS da_scalare,
+	count(
+		immagini.id
+	) AS totali
+FROM
+	immagini
+;
+
 --| 100000021000
 -- __report_movimenti_magazzini__
 -- tipologia: report
