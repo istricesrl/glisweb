@@ -232,6 +232,11 @@ ALTER TABLE `articoli`
 	ADD KEY `id_reparto` (`id_reparto`),
  	ADD KEY `id_taglia` (`id_taglia`), 
  	ADD KEY `id_colore` (`id_colore`), 
+	ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),
+	ADD KEY `id_udm_peso` (`id_udm_peso`),
+	ADD KEY `id_udm_volume` (`id_udm_volume`),
+	ADD KEY `id_udm_capacita`(`id_udm_capacita`),
+	ADD KEY `id_udm_durata`(`id_udm_durata`),
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`ordine`,`ean`,`isbn`,`id_prodotto`,`id_reparto`,`id_taglia`,`id_colore`),
@@ -432,6 +437,8 @@ ALTER TABLE `categorie_progetti`
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `se_ordinario`(`se_ordinario`),
 	ADD KEY `se_straordinario`(`se_straordinario`),
+	ADD KEY `se_materia`(`se_materia`),
+	ADD KEY `se_classe`(`se_classe`),	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`, `id_sito`);
@@ -626,6 +633,8 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_template` (`id_template`), 
 	ADD KEY `id_mailing` (`id_mailing`),
 	ADD KEY `id_colore` (`id_colore`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_lingua`),
@@ -662,6 +671,25 @@ ALTER TABLE `continenti`
 -- continenti
 -- tipologia: tabella di supporto
 ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000007200
+
+-- contratti
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+ALTER TABLE `contratti`
+ADD PRIMARY KEY (`id`),
+  ADD KEY `id_tipologia` (`id_tipologia`),
+  ADD KEY `id_emittente` (`id_emittente`),
+  ADD KEY `id_destinatario` (`id_destinatario`),
+  ADD KEY `id_progetto` (`id_progetto`),
+  ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`);
+
+--| 030000007201
+
+-- contratti
+-- tipologia: tabella gestita
+ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000008000
 
@@ -1667,6 +1695,8 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `token` (`token`), 
 	ADD KEY `data_fine` (`data_fine`),
 	ADD KEY `data_elaborazione` (`data_elaborazione`),
+	ADD KEY `entita` (`entita`),
+	ADD KEY  `model_id_luogo` (`model_id_luogo`),
 	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
 	ADD KEY `indice_progetto` (`id`,`id_progetto`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
 	ADD KEY `indice_todo` (`id`,`id_todo`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
@@ -2148,6 +2178,26 @@ ALTER TABLE `reparti`
 -- tipologia: tabella gestita
 ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000031500
+
+-- rinnovi
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 12:59 Chiara GDL
+ALTER TABLE `rinnovi`
+	ADD PRIMARY KEY (`id`), 
+	ADD	KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_licenza` (`id_licenza`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `indice` ( `id_contratto`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`);
+
+--| 030000031501
+
+-- rinnovi
+-- tipologia: tabella gestita
+ALTER TABLE `rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+	
 --| 030000032000
 
 -- risorse
@@ -2676,6 +2726,28 @@ ALTER TABLE `tipologie_contatti`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000050900
+
+-- tipologie_contratti
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:47 Chiara GDL
+ALTER TABLE `tipologie_contratti` 
+	ADD UNIQUE KEY `unica` (`nome`),
+  	ADD KEY `ordine` (`ordine`),
+  	ADD KEY `nome` (`nome`),
+  	ADD KEY `se_tesseramento`(`se_tesseramento`),
+  	ADD KEY `se_abbonamento`(`se_abbonamento`),
+  	ADD KEY `se_iscrizione`(`se_iscrizione`),
+  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`);
+
+--| 030000050901
+
+-- tipologie_contratti
+-- tipologia: tabella gestita
+ALTER TABLE `tipologie_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000052600
 
 -- tipologie_documenti
@@ -2687,6 +2759,7 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `numerazione`(`numerazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
@@ -2738,6 +2811,27 @@ ALTER TABLE `tipologie_licenze`
 -- tipologie_licenze
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000053300
+
+-- tipologie_luoghi
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 15:30 Chiara GDL
+ALTER TABLE `tipologie_luoghi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000053301
+
+-- tipologie_luoghi
+-- tipologia: tabella gestita
+ALTER TABLE `tipologie_luoghi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000053400
 
@@ -3009,9 +3103,14 @@ ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-19 13:02 Fabio Mosti
 ALTER TABLE `udm`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_genitore`,`sigla`),
-	ADD KEY `id_genitore` (`id_genitore`),
-	ADD KEY `indice` (`id`,`id_genitore`,`conversione`,`nome`,`sigla`,`se_lunghezza`,`se_peso`,`se_quantita`);
+	ADD UNIQUE KEY `unica` (`id_base`,`sigla`),
+	ADD KEY `id_base` (`id_base`),
+	ADD KEY `se_volume`(`se_volume`),
+	ADD KEY `se_massa`(`se_massa`),
+	ADD KEY `se_tempo`(`se_tempo`),
+	ADD KEY `se_lunghezza`(`se_lunghezza`),
+	ADD KEY `se_quantita`(`se_quantita`),
+	ADD KEY `indice` (`id`,`id_base`,`conversione`,`nome`,`sigla`,`se_tempo`,`se_lunghezza`,`se_volume`,`se_quantita`);
 
 --| 030000062001
 

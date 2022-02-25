@@ -97,13 +97,17 @@
     --------------------
     Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 1, ovvero un documento di tipologia fattura
 
-    fatture__passive_view
+    fatture_passive_view
     --------------------
     Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 11, ovvero un documento di tipologia fattura passiva
 
     proforma_view
     --------------------
     Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 5, ovvero un documento di tipologia proforma
+
+    note_credito_view
+    -----------------
+    Questa tabella *virtuale* contiene i documenti la cui l'id_tipologia è 3, ovvero un documento di tipologia nota di credito
 
     documenti_articoli
     ------------------
@@ -133,6 +137,8 @@
     documenti_articoli.quantita                             | la quantità movimentata dalla riga
     documenti_articoli.id_listino                           | l'ID del listino associato alla riga
     documenti_articoli.importo_netto_totale                 | l'importo netto totale della riga
+    documenti_articoli.sconto_percentuale                   | la percentuale di sconto della riga
+    documenti_articoli.sconto_valore                        | il valore dello sconto applicato alla riga
     documenti_articoli.nome                                 | nome descrittivo della riga
     documenti_articoli.specifiche                           | specifiche della riga
     documenti_articoli.note                                 | note aggiuntive sulla riga
@@ -193,6 +199,8 @@
     documenti_articoli_view.quantita                        | -
     documenti_articoli_view.id_listino                      | -
     documenti_articoli_view.importo_netto_totale            | -
+    documenti_articoli_view.sconto_percentuale              | -
+    documenti_articoli_view.sconto_valore                   | -
     documenti_articoli_view.id_matricola                    | -
     documenti_articoli_view.matricola                       | il nome della matricola associato alla riga
     documenti_articoli_view.nome                            | -
