@@ -60,18 +60,102 @@
 
     tipo                        | descrizione
     ----------------------------|------------------------------------------
-    bar                         |
-    bubble                      |
-    doughnut                    |
-    pie                         |
-    line                        |
-    polarArea                   |
-    radar                       |
-    scatter                     |
+    bar                         | grafico a barre
+    bubble                      | grafico a bolle
+    doughnut                    | grafico a ciambella
+    pie                         | grafico a torta
+    line                        | grafico a linee
+    polarArea                   | grafico ad area polare
+    radar                       | grafico a radar
+    scatter                     | grafico di distribuzione
 
     Una volta definito l'aspetto generale del grafico, è necessario impostare i dati; questo si fa con il sotto array data che dev'essere strutturato a sua volta secondo il tipo di grafico che si
     desidera rappresentare. Qui, per comodità, la struttura del PHP e quella del Javascript differiscono; mentre nel PHP le serie di dati sono rappresentate da un array associativo con le etichette
     in chiave e i dati in serie, a loro volta presentati come oggetti strutturati (valore, colore di sfondo, colore della linea), in Javascript queste entità (etichette, valori, colori di sfondo
     e colori di linea) sono rappresentati come array separati.
+
+    [...] il blocco data contiene l'indicazione delle labels da utilizzare e i dataset da rappresentare:
+
+    \code{.php}
+    $ct['page']['contents']['chartjs'] = array(
+        'graficoEsempio' => array(
+            'type' => 'bar',
+            'data' => array(
+                'labels' => array( 'gennaio', 'febbraio', 'marzo' ),
+                'datasets' => array(
+                    'entrate' => array(
+                        'data' => array(
+                            'febbraio' => array( 'value' => 50 )
+                        ),
+                        'options' => array(
+                            'bgColor' => 'rgb( 128, 128, 128 )', 'bdColor' => 'rgb( 64, 64, 64 )'
+                        )
+                    ),
+                    'crediti' => array(
+                        'data' => array(
+                            'febbraio' => array( 'value' => 30 ),
+                            'marzo' => array( 'value' => 50 )
+                        ),
+                        'options' => array(
+                            'bgColor' => 'rgb( 72, 72, 72 )', 'bdColor' => 'rgb( 64, 64, 64 )'
+                        )
+                    ),
+                    'uscite' => array(
+                        'data' => array(
+                            'febbraio' => array( 'value' => 40 )
+                        ),
+                        'options' => array(
+                            'bgColor' => 'rgb( 164, 164, 164 )', 'bdColor' => 'rgb( 64, 64, 64 )'
+                        )
+                    )
+                )
+            ),
+            'options' => array(
+                'scales' => array(
+                    'x' => array(
+                        'stacked' => true
+                    ),
+                    'y' => array(
+                        'stacked' => true
+                    )
+                )
+            )
+        )
+    );
+    \endcode
+
+    [...] il colore dei dati può essere specificato per dataset oppure per singolo valore:
+
+    \code{.php}
+    $ct['page']['contents']['chartjs'] = array(
+        'graficoEsempio' => array(
+            'type' => 'bar',
+            'data' => array(
+                'labels' => array( 'gennaio', 'febbraio', 'marzo' ),
+                'datasets' => array(
+                    'entrate' => array(
+                        'data' => array(
+                            'febbraio' => array( 'value' => 50, 'bgColor' => 'rgb( 128, 128, 128 )', 'bdColor' => 'rgb( 64, 64, 64 )' )
+                        ),
+                        'options' => array()
+                    ),
+                    'uscite' => array(
+                        'data' => array(
+                            'febbraio' => array( 'value' => 30, 'bgColor' => 'rgb( 72, 72, 72 )', 'bdColor' => 'rgb( 64, 64, 64 )' )
+                        ),
+                        'options' => array()
+                    )
+                )
+            ),
+            'options' => array(
+                'scales' => array(
+                    'y' => array(
+                        'beginAtZero' => true
+                    )
+                )
+            )
+        )
+    );
+    \endcode
 
 */

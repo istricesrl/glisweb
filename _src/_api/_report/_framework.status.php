@@ -154,6 +154,13 @@
 	    echo '[ -- ] ultimo aggiornamento dei contenuti: ' . date( 'Y-m-d H:i:s', $cf['contents']['updated'] ) . PHP_EOL;
 	}
 
+    // pagina home
+	if( empty( $cf['privacy']['titolare'] ) ) {
+	    echo '[FAIL] titolare del trattamento dei dati non impostato' . PHP_EOL;
+	} else {
+	    echo '[ OK ] titolare del trattamento dei dati impostato' . PHP_EOL;
+	}
+
     // output
 	echo PHP_EOL;
 

@@ -25,6 +25,9 @@
             'documenti_articoli' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
+            'relazioni_documenti_articoli' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'pagamenti' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
