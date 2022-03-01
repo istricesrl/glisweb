@@ -160,3 +160,15 @@
 	    buildHeaders( array( 'Content-Type: ' . $t . '; charset=' . $e ) );
 
     }
+
+
+    function buildCsv( $t, $f = NULL, $e = ENCODING_UTF8 ) {
+
+        header('Content-Type: text/csv');
+        if( ! empty( $f ) ) {
+            header('Content-Disposition: attachment; filename=' . $f );
+        }
+
+        echo $t;
+
+    }

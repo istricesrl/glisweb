@@ -106,7 +106,7 @@
      * @todo documentare
      *
      */
-    function array2csv( $data ) {
+    function array2csv( $data, $s = ",", $c = "\"", $e = '\\' ) {
 
         $csv = array();
 
@@ -115,16 +115,24 @@
         $h = fopen('php://memory', 'r+');
 
         foreach( $data as $row ) {
-            fputcsv( $h, $row );
+            fputcsv( $h, $row, $s, $c, $e );
         }
 
         rewind($h);
 
-        while( $buf = fgets($h) ) {
+        while( $buf = fgets( $h ) ) {
             $csv[] = $buf;
         }
 
-        fclose($h);
+        fclose( $h );
+
         return $csv;
+
+    }
+
+    function array2csvString( $data, $s = ",", $c = "\"", $e = '\\' ) {
+
+        $csv = array2csv( $data, $s, $c, $e );
+        return implode( NULL, $csv );
 
     }

@@ -39,5 +39,21 @@
 	    'text' => 'importa iscritti in formato CSV'
 	);
 
+    // esportazione contatti anagrafica
+	$ct['page']['contents']['metro']['esportazioni'][] = array(
+	    'modal' => array( 'id' => 'esporta_per_lista', 'include' => 'inc/iscritti.tools.modal.export.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-file-excel-o',
+	    'title' => 'esportazione iscritti alla lista',
+	    'text' => 'esporta gli iscritti alla lista in formato CSV'
+	);
+
+    // categorie anagrafica
+	$ct['etc']['select']['liste'] = mysqlCachedQuery(
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM liste_view'
+	);
+
 	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';

@@ -104,7 +104,7 @@
                 // status
                 $job['workspace']['status']['error'][] = 'nome lista non settato per la riga ' . $job['corrente'];
 
-            } elseif( ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) ) {
+            } elseif( ( ! isset( $row['id'] ) || empty( $row['id'] ) ) && ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) ) {
 
                 // status
                 $job['workspace']['status']['error'][] = 'codice utente e codice fiscale non settati per la riga ' . $job['corrente'];
@@ -125,7 +125,7 @@
                 $idAnagrafica = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
-                        'id' => NULL,
+                        'id' => ( ! empty( $row['id'] ) ) ? $row['id'] : NULL,
                         'codice' => ( ! empty( $row['codice'] ) ) ? $row['codice'] : NULL,
                         'codice_fiscale' => ( ! empty( $row['codice_fiscale'] ) ) ? $row['codice_fiscale'] : NULL,
                         'nome' => $row['nome'],
@@ -139,7 +139,7 @@
                 if( isset( $row['categoria'] ) ) {
                     $idCategoria = mysqlSelectValue(
                         $cf['mysql']['connection'],
-                        'SELECT id FROM categorie_anagrafica_view WHERE __label__ = ?',
+                        'SELECT coalesce( id, 1 ) FROM categorie_anagrafica_view WHERE __label__ = ?',
                         array( array( 's' => $row['categoria'] ) )
                     );
                     if( ! empty( $idCategoria ) ) {

@@ -2166,6 +2166,11 @@ CREATE OR REPLACE VIEW `liste_mail_view` AS
 	mail.indirizzo AS mail,
 	mail.id_anagrafica,
 	coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+	a1.nome AS anagrafica_nome,
+	a1.cognome AS anagrafica_cognome,
+	a1.denominazione AS anagrafica_denominazione,
+	a1.codice_fiscale AS anagrafica_codice_fiscale,
+	a1.codice AS anagrafica_codice,
 	concat( liste_mail.id_lista, liste_mail.id_mail ) AS __label__
 	FROM liste_mail
 	INNER JOIN liste ON liste.id = liste_mail.id_lista

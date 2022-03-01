@@ -160,6 +160,34 @@
 
     }
 
+    function removeColumnsFromArray( &$array, $keys ) {
+        foreach( $keys as $key ) {
+            removeColumnFromArray( $array, $key );
+        }
+    }
+
+    function removeColumnFromArray( &$array, $key ) {
+        return array_walk($array, function (&$v) use ($key) {
+            unset($v[$key]);
+        });
+    }
+
+    function renameColumnInArray( &$array, $oldKey, $newKey ) {
+        return array_walk($array, function (&$v) use ($oldKey, $newKey) {
+            $v[$newKey] = $v[$oldKey];
+            unset($v[$oldKey]);
+        });
+    }
+
+    function remapArray( &$array, $map ) {
+        return array_walk($array, function (&$v) use ($map) {
+            foreach( $map as $old => $new ) {
+                $n[ $new ] = $v[ $old ];
+            }
+            $v = $n;
+        });
+    }
+
     /**
      *
      * @todo implementare
