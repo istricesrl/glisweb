@@ -51,7 +51,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM coupon_view WHERE se_gestita = 1'
+	    'SELECT id, __label__ FROM coupon_view'
 	);
 
     // tendina destinatari
