@@ -49,6 +49,9 @@
         // se il job è stato correttamente recuperato dal database
         if( isset( $job['workspace'] ) ) {
 
+            // log
+            logWrite( 'workspace per il job #' . $job['id'] . print_r( $job['workspace'], true ), 'job' );
+
             // decodifica del workspace
             $job['workspace'] = json_decode( $job['workspace'], true );
 
@@ -67,6 +70,9 @@
             );
 
         } else {
+
+            // log
+            logWrite( 'workspace vuoto per il job #' . $job['id'], 'job' );
 
             // recupero dati informativi sul job
             $job = mysqlSelectRow(

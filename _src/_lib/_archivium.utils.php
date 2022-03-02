@@ -587,58 +587,63 @@
             array( array( 's' => $i['idDocumento'] ) )
         );
 
-        // gestisco le righe multiple
-        $arrayRighe = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] ) )
-            ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] )
-            : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'];
+        // se è presente l'oggetto righe
+        if( ! empty( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] ) ) {
 
-        // TODO inserisco le righe nella tabella documenti_articoli
-        foreach( $arrayRighe as $row ) {
+            // gestisco le righe multiple
+            $arrayRighe = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] ) )
+                ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] )
+                : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'];
 
-            // debug
-            print_r( $row );
+            // TODO inserisco le righe nella tabella documenti_articoli
+            foreach( $arrayRighe as $row ) {
 
-            // trovo il reparto in base all'aliquota
-            $idReparto = mysqlSelectValue(
-                $cf['mysql']['connection'],
-                'SELECT id FROM reparti INNER JOIN iva ON iva.id = reparti.id_iva WHERE iva.aliquota = ?',
-                array( array( 's' => $row['AliquotaIVA']['#'] ) )
-            );
+                // debug
+                print_r( $row );
 
-            // se il reparto non esiste, lo creo
-            if( empty( $idReparto ) ) {
-
-                $idIva = mysqlSelectValue(
+                // trovo il reparto in base all'aliquota
+                $idReparto = mysqlSelectValue(
                     $cf['mysql']['connection'],
-                    'SELECT id FROM iva WHERE iva.aliquota = ?',
+                    'SELECT reparti.id FROM reparti INNER JOIN iva ON iva.id = reparti.id_iva WHERE iva.aliquota = ?',
                     array( array( 's' => $row['AliquotaIVA']['#'] ) )
                 );
 
-                $idReparto = mysqlInsertRow(
+                // se il reparto non esiste, lo creo
+                if( empty( $idReparto ) ) {
+
+                    $idIva = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id FROM iva WHERE iva.aliquota = ?',
+                        array( array( 's' => $row['AliquotaIVA']['#'] ) )
+                    );
+
+                    $idReparto = mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'nome' => 'REPARTO IVA ' . rtrim( $row['AliquotaIVA']['#'], '.0' ) . '%',
+                            'id_iva' => $idIva
+                        ),
+                        'reparti'
+                    );
+
+                }
+
+                // inserisco la riga
+                mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
-                        'id' => NULL,
-                        'nome' => 'REPARTO IVA ' . rtrim( $row['AliquotaIVA']['#'], '.0' ) . '%',
-                        'id_iva' => $idIva
+                        'id' => array_shift( $idRighe ),
+                        'ordine' => $row['NumeroLinea']['#'],
+                        'nome' => $row['Descrizione']['#'],
+                        'id_documento' => $i['idDocumento'],
+                        'importo_netto_totale' => $row['PrezzoTotale']['#'],
+                        'id_reparto' => $idReparto
                     ),
-                    'reparti'
+                    'documenti_articoli'
                 );
 
             }
-
-            // inserisco la riga
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id' => array_shift( $idRighe ),
-                    'ordine' => $row['NumeroLinea']['#'],
-                    'nome' => $row['Descrizione']['#'],
-                    'id_documento' => $i['idDocumento'],
-                    'importo_netto_totale' => $row['PrezzoTotale']['#'],
-                    'id_reparto' => $idReparto
-                ),
-                'documenti_articoli'
-            );
 
         }
 
@@ -650,40 +655,43 @@
             array( array( 's' => $i['idDocumento'] ) )
         );
 
-        // gestisco i pagamenti multipli
-        $arrayPagamenti = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] ) )
-            ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] )
-            : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'];
+        // se è presente l'oggetto righe
+        if( ! empty( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] ) ) {
 
-        // TODO inserisco le righe nella tabella pagamenti
-        foreach( $arrayPagamenti as $row ) {
+            // gestisco i pagamenti multipli
+            $arrayPagamenti = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] ) )
+                ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] )
+                : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'];
 
-            // debug
-            print_r( $row );
+            // TODO inserisco le righe nella tabella pagamenti
+            foreach( $arrayPagamenti as $row ) {
 
-            // recupero la modalità di pagamento
-            $idModalita = mysqlSelectValue(
-                $cf['mysql']['connection'],
-                'SELECT id FROM modalita_pagamento WHERE codice = ?',
-                array( array( 's' => $row['ModalitaPagamento']['#'] ) )
-            );
+                // debug
+                print_r( $row );
 
-            // inserisco il pagamento
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id' => array_shift( $idPagamenti ),
-                    'id_documento' => $i['idDocumento'],
-                    'id_modalita_pagamento' => $idModalita,
-                    'importo_netto_totale' => $row['ImportoPagamento']['#'],
-                    'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] )
-                ),
-                'pagamenti'
-            );
+                // recupero la modalità di pagamento
+                $idModalita = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM modalita_pagamento WHERE codice = ?',
+                    array( array( 's' => $row['ModalitaPagamento']['#'] ) )
+                );
+
+                // inserisco il pagamento
+                mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => array_shift( $idPagamenti ),
+                        'id_documento' => $i['idDocumento'],
+                        'id_modalita_pagamento' => $idModalita,
+                        'importo_netto_totale' => $row['ImportoPagamento']['#'],
+                        'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] )
+                    ),
+                    'pagamenti'
+                );
+
+            }
 
         }
-
-        // debug
 
         // restituisco il risultato
         return array_replace_recursive( $d, array( '__info__' => $i ) );

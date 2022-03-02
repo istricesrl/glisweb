@@ -71,7 +71,7 @@
 
     }
 
-    function txtTable( $h, $d, $l = NULL, $w = REPORT_WIDTH ) {
+    function txtTable( $h, $d, $l = NULL, $c = NULL, $s = NULL, $w = REPORT_WIDTH ) {
 
 	$t = NULL;
 
@@ -83,7 +83,7 @@
 	    foreach( $h as $k => $v ) {
 		if( substr( $k, 0, 9 ) == 'timestamp' && is_numeric( trim( $r[ $k ] ) ) && ! empty( $r[ $k ] ) ) { $r[ $k ] = date( 'Y-m-d H:i:s', $r[ $k ] ); }
 		if( empty( $r[ $k ] ) ) { $r[ $k ] = '-'; }
-		echo txt2fixed( $r[ $k ], $v );
+		echo txt2fixed( $r[ $k ], $v, ( ( isset( $c[ $k ] ) ) ? $c[ $k ] : ' ' ), ( ( isset( $s[ $k ] ) ) ? $s[ $k ] : STR_PAD_RIGHT ) );
 	    }
 	    echo PHP_EOL;
 	    if( $n === array_key_first( $d ) ) { echo txtLine() . PHP_EOL; }
@@ -174,15 +174,17 @@ function justify( $str, $maxlen = REPORT_WIDTH) {
 
 }
 
-    function txt2fixed( $t, $w ) {
+    function txt2fixed( $t, $w, $c = ' ', $s = STR_PAD_RIGHT ) {
 
 	if( strlen( $t ) >= $w ) {
 	    $x = riduciStringa( $t, $w );
 	} else {
-	    $x = str_pad( $t, $w - 1 );
+	    $x = str_pad( $t, $w - 1, $c, $s );
 	}
 
-	return $x  . ' ';
+	return
+        ( ( $s == STR_PAD_LEFT ) ? ' ' : NULL ) . 
+        $x . 
+        ( ( $s == STR_PAD_RIGHT ) ? ' ' : NULL );
 
     }
-
