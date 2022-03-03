@@ -2874,7 +2874,8 @@ CREATE TABLE IF NOT EXISTS `udm` (
   `se_volume` int(1) DEFAULT NULL,
   `se_massa` int(1) DEFAULT NULL,
   `se_tempo` int(1) DEFAULT NULL,
-  `se_quantita` int(1) DEFAULT NULL
+  `se_quantita` int(1) DEFAULT NULL,
+  `se_area` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000062600

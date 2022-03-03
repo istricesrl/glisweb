@@ -3209,7 +3209,7 @@ DROP TABLE IF EXISTS `pagamenti_view`;
 -- pagamenti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-07 16:00 Chiara GDL
-CCREATE OR REPLACE VIEW `pagamenti_view` AS
+CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
 		pagamenti.id_tipologia,
@@ -3268,6 +3268,8 @@ CCREATE OR REPLACE VIEW `pagamenti_view` AS
 		tipologie_documenti.se_nota_credito = 1
 		OR
 		tipologie_documenti.se_ricevuta = 1
+		OR
+		tipologie_documenti.se_pro_forma = 1
 ;
 
 --| 090000023200
@@ -6048,6 +6050,7 @@ CREATE OR REPLACE VIEW udm_view AS
 		udm.se_massa,
 		udm.se_tempo,
 		udm.se_quantita,
+		udm.se_area,
 		udm.sigla AS __label__
 	FROM udm
 ;

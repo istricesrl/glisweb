@@ -125,8 +125,21 @@ Options -Indexes
     RewriteRule ^status$ _src/_api/_report/_framework.status.php [L]
     RewriteRule ^test$ _src/_api/_report/_framework.test.php [L]
 
-    # gestione dei report generici
-    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_report/_$1.php [L,QSA]
+    # gestione dei report custom base
+    RewriteCond %{DOCUMENT_ROOT}/src/api/report/$1.php -f
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)$ src/api/report/$1.php [L,QSA]
+
+    # gestione dei report standard base
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_report/_$1.php -f
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)$ _src/_api/_report/_$1.php [L,QSA]
+
+    # gestione dei report custom moduli
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/report/$2.php -f
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/report/$2.php [L,QSA]
+
+    # gestione dei report standard moduli
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_report/_$2.php -f
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_report/_$2.php [L,QSA]
 
     # proxy OSM
     RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
