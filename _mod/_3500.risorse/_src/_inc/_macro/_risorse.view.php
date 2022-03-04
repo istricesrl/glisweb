@@ -19,17 +19,15 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
         '__label__' => 'nome',
-        'tipologia' => 'tipologia',
         'codice' => 'codice',
-        'testata' => 'testata'
+        'tipologia' => 'tipologia'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         '__label__' => 'text-left no-wrap',
-        'tipologia' => 'text-left',
         'codice' => 'text-left',
-	    'testata' => 'text-left'
+        'tipologia' => 'text-left'
     );
   
     // gestione default
