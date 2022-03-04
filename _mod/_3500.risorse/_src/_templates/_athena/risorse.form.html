@@ -30,8 +30,9 @@
 
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
-    <div class="col-md-12 d-flex flex-column">
-		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+	<div class="col-md-12 d-flex flex-column">
+		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill"
+			action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 			{# CAMPI HIDDEN DI BASE #}
 			<input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -52,13 +53,40 @@
 						<span class="label-top">tipologia</span>
 						{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
 					</div>
-					<div class="col-12 col-md-3">
+					<div class="col-12 col-md-2">
 						<span class="label-top">codice</span>
 						{{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
 					</div>
 					<div class="col-12 col-md">
 						<span class="label-top">nome</span>
 						{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+					</div>
+					<div class="col-6 col-md-auto">
+						<span class="label-top">giorno</span>
+						<select name="__view__[{{ view.id }}][__filters__][giorno][EQ]" class="form-control form-control-sm">
+							<option value="" {% if request.__view__[ view.id ].__filters__.giorno.EQ == "" %}selected{% endif %}>tutti</option>
+							{% for i in 1..31 %}
+							<option value="{{ i }}"{% if request.__view__[ view.id ].__filters__.giorno.EQ == i %}selected{% endif %}>{{ i }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-6 col-md-auto">
+						<span class="label-top">mese</span>
+						<select name="__view__[{{ view.id }}][__filters__][mese][EQ]" class="form-control form-control-sm">
+							<option value="" {% if request.__view__[ view.id ].__filters__.mese.EQ == "" %}selected{% endif %}>tutti</option>
+							{% for idmese, nomemese in etc.select.mesi %}
+							<option value="{{ idmese }}"{% if request.__view__[ view.id ].__filters__.mese.EQ == idmese %}selected{% endif %}>{{ nomemese }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col-6 col-md-auto">
+						<span class="label-top">anno</span>
+						<select name="__view__[{{ view.id }}][__filters__][anno][EQ]" class="form-control form-control-sm">
+							<option value="" {% if request.__view__[ view.id ].__filters__.anno.EQ == "" %}selected{% endif %}>tutti</option>
+							{% for idanno, nomeanno in etc.select.anni %}
+							<option value="{{ idanno }}"{% if request.__view__[ view.id ].__filters__.anno.EQ == idanno %}selected{% endif %}>{{ nomeanno }}</option>
+							{% endfor %}
+						</select>
 					</div>
 				</div>
 
