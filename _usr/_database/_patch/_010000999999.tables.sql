@@ -2029,7 +2029,7 @@ CREATE TABLE IF NOT EXISTS `risorse` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `codice` char(16) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `note` text,
   `id_testata` int(11) DEFAULT NULL,
   `giorno_pubblicazione` int(2) DEFAULT NULL,
