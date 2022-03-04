@@ -31,6 +31,86 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'risorse.form',
-													'risorse.form.tools') )
+													'risorse.form.sem',
+													'risorse.form.testo',
+													'risorse.form.immagini',
+													'risorse.form.video',
+													'risorse.form.audio',
+													'risorse.form.metadati') )
 	);
 
+	// gestione risorse SEM/SMM
+	$p['risorse.form.sem'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'SEM/SMM' ),
+	    'h1'		=> array( $l		=> 'SEM/SMM' ),
+	    'parent'		=> array( 'id'		=> 'risorse.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'risorse.form.sem.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.sem.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['risorse.form']['etc']['tabs'] )
+	);
+
+	// gestione risorse testo
+	$p['risorse.form.testo'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'risorse.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'risorse.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['risorse.form']['etc']['tabs'] )
+	);
+
+	// gestione risorse immagini
+	$p['risorse.form.immagini'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'risorse.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'risorse.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['risorse.form']['etc']['tabs'] )
+	);
+
+	// gestione risorse video
+	$p['risorse.form.video'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'video' ),
+		'h1'		=> array( $l		=> 'video' ),
+		'parent'		=> array( 'id'		=> 'risorse.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'risorse.form.video.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.video.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' , 'staff') ),
+		'etc'		=> array( 'tabs'	=> $p['risorse.form']['etc']['tabs'] )
+	);
+
+	// gestione risorse audio
+	$p['risorse.form.audio'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'audio' ),
+		'h1'		=> array( $l		=> 'audio' ),
+		'parent'		=> array( 'id'		=> 'risorse.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'risorse.form.audio.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.audio.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['risorse.form']['etc']['tabs'] )
+	);
+
+	// gestione risorse metadati
+	$p['risorse.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'risorse.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'risorse.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['risorse.form']['etc']['tabs'] )
+	);
