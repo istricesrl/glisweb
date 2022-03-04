@@ -32,12 +32,12 @@
 
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
-	    $ct['etc']['select']['mesi'][$mese] = int2month( $mese ) ;
+	    $ct['etc']['select']['mesi'][] = array('id' => $mese, '__label__' => int2month( $mese ) );
 	}
 
-    // tendina anni
-	foreach( range( date( 'Y' ) - 5,  date( 'Y' ) ) as $y ) {
-	    $ct['etc']['select']['anni'][$y] = $y ;
+    // tendina giorni
+	foreach( range( 1, 31 ) as $giorno ) {
+	    $ct['etc']['select']['giorni'][] = array( 'id' => $giorno.'', '__label__' =>  $giorno  );
 	}
 
     // macro di default
