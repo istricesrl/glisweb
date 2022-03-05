@@ -45,8 +45,9 @@
         'id' => '#',
 #        'tipologia' => 'tipologia',
 #        'data' => 'data',
-        'nome' => 'nome',
-		'id_articolo' => 'articolo',
+#        'nome' => 'nome',
+		'id_articolo' => 'codice',
+		'articolo' => 'articolo',
 		'mastro_provenienza' => 'scarico',
 		'mastro_destinazione' => 'carico',
         'quantita' => 'quantità',
@@ -64,7 +65,7 @@
         'emittente' => 'text-left', 
         'data' => 'no-wrap', 
 #        'tipologia' => 'text-left',
-		'id_articolo' => 'text-left'
+		'articolo' => 'text-left'
     );
 
 	// RELAZIONI CON IL MODULO MATRICOLE

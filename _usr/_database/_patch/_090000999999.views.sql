@@ -1790,10 +1790,11 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.id_todo,
 		documenti_articoli.id_attivita,
 		documenti_articoli.id_articolo,
+		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
 		documenti_articoli.id_mastro_provenienza,
-		m1.nome AS mastro_provenienza,
+		mastri_path( m1.id ) AS mastro_provenienza,
 		documenti_articoli.id_mastro_destinazione,
-		m2.nome AS mastro_destinazione,
+		mastri_path( m2.id ) AS mastro_destinazione,
 		documenti_articoli.id_udm,
 		documenti_articoli.quantita,
 		documenti_articoli.id_listino,
@@ -1834,6 +1835,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+		LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
 --| 090000012800
