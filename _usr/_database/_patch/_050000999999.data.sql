@@ -503,15 +503,16 @@ REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categ
 -- verifica: 2021-10-11 18:47 Fabio Mosti
 REPLACE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
 (1,		NULL,	900,	'immagine',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(2,		NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(3,		NULL,	900,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(4,		NULL,	600,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(5,		NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(6,		NULL,	100,	'avatar',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,		NULL,	300,	'logo',			NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,		NULL,	200,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(9,		NULL,	200,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(10,	NULL,	200,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1);
+(2,		NULL,	600,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(3,		NULL,	200,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(4,		NULL,	200,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(5,		NULL,	200,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1),
+(6,		NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(7,		NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(8,		NULL,	900,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(9,		NULL,	200,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	100,	'avatar',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	300,	'logo',			NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000034800
 
@@ -549,21 +550,18 @@ REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font
 -- ruoli_video
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-REPLACE INTO `ruoli_video` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_prodotti`, `se_articoli`) VALUES
-(1,	    'intestazione',	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	    'sfondo',	    NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	    'card',	        NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	    'media',	    NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	    'gallery',	    NULL,	NULL,	NULL,	1,	    1),
-(8,	    'footer',	    NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	    'contenuto',	NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	'principale',	NULL,	1,	    1,	    1,	    1),
-(12,	'carousel',	    NULL,	NULL,	NULL,	NULL,	NULL),
-(13,	'video',	    1,	    1,	    1,	    1,	    1),
-(14,	'jumbotron',	NULL,	NULL,	NULL,	NULL,	NULL),
-(15,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	NULL),
-(16,	'anteprima',	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
+(1,		NULL,	'video',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(2,		NULL,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(3,		NULL,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(4,		NULL,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(5,		NULL,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1),
+(6,		NULL,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(7,		NULL,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(8,		NULL,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(9,		NULL,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'lezione',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	'episodio',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000037000
 
@@ -974,24 +972,7 @@ INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_e
 (2,	NULL,	NULL,	'servizio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	NULL,	NULL,	NULL),
 (3,	1,	NULL,	'alimentare (peso)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	1,	NULL,	'alimentare (volume)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	1,	NULL,	'alimentare (pezzo)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL)
-ON DUPLICATE KEY UPDATE
-	id_genitore = VALUES( id_genitore ),
-	ordine = VALUES( ordine ),
-	nome = VALUES(nome),
-	html_entity = VALUES(html_entity),
-	font_awesome = VALUES(font_awesome),
-	se_colori = VALUES(se_colori),
-	se_taglie = VALUES(se_taglie),
-	se_dimensioni = VALUES(se_dimensioni),
-	se_volume = VALUES(se_volume),
-	se_capacita = VALUES(se_capacita),
-	se_peso = VALUES(se_peso),
-	se_imballo = VALUES(se_imballo),
-	se_spedizione = VALUES(se_spedizione),
-	se_trasporto = VALUES(se_trasporto),
-	se_prodotto = VALUES(se_prodotto),
-	se_servizio= VALUES(se_servizio);
+(5,	1,	NULL,	'alimentare (pezzo)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055000
 

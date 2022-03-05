@@ -2693,7 +2693,6 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `se_trasporto` tinyint(1) DEFAULT NULL,
   `se_prodotto` tinyint(1) DEFAULT NULL,
   `se_servizio` tinyint(1) DEFAULT NULL,
-
   `se_volume` tinyint(1) DEFAULT NULL,
   `se_capacita` tinyint(1) DEFAULT NULL,
   `se_peso` tinyint(1) DEFAULT NULL,
