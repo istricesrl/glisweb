@@ -87,53 +87,34 @@
 				<span class="label-top remove-after-duplicate">articolo</span>
 				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
 			</div>
+			<div class="col">
+				<span class="label-top remove-after-duplicate">matricola</span>
+				{{ frm.selectBox( table, '', '', 'id_matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', 'matricole.form', 'matricole.form', 'matricole', 'id_matricola', page, pages, ietf, 'matricole' ) }}
+			</div>
 			<div class="col col-md">
 				<span class="label-top remove-after-duplicate">specifiche</span>
 				{{ frm.input( table, '', '', 'specifiche', '', '', request ) }}
 			</div>
 		</div>
 
-		<legend>valore della riga</legend>
-		<div class="form-group form-row">
-			<div class="col-1">
-				<span class="label-top remove-after-duplicate">importo</span>
-				{{ frm.inputRequired( table, '', '', 'importo_netto_totale', '', '', request ) }}
-			</div>
-			<div class="col-auto">
-				<span class="label-top remove-after-duplicate">reparto</span>
-				{{ frm.select( table, '', '', 'id_reparto', '', etc.select.id_reparti, request, 1 ) }}
-			</div>
-			<div class="col-auto">
-				<span class="label-top remove-after-duplicate">listino</span>
-				{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request, 1 ) }}
-			</div>
-			<div class="col">
-				<span class="label-top remove-after-duplicate">matricola</span>
-				{{ frm.selectBox( table, '', '', 'id_matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'matricole' ) }}
-			</div>
-		</div>	
-		<div class="form-group form-row">
+		{% if  request.__preset__[ table ].id_documento %}
+			{% set default_documento = request.__preset__[ table ].id_documento %}
+		{% elseif  session.__latest__[ table ].id_documento %}
+			{% set default_documento = session.__latest__[ table ].id_documento %}
+		{% endif %}
+		{% if  request.__preset__[ table ].id_emittente %}
+			{% set default_emittente = request.__preset__[ table ].id_emittente %}
+		{% elseif session.__latest__[ table ].id_emittente  %}
+			{% set default_emittente = session.__latest__[ table ].id_emittente  %}
+		{% else %}
+			{% set default_emittente = etc.select.id_emittenti|first.id %}
+		{% endif %}
 
-
-		</div>
-	{% if  request.__preset__[ table ].id_documento %}
-		{% set default_documento = request.__preset__[ table ].id_documento %}
-	{% elseif  session.__latest__[ table ].id_documento %}
-		{% set default_documento = session.__latest__[ table ].id_documento %}
-	{% endif %}
-	{% if  request.__preset__[ table ].id_emittente %}
-		{% set default_emittente = request.__preset__[ table ].id_emittente %}
-	{% elseif session.__latest__[ table ].id_emittente  %}
-		{% set default_emittente = session.__latest__[ table ].id_emittente  %}
-	{% else %}
-		{% set default_emittente = etc.select.id_emittenti|first.id %}
-	{% endif %}
-
-	{% if  request.__preset__[ table ].id_destinatario %}
-		{% set default_destinatario = request.__preset__[ table ].id_destinatario %}
-	{% elseif session.__latest__[ table ].id_destinatario  %}
-		{% set default_destinatario = session.__latest__[ table ].id_destinatario  %}
-	{% endif %}
+		{% if  request.__preset__[ table ].id_destinatario %}
+			{% set default_destinatario = request.__preset__[ table ].id_destinatario %}
+		{% elseif session.__latest__[ table ].id_destinatario  %}
+			{% set default_destinatario = session.__latest__[ table ].id_destinatario  %}
+		{% endif %}
 	
 		<legend>riferimenti</legend>
 		<div class="form-group form-row">
@@ -177,7 +158,7 @@
 				{{ frm.selectBox( table, '', '', 'id_todo', '', etc.select.id_todo, request, default_todo, '', '', '', 'font-awesome', 'todo.form', 'todo.form', 'todo', 'id_todo', page, pages, ietf, 'todo' ) }}
 			</div>
 		</div>	
-		{% endif  %}
+		{% endif %}
 
 		{% if '0500.mastri' in mods.active.array %}
 		<legend>magazzino</legend>
@@ -198,11 +179,9 @@
 			</div>
 		</div>	
 		{% endif %}
+        </fieldset>
 
-		</fieldset>
-
-     
-	    {# BOTTONI E COMANDI DEL MODULO #}
+		{# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>
