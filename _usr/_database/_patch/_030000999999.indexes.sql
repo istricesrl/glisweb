@@ -2189,6 +2189,8 @@ ALTER TABLE `rinnovi`
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `indice` ( `id_contratto`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`);
 
