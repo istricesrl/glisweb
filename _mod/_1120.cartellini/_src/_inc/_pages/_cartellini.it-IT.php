@@ -92,13 +92,13 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
-	$p['agenda'] = array(
+	$p['cartellini_app_agenda'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'agenda' ),
 	    'h1'		=> array( $l		=> 'agenda' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.agenda.html' ),
 	    'parent'		=> array( 'id'		=> 'app' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_app.agenda.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_app.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
     
