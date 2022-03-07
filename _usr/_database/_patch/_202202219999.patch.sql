@@ -354,7 +354,6 @@ CREATE OR REPLACE VIEW `iscrizioni_archiviati_view` AS
 CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 	SELECT
 		tipologie_contratti.id,
-		tipologie_contratti.id_genitore,
 		tipologie_contratti.ordine,
 		tipologie_contratti.nome,
 		tipologie_contratti.html_entity,
@@ -365,7 +364,7 @@ CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 		tipologie_contratti.id_account_inserimento,
 		tipologie_contratti.id_account_aggiornamento,
 		tipologie_contratti.nome  AS __label__
-	FROM tipologie_contatti
+	FROM tipologie_contratti
 ;
 
 --| 202202210170
