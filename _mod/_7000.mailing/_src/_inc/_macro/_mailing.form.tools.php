@@ -31,7 +31,7 @@
 	);
 
     // debug
-    print_r( $_REQUEST[ $ct['form']['table'] ] );
+    // print_r( $_REQUEST[ $ct['form']['table'] ] );
 
     // se è pianificato l'invio
     if( ! empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_invio'] ) ) {

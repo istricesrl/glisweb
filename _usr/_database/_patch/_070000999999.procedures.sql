@@ -4007,7 +4007,7 @@ CREATE
 
 END;
 
---| 070000050000
+--| 070000053300
 
 -- tipologie_luoghi_path
 DROP FUNCTION IF EXISTS `tipologie_luoghi_path`;
