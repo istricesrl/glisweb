@@ -82,3 +82,23 @@
 		'etc'			=> array( 'tabs'	=> $p['righe.cartellini.form']['etc']['tabs'] )
 	);
 	
+	$p['app'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'web-app' ),
+	    'h1'		=> array( $l		=> 'web-app' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.cartellini.html' ),
+	    'parent'		=> array( 'id'		=> NULL ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_app.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	$p['agenda'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'agenda' ),
+	    'h1'		=> array( $l		=> 'agenda' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.agenda.html' ),
+	    'parent'		=> array( 'id'		=> 'app' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_app.agenda.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+    

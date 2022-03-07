@@ -13,6 +13,10 @@
 	    'macro'		=> array( '_src/_inc/_macro/_app.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'app'	=> array(	'' => 	array(	'label'		=> array( $l => 'app' ),
-																	'priority'	=> '010' ) ) )
+																	'priority'	=> '010' ) ), 
+								 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'web-app' ),
+																	'priority'	=> '010' ) ) 				
+																)
+
 	);
     
