@@ -74,7 +74,7 @@
     $doc['righe'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT documenti_articoli.*, '.
-        'iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, '.
+        'iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, '.
         'udm.sigla AS udm FROM documenti_articoli '.
         'INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto '.
         'INNER JOIN iva ON iva.id = reparti.id_iva '.
@@ -109,7 +109,7 @@
                 'nome' => $riga['nome_iva'],
                 'codice' => $riga['codice_iva'],
                 'aliquota' => str_replace( ',', '.', sprintf( '%0.2f', $riga['aliquota'] ) ),
-                'riferimento' => ( ( ! empty( $riga['codice_iva'] ) ) ? $riga['descrizione_iva'] : NULL )
+                'riferimento' => ( ( ! empty( $riga['descrizione_iva'] ) ) ? $riga['descrizione_iva'] : NULL )
             );
         }
 

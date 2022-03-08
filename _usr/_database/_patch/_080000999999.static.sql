@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
   `categorie` text,
   `telefoni` text,
   `mail` text,
+  `data_nascita` char(32),
   `data_archiviazione` date DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
