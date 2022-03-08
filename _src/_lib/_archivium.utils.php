@@ -779,6 +779,10 @@
         // var_dump( $s );
         // print_r( $l );
 
+        // log
+        logWrite( $idAzienda . ' ' . $limit . ' ' . $order . ' ' . $wildcard . ' ' . $params, 'archivium' );
+        logWrite( print_r( $l, true ), 'archivium' );
+
         // restituisco il risultato
         return $l;
 
@@ -836,6 +840,9 @@
         // debug
         // print_r( $d );
         // print_r( $f );
+
+        // log
+        logWrite( print_r( $nota, true ), 'archivium' );
 
         // recupero l'ID tipologia attività dal codice (TipoNotifica e EsitoNotifica)
         $idTipologiaAttivita = mysqlSelectValue(
@@ -925,6 +932,9 @@
         // var_dump( $u );
         // var_dump( $s );
         // print_r( $r );
+
+        // log
+        logWrite( $idAzienda . ' ' . $idNota . ' ' . print_r( $r, true ), 'archivium' );
 
         // restituisco il risultato
         return $r;
