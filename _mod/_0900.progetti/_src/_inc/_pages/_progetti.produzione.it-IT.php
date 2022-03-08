@@ -66,6 +66,7 @@
 															'progetti.produzione.form.archiviazione',
 	# NOTA questa va nel modulo pianificazioni
 	#														'progetti.produzione.form.pianificazioni',
+															
 															'progetti.produzione.form.tools' ) )
 		);
 
@@ -93,6 +94,129 @@
 		if( in_array( "6000.amministrazione", $cf['mods']['active']['array'] ) ) {
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.chiusura' );
 		}
+
+		// RELAZIONI CON IL MODULO AMMINISTRAZIONE
+		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.sem');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.testo');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.menu');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.immagini');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.video');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.audio');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.file');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.macro');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.metadati' );
+		}
+
+		$p['progetti.produzione.form.sem'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'SEM/SMM' ),
+			'h1'		=> array( $l		=> 'SEM/SMM' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.sem.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.sem.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+		
+		// form progetti.produzione testo
+		$p['progetti.produzione.form.testo'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'testo' ),
+			'h1'		=> array( $l		=> 'testo' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.testo.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.testo.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+	
+		$p['progetti.produzione.form.macro'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'macro' ),
+			'h1'		=> array( $l		=> 'macro' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.macro.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.macro.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+	
+		$p['progetti.produzione.form.immagini'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'immagini' ),
+			'h1'		=> array( $l		=> 'immagini' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.immagini.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.immagini.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+	
+		// form progetti.produzione video
+		$p['progetti.produzione.form.video'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'video' ),
+			'h1'		=> array( $l		=> 'video' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.video.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.video.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+		
+		// form progetti.produzione file
+		$p['progetti.produzione.form.file'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'file' ),
+			'h1'		=> array( $l		=> 'file' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.file.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.file.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+	
+		// form progetti.produzione audio
+		$p['progetti.produzione.form.audio'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'audio' ),
+			'h1'		=> array( $l		=> 'audio' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.audio.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.audio.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+	
+		// form progetti.produzione metadati
+		$p['progetti.produzione.form.metadati'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'metadati' ),
+			'h1'		=> array( $l		=> 'metadati' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.metadati.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.metadati.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
+
+		// form progetti.produzione menu
+		$p['progetti.produzione.form.menu'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'menu' ),
+			'h1'		=> array( $l		=> 'menu' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.menu.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.menu.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
 	/*
 		// gestione todo progetti
 		// in relazione con il modulo todo
