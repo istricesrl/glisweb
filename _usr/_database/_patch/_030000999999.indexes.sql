@@ -2199,7 +2199,27 @@ ALTER TABLE `rinnovi`
 -- rinnovi
 -- tipologia: tabella gestita
 ALTER TABLE `rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-	
+
+
+--| 030000031550
+
+-- rinnovi_documenti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2022-03-08 15:59 Chiara GDL
+ALTER TABLE `rinnovi_documenti_articoli`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
+	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_rinnovo`);
+
+--| 030000031551
+
+-- rinnovi_documenti_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `rinnovi_documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000032000
 
 -- risorse

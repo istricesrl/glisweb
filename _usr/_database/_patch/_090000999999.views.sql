@@ -4696,6 +4696,26 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
 	;
 
+--| 090000031550
+
+-- rinnovi_documenti_articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `rinnovi_documenti_articoli_view`;
+
+--| 090000031551
+
+-- rinnovi_documenti_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2022-03-08 15:59 Chiara GDL
+CREATE OR REPLACE VIEW rinnovi_documenti_articoli_view AS
+	SELECT
+	rinnovi_documenti_articoli.id_documenti_articolo,
+	rinnovi_documenti_articoli.id_rinnovo,
+	concat( rinnovi_documenti_articoli.id_rinnovo ,' - ', rinnovi_documenti_articoli.id_documenti_articolo) AS __label__
+	FROM rinnovi_documenti_articoli
+	ORDER BY __label__
+;
+
 --| 090000032000
 
 -- risorse_view

@@ -2020,6 +2020,21 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000031550
+
+-- rinnovi_documenti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2022-03-08 15:59 Chiara GDL
+CREATE TABLE IF NOT EXISTS `rinnovi_documenti_articoli` (
+`id` int(11) NOT NULL,
+  `id_rinnovo` int(11) NOT NULL,
+  `id_documenti_articolo` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000032000
 
 -- risorse
