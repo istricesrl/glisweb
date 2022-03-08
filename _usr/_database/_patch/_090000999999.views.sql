@@ -460,10 +460,10 @@ DROP TABLE IF EXISTS `anagrafica_certificazioni_view`;
 CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 	SELECT
 		anagrafica_certificazioni.id,
-		anagrafica_certificazioni.id_certificazione,
-		certificazioni.nome AS certificazione,
 		anagrafica_certificazioni.id_anagrafica,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		anagrafica_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
 		anagrafica_certificazioni.id_emittente,
 		coalesce( emittente.denominazione , concat( emittente.cognome, ' ', emittente.nome ), '' ) AS emittente,
 		anagrafica_certificazioni.nome,
@@ -3645,7 +3645,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3692,7 +3692,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3741,7 +3741,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_archivio_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3790,7 +3790,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3839,7 +3839,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_archivio_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3888,7 +3888,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3937,7 +3937,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,

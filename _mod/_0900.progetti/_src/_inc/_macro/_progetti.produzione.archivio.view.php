@@ -38,7 +38,8 @@
         'id' => '#',
         'cliente' => 'cliente',
         'tipologia' => 'tipologia',
-        '__label__' => 'nome'
+        'nome' => 'nome',
+        'categorie' => 'categorie'
 	);
 
     // stili della vista
@@ -46,7 +47,8 @@
         'id' => 'd-none d-md-table-cell',
         'cliente' => 'text-left d-none d-md-table-cell',
         'tipologia' => 'text-left',
-        '__label__' => 'text-left'
+        'nome' => 'text-left',
+        'categorie' => 'text-left'
     );
 
     // inclusione filtri speciali

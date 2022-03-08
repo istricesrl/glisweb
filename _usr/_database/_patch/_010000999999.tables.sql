@@ -154,8 +154,8 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
 -- verifica: 2022-02-03 11:12 Chiara GDL
 CREATE TABLE `anagrafica_certificazioni` (
   `id` int NOT NULL,
-  `id_certificazione` int DEFAULT NULL,
   `id_anagrafica` int DEFAULT NULL,
+  `id_certificazione` int DEFAULT NULL,
   `id_emittente` int DEFAULT NULL,
   `nome` char(1) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
@@ -1776,6 +1776,24 @@ CREATE TABLE IF NOT EXISTS `progetti_categorie` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000027600
+
+-- progetti_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE TABLE `progetti_certificazioni` (
+  `id` int NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_certificazione` int DEFAULT NULL,
+  `nome` char(1) DEFAULT NULL,
+  `note` text,
+  `se_richiesta` int(1) DEFAULT NULL,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
+
 --| 010000027800
 
 -- progetti_matricole
@@ -1897,7 +1915,7 @@ CREATE TABLE IF NOT EXISTS `regioni` (
 -- tipologia: tabella relazione
 -- verifica: 2022-02-03 11:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `id_anagrafica_collegata` int(11) DEFAULT NULL,
@@ -1913,7 +1931,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
 -- tipologia: tabella relazione
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `id_documento_collegato` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1928,7 +1946,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
 -- tipologia: tabella relazione
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_documenti_articolo` int(11) DEFAULT NULL,
   `id_documenti_articolo_collegato` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1943,7 +1961,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
 -- tipologia: tabella relazione
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `id_pagamento` int(11) DEFAULT NULL,
   `id_pagamento_collegato` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2013,7 +2031,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `data_fine` date DEFAULT NULL,
   `codice` char(64) DEFAULT NULL,
   `note` text,
-  `se_automatico` int(11) DEFAULT NULL,
+  `se_automatico` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

@@ -337,8 +337,8 @@
     colonna                                                  | descrizione
     ---------------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_certificazione.id                             | l'ID dell'associazione fra anagrafica e certificazione
-    anagrafica_certificazione.id_certificaziona              | l'ID della certificaziona
     anagrafica_certificazione.id_anagrafica                  | l'ID dell'anagrafica
+    anagrafica_certificazione.id_certificaziona              | l'ID della certificaziona
     anagrafica_certificazione.id_emittente                   | l'ID dell'anagrafica emittente
     anagrafica_certificazione.nome			                 | mome della certificazione associata all'anagrafica	
     anagrafica_certificazione.codice                         | codice della certificazione
@@ -365,8 +365,8 @@
     colonna                                                     | descrizione
     ------------------------------------------------------------|---------------------------------------------------------------------------------------
     anagrafica_certificazione_view.id                           | -
-    anagrafica_certificazione_view.id_certificaziona            | -
     anagrafica_certificazione_view.certificazione		        | nome descrittivo della certificazione
+    anagrafica_certificazione_view.id_certificaziona            | -
     anagrafica_certificazione_view.id_anagrafica                | -
     anagrafica_certificazione_view.anagrafica			        | anagrafica collegata alla certificazione
     anagrafica_certificazione_view.id_emittente                 | -
