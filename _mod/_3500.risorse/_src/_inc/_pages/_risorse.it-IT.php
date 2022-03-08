@@ -15,11 +15,10 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_risorse.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'risorse.view',
-									'risorse.tools' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'risorse' ),
+	    'etc'		=> array( 'tabs'	=> array(	'risorse.view' ) ),
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'risorse' ),
 									'priority'	=> '025' ) ) )				
-	    );
+	);
 
     // gestione risorse
 	$p['risorse.form'] = array(
@@ -113,4 +112,30 @@
 		'macro'		=> array( $m . '_src/_inc/_macro/_risorse.form.metadati.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['risorse.form']['etc']['tabs'] )
+	);
+
+	// vista risorse categorie
+	$p['categorie.risorse.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'categorie' ),
+		'h1'		=> array( $l		=> 'categorie' ),
+		'parent'		=> array( 'id'		=> 'risorse.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.risorse.view.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'categorie.risorse.view' ) ),
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
+									'priority'	=> '010' ) ) )				
+	);
+
+	// gestione risorse categorie
+	$p['categorie.risorse.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'categorie.risorse.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.risorse.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.risorse.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'categorie.risorse.form' ) )
 	);
