@@ -26,7 +26,7 @@ SELECT
   mastri.id,
   mastri.nome,
   articoli.id AS id_articolo,
-  articoli.nome AS articolo,
+  concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
   matricole.id AS id_matricola,
   matricole.matricola,
   matricole.data_scadenza,
@@ -42,6 +42,7 @@ FROM mastri
     ON documenti_articoli.id_mastro_destinazione = mastri.id
       OR mastri_path_check( documenti_articoli.id_mastro_destinazione, mastri.id ) = 1
   LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
@@ -51,7 +52,7 @@ SELECT
   mastri.id,
   mastri.nome,
   articoli.id AS id_articolo,
-  articoli.nome AS articolo,
+  concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
   matricole.id AS id_matricola,
   matricole.matricola,
   matricole.data_scadenza,
@@ -67,6 +68,7 @@ FROM mastri
     ON documenti_articoli.id_mastro_provenienza = mastri.id
       OR mastri_path_check( documenti_articoli.id_mastro_provenienza, mastri.id ) = 1
   LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
@@ -146,7 +148,7 @@ FROM (
 SELECT
   mastri.id,
   mastri.nome,
-  articoli.nome AS articolo,
+  concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
   articoli.id AS id_articolo,
   matricole.matricola,
   matricole.data_scadenza,
@@ -162,6 +164,7 @@ FROM mastri
     ON documenti_articoli.id_mastro_destinazione = mastri.id
       OR mastri_path_check( documenti_articoli.id_mastro_destinazione, mastri.id ) = 1
   LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
@@ -170,7 +173,7 @@ UNION
 SELECT
   mastri.id,
   mastri.nome,
-  articoli.nome AS articolo,
+  concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
   articoli.id AS id_articolo,
   matricole.matricola,
   matricole.data_scadenza,
@@ -186,6 +189,7 @@ FROM mastri
     ON documenti_articoli.id_mastro_provenienza = mastri.id
       OR mastri_path_check( documenti_articoli.id_mastro_provenienza, mastri.id ) = 1
   LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola

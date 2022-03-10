@@ -628,14 +628,15 @@ CREATE OR REPLACE VIEW `articoli_view` AS
         articoli.durata,
         articoli.id_udm_durata,
 		articoli.nome,
-		concat(
-			articoli.id_prodotto,
-			' / ',
+		concat_ws(
+			' ',
 			articoli.id,
-			' / ',
+			'/',
+			prodotti.nome,
 			articoli.nome
 		) AS __label__
 	FROM articoli
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
 --| 090000001600
@@ -2939,12 +2940,12 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 		matricole.matricola,
 		matricole.data_scadenza,
 		matricole.nome,
-		concat_ws( ' ', articoli.id, prodotti.nome, articoli.nome, matricole.matricola ) AS __label__
+		concat_ws( ' ', matricole.matricola, '/', articoli.id, '/', prodotti.nome, articoli.nome, concat( 'scad. ', matricole.data_scadenza ) ) AS __label__
 	FROM matricole
 		LEFT JOIN anagrafica AS a1 ON a1.id = matricole.id_produttore
 		LEFT JOIN marchi ON marchi.id = matricole.id_marchio
 		LEFT JOIN articoli ON articoli.id = id_articolo
-		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto;
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
 --| 090000021600
