@@ -24,6 +24,9 @@
         ),
         'categorie_risorse' => array(
 			CONTROL_FULL => array( 'roots' )
-	    )
+	    ),
+        'risorse_categorie' => array(
+		    CONTROL_FULL => array( 'roots' )
+		)
 	    )
 	);

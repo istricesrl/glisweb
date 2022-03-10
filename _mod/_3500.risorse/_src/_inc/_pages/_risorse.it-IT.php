@@ -140,7 +140,7 @@
 		'etc'		=> array( 'tabs'	=> array(	'categorie.risorse.form',
 													'categorie.risorse.form.sem',
 													'categorie.risorse.form.testo',
-#													'categorie.risorse.form.prodotti',
+													'categorie.risorse.form.prodotti',
 													'categorie.risorse.form.macro',
 													'categorie.risorse.form.immagini',
 													'categorie.risorse.form.video',
@@ -169,6 +169,18 @@
 	    'parent'		=> array( 'id'		=> 'categorie.risorse.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.risorse.form.testo.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.risorse.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.risorse.form']['etc']['tabs'] )
+	);
+
+	// gestione categorie prodotti
+	$p['categorie.risorse.form.prodotti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'prodotti' ),
+	    'h1'		=> array( $l		=> 'prodotti' ),
+	    'parent'		=> array( 'id'		=> 'categorie.risorse.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.risorse.form.prodotti.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.risorse.form.prodotti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['categorie.risorse.form']['etc']['tabs'] )
 	);
