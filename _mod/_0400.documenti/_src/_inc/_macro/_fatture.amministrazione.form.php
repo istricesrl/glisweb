@@ -50,7 +50,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1' 
+	    'SELECT id, __label__ FROM anagrafica_view_static' 
 	);
 
 	// tendina coupon
