@@ -98,7 +98,16 @@
 	    'h1'		=> array( $l		=> 'agenda' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.agenda.html' ),
 	    'parent'		=> array( 'id'		=> 'app' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_app.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_app.agenda.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
     
+	$p['cartellini_app_dettaglio_attivita'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'dettaglio' ),
+	    'h1'		=> array( $l		=> 'dettaglio' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.agenda.dettaglio.html' ),
+	    'parent'		=> array( 'id'		=> NULL ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_app.agenda.dettaglio.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
