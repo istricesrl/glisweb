@@ -2,6 +2,7 @@
     <div class="row subnav">
         {% for child in page.children.id %}
         {% set obj = pages[ child ] %}
+        {% if obj.icon %}
         <div class="col-12 col-md-4">
             {% if obj.modal %}
             <a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
@@ -20,7 +21,8 @@
                 </div>
                 </div>
             </a>
-            </div>
+        </div>
+        {% endif %}
         {% endfor %}
     </div>
 {% endif %}

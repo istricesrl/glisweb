@@ -26,7 +26,7 @@
             
             $interval = $future_date->diff($now);
             
-            $ct['etc']['ore'] = ($interval->format("%a") * 24) + $interval->format("%h"). " ore ". $interval->format(" %i minuti ");
+            $ct['etc']['ore'] = ($interval->format("%a") * 24) + $interval->format("%h"). " ore e ". $interval->format(" %i minuti ");
             
             
         }
