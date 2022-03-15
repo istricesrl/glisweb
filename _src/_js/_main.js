@@ -23,7 +23,7 @@
 	}
 
 	// restituisce un oggetto con longitudine e latitudine 
-	function getCoords(){
+	/*function getCoords(){
 		var startPos;
 		var lo;
 		var la;
@@ -36,7 +36,7 @@
 		};
   		navigator.geolocation.getCurrentPosition(geoSuccess);
 		//return( lo+","+la );
-	}
+	}*/
 
 	// restituisce un nome di file al netto del path
 	function basename(path) {

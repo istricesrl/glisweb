@@ -82,7 +82,7 @@
 		'etc'			=> array( 'tabs'	=> $p['righe.cartellini.form']['etc']['tabs'] )
 	);
 	
-	$p['app'] = array(
+/*	$p['app'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'web-app' ),
 	    'h1'		=> array( $l		=> 'web-app' ),
@@ -90,7 +90,7 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_app.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
-	);
+	);*/
 
 	$p['cartellini_app_agenda'] = array(
 	    'sitemap'		=> false,
@@ -100,7 +100,9 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_app.agenda.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'				=> array( 'app'	=> array(	'' => 	array(	'label'		=> array( $l => 'agenda' ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'app' ),
+										'priority'	=> '010' ) ),
+										'app'	=> array(	'' => 	array(	'label'		=> array( $l => 'agenda' ),
 									'priority'	=> '020' ) ) )
 	);
     
