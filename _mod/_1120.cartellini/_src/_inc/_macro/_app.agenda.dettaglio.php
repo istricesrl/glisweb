@@ -4,7 +4,7 @@
 
         $ct['etc']['attivita'] = mysqlSelectRow(
             $cf['mysql']['connection'], 
-            'SELECT attivita_view.*, tipologie_attivita.nome AS tipologia, todo.id_responsabile , concat_ws(\' \', coalesce(anagrafica.cognome, \'\'), coalesce(anagrafica.nome, \'\') ) AS responsabile, group_concat( DISTINCT telefoni.numero SEPARATOR \' | \' ) AS telefoni FROM attivita_view '.
+            'SELECT attivita_view.*, tipologie_attivita.nome AS tipologia, todo.id_responsabile , todo.testo AS testo_todo, concat_ws(\' \', coalesce(anagrafica.cognome, \'\'), coalesce(anagrafica.nome, \'\') ) AS responsabile, group_concat( DISTINCT telefoni.numero SEPARATOR \' | \' ) AS telefoni FROM attivita_view '.
             'LEFT JOIN todo ON todo.id = attivita_view.id_todo '.
             'LEFT JOIN anagrafica ON anagrafica.id = todo.id_responsabile '.
             'LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id '.

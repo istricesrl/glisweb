@@ -135,7 +135,7 @@
   <p>rif {{ obj.responsabile }} {% for telefoni in etc.tel %}<a onclick="window.open('tel:{{ telefoni }}');">{{ telefoni }}</a>{% endfor %}</p>
   <hr>
   <h1>attività di tipo {{ obj.tipologia }}</h1>
-  <h3>{{ obj.note_programmazione }}</h3>
+  <h3>{{ obj.testo_todo }}</h3>
   <hr>
   {% if obj.data_attivita and obj.ora_inizio %}
     {% if obj.ora_fine %}
