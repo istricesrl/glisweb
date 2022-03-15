@@ -48,7 +48,7 @@
                 <p class="media-text">rif {{ obj.responsabile }} {{ obj.telefoni }}</p>
             </div>
             <div class="media-left align-middle">
-              {% if obj.ora_inizio and not obj.ora_fine %}
+              {% if obj.ora_inizio and (not obj.ora_fine > 0) %}
               <i class="fa fa-clock-o" aria-hidden="true"></i>
               {% elseif obj.ora_inizio and  obj.ora_fine %}
               <i class="fa fa-check" aria-hidden="true"></i>

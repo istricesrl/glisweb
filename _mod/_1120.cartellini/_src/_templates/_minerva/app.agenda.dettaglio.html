@@ -18,7 +18,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">no</button>
-        <button type="button" class="btn btn-success" onclick="start()">sì</button>
+        <button id="btnstart" type="button" class="btn btn-success" onclick="start()">sì</button>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-danger" data-dismiss="modal">no</button>
-        <button type="button" class="btn btn-success" onclick="stop()">sì</button>
+        <button id="btnstop" type="button" class="btn btn-success" onclick="stop()">sì</button>
       </div>
     </div>
   </div>
@@ -69,6 +69,7 @@
 
 
   function start(){
+    $('#btnstart').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var startPos;
         var geoSuccess = function(position) {
           startPos = position;
@@ -93,6 +94,7 @@
       }  
 
       function stop(){
+        $('#btnstop').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var startPos;
         var geoSuccess = function(position) {
             startPos = position;
