@@ -1,14 +1,14 @@
 <?php
 
     /**
-     * task che gira, preleva le righe di periodi_variazioni_attivita per le variazioni approvate che hanno timestamp_creazione_cartellino NULL e
-     * - crea le attività sostitutive per il cartellino (ferie, permessi, ...) corrispondenti
+     * task che può girare automaticamente o essere richiamato manualmente
+     * preleva le righe di periodi_variazioni_attivita per le variazioni approvate che hanno timestamp_creazione_cartellino NULL e
+     * - crea le attività sostitutive per il cartellino (ferie, permessi, ...) corrispondenti, dopo aver verificato che non esistano già
      * - setta timestamp_creazione_cartellino (la riga non dovrà più essere controllata)
      *
      *
-     * @todo commentare
-     * @todo usare le funzioni di ACL per verificare se l'azione è autorizzata
-     * @file
+     * può ricevere in ingresso
+     * - id: id del periodo di variazione da elaborare
      *
      */
 
@@ -19,14 +19,27 @@
 
      // inizializzo l'array del risultato
 	$status = array();
-
-    $p = mysqlSelectRow(
-        $cf['mysql']['connection'],
-        'SELECT pv.*, v.id_anagrafica, v.id_tipologia_inps FROM periodi_variazioni_attivita as pv '
-        .'LEFT JOIN variazioni_attivita AS v ON pv.id_variazione = v.id '
-        .'WHERE v.data_approvazione IS NOT NULL AND pv.timestamp_creazione_cartellino IS NULL '
-        .'ORDER BY pv.timestamp_creazione_cartellino LIMIT 1'
-    );
+	
+	if( !empty( $_REQUEST['id'] ) ){
+		$status['id'] = $_REQUEST['id'];
+        $status['info'][] = 'id passato in request';
+		$p = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT pv.*, v.id_anagrafica, v.id_tipologia_inps FROM periodi_variazioni_attivita as pv '
+			.'LEFT JOIN variazioni_attivita AS v ON pv.id_variazione = v.id '
+			.'WHERE pv.id = ?',
+			array( array( 's' => $_REQUEST['id']) )
+		);
+	}
+	else{
+		$p = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT pv.*, v.id_anagrafica, v.id_tipologia_inps FROM periodi_variazioni_attivita as pv '
+			.'LEFT JOIN variazioni_attivita AS v ON pv.id_variazione = v.id '
+			.'WHERE v.data_approvazione IS NOT NULL AND pv.timestamp_creazione_cartellino IS NULL '
+			.'ORDER BY pv.timestamp_creazione_cartellino LIMIT 1'
+		);
+	}
 
     // se ho una riga da elaborare
     if( !empty( $p ) ){
@@ -81,18 +94,59 @@
             
                 if( $ore > 0 ){
 
-                    $status['info'][] = 'inserisco riga di attivita id_anagrafica ' . $p['id_anagrafica'] . ' - data ' . $g['data'] . ', ore ' . $ore . ', tipologia_inps ' .  $p['id_tipologia_inps'];
-                    
-                    $a = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'INSERT INTO attivita (id_anagrafica, data_attivita, ore, id_tipologia_inps) VALUES (?, ?, ?, ?)',
-                        array(
-                            array( 's' => $p['id_anagrafica'] ),
+                 #   $status['info'][] = 'mi preparo ad inserire riga di attivita id_anagrafica ' . $p['id_anagrafica'] . ' - data ' . $g['data'] . ', ore ' . $ore . ', tipologia_inps ' .  $p['id_tipologia_inps'];
+					
+					$tinps = mysqlSelectValue(
+						$cf['mysql']['connection'],
+						'SELECT nome FROM tipologie_attivita_inps WHERE id = ?',
+						array( array( 's' => $p['id_tipologia_inps'] ) )
+					);
+					
+					$nomeattivita = 'riga creata automaticamente per variazione';
+					if( !empty( $tinps ) ){
+						$nomeattivita .= ' ' . $tinps;
+					}
+					
+					$nomeattivita .= ' - periodo ' . $status['id'];
+					
+					$status['def_righe_attivita'][] = array(
+						$p['id_anagrafica'],
+						$g['data'],
+						$ore,
+						$p['id_tipologia_inps'],
+						$nomeattivita
+					);
+					
+					// verifico che non esistà già la riga di attività per la variazione corrente
+					$att = mysqlSelectValue(
+						$cf['mysql']['connection'],
+						'SELECT count(id) FROM attivita WHERE id_anagrafica = ? AND data_attivita = ? AND ore = ? AND id_tipologia_inps = ?',
+						array(
+							array( 's' => $p['id_anagrafica'] ),
                             array( 's' => $g['data'] ),
                             array( 's' => $ore ),
                             array( 's' => $p['id_tipologia_inps'] )
-                        )
-                    );
+						)
+					);
+                    
+					if( empty( $att ) || $att == 0 ){
+						$a = mysqlQuery(
+							$cf['mysql']['connection'],
+							'INSERT INTO attivita (id_anagrafica, data_attivita, ore, id_tipologia_inps, nome ) VALUES (?, ?, ?, ?, ?)',
+							array(
+								array( 's' => $p['id_anagrafica'] ),
+								array( 's' => $g['data'] ),
+								array( 's' => $ore ),
+								array( 's' => $p['id_tipologia_inps'] ),
+								array( 's' => $nomeattivita )
+							)
+						);
+						
+						$status['attivita'][$g['data']] = $a;
+					}
+					else{
+						$status['attivita'][$g['data']] = 'riga di attivita presente, non la ricreo';
+					}
                 
                 }
             }
@@ -131,3 +185,6 @@
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    buildJson( $status );
 	}
+	
+	appendToFile( print_r( $status, true ) . PHP_EOL, 'var/log/variazioni.attivita.create/' .  date("Ym") . '.log' );
+	
