@@ -133,22 +133,6 @@
        }
    }
 
-   // dati che dipendono dal sito
-   if( isset( $_REQUEST[ $ct['form']['table'] ]['id_sito'] ) ) {
-
-       // tendina genitori
-       $ct['etc']['select'][ $ct['form']['table'] ] = mysqlCachedIndexedQuery(
-           $cf['memcache']['index'],
-           $cf['memcache']['connection'],
-               $cf['mysql']['connection'],
-           'SELECT id, __label__ FROM pagine_view WHERE id_sito = ? AND pagine_path_check( pagine_view.id, ? ) = 0',
-           array(
-               array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_sito'] ),
-               array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
-           );
-
-   }
-
    // dati che dipendono dal template
    if( isset( $_REQUEST[ $ct['form']['table'] ]['template'] ) ) {
 
