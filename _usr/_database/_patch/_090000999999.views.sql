@@ -627,16 +627,37 @@ CREATE OR REPLACE VIEW `articoli_view` AS
         articoli.id_udm_capacita,
         articoli.durata,
         articoli.id_udm_durata,
-		articoli.nome,
+		concat_ws(
+			' ',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat_ws(
+					' ',
+					articoli.peso,
+					udm_peso.sigla
+				),
+				''
+			)
+		) AS nome,
 		concat_ws(
 			' ',
 			articoli.id,
 			'/',
 			prodotti.nome,
-			articoli.nome
+			articoli.nome,
+			coalesce(
+				concat_ws(
+					' ',
+					articoli.peso,
+					udm_peso.sigla
+				),
+				''
+			)
 		) AS __label__
 	FROM articoli
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
 ;
 
 --| 090000001600
@@ -5831,11 +5852,13 @@ CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
 		tipologie_progetti.nome,
 		tipologie_progetti.html_entity,
 		tipologie_progetti.font_awesome,
+		tipologie_progetti.se_produzione,
 		tipologie_progetti.se_contratto,
 		tipologie_progetti.se_pacchetto,
 		tipologie_progetti.se_progetto,
 		tipologie_progetti.se_consuntivo,
 		tipologie_progetti.se_forfait,
+		tipologie_progetti.se_didattica,
 		tipologie_progetti.id_account_inserimento,
 		tipologie_progetti.id_account_aggiornamento,
 		tipologie_progetti_path( tipologie_progetti.id ) AS __label__

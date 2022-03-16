@@ -20,7 +20,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    '__label__' => 'articolo',
+	    'nome' => 'articolo',
         'id_prodotto' => 'id_prodotto',
         'ean' => 'ean'
 	);
@@ -28,7 +28,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'text-left',
-	    '__label__' => 'text-left',
+	    'nome' => 'text-left',
         'id_prodotto' => 'd-none'
 	);
 
