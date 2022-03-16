@@ -75,6 +75,7 @@
 														'progetti.produzione.form.attivita',
 														'progetti.produzione.form.pause',
 														'progetti.produzione.form.chiusura',
+														'progetti.produzione.form.file',
 														'progetti.produzione.form.pianificazioni',
 														'progetti.produzione.form.tools' ) )
 	);
@@ -139,6 +140,19 @@ $p['progetti.produzione.form.chiusura'] = array(
 	'macro'			=> array( $m.'_src/_inc/_macro/_progetti.produzione.form.chiusura.php' ),
 	'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+);
+
+// gestione progetti file
+$p['progetti.produzione.form.file'] = array(
+	'sitemap'		=> false,
+	'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+	'title'		=> array( $l		=> 'file' ),
+	'h1'		=> array( $l		=> 'file' ),
+	'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+	'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.produzione.form.file.html' ),
+	'macro'		=> array( $m . '_src/_inc/_macro/_progetti.produzione.form.file.php' ),
+	'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 );
 
 // gestione progetti tools
