@@ -19,15 +19,15 @@
         array(
             'provider' => array(
                 'contanti' => array(
-                    'action_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.ok.php',    // URL della pagina per l'action del form di riepilogo
+                    'action_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.ck.php',     // URL della pagina per l'action del form di riepilogo (macro _carrello.checkout.php)
                 ),
                 'nexi' => array(
-                    'success_url'       => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.ok.php',                     // pagina di ritorno in caso di pagamento effettuato con successo
-                    'error_url'         => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.ko.php',                           // pagina di ritorno in caso di pagamento fallito
+                    'success_url'       => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.php',        // pagina di ritorno in caso di pagamento completato con successo o fallito (macro _carrello.esito.php)
+                    'error_url'         => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.php',        // pagina di ritorno in caso di pagamento completato con successo o fallito (macro _carrello.esito.php)
                 ),
                 'paypal' => array(
-                    'return_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.ok.php',              // pagina di ritorno in caso di pagamento completato con successo o fallito
-                    'cancel_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_acquisto.03.php',                 // pagina di ritorno in caso di interruzione della procedura di pagamento
+                    'return_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.php',        // pagina di ritorno in caso di pagamento completato con successo o fallito (macro _carrello.esito.php)
+                    'cancel_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_acquisto.03.php',  // pagina di ritorno in caso di interruzione della procedura di pagamento
                 )
             )
         )

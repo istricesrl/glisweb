@@ -12,7 +12,7 @@
 		$idCarrello = $_SESSION['carrello']['id'];
 
         // nome del file di ricevuta
-		$fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'contanti/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
+		$fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'diretti/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
 
         // imposto la timestamp di checkout
         $_SESSION['carrello']['timestamp_checkout'] = time();
@@ -42,6 +42,6 @@
         }
 
         // log
-        logWrite( 'checkout effettuato con successo per il carrello ' . $_SESSION['carrello']['id'], 'paypal', LOG_INFO );
+        logWrite( 'checkout effettuato con successo per il carrello ' . $_SESSION['carrello']['id'], 'ecommerce', LOG_INFO );
 
     }
