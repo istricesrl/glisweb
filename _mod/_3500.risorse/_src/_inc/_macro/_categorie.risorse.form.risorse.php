@@ -30,7 +30,7 @@
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'risorse.form';
-    $ct['view']['open']['table'] = 'prodotti';
+    $ct['view']['open']['table'] = 'risorse';
     $ct['view']['open']['field'] = 'id_risorsa';
 
     // pagina per l'inserimento di un nuovo oggetto
