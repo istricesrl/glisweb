@@ -17,7 +17,7 @@
     $t = null;
 
     // chiamo la funzione archiviumGetListaAziende()
-    $l = archiviumGetListaFePassive( $_REQUEST['idAzienda'] );
+    $l = archiviumGetListaFeAttive( $_REQUEST['idAzienda'] );
 
     // output
     $t .= '<pre>' . htmlspecialchars( print_r( $l, true ) ) . '</pre>';

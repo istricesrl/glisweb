@@ -250,9 +250,21 @@
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
 
-        // TODO fare la chiamata
+        // effettuo la chiamata
+        $l      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $s );
 
-        // TODO restituire il risultato
+        // aggiungo l'azienda a ogni elemento dell'array
+        foreach( $l as &$e ) {
+            $e['IDArchiviumAzienda'] = $idAzienda;
+        }
+
+        // debug
+        // var_dump( $u );
+        // var_dump( $s );
+        // print_r( $l );
+
+        // restituisco il risultato
+        return $l;
 
     }
 
