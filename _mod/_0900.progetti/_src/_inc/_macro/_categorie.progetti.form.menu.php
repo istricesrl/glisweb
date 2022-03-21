@@ -23,16 +23,16 @@
 	$ct['form']['table'] = 'categorie_progetti';
 
     // dati che dipendono dal template
-	if( isset( $_REQUEST['categorie_progetti']['template'] ) ) {
+	if( isset( $_REQUEST['progetti']['template'] ) ) {
 
 	    // controllo file standard
-		if( file_exists( DIR_BASE . $_REQUEST['categorie_progetti']['template'] . '/etc/template.conf' ) ) {
+		if( file_exists( DIR_BASE . $_REQUEST['progetti']['template'] . '/etc/template.conf' ) ) {
 
 		    // configurazione del template
-			$config = parse_ini_file( DIR_BASE . $_REQUEST['categorie_progetti']['template'] . '/etc/template.conf', true, INI_SCANNER_RAW );
+			$config = parse_ini_file( DIR_BASE . $_REQUEST['progetti']['template'] . '/etc/template.conf', true, INI_SCANNER_RAW );
 		}
 
-        foreach( glob( DIR_BASE . glob2custom( $_REQUEST['categorie_progetti']['template'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
+        foreach( glob( DIR_BASE . glob2custom( $_REQUEST['progetti']['template'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
 			$config = array_merge_recursive(
 				$config,
 				parse_ini_file( $addCnf, true, INI_SCANNER_RAW )

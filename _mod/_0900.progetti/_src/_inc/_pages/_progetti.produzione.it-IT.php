@@ -99,7 +99,7 @@
 		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.sem');
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.testo');
-			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.menu');
+		//	arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.menu');
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.immagini');
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.video');
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.audio');
@@ -356,7 +356,7 @@
 		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.sem');
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.testo');
-			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.menu');
+		//	arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.menu');
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.immagini');
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.video');
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.audio');
