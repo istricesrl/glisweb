@@ -95,7 +95,7 @@
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.chiusura' );
 		}
 
-		// RELAZIONI CON IL MODULO AMMINISTRAZIONE
+		// RELAZIONI CON IL MODULO contenuti
 		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.sem');
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.testo');
@@ -346,7 +346,144 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_categorie.progetti.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'categorie.progetti.form' ) )
+			'etc'			=> array( 'tabs'	=> array(	'categorie.progetti.form'
+															,'categorie.progetti.form.tools' ) )
 		);
 
 	}
+
+			// RELAZIONI CON IL MODULO AMMINISTRAZIONE
+		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.sem');
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.testo');
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.menu');
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.immagini');
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.video');
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.audio');
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.file');
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.macro');
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.metadati' );
+		}
+
+		$p['categorie.progetti.form.sem'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'SEM/SMM' ),
+			'h1'		=> array( $l		=> 'SEM/SMM' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.sem.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.sem.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+		
+		// form categorie.progetti testo
+		$p['categorie.progetti.form.testo'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'testo' ),
+			'h1'		=> array( $l		=> 'testo' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.testo.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.testo.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+	
+		$p['categorie.progetti.form.macro'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'macro' ),
+			'h1'		=> array( $l		=> 'macro' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.macro.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.macro.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+	
+		$p['categorie.progetti.form.immagini'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'immagini' ),
+			'h1'		=> array( $l		=> 'immagini' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.immagini.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.immagini.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+	
+		// form categorie.progetti video
+		$p['categorie.progetti.form.video'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'video' ),
+			'h1'		=> array( $l		=> 'video' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.video.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.video.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+		
+		// form categorie.progetti file
+		$p['categorie.progetti.form.file'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'file' ),
+			'h1'		=> array( $l		=> 'file' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.file.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.file.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+	
+		// form categorie.progetti audio
+		$p['categorie.progetti.form.audio'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'audio' ),
+			'h1'		=> array( $l		=> 'audio' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.audio.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.audio.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+	
+		// form categorie.progetti metadati
+		$p['categorie.progetti.form.metadati'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'metadati' ),
+			'h1'		=> array( $l		=> 'metadati' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.metadati.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.metadati.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+
+		// form categorie.progetti menu
+		$p['categorie.progetti.form.menu'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'menu' ),
+			'h1'		=> array( $l		=> 'menu' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.menu.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.menu.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
+
+		// gestione progetti tools
+		$p['categorie.progetti.form.tools'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'azioni' ),
+			'h1'			=> array( $l		=> 'azioni' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.tools.php' ),
+			'etc'			=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+		);

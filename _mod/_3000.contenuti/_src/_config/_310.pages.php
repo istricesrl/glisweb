@@ -144,7 +144,7 @@
                         $cf['contents']['pages'][ $pg['id'] ],
                         $pg['id'],
                         'id_pagina',
-                        array( 4, 16, 29, 14 )
+                        array(1, 3, 4, 5, 7, 8)
                     );
 
                     // aggiungo i metadati

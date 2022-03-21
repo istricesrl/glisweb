@@ -77,9 +77,9 @@ if ($cf['contents']['cached'] === false) {
                     'cacheable'        => (($pg['se_cacheable'] == 1) ? true : false),
                     'parent'        => array('id'        => $pip),
                     'template'        => array(
-                        'path'      =>  $pg['template'],
-                        'schema'    =>  $pg['schema_html'],
-                        'theme'     =>  $pg['tema_css']
+                        'path'      =>  ( !empty($pg['template']) ? $pg['template'] : $ct['progetti']['pages']['elenco']['template']) ,
+                        'schema'    => ( !empty($pg['schema_html'])  ? $pg['schema_html'] : $ct['progetti']['pages']['elenco']['schema']) ,
+                        'theme'     => ( !empty( $pg['tema_css'] ) ? $pg['tema_css'] : 'main.css') 
                     ),
                     'metadata'      => array('id_categoria_progetti' => $pg['id']),
                     'macro'            => $cf['catalogo']['pages']['elenco']['macro']
@@ -119,7 +119,7 @@ if ($cf['contents']['cached'] === false) {
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
                     'id_categoria_progetti',
-                    array(4, 16, 29, 14)
+                    array(1, 3, 4, 5, 7, 8)
                 );
 
                 aggiungiMetadati(
