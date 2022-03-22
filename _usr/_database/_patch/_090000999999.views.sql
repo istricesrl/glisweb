@@ -6159,6 +6159,8 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_lingua,
 		lingue.nome AS lingua,
 		video.id_ruolo,
+		video.id_progetto,
+		video.id_categoria_progetti,
 		ruoli_video.nome AS ruolo,
 		video.ordine,
 		video.nome,

@@ -3206,6 +3206,8 @@ ALTER TABLE `video`
  	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
  	ADD KEY `id_embed` (`id_embed`), 
  	ADD KEY `path` (`path`), 
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),

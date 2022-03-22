@@ -2937,6 +2937,8 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` INT(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
