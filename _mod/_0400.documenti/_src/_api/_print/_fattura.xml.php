@@ -40,7 +40,13 @@
 
     // root element
 	$xml->startElement( 'p:FatturaElettronica' );
-	$xml->writeAttribute( 'versione', 'FPR12' );
+	
+	// versione PA o privati
+	if(true){
+		$xml->writeAttribute( 'versione', 'FPR12' );
+	} else {
+		$xml->writeAttribute( 'versione', 'FPA12' );
+	}
 	$xml->writeAttribute( 'xmlns:ds', 'http://www.w3.org/2000/09/xmldsig#' );
 	$xml->writeAttribute( 'xmlns:p', 'http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2' );
 	$xml->writeAttribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
@@ -67,8 +73,13 @@
     // - - - ProgressivoInvio / identificativo univoco del documento
 	$xml->writeElement( 'ProgressivoInvio', $doc['progressivo_invio'] );
 
-    // - - - FormatoTrasmissione / valore fisso
-	$xml->writeElement( 'FormatoTrasmissione', 'FPR12' );
+	if( true ){
+		// - - - FormatoTrasmissione / privati
+		$xml->writeElement( 'FormatoTrasmissione', 'FPR12' );
+	} else {
+		// - - - FormatoTrasmissione / privati
+		$xml->writeElement( 'FormatoTrasmissione', 'FPA12' );
+	}
 
     // - - - CodiceDestinatario / codice SDI del destinatario
 	$xml->writeElement( 'CodiceDestinatario', $dst['codice_sdi'] );
@@ -312,7 +323,10 @@
 		if( ! empty( $row['codice_iva'] ) ) {
 		    $xml->writeElement( 'Natura', $row['codice_iva'] );
 		}
-
+		if( $row['importo_netto_unitario'] * $row['qtd'] != $row['importo_netto_totale'] ){
+			die( 'errore di arrotondamento riga '.($num+1).': '.$row['nome'].' importo totale '.$row['importo_netto_totale'] );
+		}
+		
 	    // - - - /DettaglioLinee
 		$xml->endElement();
 
@@ -374,6 +388,11 @@
 
 	    // - - - - ImportoPagamento / l'importo di questa scadenza
 		$xml->writeElement( 'ImportoPagamento', $row['importo_lordo_totale'] );
+
+		if( !empty( $row['iban'] ) ){
+			// - - - - iban 
+			$xml->writeElement( 'IBAN', $row['iban'] );
+		}
 
 	    // - - - /DettaglioPagamento
 		$xml->endElement();

@@ -21,7 +21,6 @@
 	    'FROM documenti '.
 	    'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
         'INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
-
 	    'WHERE documenti.id = ?',
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
@@ -141,10 +140,11 @@
         $cf['mysql']['connection'],
         'SELECT modalita_pagamento.codice AS codice_pagamento, '.
         'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
-        ' importo_netto_totale AS importo_lordo_totale  '.
+        ' importo_netto_totale AS importo_lordo_totale, iban.iban AS iban  '.
         'FROM pagamenti '.
         'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
+        'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
         'WHERE pagamenti.id_documento = ?',
         array( array( 's' => $doc['id'] ) )
     );
@@ -207,6 +207,7 @@
         'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
         array( array( 's' => $src['id'] ) )
     );
+
 
     // indirizzo fiscale
     $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
