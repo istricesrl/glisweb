@@ -447,30 +447,32 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 -- ruoli_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:11 Fabio Mosti
-REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`) VALUES
-(1,	NULL,	'titolare',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(2,	NULL,	'amministratore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(3,	NULL,	'socio',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(4,	NULL,	'dipendente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(5,	NULL,	'direttore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(6,	NULL,	'presidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(7,	NULL,	'tesoriere',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(8,	NULL,	'coordinatore',	NULL,	NULL,	1,	NULL,	NULL,	1),
-(9,	NULL,	'vicepresidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(10,	NULL,	'vicedirettore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(11,	NULL,	'segretario',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(13,	NULL,	'responsabile acquisti',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(14,	NULL,	'responsabile operativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(15,	NULL,	'operatore',	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(16,	NULL,	'responsabile',	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(17,	NULL,	'assistente',	NULL,	NULL,	1,	NULL,	NULL,	1),
-(18,	NULL,	'autore',	NULL,	NULL,	NULL,	NULL,	1,	NULL),
-(19,	NULL,	'genitore',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(20,	NULL,	'fratello',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(21,	NULL,	'tutore',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(23,	NULL,	'collega',	NULL,	NULL,	NULL,	1,	NULL,	NULL);
+REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_didattica`) VALUES
+(1,		NULL,	'titolare',						NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(2,		NULL,	'amministratore',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(3,		NULL,	'socio',						NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(4,		NULL,	'dipendente',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(5,		NULL,	'direttore',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(6,		NULL,	'presidente',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(7,		NULL,	'tesoriere',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(8,		NULL,	'coordinatore',					NULL,	NULL,	1,		NULL,	NULL,	1,		NULL),
+(9,		NULL,	'vicepresidente',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'vicedirettore',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	'segretario',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	'responsabile acquisti',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	'responsabile operativo',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	'operatore',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
+(16,	NULL,	'responsabile',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
+(17,	NULL,	'assistente',					NULL,	NULL,	1,		NULL,	NULL,	1,		NULL),
+(18,	NULL,	'autore',						NULL,	NULL,	NULL,	NULL,	1,		NULL,	NULL),
+(19,	NULL,	'genitore',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(20,	NULL,	'fratello',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(21,	NULL,	'tutore',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(22,	NULL,	'coniuge',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(23,	NULL,	'collega',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(24,	NULL,	'docente',						NULL,	NULL,	NULL,	NULL,	NULL,	1,		1),
+(25,	NULL,	'istruttore',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		1);
 
 --| 050000034200
 

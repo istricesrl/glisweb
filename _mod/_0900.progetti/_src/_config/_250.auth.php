@@ -49,6 +49,9 @@
             'pause_progetti' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
+            'progetti_anagrafica' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'progetti_categorie' => array(
                 CONTROL_FULL => array( 'roots' )
             )

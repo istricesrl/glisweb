@@ -58,25 +58,37 @@
                     <span class="label-top">codice</span>
                     {{ frm.inputRequired( table, '', '', 'id', '', '', request,  'now'|date('YmdHi') ) }}
                 </div>
-				<div class="col-12 col-md">
-					<span class="label-top">nome</span>
-					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
-				</div>
-            </div>
-
-            <div class="form-group form-row">
-                <div class="col-12 col-md-auto">
+                <div class="col-12 col-md">
                     <span class="label-top">disciplina</span>
 					<input type="hidden" name="{{ table }}[progetti_categorie][0][id]" value="{{ request[ table ].progetti_categorie.0.id }}">
 					<input type="hidden" name="{{ table }}[progetti_categorie][0][id_progetto]" value="__parent_id__" >
                     {{ frm.selectRequired( table, 'progetti_categorie', '0', 'id_categoria', '', etc.select.categorie_progetti, request, '', '1', '', '' ) }}
   				</div>
-				  <div class="col-12 col-md-auto">
+				<div class="col-12 col-md">
                     <span class="label-top">livello</span>
 					<input type="hidden" name="{{ table }}[progetti_categorie][1][id]" value="{{ request[ table ].progetti_categorie.1.id }}">
 					<input type="hidden" name="{{ table }}[progetti_categorie][1][id_progetto]" value="__parent_id__" >
                     {{ frm.selectRequired( table, 'progetti_categorie', '1', 'id_categoria', '', etc.select.categorie_progetti, request, '', '1', '', '' ) }}
   				</div>
+				<div class="col-12 col-md-auto">
+					<span class="label-top">inizio</span>
+					{{ frm.date( table, '', '', 'data_accettazione', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-auto">
+					<span class="label-top">fine</span>
+					{{ frm.date( table, '', '', 'data_chiusura', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-auto">
+					<span class="label-top">archiviazione</span>
+					{{ frm.date( table, '', '', 'data_archiviazione', '', '', request ) }}
+				</div>
+            </div>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+					<span class="label-top">nome</span>
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
+				</div>
             </div>
 
 			<div class="form-group form-row">

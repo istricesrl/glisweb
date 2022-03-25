@@ -34,7 +34,6 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'cliente' => 'cliente',
         'tipologia' => 'tipologia',
         'nome' => 'nome',
         'categorie' => 'categorie'
