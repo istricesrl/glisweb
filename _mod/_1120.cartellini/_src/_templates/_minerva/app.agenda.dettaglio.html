@@ -1,0 +1,170 @@
+{% import '_bin/_default.html' as frm %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+<!-- modal per iniziare un'attività -->
+<div class="modal fade" id="avvia" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Conferma avvio attività</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        sei sicuro di voler avviare l'attività?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">no</button>
+        <button id="btnstart" type="button" class="btn btn-success" onclick="start()">sì</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- modal per terminare un'attività -->
+<div class="modal fade" id="stop" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Conferma conclusione attività</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        sei sicuro di voler terminare l'attività?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">no</button>
+        <button id="btnstop" type="button" class="btn btn-success" onclick="stop()">sì</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?sensor=false"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+    var map;
+    var geocoder;
+    var lo;
+    var la;
+    window.onload = function() {
+  var startPos;
+  var geoSuccess = function(position) {
+    startPos = position;
+    //console.log(startPos.coords.latitude);
+    //console.log(startPos.coords.longitude);
+    lo =startPos.coords.longitude;
+    la =startPos.coords.latitude;
+    document.getElementById("map").innerHTML = '<iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q='+la+','+lo+'&t=&zoom=15&maptype=roadmap&ie=UTF8&iwloc=&output=embed"></iframe><div style="width:100%"><a href="https://pininthemap.com/embed-google-map" style="padding:10px;display:inline-block;float:right" target="_blank" data-inline="true" title="Embed Google Map - Pininthemap"><img src="https://pininthemap.com/img/more.svg" style="vertical-align:middle;" alt="Embed Google Map - Pininthemap"></a></div>';
+  };
+  navigator.geolocation.getCurrentPosition(geoSuccess);
+
+};
+
+
+
+
+  function start(){
+    $('#btnstart').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+        var startPos;
+        var geoSuccess = function(position) {
+          startPos = position;
+          console.log(startPos.coords.latitude);
+          console.log(startPos.coords.longitude);
+          navigator.geolocation.getCurrentPosition(geoSuccess);
+          var url = "{{site.url}}api/attivita/{{etc.attivita.id}}?attivita[ora_inizio]={{'now'|date('H:i:s')}}&attivita[data_attivita]={{'now'|date('Y-m-d')}}&attivita[latitudine_ora_inizio]="+startPos.coords.latitude+"&attivita[longitudine_ora_inizio]="+startPos.coords.longitude;
+          var xhr = new XMLHttpRequest();
+          xhr.open("PUT", url);
+          xhr.setRequestHeader("Accept", "application/json");
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+                window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            }};
+          var data = "PUT request data";
+          xhr.send(data);
+        };
+
+        navigator.geolocation.getCurrentPosition(geoSuccess);
+      }  
+
+      function stop(){
+        $('#btnstop').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+        var startPos;
+        var geoSuccess = function(position) {
+            startPos = position;
+            console.log(startPos.coords.latitude);
+            console.log(startPos.coords.longitude);
+            var url = "{{site.url}}api/attivita/{{etc.attivita.id}}?attivita[ora_fine]={{'now'|date('H:i:s')}}&attivita[latitudine_ora_fine]="+startPos.coords.latitude+"&attivita[longitudine_ora_fine]="+startPos.coords.longitude;
+            var xhr = new XMLHttpRequest();
+            xhr.open("PUT", url);
+            xhr.setRequestHeader("Accept", "application/json");
+            xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                  console.log(xhr.status);
+                  console.log(xhr.responseText);
+                  window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            }};
+            var data = "PUT request data";
+            xhr.send(data);
+        };
+        navigator.geolocation.getCurrentPosition(geoSuccess);
+        
+      }  
+
+</script>
+<!--
+  curl --location -g --request PUT 'https://<URL>/api/attivita/<ID>?attivita[ora_inizio]=<H>&attivita[data_attivita]=<D>&attivita[latitudine_ora_inizio]=<LT>&attivita[longitudine_ora_inizio]=<LG>' \
+--header 'Accept: application/json' \
+--header 'Authorization: Basic <AUTH>'
+
+-->
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column mt-3">
+
+<div class="form-gruop">
+  <div class="row subnav">
+  {% set obj = etc.attivita %}
+  <div class="col-12 col-md">
+  <h1>{{ obj.ora_inizio_programmazione|date("H:i") }} - {{ obj.ora_fine_programmazione|date("H:i") }}</h1>
+  <h3>{{ obj.progetto }}</h3>
+  <p>{{ obj.indirizzo }}</p>
+  <p>rif {{ obj.responsabile }} {% for telefoni in etc.tel %}<a onclick="window.open('tel:{{ telefoni }}');">{{ telefoni }}</a>{% endfor %}</p>
+  <hr>
+  <h1>attività di tipo {{ obj.tipologia }}</h1>
+  <h3>{{ obj.testo_todo }}</h3>
+  <hr>
+  {% if obj.data_attivita and obj.ora_inizio %}
+    {% if obj.ora_fine %}
+    <h1>attività svolta dalle ore {{  obj.ora_inizio|date("H:i") }} alle {{ obj.ora_fine|date("H:i") }}</h1>
+    {% else %}
+    <h1>attività in corso da {{ etc.ore }}</h1>
+    <button class="btn btn-secondary" data-toggle="modal" data-target="#stop">ferma attività</button>
+    <div class="form-gruop mt-2">
+      <h3>la tua posizione</h3>
+      <div id="map" class="embed-google-map"></div>
+    </div>    
+    {% endif %}
+  {% else %}
+    <button class="btn btn-secondary" data-toggle="modal" data-target="#avvia">inizia attività</button>
+    <div class="form-gruop mt-2">
+      <h3>la tua posizione</h3>
+      <div id="map" class="embed-google-map"></div>
+    </div>
+    
+  {% endif %}
+  </div>
+
+</div>
+</div>
+
+
+</div>
+</section>
+
+{% endblock %}
