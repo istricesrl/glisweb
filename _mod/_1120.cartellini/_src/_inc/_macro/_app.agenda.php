@@ -1,5 +1,5 @@
 <?php
-
+ //$_SESSION['account']['id_anagrafica'] =1;
 
     if( !isset($_REQUEST['__d__'])){
 
