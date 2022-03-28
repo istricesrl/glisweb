@@ -36,11 +36,10 @@
     </form>
 <div class="form-gruop">
   <div class="row subnav">
-  {% for obj in etc.attivita %}
+    {% for obj in etc.attivita %}
     <div class="col-12 col-md-6">
         <a href="{{ pages.cartellini_app_dettaglio_attivita.url[ localization.language.ietf ] }}?attivita={{ obj.id }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
             <div class="media">
-
             <div class="media-body">
                 <h5 class="media-title">{{ obj.ora_inizio_programmazione|date("H:i") }} - {{ obj.ora_fine_programmazione|date("H:i") }}</h5>
                 <h5 class="media-title">{{ obj.progetto }}</h5>
@@ -48,17 +47,15 @@
                 <p class="media-text">rif {{ obj.responsabile }} {{ obj.telefoni }}</p>
             </div>
             <div class="media-left align-middle">
-              {% if obj.ora_inizio and (not obj.ora_fine > 0) %}
+              {% if obj.ora_inizio > 0 and (not (obj.ora_fine > 0)) %}
               <i class="fa fa-clock-o" aria-hidden="true"></i>
-              {% elseif obj.ora_inizio and  obj.ora_fine %}
+              {% elseif obj.ora_inizio > 0 and obj.ora_fine > 0 %}
               <i class="fa fa-check" aria-hidden="true"></i>
               {% endif %}
           </div>
             </div>
         </a>
       </div>
-
-
 {% endfor %}
 </div>
 </div>
