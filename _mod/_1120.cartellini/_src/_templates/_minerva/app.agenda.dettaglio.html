@@ -62,9 +62,12 @@
       // console.log(startPos.coords.longitude);
         lo =startPos.coords.longitude;
         la =startPos.coords.latitude;
+        document.getElementById("info").innerHTML = '<i class="fa fa-map-marker" aria-hidden="true"></i> geololcalizzazione attiva, la posizione verrà memorizzata in fase di timbratura';
         document.getElementById("map").innerHTML = '<iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q='+la+','+lo+'&t=&zoom=15&maptype=roadmap&ie=UTF8&iwloc=&output=embed"></iframe><div style="width:100%"><a href="https://pininthemap.com/embed-google-map" style="padding:10px;display:inline-block;float:right" target="_blank" data-inline="true" title="Embed Google Map - Pininthemap"><img src="https://pininthemap.com/img/more.svg" style="vertical-align:middle;" alt="Embed Google Map - Pininthemap"></a></div>';
       };
       navigator.geolocation.getCurrentPosition(geoSuccess,  function error(err) {
+        document.getElementById("info").innerHTML = '<span class="fa-stack">  <i class="fa fa-map-marker fa-stack-1x"></i>  <i class="fa fa-ban fa-stack-2x "></i></span> geololcalizzazione non attiva, la posizione non verrà memorizzata in fase di timbratura';
+        $('#tp').hide();
       console.warn(`ERROR(${err.code}): ${err.message}`);
     }, {timeout:10000});
 };
@@ -197,8 +200,11 @@
   {% else %}
     <button class="btn btn-secondary" data-toggle="modal" data-target="#avvia">inizia attività</button>
     <div class="form-gruop mt-2">
-      <h3>la tua posizione</h3>
+      <h3 id="tp">la tua posizione</h3>
+      <div id="info"></div>
       <div id="map" class="embed-google-map"></div>
+      
+
     </div>
     
   {% endif %}
