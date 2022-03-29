@@ -93,9 +93,14 @@
     // stato del login
 	$cf['auth']['status'] = NULL;
 	$cf['auth']['jwt']['pass'] = NULL;
-	$cf['auth']['jwt']['token'] = NULL;
 
-    // intercetto eventuali richieste di autenticazione HTTP
+    if( isset( $cf['auth']['jwt']['secret'] ) ) {
+        $cf['auth']['jwt']['secret'] .= date( 'Y-m-d' );
+    }
+
+	// $cf['session']['jwt']['token'] = NULL;
+
+	// intercetto eventuali richieste di autenticazione HTTP
 	if( ! empty( $_SERVER['PHP_AUTH_USER'] ) && ! empty( $_SERVER['PHP_AUTH_PW'] ) ) {
 	    $_REQUEST['__login__']['user'] = $_SERVER['PHP_AUTH_USER'];
 	    $_REQUEST['__login__']['pasw'] = $_SERVER['PHP_AUTH_PW'];
@@ -184,7 +189,7 @@
 					// JWT per il login corrente
 					// NOTA a cosa serve questo? quando viene usato $cf['auth']['jwt']['token']?
 					if( ! empty( $cf['auth']['jwt']['secret'] ) ) {
-						$cf['auth']['jwt']['token'] = getJwt(
+						$cf['session']['jwt']['token'] = getJwt(
 							array(
 								'id' => $_SESSION['account']['id'],
 								'user' => $_SESSION['account']['username']
@@ -342,7 +347,7 @@
 
 						// JWT per il login corrente
 						if( ! empty( $cf['auth']['jwt']['secret'] ) ) {
-							$cf['auth']['jwt']['token'] = getJwt(
+							$cf['session']['jwt']['token'] = getJwt(
 								array(
 									'id' => $_SESSION['account']['id'],
 									'user' => $_SESSION['account']['username']
@@ -403,3 +408,4 @@
 	// print_r( $cf['localization']['language'] );
 	// print_r( $_SESSION );
 	// print_r( $cf['auth']['jwt'] );
+	// print_r( $cf['session'] );
