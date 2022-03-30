@@ -1995,7 +1995,8 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-   WHERE documenti.id_tipologia = 11
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
 --| 090000015000

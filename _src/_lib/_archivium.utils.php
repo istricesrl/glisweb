@@ -581,6 +581,9 @@
             );
         }
 
+        // TODO
+        // aggiungere la categoria azienda gestita al cliente
+
         // cerco o creo il destinatario
         if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
             $i['idFornitore'] = mysqlInsertRow(
@@ -606,6 +609,9 @@
                 'anagrafica'
             );
         }
+
+        // TODO
+        // aggiungere la categoria fornitore al fornitore
 
         // aggiornamento view statica
         mysqlQuery( $cf['mysql']['connection'], 'CALL anagrafica_view_static( ? )', array( array( 's' => $i['idFornitore'] ) ) );

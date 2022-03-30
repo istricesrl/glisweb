@@ -47,7 +47,7 @@
      * @todo documentare
      *
      */
-    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL ) {
+    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $auth = CURLAUTH_BASIC ) {
 
 	// inizializzo l'oggetto CURL
 	    $curl = curl_init();
@@ -70,11 +70,13 @@
 	// autenticazione
 	    if( $user !== NULL && $pasw !== NULL ) {
 
-			curl_setopt( $curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
+			curl_setopt( $curl, CURLOPT_HTTPAUTH, $auth );
 
 			curl_setopt( $curl, CURLOPT_USERPWD, $user . ':' . $pasw );
 
 	    }
+
+	// NOTA usare CURLAUTH_BASIC o CURLAUTH_DIGEST secondo bisogna
 
 	// verifico che ci siano dati da inviare
 # NOTA perché questa riga è commentata?!
