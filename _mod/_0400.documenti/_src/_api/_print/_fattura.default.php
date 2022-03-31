@@ -222,9 +222,11 @@
     // recupero i dati del destinatario
 	$dst = mysqlSelectRow(
         $cf['mysql']['connection'],
-	    'SELECT * FROM anagrafica WHERE id = ?',
+	    'SELECT anagrafica.*, tipologie_anagrafica.se_pubblica_amministrazione FROM anagrafica LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia  WHERE anagrafica.id = ?',
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
+
+
 /**
  * NOTA è possibile emettere fattura elettronica verso privati senza SDI e PEC specificando '0000000'
  * lasciando vuoto il campo PECDestinatario e omettendo il campo IdFiscaleIVA

@@ -42,7 +42,7 @@
 	$xml->startElement( 'p:FatturaElettronica' );
 	
 	// versione PA o privati
-	if(true){
+	if( !$dst['se_pubblica_amministrazione'] == 1 ){
 		$xml->writeAttribute( 'versione', 'FPR12' );
 	} else {
 		$xml->writeAttribute( 'versione', 'FPA12' );
@@ -73,7 +73,7 @@
     // - - - ProgressivoInvio / identificativo univoco del documento
 	$xml->writeElement( 'ProgressivoInvio', $doc['progressivo_invio'] );
 
-	if( true ){
+	if( !$dst['se_pubblica_amministrazione'] == 1 ){
 		// - - - FormatoTrasmissione / privati
 		$xml->writeElement( 'FormatoTrasmissione', 'FPR12' );
 	} else {
@@ -262,6 +262,16 @@
 
     // - - - /DatiGeneraliDocumento
 	$xml->endElement();
+
+	if( $dst['se_pubblica_amministrazione'] == 1 ){
+
+		if( empty( $doc['cig']) ){die( 'cig mancante' ); } 
+
+		if( empty( $doc['riferimento']) ){die( 'riferimento documento per PA assente' ); } 
+
+			/*cig ecc */
+	
+	}
 
 	// ciclo sulle fatture collegate
 	foreach( $dcl AS $dc ) {

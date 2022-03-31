@@ -1734,6 +1734,9 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.esigibilita, 
 		documenti.codice_archivium,
     	documenti.codice_sdi,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
     	documenti.timestamp_invio,
     	documenti.progressivo_invio,
 		documenti.id_coupon,
@@ -1910,6 +1913,9 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		condizioni_pagamento.codice AS condizione_pagamento,
 		documenti.codice_archivium,
     	documenti.codice_sdi,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
     	documenti.timestamp_invio,
     	documenti.progressivo_invio,
 		documenti.id_coupon,
@@ -1945,18 +1951,18 @@ CREATE OR REPLACE VIEW `fatture_view` AS
    WHERE tipologie_documenti.id = 1
 ;
 
---| 090000013500
+--| 090000013250
 
 -- fatture_passive_view
 -- tipologia: vista virtuale
-DROP TABLE IF EXISTS `fatture_passive_view`;
+DROP TABLE IF EXISTS `fatture_attive_view`;
 
---| 090000013501
+--| 090000013251
 
 -- fatture_passive_view
 -- tipologia:  vista virtuale
 -- verifica: 2021-09-03 17:25 Fabio Mosti
-CREATE OR REPLACE VIEW `fatture_passive_view` AS
+CREATE OR REPLACE VIEW `fatture_attive_view` AS
     SELECT
 		documenti.id,
 		documenti.id_tipologia,
@@ -1966,6 +1972,9 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
@@ -1995,7 +2004,65 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-   WHERE documenti.id_tipologia = 11
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
+;
+
+--| 090000013500
+
+-- fatture_passive_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `fatture_passive_view`;
+
+--| 090000013501
+
+-- fatture_passive_view
+-- tipologia:  vista virtuale
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `fatture_passive_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
 --| 090000015000
@@ -5474,6 +5541,8 @@ CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
 		tipologie_anagrafica.html_entity,
 		tipologie_anagrafica.font_awesome,
 		tipologie_anagrafica.se_persona_fisica,
+        tipologie_anagrafica.se_persona_giuridica,
+        tipologie_anagrafica.se_pubblica_amministrazione,
 		tipologie_anagrafica.id_account_inserimento,
 		tipologie_anagrafica.id_account_aggiornamento,
 		tipologie_anagrafica_path( tipologie_anagrafica.id ) AS __label__
