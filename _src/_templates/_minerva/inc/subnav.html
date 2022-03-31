@@ -1,4 +1,4 @@
-{% if page.children %}
+{% if page.children and session.account %}
     <div class="row subnav">
         {% for child in page.children.id %}
         {% set obj = pages[ child ] %}
