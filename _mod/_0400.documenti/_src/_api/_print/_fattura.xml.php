@@ -47,6 +47,7 @@
 	} else {
 		$xml->writeAttribute( 'versione', 'FPA12' );
 	}
+
 	$xml->writeAttribute( 'xmlns:ds', 'http://www.w3.org/2000/09/xmldsig#' );
 	$xml->writeAttribute( 'xmlns:p', 'http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2' );
 	$xml->writeAttribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
@@ -434,7 +435,11 @@
 	    header( 'Content-disposition: attachment; filename=' . basename( $outFile ) );
         buildXml( implode( $rows ) );
 	} else {
-		array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaordinaria_v1.2.xsl" ?>' . PHP_EOL ) );
-        buildXml( implode( $rows ) );
+		if( $dst['se_pubblica_amministrazione'] == 1 ){
+			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaPA_v1.2.1.xsl" ?>' . PHP_EOL ) );
+		} else {
+			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaordinaria_v1.2.1.xsl" ?>' . PHP_EOL ) );
+		}
+		buildXml( implode( $rows ) );
     }
 
