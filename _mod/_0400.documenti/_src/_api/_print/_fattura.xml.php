@@ -270,7 +270,23 @@
 
 		if( empty( $doc['riferimento']) ){die( 'riferimento documento per PA assente' ); } 
 
-			/*cig ecc */
+		// - - - DatiOrdineAcquisto
+		$xml->startElement( 'DatiOrdineAcquisto' );
+
+		$xml->writeElement( 'RiferimentoNumeroLinea', '1' );
+
+		$xml->writeElement( 'IdDocumento', $doc['riferimento']);
+
+		$xml->writeElement( 'CodiceCIG', $doc['cig'] );
+
+		if(!empty( $doc['cup'] )){
+			$xml->writeElement( 'CodiceCUP', $doc['cup'] );
+			
+		}
+
+		// - - - /DatiOrdineAcquisto
+		$xml->endElement();
+
 	
 	}
 

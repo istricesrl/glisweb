@@ -43,6 +43,13 @@
             {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
             <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+            {% if etc.tipologia_anagrafica[0].se_pubblica_amministrazione == 1 %}
+            <div class="form-group form-row">
+                <div class="col col-md" style="background-color: darkgrey;">
+                <b><i class="fa fa-info-circle" aria-hidden="true"></i> la fattura è destinata ad una pubblica amministrazione, assicurarsi di aver inserito CIG e documento di riferimento nella scheda 'relazioni' per l'invio della fattura elettronica</b>
+            </div>
+            </div>
+            {% endif %}
             {# MODULO PRINCIPALE #}
             <fieldset>
                 <legend>dati generali <small>{{ legend }}</small></legend>
