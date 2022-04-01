@@ -2275,6 +2275,8 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_didattica` (`se_didattica`),
+	ADD KEY `se_produzione` (`se_produzione`),
 	ADD KEY `se_organizzazioni` (`se_organizzazioni`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_progetti` (`se_progetti`), 
