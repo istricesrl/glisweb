@@ -113,6 +113,11 @@
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.abbonamenti' );
 	}
 
+	// RELAZIONI CON IL MODULO AGENDA
+	if( in_array( "9000.agenda", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.attivita' );
+	}
+
     // gestione anagrafica informazioni
 	$p['anagrafica.form.informazioni'] = array(
 	    'sitemap'			=> false,
@@ -523,3 +528,4 @@
 		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'				=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] )
 	);
+	
