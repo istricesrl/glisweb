@@ -860,12 +860,13 @@ INSERT INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_de
 -- tipologie_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-15 16:15 Fabio Mosti
-REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`) VALUES
-(1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1),
-(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL),
-(3,	1,	    10,	'sig.',	                NULL,	NULL,	1),
-(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1),
-(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL);
+REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`,`se_persona_giuridica`, `se_pubblica_amministrazione`) VALUES
+(1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1,	NULL,	NULL),
+(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1),
+(3,	1,	    10,	'sig.',	                NULL,	NULL,	1,	NULL,	NULL),
+(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1,	NULL,	NULL),
+(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050400
 
@@ -992,12 +993,13 @@ INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_e
 -- tipologie_progetti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT IGNORE INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'contratto',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'pacchetto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'progetto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	NULL,	'forfait',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `se_didattica`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'contratto',	'',	'',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'pacchetto',	'',	'',	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'progetto',	'',	'',	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'consuntivo',	'',	'',	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	'forfait',	'',	'',	1,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	'corso',	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055400
 
