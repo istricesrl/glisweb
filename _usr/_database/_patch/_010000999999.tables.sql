@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `cognome` char(255) DEFAULT NULL,
   `denominazione` char(255) DEFAULT NULL,
   `soprannome` char(128) DEFAULT NULL,
-  `sesso` enum('M','F','-') NOT NULL DEFAULT '-',
+  `sesso` enum('M','F','-') DEFAULT NULL,
   `stato_civile` char(128) DEFAULT NULL,
   `codice_fiscale` char(32) DEFAULT NULL,
   `partita_iva` char(32) DEFAULT NULL,
