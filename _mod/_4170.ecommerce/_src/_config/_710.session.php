@@ -4,6 +4,26 @@
      * 
      */
 
+    // recupero carrelli abbandonati
+    if( isset( $_REQUEST['rc'] ) && isset( $_REQUEST['ti'] ) ) {
+            
+        $timestamp = intval( $_REQUEST['ti'] );
+
+        $_SESSION['carrello'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM carrelli WHERE id=? and timestamp_inserimento = ? AND timestamp_checkout IS NULL',
+            array(
+                array( 's' => $_REQUEST['rc'] ) ,
+                array( 's' => $timestamp )
+            )
+        );
+        
+        $_SESSION['carrello']['articoli'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello=?',
+            array(
+                array( 's' => $_SESSION['carrello']['id'] )
+            )
+        );
+
+    }
+
     // verifico se il carrello della sessione corrente va chiuso
     if( isset( $_SESSION['carrello']['id'] ) ) {
 

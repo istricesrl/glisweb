@@ -38,7 +38,7 @@ if [ -d "$DSTDIR" ]; then
     read -p "database: " SRVDBNAME
 
     mysqldump -h $SRVADDR -u $SRVUSER -p$SRVPASS --no-data --opt --routines --single-transaction --events $SRVDBNAME > $FILE1
-    mysqldump -h $SRVADDR -u $SRVUSER -p$SRVPASS --no-create-info --complete-insert --opt --single-transaction $SRVDBNAME > $FILE2
+    mysqldump -h $SRVADDR -u $SRVUSER -p$SRVPASS --no-create-info --complete-insert --opt --single-transaction --ignore-table=$SRVDBNAME.__patch__ --replace $SRVDBNAME > $FILE2
 
     cat $FILE1 | sed -E 's/DEFINER=`[a-z]+`@`[a-z0-9\.%]+`/DEFINER=CURRENT_USER()/g' | sed 's/ AUTO_INCREMENT=[0-9]*\b//g' > $FILEC
 	mv $FILEC $FILE1

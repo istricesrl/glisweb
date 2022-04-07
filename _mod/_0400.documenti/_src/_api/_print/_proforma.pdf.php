@@ -34,7 +34,7 @@
     $doc['righe'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT documenti_articoli.*, count(agg.id) AS aggregate, '.
-        'iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, '.
+        'iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, '.
         'udm.sigla AS udm FROM documenti_articoli '.
         'INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto '.
         'INNER JOIN iva ON iva.id = reparti.id_iva '.
@@ -69,7 +69,7 @@
                 'nome' => $riga['nome_iva'],
                 'codice' => $riga['codice_iva'],
                 'aliquota' => str_replace( ',', '.', sprintf( '%0.2f', $riga['aliquota'] ) ),
-                'riferimento' => ( ( ! empty( $riga['codice_iva'] ) ) ? $riga['descrizione_iva'] : NULL )
+                'riferimento' => ( ( ! empty( $riga['descrizione_iva'] ) ) ? $riga['descrizione_iva'] : NULL )
             );
         }
 
@@ -132,15 +132,13 @@
         'comuni.nome AS comune, provincie.sigla AS provincia, '.
         'stati.iso31661alpha2 AS sigla_stato '.
         'FROM anagrafica_indirizzi '.
-        'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
         'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
         'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
         'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
         'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
         'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
         'INNER JOIN stati ON stati.id = regioni.id_stato '.
-        'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
-        'AND ruoli_indirizzi.se_sede_legale = 1 ',
+        'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
         array( array( 's' => $src['id'] ) )
     );
 
@@ -175,15 +173,13 @@
         'comuni.nome AS comune, provincie.sigla AS provincia, '.
         'stati.iso31661alpha2 AS sigla_stato '.
         'FROM anagrafica_indirizzi '.
-        'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
         'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
         'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
         'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
         'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
         'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
         'INNER JOIN stati ON stati.id = regioni.id_stato '.
-        'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
-        'AND ruoli_indirizzi.se_sede_legale = 1 ',
+        'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
         array( array( 's' => $dst['id'] ) )
     );
 

@@ -36,10 +36,9 @@
     } else {
 
         // seleziono l'ultimo progressivo utilizzato
-        $status['current'] = mysqlSelectValue(
+        $status['current'] = mysqlSelectRow(
             $cf['mysql']['connection'],
-#            'SELECT coalesce( max( progressivo_invio ), 0 ) FROM documenti WHERE id_emittente = ?',
-            'SELECT coalesce( max( abs( numero ) ), 0 ) FROM documenti '.
+            'SELECT documenti.id, coalesce( max( cast( numero as unsigned ) ), 0 ) AS numero FROM documenti '.
             'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
             'WHERE id_emittente = ? AND sezionale = ? '.
             'AND numerazione = ( SELECT numerazione FROM tipologie_documenti WHERE id = ? )',
@@ -51,7 +50,7 @@
         );
 
         // propongo un nuovo progressivo
-        $status['new'] = $status['current'] + 1;
+        $status['new'] = $status['current']['numero'] + 1;
 
     }
 

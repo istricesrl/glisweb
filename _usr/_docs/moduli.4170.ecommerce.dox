@@ -33,7 +33,7 @@
     - _usr/_examples/_ecommerce/_acquisto.01.php che simula una pagina prodotto tramite la quale è possibile aggiungere un prodotto al carrello
     - _usr/_examples/_ecommerce/_acquisto.02.php che simula la pagina di inserimento dati del carrello
     - _usr/_examples/_ecommerce/_acquisto.03.php che simula la pagina di riepilogo del carrello che prepara la chiusura dell'ordine
-    - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento, la cui controller deve capire se c'è stato un successo o un fallimento
+    - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento, che deve capire se c'è stato un successo o un fallimento
     - _usr/_examples/_ecommerce/_esito.ck.php che simula la pagina di chiusura diretta del carrello
     - _usr/_examples/_ecommerce/_esito.ok.php che simula la pagina di esito positivo del pagamento
     - _usr/_examples/_ecommerce/_esito.ko.php che simula la pagina di esito negativo del pagamento
@@ -52,27 +52,17 @@
     la pagina di esito generico di pagamento
     ----------------------------------------
 
+    [...] macro _mod/_4170.ecommerce/_src/_inc/_macro/_carrello.esito.php
+
     [...] visualizza un contenuto diverso secondo se rileva un successo o un fallimento nel pagamento
     [...] imposta la timestamp_checkout solo in caso di esito positivo (è comunque reimpostata dal listener)
     [...] non chiama le macro di successo (vengono chiamate dal listener)
     [...] scrive sul log del carrello
 
-    la pagina di esito positivo di pagamento
-    ----------------------------------------
-
-    [...] imposta la timestamp_checkout (è comumque reimpostata dal listener)
-    [...] non chiama le macro di successo (vengono chiamate dal listener)
-    [...] scrive sul log del carrello
-
-    la pagina di esito negativo di pagamento
-    ----------------------------------------
-
-    [...] non imposta la timestamp_checkout
-    [...] non chiama le macro di successo
-    [...] scrive sul log del carrello
-
     la pagina di chiusura diretta del carrello
     ------------------------------------------
+
+    [...] macro _mod/_4170.ecommerce/_src/_inc/_macro/_carrello.checkout.php
 
     [...] imposta la timestamp_checkout
     [...] chiama le macro di successo
@@ -114,13 +104,12 @@
     inviato ed è possibile procedere con un nuovo ordine.
 
     Nel caso di pagamenti online quali PayPal, Nexi, eccetera, la timestamp_checkout è valorizzata nei rispettivi listener collocati nella cartella
-    _src/_api/ del modulo e-commerce e, per maggiore sicurezza, nelle macro di pagina _src/_inc/_macro/_carrello.esito.php o
-    _src/_inc/_macro/_carrello.successo.php; nel caso invece dei pagamenti offline, la valorizzazione della timestamp_checkout è effettuata nella
-    macro di pagina _src/_inc/_macro/_carrello.successo.php. Il motivo per cui nel caso dei pagamenti online la timestamp_checkout viene valorizzata
-    nella macro di pagina oltre che nel listener è che può verificarsi un'apprezzabile latenza fra la chiusura dell'ordine, con relativo ritorno
-    dell'utente al sito, e la chiamata in background al listener da parte del provider di pagamento. Per evitare che in questa finestra di tempo
-    l'utente possa volontariamente o accidentalmente modificare il carrello, la timestamp_checkout viene valorizzata non appena l'utente stesso
-    ritorna al sito, così da minimizzare il rischio di manomissioni o errori.
+    _src/_api/ del modulo e-commerce e, per maggiore sicurezza, nelle macro di pagina _src/_inc/_macro/_carrello.esito.php;
+    nel caso invece dei pagamenti offline, la valorizzazione della timestamp_checkout è effettuata nella macro di pagina _src/_inc/_macro/_carrello.checkout.php.
+    Il motivo per cui nel caso dei pagamenti online la timestamp_checkout viene valorizzata nella macro di pagina oltre che nel listener è che può verificarsi
+    un'apprezzabile latenza fra la chiusura dell'ordine, con relativo ritorno dell'utente al sito, e la chiamata in background al listener da parte del provider
+    di pagamento. Per evitare che in questa finestra di tempo l'utente possa volontariamente o accidentalmente modificare il carrello, la timestamp_checkout
+    viene valorizzata non appena l'utente stesso ritorna al sito, così da minimizzare il rischio di manomissioni o errori.
 
     il processo di pagamento
     ========================

@@ -70,8 +70,8 @@
 		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'mastro_provenienza' => 'scarico', 'mastro_destinazione' => 'carico' ) );
 	}
 
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-		// preset filtro righe documento
+    // preset filtro righe documento
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
 		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 

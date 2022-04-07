@@ -87,12 +87,13 @@ ALTER TABLE `anagrafica`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`codice`),
 	ADD UNIQUE KEY `unica_persone` (`nome`,`cognome`,`codice_fiscale`),
+	ADD UNIQUE KEY `unica_professionisti` (`nome`,`cognome`,`partita_iva`,`codice_fiscale`),
 	ADD UNIQUE KEY `unica_aziende` (`denominazione`,`partita_iva`,`codice_fiscale`),
-	ADD UNIQUE KEY `unica_partita_iva` (`partita_iva`),
-	ADD UNIQUE KEY `unica_codice_fiscale` (`codice_fiscale`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_pec_sdi` (`id_pec_sdi`),
 	ADD KEY `codice_archivium` (`codice_archivium`),
+	ADD KEY `partita_iva` (`partita_iva`),
+	ADD KEY `codice_fiscale` (`codice_fiscale`),
 	ADD KEY `id_regime` (`id_regime`),
 	ADD KEY `id_stato_nascita` (`id_stato_nascita`),
 	ADD KEY `id_comune_nascita` (`id_comune_nascita`),
@@ -800,6 +801,8 @@ ALTER TABLE `documenti`
 	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `cig` (`cig`),
+	ADD KEY `cup` (`cup`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
@@ -1903,14 +1906,14 @@ ALTER TABLE `progetti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-08 15:00 Fabio Mosti
 ALTER TABLE `progetti_matricole`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_progetto`,`id_categoria`,`id_ruolo`), 
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_matricola`,`id_ruolo`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
-	ADD KEY `id_categoria` (`id_categoria`), 
+	ADD KEY `id_matricola` (`id_matricola`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_progetto`,`id_categoria`,`ordine`,`id_ruolo`);
+	ADD KEY `indice` (`id`,`id_progetto`,`id_matricola`,`ordine`,`id_ruolo`);
 
 --| 030000027801
 
@@ -2189,6 +2192,8 @@ ALTER TABLE `rinnovi`
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `indice` ( `id_contratto`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`);
 
@@ -2271,6 +2276,8 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_didattica` (`se_didattica`),
+	ADD KEY `se_produzione` (`se_produzione`),
 	ADD KEY `se_organizzazioni` (`se_organizzazioni`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_progetti` (`se_progetti`), 
@@ -2654,7 +2661,7 @@ ALTER TABLE `tipologie_anagrafica`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`, `se_persona_giuridica`,`se_pubblica_amministrazione`);
 
 --| 030000050001
 

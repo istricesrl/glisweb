@@ -11,7 +11,34 @@
      *
      */
 
-    /**
+    // azioni
+	if( ! defined( 'METHOD_DELETE' ) ) { 	define( 'METHOD_DELETE'			, 'DELETE' ); }
+	if( ! defined( 'METHOD_GET' ) ) { 		define( 'METHOD_GET'			, 'GET' ); }
+	if( ! defined( 'METHOD_PATCH' ) ) { 	define( 'METHOD_PATCH'			, 'PATCH' ); }
+	if( ! defined( 'METHOD_POST' ) ) { 		define( 'METHOD_POST'			, 'POST' ); }
+	if( ! defined( 'METHOD_PUT' ) ) { 		define( 'METHOD_PUT'			, 'PUT' );  }
+	if( ! defined( 'METHOD_REPLACE' ) ) { 	define( 'METHOD_REPLACE'		, 'REPLACE' ); }
+	if( ! defined( 'METHOD_UPDATE' ) ) { 	define( 'METHOD_UPDATE'			, 'UPDATE' ); }
+
+    // costanti per il contenuto
+	if( ! defined( 'MIME_APPLICATION_JSON' ) ) { 		define( 'MIME_APPLICATION_JSON'			, 'application/json' ); }
+	if( ! defined( 'MIME_APPLICATION_XML' ) ) { 		define( 'MIME_APPLICATION_XML'			, 'application/xml' ); }
+	if( ! defined( 'MIME_MULTIPART_FORM_DATA' ) ) { 	define( 'MIME_MULTIPART_FORM_DATA'		, 'multipart/form-data' ); }
+	if( ! defined( 'MIME_TEXT_PLAIN' ) ) { 				define( 'MIME_TEXT_PLAIN'				, 'text/plain' ); }
+	if( ! defined( 'MIME_TEXT_HTML' ) ) { 				define( 'MIME_TEXT_HTML'				, 'text/html' ); }
+	if( ! defined( 'MIME_X_WWW_FORM_URLENCODED' ) ) { 	define( 'MIME_X_WWW_FORM_URLENCODED'	, 'application/x-www-form-urlencoded' ); }
+
+	// logWrite()
+	if( ! function_exists( 'logWrite') ) {
+		function logWrite( $m, $f = __FILE__, $l = LOG_DEBUG, $d = __DIR__, $t = NULL, $s = NULL ) {
+			$f = basename( $f );
+			$h = fopen( $d.'/'.$f.'.log', 'a+' );
+			fwrite( $m, $h );
+			fclose( $h );
+		}
+	}
+
+	/**
      * esegue una chiamata REST
      *
      *
@@ -20,7 +47,7 @@
      * @todo documentare
      *
      */
-    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL ) {
+    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $auth = CURLAUTH_BASIC ) {
 
 	// inizializzo l'oggetto CURL
 	    $curl = curl_init();
@@ -43,11 +70,13 @@
 	// autenticazione
 	    if( $user !== NULL && $pasw !== NULL ) {
 
-		curl_setopt( $curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC );
+			curl_setopt( $curl, CURLOPT_HTTPAUTH, $auth );
 
-		curl_setopt( $curl, CURLOPT_USERPWD, $user . ':' . $pasw );
+			curl_setopt( $curl, CURLOPT_USERPWD, $user . ':' . $pasw );
 
 	    }
+
+	// NOTA usare CURLAUTH_BASIC o CURLAUTH_DIGEST secondo bisogna
 
 	// verifico che ci siano dati da inviare
 # NOTA perché questa riga è commentata?!
@@ -57,33 +86,33 @@
 		// codifico i dati
 		    switch( $datatype ) {
 
-			case 'headers':
-			    $headers = array_merge( $headers, $data );
-			break;
+				case 'headers':
+					$headers = array_merge( $headers, $data );
+				break;
 
-			case MIME_APPLICATION_JSON:
-			    $data = json_encode( $data, JSON_UNESCAPED_SLASHES );
-			    $headers = array_merge( $headers, array( 'Content-Type' => MIME_APPLICATION_JSON, 'Content-Length' => strlen( $data ) ) );
-			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
-			break;
+				case MIME_APPLICATION_JSON:
+					$data = json_encode( $data, JSON_UNESCAPED_SLASHES );
+					$headers = array_merge( $headers, array( 'Content-Type' => MIME_APPLICATION_JSON, 'Content-Length' => strlen( $data ) ) );
+					curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+				break;
 
-			case MIME_X_WWW_FORM_URLENCODED:
-			    $data = http_build_query( $data );
-			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
-			break;
-
-			case MIME_MULTIPART_FORM_DATA:
-			    // $data = http_build_query( $data ); // NOTA riga commentata perché in conflitto con l'uso di CURLFile(), fare dei test per verificare se funziona tutto lo stesso
-			    curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
-			break;
-
-			case NULL:
-			case 'query':
-				if( ! empty( $data ) ) {
+				case MIME_X_WWW_FORM_URLENCODED:
 					$data = http_build_query( $data );
-					$url = sprintf( "%s?%s", $url, $data );
-				}
-			break;
+					curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+				break;
+
+				case MIME_MULTIPART_FORM_DATA:
+					// $data = http_build_query( $data ); // NOTA riga commentata perché in conflitto con l'uso di CURLFile(), fare dei test per verificare se funziona tutto lo stesso
+					curl_setopt( $curl, CURLOPT_POSTFIELDS, $data );
+				break;
+
+				case NULL:
+				case 'query':
+					if( ! empty( $data ) ) {
+						$data = http_build_query( $data );
+						$url = sprintf( "%s?%s", $url, $data );
+					}
+				break;
 
 		    }
 
@@ -99,8 +128,8 @@
 
 	// impostazione degli headers
 	    if( ! empty( $headers ) ) {
-		foreach( $headers as $k => $d ) { $hdrs[] = $k . ': ' . $d; }
-		curl_setopt( $curl, CURLOPT_HTTPHEADER, $hdrs );
+			foreach( $headers as $k => $d ) { $hdrs[] = $k . ': ' . $d; }
+			curl_setopt( $curl, CURLOPT_HTTPHEADER, $hdrs );
 	    }
 
 	// imposto il metodo
@@ -165,12 +194,12 @@
      */
     function restGetValue( $k, $url, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL ) {
 
-	$r = restCall( $url, METHOD_GET, $data, $datatype, $answertype, $status, $headers, $user, $pasw, $error );
+		$r = restCall( $url, METHOD_GET, $data, $datatype, $answertype, $status, $headers, $user, $pasw, $error );
 
-	if( isset( $r[ $k ] ) ) {
-	    return $r[ $k ];
-	} else {
-	    return false;
-	}
+		if( isset( $r[ $k ] ) ) {
+			return $r[ $k ];
+		} else {
+			return false;
+		}
 
     }

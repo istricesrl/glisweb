@@ -36,11 +36,24 @@
 
             // CUSTOM apro il file
             foreach( $job['workspace']['aziende'] as $azienda ) {
-                $arr = array_merge(
+                $arr = array_replace_recursive(
                     $arr,
-                    archiviumGetListaNoteAttive( $azienda, 0, 'ID=ASC', 'RIGHT', 'DataIns=' . $job['workspace']['data'] )
+                    archiviumGetListaNoteAttive( $azienda, 0, 'ID=ASC', 'RIGHT', 'DataIns=' . date( 'Y', strtotime( $job['workspace']['data'] ) ) )
                 );
             }
+
+            // pulisco l'array dei dati
+            remapArray(
+                $arr,
+                array(
+                    'IDArchiviumAzienda' => 'IDArchiviumAzienda',
+                    'IDArchiviumFE' => 'IDArchiviumFE',
+                    'IDArchivium' => 'IDArchivium',
+                    'DataIns' => 'DataIns',
+                    'ExtStato' => 'ExtStato',
+                    'ExtID' => 'ExtID'
+                )
+            );
 
             // segno il totale delle cose da fare
             $job['totale'] = count( $arr );
@@ -93,10 +106,10 @@
             $widx = $job['corrente'] - 1;
 
             // importo la fattura
-            $job['workspace']['status']['info'][] = archiviumRegistraNotaAttiva( $arr[ $widx ]['IDArchiviumAzienda'], $arr[ $widx ]['IDArchivium'] );
+            $job['workspace']['status']['info'][] = archiviumRegistraNotaAttiva( $arr[ $widx ]['IDArchiviumAzienda'], $arr[ $widx ] );
 
-            // CUSTOM status
-            $job['workspace']['status']['info'][] = 'ho lavorato la riga: ' . $arr[ $job['corrente'] ];
+            // status
+            $job['workspace']['status']['info'][] = 'ho lavorato la riga: ' . $job['corrente'];
 
             // aggiorno i valori di visualizzazione avanzamento
             $jobs = mysqlQuery(

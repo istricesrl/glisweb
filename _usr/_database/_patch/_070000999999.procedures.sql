@@ -69,7 +69,7 @@ CREATE
 		FROM anagrafica_categorie
 		INNER JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 		WHERE anagrafica_categorie.id_anagrafica = p1
-		AND categorie_anagrafica.se_gestita IS NOT NULL
+		AND categorie_anagrafica.se_gestita = 1
 		INTO gestita;
 
 		RETURN gestita;
@@ -4007,7 +4007,7 @@ CREATE
 
 END;
 
---| 070000050000
+--| 070000053300
 
 -- tipologie_luoghi_path
 DROP FUNCTION IF EXISTS `tipologie_luoghi_path`;

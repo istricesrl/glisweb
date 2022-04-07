@@ -20,12 +20,10 @@
 	    $cf['auth']['permissions'],
 	    array(
             'progetti' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
+                CONTROL_FULL => array( 'roots' )
             ),
             'progetti_archivio' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
+                CONTROL_FULL => array( 'roots' )
             ),
             'progetti_commerciale' => array(
                 CONTROL_FULL => array( 'roots' )
@@ -49,6 +47,9 @@
                 CONTROL_FULL => array( 'roots' )
             ),
             'pause_progetti' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'progetti_anagrafica' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
             'progetti_categorie' => array(

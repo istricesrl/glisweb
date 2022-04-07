@@ -460,10 +460,10 @@ DROP TABLE IF EXISTS `anagrafica_certificazioni_view`;
 CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 	SELECT
 		anagrafica_certificazioni.id,
-		anagrafica_certificazioni.id_certificazione,
-		certificazioni.nome AS certificazione,
 		anagrafica_certificazioni.id_anagrafica,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		anagrafica_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
 		anagrafica_certificazioni.id_emittente,
 		coalesce( emittente.denominazione , concat( emittente.cognome, ' ', emittente.nome ), '' ) AS emittente,
 		anagrafica_certificazioni.nome,
@@ -627,15 +627,37 @@ CREATE OR REPLACE VIEW `articoli_view` AS
         articoli.id_udm_capacita,
         articoli.durata,
         articoli.id_udm_durata,
-		articoli.nome,
-		concat(
-			articoli.id_prodotto,
-			' / ',
+		concat_ws(
+			' ',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat_ws(
+					' ',
+					articoli.peso,
+					udm_peso.sigla
+				),
+				''
+			)
+		) AS nome,
+		concat_ws(
+			' ',
 			articoli.id,
-			' / ',
-			articoli.nome
+			'/',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat_ws(
+					' ',
+					articoli.peso,
+					udm_peso.sigla
+				),
+				''
+			)
 		) AS __label__
 	FROM articoli
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
 ;
 
 --| 090000001600
@@ -1712,6 +1734,9 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.esigibilita, 
 		documenti.codice_archivium,
     	documenti.codice_sdi,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
     	documenti.timestamp_invio,
     	documenti.progressivo_invio,
 		documenti.id_coupon,
@@ -1790,10 +1815,11 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.id_todo,
 		documenti_articoli.id_attivita,
 		documenti_articoli.id_articolo,
+		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
 		documenti_articoli.id_mastro_provenienza,
-		m1.nome AS mastro_provenienza,
+		mastri_path( m1.id ) AS mastro_provenienza,
 		documenti_articoli.id_mastro_destinazione,
-		m2.nome AS mastro_destinazione,
+		mastri_path( m2.id ) AS mastro_destinazione,
 		documenti_articoli.id_udm,
 		documenti_articoli.quantita,
 		documenti_articoli.id_listino,
@@ -1834,6 +1860,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+		LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
 --| 090000012800
@@ -1885,6 +1913,9 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		condizioni_pagamento.codice AS condizione_pagamento,
 		documenti.codice_archivium,
     	documenti.codice_sdi,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
     	documenti.timestamp_invio,
     	documenti.progressivo_invio,
 		documenti.id_coupon,
@@ -1920,18 +1951,18 @@ CREATE OR REPLACE VIEW `fatture_view` AS
    WHERE tipologie_documenti.id = 1
 ;
 
---| 090000013500
+--| 090000013250
 
 -- fatture_passive_view
 -- tipologia: vista virtuale
-DROP TABLE IF EXISTS `fatture_passive_view`;
+DROP TABLE IF EXISTS `fatture_attive_view`;
 
---| 090000013501
+--| 090000013251
 
 -- fatture_passive_view
 -- tipologia:  vista virtuale
 -- verifica: 2021-09-03 17:25 Fabio Mosti
-CREATE OR REPLACE VIEW `fatture_passive_view` AS
+CREATE OR REPLACE VIEW `fatture_attive_view` AS
     SELECT
 		documenti.id,
 		documenti.id_tipologia,
@@ -1941,6 +1972,9 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
@@ -1970,7 +2004,65 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-   WHERE documenti.id_tipologia = 11
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
+;
+
+--| 090000013500
+
+-- fatture_passive_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `fatture_passive_view`;
+
+--| 090000013501
+
+-- fatture_passive_view
+-- tipologia:  vista virtuale
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `fatture_passive_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
 --| 090000015000
@@ -2936,12 +3028,12 @@ CREATE OR REPLACE VIEW `matricole_view` AS
 		matricole.matricola,
 		matricole.data_scadenza,
 		matricole.nome,
-		concat_ws( ' ', articoli.id, prodotti.nome, articoli.nome, matricole.matricola ) AS __label__
+		concat_ws( ' ', matricole.matricola, '/', articoli.id, '/', prodotti.nome, articoli.nome, concat( 'scad. ', matricole.data_scadenza ) ) AS __label__
 	FROM matricole
 		LEFT JOIN anagrafica AS a1 ON a1.id = matricole.id_produttore
 		LEFT JOIN marchi ON marchi.id = matricole.id_marchio
 		LEFT JOIN articoli ON articoli.id = id_articolo
-		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto;
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
 --| 090000021600
@@ -3209,7 +3301,7 @@ DROP TABLE IF EXISTS `pagamenti_view`;
 -- pagamenti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-01-07 16:00 Chiara GDL
-CCREATE OR REPLACE VIEW `pagamenti_view` AS
+CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
 		pagamenti.id_tipologia,
@@ -3268,6 +3360,8 @@ CCREATE OR REPLACE VIEW `pagamenti_view` AS
 		tipologie_documenti.se_nota_credito = 1
 		OR
 		tipologie_documenti.se_ricevuta = 1
+		OR
+		tipologie_documenti.se_pro_forma = 1
 ;
 
 --| 090000023200
@@ -3640,7 +3734,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3687,7 +3781,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3736,7 +3830,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_archivio_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3785,7 +3879,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3834,7 +3928,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_archivio_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3883,7 +3977,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -3932,7 +4026,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
 	SELECT
 		progetti.id,
 		progetti.id_tipologia,
-		tipologie_progetti.nome AS tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
 		progetti.id_pianificazione,
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
@@ -5447,6 +5541,8 @@ CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
 		tipologie_anagrafica.html_entity,
 		tipologie_anagrafica.font_awesome,
 		tipologie_anagrafica.se_persona_fisica,
+        tipologie_anagrafica.se_persona_giuridica,
+        tipologie_anagrafica.se_pubblica_amministrazione,
 		tipologie_anagrafica.id_account_inserimento,
 		tipologie_anagrafica.id_account_aggiornamento,
 		tipologie_anagrafica_path( tipologie_anagrafica.id ) AS __label__
@@ -5825,11 +5921,13 @@ CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
 		tipologie_progetti.nome,
 		tipologie_progetti.html_entity,
 		tipologie_progetti.font_awesome,
+		tipologie_progetti.se_produzione,
 		tipologie_progetti.se_contratto,
 		tipologie_progetti.se_pacchetto,
 		tipologie_progetti.se_progetto,
 		tipologie_progetti.se_consuntivo,
 		tipologie_progetti.se_forfait,
+		tipologie_progetti.se_didattica,
 		tipologie_progetti.id_account_inserimento,
 		tipologie_progetti.id_account_aggiornamento,
 		tipologie_progetti_path( tipologie_progetti.id ) AS __label__
@@ -6048,6 +6146,7 @@ CREATE OR REPLACE VIEW udm_view AS
 		udm.se_massa,
 		udm.se_tempo,
 		udm.se_quantita,
+		udm.se_area,
 		udm.sigla AS __label__
 	FROM udm
 ;

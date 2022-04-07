@@ -63,6 +63,16 @@
 				// pagamento non completato
 				default:
 
+					// registro il fallimento del pagamento
+					mysqlInsertRow(
+						$cf['mysql']['connection'],
+						array(
+							'id'						=> $_REQUEST['codTrans'],
+							'status_pagamento'			=> $_REQUEST['esito']
+						),
+						'carrelli'
+					);
+
 					// log
 					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['codTrans'], 'paypal', LOG_ERR );
 					appendToFile( 'pagamento non completato' . PHP_EOL, $fileRicevuta );

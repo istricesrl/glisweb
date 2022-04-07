@@ -447,30 +447,32 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 -- ruoli_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:11 Fabio Mosti
-REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`) VALUES
-(1,	NULL,	'titolare',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(2,	NULL,	'amministratore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(3,	NULL,	'socio',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(4,	NULL,	'dipendente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(5,	NULL,	'direttore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(6,	NULL,	'presidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(7,	NULL,	'tesoriere',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(8,	NULL,	'coordinatore',	NULL,	NULL,	1,	NULL,	NULL,	1),
-(9,	NULL,	'vicepresidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(10,	NULL,	'vicedirettore',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(11,	NULL,	'segretario',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(13,	NULL,	'responsabile acquisti',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(14,	NULL,	'responsabile operativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
-(15,	NULL,	'operatore',	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(16,	NULL,	'responsabile',	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(17,	NULL,	'assistente',	NULL,	NULL,	1,	NULL,	NULL,	1),
-(18,	NULL,	'autore',	NULL,	NULL,	NULL,	NULL,	1,	NULL),
-(19,	NULL,	'genitore',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(20,	NULL,	'fratello',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(21,	NULL,	'tutore',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
-(23,	NULL,	'collega',	NULL,	NULL,	NULL,	1,	NULL,	NULL);
+REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_didattica`) VALUES
+(1,		NULL,	'titolare',						NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(2,		NULL,	'amministratore',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(3,		NULL,	'socio',						NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(4,		NULL,	'dipendente',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(5,		NULL,	'direttore',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(6,		NULL,	'presidente',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(7,		NULL,	'tesoriere',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(8,		NULL,	'coordinatore',					NULL,	NULL,	1,		NULL,	NULL,	1,		NULL),
+(9,		NULL,	'vicepresidente',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'vicedirettore',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	'segretario',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	'responsabile acquisti',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	'responsabile operativo',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	'operatore',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
+(16,	NULL,	'responsabile',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
+(17,	NULL,	'assistente',					NULL,	NULL,	1,		NULL,	NULL,	1,		NULL),
+(18,	NULL,	'autore',						NULL,	NULL,	NULL,	NULL,	1,		NULL,	NULL),
+(19,	NULL,	'genitore',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(20,	NULL,	'fratello',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(21,	NULL,	'tutore',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(22,	NULL,	'coniuge',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(23,	NULL,	'collega',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
+(24,	NULL,	'docente',						NULL,	NULL,	NULL,	NULL,	NULL,	1,		1),
+(25,	NULL,	'istruttore',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		1);
 
 --| 050000034200
 
@@ -834,25 +836,26 @@ REPLACE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 INSERT INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	1,	NULL,	NULL,	1644330841,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	20,	2,	NULL,	1644330841,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	'68c2b16ef48d95b083636b5118d8e1e5',	1644330841,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	1,	NULL,	'68c2b16ef48d95b083636b5118d8e1e5',	1644330781,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	NULL,	1644330841,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	1,	NULL,	NULL,	1644330781,	NULL,	NULL,	NULL,	NULL),
 (5,	6,		2,		6,		2,		NULL,	NULL,	'_src/_api/_task/_comuni.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (6,	6,		6,		6,		6,		NULL,	NULL,	'_src/_api/_task/_settori.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (7,	6,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.fe.passive.start.php',	1,	NULL,	NULL,	1644293161,	NULL,	NULL,	NULL,	NULL),
 (8,	7,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.note.attive.start.php',	1,	NULL,	NULL,	1644293221,	NULL,	NULL,	NULL,	NULL),
-(9,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_7000.mailing/_src/_api/_task/_genera.mail.php',	20,	2,	'68c2b16ef48d95b083636b5118d8e1e5',	NULL,	NULL,	NULL,	NULL,	NULL);
+(9,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_7000.mailing/_src/_api/_task/_genera.mail.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050000
 
 -- tipologie_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-15 16:15 Fabio Mosti
-REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`) VALUES
-(1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1),
-(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL),
-(3,	1,	    10,	'sig.',	                NULL,	NULL,	1),
-(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1),
-(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL);
+REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`,`se_persona_giuridica`, `se_pubblica_amministrazione`) VALUES
+(1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1,	NULL,	NULL),
+(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1),
+(3,	1,	    10,	'sig.',	                NULL,	NULL,	1,	NULL,	NULL),
+(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1,	NULL,	NULL),
+(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050400
 
@@ -979,11 +982,13 @@ INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_e
 -- tipologie_progetti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_colori`, `se_taglie`, `se_dimensioni`, `se_volume`, `se_capacita`, `se_peso`, `se_imballo`, `se_spedizione`, `se_trasporto`, `se_prodotto`, `se_servizio`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'servizio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	NULL,	NULL,	NULL),
-(3,	1,	NULL,	'alimentare (peso)',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	1,	NULL,	'alimentare (volume)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `se_didattica`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'contratto',	'',	'',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'pacchetto',	'',	'',	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'progetto',	'',	'',	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'consuntivo',	'',	'',	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	'forfait',	'',	'',	1,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	'corso',	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055400
 
@@ -1035,41 +1040,45 @@ REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_enti
 -- udm
 -- tipologia: tabella standard
 -- verifica: 2021-10-19 13:02 Fabio Mosti
-INSERT INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_massa`, `se_tempo`, `se_quantita`) VALUES
-(1,	NULL,	NULL,	'pezzi',	'pz.',	'unità di misura usata genericamente per misurare le quantità',	NULL,	NULL,	NULL,	NULL,	1),
-(2,	NULL,	1,	'millimetro',	'mm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
-(3,	2,	10,	'centimetro',	'cm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
-(4,	2,	100,	'decimetro',	'dm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
-(5,	2,	1000,	'metro',	'm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
-(6,	2,	10000,	'decametro',	'dam',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
-(7,	2,	100000,	'ettometro',	'hm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
-(8,	2,	1000000,	'kilometro',	'km',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL),
-(9,	NULL,	1,	'milligrammo',	'mg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
-(10,	9,	10,	'centigrammo',	'cg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
-(11,	9,	100,	'decigrammo',	'dg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
-(12,	9,	1000,	'grammo',	'gr',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
-(13,	9,	10000,	'decagrammo',	'dag',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
-(14,	9,	100000,	'ettogrammo',	'hg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
-(15,	9,	1000000,	'kilogrammo',	'kg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL),
-(16,	NULL,	1,	'millilitro',	'ml',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
-(17,	16,	10,	'centilitro',	'cl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
-(18,	16,	100,	'decilitro',	'dl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
-(19,	16,	1000,	'litro',	'l',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
-(20,	16,	10000,	'decalitro',	'dal',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
-(21,	16,	100000,	'ettolitro',	'hl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL),
-(22,	16,	1000000,	'kilolitro',	'kl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL)
-ON DUPLICATE KEY UPDATE
-	id_base = VALUES( id_base ),
-	conversione = VALUES( conversione ),
-	nome = VALUES( nome ),
-	sigla = VALUES( sigla ),
-	note = VALUES( note ),
-	se_lunghezza = VALUES( se_lunghezza ),
-	se_volume = VALUES( se_volume ),
-	se_massa = VALUES( se_massa ),
-	se_tempo = VALUES( se_tempo ),
-	se_quantita = VALUES( se_quantita )
-;
+REPLACE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_massa`, `se_tempo`, `se_quantita`, `se_area`) VALUES
+(1,	NULL,	NULL,	'pezzi',	'pz.',	'unità di misura usata genericamente per misurare le quantità',	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(2,	NULL,	1,	'millimetro',	'mm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	2,	10,	'centimetro',	'cm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	2,	100,	'decimetro',	'dm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	2,	1000,	'metro',	'm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	2,	10000,	'decametro',	'dam',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	2,	100000,	'ettometro',	'hm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	2,	1000000,	'kilometro',	'km',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	1,	'milligrammo',	'mg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(10,	9,	10,	'centigrammo',	'cg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(11,	9,	100,	'decigrammo',	'dg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(12,	9,	1000,	'grammo',	'gr',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(13,	9,	10000,	'decagrammo',	'dag',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(14,	9,	100000,	'ettogrammo',	'hg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(15,	9,	1000000,	'kilogrammo',	'kg',	'https://it.wikipedia.org/wiki/Chilogrammo',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(16,	NULL,	1,	'millilitro',	'ml',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(17,	16,	10,	'centilitro',	'cl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(18,	16,	100,	'decilitro',	'dl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(19,	16,	1000,	'litro',	'l',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	16,	10000,	'decalitro',	'dal',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(21,	16,	100000,	'ettolitro',	'hl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(22,	16,	1000000,	'kilolitro',	'kl',	'https://it.wikipedia.org/wiki/Litro',	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	NULL,	1,	'secondo',	's',	'https://it.wikipedia.org/wiki/Secondo',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(24,	23,	60,	'minuto',	'min',	'https://it.wikipedia.org/wiki/Minuto',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(25,	23,	3600,	'ora',	'h',	'https://it.wikipedia.org/wiki/Ora',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(26,	23,	86400,	'giorno',	'd',	'https://it.wikipedia.org/wiki/Giorno',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(27,	9,	100000000,	'quintale',	'q',	'https://it.wikipedia.org/wiki/Quintale',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(28,	9,	1000000000,	'tonnellata',	't',	'https://it.wikipedia.org/wiki/Tonnellata',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(29,	NULL,	1,	'millimetro quadrato',	'mm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(30,	29,	100,	'centimetro quadrato',	'cm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(31,	29,	10000,	'decimetro quadrato',	'dm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(32,	29,	1000000,	'metro quadrato',	'm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(33,	29,	100000000,	'decametro quadrato',	'dam²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(34,	29,	10000000000,	'ettometro quadrato',	'hm²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(35,	29,	1000000000000,	'kilometro quadrato',	'km²',	'https://it.wikipedia.org/wiki/Metro_quadrato',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(36,	29,	1000000,	'centiara',	'ca',	'https://it.wikipedia.org/wiki/Centiara',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(37,	29,	100000000,	'ara',	'a',	'https://it.wikipedia.org/wiki/Ara_(unità_di_misura)',	1,	NULL,	NULL,	NULL,	NULL,	1),
+(38,	29,	10000000000,	'ettaro',	'ha',	'https://it.wikipedia.org/wiki/Ettaro',	1,	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000063000
 

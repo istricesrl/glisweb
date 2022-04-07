@@ -45,8 +45,9 @@
         'id' => '#',
 #        'tipologia' => 'tipologia',
 #        'data' => 'data',
-        'nome' => 'nome',
-		'id_articolo' => 'articolo',
+#        'nome' => 'nome',
+		'id_articolo' => 'codice',
+		'articolo' => 'articolo',
 		'mastro_provenienza' => 'scarico',
 		'mastro_destinazione' => 'carico',
         'quantita' => 'quantità',
@@ -64,14 +65,14 @@
         'emittente' => 'text-left', 
         'data' => 'no-wrap', 
 #        'tipologia' => 'text-left',
-		'id_articolo' => 'text-left'
+		'articolo' => 'text-left'
     );
 
 	// RELAZIONI CON IL MODULO MATRICOLE
 	if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
 
 		// colonna matricola
-		arrayInsertAssoc( 'id_articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
+		arrayInsertAssoc( 'articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
 
 		// OPZIONE scadenze
 		if( ! empty( $cf['matricole']['scadenze'] ) ) {

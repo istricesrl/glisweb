@@ -14,6 +14,8 @@
     // inizializzo l'array del risultato
 	$status = array();
 
+    # TODO c'è modo di evitare che le mail già inviate vengano generate nuovamente? magari sostituendo REPLACE con INSERT IGNORE?
+
     // nome file di default
     if( isset( $_REQUEST['idMailing'] ) ) { 
 

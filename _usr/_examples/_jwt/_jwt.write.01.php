@@ -22,6 +22,6 @@
 
     $t = getJwt( $a, 'testSecret' );
 
-    echo $t;
+    var_dump( $t );
 
     var_dump( checkJwt( $t, 'testSecret' ) );
