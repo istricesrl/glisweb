@@ -30,7 +30,9 @@
         'articolo' => 'descrizione',
         'carico' => 'carico',
         'scarico' => 'scarico',
-        'totale' => 'totale'
+        'totale' => 'totale',
+        'peso' => 'peso',
+        'sigla_udm_peso' => 'udm peso'
     );
 
 	// RELAZIONI CON IL MODULO MATRICOLE
@@ -50,7 +52,9 @@
     $ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
         'articolo' => 'text-left',
-        'totale' => 'text-right'
+        'totale' => 'text-right',
+        'peso' => 'text-right',
+        'sigla_udm_peso' => 'd-none'
     );
 
     // preset filtro custom mastro corrente
@@ -60,8 +64,9 @@
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // trasformazione icona attivo/inattivo
-	///foreach( $ct['view']['data'] as &$row ) {
-	//}
+	foreach( $ct['view']['data'] as &$row ) {
+        $row['peso'] = $row['peso'].' '.$row['sigla_udm_peso'];
+	}
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
