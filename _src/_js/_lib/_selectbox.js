@@ -156,7 +156,7 @@
 									var valore = $( li ).attr( 'value' );
 									$( li ).bind( 'click', function() {
 										$( select ).val( valore );
-										$( box ).val( opzione );
+										$( box ).val( $.parseHTML( opzione )[0].nodeValue );
 										$( box ).addClass( 'combobox-base-background' );
 										$( box ).removeClass( 'combobox-active-background' );
 										// $( box ).css( 'background-color', '#ffffff' );
@@ -206,7 +206,7 @@
 				var valore = $( li ).attr( 'value' );
 				$( li ).bind( 'click', function() {
 					$( select ).val( valore );
-					$( box ).val( opzione );
+					$( box ).val( $.parseHTML( opzione )[0].nodeValue );
 					$( box ).addClass( 'combobox-base-background' );
 					$( box ).removeClass( 'combobox-active-background' );
 					// $( box ).css( 'background-color', '#ffffff' );

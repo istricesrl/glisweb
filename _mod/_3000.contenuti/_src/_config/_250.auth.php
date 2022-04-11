@@ -30,15 +30,6 @@
             ),
             'pubblicazioni' => array(
                 CONTROL_FULL => array( 'roots' )
-    //		),
-    //		'pagine_macro' => array(
-    //		    CONTROL_FULL => array( 'roots' )
-    //		),
-    //		'pagine_metadati' => array(
-    //		    CONTROL_FULL => array( 'roots' )
-    //		),
-    //		'pagine_gruppi' => array(
-    //		    CONTROL_FULL => array( 'roots' )
             )
 	    )
 	);

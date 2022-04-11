@@ -20,7 +20,7 @@
     $l = archiviumGetListaFePassive( $_REQUEST['idAzienda'] );
 
     // output
-    $t .= '<pre>' . print_r( $l, true ) . '</pre>';
+    $t .= '<pre>' . htmlspecialchars( print_r( $l, true ) ) . '</pre>';
 
     // output
     buildHTML( $t );

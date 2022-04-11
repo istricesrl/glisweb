@@ -87,12 +87,13 @@ ALTER TABLE `anagrafica`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`codice`),
 	ADD UNIQUE KEY `unica_persone` (`nome`,`cognome`,`codice_fiscale`),
+	ADD UNIQUE KEY `unica_professionisti` (`nome`,`cognome`,`partita_iva`,`codice_fiscale`),
 	ADD UNIQUE KEY `unica_aziende` (`denominazione`,`partita_iva`,`codice_fiscale`),
-	ADD UNIQUE KEY `unica_partita_iva` (`partita_iva`),
-	ADD UNIQUE KEY `unica_codice_fiscale` (`codice_fiscale`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_pec_sdi` (`id_pec_sdi`),
 	ADD KEY `codice_archivium` (`codice_archivium`),
+	ADD KEY `partita_iva` (`partita_iva`),
+	ADD KEY `codice_fiscale` (`codice_fiscale`),
 	ADD KEY `id_regime` (`id_regime`),
 	ADD KEY `id_stato_nascita` (`id_stato_nascita`),
 	ADD KEY `id_comune_nascita` (`id_comune_nascita`),
@@ -802,6 +803,8 @@ ALTER TABLE `documenti`
 	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `cig` (`cig`),
+	ADD KEY `cup` (`cup`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
@@ -2307,6 +2310,8 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_didattica` (`se_didattica`),
+	ADD KEY `se_produzione` (`se_produzione`),
 	ADD KEY `se_organizzazioni` (`se_organizzazioni`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_progetti` (`se_progetti`), 
@@ -2690,7 +2695,7 @@ ALTER TABLE `tipologie_anagrafica`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`, `se_persona_giuridica`,`se_pubblica_amministrazione`);
 
 --| 030000050001
 

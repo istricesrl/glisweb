@@ -250,9 +250,21 @@
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;
 
-        // TODO fare la chiamata
+        // effettuo la chiamata
+        $l      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_JSON, $s );
 
-        // TODO restituire il risultato
+        // aggiungo l'azienda a ogni elemento dell'array
+        foreach( $l as &$e ) {
+            $e['IDArchiviumAzienda'] = $idAzienda;
+        }
+
+        // debug
+        // var_dump( $u );
+        // var_dump( $s );
+        // print_r( $l );
+
+        // restituisco il risultato
+        return $l;
 
     }
 
@@ -569,6 +581,9 @@
             );
         }
 
+        // TODO
+        // aggiungere la categoria azienda gestita al cliente
+
         // cerco o creo il destinatario
         if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
             $i['idFornitore'] = mysqlInsertRow(
@@ -595,6 +610,9 @@
             );
         }
 
+        // TODO
+        // aggiungere la categoria fornitore al fornitore
+
         // aggiornamento view statica
         mysqlQuery( $cf['mysql']['connection'], 'CALL anagrafica_view_static( ? )', array( array( 's' => $i['idFornitore'] ) ) );
 
@@ -609,7 +627,7 @@
                 $cf['mysql']['connection'],
                 array(
                     'id' => NULL,
-                    'id_tipologia' => 11,
+                    'id_tipologia' => 1,
                     'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
                     'numero' => $i['numero'][0],
                     'sezionale' => ( isset( $i['numero'][1] ) ? $i['numero'][1] : NULL ),
@@ -717,6 +735,22 @@
                         array( array( 's' => $row['ModalitaPagamento']['#'] ) )
                     );
 
+                    // cerco iban nel database
+                    if( ! empty( $row['IBAN']['#'] ) ){
+
+                        $idIban = mysqlInsertRow($cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'id_anagrafica' => $i['idFornitore'],
+                            'iban' => $row['IBAN']['#']
+                        ),
+                        'iban'
+                    );
+
+                    } else {
+                        $idIban = NULL;
+                    }
+
                     // inserisco il pagamento
                     mysqlInsertRow(
                         $cf['mysql']['connection'],
@@ -725,7 +759,8 @@
                             'id_documento' => $i['idDocumento'],
                             'id_modalita_pagamento' => $idModalita,
                             'importo_netto_totale' => $row['ImportoPagamento']['#'],
-                            'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] )
+                            'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] ),
+                            'id_iban' =>  $idIban
                         ),
                         'pagamenti'
                     );

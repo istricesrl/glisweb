@@ -46,8 +46,8 @@
                         ),
                         'menu' => array(),
                         'macro' => array(),
-                        'pagine_gruppi' => array(),
-                        'pubblicazione' => array()
+                        'pubblicazione' => array(),
+                        '__acl_pagine__' => array()
 
                     ),
                     'f' => array(

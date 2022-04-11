@@ -34,7 +34,7 @@
 
         } elseif( isset( $_REQUEST['item_number'] ) ) {
 
-            // PayPal
+            // PayPal VECCHIO
             if( isset( $_REQUEST['payment_status'] ) && $_REQUEST['payment_status'] == 'Completed' ) {
                 $ct['etc']['esito'] = 1;
             } else {
@@ -47,6 +47,12 @@
             // log
             appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
 
+        } elseif( isset( $_REQUEST['PayerID'] ) ) {
+
+            // PayPal NUOVO
+            // TODO leggere dal carrello $_SESSION['carrello']['id'] per vedere se il pagamento è andato a buon fine
+            // oppure no, o eventualmente se non è ancora arrivato (in questo caso dare $ct['etc']['esito'] = 2)
+            
         }
 
         // se il checkout è andato a buon fine
@@ -69,3 +75,6 @@
         }
 
     }
+
+    // debug
+    // var_dump( $_SESSION['carrello']['id'] );

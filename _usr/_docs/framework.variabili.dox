@@ -31,7 +31,6 @@
     auth.jwt                        | array dei dati per il login tramite JWT
     auth.jwt.pass                   | password per il login via JWT, ricavata a partire dai dati JWT
     auth.jwt.secret                 | chiave segreta JWT
-    auth.jwt.token                  | token per il login via JWT
     auth.permissions                | array dei permessi disponibili
     auth.permissions.<e>            | array dei permessi disponibili per l'entità <e>
     auth.permissions.<e>.<l>        | array degli account con accesso <l> all'entità <e>
@@ -972,6 +971,7 @@
     session.account.utente                    | -
     session.groups                            | gruppi collegati alla sessione corrente (appare dopo il login)
     session.id                                | l'ID della sessione corrente
+    session.jwt.token                         | token per il login via JWT
     session.used                              | la timestamp dell'ultimo utilizzo della sessione
 
     \todo approfondire gli aspetti legati a session.__view__

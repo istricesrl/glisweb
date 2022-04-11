@@ -21,7 +21,6 @@
 	    'FROM documenti '.
 	    'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
         'INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
-
 	    'WHERE documenti.id = ?',
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
@@ -74,7 +73,7 @@
     $doc['righe'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT documenti_articoli.*, '.
-        'iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, '.
+        'iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, '.
         'udm.sigla AS udm FROM documenti_articoli '.
         'INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto '.
         'INNER JOIN iva ON iva.id = reparti.id_iva '.
@@ -109,7 +108,7 @@
                 'nome' => $riga['nome_iva'],
                 'codice' => $riga['codice_iva'],
                 'aliquota' => str_replace( ',', '.', sprintf( '%0.2f', $riga['aliquota'] ) ),
-                'riferimento' => ( ( ! empty( $riga['codice_iva'] ) ) ? $riga['descrizione_iva'] : NULL )
+                'riferimento' => ( ( ! empty( $riga['descrizione_iva'] ) ) ? $riga['descrizione_iva'] : NULL )
             );
         }
 
@@ -141,10 +140,11 @@
         $cf['mysql']['connection'],
         'SELECT modalita_pagamento.codice AS codice_pagamento, '.
         'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
-        ' importo_netto_totale AS importo_lordo_totale  '.
+        ' importo_netto_totale AS importo_lordo_totale, iban.iban AS iban  '.
         'FROM pagamenti '.
         'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
+        'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
         'WHERE pagamenti.id_documento = ?',
         array( array( 's' => $doc['id'] ) )
     );
@@ -208,6 +208,7 @@
         array( array( 's' => $src['id'] ) )
     );
 
+
     // indirizzo fiscale
     $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
 
@@ -221,9 +222,11 @@
     // recupero i dati del destinatario
 	$dst = mysqlSelectRow(
         $cf['mysql']['connection'],
-	    'SELECT * FROM anagrafica WHERE id = ?',
+	    'SELECT anagrafica.*, tipologie_anagrafica.se_pubblica_amministrazione FROM anagrafica LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia  WHERE anagrafica.id = ?',
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
+
+
 /**
  * NOTA è possibile emettere fattura elettronica verso privati senza SDI e PEC specificando '0000000'
  * lasciando vuoto il campo PECDestinatario e omettendo il campo IdFiscaleIVA

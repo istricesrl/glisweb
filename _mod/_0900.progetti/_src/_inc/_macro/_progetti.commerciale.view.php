@@ -35,15 +35,17 @@
         'id' => '#',
         'cliente' => 'cliente',
         'tipologia' => 'tipologia',
-        '__label__' => 'nome'
+        'nome' => 'nome',
+        'categorie' => 'categorie'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
         'cliente' => 'text-left d-none d-md-table-cell',
-#        'tipologia' => 'text-left',
-        '__label__' => 'text-left'
+        'tipologia' => 'text-left',
+        'nome' => 'text-left',
+        'categorie' => 'text-left'
     );
 
     // inclusione filtri speciali
