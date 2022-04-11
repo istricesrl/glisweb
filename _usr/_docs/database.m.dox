@@ -23,6 +23,8 @@
     macro.id_categoria_notizie      | l'ID della categoria di notizie cui si riferisce la macro
     macro.id_risorsa                | l'ID della risorsa cui si riferisce la macro
     macro.id_categoria_risorse      | l'ID della categoria di risorse cui si riferisce la macro
+    macro.id_progetto               | l'ID del progetto a cui si riferisce la macro
+    macro.id_categoria_progetti     | l'ID della categoria di progetto a cui si riferisce la macro
     macro.ordine                    | campo di ordinamento
     macro.macro                     | il percorso della macro
     macro.id_account_inserimento    | l'ID dell'account che ha inserito la riga
@@ -42,6 +44,8 @@
     macro_ibfk_06               | id_categoria_notizie      | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
     macro_ibfk_07               | id_risorsa                | risorse.id                    | ON DELETE CASCADE ON UPDATE CASCADE
     macro_ibfk_08               | id_categoria_risorse      | categorie_risorse.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    macro_ibfk_09               | id_progetto               | progetti.id
+    macro_ibfk_10               | id_categoria_progetti     | categorie_progetti.id
     macro_ibfk_98_nofollow      | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     macro_ibfk_99_nofollow      | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -58,6 +62,8 @@
     macro_view.id_categoria_notizie         | -
     macro_view.id_risorsa                   | -
     macro_view.id_categoria_risorse         | -
+    macro_view.id_progetto                  | -
+    macro_view.id_categoria_progetti        | -
     macro_view.ordine                       | -
     macro_view.macro                        | -
     macro_view.id_account_inserimento       | -

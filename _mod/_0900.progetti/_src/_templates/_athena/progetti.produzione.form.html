@@ -89,16 +89,13 @@
 			</div>
 				
 		</fieldset>
+		{% if '3000.contenuti' in mods.active.array %}
 		<fieldset>
-			<legend>contenuti</legend>
+			<legend>contenuti e aspetto</legend>
 			<div class="form-group form-row">
 				<div class="col-12 col-md-auto">
 					<span class="label-top">sito</span>
 					{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
-				</div>  
-				<div class="col-12 col-md-auto">
-					<span class="label-top">genitore</span>
-					{{ frm.select( table, '', '', 'id_genitore', '', etc.select.progetti, request ) }}
 				</div>  
 				<div class="col-4 col-md-auto col-form-label">
 					<div class="form-check">
@@ -110,12 +107,6 @@
 						{{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
 					</div>
 				</div>
-			</div>
-		</fieldset>
-	    <fieldset>
-			<legend>aspetto</legend>
-	
-			<div class="form-group form-row">
 				<div class="col-12 col-md">
 					<span class="label-top">template</span>
 					{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
@@ -131,16 +122,18 @@
 			</div>  
 	
 			</fieldset>
+			{# SUBFORM PUBBLICAZIONI #}
+       		{{ pub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_progetto' ) }}
+
+		{% endif %}
+
 		{# SUBFORM CATEGORIE #}
 		{{ sub.categorie( table, 'progetti_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
 
         {# SUBFORM RUOLI #}
         {{ sub.ruoli( table, 'progetti_anagrafica', 'ruoli', site, page, pages, ietf, etc, request, session ) }}
-		
-		{# SUBFORM PUBBLICAZIONI #}
-        {{ pub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_progetto' ) }}
-        
 		   
+
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}

@@ -760,6 +760,8 @@
     audio.id_categoria_prodotti                         | l'ID della categoria di prodotti cui è associato l'audio
     audio.id_notizia                                    | l'ID della notizia cui è associato l'audio
     audio.id_categoria_notizie                          | l'ID della categoria di notizie cui è associato l'audio
+    audio.id_progetto                                   | l'ID del progetto a cui si riferisce la audio
+    audio.id_categoria_progetti                         | l'ID della categoria di progetto a cui si riferisce la audio
     audio.id_account_inserimento                        | l'ID dell'account che ha inserito la riga
     audio.timestamp_inserimento                         | la timestamp dell'inserimento della riga
     audio.id_account_aggiornamento                      | l'ID dell'ultimo account che ha modificato la riga
@@ -785,6 +787,8 @@
     audio_ibfk_10                       | id_categoria_prodotti     | categorie_prodotti.id         | ON DELETE SET NULL ON UPDATE SET NULL
     audio_ibfk_11                       | id_notizia                | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     audio_ibfk_12                       | id_categoria_notizie      | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_13                       | id_progetto                | notizie.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    audio_ibfk_14                       | id_categoria_progetti      | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
     audio_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     audio_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -814,6 +818,8 @@
     audio_view.id_categoria_prodotti                | -
     audio_view.id_notizia                           | -
     audio_view.id_categoria_notizie                 | -
+    audio_view.id_progetto                          | -
+    audio_view.id_categoria_progetti                | -
     audio_view.id_account_inserimento               | -
     audio_view.id_account_aggiornamento             | -
     audio_view.__label__                            | l'etichetta descrittiva dell'audio

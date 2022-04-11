@@ -138,8 +138,9 @@ REPLACE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (6,	'LA',	'America Latina'),
 (7,	'AN',	'Antartide');
 
---| 050000007100
+--| 050000010000
 
+-- embed
 -- tipologia: tabella standard
 -- verifica: 2021-06-29 16:56 Fabio Mosti
 REPLACE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
