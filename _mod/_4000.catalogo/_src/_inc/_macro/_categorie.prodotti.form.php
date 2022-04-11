@@ -24,14 +24,26 @@
 
     // tendina siti
     $ct['etc']['select']['siti'] = $cf['sites'];
-    
-    // tendina id_genitore
+
+        // tendina id_genitore
 	$ct['etc']['select']['id_genitore'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM categorie_prodotti_view'
+	    'SELECT id, __label__ FROM categorie_prodotti_view ORDER BY __label__'
     );
+
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+
+        $ct['etc']['select']['id_genitore'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM categorie_prodotti_view WHERE id <> ? ORDER BY __label__',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+        );
+
+    }
     
      // tendina templates
      $tpl = glob( DIR_BASE . '{_,}src/{_,}templates/*', GLOB_BRACE );
