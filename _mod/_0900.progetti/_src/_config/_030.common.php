@@ -17,12 +17,12 @@
     $cf['progetti']['pages']['scheda']['macro']             = array('_mod/_0900.progetti/_src/_inc/_macro/_categorie.progetti.scheda.php');
     
     // configurazione extra
-    if( isset( $cx['catalogo'] ) ) {
-        $cf['catalogo'] = array_replace_recursive( $cf['catalogo'], $cx['catalogo'] );
+    if( isset( $cx['progetti'] ) ) {
+        $cf['progetti'] = array_replace_recursive( $cf['progetti'], $cx['progetti'] );
     }
     
     // collegamento all'array $ct
-    $ct['catalogo']                                         = &$cf['catalogo'];
+    $ct['progetti']                                         = &$cf['progetti'];
     
     // costanti che descrivono lo stato di funzionamento del framework
     define('PREFX_CATEGORIE_PROGETTI', 'CATEGORIE.PROGETTI.');

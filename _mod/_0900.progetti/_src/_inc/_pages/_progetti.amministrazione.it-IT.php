@@ -87,6 +87,19 @@
 		if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ) {
 			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'], 'progetti.amministrazione.form.chiusura' );
 		}
+
+		// RELAZIONI CON IL MODULO contenuti
+		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'], 'progetti.amministrazione.form.sem');
+			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'],'progetti.amministrazione.form.testo');
+		//	arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'],'progetti.amministrazione.form.menu');
+			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'],'progetti.amministrazione.form.immagini');
+			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'],'progetti.amministrazione.form.video');
+			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'],'progetti.amministrazione.form.audio');
+			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'],'progetti.amministrazione.form.file');
+			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'],'progetti.amministrazione.form.macro');
+			arrayInsertBefore( 'progetti.amministrazione.form.archiviazione', $p['progetti.amministrazione.form']['etc']['tabs'],'progetti.amministrazione.form.metadati' );
+		}
 	/*
 		// gestione todo progetti
 		// in relazione con il modulo todo
@@ -169,6 +182,104 @@
 			'macro'			=> array( $m . '_src/_inc/_macro/_progetti.amministrazione.form.tools.php' ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+		);
+
+		$p['progetti.amministrazione.form.sem'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'SEM/SMM' ),
+			'h1'		=> array( $l		=> 'SEM/SMM' ),
+			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.sem.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.sem.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
+		);
+		
+		// form progetti.amministrazione testo
+		$p['progetti.amministrazione.form.testo'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'testo' ),
+			'h1'		=> array( $l		=> 'testo' ),
+			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.testo.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.testo.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
+		);
+	
+		$p['progetti.amministrazione.form.macro'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'macro' ),
+			'h1'		=> array( $l		=> 'macro' ),
+			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.macro.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.macro.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
+		);
+	
+		$p['progetti.amministrazione.form.immagini'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'immagini' ),
+			'h1'		=> array( $l		=> 'immagini' ),
+			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.immagini.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.immagini.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
+		);
+	
+		// form progetti.amministrazione video
+		$p['progetti.amministrazione.form.video'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'video' ),
+			'h1'		=> array( $l		=> 'video' ),
+			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.video.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.video.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
+		);
+		
+		// form progetti.amministrazione file
+		$p['progetti.amministrazione.form.file'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'file' ),
+			'h1'		=> array( $l		=> 'file' ),
+			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.file.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.file.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
+		);
+	
+		// form progetti.amministrazione audio
+		$p['progetti.amministrazione.form.audio'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'audio' ),
+			'h1'		=> array( $l		=> 'audio' ),
+			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.audio.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.audio.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
+		);
+	
+		// form progetti.amministrazione metadati
+		$p['progetti.amministrazione.form.metadati'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'metadati' ),
+			'h1'		=> array( $l		=> 'metadati' ),
+			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.metadati.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.metadati.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
 		);
 
 	}

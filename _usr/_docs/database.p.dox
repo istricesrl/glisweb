@@ -453,6 +453,11 @@
     prodotti.id_tipologia               | l'ID della tipologia del prodotto
     prodotti.nome                       | il nome del prodotto
     prodotti.note                       | note aggiuntive sul prodotto
+    prodotti.template                   | il template da utilizzare per renderizzare la pagina
+    prodotti.schema_html                | lo schema da utilizzare per renderizzare la pagina
+    prodotti.tema_css                   | il tema CSS da utilizzare per renderizzare la pagina
+    prodotti.se_sitemap                 | flag che indica se la pagina va inclusa o no nella sitemap
+    prodotti.se_cacheable               | flag che indica se la pagina può essere salvata nella cache statica
     prodotti.note_codifica              | note aggiuntive sulla codifica del prodotto
     prodotti.id_marchio                 | l'ID del marchio del prodotto
     prodotti.id_produttore              | l'ID del produttore del prodotto
@@ -482,6 +487,11 @@
     prodotti_view.se_prodotto               | flag che indica se il prodotto rappresenta un bene materiale
     prodotti_view.se_servizio               | flag che indica se il prodotto rappresenta un servizio
     prodotti_view.nome                      | -
+    prodotti_view.template                  | -
+    prodotti_view.schema_html               | -
+    prodotti_view.tema_css                  | -
+    prodotti_view.se_sitemap                | -
+    prodotti_view.se_cacheable              | -
     prodotti_view.id_marchio                | -
     prodotti_view.marchio                   | il marchio del prodotto
     prodotti_view.id_produttore             | -

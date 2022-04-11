@@ -24,7 +24,8 @@
 			'LEFT JOIN todo ON todo.id = attivita_view.id_todo '.
 			'LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = attivita_view.id_cliente '.
 			'WHERE attivita_view.data_attivita IS NULL  ORDER BY attivita_view.data_programmazione, attivita_view.ora_inizio_programmazione'
-	);
+		);
+
 	
 
 	}

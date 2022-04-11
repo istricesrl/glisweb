@@ -73,7 +73,7 @@
 	);
 
 	// form pagine SEM/SMM
-	$p['pagine.form.sem'] = array(
+/*	$p['pagine.form.sem'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
@@ -82,19 +82,9 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.sem.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
-	);
+	);*/
 
-	// form pagine testo
-	$p['pagine.form.testo'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'testo' ),
-	    'h1'		=> array( $l		=> 'testo' ),
-	    'parent'		=> array( 'id'		=> 'pagine.view' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.testo.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.testo.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
-	);
+
 
 	// form pagine menu
 	$p['pagine.form.menu'] = array(
@@ -172,15 +162,16 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
-
-	$p['pagine.form.contenuti'] = array(
+	
+	// form pagine testo
+	$p['pagine.form.testo'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
-	    'parent'		=> array( 'id'		=> 'contenuti' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.contenuti.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.php', $m . '_src/_inc/_macro/_pagine.form.contenuti.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.testo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.testo.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 

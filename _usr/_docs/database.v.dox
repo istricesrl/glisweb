@@ -50,6 +50,8 @@
     video.id_categoria_notizie          | l'ID della categoria di notizie cui si riferisce il video
     video.id_lingua                     | l'ID della lingua del video
     video.id_ruolo                      | l'ID del ruolo del video relativamente all'entità cui si riferisce
+    video.id_progetto                   | l'ID del progetto 
+    video.id_categoria_progetti         | l'ID della categoria progetti
     video.ordine                        | campo di ordinamento
     video.nome                          | il nome del video
     video.path                          | il percorso del file del video
@@ -81,6 +83,8 @@
     video_ibfk_11_nofollow          | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     video_ibfk_12_nofollow          | id_ruolo                      | ruoli_video.id                | ON DELETE NO ACTION ON UPDATE NO ACTION
     video_ibfk_13_nofollow          | id_embed                      | embed.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    video_ibfk_14                   | id_progetto                   | progetti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    video_ibfk_15                   | id_categoria_progettigetti    | categorie_progetti.id         | ON DELETE SET NULL ON UPDATE SET NULL
     video_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     video_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -101,6 +105,8 @@
     video_view.id_categoria_notizie         | -
     video_view.id_lingua                    | -
     video_view.id_ruolo                     | -
+    video_view.id_progetto                  | -
+    video_view.id_categoria_progetti        | -
     video_view.ordine                       | -
     video_view.nome                         | -
     video_view.path                         | -

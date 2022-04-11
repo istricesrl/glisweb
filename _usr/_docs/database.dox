@@ -182,6 +182,7 @@
     pubblicazioni                   | 028400    | base          | principale    | contiene le pubblicazioni
     redirect                        | 029400    | base          | principale    | contiene i redirect HTTP
     rinnovi                         | 031500    | base          | secondaria    | contiene i rinnovi dei contratti
+    rinnovi_documenti_articoli      | 031550    | relazione     | secondaria    | mette in relazione rinnovi e documenti_articoli
     risorse                         | 032000    | base          | principale    | contiene le risorse
     risorse_anagrafica              | 032200    | relazione     | principale    | mette in relazione risorse e anagrafica
     risorse_categorie               | 032400    | relazione     | principale    | mette in relazione risorse e categorie_risorse
@@ -217,7 +218,7 @@
     ------------|-----------|----------------------------------------------------------
     BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, liste, liste_mail, luoghi, mail, mail_out, mail_sent, mailing, mailing_liste, mailing_mail, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_luoghi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | contatti, tipologie_contatti
-    PRODUZIONE  | 1000      | categorie_progetti, contratti,pianificazioni, progetti, progetti_anagrafica, progetti_categorie, relazioni_progetti, rinnovi, ruoli_anagrafica, tipologie_contratti,tipologie_progetti, todo
+    PRODUZIONE  | 1000      | categorie_progetti, contratti,pianificazioni, progetti, progetti_anagrafica, progetti_categorie, relazioni_progetti, rinnovi, rinnovi_documenti_articoli, ruoli_anagrafica, tipologie_contratti,tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
@@ -327,6 +328,7 @@
     relazioni_software              | SOFTWARE
     reparti                         | DOCUMENTI, CASSE
     rinnovi                         | PRODUZIONE
+    rinnovi_documenti_articoli      | PRODUZIONE
     risorse                         | RISORSE
     risorse_anagrafica              | RISORSE
     risorse_categorie               | RISORSE

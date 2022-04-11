@@ -2095,6 +2095,8 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_categoria_risorse,
 		file.id_mail_out,                    
 		file.id_mail_sent, 
+		file.id_progetto,
+		file.id_categoria_progetti,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -2702,6 +2704,13 @@ CREATE OR REPLACE VIEW `macro_view` AS
 		macro.id_prodotto,
 		macro.id_articolo,
 		macro.id_categoria_prodotti,
+		macro.id_notizia,
+		macro.id_categoria_notizie,
+		macro.id_risorsa,
+		macro.id_categoria_risorse,
+		macro.id_progetto,
+		macro.id_categoria_progetti,
+		macro.ordine,
 		macro.macro,
 		macro.macro AS __label__
 	FROM macro
@@ -3588,6 +3597,12 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
 		prodotti.codice_produttore,
 		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		prodotti.id_sito,
+		prodotti.template,
+		prodotti.schema_html,
+		prodotti.tema_css,
+		prodotti.se_sitemap,
+		prodotti.se_cacheable,
 		prodotti.id_account_inserimento,
 		prodotti.id_account_aggiornamento,
 		concat_ws(
@@ -3740,6 +3755,12 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
 		progetti.nome,
+        progetti.id_sito,
+		progetti.template,
+		progetti.schema_html,
+		progetti.tema_css,
+		progetti.se_sitemap,
+		progetti.se_cacheable,
 		progetti.entrate_previste,
 		progetti.ore_previste,
 		progetti.costi_previsti,
@@ -4784,6 +4805,26 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
 		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
 	;
+
+--| 090000031550
+
+-- rinnovi_documenti_articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `rinnovi_documenti_articoli_view`;
+
+--| 090000031551
+
+-- rinnovi_documenti_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2022-03-08 15:59 Chiara GDL
+CREATE OR REPLACE VIEW rinnovi_documenti_articoli_view AS
+	SELECT
+	rinnovi_documenti_articoli.id_documenti_articolo,
+	rinnovi_documenti_articoli.id_rinnovo,
+	concat( rinnovi_documenti_articoli.id_rinnovo ,' - ', rinnovi_documenti_articoli.id_documenti_articolo) AS __label__
+	FROM rinnovi_documenti_articoli
+	ORDER BY __label__
+;
 
 --| 090000032000
 
@@ -6232,6 +6273,8 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_lingua,
 		lingue.nome AS lingua,
 		video.id_ruolo,
+		video.id_progetto,
+		video.id_categoria_progetti,
 		ruoli_video.nome AS ruolo,
 		video.ordine,
 		video.nome,

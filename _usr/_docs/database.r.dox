@@ -413,6 +413,40 @@
     rinnovi_view.id_account_aggiornamento       | -
     rinnovi_view.__label__                      | etichetta del rinnovo
 
+    rinnovi_documenti_articoli
+    --------------------------
+    Questa tabella *gestita* mette in relazione molti a molti rinnovi e documenti_articoli
+ 
+    colonna                                     		           | descrizione
+    ---------------------------------------------------------------|------------------------------------------------------------------------
+    rinnovi_documenti_articoli.id                                  | l'ID della risorsa
+    rinnovi_documenti_articoli.id_rinnovo                          | l'ID del contratto a cui il rinnovo fa riferimento
+    rinnovi_documenti_articoli.id_documenti_articolo               | l'ID della licenza a cui il rinnovo fa riferimento
+    rinnovi_documenti_articoli.id_account_inserimento              | l'ID dell'account che ha inserito la riga
+    rinnovi_documenti_articoli.timestamp_inserimento               | la timestamp dell'inserimento della riga
+    rinnovi_documenti_articoli.id_account_aggiornamento            | l'ID dell'ultimo account che ha modificato la riga
+    rinnovi_documenti_articoli.timestamp_aggiornamento             | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                          | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------------------|---------------------------|-------------------------------|------------------
+    rinnovi_documenti_articoli_ibfk_01              | id_rinnovo                | rinnovi.id                    | ON DELETE NO CASCADE ON UPDATE NO ACTION
+    rinnovi_documenti_articoli_ibfk_02              | id_documenti_articolo     | documenti_articoli.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    rinnovi_documenti_articoli_ibfk_98_nofollow     | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    rinnovi_documenti_articoli_ibfk_99_nofollow     | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *rinnovi_documenti_articoli_view* relativa alla tabella *rinnovi_documenti_articoli* presenta le seguenti colonne:
+
+    colonna                                                     | descrizione
+    ------------------------------------------------------------|---------------------------------------------------------------------------------------
+    rinnovi_documenti_articoli_view.id                          | -
+    rinnovi_documenti_articoli_view.id_rinnovo                  | -
+    rinnovi_documenti_articoli_view.id_documenti_articolo       | -
+    rinnovi_documenti_articoli_view.id_account_inserimento      | -
+    rinnovi_documenti_articoli_view.id_account_aggiornamento    | -
+    rinnovi_documenti_articoli_view.__label__                   | etichetta della riga
+
     risorse
     -------
     Questa tabella *gestita* contiene le risorse documentali, intese come documenti o parti di documenti di varia natura

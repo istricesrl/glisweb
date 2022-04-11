@@ -110,7 +110,7 @@ if ($cf['contents']['cached'] === false) {
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
                     'id_prodotto',
-                    array(4, 16, 29, 14)
+                    array(1, 3, 4, 5, 7, 8)
                 );
 
                 aggiungiMetadati(
