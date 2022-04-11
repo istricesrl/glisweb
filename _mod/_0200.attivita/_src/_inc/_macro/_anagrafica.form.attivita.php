@@ -25,20 +25,26 @@
 	    'id' => '#',
         'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
-        'data_attivita' => 'esecuzione',
-	    '__label__' => 'attività',
+        'ora_fine_programmazione' => 'ora fine',
+        'data_attivita' => 'eseguita',
 	    'anagrafica' => 'svolta da',
+        'nome' => 'attività',
 	    'ore' => 'ore',
-        'nome' => 'testo'    );
+        'ora_inizio' => 'oi',
+        'ora_fine' => 'of'
+      );
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
 	    'data_programmazione' => 'text-left no-wrap',
-	    'ora_inizio_programmazione' => 'text-left no-wrap',
+	    'ora_inizio_programmazione' => 'd-none',
+        'ora_fine_programmazione' => 'd-none',
 	    'anagrafica' => 'text-left no-wrap',
-        'nome' => 'd-none'
+        'nome' => 'text-left no-wrap',
+        'ora_inizio' => 'd-none',
+        'ora_fine' => 'd-none'
     );
 
     $ct['etc']['include']['insert'] = 'inc/anagrafica.form.attivita.insert.html';
@@ -77,10 +83,14 @@
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-            if(!empty($row['data_programmazione'])){$row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));}
+            if( !empty($row['data_programmazione']) && (!empty($row['ora_inizio_programmazione']) || !empty($row['ora_fine_programmazione']) )){ 
+                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']) ).'  '.( empty($row['ora_inizio_programmazione']) ? '__:__'  : date('H:i', strtotime($row['ora_inizio_programmazione']))).' - '.( empty($row['ora_fine_programmazione']) ? '__:__' :date('H:i', strtotime($row['ora_fine_programmazione']) ));}
+            elseif( !empty($row['data_programmazione']) ){$row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));}
 
-            if(!empty($row['data_attivita'])){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
-            $row['ora_inizio_programmazione'] = substr( $row['ora_inizio_programmazione'], 0, -3);
+            if( !empty( $row['data_attivita'] ) ){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
+            if( !empty( $row['ora_inizio'] ) || !empty( $row['ora_fine'] ) ){ 
+                $row['data_attivita'] = $row['data_attivita'].'  '.( empty($row['ora_inizio']) ? '__:__'  : date('H:i', strtotime($row['ora_inizio']))).' - '.( empty($row['ora_fine']) ? '__:__' :date('H:i', strtotime($row['ora_fine']) ));
+             }
           //s  $row['__label__'] = $row['note_interne'].( empty($row['note_interne']) ? '' : '; <br>').$row['testo'];
 		}
 	}

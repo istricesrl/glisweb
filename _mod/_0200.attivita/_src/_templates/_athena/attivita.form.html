@@ -233,11 +233,11 @@
 			{% if '4100.prodotti' in mods.active.array or '0400.documenti' in mods.active.array %}
 			<div class="form-group form-row">
 				{% if '4100.prodotti' in mods.active.array %}
-				<div class="col-12 col-md">
+				<!--div class="col-12 col-md">
 					<span class="label-top">matricola</span>
 					{{ frm.selectBox( table, '', '', 'id_matricola', 'matricola', etc.select.matricole, request, '', '','','','','matricole.form','','matricole', 'id_matricola', page, pages, ietf,'matricole' ) }}
 				</div>
-<!-- NOTA il campo matricola deve poter essere bippato direttamente, senza bisogno del campo barcode affianco
+ NOTA il campo matricola deve poter essere bippato direttamente, senza bisogno del campo barcode affianco
 				<div class="col-2 col-md-6">
 					<span class="label-top">barcode matricola</span>
 					{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
@@ -245,10 +245,10 @@
 -->
 				{% endif %}
 				{% if '0400.documenti' in mods.active.array %}
-				<div class="col-12 col-md">
+				<!--div class="col-12 col-md">
 					<span class="label-top">riga</span>
 					{{ frm.selectBox( table, '', '', 'id_documenti_articoli', '', etc.select.id_documenti_articoli, request, '', '','','','','documenti.articoli.form','documenti.articoli.form','documenti_articoli', 'id_documenti_articoli' , page, pages, ietf,'documenti_articoli' ) }}
-				</div>
+				</div-->
 				{% endif %}
 				
 			</div>

@@ -1,5 +1,10 @@
 <?php
 
+	function validateDate($date, $format = 'Y-m-d')
+	{
+		$d = DateTime::createFromFormat($format, $date);
+		return $d && $d->format($format) == $date;
+	}
 	
 	if( isset( $_SESSION['account']['id_anagrafica'] ) ){
 
@@ -31,11 +36,16 @@
 
 
 	foreach( $ct['etc']['attivita']  as $evento ) {
-		$ct['etc']['agenda'][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][ $evento['id'] ] = $evento;
+		
+		if(  validateDate($evento['data_programmazione'], 'Y-m-d') == 1 ){
+			$ct['etc']['agenda'][ date('Y', strtotime($evento['data_programmazione'])) ][ date('W', strtotime($evento['data_programmazione'])) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][ $evento['id'] ] = $evento;
+		} else {
+			$ct['etc']['agenda_da_fissare'][ $evento['id'] ] = $evento;
+		}
+
 	}
 
-
-	 // tendina tipologia attivita
+	// tendina tipologia attivita
 	 $ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
 

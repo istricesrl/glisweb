@@ -15,21 +15,9 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'agenda', 'agenda.todo', 'agenda.stampe' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'agenda', 'agenda.stampe' ) ),
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'agenda' ),
 									'priority'	=> '040' ) ) )	
-	);
-
-    // todo agenda
-	$p[ 'agenda.todo'] = array(
-	    'sitemap'	=> false,
-	    'title'		=> array( $l		=> 'todo_agenda' ),
-	    'h1'		=> array( $l		=> 'todo' ),
-	    'parent'	=> array( 'id'		=> 'agenda' ),
-	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.todo.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['agenda']['etc']['tabs'] )
 	);
 
     // stampe agenda
@@ -69,15 +57,3 @@
 		'etc'			=> array( 'tabs'	=> $p['agenda.form']['etc']['tabs'] )
 	);
 
-	// gestione pagamenti fatture
-    $p['anagrafica.form.attivita'] = array(
-    	'sitemap'		=> false,
-        'icon'			=> '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>',
-        'title'			=> array( $l		=> 'attività' ),
-        'h1'			=> array( $l		=> 'attività' ),
-        'parent'		=> array( 'id'		=> 'anagrafica.view' ),
-        'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.attivita.html' ),
-        'macro'			=> array( $m . '_src/_inc/_macro/_anagrafica.form.attivita.php' ),
-        'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-        'etc'			=> array( 'tabs'	=> 'anagrafica.form' )
-    );
