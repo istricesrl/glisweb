@@ -25,6 +25,9 @@
             'menu' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
+            'macro' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'pubblicazioni' => array(
                 CONTROL_FULL => array( 'roots' )
     //		),
