@@ -50,6 +50,12 @@
     $ct['etc']['include']['insert'] = 'inc/anagrafica.form.attivita.insert.html';
 	$ct['view']['insert']['field'] = 'id_cliente';
 
+    $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view' );
+        
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.form';
 
@@ -64,14 +70,12 @@
 	    $ct['view']['__restrict__']['id_cliente']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 
+
+
      // tendina tipologia attivita
 	 $ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
-     $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view' );
+
 
         // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

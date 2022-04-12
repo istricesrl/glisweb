@@ -63,6 +63,16 @@
 	    $ct['view']['__restrict__']['id_todo']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 
+    $ct['etc']['include']['insert'] = 'inc/todo.form.attivita.insert.html';
+
+
+    $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view' );
+        
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
