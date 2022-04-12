@@ -73,7 +73,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
+            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( data_chiusura IS NULL OR id = ? )', 
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
