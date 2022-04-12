@@ -120,7 +120,7 @@
     );
 
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
-	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', 
+	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
         
         if( ! empty($todo['id_cliente']) ){

@@ -21,29 +21,32 @@
 	$ct['view']['open']['page'] = 'attivita.form';
 
      // campi della vista
-	$ct['view']['cols'] = array(
+     $ct['view']['cols'] = array(
 	    'id' => '#',
         'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
-        'note_programmazione' => 'compito',
-        'data_attivita' => 'esecuzione',
-	    '__label__' => 'attività',
+        'ora_fine_programmazione' => 'ora fine',
+        'anagrafica_programmazione' => 'assegnata a',
+        'data_attivita' => 'eseguita',
 	    'anagrafica' => 'svolta da',
+        'nome' => 'attività',
 	    'ore' => 'ore',
-        'testo' => 'testo',
-        'note_interne' => 'note_interne'
-    );
+        'ora_inizio' => 'oi',
+        'ora_fine' => 'of'
+      );
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
+        'anagrafica_programmazione' => 'text-left',
 	    'data_programmazione' => 'text-left no-wrap',
-	    'ora_inizio_programmazione' => 'text-left no-wrap',
+	    'ora_inizio_programmazione' => 'd-none',
+        'ora_fine_programmazione' => 'd-none',
 	    'anagrafica' => 'text-left no-wrap',
-	    'note_programmazione' => 'text-left',
-        'note_interne' => 'd-none',
-        'testo' => 'd-none'
+        'nome' => 'text-left no-wrap',
+        'ora_inizio' => 'd-none',
+        'ora_fine' => 'd-none'
     );
     
     // pagina per la gestione degli oggetti esistenti
@@ -68,10 +71,14 @@
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-            if(!empty($row['data_programmazione'])){$row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));}
+            if( !empty($row['data_programmazione']) && (!empty($row['ora_inizio_programmazione']) || !empty($row['ora_fine_programmazione']) )){ 
+                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']) ).'  '.( empty($row['ora_inizio_programmazione']) ? '__:__'  : date('H:i', strtotime($row['ora_inizio_programmazione']))).' - '.( empty($row['ora_fine_programmazione']) ? '__:__' :date('H:i', strtotime($row['ora_fine_programmazione']) ));}
+            elseif( !empty($row['data_programmazione']) ){$row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));}
 
-            if(!empty($row['data_attivita'])){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
-            $row['ora_inizio_programmazione'] = substr( $row['ora_inizio_programmazione'], 0, -3);
-            $row['__label__'] = $row['note_interne'].( empty($row['note_interne']) ? '' : '; <br>').$row['testo'];
+            if( !empty( $row['data_attivita'] ) ){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
+            if( !empty( $row['ora_inizio'] ) || !empty( $row['ora_fine'] ) ){ 
+                $row['data_attivita'] = $row['data_attivita'].'  '.( empty($row['ora_inizio']) ? '__:__'  : date('H:i', strtotime($row['ora_inizio']))).' - '.( empty($row['ora_fine']) ? '__:__' :date('H:i', strtotime($row['ora_fine']) ));
+             }
+          //s  $row['__label__'] = $row['note_interne'].( empty($row['note_interne']) ? '' : '; <br>').$row['testo'];
 		}
 	}
