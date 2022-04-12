@@ -54,19 +54,23 @@
     <div class="form-row">
     <div class="col-6">
         <legend>nuova todo</legend>
-        {% for b in etc.id_tipologia_attivita %}
+        <div class="form-row">
+        {% for b in etc.id_tipologia_todo %}
         <div class="col-4 text-right">
-            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}', '_self')">{{ b.__label__ }}</button>
+            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
         </div>
         {% endfor %}
     </div>
+    </div>
     <div class="col-6">
         <legend>nuovo promemoria</legend>
+        <div class="form-row">
         {% for b in etc.id_tipologia_attivita %}
         <div class="col-4 text-right">
             <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}', '_self')">{{ b.__label__ }}</button>
         </div>
         {% endfor %}
+        </div>
     </div>
 
     </div>
@@ -74,7 +78,7 @@
 {% if etc.agenda_da_fissare|length > 0 %}
 <legend>da fissare</legend>
 {% for  e in etc.agenda_da_fissare.attivita %}
-    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}','_self');" style="cursor: pointer;">
+    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
 	    <p>&mdash;</p>
 	</div>
@@ -92,14 +96,14 @@
 {% endfor %}
 
 {% for  e in etc.agenda_da_fissare.todo %}
-    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}','_self');" style="cursor: pointer;">
+    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
 	    <p>&mdash;</p>
 	</div>
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
-            {% if e.id %}<b>{{ e.__label__ }}</b>{% endif %} pianificata per {% if not data_programmazione %}il {{ data_programmazione|date('d/m/Y') }}{% else %}la settimana {{settimana_programmazione}}/{{anno_programmazione}}{% endif %}<br>
+            {% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if not data_programmazione %}il {{ data_programmazione|date('d/m/Y') }}{% else %}la settimana {{settimana_programmazione}}/{{anno_programmazione}}{% endif %}<br>
 		    {{ e.nome }}</span> &mdash; responsabile {{ e.anagrafica }}
 		</div>
 	    </div>
@@ -112,16 +116,17 @@
 
 {% for settimana, attivita in anno %}
 <legend>settimana {{ settimana }}</legend>
+
 {% if etc.todo_todo[a][settimana]|length > 0 %}
 {% for e in etc.todo_todo[a][settimana] %}
-<div style="background-color: lightgrey;" class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}','_self');" style="cursor: pointer;">
+<div  class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
     <div class="col-1 lemma text-right">
         <p>&mdash;</p>
     </div>
     <div class="col">
         <div class="form-row">
         <div class="col">
-            {% if e.id %}<b>{{ e.__label__ }}</b>{% endif %} pianificata per {% if not data_programmazione %}il {{ data_programmazione|date('d/m/Y') }}{% else %}la settimana {{settimana_programmazione}}/{{anno_programmazione}}{% endif %}<br>
+            {% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if not data_programmazione %}il {{ data_programmazione|date('d/m/Y') }}{% else %}la settimana {{settimana_programmazione}}/{{anno_programmazione}}{% endif %}<br>
             {{ e.nome }}</span> &mdash; responsabile {{ e.anagrafica }}
         </div>
         </div>
@@ -131,11 +136,12 @@
 {% endif %}
 
 {% for  data,eventi_per_data in attivita %}
+{% if data %}
 <legend style="font-size: 100%;">{{ trans_day_hash[data|date('l', "Europe/Rome")] }} {{ data|date('d') }} {{ trans_month_hash[data|date('m')] }} {{ data|date('Y') }}</legend>
     {% for ora,eventi_per_ora in eventi_per_data %}
     {% for e in eventi_per_ora %}
     {% if e.entita == 'a' %}
-    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}','_self');" style="cursor: pointer;">
+    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
 	    <p>{% if ora != ora_old %}{{ ora|date(' H:i') }}{% else %}&mdash;{% endif %}</p>
 	</div>
@@ -150,16 +156,18 @@
 	</div>
     </div>
     {% set ora_old = ora %}
+    
     {% endif %}
     {% if e.entita == 't' %}
-    <div style="background-color: lightgrey;" class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}','_self');" style="cursor: pointer;">
+    <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
         <div class="col-1 lemma text-right">
             <p>&mdash;</p>
         </div>
+        
         <div class="col">
             <div class="form-row">
             <div class="col">
-                {% if e.id %}<b>{{ e.__label__ }}</b>{% endif %} pianificata per {% if not data_programmazione %}il {{ data_programmazione|date('d/m/Y') }}{% else %}la settimana {{settimana_programmazione}}/{{anno_programmazione}}{% endif %}<br>
+                {% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if not data_programmazione %}il {{ data_programmazione|date('d/m/Y') }}{% else %}la settimana {{settimana_programmazione}}/{{anno_programmazione}}{% endif %}<br>
                 {{ e.nome }}</span> &mdash; responsabile {{ e.anagrafica }}
             </div>
             </div>
@@ -167,7 +175,9 @@
         </div>
     {% endif %}
     {% endfor %}
+    
     {% endfor %}
+    {% endif %}
 {% endfor %}
 {% endfor %}
 {% endfor %}

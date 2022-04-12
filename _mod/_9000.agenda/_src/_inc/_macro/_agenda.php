@@ -23,9 +23,8 @@
 
 		$ct['etc']['todo'] = mysqlQuery(
 			$cf['mysql']['connection'],
-			'SELECT \'t\' AS entita, todo_view.*, count(attivita.id) AS n_attivita FROM todo_view LEFT JOIN attivita ON attivita.id_todo = todo_view.id WHERE attivita.data_attivita IS NULL AND (todo_view.id_anagrafica = ? OR attivita.id_anagrafica_programmazione = ?) AND todo_view.data_chiusura IS NULL GROUP BY todo_view.id HAVING n_attivita > 0',
+			'SELECT \'t\' AS entita, todo_view.*, count(attivita.id) AS n_attivita FROM todo_view LEFT JOIN attivita ON attivita.id_todo = todo_view.id WHERE attivita.data_attivita IS NULL AND (todo_view.id_anagrafica = ? AND attivita.id_anagrafica_programmazione <> ?) AND todo_view.data_chiusura IS NULL GROUP BY todo_view.id  HAVING n_attivita > 0',
 			array( array( 's' => $_SESSION['account']['id_anagrafica'] ),  array( 's' => $_SESSION['account']['id_anagrafica'] )  ) );
-
 	} else {
 
 		// elenco attivita
@@ -44,11 +43,21 @@
 			'SELECT \'t\' AS entita, todo_view.*, count(attivita.id) AS n_attivita FROM todo_view LEFT JOIN attivita ON attivita.id_todo = todo_view.id WHERE attivita.data_attivita IS NULL AND todo_view.data_chiusura IS NULL GROUP BY todo_view.id HAVING n_attivita > 0');
 	}
 
+	foreach( $ct['etc']['todo']  as $evento ) {
+		
+		if( !empty( $evento['data_programmazione']) ){
+			$ct['etc']['agenda'][ date('Y', strtotime($evento['data_programmazione'])) ][ date('W', strtotime($evento['data_programmazione'])) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][] = $evento;
+		} else {
+			$ct['etc']['todo_todo'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = $evento;
+			$ct['etc']['agenda'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = array();
+		}
+
+	}
 
 	foreach( $ct['etc']['attivita']  as $evento ) {
 		
 		if(  validateDate($evento['data_programmazione'], 'Y-m-d') == 1 ){
-			$ct['etc']['agenda'][ date('Y', strtotime($evento['data_programmazione'])) ][ date('W', strtotime($evento['data_programmazione'])) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][ $evento['id'] ] = $evento;
+			$ct['etc']['agenda'][ date('Y', strtotime($evento['data_programmazione'])) ][ date('W', strtotime($evento['data_programmazione'])) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][] = $evento;
 		} else {
 			$ct['etc']['agenda_da_fissare']['attivita'][] = $evento;
 		}
@@ -56,19 +65,16 @@
 	}
 
 
-	foreach( $ct['etc']['todo']  as $evento ) {
-		
-		if( !empty( $evento['data_programmazione']) ){
-			$ct['etc']['agenda'][ date('Y', strtotime($evento['data_programmazione'])) ][ date('W', strtotime($evento['data_programmazione'])) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][ $evento['id'] ] = $evento;
-		} else {
-			$ct['etc']['todo_todo'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = $evento;
-		}
 
-	}
-print_r($ct['etc']['agenda']);
 	// tendina tipologia attivita
 	 $ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
+	// tendina tipologia attivita
+	$ct['etc']['id_tipologia_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
 
+
+
+	// macro di default
+	require DIR_SRC_INC_MACRO . '_default.form.php';
 
 
