@@ -21,7 +21,6 @@
 	    'FROM documenti '.
 	    'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
         'INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
-
 	    'WHERE documenti.id = ?',
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
@@ -141,10 +140,11 @@
         $cf['mysql']['connection'],
         'SELECT modalita_pagamento.codice AS codice_pagamento, '.
         'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
-        ' importo_netto_totale AS importo_lordo_totale  '.
+        ' importo_netto_totale AS importo_lordo_totale, iban.iban AS iban  '.
         'FROM pagamenti '.
         'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
+        'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
         'WHERE pagamenti.id_documento = ?',
         array( array( 's' => $doc['id'] ) )
     );
@@ -208,6 +208,7 @@
         array( array( 's' => $src['id'] ) )
     );
 
+
     // indirizzo fiscale
     $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
 
@@ -221,9 +222,11 @@
     // recupero i dati del destinatario
 	$dst = mysqlSelectRow(
         $cf['mysql']['connection'],
-	    'SELECT * FROM anagrafica WHERE id = ?',
+	    'SELECT anagrafica.*, tipologie_anagrafica.se_pubblica_amministrazione FROM anagrafica LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia  WHERE anagrafica.id = ?',
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
+
+
 /**
  * NOTA è possibile emettere fattura elettronica verso privati senza SDI e PEC specificando '0000000'
  * lasciando vuoto il campo PECDestinatario e omettendo il campo IdFiscaleIVA
@@ -234,13 +237,20 @@
  */
 
     // codice SDI di default a '0000000' per i destinatari senza codice SDI
-    if( empty( $dst['codice_sdi'] ) && ! empty( $dst['pec_sdi'] ) ) {
+    if( empty( $dst['codice_sdi'] ) && ! empty( $dst['id_pec_sdi'] ) ) {
         $dst['codice_sdi'] = '0000000';
     }
 
     // verifico che il codice SDI risponda al pattern corretto
     if( ! preg_match( '/[a-zA-Z0-9]+/', $dst['codice_sdi'] ) ) {
         dieText('valore non corretto per codice SDI: ' . $dst['codice_sdi'] );
+    }
+
+    if( !empty($dst['id_pec_sdi'])){
+        $dst['pec_sdi'] =  mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT indirizzo from mail where id = ?',
+            array( array( 's' => $dst['id_pec_sdi'] ) ) );
     }
 
     // denominazione fiscale
