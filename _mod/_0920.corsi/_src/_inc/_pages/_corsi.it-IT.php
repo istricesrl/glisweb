@@ -44,7 +44,7 @@
 	    'h1'				=> array( $l		=> 'stampe' ),
 	    'parent'			=> array( 'id'		=> 'corsi.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_corsi.stampe.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_corsi.stampe.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['corsi.view']['etc']['tabs'] )
 	);
@@ -57,7 +57,7 @@
 	    'h1'				=> array( $l		=> 'azioni' ),
 	    'parent'			=> array( 'id'		=> 'corsi.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_corsi.tools.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_corsi.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['corsi.view']['etc']['tabs'] )
 	);
@@ -101,9 +101,9 @@
 	    'h1'				=> array( $l		=> 'iscritti' ),
 	    'parent'			=> array( 'id'		=> 'corsi.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.iscritti.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_corsi.form.iscritti.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_corsi.form.iscritti.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['corsi.view']['etc']['tabs'] )
+	    'etc'				=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
 	);
 
 	// calendario corsi
@@ -115,7 +115,7 @@
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.calendario.html' ),
 	    'macro'				=> array( '_src/_inc/_macro/_corsi.form.calendario.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['corsi.view']['etc']['tabs'] )
+	    'etc'				=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
 	);
 
 	// stampe corsi
@@ -128,7 +128,7 @@
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'				=> array( '_src/_inc/_macro/_corsi.stampe.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['corsi.view']['etc']['tabs'] )
+	    'etc'				=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
 	);
 
     // tools corsi
@@ -141,5 +141,5 @@
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'				=> array( '_src/_inc/_macro/_corsi.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> $p['corsi.view']['etc']['tabs'] )
+	    'etc'				=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
 	);

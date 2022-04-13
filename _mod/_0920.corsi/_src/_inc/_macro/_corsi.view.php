@@ -21,10 +21,6 @@
     // tabella della vista
 	$ct['view']['table'] = 'corsi';
 
-    $ct['view']['id'] = md5(
-		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
-	    );
-        
     // tabella per la gestione degli oggetti esistenti
 	$ct['view']['open']['table'] = 'progetti';
 
