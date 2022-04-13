@@ -346,13 +346,11 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_categorie.progetti.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'categorie.progetti.form'
-															,'categorie.progetti.form.tools' ) )
+			'etc'			=> array( 'tabs'	=> array(	'categorie.progetti.form',
+															'categorie.progetti.form.tools' ) )
 		);
 
-	}
-
-			// RELAZIONI CON IL MODULO AMMINISTRAZIONE
+		// RELAZIONI CON IL MODULO AMMINISTRAZIONE
 		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.sem');
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.testo');
@@ -487,3 +485,5 @@
 			'etc'			=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 		);
+
+	}
