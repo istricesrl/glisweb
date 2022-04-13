@@ -4988,6 +4988,8 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.id,
 		ruoli_anagrafica.id_genitore,
 		ruoli_anagrafica.nome,
+		ruoli_anagrafica.se_produzione,
+		ruoli_anagrafica.se_didattica,
 		ruoli_anagrafica.se_organizzazioni,
 		ruoli_anagrafica.se_relazioni,
 		ruoli_anagrafica.se_risorse,

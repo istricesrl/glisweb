@@ -65,4 +65,46 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 	GROUP BY progetti.id
 ;
 
+--| 202204130050
+CREATE OR REPLACE VIEW `tipologie_progetti_view` AS
+	SELECT
+		tipologie_progetti.id,
+		tipologie_progetti.id_genitore,
+		tipologie_progetti.ordine,
+		tipologie_progetti.nome,
+		tipologie_progetti.html_entity,
+		tipologie_progetti.font_awesome,
+		tipologie_progetti.se_produzione,
+		tipologie_progetti.se_contratto,
+		tipologie_progetti.se_pacchetto,
+		tipologie_progetti.se_progetto,
+		tipologie_progetti.se_consuntivo,
+		tipologie_progetti.se_forfait,
+		tipologie_progetti.se_didattica,
+		tipologie_progetti.id_account_inserimento,
+		tipologie_progetti.id_account_aggiornamento,
+		tipologie_progetti_path( tipologie_progetti.id ) AS __label__
+	FROM tipologie_progetti
+;
+
+--| 202204130060
+ALTER TABLE `progetti` CHANGE `id_tipologia` `id_tipologia`  int(11) DEFAULT NULL;
+
+--| 202204130070
+CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
+	SELECT
+		ruoli_anagrafica.id,
+		ruoli_anagrafica.id_genitore,
+		ruoli_anagrafica.nome,
+		ruoli_anagrafica.se_produzione,
+		ruoli_anagrafica.se_didattica,
+		ruoli_anagrafica.se_organizzazioni,
+		ruoli_anagrafica.se_relazioni,
+		ruoli_anagrafica.se_risorse,
+		ruoli_anagrafica.se_progetti,
+	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
+	FROM ruoli_anagrafica
+;
+
+
 -- FINE
