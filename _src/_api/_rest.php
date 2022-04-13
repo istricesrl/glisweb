@@ -170,7 +170,10 @@
 	    // inclusione del framework
 		require '../_config.php';
 
-	    // log
+		// timer
+		timerCheck( $cf['speed'], 'inizio eleborazione API REST' );
+
+		// log
 		logWrite( $_REQUEST['__ws__'] . '/' . $_SERVER['REQUEST_METHOD'] . '/' . print_r( $cf['ws'], true ), 'rest' );
 
 		// output
@@ -202,6 +205,29 @@
 		    default:
 				http_response_code( 406 );
 		    break;
+		}
+
+		// timer
+		timerCheck( $cf['speed'], 'fine esecuzione framework' );
+
+		// log
+		appendToFile( 'fine esecuzione framework' . PHP_EOL, FILE_LATEST_RUN );
+
+		// calcolo tempi
+		$tms = array_keys( $cf['speed'] );
+		$run = end( $tms );
+		$flt = floatval( str_replace( ',', '.', substr( $run, 1 ) ) );
+
+		// log
+		if( $flt > 0.75 || memory_get_usage( true ) > ( 1024 * 1024 * 15 ) ) {
+			writeToFile(
+				$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
+				'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
+				print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
+				'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
+				' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
+				DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
+			);
 		}
 
 	} else {

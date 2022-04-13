@@ -250,17 +250,22 @@
 				$r = mysqlSelectValue(
 				    $c,
 # NON CONSIDERA EDITOR
-					"SELECT concat_ws( ',', group_concat( ${aclTb}.permesso SEPARATOR ',' ), if( ( ${t}_view.id_account_inserimento = ? ), 'FULL', NULL ) ) AS t ".
+//					"SELECT concat_ws( ',', group_concat( ${aclTb}.permesso SEPARATOR ',' ), if( ( ${t}_view.id_account_inserimento = ? ), 'FULL', NULL ) ) AS t ".
+					"SELECT concat_ws( ',', group_concat( ${aclTb}.permesso SEPARATOR ',' ), if( ( ${t}.id_account_inserimento = ? ), 'FULL', NULL ) ) AS t ".
 
 # CONSIDERA EDITOR				    "SELECT concat_ws( ',', group_concat( ${aclTb}.permesso SEPARATOR ',' ), if( ( ${t}_view.id_account_inserimento = ? OR ${t}_view.id_account_editor = ? ), 'FULL', NULL ) ) AS t ".
-				    "FROM ${t}_view ".
-				    "LEFT JOIN ${aclTb} ON ${aclTb}.id_entita = ${t}_view.id ".
+//				    "FROM ${t}_view ".
+					"FROM ${t} ".
+//					"LEFT JOIN ${aclTb} ON ${aclTb}.id_entita = ${t}_view.id ".
+					"LEFT JOIN ${aclTb} ON ${aclTb}.id_entita = ${t}.id ".
 # NON GERARCHICO		    "LEFT JOIN account_gruppi ON account_gruppi.id_gruppo = ${aclTb}.id_gruppo ".
 				    "LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) OR ${aclTb}.id_account = ? ) ".
 # NON CONSIDERA EDITOR
-		    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? ) ".
+//		    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? ) ".
+			"WHERE ( account_gruppi.id_account = ? OR ${t}.id_account_inserimento = ? ) ".
 # CONSIDERA EDITOR				    "WHERE ( account_gruppi.id_account = ? OR ${t}_view.id_account_inserimento = ? OR ${t}_view.id_account_editor = ? ) ".
-				    "AND ${t}_view.id = ? ",
+//				    "AND ${t}_view.id = ? ",
+					"AND ${t}.id = ? ",
 # NON CONSIDERA EDITOR
 		    array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )
 # CONSIDERA EDITOR				    array( array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $aclId ), array( 's' => $id ) )

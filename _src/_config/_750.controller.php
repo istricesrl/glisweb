@@ -273,6 +273,9 @@
 			    // debug
 				// echo $k . '/' . $_SERVER['REQUEST_METHOD'] . PHP_EOL;
 
+                // parametri aggiuntivi
+                $pi = $ci = array();
+
 			    // attivazione controller
 				$cf['controller']['status'][ $k ] = controller(
 				    $cf['mysql']['connection'],				// connessione al database
@@ -282,7 +285,10 @@
 				    $_SERVER['REQUEST_METHOD'],				// metodo da applicare
 				    NULL,						// campo per la ricorsione
 				    $_REQUEST['__err__'][ $k ],				// array per gli errori
-				    $_REQUEST['__info__'][ $k ]				// array per le informazioni
+				    $_REQUEST['__info__'][ $k ],				// array per le informazioni
+                    $pi,
+                    $ci,
+                    $cf['speed']
 				);
 
 			    // debug

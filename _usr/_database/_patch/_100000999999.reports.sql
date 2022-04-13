@@ -38,7 +38,7 @@ SELECT
   concat( documenti.numero, '/', documenti.sezionale ) AS numero,
   documenti_articoli.id AS id_riga,
   coalesce( documenti_articoli.quantita, 0 ) AS carico,
-  coalesce( articoli.peso, 0 ) AS peso_carico,
+  coalesce( articoli.peso, 0 ) * documenti_articoli.quantita AS peso_carico,
   0 AS scarico,
   0 AS peso_scarico,
   udm_peso.sigla AS sigla_udm_peso
@@ -70,7 +70,7 @@ SELECT
   0 AS carico,
   0 AS peso_carico,
   coalesce( documenti_articoli.quantita, 0 ) AS scarico,
-  coalesce( articoli.peso, 0 ) AS peso_scarico,
+  coalesce( articoli.peso, 0 ) * documenti_articoli.quantita AS peso_scarico,
   udm_peso.sigla AS sigla_udm_peso
 FROM mastri
   LEFT JOIN documenti_articoli
