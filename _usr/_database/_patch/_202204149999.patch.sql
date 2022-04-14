@@ -308,4 +308,35 @@ ADD KEY `id_sito` (`id_sito`),
 ADD KEY `se_sitemap` (`se_sitemap`),
 ADD KEY `se_cacheable` (`se_cacheable`);
 
+--| 202204140220
+CREATE OR REPLACE VIEW `risorse_view` AS
+	SELECT
+		risorse.id, 
+		risorse.id_tipologia,
+		tipologie_risorse.nome AS tipologia,
+		risorse.codice, 
+		risorse.nome,
+		risorse.template,
+		risorse.schema_html,
+		risorse.tema_css,
+		risorse.se_sitemap,
+		risorse.se_cacheable,
+		risorse.id_sito,
+		risorse.id_testata, 
+		testate.nome AS testata,
+		risorse.giorno_pubblicazione,
+		risorse.mese_pubblicazione,
+		risorse.anno_pubblicazione,
+		risorse.id_account_inserimento,
+		risorse.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			risorse.codice,
+			risorse.nome
+		) AS __label__
+	FROM risorse
+		LEFT JOIN tipologie_risorse ON tipologie_risorse.id = risorse.id_tipologia
+		LEFT JOIN testate ON testate.id = risorse.id_testata
+;
+
 -- FINE

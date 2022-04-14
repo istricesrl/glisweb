@@ -459,6 +459,13 @@
     risorse.codice                              | il codice della risorsa
     risorse.nome                                | il nome della risorsa
     risorse.note                                | note aggiuntive sulla risorsa
+    risorse.id_sito                             | l'ID del sito cui è collegata la risorsa
+    risorse.template                            | il template da utilizzare per renderizzare la risorsa
+    risorse.schema_html                         | lo schema da utilizzare per renderizzare la risorsa
+    risorse.tema_css                            | il tema CSS da utilizzare per renderizzare la risorsa
+    risorse.id_contenuti                        | l'ID del testo della risorsa
+    risorse.se_sitemap                          | flag che indica se la risorsa va inclusa o no nella sitemap
+    risorse.se_cacheable                        | flag che indica se la risorsa può essere salvata nella cache statica
     risorse.id_testata                          | l'ID della testata su cui è stata pubblicata la risorsa
     risorse.giorno_pubblicazione                | il giorno di pubblicazione della risorsa
     risorse.mese_pubblicazione                  | il mese di pubblicazione della risorsa
@@ -486,6 +493,12 @@
     risorse_view.tipologia                  | la tipologia della risorsa
     risorse_view.codice                     | -
     risorse_view.nome                       | -
+    risorse_view.template                   | -
+    risorse_view.schema_html                | -
+    risorse_view.tema_css                   | -
+    risorse_view.id_contenuti               | -
+    risorse_view.se_sitemap                 | -
+    risorse_view.se_cacheable               | -
     risorse_view.id_testata                 | -
     risorse_view.testata                    | la testata su cui è stata pubblicata la risorsa
     risorse_view.giorno_pubblicazione       | -
