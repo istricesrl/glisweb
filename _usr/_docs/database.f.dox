@@ -31,6 +31,8 @@
     file.id_lingua                  | l'ID della lingua del file
     file.id_mail_out                | l'ID della mail in uscita a cui si riferisce il file
     file.id_mail_sent               | l'ID della mail inviata a cui si riferisce il file
+    file.id_progetto                | l'ID del progetto a cui si riferisce il file
+    file.id_categoria_progetti      | l'ID della categoria di progetto a cui si riferisce il file
     file.path                       | il percorso del file relativo alla document root per i file locali
     file.url                        | l'URL per i file esterni
     file.nome                       | il nome del file
@@ -56,7 +58,11 @@
     file_ibfk_11                    | id_categoria_notizie          | categorie_notizie.id          | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_12                    | id_risorsa                    | risorse.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_13                    | id_categoria_risorse          | categorie_risorse.id          | ON DELETE SET NULL ON UPDATE SET NULL
-    file_ibfk_13_nofollow           | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    file_ibfk_14_nofollow           | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    file_ibfk_15                    | id_mail_out                   | mail_out.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_16                    | id_mail_sent                  | mail_sent.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_17                    | id_progetto                   | progetti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_18                    | id_categoria_progetti         | categorie_progetti.id         | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -75,7 +81,7 @@
     file_view.id_todo                   | -
     file_view.id_pagina                 | -
     file_view.id_template               | -
-    file_view.id_mailing               | -
+    file_view.id_mailing                | -
     file_view.id_notizia                | -
     file_view.id_categoria_notizie      | -
     file_view.id_risorsa                | -
@@ -84,6 +90,8 @@
     file_view.lingua                    | la lingua del file
     file_view.id_mail_out               | -
     file_view.id_mail_sent              | -
+    file_view.id_progetto               | -
+    file_view.id_categoria_progetti     | -
     file_view.path                      | -
     file_view.url                       | -
     file_view.nome                      | -

@@ -95,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `cognome` char(255) DEFAULT NULL,
   `denominazione` char(255) DEFAULT NULL,
   `soprannome` char(128) DEFAULT NULL,
-  `sesso` enum('M','F','-') NOT NULL DEFAULT '-',
+  `sesso` enum('M','F','-') DEFAULT NULL,
   `stato_civile` char(128) DEFAULT NULL,
   `codice_fiscale` char(32) DEFAULT NULL,
   `partita_iva` char(32) DEFAULT NULL,
@@ -344,6 +344,8 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` INT(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -802,6 +804,9 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `esigibilita`	enum('I','D','S') DEFAULT NULL,
   `codice_archivium` char(64) DEFAULT NULL ,
   `codice_sdi` char(64) DEFAULT NULL,
+  `cig` char(16) DEFAULT NULL,
+  `cup` char(16) DEFAULT NULL,
+  `riferimento` char(255) DEFAULT NULL, 
   `timestamp_invio` int DEFAULT NULL,
   `progressivo_invio` char(5) DEFAULT NULL,
   `id_coupon` char(32) DEFAULT NULL,
@@ -890,6 +895,8 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_lingua` int(11) DEFAULT NULL,
   `id_mail_out` int(11) DEFAULT NULL,
   `id_mail_sent` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` INT(11) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `url` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -1180,6 +1187,8 @@ CREATE TABLE IF NOT EXISTS `macro` (
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` INT(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `macro` char(255) NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1383,7 +1392,7 @@ CREATE TABLE `matricole` (
 CREATE TABLE IF NOT EXISTS `menu` (
   `id` int(11) NOT NULL,
   `id_lingua` int(11) NOT NULL,
-  `id_pagina` int(11) NOT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
@@ -1663,7 +1672,14 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
   `id` char(32) NOT NULL,	
   `id_tipologia` int(11) NOT NULL,	
   `nome` char(128) NOT NULL,	
-  `note` text,	
+  `note` text,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,	
   `note_codifica` text,	
   `id_marchio` int(11) DEFAULT NULL,	
   `id_produttore` int(11) DEFAULT NULL,	
@@ -1721,6 +1737,13 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `id_indirizzo` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,	
   `entrate_previste` decimal(16,2) DEFAULT NULL,
   `ore_previste` decimal(16,2) DEFAULT NULL,
   `costi_previsti` decimal(16,2) DEFAULT NULL,
@@ -2038,6 +2061,21 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000031550
+
+-- rinnovi_documenti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2022-03-08 15:59 Chiara GDL
+CREATE TABLE IF NOT EXISTS `rinnovi_documenti_articoli` (
+`id` int(11) NOT NULL,
+  `id_rinnovo` int(11) NOT NULL,
+  `id_documenti_articolo` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000032000
 
 -- risorse
@@ -2046,8 +2084,8 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
 CREATE TABLE IF NOT EXISTS `risorse` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `codice` char(6) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `codice` char(16) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
   `note` text,
   `id_testata` int(11) DEFAULT NULL,
   `giorno_pubblicazione` int(2) DEFAULT NULL,
@@ -2103,6 +2141,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `nome` char(128) COLLATE utf8_general_ci NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
+  `se_produzione`int(1) DEFAULT NULL,
+  `se_didattica` int(1) DEFAULT NULL,
   `se_organizzazioni` int(1) DEFAULT NULL,
   `se_relazioni` int(1) DEFAULT NULL,
   `se_risorse` int(1) DEFAULT NULL,
@@ -2447,6 +2487,8 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_persona_fisica` int(1) DEFAULT NULL,
+  `se_persona_giuridica` int(1) DEFAULT NULL,
+  `se_pubblica_amministrazione` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2729,11 +2771,13 @@ CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
   `nome` char(64) NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
+  `se_produzione`int(1) DEFAULT NULL,
   `se_contratto` tinyint(1) DEFAULT NULL,
   `se_pacchetto` tinyint(1) DEFAULT NULL,
   `se_progetto` tinyint(1) DEFAULT NULL,
   `se_consuntivo` tinyint(1) DEFAULT NULL,
   `se_forfait` tinyint(1) DEFAULT NULL,
+  `se_didattica` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2940,6 +2984,8 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` INT(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,

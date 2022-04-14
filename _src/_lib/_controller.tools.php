@@ -22,7 +22,7 @@
      * @todo documentare
      *
      */
-    function controller( $c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array() ) {
+    function controller( $c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = NULL ) {
 
 	// log
 	    logWrite( "${t}/${a}", 'controller' );
@@ -213,8 +213,26 @@
 			    }
 
 			// filtri della vista
-			    if( isset( $filters ) && ! empty( $filters ) ) {
+			if( isset( $filters ) && ! empty( $filters ) ) {
 				foreach( $filters as $fc => $sn ) {
+					if( strpos($fc, '|') !== false ){
+						foreach( $sn as $sk => $sv ) {
+							if( (string) $sv != '' ) {
+								switch( $sk ) {
+								case 'EQ':
+									$whri = array();
+									$fcs = explode('|', $fc);
+									foreach($fcs as $fci){
+										$whri[] = "${fci} = ?";
+										$vs[] = array( 's' => $sv );
+									}
+									$whr[] = implode(' OR ', $whri);
+
+								break;
+								}
+							}
+						}
+					} else {
 				    foreach( $sn as $sk => $sv ) {
 					if( (string) $sv != '' ) {
 					    switch( $sk ) {
@@ -248,9 +266,20 @@
 						    $whr[] = "${fc} LIKE ?";
 						    $vs[] = array( 's' => '%'.$sv.'%' );
 						break;
+						case 'IN':
+							$sva = explode('|', $sv);
+
+							$whr[] = "${fc} IN (".implode(',', array_fill(0,count($sva),'?')).")";
+
+							foreach($sva as $svi){
+								$vs[] = array( 's' => $svi );
+							}
+						    
+						break;
 					    }
 					}
 				    }
+				}
 				}
 			    }
 

@@ -256,9 +256,9 @@
     }
 
     /**
-     * NOTA perché questa funzione era commentata?
+     * 
      */
-    function aggiungiGruppi( &$p, $id, $f = 'id_pagina', $t = 'pagine_gruppi' ) {
+    function aggiungiGruppi( &$p, $id, $f = 'id_pagina', $t = '__acl_pagine__' ) {
 
         // TODO l'assetto dei gruppi cambierà, probabilmente per usare le ACL
 
@@ -268,8 +268,8 @@
             'nome',
             $cf['mysql']['connection'],
             'SELECT gruppi.nome FROM gruppi '.
-            'INNER JOIN pagine_gruppi ON gruppi.id = pagine_gruppi.id_gruppo '.
-            'WHERE pagine_gruppi.id_pagina = ?',
+            'INNER JOIN __acl_pagine__ ON gruppi.id = __acl_pagine__.id_gruppo '.
+            'WHERE __acl_pagine__.id_entita = ?',
             array(
                 array( 's' => $id )
             )

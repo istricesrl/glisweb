@@ -627,7 +627,7 @@
                 $cf['mysql']['connection'],
                 array(
                     'id' => NULL,
-                    'id_tipologia' => 11,
+                    'id_tipologia' => 1,
                     'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
                     'numero' => $i['numero'][0],
                     'sezionale' => ( isset( $i['numero'][1] ) ? $i['numero'][1] : NULL ),
@@ -735,6 +735,22 @@
                         array( array( 's' => $row['ModalitaPagamento']['#'] ) )
                     );
 
+                    // cerco iban nel database
+                    if( ! empty( $row['IBAN']['#'] ) ){
+
+                        $idIban = mysqlInsertRow($cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'id_anagrafica' => $i['idFornitore'],
+                            'iban' => $row['IBAN']['#']
+                        ),
+                        'iban'
+                    );
+
+                    } else {
+                        $idIban = NULL;
+                    }
+
                     // inserisco il pagamento
                     mysqlInsertRow(
                         $cf['mysql']['connection'],
@@ -743,7 +759,8 @@
                             'id_documento' => $i['idDocumento'],
                             'id_modalita_pagamento' => $idModalita,
                             'importo_netto_totale' => $row['ImportoPagamento']['#'],
-                            'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] )
+                            'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] ),
+                            'id_iban' =>  $idIban
                         ),
                         'pagamenti'
                     );

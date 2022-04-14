@@ -40,7 +40,14 @@
 
     // root element
 	$xml->startElement( 'p:FatturaElettronica' );
-	$xml->writeAttribute( 'versione', 'FPR12' );
+	
+	// versione PA o privati
+	if( !$dst['se_pubblica_amministrazione'] == 1 ){
+		$xml->writeAttribute( 'versione', 'FPR12' );
+	} else {
+		$xml->writeAttribute( 'versione', 'FPA12' );
+	}
+
 	$xml->writeAttribute( 'xmlns:ds', 'http://www.w3.org/2000/09/xmldsig#' );
 	$xml->writeAttribute( 'xmlns:p', 'http://ivaservizi.agenziaentrate.gov.it/docs/xsd/fatture/v1.2' );
 	$xml->writeAttribute( 'xmlns:xsi', 'http://www.w3.org/2001/XMLSchema-instance');
@@ -67,8 +74,13 @@
     // - - - ProgressivoInvio / identificativo univoco del documento
 	$xml->writeElement( 'ProgressivoInvio', $doc['progressivo_invio'] );
 
-    // - - - FormatoTrasmissione / valore fisso
-	$xml->writeElement( 'FormatoTrasmissione', 'FPR12' );
+	if( !$dst['se_pubblica_amministrazione'] == 1 ){
+		// - - - FormatoTrasmissione / privati
+		$xml->writeElement( 'FormatoTrasmissione', 'FPR12' );
+	} else {
+		// - - - FormatoTrasmissione / privati
+		$xml->writeElement( 'FormatoTrasmissione', 'FPA12' );
+	}
 
     // - - - CodiceDestinatario / codice SDI del destinatario
 	$xml->writeElement( 'CodiceDestinatario', $dst['codice_sdi'] );
@@ -252,6 +264,32 @@
     // - - - /DatiGeneraliDocumento
 	$xml->endElement();
 
+	if( $dst['se_pubblica_amministrazione'] == 1 ){
+
+		if( empty( $doc['cig']) ){die( 'cig mancante' ); } 
+
+		if( empty( $doc['riferimento']) ){die( 'riferimento documento per PA assente' ); } 
+
+		// - - - DatiOrdineAcquisto
+		$xml->startElement( 'DatiOrdineAcquisto' );
+
+		$xml->writeElement( 'RiferimentoNumeroLinea', '1' );
+
+		$xml->writeElement( 'IdDocumento', $doc['riferimento']);
+
+		$xml->writeElement( 'CodiceCIG', $doc['cig'] );
+
+		if(!empty( $doc['cup'] )){
+			$xml->writeElement( 'CodiceCUP', $doc['cup'] );
+			
+		}
+
+		// - - - /DatiOrdineAcquisto
+		$xml->endElement();
+
+	
+	}
+
 	// ciclo sulle fatture collegate
 	foreach( $dcl AS $dc ) {
 
@@ -312,7 +350,10 @@
 		if( ! empty( $row['codice_iva'] ) ) {
 		    $xml->writeElement( 'Natura', $row['codice_iva'] );
 		}
-
+		if( $row['importo_netto_unitario'] * $row['qtd'] != $row['importo_netto_totale'] ){
+			die( 'errore di arrotondamento riga '.($num+1).': '.$row['nome'].' importo totale '.$row['importo_netto_totale'] );
+		}
+		
 	    // - - - /DettaglioLinee
 		$xml->endElement();
 
@@ -375,6 +416,11 @@
 	    // - - - - ImportoPagamento / l'importo di questa scadenza
 		$xml->writeElement( 'ImportoPagamento', $row['importo_lordo_totale'] );
 
+		if( !empty( $row['iban'] ) ){
+			// - - - - iban 
+			$xml->writeElement( 'IBAN', $row['iban'] );
+		}
+
 	    // - - - /DettaglioPagamento
 		$xml->endElement();
 
@@ -405,7 +451,11 @@
 	    header( 'Content-disposition: attachment; filename=' . basename( $outFile ) );
         buildXml( implode( $rows ) );
 	} else {
-		array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaordinaria_v1.2.xsl" ?>' . PHP_EOL ) );
-        buildXml( implode( $rows ) );
+		if( $dst['se_pubblica_amministrazione'] == 1 ){
+			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaPA_v1.2.1.xsl" ?>' . PHP_EOL ) );
+		} else {
+			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaordinaria_v1.2.1.xsl" ?>' . PHP_EOL ) );
+		}
+		buildXml( implode( $rows ) );
     }
 

@@ -125,7 +125,8 @@
 		$invio = queueMailFromTemplate(
 			$cf['mysql']['connection'],
 			$tpl,
-# TODO prelevare i dati dai metadati del mailing                array( 'dt' => array_replace_recursive( $_REQUEST['__profile__'], array( 'tk' => $tk ) ), 'ct' => $ct ),
+# TODO prelevare i dati dai metadati del mailing e inserirli come dt
+# TODO prelevare i dati del destinatario e inserirli come ds
 			array(),
 			$row['timestamp_invio'],
 			array( $row['destinatario'] => $row['indirizzo'] ),

@@ -18,7 +18,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.sem.html' ),
 			'macro'		=> array( $m . '_src/_inc/_macro/_corsi.form.sem.php' ),
 			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
+			'etc'		=> array( 'tabs'	=> 'corsi.form' )
 		);
 
 		// form corsi testo
@@ -30,7 +30,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.testo.html' ),
 			'macro'		=> array( $m . '_src/_inc/_macro/_corsi.form.testo.php' ),
 			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
+			'etc'		=> array( 'tabs'	=> 'corsi.form' )
 		);
 
 	}

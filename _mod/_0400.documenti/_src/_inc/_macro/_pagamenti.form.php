@@ -38,7 +38,7 @@
 			$cf['memcache']['connection'],
 			$cf['mysql']['connection'],
 			'SELECT iban_view.id, iban_view.__label__ FROM iban_view '.
-			'LEFT JOIN documenti ON documenti.id_destinatario = iban_view.id_anagrafica '.
+			'LEFT JOIN documenti ON documenti.id_emittente = iban_view.id_anagrafica '.
 			'WHERE documenti.id = ? ',
 			array( array( 's' => $_REQUEST['pagamenti']['id_documento'] ) )
 		);
@@ -51,7 +51,7 @@
 			$cf['memcache']['connection'],
 			$cf['mysql']['connection'],
 			'SELECT iban_view.id, iban_view.__label__ FROM iban_view '.
-			'LEFT JOIN documenti ON documenti.id_destinatario = iban_view.id_anagrafica '.
+			'LEFT JOIN documenti ON documenti.id_emittente = iban_view.id_anagrafica '.
 			'WHERE documenti.id = ? ',
 			array( array( 's' => $_REQUEST['__preset__']['pagamenti']['id_documento'] ) )
 		);

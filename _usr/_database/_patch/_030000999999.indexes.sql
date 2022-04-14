@@ -318,6 +318,8 @@ ALTER TABLE `audio`
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_embed`),
@@ -801,6 +803,8 @@ ALTER TABLE `documenti`
 	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `cig` (`cig`),
+	ADD KEY `cup` (`cup`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
@@ -902,6 +906,8 @@ ALTER TABLE `file`
 	ADD KEY `id_lingua` (`id_lingua`), 
 	ADD KEY `id_mail_out` (`id_mail_out`), 
 	ADD KEY `id_mail_sent` (`id_mail_sent`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -1254,10 +1260,14 @@ ALTER TABLE `macro`
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`macro`), 
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`macro`), 
 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`macro`), 
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`macro`), 
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`macro`), 
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `indice` (`id`,`ordine`,`macro`),
 	ADD KEY `indice_pagine` (`id`,`id_pagina`,`ordine`,`macro`),
 	ADD KEY `indice_prodotti` (`id`,`id_prodotto`,`ordine`,`macro`),
@@ -1789,6 +1799,9 @@ ALTER TABLE `prodotti`
 	ADD KEY `codice_produttore` (`codice_produttore`), 	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`);
 
 --| 030000026200
@@ -1846,6 +1859,9 @@ ALTER TABLE `progetti`
 	ADD KEY `id_cliente` (`id_cliente`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `nome` (`nome`), 
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `data_accettazione` (`data_accettazione`),
 	ADD KEY `data_chiusura` (`data_chiusura`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
@@ -2200,7 +2216,27 @@ ALTER TABLE `rinnovi`
 -- rinnovi
 -- tipologia: tabella gestita
 ALTER TABLE `rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-	
+
+
+--| 030000031550
+
+-- rinnovi_documenti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2022-03-08 15:59 Chiara GDL
+ALTER TABLE `rinnovi_documenti_articoli`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
+	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_rinnovo`);
+
+--| 030000031551
+
+-- rinnovi_documenti_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `rinnovi_documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000032000
 
 -- risorse
@@ -2274,6 +2310,8 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_didattica` (`se_didattica`),
+	ADD KEY `se_produzione` (`se_produzione`),
 	ADD KEY `se_organizzazioni` (`se_organizzazioni`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_progetti` (`se_progetti`), 
@@ -2657,7 +2695,7 @@ ALTER TABLE `tipologie_anagrafica`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`, `se_persona_giuridica`,`se_pubblica_amministrazione`);
 
 --| 030000050001
 
@@ -3187,6 +3225,8 @@ ALTER TABLE `video`
  	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
  	ADD KEY `id_embed` (`id_embed`), 
  	ADD KEY `path` (`path`), 
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),

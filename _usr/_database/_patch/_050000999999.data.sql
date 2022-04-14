@@ -138,8 +138,9 @@ REPLACE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (6,	'LA',	'America Latina'),
 (7,	'AN',	'Antartide');
 
---| 050000007100
+--| 050000010000
 
+-- embed
 -- tipologia: tabella standard
 -- verifica: 2021-06-29 16:56 Fabio Mosti
 REPLACE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
@@ -503,26 +504,18 @@ REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categ
 -- ruoli_immagini
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-INSERT INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
-(1, NULL, 900, 'immagine', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(2, NULL, 300, 'intestazione',NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(3, NULL, 900, 'sfondo', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(4, NULL, 600, 'gallery', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(5, NULL, 600, 'jumbotron', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(6, NULL, 100, 'avatar', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(7, NULL, 300, 'logo', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1),
-(8, NULL, 200, 'carousel', NULL, NULL, 1, 1, 1, 1, 1, 1, 1, 1, 1) ON DUPLICATE KEY UPDATE
-	nome = VALUES( nome ),
-	se_anagrafica = VALUES( se_anagrafica ),
-	se_pagine = VALUES( se_pagine ),
-	se_prodotti = VALUES( se_prodotti ),
-	se_articoli = VALUES( se_articoli ),
-	se_categorie_prodotti = VALUES( se_categorie_prodotti ),
-	se_notizie = VALUES( se_notizie ),
-	se_categorie_notizie = VALUES( se_categorie_notizie ),
-	se_risorse = VALUES( se_risorse ),
-	se_categorie_risorse = VALUES( se_categorie_risorse )
-;
+REPLACE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
+(1,		NULL,	900,	'immagine',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(2,		NULL,	600,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(3,		NULL,	200,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(4,		NULL,	200,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(5,		NULL,	200,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1),
+(6,		NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(7,		NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(8,		NULL,	900,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(9,		NULL,	200,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	100,	'avatar',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	300,	'logo',			NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000034800
 
@@ -560,21 +553,18 @@ REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font
 -- ruoli_video
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-REPLACE INTO `ruoli_video` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_prodotti`, `se_articoli`) VALUES
-(1,	    'intestazione',	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	    'sfondo',	    NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	    'card',	        NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	    'media',	    NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	    'gallery',	    NULL,	NULL,	NULL,	1,	    1),
-(8,	    'footer',	    NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	    'contenuto',	NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	'principale',	NULL,	1,	    1,	    1,	    1),
-(12,	'carousel',	    NULL,	NULL,	NULL,	NULL,	NULL),
-(13,	'video',	    1,	    1,	    1,	    1,	    1),
-(14,	'jumbotron',	NULL,	NULL,	NULL,	NULL,	NULL),
-(15,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	NULL),
-(16,	'anteprima',	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
+(1,		NULL,	'video',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(2,		NULL,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(3,		NULL,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(4,		NULL,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
+(5,		NULL,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1),
+(6,		NULL,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(7,		NULL,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(8,		NULL,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
+(9,		NULL,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'lezione',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
+(11,	NULL,	'episodio',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL);
 
 --| 050000037000
 
@@ -860,12 +850,13 @@ INSERT INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_de
 -- tipologie_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-15 16:15 Fabio Mosti
-REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`) VALUES
-(1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1),
-(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL),
-(3,	1,	    10,	'sig.',	                NULL,	NULL,	1),
-(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1),
-(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL);
+REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`,`se_persona_giuridica`, `se_pubblica_amministrazione`) VALUES
+(1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1,	NULL,	NULL),
+(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1),
+(3,	1,	    10,	'sig.',	                NULL,	NULL,	1,	NULL,	NULL),
+(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1,	NULL,	NULL),
+(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050400
 
@@ -992,12 +983,13 @@ INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_e
 -- tipologie_progetti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT IGNORE INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'contratto',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'pacchetto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'progetto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	NULL,	'forfait',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `se_didattica`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'contratto',	'',	'',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'pacchetto',	'',	'',	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'progetto',	'',	'',	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'consuntivo',	'',	'',	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	'forfait',	'',	'',	1,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	'corso',	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055400
 
@@ -1014,6 +1006,8 @@ INSERT IGNORE INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `no
 -- tipologie_risorse
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT INTO `tipologie_risorse` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'corso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000056200
 

@@ -89,7 +89,16 @@
 	        'SELECT indirizzi_view.id, __label__ FROM indirizzi_view LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id  WHERE anagrafica_indirizzi.id_anagrafica = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) )
 	    );
-	   } 
+	   
+		/*$ct['etc']['tipologia_anagrafica'] = mysqlCachedIndexedQuery(
+	        $cf['memcache']['index'],
+	        $cf['memcache']['connection'],
+	        $cf['mysql']['connection'],
+	        'SELECT anagrafica.*, tipologie_anagrafica.se_pubblica_amministrazione FROM anagrafica LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia  WHERE anagrafica.id = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) )
+	    );*/
+		
+	} 
 
 
 

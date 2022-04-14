@@ -20,7 +20,9 @@ SELECT
   data_scadenza,
   sum( carico ) AS carico,
   sum( scarico ) AS scarico,
-  coalesce( ( sum( carico ) - sum( scarico ) ), 0 ) AS totale
+  coalesce( ( sum( carico ) - sum( scarico ) ), 0 ) AS totale,
+  coalesce( ( sum( peso_carico ) - sum( peso_scarico ) ), 0 ) AS peso,
+  sigla_udm_peso
 FROM (
 SELECT
   mastri.id,
@@ -36,7 +38,10 @@ SELECT
   concat( documenti.numero, '/', documenti.sezionale ) AS numero,
   documenti_articoli.id AS id_riga,
   coalesce( documenti_articoli.quantita, 0 ) AS carico,
-  0 AS scarico
+  coalesce( articoli.peso, 0 ) * documenti_articoli.quantita AS peso_carico,
+  0 AS scarico,
+  0 AS peso_scarico,
+  udm_peso.sigla AS sigla_udm_peso
 FROM mastri
   LEFT JOIN documenti_articoli
     ON documenti_articoli.id_mastro_destinazione = mastri.id
@@ -46,6 +51,7 @@ FROM mastri
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
   WHERE documenti_articoli.quantita IS NOT NULL
 UNION
 SELECT
@@ -62,7 +68,10 @@ SELECT
   concat( documenti.numero, '/', documenti.sezionale ) AS numero,
   documenti_articoli.id AS id_riga,
   0 AS carico,
-  coalesce( documenti_articoli.quantita, 0 ) AS scarico
+  0 AS peso_carico,
+  coalesce( documenti_articoli.quantita, 0 ) AS scarico,
+  coalesce( articoli.peso, 0 ) * documenti_articoli.quantita AS peso_scarico,
+  udm_peso.sigla AS sigla_udm_peso
 FROM mastri
   LEFT JOIN documenti_articoli
     ON documenti_articoli.id_mastro_provenienza = mastri.id
@@ -72,10 +81,10 @@ FROM mastri
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
   WHERE documenti_articoli.quantita IS NOT NULL
 ) AS movimenti
-GROUP BY id, nome, id_articolo, articolo, id_matricola, matricola, data_scadenza;
-
+GROUP BY id, nome, id_articolo, articolo, id_matricola, matricola, data_scadenza, sigla_udm_peso;
 
 --| 100000020500
 

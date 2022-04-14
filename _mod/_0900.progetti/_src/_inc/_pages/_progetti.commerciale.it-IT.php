@@ -45,17 +45,128 @@
 			arrayInsertSeq( 'progetti.commerciale.form', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.todo' );
 		}
 
-	/*
-		// gestione todo progetti
-		$p['progetti.commerciale.form.todo'] = array(
+		/*
+			// gestione todo progetti
+			$p['progetti.commerciale.form.todo'] = array(
+				'sitemap'		=> false,
+				'title'			=> array( $l		=> 'todo' ),
+				'h1'			=> array( $l		=> 'to-do' ),
+				'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+				'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.todo.html' ),
+				'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.todo.php' ),
+				'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+				'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+			);
+		*/
+
+		// RELAZIONI CON IL MODULO contenuti
+		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.sem');
+			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.testo');
+			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.immagini');
+			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.video');
+			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.audio');
+			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.file');
+			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.macro');
+			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.metadati' );
+		}
+		
+				$p['progetti.commerciale.form.sem'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'todo' ),
-			'h1'			=> array( $l		=> 'to-do' ),
+			'title'		=> array( $l		=> 'SEM/SMM' ),
+			'h1'		=> array( $l		=> 'SEM/SMM' ),
 			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.todo.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.todo.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.sem.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.sem.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
 		);
-	*/
+		
+		// form progetti.commerciale testo
+		$p['progetti.commerciale.form.testo'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'testo' ),
+			'h1'		=> array( $l		=> 'testo' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.testo.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.testo.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
+		$p['progetti.commerciale.form.macro'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'macro' ),
+			'h1'		=> array( $l		=> 'macro' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.macro.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.macro.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
+		$p['progetti.commerciale.form.immagini'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'immagini' ),
+			'h1'		=> array( $l		=> 'immagini' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.immagini.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.immagini.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
+		// form progetti.commerciale video
+		$p['progetti.commerciale.form.video'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-video-camera" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'video' ),
+			'h1'		=> array( $l		=> 'video' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.video.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.video.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+		
+		// form progetti.commerciale file
+		$p['progetti.commerciale.form.file'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'file' ),
+			'h1'		=> array( $l		=> 'file' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.file.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.file.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
+		// form progetti.commerciale audio
+		$p['progetti.commerciale.form.audio'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-volume-up" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'audio' ),
+			'h1'		=> array( $l		=> 'audio' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.audio.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.audio.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
+		// form progetti.commerciale metadati
+		$p['progetti.commerciale.form.metadati'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'metadati' ),
+			'h1'		=> array( $l		=> 'metadati' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.metadati.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.metadati.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
 	}
