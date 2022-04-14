@@ -2,10 +2,10 @@
 -- PATCH
 --
 
---| 202204119010
+--| 202204129010
 DROP TABLE attivita_view_static;
 
---| 202204119020
+--| 202204129020
 CREATE TABLE `attivita_view_static` (
   `id` int NOT NULL,
   `id_tipologia` int DEFAULT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE `attivita_view_static` (
   `__label__` varchar(320) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---| 202204119030
+--| 202204129030
 insert into  attivita_view_static select * from attivita_view
 
 
