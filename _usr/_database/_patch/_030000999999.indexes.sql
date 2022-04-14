@@ -2323,6 +2323,27 @@ ALTER TABLE `ruoli_anagrafica`
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 010000034100
+
+-- ruoli_articoli
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:11 Fabio Mosti
+ALTER TABLE `ruoli_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_progetti` (`se_progetti`),
+	ADD KEY `se_risorse` (`se_risorse`),
+	ADD KEY `se_acquisto` (`se_acquisto`),
+	ADD KEY `se_rinnovo` (`se_rinnovo`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_progetti`,`se_risorse`,`se_acquisto`, `se_rinnovo`);
+
+--| 010000034101
+
+-- ruoli_articoli
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000034200
 
 -- ruoli_audio

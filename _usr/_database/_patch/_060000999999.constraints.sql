@@ -1136,6 +1136,14 @@ ALTER TABLE `risorse_categorie`
 ALTER TABLE `ruoli_anagrafica`
     ADD CONSTRAINT `ruoli_anagrafica_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 060000034100
+
+-- ruoli_articoli
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:14 Fabio Mosti
+ALTER TABLE `ruoli_articoli`
+    ADD CONSTRAINT `ruoli_articoli_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    
 --| 060000034200
 
 -- ruoli_audio

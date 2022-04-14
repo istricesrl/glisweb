@@ -2149,6 +2149,23 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_progetti` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000034100
+
+-- ruoli_articoli
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-09 16:21 Chiara GDL
+CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_progetti`int(1) DEFAULT NULL,
+  `se_risorse` int(1) DEFAULT NULL,
+  `se_acquisto` int(1) DEFAULT NULL,
+  `se_rinnovo` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000034200
 
 -- ruoli_audio

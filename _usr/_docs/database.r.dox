@@ -597,6 +597,45 @@
     ruoli_anagrafica_view.se_risorse            | -
     ruoli_anagrafica_view.se_progetti           | -
     ruoli_anagrafica_view.__label__             | etichetta descrittiva del ruolo
+
+    ruoli_articoli
+    ----------------
+    Questa tabella *standard* contiene i ruoli che l'entità *articoli* può svolgere in relazione a diverse
+    entità principali.
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_articoli.id                      | l'ID del ruolo
+    ruoli_articoli.id_genitore             | l'ID del ruolo genitore
+    ruoli_articoli.nome                    | il nome del ruolo
+    ruoli_articoli.html_entity             | entità HTML che rappresenta visivamente il ruolo
+    ruoli_articoli.font_awesome            | classe Font Awesome dell'icona che rappresenta visivamente il ruolo
+    ruoli_articoli.se_progetti             | flag che indica se il ruolo è pertinente ai progetti
+    ruoli_articoli.se_risorse              | flag che indica se il ruolo è pertinente alle risorse
+    ruoli_articoli.se_acquisto             | flag che indica se il ruolo è pertinente agli acquisti
+    ruoli_articoli.se_rinnovo              | flag che indica se il ruolo è pertinente ai rinnovi
+
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+    ruoli_articoli_ibfk_01                  | id_genitore           | ruoli_articoli.id           | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_articoli_view* relativa alla tabella *ruoli_articoli* presenta le seguenti colonne:
+ 
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_articoli_view.id                      | -
+    ruoli_articoli_view.id_genitore             | -
+    ruoli_articoli_view.nome                    | -
+    ruoli_articoli_view.html_entity             | -
+    ruoli_articoli_view.font_awesome            | -
+    ruoli_articoli_view.se_progetti             | -
+    ruoli_articoli_view.se_risorse              | -
+    ruoli_articoli_view.se_acquisto             | -
+    ruoli_articoli_view.se_rinnovo              | -
+    ruoli_articoli_view.__label__               | etichetta descrittiva del ruolo
     
     ruoli_audio
     -----------

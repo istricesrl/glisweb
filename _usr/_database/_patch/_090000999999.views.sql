@@ -4998,6 +4998,32 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 	FROM ruoli_anagrafica
 ;
 
+--| 090000034100
+
+-- ruoli_articoli_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_articoli_view`;
+
+--| 090000034101
+
+-- ruoli_articoli_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:17 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_articoli_view AS
+	SELECT
+		ruoli_articoli.id,
+		ruoli_articoli.id_genitore,
+		ruoli_articoli.nome,
+		ruoli_articoli.html_entity,
+		ruoli_articoli.font_awesome,
+		ruoli_articoli.se_progetti,
+		ruoli_articoli.se_risorse,
+		ruoli_articoli.se_acquisto,
+        ruoli_articoli.se_rinnovo,
+	 	ruoli_articoli_path( ruoli_articoli.id ) AS __label__
+	FROM ruoli_articoli
+;
+
 --| 090000034200
 
 -- ruoli_audio_view
