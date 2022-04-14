@@ -1783,7 +1783,7 @@ CREATE
 
 END;
 
--| 070000034100
+--| 070000034100
 
 -- ruoli_articoli_path
 DROP FUNCTION IF EXISTS `ruoli_articoli_path`;

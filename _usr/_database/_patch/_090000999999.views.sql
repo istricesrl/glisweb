@@ -4165,6 +4165,40 @@ CREATE OR REPLACE VIEW progetti_anagrafica_view AS
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = progetti_anagrafica.id_ruolo
 ;
 
+--| 090000027300
+
+-- progetti_articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_articoli_view`;
+
+--| 090000027301
+
+-- progetti_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-04-14 14:58 Chiara GDL
+CREATE OR REPLACE VIEW `progetti_articoli_view` AS
+	SELECT
+		progetti_articoli.id,
+		progetti_articoli.id_progetto,
+		progetti.nome AS progetto,
+		progetti_articoli.id_articolo,
+		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		progetti_articoli.id_ruolo,
+		progetti_articoli.ordine,
+		progetti_articoli.id_account_inserimento,
+		progetti_articoli.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			progetti.nome,
+			concat_ws( ' ', prodotti.nome, articoli.nome ),
+			ruoli_articoli.nome
+		) AS __label__
+	FROM progetti_articoli
+		LEFT JOIN ruoli_articoli ON ruoli_articoli.id = progetti_articoli.id_ruolo
+		LEFT JOIN progetti ON progetti.id = progetti_articoli.id_progetto
+		LEFT JOIN articoli ON articoli.id = progetti_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto;
+
 --| 090000027400
 
 -- progetti_categorie_view

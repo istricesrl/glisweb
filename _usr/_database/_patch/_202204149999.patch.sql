@@ -166,6 +166,64 @@ CREATE OR REPLACE VIEW ruoli_articoli_view AS
 --| 202204140100
 ALTER TABLE `ruoli_articoli`
     ADD CONSTRAINT `ruoli_articoli_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
-   
+
+--| 202204140110
+CREATE TABLE IF NOT EXISTS `progetti_articoli` (
+  `id` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_articolo` char(32) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202204140120
+ALTER TABLE `progetti_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_articolo`, `id_ruolo`),
+	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_articolo` (`id_articolo`),	
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_progetto`,`id_articolo`, `id_ruolo`,`ordine`);
+
+--| 202204140130
+ALTER TABLE `progetti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204140140
+ALTER TABLE `progetti_articoli`
+    ADD CONSTRAINT `progetti_articoli_ibfk_01` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `progetti_articoli_ibfk_02` FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `progetti_articoli_ibfk_03_nofollow` FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `progetti_articoli_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `progetti_articoli_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202204140150
+CREATE OR REPLACE VIEW `progetti_articoli_view` AS
+	SELECT
+		progetti_articoli.id,
+		progetti_articoli.id_progetto,
+		progetti.nome AS progetto,
+		progetti_articoli.id_articolo,
+		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		progetti_articoli.id_ruolo,
+		progetti_articoli.ordine,
+		progetti_articoli.id_account_inserimento,
+		progetti_articoli.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			progetti.nome,
+			concat_ws( ' ', prodotti.nome, articoli.nome ),
+			ruoli_articoli.nome
+		) AS __label__
+	FROM progetti_articoli
+		LEFT JOIN ruoli_articoli ON ruoli_articoli.id = progetti_articoli.id_ruolo
+		LEFT JOIN progetti ON progetti.id = progetti_articoli.id_progetto
+		LEFT JOIN articoli ON articoli.id = progetti_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto;
 
 -- FINE

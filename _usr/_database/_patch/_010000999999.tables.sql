@@ -1783,6 +1783,23 @@ CREATE TABLE IF NOT EXISTS `progetti_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000027300
+
+-- progetti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2021-04-14 14:58 Chiara GDL
+CREATE TABLE IF NOT EXISTS `progetti_articoli` (
+  `id` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_articolo` char(32) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000027400
 
 -- progetti_categorie
