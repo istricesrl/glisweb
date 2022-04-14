@@ -56,14 +56,14 @@
                     {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request ) }}
                 </div>
 
-				<div class="col-12 col-md-7">
+				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
-				<div class="col-12 col-md">
+				<!--div class="col-12 col-md">
 					<span class="label-top">ranking</span>
 					{{ frm.input( table, '', '', 'ranking', '', '', request ) }}
-                </div>
+                </div-->
             </div>
             
 	        <div class="form-group form-row">
@@ -80,7 +80,7 @@
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">descrizione</span>
-				{{ frm.textarea( table, '', '', 'testo', 'note (ad uso interno)', 2, request ) }}
+				{{ frm.textarea( table, '', '', 'note', 'note (ad uso interno)', 2, request ) }}
 				</div>
 			</div>
 				
@@ -94,7 +94,7 @@
 				</div>
 				<div class="col-12 col-md-10">
 					<span class="label-top">note di accettazione</span>
-					{{ frm.input( table, '', '', 'testo_accettazione', '', '', request ) }}
+					{{ frm.input( table, '', '', 'note_accettazione', '', '', request ) }}
 				</div>
             </div>
 		</fieldset>
