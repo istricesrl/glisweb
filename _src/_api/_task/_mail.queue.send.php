@@ -31,7 +31,7 @@
     // inizializzo la variabile per l'invio
 	// $mail = NULL;
 
-	// modalità di evasione (specifica mail, evasione forzata, evasione naturale)
+	// modalità di evasione (specifica mail, evasione forzata, evasione totale, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {
 
         // token della riga
@@ -54,6 +54,14 @@
             array(
                 array( 's' => $status['token'] )
             )
+        );
+
+	} elseif( isset( $_REQUEST['full'] ) ) {
+
+		// token della riga
+        $status['id'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE mail_out SET timestamp_invio = NULL'
         );
 
 	} else {
