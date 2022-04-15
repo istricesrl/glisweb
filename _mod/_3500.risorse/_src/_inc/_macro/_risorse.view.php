@@ -20,7 +20,7 @@
 	    'id' => '#',
         '__label__' => 'nome',
         'codice' => 'codice',
-        'tipologia' => 'tipologia'
+        'tipologia' => 'categorie'
 	);
 
     // stili della vista

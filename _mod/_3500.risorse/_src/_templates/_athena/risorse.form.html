@@ -1,6 +1,7 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
 {% import 'bin/risorse.form.sub.html' as sub %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as pub %}
 
 {% extends "ext/main.html" %}
 
@@ -49,6 +50,10 @@
 				<legend>dati generali <small>{{ legend }}</small></legend>
 
 				<div class="form-group form-row">
+					<div class="col-12 col-md-auto">
+                        <span class="label-top">sito</span>
+                        {{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
+                    </div>
 					<div class="col-12 col-md-3">
 						<span class="label-top">tipologia</span>
 						{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
@@ -73,8 +78,23 @@
 						<span class="label-top">anno</span>
 						{{ frm.input( table, '', '', 'anno_pubblicazione', '', '', request ) }}
 					</div>
-						</div>
+				</div>
 
+				<div class="form-group form-row">
+					<div class="col-12 col-md">
+						<span class="label-top">template</span>
+						{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
+					</div>  
+					<div class="col-12 col-md">
+						<span class="label-top">schema</span>
+						{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
+					</div>  
+					<div class="col-12 col-md">
+						<span class="label-top">tema</span>
+						{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
+					</div>  
+				</div>  
+	
 				<div class="form-group form-row">
 					<div class="col-12">
 						<span class="label-top">note</span>
@@ -85,6 +105,9 @@
 
 			{# SUBFORM CATEGORIE DELLE RISORSE #}
 			{{ sub.categorie( table, 'risorse_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
+
+            {# SUBFORM PUBBLICAZIONI #}
+            {{ pub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_risorsa' ) }}
 
 			{# BOTTONI E COMANDI DEL MODULO #}
 			<fieldset class="form-controls mt-auto">

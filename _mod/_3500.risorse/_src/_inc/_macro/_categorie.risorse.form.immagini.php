@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form anagrafica
+     * macro form categorie risorse immagini
      *
      *
      *
