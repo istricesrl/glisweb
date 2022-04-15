@@ -140,6 +140,7 @@
 		'etc'		=> array( 'tabs'	=> array(	'categorie.risorse.form',
 													'categorie.risorse.form.sem',
 													'categorie.risorse.form.testo',
+													'categorie.risorse.form.menu',
 													'categorie.risorse.form.risorse',
 													'categorie.risorse.form.macro',
 													'categorie.risorse.form.immagini',
@@ -171,6 +172,18 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.risorse.form.testo.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['categorie.risorse.form']['etc']['tabs'] )
+	);
+
+	// gestione categorie menu
+	$p['categorie.risorse.form.menu'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'menu' ),
+		'h1'		=> array( $l		=> 'menu' ),
+		'parent'		=> array( 'id'		=> 'categorie.risorse.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.risorse.form.menu.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.risorse.form.menu.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['categorie.risorse.form']['etc']['tabs'] )
 	);
 
 	// gestione categorie risorse
