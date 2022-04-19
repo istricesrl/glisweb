@@ -25,4 +25,35 @@ CREATE OR REPLACE VIEW `contratti_view` AS
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
 ;
 
+--| 202204190020
+CREATE OR REPLACE VIEW `__report_iscritti_corsi__` AS
+SELECT
+	anagrafica.id AS id_anagrafica,
+	coalesce(anagrafica.soprannome,anagrafica.denominazione, concat_ws(' ', coalesce(anagrafica.cognome, ''),coalesce(anagrafica.nome, '') ),'') AS anagrafica,
+	contratti.id_progetto,
+	rinnovi.data_inizio,
+	rinnovi.data_fine,
+	rinnovi.id_contratto
+FROM anagrafica	
+INNER JOIN contratti ON contratti.id_destinatario = anagrafica.id
+LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+INNER JOIN progetti ON progetti.id = contratti.id_progetto
+WHERE tipologie_contratti.se_iscrizione = 1
+UNION
+
+SELECT
+	anagrafica.id AS id_anagrafica,
+	coalesce(anagrafica.soprannome,anagrafica.denominazione, concat_ws(' ', coalesce(anagrafica.cognome, ''),coalesce(anagrafica.nome, '') ),'') AS anagrafica,
+	relazioni_progetti.id_progetto_collegato AS id_progetto,
+	rinnovi.data_inizio,
+	rinnovi.data_fine,
+	rinnovi.id_contratto
+FROM anagrafica	
+INNER JOIN contratti ON contratti.id_destinatario = anagrafica.id
+LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+INNER JOIN relazioni_progetti ON relazioni_progetti.id_progetto = contratti.id_progetto
+WHERE tipologie_contratti.se_iscrizione = 1;
+
 -- FINE

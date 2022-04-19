@@ -15,7 +15,7 @@
     $ct['form']['table'] = 'anagrafica';
     
     // tabella della vista
-	$ct['view']['table'] = 'contratti';
+	$ct['view']['table'] = 'iscrizioni';
 
 
     // campi della vista

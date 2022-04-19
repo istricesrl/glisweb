@@ -50,6 +50,24 @@
 		    </div>
 		</div>
 
+		<div class="form-group form-row">
+			<div class="col-4 col-md-2 col-form-label">
+				<div class="form-check">
+					{{ frm.checkbox( table, '', '', 'se_tesseramento', 'tesseramento', '', request ) }}
+				</div>
+			</div>
+			<div class="col-4 col-md-2 col-form-label">
+				<div class="form-check">
+					{{ frm.checkbox( table, '', '', 'se_iscrizione', 'iscrizione', '', request ) }}
+				</div>
+			</div>
+			<div class="col-4 col-md-2 col-form-label">
+				<div class="form-check">
+					{{ frm.checkbox( table, '', '', 'se_abbonamento', 'abbonamento', '', request ) }}
+				</div>
+			</div>
+		</div>
+
 	    </fieldset>
     
         {# BOTTONI E COMANDI DEL MODULO #}
