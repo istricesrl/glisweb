@@ -15,7 +15,6 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.view.php' ),
 	    'etc'		=> array( 'tabs'	=> array(	'contratti.view',
-													'contratti.scadenze.view',
 													'contratti.archivio.view' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contratti' ),
@@ -35,7 +34,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] )
 	);
 
-	// vista scadenze contratti
+/*	// vista scadenze contratti
 	$p['contratti.scadenze.view'] = array(
 	    'sitemap'		=> false,
 		'title'		=> array( $l		=> 'scadenze' ),
@@ -46,7 +45,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] )
 	);
-
+*/
     // gestione contratti
 	$p['contratti.form'] = array(
 	    'sitemap'		=> false,
@@ -58,7 +57,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(
 													'contratti.form',
-													'contratti.form.scadenze',
+													'contratti.form.rinnovi',
 													'contratti.form.tools' ) )
 	);
 /*
@@ -96,6 +95,17 @@
 		'auth'			=> array( 'groups'	=> array(	'roots' ) )
 	);
 */
+	// rinnovi contratti
+	$p['contratti.form.rinnovi' ] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'rinnovi' ),
+		'h1'			=> array( $l		=> 'rinnovi' ),
+		'parent'		=> array( 'id'		=> 'contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.rinnovi.html' ),
+		'macro'			=> array(  $m . '_src/_inc/_macro/_contratti.form.rinnovi.php' ),
+		'etc'			=> array( 'tabs'	=>$p['contratti.form']['etc']['tabs'] ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) )
+	);
 
 	// gestione contratti tools
 	$p['contratti.form.tools'] = array(
@@ -133,5 +143,32 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.contratti.form.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.contratti.form.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.contratti.form' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
+	);
+
+
+	// vista rinnovi contratti
+	$p['rinnovi.contratti.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'rinnovi contratti' ),
+		'h1'		=> array( $l		=> 'rinnovi' ),
+		'parent'		=> array( 'id'		=> 'contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_rinnovi.contratti.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'rinnovi.contratti.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'rinnovi' ),
+									'priority'	=> '140' ) ) )
+	);
+
+	// gestione tipologie contratti
+	$p['rinnovi.contratti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'rinnovi.contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'rinnovi.contratti.form.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_rinnovi.contratti.form.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'rinnovi.contratti.form' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
 	);

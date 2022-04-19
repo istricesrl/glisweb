@@ -36,6 +36,9 @@
         ),
         'tipologie_contratti' => array(
             CONTROL_FULL => array( 'roots' )
+        ),        
+        'rinnovi' => array(
+            CONTROL_FULL => array( 'roots' )
         )
 	    )
 	);

@@ -47,31 +47,33 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
-            <div class="col-12 col-md-2">
-                <span class="label-top">tipologia</span>
-                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
-            </div>
             <div class="col-12 col-md">
-                <span class="label-top">nome</span>
-                {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+                <span class="label-top">codice</span>
+                {{ frm.input( table, '', '', 'codice', '', '', request ) }}
             </div>
-
+            <div class="col-6 col-md-auto">
+                <span class="label-top">data inizio</span>
+                {{ frm.date( table, '', '', 'data_inizio', '', '', request, 'now'|date('Y-m-d') ) }}
+            </div>
+            <div class="col-6 col-md-auto">
+                <span class="label-top">data fine</span>
+                {{ frm.date( table, '', '', 'data_fine', '', '', request ) }}
+            </div>
         </div>
-
 
 
         <div class="form-group form-row">
             <div class="col-12 col-md-4">
-                <span class="label-top">emittente</span>
-                {{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.agenzia, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_agenzia', page, pages, ietf, 'anagrafica' ) }}
+                <span class="label-top">contratto</span>
+                {{ frm.selectBox( table, '', '', 'id_contratto', '', etc.select.contratti, request, '', '', '', '', '', 'contratti.form', 'contratti.form', 'contratti', 'id_contratto', page, pages, ietf, 'contratti' ) }}
             </div>
             <div class="col-12 col-md-4">
-                <span class="label-top">destinatario</span>
-                {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                <span class="label-top">licenza</span>
+                {{ frm.selectBox( table, '', '', 'id_licenza', '', etc.select.licenze, request, '', '', '', '', '', 'licenze.form', 'licenze.form', 'licenze', 'id_licenza', page, pages, ietf, 'licenze' ) }}
             </div>
             <div class="col-12 col-md-4">
                 <span class="label-top">progetto</span>
-                {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', '', 1, '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
+                {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', '', '', '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
             </div>
         </div>
 
