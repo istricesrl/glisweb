@@ -2505,6 +2505,25 @@ ALTER TABLE `ruoli_prodotti`
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+ALTER TABLE `ruoli_progetti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `se_sottoprogetto` (`se_sottoprogetto`),
+	ADD KEY `se_proseguimento` (`se_proseguimento`),
+	ADD KEY `se_sostituto` (`se_sostituto`), 
+	ADD KEY `indice` (`id`,`nome`,`se_sottoprogetto`,`se_proseguimento`,`se_sostituto`);
+
+--| 030000035101
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000035200
 
 -- ruoli_video

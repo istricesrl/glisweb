@@ -2302,6 +2302,21 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
+  `id` int(11) NOT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_sottoprogetto`int(1) DEFAULT NULL,
+  `se_proseguimento` int(1) DEFAULT NULL,
+  `se_sostituto` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000035200
 
 -- ruoli_video
