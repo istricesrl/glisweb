@@ -72,6 +72,8 @@
 		'macro'			=> array( $m.'_src/_inc/_macro/_corsi.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'corsi.form', 
+														'corsi.form.relazioni',
+														'corsi.form.acquisto',
 														'corsi.form.iscritti',
 														'corsi.form.calendario',
 # NOTA queste due voci vanno nel modulo contenuti
@@ -102,6 +104,30 @@
 	    'parent'			=> array( 'id'		=> 'corsi.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.iscritti.html' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_corsi.form.iscritti.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
+	);
+
+	// iscritti relazioni
+	$p['corsi.form.relazioni'] = array(
+	    'sitemap'			=> false,
+		'title'				=> array( $l		=> 'relazioni' ),
+	    'h1'				=> array( $l		=> 'relazioni' ),
+	    'parent'			=> array( 'id'		=> 'corsi.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.relazioni.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_corsi.form.relazioni.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
+	);
+
+	// iscritti corsi
+	$p['corsi.form.acquisto'] = array(
+	    'sitemap'			=> false,
+		'title'				=> array( $l		=> 'acquisto' ),
+	    'h1'				=> array( $l		=> 'acquisto' ),
+	    'parent'			=> array( 'id'		=> 'corsi.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.acquisto.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_corsi.form.acquisto.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
 	);

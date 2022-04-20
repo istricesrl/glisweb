@@ -2018,6 +2018,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
 CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
   `id` int(11) NOT NULL,
   `id_progetto` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
   `id_progetto_collegato` char(32) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,

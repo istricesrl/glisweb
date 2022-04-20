@@ -4422,11 +4422,12 @@ DROP TABLE IF EXISTS `relazioni_anagrafica_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
 	SELECT
+	relazioni_anagrafica.id,
+	relazioni_anagrafica.id_ruolo,
 	relazioni_anagrafica.id_anagrafica,
 	relazioni_anagrafica.id_anagrafica_collegata,
 	concat( relazioni_anagrafica.id_anagrafica,' - ', relazioni_anagrafica.id_anagrafica_collegata) AS __label__
 	FROM relazioni_anagrafica
-	ORDER BY __label__
 ;
 
 --| 090000030400
@@ -4446,7 +4447,6 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 	relazioni_documenti.id_documento_collegato,
 	concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato) AS __label__
 	FROM relazioni_documenti
-	ORDER BY __label__
 ;
 
 --| 090000030410
@@ -4466,7 +4466,6 @@ CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
 	relazioni_documenti_articoli.id_documenti_articolo_collegato,
 	concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato) AS __label__
 	FROM relazioni_documenti_articoli
-	ORDER BY __label__
 ;
 
 --| 090000030440
@@ -4486,7 +4485,6 @@ CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
 	relazioni_pagamenti.id_pagamento_collegato,
 	concat( relazioni_pagamenti.id_pagamento,' - ', relazioni_pagamenti.id_pagamento_collegato) AS __label__
 	FROM relazioni_pagamenti
-	ORDER BY __label__
 ;
 
 --| 090000030490
@@ -4502,11 +4500,14 @@ DROP TABLE IF EXISTS `relazioni_progetti_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_progetti_view AS
 	SELECT
+	relazioni_progetti.id,
 	relazioni_progetti.id_progetto,
 	relazioni_progetti.id_progetto_collegato,
+	relazioni_progetti.id_ruolo,
+	ruoli_progetti.nome AS ruolo,
 	concat( relazioni_progetti.id_progetto,' - ', relazioni_progetti.id_progetto_collegato) AS __label__
 	FROM relazioni_progetti
-	ORDER BY __label__
+	LEFT JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
 ;
 
 --| 060000030500
@@ -4526,7 +4527,6 @@ CREATE OR REPLACE VIEW relazioni_software_view AS
 	relazioni_software.id_software_collegato,
 	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__
 	FROM relazioni_software
-	ORDER BY __label__
 ;
 
 --| 090000030200
