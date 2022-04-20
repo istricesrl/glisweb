@@ -4,20 +4,20 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_v300.immobiliare/';
+	$m = DIR_MOD . '_V300.immobiliari/';
 
 	// dashboard immobiliare
-	$p['immobiliare'] = array(
+	$p['immobiliari'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'immobiliare' ),
-	    'h1'			=> array( $l		=> 'immobiliare' ),
+	    'title'			=> array( $l		=> 'immobiliari' ),
+	    'h1'			=> array( $l		=> 'immobiliari' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immobiliare.html' ),
-		'macro'			=> array( $m . '_src/_inc/_macro/_immobiliare.php' ),
-		'etc'			=> array( 'tabs'	=> array(	'immobiliare' ) ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immobiliari.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_immobiliari.php' ),
+		'etc'			=> array( 'tabs'	=> array(	'immobiliari' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'immobiliare' ),
-														'priority'	=> '020' ) ) )
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'immobiliari' ),
+														'priority'	=> '300' ) ) )
 	);
 
 	// vista immobili
@@ -25,7 +25,7 @@
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'immobili' ),
 	    'h1'			=> array( $l		=> 'immobili' ),
-	    'parent'		=> array( 'id'		=> 'immobiliare' ),
+	    'parent'		=> array( 'id'		=> 'immobiliari' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_immobili.view.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
