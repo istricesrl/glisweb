@@ -41,7 +41,9 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-
+        <div class="col-12 col-md-auto">
+            {{ frm.button(  'CREA PRODOTTO' ,'button','btn btn-secondary btn-sm btn-block', '','ottieni in modo automatico il progressivo' ) }}
+        </div>
 	</form>
     </div>
 </section>
