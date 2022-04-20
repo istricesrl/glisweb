@@ -284,6 +284,9 @@
     La vista *anagrafica_view* contiene molti campi booleani che qualificano i contatti in base alle categorie cui appartengono; questo è utile per la popolazione
     delle tendine (vedi *anagrafica_categorie* e *categorie_anagrafica*).
 
+    La vista *anagrafica_view* è riprodotta per ragioni di performance sulla tabella MyISAM *anagrafica_view_static*; la sincronizzazione
+    viene fatta tramite la function *anagrafica_view_static()*.
+
     La tabella *anagrafica* è vincolata dalle ACL memorizzate sulla tabella *__acl_anagrafica__*.
 
     anagrafica_attivi
