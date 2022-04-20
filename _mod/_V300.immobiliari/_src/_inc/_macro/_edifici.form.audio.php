@@ -20,17 +20,17 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'immobili';
+	$ct['form']['table'] = 'edifici';
 
     // sotto tabella gestita
-	$ct['form']['subtable'] = 'video';
+	$ct['form']['subtable'] = 'audio';
 
     // tendina ruolo video
-	$ct['etc']['select']['ruoli_video'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['ruoli_audio'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_video_view WHERE se_immobili = 1'
+	    'SELECT id, __label__ FROM ruoli_audio_view WHERE se_edifici = 1'
     );
     
     // tendina tipologia embed
@@ -38,8 +38,8 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM embed_view  WHERE se_video = 1'
-	);
+	    'SELECT id, __label__ FROM embed_view  WHERE se_edifici = 1'
+	); 
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

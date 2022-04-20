@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'immobili';
+	$ct['form']['table'] = 'edifici';
 
     // sotto tabella gestita
 	$ct['form']['subtable'] = 'immagini';
@@ -30,7 +30,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_immobili = 1'
+	    'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_edifici = 1'
 	);
 
   // tendina lingue

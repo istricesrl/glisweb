@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form immobili
+     * macro form pagine
      *
      *
      *
@@ -18,9 +18,14 @@
      * @file
      *
      */
-
     // tabella gestita
-	$ct['form']['table'] = 'immobili';
+	$ct['form']['table'] = 'edifici';
 
-	// macro di default
+    // sotto tabella gestita
+    $ct['form']['subtable'] = 'metadati';
+    
+    // tendina lingue
+    $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
+
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

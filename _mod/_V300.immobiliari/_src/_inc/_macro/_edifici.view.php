@@ -21,10 +21,10 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-	$ct['view']['table'] = 'immobili';
+	$ct['view']['table'] = 'edifici';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'immobili.form';
+	$ct['view']['open']['page'] = 'edifici.form';
 
     // tendina siti
     $ct['etc']['select']['siti'] = $cf['sites'];
@@ -45,12 +45,12 @@
 	);
 
     // inclusione filtri speciali
-	// $ct['etc']['include']['filters'] = 'inc/immobili.view.filters.html';
+	// $ct['etc']['include']['filters'] = 'inc/edifici.view.filters.html';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // trasformazione icona attivo/inattivo
-	//foreach( $ct['view']['data'] as &$row ) {
-	//    $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
-	//}
+	#foreach( $ct['view']['data'] as &$row ) {
+	#    $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
+	#}

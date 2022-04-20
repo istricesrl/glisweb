@@ -18,7 +18,7 @@
      */
 
     // tabella della vista
-    $ct['form']['table'] = 'immobili';
+    $ct['form']['table'] = 'edifici';
     
 
     // macro di default

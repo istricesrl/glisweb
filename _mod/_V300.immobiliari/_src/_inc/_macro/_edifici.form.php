@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'immobili';
+	$ct['form']['table'] = 'edifici';
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
