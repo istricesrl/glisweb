@@ -548,6 +548,15 @@ REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font
 (2,	    NULL,	'principale',	NULL,	NULL),
 (3,	    NULL,	'suggerito',	NULL,	NULL);
 
+--| 050000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+REPLACE INTO `ruoli_progetti` (`id`, `nome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`) VALUES
+(1,	    'proseguimento',	    NULL,	    1,	    NULL),
+(2,	    'bundle',	    1,	NULL,	    NULL);
+
 --| 050000035200
 
 -- ruoli_video

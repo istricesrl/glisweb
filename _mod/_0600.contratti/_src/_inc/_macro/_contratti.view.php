@@ -18,10 +18,10 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data_inizio' => 'data inizio',
-        'data_fine' => 'data fine',
-        'data_inizio_rapporto' => 'data inizio rapporto',
-        'data_fine_rapporto' => 'data fine rapporto',
+        'emittente' => 'emittente',
+        'destinatario' => 'destinatario',
+        'progetto' => 'progetto',
+        'tipologia' => 'tipologia',
 	    '__label__' => 'contratto'
 	);
 

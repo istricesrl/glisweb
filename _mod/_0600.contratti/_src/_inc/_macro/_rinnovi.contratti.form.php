@@ -12,22 +12,22 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'contratti';
+    $ct['form']['table'] = 'rinnovi';
 
      // tendina anagrafica
-	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['contratti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static'
+	    'SELECT id, __label__ FROM contratti_view'
     );
 
     // tendina emittenti
-	$ct['etc']['select']['agenzia'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['licenze'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static '
+	    'SELECT id, __label__ FROM licenze_view '
     );
     
     // tendina progetti
@@ -37,18 +37,6 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM progetti_view '
     );
-
-    // tendina per le tipologie di contratto
-    $ct['etc']['select']['tipologie_contratti'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_contratti_view'
-    );
-
-
-    // macro di default per l'entità contratti
-	require '_contratti.form.default.php';
-
+    
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

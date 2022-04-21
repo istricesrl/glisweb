@@ -34,6 +34,12 @@
             'proforma' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
+            'fatture_attive' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'righe_fatture_attive' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'righe_proforma' => array(
                 CONTROL_FULL => array( 'roots' )
             ),

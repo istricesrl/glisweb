@@ -1800,6 +1800,23 @@ CREATE TABLE IF NOT EXISTS `progetti_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000027300
+
+-- progetti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2021-04-14 14:58 Chiara GDL
+CREATE TABLE IF NOT EXISTS `progetti_articoli` (
+  `id` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_articolo` char(32) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000027400
 
 -- progetti_categorie
@@ -2018,6 +2035,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
 CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
   `id` int(11) NOT NULL,
   `id_progetto` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
   `id_progetto_collegato` char(32) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -2104,6 +2122,12 @@ CREATE TABLE IF NOT EXISTS `risorse` (
   `codice` char(16) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
   `id_testata` int(11) DEFAULT NULL,
   `giorno_pubblicazione` int(2) DEFAULT NULL,
   `mese_pubblicazione` int(2) DEFAULT NULL,
@@ -2164,6 +2188,23 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_relazioni` int(1) DEFAULT NULL,
   `se_risorse` int(1) DEFAULT NULL,
   `se_progetti` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000034100
+
+-- ruoli_articoli
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-09 16:21 Chiara GDL
+CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_progetti`int(1) DEFAULT NULL,
+  `se_risorse` int(1) DEFAULT NULL,
+  `se_acquisto` int(1) DEFAULT NULL,
+  `se_rinnovo` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034200
@@ -2276,6 +2317,21 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `nome` char(32) NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
+  `id` int(11) NOT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_sottoprogetto`int(1) DEFAULT NULL,
+  `se_proseguimento` int(1) DEFAULT NULL,
+  `se_sostituto` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000035200

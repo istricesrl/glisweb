@@ -1909,6 +1909,27 @@ ALTER TABLE `progetti_anagrafica`
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000027300
+
+-- progetti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2021-04-14 14:58 Chiara GDL
+ALTER TABLE `progetti_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_articolo`, `id_ruolo`),
+	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_articolo` (`id_articolo`),	
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_progetto`,`id_articolo`, `id_ruolo`,`ordine`);
+	
+--| 030000027301
+
+-- progetti_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `progetti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000027400
 
 -- progetti_categorie
@@ -2161,11 +2182,12 @@ ALTER TABLE `relazioni_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_progetti`
 	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_progetto_collegato` (`id_progetto_collegato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_progetto`,`id_progetto_collegato`);
+	ADD UNIQUE KEY `unico` (`id_progetto`,`id_progetto_collegato`,`id_ruolo`);
 
 --| 030000030491
 
@@ -2263,6 +2285,9 @@ ALTER TABLE `risorse`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_testata` (`id_testata`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `se_sitemap` (`se_sitemap`),
+	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `giorno_pubblicazione` (`giorno_pubblicazione`),
 	ADD KEY `mese_pubblicazione` (`mese_pubblicazione`),
 	ADD KEY `anno_pubblicazione` (`anno_pubblicazione`),
@@ -2339,6 +2364,27 @@ ALTER TABLE `ruoli_anagrafica`
 -- ruoli_anagrafica
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000034100
+
+-- ruoli_articoli
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:11 Fabio Mosti
+ALTER TABLE `ruoli_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_progetti` (`se_progetti`),
+	ADD KEY `se_risorse` (`se_risorse`),
+	ADD KEY `se_acquisto` (`se_acquisto`),
+	ADD KEY `se_rinnovo` (`se_rinnovo`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_progetti`,`se_risorse`,`se_acquisto`, `se_rinnovo`);
+
+--| 030000034101
+
+-- ruoli_articoli
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000034200
 
@@ -2475,6 +2521,25 @@ ALTER TABLE `ruoli_prodotti`
 -- ruoli_prodotti
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+ALTER TABLE `ruoli_progetti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `se_sottoprogetto` (`se_sottoprogetto`),
+	ADD KEY `se_proseguimento` (`se_proseguimento`),
+	ADD KEY `se_sostituto` (`se_sostituto`), 
+	ADD KEY `indice` (`id`,`nome`,`se_sottoprogetto`,`se_proseguimento`,`se_sostituto`);
+
+--| 030000035101
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000035200
 

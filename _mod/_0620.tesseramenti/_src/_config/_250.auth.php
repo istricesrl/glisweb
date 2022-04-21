@@ -19,10 +19,13 @@
 	$cf['auth']['permissions'] = array_merge_recursive( 
 	    $cf['auth']['permissions'],
 	    array(
-            'corsi' => array(
+            'tesseramenti' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            '__report_iscritti_corsi__' => array(
+            'tesseramenti_attivi' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'tesseramenti_archiviati' => array(
                 CONTROL_FULL => array( 'roots' )
             )
         )
