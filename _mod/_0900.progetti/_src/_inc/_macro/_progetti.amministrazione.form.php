@@ -69,7 +69,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_progetti_view'
     );
-    
+
     // tendina ruoli progetti
 	$ct['etc']['select']['ruoli_anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

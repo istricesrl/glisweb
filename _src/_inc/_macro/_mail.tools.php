@@ -67,14 +67,22 @@
             'ws' => $base . 'mail.queue.send?hard=1',
             'icon' => NULL,
             'fa' => 'fa-share-square-o',
+            'title' => 'invia la prossima mail in uscita',
+            'text' => 'forza elaborazione della prima mail della coda in uscita'
+            );
+
+            $ct['page']['contents']['metro']['mail'][] = array(
+            'confirm' => true,
+            'ws' => $base . 'mail.queue.send?full=1',
+            'icon' => NULL,
+            'fa' => 'fa-share-square',
             'title' => 'elabora coda mail in uscita',
-            'text' => 'forza elaborazione della coda delle mail in uscita'
+            'text' => 'forza elaborazione di tutta la coda delle mail in uscita'
             );
 
         }
 
     }
-
 
     // debug
 	// print_r( $_SESSION );

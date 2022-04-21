@@ -49,6 +49,20 @@
             $joinTable = 'notizie';
             $subPages = false;
 
+        } elseif( isset( $cf['contents']['page']['metadata']['id_categoria_risorse'] ) ) {
+
+            $joinField = 'id_categoria_risorse';
+            $joinValue = $cf['contents']['page']['metadata']['id_categoria_risorse'];
+            $joinTable = 'categorie_risorse';
+            $subPages = true;
+
+        } elseif( isset( $cf['contents']['page']['metadata']['id_risorsa'] ) ) {
+
+            $joinField = 'id_risorsa';
+            $joinValue = $cf['contents']['page']['metadata']['id_risorsa'];
+            $joinTable = 'risorsa';
+            $subPages = false;
+
         } else {
 
             $joinField = 'id_pagina';

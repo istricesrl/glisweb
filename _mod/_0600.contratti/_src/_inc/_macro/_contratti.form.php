@@ -37,7 +37,6 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM progetti_view '
     );
-    
 
     // tendina per le tipologie di contratto
     $ct['etc']['select']['tipologie_contratti'] = mysqlCachedIndexedQuery(
@@ -46,6 +45,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_contratti_view'
     );
+
 
     // macro di default per l'entità contratti
 	require '_contratti.form.default.php';
