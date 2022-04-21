@@ -69,6 +69,7 @@
     pagamenti_view.id_mastro_destinazione   | -
     pagamenti_view.mastro_destinazione      | il mastro caricato dalla riga
     pagamenti_view.id_iban                  | -
+    pagamenti_view.iban                     | iban su cui effettuare il pagamento
     pagamenti_view.importo_netto_totale     | -
     pagamenti_view.id_iva                   | -
     pagamenti_view.iva                      | l'aliquota IVA applicata alla riga
