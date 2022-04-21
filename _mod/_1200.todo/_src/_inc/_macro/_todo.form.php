@@ -39,7 +39,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static' );
 	
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
@@ -68,7 +68,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 3'
+	    'SELECT id, __label__ FROM mastri_view WHERE se_conto = 1'
     );
 
      // tendina anni

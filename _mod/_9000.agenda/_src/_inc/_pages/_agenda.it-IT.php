@@ -4,7 +4,7 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_0700.agenda/';
+	$m = DIR_MOD . '_9000.agenda/';
     
     // dashboard contenuti
 	$p['agenda'] = array(
@@ -15,21 +15,9 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'agenda', 'agenda.todo', 'agenda.stampe' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'agenda', 'agenda.stampe' ) ),
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'agenda' ),
 									'priority'	=> '040' ) ) )	
-	);
-
-    // todo agenda
-	$p[ 'agenda.todo'] = array(
-	    'sitemap'	=> false,
-	    'title'		=> array( $l		=> 'todo_agenda' ),
-	    'h1'		=> array( $l		=> 'todo' ),
-	    'parent'	=> array( 'id'		=> 'agenda' ),
-	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.todo.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['agenda']['etc']['tabs'] )
 	);
 
     // stampe agenda
@@ -68,3 +56,4 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['agenda.form']['etc']['tabs'] )
 	);
+

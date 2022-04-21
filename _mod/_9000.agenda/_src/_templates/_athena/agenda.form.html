@@ -54,6 +54,7 @@
                     {% if request.__continue__ %}{% set default = request.__continue__  %}{% else  %}{% set default = '' %}{% endif %}
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request, default ) }}
 				</div>
+				{% if '0500.mastri' in mods.active.array %}
 				<div class="col-12 col-md-2">
 					<span class="label-top">scarico</span>
 					{% if not request[table].id %}
@@ -68,42 +69,14 @@
 					{% endif %}
 					{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default ) }}
 				</div>
-			
+				{% endif %}
 				<div class="col">
 					<span class="label-top">descrizione</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 				</div>
 			</div>
-
-
 			</fieldset>
 
-			{% if request[ table ].id_todo %}
-			<fieldset>
-				<legend>stato lavorazione</legend>
-				<div class="col">
-
-				
-				{{ etc.todo.nome }}
-				{% if etc.attivita_completate %}
-				<legend style="font-size: 90%;">attività completate</legend>
-					<ul>
-					{% for a in etc.attivita_completate %}
-						<li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.note_cliente }}</li>
-					{% endfor %}
-					</ul>
-				{% endif %}
-				{% if etc.attivita_programmate %}
-				<legend style="font-size: 90%;">attività pianificate</legend>
-					<ul>
-					{% for a in etc.attivita_programmate %}
-						<li>{{ a.data_programmazione|date('d/m/Y') }} {% if a.ora_inizio_programmazione %}{{ a.ora_inizio_programmazione|date('H:i') }}{% endif %}- {{ a.nome }}: {{ a.note_programmazione }}</li>
-					{% endfor %}
-					</ul>
-				{% endif %}
-				</div>
-			</fieldset>
-			{% endif %}
 
 			<fieldset>
 				<legend>programmazione</legend>
@@ -178,16 +151,20 @@
 			<legend>attribuzione</legend>
 
 			<div class="form-group form-row">
+				{% if '1200.todo' in mods.active.array %}
 				<div class="col-12 col-md-6">
 					<span class="label-top">todo</span>
                     {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_todo %}{% else %}{% set default = '' %}{% endif %}
 					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, default, '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
 				</div>
+				{% endif %}
+				{% if '0900.progetti' in mods.active.array %}
 				<div class="col-12 col-md-6">
 					<span class="label-top">progetto</span>
                     {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_progetto %}{% else %}{% set default = '' %}{% endif %}
 					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, default, '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
 				</div>
+				{% endif %}
 				<div class="col-12 col-md-6">
 					<span class="label-top">cliente</span>
                     {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_cliente %}{% else %}{% set default = '' %}{% endif %}
@@ -198,8 +175,8 @@
                     {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_indirizzo %}{% else %}{% set default = '' %}{% endif %}
 					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, default, '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
 				</div>
-				{% if '4100.prodotti' in mods.active.array %}
-				<div class="col-12 col-md-6">
+				{% if '4110.matricole' in mods.active.array %}
+				<!--div class="col-12 col-md-6">
 					<span class="label-top">matricola</span>
                     {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_matricola %}{% else %}{% set default = '' %}{% endif %}
 					{{ frm.selectBox( table, '', '', 'id_matricola', 'matricola', etc.select.matricole, request, '', '','','','','matricole.form','','matricole', 'id_matricola', page, pages, ietf,'matricole' ) }}
@@ -207,7 +184,7 @@
 				<div class="col-2 col-md-6">
 					<span class="label-top">barcode matricola</span>
 					{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
-				</div>
+				</div-->
 				{% endif %}
 			</div>
 			</fieldset>

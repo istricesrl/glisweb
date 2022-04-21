@@ -21,16 +21,6 @@
 
     // tabella gestita
 	$ct['form']['table'] = 'attivita';
-
-    /*
-    // tendina tipologie pubblicazioi
-	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
-	);
-    */
     
     // tendina anagrafica
 	$ct['etc']['select']['id_anagrafica'] = mysqlCachedIndexedQuery(
@@ -39,33 +29,20 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static' );
 
-	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) ) {
-	    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
-	        $cf['memcache']['index'],
-	        $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1 OR id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) ) );
-	} else {
-	    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
+
+	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
-	}
+            'SELECT id, __label__ FROM anagrafica_view_static' );
+	
 
     // tendina tipologia
 	$ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_produzione = 1' );
-
-    // tendina tipologia inps
-	$ct['etc']['select']['id_tipologia_inps'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_inps_view' );
+        'SELECT id, __label__ FROM tipologie_attivita_view' );
 
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
@@ -73,27 +50,6 @@
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static' );
-
-    // tendina esiti
-	$ct['etc']['select']['id_esito'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM esiti_attivita_view' );
-
-    // tendina interesse
-	$ct['etc']['select']['id_interesse'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_interesse_view' );
-
-    // tendina soddisfazione
-	$ct['etc']['select']['id_soddisfazione'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_soddisfazione_view' );
 
     // tendina categorie attivita
 	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
@@ -104,19 +60,12 @@
 	);
 
     // tendina progetti
-	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
-	    $ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE ( timestamp_chiusura IS NULL OR id = ? ) ORDER BY __label__', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) );
-	} else {
-	    $ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE timestamp_chiusura IS NULL ORDER BY __label__' );
-	}
+            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE data_chiusura IS NULL ORDER BY __label__' );
+	
 
     // tendina todo
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
@@ -124,7 +73,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_completa_view WHERE id_progetto = ? AND ( timestamp_completamento IS NULL OR id = ? )', 
+            'SELECT id, __label__ FROM todo_view WHERE id_progetto = ? AND ( data_chiusura IS NULL OR id = ? )', 
             array( 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ), 
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) 
@@ -134,7 +83,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_completa_view' );
+            'SELECT id, __label__ FROM todo_view' );
 	}
 
     // tendina indirizzi
@@ -149,7 +98,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM mastri_view WHERE id_tipologia = 3'
+	    'SELECT id, __label__ FROM mastri_view WHERE se_conto = 1'
     );
 
     // tendina matricole
@@ -161,7 +110,7 @@
     );
 
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
-	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', 
+	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );
         
         if( ! empty($todo['id_cliente']) ){
@@ -193,22 +142,9 @@
         }
 	}
 
-   /* if( isset($_REQUEST['attivita']['__matricola__']) ){
-        $_REQUEST['attivita']['id_matricola'] =  mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT id FROM matricole_view WHERE __label__ = ?', array( array( 's' => $_REQUEST['attivita']['__matricola__'] ) )
-        );
-    }*/
-
-    if( isset( $_REQUEST['attivita']['id_todo'] ) && ! empty( $_REQUEST['attivita']['id_todo'] )  ){
-        $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_completa_view WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
-        $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
-        $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
-    
-    }
 
     // tendina tipologia attivita
-	$ct['etc']['id_tipologia_attivita_new'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_dashboard_agenda = 1 ORDER BY nome' );
+	$ct['etc']['id_tipologia_attivita_new'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
 
 	// macro di default

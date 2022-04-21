@@ -237,13 +237,20 @@
  */
 
     // codice SDI di default a '0000000' per i destinatari senza codice SDI
-    if( empty( $dst['codice_sdi'] ) && ! empty( $dst['pec_sdi'] ) ) {
+    if( empty( $dst['codice_sdi'] ) && ! empty( $dst['id_pec_sdi'] ) ) {
         $dst['codice_sdi'] = '0000000';
     }
 
     // verifico che il codice SDI risponda al pattern corretto
     if( ! preg_match( '/[a-zA-Z0-9]+/', $dst['codice_sdi'] ) ) {
         dieText('valore non corretto per codice SDI: ' . $dst['codice_sdi'] );
+    }
+
+    if( !empty($dst['id_pec_sdi'])){
+        $dst['pec_sdi'] =  mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT indirizzo from mail where id = ?',
+            array( array( 's' => $dst['id_pec_sdi'] ) ) );
     }
 
     // denominazione fiscale

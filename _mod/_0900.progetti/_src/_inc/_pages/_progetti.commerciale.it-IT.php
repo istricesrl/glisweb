@@ -32,8 +32,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'progetti.commerciale.form',
-															'progetti.commerciale.form.todo' ) )
+			'etc'			=> array( 'tabs'	=> array(	'progetti.commerciale.form' ) )
 		);
 
 		// RELAZIONI CON IL MODULO MATRICOLE
