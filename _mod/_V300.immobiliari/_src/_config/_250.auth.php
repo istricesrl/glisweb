@@ -22,6 +22,9 @@
             'immobili' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
+            'immobili_anagrafica' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'edifici' => array(
                 CONTROL_FULL => array( 'roots' )
             ),

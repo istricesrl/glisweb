@@ -16,11 +16,10 @@
     {% set timestamp = 'now'|date('U') %}
     <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'id_immagine', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
+	{{ frm.input( table, subtable, i, 'id_immobile', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
         <div class="col-md">
             <span class="label-top">anagrafica</span>
-            {# frm.selectRequired( table, subtable, i, 'id_anagrafica', '', etc.select.anagrafica, request, '', '', '', disabled ) #}
 			{{ frm.selectBox( table, subtable, i, 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica', disabled ) }}
         </div>
 	    <div class="col-md">

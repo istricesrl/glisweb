@@ -104,7 +104,7 @@
 	    $body = $document->createElement( 'body' );
 
 	    $contentFragment = $document->createDocumentFragment();
-	    $contentFragment->appendXML( $content );
+	    $contentFragment->appendXML( xmlEntities( $content ) );
 
 	    $title->appendChild( $text );
 	    $head->appendChild( $title );

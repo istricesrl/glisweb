@@ -22,5 +22,21 @@
     // tabella gestita
 	$ct['form']['table'] = 'edifici';
 
-	// macro di default
+    // tendina indirizzi
+	$ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM indirizzi_view'
+	);
+   
+    // tendina tipologie edifici
+	$ct['etc']['select']['tipologie_edifici'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_edifici_view'
+	);
+
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

@@ -4944,6 +4944,7 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.se_relazioni,
 		ruoli_anagrafica.se_risorse,
 		ruoli_anagrafica.se_progetti,
+		ruoli_anagrafica.se_immobili,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
 ;

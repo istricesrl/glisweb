@@ -32,16 +32,13 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    'id_tipologia' => 'tipologia',
-        'id_indirizzo' => 'indirizzo',
-        'piani' => 'piani',
-	    '__label__' => 'pagina'
+	    '__label__' => 'edificio',
+        'piani' => 'piani'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    '__label__' => 'text-left no-wrap',
-	    'id_tipologia' => 'text-left'
+	    '__label__' => 'text-left no-wrap'
 	);
 
     // inclusione filtri speciali
