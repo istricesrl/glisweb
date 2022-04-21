@@ -270,6 +270,61 @@ CREATE OR REPLACE VIEW `video_view` AS
 		LEFT JOIN ruoli_video ON ruoli_video.id = video.id_ruolo
 ;
 
+--| 202204215110
+ALTER TABLE `immagini`
+ADD COLUMN   `id_edificio` int(11) DEFAULT NULL    AFTER `id_indirizzo`,
+ADD COLUMN   `id_immobile` int(11) DEFAULT NULL    AFTER `id_edificio`,
+ADD KEY `id_edificio` (`id_edificio`), 
+ADD KEY `id_immobile` (`id_immobile`), 
+ADD CONSTRAINT `immagini_ibfk_16` FOREIGN KEY (`id_edificio`) REFERENCES `edifici` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `immagini_ibfk_17` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202204215120
+CREATE OR REPLACE VIEW `immagini_view` AS
+	SELECT
+		immagini.id,
+		immagini.id_anagrafica,
+		immagini.id_pagina,
+		immagini.id_file,
+		immagini.id_prodotto,
+		immagini.id_articolo,
+		immagini.id_categoria_prodotti,
+		immagini.id_risorsa,
+		immagini.id_categoria_risorse,
+		immagini.id_notizia,
+		immagini.id_categoria_notizie,
+		immagini.id_progetto,
+		immagini.id_categoria_progetti,
+		immagini.id_indirizzo,
+		immagini.id_edificio,
+		immagini.id_immobile,
+		immagini.id_lingua,
+		lingue.nome AS lingua,
+		immagini.id_ruolo,
+		ruoli_immagini.nome AS ruolo,
+		immagini.ordine,
+		immagini.orientamento,
+		immagini.taglio,
+		immagini.nome,
+		immagini.path,
+		immagini.path_alternativo,
+		immagini.token,
+		immagini.timestamp_scalamento,
+		immagini.id_account_inserimento,
+		immagini.id_account_aggiornamento,
+		concat(
+			ruoli_immagini.nome,
+			' # ',
+			immagini.ordine,
+			' / ',
+			immagini.nome,
+			' / ',
+			immagini.path
+		) AS __label__
+	FROM immagini
+		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
+		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
+;
 
 
 

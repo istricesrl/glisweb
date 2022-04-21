@@ -11,7 +11,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'immobili';
+    $ct['form']['table'] = 'edifici';
     
     // tabella della vista
 	$ct['view']['table'] = 'immobili';
