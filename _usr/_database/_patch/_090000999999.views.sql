@@ -3388,6 +3388,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		pagamenti.id_iban,
+		iban.iban AS iban,
 		pagamenti.importo_netto_totale,
 		pagamenti.id_iva,
 		iva.nome AS iva,
@@ -3411,6 +3412,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN iban ON iban.id = pagamenti.id_iban
 	WHERE
 		tipologie_documenti.se_fattura = 1
 		OR

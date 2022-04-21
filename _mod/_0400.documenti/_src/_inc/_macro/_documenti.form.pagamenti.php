@@ -43,8 +43,8 @@
         'id' => '#',
         'data_ora_scadenza' => 'scadenza',
         'nome' => 'nome',
-#		'mastro_provenienza' => 'scarico',
-#		'mastro_destinazione' => 'carico',
+		'modalita_pagamento' => 'modalita pagamento',
+		'iban' => 'iban',
         'importo_netto_totale' => 'importo netto',
         'data_ora_pagamento' => 'pagato',
 		'id_documento' => 'id_documento'
