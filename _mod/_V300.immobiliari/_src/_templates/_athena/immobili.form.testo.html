@@ -63,7 +63,7 @@
 		{% set r = request[ table ][ subtable ][ i ] %}
 
 		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'id_pagina', '', '', request, '__parent_id__', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_immobile', '', '', request, '__parent_id__', 'hidden' ) }}
 	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
 
 	    {% if r.id_lingua == session.__view__.__lang__ %}
