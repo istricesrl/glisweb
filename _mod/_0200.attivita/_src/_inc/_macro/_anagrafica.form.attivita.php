@@ -20,6 +20,9 @@
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.form';
 
+    // campo per il preset di apertura
+	$ct['view']['open']['preset']['field'] = 'id_cliente';
+
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
@@ -48,6 +51,8 @@
     );
 
     $ct['etc']['include']['insert'] = 'inc/anagrafica.form.attivita.insert.html';
+    $ct['etc']['include']['insert_memo'] = 'inc/anagrafica.form.attivita.insert.promemoria.html';
+
 	$ct['view']['insert']['field'] = 'id_cliente';
 
     $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
@@ -61,9 +66,6 @@
 
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'attivita.form';
-
-    // campo per il preset di apertura
-	$ct['view']['open']['preset']['field'] = 'id_anagrafica';
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
         // preset filtro custom progetti aperti

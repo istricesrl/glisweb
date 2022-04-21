@@ -39,19 +39,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static' );
 
-	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) ) {
-	    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
-	        $cf['memcache']['index'],
-	        $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1 OR id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_anagrafica'] ) ) );
-	} else {
+
 	    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
-	}
+            'SELECT id, __label__ FROM anagrafica_view_static' );
+
 
     // tendina tipologia
 	$ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
@@ -60,12 +54,6 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view' );
 
-    // tendina tipologia inps
-	$ct['etc']['select']['id_tipologia_inps'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_inps_view' );
 
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
@@ -74,34 +62,6 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static' );
 
-    // tendina esiti
-	$ct['etc']['select']['id_esito'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM esiti_attivita_view' );
-
-    // tendina interesse
-	$ct['etc']['select']['id_interesse'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_interesse_view' );
-
-    // tendina soddisfazione
-	$ct['etc']['select']['id_soddisfazione'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_soddisfazione_view' );
-
-    // tendina categorie attivita
-	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM categorie_attivita_view'
-	);
 
     // tendina progetti
 	    $ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(

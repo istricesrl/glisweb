@@ -16,11 +16,17 @@
 		{% if etc.include.insert %}
 	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-insert').toggleAttribute('disabled');$('#{{ view.id }}-insert').slideToggle(400,'swing');"><i class="fa fa-plus-circle"></i></button>
 	    {% endif %}
+		{% if etc.include.insert_memo %}
+	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-insert_memo').toggleAttribute('disabled');$('#{{ view.id }}-insert_memo').slideToggle(400,'swing');"><i class="fa fa-calendar-plus-o"></i></button>
+	    {% endif %}
 	</div>
     </div>
     {% endif %}
     {% if etc.include.insert %}
 	{% include etc.include.insert %}
+	{% endif %}
+	{% if etc.include.insert_memo %}
+	{% include etc.include.insert_memo %}
 	{% endif %}
     {% if view.data %}
     <div class="form-row">
