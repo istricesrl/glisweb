@@ -63,8 +63,11 @@
 	    $ct['view']['__restrict__']['id_todo']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 
-    $ct['etc']['include']['insert'] = 'inc/todo.form.attivita.insert.html';
-
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/todo.form.attivita.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
 
     $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
