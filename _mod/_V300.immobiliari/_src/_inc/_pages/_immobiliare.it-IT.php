@@ -185,7 +185,7 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_edifici.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'			=> array( 'tabs'	=> array(	'edifici.form',
-														'edifici.contratti.form.contratti',
+														'edifici.form.contratti',
 														'edifici.form.immagini',
 														'edifici.form.video',
 														'edifici.form.audio',
@@ -196,13 +196,13 @@
 	);
 
 	// gestione contratti edifici
-	$p['edifici.contratti.form.contratti'] = array(
+	$p['edifici.form.contratti'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'contratti' ),
 		'h1'		=> array( $l		=> 'contratti' ),
 		'parent'		=> array( 'id'		=> 'edifici.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'edifici.contratti.form.contratti.html' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_edifici.contratti.form.contratti.php' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'edifici.form.contratti.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_edifici.form.contratti.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['edifici.form']['etc']['tabs'] )
 	);
