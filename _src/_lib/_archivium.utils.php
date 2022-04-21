@@ -470,7 +470,8 @@
 
         // pulizia chiave FatturaElettronica
         foreach( $r as $k => $v ) {
-            if( strpos( $k, 'FatturaElettronica' ) ) {
+            
+            if( strpos( $k, 'FatturaElettronica' ) >= 0 ) {
                 $fe = $v;
             }
         }
@@ -583,6 +584,15 @@
 
         // TODO
         // aggiungere la categoria azienda gestita al cliente
+        mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => NULL,
+                'id_anagrafica' => $i['idCliente'],
+                'id_categoria' => mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM categorie_anagrafica WHERE se_gestita = 1 LIMIT 1')
+            ),
+            'anagrafica_categorie'
+        );
 
         // cerco o creo il destinatario
         if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
@@ -612,6 +622,15 @@
 
         // TODO
         // aggiungere la categoria fornitore al fornitore
+        mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => NULL,
+                'id_anagrafica' => $i['idFornitore'],
+                'id_categoria' => mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM categorie_anagrafica WHERE se_fornitore = 1 LIMIT 1')
+            ),
+            'anagrafica_categorie'
+        );
 
         // aggiornamento view statica
         mysqlQuery( $cf['mysql']['connection'], 'CALL anagrafica_view_static( ? )', array( array( 's' => $i['idFornitore'] ) ) );
@@ -759,7 +778,7 @@
                             'id_documento' => $i['idDocumento'],
                             'id_modalita_pagamento' => $idModalita,
                             'importo_netto_totale' => $row['ImportoPagamento']['#'],
-                            'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] ),
+                            'timestamp_scadenza' =>( isset($row['DataScadenzaPagamento']) ? strtotime( $row['DataScadenzaPagamento']['#']) : NULL ),
                             'id_iban' =>  $idIban
                         ),
                         'pagamenti'
