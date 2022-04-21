@@ -50,8 +50,17 @@
         'ora_fine' => 'd-none'
     );
 
-    $ct['etc']['include']['insert'] = 'inc/anagrafica.form.attivita.insert.html';
-    $ct['etc']['include']['insert_memo'] = 'inc/anagrafica.form.attivita.insert.promemoria.html';
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/anagrafica.form.attivita.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
+
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert_memo',
+        'file' => 'inc/anagrafica.form.attivita.insert.promemoria.html',
+        'fa' => 'fa-calendar-plus-o'
+    );
 
 	$ct['view']['insert']['field'] = 'id_cliente';
 

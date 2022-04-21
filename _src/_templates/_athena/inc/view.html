@@ -14,19 +14,17 @@
 	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
 	    {% endif %}
 		{% if etc.include.insert %}
-	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-insert').toggleAttribute('disabled');$('#{{ view.id }}-insert').slideToggle(400,'swing');"><i class="fa fa-plus-circle"></i></button>
-	    {% endif %}
-		{% if etc.include.insert_memo %}
-	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-insert_memo').toggleAttribute('disabled');$('#{{ view.id }}-insert_memo').slideToggle(400,'swing');"><i class="fa fa-calendar-plus-o"></i></button>
-	    {% endif %}
+			{% for insert in etc.include.insert %}
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-{{ insert.name }}').toggleAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').slideToggle(400,'swing');"><i class="fa {{ insert.fa }}"></i></button>
+			{% endfor %}
+		{% endif %}
 	</div>
     </div>
     {% endif %}
     {% if etc.include.insert %}
-	{% include etc.include.insert %}
-	{% endif %}
-	{% if etc.include.insert_memo %}
-	{% include etc.include.insert_memo %}
+	{% for insert in etc.include.insert %}
+	{% include insert.file %}
+	{% endfor %}
 	{% endif %}
     {% if view.data %}
     <div class="form-row">
