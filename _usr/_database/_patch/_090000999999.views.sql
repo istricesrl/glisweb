@@ -2008,13 +2008,13 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 
 --| 090000013250
 
--- fatture_passive_view
+-- fatture_attive_view
 -- tipologia: vista virtuale
 DROP TABLE IF EXISTS `fatture_attive_view`;
 
 --| 090000013251
 
--- fatture_passive_view
+-- fatture_attive_view
 -- tipologia:  vista virtuale
 -- verifica: 2021-09-03 17:25 Fabio Mosti
 CREATE OR REPLACE VIEW `fatture_attive_view` AS
@@ -2035,6 +2035,7 @@ CREATE OR REPLACE VIEW `fatture_attive_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
 		concat(
 			tipologie_documenti.nome,
 			' ',
@@ -2092,6 +2093,7 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
 		concat(
 			tipologie_documenti.nome,
 			' ',

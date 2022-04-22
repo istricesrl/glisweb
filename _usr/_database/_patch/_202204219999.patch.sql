@@ -326,9 +326,100 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
 ;
 
+--| 202204215130
+CREATE OR REPLACE VIEW `fatture_attive_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
+;
 
-
-
-
+--| 202204215140
+CREATE OR REPLACE VIEW `fatture_passive_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
+;
 
 -- FINE
