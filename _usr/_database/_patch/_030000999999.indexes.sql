@@ -2002,9 +2002,11 @@ ALTER TABLE `ranking`
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_cliente` (`se_cliente`),
+	ADD KEY `se_fornitore` (`se_fornitore`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`,`ordine`);
+	ADD KEY `indice` (`id`,`nome`,`ordine`,  `se_cliente`, `se_fornitore`);
 
 --| 030000028601
 

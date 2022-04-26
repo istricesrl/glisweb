@@ -18,6 +18,8 @@
     ranking.nome                            | il nome del ranking
     ranking.note                            | le note del ranking
     ranking.ordine                          | campo di ordinamento
+    ranking.se_cliente                      | flag che indica se il ranking fa riferimento a clienti
+    ranking.se_fornitore                    | flag che indica se il ranking fa riferimento a fornitori
     ranking.id_account_inserimento          | l'ID dell'account che ha inserito la riga
     ranking.timestamp_inserimento           | la timestamp dell'inserimento della riga
     ranking.id_account_aggiornamento        | l'ID dell'ultimo account che ha modificato la riga
@@ -37,6 +39,8 @@
     ranking_view.id                             | -
     ranking_view.nome                           | -
     ranking_view.ordine                         | -
+    ranking_view.se_cliente                     | -
+    ranking_view.se_fornitore                   | -
     ranking_view.id_account_inserimento         | -
     ranking_view.id_account_aggiornamento       | -
     ranking_view.__label__                      | etichetta descrittiva del ranking

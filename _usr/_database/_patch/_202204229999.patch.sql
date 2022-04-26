@@ -435,4 +435,18 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 	GROUP BY categorie_anagrafica.id
 ;
 
+--| 202204220200
+CREATE OR REPLACE VIEW `ranking_view` AS
+    SELECT
+		ranking.id,
+		ranking.nome,
+		ranking.ordine,
+		ranking.se_cliente,
+		ranking.se_fornitore,
+		ranking.id_account_inserimento,
+		ranking.id_account_aggiornamento,
+		ranking.nome AS __label__
+    FROM ranking
+;
+
 -- FINE

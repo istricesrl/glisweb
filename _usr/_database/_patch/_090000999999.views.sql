@@ -4282,6 +4282,8 @@ CREATE OR REPLACE VIEW `ranking_view` AS
 		ranking.id,
 		ranking.nome,
 		ranking.ordine,
+		ranking.se_cliente,
+		ranking.se_fornitore,
 		ranking.id_account_inserimento,
 		ranking.id_account_aggiornamento,
 		ranking.nome AS __label__
