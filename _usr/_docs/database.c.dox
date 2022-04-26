@@ -76,6 +76,7 @@
     categorie_anagrafica.se_produzione                     | -
     categorie_anagrafica.se_commerciale                    | -
     categorie_anagrafica.se_notizie                        | -
+    categorie_anagrafica.se_corriere                       | -    
     categorie_anagrafica.id_account_inserimento            | l'ID dell'account che ha inserito la riga
     categorie_anagrafica.timestamp_inserimento             | la timestamp dell'inserimento della riga
     categorie_anagrafica.id_account_aggiornamento          | l'ID dell'ultimo account che ha modificato la riga
@@ -119,6 +120,7 @@
     categorie_anagrafica_view.se_produzione                 | -
     categorie_anagrafica_view.se_commerciale                | -
     categorie_anagrafica_view.se_notizie                    | -
+    categorie_anagrafica_view.se_corriere                   | -
     categorie_anagrafica_view.figli                         | il numero di categorie figlie di questa categoria
     categorie_anagrafica_view.membri                        | il numero di anagrafiche collegate a questa categoria
     categorie_anagrafica_view.id_account_inserimento        | -

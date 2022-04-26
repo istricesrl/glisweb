@@ -402,4 +402,37 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
+--| 202204220190
+CREATE OR REPLACE VIEW categorie_anagrafica_view AS
+	SELECT
+		categorie_anagrafica.id,
+		categorie_anagrafica.id_genitore,
+		categorie_anagrafica.ordine,
+		categorie_anagrafica.nome,
+		categorie_anagrafica.se_prospect,
+		categorie_anagrafica.se_lead,
+		categorie_anagrafica.se_cliente,
+		categorie_anagrafica.se_fornitore,
+		categorie_anagrafica.se_produttore,
+		categorie_anagrafica.se_collaboratore,
+		categorie_anagrafica.se_interno,
+		categorie_anagrafica.se_esterno,
+		categorie_anagrafica.se_concorrente,
+		categorie_anagrafica.se_gestita,
+		categorie_anagrafica.se_amministrazione,
+		categorie_anagrafica.se_produzione,
+		categorie_anagrafica.se_commerciale,
+		categorie_anagrafica.se_notizie,
+		categorie_anagrafica.se_corriere,
+		count( c1.id ) AS figli,
+		count( anagrafica_categorie.id ) AS membri,
+		categorie_anagrafica.id_account_inserimento,
+		categorie_anagrafica.id_account_aggiornamento,
+	 	categorie_anagrafica_path( categorie_anagrafica.id ) AS __label__
+	FROM categorie_anagrafica
+		LEFT JOIN categorie_anagrafica AS c1 ON c1.id_genitore = categorie_anagrafica.id
+		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_categoria = categorie_anagrafica.id
+	GROUP BY categorie_anagrafica.id
+;
+
 -- FINE

@@ -881,6 +881,7 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 		categorie_anagrafica.se_produzione,
 		categorie_anagrafica.se_commerciale,
 		categorie_anagrafica.se_notizie,
+		categorie_anagrafica.se_corriere,
 		count( c1.id ) AS figli,
 		count( anagrafica_categorie.id ) AS membri,
 		categorie_anagrafica.id_account_inserimento,
