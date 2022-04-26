@@ -1083,6 +1083,38 @@ CREATE OR REPLACE VIEW chiavi_view AS
         LEFT JOIN tipologie_chiavi ON tipologie_chiavi.id = chiavi.id_tipologia
 ;
 
+--| 090000005000
+
+-- colli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `colli_view`;
+
+--| 090000005001
+
+-- colli_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 10:22 chiara gdl
+CREATE OR REPLACE VIEW colli_view AS
+	SELECT
+		colli.id,
+		colli.id_documento,
+		colli.ordine,
+		colli.codice,
+		colli.larghezza,
+		colli.lunghezza,
+		colli.altezza,
+		colli.id_udm_dimensioni,
+		colli.peso,
+		colli.id_udm_peso,
+		colli.volume,
+		colli.id_udm_volume,
+		colli.nome,
+		colli.id_account_inserimento,
+		colli.id_account_aggiornamento,
+		colli.nome AS __label__
+	FROM colli
+	;
+
 --| 090000005100
 
 -- colori_view

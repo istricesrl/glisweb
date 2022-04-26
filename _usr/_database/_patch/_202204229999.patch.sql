@@ -449,4 +449,26 @@ CREATE OR REPLACE VIEW `ranking_view` AS
     FROM ranking
 ;
 
+--| 202204220210
+CREATE OR REPLACE VIEW colli_view AS
+	SELECT
+		colli.id,
+		colli.id_documento,
+		colli.ordine,
+		colli.codice,
+		colli.larghezza,
+		colli.lunghezza,
+		colli.altezza,
+		colli.id_udm_dimensioni,
+		colli.peso,
+		colli.id_udm_peso,
+		colli.volume,
+		colli.id_udm_volume,
+		colli.nome,
+		colli.id_account_inserimento,
+		colli.id_account_aggiornamento,
+		colli.nome AS __label__
+	FROM colli
+	;
+
 -- FINE

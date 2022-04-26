@@ -510,6 +510,28 @@ ALTER TABLE `chiavi`
 -- tipologia: tabella di supporto
 ALTER TABLE `chiavi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000005000
+
+-- colli
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 10:22 chiara gdl
+ALTER TABLE `colli`
+ 	ADD PRIMARY KEY (`id`), 
+ 	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),
+	ADD KEY `id_udm_peso` (`id_udm_peso`),
+	ADD KEY `id_udm_volume` (`id_udm_volume`),
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`ordine`,`codice`,`id_documento`),
+	ADD KEY `indice_dimensioni` (`id`,`ordine`,`codice`,`id_documento`,`larghezza`,`lunghezza`,`altezza`,`peso`,`volume`);
+
+--| 030000005001
+
+-- colli
+-- tipologia: tabella gestita
+ALTER TABLE `colli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000005100
 
 -- colori

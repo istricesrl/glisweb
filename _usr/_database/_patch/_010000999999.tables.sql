@@ -535,6 +535,32 @@ CREATE TABLE IF NOT EXISTS `chiavi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000005000
+
+-- colli
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 10:22 chiara gdl
+CREATE TABLE `colli` (
+  `id` int(11) NOT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `ordine` int DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `larghezza` decimal(7,2) DEFAULT NULL,
+  `lunghezza` decimal(7,2) DEFAULT NULL,
+  `altezza` decimal(7,2) DEFAULT NULL,
+  `id_udm_dimensioni` int DEFAULT NULL,
+  `peso` decimal(7,2) DEFAULT NULL,
+  `id_udm_peso` int DEFAULT NULL,
+  `volume` decimal(7,2) DEFAULT NULL,
+  `id_udm_volume` int DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
+
 --| 010000005100
 
 -- colori
