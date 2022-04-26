@@ -840,6 +840,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_udm` (`id_udm`), 
 	ADD KEY `id_listino` (`id_listino`), 
 	ADD KEY `id_matricola` (`id_matricola`), 
+	ADD KEY `id_collo` (`id_collo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `data` (`data`), 

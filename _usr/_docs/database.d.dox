@@ -142,6 +142,7 @@
     documenti_articoli.id_mastro_destinazione               | l'ID del mastro caricato dalla riga
     documenti_articoli.id_udm                               | l'ID dell'unità di misura relativa alla quantità movimentata dalla riga
     documenti_articoli.id_matricola                         | l'ID della matricola associata alla riga
+    documenti_articoli.id_collo                             | l'ID del collo in cui la voce è collocata
     documenti_articoli.quantita                             | la quantità movimentata dalla riga
     documenti_articoli.id_listino                           | l'ID del listino associato alla riga
     documenti_articoli.importo_netto_totale                 | l'importo netto totale della riga
@@ -174,6 +175,7 @@
     documenti_articoli_ibfk_13_nofollow         | id_udm                        | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_14_nofollow         | id_listino                    | listini.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_15_nofollow         | id_matricola                  | matricole.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_articoli_ibfk_16_nofollow         | id_collo                      | colli.id                          | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_98_nofollow         | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     documenti_articoli_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -210,6 +212,7 @@
     documenti_articoli_view.sconto_percentuale              | -
     documenti_articoli_view.sconto_valore                   | -
     documenti_articoli_view.id_matricola                    | -
+    documenti_articoli_view.id_collo                        | -
     documenti_articoli_view.matricola                       | il nome della matricola associato alla riga
     documenti_articoli_view.nome                            | -
     documenti_articoli_view.id_account_inserimento          | -
