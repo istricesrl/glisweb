@@ -1487,6 +1487,25 @@ ALTER TABLE `menu`
 -- tipologia: tabella gestita
 ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000021700
+
+-- messaggi
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 17:32 Chiara GDL
+ALTER TABLE `messaggi`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_emittente` (`id_emittente`), 
+	ADD KEY `id_destinatario` (`id_destinatario`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_emittente`,`id_destinatario`,`timestamp_invio`,`timestamp_lettura`);
+
+--| 030000021701
+
+-- messaggi
+-- tipologia: tabella gestita
+ALTER TABLE `messaggi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000021800
 
 -- metadati

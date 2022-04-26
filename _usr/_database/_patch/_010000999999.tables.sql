@@ -1408,6 +1408,24 @@ CREATE TABLE IF NOT EXISTS `menu` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000021700
+
+-- messaggi
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 17:32 Chiara GDL
+CREATE TABLE IF NOT EXISTS `messaggi` (
+  `id` int(11) NOT NULL,
+  `id_emittente` int(11) DEFAULT NULL,
+  `id_destinatario` int(11) DEFAULT NULL,
+  `testo` text,
+  `timestamp_invio` int DEFAULT NULL,
+  `timestamp_lettura` int DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB;
+
 --| 010000021800
 
 -- metadati
