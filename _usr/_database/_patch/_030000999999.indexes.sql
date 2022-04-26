@@ -805,6 +805,9 @@ ALTER TABLE `documenti`
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `cig` (`cig`),
 	ADD KEY `cup` (`cup`),
+	ADD KEY `id_causale` (`id_causale`),
+	ADD KEY `id_trasportatore` (`id_trasportatore`),
+	ADD KEY `porto` (`porto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);

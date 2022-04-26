@@ -32,6 +32,9 @@
     documenti.id_coupon                     | l'ID del coupon associato al documento
     documenti.id_mastro_provenienza         | l'ID del mastro di scarico del documento
     documenti.id_mastro_destinazione        | l'ID del mastro di caricao del documento
+    documenti.id_causale                    | l'ID della causale del documento
+	documenti.porto                         | enum della tipologia del porto (franco, assegnato, -)
+	documenti.id_trasportatore              | l'ID dell'anagrafica del trasportatore
     documenti.note                          | note aggiuntive sul documento
     documenti.note_cliente                  | note destinate al cliente del documento
     documenti.timestamp_chiusura            | la timestamp della chiusura del documentato 
@@ -52,8 +55,10 @@
     documenti_ibfk_05_nofollow              | id_sede_destinatario      | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_06_nofollow              | id_coupon                 | coupon.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_07_nofollow              | id_condizione_pagamento   | condizioni_pagamento.id       | ON DELETE NO ACTION ON UPDATE NO ACTION          
-    documenti_ibfk_08_nofollow              | id_mastro_provenienza         | mastri.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    documenti_ibfk_09_nofollow              | id_mastro_destinazione        | mastri.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_08_nofollow              | id_mastro_provenienza     | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_09_nofollow              | id_mastro_destinazione    | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_10_nofollow              | id_causale                | causali.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_11_nofollow              | id_trasportatore          | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     documenti_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -83,6 +88,9 @@
     documenti_view.mastro_provenienza               | il mastro scaricato dal documento
     documenti_view.id_mastro_destinazione           | -
     documenti_view.mastro_destinazione              | il mastro caricato dal documento
+    documenti_view.id_causale                       | -
+    documenti_view.porto                            | -
+    documenti_view.id_trasportatore                 | -
     documenti_view.timestamp_chiusura               | -
     documenti_view.data_ora_chiusura                | chiusra del documento in formato Y-m-d H:i
     documenti_view.id_account_inserimento           | -
