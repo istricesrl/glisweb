@@ -474,6 +474,26 @@ ALTER TABLE `categorie_risorse`
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000004600
+
+-- causali
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 11:12 Chiara GDL
+ALTER TABLE `causali`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_trasporto` (`se_trasporto`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`nome`,`se_trasporto`);
+
+--| 030000004601
+
+-- causali
+-- tipologia: tabella gestita
+ALTER TABLE `causali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000004700
 
 -- certificazioni
@@ -482,6 +502,8 @@ ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `certificazioni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`); 
 
 --| 030000004701

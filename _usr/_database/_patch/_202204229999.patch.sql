@@ -6,7 +6,11 @@
 CREATE TABLE IF NOT EXISTS `causali` (
   `id` int(11) NOT NULL,
   `nome` char(64) NOT NULL,
-  `se_trasporto` int(1) DEFAULT NULL
+  `se_trasporto` int(1) DEFAULT NULL,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 202204220020
@@ -15,10 +19,17 @@ ALTER TABLE `causali`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `se_trasporto` (`se_trasporto`), 
 	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`se_trasporto`);
 
 --| 202204220030
 ALTER TABLE `causali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204220035
+ALTER TABLE `causali`
+    ADD CONSTRAINT `causali_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `causali_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| 202204220040
 ALTER TABLE documenti 
@@ -470,5 +481,17 @@ CREATE OR REPLACE VIEW colli_view AS
 		colli.nome AS __label__
 	FROM colli
 	;
+
+--| 202204220220
+CREATE OR REPLACE VIEW causali_view AS
+	SELECT
+		causali.id,
+		causali.nome,
+		causali.se_trasporto,
+		causali.id_account_inserimento,
+		causali.id_account_aggiornamento,
+	 	causali.nome AS __label__
+	FROM causali
+;
 
 -- FINE

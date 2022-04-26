@@ -1037,6 +1037,28 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 	GROUP BY categorie_risorse.id
 ;
 
+--| 090000004600
+
+-- causali_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `causali_view`;
+
+--| 090000004601
+
+-- causali_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 11:12 Chiara GDL
+CREATE OR REPLACE VIEW causali_view AS
+	SELECT
+		causali.id,
+		causali.nome,
+		causali.se_trasporto,
+		causali.id_account_inserimento,
+		causali.id_account_aggiornamento,
+	 	causali.nome AS __label__
+	FROM causali
+;
+
 --| 090000004700
 -- certificazioni
 -- tipologia: tabella assistita

@@ -128,6 +128,7 @@
     categorie_prodotti              | 003900    | ricorsiva     | categorie     | contiene le categorie di prodotti
     categorie_progetti              | 004300    | ricorsiva     | categorie     | contiene le categorie di progetti
     categorie_risorse               | 004500    | ricorsiva     | categorie     | contiene le categorie di risorse
+    causali                         | 004600    | base          | principale    | contiene le causali per i documenti
     chiavi                          | 004800    | base          | principale    | contiene le chiavi
     colli                           | 005000    | base          | principale    | contiene i colli
     contatti                        | 006700    | base          | principale    | contiene i contatti
@@ -228,7 +229,7 @@
     RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
     PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, matricole, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
-    DOCUMENTI   |           | articoli, condizioni_pagamento, colli, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
+    DOCUMENTI   |           | articoli, causali, condizioni_pagamento, colli, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     CASSE       | 6500      | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     SOFTWARE    |           | chiavi, licenze, licenze_software, relazioni_software, software, tipologie_chiavi, tipologie_licenze
 
@@ -255,6 +256,7 @@
     categorie_prodotti              | PRODOTTI
     categorie_progetti              | PRODUZIONE
     categorie_risorse               | RISORSE
+    causali                         | DOCUMENTI
     certificazioni                  | BASE
     chiavi                          | SOFTWARE
     colori                          | BASE, PRODOTTI

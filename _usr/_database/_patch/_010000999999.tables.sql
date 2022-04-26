@@ -503,6 +503,21 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000004600
+
+-- causali
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 11:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `causali` (
+  `id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_trasporto` int(1) DEFAULT NULL,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
+
 --| 010000004700
 
 -- certificazioni
