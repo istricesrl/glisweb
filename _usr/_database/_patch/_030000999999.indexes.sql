@@ -1932,6 +1932,28 @@ ALTER TABLE `progetti_categorie`
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000027600
+
+-- progetti_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+ALTER TABLE `progetti_certificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_certificazione`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_certificazione` (`id_certificazione`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_richiesta` (`se_richiesta`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_progetto`,`id_certificazione`,`ordine`);
+
+--| 030000027601
+
+-- progetti_certificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `progetti_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000027800
 
 -- progetti_matricole
@@ -3156,6 +3178,28 @@ ALTER TABLE `todo`
 -- tipologia: tabella gestita
 ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000060100
+
+-- todo_matricole
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 15:00 Chiara GDL
+ALTER TABLE `todo_matricole`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_todo`,`id_matricola`,`id_ruolo`), 
+	ADD KEY `id_todo` (`id_todo`), 
+	ADD KEY `id_matricola` (`id_matricola`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_todo`,`id_matricola`,`ordine`,`id_ruolo`);
+
+--| 030000060101
+
+-- todo_matricole
+-- tipologia: tabella gestita
+ALTER TABLE `todo_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000062000
 
 -- udm
@@ -3170,6 +3214,7 @@ ALTER TABLE `udm`
 	ADD KEY `se_tempo`(`se_tempo`),
 	ADD KEY `se_lunghezza`(`se_lunghezza`),
 	ADD KEY `se_quantita`(`se_quantita`),
+ 	ADD KEY `se_area` (`se_area`),
 	ADD KEY `indice` (`id`,`id_base`,`conversione`,`nome`,`sigla`,`se_tempo`,`se_lunghezza`,`se_volume`,`se_quantita`);
 
 --| 030000062001

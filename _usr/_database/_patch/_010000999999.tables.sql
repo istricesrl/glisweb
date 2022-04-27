@@ -1817,6 +1817,7 @@ CREATE TABLE IF NOT EXISTS `progetti_categorie` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
 --| 010000027600
 
 -- progetti_certificazioni
@@ -1826,6 +1827,7 @@ CREATE TABLE `progetti_certificazioni` (
   `id` int NOT NULL,
   `id_progetto` char(32) NOT NULL,
   `id_certificazione` int DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `nome` char(1) DEFAULT NULL,
   `note` text,
   `se_richiesta` int(1) DEFAULT NULL,
@@ -2765,7 +2767,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `se_dimensioni` tinyint(1) DEFAULT NULL,
   `se_volume` tinyint(1) DEFAULT NULL,
   `se_capacita` tinyint(1) DEFAULT NULL,
-  `se_peso` tinyint(1) DEFAULT NULL,
+  `se_massa` tinyint(1) DEFAULT NULL,
   `se_imballo` tinyint(1) DEFAULT NULL,
   `se_spedizione` tinyint(1) DEFAULT NULL,
   `se_trasporto` tinyint(1) DEFAULT NULL,
@@ -2932,6 +2934,23 @@ CREATE TABLE IF NOT EXISTS `todo` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000060100
+
+-- todo_matricole
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 14:58 Chiara GDL
+CREATE TABLE IF NOT EXISTS `todo_matricole` (
+  `id` int(11) NOT NULL,
+  `id_todo` int(11) NOT NULL,
+  `id_matricola` int(11) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000062000

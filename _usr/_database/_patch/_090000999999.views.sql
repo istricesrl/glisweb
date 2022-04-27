@@ -4175,6 +4175,39 @@ CREATE OR REPLACE VIEW progetti_categorie_view AS
 		LEFT JOIN progetti ON progetti.id = progetti_categorie.id_progetto
 ;
 
+--| 090000027600
+
+-- progetti_certificazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_certificazioni_view`;
+
+--| 090000027601
+
+-- progetti_certificazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE OR REPLACE VIEW progetti_certificazioni_view AS
+	SELECT
+		progetti_certificazioni.id,
+		progetti_certificazioni.id_progetto,
+		progetti.nome AS progetto,
+		progetti_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
+		progetti_certificazioni.ordine,
+		progetti_certificazioni.se_richiesta,
+		progetti_certificazioni.id_account_inserimento,
+		progetti_certificazioni.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			progetti.nome,
+			'/',
+			certificazioni.nome 
+		) AS __label__
+	FROM progetti_certificazioni
+		LEFT JOIN progetti ON progetti.id = progetti_certificazioni.id_progetto
+		LEFT JOIN certificazioni ON certificazioni.id = progetti_certificazioni.id_certificazione
+;
+
 --| 090000027800
 
 -- progetti_matricole_view
@@ -4877,6 +4910,7 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 		risorse.giorno_pubblicazione,
 		risorse.mese_pubblicazione,
 		risorse.anno_pubblicazione,
+		group_concat( DISTINCT categorie_risorse_path( categorie_risorse.id ) SEPARATOR ' | ' ) AS categorie,
 		risorse.id_account_inserimento,
 		risorse.id_account_aggiornamento,
 		concat_ws(
@@ -4887,6 +4921,9 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 	FROM risorse
 		LEFT JOIN tipologie_risorse ON tipologie_risorse.id = risorse.id_tipologia
 		LEFT JOIN testate ON testate.id = risorse.id_testata
+		LEFT JOIN risorse_categorie ON risorse_categorie.id_risorsa = risorse.id
+		LEFT JOIN categorie_risorse ON categorie_risorse.id = risorse_categorie.id_categoria
+	GROUP BY risorse.id
 ;
 
 --| 090000032200
@@ -5964,7 +6001,7 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.se_volume,
 		tipologie_prodotti.se_capacita,
-		tipologie_prodotti.se_peso,
+		tipologie_prodotti.se_massa,
 		tipologie_prodotti.id_account_inserimento,
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
@@ -6190,6 +6227,39 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+;
+
+--| 090000060100
+
+-- todo_matricole_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `todo_matricole_view`;
+
+--| 090000060101
+
+-- todo_matricole_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 15:07 Chiara GDL
+CREATE OR REPLACE VIEW todo_matricole_view AS
+	SELECT
+		todo_matricole.id,
+		todo_matricole.id_todo,
+		todo.nome AS todo,
+		todo_matricole.id_matricola,
+		matricole.matricola AS matricola,
+		todo_matricole.id_ruolo,
+		ruoli_matricole_path( todo_matricole.id_ruolo ) AS ruolo,
+		todo_matricole.ordine,
+		todo_matricole.id_account_inserimento,
+		todo_matricole.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			todo.nome,
+			matricole.matricola
+		) AS __label__
+	FROM todo_matricole
+		LEFT JOIN todo ON todo.id = todo_matricole.id_todo
+		LEFT JOIN matricole ON matricole.id = todo_matricole.id_matricola
 ;
 
 --| 090000062000
