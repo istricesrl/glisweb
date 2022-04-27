@@ -448,32 +448,33 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 -- ruoli_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:11 Fabio Mosti
-REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_didattica`) VALUES
-(1,		NULL,	'titolare',						NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(2,		NULL,	'amministratore',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(3,		NULL,	'socio',						NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(4,		NULL,	'dipendente',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(5,		NULL,	'direttore',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(6,		NULL,	'presidente',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(7,		NULL,	'tesoriere',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(8,		NULL,	'coordinatore',					NULL,	NULL,	1,		NULL,	NULL,	1,		NULL),
-(9,		NULL,	'vicepresidente',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	'vicedirettore',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	'segretario',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(13,	NULL,	'responsabile acquisti',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(14,	NULL,	'responsabile operativo',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(15,	NULL,	'operatore',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
-(16,	NULL,	'responsabile',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
-(17,	NULL,	'assistente',					NULL,	NULL,	1,		NULL,	NULL,	1,		NULL),
-(18,	NULL,	'autore',						NULL,	NULL,	NULL,	NULL,	1,		NULL,	NULL),
-(19,	NULL,	'genitore',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(20,	NULL,	'fratello',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(21,	NULL,	'tutore',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(22,	NULL,	'coniuge',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(23,	NULL,	'collega',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(24,	NULL,	'docente',						NULL,	NULL,	NULL,	NULL,	NULL,	1,		1),
-(25,	NULL,	'istruttore',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		1);
+REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_didattica`, `se_immobili`) VALUES
+(1,	NULL,	'titolare',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'amministratore',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'socio',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'dipendente',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'direttore',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'presidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'tesoriere',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'coordinatore',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(9,	NULL,	'vicepresidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'vicedirettore',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	'segretario',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	'responsabile acquisti',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	'responsabile operativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	'operatore',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(16,	NULL,	'responsabile',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(17,	NULL,	'assistente',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(18,	NULL,	'autore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(19,	NULL,	'genitore',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	NULL,	'fratello',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(21,	NULL,	'tutore',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	NULL,	'collega',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(24,	NULL,	'docente',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL),
+(25,	NULL,	'istruttore',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL),
+(26,	NULL,	'proprietario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000034200
 
@@ -932,7 +933,33 @@ ON DUPLICATE KEY UPDATE
 	se_offerta = VALUES(se_offerta),
 	se_ordine = VALUES(se_ordine),
 	se_ricevuta= VALUES(se_ricevuta);
-	
+
+--| 050000052800
+
+-- tipologie_edifici
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+INSERT INTO `tipologie_edifici` (`id`, `id_genitore`, `nome`) VALUES
+(1, NULL, 'palazzo'),
+(2, NULL, 'palazzo storico'),
+(3, NULL, 'palazzina'),
+(4, NULL, 'complesso'),
+(5, NULL, 'residence'),
+(6, NULL, 'edificio indipendente');
+
+--| 050000052900
+
+-- tipologie_immobili
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+INSERT INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_industriale`) VALUES
+(1, 'appartamento', 1, NULL),
+(3, 'abitazione', 1, NULL),
+(6, 'garage', 1, NULL),
+(7, 'magazzino', 1, 1),
+(8, 'ufficio', NULL, 1),
+(9, 'negozio', NULL, 1);
+
 --| 050000053000
 
 -- tipologie_indirizzi

@@ -1919,6 +1919,59 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
+--| 090000012000
+
+-- edifici
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `edifici_view`;
+
+--| 090000012001
+
+-- edifici
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 16:56 Chiara GDL
+CREATE OR REPLACE VIEW edifici_view AS
+	SELECT
+		edifici.id,
+		edifici.id_tipologia,
+		tipologie_edifici.nome AS tipologia,
+		edifici.id_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		edifici.nome,
+		edifici.piani,
+		edifici.id_account_inserimento,
+		edifici.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS __label__
+	FROM edifici
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN regioni ON regioni.id = provincie.id_regione
+		LEFT JOIN stati ON stati.id = regioni.id_stato
+;
+
 --| 090000012800
 
 -- embed_view
@@ -2295,6 +2348,77 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 	FROM immagini
 		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
 		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
+;
+
+--| 090000015700
+
+-- immobili_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `immobili_view`;
+
+--| 090000015701
+
+-- immobili_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 12:20 Chiara GDL
+CREATE OR REPLACE VIEW immobili_view AS
+	SELECT
+		immobili.id,
+		immobili.id_tipologia,
+		tipologie_immobili.nome AS tipologia,
+		immobili.id_edificio,
+		edifici.id_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		immobili.scala,
+		immobili.piano,
+		immobili.interno,
+immobili.campanello,
+		immobili.id_account_inserimento,
+		immobili.id_account_aggiornamento,
+		concat_ws(
+			' ',
+    tipologie_immobili.nome, 
+    coalesce(
+      concat('scala ', immobili.scala), 
+      ''
+    ), 
+    coalesce(
+      concat('piano ', immobili.piano), 
+      ''
+    ), 
+    coalesce(
+      concat('int. ', immobili.interno), 
+      ''
+    ),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS __label__
+	FROM immobili
+		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
+		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN regioni ON regioni.id = provincie.id_regione
+		LEFT JOIN stati ON stati.id = regioni.id_stato
 ;
 
 --| 090000015800
@@ -5892,6 +6016,58 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti_path( tipologie_documenti.id ) AS __label__
 	FROM tipologie_documenti
 ;
+
+--| 090000052800
+
+-- tipologie_edifici_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `tipologie_edifici_view`;
+
+--| 090000052801
+
+-- tipologie_edifici_view
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+CREATE OR REPLACE VIEW tipologie_edifici_view AS
+	SELECT
+	tipologie_edifici.id,
+	tipologie_edifici.id_genitore,
+	tipologie_edifici.ordine,
+	tipologie_edifici.nome,
+	tipologie_edifici.html_entity,
+	tipologie_edifici.font_awesome,
+	tipologie_edifici.id_account_inserimento,
+	tipologie_edifici.id_account_aggiornamento,
+	tipologie_edifici_path( tipologie_edifici.id )  AS __label__
+	FROM tipologie_edifici
+	;
+
+--| 090000052900
+
+-- tipologie_immobili_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `tipologie_immobili_view`;
+
+--| 090000052901
+
+-- tipologie_immobili_view
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+CREATE OR REPLACE VIEW tipologie_immobili_view AS
+	SELECT
+	tipologie_immobili.id,
+	tipologie_immobili.id_genitore,
+	tipologie_immobili.ordine,
+	tipologie_immobili.nome,
+	tipologie_immobili.html_entity,
+	tipologie_immobili.font_awesome,
+	tipologie_immobili.se_residenziale ,
+	tipologie_immobili.se_industriale ,
+	tipologie_immobili.id_account_inserimento,
+	tipologie_immobili.id_account_aggiornamento,
+	tipologie_immobili_path( tipologie_immobili.id )  AS __label__
+	FROM tipologie_immobili
+	;
 
 --| 090000053000
 

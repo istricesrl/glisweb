@@ -861,6 +861,26 @@ ALTER TABLE `documenti_articoli`
 -- tipologia: tabella gestita
 ALTER TABLE `documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000012000
+
+-- edifici
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 16:56 Chiara GDL
+ALTER TABLE `edifici`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_tipologia` (`id_tipologia`),
+  ADD KEY `id_indirizzo` (`id_indirizzo`),
+  ADD KEY `nome` (`nome`),
+  ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  ADD KEY `indice` (`id`, `id_tipologia`, `id_indirizzo`, `nome`);
+
+--| 030000012001
+
+-- edifici
+-- tipologia: tabella gestita
+ALTER TABLE `edifici`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000012800
 
 -- embed
@@ -1036,6 +1056,28 @@ ALTER TABLE `immagini`
 -- immagini
 -- tipologia: tabella gestita
 ALTER TABLE `immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000015700
+
+-- immobili
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 12:20 Chiara GDL
+ALTER TABLE `immobili`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`),
+  ADD KEY `id_tipologia` (`id_tipologia`),
+  ADD KEY `id_edificio` (`id_edificio`),
+  ADD KEY `scala` (`scala`),
+  ADD KEY `piano` (`piano`),
+  ADD KEY `interno` (`interno`),
+  ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+--| 030000015701
+
+-- immobili
+-- tipologia: tabella gestita
+ALTER TABLE `immobili`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000015800
 
@@ -2357,7 +2399,8 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD KEY `se_organizzazioni` (`se_organizzazioni`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_progetti` (`se_progetti`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_organizzazioni`,`se_risorse`,`se_progetti`);
+	ADD KEY `se_immobili` (`se_immobili`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_organizzazioni`,`se_risorse`,`se_progetti`, `se_immobili`);
 
 --| 030000034001
 
@@ -2892,6 +2935,50 @@ ALTER TABLE `tipologie_documenti`
 -- tipologie_documenti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000052800
+
+-- tipologie_edifici
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+ALTER TABLE `tipologie_edifici`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000052801
+
+-- tipologie_edifici
+-- tipologia: tabella di supporto
+ALTER TABLE `tipologie_edifici` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000052900
+
+-- tipologie_immobili
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+ALTER TABLE `tipologie_immobili`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY  `se_residenziale` (`se_residenziale`),
+  	ADD KEY `se_industriale` (`se_industriale`),
+  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_residenziale`, `se_industriale`);
+
+--| 030000052901
+
+-- tipologie_immobili
+-- tipologia: tabella di supporto
+ALTER TABLE `tipologie_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000053000
 

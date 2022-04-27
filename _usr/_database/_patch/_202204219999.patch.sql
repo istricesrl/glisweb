@@ -2,6 +2,598 @@
 -- PATCH
 --
 
+--| 202204210010
+CREATE TABLE `tipologie_edifici` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB;
+
+--| 202204210020
+ALTER TABLE `tipologie_edifici`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 202204210030
+ALTER TABLE `tipologie_edifici` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204210040
+INSERT INTO `tipologie_edifici` (`id`, `id_genitore`, `nome`) VALUES
+(1, NULL, 'palazzo'),
+(2, NULL, 'palazzo storico'),
+(3, NULL, 'palazzina'),
+(4, NULL, 'complesso'),
+(5, NULL, 'residence'),
+(6, NULL, 'edificio indipendente');
+
+--| 202204210050
+ALTER TABLE `tipologie_edifici`
+  ADD CONSTRAINT `tipologie_edifici_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_edifici` (`id`),
+  ADD CONSTRAINT `tipologie_edifici_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `tipologie_edifici_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202204210060
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_edifici_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_edifici_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_edifici.id_genitore,
+				tipologie_edifici.nome
+			FROM tipologie_edifici
+			WHERE tipologie_edifici.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 202204210070
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_edifici_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_edifici_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_edifici.id_genitore
+			FROM tipologie_edifici
+			WHERE tipologie_edifici.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 202204210080
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_edifici_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_edifici_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_edifici.id_genitore,
+				tipologie_edifici.id
+			FROM tipologie_edifici
+			WHERE tipologie_edifici.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+--| 202204210090
+CREATE OR REPLACE VIEW tipologie_edifici_view AS
+	SELECT
+	tipologie_edifici.id,
+	tipologie_edifici.id_genitore,
+	tipologie_edifici.ordine,
+	tipologie_edifici.nome,
+	tipologie_edifici.html_entity,
+	tipologie_edifici.font_awesome,
+	tipologie_edifici.id_account_inserimento,
+	tipologie_edifici.id_account_aggiornamento,
+	tipologie_edifici_path( tipologie_edifici.id )  AS __label__
+	FROM tipologie_edifici
+	;
+	
+--| 202204210100
+CREATE TABLE IF NOT EXISTS `edifici` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `piani` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB;
+
+--| 202204210110
+ALTER TABLE `edifici`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `id_tipologia` (`id_tipologia`),
+  ADD KEY `id_indirizzo` (`id_indirizzo`),
+  ADD KEY `nome` (`nome`),
+  ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  ADD KEY `indice` (`id`, `id_tipologia`, `id_indirizzo`, `nome`);
+  
+--| 202204210120
+ALTER TABLE `edifici`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204210130
+ALTER TABLE `edifici`
+  ADD CONSTRAINT `edifici_ibfk_01_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_edifici` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `edifici_ibfk_02_nofollow` FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `edifici_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `edifici_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202204210140
+CREATE OR REPLACE VIEW edifici_view AS
+	SELECT
+		edifici.id,
+		edifici.id_tipologia,
+		tipologie_edifici.nome AS tipologia,
+		edifici.id_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		edifici.nome,
+		edifici.piani,
+		edifici.id_account_inserimento,
+		edifici.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS __label__
+	FROM edifici
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN regioni ON regioni.id = provincie.id_regione
+		LEFT JOIN stati ON stati.id = regioni.id_stato
+;
+
+--| 202204210141
+CREATE TABLE `tipologie_immobili` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_residenziale` int(1) DEFAULT NULL,
+  `se_industriale` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202204210142
+ALTER TABLE `tipologie_immobili`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY  `se_residenziale` (`se_residenziale`),
+  	ADD KEY `se_industriale` (`se_industriale`),
+  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_residenziale`, `se_industriale`);
+
+--| 202204210143
+ALTER TABLE `tipologie_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204210144
+INSERT INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_industriale`) VALUES
+(1, 'appartamento', 1, NULL),
+(3, 'abitazione', 1, NULL),
+(6, 'garage', 1, NULL),
+(7, 'magazzino', 1, 1),
+(8, 'ufficio', NULL, 1),
+(9, 'negozio', NULL, 1);
+
+--| 202204210145
+ALTER TABLE `tipologie_immobili`
+  ADD CONSTRAINT `tipologie_immobili_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_immobili` (`id`),
+  ADD CONSTRAINT `tipologie_immobili_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `tipologie_immobili_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202204210146
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_immobili_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_immobili_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_immobili.id_genitore,
+				tipologie_immobili.nome
+			FROM tipologie_immobili
+			WHERE tipologie_immobili.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 202204210147
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_immobili_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_immobili_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_immobili.id_genitore
+			FROM tipologie_immobili
+			WHERE tipologie_immobili.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 202204210148
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_immobili_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_immobili_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_immobili.id_genitore,
+				tipologie_immobili.id
+			FROM tipologie_immobili
+			WHERE tipologie_immobili.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+--| 202204210149
+CREATE OR REPLACE VIEW tipologie_immobili_view AS
+	SELECT
+	tipologie_immobili.id,
+	tipologie_immobili.id_genitore,
+	tipologie_immobili.ordine,
+	tipologie_immobili.nome,
+	tipologie_immobili.html_entity,
+	tipologie_immobili.font_awesome,
+	tipologie_immobili.se_residenziale ,
+	tipologie_immobili.se_industriale ,
+	tipologie_immobili.id_account_inserimento,
+	tipologie_immobili.id_account_aggiornamento,
+	tipologie_immobili_path( tipologie_immobili.id )  AS __label__
+	FROM tipologie_immobili
+	;
+
+
+--| 202204210150
+CREATE TABLE IF NOT EXISTS  `immobili` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `scala` char(32) DEFAULT NULL,
+  `piano` char(64) DEFAULT NULL,
+  `interno` char(8) DEFAULT NULL,
+  `campanello` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202204210160
+ALTER TABLE `immobili`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`),
+  ADD KEY `id_tipologia` (`id_tipologia`),
+  ADD KEY `id_edificio` (`id_edificio`),
+  ADD KEY `scala` (`scala`),
+  ADD KEY `piano` (`piano`),
+  ADD KEY `interno` (`interno`),
+  ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+  ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+--| 202204210170
+ALTER TABLE `immobili`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204210180
+ALTER TABLE `immobili`
+  ADD CONSTRAINT `immobili_ibfk_01_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_immobili` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `immobili_ifbk_02_nofollow` FOREIGN KEY (`id_edificio`) REFERENCES `edifici` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+  ADD CONSTRAINT `immobili_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `immobili_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202204210190
+CREATE OR REPLACE VIEW immobili_view AS
+	SELECT
+		immobili.id,
+		immobili.id_tipologia,
+		tipologie_immobili.nome AS tipologia,
+		immobili.id_edificio,
+		edifici.id_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		immobili.scala,
+		immobili.piano,
+		immobili.interno,
+immobili.campanello,
+		immobili.id_account_inserimento,
+		immobili.id_account_aggiornamento,
+		concat_ws(
+			' ',
+    tipologie_immobili.nome, 
+    coalesce(
+      concat('scala ', immobili.scala), 
+      ''
+    ), 
+    coalesce(
+      concat('piano ', immobili.piano), 
+      ''
+    ), 
+    coalesce(
+      concat('int. ', immobili.interno), 
+      ''
+    ),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS __label__
+	FROM immobili
+		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
+		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN regioni ON regioni.id = provincie.id_regione
+		LEFT JOIN stati ON stati.id = regioni.id_stato
+;
+
+--| 202204210200
+ALTER TABLE `ruoli_anagrafica` DROP KEY indice;
+
+--| 202204210210
+ALTER TABLE `ruoli_anagrafica` ADD `se_immobili` int NULL,
+ADD KEY `se_immobili` (`se_immobili`),
+ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_organizzazioni`,`se_risorse`,`se_progetti`, `se_immobili`);
+
+--| 202204210220
+INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_didattica`, `se_immobili`) VALUES
+(1,	NULL,	'titolare',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'amministratore',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'socio',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'dipendente',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'direttore',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'presidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'tesoriere',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'coordinatore',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(9,	NULL,	'vicepresidente',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'vicedirettore',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	'segretario',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	'responsabile acquisti',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	'responsabile operativo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	'operatore',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(16,	NULL,	'responsabile',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(17,	NULL,	'assistente',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(18,	NULL,	'autore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(19,	NULL,	'genitore',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	NULL,	'fratello',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(21,	NULL,	'tutore',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	NULL,	'collega',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(24,	NULL,	'docente',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL),
+(25,	NULL,	'istruttore',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL),
+(26,	NULL,	'proprietario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1)
+ON DUPLICATE KEY UPDATE
+	id_genitore = VALUES( id_genitore ),
+	nome = VALUES(nome),
+	html_entity = VALUES(html_entity),
+	font_awesome = VALUES(font_awesome),
+	se_organizzazioni = VALUES(se_organizzazioni),
+	se_relazioni = VALUES(se_relazioni),
+	se_risorse = VALUES(se_risorse),
+	se_progetti = VALUES(se_progetti),
+	se_didattica = VALUES(se_didattica),
+	se_immobili = VALUES(se_immobili);
+
+--| 202204210230
+CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
+	SELECT
+		ruoli_anagrafica.id,
+		ruoli_anagrafica.id_genitore,
+		ruoli_anagrafica.nome,
+		ruoli_anagrafica.se_organizzazioni,
+		ruoli_anagrafica.se_relazioni,
+		ruoli_anagrafica.se_risorse,
+		ruoli_anagrafica.se_progetti,
+		ruoli_anagrafica.se_immobili,
+	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
+	FROM ruoli_anagrafica
+;
+
 --| 202204215010
 ALTER TABLE `audio`
 ADD COLUMN   `id_indirizzo` int(11) DEFAULT NULL    AFTER `id_categoria_progetti`,
