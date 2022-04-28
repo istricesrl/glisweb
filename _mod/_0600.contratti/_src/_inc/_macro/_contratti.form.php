@@ -14,12 +14,21 @@
     // tabella gestita
     $ct['form']['table'] = 'contratti';
 
-     // tendina anagrafica
+
+    // tendina ruoli progetti
 	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static'
+	    'SELECT id, __label__ FROM anagrafica_view'
+    );
+
+    // tendina ruoli progetti
+	$ct['etc']['select']['ruoli_anagrafica'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM ruoli_anagrafica_view WHERE se_contratti = 1'
     );
 
     // tendina emittenti
