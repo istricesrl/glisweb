@@ -47,6 +47,14 @@
 	    'SELECT id, __label__ FROM progetti_view '
     );
 
+    // tendina immobili
+	$ct['etc']['select']['immobili'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM immobili_view '
+    );
+
     // tendina per le tipologie di contratto
     $ct['etc']['select']['tipologie_contratti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -57,7 +65,7 @@
 
 
     // macro di default per l'entità contratti
-	require '_contratti.form.default.php';
+//	require '_contratti.form.default.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

@@ -18,9 +18,9 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'emittente' => 'emittente',
-        'destinatario' => 'destinatario',
+        'parti' => 'parti',
         'progetto' => 'progetto',
+        'immobile' => 'immobile',
         'tipologia' => 'tipologia',
 	    '__label__' => 'contratto'
 	);

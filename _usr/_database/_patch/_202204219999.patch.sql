@@ -1400,4 +1400,193 @@ CREATE OR REPLACE VIEW  contratti_anagrafica_view AS
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
 		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica;
 
+--| 202204215489
+alter table contratti drop key indice;
+
+--| 202204215490
+alter table contratti
+change   `nome`  `nome` char(128) DEFAULT NULL,
+change `id_destinatario`  `id_destinatario` int DEFAULT NULL,
+ADD COLUMN `id_immobile` int(11) DEFAULT NULL,
+ADD KEY  `id_immobile` ( `id_immobile` ),
+ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`, `id_immobile`),
+ADD CONSTRAINT `contratti_ibfk_05_nofollow` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`);
+
+--| 202204215500
+CREATE OR REPLACE VIEW `contratti_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.id_immobile,
+		immobili.nome AS immobile,
+		contratti.nome,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		group_concat( DISTINCT concat( coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),': ', ruoli_anagrafica.nome ) SEPARATOR ' | ' ) AS parti,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
+	GROUP BY contratti.id, tipologie_contratti.nome
+;
+
+--| 202204215510
+ALTER TABLE `metadati`
+ADD COLUMN   `id_contratto` int(11) DEFAULT NULL    AFTER `id_immobile`,
+ADD KEY `id_contratto` (`id_contratto`), 
+ADD CONSTRAINT `metadati_ibfk_20` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202204215520
+CREATE OR REPLACE VIEW `metadati_view` AS
+	SELECT
+		metadati.id,
+		metadati.id_lingua,
+		lingue.ietf,
+		metadati.id_anagrafica,
+		metadati.id_pagina,
+		metadati.id_prodotto,
+		metadati.id_articolo,
+		metadati.id_categoria_prodotti,
+		metadati.id_notizia,
+		metadati.id_categoria_notizie,
+		metadati.id_risorsa,
+		metadati.id_categoria_risorse,
+		metadati.id_immagine,
+		metadati.id_video,
+		metadati.id_audio,
+		metadati.id_file,
+		metadati.id_progetto,
+		metadati.id_categoria_progetti,
+		metadati.id_indirizzo,
+		metadati.id_edificio,
+		metadati.id_immobile,
+		metadati.id_contratto,
+		metadati.id_account_inserimento,
+		metadati.id_account_aggiornamento,
+		concat(
+			metadati.nome,
+			':',
+			metadati.testo
+		) AS __label__
+	FROM metadati
+		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+;
+
+--| 202204215530
+ALTER TABLE `file`
+ADD COLUMN   `id_contratto` int(11) DEFAULT NULL    AFTER `id_immobile`,
+ADD KEY `id_contratto` (`id_contratto`), 
+ADD CONSTRAINT `file_ibfk_22` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202204215540
+CREATE OR REPLACE VIEW `file_view` AS
+	SELECT
+		file.id,
+		file.ordine,
+		file.id_ruolo,
+		ruoli_file.nome AS ruolo,
+		file.id_anagrafica,
+		file.id_prodotto,
+		file.id_articolo,
+		file.id_categoria_prodotti,
+		file.id_todo,
+		file.id_pagina,
+		file.id_template,
+		file.id_notizia,
+		file.id_categoria_notizie,
+		file.id_risorsa,
+		file.id_categoria_risorse,
+		file.id_mail_out,                    
+		file.id_mail_sent, 
+		file.id_progetto,
+		file.id_categoria_progetti,
+		file.id_indirizzo,
+		file.id_edificio,
+		file.id_immobile,
+		file.id_contratto,
+		file.id_lingua,
+		lingue.iso6393alpha3 AS lingua,
+		file.path,
+		file.url,
+		file.nome,
+		file.id_account_inserimento,
+		file.id_account_aggiornamento,
+		concat(
+			ruoli_file.nome,
+			' # ',
+			file.ordine,
+			' / ',
+			file.nome,
+			' / ',
+			coalesce(
+				file.path,
+				file.url
+			)
+		) AS __label__
+	FROM file
+		LEFT JOIN ruoli_file ON ruoli_file.id = file.id_ruolo
+		LEFT JOIN lingue ON lingue.id = file.id_lingua
+;
+
+--| 202204215550
+ALTER TABLE `immagini`
+ADD COLUMN   `id_contratto` int(11) DEFAULT NULL    AFTER `id_edificio`,
+ADD KEY `id_contratto` (`id_contratto`), 
+ADD CONSTRAINT `immagini_ibfk_18` FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202204215560
+CREATE OR REPLACE VIEW `immagini_view` AS
+	SELECT
+		immagini.id,
+		immagini.id_anagrafica,
+		immagini.id_pagina,
+		immagini.id_file,
+		immagini.id_prodotto,
+		immagini.id_articolo,
+		immagini.id_categoria_prodotti,
+		immagini.id_risorsa,
+		immagini.id_categoria_risorse,
+		immagini.id_notizia,
+		immagini.id_categoria_notizie,
+		immagini.id_progetto,
+		immagini.id_categoria_progetti,
+		immagini.id_indirizzo,
+		immagini.id_edificio,
+		immagini.id_immobile,
+		immagini.id_contratto,
+		immagini.id_lingua,
+		lingue.nome AS lingua,
+		immagini.id_ruolo,
+		ruoli_immagini.nome AS ruolo,
+		immagini.ordine,
+		immagini.orientamento,
+		immagini.taglio,
+		immagini.nome,
+		immagini.path,
+		immagini.path_alternativo,
+		immagini.token,
+		immagini.timestamp_scalamento,
+		immagini.id_account_inserimento,
+		immagini.id_account_aggiornamento,
+		concat(
+			ruoli_immagini.nome,
+			' # ',
+			immagini.ordine,
+			' / ',
+			immagini.nome,
+			' / ',
+			immagini.path
+		) AS __label__
+	FROM immagini
+		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
+		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
+;
+
 -- FINE

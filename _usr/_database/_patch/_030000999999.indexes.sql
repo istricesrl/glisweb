@@ -725,7 +725,8 @@ ADD PRIMARY KEY (`id`),
   ADD KEY `id_emittente` (`id_emittente`),
   ADD KEY `id_destinatario` (`id_destinatario`),
   ADD KEY `id_progetto` (`id_progetto`),
-  ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`);
+  ADD KEY  `id_immobile` (`id_immobile`);
+  ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`, `id_immobile`);
 
 --| 030000007201
 
@@ -1011,6 +1012,7 @@ ALTER TABLE `file`
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_contratto` (`id_contratto`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -1103,6 +1105,7 @@ ALTER TABLE `immagini`
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_contratto` (`id_contratto`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_progetto` (`id_progetto`),
@@ -1172,7 +1175,7 @@ ALTER TABLE `immobili_anagrafica`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_immobile`,`id_anagrafica`,`id_ruolo`,`ordine`);
 
---| 030000015710
+--| 030000015711
 
 -- immobili_anagrafica
 -- tipologia: tabella gestita
@@ -1679,6 +1682,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_contratto` (`id_contratto`), 
 	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255)),
 	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`,`nome`,`testo`(255)),
 	ADD KEY `indice_pagina` (`id`,`id_lingua`,`id_pagina`,`nome`,`testo`(255)),

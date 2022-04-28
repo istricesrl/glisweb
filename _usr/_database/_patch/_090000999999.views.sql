@@ -1349,26 +1349,39 @@ CREATE OR REPLACE VIEW continenti_view AS
 -- contratti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
-CREATE OR REPLACE VIEW `contratti_view` AS
+CREATE OR REPLACE VIEW `metadati_view` AS
 	SELECT
-		contratti.id,
-		contratti.id_tipologia,
-        tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce(a1.soprannome,a1.denominazione, concat_ws(' ', coalesce(a1.cognome, ''),coalesce(a1.nome, '') ),'') AS emittente,
-		contratti.id_destinatario,
-		coalesce(a2.soprannome,a2.denominazione, concat_ws(' ', coalesce(a2.cognome, ''),coalesce(a2.nome, '') ),'') AS destinatario,
-		contratti.id_progetto,
-		progetti.nome AS progetto,
-		contratti.nome,
-		contratti.id_account_inserimento,
-		contratti.id_account_aggiornamento,
-		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
-	FROM contratti
-        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
-        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		metadati.id,
+		metadati.id_lingua,
+		lingue.ietf,
+		metadati.id_anagrafica,
+		metadati.id_pagina,
+		metadati.id_prodotto,
+		metadati.id_articolo,
+		metadati.id_categoria_prodotti,
+		metadati.id_notizia,
+		metadati.id_categoria_notizie,
+		metadati.id_risorsa,
+		metadati.id_categoria_risorse,
+		metadati.id_immagine,
+		metadati.id_video,
+		metadati.id_audio,
+		metadati.id_file,
+		metadati.id_progetto,
+		metadati.id_categoria_progetti,
+		metadati.id_indirizzo,
+		metadati.id_edificio,
+		metadati.id_immobile,
+		metadati.id_contratto,
+		metadati.id_account_inserimento,
+		metadati.id_account_aggiornamento,
+		concat(
+			metadati.nome,
+			':',
+			metadati.testo
+		) AS __label__
+	FROM metadati
+		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
 ;
 
 --| 090000007300
@@ -2305,6 +2318,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_indirizzo,
 		file.id_edificio,
 		file.id_immobile,
+		file.id_contratto,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -2417,6 +2431,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_indirizzo,
 		immagini.id_edificio,
 		immagini.id_immobile,
+		immagini.id_contratto,
 		immagini.id_lingua,
 		lingue.nome AS lingua,
 		immagini.id_ruolo,
