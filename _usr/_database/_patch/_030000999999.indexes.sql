@@ -277,6 +277,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_documento` (`id_documento`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_matricola` (`id_matricola`),
 	ADD KEY `id_todo` (`id_todo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 

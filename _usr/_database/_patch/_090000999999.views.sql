@@ -746,6 +746,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		) AS documento,
 		attivita.id_progetto,
 		progetti.nome AS progetto,
+		attivita.id_matricola,
 		attivita.id_todo,
 		todo.nome AS todo,
 		attivita.id_mastro_provenienza,
