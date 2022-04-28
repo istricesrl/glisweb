@@ -1,0 +1,144 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		<fieldset>
+			<legend>modiifca massiva</legend>
+			<div class="form-row">
+				<div class="col-6 col-md-auto">
+					<span class="label-top">dal</span>
+					{{ frm.date( table, '', '', '__data_inizio__', '', '', request ) }}
+				</div>
+				<div class="col-6 col-md-auto">
+					<span class="label-top">al</span>
+					{{ frm.date( table, '', '', '__data_fine__', '', '', request ) }}
+				</div>
+				<div class="col-2 col-md-1">
+					<span class="label-top">ora inizio</span>
+					{{ frm.time( table, '', '', '__ora_inizio__', '', '', request) }} 
+				</div>
+				<div class="col-2 col-md-1">
+					<span class="label-top">ora fine</span>
+					{{ frm.time( table, '', '', '__ora_fine__', '', '', request) }} 
+				</div>
+				<div class="col-6 col-md">
+					<span class="label-top">luogo</span>
+					{{ frm.selectBox( table, '', '', '__id_luogo__', '', etc.select.luoghi, request, '', '', '', '', 'font-awesome') }}
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-12 col-md-6">
+					<span class="label-top">aggiungi istruttore</span>
+					{{ frm.selectBox( table, '', '', '__id_anagrafica_plus__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, 'anagrafica' ) }}
+				</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">rimuovi istruttore</span>
+					{{ frm.selectBox( table, '', '', '__id_anagrafica_plus__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, 'anagrafica' ) }}
+				</div>
+			</div>
+			<div class="form-row">
+				<div class="col-6 col-md-6">
+					<span class="label-top">sostituisci istruttore</span>
+					{{ frm.selectBox( table, '', '', '__id_anagrafica_plus__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, 'anagrafica' ) }}
+				</div>
+				<div class="col-6 col-md-6">
+					<span class="label-top">con</span>
+					{{ frm.selectBox( table, '', '', '__id_anagrafica_plus__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, 'anagrafica' ) }}
+				</div>
+			</div>
+			<div class="form-row">
+
+			</div>
+			<div class="form-row">
+				<div class="col-12 col-md-auto">
+					{{ frm.button(  'MODIFICA' ,'button','btn btn-secondary btn-sm btn-block', '','ottieni in modo automatico il progressivo' ) }}
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>generazione massiva</legend>
+			<div class="form-row">
+				<div class="col-6 col-md-auto">
+					<span class="label-top">dal</span>
+					{{ frm.date( table, '', '', '__data_inizio__', '', '', request ) }}
+				</div>
+				<div class="col-6 col-md-auto">
+					<span class="label-top">al</span>
+					{{ frm.date( table, '', '', '__data_fine__', '', '', request ) }}
+				</div>
+				<div class="col-2 col-md-1">
+					<span class="label-top">ora inizio</span>
+					{{ frm.time( table, '', '', '__ora_inizio__', '', '', request) }} 
+				</div>
+				<div class="col-2 col-md-1">
+					<span class="label-top">ora fine</span>
+					{{ frm.time( table, '', '', '__ora_fine__', '', '', request) }} 
+				</div>
+				<div class="col-6 col-md-3">
+					<span class="label-top">luogo</span>
+					{{ frm.selectBox( table, '', '', '__id_luogo__', '', etc.select.luoghi, request, '', '', '', '', 'font-awesome') }}
+				</div>
+				<div class="col-6 col-md">
+					<span class="label-top">istruttore</span>
+					{{ frm.selectBox( table, '', '', '__id_anagrafica__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, 'anagrafica' ) }}
+				</div>
+				<div class="col-12 col-md-auto">
+					{{ frm.button(  'GENERA' ,'button','btn btn-secondary btn-sm btn-block', '','ottieni in modo automatico il progressivo' ) }}
+				</div>
+			</div>
+		</fieldset>
+		<legend>elenco lezioni</legend>
+
+		{# VIEW PRINCIPALE #}
+		{% include 'inc/view.html' %}
+
+		{# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

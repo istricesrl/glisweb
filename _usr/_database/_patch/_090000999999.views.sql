@@ -798,6 +798,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		) AS documento,
 		attivita.id_progetto,
 		progetti.nome AS progetto,
+		attivita.id_matricola,
 		attivita.id_todo,
 		todo.nome AS todo,
 		attivita.id_mastro_provenienza,
@@ -865,6 +866,9 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		audio.id_categoria_prodotti,
 		audio.id_notizia,
 		audio.id_categoria_notizie,
+		audio.id_indirizzo,
+		audio.id_edificio,
+		audio.id_immobile,
 		concat(
 			audio.nome,
 			' / ',
@@ -1134,6 +1138,28 @@ CREATE OR REPLACE VIEW chiavi_view AS
         LEFT JOIN tipologie_chiavi ON tipologie_chiavi.id = chiavi.id_tipologia
 ;
 
+--| 090000005000
+
+-- classi_energetiche_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `classi_energetiche_view`;
+
+--| 090000005001
+
+-- classi_energetiche_view
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 22:22 Chiara GDL
+CREATE OR REPLACE VIEW classi_energetiche_view AS
+	SELECT
+		classi_energetiche.id,
+		classi_energetiche.nome,
+		classi_energetiche.ep_min,
+		classi_energetiche.ep_max,
+		classi_energetiche.rgb,
+		classi_energetiche.nome AS __label__
+	FROM classi_energetiche
+;
+
 --| 090000005100
 
 -- colori_view
@@ -1197,6 +1223,28 @@ CREATE OR REPLACE VIEW comuni_view AS
 		INNER JOIN provincie ON provincie.id = comuni.id_provincia
 		INNER JOIN regioni ON regioni.id = provincie.id_regione
 		INNER JOIN stati ON stati.id = regioni.id_stato
+;
+
+--| 090000006000
+
+-- condizioni_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `condizioni_view`;
+
+--| 090000006001
+
+-- condizioni_view
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE OR REPLACE VIEW condizioni_view AS
+	SELECT
+		condizioni.id,
+		condizioni.nome,
+		condizioni.se_immobili,
+		condizioni.se_catalogo,
+		condizioni.nome AS __label__
+	FROM
+		condizioni
 ;
 
 --| 090000006200
@@ -1286,10 +1334,14 @@ CREATE OR REPLACE VIEW contenuti_view AS
 		contenuti.id_pagina,
 		contenuti.id_popup,
 		contenuti.id_indirizzo,
+		contenuti.id_edificio,
+		contenuti.id_immobile,
 		contenuti.id_notizia,
 		contenuti.id_categoria_notizie,
 		contenuti.id_template,
 		contenuti.id_colore,
+		contenuti.id_progetto,
+		contenuti.id_categoria_progetti,
 		contenuti.title,
 		contenuti.h1,
 		contenuti.id_account_inserimento,
@@ -1350,27 +1402,68 @@ CREATE OR REPLACE VIEW continenti_view AS
 -- contratti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
-CREATE OR REPLACE VIEW `contratti_view` AS
+CREATE OR REPLACE VIEW `metadati_view` AS
 	SELECT
-		contratti.id,
-		contratti.id_tipologia,
-        tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		contratti.id_progetto,
-		progetti.nome AS progetto,
-		contratti.nome,
-		contratti.id_account_inserimento,
-		contratti.id_account_aggiornamento,
-		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
-	FROM contratti
-        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
-        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		metadati.id,
+		metadati.id_lingua,
+		lingue.ietf,
+		metadati.id_anagrafica,
+		metadati.id_pagina,
+		metadati.id_prodotto,
+		metadati.id_articolo,
+		metadati.id_categoria_prodotti,
+		metadati.id_notizia,
+		metadati.id_categoria_notizie,
+		metadati.id_risorsa,
+		metadati.id_categoria_risorse,
+		metadati.id_immagine,
+		metadati.id_video,
+		metadati.id_audio,
+		metadati.id_file,
+		metadati.id_progetto,
+		metadati.id_categoria_progetti,
+		metadati.id_indirizzo,
+		metadati.id_edificio,
+		metadati.id_immobile,
+		metadati.id_contratto,
+		metadati.id_account_inserimento,
+		metadati.id_account_aggiornamento,
+		concat(
+			metadati.nome,
+			':',
+			metadati.testo
+		) AS __label__
+	FROM metadati
+		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
 ;
+
+--| 090000007300
+
+-- contratti_anagrafica_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `contratti_anagrafica_view`;
+
+--| 090000007301
+
+-- contratti_anagrafica_view
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+CREATE OR REPLACE VIEW  contratti_anagrafica_view AS 
+	SELECT 
+		contratti_anagrafica.id,
+		contratti_anagrafica.id_contratto,
+		contratti_anagrafica.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		contratti_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		contratti_anagrafica.ordine,
+		contratti_anagrafica.id_account_inserimento ,
+		contratti_anagrafica.id_account_aggiornamento ,
+		concat( 'contratto ', contratti.nome, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+	FROM contratti_anagrafica
+		LEFT JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
+		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica;
 
 --| 090000007201
 
@@ -1430,6 +1523,54 @@ CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
     GROUP BY contratti.id
+;
+
+--| 090000007500
+
+-- corsi_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `corsi_view`;
+
+--| 090000007501
+
+-- corsi_view
+-- tipologia: vista virtuale
+-- verifica: 2022-04-13 11:50 Chiara GDL
+CREATE OR REPLACE VIEW `corsi_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.nome,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		progetti.id_account_inserimento,
+		progetti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			' cliente ',
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+	WHERE tipologie_progetti.se_didattica = 1
+	GROUP BY progetti.id
 ;
 
 --| 090000008000
@@ -1757,6 +1898,28 @@ CREATE OR REPLACE VIEW `ddt_passivi_view` AS
 	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
+--| 090000009000
+
+-- disponibilita_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `disponibilita_view`;
+
+--| 090000009001
+
+-- disponibilita_view
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE OR REPLACE VIEW disponibilita_view AS
+	SELECT
+		disponibilita.id,
+		disponibilita.nome,
+		disponibilita.se_immobili,
+		disponibilita.se_catalogo,
+		disponibilita.nome AS __label__
+	FROM
+		disponibilita
+;
+
 --| 090000009800
 
 -- documenti_view
@@ -1916,6 +2079,60 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 ;
 
+--| 090000012000
+
+-- edifici
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `edifici_view`;
+
+--| 090000012001
+
+-- edifici
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 16:56 Chiara GDL
+CREATE OR REPLACE VIEW edifici_view AS
+	SELECT
+		edifici.id,
+		edifici.id_tipologia,
+		tipologie_edifici.nome AS tipologia,
+		edifici.id_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		edifici.codice,
+		edifici.nome,
+		edifici.piani,
+		edifici.id_account_inserimento,
+		edifici.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS __label__
+	FROM edifici
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN regioni ON regioni.id = provincie.id_regione
+		LEFT JOIN stati ON stati.id = regioni.id_stato
+;
+
 --| 090000012800
 
 -- embed_view
@@ -2005,13 +2222,13 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 
 --| 090000013250
 
--- fatture_passive_view
+-- fatture_attive_view
 -- tipologia: vista virtuale
 DROP TABLE IF EXISTS `fatture_attive_view`;
 
 --| 090000013251
 
--- fatture_passive_view
+-- fatture_attive_view
 -- tipologia:  vista virtuale
 -- verifica: 2021-09-03 17:25 Fabio Mosti
 CREATE OR REPLACE VIEW `fatture_attive_view` AS
@@ -2032,6 +2249,7 @@ CREATE OR REPLACE VIEW `fatture_attive_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
 		concat(
 			tipologie_documenti.nome,
 			' ',
@@ -2089,6 +2307,7 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
 		concat(
 			tipologie_documenti.nome,
 			' ',
@@ -2149,6 +2368,10 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_mail_sent, 
 		file.id_progetto,
 		file.id_categoria_progetti,
+		file.id_indirizzo,
+		file.id_edificio,
+		file.id_immobile,
+		file.id_contratto,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -2256,7 +2479,12 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_categoria_risorse,
 		immagini.id_notizia,
 		immagini.id_categoria_notizie,
+		immagini.id_progetto,
+		immagini.id_categoria_progetti,
 		immagini.id_indirizzo,
+		immagini.id_edificio,
+		immagini.id_immobile,
+		immagini.id_contratto,
 		immagini.id_lingua,
 		lingue.nome AS lingua,
 		immagini.id_ruolo,
@@ -2284,6 +2512,106 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
 		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
 ;
+
+--| 090000015700
+
+-- immobili_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `immobili_view`;
+
+--| 090000015701
+
+-- immobili_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 12:20 Chiara GDL
+CREATE OR REPLACE VIEW immobili_view AS
+	SELECT
+		immobili.id,
+		immobili.id_tipologia,
+		tipologie_immobili.nome AS tipologia,
+		immobili.id_edificio,
+		immobili.nome,
+		immobili.codice,
+		edifici.id_indirizzo,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		immobili.scala,
+		immobili.piano,
+		immobili.interno,
+immobili.campanello,
+		immobili.id_account_inserimento,
+		immobili.id_account_aggiornamento,
+		concat_ws(
+			' ',
+    tipologie_immobili.nome, 
+    coalesce(
+      concat('scala ', immobili.scala), 
+      ''
+    ), 
+    coalesce(
+      concat('piano ', immobili.piano), 
+      ''
+    ), 
+    coalesce(
+      concat('int. ', immobili.interno), 
+      ''
+    ),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS __label__
+	FROM immobili
+		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
+		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN regioni ON regioni.id = provincie.id_regione
+		LEFT JOIN stati ON stati.id = regioni.id_stato
+;
+
+--| 090000015710
+
+-- immobili_anagrafica_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS immobili_anagrafica_view;
+
+--| 090000015711
+
+-- immobili_anagrafica_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 12:20 Chiara GDL
+CREATE OR REPLACE VIEW  immobili_anagrafica_view AS 
+	SELECT 
+		immobili_anagrafica.id,
+		immobili_anagrafica.id_immobile,
+		immobili_anagrafica.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		immobili_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		immobili_anagrafica.ordine,
+		immobili_anagrafica.id_account_inserimento ,
+		immobili_anagrafica.id_account_aggiornamento ,
+		concat( 'immobile ', immobili_anagrafica.id_immobile, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+	FROM immobili_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = immobili_anagrafica.id_ruolo
+		LEFT JOIN anagrafica ON anagrafica.id = immobili_anagrafica.id_anagrafica;
 
 --| 090000015800
 
@@ -3164,6 +3492,11 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_video,
 		metadati.id_audio,
 		metadati.id_file,
+		metadati.id_progetto,
+		metadati.id_categoria_progetti,
+		metadati.id_indirizzo,
+		metadati.id_edificio,
+		metadati.id_immobile,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
@@ -3392,6 +3725,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		documenti.id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		pagamenti.id_iban,
+		iban.iban AS iban,
 		pagamenti.importo_netto_totale,
 		pagamenti.id_iva,
 		iva.nome AS iva,
@@ -3415,6 +3749,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN iban ON iban.id = pagamenti.id_iban
 	WHERE
 		tipologie_documenti.se_fattura = 1
 		OR
@@ -4169,6 +4504,40 @@ CREATE OR REPLACE VIEW progetti_anagrafica_view AS
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = progetti_anagrafica.id_ruolo
 ;
 
+--| 090000027300
+
+-- progetti_articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_articoli_view`;
+
+--| 090000027301
+
+-- progetti_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-04-14 14:58 Chiara GDL
+CREATE OR REPLACE VIEW `progetti_articoli_view` AS
+	SELECT
+		progetti_articoli.id,
+		progetti_articoli.id_progetto,
+		progetti.nome AS progetto,
+		progetti_articoli.id_articolo,
+		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		progetti_articoli.id_ruolo,
+		progetti_articoli.ordine,
+		progetti_articoli.id_account_inserimento,
+		progetti_articoli.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			progetti.nome,
+			concat_ws( ' ', prodotti.nome, articoli.nome ),
+			ruoli_articoli.nome
+		) AS __label__
+	FROM progetti_articoli
+		LEFT JOIN ruoli_articoli ON ruoli_articoli.id = progetti_articoli.id_ruolo
+		LEFT JOIN progetti ON progetti.id = progetti_articoli.id_progetto
+		LEFT JOIN articoli ON articoli.id = progetti_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto;
+
 --| 090000027400
 
 -- progetti_categorie_view
@@ -4392,11 +4761,12 @@ DROP TABLE IF EXISTS `relazioni_anagrafica_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
 	SELECT
+	relazioni_anagrafica.id,
+	relazioni_anagrafica.id_ruolo,
 	relazioni_anagrafica.id_anagrafica,
 	relazioni_anagrafica.id_anagrafica_collegata,
 	concat( relazioni_anagrafica.id_anagrafica,' - ', relazioni_anagrafica.id_anagrafica_collegata) AS __label__
 	FROM relazioni_anagrafica
-	ORDER BY __label__
 ;
 
 --| 090000030400
@@ -4416,7 +4786,6 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 	relazioni_documenti.id_documento_collegato,
 	concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato) AS __label__
 	FROM relazioni_documenti
-	ORDER BY __label__
 ;
 
 --| 090000030410
@@ -4436,7 +4805,6 @@ CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
 	relazioni_documenti_articoli.id_documenti_articolo_collegato,
 	concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato) AS __label__
 	FROM relazioni_documenti_articoli
-	ORDER BY __label__
 ;
 
 --| 090000030440
@@ -4456,7 +4824,6 @@ CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
 	relazioni_pagamenti.id_pagamento_collegato,
 	concat( relazioni_pagamenti.id_pagamento,' - ', relazioni_pagamenti.id_pagamento_collegato) AS __label__
 	FROM relazioni_pagamenti
-	ORDER BY __label__
 ;
 
 --| 090000030490
@@ -4472,11 +4839,14 @@ DROP TABLE IF EXISTS `relazioni_progetti_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_progetti_view AS
 	SELECT
+	relazioni_progetti.id,
 	relazioni_progetti.id_progetto,
 	relazioni_progetti.id_progetto_collegato,
+	relazioni_progetti.id_ruolo,
+	ruoli_progetti.nome AS ruolo,
 	concat( relazioni_progetti.id_progetto,' - ', relazioni_progetti.id_progetto_collegato) AS __label__
 	FROM relazioni_progetti
-	ORDER BY __label__
+	LEFT JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
 ;
 
 --| 060000030500
@@ -4496,7 +4866,6 @@ CREATE OR REPLACE VIEW relazioni_software_view AS
 	relazioni_software.id_software_collegato,
 	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__
 	FROM relazioni_software
-	ORDER BY __label__
 ;
 
 --| 090000030200
@@ -4896,6 +5265,12 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 		tipologie_risorse.nome AS tipologia,
 		risorse.codice, 
 		risorse.nome,
+		risorse.template,
+		risorse.schema_html,
+		risorse.tema_css,
+		risorse.se_sitemap,
+		risorse.se_cacheable,
+		risorse.id_sito,
 		risorse.id_testata, 
 		testate.nome AS testata,
 		risorse.giorno_pubblicazione,
@@ -4992,12 +5367,42 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.id,
 		ruoli_anagrafica.id_genitore,
 		ruoli_anagrafica.nome,
+		ruoli_anagrafica.se_produzione,
+		ruoli_anagrafica.se_didattica,
 		ruoli_anagrafica.se_organizzazioni,
 		ruoli_anagrafica.se_relazioni,
 		ruoli_anagrafica.se_risorse,
 		ruoli_anagrafica.se_progetti,
+		ruoli_anagrafica.se_immobili,
+		ruoli_anagrafica.se_contratti,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
+;
+
+--| 090000034100
+
+-- ruoli_articoli_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_articoli_view`;
+
+--| 090000034101
+
+-- ruoli_articoli_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:17 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_articoli_view AS
+	SELECT
+		ruoli_articoli.id,
+		ruoli_articoli.id_genitore,
+		ruoli_articoli.nome,
+		ruoli_articoli.html_entity,
+		ruoli_articoli.font_awesome,
+		ruoli_articoli.se_progetti,
+		ruoli_articoli.se_risorse,
+		ruoli_articoli.se_acquisto,
+        ruoli_articoli.se_rinnovo,
+	 	ruoli_articoli_path( ruoli_articoli.id ) AS __label__
+	FROM ruoli_articoli
 ;
 
 --| 090000034200
@@ -5161,6 +5566,30 @@ CREATE OR REPLACE VIEW ruoli_prodotti_view AS
 		ruoli_prodotti.nome,
 	 	ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
 	FROM ruoli_prodotti
+;
+
+--| 090000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_progetti_view`;
+
+--| 090000035101
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+CREATE OR REPLACE VIEW ruoli_progetti_view AS
+	SELECT
+		ruoli_progetti.id,
+		ruoli_progetti.nome,
+		ruoli_progetti.html_entity,
+		ruoli_progetti.font_awesome,
+		ruoli_progetti.se_sottoprogetto,
+		ruoli_progetti.se_proseguimento,
+		ruoli_progetti.se_sostituto,
+	 	ruoli_progetti.nome AS __label__
+	FROM ruoli_progetti
 ;
 
 --| 090000035200
@@ -5781,6 +6210,58 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 	FROM tipologie_documenti
 ;
 
+--| 090000052800
+
+-- tipologie_edifici_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `tipologie_edifici_view`;
+
+--| 090000052801
+
+-- tipologie_edifici_view
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+CREATE OR REPLACE VIEW tipologie_edifici_view AS
+	SELECT
+	tipologie_edifici.id,
+	tipologie_edifici.id_genitore,
+	tipologie_edifici.ordine,
+	tipologie_edifici.nome,
+	tipologie_edifici.html_entity,
+	tipologie_edifici.font_awesome,
+	tipologie_edifici.id_account_inserimento,
+	tipologie_edifici.id_account_aggiornamento,
+	tipologie_edifici_path( tipologie_edifici.id )  AS __label__
+	FROM tipologie_edifici
+	;
+
+--| 090000052900
+
+-- tipologie_immobili_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `tipologie_immobili_view`;
+
+--| 090000052901
+
+-- tipologie_immobili_view
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+CREATE OR REPLACE VIEW tipologie_immobili_view AS
+	SELECT
+	tipologie_immobili.id,
+	tipologie_immobili.id_genitore,
+	tipologie_immobili.ordine,
+	tipologie_immobili.nome,
+	tipologie_immobili.html_entity,
+	tipologie_immobili.font_awesome,
+	tipologie_immobili.se_residenziale ,
+	tipologie_immobili.se_industriale ,
+	tipologie_immobili.id_account_inserimento,
+	tipologie_immobili.id_account_aggiornamento,
+	tipologie_immobili_path( tipologie_immobili.id )  AS __label__
+	FROM tipologie_immobili
+	;
+
 --| 090000053000
 
 -- tipologie_indirizzi_view
@@ -6277,6 +6758,46 @@ CREATE OR REPLACE VIEW url_view AS
 		LEFT JOIN tipologie_url ON tipologie_url.id = url.id_tipologia
 ;
 
+--| 090000062900
+
+-- valutazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `valutazioni_view`;
+
+--| 090000062901
+
+-- valutazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 Chiara GDL
+CREATE OR REPLACE VIEW valutazioni_view AS
+	SELECT
+		valutazioni.id,
+		valutazioni.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		valutazioni.id_matricola,
+		matricole.matricola AS matricola,
+		valutazioni.id_immobile,
+		immobili.nome AS immobile,
+		valutazioni.mq_commerciali,
+		valutazioni.mq_calpestabili,
+		valutazioni.id_condizione,
+		condizioni.nome AS condizione,
+		valutazioni.id_disponibilita,
+		disponibilita.nome AS disponibilita,
+		valutazioni.id_classe_energetica,
+		classi_energetiche.nome AS classe_energetica,
+		valutazioni.timestamp_valutazione,
+		valutazioni.id_account_inserimento,
+		valutazioni.id_account_aggiornamento,
+		concat('valutazione ', immobili.nome) AS __label__
+	FROM valutazioni
+		LEFT JOIN anagrafica ON anagrafica.id = valutazioni.id_anagrafica
+		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
+		LEFT JOIN immobili ON immobili.id = valutazioni.id_immobile
+		LEFT JOIN condizioni ON condizioni.id = valutazioni.id_condizione
+		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
+		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica;
+		
 --| 090000063000
 
 -- valute_view
@@ -6327,6 +6848,9 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_ruolo,
 		video.id_progetto,
 		video.id_categoria_progetti,
+		video.id_indirizzo,
+		video.id_edificio,
+		video.id_immobile,
 		ruoli_video.nome AS ruolo,
 		video.ordine,
 		video.nome,

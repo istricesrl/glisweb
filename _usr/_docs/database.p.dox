@@ -69,6 +69,7 @@
     pagamenti_view.id_mastro_destinazione   | -
     pagamenti_view.mastro_destinazione      | il mastro caricato dalla riga
     pagamenti_view.id_iban                  | -
+    pagamenti_view.iban                     | iban su cui effettuare il pagamento
     pagamenti_view.importo_netto_totale     | -
     pagamenti_view.id_iva                   | -
     pagamenti_view.iva                      | l'aliquota IVA applicata alla riga
@@ -731,6 +732,50 @@
     progetti_anagrafica_view.id_account_inserimento   | -
     progetti_anagrafica_view.id_account_aggiornamento | -
     progetti_anagrafica_view.__label__                | etichetta descrittiva dell'associazione fra progetto e anagrafica
+
+    progetti_articoli
+    -------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *progetti* con l'attività secondaria
+    *articoli*.
+    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_articoli.id                            | l'ID dell'associazione fra progetto e articolo
+    progetti_articoli.id_progetto                   | l'ID del progetto
+    progetti_articoli.id_articolo                   | l'ID dell'articolo
+    progetti_articoli.id_ruolo                      | l'ID del ruolo svolto dall'articolo nel progetto
+    progetti_articoli.ordine                        | campo di ordinamento
+    progetti_articoli.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    progetti_articoli.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    progetti_articoli.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    progetti_articoli.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                         | tabella e campo collegati     | comportamento
+    --------------------------------------------|-------------------------------|-------------------------------|----------------------
+    progetti_articoli_ibfk_01                   | id_progetto                   | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_articoli_ibfk_02_nofollow          | id_articolo                   | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_articoli_ibfk_03_nofollow          | id_ruolo                      | ruoli_articoli.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    progetti_articoli_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    progetti_articoli_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *progetti_articoli_view* relativa alla tabella *progetti_articoli* presenta le seguenti colonne:
+    
+    colonna                                         | descrizione
+    ------------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_articoli_view.id                       | -
+    progetti_articoli_view.id_progetto              | -
+    progetti_articoli_view.progetto                 | il progetto
+    progetti_articoli_view.id_anagrafica            | -
+    progetti_articoli_view.articoli                 | l'articolo
+    progetti_articoli_view.id_ruolo                 | -
+    progetti_articoli_view.ruolo                    | il ruolo dell'articolo nel progetto
+    progetti_articoli_view.ordine                   | -
+    progetti_articoli_view.se_sostituto             | -
+    progetti_articoli_view.id_account_inserimento   | -
+    progetti_articoli_view.id_account_aggiornamento | -
+    progetti_articoli_view.__label__                | etichetta descrittiva dell'associazione fra progetto e articolo
 
     progetti_categorie
     ------------------

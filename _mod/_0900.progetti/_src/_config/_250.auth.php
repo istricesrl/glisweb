@@ -57,6 +57,13 @@
             ),
             'macro' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'relazioni_progetti' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'todo' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

@@ -307,6 +307,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `note_cliente` text,
   `id_documento` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
@@ -346,6 +347,9 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -534,6 +538,19 @@ CREATE TABLE IF NOT EXISTS `chiavi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000005000
+
+-- classi_energetiche
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 22:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `classi_energetiche` (
+`id` int(11) NOT NULL,
+  `nome` char(8) NOT NULL,
+  `ep_min` int(11) DEFAULT NULL,
+  `ep_max` int(11) DEFAULT NULL,
+  `rgb` char(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000005100
 
 -- colori
@@ -566,6 +583,18 @@ CREATE TABLE IF NOT EXISTS `comuni` (
   `nome` varchar(254) NOT NULL,
   `codice_istat` char(12) DEFAULT NULL,
   `codice_catasto` char(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000006000
+
+-- condizioni
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE TABLE `condizioni` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_catalogo` int(1) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000006200
@@ -623,6 +652,8 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_pagina` int(11) DEFAULT NULL,
   `id_popup` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_template` int(11) DEFAULT NULL,
@@ -689,15 +720,33 @@ CREATE TABLE `contratti` (
   `id` int NOT NULL,
   `id_tipologia` int DEFAULT NULL,
   `id_emittente` int DEFAULT NULL,
-  `id_destinatario` int NOT NULL,
+  `id_destinatario` int DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000007300
+
+-- contratti_anagrafica
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000008000
 
@@ -784,6 +833,18 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000009000
+
+-- disponibilita
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE TABLE `disponibilita` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_catalogo` int(1) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000009800
 
 -- documenti
@@ -859,6 +920,25 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000012000
+
+-- edifici
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 16:56 Chiara GDL
+CREATE TABLE IF NOT EXISTS `edifici` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `piani` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB;
+
 --| 010000012800
 
 -- embed
@@ -897,6 +977,10 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_mail_sent` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `url` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -959,8 +1043,13 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `id_notizia` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` INT(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `orientamento` enum('L','P') DEFAULT NULL,
   `taglio` char(64) DEFAULT NULL,
@@ -973,6 +1062,45 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000015700
+
+-- immobili
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 12:20 Chiara GDL
+CREATE TABLE IF NOT EXISTS  `immobili` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `scala` char(32) DEFAULT NULL,
+  `piano` char(64) DEFAULT NULL,
+  `interno` char(8) DEFAULT NULL,
+  `campanello` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000015710
+
+-- immobili_anagrafica
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 12:20 Chiara GDL
+CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000015800
@@ -1429,6 +1557,12 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_video` int(11) DEFAULT NULL,
   `id_audio` int(11) DEFAULT NULL,
   `id_file` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL, 
   `nome` char(32) DEFAULT NULL,
   `testo` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1783,6 +1917,23 @@ CREATE TABLE IF NOT EXISTS `progetti_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000027300
+
+-- progetti_articoli
+-- tipologia: tabella gestita
+-- verifica: 2021-04-14 14:58 Chiara GDL
+CREATE TABLE IF NOT EXISTS `progetti_articoli` (
+  `id` int(11) NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_articolo` char(32) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000027400
 
 -- progetti_categorie
@@ -2001,6 +2152,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
 CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
   `id` int(11) NOT NULL,
   `id_progetto` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
   `id_progetto_collegato` char(32) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -2087,6 +2239,12 @@ CREATE TABLE IF NOT EXISTS `risorse` (
   `codice` char(16) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` int(1) DEFAULT NULL,
+  `se_cacheable` int(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
   `id_testata` int(11) DEFAULT NULL,
   `giorno_pubblicazione` int(2) DEFAULT NULL,
   `mese_pubblicazione` int(2) DEFAULT NULL,
@@ -2146,7 +2304,26 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_organizzazioni` int(1) DEFAULT NULL,
   `se_relazioni` int(1) DEFAULT NULL,
   `se_risorse` int(1) DEFAULT NULL,
-  `se_progetti` int(1) DEFAULT NULL
+  `se_progetti` int(1) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL,
+  `se_contratti` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000034100
+
+-- ruoli_articoli
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-09 16:21 Chiara GDL
+CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_progetti`int(1) DEFAULT NULL,
+  `se_risorse` int(1) DEFAULT NULL,
+  `se_acquisto` int(1) DEFAULT NULL,
+  `se_rinnovo` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034200
@@ -2259,6 +2436,21 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `nome` char(32) NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
+  `id` int(11) NOT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_sottoprogetto`int(1) DEFAULT NULL,
+  `se_proseguimento` int(1) DEFAULT NULL,
+  `se_sostituto` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000035200
@@ -2595,6 +2787,44 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `se_ricevuta` int(1) DEFAULT NULL,
   `stampa_xml` char(255) DEFAULT NULL,
   `stampa_pdf` char(255) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000052800
+
+-- tipologie_edifici
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+CREATE TABLE `tipologie_edifici` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB;
+
+--| 010000052900
+
+-- tipologie_immobili
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+CREATE TABLE `tipologie_immobili` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_residenziale` int(1) DEFAULT NULL,
+  `se_industriale` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2953,6 +3183,29 @@ CREATE TABLE IF NOT EXISTS `url` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000062900
+
+-- valutazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 Chiara GDL
+CREATE TABLE `valutazioni` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `mq_commerciali` decimal(15,2) DEFAULT NULL,
+  `mq_calpestabili` decimal(15,2) DEFAULT NULL,
+  `id_condizione` int(11) DEFAULT NULL,
+  `id_disponibilita` int(11) DEFAULT NULL,
+  `id_classe_energetica` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_valutazione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000063000
 
 -- valute
@@ -2986,6 +3239,9 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_ruolo` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
