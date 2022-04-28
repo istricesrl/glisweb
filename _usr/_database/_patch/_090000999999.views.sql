@@ -619,14 +619,19 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		articoli.lunghezza,
 		articoli.altezza,
         articoli.id_udm_dimensioni,
+		udm_dimensioni.sigla AS udm_dimensioni,
 		articoli.peso,
         articoli.id_udm_peso,
+		udm_peso.sigla AS udm_peso,
 		articoli.volume,
         articoli.id_udm_volume,
+		udm_volume.sigla AS udm_volume,
 		articoli.capacita,
         articoli.id_udm_capacita,
+		udm_capacita.sigla AS udm_capacita,
         articoli.durata,
         articoli.id_udm_durata,
+		udm_durata.sigla AS udm_durata,
 		concat_ws(
 			' ',
 			prodotti.nome,
@@ -634,12 +639,33 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			coalesce(
 				concat_ws(
 					' ',
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					udm_dimensioni.sigla
+				),
+				concat_ws(
+					' ',
 					articoli.peso,
 					udm_peso.sigla
+				),
+				concat_ws(
+					' ',
+					articoli.volume,
+					udm_volume.sigla
+				),
+				concat_ws(
+					' ',
+					articoli.capacita,
+					udm_capacita.sigla
+				),
+				concat_ws(
+					' ',
+					articoli.durata,
+					udm_durata.sigla
 				),
 				''
 			)
 		) AS nome,
+		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		concat_ws(
 			' ',
 			articoli.id,
@@ -649,15 +675,41 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			coalesce(
 				concat_ws(
 					' ',
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					udm_dimensioni.sigla
+				),
+				concat_ws(
+					' ',
 					articoli.peso,
 					udm_peso.sigla
+				),
+				concat_ws(
+					' ',
+					articoli.volume,
+					udm_volume.sigla
+				),
+				concat_ws(
+					' ',
+					articoli.capacita,
+					udm_capacita.sigla
+				),
+				concat_ws(
+					' ',
+					articoli.durata,
+					udm_durata.sigla
 				),
 				''
 			)
 		) AS __label__
 	FROM articoli
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
 		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
+		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_prodotto
+	GROUP BY articoli.id
 ;
 
 --| 090000001600
