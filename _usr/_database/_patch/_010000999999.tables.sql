@@ -2283,7 +2283,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_relazioni` int(1) DEFAULT NULL,
   `se_risorse` int(1) DEFAULT NULL,
   `se_progetti` int(1) DEFAULT NULL,
-  `se_immobili` int(1) DEFAULT NULL
+  `se_immobili` int(1) DEFAULT NULL,
+  `se_contratti` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034100

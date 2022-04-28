@@ -2477,7 +2477,8 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_progetti` (`se_progetti`), 
 	ADD KEY `se_immobili` (`se_immobili`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_organizzazioni`,`se_risorse`,`se_progetti`, `se_immobili`);
+	ADD KEY `se_contratti` (`se_contratti`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_organizzazioni`,`se_risorse`,`se_progetti`, `se_immobili`, `se_contratti`);
 
 --| 030000034001
 

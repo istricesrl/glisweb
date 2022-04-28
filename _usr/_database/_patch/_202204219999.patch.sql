@@ -1275,4 +1275,75 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
 		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica;
 
+--| 202204215400
+ALTER TABLE `ruoli_anagrafica` DROP KEY indice;
+
+
+--| 202204215410
+ALTER TABLE `ruoli_anagrafica` ADD `se_contratti` int NULL,
+ADD KEY `se_contratti` (`se_contratti`),
+ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_organizzazioni`,`se_risorse`,`se_progetti`, `se_immobili`, `se_contratti`);
+
+
+--| 202204215420
+INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_didattica`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_immobili`, `se_contratti`) VALUES
+(1,	NULL,	'titolare',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'amministratore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'socio',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'dipendente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'direttore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'presidente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'tesoriere',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'coordinatore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(9,	NULL,	'vicepresidente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'vicedirettore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	'segretario',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	'responsabile acquisti',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	'responsabile operativo',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	'operatore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(16,	NULL,	'responsabile',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(17,	NULL,	'assistente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(18,	NULL,	'autore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(19,	NULL,	'genitore',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	NULL,	'fratello',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(21,	NULL,	'tutore',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	NULL,	'collega',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(24,	NULL,	'docente',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(25,	NULL,	'istruttore',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(26,	NULL,	'proprietario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(27,	NULL,	'proponente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(28,	NULL,	'contraente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1)
+ON DUPLICATE KEY UPDATE
+	id_genitore = VALUES( id_genitore ),
+	nome = VALUES(nome),
+	html_entity = VALUES(html_entity),
+	font_awesome = VALUES(font_awesome),
+	se_organizzazioni = VALUES(se_organizzazioni),
+	se_relazioni = VALUES(se_relazioni),
+	se_risorse = VALUES(se_risorse),
+	se_progetti = VALUES(se_progetti),
+	se_didattica = VALUES(se_didattica),
+	se_immobili = VALUES(se_immobili),
+	se_contratti = VALUES(se_contratti);
+
+--| 202204215430
+CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
+	SELECT
+		ruoli_anagrafica.id,
+		ruoli_anagrafica.id_genitore,
+		ruoli_anagrafica.nome,
+		ruoli_anagrafica.se_produzione,
+		ruoli_anagrafica.se_didattica,
+		ruoli_anagrafica.se_organizzazioni,
+		ruoli_anagrafica.se_relazioni,
+		ruoli_anagrafica.se_risorse,
+		ruoli_anagrafica.se_progetti,
+		ruoli_anagrafica.se_immobili,
+		ruoli_anagrafica.se_contratti,
+	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
+	FROM ruoli_anagrafica
+;
+
 -- FINE
