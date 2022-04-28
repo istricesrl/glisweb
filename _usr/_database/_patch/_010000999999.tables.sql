@@ -729,6 +729,23 @@ CREATE TABLE `contratti` (
   `timestamp_aggiornamento` int DEFAULT NULL
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000007300
+
+-- contratti_anagrafica
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000008000
 
 -- coupon

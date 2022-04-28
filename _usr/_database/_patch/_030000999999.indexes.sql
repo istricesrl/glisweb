@@ -733,6 +733,28 @@ ADD PRIMARY KEY (`id`),
 -- tipologia: tabella gestita
 ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000007300
+
+-- contratti_anagrafica
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+ALTER TABLE `contratti_anagrafica`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_contratto`,`id_anagrafica`,`id_ruolo`), 
+	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_contratto`,`id_anagrafica`,`id_ruolo`,`ordine`);
+
+--| 030000007301
+
+-- contratti_anagrafica
+-- tipologia: tabella gestita
+ALTER TABLE `contratti_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000008000
 
 -- coupon

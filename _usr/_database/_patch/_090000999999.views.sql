@@ -1371,6 +1371,34 @@ CREATE OR REPLACE VIEW `contratti_view` AS
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
 ;
 
+--| 090000007300
+
+-- contratti_anagrafica_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `contratti_anagrafica_view`;
+
+--| 090000007301
+
+-- contratti_anagrafica_view
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+CREATE OR REPLACE VIEW  contratti_anagrafica_view AS 
+	SELECT 
+		contratti_anagrafica.id,
+		contratti_anagrafica.id_contratto,
+		contratti_anagrafica.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		contratti_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		contratti_anagrafica.ordine,
+		contratti_anagrafica.id_account_inserimento ,
+		contratti_anagrafica.id_account_aggiornamento ,
+		concat( 'contratto ', contratti.nome, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+	FROM contratti_anagrafica
+		LEFT JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
+		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica;
+
 --| 090000007201
 
 -- contratti_attivi_view
