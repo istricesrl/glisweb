@@ -180,6 +180,7 @@ CREATE TABLE IF NOT EXISTS `edifici` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `piani` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
@@ -195,9 +196,10 @@ ALTER TABLE `edifici`
   ADD KEY `id_tipologia` (`id_tipologia`),
   ADD KEY `id_indirizzo` (`id_indirizzo`),
   ADD KEY `nome` (`nome`),
+  ADD KEY `codice` (`codice`),
   ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  ADD KEY `indice` (`id`, `id_tipologia`, `id_indirizzo`, `nome`);
+  ADD KEY `indice` (`id`, `id_tipologia`, `id_indirizzo`, `nome`, `codice`);
   
 --| 202204210120
 ALTER TABLE `edifici`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -226,6 +228,7 @@ CREATE OR REPLACE VIEW edifici_view AS
 			comuni.nome,
 			provincie.sigla
 		) AS indirizzo,
+		edifici.codice,
 		edifici.nome,
 		edifici.piani,
 		edifici.id_account_inserimento,
@@ -437,6 +440,8 @@ CREATE TABLE IF NOT EXISTS  `immobili` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
   `scala` char(32) DEFAULT NULL,
   `piano` char(64) DEFAULT NULL,
   `interno` char(8) DEFAULT NULL,
@@ -451,9 +456,11 @@ CREATE TABLE IF NOT EXISTS  `immobili` (
 --| 202204210160
 ALTER TABLE `immobili`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`),
+  ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`, `nome`, `codice`),
   ADD KEY `id_tipologia` (`id_tipologia`),
   ADD KEY `id_edificio` (`id_edificio`),
+  ADD KEY `nome` (`nome`),
+  ADD KEY `codice` (`codice`),
   ADD KEY `scala` (`scala`),
   ADD KEY `piano` (`piano`),
   ADD KEY `interno` (`interno`),
@@ -477,6 +484,8 @@ CREATE OR REPLACE VIEW immobili_view AS
 		immobili.id_tipologia,
 		tipologie_immobili.nome AS tipologia,
 		immobili.id_edificio,
+		immobili.nome,
+		immobili.codice,
 		edifici.id_indirizzo,
 		concat_ws(
 			' ',
@@ -1013,5 +1022,257 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
    	WHERE tipologie_documenti.se_fattura IS NOT NULL
 	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
+
+--| 202204215150
+CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202204215160
+ALTER TABLE `immobili_anagrafica`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_immobile`,`id_anagrafica`,`id_ruolo`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_anagrafica`,`id_ruolo`,`ordine`);
+
+--| 202204215170
+ALTER TABLE `immobili_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204215180
+ALTER TABLE `immobili_anagrafica`
+    ADD CONSTRAINT `immobili_anagrafica_ibfk_01`            FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `immobili_anagrafica_ibfk_02_nofollow`   FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `immobili_anagrafica_ibfk_03_nofollow`   FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `immobili_anagrafica_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `immobili_anagrafica_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    
+
+--| 202204215190
+CREATE OR REPLACE VIEW  immobili_anagrafica_view AS 
+	SELECT 
+		immobili_anagrafica.id,
+		immobili_anagrafica.id_immobile,
+		immobili_anagrafica.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		immobili_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		immobili_anagrafica.ordine,
+		immobili_anagrafica.id_account_inserimento ,
+		immobili_anagrafica.id_account_aggiornamento ,
+		concat( 'immobile ', immobili_anagrafica.id_immobile, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+	FROM immobili_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = immobili_anagrafica.id_ruolo
+		LEFT JOIN anagrafica ON anagrafica.id = immobili_anagrafica.id_anagrafica;
+
+--| 202204215200
+CREATE TABLE `condizioni` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_catalogo` int(1) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202204215210
+ALTER TABLE `condizioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_catalogo` (`se_catalogo`),
+	ADD KEY `se_immobili` (`se_immobili`),
+	ADD UNIQUE KEY `unico` (`nome`);
+
+--| 202204215220
+ALTER TABLE `condizioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204215230
+CREATE OR REPLACE VIEW condizioni_view AS
+	SELECT
+		condizioni.id,
+		condizioni.nome,
+		condizioni.se_immobili,
+		condizioni.se_catalogo,
+		condizioni.nome AS __label__
+	FROM
+		condizioni
+;
+
+--| 202204215240
+INSERT INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'nuovo',	1,	1),
+(2,	'usato',	1,	NULL),
+(3,	'da ristrutturare',	NULL,	1);
+
+--| 202204215250
+CREATE TABLE `disponibilita` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_catalogo` int(1) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202204215260
+ALTER TABLE `disponibilita`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_catalogo` (`se_catalogo`),
+	ADD KEY `se_immobili` (`se_immobili`),
+	ADD UNIQUE KEY `unico` (`nome`);
+
+--| 202204215270
+ALTER TABLE `disponibilita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204215280
+CREATE OR REPLACE VIEW disponibilita_view AS
+	SELECT
+		disponibilita.id,
+		disponibilita.nome,
+		disponibilita.se_immobili,
+		disponibilita.se_catalogo,
+		disponibilita.nome AS __label__
+	FROM
+		disponibilita
+;
+
+--| 202204215290
+INSERT INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'disponibile',	1,	1),
+(2,	'in riassortimento',	1,	NULL),
+(3,	'nuda proprietà',	NULL,	1);
+
+--| 202204215300
+CREATE TABLE `valutazioni` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `mq_commerciali` decimal(15,2) DEFAULT NULL,
+  `mq_calpestabili` decimal(15,2) DEFAULT NULL,
+  `id_condizione` int(11) DEFAULT NULL,
+  `id_disponibilita` int(11) DEFAULT NULL,
+  `id_classe_energetica` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_valutazione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202204215310
+ALTER TABLE `valutazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_immobile`,`timestamp_valutazione`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_matricola` (`id_matricola`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_condizione` (`id_condizione`), 
+	ADD KEY `id_disponibilita` (`id_disponibilita`), 
+	ADD KEY `id_classe_energetica` (`id_classe_energetica`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_matricola`,`id_anagrafica`,`id_immobile`, `id_condizione`, `id_disponibilita`, `id_classe_energetica`); 
+
+--| 202204215320
+ALTER TABLE `valutazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204215330
+CREATE TABLE IF NOT EXISTS `classi_energetiche` (
+`id` int(11) NOT NULL,
+  `nome` char(8) NOT NULL,
+  `ep_min` int(11) DEFAULT NULL,
+  `ep_max` int(11) DEFAULT NULL,
+  `rgb` char(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202204215340
+ALTER TABLE `classi_energetiche`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`);
+
+--| 202204215350
+ALTER TABLE `classi_energetiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202204215360
+INSERT INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`) VALUES
+(1, 'G', NULL, NULL, 'ff2a1a'),
+(2, 'F', NULL, NULL, 'c0504d'),
+(3, 'E', NULL, NULL, 'e46c1c'),
+(4, 'D', NULL, NULL, 'ffc02b'),
+(5, 'C', NULL, NULL, 'fef934'),
+(6, 'B', NULL, NULL, '99cc26'),
+(7, 'A1', NULL, NULL, '00cc22'),
+(8, 'A2', NULL, NULL, '009917'),
+(9, 'A3', NULL, NULL, '00660c'),
+(10, 'A4', NULL, NULL, '33660d')
+ON DUPLICATE KEY UPDATE
+	nome = VALUES( nome ),
+	ep_min = VALUES( ep_min ),
+	ep_max = VALUES( ep_max ),
+	rgb = VALUES( rgb );
+
+--| 202204215370
+CREATE OR REPLACE VIEW classi_energetiche_view AS
+	SELECT
+		classi_energetiche.id,
+		classi_energetiche.nome,
+		classi_energetiche.ep_min,
+		classi_energetiche.ep_max,
+		classi_energetiche.rgb,
+		classi_energetiche.nome AS __label__
+	FROM classi_energetiche
+;
+
+--| 202204215380
+ALTER TABLE `valutazioni`
+    ADD CONSTRAINT `valutazioni_ibfk_01_nofollow`       FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `valutazioni_ibfk_02_nofollow`       FOREIGN KEY (`id_matricola`) REFERENCES `matricole` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `valutazioni_ibfk_03_nofollow`       FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `valutazioni_ibfk_04_nofollow`       FOREIGN KEY (`id_condizione`) REFERENCES `condizioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `valutazioni_ibfk_05_nofollow`       FOREIGN KEY (`id_disponibilita`) REFERENCES `disponibilita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `valutazioni_ibfk_06_nofollow`       FOREIGN KEY (`id_classe_energetica`) REFERENCES `classi_energetiche` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `valutazioni_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `valutazioni_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202204215390
+CREATE OR REPLACE VIEW valutazioni_view AS
+	SELECT
+		valutazioni.id,
+		valutazioni.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		valutazioni.id_matricola,
+		matricole.matricola AS matricola,
+		valutazioni.id_immobile,
+		immobili.nome AS immobile,
+		valutazioni.mq_commerciali,
+		valutazioni.mq_calpestabili,
+		valutazioni.id_condizione,
+		condizioni.nome AS condizione,
+		valutazioni.id_disponibilita,
+		disponibilita.nome AS disponibilita,
+		valutazioni.id_classe_energetica,
+		classi_energetiche.nome AS classe_energetica,
+		valutazioni.timestamp_valutazione,
+		valutazioni.id_account_inserimento,
+		valutazioni.id_account_aggiornamento,
+		concat('valutazione ', immobili.nome) AS __label__
+	FROM valutazioni
+		LEFT JOIN anagrafica ON anagrafica.id = valutazioni.id_anagrafica
+		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
+		LEFT JOIN immobili ON immobili.id = valutazioni.id_immobile
+		LEFT JOIN condizioni ON condizioni.id = valutazioni.id_condizione
+		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
+		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica;
 
 -- FINE

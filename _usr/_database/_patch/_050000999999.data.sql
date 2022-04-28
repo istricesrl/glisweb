@@ -40,6 +40,28 @@ INSERT INTO `certificazioni` (`id`, `nome`, `id_account_inserimento`, `timestamp
 (4,	'certificato medico agonistico',	NULL,	NULL,	NULL,	NULL),
 (5,	'certificato medico sportivo',	NULL,	NULL,	NULL,	NULL);
 
+--| 050000005000
+
+-- classi_energetiche
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 22:22 Chiara GDL
+INSERT INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`) VALUES
+(1, 'G', NULL, NULL, 'ff2a1a'),
+(2, 'F', NULL, NULL, 'c0504d'),
+(3, 'E', NULL, NULL, 'e46c1c'),
+(4, 'D', NULL, NULL, 'ffc02b'),
+(5, 'C', NULL, NULL, 'fef934'),
+(6, 'B', NULL, NULL, '99cc26'),
+(7, 'A1', NULL, NULL, '00cc22'),
+(8, 'A2', NULL, NULL, '009917'),
+(9, 'A3', NULL, NULL, '00660c'),
+(10, 'A4', NULL, NULL, '33660d')
+ON DUPLICATE KEY UPDATE
+	nome = VALUES( nome ),
+	ep_min = VALUES( ep_min ),
+	ep_max = VALUES( ep_max ),
+	rgb = VALUES( rgb );
+
 --| 050000005100
 
 -- colori
@@ -114,6 +136,16 @@ REPLACE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_cat
 (12594,	1,	'Valsamoggia',	                    '037061',	'M320'),
 (12595,	1,	'Alto Reno Terme',	                '037062',	'M369');
 
+--| 050000006000
+
+-- condizioni
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+INSERT INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'nuovo',	1,	1),
+(2,	'usato',	1,	NULL),
+(3,	'da ristrutturare',	NULL,	1);
+
 --| 050000006200
 
 -- condizioni_pagamento
@@ -137,6 +169,16 @@ REPLACE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (5,	'AU',	'Oceania'),
 (6,	'LA',	'America Latina'),
 (7,	'AN',	'Antartide');
+
+--| 050000009000
+
+-- disponibilita
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+INSERT INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'disponibile',	1,	1),
+(2,	'in riassortimento',	1,	NULL),
+(3,	'nuda proprietà',	NULL,	1);
 
 --| 050000010000
 

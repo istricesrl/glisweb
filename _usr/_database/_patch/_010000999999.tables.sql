@@ -537,6 +537,19 @@ CREATE TABLE IF NOT EXISTS `chiavi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000005000
+
+-- classi_energetiche
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 22:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `classi_energetiche` (
+`id` int(11) NOT NULL,
+  `nome` char(8) NOT NULL,
+  `ep_min` int(11) DEFAULT NULL,
+  `ep_max` int(11) DEFAULT NULL,
+  `rgb` char(8) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000005100
 
 -- colori
@@ -569,6 +582,18 @@ CREATE TABLE IF NOT EXISTS `comuni` (
   `nome` varchar(254) NOT NULL,
   `codice_istat` char(12) DEFAULT NULL,
   `codice_catasto` char(4) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000006000
+
+-- condizioni
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE TABLE `condizioni` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_catalogo` int(1) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000006200
@@ -789,6 +814,18 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000009000
+
+-- disponibilita
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE TABLE `disponibilita` (
+  `id` int(11) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `se_catalogo` int(1) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000009800
 
 -- documenti
@@ -873,6 +910,7 @@ CREATE TABLE IF NOT EXISTS `edifici` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `piani` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
@@ -1014,6 +1052,8 @@ CREATE TABLE IF NOT EXISTS  `immobili` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
   `scala` char(32) DEFAULT NULL,
   `piano` char(64) DEFAULT NULL,
   `interno` char(8) DEFAULT NULL,
@@ -1023,6 +1063,23 @@ CREATE TABLE IF NOT EXISTS  `immobili` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000015710
+
+-- immobili_anagrafica
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 12:20 Chiara GDL
+CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000015800
@@ -3097,6 +3154,29 @@ CREATE TABLE IF NOT EXISTS `url` (
   `id_anagrafica` int(11) DEFAULT NULL,
   `url` char(255) NOT NULL,
   `nome` char(128) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000062900
+
+-- valutazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 Chiara GDL
+CREATE TABLE `valutazioni` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `mq_commerciali` decimal(15,2) DEFAULT NULL,
+  `mq_calpestabili` decimal(15,2) DEFAULT NULL,
+  `id_condizione` int(11) DEFAULT NULL,
+  `id_disponibilita` int(11) DEFAULT NULL,
+  `id_classe_energetica` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_valutazione` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

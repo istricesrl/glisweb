@@ -1085,6 +1085,28 @@ CREATE OR REPLACE VIEW chiavi_view AS
         LEFT JOIN tipologie_chiavi ON tipologie_chiavi.id = chiavi.id_tipologia
 ;
 
+--| 090000005000
+
+-- classi_energetiche_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `classi_energetiche_view`;
+
+--| 090000005001
+
+-- classi_energetiche_view
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 22:22 Chiara GDL
+CREATE OR REPLACE VIEW classi_energetiche_view AS
+	SELECT
+		classi_energetiche.id,
+		classi_energetiche.nome,
+		classi_energetiche.ep_min,
+		classi_energetiche.ep_max,
+		classi_energetiche.rgb,
+		classi_energetiche.nome AS __label__
+	FROM classi_energetiche
+;
+
 --| 090000005100
 
 -- colori_view
@@ -1148,6 +1170,28 @@ CREATE OR REPLACE VIEW comuni_view AS
 		INNER JOIN provincie ON provincie.id = comuni.id_provincia
 		INNER JOIN regioni ON regioni.id = provincie.id_regione
 		INNER JOIN stati ON stati.id = regioni.id_stato
+;
+
+--| 090000006000
+
+-- condizioni_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `condizioni_view`;
+
+--| 090000006001
+
+-- condizioni_view
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE OR REPLACE VIEW condizioni_view AS
+	SELECT
+		condizioni.id,
+		condizioni.nome,
+		condizioni.se_immobili,
+		condizioni.se_catalogo,
+		condizioni.nome AS __label__
+	FROM
+		condizioni
 ;
 
 --| 090000006200
@@ -1760,6 +1804,28 @@ CREATE OR REPLACE VIEW `ddt_passivi_view` AS
 	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
+--| 090000009000
+
+-- disponibilita_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `disponibilita_view`;
+
+--| 090000009001
+
+-- disponibilita_view
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE OR REPLACE VIEW disponibilita_view AS
+	SELECT
+		disponibilita.id,
+		disponibilita.nome,
+		disponibilita.se_immobili,
+		disponibilita.se_catalogo,
+		disponibilita.nome AS __label__
+	FROM
+		disponibilita
+;
+
 --| 090000009800
 
 -- documenti_view
@@ -1946,6 +2012,7 @@ CREATE OR REPLACE VIEW edifici_view AS
 			comuni.nome,
 			provincie.sigla
 		) AS indirizzo,
+		edifici.codice,
 		edifici.nome,
 		edifici.piani,
 		edifici.id_account_inserimento,
@@ -2367,6 +2434,8 @@ CREATE OR REPLACE VIEW immobili_view AS
 		immobili.id_tipologia,
 		tipologie_immobili.nome AS tipologia,
 		immobili.id_edificio,
+		immobili.nome,
+		immobili.codice,
 		edifici.id_indirizzo,
 		concat_ws(
 			' ',
@@ -2420,6 +2489,33 @@ immobili.campanello,
 		LEFT JOIN regioni ON regioni.id = provincie.id_regione
 		LEFT JOIN stati ON stati.id = regioni.id_stato
 ;
+
+--| 090000015710
+
+-- immobili_anagrafica_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS immobili_anagrafica_view;
+
+--| 090000015711
+
+-- immobili_anagrafica_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 12:20 Chiara GDL
+CREATE OR REPLACE VIEW  immobili_anagrafica_view AS 
+	SELECT 
+		immobili_anagrafica.id,
+		immobili_anagrafica.id_immobile,
+		immobili_anagrafica.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		immobili_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		immobili_anagrafica.ordine,
+		immobili_anagrafica.id_account_inserimento ,
+		immobili_anagrafica.id_account_aggiornamento ,
+		concat( 'immobile ', immobili_anagrafica.id_immobile, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+	FROM immobili_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = immobili_anagrafica.id_ruolo
+		LEFT JOIN anagrafica ON anagrafica.id = immobili_anagrafica.id_anagrafica;
 
 --| 090000015800
 
@@ -6565,6 +6661,46 @@ CREATE OR REPLACE VIEW url_view AS
 		LEFT JOIN tipologie_url ON tipologie_url.id = url.id_tipologia
 ;
 
+--| 090000062900
+
+-- valutazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `valutazioni_view`;
+
+--| 090000062901
+
+-- valutazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 Chiara GDL
+CREATE OR REPLACE VIEW valutazioni_view AS
+	SELECT
+		valutazioni.id,
+		valutazioni.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		valutazioni.id_matricola,
+		matricole.matricola AS matricola,
+		valutazioni.id_immobile,
+		immobili.nome AS immobile,
+		valutazioni.mq_commerciali,
+		valutazioni.mq_calpestabili,
+		valutazioni.id_condizione,
+		condizioni.nome AS condizione,
+		valutazioni.id_disponibilita,
+		disponibilita.nome AS disponibilita,
+		valutazioni.id_classe_energetica,
+		classi_energetiche.nome AS classe_energetica,
+		valutazioni.timestamp_valutazione,
+		valutazioni.id_account_inserimento,
+		valutazioni.id_account_aggiornamento,
+		concat('valutazione ', immobili.nome) AS __label__
+	FROM valutazioni
+		LEFT JOIN anagrafica ON anagrafica.id = valutazioni.id_anagrafica
+		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
+		LEFT JOIN immobili ON immobili.id = valutazioni.id_immobile
+		LEFT JOIN condizioni ON condizioni.id = valutazioni.id_condizione
+		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
+		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica;
+		
 --| 090000063000
 
 -- valute_view

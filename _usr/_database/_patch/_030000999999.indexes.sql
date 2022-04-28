@@ -512,6 +512,22 @@ ALTER TABLE `chiavi`
 -- tipologia: tabella di supporto
 ALTER TABLE `chiavi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000005000
+
+-- classi_energetiche
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 22:22 Chiara GDL
+ALTER TABLE `classi_energetiche`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`);
+
+--| 030000005001
+
+-- classi_energetiche
+-- tipologia: tabella standard
+ALTER TABLE `classi_energetiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 --| 030000005100
 
 -- colori
@@ -553,6 +569,24 @@ ALTER TABLE `comuni`
 -- comuni
 -- tipologia: tabella di supporto
 ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000006000
+
+-- condizioni
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+ALTER TABLE `condizioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_catalogo` (`se_catalogo`),
+	ADD KEY `se_immobili` (`se_immobili`),
+	ADD UNIQUE KEY `unico` (`nome`);
+
+--| 030000006001
+
+-- condizioni
+-- tipologia: tabella standard
+ALTER TABLE `condizioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000006200
 
@@ -790,6 +824,24 @@ ALTER TABLE `coupon_prodotti`
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000009000
+
+-- disponibilita
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+ALTER TABLE `disponibilita`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_catalogo` (`se_catalogo`),
+	ADD KEY `se_immobili` (`se_immobili`),
+	ADD UNIQUE KEY `unico` (`nome`);
+
+--| 030000009001
+
+-- disponibilita
+-- tipologia: tabella standard
+ALTER TABLE `disponibilita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000009800
 
 -- documenti
@@ -871,9 +923,10 @@ ALTER TABLE `edifici`
   ADD KEY `id_tipologia` (`id_tipologia`),
   ADD KEY `id_indirizzo` (`id_indirizzo`),
   ADD KEY `nome` (`nome`),
+  ADD KEY `codice` (`codice`),
   ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  ADD KEY `indice` (`id`, `id_tipologia`, `id_indirizzo`, `nome`);
+  ADD KEY `indice` (`id`, `id_tipologia`, `id_indirizzo`, `nome`, `codice`);
 
 --| 030000012001
 
@@ -1064,9 +1117,11 @@ ALTER TABLE `immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-04-27 12:20 Chiara GDL
 ALTER TABLE `immobili`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`),
+  ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`, `nome`, `codice`),
   ADD KEY `id_tipologia` (`id_tipologia`),
   ADD KEY `id_edificio` (`id_edificio`),
+  ADD KEY `nome` (`nome`),
+  ADD KEY `codice` (`codice`),
   ADD KEY `scala` (`scala`),
   ADD KEY `piano` (`piano`),
   ADD KEY `interno` (`interno`),
@@ -1078,6 +1133,28 @@ ALTER TABLE `immobili`
 -- immobili
 -- tipologia: tabella gestita
 ALTER TABLE `immobili`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000015710
+
+-- immobili_anagrafica
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 12:20 Chiara GDL
+ALTER TABLE `immobili_anagrafica`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_immobile`,`id_anagrafica`,`id_ruolo`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_anagrafica`,`id_ruolo`,`ordine`);
+
+--| 030000015710
+
+-- immobili_anagrafica
+-- tipologia: tabella gestita
+ALTER TABLE `immobili_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000015800
 
@@ -3348,6 +3425,30 @@ ALTER TABLE `url`
 -- url
 -- tipologia: tabella di supporto
 ALTER TABLE `url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000062900
+
+-- valutazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 Chiara GDL
+ALTER TABLE `valutazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_immobile`,`timestamp_valutazione`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_matricola` (`id_matricola`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `id_condizione` (`id_condizione`), 
+	ADD KEY `id_disponibilita` (`id_disponibilita`), 
+	ADD KEY `id_classe_energetica` (`id_classe_energetica`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_matricola`,`id_anagrafica`,`id_immobile`, `id_condizione`, `id_disponibilita`, `id_classe_energetica`); 
+
+--| 030000062900
+
+-- valutazioni
+-- tipologia: tabella gestita
+ALTER TABLE `valutazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000063000
 
