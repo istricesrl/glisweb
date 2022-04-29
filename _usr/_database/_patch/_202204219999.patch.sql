@@ -1673,4 +1673,4 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 ;
 
--- FINE
+--| FINE FILE

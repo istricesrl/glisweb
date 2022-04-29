@@ -6564,6 +6564,37 @@ CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS
 	FROM tipologie_pubblicazioni
 ;
 
+--| 090000055700
+
+-- tipologie_rinnovi_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `tipologie_rinnovi_view`;
+
+--| 090000055701
+
+-- tipologie_rinnovi_view
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-29 17:45 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_rinnovi_view` AS
+	SELECT
+		tipologie_rinnovi.id,
+		tipologie_rinnovi.id_genitore,
+		tipologie_rinnovi.ordine,
+		tipologie_rinnovi.nome,
+		tipologie_rinnovi.html_entity,
+		tipologie_rinnovi.font_awesome,
+		tipologie_rinnovi.se_tesseramenti, 
+		tipologie_rinnovi.se_iscrizioni, 
+		tipologie_rinnovi.se_abbonamenti,
+		tipologie_rinnovi.se_licenze, 
+		tipologie_rinnovi.se_contratti,
+		tipologie_rinnovi.se_progetti,
+		tipologie_rinnovi.id_account_inserimento,
+		tipologie_rinnovi.id_account_aggiornamento,
+		tipologie_rinnovi_path( tipologie_rinnovi.id ) AS __label__
+	FROM tipologie_rinnovi
+;
+
 --| 090000055800
 
 -- tipologie_risorse_view

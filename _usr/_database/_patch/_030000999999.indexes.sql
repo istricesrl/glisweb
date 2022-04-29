@@ -3301,6 +3301,33 @@ ALTER TABLE `tipologie_pubblicazioni`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000055700
+
+-- tipologie_rinnovi
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-29 17:45 Chiara GDL
+ALTER TABLE `tipologie_rinnovi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_tesseramenti` (`se_tesseramenti`),
+  	ADD KEY `se_iscrizioni` (`se_iscrizioni`),
+  	ADD KEY `se_abbonamenti` (`se_abbonamenti`),
+  	ADD KEY `se_licenze` (`se_licenze`),
+  	ADD KEY `se_contratti` (`se_contratti`),
+  	ADD KEY `se_progetti`(`se_progetti`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`, `se_tesseramenti`,`se_iscrizioni`, `se_abbonamenti`, `se_licenze`, `se_contratti`, `se_progetti`);
+
+--| 030000055701
+
+-- tipologie_rinnovi
+-- tipologia: tabella di supporto
+ALTER TABLE `tipologie_rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000055800
 
 -- tipologie_risorse

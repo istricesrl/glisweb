@@ -3036,6 +3036,30 @@ CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000055700
+
+-- tipologie_rinnovi
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-29 17:45 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_tesseramenti` int(1) DEFAULT NULL,
+  `se_iscrizioni` int(1) DEFAULT NULL,
+  `se_abbonamenti` int(1) DEFAULT NULL,
+  `se_licenze` int(1) DEFAULT NULL,
+  `se_contratti` int(1) DEFAULT NULL,
+  `se_progetti` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000055800
 
 -- tipologie_risorse
