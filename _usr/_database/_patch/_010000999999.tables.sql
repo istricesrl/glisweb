@@ -2200,6 +2200,7 @@ CREATE TABLE IF NOT EXISTS `reparti` (
 -- verifica: 2022-02-21 12:59 Chiara GDL
 CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL,
   `id_licenza` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,

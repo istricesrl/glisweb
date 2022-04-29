@@ -542,4 +542,38 @@ CREATE OR REPLACE VIEW `tipologie_rinnovi_view` AS
 	FROM tipologie_rinnovi
 ;
 
+--| 202204299230
+alter table rinnovi drop key indice;
+
+--| 202204299240
+alter table rinnovi
+	add COLUMN id_tipologia int(11) default null after id,
+	ADD	KEY `id_tipologia` (`id_tipologia`),
+   ADD CONSTRAINT `rinnovi_ibfk_04` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_rinnovi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202204299250
+CREATE OR REPLACE VIEW `rinnovi_view` AS
+	SELECT
+		rinnovi.id,
+		rinnovi.id_tipologia,
+		tipologie_rinnovi.nome AS tipologia,
+		rinnovi.id_contratto,
+		contratti.nome AS contratto,
+		rinnovi.id_licenza,
+		licenze.nome AS licenza,
+		rinnovi.id_progetto,
+		progetti.nome AS progetto,
+		rinnovi.data_inizio,
+		rinnovi.data_fine,
+		rinnovi.codice,
+		rinnovi.id_account_inserimento,
+		rinnovi.id_account_aggiornamento,
+		concat('rinnovo ', rinnovi.id, ' dal ',CONCAT_WS('-',rinnovi.data_inizio),' al ',CONCAT_WS('-',rinnovi.data_fine)) AS __label__
+	FROM rinnovi
+		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
+		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto 
+		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
+		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
+	;
+
 --| FINE FILE

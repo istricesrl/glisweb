@@ -5229,6 +5229,8 @@ DROP TABLE IF EXISTS `rinnovi_view`;
 CREATE OR REPLACE VIEW `rinnovi_view` AS
 	SELECT
 		rinnovi.id,
+		rinnovi.id_tipologia,
+		tipologie_rinnovi.nome AS tipologia,
 		rinnovi.id_contratto,
 		contratti.nome AS contratto,
 		rinnovi.id_licenza,
@@ -5242,10 +5244,12 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		rinnovi.id_account_aggiornamento,
 		concat('rinnovo ', rinnovi.id, ' dal ',CONCAT_WS('-',rinnovi.data_inizio),' al ',CONCAT_WS('-',rinnovi.data_fine)) AS __label__
 	FROM rinnovi
+		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
 		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto 
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
 		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
 	;
+
 
 --| 090000031550
 

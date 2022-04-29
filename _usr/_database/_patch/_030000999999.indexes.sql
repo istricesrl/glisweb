@@ -2388,10 +2388,11 @@ ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-02-21 12:59 Chiara GDL
 ALTER TABLE `rinnovi`
 	ADD PRIMARY KEY (`id`), 
+	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
-	ADD KEY `indice` ( `id_contratto`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
+	ADD KEY `indice` ( `id_contratto`, `id_tipologia`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
