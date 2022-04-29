@@ -26,7 +26,7 @@
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'tesseramenti' ),
 			'h1'				=> array( $l		=> 'tesseramenti' ),
-			'parent'			=> array( 'id'		=> 'corsi' ),
+			'parent'			=> array( 'id'		=> 'corsi.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.view.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
