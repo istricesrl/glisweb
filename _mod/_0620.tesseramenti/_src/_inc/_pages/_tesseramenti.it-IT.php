@@ -25,7 +25,7 @@
 	    'h1'				=> array( $l		=> 'tesseramenti' ),
 	    'parent'			=> array( 'id'		=> 'amministrazione' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_tesseramenti.view.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'tesseramenti.view',
 															'tesseramenti.archivio.view',
@@ -43,7 +43,7 @@
 	    'h1'				=> array( $l		=> 'archivio' ),
 	    'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_tesseramenti.archivio.view.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.archivio.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['tesseramenti.view']['etc']['tabs'] )
 	);
@@ -56,7 +56,7 @@
 	    'h1'				=> array( $l		=> 'stampe' ),
 	    'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_tesseramenti.stampe.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.stampe.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['tesseramenti.view']['etc']['tabs'] )
 	);
