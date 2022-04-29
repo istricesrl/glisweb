@@ -14,7 +14,7 @@
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.tesseramenti.html' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.tesseramenti.php' ),
-	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'				=> array( 'tabs'	=> 'anagrafica.form' )
 	);
 
@@ -29,7 +29,7 @@
 			'parent'			=> array( 'id'		=> 'corsi.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.view.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> array(	'tesseramenti.view',
 																'tesseramenti.archivio.view',
 																'tesseramenti.stampe',
@@ -47,7 +47,7 @@
 			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.archivio.view.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> $p['tesseramenti.view']['etc']['tabs'] )
 		);
 
@@ -60,7 +60,20 @@
 			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.stampe.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'				=> array( 'groups'	=> array(	'roots'	) ),
 			'etc'				=> array( 'tabs'	=> $p['tesseramenti.view']['etc']['tabs'] )
+		);
+
+		// gestione progetti
+		$p['tesseramenti.form'] = array(
+			'sitemap'			=> false,
+			'title'				=> array( $l		=> 'gestione' ),
+			'h1'				=> array( $l		=> 'gestione' ),
+			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tesseramenti.form.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.form.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'				=> array( 'tabs'	=> array(	'tesseramenti.form'
+															) )
 		);
 	}
