@@ -37,6 +37,8 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -45,7 +47,9 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
         LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_abbonamento = 1
+    GROUP BY contratti.id, tipologie_contratti.nome
 ;
 
 --| 090000000020
@@ -73,6 +77,8 @@ CREATE OR REPLACE VIEW `abbonamenti_attivi_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MAX(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -111,6 +117,8 @@ CREATE OR REPLACE VIEW `abbonamenti_archiviati_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -1418,6 +1426,8 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
+        MIN(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		group_concat( DISTINCT concat( coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),': ', ruoli_anagrafica.nome ) SEPARATOR ' | ' ) AS parti,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
@@ -1427,9 +1437,9 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
 		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
 	GROUP BY contratti.id, tipologie_contratti.nome
 ;
-
 
 --| 090000007300
 
@@ -1477,6 +1487,8 @@ CREATE OR REPLACE VIEW `contratti_attivi_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MAX(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -1508,6 +1520,8 @@ CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -2684,6 +2698,8 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -2692,9 +2708,10 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
         LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_iscrizione = 1
+	GROUP BY contratti.id
 ;
-
 
 --| 090000015910
 
@@ -2719,6 +2736,8 @@ CREATE OR REPLACE VIEW `iscrizioni_attivi_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MAX(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -2755,6 +2774,8 @@ CREATE OR REPLACE VIEW `iscrizioni_archiviati_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -5939,6 +5960,8 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -5947,7 +5970,9 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
         LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_tesseramento = 1
+    GROUP BY contratti.id
 ;
 
 --| 090000044510
@@ -5975,6 +6000,8 @@ CREATE OR REPLACE VIEW `tesseramenti_attivi_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MAX(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -6013,6 +6040,8 @@ CREATE OR REPLACE VIEW `tesseramenti_archiviati_view` AS
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio),
+        MAX(rinnovi.data_fine),
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
