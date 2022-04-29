@@ -723,6 +723,7 @@ CREATE TABLE `contratti` (
   `id_destinatario` int DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int DEFAULT NULL,

@@ -35,6 +35,7 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -70,6 +71,7 @@ CREATE OR REPLACE VIEW `abbonamenti_attivi_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -107,6 +109,7 @@ CREATE OR REPLACE VIEW `abbonamenti_archiviati_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -1411,6 +1414,7 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		progetti.nome AS progetto,
 		contratti.id_immobile,
 		immobili.nome AS immobile,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -1471,6 +1475,7 @@ CREATE OR REPLACE VIEW `contratti_attivi_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -1501,6 +1506,7 @@ CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -2676,6 +2682,7 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -2710,6 +2717,7 @@ CREATE OR REPLACE VIEW `iscrizioni_attivi_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -2745,6 +2753,7 @@ CREATE OR REPLACE VIEW `iscrizioni_archiviati_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -5928,6 +5937,7 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -5963,6 +5973,7 @@ CREATE OR REPLACE VIEW `tesseramenti_attivi_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -5982,7 +5993,7 @@ CREATE OR REPLACE VIEW `tesseramenti_attivi_view` AS
 -- tesseramenti_archiviati_view
 -- tipologia: vista virtuale
 -- verifica: 2021-09-10 16:54 Fabio Mosti
-DROP TABLE IF EXISTS `tesseramenti_attivi_view`;
+DROP TABLE IF EXISTS `tesseramenti_archiviati_view`;
 
 --| 090000044521
 
@@ -6000,6 +6011,7 @@ CREATE OR REPLACE VIEW `tesseramenti_archiviati_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,

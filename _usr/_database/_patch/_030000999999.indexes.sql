@@ -721,13 +721,14 @@ ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
 ALTER TABLE `contratti`
-ADD PRIMARY KEY (`id`),
-  ADD KEY `id_tipologia` (`id_tipologia`),
-  ADD KEY `id_emittente` (`id_emittente`),
-  ADD KEY `id_destinatario` (`id_destinatario`),
-  ADD KEY `id_progetto` (`id_progetto`),
-  ADD KEY  `id_immobile` (`id_immobile`),
-  ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`, `id_immobile`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_emittente` (`id_emittente`),
+	ADD KEY `id_destinatario` (`id_destinatario`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY  `id_immobile` (`id_immobile`),
+	ADD KEY  `codice` ( `codice` ),
+	ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `codice`, `nome`, `id_progetto`, `id_immobile`);
 
 --| 030000007201
 
