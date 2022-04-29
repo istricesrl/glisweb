@@ -1402,40 +1402,30 @@ CREATE OR REPLACE VIEW continenti_view AS
 -- contratti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
-CREATE OR REPLACE VIEW `metadati_view` AS
+CREATE OR REPLACE VIEW `contratti_view` AS
 	SELECT
-		metadati.id,
-		metadati.id_lingua,
-		lingue.ietf,
-		metadati.id_anagrafica,
-		metadati.id_pagina,
-		metadati.id_prodotto,
-		metadati.id_articolo,
-		metadati.id_categoria_prodotti,
-		metadati.id_notizia,
-		metadati.id_categoria_notizie,
-		metadati.id_risorsa,
-		metadati.id_categoria_risorse,
-		metadati.id_immagine,
-		metadati.id_video,
-		metadati.id_audio,
-		metadati.id_file,
-		metadati.id_progetto,
-		metadati.id_categoria_progetti,
-		metadati.id_indirizzo,
-		metadati.id_edificio,
-		metadati.id_immobile,
-		metadati.id_contratto,
-		metadati.id_account_inserimento,
-		metadati.id_account_aggiornamento,
-		concat(
-			metadati.nome,
-			':',
-			metadati.testo
-		) AS __label__
-	FROM metadati
-		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.id_immobile,
+		immobili.nome AS immobile,
+		contratti.nome,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		group_concat( DISTINCT concat( coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),': ', ruoli_anagrafica.nome ) SEPARATOR ' | ' ) AS parti,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
+	GROUP BY contratti.id, tipologie_contratti.nome
 ;
+
 
 --| 090000007300
 
