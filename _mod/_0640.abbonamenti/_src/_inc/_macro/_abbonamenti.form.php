@@ -16,6 +16,8 @@
      // tabella gestita
 	$ct['form']['table'] = 'contratti';
 
+    $ct['form']['subtable'] = 'contratti_anagrafica';
+
     // tendina tesserato
 	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

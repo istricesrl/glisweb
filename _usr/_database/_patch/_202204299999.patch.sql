@@ -543,10 +543,10 @@ CREATE OR REPLACE VIEW `tipologie_rinnovi_view` AS
 ;
 
 --| 202204299230
-alter table rinnovi drop key indice;
+ALTER TABLE rinnovi drop key indice;
 
 --| 202204299240
-alter table rinnovi
+ALTER TABLE rinnovi
 	add COLUMN id_tipologia int(11) default null after id,
 	ADD	KEY `id_tipologia` (`id_tipologia`),
    ADD CONSTRAINT `rinnovi_ibfk_04` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_rinnovi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;

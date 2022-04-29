@@ -6,8 +6,12 @@
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
     <input type="hidden" id="account" name="{{ table }}[id_account_inserimento]" value="{{ account }}" disabled>
     {{ frm.input( view.open.table, '', '', view.insert.field, '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
-       <div class="form-row d-print-none">
+    <div class="form-row d-print-none">
         <div class="col">
+            <span class="label-top">tipologia</span>
+            {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.tipologie, '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col-auto">
             <span class="label-top">codice</span>
             {{ frm.input( view.open.table, '', '', 'codice', '', '', '', '', '', '', '', 2 ) }}
         </div>

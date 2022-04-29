@@ -32,8 +32,8 @@
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> array(	'tesseramenti.view',
 																'tesseramenti.archivio.view',
-																'tesseramenti.stampe',
-																'tesseramenti.tools' ) ),
+																'tesseramenti.tools'
+															) ),
 			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tesseramenti' ),
 																				'priority'	=> '050' ) ) )
 		);
@@ -51,16 +51,16 @@
 			'etc'				=> array( 'tabs'	=> $p['tesseramenti.view']['etc']['tabs'] )
 		);
 
-		// stampe tesseramenti
-		$p['tesseramenti.stampe'] = array(
+		// tools tesseramenti
+		$p['tesseramenti.tools'] = array(
 			'sitemap'			=> false,
-			'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
-			'title'				=> array( $l		=> 'stampe' ),
-			'h1'				=> array( $l		=> 'stampe' ),
+			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'azioni' ),
+			'h1'				=> array( $l		=> 'azioni' ),
 			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.stampe.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots'	) ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.tools.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'				=> array( 'tabs'	=> $p['tesseramenti.view']['etc']['tabs'] )
 		);
 
@@ -73,7 +73,35 @@
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tesseramenti.form.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.form.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
-			'etc'				=> array( 'tabs'	=> array(	'tesseramenti.form'
+			'etc'				=> array( 'tabs'	=> array(	'tesseramenti.form',
+																'tesseramenti.form.stampe',
+																'tesseramenti.form.tools' 
 															) )
+		);
+
+		// stampe form tesseramenti
+		$p['tesseramenti.form.stampe'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'stampe corso' ),
+			'h1'				=> array( $l		=> 'stampe' ),
+			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.form.stampe.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'				=> array( 'tabs'	=> $p['tesseramenti.form']['etc']['tabs'] )
+		);
+
+		// tools form tesseramenti
+		$p['tesseramenti.form.tools'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'azioni corso' ),
+			'h1'				=> array( $l		=> 'azioni' ),
+			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.form.tools.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'				=> array( 'tabs'	=> $p['tesseramenti.form']['etc']['tabs'] )
 		);
 	}
