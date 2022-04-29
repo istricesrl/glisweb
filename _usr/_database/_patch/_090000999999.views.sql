@@ -805,6 +805,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		m1.nome AS mastro_provenienza,
 		attivita.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+        attivita.id_immobile,
 		attivita.codice_archivium,
 		attivita.token,
 		attivita.id_account_inserimento,
