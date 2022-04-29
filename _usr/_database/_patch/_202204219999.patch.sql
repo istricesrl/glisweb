@@ -1588,6 +1588,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
 		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
 ;
+
 --| 202204215570
 ALTER TABLE `attivita` ADD `id_matricola` INT NULL DEFAULT NULL AFTER `id_progetto`, 
 ADD INDEX `id_matricola` (`id_matricola`),

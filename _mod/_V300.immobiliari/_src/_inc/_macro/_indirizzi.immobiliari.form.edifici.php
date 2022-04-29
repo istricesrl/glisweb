@@ -56,7 +56,7 @@
 
 	// preset filtro righe documento
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-	//	$ct['view']['__restrict__']['id_lista']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+		$ct['view']['__restrict__']['id_indirizzo']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 
     // gestione default

@@ -281,6 +281,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_todo` (`id_todo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `codice_archivium` (`codice_archivium`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -726,7 +727,7 @@ ADD PRIMARY KEY (`id`),
   ADD KEY `id_emittente` (`id_emittente`),
   ADD KEY `id_destinatario` (`id_destinatario`),
   ADD KEY `id_progetto` (`id_progetto`),
-  ADD KEY  `id_immobile` (`id_immobile`);
+  ADD KEY  `id_immobile` (`id_immobile`),
   ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`, `id_immobile`);
 
 --| 030000007201

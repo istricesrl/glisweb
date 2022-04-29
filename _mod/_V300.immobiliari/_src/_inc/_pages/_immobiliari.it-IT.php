@@ -59,6 +59,7 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_immobili.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'			=> array( 'tabs'	=> array(	'immobili.form',
+														'immobili.form.valutazioni',
 														'immobili.form.immagini',
 														'immobili.form.video',
 														'immobili.form.audio',
@@ -70,8 +71,20 @@
 
 	// RELAZIONI CON IL MODULO CONTRATTI
 	if( in_array( "0600.contratti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'immobili.form', $p['immobili.form']['etc']['tabs'], 'immobili.form.contratti' );
+		arrayInsertSeq( 'immobili.form.valutazioni', $p['immobili.form']['etc']['tabs'], 'immobili.form.contratti' );
 	}
+
+	// form immobili valutazioni
+	$p['immobili.form.valutazioni'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'valutazioni' ),
+		'h1'		=> array( $l		=> 'valutazioni' ),
+		'parent'		=> array( 'id'		=> 'immobili.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immobili.form.valutazioni.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_immobili.form.valutazioni.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['immobili.form']['etc']['tabs'] )
+	);
 
 	// form immobili immagini
 	$p['immobili.form.immagini'] = array(

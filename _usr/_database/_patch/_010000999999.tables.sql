@@ -311,6 +311,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_todo` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
   `codice_archivium` char(32) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
   `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,
