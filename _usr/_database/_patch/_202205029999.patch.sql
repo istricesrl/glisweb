@@ -339,4 +339,352 @@ CREATE OR REPLACE VIEW `video_view` AS
 		LEFT JOIN ruoli_video ON ruoli_video.id = video.id_ruolo
 ;
 
+--| 202205020180
+CREATE OR REPLACE VIEW `contratti_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.id_immobile,
+		immobili.nome AS immobile,
+		contratti.codice,
+		contratti.nome,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		group_concat( DISTINCT concat( coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),': ', ruoli_anagrafica.nome ) SEPARATOR ' | ' ) AS parti,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+	GROUP BY contratti.id, tipologie_contratti.nome
+;
+
+--| 202205020190
+CREATE OR REPLACE VIEW `abbonamenti_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_abbonamento = 1
+    GROUP BY contratti.id, tipologie_contratti.nome
+;
+
+--| 202205020200
+CREATE OR REPLACE VIEW `abbonamenti_attivi_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_abbonamento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
+    GROUP BY contratti.id
+;
+
+--| 202205020210
+CREATE OR REPLACE VIEW `abbonamenti_archiviati_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_abbonamento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
+    GROUP BY contratti.id
+;
+
+--| 202205020220
+CREATE OR REPLACE VIEW `contratti_attivi_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
+    GROUP BY contratti.id
+;
+
+--| 202205020230
+CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
+    GROUP BY contratti.id
+;
+
+--| 202205020240
+CREATE OR REPLACE VIEW `iscrizioni_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_iscrizione = 1
+    GROUP BY contratti.id
+;
+
+--| 202205020250
+CREATE OR REPLACE VIEW `iscrizioni_attivi_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_iscrizione = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
+    GROUP BY contratti.id
+;
+
+--| 202205020260
+CREATE OR REPLACE VIEW `iscrizioni_archiviati_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_iscrizione = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
+    GROUP BY contratti.id
+;
+
+--| 202205020270
+CREATE OR REPLACE VIEW `tesseramenti_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_tesseramento = 1
+    GROUP BY contratti.id
+;
+
+--| 202205020280
+CREATE OR REPLACE VIEW `tesseramenti_attivi_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_tesseramento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
+    GROUP BY contratti.id
+;
+
+--| 202205020290
+CREATE OR REPLACE VIEW `tesseramenti_archiviati_view` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		contratti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+    WHERE tipologie_contratti.se_tesseramento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
+    GROUP BY contratti.id
+;
+
 --| FINE FILE
