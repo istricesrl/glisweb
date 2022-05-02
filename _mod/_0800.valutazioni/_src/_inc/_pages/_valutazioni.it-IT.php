@@ -35,6 +35,7 @@
 													'valutazioni.form.video',
 													'valutazioni.form.file',
 													'valutazioni.form.metadati',
+													'valutazioni.form.stampe',
 													'valutazioni.form.tools' ) )
 	);
 
@@ -90,3 +91,17 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['valutazioni.form']['etc']['tabs'] )
 	);
+
+	// gestione anagrafica stampe
+	$p['valutazioni.form.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'valutazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_valutazioni.form.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['valutazioni.form']['etc']['tabs'] )
+	);
+	

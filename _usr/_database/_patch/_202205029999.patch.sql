@@ -2,6 +2,10 @@
 -- PATCH
 --
 
+--| 202205020001
+ALTER TABLE `valutazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 --| 202205020010
 ALTER TABLE `todo` ADD `id_immobile` INT NULL DEFAULT NULL AFTER `id_pianificazione`, 
 ADD INDEX `id_immobile` (`id_immobile`),
@@ -686,5 +690,21 @@ CREATE OR REPLACE VIEW `tesseramenti_archiviati_view` AS
     WHERE tipologie_contratti.se_tesseramento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
     GROUP BY contratti.id
 ;
+
+--| 202205020300
+ALTER TABLE `rinnovi`	ADD UNIQUE KEY `unica_codice` (`codice`);
+
+--| 202205020310
+CREATE OR REPLACE VIEW disponibilita_view AS
+	SELECT
+		disponibilita.id,
+		disponibilita.nome,
+		disponibilita.se_immobili,
+		disponibilita.se_catalogo,
+		disponibilita.nome AS __label__
+	FROM
+		disponibilita
+;
+
 
 --| FINE FILE

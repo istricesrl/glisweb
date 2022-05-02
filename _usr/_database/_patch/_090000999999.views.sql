@@ -1733,6 +1733,28 @@ CREATE OR REPLACE VIEW `coupon_prodotti_view` AS
 		LEFT JOIN prodotti ON prodotti.id = coupon_prodotti.id_prodotto
 ;
 
+--| 090000009000
+
+-- disponibilita_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `disponibilita_view`;
+
+--| 090000009001
+
+-- disponibilita_view
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE OR REPLACE VIEW disponibilita_view AS
+	SELECT
+		disponibilita.id,
+		disponibilita.nome,
+		disponibilita.se_immobili,
+		disponibilita.se_catalogo,
+		disponibilita.nome AS __label__
+	FROM
+		disponibilita
+;
+
 --| 090000009700
 
 -- ddt_view
@@ -1907,28 +1929,6 @@ CREATE OR REPLACE VIEW `ddt_passivi_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
    	WHERE tipologie_documenti.se_trasporto IS NOT NULL
 	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
-;
-
---| 090000009000
-
--- disponibilita_view
--- tipologia: tabella standard
-DROP TABLE IF EXISTS `disponibilita_view`;
-
---| 090000009001
-
--- disponibilita_view
--- tipologia: tabella standard
--- verifica: 2022-04-28 16:12 Chiara GDL
-CREATE OR REPLACE VIEW disponibilita_view AS
-	SELECT
-		disponibilita.id,
-		disponibilita.nome,
-		disponibilita.se_immobili,
-		disponibilita.se_catalogo,
-		disponibilita.nome AS __label__
-	FROM
-		disponibilita
 ;
 
 --| 090000009800

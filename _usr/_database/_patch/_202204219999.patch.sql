@@ -1401,10 +1401,10 @@ CREATE OR REPLACE VIEW  contratti_anagrafica_view AS
 		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica;
 
 --| 202204215489
-alter table contratti drop key indice;
+ALTER TABLE contratti drop key indice;
 
 --| 202204215490
-alter table contratti
+ALTER TABLE contratti
 change   `nome`  `nome` char(128) DEFAULT NULL,
 change `id_destinatario`  `id_destinatario` int DEFAULT NULL,
 ADD COLUMN `id_immobile` int(11) DEFAULT NULL,
