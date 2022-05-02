@@ -241,4 +241,4 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		tipologie_documenti.se_pro_forma = 1
 ;
 
--- FINE
+--| FINE

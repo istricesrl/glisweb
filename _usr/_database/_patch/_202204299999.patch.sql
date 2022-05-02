@@ -88,7 +88,13 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 ;
 
+--| 202204290060
+ALTER TABLE `attivita_view_static` ADD `id_matricola` INT NULL DEFAULT NULL AFTER `id_progetto`;
 
+--| 202204290070
+TRUNCATE attivita_view_static;
 
+--| 202204290080
+INSERT INTO attivita_view_static SELECT * FROM attivita_view;
 
--- FINE
+--| FINE

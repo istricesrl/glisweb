@@ -245,4 +245,4 @@ CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
 	FROM tipologie_anagrafica
 ;
 
--- FINE
+--| FINE

@@ -1015,6 +1015,7 @@ ALTER TABLE `file`
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -1108,6 +1109,7 @@ ALTER TABLE `immagini`
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_progetto` (`id_progetto`),
@@ -1685,6 +1687,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255)),
 	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`,`nome`,`testo`(255)),
 	ADD KEY `indice_pagina` (`id`,`id_lingua`,`id_pagina`,`nome`,`testo`(255)),
@@ -1862,9 +1865,10 @@ ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-05 17:57 Fabio Mosti
 ALTER TABLE `pianificazioni`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica_progetto` (`id_progetto`), 
-	ADD UNIQUE KEY `unica_todo` (`id_todo`), 
-	ADD UNIQUE KEY `unica_attivita` (`id_attivita`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_todo` (`id_todo`), 
+	ADD KEY `id_attivita` (`id_attivita`), 
+	ADD KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_periodicita` (`id_periodicita`),
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `token` (`token`), 
@@ -1875,7 +1879,8 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
 	ADD KEY `indice_progetto` (`id`,`id_progetto`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
 	ADD KEY `indice_todo` (`id`,`id_todo`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
-	ADD KEY `indice_attivita` (`id`,`id_attivita`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
+	ADD KEY `indice_attivita` (`id`,`id_attivita`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
+	ADD KEY `indice_contratto` (`id`,`id_contratto`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
 
 --| 030000023801
 
@@ -3400,6 +3405,7 @@ ALTER TABLE `todo`
 	ADD KEY `id_contatto` (`id_contatto`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_pianificazione` (`id_pianificazione`), 
+	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_indirizzo`,`id_luogo`,`data_scadenza`,`ora_scadenza`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`,`data_chiusura`,`id_contatto`,`id_progetto`),
@@ -3529,6 +3535,7 @@ ALTER TABLE `video`
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_valutazione` (`id_valutazione`), 
  	ADD KEY `id_embed` (`id_embed`), 
  	ADD KEY `path` (`path`), 
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
