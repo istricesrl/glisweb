@@ -337,6 +337,24 @@ ALTER TABLE `audio`
 -- tipologia: tabella gestita
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000002800
+
+-- caratteristiche_immobili
+-- tipologia: tabella gestita
+-- verifica: 2022-05-02 17:22 Chiara GDL
+ALTER TABLE `caratteristiche_immobili`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`nome`,`se_indirizzo`,`se_edificio`,`se_immobile`);
+
+--| 030000002801
+
+-- caratteristiche_immobili
+-- tipologia: tabella gestita
+ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000002900
 
 -- caratteristiche_prodotti

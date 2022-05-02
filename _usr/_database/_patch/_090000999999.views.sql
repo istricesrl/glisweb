@@ -892,6 +892,32 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		LEFT JOIN embed ON embed.id = audio.id_embed
 ;
 
+--| 090000002800
+
+-- caratteristiche_immobili_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `caratteristiche_immobili_view`;
+
+--| 090000002801
+
+-- caratteristiche_immobili_view
+-- tipologia: tabella gestita
+-- verifica: 2022-05-02 17:22 Chiara GDL
+CREATE OR REPLACE VIEW caratteristiche_immobili_view AS
+	SELECT
+		caratteristiche_immobili.id,
+		caratteristiche_immobili.nome,
+		caratteristiche_immobili.html_entity,
+		caratteristiche_immobili.font_awesome,
+		caratteristiche_immobili.se_indirizzo,
+		caratteristiche_immobili.se_edificio,
+		caratteristiche_immobili.se_immobile,
+		caratteristiche_immobili.id_account_inserimento,
+		caratteristiche_immobili.id_account_aggiornamento,
+		caratteristiche_immobili.nome AS __label__
+	FROM caratteristiche_immobili
+;
+
 --| 090000002900
 
 -- caratteristiche_prodotti_view

@@ -31,7 +31,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_valutazioni.immobiliari.view.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
-			'etc'			=> array( 'tabs'	=>  'immobili.view' ),
+			'etc'			=> array( 'tabs'	=>  array('valutazioni.immobiliari.view') ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'valutazioni' ),
 									'priority'	=> '100' ) ) )	
 		);

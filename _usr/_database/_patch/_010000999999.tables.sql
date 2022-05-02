@@ -357,6 +357,25 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000002800
+
+-- caratteristiche_immobili
+-- tipologia: tabella gestita
+-- verifica: 2022-05-02 17:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(128) NOT NULL,
+  `font_awesome` char(24) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `se_indirizzo` int(1) DEFAULT NULL,
+  `se_edificio` int(1) DEFAULT NULL,
+  `se_immobile` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+
 --| 010000002900
 
 -- caratteristiche_prodotti

@@ -706,5 +706,90 @@ CREATE OR REPLACE VIEW disponibilita_view AS
 		disponibilita
 ;
 
+--| 202205020350
+CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(128) NOT NULL,
+  `font_awesome` char(24) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `se_indirizzo` int(1) DEFAULT NULL,
+  `se_edificio` int(1) DEFAULT NULL,
+  `se_immobile` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
+
+--| 202205020360
+ALTER TABLE `caratteristiche_immobili`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`nome`,`se_indirizzo`,`se_edificio`,`se_immobile`);
+
+--| 202205020370
+ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202205020380
+CREATE OR REPLACE VIEW caratteristiche_immobili_view AS
+	SELECT
+		caratteristiche_immobili.id,
+		caratteristiche_immobili.nome,
+		caratteristiche_immobili.html_entity,
+		caratteristiche_immobili.font_awesome,
+		caratteristiche_immobili.se_indirizzo,
+		caratteristiche_immobili.se_edificio,
+		caratteristiche_immobili.se_immobile,
+		caratteristiche_immobili.id_account_inserimento,
+		caratteristiche_immobili.id_account_aggiornamento,
+		caratteristiche_immobili.nome AS __label__
+	FROM caratteristiche_immobili
+;
+
+--| 202205020390
+INSERT INTO `caratteristiche_immobili` (`id`, `nome`, `font_awesome`, `html_entity`, `se_indirizzo`, `se_edificio`, `se_immobile`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'balcone',	'fa-picture-o',	'&#xf03e;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	'giardino',	'fa-tree',	'&#xf1bb;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(3,	'cantina',	'fa-key',	'&#xf084;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	'tavernetta',	'fa-key',	'&#xf084;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(5,	'ascensore',	'fa-sort',	'&#xf0dc;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(6,	'giardino privato',	'fa-tree',	'&#xf1bb;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(7,	'posto auto',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(8,	'garage',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(9,	'riscaldamento autonomo',	'fa-thermometer-full',	'&#xf2c7;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(10,	'riscaldamento centralizzato',	'fa-thermometer-half',	'&#xf2c9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(11,	'arredato',	'fa-check',	'&#xf00c;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(12,	'non arredato',	'fa-times',	'&#xf00d;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(13,	'parzialmente arredato',	'fa-minus',	'&#xf068;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(14,	'terrazza abitabile',	'fa-picture-o',	'&#xf03e;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(15,	'senza riscaldamento',	'fa-thermometer-empty',	'&#xf2cb;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(16,	'volendo arredato',	'fa-truck',	'&#xf0d1;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(17,	'arredato solo cucina',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(18,	'garage doppio',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(19,	'posto auto coperto',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	'nessun posto auto',	'fa-road',	'&#xf018;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(21,	'posto auto condominiale',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(22,	'cucina abitabile',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	'mansarda',	'fa-angle-up',	'&#xf106;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(24,	'camino',	'fa-fire',	'&#xf06d;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(25,	'angolo cottura',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(26,	'giardino condominiale',	'fa-tree',	'&#xf1bb;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(27,	'aria condizionata',	'fa-snowflake-o',	'&#xf2dc;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(28,	'portineria',	'fa-user',	'&#xf007;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(29,	'mezzi pubblici',	'fa-bus',	'&#xf207;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(30,	'palazzo storico',	'fa-university',	'&#xf19c;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(31,	'stile Liberty',	'fa-building',	'&#xf1ad;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(32,	'pietra vista',	'fa-cubes',	'&#xf1b3;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(33,	'intonaco',	'fa-clone',	'&#xf24d;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL)
+ON DUPLICATE KEY UPDATE
+	nome = VALUES( nome ), font_awesome = VALUES( font_awesome ), html_entity = VALUES( html_entity ), se_edificio = VALUES(se_edificio), se_immobile = VALUES( se_immobile), se_indirizzo = VALUES( se_indirizzo ) 
+;
+
+--| 202205020400
+ALTER TABLE `caratteristiche_immobili`
+    ADD CONSTRAINT `caratteristiche_immobili_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `caratteristiche_immobili_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| FINE FILE
