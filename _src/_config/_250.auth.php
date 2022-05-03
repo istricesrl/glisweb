@@ -146,9 +146,9 @@
 	    'job' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'luoghi' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'luoghi' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #		'macro' => array(
 #		CONTROL_FULL => array( 'roots' )
 #		),

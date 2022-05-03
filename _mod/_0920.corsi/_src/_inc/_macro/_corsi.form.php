@@ -34,7 +34,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static' );
 
     if( isset( $_REQUEST[$ct['form']['table']]['id_cliente'] ) ){
 
@@ -93,12 +93,38 @@
     );
 
     // tendina categorie progetti
-	$ct['etc']['select']['categorie_progetti'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['materie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM categorie_progetti_view'
+	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_materia = 1'
 	);
+
+	$ct['etc']['select']['classi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_classe = 1'
+	);
+
+	$ct['etc']['select']['fasce'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_fascia = 1'
+	);
+
+    $ct['etc']['select']['certificazioni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM certificazioni_view'
+	);
+
+    $ct['etc']['select']['sn'] = array(
+        array( 'id' => NULL, '__label__' => 'no' ),
+        array( 'id' => 1, '__label__' => 'sì' )
+    );
 /*
     if ( isset( $_REQUEST[ $ct['form']['table'] ]['progetti_anagrafica'] ) )
     { 

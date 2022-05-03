@@ -496,6 +496,7 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (
   `se_straordinario` int(1) DEFAULT NULL,
   `se_materia` int(1) DEFAULT NULL,
   `se_classe` int(1) DEFAULT NULL,  
+  `se_fascia` int(1) DEFAULT NULL, 
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -743,6 +744,7 @@ CREATE TABLE `contratti` (
   `id_destinatario` int DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int DEFAULT NULL,
@@ -1983,6 +1985,7 @@ CREATE TABLE `progetti_certificazioni` (
   `id` int NOT NULL,
   `id_progetto` char(32) NOT NULL,
   `id_certificazione` int DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
   `nome` char(1) DEFAULT NULL,
   `note` text,
   `se_richiesta` int(1) DEFAULT NULL,
@@ -2223,6 +2226,7 @@ CREATE TABLE IF NOT EXISTS `reparti` (
 -- verifica: 2022-02-21 12:59 Chiara GDL
 CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL,
   `id_licenza` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
@@ -3057,6 +3061,30 @@ CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (
   `se_bozza` int(1) DEFAULT NULL,
   `se_pubblicato` int(1) DEFAULT NULL,
   `se_evidenza` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000055700
+
+-- tipologie_rinnovi
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-29 17:45 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_tesseramenti` int(1) DEFAULT NULL,
+  `se_iscrizioni` int(1) DEFAULT NULL,
+  `se_abbonamenti` int(1) DEFAULT NULL,
+  `se_licenze` int(1) DEFAULT NULL,
+  `se_contratti` int(1) DEFAULT NULL,
+  `se_progetti` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

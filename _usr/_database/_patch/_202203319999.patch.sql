@@ -246,3 +246,4 @@ CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
 ;
 
 --| FINE
+

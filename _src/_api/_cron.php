@@ -107,7 +107,7 @@
 						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
 						require DIR_BASE . $task['task'];
 						$cf['cron']['task']['results']['task'][ $task['task'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-						if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
+						if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = mt_rand( 3, 9 ); }
 						sleep( $task['delay'] );
 					}
 				} else {
@@ -204,7 +204,7 @@
 						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
 						require DIR_BASE . $job['job'];
 						$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-						if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
+						if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = mt_rand( 3, 9 ); }
 						sleep( $job['delay'] );
 					}
 				} else {

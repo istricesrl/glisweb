@@ -1084,6 +1084,7 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 		categorie_progetti.se_ordinario,
 		categorie_progetti.se_materia,
 		categorie_progetti.se_classe,
+		categorie_progetti.se_fascia,
 		count( c1.id ) AS figli,
 		count( progetti_categorie.id ) AS membri,
 		categorie_progetti.id_account_inserimento,
@@ -2739,7 +2740,7 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_iscrizione = 1
-    GROUP BY contratti.id
+	GROUP BY contratti.id
 ;
 
 --| 090000015910
@@ -4619,6 +4620,39 @@ CREATE OR REPLACE VIEW progetti_categorie_view AS
 		LEFT JOIN progetti ON progetti.id = progetti_categorie.id_progetto
 ;
 
+--| 090000027600
+
+-- progetti_certificazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_certificazioni_view`;
+
+--| 090000027601
+
+-- progetti_certificazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE OR REPLACE VIEW progetti_certificazioni_view AS
+	SELECT
+		progetti_certificazioni.id,
+		progetti_certificazioni.id_progetto,
+		progetti.nome AS progetto,
+		progetti_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
+		progetti_certificazioni.ordine,
+		progetti_certificazioni.nome,
+		progetti_certificazioni.se_richiesta,
+		progetti_certificazioni.id_account_inserimento,
+		progetti_certificazioni.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			progetti.nome,
+			certificazioni.nome
+		) AS __label__
+	FROM progetti_certificazioni
+		LEFT JOIN progetti ON progetti.id = progetti_certificazioni.id_progetto
+		LEFT JOIN certificazioni ON certificazioni.id = progetti_certificazioni.id_certificazione
+;
+
 --| 090000027800
 
 -- progetti_matricole_view
@@ -5260,6 +5294,8 @@ DROP TABLE IF EXISTS `rinnovi_view`;
 CREATE OR REPLACE VIEW `rinnovi_view` AS
 	SELECT
 		rinnovi.id,
+		rinnovi.id_tipologia,
+		tipologie_rinnovi.nome AS tipologia,
 		rinnovi.id_contratto,
 		contratti.nome AS contratto,
 		rinnovi.id_licenza,
@@ -5273,10 +5309,12 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		rinnovi.id_account_aggiornamento,
 		concat('rinnovo ', rinnovi.id, ' dal ',CONCAT_WS('-',rinnovi.data_inizio),' al ',CONCAT_WS('-',rinnovi.data_fine)) AS __label__
 	FROM rinnovi
+		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
 		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto 
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
 		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
 	;
+
 
 --| 090000031550
 
@@ -6051,7 +6089,7 @@ CREATE OR REPLACE VIEW `tesseramenti_attivi_view` AS
 -- tesseramenti_archiviati_view
 -- tipologia: vista virtuale
 -- verifica: 2021-09-10 16:54 Fabio Mosti
-DROP TABLE IF EXISTS `tesseramenti_attivi_view`;
+DROP TABLE IF EXISTS `tesseramenti_archiviati_view`;
 
 --| 090000044521
 
@@ -6597,6 +6635,37 @@ CREATE OR REPLACE VIEW `tipologie_pubblicazioni_view` AS
 		tipologie_pubblicazioni.id_account_aggiornamento,
 		tipologie_pubblicazioni_path( tipologie_pubblicazioni.id ) AS __label__
 	FROM tipologie_pubblicazioni
+;
+
+--| 090000055700
+
+-- tipologie_rinnovi_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `tipologie_rinnovi_view`;
+
+--| 090000055701
+
+-- tipologie_rinnovi_view
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-29 17:45 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_rinnovi_view` AS
+	SELECT
+		tipologie_rinnovi.id,
+		tipologie_rinnovi.id_genitore,
+		tipologie_rinnovi.ordine,
+		tipologie_rinnovi.nome,
+		tipologie_rinnovi.html_entity,
+		tipologie_rinnovi.font_awesome,
+		tipologie_rinnovi.se_tesseramenti, 
+		tipologie_rinnovi.se_iscrizioni, 
+		tipologie_rinnovi.se_abbonamenti,
+		tipologie_rinnovi.se_licenze, 
+		tipologie_rinnovi.se_contratti,
+		tipologie_rinnovi.se_progetti,
+		tipologie_rinnovi.id_account_inserimento,
+		tipologie_rinnovi.id_account_aggiornamento,
+		tipologie_rinnovi_path( tipologie_rinnovi.id ) AS __label__
+	FROM tipologie_rinnovi
 ;
 
 --| 090000055800

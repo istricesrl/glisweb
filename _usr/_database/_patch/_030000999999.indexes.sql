@@ -465,6 +465,7 @@ ALTER TABLE `categorie_progetti`
 	ADD KEY `se_straordinario`(`se_straordinario`),
 	ADD KEY `se_materia`(`se_materia`),
 	ADD KEY `se_classe`(`se_classe`),	
+	ADD KEY `se_fascia` (`se_fascia`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`, `id_sito`);
@@ -740,13 +741,15 @@ ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
 ALTER TABLE `contratti`
-ADD PRIMARY KEY (`id`),
-  ADD KEY `id_tipologia` (`id_tipologia`),
-  ADD KEY `id_emittente` (`id_emittente`),
-  ADD KEY `id_destinatario` (`id_destinatario`),
-  ADD KEY `id_progetto` (`id_progetto`),
-  ADD KEY  `id_immobile` (`id_immobile`),
-  ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`, `id_immobile`);
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_emittente` (`id_emittente`),
+	ADD KEY `id_destinatario` (`id_destinatario`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY  `id_immobile` (`id_immobile`),
+	ADD KEY  `codice` ( `codice` ),
+	ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `codice`, `nome`, `id_progetto`, `id_immobile`);
+
 
 --| 030000007201
 
@@ -2121,6 +2124,28 @@ ALTER TABLE `progetti_categorie`
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000027600
+
+-- progetti_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+ALTER TABLE `progetti_certificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_certificazione`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_certificazione` (`id_certificazione`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_progetto`,`id_certificazione`,`ordine`,`nome`);
+
+--| 030000027601
+
+-- progetti_certificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `progetti_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000027800
 
 -- progetti_matricole
@@ -2411,10 +2436,11 @@ ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-02-21 12:59 Chiara GDL
 ALTER TABLE `rinnovi`
 	ADD PRIMARY KEY (`id`), 
+	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
-	ADD KEY `indice` ( `id_contratto`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
+	ADD KEY `indice` ( `id_contratto`, `id_tipologia`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD UNIQUE KEY `unica_codice` (`codice`),
@@ -3329,6 +3355,33 @@ ALTER TABLE `tipologie_pubblicazioni`
 -- tipologie_pubblicazioni
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000055700
+
+-- tipologie_rinnovi
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-29 17:45 Chiara GDL
+ALTER TABLE `tipologie_rinnovi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_tesseramenti` (`se_tesseramenti`),
+  	ADD KEY `se_iscrizioni` (`se_iscrizioni`),
+  	ADD KEY `se_abbonamenti` (`se_abbonamenti`),
+  	ADD KEY `se_licenze` (`se_licenze`),
+  	ADD KEY `se_contratti` (`se_contratti`),
+  	ADD KEY `se_progetti`(`se_progetti`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`, `se_tesseramenti`,`se_iscrizioni`, `se_abbonamenti`, `se_licenze`, `se_contratti`, `se_progetti`);
+
+--| 030000055701
+
+-- tipologie_rinnovi
+-- tipologia: tabella di supporto
+ALTER TABLE `tipologie_rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000055800
 

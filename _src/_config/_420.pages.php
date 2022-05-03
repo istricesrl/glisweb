@@ -116,6 +116,11 @@
 
     }
 
+    // TODO la forzatura del nome del sito nel <title> dev'essere opzionale
+    if( ! empty( TITLE_SEPARATOR ) ) {
+        $ct['page']['title'][ LINGUA_CORRENTE ] = $cf['site']['name'][ LINGUA_CORRENTE ] . TITLE_SEPARATOR . $ct['page']['title'][ LINGUA_CORRENTE ];
+    }
+
     /*
      * @todo prevedere la forzatura anche per il tema della pagina
      */

@@ -339,4 +339,5 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 		LEFT JOIN testate ON testate.id = risorse.id_testata
 ;
 
---| FINE
+--| FINE FILE
+

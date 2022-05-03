@@ -107,4 +107,4 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 ;
 
 
---| FINE
+--| FINE FILE
