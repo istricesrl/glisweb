@@ -204,7 +204,7 @@
 						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
 						require DIR_BASE . $job['job'];
 						$cf['cron']['results']['job'][ $job['job'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-						if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = 3; }
+						if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = mt_rand( 3, 15 ); }
 						sleep( $job['delay'] );
 					}
 				} else {
