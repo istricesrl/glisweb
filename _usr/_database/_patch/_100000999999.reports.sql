@@ -142,8 +142,9 @@ SELECT
 	rinnovi.data_inizio,
 	rinnovi.data_fine,
 	rinnovi.id_contratto
-FROM anagrafica	
-INNER JOIN contratti ON contratti.id_destinatario = anagrafica.id
+FROM anagrafica
+INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_anagrafica = anagrafica.id	
+INNER JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto 
 LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
 INNER JOIN progetti ON progetti.id = contratti.id_progetto
@@ -156,13 +157,15 @@ SELECT
 	rinnovi.data_inizio,
 	rinnovi.data_fine,
 	rinnovi.id_contratto
-FROM anagrafica	
-INNER JOIN contratti ON contratti.id_destinatario = anagrafica.id
+FROM anagrafica
+INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_anagrafica = anagrafica.id	
+INNER JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto 
 LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
 INNER JOIN relazioni_progetti ON relazioni_progetti.id_progetto = contratti.id_progetto
 INNER JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
 WHERE tipologie_contratti.se_iscrizione = 1 AND ruoli_progetti.se_sottoprogetto = 1;
+
 
 --| 100000021000
 -- __report_movimenti_magazzini__
