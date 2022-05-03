@@ -1082,7 +1082,7 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 		categorie_progetti.id_pagina,
 		categorie_progetti.se_straordinario,
 		categorie_progetti.se_ordinario,
-		categorie_progetti.se_materia,
+		categorie_progetti.se_disciplina,
 		categorie_progetti.se_classe,
 		categorie_progetti.se_fascia,
 		count( c1.id ) AS figli,
