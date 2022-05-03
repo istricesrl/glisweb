@@ -34,7 +34,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static' );
 
     if( isset( $_REQUEST[$ct['form']['table']]['id_cliente'] ) ){
 

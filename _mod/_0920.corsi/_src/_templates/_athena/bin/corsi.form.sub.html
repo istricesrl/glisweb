@@ -62,15 +62,15 @@
 	<div class="form-group form-row">
         <div class="col-auto">
             <span class="label-top">richiesto</span>
-            {{ frm.select( table, subtable, i, 'se_richiesta', '', etc.select.sn, request, '', '', '', '', '', disabled  ) }}
+            {{ frm.select( table, subtable, i, 'se_richiesta', '', etc.select.sn, request, '', '', '', '1', '', disabled  ) }}
         </div>
         <div class="col-12 col-md-3">
 		<span class="label-top">certificazione</span>
 		{{ frm.select( table, subtable, i, 'id_certificazione', '', etc.select.certificazioni, request, '', '', '', '', '', disabled ) }}
         </div>        
-		<div class="col-12 col-md-3">
+		<div class="col-12 col-md">
 			<span class="label-top">dettagli</span>
-			{{ frm.input( table, subtable, i, 'nome', '', '', request, '', '', '', disabled ) }}
+			{{ frm.input( table, subtable, i, 'nome', '', '', request, '', '', '', '',disabled ) }}
 		</div>
         {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
