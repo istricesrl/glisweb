@@ -4588,6 +4588,39 @@ CREATE OR REPLACE VIEW progetti_categorie_view AS
 		LEFT JOIN progetti ON progetti.id = progetti_categorie.id_progetto
 ;
 
+--| 090000027600
+
+-- progetti_certificazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `progetti_certificazioni_view`;
+
+--| 090000027601
+
+-- progetti_certificazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+CREATE OR REPLACE VIEW progetti_certificazioni_view AS
+	SELECT
+		progetti_certificazioni.id,
+		progetti_certificazioni.id_progetto,
+		progetti.nome AS progetto,
+		progetti_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
+		progetti_certificazioni.ordine,
+		progetti_certificazioni.nome,
+		progetti_certificazioni.se_richiesta,
+		progetti_certificazioni.id_account_inserimento,
+		progetti_certificazioni.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			progetti.nome,
+			certificazioni.nome
+		) AS __label__
+	FROM progetti_certificazioni
+		LEFT JOIN progetti ON progetti.id = progetti_certificazioni.id_progetto
+		LEFT JOIN certificazioni ON certificazioni.id = progetti_certificazioni.id_certificazione
+;
+
 --| 090000027800
 
 -- progetti_matricole_view

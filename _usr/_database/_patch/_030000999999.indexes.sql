@@ -2098,6 +2098,28 @@ ALTER TABLE `progetti_categorie`
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000027600
+
+-- progetti_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-02-03 11:12 Chiara GDL
+ALTER TABLE `progetti_certificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_progetto`,`id_certificazione`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_certificazione` (`id_certificazione`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_progetto`,`id_certificazione`,`ordine`,`nome`);
+
+--| 030000027601
+
+-- progetti_certificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `progetti_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000027800
 
 -- progetti_matricole
