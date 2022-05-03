@@ -59,4 +59,4 @@ CREATE TABLE `attivita_view_static` (
 insert into  attivita_view_static select * from attivita_view
 
 
--- FINE
+--| FINE

@@ -281,6 +281,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_todo` (`id_todo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `codice_archivium` (`codice_archivium`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -335,6 +336,24 @@ ALTER TABLE `audio`
 -- audio
 -- tipologia: tabella gestita
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000002800
+
+-- caratteristiche_immobili
+-- tipologia: tabella gestita
+-- verifica: 2022-05-02 17:22 Chiara GDL
+ALTER TABLE `caratteristiche_immobili`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`nome`,`se_indirizzo`,`se_edificio`,`se_immobile`);
+
+--| 030000002801
+
+-- caratteristiche_immobili
+-- tipologia: tabella gestita
+ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000002900
 
@@ -726,7 +745,7 @@ ADD PRIMARY KEY (`id`),
   ADD KEY `id_emittente` (`id_emittente`),
   ADD KEY `id_destinatario` (`id_destinatario`),
   ADD KEY `id_progetto` (`id_progetto`),
-  ADD KEY  `id_immobile` (`id_immobile`);
+  ADD KEY  `id_immobile` (`id_immobile`),
   ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `nome`, `id_progetto`, `id_immobile`);
 
 --| 030000007201
@@ -1014,6 +1033,7 @@ ALTER TABLE `file`
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -1107,6 +1127,7 @@ ALTER TABLE `immagini`
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_progetto` (`id_progetto`),
@@ -1684,6 +1705,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255)),
 	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`,`nome`,`testo`(255)),
 	ADD KEY `indice_pagina` (`id`,`id_lingua`,`id_pagina`,`nome`,`testo`(255)),
@@ -1861,9 +1883,10 @@ ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-05 17:57 Fabio Mosti
 ALTER TABLE `pianificazioni`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica_progetto` (`id_progetto`), 
-	ADD UNIQUE KEY `unica_todo` (`id_todo`), 
-	ADD UNIQUE KEY `unica_attivita` (`id_attivita`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_todo` (`id_todo`), 
+	ADD KEY `id_attivita` (`id_attivita`), 
+	ADD KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_periodicita` (`id_periodicita`),
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `token` (`token`), 
@@ -1874,7 +1897,8 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
 	ADD KEY `indice_progetto` (`id`,`id_progetto`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
 	ADD KEY `indice_todo` (`id`,`id_todo`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
-	ADD KEY `indice_attivita` (`id`,`id_attivita`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
+	ADD KEY `indice_attivita` (`id`,`id_attivita`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
+	ADD KEY `indice_contratto` (`id`,`id_contratto`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
 
 --| 030000023801
 
@@ -2393,6 +2417,7 @@ ALTER TABLE `rinnovi`
 	ADD KEY `indice` ( `id_contratto`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD UNIQUE KEY `unica_codice` (`codice`),
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`);
 
@@ -3003,15 +3028,20 @@ ALTER TABLE `tipologie_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:47 Chiara GDL
 ALTER TABLE `tipologie_contratti` 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
   	ADD KEY `ordine` (`ordine`),
   	ADD KEY `nome` (`nome`),
   	ADD KEY `se_tesseramento`(`se_tesseramento`),
   	ADD KEY `se_abbonamento`(`se_abbonamento`),
   	ADD KEY `se_iscrizione`(`se_iscrizione`),
+  	ADD KEY `se_immobili`(`se_immobili`),
+  	ADD KEY `se_acquisto`(`se_acquisto`),
+  	ADD KEY `se_locazione`(`se_locazione`),
   	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`);
+  	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`,`se_immobili`,`se_acquisto`,`se_locazione`);
 
 --| 030000050901
 
@@ -3399,6 +3429,7 @@ ALTER TABLE `todo`
 	ADD KEY `id_contatto` (`id_contatto`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_pianificazione` (`id_pianificazione`), 
+	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_indirizzo`,`id_luogo`,`data_scadenza`,`ora_scadenza`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`,`data_chiusura`,`id_contatto`,`id_progetto`),
@@ -3472,7 +3503,7 @@ ALTER TABLE `valutazioni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_matricola`,`id_anagrafica`,`id_immobile`, `id_condizione`, `id_disponibilita`, `id_classe_energetica`); 
 
---| 030000062900
+--| 030000062901
 
 -- valutazioni
 -- tipologia: tabella gestita
@@ -3528,6 +3559,7 @@ ALTER TABLE `video`
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_valutazione` (`id_valutazione`), 
  	ADD KEY `id_embed` (`id_embed`), 
  	ADD KEY `path` (`path`), 
  	ADD KEY `id_account_inserimento` (`id_account_inserimento`),

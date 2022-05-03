@@ -124,6 +124,7 @@
     articoli_caratteristiche        | 001600    | relazione     | principale    | mette in relazione articoli e caratteristiche_prodotti
     attivita                        | 001800    | base          | principale    | contiene le attività
     audio                           | 002100    | base          | contenuti     | contiene gli audio
+    caratteristiche_immobili        | 002800    | base          | secondaria    | contiene le caratteristica di indirizzi, edifici e immobili
     caratteristiche_prodotti        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
     categorie_notizie               | 003700    | ricorsiva     | categorie     | contiene le categorie di notizie
     categorie_prodotti              | 003900    | ricorsiva     | categorie     | contiene le categorie di prodotti
@@ -232,6 +233,7 @@
     DOCUMENTI   |           | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     CASSE       | 6500      | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     SOFTWARE    |           | chiavi, licenze, licenze_software, relazioni_software, software, tipologie_chiavi, tipologie_licenze
+    IMMOBILIARE | V300      | caratteristiche_immobili, edifici, immobili
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -250,6 +252,7 @@
     articoli_caratteristiche        | PRODOTTI
     attivita                        | ATTIVITA
     audio                           | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
+    caratteristiche_immobili        | IMMOBILIARE
     caratteristiche_prodotti        | PRODOTTI
     categorie_anagrafica            | BASE
     categorie_notizie               | NOTIZIE

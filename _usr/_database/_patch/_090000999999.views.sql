@@ -35,7 +35,10 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -44,7 +47,9 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
         LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_abbonamento = 1
+    GROUP BY contratti.id, tipologie_contratti.nome
 ;
 
 --| 090000000020
@@ -70,7 +75,10 @@ CREATE OR REPLACE VIEW `abbonamenti_attivi_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -107,7 +115,10 @@ CREATE OR REPLACE VIEW `abbonamenti_archiviati_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -805,6 +816,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		m1.nome AS mastro_provenienza,
 		attivita.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+        attivita.id_immobile,
 		attivita.codice_archivium,
 		attivita.token,
 		attivita.id_account_inserimento,
@@ -878,6 +890,32 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		LEFT JOIN lingue ON lingue.id = audio.id_lingua
 		LEFT JOIN ruoli_audio ON ruoli_audio.id = audio.id_ruolo
 		LEFT JOIN embed ON embed.id = audio.id_embed
+;
+
+--| 090000002800
+
+-- caratteristiche_immobili_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `caratteristiche_immobili_view`;
+
+--| 090000002801
+
+-- caratteristiche_immobili_view
+-- tipologia: tabella gestita
+-- verifica: 2022-05-02 17:22 Chiara GDL
+CREATE OR REPLACE VIEW caratteristiche_immobili_view AS
+	SELECT
+		caratteristiche_immobili.id,
+		caratteristiche_immobili.nome,
+		caratteristiche_immobili.html_entity,
+		caratteristiche_immobili.font_awesome,
+		caratteristiche_immobili.se_indirizzo,
+		caratteristiche_immobili.se_edificio,
+		caratteristiche_immobili.se_immobile,
+		caratteristiche_immobili.id_account_inserimento,
+		caratteristiche_immobili.id_account_aggiornamento,
+		caratteristiche_immobili.nome AS __label__
+	FROM caratteristiche_immobili
 ;
 
 --| 090000002900
@@ -1402,39 +1440,32 @@ CREATE OR REPLACE VIEW continenti_view AS
 -- contratti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
-CREATE OR REPLACE VIEW `metadati_view` AS
+CREATE OR REPLACE VIEW `contratti_view` AS
 	SELECT
-		metadati.id,
-		metadati.id_lingua,
-		lingue.ietf,
-		metadati.id_anagrafica,
-		metadati.id_pagina,
-		metadati.id_prodotto,
-		metadati.id_articolo,
-		metadati.id_categoria_prodotti,
-		metadati.id_notizia,
-		metadati.id_categoria_notizie,
-		metadati.id_risorsa,
-		metadati.id_categoria_risorse,
-		metadati.id_immagine,
-		metadati.id_video,
-		metadati.id_audio,
-		metadati.id_file,
-		metadati.id_progetto,
-		metadati.id_categoria_progetti,
-		metadati.id_indirizzo,
-		metadati.id_edificio,
-		metadati.id_immobile,
-		metadati.id_contratto,
-		metadati.id_account_inserimento,
-		metadati.id_account_aggiornamento,
-		concat(
-			metadati.nome,
-			':',
-			metadati.testo
-		) AS __label__
-	FROM metadati
-		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.id_immobile,
+		immobili.nome AS immobile,
+		contratti.codice,
+		contratti.nome,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		group_concat( DISTINCT concat( coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),': ', ruoli_anagrafica.nome ) SEPARATOR ' | ' ) AS parti,
+		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+	FROM contratti
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+	GROUP BY contratti.id, tipologie_contratti.nome
 ;
 
 --| 090000007300
@@ -1481,7 +1512,10 @@ CREATE OR REPLACE VIEW `contratti_attivi_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -1511,7 +1545,10 @@ CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -1722,6 +1759,28 @@ CREATE OR REPLACE VIEW `coupon_prodotti_view` AS
 		LEFT JOIN prodotti ON prodotti.id = coupon_prodotti.id_prodotto
 ;
 
+--| 090000009000
+
+-- disponibilita_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `disponibilita_view`;
+
+--| 090000009001
+
+-- disponibilita_view
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+CREATE OR REPLACE VIEW disponibilita_view AS
+	SELECT
+		disponibilita.id,
+		disponibilita.nome,
+		disponibilita.se_immobili,
+		disponibilita.se_catalogo,
+		disponibilita.nome AS __label__
+	FROM
+		disponibilita
+;
+
 --| 090000009700
 
 -- ddt_view
@@ -1896,28 +1955,6 @@ CREATE OR REPLACE VIEW `ddt_passivi_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
    	WHERE tipologie_documenti.se_trasporto IS NOT NULL
 	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
-;
-
---| 090000009000
-
--- disponibilita_view
--- tipologia: tabella standard
-DROP TABLE IF EXISTS `disponibilita_view`;
-
---| 090000009001
-
--- disponibilita_view
--- tipologia: tabella standard
--- verifica: 2022-04-28 16:12 Chiara GDL
-CREATE OR REPLACE VIEW disponibilita_view AS
-	SELECT
-		disponibilita.id,
-		disponibilita.nome,
-		disponibilita.se_immobili,
-		disponibilita.se_catalogo,
-		disponibilita.nome AS __label__
-	FROM
-		disponibilita
 ;
 
 --| 090000009800
@@ -2372,6 +2409,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_edificio,
 		file.id_immobile,
 		file.id_contratto,
+        file.id_valutazione,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -2485,6 +2523,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_edificio,
 		immagini.id_immobile,
 		immagini.id_contratto,
+        immagini.id_valutazione,
 		immagini.id_lingua,
 		lingue.nome AS lingua,
 		immagini.id_ruolo,
@@ -2686,7 +2725,10 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -2695,9 +2737,10 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
         LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_iscrizione = 1
+    GROUP BY contratti.id
 ;
-
 
 --| 090000015910
 
@@ -2720,7 +2763,10 @@ CREATE OR REPLACE VIEW `iscrizioni_attivi_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -2755,7 +2801,10 @@ CREATE OR REPLACE VIEW `iscrizioni_archiviati_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -2768,7 +2817,6 @@ CREATE OR REPLACE VIEW `iscrizioni_archiviati_view` AS
     WHERE tipologie_contratti.se_iscrizione = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
     GROUP BY contratti.id
 ;
-
 --| 090000016000
 
 -- iva_view
@@ -3497,6 +3545,8 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_indirizzo,
 		metadati.id_edificio,
 		metadati.id_immobile,
+		metadati.id_contratto,
+        metadati.id_valutazione,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
@@ -3824,6 +3874,7 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.id_progetto,
 		pianificazioni.id_todo,
 		pianificazioni.id_attivita,
+		pianificazioni.id_contratto,
 		pianificazioni.nome,
 		pianificazioni.id_periodicita,
 		periodicita.nome AS periodicita,
@@ -5938,7 +5989,10 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -5947,7 +6001,9 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
         LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
 		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_tesseramento = 1
+    GROUP BY contratti.id
 ;
 
 --| 090000044510
@@ -5973,7 +6029,10 @@ CREATE OR REPLACE VIEW `tesseramenti_attivi_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -6010,7 +6069,10 @@ CREATE OR REPLACE VIEW `tesseramenti_archiviati_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.codice,
 		contratti.nome,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
@@ -6163,6 +6225,7 @@ DROP TABLE IF EXISTS `tipologie_contratti_view`;
 CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 	SELECT
 		tipologie_contratti.id,
+		tipologie_contratti.id_genitore,
 		tipologie_contratti.ordine,
 		tipologie_contratti.nome,
 		tipologie_contratti.html_entity,
@@ -6170,9 +6233,12 @@ CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 		tipologie_contratti.se_abbonamento,
 		tipologie_contratti.se_iscrizione,
 		tipologie_contratti.se_tesseramento,
+		tipologie_contratti.se_immobili,
+		tipologie_contratti.se_acquisto,
+		tipologie_contratti.se_locazione,
 		tipologie_contratti.id_account_inserimento,
 		tipologie_contratti.id_account_aggiornamento,
-		tipologie_contratti.nome  AS __label__
+		tipologie_contratti_path( tipologie_contratti.id ) AS __label__
 	FROM tipologie_contratti
 ;
 
@@ -6678,6 +6744,7 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		todo.id_contatto,
 		todo.id_progetto,
 		todo.id_pianificazione,
+		todo.id_immobile,
 		todo.data_archiviazione,
 		todo.id_account_inserimento,
 		todo.id_account_aggiornamento,
@@ -6851,6 +6918,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_indirizzo,
 		video.id_edificio,
 		video.id_immobile,
+        video.id_valutazione,
 		ruoli_video.nome AS ruolo,
 		video.ordine,
 		video.nome,

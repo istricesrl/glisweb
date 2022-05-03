@@ -1401,10 +1401,10 @@ CREATE OR REPLACE VIEW  contratti_anagrafica_view AS
 		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica;
 
 --| 202204215489
-alter table contratti drop key indice;
+ALTER TABLE contratti drop key indice;
 
 --| 202204215490
-alter table contratti
+ALTER TABLE contratti
 change   `nome`  `nome` char(128) DEFAULT NULL,
 change `id_destinatario`  `id_destinatario` int DEFAULT NULL,
 ADD COLUMN `id_immobile` int(11) DEFAULT NULL,
@@ -1588,6 +1588,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
 		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
 ;
+
 --| 202204215570
 ALTER TABLE `attivita` ADD `id_matricola` INT NULL DEFAULT NULL AFTER `id_progetto`, 
 ADD INDEX `id_matricola` (`id_matricola`),
@@ -1673,4 +1674,4 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 ;
 
--- FINE
+--| FINE
