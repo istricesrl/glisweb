@@ -71,7 +71,7 @@
                     {{ frm.selectRequired( table, 'progetti_categorie', '1', 'id_categoria', '', etc.select.classi, request, '', '1', '', '' ) }}
   				</div>
 				  <div class="col-12 col-md">
-                    <span class="label-top">fascia d'età</span>
+                    <span class="label-top">fascia di età</span>
 					<input type="hidden" name="{{ table }}[progetti_categorie][2][id]" value="{{ request[ table ].progetti_categorie.2.id }}">
 					<input type="hidden" name="{{ table }}[progetti_categorie][2][id_progetto]" value="__parent_id__" >
                     {{ frm.selectRequired( table, 'progetti_categorie', '2', 'id_categoria', '', etc.select.fasce, request, '', '1', '', '' ) }}
