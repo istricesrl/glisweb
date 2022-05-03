@@ -31,6 +31,7 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_indirizzi.immobiliari.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'			=> array( 'tabs'	=> array(	'indirizzi.immobiliari.form',
+														'indirizzi.immobiliari.form.caratteristiche',
 														'indirizzi.immobiliari.form.mappa',
 														'indirizzi.immobiliari.form.edifici',
 														'indirizzi.immobiliari.form.immagini',
@@ -40,6 +41,18 @@
 														'indirizzi.immobiliari.form.metadati',
 														'indirizzi.immobiliari.form.stampe'
 													) )
+	);
+		
+	// form immobili immagini
+	$p['indirizzi.immobiliari.form.caratteristiche'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'caratteristiche' ),
+		'h1'		=> array( $l		=> 'caratteristiche' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.immobiliari.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.immobiliari.form.caratteristiche.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_indirizzi.immobiliari.form.caratteristiche.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['indirizzi.immobiliari.form']['etc']['tabs'] )
 	);
 
 	// gestione mappa indirizzi

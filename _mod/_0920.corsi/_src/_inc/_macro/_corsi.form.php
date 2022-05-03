@@ -97,7 +97,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_materia = 1'
+	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_disciplina = 1'
 	);
 
 	$ct['etc']['select']['classi'] = mysqlCachedIndexedQuery(

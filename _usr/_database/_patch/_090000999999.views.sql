@@ -1082,7 +1082,7 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 		categorie_progetti.id_pagina,
 		categorie_progetti.se_straordinario,
 		categorie_progetti.se_ordinario,
-		categorie_progetti.se_materia,
+		categorie_progetti.se_disciplina,
 		categorie_progetti.se_classe,
 		categorie_progetti.se_fascia,
 		count( c1.id ) AS figli,
@@ -2171,6 +2171,36 @@ CREATE OR REPLACE VIEW edifici_view AS
 		LEFT JOIN stati ON stati.id = regioni.id_stato
 ;
 
+--| 090000012050
+
+-- edifici_caratteristiche_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `edifici_caratteristiche_view`;
+
+--| 090000012051
+
+-- edifici_caratteristiche_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 16:56 Chiara GDL
+CREATE OR REPLACE VIEW `edifici_caratteristiche_view` AS
+	SELECT
+		edifici_caratteristiche.id,
+		edifici_caratteristiche.id_edificio,
+		edifici_caratteristiche.id_caratteristica,
+		caratteristiche_immobili.nome AS caratteristica,
+		edifici_caratteristiche.ordine,
+		edifici_caratteristiche.se_presente,
+		edifici_caratteristiche.id_account_inserimento,
+		edifici_caratteristiche.id_account_aggiornamento,
+		concat(
+			edifici_caratteristiche.id_edificio,
+			' / ',
+			caratteristiche_immobili.nome
+		) AS __label__
+	FROM edifici_caratteristiche
+		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = edifici_caratteristiche.id_caratteristica
+;
+
 --| 090000012800
 
 -- embed_view
@@ -2653,6 +2683,36 @@ CREATE OR REPLACE VIEW  immobili_anagrafica_view AS
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = immobili_anagrafica.id_ruolo
 		LEFT JOIN anagrafica ON anagrafica.id = immobili_anagrafica.id_anagrafica;
 
+--| 090000015750
+
+-- immobili_caratteristiche_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS immobili_caratteristiche_view;
+
+--| 090000015751
+
+-- immobili_caratteristiche_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 12:20 Chiara GDL
+CREATE OR REPLACE VIEW `immobili_caratteristiche_view` AS
+	SELECT
+		immobili_caratteristiche.id,
+		immobili_caratteristiche.id_immobile,
+		immobili_caratteristiche.id_caratteristica,
+		caratteristiche_immobili.nome AS caratteristica,
+		immobili_caratteristiche.ordine,
+		immobili_caratteristiche.se_presente,
+		immobili_caratteristiche.id_account_inserimento,
+		immobili_caratteristiche.id_account_aggiornamento,
+		concat(
+			immobili_caratteristiche.id_immobile,
+			' / ',
+			caratteristiche_immobili.nome
+		) AS __label__
+	FROM immobili_caratteristiche
+		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = immobili_caratteristiche.id_caratteristica
+;
+
 --| 090000015800
 
 -- indirizzi_view
@@ -2703,6 +2763,36 @@ CREATE OR REPLACE VIEW indirizzi_view AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN regioni ON regioni.id = provincie.id_regione
 		LEFT JOIN stati ON stati.id = regioni.id_stato
+;
+
+--| 090000015850
+
+-- indirizzi_caratteristiche_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `indirizzi_caratteristiche_view`;
+
+--| 090000015851
+
+-- indirizzi_caratteristiche_view
+-- tipologia: tabella gestita
+-- verifica: 2022-05-03 15:21 Chiara GDL
+CREATE OR REPLACE VIEW `indirizzi_caratteristiche_view` AS
+	SELECT
+		indirizzi_caratteristiche.id,
+		indirizzi_caratteristiche.id_indirizzo,
+		indirizzi_caratteristiche.id_caratteristica,
+		caratteristiche_immobili.nome AS caratteristica,
+		indirizzi_caratteristiche.ordine,
+		indirizzi_caratteristiche.se_presente,
+		indirizzi_caratteristiche.id_account_inserimento,
+		indirizzi_caratteristiche.id_account_aggiornamento,
+		concat(
+			indirizzi_caratteristiche.id_indirizzo,
+			' / ',
+			caratteristiche_immobili.nome
+		) AS __label__
+	FROM indirizzi_caratteristiche
+		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = indirizzi_caratteristiche.id_caratteristica
 ;
 
 --| 090000015900

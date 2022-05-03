@@ -25,7 +25,13 @@
             'immobili_anagrafica' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
+            'immobili_caratteristiche' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'edifici' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'edifici_caratteristiche' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
             'menu' => array(

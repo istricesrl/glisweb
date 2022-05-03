@@ -494,9 +494,10 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (
   `id_pagina` int(11) DEFAULT NULL,
   `se_ordinario` int(1) DEFAULT NULL,
   `se_straordinario` int(1) DEFAULT NULL,
-  `se_materia` int(1) DEFAULT NULL,
+  `se_disciplina` int(1) DEFAULT NULL,
   `se_classe` int(1) DEFAULT NULL,  
   `se_fascia` int(1) DEFAULT NULL, 
+  `se_periodo` int(1) DEFAULT NULL, 
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -961,6 +962,24 @@ CREATE TABLE IF NOT EXISTS `edifici` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB;
 
+--| 010000012050
+
+-- edifici_caratteristiche
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 16:56 Chiara GDL
+CREATE TABLE IF NOT EXISTS `edifici_caratteristiche` (
+  `id` int(11) NOT NULL,
+  `id_edificio` int(11) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `se_presente` int(1) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000012800
 
 -- embed
@@ -1127,6 +1146,24 @@ CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000015750
+
+-- immobili_caratteristiche
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 12:20 Chiara GDL
+CREATE TABLE IF NOT EXISTS `immobili_caratteristiche` (
+  `id` int(11) NOT NULL,
+  `id_immobile` int(11) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `se_presente` int(1) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000015800
 
 -- indirizzi
@@ -1149,6 +1186,24 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000015850
+
+-- indirizzi_caratteristiche
+-- tipologia: tabella gestita
+-- verifica: 2022-05-03 15:21 Chiara GDL
+CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
+  `id` int(11) NOT NULL,
+  `id_indirizzo` int(11) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `se_presente` int(1) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000016000

@@ -180,10 +180,10 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 ;
 
 --| 202201240100
-truncate attivita_view_static;
+TRUNCATE attivita_view_static;
 
 --| 202201240110
-insert into attivita_view_static select * from attivita_view; 
+INSERT INTO attivita_view_static select * from attivita_view; 
 
 --| 202201240120
 ALTER TABLE attivita CHANGE `testo` `note` text NULL AFTER `nome`;
