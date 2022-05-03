@@ -272,3 +272,31 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['video.form']['etc']['tabs'] )
 	);
+
+	// vista valutazioni
+	$p['valutazioni.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'valutazioni' ),
+		'h1'		=> array( $l		=> 'valutazioni' ),
+		'parent'		=> array( 'id'		=> 'archivio' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_valutazioni.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'valutazioni.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'valutazioni' ),
+		'priority'	=> '300' ) ) )
+	);
+
+	// gestione video
+	$p['valutazioni.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'video.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'valutazioni.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_valutazioni.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 
+												'valutazioni.form'
+												 ) )	
+	);

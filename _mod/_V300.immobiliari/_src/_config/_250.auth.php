@@ -30,6 +30,9 @@
             ),
             'menu' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'valutazioni' => array(
+                CONTROL_FULL => array( 'roots' )
             )
 	    )
 	);

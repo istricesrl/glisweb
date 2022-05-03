@@ -311,6 +311,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_todo` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
   `codice_archivium` char(32) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
   `timestamp_calcolo_sostituti` int(11) DEFAULT NULL,
@@ -355,6 +356,25 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000002800
+
+-- caratteristiche_immobili
+-- tipologia: tabella gestita
+-- verifica: 2022-05-02 17:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
+`id` int(11) NOT NULL,
+  `nome` char(128) NOT NULL,
+  `font_awesome` char(24) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `se_indirizzo` int(1) DEFAULT NULL,
+  `se_edificio` int(1) DEFAULT NULL,
+  `se_immobile` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
 --| 010000002900
 
@@ -983,6 +1003,7 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL,
+  `id_valutazione` int(11) DEFAULT NULL, 
   `path` char(255) DEFAULT NULL,
   `url` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
@@ -1048,6 +1069,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL,
+  `id_valutazione` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
@@ -1565,6 +1587,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL, 
+  `id_valutazione` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `testo` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1713,6 +1736,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `id_progetto` char(32) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_attivita` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text,
   `id_periodicita` int(11) NOT NULL,
@@ -2755,6 +2779,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
 -- verifica: 2022-02-21 11:47 Chiara GDL
 CREATE TABLE `tipologie_contratti` (
   `id` int NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `ordine` int DEFAULT NULL,
   `nome` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
@@ -2762,6 +2787,9 @@ CREATE TABLE `tipologie_contratti` (
   `se_tesseramento` INT(1) NULL DEFAULT NULL,
   `se_abbonamento` INT(1) NULL DEFAULT NULL,
   `se_iscrizione` INT(1) NULL DEFAULT NULL,
+  `se_immobili` INT(1) NULL DEFAULT NULL,
+  `se_acquisto` INT(1) NULL DEFAULT NULL,
+  `se_locazione` INT(1) NULL DEFAULT NULL,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
@@ -3165,6 +3193,7 @@ CREATE TABLE IF NOT EXISTS `todo` (
   `id_contatto` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
   `note_pianificazione` text,
   `data_archiviazione` DATE DEFAULT NULL,
   `note_archiviazione` text,
@@ -3270,6 +3299,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
+  `id_valutazione` int(11) DEFAULT NULL, 
   `ordine` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,

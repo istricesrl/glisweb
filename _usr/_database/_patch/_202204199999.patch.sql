@@ -242,3 +242,4 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 ;
 
 --| FINE FILE
+

@@ -51,9 +51,6 @@
                 )
             );
 
-            // debug
-            logWrite( print_r( $arr, true ), 'job', LOG_ERR );
-
             // segno il totale delle cose da fare
             $job['totale'] = count( $arr );
 

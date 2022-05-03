@@ -340,3 +340,4 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 ;
 
 --| FINE FILE
+

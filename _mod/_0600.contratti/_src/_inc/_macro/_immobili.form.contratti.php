@@ -41,39 +41,21 @@
 
 	$ct['view']['cols'] = array(
         'id' => '#',
-#        'tipologia' => 'tipologia',
-#        'data' => 'data',
-#        'nome' => 'nome',
-#		'id_articolo' => 'articolo',
-#		'mastro_provenienza' => 'scarico',
-#		'mastro_destinazione' => 'carico',
-#        'quantita' => 'quantità',
-#        'importo_netto_totale' => 'importo netto',
-#		'id_genitore' => 'aggregata a',
-#		'id_documento' => 'id_documento'
-#		'anagrafica' => 'destinatario',
-#		'mail' => 'indirizzo'
-#		'data_ora_generazione' => 'preparata',
-#		'data_ora_invio' => 'inviata'
+        'parti' => 'parti',
+        'progetto' => 'progetto',
+        'id_immobile' => 'id_immobile',
+        'tipologia' => 'tipologia',
+	    '__label__' => 'contratto'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-        'nome' => 'text-left',
-        'importo_netto_totale' => 'text-right',
-        'quantita' => 'text-right',
-		'totale_riga' => 'text-right',
-        'id_documento' => 'd-none',
-        'cliente' => 'text-left',
-        'emittente' => 'text-left', 
-        'data' => 'no-wrap', 
-        'anagrafica' => 'text-left',
-		'mail' => 'text-left'
+        'id_immobile' => 'd-none'
     );
 
 	// preset filtro righe documento
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-		$ct['view']['__restrict__']['id_lista']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+		$ct['view']['__restrict__']['id_immobile']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 
     // gestione default
