@@ -991,6 +991,7 @@ ALTER TABLE `edifici_caratteristiche`
 	ADD KEY `id_edificio` (`id_edificio`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_presente` (`se_presente`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_edificio`,`id_caratteristica`,`ordine`);
@@ -1238,6 +1239,7 @@ ALTER TABLE `immobili_caratteristiche`
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_presente` (`se_presente`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_immobile`,`id_caratteristica`,`ordine`);
@@ -1280,6 +1282,7 @@ ALTER TABLE `indirizzi_caratteristiche`
 	ADD KEY `id_indirizzo` (`id_indirizzo`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_presente` (`se_presente`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_indirizzo`,`id_caratteristica`,`ordine`);

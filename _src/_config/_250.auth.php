@@ -143,6 +143,9 @@
 	    'indirizzi' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),
+		'indirizzi_caratteristiche' => array(
+			CONTROL_FULL => array( 'roots' )
+	    ),
 	    'job' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),

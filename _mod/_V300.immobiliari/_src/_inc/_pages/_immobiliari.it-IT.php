@@ -59,6 +59,7 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_immobili.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'			=> array( 'tabs'	=> array(	'immobili.form',
+														'immobili.form.caratteristiche',
 														'immobili.form.immagini',
 														'immobili.form.video',
 														'immobili.form.audio',
@@ -70,13 +71,25 @@
 
 	// RELAZIONI CON IL MODULO CONTRATTI
 	if( in_array( "0600.contratti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'immobili.form', $p['immobili.form']['etc']['tabs'], 'immobili.form.contratti' );
+		arrayInsertSeq( 'immobili.form.caratteristiche', $p['immobili.form']['etc']['tabs'], 'immobili.form.contratti' );
 	}
 
 	// RELAZIONI CON IL MODULO VALUTAZIONI
 	if( in_array( "0800.valutazioni", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'immobili.form', $p['immobili.form']['etc']['tabs'], 'immobili.form.valutazioni' );
+		arrayInsertSeq( 'immobili.form.caratteristiche', $p['immobili.form']['etc']['tabs'], 'immobili.form.valutazioni' );
 	}
+
+	// form immobili immagini
+	$p['immobili.form.caratteristiche'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'caratteristiche' ),
+		'h1'		=> array( $l		=> 'caratteristiche' ),
+		'parent'		=> array( 'id'		=> 'immobili.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immobili.form.caratteristiche.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_immobili.form.caratteristiche.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['immobili.form']['etc']['tabs'] )
+	);
 
 	// form immobili immagini
 	$p['immobili.form.immagini'] = array(
@@ -195,6 +208,7 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_edifici.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'			=> array( 'tabs'	=> array(	'edifici.form',
+														'edifici.form.caratteristiche',
 														'edifici.form.immobili',
 														'edifici.form.immagini',
 														'edifici.form.video',
@@ -203,6 +217,18 @@
 														'edifici.form.metadati',
 														'edifici.form.stampe'
 													) )
+	);
+
+	// form immobili immagini
+	$p['edifici.form.caratteristiche'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'caratteristiche' ),
+		'h1'		=> array( $l		=> 'caratteristiche' ),
+		'parent'		=> array( 'id'		=> 'edifici.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'edifici.form.caratteristiche.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_edifici.form.caratteristiche.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['edifici.form']['etc']['tabs'] )
 	);
 
 	// gestione immobili edifici

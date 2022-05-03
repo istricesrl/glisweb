@@ -2189,6 +2189,7 @@ CREATE OR REPLACE VIEW `edifici_caratteristiche_view` AS
 		edifici_caratteristiche.id_caratteristica,
 		caratteristiche_immobili.nome AS caratteristica,
 		edifici_caratteristiche.ordine,
+		edifici_caratteristiche.se_presente,
 		edifici_caratteristiche.id_account_inserimento,
 		edifici_caratteristiche.id_account_aggiornamento,
 		concat(
@@ -2700,6 +2701,7 @@ CREATE OR REPLACE VIEW `immobili_caratteristiche_view` AS
 		immobili_caratteristiche.id_caratteristica,
 		caratteristiche_immobili.nome AS caratteristica,
 		immobili_caratteristiche.ordine,
+		immobili_caratteristiche.se_presente,
 		immobili_caratteristiche.id_account_inserimento,
 		immobili_caratteristiche.id_account_aggiornamento,
 		concat(
@@ -2781,6 +2783,7 @@ CREATE OR REPLACE VIEW `indirizzi_caratteristiche_view` AS
 		indirizzi_caratteristiche.id_caratteristica,
 		caratteristiche_immobili.nome AS caratteristica,
 		indirizzi_caratteristiche.ordine,
+		indirizzi_caratteristiche.se_presente,
 		indirizzi_caratteristiche.id_account_inserimento,
 		indirizzi_caratteristiche.id_account_aggiornamento,
 		concat(

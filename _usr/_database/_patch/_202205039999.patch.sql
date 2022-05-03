@@ -185,6 +185,7 @@ CREATE TABLE IF NOT EXISTS `immobili_caratteristiche` (
   `id_immobile` int(11) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `se_presente` int(1) DEFAULT NULL,
   `note` text,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
@@ -199,6 +200,7 @@ ALTER TABLE `immobili_caratteristiche`
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_presente` (`se_presente`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_immobile`,`id_caratteristica`,`ordine`);
@@ -216,6 +218,7 @@ CREATE OR REPLACE VIEW `immobili_caratteristiche_view` AS
 		immobili_caratteristiche.id_caratteristica,
 		caratteristiche_immobili.nome AS caratteristica,
 		immobili_caratteristiche.ordine,
+		immobili_caratteristiche.se_presente,
 		immobili_caratteristiche.id_account_inserimento,
 		immobili_caratteristiche.id_account_aggiornamento,
 		concat(
@@ -240,6 +243,7 @@ CREATE TABLE IF NOT EXISTS `edifici_caratteristiche` (
   `id_edificio` int(11) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `se_presente` int(1) DEFAULT NULL,
   `note` text,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
@@ -254,6 +258,7 @@ ALTER TABLE `edifici_caratteristiche`
 	ADD KEY `id_edificio` (`id_edificio`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_presente` (`se_presente`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_edificio`,`id_caratteristica`,`ordine`);
@@ -278,6 +283,7 @@ CREATE OR REPLACE VIEW `edifici_caratteristiche_view` AS
 		edifici_caratteristiche.id_caratteristica,
 		caratteristiche_immobili.nome AS caratteristica,
 		edifici_caratteristiche.ordine,
+		edifici_caratteristiche.se_presente,
 		edifici_caratteristiche.id_account_inserimento,
 		edifici_caratteristiche.id_account_aggiornamento,
 		concat(
@@ -295,6 +301,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
   `id_indirizzo` int(11) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `se_presente` int(1) DEFAULT NULL,
   `note` text,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
@@ -309,6 +316,7 @@ ALTER TABLE `indirizzi_caratteristiche`
 	ADD KEY `id_indirizzo` (`id_indirizzo`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_presente` (`se_presente`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_indirizzo`,`id_caratteristica`,`ordine`);
@@ -324,6 +332,7 @@ CREATE OR REPLACE VIEW `indirizzi_caratteristiche_view` AS
 		indirizzi_caratteristiche.id,
 		indirizzi_caratteristiche.id_indirizzo,
 		indirizzi_caratteristiche.id_caratteristica,
+		indirizzi_caratteristiche.se_presente,
 		caratteristiche_immobili.nome AS caratteristica,
 		indirizzi_caratteristiche.ordine,
 		indirizzi_caratteristiche.id_account_inserimento,
