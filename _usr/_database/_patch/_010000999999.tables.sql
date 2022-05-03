@@ -2775,6 +2775,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
 -- verifica: 2022-02-21 11:47 Chiara GDL
 CREATE TABLE `tipologie_contratti` (
   `id` int NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `ordine` int DEFAULT NULL,
   `nome` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   `html_entity` char(8) DEFAULT NULL,
@@ -2782,6 +2783,9 @@ CREATE TABLE `tipologie_contratti` (
   `se_tesseramento` INT(1) NULL DEFAULT NULL,
   `se_abbonamento` INT(1) NULL DEFAULT NULL,
   `se_iscrizione` INT(1) NULL DEFAULT NULL,
+  `se_immobili` INT(1) NULL DEFAULT NULL,
+  `se_acquisto` INT(1) NULL DEFAULT NULL,
+  `se_locazione` INT(1) NULL DEFAULT NULL,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,

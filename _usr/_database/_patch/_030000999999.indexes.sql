@@ -3028,15 +3028,20 @@ ALTER TABLE `tipologie_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:47 Chiara GDL
 ALTER TABLE `tipologie_contratti` 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
   	ADD KEY `ordine` (`ordine`),
   	ADD KEY `nome` (`nome`),
   	ADD KEY `se_tesseramento`(`se_tesseramento`),
   	ADD KEY `se_abbonamento`(`se_abbonamento`),
   	ADD KEY `se_iscrizione`(`se_iscrizione`),
+  	ADD KEY `se_immobili`(`se_immobili`),
+  	ADD KEY `se_acquisto`(`se_acquisto`),
+  	ADD KEY `se_locazione`(`se_locazione`),
   	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`);
+  	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`,`se_immobili`,`se_acquisto`,`se_locazione`);
 
 --| 030000050901
 

@@ -792,4 +792,171 @@ ALTER TABLE `caratteristiche_immobili`
     ADD CONSTRAINT `caratteristiche_immobili_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `caratteristiche_immobili_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 202205020405
+ALTER TABLE `tipologie_contratti`	ADD PRIMARY KEY (`id`),
+
+--| 202205020410
+ALTER TABLE `tipologie_contratti`  DROP KEY `unica` ;
+
+--| 202205020415
+ALTER TABLE `tipologie_contratti`  DROP KEY `indice` ;
+
+--| 202205020420
+ALTER TABLE `tipologie_contratti` 
+	ADD COLUMN `id_genitore` int(11) DEFAULT NULL AFTER `id`,
+	ADD COLUMN `se_immobili` INT(1) NULL DEFAULT NULL AFTER `se_iscrizione`,
+	ADD COLUMN `se_acquisto` INT(1) NULL DEFAULT NULL AFTER `se_immobili`, 
+	ADD COLUMN `se_locazione` INT(1) NULL DEFAULT NULL AFTER `se_acquisto`,
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+  	ADD KEY `se_immobili`(`se_immobili`),
+  	ADD KEY `se_acquisto`(`se_acquisto`),
+  	ADD KEY `se_locazione`(`se_locazione`),
+  	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`,`se_immobili`,`se_acquisto`,`se_locazione`),
+    ADD CONSTRAINT `tipologie_contratti_ibfk_01_nofollow`        FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_contratti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202205020430
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_contratti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_contratti_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_contratti.id_genitore,
+				tipologie_contratti.nome
+			FROM tipologie_contratti
+			WHERE tipologie_contratti.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 202205020440
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_contratti_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_contratti_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_contratti.id_genitore
+			FROM tipologie_contratti
+			WHERE tipologie_contratti.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 202205020450
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_contratti_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_contratti_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_contratti.id_genitore,
+				tipologie_contratti.id
+			FROM tipologie_contratti
+			WHERE tipologie_contratti.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+--| 202205020460
+CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
+	SELECT
+		tipologie_contratti.id,
+		tipologie_contratti.id_genitore,
+		tipologie_contratti.ordine,
+		tipologie_contratti.nome,
+		tipologie_contratti.html_entity,
+		tipologie_contratti.font_awesome,
+		tipologie_contratti.se_abbonamento,
+		tipologie_contratti.se_iscrizione,
+		tipologie_contratti.se_tesseramento,
+		tipologie_contratti.se_immobili,
+		tipologie_contratti.se_acquisto,
+		tipologie_contratti.se_locazione,
+		tipologie_contratti.id_account_inserimento,
+		tipologie_contratti.id_account_aggiornamento,
+		tipologie_contratti_path( tipologie_contratti.id ) AS __label__
+	FROM tipologie_contratti
+;
+
+--| 202205020470
+INSERT INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_tesseramento`, `se_abbonamento`, `se_iscrizione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(4,	NULL,	'abbonamento',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'iscrizione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'locazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'tesseramento',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(1,	NULL,	'vendita',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| FINE FILE

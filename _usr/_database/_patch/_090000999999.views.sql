@@ -6225,6 +6225,7 @@ DROP TABLE IF EXISTS `tipologie_contratti_view`;
 CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 	SELECT
 		tipologie_contratti.id,
+		tipologie_contratti.id_genitore,
 		tipologie_contratti.ordine,
 		tipologie_contratti.nome,
 		tipologie_contratti.html_entity,
@@ -6232,9 +6233,12 @@ CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 		tipologie_contratti.se_abbonamento,
 		tipologie_contratti.se_iscrizione,
 		tipologie_contratti.se_tesseramento,
+		tipologie_contratti.se_immobili,
+		tipologie_contratti.se_acquisto,
+		tipologie_contratti.se_locazione,
 		tipologie_contratti.id_account_inserimento,
 		tipologie_contratti.id_account_aggiornamento,
-		tipologie_contratti.nome  AS __label__
+		tipologie_contratti_path( tipologie_contratti.id ) AS __label__
 	FROM tipologie_contratti
 ;
 
