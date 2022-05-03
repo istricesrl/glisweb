@@ -1,0 +1,34 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+<fieldset id="{{ view.id }}-insert" class="view-insert hidden">
+	<div class="form-row">
+		<div class="col-6 col-md-auto">
+			<span class="label-top">dal</span>
+			{{ frm.date( table, '', '', '__data_inizio__', '', '', request ) }}
+		</div>
+		<div class="col-6 col-md-auto">
+			<span class="label-top">al</span>
+			{{ frm.date( table, '', '', '__data_fine__', '', '', request ) }}
+		</div>
+		<div class="col-2 col-md-1">
+			<span class="label-top">ora inizio</span>
+			{{ frm.time( table, '', '', '__ora_inizio__', '', '', request) }} 
+		</div>
+		<div class="col-2 col-md-1">
+			<span class="label-top">ora fine</span>
+			{{ frm.time( table, '', '', '__ora_fine__', '', '', request) }} 
+		</div>
+		<div class="col-6 col-md-3">
+			<span class="label-top">luogo</span>
+			{{ frm.selectBox( table, '', '', '__id_luogo__', '', etc.select.luoghi, request, '', '', '', '', 'font-awesome') }}
+		</div>
+		<div class="col-6 col-md">
+			<span class="label-top">istruttore</span>
+			{{ frm.selectBox( table, '', '', '__id_anagrafica__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, 'anagrafica' ) }}
+		</div>
+		<div class="col-12 col-md-auto">
+			{{ frm.button(  'GENERA' ,'button','btn btn-secondary btn-sm btn-block', '','ottieni in modo automatico il progressivo' ) }}
+		</div>
+	</div>
+</fieldset>

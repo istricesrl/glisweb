@@ -69,7 +69,19 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM luoghi_view'
     );
-    
+
+	$ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/corsi.form.calendario.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
+
+	$ct['etc']['include']['insert'][] = array(
+        'name' => 'edit',
+        'file' => 'inc/corsi.form.calendario.edit.html',
+        'fa' => 'fa-calendar'
+    );
+
     // gestione default
     require DIR_SRC_INC_MACRO . '_default.view.php';
         

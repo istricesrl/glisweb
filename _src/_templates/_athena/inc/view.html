@@ -15,7 +15,7 @@
 	    {% endif %}
 		{% if etc.include.insert %}
 			{% for insert in etc.include.insert %}
-			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-{{ insert.name }}').toggleAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').slideToggle(400,'swing');"><i class="fa {{ insert.fa }}"></i></button>
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('.view-insert').slideUp(400,'swing');$('.view-insert').attr('disabled',true);$('#{{ view.id }}-{{ insert.name }}').toggleAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').slideToggle(400,'swing');"><i class="fa {{ insert.fa }}"></i></button>
 			{% endfor %}
 		{% endif %}
 	</div>

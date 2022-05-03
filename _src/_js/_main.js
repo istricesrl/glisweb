@@ -32,7 +32,8 @@
 		return false;
 	};
 
-	 // abilita un attributo se assente e lo disabilita se presente
+	// abilita un attributo se assente e lo disabilita se presente
+	// TODO adesso funziona solo col disabled, farlo per tutti
 	$.fn.toggleAttribute = function( a ) {
 
 		var el = $(this).get(0);
@@ -53,7 +54,6 @@
 		// console.log( e );
 	    // console.log( this );
 	    // console.log( $(this) );
-
 
 	}
 
