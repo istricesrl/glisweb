@@ -79,7 +79,7 @@
 	$ct['etc']['include']['insert'][] = array(
         'name' => 'edit',
         'file' => 'inc/corsi.form.calendario.edit.html',
-        'fa' => 'fa-calendar'
+        'fa' => 'fa-pencil'
     );
 
     // gestione default
