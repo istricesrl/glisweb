@@ -6,7 +6,7 @@
     }
 
     // inclusione del framework
-	require_once '../../../../../_src/_config/_config.php';
+	// require_once '../../../../../_src/_config/_config.php';
 
     // configurazione stampante
     if( empty( $cf['casse']['printer'] ) ) {
