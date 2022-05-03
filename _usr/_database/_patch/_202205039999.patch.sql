@@ -179,4 +179,169 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 	GROUP BY categorie_progetti.id
 ;
 
+--| 202205030130
+CREATE TABLE IF NOT EXISTS `immobili_caratteristiche` (
+  `id` int(11) NOT NULL,
+  `id_immobile` int(11) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202205030140
+ALTER TABLE `immobili_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_immobile`,`id_caratteristica`), 
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_caratteristica`,`ordine`);
+
+
+--| 202205030150
+ALTER TABLE `immobili_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+--| 202205030170
+CREATE OR REPLACE VIEW `immobili_caratteristiche_view` AS
+	SELECT
+		immobili_caratteristiche.id,
+		immobili_caratteristiche.id_immobile,
+		immobili_caratteristiche.id_caratteristica,
+		caratteristiche_immobili.nome AS caratteristica,
+		immobili_caratteristiche.ordine,
+		immobili_caratteristiche.id_account_inserimento,
+		immobili_caratteristiche.id_account_aggiornamento,
+		concat(
+			immobili_caratteristiche.id_immobile,
+			' / ',
+			caratteristiche_immobili.nome
+		) AS __label__
+	FROM immobili_caratteristiche
+		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = immobili_caratteristiche.id_caratteristica
+;
+
+--| 202205030180
+ALTER TABLE `immobili_caratteristiche`
+    ADD CONSTRAINT `immobili_caratteristiche_ibfk_01`           FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `immobili_caratteristiche_ibfk_02_nofollow`  FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `immobili_caratteristiche_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `immobili_caratteristiche_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202205030230
+CREATE TABLE IF NOT EXISTS `edifici_caratteristiche` (
+  `id` int(11) NOT NULL,
+  `id_edificio` int(11) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202205030240
+ALTER TABLE `edifici_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_edificio`,`id_caratteristica`), 
+	ADD KEY `id_edificio` (`id_edificio`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_edificio`,`id_caratteristica`,`ordine`);
+
+
+--| 202205030250
+ALTER TABLE `edifici_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+--| 202205030270
+ALTER TABLE `edifici_caratteristiche`
+    ADD CONSTRAINT `edifici_caratteristiche_ibfk_01`           FOREIGN KEY (`id_edificio`) REFERENCES `edifici` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `edifici_caratteristiche_ibfk_02_nofollow`  FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `edifici_caratteristiche_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `edifici_caratteristiche_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202205030280
+CREATE OR REPLACE VIEW `edifici_caratteristiche_view` AS
+	SELECT
+		edifici_caratteristiche.id,
+		edifici_caratteristiche.id_edificio,
+		edifici_caratteristiche.id_caratteristica,
+		caratteristiche_immobili.nome AS caratteristica,
+		edifici_caratteristiche.ordine,
+		edifici_caratteristiche.id_account_inserimento,
+		edifici_caratteristiche.id_account_aggiornamento,
+		concat(
+			edifici_caratteristiche.id_edificio,
+			' / ',
+			caratteristiche_immobili.nome
+		) AS __label__
+	FROM edifici_caratteristiche
+		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = edifici_caratteristiche.id_caratteristica
+;
+
+--| 202205030330
+CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
+  `id` int(11) NOT NULL,
+  `id_indirizzo` int(11) NOT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202205030340
+ALTER TABLE `indirizzi_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_indirizzo`,`id_caratteristica`), 
+	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_indirizzo`,`id_caratteristica`,`ordine`);
+
+
+--| 202205030350
+ALTER TABLE `indirizzi_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
+--| 202205030370
+CREATE OR REPLACE VIEW `indirizzi_caratteristiche_view` AS
+	SELECT
+		indirizzi_caratteristiche.id,
+		indirizzi_caratteristiche.id_indirizzo,
+		indirizzi_caratteristiche.id_caratteristica,
+		caratteristiche_immobili.nome AS caratteristica,
+		indirizzi_caratteristiche.ordine,
+		indirizzi_caratteristiche.id_account_inserimento,
+		indirizzi_caratteristiche.id_account_aggiornamento,
+		concat(
+			indirizzi_caratteristiche.id_indirizzo,
+			' / ',
+			caratteristiche_immobili.nome
+		) AS __label__
+	FROM indirizzi_caratteristiche
+		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = indirizzi_caratteristiche.id_caratteristica
+;
+
+--| 202205030380
+ALTER TABLE `indirizzi_caratteristiche`
+    ADD CONSTRAINT `indirizzi_caratteristiche_ibfk_01`           FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `indirizzi_caratteristiche_ibfk_02_nofollow`  FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `indirizzi_caratteristiche_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `indirizzi_caratteristiche_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 --| FINE FILE

@@ -980,6 +980,27 @@ ALTER TABLE `edifici`
 -- tipologia: tabella gestita
 ALTER TABLE `edifici`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000012050
+
+-- edifici_caratteristiche
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 16:56 Chiara GDL
+ALTER TABLE `edifici_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_edificio`,`id_caratteristica`), 
+	ADD KEY `id_edificio` (`id_edificio`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_edificio`,`id_caratteristica`,`ordine`);
+
+--| 030000012051
+
+-- edifici_caratteristiche
+-- tipologia: tabella gestita
+ALTER TABLE `edifici_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000012800
 
 -- embed
@@ -1206,6 +1227,27 @@ ALTER TABLE `immobili_anagrafica`
 -- tipologia: tabella gestita
 ALTER TABLE `immobili_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000015750
+
+-- immobili_caratteristiche
+-- tipologia: tabella gestita
+-- verifica: 2022-04-28 12:20 Chiara GDL
+ALTER TABLE `immobili_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_immobile`,`id_caratteristica`), 
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_immobile`,`id_caratteristica`,`ordine`);
+
+--| 030000015751
+
+-- immobili_caratteristiche
+-- tipologia: tabella gestita
+ALTER TABLE `immobili_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000015800
 
 -- indirizzi
@@ -1226,6 +1268,27 @@ ALTER TABLE `indirizzi`
 -- indirizzi
 -- tipologia: tabella gestita
 ALTER TABLE `indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000015850
+
+-- indirizzi_caratteristiche
+-- tipologia: tabella gestita
+-- verifica: 2022-05-03 15:21 Chiara GDL
+ALTER TABLE `indirizzi_caratteristiche`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_indirizzo`,`id_caratteristica`), 
+	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_indirizzo`,`id_caratteristica`,`ordine`);
+
+--| 030000015851
+
+-- indirizzi_caratteristiche
+-- tipologia: tabella gestita
+ALTER TABLE `indirizzi_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000016000
 
