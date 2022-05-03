@@ -107,7 +107,7 @@
 						// fwrite( $cHnd, 'iterazione #' . $iter . PHP_EOL );
 						require DIR_BASE . $task['task'];
 						$cf['cron']['task']['results']['task'][ $task['task'] ][] = array_replace_recursive( $status, array( 'esecuzione' => time() ) );
-						if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = 3; }
+						if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = mt_rand( 3, 15 ); }
 						sleep( $task['delay'] );
 					}
 				} else {
