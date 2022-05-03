@@ -98,10 +98,10 @@ TRUNCATE attivita_view_static;
 INSERT INTO attivita_view_static SELECT * FROM attivita_view;
 
 --| 202204299000
-alter table contratti drop key indice;
+ALTER TABLE contratti drop key indice;
 
 --| 202204299010
-alter table contratti
+ALTER TABLE contratti
 ADD COLUMN `codice` char(32) DEFAULT NULL AFTER `id_immobile`,
 ADD KEY  `codice` ( `codice` ),
 ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `codice`, `nome`, `id_progetto`, `id_immobile`);

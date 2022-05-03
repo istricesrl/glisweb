@@ -793,7 +793,7 @@ ALTER TABLE `caratteristiche_immobili`
     ADD CONSTRAINT `caratteristiche_immobili_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| 202205020405
-ALTER TABLE `tipologie_contratti`	ADD PRIMARY KEY (`id`),
+ALTER TABLE `tipologie_contratti`	ADD PRIMARY KEY (`id`);
 
 --| 202205020410
 ALTER TABLE `tipologie_contratti`  DROP KEY `unica` ;

@@ -2,9 +2,27 @@
 -- PATCH
 --
 
+--| 202205030001
+CREATE TABLE IF NOT EXISTS `progetti_certificazioni` (
+  `id` int NOT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_certificazione` int DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(1) DEFAULT NULL,
+  `note` text,
+  `se_richiesta` int(1) DEFAULT NULL,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
+
+--| 202205030005
+ALTER TABLE `progetti_certificazioni` 
+    ADD COLUMN `ordine` int(11) DEFAULT NULL AFTER  `id_certificazione`;
+
 --| 202205030010
 ALTER TABLE `progetti_certificazioni` 
-    ADD COLUMN `ordine` int(11) DEFAULT NULL AFTER  `id_certificazione`,
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_progetto`,`id_certificazione`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
@@ -84,6 +102,16 @@ CREATE OR REPLACE VIEW categorie_progetti_view AS
 	GROUP BY categorie_progetti.id
 ;
 
+--| 202205030070
+ALTER TABLE attivita_view_static
+ADD COLUMN  `id_immobile` int DEFAULT NULL AFTER mastro_destinazione;
+
+--| 202205030080
+TRUNCATE attivita_view_static;
+
+--| 202205030090
+INSERT INTO attivita_view_static select * from attivita_view;
+
 --| 202205030100
 CREATE OR REPLACE VIEW `__report_iscritti_corsi__` AS
 SELECT
@@ -116,5 +144,6 @@ INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
 INNER JOIN relazioni_progetti ON relazioni_progetti.id_progetto = contratti.id_progetto
 INNER JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
 WHERE tipologie_contratti.se_iscrizione = 1 AND ruoli_progetti.se_sottoprogetto = 1;
+
 
 --| FINE FILE
