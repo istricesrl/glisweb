@@ -2103,7 +2103,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.sconto_percentuale,
 		documenti_articoli.sconto_valore,
 		documenti_articoli.id_matricola,
-		concat( 'MAT.',lpad(matricole.id, 15, '0') ) AS matricola,
+		matricole.matricola AS matricola,
 		matricole.data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.id_account_inserimento,
