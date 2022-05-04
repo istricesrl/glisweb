@@ -27,7 +27,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ranking_view'
+	    'SELECT id, __label__ FROM ranking_view WHERE se_fornitore = 1'
 	);
     
     // macro di default per l'entità anagrafica

@@ -967,6 +967,7 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 		categorie_anagrafica.se_produzione,
 		categorie_anagrafica.se_commerciale,
 		categorie_anagrafica.se_notizie,
+		categorie_anagrafica.se_corriere,
 		count( c1.id ) AS figli,
 		count( anagrafica_categorie.id ) AS membri,
 		categorie_anagrafica.id_account_inserimento,
@@ -1123,6 +1124,26 @@ CREATE OR REPLACE VIEW categorie_risorse_view AS
 	GROUP BY categorie_risorse.id
 ;
 
+--| 090000004600
+
+-- causali_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `causali_view`;
+
+--| 090000004601
+
+-- causali_view
+-- tipologia: tabella gestita
+-- verifica: 2022-05-04 20:04 Chiara GDL
+CREATE OR REPLACE VIEW causali_view AS
+	SELECT
+		causali.id,
+		causali.nome,
+		causali.se_trasporto,
+	 	causali.nome AS __label__
+	FROM causali
+;
+
 --| 090000004700
 -- certificazioni
 -- tipologia: tabella assistita
@@ -1190,6 +1211,37 @@ CREATE OR REPLACE VIEW classi_energetiche_view AS
 		classi_energetiche.nome AS __label__
 	FROM classi_energetiche
 ;
+
+--| 090000005050
+
+-- colli_view
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `colli_view`;
+
+--| 090000005051
+
+-- colli_view
+-- tipologia: tabella standard
+-- verifica: 2022-05-04 22:22 Chiara GDL
+CREATE OR REPLACE VIEW colli_view AS
+	SELECT
+		colli.id,
+		colli.id_documento,
+		colli.ordine,
+		colli.codice,
+		colli.larghezza,
+		colli.lunghezza,
+		colli.altezza,
+		colli.id_udm_dimensioni,
+		colli.peso,
+		colli.id_udm_peso,
+		colli.volume,
+		colli.id_udm_volume,
+		colli.nome,
+		colli.id_account_inserimento,
+		colli.id_account_aggiornamento,
+		colli.nome AS __label__
+	FROM colli;
 
 --| 090000005100
 
@@ -1989,6 +2041,10 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		m1.nome AS mastro_provenienza,
 		documenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+		documenti.porto,
+		documenti.id_causale,
+		documenti.id_trasportatore,
+		documenti.id_immobile,
 		documenti.timestamp_chiusura,
 		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
 		documenti.id_account_inserimento,
@@ -2104,6 +2160,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.sconto_valore,
 		documenti_articoli.id_matricola,
 		matricole.matricola AS matricola,
+		documenti_articoli.id_collo,
 		matricole.data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.id_account_inserimento,
@@ -4890,6 +4947,9 @@ CREATE OR REPLACE VIEW `ranking_view` AS
 		ranking.id,
 		ranking.nome,
 		ranking.ordine,
+		ranking.se_fornitore,
+		ranking.se_cliente,
+		ranking.se_progetti,
 		ranking.id_account_inserimento,
 		ranking.id_account_aggiornamento,
 		ranking.nome AS __label__
