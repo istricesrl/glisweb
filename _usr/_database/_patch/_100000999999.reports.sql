@@ -262,7 +262,36 @@ FROM (
 SELECT
   mastri.id,
   mastri.nome,
-  concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+  concat_ws(
+			' ',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat(
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					udm_dimensioni.sigla
+				),
+				concat(
+					articoli.peso,
+					udm_peso.sigla
+				),
+				concat(
+					articoli.volume,
+					udm_volume.sigla
+				),
+				concat(
+					
+					articoli.capacita,
+					udm_capacita.sigla
+				),
+				concat(
+					
+					articoli.durata,
+					udm_durata.sigla
+				),
+				''
+			)
+		)AS articolo,
   articoli.id AS id_articolo,
   matricole.matricola,
   matricole.data_scadenza,
@@ -282,12 +311,46 @@ FROM mastri
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
   WHERE documenti_articoli.quantita IS NOT NULL
 UNION
 SELECT
   mastri.id,
   mastri.nome,
-  concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+  concat_ws(
+			' ',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat(
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					udm_dimensioni.sigla
+				),
+				concat(
+					articoli.peso,
+					udm_peso.sigla
+				),
+				concat(
+					articoli.volume,
+					udm_volume.sigla
+				),
+				concat(
+					
+					articoli.capacita,
+					udm_capacita.sigla
+				),
+				concat(
+					
+					articoli.durata,
+					udm_durata.sigla
+				),
+				''
+			)
+		) AS articolo,
   articoli.id AS id_articolo,
   matricole.matricola,
   matricole.data_scadenza,
@@ -307,6 +370,11 @@ FROM mastri
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
   WHERE documenti_articoli.quantita IS NOT NULL
 ) AS movimenti;
 
