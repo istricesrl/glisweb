@@ -648,28 +648,25 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			prodotti.nome,
 			articoli.nome,
 			coalesce(
-				concat_ws(
-					' ',
+				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
 					udm_dimensioni.sigla
 				),
-				concat_ws(
-					' ',
+				concat(
 					articoli.peso,
 					udm_peso.sigla
 				),
-				concat_ws(
-					' ',
+				concat(
 					articoli.volume,
 					udm_volume.sigla
 				),
-				concat_ws(
-					' ',
+				concat(
+					
 					articoli.capacita,
 					udm_capacita.sigla
 				),
-				concat_ws(
-					' ',
+				concat(
+					
 					articoli.durata,
 					udm_durata.sigla
 				),
@@ -684,28 +681,23 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			prodotti.nome,
 			articoli.nome,
 			coalesce(
-				concat_ws(
-					' ',
+				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
 					udm_dimensioni.sigla
 				),
-				concat_ws(
-					' ',
+				concat(
 					articoli.peso,
 					udm_peso.sigla
 				),
-				concat_ws(
-					' ',
+				concat(
 					articoli.volume,
 					udm_volume.sigla
 				),
-				concat_ws(
-					' ',
+				concat(
 					articoli.capacita,
 					udm_capacita.sigla
 				),
-				concat_ws(
-					' ',
+				concat(
 					articoli.durata,
 					udm_durata.sigla
 				),
@@ -2068,7 +2060,36 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.id_todo,
 		documenti_articoli.id_attivita,
 		documenti_articoli.id_articolo,
-		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+				concat_ws(
+			' ',
+			articoli.id,
+			'/',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat(
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					udm_dimensioni.sigla
+				),
+				concat(
+					articoli.peso,
+					udm_peso.sigla
+				),
+				concat(
+					articoli.volume,
+					udm_volume.sigla
+				),
+				concat(
+					articoli.capacita,
+					udm_capacita.sigla
+				),
+				concat(
+					articoli.durata,
+					udm_durata.sigla
+				),
+				''
+			)
+		) AS articolo,
 		documenti_articoli.id_mastro_provenienza,
 		mastri_path( m1.id ) AS mastro_provenienza,
 		documenti_articoli.id_mastro_destinazione,
@@ -2115,6 +2136,11 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
 		LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
+		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 ;
 
 --| 090000012000

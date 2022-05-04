@@ -80,13 +80,8 @@
 		}
 
 	}
-	
-    $ct['etc']['include']['insert'][] = array(
-        'name' => 'insert',
-        'file' => 'inc/ddt.magazzini.form.righe.insert.html',
-        'fa' => 'fa-plus-circle'
-    );
- //   $ct['etc']['include']['insert'] = 'inc/ddt.magazzini.form.righe.insert.html';
+
+    $ct['etc']['include']['insert'] = 'inc/ddt.magazzini.form.righe.insert.html';
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro custom progetti aperti
