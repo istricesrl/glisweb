@@ -66,8 +66,8 @@
 {% for link in links %}<li class="breadcrumb-item{% if link.active %} active{% endif %}"><a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a></li>{% endfor %}
 {% endmacro %}
 
-{% macro lineBreadcrumbs( links, lang, site, query ) %}
-{% for link in links %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a>{% if not loop.last %} | {% endif %}{% endfor %}
+{% macro lineBreadcrumbs( links, lang, site, query, separator ) %}
+{% for link in links %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a>{% if not loop.last %} {% if separator %} {{ separator }} {% else %} | {% endif %}{% endif %}{% endfor %}
 {% endmacro %}
 
 {% macro flags( links, lang, site, query ) %}
