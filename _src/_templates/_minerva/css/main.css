@@ -69,6 +69,19 @@ header nav.navbar-light li.nav-item > a.nav-link:active {
     transition: background-color 100ms linear;
 }
 
+header .btn-sqr {
+    border-radius: 0px;
+    font-size: 1em;
+    width: 2em;
+}
+
+header .btn-sqr,
+header .btn-sqr:visited,
+header .btn-sqr:hover,
+header .btn-sqr:active {
+    background-color: #333333;
+}
+
 div.subnav a,
 div.subnav a:visited,
 div.subnav a:hover,
