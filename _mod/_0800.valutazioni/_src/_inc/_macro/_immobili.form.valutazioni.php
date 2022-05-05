@@ -32,7 +32,7 @@
 
 	// pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'valutazioni.immobiliari.form';
-
+    
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_immobile';
 
@@ -59,8 +59,9 @@
 		$ct['view']['__restrict__']['id_immobile']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 
-    // gestione default
-	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // gestione default
+	require DIR_SRC_INC_MACRO . '_default.view.php';
