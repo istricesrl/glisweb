@@ -20,6 +20,9 @@
 	writeToFile( date( 'Y/m/d H:i:s' ), FILE_LATEST_CRON );
 
     // log
+	appendToFile( 'avvio API cron' . PHP_EOL, FILE_LATEST_RUN );
+
+    // log
 	logWrite( 'chiamata cron API', 'cron' );
 
     // tempo
