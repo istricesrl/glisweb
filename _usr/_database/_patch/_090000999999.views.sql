@@ -2441,6 +2441,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_immobile,
 		file.id_contratto,
         file.id_valutazione,
+        file.id_rinnovo,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -2555,6 +2556,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_immobile,
 		immagini.id_contratto,
         immagini.id_valutazione,
+         immagini.id_rinnovo,
 		immagini.id_lingua,
 		lingue.nome AS lingua,
 		immagini.id_ruolo,
@@ -3638,6 +3640,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_immobile,
 		metadati.id_contratto,
         metadati.id_valutazione,
+        metadati.id_rinnovo,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
