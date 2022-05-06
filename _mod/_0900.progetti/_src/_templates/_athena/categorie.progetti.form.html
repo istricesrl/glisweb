@@ -75,6 +75,7 @@
 
 
 		<div class="form-group form-row">
+			<legend>gestione progetti</legend>
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
                     {{ frm.checkbox( table, '', '', 'se_ordinario', 'se ordinario', '', request ) }}
@@ -86,7 +87,9 @@
                 </div>
             </div>
 		</div>
+		{% if '0920.corsi' in mods.active.array %}
 		<div class="form-group form-row">
+			<legend>gestione corsi</legend>
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
                     {{ frm.checkbox( table, '', '', 'se_disciplina', 'se disciplina', '', request ) }}
@@ -103,6 +106,7 @@
                 </div>
             </div>
 		</div>
+		{% endif %}
 	    </fieldset>
 
 		{% if '3000.contenuti' in mods.active.array %}
