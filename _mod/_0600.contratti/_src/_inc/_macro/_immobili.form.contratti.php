@@ -39,19 +39,29 @@
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_immobile';
 
+
+	// campi della vista
 	$ct['view']['cols'] = array(
-        'id' => '#',
-        'parti' => 'parti',
-        'progetto' => 'progetto',
-        'id_immobile' => 'id_immobile',
-        'tipologia' => 'tipologia',
-	    '__label__' => 'contratto'
+		'id' => '#',
+		'contraenti' => 'contraenti',
+		'proponenti' => 'proponenti',
+		'tipologia' => 'tipologia',
+		'id_immobile' => 'id_immobile',
+		'__label__' => 'contratto'
 	);
 
-    // stili della vista
+	// stili della vista
 	$ct['view']['class'] = array(
-        'id_immobile' => 'd-none'
-    );
+		'__label__' => 'text-left no-wrap',
+		'contraenti' => 'text-left',
+		'proponenti' => 'text-left',
+		'progetto' => 'text-left',
+		'immobile' => 'text-left',
+		'tipologia' => 'text-left',
+		'id_immobile' => 'd-none'
+
+	);
+	
 
 	// preset filtro righe documento
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){

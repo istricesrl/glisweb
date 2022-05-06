@@ -40,7 +40,6 @@
         'id' => '#',
         'timestamp_valutazione' => 'data',
         'anagrafica' => 'esecutore',
-        'immobile' => 'immobile',
         'condizione' => 'condizione',
 	    'disponibilita' => 'disponibilità',
         'id_immobile' => 'id_immobile',

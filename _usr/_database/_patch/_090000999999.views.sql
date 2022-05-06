@@ -1456,17 +1456,19 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		contratti.id_account_aggiornamento,
         MIN(rinnovi.data_inizio) AS data_inizio,
         MAX(rinnovi.data_fine) AS data_fine,
-		group_concat( DISTINCT concat( coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),': ', ruoli_anagrafica.nome ) SEPARATOR ' | ' ) AS parti,
+		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
+		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
 		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
-		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
-		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
-		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 27
+		LEFT JOIN anagrafica AS proponente ON proponente.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 28
+		LEFT JOIN anagrafica AS contraente ON contraente.id = c_a.id_anagrafica
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
-	GROUP BY contratti.id, tipologie_contratti.nome
+	GROUP BY contratti.id, contratti_anagrafica.id_contratto, tipologie_contratti.nome
 ;
 
 --| 090000007300
@@ -2618,24 +2620,28 @@ CREATE OR REPLACE VIEW immobili_view AS
 		immobili.scala,
 		immobili.piano,
 		immobili.interno,
-immobili.campanello,
+		immobili.campanello,
 		immobili.id_account_inserimento,
 		immobili.id_account_aggiornamento,
+		MAX(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
+		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
 		concat_ws(
 			' ',
-    tipologie_immobili.nome, 
-    coalesce(
-      concat('scala ', immobili.scala), 
-      ''
-    ), 
-    coalesce(
-      concat('piano ', immobili.piano), 
-      ''
-    ), 
-    coalesce(
-      concat('int. ', immobili.interno), 
-      ''
-    ),
+			tipologie_immobili.nome, 
+			coalesce(
+			concat('scala ', immobili.scala), 
+			''
+			), 
+			coalesce(
+			concat('piano ', immobili.piano), 
+			''
+			), 
+			coalesce(
+			concat('int. ', immobili.interno), 
+			''
+			),
 			tipologie_edifici.nome,
 			edifici.nome,
 			tipologie_indirizzi.nome,
@@ -2655,7 +2661,14 @@ immobili.campanello,
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN regioni ON regioni.id = provincie.id_regione
-		LEFT JOIN stati ON stati.id = regioni.id_stato
+		LEFT JOIN stati ON stati.id = regioni.id_stato	
+		LEFT JOIN contratti ON contratti.id_immobile = immobili.id
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 27
+		LEFT JOIN anagrafica AS proponente ON proponente.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 28
+		LEFT JOIN anagrafica AS contraente ON contraente.id = c_a.id_anagrafica
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id  AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
+	GROUP BY immobili.id, contratti.id, contratti_anagrafica.id_contratto
 ;
 
 --| 090000015710
@@ -7006,7 +7019,31 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		valutazioni.id_matricola,
 		matricole.matricola AS matricola,
 		valutazioni.id_immobile,
-		immobili.nome AS immobile,
+		concat_ws(
+			' ',
+			tipologie_immobili.nome, 
+			coalesce(
+			concat('scala ', immobili.scala), 
+			''
+			), 
+			coalesce(
+			concat('piano ', immobili.piano), 
+			''
+			), 
+			coalesce(
+			concat('int. ', immobili.interno), 
+			''
+			),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS immobile,
 		valutazioni.mq_commerciali,
 		valutazioni.mq_calpestabili,
 		valutazioni.id_condizione,
@@ -7025,8 +7062,17 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		LEFT JOIN immobili ON immobili.id = valutazioni.id_immobile
 		LEFT JOIN condizioni ON condizioni.id = valutazioni.id_condizione
 		LEFT JOIN disponibilita ON disponibilita.id = valutazioni.id_disponibilita
-		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica;
-		
+		LEFT JOIN classi_energetiche ON classi_energetiche.id = valutazioni.id_classe_energetica
+		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
+		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN regioni ON regioni.id = provincie.id_regione
+		LEFT JOIN stati ON stati.id = regioni.id_stato;
+				
 --| 090000063000
 
 -- valute_view

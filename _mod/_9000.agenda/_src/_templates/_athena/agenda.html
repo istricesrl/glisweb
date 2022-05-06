@@ -57,7 +57,7 @@
         <div class="form-row">
         {% for b in etc.id_tipologia_todo %}
         <div class="col-4 text-right">
-            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
+            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
         </div>
         {% endfor %}
     </div>

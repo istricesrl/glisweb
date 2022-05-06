@@ -85,7 +85,7 @@ CREATE TABLE `attivita_view_static` (
   `id_anagrafica` int DEFAULT NULL,
   `anagrafica` char(255) DEFAULT NULL,
   `ore` decimal(5,2) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `id_documento` int DEFAULT NULL,
   `documento` char(255) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,

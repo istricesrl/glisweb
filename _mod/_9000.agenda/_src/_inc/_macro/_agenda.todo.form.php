@@ -62,13 +62,6 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM immobili_view' );
 
-    // tendina categorie attivita
-	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM categorie_attivita_view'
-	);
 
     // tendina mastri attivita
 	$ct['etc']['select']['mastri'] = mysqlCachedIndexedQuery(
