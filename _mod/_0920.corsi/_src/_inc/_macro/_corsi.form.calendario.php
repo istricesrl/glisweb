@@ -80,7 +80,12 @@
         array( 'id' => 6, '__label__' => 'domenica' )
     );
 
-
+    $ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
+        
 	$ct['etc']['include']['insert'][] = array(
         'name' => 'insert',
         'file' => 'inc/corsi.form.calendario.insert.html',
