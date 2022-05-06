@@ -230,6 +230,14 @@
 					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
 				</div>
 			</div>
+			{% if 'V300.immobiliari' in mods.active.array %}
+			<div class="form-group form-row">
+			<div class="col-12 col-md">
+				<span class="label-top">immobile</span>
+				{{ frm.selectBox( table, '', '', 'id_immobile', '', etc.select.immobili, request, '', '','','','','immobili.form','','immobili', 'id_immobile' , page, pages, ietf,'immobili' ) }}
+			</div>
+			</div>
+			{% endif %}
 			{% if '4100.prodotti' in mods.active.array or '0400.documenti' in mods.active.array %}
 			<div class="form-group form-row">
 				{% if '4100.prodotti' in mods.active.array %}
