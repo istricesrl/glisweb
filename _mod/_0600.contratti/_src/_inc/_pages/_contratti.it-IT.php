@@ -258,3 +258,4 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['rinnovi.contratti.form']['etc']['tabs'] )
 	);
+

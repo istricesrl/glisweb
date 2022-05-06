@@ -3,6 +3,10 @@
 
 <fieldset id="{{ view.id }}-edit" class="view-insert hidden">
 	<div class="form-row">
+		<div class="col-6 col-md">
+			<span class="label-top">giorno</span>
+			{{ frm.select( table, '', '', '__giorno__', '', etc.select.giorni_settimana, '', '', '', '', '', '', 2) }}
+		</div>
 		<div class="col-6 col-md-auto">
 			<span class="label-top">dal</span>
 			{{ frm.date( table, '', '', '__data_inizio__', '', '', '', '', '', '', '', 2 ) }}

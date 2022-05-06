@@ -169,3 +169,33 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
 	);
+
+	$p['corsi.form.archiviazione'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'archiviazione' ),
+	    'h1'		=> array( $l		=> 'archiviazione' ),
+	    'parent'		=> array( 'id'		=> 'corsi.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.archiviazione.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_corsi.form.archiviazione.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['corsi.form']['etc']['tabs'] )
+	);
+
+	if( in_array( "0620.tesseramenti", $cf['mods']['active']['array'] ) ||  in_array( "0630.iscrizioni", $cf['mods']['active']['array'] ) ||  in_array( "0640.abbonamenti", $cf['mods']['active']['array'] )) {
+		
+		// dashboard produzione
+		$p['segreteria'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'segreteria' ),
+			'h1'			=> array( $l		=> 'segreteria' ),
+			'parent'		=> array( 'id'		=> NULL ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'segreteria.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_segreteria.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'segreteria' ) ),
+			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'segreteria' ),
+																			'priority'	=> '050' ) ) )														
+		);
+		
+	}
