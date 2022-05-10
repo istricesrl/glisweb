@@ -44,7 +44,7 @@
 			'h1'		=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'valutazioni.immobiliari.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'valutazioni.immobiliari.form.html' ),
-			'macro'		=> array(  $m_v . '_src/_inc/_macro/_valutazioni.form.php' ),
+			'macro'		=> array(  $m . '_src/_inc/_macro/_valutazioni.immobiliari.form.php' ),
 			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'		=> array( 'tabs'	=> array(
 														'valutazioni.immobiliari.form',

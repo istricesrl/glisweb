@@ -26,7 +26,7 @@
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'tesseramenti' ),
 			'h1'				=> array( $l		=> 'tesseramenti' ),
-			'parent'			=> array( 'id'		=> 'corsi.view' ),
+			'parent'			=> array( 'id'		=> 'segreteria' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.view.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
@@ -35,7 +35,8 @@
 																'tesseramenti.tools'
 															) ),
 			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tesseramenti' ),
-																				'priority'	=> '050' ) ) )
+															'priority'	=> '080' ) ) )
+
 		);
 
 		// vista archivio tesseramenti
@@ -105,23 +106,6 @@
 			'etc'				=> array( 'tabs'	=> $p['tesseramenti.form']['etc']['tabs'] )
 		);
 
-
-    // vista tesseramenti
-	$p['tesseramenti.view']	= array(
-	    'sitemap'			=> false,
-	    'title'				=> array( $l		=> 'tesseramenti' ),
-	    'h1'				=> array( $l		=> 'tesseramenti' ),
-	    'parent'			=> array( 'id'		=> 'amministrazione' ),
-	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.view.php' ),
-	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> array(	'tesseramenti.view',
-															'tesseramenti.archivio.view',
-															'tesseramenti.stampe',
-															'tesseramenti.tools' ) ),
-	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tesseramenti' ),
-																			'priority'	=> '050' ) ) )
-	);
 
     // vista archivio tesseramenti
 	$p['tesseramenti.archivio.view'] = array(

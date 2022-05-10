@@ -26,7 +26,7 @@
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'iscrizioni' ),
 			'h1'				=> array( $l		=> 'iscrizioni' ),
-			'parent'			=> array( 'id'		=> 'corsi.view' ),
+			'parent'			=> array( 'id'		=> 'segreteria' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_iscrizioni.view.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),

@@ -70,6 +70,22 @@
 	    'SELECT id, __label__ FROM luoghi_view'
     );
 
+    $ct['etc']['select']['giorni_settimana'] = array(
+        array( 'id' => 0, '__label__' => 'lunedì' ),
+        array( 'id' => 1, '__label__' => 'martedì' ),
+        array( 'id' => 2, '__label__' => 'mercoledì' ),
+        array( 'id' => 3, '__label__' => 'giovedì' ),
+        array( 'id' => 4, '__label__' => 'venerdì' ),
+        array( 'id' => 5, '__label__' => 'sabato' ),
+        array( 'id' => 6, '__label__' => 'domenica' )
+    );
+
+    $ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
+        
 	$ct['etc']['include']['insert'][] = array(
         'name' => 'insert',
         'file' => 'inc/corsi.form.calendario.insert.html',
@@ -80,6 +96,12 @@
         'name' => 'edit',
         'file' => 'inc/corsi.form.calendario.edit.html',
         'fa' => 'fa-pencil'
+    );
+
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'delete',
+        'file' => 'inc/corsi.form.calendario.delete.html',
+        'fa' => 'fa-trash'
     );
 
     // gestione default
