@@ -235,6 +235,8 @@
     // funzione per la creazione di un'array di date pianificate in base a criteri specifici
     function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
 
+        logWrite( 'richiesta generazione '.$data, 'todo', LOG_ERR );
+
         // TODO controlli
                // la data inizio è successiva alla data fine
 
@@ -266,11 +268,13 @@
     
                 // attività con ripetizione settimanale
                 case 2:
+                    logWrite( 'richiesta generazione settimanale data '.$data, 'todo', LOG_ERR );
                     // lunedì della settimana di inizio
                     $d_inizio = date('Y-m-d',strtotime('monday this week ', strtotime($data) ));
                     if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($d_inizio. ' + '.($cadenza * $numero_ripetizioni ).' weeks -1 day')); }
                     $giorni = explode(",",$giorni_settimana);
                     foreach($giorni as $g){
+                        logWrite( 'lavoro giorno '.$g.' '.$days[$g], 'todo', LOG_ERR );
                         if( date('N', strtotime($data)) - 1 == $g ){
                             $d = $data;
                         } else {

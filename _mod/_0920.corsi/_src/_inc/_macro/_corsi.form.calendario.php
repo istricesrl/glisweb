@@ -39,21 +39,24 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
-        'tipologia' => 'tipologia',
-        'nome' => 'titolo',
-        'data_programmazione' => 'giorno'
+        'data_programmazione' => 'data',
+        'ora_inizio_programmazione' => 'ora inizio',
+        'ora_fine_programmazione' => 'ora fine',
+        'luogo' => 'luogo',
+        'anagrafica' => 'responsabile',
+        'id_progetto' => 'id_progetto'
     );
 
     // stili della vista
     $ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
-        'id_priorita' => 'd-none',
+        'id_progetto' => 'd-none',
     #		'completato' => 'd-none',
-        'cliente' => 'text-left d-none d-md-table-cell',
-        'nome' => 'text-left',
-        'priorita' => 'text-left',
+        'ora_fine_programmazione' => 'text-left d-none d-md-table-cell',
+        'luogo' => 'text-left',
+        'ora_inizio_programmazione' => 'text-left',
         'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
-        'progresso' => 'text-right no-wrap d-none d-sm-table-cell',
+        'data_programmazione' => 'text-left',
     #	    'completato' => 'text-left'
     );
 
@@ -109,3 +112,4 @@
         
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
+
