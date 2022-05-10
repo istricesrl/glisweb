@@ -23,22 +23,27 @@
     // verifico se è arrivata una todo
     if( ! empty( $_REQUEST['id'] ) ) {
 
-        if( isset($_REQUEST['dal']) && isset($_REQUEST['al']) ){
-            // ID della todo in oggetto
-            $status['id_todo'] = $_REQUEST['id'];
+    // log
+	logWrite( 'richiesta generazione todo', 'todo', LOG_ERR );
 
-            // inserisco una richiesta di ripopolamento per attivita_view_static e todo_view_static
-            mysqlQuery(
-           /*     $cf['mysql']['connection'],
-                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
-                array(
-                    array( 's' => 'attivita' ),
-                    array( 's' => '_mod/_1200.todo/_src/_api/_task/_todo.delete.php'),
-                    array( 's' => time() )
-                )*/
-            );
+    if( isset($_REQUEST) && !empty($_REQUEST['__data__']) && !empty($_REQUEST['__anagrafica__']) && !empty($_REQUEST['__cliente__']) && !empty($_REQUEST['__luogo__']) ){
 
+        $status['__status__'] = 'OK';
+   
+        if( empty($_REQUEST['__desc__']) || $_REQUEST['__desc__'] == ''){ $_REQUEST['__desc__'] = ' ';}
+   
+        $restult = pianificazioneTodo( $cf['mysql']['connection'], $_REQUEST['__anagrafica__'], $_REQUEST['__cliente__'], $_REQUEST['__luogo__'], $_REQUEST['__data__'], $_REQUEST['__ora__'], $_REQUEST['__ore__'], $_REQUEST['__p__'],$_REQUEST['__desc__'],$_REQUEST['__cad__'], $_REQUEST['__datafine__'], $_REQUEST['__nr__'],$_REQUEST['__gs__'],$_REQUEST['__rm__'],$_REQUEST['__ra__']);
+    
+        if( $restult ){
+            $status['__status__'] = 'Pianificazione completata';
+        } else {
+            $status['__status__'] = 'Pianificazione NON completata: controllare i dati e la connessione';
         }
+
+    } else {
+	    $status['__status__'] = 'NO';
+	}
+
 
 
     } else {
