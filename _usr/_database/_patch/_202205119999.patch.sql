@@ -34,7 +34,7 @@ CREATE OR REPLACE VIEW discipline_view AS
 ;
 
 --| 202205110110
-CREATE OR REPLACE VIEW discipline_view AS
+CREATE OR REPLACE VIEW fasce_view AS
 	SELECT
 		categorie_progetti.id,
 		categorie_progetti.id_genitore,
@@ -60,9 +60,10 @@ CREATE OR REPLACE VIEW discipline_view AS
 	FROM categorie_progetti
 		LEFT JOIN categorie_progetti AS c1 ON c1.id_genitore = categorie_progetti.id
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_categoria = categorie_progetti.id
-	WHERE categorie_progetti.se_disciplina = 1
+	WHERE categorie_progetti.se_fascia = 1
 	GROUP BY categorie_progetti.id
 ;
+
 
 --| 202205110120
 CREATE OR REPLACE VIEW livelli_view AS
