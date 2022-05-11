@@ -10,16 +10,16 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'discipline';
+	$ct['view']['table'] = 'fasce';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'discipline.form';
+	$ct['view']['open']['page'] = 'fasce.form';
     $ct['view']['open']['table'] = 'categorie_progetti';
 
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-        '__label__' => 'disciplina'
+        '__label__' => 'fascia di età'
 	);
 
     // stili della vista

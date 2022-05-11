@@ -10,16 +10,16 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'discipline';
+	$ct['view']['table'] = 'livelli';
+    $ct['view']['open']['table'] = 'categorie_progetti';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'discipline.form';
-    $ct['view']['open']['table'] = 'categorie_progetti';
+	$ct['view']['open']['page'] = 'livelli.form';
 
      // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-        '__label__' => 'disciplina'
+        '__label__' => 'livello'
 	);
 
     // stili della vista

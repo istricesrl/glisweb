@@ -25,6 +25,12 @@
             'discipline' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
+            'fasce' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'livelli' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             '__report_iscritti_corsi__' => array(
                 CONTROL_FULL => array( 'roots' )
             )
