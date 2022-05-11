@@ -96,17 +96,4 @@ CREATE OR REPLACE VIEW livelli_view AS
 	GROUP BY categorie_progetti.id
 ;
 
---| 202205110130
-CREATE TABLE `refresh_view_statiche` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `entita` char(64) NOT NULL,
-  `note` text,
-  `timestamp_prenotazione` int(11) DEFAULT NULL,
-  `token` char(128) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `entita` (`entita`),
-  KEY `timestamp_prenotazione` (`timestamp_prenotazione`),
-  KEY `token` (`token`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
-
 --| FINE FILE
