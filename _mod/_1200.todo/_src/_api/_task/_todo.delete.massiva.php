@@ -27,7 +27,7 @@
 	logWrite( 'richiesta generazione todo', 'todo', LOG_ERR );
     //var par = '&__g__=' + giorno + '&__d_i__=' + data_inizio + '&__d_f__=' + data_fine + '&__o_i__=' + ora_inizio + '&__o_f__=' + ora_fine + '&__l__=' + luogo + '&__'
 
-    if( isset($_REQUEST) && (! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']==0 )&& ! empty( $_REQUEST['__d_i__'] ) && ! empty( $_REQUEST['__d_f__'] ) && ! empty( $_REQUEST['__o_i__'] ) && ! empty( $_REQUEST['__o_f__'] ) && ! empty( $_REQUEST['__l__'] )   ){
+    if( isset($_REQUEST) && (! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']==0 )&& ! empty( $_REQUEST['__d_i__'] ) && ! empty( $_REQUEST['__d_f__'] )   ){
         
         $status['__status__'] = 'OK';
    
@@ -44,18 +44,36 @@
             $status['date'] = $restult;
             $status['n'] = count($restult);
 
+            $where = array();
+            $params = array();
+
+            $params[] = array( 's' => $_REQUEST['progetto'] );
+            
+            if(! empty( $_REQUEST['__o_i__'] )){
+                $where[] = 'ora_inizio_programmazione = ?';
+                $params[] = array( 's' => $_REQUEST['__o_i__'] );
+            }  
+            if(! empty( $_REQUEST['__o_f__'] )){
+                $where[] = 'ora_fine_programmazione = ?';
+                $params[] = array( 's' => $_REQUEST['__o_f__'] );
+            }  
+            if(! empty( $_REQUEST['__l__'] ) ){
+                $where[] = 'id_luogo = ?';
+                $params[] = array( 's' => $_REQUEST['__l__'] );
+            } 
+
+            if(!empty($where)){$where = implode(' AND ', $where);}
+            else{ $where = '';}
+            
             // creazione todo [andrebbe fatto un job?]
             foreach( $restult as $data ){
+                $params[] =  array( 's' => $data );
 
                 mysqlQuery( $cf['mysql']['connection'],
-                    'DELETE FROM todo WHERE  id_luogo = ? AND id_progetto = ? AND ora_inizio_programmazione = ? AND  ora_fine_programmazione = ? AND  data_programmazione = ?',
-                    array(  
-                            array( 's' => $_REQUEST['__l__'] ), 
-                            array( 's' => $_REQUEST['progetto'] ), 
-                            array( 's' => $_REQUEST['__o_i__'] ), 
-                            array( 's' => $_REQUEST['__o_f__'] ),
-                            array( 's' => $data ) )
+                    'DELETE FROM todo WHERE  id_progetto = ? '.$where.' AND  data_programmazione = ?',
+                    $params
                 );
+                unset($params[count($params)-1]);
         }
         mysqlQuery(
             $cf['mysql']['connection'],
