@@ -87,8 +87,11 @@
 
                     mysqlQuery( $cf['mysql']['connection'], 'CALL todo_view_static( ? )', array( array( 's' => $todo['id'] ) ) );
                     logWrite( 'aggiornata view statica  per id #' . $todo['id'], 'speed' );
-                    mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => $attivita['id'] ) ) );
-                    logWrite( 'aggiornata view statica  per id #' . $attivita['id'], 'speed' );
+                    
+                    if( $attivita['id'] ){
+                        mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => $attivita['id'] ) ) );
+                        logWrite( 'aggiornata view statica  per id #' . $attivita['id'], 'speed' );
+                    }
 
                 }
                 
