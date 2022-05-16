@@ -46,12 +46,17 @@
             $status['n'] = count($restult);
 
             if( ! empty( $_REQUEST['__o_i__'] ) && ! empty( $_REQUEST['__o_f__'] ) && ! empty( $_REQUEST['__l__'] ) && ! empty( $_REQUEST['__a__'] )  ){
+            
+            $inserite = 0;
+            $resp = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_anagrafica FROM progetti_anagrafica WHERE se_sostituto IS NULL AND id_ruolo = 16 AND id_progetto = ?', array( array( 's' => $_REQUEST['progetto'] ) ) );
             // creazione todo [andrebbe fatto un job?]
             foreach( $restult as $data ){
 
-                mysqlQuery( $cf['mysql']['connection'],
+                logWrite( 'inserisco la todo per la data  '.$data, 'todo', LOG_ERR ); 
+
+                $todo['id'] = mysqlQuery( $cf['mysql']['connection'],
                     'INSERT INTO todo ( id_anagrafica, id_luogo, id_progetto, ora_inizio_programmazione, ora_fine_programmazione, data_programmazione, nome ) VALUES ( ?, ?, ?, ?, ?, ?, ? )',
-                    array(  array( 's' => $_REQUEST['__a__'] ), 
+                    array(  array( 's' => $resp ), 
                             array( 's' => $_REQUEST['__l__'] ), 
                             array( 's' => $_REQUEST['progetto'] ), 
                             array( 's' => $_REQUEST['__o_i__'] ), 
@@ -59,17 +64,38 @@
                             array( 's' => $data ),
                             array( 's' => 'lezione corso '.$_REQUEST['progetto'] ) )
                 );
-            }
 
-            mysqlQuery(
-                $cf['mysql']['connection'],
-                'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
-                array(
-                    array( 's' => 'todo' ),
-                    array( 's' => '_mod/_1200.todo/_src/_api/_task/_todo.generate.php'),
-                    array( 's' => time() )
-                )
-            );
+               
+
+                if( $todo['id'] ){
+                 
+                    $inserite++;
+
+                    $attivita['id'] = mysqlQuery( $cf['mysql']['connection'], 
+                    'INSERT INTO attivita (id_anagrafica_programmazione, id_luogo, id_todo, id_progetto, ora_inizio_programmazione, ora_fine_programmazione, data_programmazione, id_tipologia) VALUES ( ?, ?, ?, ?, ?, ?, ?, ? )',
+                        array(  
+                            array( 's' => $_REQUEST['__a__'] ),
+                            array( 's' => $_REQUEST['__l__'] ), 
+                            array( 's' => $todo['id'] ),                             
+                            array( 's' => $_REQUEST['progetto'] ), 
+                            array( 's' => $_REQUEST['__o_i__'] ), 
+                            array( 's' => $_REQUEST['__o_f__'] ), 
+                            array( 's' => $data ),
+                            array( 's' => 1 )
+                        )
+                    );
+
+                    mysqlQuery( $cf['mysql']['connection'], 'CALL todo_view_static( ? )', array( array( 's' => $todo['id'] ) ) );
+                    logWrite( 'aggiornata view statica  per id #' . $todo['id'], 'speed' );
+                    mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => $attivita['id'] ) ) );
+                    logWrite( 'aggiornata view statica  per id #' . $attivita['id'], 'speed' );
+
+                }
+                
+    
+            }
+            $status['__status__'] = 'OK';
+            $status['__new__'] = $inserite;
 
             } else {
                 $status['__status__'] = 'NO';

@@ -75,15 +75,12 @@
                 );
                 unset($params[count($params)-1]);
         }
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'INSERT INTO refresh_view_statiche (entita, note, timestamp_prenotazione) VALUES( ?, ?, ? )',
-            array(
-                array( 's' => 'todo' ),
-                array( 's' => '_mod/_1200.todo/_src/_api/_task/_todo.delete.massiva.php'),
-                array( 's' => time() )
-            )
-        );
+        
+
+        // aggiornare todo_view_static
+        mysqlQuery( $cf['mysql']['connection'], 'CALL todo_view_static( ? )', array( array( 's' => NULL ) ) );
+        logWrite( 'aggiornata todo view statica per tutti i record', 'speed' );
+
 
     }
     } else {

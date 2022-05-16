@@ -1602,8 +1602,10 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 			' ',
 			progetti.id,
 			progetti.nome,
-			' cliente ',
-			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+			' dal ',
+			coalesce( progetti.data_accettazione, '-' ),
+			' al ',
+			coalesce( progetti.data_chiusura, '-' )
 		) AS __label__
 	FROM progetti
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
