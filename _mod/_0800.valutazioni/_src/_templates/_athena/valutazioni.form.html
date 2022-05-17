@@ -53,17 +53,24 @@
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">esecutore</span>
-                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, session.account.id_anagrafica, '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
             </div>
 
         </div>
-
+        <div class="form-group form-row">
+            <div class="col">
+            <span class="label-top">descrizione e note</span>
+			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+            </div>
+        </div>
+        
+        <legend>valutazione</legend>
         <div class="form-group form-row">
                 <div class="col-12 col-md-2">
                     <span class="label-top">condizione</span>
                     {{ frm.select( table, '', '', 'id_condizione', '', etc.select.condizioni, request ) }}
                 </div>              
-                <div class="col-12 col-md-2">
+                <div class="col-12 col-md">
                     <span class="label-top">disponibilità</span>
                     {{ frm.select( table, '', '', 'id_disponibilita', '', etc.select.disponibilita, request ) }}
                 </div>
@@ -84,12 +91,7 @@
         </div>
 
         
-        <div class="form-group form-row">
-            <div class="col">
-            <span class="label-top">descrizione e note</span>
-			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
-            </div>
-        </div>
+
        
     </fieldset>
 

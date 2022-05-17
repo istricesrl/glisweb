@@ -103,6 +103,22 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['immobili.form']['etc']['tabs'] )
 	);
+	/*
+	// form immobili immagini
+	$p['immobili.form.webapp'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-envelope-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'dettaglio' ),
+		'h1'		=> array( $l		=> 'dettaglio' ),
+		'parent'		=> array( 'id'		=> 'immobili.view' ),
+		'onclick'		=> array( $l		=> 'anagrafica.form' ),
+		'target'		=> '_blank',
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'immobili.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_immobili.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['immobili.form']['etc']['tabs'] )
+	);
+	*/
 
 	// form immobili video
 	$p['immobili.form.video'] = array(

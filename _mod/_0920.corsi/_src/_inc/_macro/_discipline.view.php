@@ -14,6 +14,7 @@
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'discipline.form';
+    $ct['view']['open']['table'] = 'categorie_progetti';
 
      // campi della vista
 	$ct['view']['cols'] = array(

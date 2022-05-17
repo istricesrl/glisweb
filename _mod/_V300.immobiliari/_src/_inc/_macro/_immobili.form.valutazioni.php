@@ -25,45 +25,45 @@
     // tabella della vista
 	$ct['view']['table'] = 'valutazioni';
 
-    // id della vista
-   	# $ct['view']['id'] = md5( $ct['view']['table'] );
-
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'valutazioni.form';
+	$ct['view']['open']['page'] = 'valutazioni.immobiliari.form';
     $ct['view']['open']['table'] = 'valutazioni';
     $ct['view']['open']['field'] = 'id';
 
 	// pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'valutazioni.form';
-
+	$ct['view']['insert']['page'] = 'valutazioni.immobiliari.form';
+    
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_immobile';
 
-    // campi della vista
 	$ct['view']['cols'] = array(
-	    'id' => '#',
-	    '__label__' => 'valutazione',
-        'timestamp_valutazione' => 'data valutazione',
-        'id_immobile' => 'id_immobile'
+        'id' => '#',
+        'timestamp_valutazione' => 'data',
+        'anagrafica' => 'esecutore',
+        'condizione' => 'condizione',
+	    'disponibilita' => 'disponibilità',
+        'id_immobile' => 'id_immobile',
+        'mq_calpestabili' => 'mq calpestabili',
+	    'mq_commerciali' => 'mq commerciali',
+        'classe_energetica' => 'classe energetica'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    '__label__' => 'text-left no-wrap',
         'id_immobile' => 'd-none'
-	);
-
+    );
 
 	// preset filtro righe documento
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		$ct['view']['__restrict__']['id_immobile']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 
-    // gestione default
-	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // gestione default
+	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     if( isset($ct['view']['data']) ){
         foreach( $ct['view']['data'] as &$row ) {

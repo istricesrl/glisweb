@@ -41,7 +41,7 @@
 		'h1'			=> array( $l		=> 'gestione' ),
 		'parent'		=> array( 'id'		=> 'fasce.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fasce.form.html' ),
-		'macro'			=> array( $m.'_src/_inc/_macro/_fasce.form.php' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_discipline.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'fasce.form', 
 														'fasce.form.tools' ) )

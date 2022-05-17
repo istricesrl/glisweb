@@ -31,10 +31,10 @@
 
     // tendina anagrafica per referenti e operatori (TODO vedere se filtrare sui referenti del cliente)
     $ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'],
-        $cf['memcache']['connection'],
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static' );
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
 
     if( isset( $_REQUEST[$ct['form']['table']]['id_cliente'] ) ){
 

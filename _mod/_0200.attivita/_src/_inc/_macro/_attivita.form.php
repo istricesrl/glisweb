@@ -22,15 +22,15 @@
     // tabella gestita
 	$ct['form']['table'] = 'attivita';
 
-    /*
+
     // tendina tipologie pubblicazioni
-	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['immobili'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
+	    'SELECT id, __label__ FROM immobili_view'
 	);
-    */
+    
     
     // tendina anagrafica
 	$ct['etc']['select']['id_anagrafica'] = mysqlCachedIndexedQuery(

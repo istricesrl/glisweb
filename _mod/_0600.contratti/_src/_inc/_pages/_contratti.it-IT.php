@@ -212,6 +212,50 @@
 	    'parent'		=> array( 'id'		=> 'rinnovi.contratti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'rinnovi.contratti.form.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_rinnovi.contratti.form.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'rinnovi.contratti.form' ) ),
+		'etc'		=> array( 'tabs'	=> array(   'rinnovi.contratti.form',
+													'rinnovi.contratti.form.immagini',
+													'rinnovi.contratti.form.file',
+													'rinnovi.contratti.form.metadati' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
 	);
+
+		// form contratti immagini
+	$p['rinnovi.contratti.form.immagini'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'rinnovi.contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'rinnovi.contratti.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_rinnovi.contratti.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['rinnovi.contratti.form']['etc']['tabs'] )
+	);
+	
+	// form contratti file
+	$p['rinnovi.contratti.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'rinnovi.contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'rinnovi.contratti.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_rinnovi.contratti.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['rinnovi.contratti.form']['etc']['tabs'] )
+	);
+
+
+	// form contratti metadati
+	$p['rinnovi.contratti.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'rinnovi.contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'rinnovi.contratti.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_rinnovi.contratti.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['rinnovi.contratti.form']['etc']['tabs'] )
+	);
+

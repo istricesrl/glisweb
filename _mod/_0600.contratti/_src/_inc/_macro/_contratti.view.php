@@ -18,7 +18,8 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'parti' => 'parti',
+        'contraenti' => 'contraenti',
+        'proponenti' => 'proponenti',
         'progetto' => 'progetto',
         'immobile' => 'immobile',
         'tipologia' => 'tipologia',
@@ -27,7 +28,12 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    '__label__' => 'text-left no-wrap'
+	    '__label__' => 'text-left no-wrap',
+        'contraenti' => 'text-left',
+        'proponenti' => 'text-left',
+        'progetto' => 'text-left',
+        'immobile' => 'text-left',
+        'tipologia' => 'text-left',
 	);
 
     // inclusione filtri speciali

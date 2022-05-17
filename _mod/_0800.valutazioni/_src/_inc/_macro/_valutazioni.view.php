@@ -28,7 +28,13 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    '__label__' => 'text-left no-wrap'
+	    '__label__' => 'text-left no-wrap',
+        'timestamp_valutazione' => 'text-left no-wrap',
+        'anagrafica' => 'text-left no-wrap',
+        'matricola' => 'text-left',
+        'immobile' => 'text-left',
+        'condizione' => 'text-left no-wrap',
+	    'disponibilita' => 'text-left'
 	);
     
     // gestione default

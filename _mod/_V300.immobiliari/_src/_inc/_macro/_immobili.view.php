@@ -32,7 +32,11 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    '__label__' => 'immobile'
+	    '__label__' => 'immobile',
+        'proponenti' => 'proprietario',
+        'contraenti' => 'inquilini',
+        'data_inizio' => 'inizio contratto',
+        'data_fine' => 'fine contratto'
 	);
 
     // stili della vista

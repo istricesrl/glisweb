@@ -43,13 +43,17 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    '__label__' => 'immobile',
+        'contraenti' => 'contraenti',
+        'proponenti' => 'proponenti',
         'id_edificio' => 'id_edificio'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    '__label__' => 'text-left no-wrap',
-        'id_edificio' => 'd-none'
+        'id_edificio' => 'd-none',
+        'contraenti' => 'text-left',
+        'proponenti' => 'text-left',
 	);
 
 
