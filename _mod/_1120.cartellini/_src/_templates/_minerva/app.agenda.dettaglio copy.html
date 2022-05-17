@@ -78,23 +78,25 @@
   function start(){
     $('#btnstart').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var startPos;
-        var url = "{{site.url}}api/attivita/{{etc.attivita.id}}?attivita[ora_inizio]={{'now'|date('H:i:s')}}&attivita[data_attivita]={{'now'|date('Y-m-d')}}";
+        var url = "{{site.url}}_mod/_1120.cartellini/_src/_api/_task/_cartellini.timbratura.php?a[action]=start&a[id]={{etc.attivita.id}}&a[ora_inizio]={{'now'|date('H:i:s')}}&a[data_attivita]={{'now'|date('Y-m-d')}}";
         var geoSuccessStart = function(position) {
           startPos = position;
           console.log(startPos.coords.latitude);
           console.log(startPos.coords.longitude);
-          url = url + "&attivita[latitudine_ora_inizio]="+startPos.coords.latitude+"&attivita[longitudine_ora_inizio]="+startPos.coords.longitude;
-          var xhr = new XMLHttpRequest();
-          xhr.open("PUT", url);
-          xhr.setRequestHeader("Accept", "application/json");
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                console.log(xhr.status);
-                console.log(xhr.responseText);
-                window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
-            }};
-          var data = "PUT request data";
-          xhr.send(data);
+          
+          url = url + "&a[latitudine_ora_inizio]="+startPos.coords.latitude+"&a[longitudine_ora_inizio]="+startPos.coords.longitude;
+          getws( url, '',function(data) {
+            
+            console.log(data);
+            if( data.status == 'OK' ){
+              window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            } 
+
+            if( data.status == 'KO' ){
+              alert("errore impossibile effettuare timbratura");
+            }
+
+          }); 
    
           };
 
@@ -121,24 +123,26 @@
       function stop(){
         $('#btnstop').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var startPos;
-        var url = "{{site.url}}api/attivita/{{etc.attivita.id}}?attivita[ora_inizio]={{'now'|date('H:i:s')}}&attivita[data_attivita]={{'now'|date('Y-m-d')}}";
+        var url = "{{site.url}}_mod/_1120.cartellini/_src/_api/_task/_cartellini.timbratura.php?a[action]=stop&a[id]={{etc.attivita.id}}&a[ora_fine]={{'now'|date('H:i:s')}}";
         var geoSuccessStop = function(position) {
           startPos = position;
           console.log(startPos.coords.latitude);
           console.log(startPos.coords.longitude);
-          url = url + "&attivita[latitudine_ora_inizio]="+startPos.coords.latitude+"&attivita[longitudine_ora_inizio]="+startPos.coords.longitude;
-          var xhr = new XMLHttpRequest();
-          xhr.open("PUT", url);
-          xhr.setRequestHeader("Accept", "application/json");
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 4) {
-                console.log(xhr.status);
-                console.log(xhr.responseText);
-                window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
-            }};
-          var data = "PUT request data";
-          xhr.send(data);
+          
+          url = url + "&a[latitudine_ora_fine]="+startPos.coords.latitude+"&a[longitudine_ora_fine]="+startPos.coords.longitude;
+          getws( url, '',function(data) {
+            
+            console.log(data);
+            if( data.status == 'OK' ){
+              window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            } 
 
+            if( data.status == 'KO' ){
+              alert("errore impossibile effettuare timbratura");
+            }
+
+          }); 
+   
           };
 
         navigator.geolocation.getCurrentPosition(geoSuccessStop, function noGeo(err) {
