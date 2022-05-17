@@ -285,8 +285,6 @@
 
                     $status['action'][] = 'aggiunta istruttore';
 
-                    // aggiornamento todo ed attivita
-                    foreach( $restult as $data ){
 
                         $where = array();
                         $params = array();
@@ -325,7 +323,7 @@
                                         array( 's' => $todo['id_progetto'] ), 
                                         array( 's' => $todo['ora_inizio_programmazione'] ), 
                                         array( 's' => $todo['ora_fine_programmazione'] ), 
-                                        array( 's' => $data ),
+                                        array( 's' => $todo['data_programmazione'] ),
                                         array( 's' => 1 )
                                     )
                                 );
@@ -334,16 +332,14 @@
 
                         }
 
-                    }
-
                 }
 
                 // se devo eliminare un istruttore
                 if( ! empty( $_REQUEST['__removei__'] ) ){
 
-                    // aggiornamento todo ed attivita
-                    foreach( $restult as $data ){
+                    $status['action'][] = 'eliminazione istruttore';
 
+                    // aggiornamento todo ed attivita
                         $where = array();
                         $params = array();
 
@@ -372,19 +368,20 @@
                         if( $todo ){
 
                             foreach($todo as $t){
+
                                 $params[0] = array( 's' => $_REQUEST['__removei__'] );
+                                $params[count($params)] = array( 's' => $t['id'] );
                                 mysqlQuery(  $cf['mysql']['connection'],
                                 'DELETE FROM attivita WHERE id_anagrafica_programmazione = ?  AND (data_programmazione BETWEEN ? AND ?)  '.$where.' AND id_todo = ?',
                                 $params
                                 );
-                                $params[count($params)] = array( 's' => $t['id'] );
+                               
 
                             }
 
                             //ora_inizio_programmazione, ora_fine_programmazione, data_programmazione
                         }
 
-                    }
 
                 }
 
@@ -392,9 +389,7 @@
                 if( ! empty( $_REQUEST['__deletei__'] ) && ! empty( $_REQUEST['__newi__'] ) ){
 
                     $status['action'][] = 'sostituzione istruttore';
-                    $status['date'] = $restult;
                     
-
                         $where = array();
                         $params = array();
 
@@ -417,7 +412,7 @@
                         else{ $where = '';}
 
                         $todo = mysqlQuery( $cf['mysql']['connection'],
-                        'SELECT id FROM todo WHERE '.$where.' id_progetto = ? (AND data_programmazione BETWEEN ? AND ?) ',
+                        'SELECT id FROM todo WHERE '.$where.' id_progetto = ? AND (data_programmazione BETWEEN ? AND ?) ',
                         $params
                         );
                         
