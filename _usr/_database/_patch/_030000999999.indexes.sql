@@ -396,6 +396,7 @@ ALTER TABLE `categorie_anagrafica`
 	ADD KEY `se_gestita` (`se_gestita`), 
 	ADD KEY `se_amministrazione` (`se_amministrazione`), 
 	ADD KEY `se_notizie` (`se_notizie`), 
+	ADD KEY `se_corriere` (`se_corriere`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_lead`,`se_prospect`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_commerciale`,`se_concorrente`,`se_gestita`,`se_amministrazione`);
@@ -497,6 +498,24 @@ ALTER TABLE `categorie_risorse`
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000004600
+
+-- causali
+-- tipologia: tabella gestita
+-- verifica: 2022-05-04 20:04 Chiara GDL
+ALTER TABLE `causali`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `se_trasporto` (`se_trasporto`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `indice` (`id`,`nome`,`se_trasporto`);
+
+--| 030000004601
+
+-- causali
+-- tipologia: tabella gestita
+ALTER TABLE `causali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000004700
 
 -- certificazioni
@@ -548,6 +567,27 @@ ALTER TABLE `classi_energetiche`
 -- tipologia: tabella standard
 ALTER TABLE `classi_energetiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000005050
+
+-- colli
+-- tipologia: tabella standard
+-- verifica: 2022-05-04 22:22 Chiara GDL
+ALTER TABLE `colli`
+ 	ADD PRIMARY KEY (`id`), 
+ 	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),
+	ADD KEY `id_udm_peso` (`id_udm_peso`),
+	ADD KEY `id_udm_volume` (`id_udm_volume`),
+ 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`ordine`,`codice`,`id_documento`),
+	ADD KEY `indice_dimensioni` (`id`,`ordine`,`codice`,`id_documento`,`larghezza`,`lunghezza`,`altezza`,`peso`,`volume`);
+
+--| 030000005051
+
+-- colli
+-- tipologia: tabella standard
+ALTER TABLE `colli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000005100
 
@@ -906,6 +946,10 @@ ALTER TABLE `documenti`
 	ADD KEY `id_coupon` (`id_coupon`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+	ADD KEY `id_causale` (`id_causale`),
+	ADD KEY `id_trasportatore` (`id_trasportatore`),
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `porto` (`porto`),
 	ADD KEY `cig` (`cig`),
 	ADD KEY `cup` (`cup`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -940,6 +984,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_udm` (`id_udm`), 
 	ADD KEY `id_listino` (`id_listino`), 
 	ADD KEY `id_matricola` (`id_matricola`), 
+	ADD KEY `id_collo` (`id_collo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `data` (`data`), 
@@ -2299,9 +2344,12 @@ ALTER TABLE `ranking`
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_fornitore` (`se_fornitore`),
+	ADD KEY `se_cliente` (`se_cliente`),
+	ADD KEY `se_progetti` (`se_progetti`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`,`ordine`);
+	ADD KEY `indice` (`id`,`nome`,`ordine`,  `se_cliente`, `se_fornitore`,`se_progetti`);
 
 --| 030000028601
 

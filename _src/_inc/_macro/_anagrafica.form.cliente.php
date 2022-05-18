@@ -43,7 +43,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ranking_view'
+	    'SELECT id, __label__ FROM ranking_view WHERE se_cliente = 1'
 	);
 
     // tendina settori e attività

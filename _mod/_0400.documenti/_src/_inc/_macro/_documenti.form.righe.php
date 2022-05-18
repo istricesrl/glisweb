@@ -38,7 +38,47 @@
 
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_documento';
+/*
+	$ct['view']['cols'] = array(
+        'id' => '#',
+#        'tipologia' => 'tipologia',
+#        'data' => 'data',
+#        'nome' => 'nome',
+		'id_articolo' => 'codice',
+		'articolo' => 'articolo',
+		'mastro_provenienza' => 'scarico',
+		'mastro_destinazione' => 'carico',
+        'quantita' => 'quantità',
+	#	'totale_riga' => 'totale',
+		'id_documento' => 'id_documento'
+	);
 
+    // stili della vista
+	$ct['view']['class'] = array(
+        'nome' => 'text-left',
+        'quantita' => 'text-right',
+		'totale_riga' => 'text-right',
+        'id_documento' => 'd-none',
+        'cliente' => 'text-left',
+        'emittente' => 'text-left', 
+        'data' => 'no-wrap', 
+#        'tipologia' => 'text-left',
+		'articolo' => 'text-left'
+    );
+
+	// RELAZIONI CON IL MODULO MATRICOLE
+	if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
+
+		// colonna matricola
+		arrayInsertAssoc( 'id_articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
+
+		// OPZIONE scadenze
+		if( ! empty( $cf['matricole']['scadenze'] ) ) {
+			arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
+		}
+
+	}
+*/
 	$ct['view']['cols'] = array(
         'id' => '#',
 #        'tipologia' => 'tipologia',
@@ -74,7 +114,9 @@
 
 	// RELAZIONI CON IL MODULO PRODOTTI
 	if( in_array( "4100.prodotti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'id_articolo' => 'articolo' ) );
+		arrayInsertAssoc( 'id', $ct['view']['cols'], array( 'id_articolo' => 'codice' ) );
+		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'articolo' => 'articolo' ) );
+
 	}
 
 	// RELAZIONI CON IL MODULO MATRICOLE

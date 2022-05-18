@@ -74,7 +74,6 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 ALTER TABLE `pagamenti` ADD `note_pagamento` text NULL AFTER `note`;
 
 --| 202201070050
-
 CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,

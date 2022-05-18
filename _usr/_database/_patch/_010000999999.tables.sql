@@ -420,6 +420,7 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `se_produzione` int(1) DEFAULT NULL,
   `se_commerciale` int(1) DEFAULT NULL,
   `se_notizie` int(1) DEFAULT NULL,
+  `se_corriere` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -528,6 +529,17 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000004600
+
+-- causali
+-- tipologia: tabella gestita
+-- verifica: 2022-05-04 20:04 Chiara GDL
+CREATE TABLE IF NOT EXISTS `causali` (
+  `id` int(11) NOT NULL,
+  `nome` char(64) NOT NULL,
+  `se_trasporto` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000004700
 
 -- certificazioni
@@ -572,6 +584,32 @@ CREATE TABLE IF NOT EXISTS `classi_energetiche` (
   `ep_max` int(11) DEFAULT NULL,
   `rgb` char(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000005050
+
+-- colli
+-- tipologia: tabella standard
+-- verifica: 2022-05-04 22:22 Chiara GDL
+CREATE TABLE `colli` (
+  `id` int(11) NOT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `ordine` int DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `larghezza` decimal(7,2) DEFAULT NULL,
+  `lunghezza` decimal(7,2) DEFAULT NULL,
+  `altezza` decimal(7,2) DEFAULT NULL,
+  `id_udm_dimensioni` int DEFAULT NULL,
+  `peso` decimal(7,2) DEFAULT NULL,
+  `id_udm_peso` int DEFAULT NULL,
+  `volume` decimal(7,2) DEFAULT NULL,
+  `id_udm_volume` int DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
 
 --| 010000005100
 
@@ -896,6 +934,10 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `id_coupon` char(32) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `porto` enum('franco','assegnato','-') DEFAULT NULL,
+  `id_causale` int(11) DEFAULT NULL,
+  `id_trasportatore` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
   `note` text,
   `note_cliente` text DEFAULT NULL,
   `timestamp_chiusura` int DEFAULT NULL,
@@ -929,6 +971,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
+  `id_collo` int(11) DEFAULT NULL, 
   `quantita` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `importo_netto_totale` decimal(9,2) DEFAULT NULL,
@@ -2122,6 +2165,9 @@ CREATE TABLE IF NOT EXISTS `ranking` (
   `nome` varchar(254) NOT NULL,
   `note` text DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `se_cliente` int(1) DEFAULT NULL,
+  `se_fornitore` int(1) DEFAULT NULL,
+  `se_progetti` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
