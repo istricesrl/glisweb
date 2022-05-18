@@ -62,11 +62,11 @@
       // console.log(startPos.coords.longitude);
         lo =startPos.coords.longitude;
         la =startPos.coords.latitude;
-        document.getElementById("info").innerHTML = '<i class="fa fa-map-marker" aria-hidden="true"></i> geololcalizzazione attiva, la posizione verrà memorizzata in fase di timbratura';
+        document.getElementById("info").innerHTML = '<i class="fa fa-map-marker" aria-hidden="true"></i> Geolocalizzazione attiva, la posizione verrà verificata solo ed esclusivamente a inizio e termine dell\'attività';
         document.getElementById("map").innerHTML = '<iframe width="100%" height="400" frameborder="0" scrolling="no" marginheight="0" marginwidth="0" src="https://maps.google.com/maps?q='+la+','+lo+'&t=&zoom=15&maptype=roadmap&ie=UTF8&iwloc=&output=embed"></iframe><div style="width:100%"><a href="https://pininthemap.com/embed-google-map" style="padding:10px;display:inline-block;float:right" target="_blank" data-inline="true" title="Embed Google Map - Pininthemap"><img src="https://pininthemap.com/img/more.svg" style="vertical-align:middle;" alt="Embed Google Map - Pininthemap"></a></div>';
       };
       navigator.geolocation.getCurrentPosition(geoSuccess,  function error(err) {
-        document.getElementById("info").innerHTML = '<span class="fa-stack">  <i class="fa fa-map-marker fa-stack-1x"></i>  <i class="fa fa-ban fa-stack-2x "></i></span> geololcalizzazione non attiva, la posizione non verrà memorizzata in fase di timbratura';
+        document.getElementById("info").innerHTML = '<span class="fa-stack">  <i class="fa fa-map-marker fa-stack-1x"></i>  <i class="fa fa-ban fa-stack-2x "></i></span> Geolocalizzazione non attiva, la posizione non verrà verificata';
         $('#tp').hide();
       console.warn(`ERROR(${err.code}): ${err.message}`);
     }, {timeout:10000});
@@ -74,8 +74,101 @@
 
 
 
-
+/*
   function start(){
+    $('#btnstart').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+        var startPos;
+        var url = "{{site.url}}_mod/_1120.cartellini/_src/_api/_task/_cartellini.timbratura.php?a[action]=start&a[id]={{etc.attivita.id}}&a[ora_inizio]={{'now'|date('H:i:s')}}&a[data_attivita]={{'now'|date('Y-m-d')}}";
+        var geoSuccessStart = function(position) {
+          startPos = position;
+          console.log(startPos.coords.latitude);
+          console.log(startPos.coords.longitude);
+          
+          url = url + "&a[latitudine_ora_inizio]="+startPos.coords.latitude+"&a[longitudine_ora_inizio]="+startPos.coords.longitude;
+          getws( url, '',function(data) {
+            
+            console.log(data);
+            if( data.status == 'OK' ){
+              window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            } 
+
+            if( data.status == 'KO' ){
+              alert("errore impossibile effettuare timbratura");
+            }
+
+          }); 
+   
+          };
+
+        navigator.geolocation.getCurrentPosition(geoSuccessStart, function noGeo(err) {
+      
+          console.warn(`ERROR(${err.code}): ${err.message}`);
+          getws( url, '',function(data) {
+            
+            console.log(data);
+            if( data.status == 'OK' ){
+              window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            } 
+
+            if( data.status == 'KO' ){
+              alert("errore impossibile effettuare timbratura");
+            }
+
+          }); 
+        } );
+
+  
+      }  
+*/
+/*
+      function stop(){
+        $('#btnstop').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+        var startPos;
+        var url = "{{site.url}}_mod/_1120.cartellini/_src/_api/_task/_cartellini.timbratura.php?a[action]=stop&a[id]={{etc.attivita.id}}&a[ora_fine]={{'now'|date('H:i:s')}}";
+        var geoSuccessStop = function(position) {
+          startPos = position;
+          console.log(startPos.coords.latitude);
+          console.log(startPos.coords.longitude);
+          
+          url = url + "&a[latitudine_ora_fine]="+startPos.coords.latitude+"&a[longitudine_ora_fine]="+startPos.coords.longitude;
+          getws( url, '',function(data) {
+            
+            console.log(data);
+            if( data.status == 'OK' ){
+              window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            } 
+
+            if( data.status == 'KO' ){
+              alert("errore impossibile effettuare timbratura");
+            }
+
+          }); 
+   
+          };
+
+        navigator.geolocation.getCurrentPosition(geoSuccessStop, function noGeo(err) {
+      
+          console.warn(`ERROR(${err.code}): ${err.message}`);
+          getws( url, '',function(data) {
+            
+            console.log(data);
+            if( data.status == 'OK' ){
+              window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            } 
+
+            if( data.status == 'KO' ){
+              alert("errore impossibile effettuare timbratura");
+            }
+
+          }); 
+        } );
+
+      }  
+*/
+
+
+
+function start(){
     $('#btnstart').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var startPos;
         var url = "{{site.url}}api/attivita/{{etc.attivita.id}}?attivita[ora_inizio]={{'now'|date('H:i:s')}}&attivita[data_attivita]={{'now'|date('Y-m-d')}}";
@@ -101,18 +194,17 @@
         navigator.geolocation.getCurrentPosition(geoSuccessStart, function noGeo(err) {
       
           console.warn(`ERROR(${err.code}): ${err.message}`);
-          getws( url, '',function(data) {
-            
-            console.log(data);
-            if( data.status == 'OK' ){
-              window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
-            } 
-
-            if( data.status == 'KO' ){
-              alert("errore impossibile effettuare timbratura");
-            }
-
-          }); 
+          var xhr = new XMLHttpRequest();
+          xhr.open("PUT", url);
+          xhr.setRequestHeader("Accept", "application/json");
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+                window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            }};
+          var data = "PUT request data";
+          xhr.send(data);
         } );
 
   
@@ -121,12 +213,13 @@
       function stop(){
         $('#btnstop').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
         var startPos;
-        var url = "{{site.url}}api/attivita/{{etc.attivita.id}}?attivita[ora_inizio]={{'now'|date('H:i:s')}}&attivita[data_attivita]={{'now'|date('Y-m-d')}}";
+        var url = "{{site.url}}api/attivita/{{etc.attivita.id}}?attivita[ora_fine]={{'now'|date('H:i:s')}}";
         var geoSuccessStop = function(position) {
           startPos = position;
           console.log(startPos.coords.latitude);
           console.log(startPos.coords.longitude);
-          url = url + "&attivita[latitudine_ora_inizio]="+startPos.coords.latitude+"&attivita[longitudine_ora_inizio]="+startPos.coords.longitude;
+          url = url + "&attivita[latitudine_ora_fine]="+startPos.coords.latitude+"&attivita[longitudine_ora_fine]="+startPos.coords.longitude;
+         
           var xhr = new XMLHttpRequest();
           xhr.open("PUT", url);
           xhr.setRequestHeader("Accept", "application/json");
@@ -144,22 +237,20 @@
         navigator.geolocation.getCurrentPosition(geoSuccessStop, function noGeo(err) {
       
           console.warn(`ERROR(${err.code}): ${err.message}`);
-          getws( url, '',function(data) {
-            
-            console.log(data);
-            if( data.status == 'OK' ){
-              window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
-            } 
-
-            if( data.status == 'KO' ){
-              alert("errore impossibile effettuare timbratura");
-            }
-
-          }); 
+          var xhr = new XMLHttpRequest();
+          xhr.open("PUT", url);
+          xhr.setRequestHeader("Accept", "application/json");
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                console.log(xhr.status);
+                console.log(xhr.responseText);
+                window.location.href = "{{ pages.cartellini_app_agenda.url[localization.language.ietf] }}";
+            }};
+          var data = "PUT request data";
+          xhr.send(data);
         } );
 
       }  
-
 </script>
 <!--
   curl --location -g --request PUT 'https://<URL>/api/attivita/<ID>?attivita[ora_inizio]=<H>&attivita[data_attivita]=<D>&attivita[latitudine_ora_inizio]=<LT>&attivita[longitudine_ora_inizio]=<LG>' \
@@ -190,6 +281,7 @@
     <button class="btn btn-secondary" data-toggle="modal" data-target="#stop">ferma attività</button>
     <div class="form-gruop mt-2">
       <h3>la tua posizione</h3>
+      <div id="info"></div>
       <div id="map" class="embed-google-map"></div>
     </div>    
     {% endif %}
