@@ -5838,6 +5838,7 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.se_categorie_notizie,
 		ruoli_audio.se_risorse,
 		ruoli_audio.se_categorie_risorse,
+		ruoli_audio.se_immobili,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
 ;
@@ -5870,6 +5871,7 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_risorse,
 		ruoli_file.se_categorie_risorse,
 		ruoli_file.se_mail,
+		ruoli_file.se_immobili,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;
@@ -5902,6 +5904,7 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS
 		ruoli_immagini.se_categorie_notizie,
 		ruoli_immagini.se_risorse,
 		ruoli_immagini.se_categorie_risorse,
+		ruoli_immagini.se_immobili,
 	 	ruoli_immagini_path( ruoli_immagini.id ) AS __label__
 	FROM ruoli_immagini
 ;
@@ -6025,6 +6028,7 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.se_categorie_notizie,
 		ruoli_video.se_risorse,
 		ruoli_video.se_categorie_risorse,
+		ruoli_video.se_immobili,
 	 	ruoli_video_path( ruoli_video.id ) AS __label__
 	FROM ruoli_video
 ;
