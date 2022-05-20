@@ -149,4 +149,89 @@ INSERT INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awe
 (12,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
 (13,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
+--| 202205190160
+UPDATE `ruoli_anagrafica` SET
+`id` = '28',
+`id_genitore` = NULL,
+`nome` = 'conduttore',
+`html_entity` = NULL,
+`font_awesome` = NULL,
+`se_produzione` = NULL,
+`se_didattica` = NULL,
+`se_organizzazioni` = NULL,
+`se_relazioni` = NULL,
+`se_risorse` = NULL,
+`se_progetti` = NULL,
+`se_immobili` = NULL,
+`se_contratti` = '1'
+WHERE `id` = '28';
+
+--| 202205190170
+CREATE TABLE `valutazioni_certificazioni` (
+  `id` int NOT NULL,
+  `id_valutazione` int DEFAULT NULL,
+  `id_certificazione` int DEFAULT NULL,
+  `id_emittente` int DEFAULT NULL,
+  `nome` char(1) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `data_emissione` date DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
+
+--| 202205190180
+ALTER TABLE `valutazioni_certificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_certificazione` (`id_certificazione`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
+	ADD KEY `id_emittente` (`id_emittente`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `codice` (`codice`), 
+	ADD KEY `data_emissione` (`data_emissione`), 
+	ADD KEY `data_scadenza` (`data_scadenza`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unica` (`id_valutazione`,`id_certificazione`, `codice`),
+	ADD KEY `indice` (`id`,`id_valutazione`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
+
+
+--| 202205190190
+ALTER TABLE `valutazioni_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202205190200
+ALTER TABLE `valutazioni_certificazioni`
+    ADD CONSTRAINT `valutazioni_certificazioni_ibfk_01`               FOREIGN KEY (`id_valutazione`) REFERENCES `valutazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `valutazioni_certificazioni_ibfk_02_nofollow`      FOREIGN KEY (`id_certificazione`) REFERENCES `certificazioni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `valutazioni_certificazioni_ibfk_03_nofollow`      FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `valutazioni_certificazioni_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `valutazioni_certificazioni_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202205190210
+CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
+	SELECT
+		valutazioni_certificazioni.id,
+		valutazioni_certificazioni.id_valutazione,
+		valutazioni_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
+		valutazioni_certificazioni.id_emittente,
+		coalesce( emittente.denominazione , concat( emittente.cognome, ' ', emittente.nome ), '' ) AS emittente,
+		valutazioni_certificazioni.nome,
+		valutazioni_certificazioni.codice,
+		valutazioni_certificazioni.data_emissione,
+		valutazioni_certificazioni.data_scadenza,
+		concat(
+			valutazioni_certificazioni.id_valutazione, ' ',
+			certificazioni.nome,
+			' - ',
+			valutazioni_certificazioni.codice
+		) AS __label__
+	FROM valutazioni_certificazioni
+		INNER JOIN anagrafica AS emittente ON emittente.id = valutazioni_certificazioni.id_emittente
+		INNER JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione		
+;
+
 --| FINE

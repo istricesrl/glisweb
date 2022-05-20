@@ -36,6 +36,9 @@
         ),
         'progetti_certificazioni' => array(
             CONTROL_FULL => array( 'roots' )
+        ),
+        'valutazioni_certificazioni' => array(
+            CONTROL_FULL => array( 'roots' )
         )
 	    )
 	);
