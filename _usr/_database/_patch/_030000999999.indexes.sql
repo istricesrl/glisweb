@@ -3685,6 +3685,31 @@ ALTER TABLE `valutazioni`
 -- tipologia: tabella gestita
 ALTER TABLE `valutazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000062950
+
+-- valutazioni_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-05-23 Chiara GDL
+ALTER TABLE `valutazioni_certificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_certificazione` (`id_certificazione`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
+	ADD KEY `id_emittente` (`id_emittente`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `codice` (`codice`), 
+	ADD KEY `data_emissione` (`data_emissione`), 
+	ADD KEY `data_scadenza` (`data_scadenza`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unica` (`id_valutazione`,`id_certificazione`, `codice`),
+	ADD KEY `indice` (`id`,`id_valutazione`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
+
+--| 030000062951
+
+-- valutazioni_certificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `valutazioni_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000063000
 
 -- valute

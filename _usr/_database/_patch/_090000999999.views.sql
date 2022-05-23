@@ -7313,7 +7313,41 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN regioni ON regioni.id = provincie.id_regione
 		LEFT JOIN stati ON stati.id = regioni.id_stato;
-				
+
+--| 090000062950
+
+-- valutazioni_certificazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `valutazioni_certificazioni_view`;
+
+--| 090000062951
+
+-- valutazioni_certificazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-05-23 Chiara GDL
+CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
+	SELECT
+		valutazioni_certificazioni.id,
+		valutazioni_certificazioni.id_valutazione,
+		valutazioni_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
+		valutazioni_certificazioni.id_emittente,
+		coalesce( emittente.denominazione , concat( emittente.cognome, ' ', emittente.nome ), '' ) AS emittente,
+		valutazioni_certificazioni.nome,
+		valutazioni_certificazioni.codice,
+		valutazioni_certificazioni.data_emissione,
+		valutazioni_certificazioni.data_scadenza,
+		concat(
+			valutazioni_certificazioni.id_valutazione, ' ',
+			certificazioni.nome,
+			' - ',
+			valutazioni_certificazioni.codice
+		) AS __label__
+	FROM valutazioni_certificazioni
+		LEFT JOIN anagrafica AS emittente ON emittente.id = valutazioni_certificazioni.id_emittente
+		INNER JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione		
+;
+
 --| 090000063000
 
 -- valute_view

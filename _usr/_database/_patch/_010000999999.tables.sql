@@ -3373,6 +3373,27 @@ CREATE TABLE `valutazioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000062950
+
+-- valutazioni_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-05-23 Chiara GDL
+CREATE TABLE `valutazioni_certificazioni` (
+  `id` int NOT NULL,
+  `id_valutazione` int DEFAULT NULL,
+  `id_certificazione` int DEFAULT NULL,
+  `id_emittente` int DEFAULT NULL,
+  `nome` char(1) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `data_emissione` date DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
+
 --| 010000063000
 
 -- valute
