@@ -490,7 +490,7 @@ CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 		) AS __label__
 	FROM anagrafica_certificazioni
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_certificazioni.id_anagrafica
-		INNER JOIN anagrafica AS emittente ON emittente.id = anagrafica_certificazioni.id_emittente
+		LEFT JOIN anagrafica AS emittente ON emittente.id = anagrafica_certificazioni.id_emittente
 		INNER JOIN certificazioni ON certificazioni.id = anagrafica_certificazioni.id_certificazione		
 ;
 
@@ -2611,6 +2611,8 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_contratto,
         file.id_valutazione,
         file.id_rinnovo,
+		file.id_anagrafica_certificazioni,
+		file.id_valutazione_certificazioni,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -5839,6 +5841,7 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.se_categorie_notizie,
 		ruoli_audio.se_risorse,
 		ruoli_audio.se_categorie_risorse,
+		ruoli_audio.se_immobili,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
 ;
@@ -5871,6 +5874,7 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_risorse,
 		ruoli_file.se_categorie_risorse,
 		ruoli_file.se_mail,
+		ruoli_file.se_immobili,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;
@@ -5903,6 +5907,7 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS
 		ruoli_immagini.se_categorie_notizie,
 		ruoli_immagini.se_risorse,
 		ruoli_immagini.se_categorie_risorse,
+		ruoli_immagini.se_immobili,
 	 	ruoli_immagini_path( ruoli_immagini.id ) AS __label__
 	FROM ruoli_immagini
 ;
@@ -6026,6 +6031,7 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.se_categorie_notizie,
 		ruoli_video.se_risorse,
 		ruoli_video.se_categorie_risorse,
+		ruoli_video.se_immobili,
 	 	ruoli_video_path( ruoli_video.id ) AS __label__
 	FROM ruoli_video
 ;
@@ -7267,7 +7273,31 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		valutazioni.timestamp_valutazione,
 		valutazioni.id_account_inserimento,
 		valutazioni.id_account_aggiornamento,
-		concat('valutazione ', immobili.nome) AS __label__
+		concat('valutazione ', 	concat_ws(
+			' ',
+			tipologie_immobili.nome, 
+			coalesce(
+			concat('scala ', immobili.scala), 
+			''
+			), 
+			coalesce(
+			concat('piano ', immobili.piano), 
+			''
+			), 
+			coalesce(
+			concat('int. ', immobili.interno), 
+			''
+			),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) ) AS __label__
 	FROM valutazioni
 		LEFT JOIN anagrafica ON anagrafica.id = valutazioni.id_anagrafica
 		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
@@ -7284,7 +7314,41 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN regioni ON regioni.id = provincie.id_regione
 		LEFT JOIN stati ON stati.id = regioni.id_stato;
-				
+
+--| 090000062950
+
+-- valutazioni_certificazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `valutazioni_certificazioni_view`;
+
+--| 090000062951
+
+-- valutazioni_certificazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-05-23 Chiara GDL
+CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
+	SELECT
+		valutazioni_certificazioni.id,
+		valutazioni_certificazioni.id_valutazione,
+		valutazioni_certificazioni.id_certificazione,
+		certificazioni.nome AS certificazione,
+		valutazioni_certificazioni.id_emittente,
+		coalesce( emittente.denominazione , concat( emittente.cognome, ' ', emittente.nome ), '' ) AS emittente,
+		valutazioni_certificazioni.nome,
+		valutazioni_certificazioni.codice,
+		valutazioni_certificazioni.data_emissione,
+		valutazioni_certificazioni.data_scadenza,
+		concat(
+			valutazioni_certificazioni.id_valutazione, ' ',
+			certificazioni.nome,
+			' - ',
+			valutazioni_certificazioni.codice
+		) AS __label__
+	FROM valutazioni_certificazioni
+		LEFT JOIN anagrafica AS emittente ON emittente.id = valutazioni_certificazioni.id_emittente
+		INNER JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione		
+;
+
 --| 090000063000
 
 -- valute_view

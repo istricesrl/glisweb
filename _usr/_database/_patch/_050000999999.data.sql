@@ -562,7 +562,7 @@ INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 (25,	NULL,	'istruttore',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
 (26,	NULL,	'proprietario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
 (27,	NULL,	'proponente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(28,	NULL,	'contraente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1)
+(28,	NULL,	'conduttore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1)
 ON DUPLICATE KEY UPDATE
 	id_genitore = VALUES( id_genitore ),
 	nome = VALUES(nome),
@@ -581,42 +581,48 @@ ON DUPLICATE KEY UPDATE
 -- ruoli_audio
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:28 Fabio Mosti
-REPLACE INTO `ruoli_audio` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_prodotti`, `se_articoli`) VALUES
-(1,	    'audio',	    1,	    1,	    1,	    1,	    1),
-(2,	    'commento',	    NULL,	1,	    NULL,	1,	    1);
+INSERT INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+(1,	NULL,	'audio',	NULL,	NULL,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	1),
+(2,	NULL,	'commento',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000034400
 
 -- ruoli_file
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:14 Fabio Mosti
-REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`, `se_mail`) VALUES
-(1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL,	    1),
-(2,	    'brochure',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(3,	    'documentazione',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(4,	    'driver',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(5,	    'manualistica',	    NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(6,	    'press kit',	    1,	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	    NULL),
-(7,	    'schede tecniche',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(8,	    'software',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL);
+REPLACE INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_mail`, `se_immobili`) VALUES
+(1,	NULL,	'allegato',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	1,	1),
+(2,	NULL,	'brochure',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'documentazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(4,	NULL,	'driver',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'manualistica',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(6,	NULL,	'press kit',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'schede tecniche',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'software',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	'contratto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(10,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(11,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000034600
 
 -- ruoli_immagini
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-REPLACE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
-(1,		NULL,	900,	'immagine',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(2,		NULL,	600,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(3,		NULL,	200,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(4,		NULL,	200,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(5,		NULL,	200,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1),
-(6,		NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(7,		NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(8,		NULL,	900,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(9,		NULL,	200,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	100,	'avatar',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	300,	'logo',			NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+(1,	NULL,	900,	'immagine',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(2,	NULL,	600,	'gallery',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(3,	NULL,	200,	'carousel',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(4,	NULL,	200,	'card',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(5,	NULL,	200,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	1,	1,	NULL),
+(6,	NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(7,	NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(8,	NULL,	900,	'sfondo',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(9,	NULL,	200,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	100,	'avatar',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	300,	'logo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	NULL,	'contratto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(13,	NULL,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(14,	NULL,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000034800
 
@@ -663,19 +669,20 @@ REPLACE INTO `ruoli_progetti` (`id`, `nome`, `se_sottoprogetto`, `se_proseguimen
 -- ruoli_video
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
-(1,		NULL,	'video',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(2,		NULL,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(3,		NULL,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(4,		NULL,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(5,		NULL,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1),
-(6,		NULL,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(7,		NULL,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(8,		NULL,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(9,		NULL,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	'lezione',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
-(11,	NULL,	'episodio',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL);
-
+REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+(1,	NULL,	'video',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(2,	NULL,	'gallery',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(3,	NULL,	'carousel',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(4,	NULL,	'card',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(5,	NULL,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	1,	1,	NULL),
+(6,	NULL,	'jumbotron',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(7,	NULL,	'intestazione',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(8,	NULL,	'sfondo',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(9,	NULL,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(10,	NULL,	'lezione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(11,	NULL,	'episodio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(12,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(13,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 --| 050000037000
 
 -- settori

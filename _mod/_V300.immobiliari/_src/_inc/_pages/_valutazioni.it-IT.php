@@ -58,7 +58,10 @@
 
 
 
-
+	// RELAZIONI CON IL MODULO CERTIFICAZIONI
+	if( in_array( "6700.certificazioni", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'valutazioni.immobiliari.form', $p['valutazioni.immobiliari.form']['etc']['tabs'], 'valutazioni.immobiliari.form.certificazioni' );
+	}
 
 		// form valutazioni immagini
 		$p['valutazioni.immobiliari.form.immagini'] = array(

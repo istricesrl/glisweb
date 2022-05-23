@@ -1104,7 +1104,9 @@ ALTER TABLE `file`
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_contratto` (`id_contratto`), 
 	ADD KEY `id_valutazione` (`id_valutazione`), 
-	ADD KEY `id_rinnovo` (`id_rinnovo`), 
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
+	ADD KEY `id_anagrafica_certificazioni` (`id_anagrafica_certificazioni`), 
+	ADD KEY `id_valutazione_certificazioni` (`id_valutazione_certificazioni`),  
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -2730,6 +2732,7 @@ ALTER TABLE `ruoli_audio`
 	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
+	ADD KEY `se_immobili` (`se_immobili`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
 --| 030000034201
@@ -2758,6 +2761,7 @@ ALTER TABLE `ruoli_file`
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
 	ADD KEY `se_mail` (`se_mail`), 
+	ADD KEY `se_immobili` (`se_immobili`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`, `se_mail`);
 
 --| 030000034401
@@ -2784,7 +2788,8 @@ ALTER TABLE `ruoli_immagini`
 	ADD KEY `se_notizie` (`se_notizie`), 
 	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
-	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
+	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`),
+	ADD KEY `se_immobili` (`se_immobili`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine_scalamento`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
 --| 030000034601
@@ -2885,6 +2890,7 @@ ALTER TABLE `ruoli_video`
 	ADD KEY `se_categorie_notizie` (`se_categorie_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
+	ADD KEY `se_immobili` (`se_immobili`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
 --| 030000035201
@@ -3688,6 +3694,31 @@ ALTER TABLE `valutazioni`
 -- valutazioni
 -- tipologia: tabella gestita
 ALTER TABLE `valutazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000062950
+
+-- valutazioni_certificazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-05-23 Chiara GDL
+ALTER TABLE `valutazioni_certificazioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_certificazione` (`id_certificazione`), 
+	ADD KEY `id_valutazione` (`id_valutazione`), 
+	ADD KEY `id_emittente` (`id_emittente`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `codice` (`codice`), 
+	ADD KEY `data_emissione` (`data_emissione`), 
+	ADD KEY `data_scadenza` (`data_scadenza`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unica` (`id_valutazione`,`id_certificazione`, `codice`),
+	ADD KEY `indice` (`id`,`id_valutazione`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
+
+--| 030000062951
+
+-- valutazioni_certificazioni
+-- tipologia: tabella gestita
+ALTER TABLE `valutazioni_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000063000
 

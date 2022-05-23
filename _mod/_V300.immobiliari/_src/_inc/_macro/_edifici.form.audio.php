@@ -30,7 +30,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_audio_view /*WHERE se_edifici = 1*/'
+	    'SELECT id, __label__ FROM ruoli_audio_view WHERE se_immobili = 1'
     );
     
     // tendina tipologia embed
@@ -38,7 +38,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM embed_view  /*WHERE se_edifici = 1*/'
+	    'SELECT id, __label__ FROM embed_view  '
 	); 
 
     // macro di default

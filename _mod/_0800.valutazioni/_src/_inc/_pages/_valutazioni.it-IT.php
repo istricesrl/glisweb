@@ -35,8 +35,7 @@
 													'valutazioni.form.video',
 													'valutazioni.form.file',
 													'valutazioni.form.metadati',
-													'valutazioni.form.stampe',
-													'valutazioni.form.tools' ) )
+													'valutazioni.form.stampe' ) )
 	);
 
 	// form valutazioni immagini

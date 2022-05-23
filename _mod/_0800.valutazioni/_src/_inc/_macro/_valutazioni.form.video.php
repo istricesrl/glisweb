@@ -30,7 +30,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_video_view /*WHERE se_immobili = 1*/'
+        'SELECT id, __label__ FROM ruoli_video_view WHERE se_immobili = 1 OR se_prodotti = 1 OR se_articoli = 1'
     );
     
     // tendina tipologia embed

@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'contratti';
+	$ct['form']['table'] = 'valutazioni_certificazioni';
 
     // sotto tabella gestita
 	$ct['form']['subtable'] = 'file';
@@ -30,7 +30,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_file_view WHERE se_immobili = 1 '
+	    'SELECT id, __label__ FROM ruoli_file_view /*WHERE se_certificazioni = 1*/ '
 	);
 
     // tendina lingue
