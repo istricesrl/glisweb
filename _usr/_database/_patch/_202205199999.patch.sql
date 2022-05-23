@@ -230,8 +230,9 @@ CREATE OR REPLACE VIEW `valutazioni_certificazioni_view` AS
 			valutazioni_certificazioni.codice
 		) AS __label__
 	FROM valutazioni_certificazioni
-		INNER JOIN anagrafica AS emittente ON emittente.id = valutazioni_certificazioni.id_emittente
+		LEFT JOIN anagrafica AS emittente ON emittente.id = valutazioni_certificazioni.id_emittente
 		INNER JOIN certificazioni ON certificazioni.id = valutazioni_certificazioni.id_certificazione		
 ;
+
 
 --| FINE

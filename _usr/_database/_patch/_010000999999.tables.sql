@@ -1067,6 +1067,8 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_contratto` int(11) DEFAULT NULL,
   `id_valutazione` int(11) DEFAULT NULL, 
   `id_rinnovo` int(11) DEFAULT NULL,
+  `id_anagrafica_certificazioni` int(11) DEFAULT NULL,
+  `id_valutazione_certificazioni` int(11) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `url` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,

@@ -490,7 +490,7 @@ CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 		) AS __label__
 	FROM anagrafica_certificazioni
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_certificazioni.id_anagrafica
-		INNER JOIN anagrafica AS emittente ON emittente.id = anagrafica_certificazioni.id_emittente
+		LEFT JOIN anagrafica AS emittente ON emittente.id = anagrafica_certificazioni.id_emittente
 		INNER JOIN certificazioni ON certificazioni.id = anagrafica_certificazioni.id_certificazione		
 ;
 
@@ -2611,6 +2611,8 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_contratto,
         file.id_valutazione,
         file.id_rinnovo,
+		file.id_anagrafica_certificazioni,
+		file.id_valutazione_certificazioni,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -7270,7 +7272,31 @@ CREATE OR REPLACE VIEW valutazioni_view AS
 		valutazioni.timestamp_valutazione,
 		valutazioni.id_account_inserimento,
 		valutazioni.id_account_aggiornamento,
-		concat('valutazione ', immobili.nome) AS __label__
+		concat('valutazione ', 	concat_ws(
+			' ',
+			tipologie_immobili.nome, 
+			coalesce(
+			concat('scala ', immobili.scala), 
+			''
+			), 
+			coalesce(
+			concat('piano ', immobili.piano), 
+			''
+			), 
+			coalesce(
+			concat('int. ', immobili.interno), 
+			''
+			),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) ) AS __label__
 	FROM valutazioni
 		LEFT JOIN anagrafica ON anagrafica.id = valutazioni.id_anagrafica
 		LEFT JOIN matricole ON matricole.id = valutazioni.id_matricola
