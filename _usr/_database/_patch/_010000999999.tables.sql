@@ -1689,6 +1689,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_contratto` int(11) DEFAULT NULL, 
   `id_valutazione` int(11) DEFAULT NULL,
   `id_rinnovo` int(11) DEFAULT NULL,
+  `id_tipologia_attivita` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `testo` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
