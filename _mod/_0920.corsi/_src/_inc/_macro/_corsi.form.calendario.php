@@ -73,6 +73,13 @@
 	    'SELECT id, __label__ FROM luoghi_view'
     );
 
+    $ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_periodi_view'
+    );
+
     $ct['etc']['select']['giorni_settimana'] = array(
         array( 'id' => 0, '__label__' => 'lunedì' ),
         array( 'id' => 1, '__label__' => 'martedì' ),

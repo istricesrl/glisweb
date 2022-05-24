@@ -35,6 +35,16 @@
 			{{ frm.button(  'GENERA' ,'button','btn btn-secondary btn-sm btn-block', 'creaTodo($(\'#progetti___giorno__\').val(),$(\'#progetti___data_inizio__\').val(),$(\'#progetti___data_fine__\').val(),$(\'#progetti___ora_inizio__\').val(),$(\'#progetti___ora_fine__\').val(),$(\'#progetti___id_luogo__\').val(),$(\'#progetti___id_anagrafica__\').val());','genera lezioni', 'btncrea' ) }}
 		</div>
 	</div>
+	<div class="form-group form-row">
+		<div class="col-4 col-md-2 col-form-label"><h4>escludi</h4></div>
+		{% for t in etc.select.tipologie %}
+		<div class="col-4 col-md-2 col-form-label">
+			<div class="form-check">
+				{{ frm.checkbox( table, '', '', '__' ~ t.id ~ '__',  t.__label__, '', request ) }}
+			</div>
+		</div>
+		{% endfor %}
+	</div>
 </fieldset>
 <script>
 	function creaTodo( giorno, data_inizio, data_fine, ora_inizio, ora_fine, luogo, anagrafica ) {
