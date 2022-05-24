@@ -1820,6 +1820,24 @@ CREATE TABLE IF NOT EXISTS `pagine` (
   `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000023500
+
+-- periodi
+-- tipologia: tabella di supporto
+-- verifica: 2022-05-24 12:57 Chiara GDL
+CREATE TABLE IF NOT EXISTS `periodi` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000023600
 
 -- periodicita

@@ -1988,6 +1988,25 @@ ALTER TABLE `pagine`
 -- tipologia: tabella gestita
 ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000023500
+
+-- periodi
+-- tipologia: tabella di supporto
+-- verifica: 2022-05-24 12:57 Chiara GDL
+ALTER TABLE `periodi`
+	ADD PRIMARY KEY (`id`), 
+	ADD	KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` ( `id`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`);
+
+--| 030000023501
+
+-- periodi
+-- tipologia: tabella di supporto
+ALTER TABLE `periodi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000023600
 
 -- periodicita
