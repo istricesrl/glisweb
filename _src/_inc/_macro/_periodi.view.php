@@ -27,7 +27,10 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
-        '__label__' => 'text-left'
+        '__label__' => 'text-left',
+        'tipologia' => 'text-left',
+        'data_inizio' => 'text-left',
+        'data_fine' => 'text-left'
 	);
    
     // gestione default
