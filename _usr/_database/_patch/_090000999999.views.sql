@@ -6843,6 +6843,31 @@ CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
 	FROM tipologie_pagamenti
 ;
 
+--| 090000054100
+
+-- tipologie_periodi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `tipologie_periodi_view`;
+
+--| 090000054101
+
+-- tipologie_periodi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-05-24 11:00 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
+	SELECT
+		tipologie_periodi.id,
+		tipologie_periodi.id_genitore,
+		tipologie_periodi.ordine,
+		tipologie_periodi.nome,
+		tipologie_periodi.html_entity,
+		tipologie_periodi.font_awesome,
+		tipologie_periodi.id_account_inserimento,
+		tipologie_periodi.id_account_aggiornamento,
+		tipologie_periodi_path( tipologie_periodi.id ) AS __label__
+	FROM tipologie_periodi
+;
+
 --| 090000054200
 
 -- tipologie_popup_view
