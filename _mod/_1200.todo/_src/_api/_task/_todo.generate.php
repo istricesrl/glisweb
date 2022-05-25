@@ -37,9 +37,30 @@
 
         $restult = creazionePianificazione( $cf['mysql']['connection'], $_REQUEST['__d_i__'], 2, 1, $_REQUEST['__d_f__'], NULL, $_REQUEST['__g__']);
 	    
+        
+
         logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
         
         if( $restult ){
+
+            // se vanno eliminate le chiusure
+            if( false ){
+
+                foreach( $tipologie as $t ){
+
+                    $chiusure = mysqlQuery(
+                        $cf['mysql']['connection'], 
+                        'SELECT data_inizio, data_fine FROM periodi WHERE tipologie_periodi_path_check( id_tipologia, ? ) = 1',
+                        array( array( 's' => 'a' ) )
+                    );
+
+                    foreach( $chiusure as $c ){
+                        $restult = array_diff($restult, $c);
+                    }
+                    
+                }
+
+            }
 
             $status['__status__'] = 'Pianificazione completata';
             $status['date'] = $restult;
