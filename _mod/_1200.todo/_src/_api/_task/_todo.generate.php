@@ -27,35 +27,40 @@
 	logWrite( 'richiesta generazione todo', 'todo', LOG_ERR );
     //var par = '&__g__=' + giorno + '&__d_i__=' + data_inizio + '&__d_f__=' + data_fine + '&__o_i__=' + ora_inizio + '&__o_f__=' + ora_fine + '&__l__=' + luogo + '&__'
 
-    if( isset($_REQUEST) && (! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']==0 )&& ! empty( $_REQUEST['__d_i__'] ) && ! empty( $_REQUEST['__d_f__'] )  ){
+    if( isset($_REQUEST) && (! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']==0  )&& ! empty( $_REQUEST['__d_i__'] ) && ! empty( $_REQUEST['__d_f__'] )  ){
+       
         
         $status['__status__'] = 'OK';
    
        // log
 	    logWrite( 'data inizio generazione '.$_REQUEST['__d_i__'].' '.$_REQUEST['__d_f__'], 'todo', LOG_ERR );
        // function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
-
-        $restult = creazionePianificazione( $cf['mysql']['connection'], $_REQUEST['__d_i__'], 2, 1, $_REQUEST['__d_f__'], NULL, $_REQUEST['__g__']);
-	    
-        
-
+        if( ! $_REQUEST['__g__'] == ''){
+            $restult = creazionePianificazione( $cf['mysql']['connection'], $_REQUEST['__d_i__'], 2, 1, $_REQUEST['__d_f__'], NULL, $_REQUEST['__g__']);
+        } else {
+            $restult = createDateRangeArray($_REQUEST['__d_i__'],$_REQUEST['__d_f__']);
+        }
+        	    
         logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
         
         if( $restult ){
 
             // se vanno eliminate le chiusure
-            if( false ){
+            if( isset( $_REQUEST['__periodi__'] ) && ! empty( $_REQUEST['__periodi__'] ) ){
+
+                $tipologie = explode(',', $_REQUEST['__periodi__']);
 
                 foreach( $tipologie as $t ){
 
                     $chiusure = mysqlQuery(
                         $cf['mysql']['connection'], 
                         'SELECT data_inizio, data_fine FROM periodi WHERE tipologie_periodi_path_check( id_tipologia, ? ) = 1',
-                        array( array( 's' => 'a' ) )
+                        array( array( 's' => $t ) )
                     );
 
                     foreach( $chiusure as $c ){
-                        $restult = array_diff($restult, $c);
+                        $range = createDateRangeArray($c['data_inizio'], $c['data_fine']);
+                        $restult = array_diff($restult, $range);
                     }
                     
                 }
@@ -118,6 +123,7 @@
                 
     
             }
+
             $status['__status__'] = 'OK';
             $status['__new__'] = $inserite;
 
