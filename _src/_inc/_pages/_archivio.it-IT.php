@@ -300,3 +300,59 @@
 												'valutazioni.form'
 												 ) )	
 	);
+
+	// vista periodi
+	$p['periodi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'periodi' ),
+		'h1'		=> array( $l		=> 'periodi' ),
+		'parent'		=> array( 'id'		=> 'archivio' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_periodi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'periodi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'periodi' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione periodi
+	$p['periodi.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'periodi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'periodi.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_periodi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'periodi.form') )
+		
+	);
+
+	// vista tipologie periodi
+	$p['tipologie.periodi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'periodi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.periodi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.periodi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione periodi
+	$p['tipologie.periodi.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'tipologie.periodi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.periodi.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.periodi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.periodi.form') )
+		
+	);
+
+		

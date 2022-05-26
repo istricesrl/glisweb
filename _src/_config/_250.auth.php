@@ -167,9 +167,9 @@
 	    'metadati' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
-#		'pianificazioni' => array(
-#			CONTROL_FULL => array( 'roots' )
-#		),
+		'periodi' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
 #		'progetti_anagrafica' => array(
 #			CONTROL_FULL => array( 'roots' ),
 #			CONTROL_FILTERED => array( 'staff' )
@@ -210,9 +210,9 @@
 #	    'tipologie_anagrafica' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'tipologie_attivita' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'tipologie_periodi' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'ranking' => array(
 			CONTROL_FULL => array( 'roots' )
 		),

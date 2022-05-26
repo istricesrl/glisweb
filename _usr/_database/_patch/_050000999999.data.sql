@@ -1153,6 +1153,15 @@ INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_ent
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
 
+--| 050000054100
+
+-- tipologie_periodi
+-- tipologia: tabella gestita
+-- verifica: 2022-05-24 11:00 Chiara GDL
+REPLACE INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	NULL,	'feste',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| 050000054200
 
 -- tipologie_popup

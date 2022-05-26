@@ -4157,6 +4157,29 @@ CREATE OR REPLACE VIEW `pagine_view` AS
 	FROM pagine
 ;
 
+--| 090000023501
+
+-- periodi_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `periodi_view`;
+
+--| 090000023500
+
+-- periodi_view
+-- tipologia: tabella di supporto
+-- verifica: 2022-05-24 12:57 Chiara GDL
+CREATE OR REPLACE VIEW `periodi_view` AS
+	SELECT
+		periodi.id,
+		periodi.id_tipologia,
+		tipologie_periodi_path( periodi.id_tipologia ) AS tipologia,
+		periodi.data_inizio,
+		periodi.data_fine,
+		periodi.id_account_inserimento,
+		periodi.id_account_aggiornamento,
+		concat( periodi.nome, ' dal ',CONCAT_WS('-',periodi.data_inizio),' al ',CONCAT_WS('-',periodi.data_fine)) AS __label__
+	FROM periodi;
+
 --| 090000023600
 
 -- periodicita_view
@@ -6841,6 +6864,31 @@ CREATE OR REPLACE VIEW `tipologie_pagamenti_view` AS
 		tipologie_pagamenti.id_account_aggiornamento,
 		tipologie_pagamenti_path( tipologie_pagamenti.id ) AS __label__
 	FROM tipologie_pagamenti
+;
+
+--| 090000054100
+
+-- tipologie_periodi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `tipologie_periodi_view`;
+
+--| 090000054101
+
+-- tipologie_periodi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-05-24 11:00 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
+	SELECT
+		tipologie_periodi.id,
+		tipologie_periodi.id_genitore,
+		tipologie_periodi.ordine,
+		tipologie_periodi.nome,
+		tipologie_periodi.html_entity,
+		tipologie_periodi.font_awesome,
+		tipologie_periodi.id_account_inserimento,
+		tipologie_periodi.id_account_aggiornamento,
+		tipologie_periodi_path( tipologie_periodi.id ) AS __label__
+	FROM tipologie_periodi
 ;
 
 --| 090000054200

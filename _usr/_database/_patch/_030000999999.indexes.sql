@@ -1988,6 +1988,25 @@ ALTER TABLE `pagine`
 -- tipologia: tabella gestita
 ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000023500
+
+-- periodi
+-- tipologia: tabella di supporto
+-- verifica: 2022-05-24 12:57 Chiara GDL
+ALTER TABLE `periodi`
+	ADD PRIMARY KEY (`id`), 
+	ADD	KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` ( `id`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`);
+
+--| 030000023501
+
+-- periodi
+-- tipologia: tabella di supporto
+ALTER TABLE `periodi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000023600
 
 -- periodicita
@@ -3399,6 +3418,27 @@ ALTER TABLE `tipologie_pagamenti`
 -- tipologie_pagamenti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000054100
+
+-- tipologie_periodi
+-- tipologia: tabella gestita
+-- verifica: 2022-05-24 11:00 Chiara GDL
+ALTER TABLE `tipologie_periodi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000054101
+
+-- tipologie_periodi
+-- tipologia: tabella gestita
+ALTER TABLE `tipologie_periodi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000054200
 
