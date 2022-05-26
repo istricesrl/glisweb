@@ -17,7 +17,8 @@
 
     $ct['form']['table'] = 'documenti';
 
-
+    // dati per tendine ed elenco
+    // elenco prodotti disponibili
     $ct['etc']['prodotti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -25,10 +26,19 @@
 	    'SELECT * FROM prodotti_view'
 	);
 
+    // tipologia ordine
     $ct['etc']['default_tipologia'] = mysqlSelectCachedValue(
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id FROM tipologie_documenti WHERE nome = "ordine"'
+	);
+
+    // elenco udm
+    $ct['etc']['udm'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT * FROM udm_view'
 	);
 
     // verifico se è presente uno scontrino aperto
