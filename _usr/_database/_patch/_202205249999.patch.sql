@@ -218,4 +218,8 @@ CREATE OR REPLACE VIEW `periodi_view` AS
 		concat( periodi.nome, ' dal ',CONCAT_WS('-',periodi.data_inizio),' al ',CONCAT_WS('-',periodi.data_fine)) AS __label__
 	FROM periodi;
 
+--| 202205240150
+ALTER TABLE  `anagrafica` 
+CHANGE   `riferimento` `riferimento` char(255) DEFAULT NULL;
+
 --| FINE

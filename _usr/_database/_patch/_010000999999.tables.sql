@@ -90,7 +90,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
-  `riferimento` char(32) DEFAULT NULL,
+  `riferimento` char(255) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `cognome` char(255) DEFAULT NULL,
   `denominazione` char(255) DEFAULT NULL,
