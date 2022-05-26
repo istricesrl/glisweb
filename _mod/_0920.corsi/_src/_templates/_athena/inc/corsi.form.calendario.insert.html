@@ -31,20 +31,20 @@
 			<span class="label-top">istruttore</span>
 			{{ frm.selectBox( table, '', '', '__id_anagrafica__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, '', '2' ) }}
 		</div>
-	</div>
-		<div class="form-group form-row">
-			<div class="col-4 col-md-2 col-form-label"><h4>escludi</h4></div>
+		<div class="form-row col-12">
+			<div class="col-1"><h3>escludi</h3></div>
 			{% for t in etc.select.tipologie %}
 			<div class="col-auto">
 				<input type="checkbox" id="tipologie_{{t.id}}" name="tipologie" value="{{ t.id }}">
 				<label for="horns">{{t.__label__}}</label>
 			</div>
 			{% endfor %}
-		</div>
-		<div class="col-12 col-md-auto">
-			{{ frm.button(  'GENERA' ,'button','btn btn-secondary btn-sm btn-block', 'creaTodo($(\'#progetti___giorno__\').val(),$(\'#progetti___data_inizio__\').val(),$(\'#progetti___data_fine__\').val(),$(\'#progetti___ora_inizio__\').val(),$(\'#progetti___ora_fine__\').val(),$(\'#progetti___id_luogo__\').val(),$(\'#progetti___id_anagrafica__\').val());','genera lezioni', 'btncrea' ) }}
+			<div class="col-12 col-md-12">
+				{{ frm.button(  'GENERA' ,'button','btn btn-secondary btn-sm btn-block', 'creaTodo($(\'#progetti___giorno__\').val(),$(\'#progetti___data_inizio__\').val(),$(\'#progetti___data_fine__\').val(),$(\'#progetti___ora_inizio__\').val(),$(\'#progetti___ora_fine__\').val(),$(\'#progetti___id_luogo__\').val(),$(\'#progetti___id_anagrafica__\').val());','genera lezioni', 'btncrea' ) }}
+			</div>
 		</div>
 
+	</div>
 
 </fieldset>
 <script>
