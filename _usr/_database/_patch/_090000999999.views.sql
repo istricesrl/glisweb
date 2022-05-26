@@ -2191,6 +2191,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 				''
 			)
 		) AS articolo,
+		documenti_articoli.id_prodotto,
+		prodotti.nome AS prodotto,
 		documenti_articoli.id_mastro_provenienza,
 		mastri_path( m1.id ) AS mastro_provenienza,
 		documenti_articoli.id_mastro_destinazione,
