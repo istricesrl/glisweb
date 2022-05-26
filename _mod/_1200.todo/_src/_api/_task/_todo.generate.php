@@ -36,9 +36,13 @@
 	    logWrite( 'data inizio generazione '.$_REQUEST['__d_i__'].' '.$_REQUEST['__d_f__'], 'todo', LOG_ERR );
        // function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
         if( ! $_REQUEST['__g__'] == ''){
+        
             $restult = creazionePianificazione( $cf['mysql']['connection'], $_REQUEST['__d_i__'], 2, 1, $_REQUEST['__d_f__'], NULL, $_REQUEST['__g__']);
+        
         } else {
+        
             $restult = createDateRangeArray($_REQUEST['__d_i__'],$_REQUEST['__d_f__']);
+        
         }
         	    
         logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
