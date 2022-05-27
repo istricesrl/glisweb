@@ -36,6 +36,8 @@
         'sigla_udm_peso' => 'udm peso'
     );
 
+    $ct['view']['__restrict__']['id']['EQ'] = 2;
+
     // dati per tendine ed elenco
     // elenco prodotti disponibili
     /*$ct['etc']['prodotti'] = mysqlCachedIndexedQuery(
@@ -103,5 +105,3 @@
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
     require DIR_SRC_INC_MACRO . '_default.view.php';
-
-print_r($ct['view']['data']);
