@@ -27,7 +27,7 @@
     $ct['page']['contents']['metro']['scorciatoie'][] = array(
         'url' => $cf['contents']['pages']['mailing.form']['url'][ LINGUA_CORRENTE ],
         'icon' => NULL,
-        'fa' => 'fa-bolt',
+        'fa' => 'fa-plus-square',
         'title' => 'crea mailing',
         'text' => 'crea nuovo invio mailing'
     );

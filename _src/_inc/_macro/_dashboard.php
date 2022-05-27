@@ -27,7 +27,7 @@
 	$ct['page']['contents']['metro']['scorciatoie'][] = array(
 	    'url' => $cf['contents']['pages']['anagrafica.form']['url'][ LINGUA_CORRENTE ],
 	    'icon' => NULL,
-	    'fa' => 'fa-bolt',
+	    'fa' => 'fa-plus-square',
 	    'title' => 'inserimento anagrafica',
 	    'text' => 'inserisce una nuova anagrafica'
 	);
@@ -39,7 +39,7 @@
         $ct['page']['contents']['metro']['scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
-            'fa' => 'fa-bolt',
+            'fa' => 'fa-plus-square',
             'title' => 'inserimento fattura',
             'text' => 'inserisce una nuova fattura'
         );
@@ -53,7 +53,7 @@
         $ct['page']['contents']['metro']['scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['ddt.magazzini.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
-            'fa' => 'fa-bolt',
+            'fa' => 'fa-plus-square',
             'title' => 'inserimento DDT',
             'text' => 'inserisce un nuovo DDT'
         );
@@ -67,7 +67,7 @@
         $ct['page']['contents']['metro']['scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['mailing.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
-            'fa' => 'fa-bolt',
+            'fa' => 'fa-plus-square',
             'title' => 'crea mailing',
             'text' => 'crea nuovo invio mailing'
         );

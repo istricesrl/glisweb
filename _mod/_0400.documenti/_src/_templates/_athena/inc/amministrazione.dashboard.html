@@ -1,0 +1,38 @@
+<div class="form-group form-row h-50">
+    <div class="col-12">
+        <canvas class="" id="andamento"></canvas>
+    </div>
+</div>
+
+<div class="form-group form-row">
+    <div class="col">
+
+        <table class="view-table">
+            <tr>
+                <th class="table-header-static"></th>
+                {% for m in data.labels %}
+                <th class="table-header-static">{{ m }}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>entrate</td>
+                {% for k,m in data.labels %}
+                <td>{{ data.values.entrate[ m ].value }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>uscite</td>
+                {% for k,m in data.labels %}
+                <td>{{ data.values.uscite[ m ].value }}</td>
+                {% endfor %}
+            </tr>
+            <tr style="background-color: #eeeeee;">
+                <td>totale</td>
+                {% for k,m in data.labels %}
+                <td>{{ data.values.entrate[ m ].value - data.values.uscite[ m ].value }}</td>
+                {% endfor %}
+            </tr>
+        </table>
+
+    </div>
+</div>

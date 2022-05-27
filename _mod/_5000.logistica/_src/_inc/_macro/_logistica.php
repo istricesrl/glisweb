@@ -29,7 +29,7 @@
         $ct['page']['contents']['metro']['scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['ddt.magazzini.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
-            'fa' => 'fa-bolt',
+            'fa' => 'fa-plus-square',
             'title' => 'inserimento DDT',
             'text' => 'inserisce un nuovo DDT'
         );
