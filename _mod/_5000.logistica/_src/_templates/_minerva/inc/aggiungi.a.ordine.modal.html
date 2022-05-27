@@ -21,76 +21,61 @@
 {% set activity = 'inserimento' %}
 {% endif %}
 <script>
-    function aggiungi( t ) {
+    function aggiungi() {
 
-		var qta = $( '#_qta' ).val().replace(",", ".");
-		var ore = $( '#_ore_c' ).val().replace(",", ".");
-		var id_articolo = $( '#_id_articolo_inputbox' ).val();
-		var id_mastro = $( '#_mastro' ).val();
-        var id_cliente = '{{ etc.todo.id_cliente }}';
-        var id_todo = '{{ etc.todo.id }}';
-        var id_progetto = '{{ etc.todo.id_progetto }}';
-
-    if( qta != '' && ore != '' && id_articolo != '' && id_mastro != ''  ){
+		var qta = $( '#_quantita' ).val().replace(",", ".");
+		var udm = $( '#_id_udm' ).val();
+        var p = $( '#_id_prodotto_add' ).val();
 
 
-        window.open('{{ cassa }}?__art__='+id_articolo+'&__qta__='+qta+'&__mastro__='+id_mastro+'&__ore__='+ore+'&__cliente__='+id_cliente+'&__todo__='+id_todo+'&__progetto__='+id_progetto,'_self');
+    if( qta != '' && udm != '' && p != ''  ){
+
+
+        window.open('{{ pages[ "app.logistica.ordine" ].path[ietf] }}?__action__=add&__p__='+p+'&__qta__='+qta+'&__udm__='+udm,'_self');
         
     } 
     
-    if(qta == ''){ document.getElementById("_qta").style.borderColor="#FF0000";
-    } else { document.getElementById("_qta").style.borderColor="#ced4da"; }
+    if(qta == ''){ document.getElementById("_quantita").style.borderColor="#FF0000";
+    } else { document.getElementById("_quantita").style.borderColor="#ced4da"; }
     
-    if ( ore == '' ) { document.getElementById("_ore_c").style.borderColor="#FF0000";
-    } else { document.getElementById("_ore_c").style.borderColor="#ced4da"; }
+    if ( udm == '' ) { document.getElementById("_id_udm").style.borderColor="#FF0000";
+    } else { document.getElementById("_id_udm").style.borderColor="#ced4da"; }
     
-    if ( id_articolo == '' ){ document.getElementById("_id_articolo_inputbox").style.borderColor="#FF0000";
-    } else { document.getElementById("_id_articolo_inputbox").style.borderColor="#ced4da"; }
-    
-    if ( id_mastro == '' ){ document.getElementById("_mastro").style.borderColor="#FF0000";
-    } else { document.getElementById("_mastro").style.borderColor="#ced4da"; }
 
     }
 </script>
 
-<div class="modal" tabindex="-1" role="dialog" id="aggiungi_ordine">
-    <div class="modal-dialog modal-lg" role="document">
-	<div class="modal-content">
-	    <div class="modal-header">
-		<h3 class="modal-title">attività</h3>
-		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-	    </div>
-	    <div class="modal-body">
-		<div class="container-fluid">
-			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
-
-				{# CAMPI HIDDEN DI BASE #}
-
-                <legend>aggiungi adll'ordine</legend>
-                <div class="form-group form-row">
-                    <input type="hidden" id="id_prodotto_add" name="{{ table }}[id_prodotto_add]" value="">
-                    <div class="col-2">
-                        <span class="label-top">ore</span>
-                        {{ frm.inputDisabled( table, '', '', 'prodotto_add', '', '', request, tot ) }}
-                    </div>
-                    <div class="col-2">
-                        <span class="label-top">quantità</span>
-                        {{ frm.input( '', '', '', 'qta', '', '', request, tot ) }}
-                    </div>
-                    <div class="col-2" >
-                        <span class="label-top">unità di misura</span>
-                        {{ frm.select( '', '', '', 'udm', '', etc.select.udm, request, etc.mastro_attivita ) }}
-                    </div>
-
+<div class="modal fade" id="aggiungi_a_ordine" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Aggiungi prodotto al tuo ordine</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row form-group">
+                <legend>dettaglio</legend>
+                <input type="hiddent" id="_id_prodotto_add" name="_id_prodotto_add" >
+                <div class="col-12">
+                    <span class="label-top">prodotto</span>
+                    {{ frm.inputDisabled( '', '', '', 'prodotto_add', '', '', request ) }}
                 </div>
+                <div class="col-4">
+                    <span class="label-top">quantità</span>
+                    {{ frm.input( '', '', '', 'quantita', '', '', request, '', 'number', '', '', '', '0.5' ) }}
+                 </div>
+                 <div class="col" >
+                    <span class="label-top">unità di misura</span>
+                    {{ frm.select( table, '', '', 'id_udm', '', etc.select.udm, request ) }}
                 </div>
-        
-	    <div class="modal-footer">
-		<!--button id="annulla_matricola" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button-->
-        <button id="elimina_articolo" type="button" class="btn btn-secondary btn-sm" data-dismiss="modal" >annulla</button>
-        <button type="button" class="btn btn-secondary btn-sm" id="genera-btn" onclick="aggiungi(this)">aggiungi</button>
-	    </div>
-		</div></form>
-	</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">annulla</button>
+          <button type="button" class="btn  btn-secondary" onclick="aggiungi()">aggiungi</button>
+        </div>
+      </div>
     </div>
-</div>
+  </div>

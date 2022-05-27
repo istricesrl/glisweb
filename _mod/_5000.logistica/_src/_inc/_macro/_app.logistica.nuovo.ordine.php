@@ -54,12 +54,18 @@
 	    'SELECT id FROM tipologie_documenti WHERE nome = "ordine"'
 	);
 
+    $ct['etc']['default_mastro'] = mysqlSelectCachedValue(
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id FROM mastri WHERE nome = "ordini da evadere"'
+	);
+
     // elenco udm
-    $ct['etc']['udm'] = mysqlCachedIndexedQuery(
+    $ct['etc']['select']['udm'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT * FROM udm_view'
+	    'SELECT * FROM udm_view WHERE se_massa = 1 OR se_quantita = 1 OR se_volume = 1'
 	);
 
     // verifico se è presente uno scontrino aperto
@@ -80,13 +86,77 @@
             'DELETE FROM documenti WHERE id = ?',
             array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
+
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id']) && isset($_REQUEST['__action__']) & isset($_REQUEST['__p__']) && isset($_REQUEST['__qta__']) && isset($_REQUEST['__udm__']) ){
+
+        if( $_REQUEST['__action__'] == 'add' ){
+            $quantita_riga = mysqlSelectValue( 
+                $cf['mysql']['connection'], 
+                'SELECT quantita FROM documenti_articoli WHERE id_prodotto = ? AND id_documento = ? AND id_udm = ?',
+                array( 
+                    array( 's' => $_REQUEST['__p__'] ),
+                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                    array( 's' => $_REQUEST['__udm__'] )
+                )
+            );
     
+            if( $quantita_riga ){
+    
+                $update = mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    "UPDATE documenti_articoli SET quantita = ? WHERE id_prodotto = ? AND id_documento = ? AND id_udm = ?",
+                    array( 
+                        array( 's' => $quantita_riga + $_REQUEST['__qta__']),
+                        array( 's' => $_REQUEST['__p__'] ),
+                        array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                        array( 's' => $_REQUEST['__udm__'] )
+                    )
+                    );
+    
+            } else {
+                $insert = mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    "INSERT INTO documenti_articoli ( id_prodotto, id_documento, quantita, id_udm, id_mastro_destinazione, id_tipologia )  VALUES (?, ?, ?, ?, ?, ? )",
+                    array( 
+                        array( 's' => $_REQUEST['__p__'] ),
+                        array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                        array( 's' => $_REQUEST['__qta__'] ),
+                        array( 's' => $_REQUEST['__udm__'] ),
+                        array( 's' => $ct['etc']['default_mastro'] ),
+                        array( 's' => $ct['etc']['default_tipologia'] )
+                        
+         
+                    ) );
+            }
+        }
+
+
+        if( $_REQUEST['__action__'] == 'edit' ){
+    
+                $update = mysqlQuery( 
+                    $cf['mysql']['connection'], 
+                    "UPDATE documenti_articoli SET quantita = ?, id_udm = ?  WHERE id_prodotto = ? AND id_documento = ? ",
+                    array( 
+                        array( 's' => $_REQUEST['__qta__']),
+                        array( 's' => $_REQUEST['__udm__'] ),
+                        array( 's' => $_REQUEST['__p__'] ),
+                        array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                        
+                    )
+                    );
+        }
+
+
+
+
+    }
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
     // inclusione modal
     $ct['page']['contents']['metro'][NULL][] = array(
-        'modal' => array( 'id' => 'aggiungi_ordine', 'include' => 'inc/aggiungi.a.ordine.modal.html' )
+        'modal' => array( 'id' => 'aggiungi_a_ordine', 'include' => 'inc/aggiungi.a.ordine.modal.html' )
         );
 
     $ct['page']['contents']['metro'][NULL][] = array(
@@ -104,4 +174,5 @@
     // macro per l'apertura dei modal
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
+    require DIR_SRC_INC_MACRO . '_default.form.php';
     require DIR_SRC_INC_MACRO . '_default.view.php';
