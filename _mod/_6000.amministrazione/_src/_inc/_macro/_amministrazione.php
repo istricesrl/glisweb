@@ -66,6 +66,24 @@
             $ct['data']['labels'][ date( 'm', $ts ) ] = strftime( '%B', $ts );
         }
 
+        /*
+        SELECT 
+            data AS mese,
+            sum( entrate ) AS entrate,
+            sum( uscite ) AS uscite,
+            FORMAT(coalesce( ( sum( entrate ) - sum( uscite ) ), 0 ), 2,'es_ES') AS totale
+        FROM ( 
+            SELECT DATE_FORMAT(`data`,'%M')
+            FROM `documenti_articoli`
+            WHERE `id_tipologia`=1 AND (`data` BETWEEN "2019-01-01" AND "2019-12-31")
+            UNION
+            SELECT
+            FROM
+            WHERE
+        ) AS 
+        ORDER BY mese ASC
+        */
+
         // dati entrate
         foreach( $ct['data']['labels'] as $m => $l ) {
             $ct['data']['values']['entrate'][ $l ] = array( 'value' => 100.00 );
