@@ -86,7 +86,7 @@
 
     // inclusione modal
     $ct['page']['contents']['metro'][NULL][] = array(
-        'modal' => array( 'id' => 'aggiungi_prodotto', 'include' => 'inc/aggiungi.a.ordine.modal.html' )
+        'modal' => array( 'id' => 'aggiungi_ordine', 'include' => 'inc/aggiungi.a.ordine.modal.html' )
         );
 
     $ct['page']['contents']['metro'][NULL][] = array(
