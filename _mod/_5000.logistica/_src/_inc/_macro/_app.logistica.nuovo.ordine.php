@@ -17,14 +17,33 @@
 
     $ct['form']['table'] = 'documenti';
 
+    $ct['view']['data']['__report_mode__'] = 1;
+
+    // tabella della vista
+    $ct['view']['table'] = '__report_giacenza_magazzini__';
+
+    $ct['view']['cols'] = array(
+        'id' => '#',
+        'id_prodotto' => 'id_prodotto',
+        'prodotto' => 'prodotto',
+        'id_articolo' => 'codice',
+        'articolo' => 'descrizione',
+        'categorie' => 'categoria',
+        'carico' => 'carico',
+        'scarico' => 'scarico',
+        'totale' => 'totale',
+        'peso' => 'peso',
+        'sigla_udm_peso' => 'udm peso'
+    );
+
     // dati per tendine ed elenco
     // elenco prodotti disponibili
-    $ct['etc']['prodotti'] = mysqlCachedIndexedQuery(
+    /*$ct['etc']['prodotti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT * FROM prodotti_view'
-	);
+	);*/
 
     // tipologia ordine
     $ct['etc']['default_tipologia'] = mysqlSelectCachedValue(
@@ -83,3 +102,6 @@
     // macro per l'apertura dei modal
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
+    require DIR_SRC_INC_MACRO . '_default.view.php';
+
+print_r($ct['view']['data']);

@@ -52,12 +52,20 @@
 
         <div class="col-6 align-items-center"  >
             <legend>prodotti disponibili</legend>
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
             <div class="box" style="height: 85vh;" >
-                {% for p in etc.prodotti %}
+                {% for row in view.data %}
                 <div class="media">
                    
                     <div class="media-body p-3 col-10">
-                      <h3 class="mt-0">{{ p.__label__ }}</h3>
+                      <h3 class="mt-0">{{ row.prodotto }}</h3>
                     </div>
                     <div class="col-2 align-middle">
                         <button class="btn"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>
