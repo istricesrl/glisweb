@@ -28,13 +28,31 @@
 
 	if( in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
 
-        // inserimento nuova fattura
+        // inserimento nuova fattura attiva
         $ct['page']['contents']['metro']['10.scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
             'fa' => 'fa-plus-square',
-            'title' => 'inserimento fattura',
-            'text' => 'inserisce una nuova fattura'
+            'title' => 'inserimento fattura attiva',
+            'text' => 'inserisce una nuova fattura attiva'
+        );
+
+        // inserimento nuova proforma
+        $ct['page']['contents']['metro']['10.scorciatoie'][] = array(
+            'url' => $cf['contents']['pages']['proforma.amministrazione.form']['url'][ LINGUA_CORRENTE ],
+            'icon' => NULL,
+            'fa' => 'fa-plus-square',
+            'title' => 'inserimento proforma',
+            'text' => 'inserisce una nuova proforma'
+        );
+
+        // inserimento nuova nota di credito
+        $ct['page']['contents']['metro']['10.scorciatoie'][] = array(
+            'url' => $cf['contents']['pages']['note.credito.amministrazione.form']['url'][ LINGUA_CORRENTE ],
+            'icon' => NULL,
+            'fa' => 'fa-plus-square',
+            'title' => 'inserimento nota di credito',
+            'text' => 'inserisce una nuova nota di credito'
         );
 
         // inserimento nuova fattura

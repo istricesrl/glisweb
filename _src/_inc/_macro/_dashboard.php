@@ -35,13 +35,13 @@
 	// RELAZIONI CON IL MODULO DOCUMENTI
 	if( in_array( "6000.amministrazione", $cf['mods']['active']['array'] ) && in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
 
-        // inserimento nuova fattura
+        // inserimento nuova fattura attiva
         $ct['page']['contents']['metro']['scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
             'fa' => 'fa-plus-square',
-            'title' => 'inserimento fattura',
-            'text' => 'inserisce una nuova fattura'
+            'title' => 'inserimento fattura attiva',
+            'text' => 'inserisce una nuova fattura attiva'
         );
 
     }
@@ -49,13 +49,13 @@
     // RELAZIONI CON IL MODULO LOGISTICA
 	if( in_array( "5000.logistica", $cf['mods']['active']['array'] ) && in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
 
-        // inserimento nuovo DDT
+        // inserimento nuovo DDT attivo
         $ct['page']['contents']['metro']['scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['ddt.magazzini.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
             'fa' => 'fa-plus-square',
-            'title' => 'inserimento DDT',
-            'text' => 'inserisce un nuovo DDT'
+            'title' => 'inserimento DDT attivo',
+            'text' => 'inserisce un nuovo DDT attivo'
         );
         
     }

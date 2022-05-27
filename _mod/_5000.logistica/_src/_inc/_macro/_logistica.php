@@ -25,12 +25,22 @@
 
 	if( in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
 
-        // inserimento nuovo DDT
+        // inserimento nuovo DDT attivo
         $ct['page']['contents']['metro']['scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['ddt.magazzini.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
             'fa' => 'fa-plus-square',
-            'title' => 'inserimento DDT',
-            'text' => 'inserisce un nuovo DDT'
+            'title' => 'inserimento DDT attivo',
+            'text' => 'inserisce un nuovo DDT attivo'
         );
+
+        // inserimento nuovo DDT passivo
+        $ct['page']['contents']['metro']['scorciatoie'][] = array(
+            'url' => $cf['contents']['pages']['ddt.passivi.magazzini.form']['url'][ LINGUA_CORRENTE ],
+            'icon' => NULL,
+            'fa' => 'fa-plus-square',
+            'title' => 'inserimento DDT passivo',
+            'text' => 'inserisce un nuovo DDT passivo'
+        );
+
     }
