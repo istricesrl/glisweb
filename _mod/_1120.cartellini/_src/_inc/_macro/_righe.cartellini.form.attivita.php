@@ -43,6 +43,13 @@
             $contratto = $car['id_contratto'];
 
             if( !empty(  $contratto ) ){
+
+                $dati_contratto = mysqlSelectRow(
+                    $cf['mysql']['connection'], 
+                    'SELECT * FROM contratti WHERE id = ?',
+                    array( array( 's' => $contratto ) )
+                );
+
                 // verifico se c'è un turno specificato nella tabella turni
                 $turno = mysqlSelectValue(
                     $cf['mysql']['connection'], 
@@ -70,8 +77,8 @@
                 );
 
                 if( empty( $fasce ) ){
-                    $fasce['ora_inizio'] = '06:00:00';
-                    $fasce['ora_fine'] = '22:00:00';
+                    $fasce['ora_inizio'] = '00:00:01';  // '06:00:00';
+                    $fasce['ora_fine'] = '23:59:59';    // '22:00:00';
                 }
 
             } else {
@@ -80,31 +87,42 @@
             }
 
             foreach( $attivita as $a ){
+
+                $orecontratto = oreGiornaliereContratto( $dati_contratto['id_anagrafica'], $a['data_attivita'] );
+
                 $ct['etc']['attivita'][$a['id']] = $a;
 
-                $ct['etc']['attivita'][$a['id']]['ore_ordinarie'] = mysqlSelectValue( 
-                    $cf['mysql']['connection'], 
-                    'SELECT sum( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) ) AS tot_ore FROM attivita ' .
-                    'WHERE attivita.id = ?',
-                    array(
-                        array( 's' => $fasce['ora_fine'] ),
-                        array( 's' => $fasce['ora_inizio'] ),
-                        array( 's' => $a['id'] )
-                    )			
-                ) / 10000 ;
-        
-                $ct['etc']['attivita'][$a['id']]['ore_straordinarie'] = mysqlSelectValue( 
-                    $cf['mysql']['connection'], 
-                    'SELECT ( sum( TIMEDIFF( ?, LEAST( ora_inizio, ? )  ) ) + sum( TIMEDIFF(  GREATEST( ora_fine, ? ), ?  )  )  ) as tot_ore FROM attivita ' .
-                    'WHERE attivita.id = ?',
-                    array(
-                        array( 's' => $fasce['ora_inizio'] ),
-                        array( 's' => $fasce['ora_inizio'] ),
-                        array( 's' => $fasce['ora_fine'] ),
-                        array( 's' => $fasce['ora_fine'] ),
-                        array( 's' => $a['id'] )
-                    )			
-                ) / 10000 ;               
+                if( $orecontratto > 0 ){
+                    $ct['etc']['attivita'][$a['id']]['ore_ordinarie'] = mysqlSelectValue( 
+                        $cf['mysql']['connection'], 
+                    #    'SELECT round( sum( time_to_sec( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) )/3600 ), 2) AS tot_ore FROM attivita ' .
+                        'SELECT round( sum( ore ), 2) AS tot_ore FROM attivita ' .
+                        'WHERE attivita.id = ?',
+                        array(
+                         /*   array( 's' => $fasce['ora_fine'] ),
+                            array( 's' => $fasce['ora_inizio'] ),*/
+                            array( 's' => $a['id'] )
+                        )			
+                    );
+                    $ct['etc']['attivita'][$a['id']]['ore_straordinarie'] = 0;
+                }
+                else{
+                    $ct['etc']['attivita'][$a['id']]['ore_straordinarie'] = mysqlSelectValue( 
+                        $cf['mysql']['connection'], 
+                        #'SELECT round( sum( time_to_sec( TIMEDIFF( ?, LEAST( ora_inizio, ? )  ) )/3600 ) + sum( time_to_sec( TIMEDIFF(  GREATEST( ora_fine, ? ), ?  ) )/3600 ), 2) as tot_ore FROM attivita ' .
+                        'SELECT round( sum( ore ), 2) as tot_ore FROM attivita ' .
+                        'WHERE attivita.id = ?',
+                        array(
+                        /*    array( 's' => $fasce['ora_inizio'] ),
+                            array( 's' => $fasce['ora_inizio'] ),
+                            array( 's' => $fasce['ora_fine'] ),
+                            array( 's' => $fasce['ora_fine'] ),*/
+                            array( 's' => $a['id'] )
+                        )			
+                    );  
+
+                    $ct['etc']['attivita'][$a['id']]['ore_ordinarie'] = 0;
+                }         
                 
             }
         }
