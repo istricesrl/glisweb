@@ -1,0 +1,68 @@
+{% import '_bin/_default.html' as frm %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+ 
+      function data_cambiata(){
+        console.log('Submiting form');                
+        $('#form1').submit();
+      }  
+      
+   /*   window.onload = function() {
+  var startPos;
+  var geoSuccess = function(position) {
+    startPos = position;
+    console.log(startPos.coords.latitude);
+    console.log(startPos.coords.longitude);
+  };
+  navigator.geolocation.getCurrentPosition(geoSuccess);
+};*/
+</script>
+
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column mt-3">
+        <form action="{{ page.url[ localization.language.ietf ] }}" method='GET' id="form1">
+            <div class="form-group form-row">
+                    <div class="col-auto form-group">
+                    <label><b>data attività</b></label>
+                    <input  type="date" id='__d__' name="__d__" onchange="data_cambiata()"   min="1000-01-01" max="3000-12-31" class="form-control" placeholder="Calendario" {% if not request.__d__  %} value ='{{ "now"|date("Y-m-d") }}'{% else %}value ='{{ request.__d__  }}'{% endif %}>
+                    </div>
+            </div>
+            
+
+    </form>
+<div class="form-gruop">
+  <div class="row subnav">
+    {% for obj in etc.attivita %}
+    <div class="col-12 col-md-6">
+        <a href="{{ pages.cartellini_app_dettaglio_attivita.url[ localization.language.ietf ] }}?attivita={{ obj.id }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
+            <div class="media">
+            <div class="media-body">
+                <h5 class="media-title">{{ obj.ora_inizio_programmazione|date("H:i") }} - {{ obj.ora_fine_programmazione|date("H:i") }}</h5>
+                <h5 class="media-title">{{ obj.progetto }}</h5>
+                <p class="media-text">{{ obj.indirizzo }}</p>
+                <p class="media-text">rif {{ obj.responsabile }} {{ obj.telefoni }}</p>
+            </div>
+            <div class="media-left align-middle">
+              {% if obj.ora_inizio > 0 and (not (obj.ora_fine > 0)) %}
+              <i class="fa fa-clock-o" aria-hidden="true"></i>
+              {% elseif obj.ora_inizio > 0 and obj.ora_fine > 0 %}
+              <i class="fa fa-check" aria-hidden="true"></i>
+              {% endif %}
+          </div>
+            </div>
+        </a>
+      </div>
+{% endfor %}
+</div>
+</div>
+
+
+
+</div>
+</section>
+
+{% endblock %}

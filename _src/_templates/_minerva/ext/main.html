@@ -1,0 +1,39 @@
+{% import '_bin/_navigation.html' as nav %}
+
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.html' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.html' %}
+
+        {% if page.template.menu.app|length > 0 %}
+        <header class="sticky-top">
+            <div class="container-fluid">
+                <div class="row">
+                    {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
+                </div>
+            </div>
+        </header>
+        {% endif %}
+
+        <main class="d-flex flex-column container-fluid w-100 vh-100">
+
+            {% block subnav %}{% include 'inc/subnav.html' %}{% endblock %}
+
+            {% block main %}{{ contents.pages.ordini.title[ localization.language.ietf ] }}{% endblock %}
+
+        </main>
+
+        {% include '_inc/_page.close.html' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>
