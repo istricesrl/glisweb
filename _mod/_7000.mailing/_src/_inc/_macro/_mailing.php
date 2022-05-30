@@ -30,5 +30,5 @@
         'fa' => 'fa-plus-square',
         'title' => 'crea mailing',
         'text' => 'crea nuovo invio mailing',
-        'colspan' => '3'
+        'colspan' => 3
     );

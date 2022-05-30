@@ -39,7 +39,7 @@
 	    'fa' => 'fa-list',
 	    'title' => 'lista anagrafica',
 	    'text' => 'mostra la lista delle anagrafica',
-        'colspan' => '3'
+        'colspan' => 3
 	);
 
     // inserimento nuova anagrafica
@@ -49,7 +49,7 @@
 	    'fa' => 'fa-plus-square',
 	    'title' => 'inserimento anagrafica',
 	    'text' => 'inserisce una nuova anagrafica',
-        'colspan' => '3'
+        'colspan' => 3
 	);
 
 	// RELAZIONI CON IL MODULO DOCUMENTI
@@ -62,7 +62,7 @@
             'fa' => 'fa-list',
             'title' => 'lista fatture attive',
             'text' => 'mostra la lista delle fattura attiva',
-            'colspan' => '3'
+            'colspan' => 3
         );
 
         // inserimento nuova fattura attiva
@@ -72,7 +72,7 @@
             'fa' => 'fa-plus-square',
             'title' => 'inserimento fattura attiva',
             'text' => 'inserisce una nuova fattura attiva',
-            'colspan' => '3'
+            'colspan' => 3
         );
 
     }
@@ -87,7 +87,7 @@
             'fa' => 'fa-list',
             'title' => 'lista DDT attivi',
             'text' => 'mostra la lista dei DDT attivi',
-            'colspan' => '3'
+            'colspan' => 3
         );
 
         // inserimento nuovo DDT attivo
@@ -97,7 +97,7 @@
             'fa' => 'fa-plus-square',
             'title' => 'inserimento DDT attivo',
             'text' => 'inserisce un nuovo DDT attivo',
-            'colspan' => '3'
+            'colspan' => 3
         );
         
     }
@@ -112,7 +112,7 @@
             'fa' => 'fa-list',
             'title' => 'lista mailing',
             'text' => 'mostra la lista dei mailing',
-            'colspan' => '3'
+            'colspan' => 3
         );
 
         // inserimento nuovo invio mailing
@@ -122,7 +122,7 @@
             'fa' => 'fa-plus-square',
             'title' => 'crea mailing',
             'text' => 'crea nuovo invio mailing',
-            'colspan' => '3'
+            'colspan' => 3
         );
 
     }
