@@ -5210,6 +5210,7 @@ DROP TABLE IF EXISTS `relazioni_documenti_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_documenti_view AS
 	SELECT
+	relazioni_documenti.id,
 	relazioni_documenti.id_documento,
 	relazioni_documenti.id_documento_collegato,
 	concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato) AS __label__
@@ -5229,6 +5230,7 @@ DROP TABLE IF EXISTS `relazioni_documenti_articoli_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
 	SELECT
+	relazioni_documenti_articoli.id,
 	relazioni_documenti_articoli.id_documenti_articolo,
 	relazioni_documenti_articoli.id_documenti_articolo_collegato,
 	concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato) AS __label__
@@ -5248,6 +5250,7 @@ DROP TABLE IF EXISTS `relazioni_pagamenti_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
 	SELECT
+	relazioni_pagamenti.id,
 	relazioni_pagamenti.id_pagamento,
 	relazioni_pagamenti.id_pagamento_collegato,
 	concat( relazioni_pagamenti.id_pagamento,' - ', relazioni_pagamenti.id_pagamento_collegato) AS __label__
@@ -5290,6 +5293,7 @@ DROP TABLE IF EXISTS `relazioni_software_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_software_view AS
 	SELECT
+	relazioni_software.id,
 	relazioni_software.id_software,
 	relazioni_software.id_software_collegato,
 	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__

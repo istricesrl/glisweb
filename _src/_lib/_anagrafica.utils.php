@@ -24,17 +24,19 @@
 	    // die( 'id -> ' . $id );
 
 	// prelevo la riga
-	    $r = mysqlSelectValue(
+	$r = mysqlSelectValue(
 		$cf['mysql']['connection'],
 		'SELECT path FROM immagini '.
 		'INNER JOIN anagrafica ON immagini.id_anagrafica = anagrafica.id '.
-		'WHERE immagini.id_ruolo = 7 '.
+		'LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo '.
+		'WHERE ruoli_immagini.nome = "logo" '.
 		'AND anagrafica.id = ? '.
 		'LIMIT 1',
 		array(
 		    array( 's' => $id )
 		)
 	    );
+
 
 	// full path
 	    fullPath( $r );

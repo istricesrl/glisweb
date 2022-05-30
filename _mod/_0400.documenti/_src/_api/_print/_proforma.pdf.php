@@ -341,7 +341,7 @@
     // tabella di dettaglio
 	$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
 	foreach( $doc['righe'] as $row ) {
-	    $trh = $pdf->GetStringHeight( $col * 4,( substr($row['nome'],0,1) === '*'  ?  trim($row['data']." - ".substr($row['nome'],1,strlen($row['nome'] )-2 )) : trim($row['data']." - ".$row['nome']) ) , false, true, '', 'B' );				// 
+	    $trh = $pdf->GetStringHeight( $col * 4,$row['nome'], false, true, '', 'B' );				// 
 	$pdf->SetFont( $fnt, '', $fnts );
 	    // controllo se la riga di dettaglio entra nella parte rimanente del foglio
 	    if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){
@@ -361,7 +361,7 @@
 								    }
 	    if( substr($row['nome'],0,1) === '*' ){$pdf->SetFillColor(230, 230, 230);} 
 	    else {	    $pdf->SetFillColor(255, 255, 255);}
-	    $pdf->MultiCell( $col * 4, $lh,( substr($row['nome'],0,1) === '*'  ?  trim($row['data']." - ".substr($row['nome'],1,strlen($row['nome'] )-1 )) : trim($row['data']." - ".$row['nome']) ) , $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+	    $pdf->MultiCell( $col * 4, $lh,$row['nome'] , $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 
 	    // scrivo in grassetto le righe che sono aggregazioni di righe
 	    if($row['aggregate']>0 ){	$pdf->SetFont( $fnt, 'B', $fnts ); }
@@ -404,20 +404,18 @@ foreach( $doc['iva'] as $iva => $row ) {
 
 // spazio sotto la tabella IVA
 $pdf->SetY( $pdf->GetY() + $stdsp );
-/*
-    // carico i pagamenti per il documento
-    $doc['pagamenti'] = mysqlQuery(
-        $cf['mysql']['connection'],
-        'SELECT modalita_pagamento.codice AS codice_pagamento, '.
-        'date_format( from_unixtime(timestamp_scadenza, "%Y-%m-%d" ) AS data_standard, '.
-        '( importo_netto_totale + ( importo_netto_totale / 100 * iva.aliquota ) ) AS importo_lordo_totale  '.
-        'FROM pagamenti '.
-        'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
-        'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
-        'WHERE pagamenti.id_documento = ?',
-        array( array( 's' => $doc['id'] ) )
-    );
-*/
+
+$doc['pagamenti'] = mysqlQuery(
+    $cf['mysql']['connection'],
+    'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, '.
+    'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
+    ' importo_netto_totale  AS importo_lordo_totale  '.
+    'FROM pagamenti '.
+    'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
+    'WHERE pagamenti.id_documento = ?',
+    array( array( 's' => $doc['id'] ) )
+);
+
 if (strlen($tx[1])>0){
 
 	// note per il cliente

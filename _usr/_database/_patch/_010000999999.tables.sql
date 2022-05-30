@@ -1952,7 +1952,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
 -- verifica: 2021-10-04 18:47 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `prodotti` (	
   `id` char(32) NOT NULL,	
-  `id_tipologia` int(11) NOT NULL,	
+  `id_tipologia` int(11) DEFAULT NULL,	
   `nome` char(128) NOT NULL,	
   `note` text,
   `template` char(255) DEFAULT NULL,
