@@ -30,21 +30,21 @@
 
         // riepilogo fatture attive
         $ct['page']['contents']['metro']['00.notifiche'][] = array(
-            'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
+            'url' => $cf['contents']['pages']['fatture.amministrazione.view']['url'][ LINGUA_CORRENTE ],
             'h4' => '25/500',
             'title' => 'fatture attive'
         );
 
         // riepilogo fatture passive
         $ct['page']['contents']['metro']['00.notifiche'][] = array(
-            'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
+            'url' => $cf['contents']['pages']['fatture.passive.amministrazione.view']['url'][ LINGUA_CORRENTE ],
             'h4' => '48/500',
             'title' => 'fatture passive'
         );
 
         // riepilogo fattura da verifacre
         $ct['page']['contents']['metro']['00.notifiche'][] = array(
-            'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
+            'url' => $cf['contents']['pages']['fatture.passive.amministrazione.view']['url'][ LINGUA_CORRENTE ],
             'h4' => '15',
             'title' => 'fatture da verificare'
         );
