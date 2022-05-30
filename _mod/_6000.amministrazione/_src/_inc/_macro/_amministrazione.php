@@ -34,7 +34,8 @@
             'icon' => NULL,
             'fa' => 'fa-plus-square',
             'title' => 'inserimento fattura attiva',
-            'text' => 'inserisce una nuova fattura attiva'
+            'text' => 'inserisce una nuova fattura attiva',
+            'colspan' => '3'
         );
 
         // inserimento nuova proforma
@@ -43,7 +44,8 @@
             'icon' => NULL,
             'fa' => 'fa-plus-square',
             'title' => 'inserimento proforma',
-            'text' => 'inserisce una nuova proforma'
+            'text' => 'inserisce una nuova proforma',
+            'colspan' => '3'
         );
 
         // inserimento nuova nota di credito
@@ -52,7 +54,8 @@
             'icon' => NULL,
             'fa' => 'fa-plus-square',
             'title' => 'inserimento nota di credito',
-            'text' => 'inserisce una nuova nota di credito'
+            'text' => 'inserisce una nuova nota di credito',
+            'colspan' => '3'
         );
 
         // inserimento nuova fattura
@@ -70,17 +73,25 @@
         SELECT 
             data AS mese,
             sum( entrate ) AS entrate,
-            sum( uscite ) AS uscite,
-            FORMAT(coalesce( ( sum( entrate ) - sum( uscite ) ), 0 ), 2,'es_ES') AS totale
+            sum( uscite ) AS uscite
         FROM ( 
-            SELECT DATE_FORMAT(`data`,'%M')
-            FROM `documenti_articoli`
-            WHERE `id_tipologia`=1 AND (`data` BETWEEN "2019-01-01" AND "2019-12-31")
-            UNION
             SELECT
-            FROM
-            WHERE
+                DATE_FORMAT(`data`,'%M'),
+                importo_netto_totale,
+                coalesce( documenti_articoli.importo_netto_totale, 0 ) AS entrate,
+                0 AS uscite
+            FROM documenti_articoli
+            WHERE id_tipologia=1
+        UNION
+            SELECT
+                DATE_FORMAT(`data`,'%M'),
+                importo_netto_totale,
+                0 AS entrate,
+                coalesce( documenti_articoli.importo_netto_totale, 0 ) AS uscite
+            FROM documenti_articoli
+            WHERE id_tipologia=1
         ) AS 
+        WHERE data BETWEEN "2019-01-01" AND "2019-12-31"
         ORDER BY mese ASC
         */
 
