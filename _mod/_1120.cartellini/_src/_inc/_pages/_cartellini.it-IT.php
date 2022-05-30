@@ -9,16 +9,30 @@
     // tools attività
 	$p['attivita.tools']['macro'][]		= $m . '_src/_inc/_macro/_attivita.tools.php';
 
+	// vista cartellini
+	$p['cartellini.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'cartellini' ),
+	    'h1'			=> array( $l		=> 'elenco' ),
+	    'parent'		=> array( 'id'		=> 'attivita.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cartellini.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_cartellini.view.php' ),
+		'etc'			=> array( 'tabs'	=> array(	'cartellini.view', 'cartellini' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cartellini' ),
+																		'priority'	=> '120' ) ) )	
+	);
+
 	// dashboard cartellini
 	$p['cartellini'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'cartellini' ),
-	    'h1'		=> array( $l		=> 'cartellini' ),
-	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'title'		=> array( $l		=> 'controllo' ),
+	    'h1'		=> array( $l		=> 'controllo' ),
+	    'parent'		=> array( 'id'		=> 'cartellini.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cartellini.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_cartellini.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] )
+	    'etc'		=> array( 'tabs'	=> $p['cartellini.view']['etc']['tabs'] )
     );
 
 	// gestione cartellini

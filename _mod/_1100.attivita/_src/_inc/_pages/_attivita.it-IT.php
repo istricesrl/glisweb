@@ -14,7 +14,7 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
-		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini', 'attivita.tools' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'attivita.tools' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attività' ),
 																		'priority'	=> '100' ) ) )	
