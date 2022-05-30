@@ -13,6 +13,11 @@
      *
      */
 
+    // ID della vista
+    $ct['view']['id'] = md5(
+		$ct['page']['id'] . 'amministrazione' . $_SESSION['__view__']['__site__']
+	);
+
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
 	    '00.notifiche' => array(
@@ -155,3 +160,13 @@
         );
 
     }
+
+    // tendina anni
+	$ct['etc']['select']['anni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT DISTINCT year( documenti.data ) AS id, year( documenti.data ) AS __label__ FROM documenti ORDER BY __label__ DESC'
+	);
+
+    print_r( $ct['etc']['select']['anni'] );
