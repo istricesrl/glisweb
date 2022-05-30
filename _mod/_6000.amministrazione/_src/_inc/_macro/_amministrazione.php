@@ -18,8 +18,8 @@
 	    '00.notifiche' => array(
 			'label' => 'notifiche'
 		),
-	    '10.scorciatoie' => array(
-			'label' => 'azioni rapide'
+        '10.scorciatoie' => array(
+            'label' => 'azioni rapide'
         ),
         '20.andamento' => array(
             'label' => 'riepilogo fatturato'
@@ -28,13 +28,25 @@
 
 	if( in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
 
-        // inserimento nuova fattura attiva
-        $ct['page']['contents']['metro']['10.scorciatoie'][] = array(
+        // riepilogo fatture attive
+        $ct['page']['contents']['metro']['00.notifiche'][] = array(
             'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
             'h4' => '25/500',
-            'colspan' => 3,
-            'title' => 'inserimento fattura attiva',
-            'text' => 'inserisce una nuova fattura attiva'
+            'title' => 'fatture attive'
+        );
+
+        // riepilogo fatture passive
+        $ct['page']['contents']['metro']['00.notifiche'][] = array(
+            'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
+            'h4' => '48/500',
+            'title' => 'fatture passive'
+        );
+
+        // riepilogo fattura da verifacre
+        $ct['page']['contents']['metro']['00.notifiche'][] = array(
+            'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
+            'h4' => '15',
+            'title' => 'fatture da verificare'
         );
 
         // inserimento nuova fattura attiva
@@ -43,8 +55,7 @@
             'icon' => NULL,
             'fa' => 'fa-plus-square',
             'title' => 'inserimento fattura attiva',
-            'text' => 'inserisce una nuova fattura attiva',
-            'colspan' => '3'
+            'text' => 'inserisce una nuova fattura attiva'
         );
 
         // inserimento nuova proforma
@@ -53,8 +64,7 @@
             'icon' => NULL,
             'fa' => 'fa-plus-square',
             'title' => 'inserimento proforma',
-            'text' => 'inserisce una nuova proforma',
-            'colspan' => '3'
+            'text' => 'inserisce una nuova proforma'
         );
 
         // inserimento nuova nota di credito
@@ -63,8 +73,7 @@
             'icon' => NULL,
             'fa' => 'fa-plus-square',
             'title' => 'inserimento nota di credito',
-            'text' => 'inserisce una nuova nota di credito',
-            'colspan' => '3'
+            'text' => 'inserisce una nuova nota di credito'
         );
 
         // inserimento nuova fattura
