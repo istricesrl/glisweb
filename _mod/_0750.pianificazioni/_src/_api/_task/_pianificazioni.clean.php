@@ -21,6 +21,8 @@
 
     // inizializzo l'array del risultato
 	$status = array();
+	
+	$status['data_ora_richiesta'] = date("d/m/Y H:i");
 
     // verifico se è arrivata una data
     if( ! empty( $_REQUEST['id'] ) ) {
@@ -140,6 +142,8 @@
 
     }
 
+	appendToFile( print_r($status, true), 'var/log/pianificazioni.clean.' . date("Ym") . '.log');
+	
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    buildJson( $status );

@@ -16,8 +16,11 @@
 
      // inizializzo l'array del risultato
 	$status = array();
+	
+	$status['data_ora_richiesta'] = date("d/m/Y H:i");
 
     if( ! empty( $_REQUEST['id'] ) ) {
+		$status['id_request'] = $_REQUEST['id'];
         $p = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT * FROM pianificazioni WHERE id = ?',
@@ -74,11 +77,11 @@
             // se la pulizia è andata a buon fine aggiorno i flag e controllo se bisogna ripopolare
             if( $status['clean']['delete'] == 1 ){
 				
-				appendToFile( date('d-m-Y H:i') . ' pulite le righe' . PHP_EOL, 'var/log/pianificazioni.check.log');
+			#	appendToFile( date('d-m-Y H:i') . ' pulite le righe' . PHP_EOL, 'var/log/pianificazioni.check.log');
 
                 if( $p['se_ripopolare'] == 1 ){
 					
-					appendToFile( date('d-m-Y H:i') . ' la pianificazione è da ripopolare, chiamo populate' . PHP_EOL, 'var/log/pianificazioni.check.log');
+				#	appendToFile( date('d-m-Y H:i') . ' la pianificazione è da ripopolare, chiamo populate' . PHP_EOL, 'var/log/pianificazioni.check.log');
                     $status['ripopola'] = 1;
                     
 					// setto il timestamp di popolazione a NULL, così poi la populate fa il resto
@@ -124,7 +127,7 @@
     }
 	
 #	appendToFile( date('d-m-Y H:i') . print_r( $status, true ) . PHP_EOL, 'var/log/pianificazioni.check.log');
-#	appendToFile( print_r($status, true), 'var/log/pianificazioni.check.log');
+	appendToFile( print_r($status, true), 'var/log/pianificazioni.check.' . date("Ym") . '.log');
         
 
     // output
