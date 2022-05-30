@@ -499,7 +499,7 @@ header.subform-intestazione {
     margin-bottom: 10px;
 }
 
-#info, #jobs {
+#info, #jobs, #alert {
     background-color: #555555;
     color: #ffffff;
     display: none;
@@ -510,12 +510,12 @@ header.subform-intestazione {
     z-index: 999;
 }
 
-#info h2, #jobs h2 {
+#info h2, #jobs h2, #alert h2 {
     font-size: 1.6em;
     margin: 0px;
 }
 
-#info p, #jobs p {
+#info p, #jobs p, #alert p {
     margin: 0px;
     margin-top: 5px;
 }
@@ -527,8 +527,25 @@ header.subform-intestazione {
 #jobs a,
 #jobs a:visited,
 #jobs a:hover,
-#jobs a:active {
+#jobs a:active,
+#alert a,
+#alert a:visited,
+#alert a:hover,
+#alert a:active {
     color: #ffffff;
+}
+
+#widget-alert .alert-number {
+    font-size:.5em;
+    font-weight: bold;
+    background-color: #eeeeee;
+    border: 2px solid #cccccc;
+    color: #333333;
+    border-radius: 5px;
+    padding: 0px 3px;
+    position: absolute;
+    top: 2em;
+    left: 2.5em;
 }
 
 #form-login {
