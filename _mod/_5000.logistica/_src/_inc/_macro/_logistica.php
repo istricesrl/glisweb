@@ -32,7 +32,7 @@
             'fa' => 'fa-plus-square',
             'title' => 'inserimento DDT attivo',
             'text' => 'inserisce un nuovo DDT attivo',
-            'colspan' => '3'
+            'colspan' => 3
         );
 
         // inserimento nuovo DDT passivo
@@ -42,7 +42,7 @@
             'fa' => 'fa-plus-square',
             'title' => 'inserimento DDT passivo',
             'text' => 'inserisce un nuovo DDT passivo',
-            'colspan' => '3'
+            'colspan' => 3
         );
 
     }
