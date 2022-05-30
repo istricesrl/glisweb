@@ -31,6 +31,15 @@
         // inserimento nuova fattura attiva
         $ct['page']['contents']['metro']['10.scorciatoie'][] = array(
             'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
+            'h4' => '25/500',
+            'colspan' => 3,
+            'title' => 'inserimento fattura attiva',
+            'text' => 'inserisce una nuova fattura attiva'
+        );
+
+        // inserimento nuova fattura attiva
+        $ct['page']['contents']['metro']['10.scorciatoie'][] = array(
+            'url' => $cf['contents']['pages']['fatture.amministrazione.form']['url'][ LINGUA_CORRENTE ],
             'icon' => NULL,
             'fa' => 'fa-plus-square',
             'title' => 'inserimento fattura attiva',

@@ -25,6 +25,8 @@
 		<div class="media-left">
 			{% if obj.fa %}
 		    <i class="fa {{ obj.fa }}"></i>
+			{% elseif obj.h4 %}
+			<h4>{{ obj.h4 }}</h4>
 			{% else %}
 			{{ obj.icon }}
 			{% endif %}
