@@ -168,5 +168,3 @@
 	    $cf['mysql']['connection'],
 	    'SELECT DISTINCT year( documenti.data ) AS id, year( documenti.data ) AS __label__ FROM documenti ORDER BY __label__ DESC'
 	);
-
-    print_r( $ct['etc']['select']['anni'] );

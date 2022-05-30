@@ -30,7 +30,7 @@
 
                 {% if debug.alert %}
                 <div id="widget-alert" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-alert" onclick="$('.slide-alert').not('#alert').slideUp(400,'swing');$('#alert').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-alert').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-bell" aria-hidden="true"></i><span class="alert-number">{{ debug.alert|length }}</span></button>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-alert" onclick="$('.slide-info').not('#alert').slideUp(400,'swing');$('#alert').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-alert').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-bell" aria-hidden="true"></i><span class="alert-number">{{ debug.alert|length }}</span></button>
                 </div>
                 {% endif %}
 
