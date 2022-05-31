@@ -20,7 +20,7 @@
 														'corsi.stampe',
 														'corsi.tools' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'corsi' ),
-																		'priority'	=> '210' ) ) )														
+																		'priority'	=> '220' ) ) )														
 	);
 
     // vista archivio corsi
