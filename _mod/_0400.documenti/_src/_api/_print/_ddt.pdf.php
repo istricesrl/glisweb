@@ -178,10 +178,10 @@
 	);
 
     // testi
-	$tx[0] = "Gentile Cliente, per le prestazioni qui di seguito dettagliate richiediamo gentilmente il pagamento come sotto indicato secondo le modalità specificate:\n";
+	$tx[0] = "";
 	$tx[1] = $doc['note'];
-	$tx[8] = "Il presente documento non costituisce in maniera assoluta fattura ai sensi dell’art. 21 del D.P.R. 633/72 e quindi non genera esigibilità di imposta per il prestatore.\n";
-	$tx[9] = "Trattasi di documento emesso in relazione al pagamento di corrispettivi di operazioni assoggettate ad imposta sul valore aggiunto (art.6, comma 2, del D.P.R. 642/72). Contestualmente al pagamento, verrà emessa regolare fattura con evidenziazione dell’IVA.\n";
+	$tx[8] = "";
+	$tx[9] = "";
 	$tx[10] = "ALLEGATO A";
 	$tx[11] = "DETTAGLIO RIGHE";
 
