@@ -51,10 +51,18 @@ CREATE OR REPLACE VIEW relazioni_software_view AS
 ALTER TABLE attivita_view_static
 ADD COLUMN  `id_immobile` int DEFAULT NULL AFTER mastro_destinazione;
 
+--| 202205300064
+ALTER TABLE `attivita_view_static` DROP COLUMN `id_matricola`;
+
+--| 202205300068
+ALTER TABLE `attivita_view_static` ADD `id_matricola` INT NULL DEFAULT NULL AFTER `progetto`;
+
 --| 202205300070
 TRUNCATE attivita_view_static;
 
 --| 202205300080
 INSERT INTO attivita_view_static select * from attivita_view;
+
+
 
 --| FINE
