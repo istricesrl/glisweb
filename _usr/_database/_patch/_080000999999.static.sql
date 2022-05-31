@@ -97,6 +97,7 @@ CREATE TABLE `attivita_view_static` (
   `mastro_provenienza` char(64) DEFAULT NULL,
   `id_mastro_destinazione` int DEFAULT NULL,
   `mastro_destinazione` char(64) DEFAULT NULL,
+  `id_immobile` int DEFAULT NULL,
   `codice_archivium` char(128) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
   `id_account_inserimento` int DEFAULT NULL,

@@ -46,4 +46,15 @@ CREATE OR REPLACE VIEW relazioni_software_view AS
 	concat( relazioni_software.id_software,' - ', relazioni_software.id_software_collegato) AS __label__
 	FROM relazioni_software
 ;
+
+--| 202205300060
+ALTER TABLE attivita_view_static
+ADD COLUMN  `id_immobile` int DEFAULT NULL AFTER mastro_destinazione;
+
+--| 202205300070
+TRUNCATE attivita_view_static;
+
+--| 202205300080
+INSERT INTO attivita_view_static select * from attivita_view;
+
 --| FINE
