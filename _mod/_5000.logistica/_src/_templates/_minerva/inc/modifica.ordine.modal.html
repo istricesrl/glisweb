@@ -21,17 +21,17 @@
 {% set activity = 'inserimento' %}
 {% endif %}
 <script>
-    function aggiungi() {
+    function modifica() {
 
-		var qta = $( '#_quantita' ).val().replace(",", ".");
-		var udm = $( '#_id_udm' ).val();
-        var p = $( '#_id_prodotto_add' ).val();
+		var qta = $( '#_quantita_edit' ).val().replace(",", ".");
+		var udm = $( '#_id_udm_edit' ).val();
+        var p = $( '#_id_prodotto_edit' ).val();
 
 
     if( qta != '' && udm != '' && p != ''  ){
 
 
-        window.open('{{ pages[ "app.logistica.ordine" ].path[ietf] }}?__action__=add&__p__='+p+'&__qta__='+qta+'&__udm__='+udm,'_self');
+        window.open('{{ pages[ "app.logistica.ordine" ].path[ietf] }}?__action__=edit&__p__='+p+'&__qta__='+qta+'&__udm__='+udm,'_self');
         
     } 
     
@@ -45,11 +45,11 @@
     }
 </script>
 
-<div class="modal fade" id="aggiungi_a_ordine" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modifica_prodotto" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Aggiungi prodotto al tuo ordine</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Modifica ordine</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -57,24 +57,24 @@
         <div class="modal-body">
             <div class="form-row form-group">
                 <legend>dettaglio</legend>
-                <input type="hidden" id="_id_prodotto_add" name="_id_prodotto_add" >
+                <input type="hidden" id="_id_prodotto_edit" name="_id_prodotto_edit" >
                 <div class="col-12">
                     <span class="label-top">prodotto</span>
-                    {{ frm.inputDisabled( '', '', '', 'prodotto_add', '', '', request ) }}
+                    {{ frm.inputDisabled( '', '', '', 'prodotto_edit', '', '', request ) }}
                 </div>
                 <div class="col-4">
                     <span class="label-top">quantità</span>
-                    {{ frm.input( '', '', '', 'quantita', '', '', request, '', 'number', '', '', '', '0.5' ) }}
+                    {{ frm.input( '', '', '', 'quantita_edit', '', '', request, '', 'number', '', '', '', '0.5' ) }}
                  </div>
                  <div class="col" >
                     <span class="label-top">unità di misura</span>
-                    {{ frm.select( table, '', '', 'id_udm', '', etc.select.udm, request ) }}
+                    {{ frm.select( table, '', '', 'id_udm_edit', '', etc.select.udm, request ) }}
                 </div>
             </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn" data-dismiss="modal">annulla</button>
-          <button type="button" class="btn  btn-secondary" onclick="aggiungi()">aggiungi</button>
+          <button type="button" class="btn  btn-secondary" onclick="modifica()">modifica</button>
         </div>
       </div>
     </div>

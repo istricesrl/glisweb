@@ -3272,7 +3272,7 @@ CREATE OR REPLACE VIEW lingue_view AS
 	FROM lingue
 ;
 
---| 090000017001
+--| 090000017000
 
 -- liste_view
 -- tipolgia: tabella gestita

@@ -1652,7 +1652,7 @@ ALTER TABLE `mailing`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`);
 
---| 0300000190001
+--| 030000019001
 
 -- mailing
 -- tipolgia: tabella gestita

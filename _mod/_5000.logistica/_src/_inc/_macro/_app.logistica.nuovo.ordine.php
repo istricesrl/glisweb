@@ -46,7 +46,6 @@
 	    $cf['mysql']['connection'],
 	    'SELECT * FROM prodotti_view'
 	);*/
-
     // tipologia ordine
     $ct['etc']['default_tipologia'] = mysqlSelectCachedValue(
 	    $cf['memcache']['connection'],
@@ -68,15 +67,8 @@
 	    'SELECT * FROM udm_view WHERE se_massa = 1 OR se_quantita = 1 OR se_volume = 1'
 	);
 
-    // verifico se è presente uno scontrino aperto
-    if( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_SESSION['account'] )  ){ 
-             $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
-             'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL AND id_tipologia = ?',
-             array( array( 's' => $_SESSION['account']['id'] ), array( 's' => $ct['etc']['default_tipologia'] ) ) );
-    }
-    
     // eliminazione ordine
-    if( isset( $_REQUEST['__delete__'] ) ){
+    if( isset( $_REQUEST['__delete__']['documenti'] )   ){
     
             $del = mysqlQuery(  $cf['mysql']['connection'],
             'DELETE FROM documenti_articoli WHERE id_documento = ?',
@@ -86,6 +78,14 @@
             'DELETE FROM documenti WHERE id = ?',
             array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
+
+    // verifico se è presente uno scontrino aperto
+    if( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_SESSION['account'] )  ){ 
+             $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
+             'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL AND id_tipologia = ?',
+             array( array( 's' => $_SESSION['account']['id'] ), array( 's' => $ct['etc']['default_tipologia'] ) ) );
+    }
+    
 
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id']) && isset($_REQUEST['__action__']) & isset($_REQUEST['__p__']) && isset($_REQUEST['__qta__']) && isset($_REQUEST['__udm__']) ){
 
@@ -140,7 +140,7 @@
                         array( 's' => $_REQUEST['__qta__']),
                         array( 's' => $_REQUEST['__udm__'] ),
                         array( 's' => $_REQUEST['__p__'] ),
-                        array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                        array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
                         
                     )
                     );
@@ -151,8 +151,19 @@
 
     }
 
-    // macro di default
-	require DIR_SRC_INC_MACRO . '_default.form.php';
+   if( isset( $_REQUEST[ $ct['form']['table'] ]['id']) ){
+
+        $_REQUEST[ $ct['form']['table'] ]['documenti_articoli'] = mysqlQuery(
+            $cf['mysql']['connection'], 
+            'SELECT documenti_articoli.*, prodotti.nome AS prodotto, udm.sigla AS sigla_udm   FROM documenti_articoli '.
+            'LEFT JOIN prodotti ON prodotti.id = documenti_articoli.id_prodotto  '.
+            'LEFT JOIN udm ON udm.id = documenti_articoli.id_udm '.
+            'WHERE documenti_articoli.id_documento = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+        );
+
+   }
+
 
     // inclusione modal
     $ct['page']['contents']['metro'][NULL][] = array(
@@ -160,15 +171,11 @@
         );
 
     $ct['page']['contents']['metro'][NULL][] = array(
-            'modal' => array( 'id' => 'rimuovi_prodotto', 'include' => 'inc/rimuovi.da.ordine.modal.html' )
-        );
-
-    $ct['page']['contents']['metro'][NULL][] = array(
         'modal' => array( 'id' => 'chiudi_ordine', 'include' => 'inc/chiudi.ordine.modal.html' )
     );
 
     $ct['page']['contents']['metro'][NULL][] = array(
-        'modal' => array( 'id' => 'cancella_ordine', 'include' => 'inc/cancella.ordine.modal.html' )
+        'modal' => array( 'id' => 'modifica_prodotto', 'include' => 'inc/modifica.ordine.modal.html' )
     );
 
     // macro per l'apertura dei modal
