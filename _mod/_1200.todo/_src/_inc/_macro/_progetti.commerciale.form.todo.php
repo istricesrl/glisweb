@@ -22,19 +22,21 @@
 
     $ct['view']['cols'] = array(
 	    'id' => '#',
-	    'pianificazione' => 'pianificato',
-	    'priorita' => 'priorità',
-	    'nome' => 'attività',
-	    'responsabile' => 'assegnato a',
-	    'progresso' => 'ore',
-	    'completato' => 'stato',
-	    'id_priorita' => 'id_priorita'
+	//    'pianificazione' => 'pianificato',
+	 //   'priorita' => 'priorità',
+	 'tipologia' => 'tipologia',
+	 'nome' => 'titolo',
+	 'cliente' => 'da fare per',
+	 'anagrafica' => 'assegnato a',
+	 'settimana_programmazione' => 'settimana',
+	 'anno_programmazione' => 'anno',
+	    'id_progetto' => 'id_progetto'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
-	    'id_priorita' => 'd-none',
+	    'id_progetto' => 'd-none',
 	    'pianificazione' => 'text-left no-wrap',
 	    'nome' => 'text-left',
 	    'priorita' => 'text-left',
@@ -54,7 +56,7 @@
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
         // preset filtro custom progetti aperti
-	    $ct['view']['__restrict__']['id_progetto']['LK'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+	    $ct['view']['__restrict__']['id_progetto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
