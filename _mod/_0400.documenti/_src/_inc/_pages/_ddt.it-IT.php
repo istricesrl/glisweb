@@ -124,4 +124,15 @@
 			'etc'			=> array( 'tabs'	=> array(	'ddt.passivi.magazzini.righe.form' ) )
 		);
 
+		$p['ddt.passivi.magazzini.form.stampe'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'stampe' ),
+			'h1'		=> array( $l		=> 'stampe' ),
+			'parent'		=> array( 'id'		=> 'ddt.passivi.magazzini.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'		=> array( $m.'_src/_inc/_macro/_ddt.magazzini.form.stampe.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['ddt.passivi.magazzini.form']['etc']['tabs'] )
+		);
 	}
