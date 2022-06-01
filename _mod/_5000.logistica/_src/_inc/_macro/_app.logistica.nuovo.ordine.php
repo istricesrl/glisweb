@@ -24,9 +24,16 @@
     $ct['view']['cols'] = array(
         'id' => '#',
         'nome' => 'nome',
+        'categorie' => 'categorie',
         '__label__' => '__label__'     
     );
 
+    $ct['view']['id'] = md5(
+        $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
+        );
+
+    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['nome'] = 'ASC';
+    $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__']['rows'] = 20000;
 
     // dati per tendine ed elenco
     // elenco prodotti disponibili
@@ -172,4 +179,7 @@
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
     require DIR_SRC_INC_MACRO . '_default.form.php';
+
+
     require DIR_SRC_INC_MACRO . '_default.view.php';
+

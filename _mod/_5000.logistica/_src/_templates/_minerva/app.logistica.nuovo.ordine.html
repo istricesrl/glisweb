@@ -66,6 +66,7 @@
                    
                     <div class="media-body p-3 col-10 " style="background-color: rgb(192, 192, 192); color: black;">
                       <h3 class="mt-0">{{ row.nome }}</h3>
+                      <h5>{{ row.categorie }}</h5>
                     </div>
                     <div class="col-2 justify-content-center align-self-center">
                         <button type="button" class="btn" onclick='$("#_id_prodotto_add").val({{ row.id }}); $("#_prodotto_add").val("{{ row.nome }}");' data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>

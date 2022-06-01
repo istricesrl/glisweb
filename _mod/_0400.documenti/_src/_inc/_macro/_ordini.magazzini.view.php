@@ -69,3 +69,9 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    foreach( $ct['view']['data'] as $key => &$row ) {
+
+        $row['timestamp_chiusura'] = date( 'Y-m-d H:i', $row['timestamp_chiusura']);
+
+	}
