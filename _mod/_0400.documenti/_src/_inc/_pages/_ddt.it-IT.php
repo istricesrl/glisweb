@@ -49,6 +49,19 @@
 			'etc'			=> array( 'tabs'	=> $p['ddt.magazzini.form']['etc']['tabs'] )
 		);
 
+		// gestione righe ordini
+		$p['ddt.magazzini.form.ordine'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'ordine' ),
+			'h1'			=> array( $l		=> 'ordine' ),
+			'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.form.ordine.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.magazzini.form.ordine.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['ddt.magazzini.form']['etc']['tabs'] )
+		);
+
+
 		// gestione righe ddt
 		$p['ddt.magazzini.form.righe'] = array(
 			'sitemap'		=> false,
