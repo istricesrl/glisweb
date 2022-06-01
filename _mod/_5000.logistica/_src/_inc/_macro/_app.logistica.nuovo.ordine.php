@@ -56,7 +56,7 @@
     $ct['etc']['default_mastro'] = mysqlSelectCachedValue(
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id FROM mastri WHERE nome = "ordini da evadere"'
+	    'SELECT id FROM mastri WHERE nome = "codici da evadere"'
 	);
 
     // elenco udm
