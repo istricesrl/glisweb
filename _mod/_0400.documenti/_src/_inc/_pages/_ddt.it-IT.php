@@ -31,9 +31,22 @@
 			'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'ddt.magazzini.form',
+															'ddt.magazzini.form.relazioni',
 															'ddt.magazzini.form.righe',
 															'ddt.magazzini.form.stampe',
 															'ddt.magazzini.form.tools' ) )
+		);
+
+		// gestione relazioni ddt
+		$p['ddt.magazzini.form.relazioni'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'relazioni' ),
+			'h1'			=> array( $l		=> 'relazioni' ),
+			'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.form.relazioni.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.magazzini.form.relazioni.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['ddt.magazzini.form']['etc']['tabs'] )
 		);
 
 		// gestione righe ddt

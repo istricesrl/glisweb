@@ -15,8 +15,18 @@
 
     $_SESSION['account']['id'] = 1;
 
-    $ct['form']['table'] = 'documenti';
+    $ct['etc']['numero'] = mysqlSelectValue(  
+        $cf['mysql']['connection'],          
+        'SELECT  coalesce( max( cast( numero as unsigned ) ), 0 ) AS numero FROM documenti '.
+        'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
+        'WHERE tipologie_documenti.se_ordine = 1 ') + 1;
 
+    $ct['etc']['azienda'] = mysqlSelectValue(  
+        $cf['mysql']['connection'],          
+        'SELECT  id FROM anagrafica_view_static '.
+        'WHERE se_gestita = 1 ORDER BY id ASC LIMIT 1') ;
+    
+    $ct['form']['table'] = 'documenti';
 
     // tabella della vista
     $ct['view']['table'] = 'prodotti';
@@ -35,14 +45,7 @@
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['nome'] = 'ASC';
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__']['rows'] = 20000;
 
-    // dati per tendine ed elenco
-    // elenco prodotti disponibili
-    /*$ct['etc']['prodotti'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT * FROM prodotti_view'
-	);*/
+
     // tipologia ordine
     $ct['etc']['default_tipologia'] = mysqlSelectCachedValue(
 	    $cf['memcache']['connection'],
@@ -179,7 +182,6 @@
     require DIR_SRC_INC_MACRO . '_default.tools.php';
 
     require DIR_SRC_INC_MACRO . '_default.form.php';
-
 
     require DIR_SRC_INC_MACRO . '_default.view.php';
 
