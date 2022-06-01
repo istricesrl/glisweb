@@ -2161,6 +2161,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.id_todo,
 		documenti_articoli.id_attivita,
 		documenti_articoli.id_articolo,
+		udm_riga.sigla AS udm,
 				concat_ws(
 			' ',
 			articoli.id,
@@ -2191,6 +2192,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 				''
 			)
 		) AS articolo,
+		documenti_articoli.id_prodotto,
+		IF( documenti_articoli.id_articolo IS NOT NULL ,prodotti.nome, p.nome ) AS prodotto,
 		documenti_articoli.id_mastro_provenienza,
 		mastri_path( m1.id ) AS mastro_provenienza,
 		documenti_articoli.id_mastro_destinazione,
@@ -2238,11 +2241,13 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
 		LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN prodotti AS p ON p.id = documenti_articoli.id_prodotto
 		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
 		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
 		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
 		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
+		LEFT JOIN udm AS udm_riga ON udm_riga.id = documenti_articoli.id_udm
 ;
 
 --| 090000012000
@@ -2412,9 +2417,21 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
 		documenti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
 		documenti.id_condizione_pagamento,
 		condizioni_pagamento.codice AS condizione_pagamento,
 		documenti.codice_archivium,
@@ -2454,7 +2471,7 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
-   WHERE tipologie_documenti.id = 1
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
 ;
 
 --| 090000013250
@@ -2481,9 +2498,21 @@ CREATE OR REPLACE VIEW `fatture_attive_view` AS
 		documenti.cig,
 		documenti.cup,
 		documenti.riferimento,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
 		documenti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		documenti.timestamp_chiusura,
@@ -2539,9 +2568,21 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		documenti.cig,
 		documenti.cup,
 		documenti.riferimento,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+				coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
 		documenti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		documenti.timestamp_chiusura,
@@ -3234,7 +3275,7 @@ CREATE OR REPLACE VIEW lingue_view AS
 	FROM lingue
 ;
 
---| 090000017001
+--| 090000017000
 
 -- liste_view
 -- tipolgia: tabella gestita
@@ -4017,6 +4058,224 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 		) AS __label__
 	FROM notizie_categorie
 		LEFT JOIN notizie ON notizie.id = notizie_categorie.id_notizia
+;
+
+--| 090000022700
+
+-- ordini_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ordini_view`;
+
+--| 090000022701
+
+-- ordini_view
+-- tipologia: tabella gestita
+-- verifica: 2022-06-01 13:10 Chiara GDL
+CREATE OR REPLACE VIEW `ordini_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
+		documenti.id_destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
+		documenti.id_condizione_pagamento,
+		condizioni_pagamento.codice AS condizione_pagamento,
+		documenti.codice_archivium,
+    	documenti.codice_sdi,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+    	documenti.timestamp_invio,
+    	documenti.progressivo_invio,
+		documenti.id_coupon,
+		documenti.timestamp_chiusura,
+		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+   	WHERE tipologie_documenti.se_ordine IS NOT NULL
+;
+
+--| 090000022710
+
+-- ordini_attivi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ordini_attivi_view`;
+
+--| 090000022711
+
+-- ordini_attivi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-06-01 13:10 Chiara GDL
+CREATE OR REPLACE VIEW `ordini_attivi_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+		coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
+		documenti.id_destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   	WHERE tipologie_documenti.se_ordine IS NOT NULL
+	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
+;
+
+--| 090000022720
+
+-- ordini_passivi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ordini_passivi_view`;
+
+--| 090000022721
+
+-- ordini_passivi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-06-01 13:10 Chiara GDL
+CREATE OR REPLACE VIEW `ordini_passivi_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+				coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
+		documenti.id_destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
+		concat(
+			tipologie_documenti.nome,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   	WHERE tipologie_documenti.se_ordine IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
 --| 090000022800

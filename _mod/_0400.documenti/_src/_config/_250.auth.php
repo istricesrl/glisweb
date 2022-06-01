@@ -69,6 +69,9 @@
             ),
             'relazioni_documenti' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'ordini' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);

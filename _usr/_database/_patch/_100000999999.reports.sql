@@ -11,18 +11,21 @@ DROP VIEW IF EXISTS `__report_giacenza_magazzini__`;
 --| 100000020001
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini__` AS
 SELECT
-  id,
-  nome,
-  id_articolo,
-  articolo,
-  id_matricola,
-  matricola,
-  data_scadenza,
-  sum( carico ) AS carico,
-  sum( scarico ) AS scarico,
-  FORMAT(coalesce( ( sum( carico ) - sum( scarico ) ), 0 ), 2,'es_ES') AS totale,
-  FORMAT(coalesce( ( sum( peso_carico ) - sum( peso_scarico ) ), 0 ), 2,'es_ES') AS peso,
-  sigla_udm_peso
+  movimenti.id,
+  movimenti.nome,
+  movimenti.id_articolo,
+  movimenti.articolo,
+  movimenti.id_prodotto,
+  movimenti.prodotto,
+  group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+  movimenti.id_matricola,
+  movimenti.matricola,
+  movimenti.data_scadenza,
+  sum( movimenti.carico ) AS carico,
+  sum( movimenti.scarico ) AS scarico,
+  FORMAT(coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2,'es_ES') AS totale,
+  FORMAT(coalesce( ( sum( movimenti.peso_carico ) - sum( movimenti.peso_scarico ) ), 0 ), 2,'es_ES') AS peso,
+  movimenti.sigla_udm_peso
 FROM (
 SELECT
   mastri.id,
@@ -37,27 +40,34 @@ SELECT
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					' ',
 					udm_dimensioni.sigla
 				),
 				concat(
 					articoli.peso,
+					' ',
 					udm_peso.sigla
 				),
 				concat(
 					articoli.volume,
+					' ',
 					udm_volume.sigla
 				),
 				concat(
 					articoli.capacita,
+					' ',
 					udm_capacita.sigla
 				),
 				concat(
 					articoli.durata,
+					' ',
 					udm_durata.sigla
 				),
 				''
 			)
 		) AS articolo,
+articoli.id_prodotto AS id_prodotto,
+prodotti.nome AS prodotto,
   matricole.id AS id_matricola,
   matricole.matricola,
   matricole.data_scadenza,
@@ -101,27 +111,34 @@ SELECT
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					' ',
 					udm_dimensioni.sigla
 				),
 				concat(
 					articoli.peso,
+					' ',
 					udm_peso.sigla
 				),
 				concat(
 					articoli.volume,
+					' ',
 					udm_volume.sigla
 				),
 				concat(
 					articoli.capacita,
+					' ',
 					udm_capacita.sigla
 				),
 				concat(
 					articoli.durata,
+					' ',
 					udm_durata.sigla
 				),
 				''
 			)
 		) AS articolo,
+		articoli.id_prodotto AS id_prodotto,
+prodotti.nome AS prodotto,
   matricole.id AS id_matricola,
   matricole.matricola,
   matricole.data_scadenza,
@@ -152,7 +169,8 @@ LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_prodotto
   WHERE documenti_articoli.quantita IS NOT NULL
 ) AS movimenti
-GROUP BY id, nome, id_articolo, articolo, id_matricola, matricola, data_scadenza, sigla_udm_peso;
+LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
+GROUP BY movimenti.id, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 
 --| 100000020500
 
