@@ -17,26 +17,16 @@
 
     $ct['form']['table'] = 'documenti';
 
-    $ct['view']['data']['__report_mode__'] = 1;
 
     // tabella della vista
-    $ct['view']['table'] = '__report_giacenza_magazzini__';
+    $ct['view']['table'] = 'prodotti';
 
     $ct['view']['cols'] = array(
         'id' => '#',
-        'id_prodotto' => 'id_prodotto',
-        'prodotto' => 'prodotto',
-        'id_articolo' => 'codice',
-        'articolo' => 'descrizione',
-        'categorie' => 'categoria',
-        'carico' => 'carico',
-        'scarico' => 'scarico',
-        'totale' => 'totale',
-        'peso' => 'peso',
-        'sigla_udm_peso' => 'udm peso'
+        'nome' => 'nome',
+        '__label__' => '__label__'     
     );
 
-    $ct['view']['__restrict__']['id']['EQ'] = 2;
 
     // dati per tendine ed elenco
     // elenco prodotti disponibili

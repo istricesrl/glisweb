@@ -48,7 +48,7 @@
 
     {% if  request.documenti.id  %}
 
-    <div class="container-fluid pannello-cassa form-row">
+    <div class="container-fluid pannello-cassa form-row" style="overflow: hidden;">
 
         <div class="col-6 align-items-center mt-3"  >
             <legend><b>prodotti disponibili</b></legend>
@@ -60,15 +60,15 @@
                     <button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
                 </div>
             </div>
-            <div class="box mt-2" style="height: 85vh;" >
+            <div class="box mt-2" style="height: 70vh;" >
                 {% for row in view.data %}
                 <div class="media" style="background-color: rgb(192, 192, 192); color: black;">
                    
                     <div class="media-body p-3 col-10 " style="background-color: rgb(192, 192, 192); color: black;">
-                      <h3 class="mt-0">{{ row.prodotto }}</h3>
+                      <h3 class="mt-0">{{ row.nome }}</h3>
                     </div>
                     <div class="col-2 justify-content-center align-self-center">
-                        <button type="button" class="btn" onclick='$("#_id_prodotto_add").val({{ row.id_prodotto }}); $("#_prodotto_add").val("{{ row.prodotto }}");' data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>
+                        <button type="button" class="btn" onclick='$("#_id_prodotto_add").val({{ row.id }}); $("#_prodotto_add").val("{{ row.nome }}");' data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>
                     </div>
                   </div>
                   {% endfor %}
@@ -76,7 +76,7 @@
         </div>
         <div class="col-6 align-items-center mt-3"  >
             <legend><b>il tuo ordine</b></legend>
-            <div class="box" style="height: 85vh;" >
+            <div class="box" style="height: 70vh;" >
                 {% for p in request.documenti.documenti_articoli %}
                 <div class="media" style="background-color: gray;">
                     <div class="media-body p-3 col-10">
@@ -94,10 +94,10 @@
         </div>
         <div class="form-row fixed-bottom " style="margin-bottom: 2%; margin-left: 2%; margin-right: 2%;">
             <div class="col-6 col-md-6">
-                <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" data-toggle="modal" data-target="#chiudi_ordine" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-check" aria-hidden="true"></i> conferma ordine</button>
+                <button type="button" class="btn-lg btn btn-secondary btn-sqr btn-block" data-toggle="modal" data-target="#chiudi_ordine" data-placement="bottom" data-delay="1000" title="torna alla dashboard"><i class="fa fa-check" aria-hidden="true"></i> conferma ordine</button>
             </div>
             <div class="col-6 col-md-6">
-                <button type="button" class="btn-lg btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash " aria-hidden="true"></i> elimina</button>
+                <button type="button" class="btn-lg btn  btn-secondary btn-sqr btn-block" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti&__delete__[id]={{request.documenti.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti][id]={{ request.documenti.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"><i class="fa fa-trash " aria-hidden="true"></i> elimina</button>
             </div>
         </div>
     </div>

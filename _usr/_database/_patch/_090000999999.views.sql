@@ -2468,7 +2468,7 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
-   WHERE tipologie_documenti.id = 1
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
 ;
 
 --| 090000013250
