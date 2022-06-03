@@ -81,6 +81,11 @@
             'include' => 'inc/amministrazione.dashboard.html'
         );
 
+        // default anno
+        if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] ) ) {
+            $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno']['EQ'] = date('Y');
+        }
+    
         // etichette
         for( $m = 0; $m < 12; $m++ ) {
             $ts = strtotime( '+'.$m.' months', strtotime( date('Y').'-01-01' ) );
