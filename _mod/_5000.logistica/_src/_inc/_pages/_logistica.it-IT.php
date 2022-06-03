@@ -19,7 +19,7 @@
 		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'logistica' ),
 														'priority'	=> '320' ) ) )
 	);
-
+/*
 	// pagina principale
 	$p['app.logistica'] = array(
 	    'sitemap'		=> false,
@@ -67,7 +67,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_app.logistica.lista.ordini.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
-
+*/
 /*	// pagina principale
 	$p['app.logistica.ddt'] = array(
 	    'sitemap'		=> false,
