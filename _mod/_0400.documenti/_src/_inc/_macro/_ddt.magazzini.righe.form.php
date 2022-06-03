@@ -22,7 +22,7 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti_articoli';
 
-       // tendina articoli
+    // tendina articoli
 	$ct['etc']['select']['id_articoli'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],

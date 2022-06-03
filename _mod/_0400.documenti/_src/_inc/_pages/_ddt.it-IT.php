@@ -32,6 +32,7 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'ddt.magazzini.form',
 															'ddt.magazzini.form.relazioni',
+															'ddt.magazzini.form.ordine',
 															'ddt.magazzini.form.righe',
 															'ddt.magazzini.form.stampe',
 															'ddt.magazzini.form.tools' ) )
@@ -60,7 +61,6 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['ddt.magazzini.form']['etc']['tabs'] )
 		);
-
 
 		// gestione righe ddt
 		$p['ddt.magazzini.form.righe'] = array(

@@ -252,7 +252,6 @@ INNER JOIN relazioni_progetti ON relazioni_progetti.id_progetto = contratti.id_p
 INNER JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
 WHERE tipologie_contratti.se_iscrizione = 1 AND ruoli_progetti.se_sottoprogetto = 1;
 
-
 --| 100000021000
 -- __report_movimenti_magazzini__
 -- tipologia: report
@@ -395,5 +394,63 @@ FROM mastri
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
   WHERE documenti_articoli.quantita IS NOT NULL
 ) AS movimenti;
+
+--| 100000022700
+-- __report_evasione_ordini__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_evasione_ordini__`;
+
+--| 100000022701
+-- __report_evasione_ordini__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_evasione_ordini__` AS
+SELECT
+  ordine.id_ordine,
+  ordine.codice_prodotto,
+  ordine.codice_articolo,
+  sum( ordine.quantita_ordinata ) AS quantita_ordinata,
+  sum( ordine.quantita_evasa ) AS quantita_evasa,
+  ordine.udm
+FROM (
+  SELECT
+    documenti.id AS id_ordine,
+    coalesce(
+      documenti_articoli.id_prodotto,
+      articoli.id_prodotto
+    ) AS codice_prodotto,
+    documenti_articoli.id_articolo AS codice_articolo,
+    ( documenti_articoli.quantita * udm.conversione ) AS quantita_ordinata,
+    0 AS quantita_evasa,
+    udm_base.sigla AS udm
+  FROM documenti
+  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+  LEFT JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id
+  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN udm ON udm.id = documenti_articoli.id_udm
+  LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
+  WHERE tipologie_documenti.se_ordine IS NOT NULL
+  HAVING codice_prodotto IS NOT NULL
+  UNION
+  SELECT
+    relazioni_documenti.id_documento_collegato AS id_ordine,
+    coalesce(
+      documenti_articoli.id_prodotto,
+      articoli.id_prodotto
+    ) AS codice_prodotto,
+    documenti_articoli.id_articolo AS codice_articolo,
+    0 AS quantita_ordinata,
+    ( articoli.peso * udm.conversione * documenti_articoli.quantita ) AS quantita_evasa,
+    udm_base.sigla AS udm
+  FROM documenti
+  INNER JOIN relazioni_documenti ON id_documento = documenti.id
+  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+  LEFT JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id
+  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN udm ON udm.id = articoli.id_udm_peso
+  LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
+  WHERE tipologie_documenti.se_trasporto IS NOT NULL
+  HAVING codice_prodotto IS NOT NULL
+) AS ordine
+GROUP BY id_ordine, codice_prodotto
 
 --| FINE FILE

@@ -41,5 +41,8 @@
     // debug
     // print_r( $ct['etc']['select']['anagrafica'] );
 
+    // macro di default per l'entità DDT
+	require DIR_BASE . '_mod/_0400.documenti/_src/_inc/_macro/_ddt.magazzini.form.default.php';
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

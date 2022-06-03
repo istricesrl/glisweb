@@ -41,7 +41,7 @@
             'SELECT documenti.id, coalesce( max( cast( numero as unsigned ) ), 0 ) AS numero FROM documenti '.
             'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
             'WHERE id_emittente = ? AND sezionale = ? '.
-            'AND numerazione = ( SELECT numerazione FROM tipologie_documenti WHERE id = ? )',
+            'AND numerazione = ( SELECT numerazione FROM tipologie_documenti WHERE id = ? ) GROUP BY documenti.id, numero',
             array(
                 array( 's' => $_REQUEST['idAzienda'] ),
                 array( 's' => $_REQUEST['sezionale'] ),

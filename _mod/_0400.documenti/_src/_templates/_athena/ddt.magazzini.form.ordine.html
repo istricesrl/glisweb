@@ -42,9 +42,63 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-		{# VIEW PRINCIPALE #}
-		{% include 'inc/view.html' %}
-        
+        {# CAMPI SPECIALI PER MODULO RAPIDO #}
+        {% set subtable = 'documenti_articoli' %}
+        {{ frm.input( table, '', '', 'id_documento', '', '', '', request[ table ].id, 'hidden' ) }}
+        {{ frm.input( table, '', '', 'id_tipologia', '', '', '', request[ table ].id_tipologia, 'hidden' ) }}
+
+	    {# MODULO RAPIDO #}
+	    <fieldset>
+        <legend>inserimento rapido riga</legend>
+		<div class="form-group form-row">
+			<div class="col-1">
+				<span class="label-top remove-after-duplicate">quantità</span>
+				{{ frm.input( subtable, '', '', 'quantita', '', '', request, 1 ) }}
+			</div>
+			{% if  session.__latest__[ subtable ].id_udm %}
+				{% set default_udm = session.__latest__[ subtable ].id_udm %}
+			{% endif %}
+			<div class="col-auto">
+				<span class="label-top remove-after-duplicate">udm</span>
+				{{ frm.select( subtable, '', '', 'id_udm', '', etc.select.id_udm, request, default_udm ) }}
+			</div>
+			<div class="col-6">
+				<span class="label-top remove-after-duplicate">articolo</span>
+				{{ frm.selectBox( subtable, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
+			</div>
+			<div class="col">
+				<span class="label-top remove-after-duplicate">matricola</span>
+				{{ frm.selectBox( subtable, '', '', 'id_matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', 'matricole.form', 'matricole.form', 'matricole', 'id_matricola', page, pages, ietf, 'matricole' ) }}
+			</div>
+			<div class="col col-md">
+				<span class="label-top remove-after-duplicate">specifiche</span>
+				{{ frm.input( subtable, '', '', 'specifiche', '', '', request ) }}
+			</div>
+		</div>
+
+		{% if '0500.mastri' in mods.active.array %}
+		{% if  session.__latest__[ subtable ].id_mastro_provenienza %}
+			{% set default_mp = session.__latest__[ subtable ].id_mastro_provenienza %}
+		{% endif %}
+		<div class="form-group form-row">
+			<div class="col-md-6 col">
+				<span class="label-top remove-after-duplicate">scarico</span>
+				{{ frm.selectBox( subtable, '', '', 'id_mastro_provenienza', '', etc.select.id_mastri, request, default_mp, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_provenienza', page, pages, ietf ) }}
+			</div>
+			{% if  session.__latest__[ subtable ].id_mastro_destinazione %}
+				{% set default_md = session.__latest__[ subtable ].id_mastro_destinazione %}
+			{% endif %}
+			<div class="col-md-6 col">
+				<span class="label-top remove-after-duplicate">carico</span>
+				{{ frm.selectBox( subtable, '', '', 'id_mastro_destinazione', '', etc.select.id_mastri, request, default_md, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_destinazione', page, pages, ietf ) }}
+			</div>
+		</div>	
+		{% endif %}
+
+        <legend>status evasione ordine</legend>
+
+        </fieldset>
+
     </form>
 </div>
 </section>
