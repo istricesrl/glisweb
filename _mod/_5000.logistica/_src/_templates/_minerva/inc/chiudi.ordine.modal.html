@@ -27,7 +27,7 @@
         var documento = $( '#_id_documento' ).val();
         getws('{{ site.url }}/_mod/_0400.documenti/_src/_api/_task/_chiusura.documento.php', 'id='+documento, 
                 function( data ){ 
-                    window.open('{{ pages['app.logistica'].url[ localization.language.ietf ] }}','_self');
+                    window.open('{{ pages["app.ordini"].url[ localization.language.ietf ] }}','_self');
                 }
             );
 

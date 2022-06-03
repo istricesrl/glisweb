@@ -116,7 +116,7 @@
             } else {
                 $insert = mysqlQuery( 
                     $cf['mysql']['connection'], 
-                    "INSERT INTO documenti_articoli ( id_prodotto, id_documento, quantita, id_udm, id_mastro_destinazione, id_tipologia )  VALUES (?, ?, ?, ?, ?, ? )",
+                    "INSERT INTO documenti_articoli ( id_prodotto, id_documento, quantita, id_udm, id_mastro_provenienza, id_tipologia )  VALUES (?, ?, ?, ?, ?, ? )",
                     array( 
                         array( 's' => $_REQUEST['__p__'] ),
                         array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
