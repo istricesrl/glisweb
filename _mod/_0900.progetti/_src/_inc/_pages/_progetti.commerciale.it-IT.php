@@ -45,7 +45,7 @@
 			arrayInsertSeq( 'progetti.commerciale.form', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.todo' );
 		}
 
-		/*
+	/*	
 			// gestione todo progetti
 			$p['progetti.commerciale.form.todo'] = array(
 				'sitemap'		=> false,

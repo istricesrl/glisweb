@@ -979,6 +979,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_todo` (`id_todo`), 
 	ADD KEY `id_attivita` (`id_attivita`), 
 	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `id_udm` (`id_udm`), 
@@ -1651,7 +1652,7 @@ ALTER TABLE `mailing`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`);
 
---| 0300000190001
+--| 030000019001
 
 -- mailing
 -- tipolgia: tabella gestita

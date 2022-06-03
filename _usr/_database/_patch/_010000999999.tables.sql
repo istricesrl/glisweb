@@ -967,6 +967,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_todo` int(11) DEFAULT NULL,
   `id_attivita` int(11) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
@@ -1952,7 +1953,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
 -- verifica: 2021-10-04 18:47 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `prodotti` (	
   `id` char(32) NOT NULL,	
-  `id_tipologia` int(11) NOT NULL,	
+  `id_tipologia` int(11) DEFAULT NULL,	
   `nome` char(128) NOT NULL,	
   `note` text,
   `template` char(255) DEFAULT NULL,
