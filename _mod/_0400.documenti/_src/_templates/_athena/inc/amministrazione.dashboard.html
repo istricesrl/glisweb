@@ -50,12 +50,14 @@
                 <td>{{ data.values.uscite[ m ].value }}</td>
                 {% endfor %}
             </tr>
-            <tr style="background-color: #eeeeee;">
-                <td>totale</td>
-                {% for k,m in data.labels %}
-                <td>{{ data.values.entrate[ m ].value - data.values.uscite[ m ].value }}</td>
-                {% endfor %}
-            </tr>
+            <tfoot>
+                <tr class="row-totale">
+                    <td>totale</td>
+                    {% for k,m in data.labels %}
+                    <td>{{ data.values.entrate[ m ].value - data.values.uscite[ m ].value }}</td>
+                    {% endfor %}
+                </tr>
+            </tfoot>
         </table>
 
     </div>

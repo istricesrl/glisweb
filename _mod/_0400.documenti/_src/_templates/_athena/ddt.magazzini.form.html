@@ -110,6 +110,13 @@
 
             </fieldset>
 
+            {% if request.__ordine_da_evadere__ %}
+            {% set subtable = 'relazioni_documenti' %}
+            <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][__reset__]" value="">
+            <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][id_documento]" value="__parent_id__">
+            <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][id_documento_collegato]" value="{{ request.__ordine_da_evadere__ }}">
+            {% endif %}
+
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, table, request ) }}

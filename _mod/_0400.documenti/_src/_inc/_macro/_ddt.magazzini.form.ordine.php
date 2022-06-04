@@ -33,11 +33,12 @@
     // tabella status evasione
     $ct['etc']['evasione'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT * FROM __report_evasione_ordini__ WHERE id_ordine = ?',
+        'SELECT codice_prodotto, prodotto, quantita_ordinata, quantita_evasa, quantita_da_evadere, udm '.
+        'FROM __report_evasione_ordini__ WHERE id_ordine = ? ORDER BY quantita_da_evadere DESC',
         array( array( 's' => $idOrdine ) )
     );
 
-    print_r( $ct['etc']['evasione'] );
+    // print_r( $ct['etc']['evasione'] );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

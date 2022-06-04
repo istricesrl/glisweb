@@ -71,7 +71,7 @@
                       <h5>{{ row.categorie }}</h5>
                     </div>
                     <div class="col-2 justify-content-center align-self-center">
-                        <button type="button" class="btn" onclick='$("#_id_prodotto_add").val({{ row.id }}); $("#_prodotto_add").val("{{ row.nome }}");' data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>
+                        <button type="button" class="btn" onclick='$("#_id_prodotto_add").val("{{ row.id }}"); $("#_prodotto_add").val("{{ row.nome }}");' data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>
                     </div>
                   </div>
                   {% endfor %}
@@ -86,7 +86,7 @@
                       <h3 class="mt-0">{{ p.quantita }} {{ p.sigla_udm}} {{ p.prodotto }}</h3>
                     </div>
                     <div class="col-2 justify-content-center align-self-center" >
-                        <button type="button" class="btn" onclick='$("#_id_prodotto_edit").val({{ p.id_prodotto }}); $("#_prodotto_edit").val("{{ p.prodotto }}"); $("#_quantita_edit" ).val({{ p.quantita }}); $("#_id_udm_edit" ).val({{ p.id_udm }});' data-toggle="modal" data-target="#modifica_prodotto" style="color: white;  background-color: gray;"><i class="fa fa-pencil fa-3x" aria-hidden="true"></i></button>
+                        <button type="button" class="btn" onclick='$("#_id_prodotto_edit").val("{{ p.id_prodotto }}"); $("#_prodotto_edit").val("{{ p.prodotto }}"); $("#_quantita_edit" ).val({{ p.quantita }}); $("#_id_udm_edit" ).val({{ p.id_udm }});' data-toggle="modal" data-target="#modifica_prodotto" style="color: white;  background-color: gray;"><i class="fa fa-pencil fa-3x" aria-hidden="true"></i></button>
                     </div>
                     <div class="col-2 justify-content-center align-self-center" >
                         <button type="button" class="btn" onclick="window.open('{{ pages.delete.path[ localization.language.ietf ] }}?__delete__[table]=documenti_articoli&__delete__[id]={{p.id }}&__delete__[target]={{ page.path[ localization.language.ietf ]|url_encode }}?__delete__[documenti_articoli][id]={{ p.id }}&__delete__[rollback]={{page.path[ localization.language.ietf ]|url_encode}}','_self');"  style="color: white; background-color: gray;"><i class="fa fa-trash fa-3x" aria-hidden="true"></i></button>
