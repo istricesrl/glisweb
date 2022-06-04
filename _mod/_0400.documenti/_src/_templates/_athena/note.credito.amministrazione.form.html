@@ -58,7 +58,7 @@
                     </div>
                     {% if not request[ table ].numero %}
                     <div class="col-12 col-md-auto">
-                        {{ frm.button(  'OTTIENI NUMERO' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroFattura(\'documenti_numero\',$(\'#documenti_id_emittente\').val(),$(\'#documenti_sezionale\').val(),$(\'#documenti_id_tipologia\').val());','ottieni in modo automatico il progressivo' ) }}
+                        {{ frm.button(  'OTTIENI NUMERO' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroDocumento(\'documenti_numero\',$(\'#documenti_id_emittente\').val(),$(\'#documenti_sezionale\').val(),$(\'#documenti_id_tipologia\').val());','ottieni in modo automatico il progressivo' ) }}
                     </div>
                     {% endif %}
                     <div class="col-4 col-md-1">
