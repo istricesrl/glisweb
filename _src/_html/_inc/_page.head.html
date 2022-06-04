@@ -22,15 +22,15 @@
 
 {% include '_inc/_opengraph.head.html' %}
 
-{% for c in page.css.external %}<link rel="stylesheet" href="{{ c }}" media="screen">{% endfor %}
+{% for m,c in page.css.external %}<link rel="stylesheet" href="{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}">{% endfor %}
 
-{% for c in page.css.preload %}<link rel="preload" as="style" href="{{ c }}" media="screen" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
+{% for m,c in page.css.preload %}<link rel="preload" as="style" href="{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
 
-{% for c in page.css.internal %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
+{% for m,c in page.css.internal %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}">{% endfor %}
 
-{% for c in page.css.template %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% endfor %}
+{% for m,c in page.css.template %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}">{% endfor %}
 
-{% for c in page.css.custom %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
+{% for m,c in page.css.custom %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}">{% endfor %}
 
 {% include '_inc/_facebook.head.html' %}
 

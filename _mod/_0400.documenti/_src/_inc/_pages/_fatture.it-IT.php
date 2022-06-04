@@ -130,7 +130,7 @@
 			'h1'			=> array( $l		=> 'chiusura' ),
 			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.chiusura.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.tools.php' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.chiusura.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
 		);

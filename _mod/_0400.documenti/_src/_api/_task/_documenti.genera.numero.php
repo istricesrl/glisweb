@@ -50,6 +50,10 @@
             )
         );
 
+        if( ! isset( $status['current']['numero'] ) ) {
+            $status['current']['numero'] = 0;
+        }
+
         // propongo un nuovo progressivo
         $status['new'] = $status['current']['numero'] + 1;
 

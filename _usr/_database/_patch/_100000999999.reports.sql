@@ -405,6 +405,7 @@ DROP VIEW IF EXISTS `__report_evasione_ordini__`;
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_evasione_ordini__` AS
 SELECT
+  ordine.id_documento,
   ordine.id_ordine,
   ordine.codice_prodotto,
   ordine.prodotto,
@@ -418,6 +419,7 @@ SELECT
   udm.sigla AS udm
 FROM (
   SELECT
+    relazioni_documenti.id_documento,
     documenti.id AS id_ordine,
     coalesce(
       documenti_articoli.id_prodotto,
@@ -425,11 +427,12 @@ FROM (
     ) AS codice_prodotto,
     prodotti.nome AS prodotto,
     documenti_articoli.id_articolo AS codice_articolo,
-    ( documenti_articoli.quantita * udm.conversione ) AS quantita_ordinata,
+    coalesce( ( documenti_articoli.quantita * udm.conversione ), 0 ) AS quantita_ordinata,
     0 AS quantita_evasa,
     udm_base.sigla AS udm_base,
     udm.id AS id_udm
   FROM documenti
+  LEFT JOIN relazioni_documenti ON relazioni_documenti.id_documento_collegato = documenti.id
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id
   LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
@@ -440,6 +443,7 @@ FROM (
   HAVING codice_prodotto IS NOT NULL
   UNION
   SELECT
+    relazioni_documenti.id_documento,
     relazioni_documenti.id_documento_collegato AS id_ordine,
     coalesce(
       documenti_articoli.id_prodotto,
@@ -448,7 +452,7 @@ FROM (
     prodotti.nome AS prodotto,
     documenti_articoli.id_articolo AS codice_articolo,
     0 AS quantita_ordinata,
-    ( articoli.peso * udm.conversione * documenti_articoli.quantita ) AS quantita_evasa,
+    coalesce( ( articoli.peso * udm.conversione * documenti_articoli.quantita ), 0 ) AS quantita_evasa,
     udm_base.sigla AS udm_base,
     udm.id AS id_udm
   FROM documenti
@@ -463,8 +467,11 @@ FROM (
   HAVING codice_prodotto IS NOT NULL
 ) AS ordine
 LEFT JOIN udm ON udm.id = (
-  SELECT max( id_udm ) FROM documenti_articoli WHERE documenti_articoli.id_documento = ordine.id_ordine AND documenti_articoli.id_prodotto = ordine.id_prodotto
+  SELECT coalesce( max( documenti_articoli.id_udm ), max( articoli.id_udm_peso ) )
+  FROM documenti_articoli LEFT JOIN articoli ON articoli.id = ordine.codice_articolo
+  WHERE documenti_articoli.id_documento IN ( ordine.id_documento, ordine.id_ordine )
+  AND ( documenti_articoli.id_prodotto = ordine.codice_prodotto OR articoli.id = ordine.codice_articolo )
 )
-GROUP BY id_ordine, codice_prodotto, prodotto, conversione, udm
+GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, conversione, udm
 
 --| FINE FILE

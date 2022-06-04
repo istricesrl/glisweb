@@ -43,15 +43,15 @@
 
             {# MODULO PRINCIPALE #}
             <fieldset>
-                <legend>chiusura del documento</legend>
+                <legend>invio dell'ordine</legend>
                 <div class="form-group form-row">
                     <div class="col-12 col-md-auto">
-                        <span class="label-top">data chiusura</span>
-                        {{ frm.dateTime( table, '', '', 'timestamp_chiusura', '', '', request ) }}
+                        <span class="label-top">data invio</span>
+                        {{ frm.dateTime( table, '', '', 'timestamp_invio', '', '', request ) }}
                     </div>
                     <div class="col-12 col-md">
-                        <span class="label-top">note chiusura</span>
-                        {{ frm.textarea( table, '', '', 'note_chiusura', '', 3, request ) }}
+                        <span class="label-top">note invio</span>
+                        {{ frm.textarea( table, '', '', 'note_invio', '', 3, request ) }}
                     </div>
                 </div>
             </fieldset>

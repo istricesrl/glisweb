@@ -32,6 +32,8 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'ordini.magazzini.form',
 															'ordini.magazzini.form.righe',
+															'ordini.magazzini.form.invio',
+															'ordini.magazzini.form.chiusura',
 															'ordini.magazzini.form.stampe',
 															'ordini.magazzini.form.tools' ) )
 		);        
@@ -48,7 +50,33 @@
 			'etc'			=> array( 'tabs'	=> $p['ordini.magazzini.form']['etc']['tabs'] )
 		);
 
-        $p['ordini.magazzini.form.stampe'] = array(
+		// gestione chiusura fatture
+		$p['ordini.magazzini.form.invio'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-paper-plane-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'invio' ),
+			'h1'			=> array( $l		=> 'invio' ),
+			'parent'		=> array( 'id'		=> 'ordini.magazzini.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.magazzini.form.invio.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.magazzini.form.invio.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['ordini.magazzini.form']['etc']['tabs'] )
+		);
+
+		// gestione chiusura fatture
+		$p['ordini.magazzini.form.chiusura'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'chiusura' ),
+			'h1'			=> array( $l		=> 'chiusura' ),
+			'parent'		=> array( 'id'		=> 'ordini.magazzini.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.magazzini.form.chiusura.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.magazzini.form.chiusura.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['ordini.magazzini.form']['etc']['tabs'] )
+		);
+
+		$p['ordini.magazzini.form.stampe'] = array(
             'sitemap'		=> false,
             'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
             'title'		=> array( $l		=> 'stampe' ),

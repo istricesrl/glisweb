@@ -35,7 +35,7 @@
         $cf['mysql']['connection'],
         'SELECT codice_prodotto, prodotto, quantita_ordinata, quantita_evasa, quantita_da_evadere, udm '.
         'FROM __report_evasione_ordini__ WHERE id_ordine = ? ORDER BY quantita_da_evadere DESC',
-        array( array( 's' => $idOrdine ) )
+        array( array( 's' => $ct['etc']['ordine']['id'] ) )
     );
 
     // print_r( $ct['etc']['evasione'] );
