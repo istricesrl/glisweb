@@ -52,6 +52,6 @@
 	    'abstract'		=> array( $l		=> 'rivedere gli ordini già effettuati' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.ordini.lista.html' ),
 	    'parent'		=> array( 'id'		=> 'app.ordini' ),
-	    'macro'		=> array( '_src/_inc/_macro/_app.ordini.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_app.ordini.lista.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
