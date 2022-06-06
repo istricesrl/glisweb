@@ -317,8 +317,11 @@
 	if( ! function_exists( 'xmlEntities' ) ) {
 	function xmlEntities( $t ) {
 	    $t = iconv( 'UTF-8', 'ASCII//TRANSLIT//IGNORE', $t );
+		$t = html_entity_decode( $t );
 	    $t = str_replace( '€', 'EURO', $t );
-	    $t = str_replace( ',', '.', $t );
+//	    $t = str_replace( ',', '.', $t );
+	    $t = str_replace( '&amp;', '&', $t );
+	    $t = str_replace( '&', '&amp;', $t );
 //	    $t = str_replace( 'ù', 'u', $t );
 	    return $t;
 	}

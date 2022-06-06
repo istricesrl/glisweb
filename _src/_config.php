@@ -387,13 +387,13 @@
 	define( 'MIME_TEXT_HTML'		, 'text/html' );
     define( 'MIME_X_WWW_FORM_URLENCODED',   'application/x-www-form-urlencoded' );
 
+    // costanti per l'encoding
+	define( 'ENCODING_UTF8'			, 'utf-8' );
+
     // controllo scrittura
     if( ! is_writeable( DIR_BASE ) ) {
         die( 'la cartella di installazione non è scrivibile, lanciare _lamp.permissions.reset.sh' );
     }
-
-    // costanti per l'encoding
-	define( 'ENCODING_UTF8'			, 'utf-8' );
 
     // inizializzazione motore numeri casuali
 	mt_srand( ( double ) microtime() * 1000000 );
@@ -566,7 +566,8 @@
     // writeToFile() dovrebbe diventare write2file()
 
     // log
-	writeToFile( 'inizio esecuzione runlevels' . PHP_EOL, FILE_LATEST_RUN );
+	writeToFile( date( 'Y-m-d H:i:s' ) . ' ' . $_SERVER['REDIRECT_URL'] . PHP_EOL, FILE_LATEST_RUN );
+	appendToFile( 'inizio esecuzione runlevel' . PHP_EOL, FILE_LATEST_RUN );
 
     // NOTA il framework prevede alcuni file di log speciali, utili soprattutto per il debug; questi file vengono scritti
     // a parte, direttamente con appendToFile(), senza passare dalla factory di log principale logWrite() per ridurre le
@@ -579,7 +580,7 @@
     //						output, altrimenti difficile da catturare in altra maniera
 
     // debug
-	// die( 'INIZIO ESECUZIONE RUNLEVELS' );
+	// die( 'INIZIO ESECUZIONE RUNLEVEL' );
 
     // inclusione dei files di configurazione
     // NOTA questa è l'esecuzione della griglia moduli/livelli
@@ -601,13 +602,13 @@
 		    // inclusione file standard
 			require $configFile;
 			timerCheck( $cf['speed'], $configFile );
-			appendToFile( 'esecuzione runlevel -> ' . $configFile . PHP_EOL, FILE_LATEST_RUN );
+			appendToFile( 'eseguito runlevel -> ' . $configFile . PHP_EOL, FILE_LATEST_RUN );
 
 		    // inclusione file locale
 			if( file_exists( $configFileLocale ) ) {
 			    require $configFileLocale;
 			    timerCheck( $cf['speed'], $configFileLocale );
-			    appendToFile( 'esecuzione runlevel -> ' . $configFileLocale . PHP_EOL, FILE_LATEST_RUN );
+			    appendToFile( 'eseguito runlevel -> ' . $configFileLocale . PHP_EOL, FILE_LATEST_RUN );
 			}
 
 		    // debug
@@ -623,14 +624,14 @@
 			    // inclusione file di modulo
 				require $configFileModuli;
 				timerCheck( $cf['speed'], $configFileModuli );
-				appendToFile( 'esecuzione runlevel -> ' . $configFileModuli . PHP_EOL, FILE_LATEST_RUN );
+				appendToFile( 'eseguito runlevel -> ' . $configFileModuli . PHP_EOL, FILE_LATEST_RUN );
 
 			    // controparte modulo locale
 				$configFileModuliLocale = path2custom( $configFileModuli );
 				if( file_exists( $configFileModuliLocale ) ) {
 				    require $configFileModuliLocale;
 				    timerCheck( $cf['speed'], $configFileModuliLocale );
-				    appendToFile( 'esecuzione runlevel -> ' . $configFileModuliLocale . PHP_EOL, FILE_LATEST_RUN );
+				    appendToFile( 'eseguito runlevel -> ' . $configFileModuliLocale . PHP_EOL, FILE_LATEST_RUN );
 				}
 
 			}
@@ -642,6 +643,9 @@
 		}
 
 	}
+
+    // debug
+    appendToFile( 'fine esecuzione runlevel' . PHP_EOL, FILE_LATEST_RUN );
 
     // CHIAVI DI CONFIGURAZIONE
     // $cf['speed']				contiene informazioni sulla velocità e sulle performance del framework

@@ -41,9 +41,14 @@
      *
      */
 
-    // multisito di default
+    // carattere di default per la separazione delle parole negli URL
 	if( ! defined( 'URL_WORD_SEPARATOR' ) ) {
 	    define( 'URL_WORD_SEPARATOR'		, '-' );
+	}
+
+    // carattere di default per separare il titolo del sito da quello della pagina nel tag <title>
+	if( ! defined( 'TITLE_SEPARATOR' ) ) {
+	    define( 'TITLE_SEPARATOR'		    , ' | ' );
 	}
 
     // gli URL del sito

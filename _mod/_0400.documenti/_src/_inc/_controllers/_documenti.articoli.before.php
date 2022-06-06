@@ -52,7 +52,7 @@
 
 			}
 
-			if( isset( $vs['id_matricola'] ) ) {
+			if( isset( $vs['id_matricola']['s'] ) && ! empty( $vs['id_matricola']['s'] ) ) {
 
 				$idArticolo = mysqlSelectValue(
 					$c,

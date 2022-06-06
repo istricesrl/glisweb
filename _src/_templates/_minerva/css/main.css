@@ -69,6 +69,19 @@ header nav.navbar-light li.nav-item > a.nav-link:active {
     transition: background-color 100ms linear;
 }
 
+header .btn-sqr {
+    border-radius: 0px;
+    font-size: 1em;
+    width: 2em;
+}
+
+header .btn-sqr,
+header .btn-sqr:visited,
+header .btn-sqr:hover,
+header .btn-sqr:active {
+    background-color: #333333;
+}
+
 div.subnav a,
 div.subnav a:visited,
 div.subnav a:hover,
@@ -117,3 +130,31 @@ div.subnav p {
     min-width: 280px;
     margin: auto;
 }
+
+.label-top {
+    font-size: .9em;
+/*    height: 1.75em; */
+    color: #777777;
+
+    position: absolute;
+    top: -0.75em;
+    left: 1.25em;
+    background-color: white;
+    padding: 0em 0.5em;
+    z-index: 30;
+
+    border: 1px solid rgba(206,212,218,1);
+    border-image: linear-gradient(to bottom, rgba(206,212,218,0) 25%,rgba(206,212,218,1) 25%,rgba(206,212,218,1) 75%,rgba(206,212,218,0) 75%);
+    border-image-slice: 1;
+
+
+/*
+    border-left: 1px solid #ced4da;
+    border-right: 1px solid #ced4da;
+*/
+}
+
+.form-control:focus {
+    border-color: #cccccc;
+    box-shadow: inset 0 1px 1px rgba(64, 64, 64, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
+    }

@@ -54,6 +54,11 @@
 
             break;
 
+            // pagamento con PayPal Advanced Checkout
+            case 'paypal-advanced':
+
+            break;
+
             // pagamento con Nexi
             case 'nexi':
 

@@ -1,0 +1,64 @@
+<div class="form-row view-filters d-print-none">
+	<div class="col-12 col-md-auto">
+		<span class="label-top">emittente</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_emittente][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_emittente.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for emittente in etc.select.id_emittenti %}
+			<option value="{{ emittente.id }}" {% if request.__view__[ view.id ].__filters__.id_emittente.EQ == emittente.id %}selected{% endif %}>{{ emittente.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	<div class="col-12 col-md-auto">
+		<span class="label-top">anno</span>
+		<select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.anno.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for anno in etc.select.anni %}
+			<option value="{{ anno.id }}" {% if request.__view__[ view.id ].__filters__.anno.EQ == anno.id %}selected{% endif %}>{{ anno.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+    <div class="col-auto">
+	<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+    </div>
+</div>
+
+<div class="form-group form-row h-50">
+    <div class="col-12">
+        <canvas class="" id="andamento"></canvas>
+    </div>
+</div>
+
+<div class="form-group form-row">
+    <div class="col">
+
+        <table class="view-table">
+            <tr>
+                <th class="table-header-static"></th>
+                {% for m in data.labels %}
+                <th class="table-header-static">{{ m }}</th>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>entrate</td>
+                {% for k,m in data.labels %}
+                <td>{{ data.values.entrate[ m ].value }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td>uscite</td>
+                {% for k,m in data.labels %}
+                <td>{{ data.values.uscite[ m ].value }}</td>
+                {% endfor %}
+            </tr>
+            <tfoot>
+                <tr class="row-totale">
+                    <td>totale</td>
+                    {% for k,m in data.labels %}
+                    <td>{{ data.values.entrate[ m ].value - data.values.uscite[ m ].value }}</td>
+                    {% endfor %}
+                </tr>
+            </tfoot>
+        </table>
+
+    </div>
+</div>

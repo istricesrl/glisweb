@@ -44,6 +44,10 @@
 			<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
+				<div class="col-12 col-md-auto">
+					<span class="label-top">genitore</span>
+					{{ frm.select( table, '', '', 'id_genitore', '', etc.select.genitori, request ) }}
+				</div>
 				<div class="col-12 col-md">
 				<span class="label-top">nome della tipologia</span>
 				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
@@ -52,7 +56,7 @@
 
 		</fieldset>
 
-		<fieldset>
+		<!--fieldset>
             <legend>ruoli</legend>
 
 			<div class="form-group form-row">
@@ -88,7 +92,7 @@
 				</div>
 			</div>
 
-	    </fieldset>
+	    </fieldset-->
     
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

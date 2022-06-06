@@ -45,10 +45,12 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
+			{% if '3000.contenuti' in mods.active.array %}
 			<div class="col-12 col-md-auto">
 				<span class="label-top">sito</span>
 				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
 			</div>  
+			{% endif %}
 		    <div class="col-12 col-md">
 			<span class="label-top">genitore</span>
 			{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.categorie_progetti, request, '', '', '', '', '', 'categorie.progetti.form', 'categorie.progetti.form', 'categorie_progetti', 'id_genitore', page, pages, ietf ) }}
@@ -57,6 +59,7 @@
 			<span class="label-top">nome della categoria</span>
 			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 		    </div>
+			{% if '3000.contenuti' in mods.active.array %}
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
                     {{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
@@ -67,8 +70,43 @@
                     {{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
                 </div>
             </div>
+			{% endif %}
 		</div>
-		      
+
+
+		<div class="form-group form-row">
+			<legend>gestione progetti</legend>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_ordinario', 'se ordinario', '', request ) }}
+                </div>
+            </div>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_straordinario', 'se straordinario', '', request ) }}
+                </div>
+            </div>
+		</div>
+		{% if '0920.corsi' in mods.active.array %}
+		<div class="form-group form-row">
+			<legend>gestione corsi</legend>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_disciplina', 'se disciplina', '', request ) }}
+                </div>
+            </div>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_classe', 'se livello', '', request ) }}
+                </div>
+            </div>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_fascia', 'se fascia di età', '', request ) }}
+                </div>
+            </div>
+		</div>
+		{% endif %}
 	    </fieldset>
 
 		{% if '3000.contenuti' in mods.active.array %}

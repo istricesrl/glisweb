@@ -14,10 +14,10 @@ function getProgressivoInvioFattura( id, ida ) {
 
 }
 
-function getNumeroFattura( id, ida, sez, idt ) {
+function getNumeroDocumento( id, ida, sez, idt ) {
 
     getws(
-        '/task/0400.documenti/fatture.genera.numero?idAzienda='+ida+'&sezionale='+sez+'&idTipologia='+idt,
+        '/task/0400.documenti/documenti.genera.numero?idAzienda='+ida+'&sezionale='+sez+'&idTipologia='+idt,
         null,
         function( data ) {
             console.log( data );

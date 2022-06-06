@@ -86,6 +86,7 @@
         'file' => 'inc/ddt.passivi.magazzini.form.righe.insert.html',
         'fa' => 'fa-plus-circle'
     );
+
 	//$ct['etc']['include']['insert'] = 'inc/ddt.passivi.magazzini.form.righe.insert.html';
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){

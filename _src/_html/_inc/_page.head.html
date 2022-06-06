@@ -29,6 +29,7 @@
 {% for c in page.css.internal %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
 
 {% for c in page.css.template %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% endfor %}
+{% for c in page.css.template_print %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="print">{% endfor %}
 
 {% for c in page.css.custom %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
 

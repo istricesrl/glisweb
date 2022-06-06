@@ -153,3 +153,15 @@
 	    // echo $l . '/' . $t . ' -> ' . $m . PHP_EOL;
 
     }
+
+	function logMsg( $m, &$o = NULL, &$a = array(), &$t = NULL ) {
+
+		$o .= $m;
+
+		$a[] = strip_tags( $m );
+
+		if( $t !== NULL ) {
+			timerCheck( $t, strip_tags( $m ) );
+		}
+
+	}

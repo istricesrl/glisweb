@@ -20,10 +20,12 @@
 	    $cf['auth']['permissions'],
 	    array(
             'documenti' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'documenti_articoli' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'relazioni_documenti_articoli' => array(
                 CONTROL_FULL => array( 'roots' )
@@ -32,6 +34,12 @@
                 CONTROL_FULL => array( 'roots' )
             ),
             'proforma' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'fatture_attive' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'righe_fatture_attive' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
             'righe_proforma' => array(
@@ -63,6 +71,10 @@
             ),
             'relazioni_documenti' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            'ordini' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

@@ -53,7 +53,11 @@
         <span style="margin-left: auto;">        </span>
         {% for t in pages[ page.id ].etc.tabs %}
         {% if pages[ t ].icon %}
+        {% if pages[ t ].onclick %}
+        <li class="nav-item nav-icon d-flex align-items-stretch"><a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" href="{{ pages[  pages[ t ].onclick[ lang ] ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}" target="{{  pages[ t ].target  }}">{{ pages[ t ].icon|raw }}</a></li>
+        {% else %}
         <li class="nav-item nav-icon d-flex align-items-stretch"><a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{{ pages[ t ].icon|raw }}</a></li>
+        {% endif %}
         {% endif %}
 	    {% endfor %}
     </ul>
@@ -66,8 +70,8 @@
 {% for link in links %}<li class="breadcrumb-item{% if link.active %} active{% endif %}"><a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a></li>{% endfor %}
 {% endmacro %}
 
-{% macro lineBreadcrumbs( links, lang, site, query ) %}
-{% for link in links %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a>{% if not loop.last %} | {% endif %}{% endfor %}
+{% macro lineBreadcrumbs( links, lang, site, query, separator ) %}
+{% for link in links %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a>{% if not loop.last %} {% if separator %} {{ separator }} {% else %} | {% endif %}{% endif %}{% endfor %}
 {% endmacro %}
 
 {% macro flags( links, lang, site, query ) %}

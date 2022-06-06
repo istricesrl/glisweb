@@ -143,12 +143,15 @@
 	    'indirizzi' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),
+		'indirizzi_caratteristiche' => array(
+			CONTROL_FULL => array( 'roots' )
+	    ),
 	    'job' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),
-#	    'luoghi' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'luoghi' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #		'macro' => array(
 #		CONTROL_FULL => array( 'roots' )
 #		),
@@ -164,9 +167,9 @@
 	    'metadati' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
-#		'pianificazioni' => array(
-#			CONTROL_FULL => array( 'roots' )
-#		),
+		'periodi' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
 #		'progetti_anagrafica' => array(
 #			CONTROL_FULL => array( 'roots' ),
 #			CONTROL_FILTERED => array( 'staff' )
@@ -207,9 +210,9 @@
 #	    'tipologie_anagrafica' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'tipologie_attivita' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'tipologie_periodi' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'ranking' => array(
 			CONTROL_FULL => array( 'roots' )
 		),

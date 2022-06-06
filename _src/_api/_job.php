@@ -69,7 +69,7 @@
                 )
             );
 
-        } else {
+        } elseif( isset( $job['id'] ) ) {
 
             // log
             logWrite( 'workspace vuoto per il job #' . $job['id'], 'job' );
@@ -83,10 +83,17 @@
                 )
             );
 
+        } else {
+
+            // log
+            logWrite( 'nessun job trovato per il token' . $status['token'], 'job' );
+
         }
 
         // log
-        appendToFile( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+        if( isset( $job['id'] ) ) {
+            appendToFile( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+        }
 
         // output
         buildJson( array_replace_recursive( $job, $status ) );

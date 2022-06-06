@@ -29,28 +29,37 @@
 		    // debug
 			// echo $tk;
 
-		    // invio la mail con il link e il token
-			$_REQUEST['__signup__']['activation']['mail']['id'] = queueMailFromTemplate(
-			    $cf['mysql']['connection'],
-#			    $cf['mail']['tpl']['DEFAULT_REGISTRAZIONE_ACCOUNT'],
-#			    $cf['mail']['tpl']['NUOVO_ACCOUNT'],
-			    $cf['mail']['tpl']['DEFAULT_NUOVO_ACCOUNT'],
-			    array( 'dt' => array_replace_recursive( $_REQUEST['__signup__'], array( 'tk' => $tk ) ), 'ct' => $ct ),
-			    strtotime( '+1 minutes' ),
-			    array( $_REQUEST['__signup__']['nome'] . ' ' . $_REQUEST['__signup__']['cognome'] => $_REQUEST['__signup__']['email'] ),
-			    $cf['localization']['language']['ietf']
-			);
+			// TODO fare ramo di codice alternativo per registrazione con mail + sms
+			if( true ) {
 
-		    // se la mail è stata accodata, imposto il flag per il modulo
-			if( ! empty( $_REQUEST['__signup__']['activation']['mail']['id'] ) ) {
+				// invio la mail con il link e il token
+				$_REQUEST['__signup__']['activation']['mail']['id'] = queueMailFromTemplate(
+					$cf['mysql']['connection'],
+	#			    $cf['mail']['tpl']['DEFAULT_REGISTRAZIONE_ACCOUNT'],
+	#			    $cf['mail']['tpl']['NUOVO_ACCOUNT'],
+					$cf['mail']['tpl']['DEFAULT_NUOVO_ACCOUNT'],
+					array( 'dt' => array_replace_recursive( $_REQUEST['__signup__'], array( 'tk' => $tk ) ), 'ct' => $ct ),
+					strtotime( '+1 minutes' ),
+					array( $_REQUEST['__signup__']['nome'] . ' ' . $_REQUEST['__signup__']['cognome'] => $_REQUEST['__signup__']['email'] ),
+					$cf['localization']['language']['ietf']
+				);
 
-			    $_REQUEST['__signup__']['__tk_sent__']['testo'] = array(
-				'it-IT' => '<p>grazie per esserti registrato! controlla la mail fra qualche minuto per confermare il tuo account</p><p>ora puoi chiudere questa finestra</p>'
-			    );
+				// se la mail è stata accodata, imposto il flag per il modulo
+				if( ! empty( $_REQUEST['__signup__']['activation']['mail']['id'] ) ) {
+
+					$_REQUEST['__signup__']['__tk_sent__']['testo'] = array(
+					'it-IT' => '<p>grazie per esserti registrato! controlla la mail fra qualche minuto per confermare il tuo account</p><p>ora puoi chiudere questa finestra</p>'
+					);
+
+				} else {
+
+					$_REQUEST['__signup__']['__err__'][0]['testo'] = array( 'it-IT' => 'abbiamo riscontrato un problema nella creazione del tuo account, prova più tardi' );
+
+				}
 
 			} else {
 
-			    $_REQUEST['__signup__']['__err__'][0]['testo'] = array( 'it-IT' => 'abbiamo riscontrato un problema nella creazione del tuo account, prova più tardi' );
+				// TODO autenticazione con mail + sms
 
 			}
 
@@ -63,6 +72,10 @@
 
 	    // scrivo i dati di registrazione su un file temporaneo
 		writeToFile( serialize( $_REQUEST['__signup__'] ), 'var/log/signup/' . $tk . '.txt' );
+
+	} elseif( isset( $_REQUEST['tkm'] ) && isset( $_REQUEST['tks'] ) ) {
+
+		// TODO verifica con token mail + token sms
 
 	} elseif( isset( $_REQUEST['tk'] ) ) {
 
@@ -77,8 +90,12 @@
 		    // creo l'anagrafica
 			$idAnagrafica = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO anagrafica ( nome, cognome ) VALUES ( ?, ? )', array( array( 's' => $dati['nome'] ), array( 's' => $dati['cognome'] ) ) );
 
+			// TODO prevedere la possibilità di inserire altri campi dell'anagrafica (ad es. indirizzo, partita IVA, codice fiscale, eccetera)
+
 		    // creo la mail
 			$idMail = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO mail ( id_anagrafica, indirizzo ) VALUES ( ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['email'] ) ) );
+
+			// TODO prevedere la possibilità di associare categorie diverse a tipologie di registrazione diverse
 
 		    // associo alle categorie
 			foreach( $cf['registrazione']['default']['categorie'] as $categoria ) {

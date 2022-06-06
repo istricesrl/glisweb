@@ -45,10 +45,16 @@
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
         <legend>condizioni di fornitura</legend>
-        
+		<div class="form-group form-row">
+			<div class="col">
+				<span class="label-top">ranking</span>
+				{{ frm.select( table, '', '', 'id_ranking', '', etc.select.ranking, request ) }}
+			</div>
+		</div>
         <div class="form-group form-row">
 		    <div class="col-12">
 			<span class="label-top">condizioni di fornitura</span>
+			
             {# frm.textarea( table, '', '', 'condizioni_acquisto', 'condizioni di fornitura', 3, request, '', '', 'ckEditor', 200 ) #}
 			{{ frm.textarea( table, '', '', 'condizioni_acquisto', '', 3, request ) }}
 		    </div>
@@ -68,6 +74,8 @@
 					{{ frm.input( table, '', '', 'partita_iva', '', '', request ) }}
 				</div>
 			</div>
+
+
 		</fieldset>
 
         {# SUBFORM IBAN #}

@@ -1,0 +1,82 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+<fieldset id="{{ view.id }}-insert" class="view-insert hidden">
+	<div class="form-row">
+		<div class="col-6 col-md">
+			<span class="label-top">giorno</span>
+			{{ frm.select( table, '', '', '__giorno__', '', etc.select.giorni_settimana, '', '', '', '', '', '', 2) }}
+		</div>
+		<div class="col-6 col-md-auto">
+			<span class="label-top">dal</span>
+			{{ frm.date( table, '', '', '__data_inizio__', '', '', '', '', '', '', '', 2 ) }}
+		</div>
+		<div class="col-6 col-md-auto">
+			<span class="label-top">al</span>
+			{{ frm.date( table, '', '', '__data_fine__', '', '', '', '', '', '', '', 2 ) }}
+		</div>
+		<div class="col-2 col-md-1">
+			<span class="label-top">ora inizio</span>
+			{{ frm.time( table, '', '', '__ora_inizio__', '', '', '', '', '', '', '', 2) }} 
+		</div>
+		<div class="col-2 col-md-1">
+			<span class="label-top">ora fine</span>
+			{{ frm.time( table, '', '', '__ora_fine__', '', '', '', '', '', '', '', 2) }} 
+		</div>
+		<div class="col-6 col-md-3">
+			<span class="label-top">luogo</span>
+			{{ frm.selectBox( table, '', '', '__id_luogo__', '', etc.select.luoghi, request, '', '', '', '', 'font-awesome', '', '', '', '', '', '', '', '', '2') }}
+		</div>
+		<div class="col-6 col-md">
+			<span class="label-top">istruttore</span>
+			{{ frm.selectBox( table, '', '', '__id_anagrafica__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, '', '2' ) }}
+		</div>
+		<div class="form-row col-12">
+			<div class="col-1"><h3>escludi</h3></div>
+			{% for t in etc.select.tipologie %}
+			<div class="col-auto">
+				<input type="checkbox" id="tipologie_{{t.id}}" name="tipologie" value="{{ t.id }}">
+				<label for="horns">{{t.__label__}}</label>
+			</div>
+			{% endfor %}
+			<div class="col-12 col-md-12">
+				{{ frm.button(  'GENERA' ,'button','btn btn-secondary btn-sm btn-block', 'creaTodo($(\'#progetti___giorno__\').val(),$(\'#progetti___data_inizio__\').val(),$(\'#progetti___data_fine__\').val(),$(\'#progetti___ora_inizio__\').val(),$(\'#progetti___ora_fine__\').val(),$(\'#progetti___id_luogo__\').val(),$(\'#progetti___id_anagrafica__\').val());','genera lezioni', 'btncrea' ) }}
+			</div>
+		</div>
+
+	</div>
+
+</fieldset>
+<script>
+	function creaTodo( giorno, data_inizio, data_fine, ora_inizio, ora_fine, luogo, anagrafica ) {
+			
+			$('#btncrea').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> GENERAZIONE IN CORSO');
+			var periodi = [];
+			
+        	$.each($("input[name='tipologie']:checked"), function(){ periodi.push($(this).val()); });
+			//console.log(periodi);
+
+			var call = '{{ site.url }}_mod/_1200.todo/_src/_api/_task/_todo.generate.php';
+			var par = '&__g__=' + giorno + '&__d_i__=' + data_inizio + '&__d_f__=' + data_fine + '&__o_i__=' + ora_inizio + '&__o_f__=' + ora_fine + '&__l__=' + luogo + '&__a__='+anagrafica + '&__periodi__=' + periodi;
+			
+			console.log(call + '?progetto={{ request[form.table].id }}'+ par);
+			
+			getws(
+				call + '?progetto={{ request[form.table].id }}'+ par,
+				null,
+				function( data ) {
+					console.log( data );
+				//	$( '#'+id ).val( data.new );
+					if( data.err ) { 
+						alert( data.err ); 
+					} else if( data.__status__ == 'OK' )  {
+						location.reload();
+						//alert("sono state generate "+data.__new__+" lezioni" );
+					}
+					$('#btncrea').html('GENERA');
+
+				}
+			);
+
+			}
+</script>

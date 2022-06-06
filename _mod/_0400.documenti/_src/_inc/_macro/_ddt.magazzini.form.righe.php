@@ -80,13 +80,8 @@
 		}
 
 	}
-	
-    $ct['etc']['include']['insert'][] = array(
-        'name' => 'insert',
-        'file' => 'inc/ddt.magazzini.form.righe.insert.html',
-        'fa' => 'fa-plus-circle'
-    );
- //   $ct['etc']['include']['insert'] = 'inc/ddt.magazzini.form.righe.insert.html';
+
+    $ct['etc']['include']['insert'] = 'inc/ddt.magazzini.form.righe.insert.html';
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro custom progetti aperti
@@ -99,6 +94,9 @@
     // trasformazione icona attivo/inattivo
 	///foreach( $ct['view']['data'] as &$row ) {
 	//}
+
+    // macro di default per l'entità DDT
+	require DIR_BASE . '_mod/_0400.documenti/_src/_inc/_macro/_ddt.magazzini.form.default.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

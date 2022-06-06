@@ -358,3 +358,73 @@
         );
 
     }
+
+    function trovaRigaDaElaborare( $c, $t, $q, $f1 = 'timestamp_sincronizzazione', $f2 = 'timestamp_aggiornamento', &$o = NULL, $e = array() ) {
+
+        // default
+        $r = NULL;
+
+        // condizioni extra
+        if( ! empty( $e ) ) {
+            $ew = ' AND ' . implode( ' AND ', $e );
+        } else {
+            $ew = NULL;
+        }
+
+	    // ricerca di un elemento con timestamp_aggiornamento > timestamp_sincronizzazione in ordine di timestamp_aggiornamento
+		if( isset( $q['id'] ) ) {
+
+		    // recupero dati
+			$r	= mysqlSelectRow( $c,
+			    'SELECT '.$t.'.* FROM '.$t.'
+			    WHERE '.$t.'.id = ?',
+			    array(
+				    array( 's' => $q['id'] ) 
+			    )
+			);
+
+		    // output
+			$o .= '<p>elemento da importare specificato</p>';
+
+		} elseif( isset( $q['f'] ) ) {
+
+		    // recupero dati
+			$r	= mysqlSelectRow( $c,
+			    'SELECT '.$t.'.* FROM '.$t.'
+			    ORDER BY '.$t.'.'.$f1.' ASC, '.$t.'.id ASC LIMIT 1'
+			);
+
+		    // output
+			$o .= '<p>ricerca forzata di un elemento da importare</p>';
+
+		} else {
+
+            // recupero dati
+			$r	= mysqlSelectRow( $c,
+			    'SELECT '.$t.'.* FROM '.$t.'
+			    WHERE ( '.$t.'.'.$f1.' < '.$t.'.'.$f2.'
+			    OR '.$t.'.'.$f1.' < ?
+			    OR '.$t.'.'.$f1.' IS NULL ) '.$ew.'
+			    ORDER BY '.$t.'.'.$f1.' ASC, '.$t.'.id ASC LIMIT 1',
+			    array( array( 's' => strtotime( '-2 days' ) ) )
+			);
+
+			// output
+			$o .= '<p>ricerca di un corso da importare</p>';
+
+		}
+
+        // aggiornamento timestamp di importazione
+        if( ! empty( $r['id'] ) ) {
+            mysqlQuery( $c,
+                'UPDATE '.$t.' SET '.$f1.' = ? WHERE id = ?',
+                array(
+                    array( 's' => time() ),
+                    array( 's' => $r['id'] )
+                )
+            );
+        }
+
+        return $r;
+
+    }

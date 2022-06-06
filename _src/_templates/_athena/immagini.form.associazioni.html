@@ -60,23 +60,90 @@
 		<fieldset>
 			<legend>associazioni</legend>
 			<div class="form-group form-row">
+				{% if '3000.contenuti' in mods.active.array %}
 				<div class="col-12">
 					<span class="label-top">pagina</span>
 					{{ frm.select( table, '', '', 'id_pagina', '', etc.select.pagine, request ) }}
 				</div>
-				
+				{% endif %}
 				<div class="col-12">
-					<span class="label-top">evento</span>
-					{{ frm.select( table, '', '', 'id_evento', '', etc.select.eventi, request ) }}
+					<span class="label-top">anagrafica</span>
+					{{ frm.selectBox( table, '', '', 'id_anagrafica',   '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
 				</div>
 				<div class="col-12">
+					<span class="label-top">indirizzo</span>
+					{{ frm.selectBox( table, '', '', 'id_indirizzo',   '', etc.select.indirizzi, request, '', '', '', '', '', 'indirizzi.form', 'indirizzi.form', 'indirizzi', 'id_indirizzo', page, pages, ietf, 'indirizzi' ) }}
+				</div>
+				{% if 'V300.immobiliari' in mods.active.array %}
+				<div class="col-6">
+					<span class="label-top">edificio</span>
+					{{ frm.selectBox( table, '', '', 'id_edificio',   '', etc.select.edifici, request, '', '', '', '', '', 'edifici.form', 'edifici.form', 'edifici', 'id_edificio', page, pages, ietf, 'edifici' ) }}
+				</div>
+				<div class="col-6">
+					<span class="label-top">immobile</span>
+					{{ frm.selectBox( table, '', '', 'id_immobile',   '', etc.select.immobili, request, '', '', '', '', '', 'immobili.form', 'immobili.form', 'immobili', 'id_immobile', page, pages, ietf, 'immobili' ) }}
+				</div>
+				{% endif %}
+				{% if '4000.catalogo' in mods.active.array %}
+				<div class="col-4">
 					<span class="label-top">categoria prodotto</span>
 					{{ frm.select( table, '', '', 'id_categoria_prodotti', '', etc.select.categorie_prodotti, request ) }}
 				</div>
-				<div class="col-12">
+				<div class="col-4">
 					<span class="label-top">prodotto</span>
-					{{ frm.select( table, '', '', 'id_prodotto', '', etc.select.prodotti, request ) }}
+					{{ frm.selectBox( table, '', '', 'id_prodotto',   '', etc.select.prodotti, request, '', '', '', '', '', 'prodotti.form', 'prodotti.form', 'prodotti', 'id_prodotto', page, pages, ietf, 'prodotti' ) }}
 				</div>
+				<div class="col-4">
+					<span class="label-top">articolo</span>
+					{{ frm.selectBox( table, '', '', 'id_articolo',   '', etc.select.articoli, request, '', '', '', '', '', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
+				</div>
+				{% endif %}
+				{% if '3500.risorse' in mods.active.array %}
+				<div class="col-6">
+					<span class="label-top">categoria risorsa</span>
+					{{ frm.selectBox( table, '', '', 'id_categoria_risorse',   '', etc.select.categorie_risorse, request ) }}
+				</div>
+				<div class="col-6">
+					<span class="label-top">risorsa</span>
+					{{ frm.selectBox( table, '', '', 'id_risorsa',   '', etc.select.risorse, request, '', '', '', '', '', 'risorse.form', 'risorse.form', 'risorse', 'id_risorsa', page, pages, ietf, 'risorse' ) }}
+				</div>
+				{% endif %}
+				{% if '3100.notizie' in mods.active.array %}
+				<div class="col-6">
+					<span class="label-top">categoria notizie</span>
+					{{ frm.selectBox( table, '', '', 'id_categoria_notizie',   '', etc.select.categorie_notizie, request, '', '', '', '', '', 'categorie.notizie.form', 'categorie.notizie.form', 'categorie_notizie', 'id_categoria_notizie', page, pages, ietf, 'categorie_notizie' ) }}
+				</div>
+				<div class="col-6">
+					<span class="label-top">notizia</span>
+					{{ frm.selectBox( table, '', '', 'id_notizia',   '', etc.select.notizie, request, '', '', '', '', '', 'notizie.form', 'notizie.form', 'notizie', 'id_notizia', page, pages, ietf, 'notizie' ) }}
+				</div>
+				{% endif %}
+				{% if '0900.progetti' in mods.active.array %}
+				<div class="col-6">
+					<span class="label-top">categoria progetto</span>
+					{{ frm.select( table, '', '', 'id_categoria_progetti', '', etc.select.categorie_progetti, request ) }}
+				</div>
+				<div class="col-6">
+					<span class="label-top">progetto</span>
+					{{ frm.selectBox( table, '', '', 'id_progetto',   '', etc.select.progetti, request, '', '', '', '', '', 'progetti.form', 'progetti.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
+				</div>
+				{% endif %}
+				{% if '0800.valutazioni' in mods.active.array %}
+				<div class="col-12">
+					<span class="label-top">valutazione</span>
+					{{ frm.selectBox( table, '', '', 'id_valutazione',   '', etc.select.valutazioni, request, '', '', '', '', '', 'valutazioni.form', 'valutazioni.form', 'valutazioni', 'id_valutazione', page, pages, ietf, 'valutazioni' ) }}
+				</div>
+				{% endif %}
+				{% if '0600.contratti' in mods.active.array %}
+				<div class="col-6">
+					<span class="label-top">contratto</span>
+					{{ frm.selectBox( table, '', '', 'id_contratto',   '', etc.select.contratti, request, '', '', '', '', '', 'contratti.form', 'contratti.form', 'contratti', 'id_contratto', page, pages, ietf, 'contratti' ) }}
+				</div>
+				<div class="col-6">
+					<span class="label-top">rinnovo</span>
+					{{ frm.selectBox( table, '', '', 'id_rinnovo',   '', etc.select.rinnovi, request, '', '', '', '', '', 'rinnovi.contratti.form', 'rinnovi.contratti.form', 'rinnovi', 'id_rinnovo', page, pages, ietf, 'rinnovi' ) }}
+				</div>
+				{% endif %}
 			</div>
 
 	    </fieldset>
