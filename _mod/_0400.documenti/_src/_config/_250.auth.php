@@ -20,10 +20,12 @@
 	    $cf['auth']['permissions'],
 	    array(
             'documenti' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'documenti_articoli' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'relazioni_documenti_articoli' => array(
                 CONTROL_FULL => array( 'roots' )
@@ -71,7 +73,8 @@
                 CONTROL_FULL => array( 'roots' )
             ),
             'ordini' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

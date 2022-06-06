@@ -37,8 +37,9 @@
     <input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ session.account.id_anagrafica }}">
     <input type="hidden" id="id_destinatario" name="{{ table }}[id_destinatario]" value="{{ etc.azienda }}">
     <input type="hidden" id="data" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d') }}">
+    <input type="hidden" id="nome" name="{{ table }}[nome]" value="ordine da webapp">
     <input type="hidden" id="numero" name="{{ table }}[numero]" value="{{ etc.numero }}">
-    <input type="hidden" id="numero" name="{{ table }}[sezionale]" value="{{ 'now'|date('Y') }}">
+    <input type="hidden" id="sezionale" name="{{ table }}[sezionale]" value="{{ 'now'|date('Y') }}">
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
     <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
     {% if not request[table].id %}
