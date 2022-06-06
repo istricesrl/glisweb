@@ -49,6 +49,16 @@
         {{ frm.input( table, subtable, '-1', '__reset__', '', '', '', '1', 'hidden' ) }}
 
 	    {# MODULO RAPIDO #}
+		{% if etc.note %}
+		<fieldset>
+			<legend>note d'invio dell'ordine</legend>
+			<div class="form-group form-row">
+				<div class="col">
+				{{ etc.note }}
+				</div>
+			</div>
+		</fieldset>
+		{% endif %}
 	    <fieldset>
 			<legend>inserimento rapido riga</legend>
 			<div class="form-group form-row">
