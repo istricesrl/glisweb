@@ -22,15 +22,20 @@
 
 {% include '_inc/_opengraph.head.html' %}
 
-{% for m,c in page.css.external %}<link rel="stylesheet" href="{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}">{% endfor %}
+{% for m,c in page.css.external %}{% if m matches '/^\\d+$/' %}<link rel="stylesheet" href="{{ c }}" media="screen">{% else %}
+{% for s in c %}<link rel="stylesheet" href="{{ s }}" media="{{ m }}">{% endfor %}{% endif %}{% endfor %}
 
-{% for m,c in page.css.preload %}<link rel="preload" as="style" href="{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
+{% for m,c in page.css.preload %}{% if m matches '/^\\d+$/' %}<link rel="preload" as="style" href="{{ c }}" media="screen" onload="this.onload=null;this.rel='stylesheet'">{% else %}
+{% for s in c %}<link rel="preload" as="style" href="{{ s }}" media="{{ m }}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}{% endif %}{% endfor %}
 
-{% for m,c in page.css.internal %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}">{% endfor %}
+{% for m,c in page.css.internal %}{% if m matches '/^\\d+$/' %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% else %}
+{% for s in c %}<link rel="stylesheet" href="{{ site.root }}{{ s }}" media="{{ m }}">{% endfor %}{% endif %}{% endfor %}
 
-{% for m,c in page.css.template %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}">{% endfor %}
+{% for m,c in page.css.template %}{% if m matches '/^\\d+$/' %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% else %}
+{% for s in c %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ s }}" media="{{ m }}">{% endfor %}{% endif %}{% endfor %}
 
-{% for m,c in page.css.custom %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{% if m matches '/^\\d+$/' %}screen{% else %}{{ m }}{% endif %}">{% endfor %}
+{% for m,c in page.css.custom %}{% if m matches '/^\\d+$/' %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% else %}
+{% for s in c %}<link rel="stylesheet" href="{{ site.root }}{{ s }}" media="{{ m }}">{% endfor %}{% endif %}{% endfor %}
 
 {% include '_inc/_facebook.head.html' %}
 
