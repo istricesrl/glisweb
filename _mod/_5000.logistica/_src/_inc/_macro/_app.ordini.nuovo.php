@@ -28,30 +28,32 @@
     
     if( isset( $_SESSION['account']['id_anagrafica'] ) ){
 
-        $ct['etc']['select']['emittenti'] = mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'],       
-            'SELECT  anagrafica_view_static.id, anagrafica_view_static.__label__ FROM anagrafica_view_static '.
-            'INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica_collegata = anagrafica_view_static.id '.
-            'WHERE anagrafica_view_static.se_gestita = 1 AND relazioni_anagrafica.id_ruolo = 16 AND relazioni_anagrafica.id_anagrafica = ? ',
-            array( array( 's' =>  $_SESSION['account']['id_anagrafica']  ) )
-        );
-
-        $ct['etc']['emittente'] =  $ct['etc']['select']['emittenti'][0]['id'];
-
+            $ct['etc']['select']['emittenti'] = mysqlCachedIndexedQuery(
+                $cf['memcache']['index'],
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],       
+                'SELECT  anagrafica_view_static.id, anagrafica_view_static.__label__ FROM anagrafica_view_static INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica_collegata = anagrafica_view_static.id WHERE anagrafica_view_static.se_gestita = 1 AND relazioni_anagrafica.id_ruolo = 16 AND relazioni_anagrafica.id_anagrafica = ? UNION SELECT  anagrafica_view_static.id, anagrafica_view_static.__label__ FROM anagrafica_view_static INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica = anagrafica_view_static.id  WHERE anagrafica_view_static.se_gestita = 1 AND relazioni_anagrafica.id_ruolo = 16 AND relazioni_anagrafica.id_anagrafica_collegata = ?',
+                array( array( 's' =>  $_SESSION['account']['id_anagrafica']  ),array( 's' =>  $_SESSION['account']['id_anagrafica']  ) )
+            );
+    
+            if( $ct['etc']['select']['emittenti'] ){
+                $ct['etc']['emittente'] =  $ct['etc']['select']['emittenti'][0]['id'];
+            }
+    
     } 
-
 
     $ct['form']['table'] = 'documenti';
 
+    $ct['view']['data']['__report_mode__'] = 1;
+
     // tabella della vista
-    $ct['view']['table'] = 'prodotti';
+    $ct['view']['table'] = '__report_giacenza_magazzini__';
 
     $ct['view']['cols'] = array(
         'id' => '#',
         'nome' => 'nome',
         'categorie' => 'categorie',
+        'totale' => 'totale',
         '__label__' => '__label__'     
     );
 
@@ -62,6 +64,7 @@
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['nome'] = 'ASC';
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__']['rows'] = 20000;
 
+    $ct['view']['__restrict__']['totale']['GT'] = 0;
 
     // tipologia ordine
     $ct['etc']['default_tipologia'] = mysqlSelectCachedValue(
