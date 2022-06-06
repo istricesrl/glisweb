@@ -34,7 +34,7 @@
     <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
     <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
     <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-    <input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ session.account.id_anagrafica }}">
+    <input type="hidden" id="id_emittente" name="{{ table }}[id_emittente]" value="{{ etc.emittente }}">
     <input type="hidden" id="id_destinatario" name="{{ table }}[id_destinatario]" value="{{ etc.azienda }}">
     <input type="hidden" id="data" name="{{ table }}[data]" value="{{ 'now'|date('Y-m-d') }}">
     <input type="hidden" id="nome" name="{{ table }}[nome]" value="ordine da webapp">
@@ -57,10 +57,10 @@
             <legend><b>prodotti disponibili</b></legend>
             <div class="form-row">
                 <div class="col">
-                    <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+                    <input type="text" class="form-control form-control-lg" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
                 </div>
                 <div class="col-auto">
-                    <button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-lg"><i class="fa fa-search"></i></button>
                 </div>
             </div>
             <div class="box mt-2" style="height: 70vh;" >
@@ -80,6 +80,12 @@
         </div>
         <div class="col-6 align-items-center mt-3"  >
             <legend><b>il tuo ordine</b></legend>
+            <div class="form-group form-row">
+                <div class="col col-md">
+                    <span class="label-top">emittente</span>
+					{{ frm.selectAuto( table, '', '', 'id_emittente', '', etc.select.emittenti, request,'','','1','form-control-lg' ) }}
+                </div>
+            </div>
             <div class="box" style="height: 70vh;" >
                 {% for p in request.documenti.documenti_articoli %}
                 <div class="media" style="background-color: gray;">

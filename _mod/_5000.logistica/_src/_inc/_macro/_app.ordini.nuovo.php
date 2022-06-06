@@ -13,7 +13,7 @@
      *
      */
 
-    $_SESSION['account']['id'] = 1;
+    //$_SESSION['account']['id'] = 1;
 
     $ct['etc']['numero'] = mysqlSelectValue(  
         $cf['mysql']['connection'],          
@@ -26,6 +26,23 @@
         'SELECT  id FROM anagrafica_view_static '.
         'WHERE se_gestita = 1 ORDER BY id ASC LIMIT 1') ;
     
+    if( isset( $_SESSION['account']['id_anagrafica'] ) ){
+
+        $ct['etc']['select']['emittenti'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],       
+            'SELECT  anagrafica_view_static.id, anagrafica_view_static.__label__ FROM anagrafica_view_static '.
+            'INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica_collegata = anagrafica_view_static.id '.
+            'WHERE anagrafica_view_static.se_gestita = 1 AND relazioni_anagrafica.id_ruolo = 16 AND relazioni_anagrafica.id_anagrafica = ? ',
+            array( array( 's' =>  $_SESSION['account']['id_anagrafica']  ) )
+        );
+
+        $ct['etc']['emittente'] =  $ct['etc']['select']['emittenti'][0]['id'];
+
+    } 
+
+
     $ct['form']['table'] = 'documenti';
 
     // tabella della vista
@@ -66,6 +83,8 @@
 	    $cf['mysql']['connection'],
 	    'SELECT * FROM udm_view WHERE se_massa = 1 OR se_quantita = 1 OR se_volume = 1'
 	);
+
+
 
     // eliminazione ordine
     if( isset( $_REQUEST['__delete__']['documenti'] )   ){

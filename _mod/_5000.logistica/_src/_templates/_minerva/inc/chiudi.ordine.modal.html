@@ -23,9 +23,9 @@
 <script>
     function chiudi() {
 
-	
-        var documento = $( '#_id_documento' ).val();
-        getws('{{ site.url }}/_mod/_0400.documenti/_src/_api/_task/_chiusura.documento.php', 'id='+documento, 
+        var documento =  $( '#_id_documento' ).val();
+        var note = encodeURIComponent($( '#_note' ).val());
+        getws('{{ site.url }}/_mod/_0400.documenti/_src/_api/_task/_chiusura.documento.php', 'id='+documento+'&note_invio='+note, 
                 function( data ){ 
                     window.open('{{ pages["app.ordini"].url[ localization.language.ietf ] }}','_self');
                 }
@@ -38,15 +38,18 @@
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">vuoi confermare il tuo ordine?</h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
             <div class="form-row form-group">
-                <h3>vuoi confermare il tuo ordine?</h3>
                 <input type="hidden" id="_id_documento" name="_id_documento" value="{{ request.documenti.id }}" >
-
+                  <div class="col-12 col-md  mt-3">
+                    <span class="label-top">aggiungi qui eventuali note</span>
+                    {{ frm.textarea( table, '', '', 'note', '', 3, request, '', '', 'form-control-lg' ) }}
+                  </div>
             </div>
         </div>
         <div class="modal-footer">
