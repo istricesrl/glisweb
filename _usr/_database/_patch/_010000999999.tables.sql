@@ -533,12 +533,16 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
 
 -- causali
 -- tipologia: tabella gestita
--- verifica: 2022-05-04 20:04 Chiara GDL
+-- verifica: 2022-04-26 11:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `causali` (
   `id` int(11) NOT NULL,
   `nome` char(64) NOT NULL,
-  `se_trasporto` int(1) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `se_trasporto` int(1) DEFAULT NULL,
+  `id_account_inserimento` int DEFAULT NULL,
+  `timestamp_inserimento` int DEFAULT NULL,
+  `id_account_aggiornamento` int DEFAULT NULL,
+  `timestamp_aggiornamento` int DEFAULT NULL
+) ENGINE=InnoDB;
 
 --| 010000004700
 
@@ -968,6 +972,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_todo` int(11) DEFAULT NULL,
   `id_attivita` int(11) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
+  `id_collo` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,

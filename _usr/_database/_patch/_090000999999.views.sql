@@ -1134,12 +1134,14 @@ DROP TABLE IF EXISTS `causali_view`;
 
 -- causali_view
 -- tipologia: tabella gestita
--- verifica: 2022-05-04 20:04 Chiara GDL
+-- verifica: 2022-04-26 11:12 Chiara GDL
 CREATE OR REPLACE VIEW causali_view AS
 	SELECT
 		causali.id,
 		causali.nome,
 		causali.se_trasporto,
+		causali.id_account_inserimento,
+		causali.id_account_aggiornamento,
 	 	causali.nome AS __label__
 	FROM causali
 ;
@@ -1241,7 +1243,9 @@ CREATE OR REPLACE VIEW colli_view AS
 		colli.id_account_inserimento,
 		colli.id_account_aggiornamento,
 		colli.nome AS __label__
-	FROM colli;
+	FROM colli
+	;
+
 
 --| 090000005100
 
@@ -1899,6 +1903,9 @@ CREATE OR REPLACE VIEW `ddt_view` AS
 		m1.nome AS mastro_provenienza,
 		documenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+		documenti.id_causale,
+		documenti.porto,
+		documenti.id_trasportatore,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
@@ -1957,6 +1964,9 @@ CREATE OR REPLACE VIEW `ddt_attivi_view` AS
 		m1.nome AS mastro_provenienza,
 		documenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+		documenti.id_causale,
+		documenti.porto,
+		documenti.id_trasportatore,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
@@ -2016,6 +2026,9 @@ CREATE OR REPLACE VIEW `ddt_passivi_view` AS
 		m1.nome AS mastro_provenienza,
 		documenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
+		documenti.id_causale,
+		documenti.porto,
+		documenti.id_trasportatore,
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(

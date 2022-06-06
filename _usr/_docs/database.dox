@@ -130,7 +130,9 @@
     categorie_prodotti              | 003900    | ricorsiva     | categorie     | contiene le categorie di prodotti
     categorie_progetti              | 004300    | ricorsiva     | categorie     | contiene le categorie di progetti
     categorie_risorse               | 004500    | ricorsiva     | categorie     | contiene le categorie di risorse
+    causali                         | 004600    | base          | principale    | contiene le causali per i documenti
     chiavi                          | 004800    | base          | principale    | contiene le chiavi
+    colli                           | 005000    | base          | principale    | contiene i colli
     contatti                        | 006700    | base          | principale    | contiene i contatti
     contenuti                       | 006900    | base          | contenuti     | contiene i testi
     contratti                       | 007200    | base          | principale    | contiene i contratti
@@ -259,9 +261,11 @@
     categorie_prodotti              | PRODOTTI
     categorie_progetti              | PRODUZIONE
     categorie_risorse               | RISORSE
+    causali                         | DOCUMENTI
     certificazioni                  | BASE
     chiavi                          | SOFTWARE
     colori                          | BASE, PRODOTTI
+    colli                           | DOCUMENTI
     comuni                          | BASE
     condizioni_pagamento            | DOCUMENTI, CASSE
     contatti                        | CONTATTI
