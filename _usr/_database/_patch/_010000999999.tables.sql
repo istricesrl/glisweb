@@ -940,6 +940,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `id_immobile` int(11) DEFAULT NULL,
   `note` text,
   `note_cliente` text DEFAULT NULL,
+  `note_invio` text DEFAULT NULL,
   `timestamp_chiusura` int DEFAULT NULL,
   `note_chiusura` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

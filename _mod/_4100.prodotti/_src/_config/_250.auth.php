@@ -20,10 +20,12 @@
 	    $cf['auth']['permissions'],
 	    array(
              'prodotti' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),              
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'articoli' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),              
+                CONTROL_FILTERED => array( 'staff' )
             ),
 #            'coupon' => array(
 #                CONTROL_FULL => array( 'roots' ),

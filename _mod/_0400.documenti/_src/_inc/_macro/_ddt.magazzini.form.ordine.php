@@ -38,6 +38,14 @@
         array( array( 's' => $ct['etc']['ordine']['id'] ) )
     );
 
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+
+		$ct['etc']['note'] = mysqlSelectValue(
+			$cf['mysql']['connection'],
+			'SELECT note_invio FROM documenti INNER JOIN relazioni_documenti ON relazioni_documenti.id_documento_collegato = documenti.id WHERE documenti.id_tipologia = 7 AND  relazioni_documenti.id_documento = ?',
+			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+		);
+		}
     // print_r( $ct['etc']['evasione'] );
 
 	// macro di default

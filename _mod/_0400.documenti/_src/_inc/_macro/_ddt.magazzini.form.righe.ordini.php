@@ -88,6 +88,7 @@
 		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
 
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
