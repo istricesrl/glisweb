@@ -348,4 +348,21 @@ LEFT JOIN prodotti AS p ON p.id = documenti_articoli.id_prodotto
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
 GROUP BY movimenti.id, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 
+--| 202206060060
+UPDATE `ruoli_anagrafica` SET
+`id` = '16',
+`id_genitore` = NULL,
+`nome` = 'responsabile',
+`html_entity` = NULL,
+`font_awesome` = NULL,
+`se_produzione` = NULL,
+`se_didattica` = NULL,
+`se_organizzazioni` = NULL,
+`se_relazioni` = '1',
+`se_risorse` = NULL,
+`se_progetti` = '1',
+`se_immobili` = NULL,
+`se_contratti` = NULL
+WHERE `id` = '16';
+
 --| FINE
