@@ -48,7 +48,8 @@
                    
                     <div class="media-body p-3 col-10 " style="background-color: rgb(192, 192, 192); color: black;">
                       <h3 class="mt-0">{{ row.__label__ }}</h3>
-                      <h5>{{ row.data }}</h5>
+                      <h4>emittente: {{ row.emittente }}</h4>
+                      <h5>creato il {{ row.data|date("d/m/Y") }} | {% if row.timestamp_invio %}confermato il {{ row.timestamp_invio|date('d/m/Y H:i') }} {% if row.timestamp_chiusura %}| evaso il {{ row.timestamp_chiusura|date('d/m/Y H:i') }}{% else %}| da evadere{% endif %} {% else %}da confermare{% endif %} </h5>
                     </div>
                     <div class="col-2 justify-content-center align-self-center">
                         <button type="button" class="btn" onclick=" window.open( '{{ site.url }}_mod/_0400.documenti/_src/_api/_print/_ordine.pdf.php?__documento__={{row.id}}', '_blank');" data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-file-pdf-o fa-3x" aria-hidden="true"></i></button>
