@@ -44,7 +44,6 @@
 
     $ct['form']['table'] = 'documenti';
 
-    $ct['view']['data']['__report_mode__'] = 1;
 
     // tabella della vista
     $ct['view']['table'] = '__report_giacenza_magazzini__';
@@ -54,17 +53,20 @@
         'nome' => 'nome',
         'categorie' => 'categorie',
         'totale' => 'totale',
-        '__label__' => '__label__'     
+        'prodotto' => 'prodotto'   
     );
 
     $ct['view']['id'] = md5(
         $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
         );
 
+    $ct['view']['data']['__report_mode__'] = 1;
+
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['nome'] = 'ASC';
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__']['rows'] = 20000;
 
-    $ct['view']['__restrict__']['totale']['GT'] = 0;
+    $ct['view']['__restrict__']['totale']['GE'] = 1;
+    $ct['view']['__restrict__']['id']['EQ'] = 2;
 
     // tipologia ordine
     $ct['etc']['default_tipologia'] = mysqlSelectCachedValue(
