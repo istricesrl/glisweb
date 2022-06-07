@@ -683,6 +683,7 @@ CREATE TABLE IF NOT EXISTS `contatti` (
   `id_tipologia` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_inviante` int(11) DEFAULT NULL,
+  `id_ranking` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `json` text DEFAULT NULL,
