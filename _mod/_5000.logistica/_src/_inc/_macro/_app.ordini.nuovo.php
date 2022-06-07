@@ -103,6 +103,14 @@
             array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
 
+    if( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_REQUEST['__documento__'] )  ){ 
+        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
+        'SELECT * FROM documenti WHERE id = ?',
+        array( array( 's' => $_REQUEST['__documento__'] ) ) );
+
+    }
+
+
     // verifico se è presente uno scontrino aperto
     if( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_SESSION['account'] )  ){ 
              $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
