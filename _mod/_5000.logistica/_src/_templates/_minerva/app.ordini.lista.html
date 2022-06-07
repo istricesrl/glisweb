@@ -48,6 +48,7 @@
                    
                     <div class="media-body p-3 col-10 " style="background-color: rgb(192, 192, 192); color: black;">
                       <h3 class="mt-0">{{ row.__label__ }}</h3>
+                      <h4>emittente: {{ row.emittente }}</h4>
                       <h5>creato il {{ row.data|date("d/m/Y") }} | {% if row.timestamp_invio %}confermato il {{ row.timestamp_invio|date('d/m/Y H:i') }} {% if row.timestamp_chiusura %}| evaso il {{ row.timestamp_chiusura|date('d/m/Y H:i') }}{% else %}| da evadere{% endif %} {% else %}da confermare{% endif %} </h5>
                     </div>
                     <div class="col-2 justify-content-center align-self-center">
