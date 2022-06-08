@@ -109,12 +109,12 @@
 					
 					$nomeattivita .= ' - periodo ' . $status['id'];
 					
-					$status['def_righe_attivita'][] = array(
-						$p['id_anagrafica'],
-						$g['data'],
-						$ore,
-						$p['id_tipologia_inps'],
-						$nomeattivita
+					$status['attivita'][$g['data']]['dati'] = array(
+						'id_anagrafica' => $p['id_anagrafica'],
+						'data_attivita' => $g['data'],
+						'ore' => $ore,
+						'id_tipologia_inps' => $p['id_tipologia_inps'],
+						'nome' => $nomeattivita
 					);
 					
 					// verifico che non esistà già la riga di attività per la variazione corrente
@@ -142,10 +142,10 @@
 							)
 						);
 						
-						$status['attivita'][$g['data']] = $a;
+						$status['attivita'][$g['data']]['esito'] = 'creata attivita ' . $a;
 					}
 					else{
-						$status['attivita'][$g['data']] = 'riga di attivita presente, non la ricreo';
+						$status['attivita'][$g['data']]['esito'] = 'riga di attivita presente, non la ricreo';
 					}
                 
                 }
@@ -175,6 +175,8 @@
 
         $status['info'][] = 'settaggio riga come elaborata ' . $u;
 		
+		appendToFile( print_r( $status, true ) . PHP_EOL, 'var/log/variazioni.attivita.create/' .  date("Ym") . '.log' );
+		
     }
     else{
         $status['info'][] = 'nessun periodo da elaborare';
@@ -186,5 +188,5 @@
 	    buildJson( $status );
 	}
 	
-	appendToFile( print_r( $status, true ) . PHP_EOL, 'var/log/variazioni.attivita.create/' .  date("Ym") . '.log' );
+	#appendToFile( print_r( $status, true ) . PHP_EOL, 'var/log/variazioni.attivita.create/' .  date("Ym") . '.log' );
 	

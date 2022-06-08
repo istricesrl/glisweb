@@ -73,8 +73,8 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
             );
 
             if( empty( $fasce ) ){
-                $fasce['ora_inizio'] = '06:00:00';
-                $fasce['ora_fine'] = '22:00:00';
+                $fasce['ora_inizio'] = '00:00:01';  // '06:00:00';
+				$fasce['ora_fine'] = '23:59:59';    // '22:00:00';
             }
 
         } else {
@@ -86,16 +86,17 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
         // tutte le attività svolte nella fascia oraria del giorno 
         $oreOrdinarie = mysqlSelectValue( 
             $cf['mysql']['connection'], 
-            'SELECT sum( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) ) AS tot_ore FROM attivita ' .
+        #    'SELECT sum( time_to_sec( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) )/3600 ) AS tot_ore FROM attivita ' .
+            'SELECT sum( ore ) AS tot_ore FROM attivita ' .
             'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
             'WHERE tipologie_attivita.se_produzione = 1 AND data_attivita = ? AND id_anagrafica = ? GROUP by data_attivita',
             array(
-                array( 's' => $fasce['ora_fine'] ),
-                array( 's' => $fasce['ora_inizio'] ),
+            /*    array( 's' => $fasce['ora_fine'] ),
+                array( 's' => $fasce['ora_inizio'] ),*/
                 array( 's' => $car['data_attivita'] ),
                 array( 's' => $car['id_anagrafica'] )
             )			
-        ) / 10000 ;
+        );
 
         if( !empty ( $oreOrdinarie ) && $oreOrdinarie > 0 ){
 
@@ -111,26 +112,26 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
 
         } 
 
-       
 
         // LAVORO STRAORDINARIO
         // tutte le attività svolte nella fascia oraria del giorno
         $oreStraordinarie = mysqlSelectValue( 
             $cf['mysql']['connection'], 
-            'SELECT ( sum( TIMEDIFF( ?, LEAST( ora_inizio, ? )  ) ) + sum( TIMEDIFF(  GREATEST( ora_fine, ? ), ?  )  )  ) as tot_ore FROM attivita ' .
+            #'SELECT ( sum( time_to_sec( TIMEDIFF( ?, LEAST( ora_inizio, ? )  ) )/3600 ) + sum( time_to_sec( TIMEDIFF(  GREATEST( ora_fine, ? ), ?  )  )/3600 ) )   as tot_ore FROM attivita ' .
+            'SELECT sum( ore )   as tot_ore FROM attivita ' .
             'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia '.
             'WHERE tipologie_attivita.se_produzione = 1 AND data_attivita = ? and id_anagrafica = ? AND (ora_inizio < ? OR ora_fine > ?) GROUP by data_attivita',
             array(
-                array( 's' => $fasce['ora_inizio'] ),
+            /*    array( 's' => $fasce['ora_inizio'] ),
                 array( 's' => $fasce['ora_inizio'] ),
                 array( 's' => $fasce['ora_fine'] ),
-                array( 's' => $fasce['ora_fine'] ),
+                array( 's' => $fasce['ora_fine'] ),*/
                 array( 's' => $car['data_attivita'] ),
                 array( 's' => $car['id_anagrafica'] ),
                 array( 's' => $fasce['ora_inizio'] ),
                 array( 's' => $fasce['ora_fine'] )
             )			
-        ) / 10000 ;
+        );
 
         if( !empty ( $oreStraordinarie ) && $oreStraordinarie > 0 ){
 
@@ -162,7 +163,7 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                 );
             }
         }
-        
+
 
         // LAVORO VARIAZIONI
         // tutte le attività legate alle variazioni (permessi, malattie, ecc.)

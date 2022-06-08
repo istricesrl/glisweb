@@ -22,6 +22,8 @@
 
     // inizializzo l'array del risultato
 	$status = array();
+	
+	$status['data_ora_richiesta'] = date("d/m/Y H:i");
 
     // chiave di lock
 	$status['token'] = getToken( __FILE__ );
@@ -121,6 +123,10 @@
         );
     
         $date = array_diff( $date, array( $current['data_ultimo_oggetto'] ) );
+		
+		if( empty( $date ) ){
+			$status['info'][] = 'creazionePianificazione non ha generato nessuna data';
+		}
 
         // per ogni data...
         foreach( $date as $data ) {
@@ -249,6 +255,7 @@
             }
 
         }
+		
 
         // estraggo le statiche coinvolte nella creazione
         $status['statiche'] = pianificazioniGetStatic( $current['id'] );
@@ -286,6 +293,8 @@
         $status['info'][] = 'nessuna pianificazione da popolare';
 
     }
+	
+	appendToFile( print_r($status, true), 'var/log/pianificazioni.populate.' . date("Ym") . '.log');
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {
