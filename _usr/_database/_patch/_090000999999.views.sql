@@ -1376,6 +1376,8 @@ CREATE OR REPLACE VIEW contatti_view AS
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		contatti.id_inviante,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS inviante,
+		contatti.id_ranking,
+		ranking.nome AS ranking,
 		contatti.nome,
 		contatti.timestamp_contatto,
 		contatti.id_account_inserimento,
@@ -1389,6 +1391,7 @@ CREATE OR REPLACE VIEW contatti_view AS
 		LEFT JOIN tipologie_contatti ON tipologie_contatti.id = contatti.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = contatti.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = contatti.id_inviante
+		LEFT JOIN ranking ON ranking.id = contatti.id_ranking
 ;
 
 --| 090000006900

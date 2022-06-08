@@ -681,10 +681,11 @@ ALTER TABLE `contatti`
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_inviante` (`id_inviante`),
+	ADD KEY `id_ranking` (`id_ranking`),	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
-	ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`nome`,`timestamp_contatto`);
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`id_ranking`,`nome`,`timestamp_contatto`);
 
 --| 030000006701
 

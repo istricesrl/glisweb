@@ -625,6 +625,7 @@
     contatti.id_tipologia                  | l'ID della tipologia di contatto
     contatti.id_anagrafica                 | l'ID dell'anagrafica che ha effettuato il contatto
     contatti.id_inviante                   | l'ID dell'anagrafica che ha generato il contatto
+    contatti.id_ranking                    | l'ID del ranking del contatto
     contatti.nome                          | una descrizione sintetica del contatto ed eventuali riferimenti della persona
     contatti.note                          | annotazioni estese sul contatto, le richieste, e simili
     contatti.json                          | il JSON dei contatti via web
@@ -641,6 +642,7 @@
     contatti_ibfk_01_nofollow           | id_tipologia                  | tipologie_contatti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
     contatti_ibfk_02_nofollow           | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     contatti_ibfk_03_nofollow           | id_inviante                   | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_04_nofollow           | id_ranking                    | ranking.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     contatti_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     contatti_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -654,6 +656,8 @@
     contatti_view.id_anagrafica                 | -
     contatti_view.anagrafica                    | l'anagrafica che ha effettuato il contatto
     contatti_view.id_inviante                   | -
+    contatti_view.id_ranking                    | -
+    contatti_view.ranking                       | il nome del ranking del contatto
     contatti_view.inviante                      | l'anagrafica che ha generato il contatto
     contatti_view.nome                          | -
     contatti_view.timestamp_contatto            | -

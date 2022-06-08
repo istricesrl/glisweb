@@ -365,4 +365,43 @@ UPDATE `ruoli_anagrafica` SET
 `se_contratti` = NULL
 WHERE `id` = '16';
 
+--| 202206069960
+ALTER TABLE `contatti`
+DROP  KEY `indice`;
+
+--| 202206069970
+ALTER TABLE `contatti`
+ADD COLUMN  `id_ranking` int(11) DEFAULT NULL AFTER `id_inviante`,
+ADD KEY `id_ranking` (`id_ranking`),	
+ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`id_ranking`,`nome`,`timestamp_contatto`),
+ADD CONSTRAINT `contatti_ibfk_04_nofollow` FOREIGN KEY (`id_ranking`) REFERENCES `ranking` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202206069980
+CREATE OR REPLACE VIEW contatti_view AS
+	SELECT
+		contatti.id,
+		contatti.id_tipologia,
+		tipologie_contatti.nome AS tipologia,
+		contatti.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		contatti.id_inviante,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS inviante,
+		contatti.id_ranking,
+		ranking.nome AS ranking,
+		contatti.nome,
+		contatti.timestamp_contatto,
+		contatti.id_account_inserimento,
+		contatti.id_account_aggiornamento,
+		concat(
+			tipologie_contatti.nome,
+			' / ',
+			contatti.nome
+		) AS __label__
+	FROM contatti
+		LEFT JOIN tipologie_contatti ON tipologie_contatti.id = contatti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = contatti.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = contatti.id_inviante
+		LEFT JOIN ranking ON ranking.id = contatti.id_ranking
+;
+
 --| FINE

@@ -103,10 +103,18 @@
             array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
 
+    if( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_REQUEST['__documento__'] )  ){ 
+        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
+        'SELECT * FROM documenti WHERE id = ?',
+        array( array( 's' => $_REQUEST['__documento__'] ) ) );
+
+    }
+
+
     // verifico se è presente uno scontrino aperto
     if( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_SESSION['account'] )  ){ 
              $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
-             'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL AND id_tipologia = ?',
+             'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_invio IS NULL AND id_tipologia = ?',
              array( array( 's' => $_SESSION['account']['id'] ), array( 's' => $ct['etc']['default_tipologia'] ) ) );
     }
     
