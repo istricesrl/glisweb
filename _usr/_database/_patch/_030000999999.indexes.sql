@@ -2203,6 +2203,7 @@ ALTER TABLE `progetti`
 	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_cliente` (`id_cliente`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
+	ADD KEY `id_ranking` (`id_ranking`),	
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
@@ -2212,7 +2213,7 @@ ALTER TABLE `progetti`
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`nome`,`data_accettazione`,`data_chiusura`,`data_archiviazione`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_chiusura`,`data_archiviazione`);
 
 --| 030000027200
 

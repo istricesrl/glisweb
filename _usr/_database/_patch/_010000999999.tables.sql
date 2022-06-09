@@ -2025,6 +2025,7 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
+  `id_ranking` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `template` char(255) DEFAULT NULL,

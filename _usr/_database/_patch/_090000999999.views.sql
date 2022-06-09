@@ -4873,6 +4873,8 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
         progetti.id_sito,
 		progetti.template,
@@ -4903,6 +4905,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	GROUP BY progetti.id
 ;
 
@@ -4926,6 +4929,8 @@ CREATE OR REPLACE VIEW `progetti_commerciale_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -4949,6 +4954,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NULL
@@ -4975,6 +4981,8 @@ CREATE OR REPLACE VIEW `progetti_commerciale_archivio_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -4998,6 +5006,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_archivio_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NOT NULL
@@ -5024,6 +5033,8 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -5047,6 +5058,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NULL
@@ -5073,6 +5085,8 @@ CREATE OR REPLACE VIEW `progetti_produzione_archivio_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -5096,6 +5110,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_archivio_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NOT NULL
@@ -5122,6 +5137,8 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -5145,6 +5162,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NOT NULL
 		AND progetti.data_archiviazione IS NULL
@@ -5171,6 +5189,8 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -5194,6 +5214,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NOT NULL
 		AND progetti.data_archiviazione IS NOT NULL
