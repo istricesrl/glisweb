@@ -2775,6 +2775,29 @@ ALTER TABLE `ruoli_audio`
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000034300
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2022-06-09 16:21 Chiara GDL
+ALTER TABLE `ruoli_documenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_xml` (`se_xml`), 
+	ADD KEY `se_documenti` (`se_documenti`), 
+	ADD KEY `se_documenti_articoli` (`se_documenti_articoli`), 
+	ADD KEY `se_conferma` (`se_conferma`), 
+	ADD KEY `se_consuntivo` (`se_consuntivo`), 
+	ADD KEY `se_evasione` (`se_evasione`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_xml`,`se_documenti`,`se_documenti_articoli`,`se_conferma`, `se_consuntivo`,  `se_evasione`);
+
+--| 030000034301
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000034400
 
 -- ruoli_file

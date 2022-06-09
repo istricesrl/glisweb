@@ -1343,6 +1343,14 @@ ALTER TABLE `ruoli_articoli`
 ALTER TABLE `ruoli_audio`
     ADD CONSTRAINT `ruoli_audio_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_audio` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+--| 060000034300
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2022-06-09 16:21 Chiara GDL
+ALTER TABLE `ruoli_documenti`
+    ADD CONSTRAINT `ruoli_documenti_ibfk_01`     FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 --| 060000034400
 
 -- ruoli_file

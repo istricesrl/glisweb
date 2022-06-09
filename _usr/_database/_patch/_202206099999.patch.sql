@@ -562,4 +562,172 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		LEFT JOIN periodicita ON periodicita.id = pianificazioni.id_periodicita
 ;
 
+--| 202206099210
+CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` int(1) DEFAULT NULL,
+  `se_documenti` int(1) DEFAULT NULL,
+  `se_documenti_articoli` int(1) DEFAULT NULL,
+  `se_conferma` int(1) DEFAULT NULL,
+  `se_consuntivo` int(1) DEFAULT NULL,
+  `se_evasione` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202206099220
+ALTER TABLE `ruoli_documenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_xml` (`se_xml`), 
+	ADD KEY `se_documenti` (`se_documenti`), 
+	ADD KEY `se_documenti_articoli` (`se_documenti_articoli`), 
+	ADD KEY `se_conferma` (`se_conferma`), 
+	ADD KEY `se_consuntivo` (`se_consuntivo`), 
+	ADD KEY `se_evasione` (`se_evasione`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_xml`,`se_documenti`,`se_documenti_articoli`,`se_conferma`, `se_consuntivo`,  `se_evasione`);
+
+--| 202206099230
+ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202206099240
+ALTER TABLE `ruoli_documenti`
+    ADD CONSTRAINT `ruoli_documenti_ibfk_01`     FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202206099250
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_documenti_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_documenti_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				ruoli_documenti.id_genitore,
+				ruoli_documenti.nome
+			FROM ruoli_documenti
+			WHERE ruoli_documenti.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 202206099260
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_documenti_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_documenti_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				ruoli_documenti.id_genitore
+			FROM ruoli_documenti
+			WHERE ruoli_documenti.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 202206099270
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `ruoli_documenti_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT ruoli_documenti_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				ruoli_documenti.id_genitore,
+				ruoli_documenti.id
+			FROM ruoli_documenti
+			WHERE ruoli_documenti.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+--| 202206099280
+CREATE OR REPLACE VIEW ruoli_documenti_view AS
+	SELECT
+		ruoli_documenti.id,
+		ruoli_documenti.id_genitore,
+		ruoli_documenti.nome,
+		ruoli_documenti.html_entity,
+		ruoli_documenti.font_awesome,
+		ruoli_documenti.se_xml,
+		ruoli_documenti.se_documenti,
+		ruoli_documenti.se_documenti_articoli,
+		ruoli_documenti.se_conferma,
+		ruoli_documenti.se_consuntivo,
+		ruoli_documenti.se_evasione,
+	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
+	FROM ruoli_documenti
+;
+
 --| FINE

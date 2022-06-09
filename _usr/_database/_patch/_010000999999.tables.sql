@@ -2515,6 +2515,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `se_immobili` int(1) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000034300
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2022-06-09 16:21 Chiara GDL
+CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` int(1) DEFAULT NULL,
+  `se_documenti` int(1) DEFAULT NULL,
+  `se_documenti_articoli` int(1) DEFAULT NULL,
+  `se_conferma` int(1) DEFAULT NULL,
+  `se_consuntivo` int(1) DEFAULT NULL,
+  `se_evasione` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000034400
 
 -- ruoli_file

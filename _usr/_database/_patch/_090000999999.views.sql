@@ -6240,6 +6240,34 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 	FROM ruoli_audio
 ;
 
+--| 090000034300
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_documenti_view`;
+
+--| 090000034301
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2022-06-09 16:21 Chiara GDL
+CREATE OR REPLACE VIEW ruoli_documenti_view AS
+	SELECT
+		ruoli_documenti.id,
+		ruoli_documenti.id_genitore,
+		ruoli_documenti.nome,
+		ruoli_documenti.html_entity,
+		ruoli_documenti.font_awesome,
+		ruoli_documenti.se_xml,
+		ruoli_documenti.se_documenti,
+		ruoli_documenti.se_documenti_articoli,
+		ruoli_documenti.se_conferma,
+		ruoli_documenti.se_consuntivo,
+		ruoli_documenti.se_evasione,
+	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
+	FROM ruoli_documenti
+;
+
 --| 090000034400
 
 -- ruoli_file_view
