@@ -1541,9 +1541,11 @@ ALTER TABLE `luoghi`
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_edificio` (`id_edificio`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`, `id_edificio`, `id_immobile`,`nome`);
 
 --| 030000018001
 
@@ -2041,6 +2043,7 @@ ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-05 17:57 Fabio Mosti
 ALTER TABLE `pianificazioni`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_todo` (`id_todo`), 
 	ADD KEY `id_attivita` (`id_attivita`), 
@@ -2142,12 +2145,13 @@ ALTER TABLE `prodotti`
 	ADD KEY `id_produttore` (`id_produttore`), 	
 	ADD KEY `nome` (`nome`), 	
 	ADD KEY `codice_produttore` (`codice_produttore`), 	
+	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
 	ADD KEY `se_cacheable` (`se_cacheable`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`, `id_progetto`);
 
 --| 030000026200
 

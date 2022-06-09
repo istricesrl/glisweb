@@ -3477,6 +3477,8 @@ CREATE OR REPLACE VIEW `luoghi_view` AS
 			comuni.nome,
 			provincie.sigla
 		) AS indirizzo,
+		luoghi.id_edificio,
+		luoghi.id_immobile,		
 		luoghi.nome,
 		luoghi.id_account_inserimento,
 		luoghi.id_account_aggiornamento,
@@ -4552,6 +4554,7 @@ DROP TABLE IF EXISTS `pianificazioni_view`;
 CREATE OR REPLACE VIEW `pianificazioni_view` AS
 	SELECT
 		pianificazioni.id,
+		pianificazioni.id_genitore,
 		pianificazioni.id_progetto,
 		pianificazioni.id_todo,
 		pianificazioni.id_attivita,
@@ -4715,6 +4718,8 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		prodotti.id_produttore,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
 		prodotti.codice_produttore,
+		prodotti.id_progetto,
+		progetti.nome AS progetto,
 		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		prodotti.id_sito,
 		prodotti.template,
@@ -4734,6 +4739,7 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
 		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
 		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
+		LEFT JOIN progetti ON  progetti.id = prodotti.id_progetto
 	GROUP BY prodotti.id
 ;
 

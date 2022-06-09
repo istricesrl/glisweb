@@ -1426,6 +1426,8 @@ CREATE TABLE IF NOT EXISTS `luoghi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
   `nome` char(255) COLLATE utf8_general_ci NOT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1863,6 +1865,7 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 -- verifica: 2021-10-05 17:16 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_attivita` int(11) DEFAULT NULL,
@@ -1974,6 +1977,7 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
   `id_marchio` int(11) DEFAULT NULL,	
   `id_produttore` int(11) DEFAULT NULL,	
   `codice_produttore` char(64) DEFAULT NULL,	
+  `id_progetto` char(32) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	

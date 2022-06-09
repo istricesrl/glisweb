@@ -310,5 +310,256 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
 	GROUP BY progetti.id
 ;
 
+--| 202206099100
+ALTER TABLE `luoghi` DROP KEY  `indice`;
+
+--| 202206099110
+ALTER TABLE `luoghi`
+ADD COLUMN   `id_edificio` int(11) DEFAULT NULL    AFTER `id_indirizzo`,
+ADD COLUMN   `id_immobile` int(11) DEFAULT NULL    AFTER `id_edificio`,
+ADD KEY `id_edificio` (`id_edificio`), 
+ADD KEY `id_immobile` (`id_immobile`), 
+ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`, `id_edificio`, `id_immobile`,`nome`),
+ADD CONSTRAINT `luoghi_ibfk_03_nofollow` FOREIGN KEY (`id_edificio`) REFERENCES `edifici` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+ADD CONSTRAINT `luoghi_ibfk_04_nofollow` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202206099120
+CREATE OR REPLACE VIEW `luoghi_view` AS
+	SELECT
+		luoghi.id,
+		luoghi.id_genitore,
+		luoghi.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		luoghi.id_edificio,
+		luoghi.id_immobile,		
+		luoghi.nome,
+		luoghi.id_account_inserimento,
+		luoghi.id_account_aggiornamento,
+		luoghi_path( luoghi.id ) AS __label__
+	FROM luoghi
+		LEFT JOIN indirizzi ON indirizzi.id = luoghi.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+;
+
+--| 202206099130
+ALTER TABLE prodotti DROP KEY `indice`;
+
+--| 202206099140
+ALTER TABLE prodotti
+    ADD COLUMN   `id_progetto` char(32) DEFAULT NULL AFTER  `codice_produttore`,
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`, `id_progetto`),
+    ADD CONSTRAINT `prodotti_ibfk_04_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202206099150
+CREATE OR REPLACE VIEW `prodotti_view` AS
+	SELECT
+		prodotti.id,
+		prodotti.id_tipologia,
+		tipologie_prodotti.nome AS tipologia,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
+		prodotti.nome,
+		prodotti.id_marchio,
+		marchi.nome AS marchio,
+		prodotti.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		prodotti.codice_produttore,
+		prodotti.id_progetto,
+		progetti.nome AS progetto,
+		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		prodotti.id_sito,
+		prodotti.template,
+		prodotti.schema_html,
+		prodotti.tema_css,
+		prodotti.se_sitemap,
+		prodotti.se_cacheable,
+		prodotti.id_account_inserimento,
+		prodotti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			prodotti.id,
+			prodotti.nome
+		) AS __label__
+	FROM prodotti
+		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = prodotti.id_tipologia
+		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
+		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
+		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
+		LEFT JOIN progetti ON  progetti.id = prodotti.id_progetto
+	GROUP BY prodotti.id
+;
+
+--| 202206099160
+ALTER TABLE `pianificazioni` 
+    ADD COLUMN `id_genitore` int(11) DEFAULT NULL AFTER id,
+	ADD KEY `id_genitore` (`id_genitore`),
+    ADD CONSTRAINT `pianificazioni_ibfk_00`             FOREIGN KEY (`id_genitore`) REFERENCES `pianificazioni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202206099170
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `pianificazioni_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT pianificazioni_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				pianificazioni.id_genitore,
+				pianificazioni.nome
+			FROM pianificazioni
+			WHERE pianificazioni.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 202206099180
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `pianificazioni_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT pianificazioni_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				pianificazioni.id_genitore
+			FROM pianificazioni
+			WHERE pianificazioni.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 202206099190
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `pianificazioni_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT pianificazioni_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				pianificazioni.id_genitore,
+				pianificazioni.id
+			FROM pianificazioni
+			WHERE pianificazioni.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+--| 202206099200
+CREATE OR REPLACE VIEW `pianificazioni_view` AS
+	SELECT
+		pianificazioni.id,
+		pianificazioni.id_genitore,
+		pianificazioni.id_progetto,
+		pianificazioni.id_todo,
+		pianificazioni.id_attivita,
+		pianificazioni.id_contratto,
+		pianificazioni.nome,
+		pianificazioni.id_periodicita,
+		periodicita.nome AS periodicita,
+		pianificazioni.cadenza,
+		pianificazioni.se_lunedi,
+		pianificazioni.se_martedi,
+		pianificazioni.se_mercoledi,
+		pianificazioni.se_giovedi,
+		pianificazioni.se_venerdi,
+		pianificazioni.se_sabato,
+		pianificazioni.se_domenica,
+		pianificazioni.schema_ripetizione,
+		pianificazioni.data_elaborazione,
+		pianificazioni.giorni_estensione,
+		pianificazioni.data_fine,
+		pianificazioni.entita,
+		pianificazioni.model_id_luogo,
+		pianificazioni.model_ora_inizio_programmazione,
+		pianificazioni.model_ora_fine_programmazione,
+		pianificazioni.workspace,
+		pianificazioni.token,
+		pianificazioni.id_account_inserimento,
+		pianificazioni.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			pianificazioni.nome,
+			periodicita.nome,
+			pianificazioni.cadenza
+		) as __label__
+	FROM pianificazioni
+		LEFT JOIN periodicita ON periodicita.id = pianificazioni.id_periodicita
+;
 
 --| FINE
