@@ -17,10 +17,10 @@
 
     // campi della vista
 	$ct['view']['cols'] = array(
-	    //'id' => '#',
+	    'id' => '#',
 	    'data_ora_recensione' => 'inserita il',
-	    '__label__' => 'autore'
-	    //'se_approvata' => 'approvata'
+	    '__label__' => 'autore',
+	    'se_approvata' => 'approvata'
 	);
 
     // stili della vista
@@ -33,6 +33,6 @@
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // icona approvato
-	//foreach($ct['view']['data'] as &$row) {
-	//    if( $row['se_approvata'] == 1 ){ $row['se_approvata']='<i class="fa fa-check"></i>';  }
-	//}
+	foreach($ct['view']['data'] as &$row) {
+	    if( $row['se_approvata'] == 1 ){ $row['se_approvata']='<i class="fa fa-check"></i>';  }
+	}
