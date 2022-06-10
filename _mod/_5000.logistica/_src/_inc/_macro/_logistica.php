@@ -28,7 +28,7 @@
         // ricerca ordini da evadere
         $ordini = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT id, data, numero FROM documenti INNER JOIN __report_evasione_ordini__ AS r ON r.id_ordine = documenti.id WHERE r.quantita_da_evadere > 0 GROUP BY documenti.id'
+            'SELECT id, data, numero FROM documenti INNER JOIN __report_evasione_ordini__ AS r ON r.id_ordine = documenti.id WHERE r.quantita_da_evadere > 0 AND documenti.timestamp_invio IS NOT NULL AND documenti.timestamp_chiusura IS NULL GROUP BY documenti.id'
         );
 
         foreach( $ordini as $ordine ) {
@@ -36,7 +36,7 @@
                 'url' => $cf['contents']['pages']['ddt.magazzini.form']['url'][ LINGUA_CORRENTE ] . '?__ordine_da_evadere__=' . $ordine['id'],
                 'icon' => NULL,
                 'fa' => 'fa-plus-square',
-                'title' => 'evadi ordine n. ' . $ordine['numero'] . ' del ' . $ordine['data'],
+                'title' => 'evadi ordine n. ' . $ordine['numero'] . ' del ' . date('d/m/Y', strtotime($ordine['data'])),
                 'text' => 'inserisce un nuovo DDT attivo per evadere l\'ordine',
                 'colspan' => 3
             );

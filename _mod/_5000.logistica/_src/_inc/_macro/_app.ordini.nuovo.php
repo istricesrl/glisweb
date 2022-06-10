@@ -28,40 +28,45 @@
     
     if( isset( $_SESSION['account']['id_anagrafica'] ) ){
 
-        $ct['etc']['select']['emittenti'] = mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'],       
-            'SELECT  anagrafica_view_static.id, anagrafica_view_static.__label__ FROM anagrafica_view_static '.
-            'INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica_collegata = anagrafica_view_static.id '.
-            'WHERE anagrafica_view_static.se_gestita = 1 AND relazioni_anagrafica.id_ruolo = 16 AND relazioni_anagrafica.id_anagrafica = ? ',
-            array( array( 's' =>  $_SESSION['account']['id_anagrafica']  ) )
-        );
-
-        $ct['etc']['emittente'] =  $ct['etc']['select']['emittenti'][0]['id'];
-
+            $ct['etc']['select']['emittenti'] = mysqlCachedIndexedQuery(
+                $cf['memcache']['index'],
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],       
+                'SELECT  anagrafica_view_static.id, anagrafica_view_static.__label__ FROM anagrafica_view_static INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica_collegata = anagrafica_view_static.id WHERE anagrafica_view_static.se_gestita = 1 AND relazioni_anagrafica.id_ruolo = 16 AND relazioni_anagrafica.id_anagrafica = ? UNION SELECT  anagrafica_view_static.id, anagrafica_view_static.__label__ FROM anagrafica_view_static INNER JOIN relazioni_anagrafica ON relazioni_anagrafica.id_anagrafica = anagrafica_view_static.id  WHERE anagrafica_view_static.se_gestita = 1 AND relazioni_anagrafica.id_ruolo = 16 AND relazioni_anagrafica.id_anagrafica_collegata = ?',
+                array( array( 's' =>  $_SESSION['account']['id_anagrafica']  ),array( 's' =>  $_SESSION['account']['id_anagrafica']  ) )
+            );
+    
+            if( $ct['etc']['select']['emittenti'] ){
+                $ct['etc']['emittente'] =  $ct['etc']['select']['emittenti'][0]['id'];
+            }
+    
     } 
-
 
     $ct['form']['table'] = 'documenti';
 
+
     // tabella della vista
-    $ct['view']['table'] = 'prodotti';
+    $ct['view']['table'] = '__report_giacenza_magazzini__';
 
     $ct['view']['cols'] = array(
         'id' => '#',
         'nome' => 'nome',
         'categorie' => 'categorie',
-        '__label__' => '__label__'     
+        'totale' => 'totale',
+        'prodotto' => 'prodotto'   
     );
 
     $ct['view']['id'] = md5(
         $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
         );
 
+    $ct['view']['data']['__report_mode__'] = 1;
+
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['nome'] = 'ASC';
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__']['rows'] = 20000;
 
+    $ct['view']['__restrict__']['totale']['GE'] = 1;
+    $ct['view']['__restrict__']['id']['EQ'] = 2;
 
     // tipologia ordine
     $ct['etc']['default_tipologia'] = mysqlSelectCachedValue(
@@ -98,10 +103,18 @@
             array( array( 's' => $_REQUEST['__delete__']['documenti']['id'] ) ) );
     }
 
+    if( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_REQUEST['__documento__'] )  ){ 
+        $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
+        'SELECT * FROM documenti WHERE id = ?',
+        array( array( 's' => $_REQUEST['__documento__'] ) ) );
+
+    }
+
+
     // verifico se è presente uno scontrino aperto
     if( !isset( $_REQUEST[ $ct['form']['table'] ]) && isset( $_SESSION['account'] )  ){ 
              $_REQUEST[ $ct['form']['table'] ] = mysqlSelectRow(  $cf['mysql']['connection'],
-             'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_chiusura IS NULL AND id_tipologia = ?',
+             'SELECT * FROM documenti WHERE id_account_inserimento = ? AND timestamp_invio IS NULL AND id_tipologia = ?',
              array( array( 's' => $_SESSION['account']['id'] ), array( 's' => $ct['etc']['default_tipologia'] ) ) );
     }
     

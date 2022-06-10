@@ -508,6 +508,8 @@ ALTER TABLE `causali`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `se_trasporto` (`se_trasporto`), 
 	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`se_trasporto`);
 
 --| 030000004601
@@ -524,6 +526,8 @@ ALTER TABLE `causali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `certificazioni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`); 
 
 --| 030000004701
@@ -582,6 +586,7 @@ ALTER TABLE `colli`
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`ordine`,`codice`,`id_documento`),
 	ADD KEY `indice_dimensioni` (`id`,`ordine`,`codice`,`id_documento`,`larghezza`,`lunghezza`,`altezza`,`peso`,`volume`);
+
 
 --| 030000005051
 
@@ -676,10 +681,11 @@ ALTER TABLE `contatti`
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_inviante` (`id_inviante`),
+	ADD KEY `id_ranking` (`id_ranking`),	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
-	ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`nome`,`timestamp_contatto`);
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`id_ranking`,`nome`,`timestamp_contatto`);
 
 --| 030000006701
 
@@ -952,6 +958,9 @@ ALTER TABLE `documenti`
 	ADD KEY `porto` (`porto`),
 	ADD KEY `cig` (`cig`),
 	ADD KEY `cup` (`cup`),
+	ADD KEY `id_causale` (`id_causale`),
+	ADD KEY `id_trasportatore` (`id_trasportatore`),
+	ADD KEY `porto` (`porto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);

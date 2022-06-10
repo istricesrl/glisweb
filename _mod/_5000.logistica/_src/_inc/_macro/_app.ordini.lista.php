@@ -23,13 +23,11 @@
         'id' => '#',
         'data' => 'data',
         'id_emittente' => 'id_emittente',
+        'timestamp_invio' => 'timestamp_invio',
+        'timestamp_chiusura' => 'timestamp_chiusura',
         'emittente' => 'emittente',
         '__label__' => '__label__'     
     );
-
-    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
-	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
-	} 
 
     require DIR_SRC_INC_MACRO . '_default.view.php';
 

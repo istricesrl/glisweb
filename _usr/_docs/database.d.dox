@@ -32,6 +32,9 @@
     documenti.id_coupon                     | l'ID del coupon associato al documento
     documenti.id_mastro_provenienza         | l'ID del mastro di scarico del documento
     documenti.id_mastro_destinazione        | l'ID del mastro di caricao del documento
+    documenti.id_causale                    | l'ID della causale del documento
+	documenti.porto                         | enum della tipologia del porto (franco, assegnato, -)
+	documenti.id_trasportatore              | l'ID dell'anagrafica del trasportatore
     documenti.note                          | note aggiuntive sul documento
     documenti.note_cliente                  | note destinate al cliente del documento
     documenti.timestamp_chiusura            | la timestamp della chiusura del documentato 
@@ -52,8 +55,10 @@
     documenti_ibfk_05_nofollow              | id_sede_destinatario      | indirizzi.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_06_nofollow              | id_coupon                 | coupon.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_07_nofollow              | id_condizione_pagamento   | condizioni_pagamento.id       | ON DELETE NO ACTION ON UPDATE NO ACTION          
-    documenti_ibfk_08_nofollow              | id_mastro_provenienza         | mastri.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
-    documenti_ibfk_09_nofollow              | id_mastro_destinazione        | mastri.id                         | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_08_nofollow              | id_mastro_provenienza     | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_09_nofollow              | id_mastro_destinazione    | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_10_nofollow              | id_causale                | causali.id                    | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_ibfk_11_nofollow              | id_trasportatore          | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     documenti_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -83,6 +88,9 @@
     documenti_view.mastro_provenienza               | il mastro scaricato dal documento
     documenti_view.id_mastro_destinazione           | -
     documenti_view.mastro_destinazione              | il mastro caricato dal documento
+    documenti_view.id_causale                       | -
+    documenti_view.porto                            | -
+    documenti_view.id_trasportatore                 | -
     documenti_view.timestamp_chiusura               | -
     documenti_view.data_ora_chiusura                | chiusra del documento in formato Y-m-d H:i
     documenti_view.id_account_inserimento           | -
@@ -134,6 +142,7 @@
     documenti_articoli.id_mastro_destinazione               | l'ID del mastro caricato dalla riga
     documenti_articoli.id_udm                               | l'ID dell'unità di misura relativa alla quantità movimentata dalla riga
     documenti_articoli.id_matricola                         | l'ID della matricola associata alla riga
+    documenti_articoli.id_collo                             | l'ID del collo in cui la voce è collocata
     documenti_articoli.quantita                             | la quantità movimentata dalla riga
     documenti_articoli.id_listino                           | l'ID del listino associato alla riga
     documenti_articoli.importo_netto_totale                 | l'importo netto totale della riga
@@ -166,6 +175,7 @@
     documenti_articoli_ibfk_13_nofollow         | id_udm                        | udm.id                            | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_14_nofollow         | id_listino                    | listini.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_15_nofollow         | id_matricola                  | matricole.id                      | ON DELETE NO ACTION ON UPDATE NO ACTION
+    documenti_articoli_ibfk_16_nofollow         | id_collo                      | colli.id                          | ON DELETE NO ACTION ON UPDATE NO ACTION
     documenti_articoli_ibfk_98_nofollow         | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     documenti_articoli_ibfk_99_nofollow         | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -202,6 +212,7 @@
     documenti_articoli_view.sconto_percentuale              | -
     documenti_articoli_view.sconto_valore                   | -
     documenti_articoli_view.id_matricola                    | -
+    documenti_articoli_view.id_collo                        | -
     documenti_articoli_view.matricola                       | il nome della matricola associato alla riga
     documenti_articoli_view.nome                            | -
     documenti_articoli_view.id_account_inserimento          | -

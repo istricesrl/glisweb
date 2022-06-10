@@ -25,7 +25,7 @@
 
         var documento =  $( '#_id_documento' ).val();
         var note = encodeURIComponent($( '#_note' ).val());
-        getws('{{ site.url }}/_mod/_0400.documenti/_src/_api/_task/_chiusura.documento.php', 'id='+documento+'&note_invio='+note, 
+        getws('{{ site.url }}/_mod/_0400.documenti/_src/_api/_task/_invio.documento.php', 'id='+documento+'&note_invio='+note, 
                 function( data ){ 
                     window.open('{{ pages["app.ordini"].url[ localization.language.ietf ] }}','_self');
                 }
