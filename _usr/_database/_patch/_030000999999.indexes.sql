@@ -2145,13 +2145,12 @@ ALTER TABLE `prodotti`
 	ADD KEY `id_produttore` (`id_produttore`), 	
 	ADD KEY `nome` (`nome`), 	
 	ADD KEY `codice_produttore` (`codice_produttore`), 	
-	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
 	ADD KEY `se_cacheable` (`se_cacheable`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`, `id_progetto`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`);
 
 --| 030000026200
 

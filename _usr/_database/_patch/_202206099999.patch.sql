@@ -786,4 +786,56 @@ REPLACE INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 (2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL),
 (3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1);
 
+
+--| 202206099355
+ALTER TABLE `prodotti`
+DROP CONSTRAINT `prodotti_ibfk_04_nofollow`,
+DROP KEY `indice`;
+
+--| 202206099360
+ALTER TABLE `prodotti`
+DROP FOREIGN KEY  `prodotti_ibfk_04_nofollow`,
+DROP KEY `indice`;
+
+--| 202206099365
+ALTER TABLE `prodotti` 
+	DROP COLUMN `id_progetto`,
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`);
+
+--| 202206099370
+CREATE OR REPLACE VIEW `prodotti_view` AS
+	SELECT
+		prodotti.id,
+		prodotti.id_tipologia,
+		tipologie_prodotti.nome AS tipologia,
+		tipologie_prodotti.se_prodotto,
+		tipologie_prodotti.se_servizio,
+		prodotti.nome,
+		prodotti.id_marchio,
+		marchi.nome AS marchio,
+		prodotti.id_produttore,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS produttore,
+		prodotti.codice_produttore,
+		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		prodotti.id_sito,
+		prodotti.template,
+		prodotti.schema_html,
+		prodotti.tema_css,
+		prodotti.se_sitemap,
+		prodotti.se_cacheable,
+		prodotti.id_account_inserimento,
+		prodotti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			prodotti.id,
+			prodotti.nome
+		) AS __label__
+	FROM prodotti
+		LEFT JOIN tipologie_prodotti ON tipologie_prodotti.id = prodotti.id_tipologia
+		LEFT JOIN marchi ON marchi.id = prodotti.id_marchio
+		LEFT JOIN anagrafica AS a1 ON a1.id = prodotti.id_produttore
+		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
+	GROUP BY prodotti.id
+;
+
 --| FINE

@@ -1977,7 +1977,6 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
   `id_marchio` int(11) DEFAULT NULL,	
   `id_produttore` int(11) DEFAULT NULL,	
   `codice_produttore` char(64) DEFAULT NULL,	
-  `id_progetto` char(32) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
