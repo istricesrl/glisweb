@@ -2203,6 +2203,29 @@ CREATE TABLE IF NOT EXISTS `ranking` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000029000
+
+-- recensioni
+-- tipologia: tabella gestita
+-- verifica: 2022-06-09 13:00 Chiara GDL
+CREATE TABLE IF NOT EXISTS `recensioni` (
+`id` int(11) NOT NULL,
+  `id_lingua` int(11) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_risorsa` int(11) NULL DEFAULT NULL,
+  `id_pagina` int(11) NULL DEFAULT NULL,
+  `autore` char(128) NULL DEFAULT NULL,
+  `valutazione` int(11) NULL DEFAULT NULL,
+  `titolo` char(255) NULL DEFAULT NULL,
+  `testo` text,
+  `se_approvata` tinyint(1) NULL DEFAULT NULL,
+  `id_account_inserimento` int(11) NULL DEFAULT NULL,
+  `timestamp_inserimento` int(11) NULL DEFAULT NULL,
+  `id_account_aggiornamento` int(11) NULL DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000029400
 
 -- redirect

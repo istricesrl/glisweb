@@ -5463,6 +5463,43 @@ CREATE OR REPLACE VIEW `ranking_view` AS
     FROM ranking
 ;
 
+--| 090000029000
+
+-- recensioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `recensioni_view`;
+
+--| 090000029001
+
+-- recensioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-06-09 13:00 Chiara GDL
+CREATE OR REPLACE VIEW recensioni_view AS
+    SELECT
+    recensioni.id,
+	recensioni.id_lingua ,
+	recensioni.id_prodotto,
+	prodotti.nome AS prodotto,
+	recensioni.id_articolo,
+	concat_ws( ' ', p2.nome, articoli.nome ) AS articolo,
+	recensioni.id_risorsa,
+	risorse.nome AS risorsa,
+	recensioni.id_pagina,
+	recensioni.autore,
+	recensioni.valutazione,
+	recensioni.titolo ,
+	recensioni.se_approvata,
+	recensioni.id_account_inserimento ,
+	recensioni.id_account_aggiornamento ,
+	from_unixtime( recensioni.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_recensione,
+	concat_ws( '|', recensioni.autore, recensioni.titolo ) AS __label__
+    FROM recensioni
+    	LEFT JOIN articoli ON articoli.id = recensioni.id_articolo
+    	LEFT JOIN prodotti AS p2 ON p2.id = articoli.id_prodotto
+	LEFT JOIN prodotti ON prodotti.id = recensioni.id_prodotto
+	LEFT JOIN risorse ON risorse.id = recensioni.id_risorsa
+;
+
 --| 090000029400
 
 -- redirect_view

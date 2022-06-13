@@ -185,6 +185,7 @@
     progetti_categorie              | 027400    | relazione     | principale    | mette in relazione progetti e categorie_progetti
     progetti_matricole              | 027800    | relazione     | principale    | mette in relazione progetti e matricole
     pubblicazioni                   | 028400    | base          | principale    | contiene le pubblicazioni
+    recensioni                      | 029000    | base          | principale    | contiene le recensioni
     redirect                        | 029400    | base          | principale    | contiene i redirect HTTP
     rinnovi                         | 031500    | base          | secondaria    | contiene i rinnovi dei contratti
     rinnovi_documenti_articoli      | 031550    | relazione     | secondaria    | mette in relazione rinnovi e documenti_articoli
@@ -226,7 +227,7 @@
     PRODUZIONE  | 1000      | categorie_progetti, contratti,pianificazioni, progetti, progetti_anagrafica, progetti_articoli, progetti_categorie, relazioni_progetti, rinnovi, rinnovi_documenti_articoli, ruoli_anagrafica, tipologie_contratti,tipologie_progetti, todo
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
-    CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
+    CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, recensioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
     POPUP       |           | popup, popup_pagine, pubblicazioni, tipologie_popup, tipologie_pubblicazioni
     NOTIZIE     |           | audio, contenuti, file, categorie_notizie, immagini, menu, metadati, notizie notizie_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_notizie, tipologie_pubblicazioni, video
     RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
@@ -327,6 +328,7 @@
     progetti_categorie              | PRODUZIONE
     pubblicazioni                   | CONTENUTI, POPUP, PRODOTTI, NOTIZIE, RISORSE
     ranking                         | BASE
+    recensioni                      | CONTENUTI
     redirect                        | CONTENUTI
     regimi                          | BASE
     regioni                         | BASE

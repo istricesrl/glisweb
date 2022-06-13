@@ -45,6 +45,17 @@
                 $a['prezzi'][$prezzo['listino'].'/'.$prezzo['valuta'] ] = $prezzo;
             }
 
+            $m = mysqlQuery( $cf['mysql']['connection'],
+            'SELECT * fROM metadati WHERE id_articolo = ? AND (id_lingua = ? OR id_lingua IS NULL )',
+                array( 
+                    array( 's' => $a['id'] ) ,
+                    array( 's' => $cf['localization']['language']['id'] )
+                )
+            );
+
+            foreach($m as $metadati  ){
+                $a['metadati'][ $metadati['nome'] ] = $metadati['testo'];
+            }
         }
 
     }   

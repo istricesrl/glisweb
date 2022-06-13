@@ -2399,6 +2399,29 @@ ALTER TABLE `ranking`
 -- verifica: 2021-10-11 17:48 Fabio Mosti
 ALTER TABLE `ranking` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000029000
+
+-- recensioni
+-- tipologia: tabella gestita
+-- verifica: 2022-06-09 13:00 Chiara GDL
+ALTER TABLE `recensioni`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_lingua`,`id_prodotto`,`id_articolo`, `id_risorsa` ,`autore`,`valutazione`,`se_approvata`),
+	ADD KEY `id_pagina` (`id_pagina`);
+
+--| 030000029001
+
+-- recensioni
+-- tipologia: tabella gestita
+-- verifica: 2022-06-09 13:00 Chiara GDL
+ALTER TABLE `recensioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000029400
 
 -- redirect
