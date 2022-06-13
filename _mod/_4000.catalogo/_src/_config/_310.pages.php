@@ -109,11 +109,11 @@ if ($cf['contents']['cached'] === false) {
                     'id_categoria_prodotti'
                 );
 
-                aggiungiContenuti(
+             /*   aggiungiContenuti(
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
                     'id_categoria_prodotti'
-                );
+                );*/
 
                 aggiungiImmagini(
                     $cf['contents']['pages'][$pid],
