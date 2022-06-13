@@ -2485,9 +2485,10 @@ ALTER TABLE `relazioni_documenti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_documento_collegato` (`id_documento_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_documento`,`id_documento_collegato`);
+	ADD UNIQUE KEY `unico` (`id_documento`,`id_documento_collegato`,`id_ruolo`);
 
 --| 030000030401
 
@@ -2504,9 +2505,10 @@ ALTER TABLE `relazioni_documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
 	ADD KEY `id_documenti_articolo_collegato` (`id_documenti_articolo_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`);
+	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`);
 
 --| 030000030411
 

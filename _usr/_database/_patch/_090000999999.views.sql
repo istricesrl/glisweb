@@ -5577,11 +5577,14 @@ DROP TABLE IF EXISTS `relazioni_documenti_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_documenti_view AS
 	SELECT
-	relazioni_documenti.id,
-	relazioni_documenti.id_documento,
-	relazioni_documenti.id_documento_collegato,
-	concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato) AS __label__
+		relazioni_documenti.id,
+		relazioni_documenti.id_documento,
+		relazioni_documenti.id_documento_collegato,
+		relazioni_documenti.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
 	FROM relazioni_documenti
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
 ;
 
 --| 090000030410
@@ -5597,11 +5600,14 @@ DROP TABLE IF EXISTS `relazioni_documenti_articoli_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
 	SELECT
-	relazioni_documenti_articoli.id,
-	relazioni_documenti_articoli.id_documenti_articolo,
-	relazioni_documenti_articoli.id_documenti_articolo_collegato,
-	concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato) AS __label__
+		relazioni_documenti_articoli.id,
+		relazioni_documenti_articoli.id_documenti_articolo,
+		relazioni_documenti_articoli.id_documenti_articolo_collegato,
+		relazioni_documenti_articoli.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
 	FROM relazioni_documenti_articoli
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti_articoli.id_ruolo
 ;
 
 --| 090000030440

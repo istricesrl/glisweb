@@ -730,4 +730,60 @@ CREATE OR REPLACE VIEW ruoli_documenti_view AS
 	FROM ruoli_documenti
 ;
 
+--| 202206099290
+ALTER TABLE `relazioni_documenti`
+DROP KEY `unico`;
+
+--| 202206099300
+ALTER TABLE `relazioni_documenti_articoli`
+DROP KEY `unico`;
+
+--| 202206099310
+ALTER TABLE `relazioni_documenti`
+	ADD COLUMN   `id_ruolo` int(11) DEFAULT NULL AFTER `id_documento_collegato`,
+ 	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD UNIQUE KEY `unico` (`id_documento`,`id_documento_collegato`,`id_ruolo`),
+	ADD CONSTRAINT `relazioni_documenti_ibfk_03`     FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+
+--| 202206099320
+ALTER TABLE `relazioni_documenti_articoli`
+	ADD COLUMN   `id_ruolo` int(11) DEFAULT NULL AFTER  `id_documenti_articolo_collegato` ,
+ 	ADD KEY `id_ruolo` (`id_ruolo`), 
+	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`),
+	ADD CONSTRAINT `relazioni_documenti_articoli_ibfk_03`     FOREIGN KEY (`id_ruolo`) REFERENCES `ruoli_documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+
+--| 202206099330
+CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
+	SELECT
+		relazioni_documenti_articoli.id,
+		relazioni_documenti_articoli.id_documenti_articolo,
+		relazioni_documenti_articoli.id_documenti_articolo_collegato,
+		relazioni_documenti_articoli.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+	FROM relazioni_documenti_articoli
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti_articoli.id_ruolo
+;
+
+--| 202206099340
+CREATE OR REPLACE VIEW relazioni_documenti_view AS
+	SELECT
+		relazioni_documenti.id,
+		relazioni_documenti.id_documento,
+		relazioni_documenti.id_documento_collegato,
+		relazioni_documenti.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+	FROM relazioni_documenti
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
+;
+
+--| 202206099350
+REPLACE INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_documenti`, `se_documenti_articoli`, `se_conferma`, `se_consuntivo`, `se_evasione`) VALUES
+(1,	NULL,	'conferma',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL),
+(2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL),
+(3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1);
+
 --| FINE
