@@ -91,6 +91,10 @@
             </div>
 
 			<div class="form-group form-row">
+				<div class="col-12 col-md-auto">
+                    <span class="label-top">periodo</span>
+					{{ frm.select( table, '', '', 'id_periodo', '', etc.select.periodi, request ) }}
+  				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
