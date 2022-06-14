@@ -1541,9 +1541,11 @@ ALTER TABLE `luoghi`
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_edificio` (`id_edificio`), 
+	ADD KEY `id_immobile` (`id_immobile`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`, `id_edificio`, `id_immobile`,`nome`);
 
 --| 030000018001
 
@@ -2041,6 +2043,7 @@ ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-05 17:57 Fabio Mosti
 ALTER TABLE `pianificazioni`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_todo` (`id_todo`), 
 	ADD KEY `id_attivita` (`id_attivita`), 
@@ -2203,6 +2206,10 @@ ALTER TABLE `progetti`
 	ADD KEY `id_pianificazione` (`id_pianificazione`),
 	ADD KEY `id_cliente` (`id_cliente`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
+	ADD KEY `id_ranking` (`id_ranking`),
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD KEY `id_periodo` (`id_periodo`),  	
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
@@ -2212,7 +2219,7 @@ ALTER TABLE `progetti`
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`nome`,`data_accettazione`,`data_chiusura`,`data_archiviazione`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_chiusura`,`data_archiviazione`);
 
 --| 030000027200
 
@@ -2480,9 +2487,10 @@ ALTER TABLE `relazioni_documenti`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_documento_collegato` (`id_documento_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_documento`,`id_documento_collegato`);
+	ADD UNIQUE KEY `unico` (`id_documento`,`id_documento_collegato`,`id_ruolo`);
 
 --| 030000030401
 
@@ -2499,9 +2507,10 @@ ALTER TABLE `relazioni_documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
 	ADD KEY `id_documenti_articolo_collegato` (`id_documenti_articolo_collegato`),
+	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`);
+	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`);
 
 --| 030000030411
 
@@ -2640,6 +2649,8 @@ ALTER TABLE `risorse`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_testata` (`id_testata`),
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
 	ADD KEY `se_cacheable` (`se_cacheable`),
@@ -2769,6 +2780,29 @@ ALTER TABLE `ruoli_audio`
 -- ruoli_audio
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000034300
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2022-06-09 16:21 Chiara GDL
+ALTER TABLE `ruoli_documenti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_xml` (`se_xml`), 
+	ADD KEY `se_documenti` (`se_documenti`), 
+	ADD KEY `se_documenti_articoli` (`se_documenti_articoli`), 
+	ADD KEY `se_conferma` (`se_conferma`), 
+	ADD KEY `se_consuntivo` (`se_consuntivo`), 
+	ADD KEY `se_evasione` (`se_evasione`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_xml`,`se_documenti`,`se_documenti_articoli`,`se_conferma`, `se_consuntivo`,  `se_evasione`);
+
+--| 030000034301
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000034400
 

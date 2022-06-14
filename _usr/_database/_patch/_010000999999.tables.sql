@@ -1426,7 +1426,9 @@ CREATE TABLE IF NOT EXISTS `luoghi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL,
+  `id_edificio` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `nome` char(255) COLLATE utf8_general_ci NOT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -1863,6 +1865,7 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 -- verifica: 2021-10-05 17:16 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_attivita` int(11) DEFAULT NULL,
@@ -2025,6 +2028,10 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
+  `id_ranking` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_periodo` int(11) DEFAULT NULL, 
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `template` char(255) DEFAULT NULL,
@@ -2268,6 +2275,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
   `id` int(11) NOT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `id_documento_collegato` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2283,6 +2291,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
   `id` int(11) NOT NULL,
   `id_documenti_articolo` int(11) DEFAULT NULL,
   `id_documenti_articolo_collegato` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2407,6 +2416,8 @@ CREATE TABLE IF NOT EXISTS `risorse` (
   `se_cacheable` int(1) DEFAULT NULL,
   `id_sito` int(11) DEFAULT NULL,
   `id_testata` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
   `giorno_pubblicazione` int(2) DEFAULT NULL,
   `mese_pubblicazione` int(2) DEFAULT NULL,
   `anno_pubblicazione` int(4) DEFAULT NULL,
@@ -2508,6 +2519,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `se_risorse` int(1) DEFAULT NULL,
   `se_categorie_risorse` int(1) DEFAULT NULL,
   `se_immobili` int(1) DEFAULT NULL 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000034300
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2022-06-09 16:21 Chiara GDL
+CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` int(1) DEFAULT NULL,
+  `se_documenti` int(1) DEFAULT NULL,
+  `se_documenti_articoli` int(1) DEFAULT NULL,
+  `se_conferma` int(1) DEFAULT NULL,
+  `se_consuntivo` int(1) DEFAULT NULL,
+  `se_evasione` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034400

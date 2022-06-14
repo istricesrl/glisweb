@@ -3477,6 +3477,8 @@ CREATE OR REPLACE VIEW `luoghi_view` AS
 			comuni.nome,
 			provincie.sigla
 		) AS indirizzo,
+		luoghi.id_edificio,
+		luoghi.id_immobile,		
 		luoghi.nome,
 		luoghi.id_account_inserimento,
 		luoghi.id_account_aggiornamento,
@@ -4552,6 +4554,7 @@ DROP TABLE IF EXISTS `pianificazioni_view`;
 CREATE OR REPLACE VIEW `pianificazioni_view` AS
 	SELECT
 		pianificazioni.id,
+		pianificazioni.id_genitore,
 		pianificazioni.id_progetto,
 		pianificazioni.id_todo,
 		pianificazioni.id_attivita,
@@ -4873,6 +4876,11 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
+		progetti.id_articolo,
+		progetti.id_prodotto,
+		progetti.id_periodo,
 		progetti.nome,
         progetti.id_sito,
 		progetti.template,
@@ -4903,6 +4911,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	GROUP BY progetti.id
 ;
 
@@ -4926,6 +4935,8 @@ CREATE OR REPLACE VIEW `progetti_commerciale_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -4949,6 +4960,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NULL
@@ -4975,6 +4987,8 @@ CREATE OR REPLACE VIEW `progetti_commerciale_archivio_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -4998,6 +5012,7 @@ CREATE OR REPLACE VIEW `progetti_commerciale_archivio_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NOT NULL
@@ -5024,6 +5039,8 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -5047,6 +5064,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NULL
@@ -5073,6 +5091,8 @@ CREATE OR REPLACE VIEW `progetti_produzione_archivio_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -5096,6 +5116,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_archivio_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NOT NULL
@@ -5122,6 +5143,8 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -5145,6 +5168,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NOT NULL
 		AND progetti.data_archiviazione IS NULL
@@ -5171,6 +5195,8 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -5194,6 +5220,7 @@ CREATE OR REPLACE VIEW `progetti_amministrazione_archivio_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NOT NULL
 		AND progetti.data_archiviazione IS NOT NULL
@@ -5550,11 +5577,14 @@ DROP TABLE IF EXISTS `relazioni_documenti_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_documenti_view AS
 	SELECT
-	relazioni_documenti.id,
-	relazioni_documenti.id_documento,
-	relazioni_documenti.id_documento_collegato,
-	concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato) AS __label__
+		relazioni_documenti.id,
+		relazioni_documenti.id_documento,
+		relazioni_documenti.id_documento_collegato,
+		relazioni_documenti.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
 	FROM relazioni_documenti
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
 ;
 
 --| 090000030410
@@ -5570,11 +5600,14 @@ DROP TABLE IF EXISTS `relazioni_documenti_articoli_view`;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_documenti_articoli_view AS
 	SELECT
-	relazioni_documenti_articoli.id,
-	relazioni_documenti_articoli.id_documenti_articolo,
-	relazioni_documenti_articoli.id_documenti_articolo_collegato,
-	concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato) AS __label__
+		relazioni_documenti_articoli.id,
+		relazioni_documenti_articoli.id_documenti_articolo,
+		relazioni_documenti_articoli.id_documenti_articolo_collegato,
+		relazioni_documenti_articoli.id_ruolo,
+		ruoli_documenti.nome AS ruolo,
+		concat( relazioni_documenti_articoli.id_documenti_articolo,' - ', relazioni_documenti_articoli.id_documenti_articolo_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
 	FROM relazioni_documenti_articoli
+		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti_articoli.id_ruolo
 ;
 
 --| 090000030440
@@ -6049,6 +6082,8 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 		risorse.id_sito,
 		risorse.id_testata, 
 		testate.nome AS testata,
+		risorse.id_articolo,
+		risorse.id_prodotto,
 		risorse.giorno_pubblicazione,
 		risorse.mese_pubblicazione,
 		risorse.anno_pubblicazione,
@@ -6211,6 +6246,34 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.se_immobili,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
+;
+
+--| 090000034300
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_documenti_view`;
+
+--| 090000034301
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2022-06-09 16:21 Chiara GDL
+CREATE OR REPLACE VIEW ruoli_documenti_view AS
+	SELECT
+		ruoli_documenti.id,
+		ruoli_documenti.id_genitore,
+		ruoli_documenti.nome,
+		ruoli_documenti.html_entity,
+		ruoli_documenti.font_awesome,
+		ruoli_documenti.se_xml,
+		ruoli_documenti.se_documenti,
+		ruoli_documenti.se_documenti_articoli,
+		ruoli_documenti.se_conferma,
+		ruoli_documenti.se_consuntivo,
+		ruoli_documenti.se_evasione,
+	 	ruoli_documenti_path( ruoli_documenti.id ) AS __label__
+	FROM ruoli_documenti
 ;
 
 --| 090000034400
