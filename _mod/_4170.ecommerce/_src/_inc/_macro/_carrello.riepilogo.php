@@ -57,6 +57,21 @@
             // pagamento con PayPal Advanced Checkout
             case 'paypal-advanced':
 
+                // TODO ottengo il Client Token
+/*
+                    $ct['etc']['client_token']              = restCall(
+                        $k['token_api'],
+                        METHOD_POST,
+                        array(),
+                        MIME_APPLICATION_JSON,
+                        MIME_APPLICATION_JSON,
+                        $status,
+                        array(
+                            'Authorization' => 'Bearer ' . $k['auth_token']
+                        )
+                    );
+*/
+
             break;
 
             // pagamento con Nexi

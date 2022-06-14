@@ -92,7 +92,8 @@
             array( array( 's' => $_REQUEST['__ordine_da_evadere__'] ) )
 	    );
 	}
-    // macro di default per l'entità DDT
+
+	// macro di default per l'entità DDT
 	require DIR_BASE . '_mod/_0400.documenti/_src/_inc/_macro/_ddt.magazzini.form.default.php';
 
 	// macro di default

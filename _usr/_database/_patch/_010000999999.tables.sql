@@ -364,7 +364,7 @@ CREATE TABLE IF NOT EXISTS `audio` (
 -- verifica: 2022-05-02 17:22 Chiara GDL
 CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
 `id` int(11) NOT NULL,
-  `nome` char(128) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
   `font_awesome` char(24) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `se_indirizzo` int(1) DEFAULT NULL,
@@ -383,7 +383,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
 -- verifica: 2021-05-28 18:22 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
   `id` int(11) NOT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `font_awesome` char(24) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `se_categoria` int(1) DEFAULT NULL,
@@ -404,7 +404,7 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `note` text,
   `se_lead` int(1) DEFAULT NULL,
   `se_prospect` int(1) DEFAULT NULL,
@@ -436,7 +436,7 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
@@ -460,7 +460,7 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
@@ -484,7 +484,7 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
@@ -514,7 +514,7 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `note` text,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
@@ -551,7 +551,7 @@ CREATE TABLE IF NOT EXISTS `causali` (
 -- verifica: 2022-02-03 11:12 Chiara GDL
 CREATE TABLE `certificazioni` (
   `id` int NOT NULL,
-  `nome` char(255) CHARACTER SET utf8 COLLATE utf8_general_ci DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
@@ -567,9 +567,9 @@ CREATE TABLE IF NOT EXISTS `chiavi` (
   `id` int(11) NOT NULL,
   `id_licenza` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `codice` char(32) COLLATE utf8_general_ci DEFAULT NULL,
-  `seriale` char(32) COLLATE utf8_general_ci DEFAULT NULL,
-  `nome` char(32) COLLATE utf8_general_ci NOT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `seriale` char(32) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -583,10 +583,10 @@ CREATE TABLE IF NOT EXISTS `chiavi` (
 -- verifica: 2022-04-28 22:22 Chiara GDL
 CREATE TABLE IF NOT EXISTS `classi_energetiche` (
 `id` int(11) NOT NULL,
-  `nome` char(8) NOT NULL,
+  `nome` char(8) DEFAULT NULL,
   `ep_min` int(11) DEFAULT NULL,
   `ep_max` int(11) DEFAULT NULL,
-  `rgb` char(8) NOT NULL
+  `rgb` char(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000005050
@@ -623,7 +623,7 @@ CREATE TABLE `colli` (
 CREATE TABLE IF NOT EXISTS `colori` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(16) NOT NULL,
+  `nome` char(16) DEFAULT NULL,
   `hex` char(8) DEFAULT NULL,
   `r` int(3) DEFAULT NULL,
   `g` int(3) DEFAULT NULL,
@@ -644,7 +644,7 @@ CREATE TABLE IF NOT EXISTS `colori` (
 CREATE TABLE IF NOT EXISTS `comuni` (
   `id` int(11) NOT NULL,
   `id_provincia` int(11) NOT NULL,
-  `nome` varchar(254) NOT NULL,
+  `nome` varchar(254) DEFAULT NULL,
   `codice_istat` char(12) DEFAULT NULL,
   `codice_catasto` char(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -772,8 +772,8 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
 -- verifica: 2021-06-09 11:26 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `continenti` (
   `id` int(11) NOT NULL,
-  `codice` char(2) COLLATE utf8_general_ci DEFAULT NULL,
-  `nome` char(32) COLLATE utf8_general_ci NOT NULL
+  `codice` char(2) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000007200
@@ -1038,7 +1038,7 @@ CREATE TABLE IF NOT EXISTS `edifici_caratteristiche` (
 -- verifica: 2021-06-29 16:56 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `embed` (
   `id` int(11) NOT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `se_audio` int(1) DEFAULT NULL,
   `se_video` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1095,7 +1095,7 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_organizzazione` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1152,7 +1152,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `orientamento` enum('L','P') DEFAULT NULL,
   `taglio` char(64) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
-  `path` char(255) NOT NULL,
+  `path` char(255) DEFAULT NULL,
   `path_alternativo` char(255) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
   `timestamp_scalamento` int(11) DEFAULT NULL,
@@ -1269,7 +1269,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
 CREATE TABLE IF NOT EXISTS `iva` (
   `id` int(11) NOT NULL,
   `aliquota` decimal(5,2) NOT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `descrizione` text,
   `codice` char(8) DEFAULT NULL,
   `timestamp_archiviazione` int(11) DEFAULT NULL
@@ -1311,7 +1311,7 @@ CREATE TABLE IF NOT EXISTS `licenze` (
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_rivenditore` int(11) DEFAULT NULL,
   `codice` char(254) DEFAULT NULL,
-  `postazioni` int(11) NOT NULL,
+  `postazioni` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `note` char(254) DEFAULT NULL,
   `testo` text,
@@ -1349,11 +1349,11 @@ CREATE TABLE IF NOT EXISTS `licenze_software` (
 -- verifica: 2021-09-24 17:41 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `lingue` (
   `id` int(11) NOT NULL,
-  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
-  `note` char(128) COLLATE utf8_general_ci DEFAULT NULL,
-  `iso6391alpha2` char(36) COLLATE utf8_general_ci DEFAULT NULL,
-  `iso6393alpha3` char(36) COLLATE utf8_general_ci DEFAULT NULL,
-  `ietf` char(36) COLLATE utf8_general_ci DEFAULT NULL
+  `nome` char(128) DEFAULT NULL,
+  `note` char(128) DEFAULT NULL,
+  `iso6391alpha2` char(36) DEFAULT NULL,
+  `iso6393alpha3` char(36) DEFAULT NULL,
+  `ietf` char(36) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000017000
@@ -1394,7 +1394,7 @@ CREATE TABLE `liste_mail` (
 CREATE TABLE IF NOT EXISTS `listini` (
   `id` int(11) NOT NULL,
   `id_valuta` int(11) NOT NULL,
-  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1602,7 +1602,7 @@ CREATE TABLE `mailing_mail` (
 -- verifica: 2021-09-28 17:59 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `marchi` (
   `id` int(11) NOT NULL,
-  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -1620,7 +1620,7 @@ CREATE TABLE IF NOT EXISTS `mastri` (
   `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) NOT NULL,
   `id_anagrafica_indirizzi` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -1662,7 +1662,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `menu` char(32) NOT NULL,
-  `nome` char(128) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
   `target` char(16) DEFAULT NULL,
   `ancora` CHAR(64) DEFAULT NULL,
   `sottopagine` char(32) DEFAULT NULL,
@@ -1717,7 +1717,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (
 -- verifica: 2022-01-18 12:06 Chiara GDL
 CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
 `id` int(11) NOT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `provider` char(64) DEFAULT NULL,
   `codice` char(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1730,7 +1730,7 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
 CREATE TABLE IF NOT EXISTS `notizie` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) NOT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
@@ -1906,7 +1906,7 @@ CREATE TABLE IF NOT EXISTS `popup` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) NOT NULL,
   `id_sito` int(11) DEFAULT NULL,
-  `nome` char(128) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
   `note` text,
   `html_id` char(128) DEFAULT NULL,
   `html_class` char(128) DEFAULT NULL,
@@ -1964,7 +1964,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
 CREATE TABLE IF NOT EXISTS `prodotti` (	
   `id` char(32) NOT NULL,	
   `id_tipologia` int(11) DEFAULT NULL,	
-  `nome` char(128) NOT NULL,	
+  `nome` char(128) DEFAULT NULL,	
   `note` text,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
@@ -2157,7 +2157,7 @@ CREATE TABLE IF NOT EXISTS `progetti_matricole` (
 CREATE TABLE IF NOT EXISTS `provincie` (
   `id` int(11) NOT NULL,
   `id_regione` int(11) NOT NULL,
-  `nome` varchar(254) NOT NULL,
+  `nome` varchar(254) DEFAULT NULL,
   `sigla` char(8) DEFAULT NULL,
   `codice_istat` char(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2198,7 +2198,7 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (
 -- verifica: 2021-10-12 12:12 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ranking` (
   `id` int(11) NOT NULL,
-  `nome` varchar(254) NOT NULL,
+  `nome` varchar(254) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `se_cliente` int(1) DEFAULT NULL,
@@ -2234,7 +2234,7 @@ CREATE TABLE IF NOT EXISTS `redirect` (
 -- verifica: 2021-10-09 15:02 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `regimi` (
   `id` int(11) NOT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `codice` char(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2246,7 +2246,7 @@ CREATE TABLE IF NOT EXISTS `regimi` (
 CREATE TABLE IF NOT EXISTS `regioni` (
   `id` int(11) NOT NULL,
   `id_stato` int(11) NOT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `codice_istat` char(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2353,7 +2353,7 @@ CREATE TABLE IF NOT EXISTS `reparti` (
   `id` int(11) NOT NULL,
   `id_iva` int(11) NOT NULL,
   `id_settore` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `note` text,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
@@ -2468,7 +2468,7 @@ CREATE TABLE IF NOT EXISTS `risorse_categorie` (
 CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(128) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_produzione`int(1) DEFAULT NULL,
@@ -2489,7 +2489,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
 CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(128) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_progetti`int(1) DEFAULT NULL,
@@ -2506,7 +2506,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
 CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_anagrafica` int(1) DEFAULT NULL,
@@ -2548,7 +2548,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
 CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_anagrafica` int(1) DEFAULT NULL,
@@ -2574,7 +2574,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine_scalamento` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_anagrafica` int(1) DEFAULT NULL,
@@ -2597,7 +2597,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (
 CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_sede_legale` int(1) DEFAULT NULL,
@@ -2614,7 +2614,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
 CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2627,7 +2627,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
 CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2639,7 +2639,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
 -- verifica: 2022-04-20 10:45 chiara GDL
 CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `id` int(11) NOT NULL,
-  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(128) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_sottoprogetto`int(1) DEFAULT NULL,
@@ -2655,7 +2655,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
 CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_anagrafica` int(1) DEFAULT NULL,
@@ -2678,7 +2678,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
 CREATE TABLE IF NOT EXISTS `settori` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
-  `nome` char(128) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
   `soprannome` char(64) NULL,
   `ateco` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -2763,7 +2763,7 @@ CREATE TABLE IF NOT EXISTS `software` (
 CREATE TABLE IF NOT EXISTS `stati` (
   `id` int(11) NOT NULL,
   `id_continente` int(11) DEFAULT NULL,
-  `nome` char(128) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
   `note` char(128) DEFAULT NULL,
   `iso31661alpha2` char(2) DEFAULT NULL,
   `iso31661alpha3` char(3) DEFAULT NULL,
@@ -2870,7 +2870,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_persona_fisica` int(1) DEFAULT NULL,
@@ -2892,7 +2892,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `codice` char(8) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_anagrafica` int(1) DEFAULT NULL,
@@ -2912,7 +2912,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_chiavi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2930,7 +2930,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2948,7 +2948,7 @@ CREATE TABLE `tipologie_contratti` (
   `id` int NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int DEFAULT NULL,
-  `nome` char(64) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_tesseramento` INT(1) NULL DEFAULT NULL,
@@ -2974,7 +2974,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `ordine` int(11) DEFAULT NULL,
   `codice` char(8) DEFAULT NULL,
   `numerazione` char(1) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_fattura` int(1) DEFAULT NULL,
@@ -3001,7 +3001,7 @@ CREATE TABLE `tipologie_edifici` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3019,7 +3019,7 @@ CREATE TABLE `tipologie_immobili` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_residenziale` int(1) DEFAULT NULL,
@@ -3039,7 +3039,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3057,7 +3057,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3075,7 +3075,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3093,7 +3093,7 @@ CREATE TABLE `tipologie_mastri` (
   `id` int NOT NULL,
   `id_genitore` int DEFAULT NULL,
   `ordine` int DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_magazzino` int DEFAULT NULL,
@@ -3114,7 +3114,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3132,7 +3132,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3151,7 +3151,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_periodi` (
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `codice` char(8) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3169,7 +3169,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_popup` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3187,7 +3187,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `id` int(11) NOT NULL,
   `id_genitore` int DEFAULT NULL,
   `ordine` int DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_colori` tinyint(1) DEFAULT NULL,
@@ -3216,7 +3216,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_produzione`int(1) DEFAULT NULL,
@@ -3241,7 +3241,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_bozza` int(1) DEFAULT NULL,
@@ -3262,7 +3262,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_tesseramenti` int(1) DEFAULT NULL,
@@ -3286,7 +3286,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_risorse` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3305,7 +3305,7 @@ CREATE TABLE `tipologie_telefoni` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3323,7 +3323,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_todo` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3341,7 +3341,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3374,7 +3374,7 @@ CREATE TABLE IF NOT EXISTS `todo` (
   `note_programmazione` text,
   `data_chiusura` date DEFAULT NULL,
   `note_chiusura` text,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `testo` text,
   `id_contatto` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
@@ -3398,7 +3398,7 @@ CREATE TABLE IF NOT EXISTS `udm` (
   `id` int(11) NOT NULL,
   `id_base` int(11) DEFAULT NULL,
   `conversione` float DEFAULT NULL,
-  `nome` char(32) NOT NULL,
+  `nome` char(32) DEFAULT NULL,
   `sigla` char(8) DEFAULT NULL,
   `note` text,
   `se_lunghezza` int(1) DEFAULT NULL,
@@ -3418,8 +3418,8 @@ CREATE TABLE IF NOT EXISTS `url` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
-  `url` char(255) NOT NULL,
-  `nome` char(128) NOT NULL,
+  `url` char(255) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -3477,8 +3477,8 @@ CREATE TABLE `valutazioni_certificazioni` (
 -- verifica: 2021-10-19 13:16 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `valute` (
   `id` int(11) NOT NULL,
-  `iso4217` char(3) COLLATE utf8_general_ci NOT NULL,
-  `html_entity` char(8) COLLATE utf8_general_ci NOT NULL,
+  `iso4217` char(3) COLLATE utf8_general_ci DEFAULT NULL,
+  `html_entity` char(8) COLLATE utf8_general_ci DEFAULT NULL,
   `utf8` char(1) COLLATE utf8_general_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

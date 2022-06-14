@@ -3,32 +3,6 @@
 -- questo file contiene le query per la creazione dei report
 --
 
---| 100000007000
--- __report_avanzamento_progetti__
--- tipologia: report
-DROP VIEW IF EXISTS `__report_avanzamento_progetti__`;
-
---| 100000007001
--- __report_avanzamento_progetti__
--- tipologia: report
-CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
-	SELECT
-		progetti.id,
-		count( td1.id ) AS backlog,
-		count( td2.id ) AS sprint,
-		count( td3.id ) AS fatto,
-		round( datediff( now(), progetti.data_accettazione ) / 7, 0 ) AS elapsed,
-		coalesce( ( count( td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) AS speed,
-		coalesce(
-			date_add( now(), interval ( ( count( td1.id ) + count( td2.id ) ) / ( coalesce( ( count( td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) ) ) week ),
-			'-'
-		) AS eta
-	FROM progetti
-		LEFT JOIN todo AS td1 ON ( td1.id_progetto = progetti.id AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL )
-		LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td1.data_chiusura IS NULL )
-		LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
-	GROUP BY progetti.id;
-
 --| 100000020000
 -- __report_giacenza_magazzini__
 -- tipologia: report
@@ -499,5 +473,29 @@ LEFT JOIN udm ON udm.id = (
   AND ( documenti_articoli.id_prodotto = ordine.codice_prodotto OR articoli.id = ordine.codice_articolo )
 )
 GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, conversione, udm;
+
+--| 100000027000
+-- __report_avanzamento_progetti__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_avanzamento_progetti__`;
+
+--| 100000027001
+-- __report_avanzamento_progetti__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
+  SELECT
+    progetti.id,
+    progetti.nome,
+    count( DISTINCT td1.id ) AS backlog,
+    count( DISTINCT td2.id ) AS sprint,
+    count( DISTINCT td3.id ) AS fatto,
+    round( datediff( now(), progetti.data_accettazione ) / 7, 0 ) AS elapsed,
+    coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) AS speed,
+    coalesce( date_add( now(), interval ( ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ) / ( coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) ) ) week ), '-' ) AS eta
+  FROM progetti
+    LEFT JOIN todo AS td1 ON ( td1.id_progetto = progetti.id AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL )
+    LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td1.data_chiusura IS NULL )
+    LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
+  GROUP BY progetti.id
 
 --| FINE FILE
