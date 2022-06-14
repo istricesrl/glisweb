@@ -4,12 +4,12 @@
 
         $ct['etc']['attivita'] = mysqlSelectRow(
             $cf['mysql']['connection'], 
-            'SELECT attivita_view.*, tipologie_attivita.nome AS tipologia, todo.id_responsabile , todo.testo AS testo_todo, concat_ws(\' \', coalesce(anagrafica.cognome, \'\'), coalesce(anagrafica.nome, \'\') ) AS responsabile, group_concat( DISTINCT telefoni.numero SEPARATOR \' | \' ) AS telefoni FROM attivita_view '.
-            'LEFT JOIN todo ON todo.id = attivita_view.id_todo '.
+            'SELECT attivita_view_static.*, tipologie_attivita.nome AS tipologia, todo.id_responsabile , todo.testo AS testo_todo, concat_ws(\' \', coalesce(anagrafica.cognome, \'\'), coalesce(anagrafica.nome, \'\') ) AS responsabile, group_concat( DISTINCT telefoni.numero SEPARATOR \' | \' ) AS telefoni FROM attivita_view_static '.
+            'LEFT JOIN todo ON todo.id = attivita_view_static.id_todo '.
             'LEFT JOIN anagrafica ON anagrafica.id = todo.id_responsabile '.
             'LEFT JOIN telefoni ON telefoni.id_anagrafica = anagrafica.id '.
-            'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita_view.id_tipologia '.
-            'WHERE attivita_view.id = ?  GROUP BY attivita_view.id ORDER BY attivita_view.ora_inizio_programmazione',
+            'LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita_view_static.id_tipologia '.
+            'WHERE attivita_view_static.id = ?  GROUP BY attivita_view_static.id ORDER BY attivita_view_static.ora_inizio_programmazione',
             array( array( 's' => $_REQUEST['attivita'] ) )
         );
 
@@ -20,6 +20,7 @@
             array( array( 's' => $ct['etc']['attivita']['id_responsabile'] ) )
         );
 
+        
         if( !empty($ct['etc']['attivita']['ora_inizio']) ){
             $now = new DateTime();
             $future_date = new DateTime($ct['etc']['attivita']['data_attivita'].' '.$ct['etc']['attivita']['ora_inizio']);
