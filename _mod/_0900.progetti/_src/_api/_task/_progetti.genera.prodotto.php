@@ -49,8 +49,33 @@
                 array( 's' => $status['id_progetto'] )
             )
         );
+        
+        if( $status['insert_prodotto'] == NULL && $status['update_progetti'] ){
+            $status['__status__'] = 'OK';
+        }
+        
 
+        if( ( isset($_REQUEST['__timestamp_inizio__']) || isset( $_REQUEST['__timestamp_fine__'] ) ) && ( ! empty($_REQUEST['__timestamp_inizio__']) || ! empty( $_REQUEST['__timestamp_fine__'] ) ) ){
 
+            if( !isset($_REQUEST['__timestamp_inizio__']) ){ $_REQUEST['__timestamp_inizio__'] = NULL; }
+            else { $_REQUEST['__timestamp_inizio__'] = strtotime($_REQUEST['__timestamp_inizio__']); }
+
+            if( !isset($_REQUEST['__timestamp_fine__']) ){ $_REQUEST['__timestamp_fine__'] = NULL; }
+            else { $_REQUEST['__timestamp_fine__'] = strtotime($_REQUEST['__timestamp_fine__']); }
+
+            $status['insert_pubblicazione'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO pubblicazioni ( ordine, id_prodotto, id_tipologia, timestamp_inizio, timestamp_fine ) VALUES ( ?, ?, ?, ?, ? )',
+                array(
+                    array( 's' => '10' ),
+                    array( 's' => $status['id_progetto'] ),
+                    array( 's' => '2' ),
+                    array( 's' => $_REQUEST['__timestamp_inizio__'] ),
+                    array( 's' => $_REQUEST['__timestamp_fine__'] )
+                )
+            );
+
+        }
 
     } else {
 

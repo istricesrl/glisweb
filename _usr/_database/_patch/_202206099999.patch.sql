@@ -846,9 +846,9 @@ ALTER TABLE `progetti`
 	ADD KEY `id_articolo` (`id_articolo`), 
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_periodo` (`id_periodo`),  
-    ADD CONSTRAINT `progetti_ibfk_06_nofollow`    FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `progetti_ibfk_07_nofollow`    FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `progetti_ibfk_08_nofollow`    FOREIGN KEY (`id_periodo`) REFERENCES `periodi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `progetti_ibfk_06_nofollow`    FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `progetti_ibfk_07_nofollow`    FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `progetti_ibfk_08_nofollow`    FOREIGN KEY (`id_periodo`) REFERENCES `periodi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| 202206099390
 ALTER TABLE `risorse` 
@@ -856,8 +856,8 @@ ALTER TABLE `risorse`
     ADD COLUMN `id_prodotto` char(32) DEFAULT NULL AFTER `id_articolo`,
 	ADD KEY `id_articolo` (`id_articolo`), 
 	ADD KEY `id_prodotto` (`id_prodotto`), 
-    ADD CONSTRAINT `risorse_ibfk_02_nofollow`    FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-    ADD CONSTRAINT `risorse_ibfk_03_nofollow`    FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+    ADD CONSTRAINT `risorse_ibfk_02_nofollow`    FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `risorse_ibfk_03_nofollow`    FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| 202206099400
 CREATE OR REPLACE VIEW `progetti_view` AS
