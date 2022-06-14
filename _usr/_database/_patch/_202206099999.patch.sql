@@ -838,4 +838,107 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 	GROUP BY prodotti.id
 ;
 
+--| 202206099380
+ALTER TABLE `progetti` 
+    ADD COLUMN `id_articolo` char(32) DEFAULT NULL AFTER `id_ranking`,
+    ADD COLUMN `id_prodotto` char(32) DEFAULT NULL AFTER `id_articolo`,
+	ADD COLUMN `id_periodo` int(11) DEFAULT NULL AFTER `id_prodotto`,
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_periodo` (`id_periodo`),  
+    ADD CONSTRAINT `progetti_ibfk_06_nofollow`    FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `progetti_ibfk_07_nofollow`    FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `progetti_ibfk_08_nofollow`    FOREIGN KEY (`id_periodo`) REFERENCES `periodi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202206099390
+ALTER TABLE `risorse` 
+    ADD COLUMN `id_articolo` char(32) DEFAULT NULL AFTER `id_testata`,
+    ADD COLUMN `id_prodotto` char(32) DEFAULT NULL AFTER `id_articolo`,
+	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
+    ADD CONSTRAINT `risorse_ibfk_02_nofollow`    FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `risorse_ibfk_03_nofollow`    FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202206099400
+CREATE OR REPLACE VIEW `progetti_view` AS
+	SELECT
+		progetti.id,
+		progetti.id_tipologia,
+		tipologie_progetti_path( tipologie_progetti.id ) AS tipologia,
+		progetti.id_pianificazione,
+		progetti.id_cliente,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
+		progetti.id_indirizzo,
+		progetti.id_ranking,
+		ranking.nome AS ranking,
+		progetti.id_articolo,
+		progetti.id_prodotto,
+		progetti.id_periodo,
+		progetti.nome,
+        progetti.id_sito,
+		progetti.template,
+		progetti.schema_html,
+		progetti.tema_css,
+		progetti.se_sitemap,
+		progetti.se_cacheable,
+		progetti.entrate_previste,
+		progetti.ore_previste,
+		progetti.costi_previsti,
+		progetti.entrate_accettazione,
+		progetti.data_accettazione,
+		progetti.data_chiusura,
+		progetti.entrate_totali,
+		progetti.uscite_totali,
+		progetti.data_archiviazione,
+		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		progetti.id_account_inserimento,
+		progetti.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			' cliente ',
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
+	GROUP BY progetti.id
+;
+
+--| 202206099410
+CREATE OR REPLACE VIEW `risorse_view` AS
+	SELECT
+		risorse.id, 
+		risorse.id_tipologia,
+		tipologie_risorse.nome AS tipologia,
+		risorse.codice, 
+		risorse.nome,
+		risorse.template,
+		risorse.schema_html,
+		risorse.tema_css,
+		risorse.se_sitemap,
+		risorse.se_cacheable,
+		risorse.id_sito,
+		risorse.id_testata, 
+		testate.nome AS testata,
+		risorse.id_articolo,
+		risorse.id_prodotto,
+		risorse.giorno_pubblicazione,
+		risorse.mese_pubblicazione,
+		risorse.anno_pubblicazione,
+		risorse.id_account_inserimento,
+		risorse.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			risorse.codice,
+			risorse.nome
+		) AS __label__
+	FROM risorse
+		LEFT JOIN tipologie_risorse ON tipologie_risorse.id = risorse.id_tipologia
+		LEFT JOIN testate ON testate.id = risorse.id_testata
+;
+
 --| FINE
