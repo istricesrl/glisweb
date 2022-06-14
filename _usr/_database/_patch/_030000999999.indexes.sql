@@ -508,6 +508,8 @@ ALTER TABLE `causali`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `se_trasporto` (`se_trasporto`), 
 	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`se_trasporto`);
 
 --| 030000004601
@@ -524,6 +526,8 @@ ALTER TABLE `causali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `certificazioni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+ 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`); 
 
 --| 030000004701
@@ -582,6 +586,7 @@ ALTER TABLE `colli`
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`ordine`,`codice`,`id_documento`),
 	ADD KEY `indice_dimensioni` (`id`,`ordine`,`codice`,`id_documento`,`larghezza`,`lunghezza`,`altezza`,`peso`,`volume`);
+
 
 --| 030000005051
 
@@ -676,10 +681,11 @@ ALTER TABLE `contatti`
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_inviante` (`id_inviante`),
+	ADD KEY `id_ranking` (`id_ranking`),	
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
-	ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`nome`,`timestamp_contatto`);
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`id_ranking`,`nome`,`timestamp_contatto`);
 
 --| 030000006701
 
@@ -952,6 +958,9 @@ ALTER TABLE `documenti`
 	ADD KEY `porto` (`porto`),
 	ADD KEY `cig` (`cig`),
 	ADD KEY `cup` (`cup`),
+	ADD KEY `id_causale` (`id_causale`),
+	ADD KEY `id_trasportatore` (`id_trasportatore`),
+	ADD KEY `porto` (`porto`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
@@ -979,6 +988,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_todo` (`id_todo`), 
 	ADD KEY `id_attivita` (`id_attivita`), 
 	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `id_udm` (`id_udm`), 
@@ -1651,7 +1661,7 @@ ALTER TABLE `mailing`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`);
 
---| 0300000190001
+--| 030000019001
 
 -- mailing
 -- tipolgia: tabella gestita
@@ -1987,6 +1997,25 @@ ALTER TABLE `pagine`
 -- pagine
 -- tipologia: tabella gestita
 ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000023500
+
+-- periodi
+-- tipologia: tabella di supporto
+-- verifica: 2022-05-24 12:57 Chiara GDL
+ALTER TABLE `periodi`
+	ADD PRIMARY KEY (`id`), 
+	ADD	KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `indice` ( `id`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`);
+
+--| 030000023501
+
+-- periodi
+-- tipologia: tabella di supporto
+ALTER TABLE `periodi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000023600
 
@@ -3399,6 +3428,27 @@ ALTER TABLE `tipologie_pagamenti`
 -- tipologie_pagamenti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000054100
+
+-- tipologie_periodi
+-- tipologia: tabella gestita
+-- verifica: 2022-05-24 11:00 Chiara GDL
+ALTER TABLE `tipologie_periodi`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000054101
+
+-- tipologie_periodi
+-- tipologia: tabella gestita
+ALTER TABLE `tipologie_periodi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000054200
 

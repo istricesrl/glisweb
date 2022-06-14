@@ -55,9 +55,9 @@
             'progetti_categorie' => array(
                 CONTROL_FULL => array( 'roots' )
             ),
-            'macro' => array(
-                CONTROL_FULL => array( 'roots' )
-            ),
+#            'macro' => array(
+#                CONTROL_FULL => array( 'roots' )
+#            ),
             'relazioni_progetti' => array(
                 CONTROL_FULL => array( 'roots' )
             ),

@@ -1,0 +1,61 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = '' %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account %}
+    {% set account = session.account.id %}
+    {% set anagrafica = session.account.id_anagrafica %}
+{% else %}
+    {% set account = '__null__' %}
+    {% set anagrafica = '__null__' %}
+{% endif %}
+
+{% if request.table.id %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% endif %}
+<script>
+    function chiudi() {
+
+        var documento =  $( '#_id_documento' ).val();
+        var note = encodeURIComponent($( '#_note' ).val());
+        getws('{{ site.url }}/_mod/_0400.documenti/_src/_api/_task/_invio.documento.php', 'id='+documento+'&note_invio='+note, 
+                function( data ){ 
+                    window.open('{{ pages["app.ordini"].url[ localization.language.ietf ] }}','_self');
+                }
+            );
+
+    }
+</script>
+
+<div class="modal fade" id="chiudi_ordine" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">vuoi confermare il tuo ordine?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row form-group">
+                <input type="hidden" id="_id_documento" name="_id_documento" value="{{ request.documenti.id }}" >
+                  <div class="col-12 col-md  mt-3">
+                    <span class="label-top">note aggiuntive</span>
+                    {{ frm.textarea( table, '', '', 'note', '', 3, request, '', '', 'form-control-lg' ) }}
+                  </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">annulla</button>
+          <button type="button" class="btn  btn-secondary" onclick="chiudi()">conferma</button>
+        </div>
+      </div>
+    </div>
+  </div>
