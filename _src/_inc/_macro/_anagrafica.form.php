@@ -198,8 +198,14 @@
 	}
 */
 
+	$ct['page']['contents']['metro'][NULL][] = array(
+		'modal' => array( 'id' => 'modal-inserimento-indirizzi', 'include' => 'inc/anagrafica.form.modal.aggiungi.indirizzo.html' )
+	);
+
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+	require DIR_SRC_INC_MACRO . '_default.tools.php';
