@@ -58,13 +58,9 @@
             ),
             'paypal-advanced' => array(
                 'id'            => 'paypal-advanced',                                               // ID del provider per le tendine
-                'business'      => NULL,                                                            // 
-                'action_url'    => 'https://www.sandbox.paypal.com/cgi-bin/webscr',                 // pagina per l'action del form di riepilogo
-                'method'        => 'post',                                                          // metodo per il form di riepilogo
-                'return'        => 'carrello_esito',                                                // pagina di ritorno in caso di pagamento completato con successo o fallito
-                'cancel'        => 'carrello',                                                      // pagina di ritorno in caso di interruzione della procedura di pagamento
-                'listener'      => '_mod/_4170.ecommerce/_src/_api/_paypal.listener.php',           // listener per la conferma di pagamento in background
-                '__label__'     => 'PayPal Advanced'                                                         // etichetta del provider per le tendine
+                'token'         => NULL,
+                'token_api'     => 'https://api-m.sandbox.paypal.com/v1/identity/generate-token',   // API alla quale richiedere il Client Token
+                '__label__'     => 'PayPal Advanced'                                                // etichetta del provider per le tendine
             )
         )
     );
