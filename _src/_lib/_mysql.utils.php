@@ -302,6 +302,7 @@
                     'forced'	        => array( $cn['ietf']	=> $cn['url_custom'] ),
                     'custom'	        => array( $cn['ietf']	=> $cn['rewrite_custom'] ),
                     'title'	            => array( $cn['ietf']	=> $cn['title'] ),
+                    'cappello'	        => array( $cn['ietf']	=> $cn['cappello'] ),
                     'h1'	            => array( $cn['ietf']	=> $cn['h1'] ),
                     'h2'	            => array( $cn['ietf']	=> $cn['h2'] ),
                     'h3'	            => array( $cn['ietf']	=> $cn['h3'] ),

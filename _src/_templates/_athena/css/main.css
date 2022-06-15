@@ -706,7 +706,7 @@ select.select-tabs {
 main {
     padding-top: 60px;
     padding-bottom: 15px;
-    z-index: 150;
+    z-index: 2500;
 }
 
 /* stili del footer */
@@ -994,6 +994,18 @@ div.combobox-container > .spinner-border {
 
 /* stile dei modal */
 
+.modal {
+    z-index: 5100 !important;
+}
+
 .modal p {
     margin: 0px;
+}
+
+.modal-backdrop {
+    z-index: 5050 !important;
+}
+
+.modal-content {
+    margin: 2px auto;
 }

@@ -30,6 +30,22 @@
 	    'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY nome ASC'
 	);
 
+	// tendina tipologie indirizzi
+	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_indirizzi_view ORDER BY nome ASC'
+	);
+
+    // tendina comuni
+	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM comuni_view'
+	);
+
     // tendina sesso
 	$ct['etc']['select']['sesso'] = array( 
 	    array( 'id' => '-', '__label__' => '-' ),
@@ -197,9 +213,15 @@
 	    $ct['etc']['select']['id_pec_sdi'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM mail_view WHERE id_anagrafica = ? AND se_pec = 1', array( array( 's' => $_REQUEST['anagrafica']['id'] ) ) );
 	}
 */
-
+/*
+	$ct['page']['contents']['metro'][NULL][] = array(
+		'modal' => array( 'id' => 'modal-inserimento-indirizzi', 'include' => 'inc/anagrafica.form.modal.aggiungi.indirizzo.html' )
+	);
+*/
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+	require DIR_SRC_INC_MACRO . '_default.tools.php';
