@@ -979,7 +979,6 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
-  `id_collo` int(11) DEFAULT NULL, 
   `quantita` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `importo_netto_totale` decimal(9,2) DEFAULT NULL,
