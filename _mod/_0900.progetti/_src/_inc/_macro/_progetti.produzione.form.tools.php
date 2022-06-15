@@ -25,20 +25,27 @@
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
 	    'azioni' => array(
-		'label' => 'azioni'
+		    'label' => 'azioni'
+        ),
+	    'report' => array(
+		    'label' => 'report'
 	    )
 	);
-/*
-    // modal per la conferma di invio richiesta sostituzione
-    $ct['page']['contents']['metro']['azioni'][] = array(
-        'modal' => array('id' => 'elimina', 'include' => 'inc/progetti.produzione.form.tools.modal.elimina.html' ),
-        'icon' => NULL,
-	    'fa' => 'fa-trash',
-	    'title' => 'elimina progetto',
-	    'text' => 'elimina il progetto e gli oggetti to-do e attività collegati'
-    );
-*/
+
+    // RELAZIONI CON IL MODULO TODO
+    if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
+
+        $ct['page']['contents']['metro']['report'][] = array(
+            'url' => '/report/1200.todo/progetti.todo?idProgetto='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'target' => '_blank',
+            'icon' => NULL,
+            'fa' => 'fa-file-text-o',
+            'title' => 'report TXT attività progeto',
+            'text' => 'report in formato TXT delle attività in corso per il progetto'
+        );
+
+    }
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
     require DIR_SRC_INC_MACRO . '_default.tools.php';
-

@@ -20,6 +20,9 @@
     // timer
 	$start = timerNow();
 
+    // header
+    buildContentHeader();
+
     // ...
     if( isset( $_REQUEST['idProgetto'] ) ) {
 
@@ -27,29 +30,54 @@
         $proj = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM progetti WHERE id = ?', array( array( 's' => $_REQUEST['idProgetto'] ) ) );
 
         // dati
-        $dati = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM todo WHERE id_progetto = ? AND data_programmazione IS NULL and settimana_programmazione IS NULL', array( array( 's' => $_REQUEST['idProgetto'] ) ) );
-
-        // header
-        buildContentHeader();
+        $dati = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM todo WHERE id_progetto = ? AND data_chiusura IS NULL', array( array( 's' => $_REQUEST['idProgetto'] ) ) );
 
         // intestazione report
         echo txtHeader( $proj['nome'] );
+
+    } else {
+
+        // dati
+        $dati = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM todo WHERE data_chiusura IS NULL ORDER BY id_progetto' );
+        
+        // intestazione report
+        echo txtHeader( 'stato generale delle cose da fare' );
+
+    }
 
 #        // chiusura report
 #        echo txtLine( '=' );
 
         // elenco delle todo
         foreach( $dati AS $key => $dato ) {
+
             echo PHP_EOL;
-            echo txtSubtitle( '#' . $dato['id'] . ' ' . $dato['nome'] );
+            echo PHP_EOL;
+
+            if( ! isset( $_REQUEST['idProgetto'] ) ) {
+                if( ! isset( $proj ) || $proj['id'] != $dato['id_progetto'] ) {
+                    $proj = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM progetti WHERE id = ?', array( array( 's' => $dato['id_progetto'] ) ) );
+                }
+                # echo txtSubtitle( $proj['nome'] );
+                echo txtFullText( '###' . ' ' . $proj['nome'] );
+            }
+
+#            echo txtSubtitle( '#' . $dato['id'] . ' ' . $dato['nome'] );
+            echo txtFullText( '#' . $dato['id'] . ' ' . $dato['nome'] );
 #            echo txtFullText( $dato['testo'] );
-            foreach( explode( "\n", $dato['testo'] ) as $todo ) {
+            foreach( explode( "\n", trim( $dato['testo'] ) ) as $todo ) {
                 echo txtFullText( $todo );
             }
+
             echo PHP_EOL;
+            echo PHP_EOL;
+
             if( $key === array_key_last( $dati ) ) {
                 echo txtDateTimeLine( '=' );
+            } else {
+                echo txtFullLine();
             }
+
         }
 
 /*
@@ -82,6 +110,3 @@
         // debug
         // timer_debug( $t );
         // print_r( $dati );
-
-    }
-

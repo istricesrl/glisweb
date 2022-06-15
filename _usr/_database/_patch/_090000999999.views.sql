@@ -802,13 +802,13 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id_progetto,
 		progetti.nome AS progetto,
 		attivita.id_matricola,
+        attivita.id_immobile,
 		attivita.id_todo,
 		todo.nome AS todo,
 		attivita.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
 		attivita.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
-        attivita.id_immobile,
 		attivita.codice_archivium,
 		attivita.token,
 		attivita.id_account_inserimento,
@@ -7535,10 +7535,8 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		todo.id_account_aggiornamento,
 		concat(
 			todo.nome,
-			' per ',
-			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ),
-			' su ',
-			todo.id_progetto
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
 		) AS __label__
 	FROM todo
 		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
@@ -7547,6 +7545,7 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
 ;
 
 --| 090000062000

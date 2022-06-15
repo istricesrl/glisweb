@@ -95,7 +95,11 @@
 
 	$t = wordwrap( $t, $w, "\n" );
 
-	if( $j === true ) {
+    if( substr( $t, 0, 1 ) == '-' ) {
+        $j = false;
+    }
+
+    if( $j === true ) {
 	    $lines = explode( "\n", $t );
 	    foreach( $lines as $key => &$line ) {
 		if( substr( $line, -1 ) != '.' && $key !== array_key_last( $lines ) ) {
