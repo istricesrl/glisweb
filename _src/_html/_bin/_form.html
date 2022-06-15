@@ -136,7 +136,7 @@
 	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
     </div>{% endif %}
     {% if modal %}<div class="col-auto p-0 pl-1">
-    <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="" data-toggle="modal" data-target="#{{ modal }}"><i class="fa fa-plus-circle"></i></button>
+    <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#{{ modal }}').setAttribute('disabled');$('#{{ modal }}').toggleAttribute('disabled');$('#{{ modal }}').appendTo('#form-{{ table }}').modal('show');$('.modal-backdrop').appendTo('#form-{{ table }}');" data-toggle="modal" data-target=""><i class="fa fa-plus-circle"></i></button>
     </div>{% endif %}
 </div>
 {% endmacro %}

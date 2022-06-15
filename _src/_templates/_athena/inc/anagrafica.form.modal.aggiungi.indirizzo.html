@@ -1,11 +1,5 @@
 {% import '_bin/_form.html' as frm %}
-{% set table = 'indirizzi' %}
-<script>
-    function salvaIndirizzo( t ) {
-					$( "#form-indirizzi" ).submit();
-	   // window.open( '/print/indirizzario.csv?__categoria__='+data, '_self');
-    }
-</script>
+{% set modalTable = 'indirizzi' %}
 <div class="modal" tabindex="-1" role="dialog" id="modal-inserimento-indirizzi">
 	<div class="modal-dialog" role="document">
 	<div class="modal-content">
@@ -15,53 +9,50 @@
 		</div>
 		<div class="modal-body">
 		<div class="container-fluid">
-			<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="" method="post" autocomplete="off">
 
 				{# CAMPI HIDDEN DI BASE #}
-				<input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-				<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-				<input type="hidden" id="timestamp" name="{{ table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}">
-				<input type="hidden" id="account" name="{{ table }}[id_account_inserimento]" value="{{ account }}">
+				<input type="hidden" id="method" name="{{ modalTable }}[__method__]" value="{{ method }}" disabled>
+				<input type="hidden" id="reset" name="{{ modalTable }}[__reset__]" value="1" disabled>
+				<input type="hidden" id="timestamp" name="{{ modalTable }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+				<input type="hidden" id="account" name="{{ modalTable }}[id_account_inserimento]" value="{{ account }}" disabled>
 				{% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 		
 			<div class="form-group form-row">
 				<div class="col-auto">
 				<span class="label-top">tipo</span>
-				{{ frm.select( 'indirizzi', '', '', 'id_tipologia', '', etc.select.tipologie_indirizzi, request ) }}
-				</div>
+				{{ frm.select( modalTable, '', '', 'id_tipologia', '', etc.select.tipologie_indirizzi, '', '', '', '', '', '', 2 ) }}
+			</div>
 				<div class="col">
 				<span class="label-top ">indirizzo</span>
-					{{ frm.inputRequired(  'indirizzi', '', '', 'indirizzo', '', '', request ) }}
+					{{ frm.inputRequired(  modalTable, '', '', 'indirizzo', '', '', '', '', '', '', 2 ) }}
 				</div>
 			</div>
 			<div class="form-group form-row">
 				<div class="col-2 col-md-2">
 					<span class="label-top ">civico</span>
-					{{ frm.input(  'indirizzi', '', '', 'civico', '', '', request ) }}
+					{{ frm.input(  modalTable, '', '', 'civico', '', '', '', '', '', '', '', 2 ) }}
 				</div>
-
 				<div class="col-3 col-md-3">
 				<span class="label-top">cap</span>
-				{{ frm.input(  'indirizzi', '', '', 'cap', '', '', request ) }}
+				{{ frm.input(  modalTable, '', '', 'cap', '', '', '', '', '', '', '', 2 ) }}
 				</div>
 				<div class="col">
 					<span class="label-top ">località</span>
-					{{ frm.input(  'indirizzi',  '', '', 'localita', '', '', request ) }}
+					{{ frm.input(  modalTable,  '', '', 'localita', '', '', '', '', '', '', '', 2 ) }}
 				</div>
 			</div>
 			<div class="form-group form-row">
 
 				<div class="col-12 col-md">
 				<span class="label-top ">comune</span>
-					{{ frm.selectBox(  'indirizzi', '', '', 'id_comune', 'comune', etc.select.comuni, request, '', '', 1 ) }}
+					{{ frm.selectBox(  modalTable, '', '', 'id_comune', 'comune', etc.select.comuni, '', '', '', 1, '', '', '', '', '', '', '', '', '', '', 2 ) }}
 				</div>
 			</div>
 	
 		</div>
 		</div>
 		<div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="salvaIndirizzo(this);" >salva</button>
+		<button type="submit" class="btn btn-secondary btn-sm" onclick="submitFormOkay = true;" id="duplica-btn">salva</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 		</div>
 	</div>
