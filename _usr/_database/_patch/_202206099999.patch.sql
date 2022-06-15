@@ -941,4 +941,29 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 		LEFT JOIN testate ON testate.id = risorse.id_testata
 ;
 
+--| 202206099420
+ALTER TABLE `tipologie_todo` DROP KEY `indice`; 
+
+--| 202206099430
+ALTER TABLE `tipologie_todo` 
+	ADD COLUMN   `se_agenda` int(1) DEFAULT NULL after `font_awesome`,
+	ADD KEY `se_agenda` (`se_agenda`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_agenda`);
+
+--| 202206099440
+CREATE OR REPLACE VIEW `tipologie_todo_view` AS
+	SELECT
+		tipologie_todo.id,
+		tipologie_todo.id_genitore,
+		tipologie_todo.ordine,
+		tipologie_todo.nome,
+		tipologie_todo.html_entity,
+		tipologie_todo.font_awesome,
+		tipologie_todo.se_agenda,
+		tipologie_todo.id_account_inserimento,
+		tipologie_todo.id_account_aggiornamento,
+		tipologie_todo_path( tipologie_todo.id ) AS __label__
+	FROM tipologie_todo
+;  
+
 --| FINE

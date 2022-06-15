@@ -7516,6 +7516,7 @@ CREATE OR REPLACE VIEW `tipologie_todo_view` AS
 		tipologie_todo.nome,
 		tipologie_todo.html_entity,
 		tipologie_todo.font_awesome,
+		tipologie_todo.se_agenda,
 		tipologie_todo.id_account_inserimento,
 		tipologie_todo.id_account_aggiornamento,
 		tipologie_todo_path( tipologie_todo.id ) AS __label__
