@@ -117,6 +117,7 @@
             {% set subtable = 'relazioni_documenti' %}
             <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][__reset__]" value="">
             <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][id_documento]" value="__parent_id__">
+            <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][id_ruolo]" value="3">
             <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][id_documento_collegato]" value="{{ request.__ordine_da_evadere__ }}">
             {% endif %}
 

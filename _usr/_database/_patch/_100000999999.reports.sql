@@ -286,24 +286,27 @@ SELECT
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+          ' ',
 					udm_dimensioni.sigla
 				),
 				concat(
 					articoli.peso,
+          ' ',
 					udm_peso.sigla
 				),
 				concat(
 					articoli.volume,
+          ' ',
 					udm_volume.sigla
 				),
 				concat(
-					
 					articoli.capacita,
+          ' ',
 					udm_capacita.sigla
 				),
 				concat(
-					
 					articoli.durata,
+          ' ',
 					udm_durata.sigla
 				),
 				''
@@ -345,24 +348,27 @@ SELECT
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+          ' ',
 					udm_dimensioni.sigla
 				),
 				concat(
 					articoli.peso,
+          ' ',
 					udm_peso.sigla
 				),
 				concat(
 					articoli.volume,
+          ' ',
 					udm_volume.sigla
 				),
 				concat(
-					
 					articoli.capacita,
+          ' ',
 					udm_capacita.sigla
 				),
 				concat(
-					
 					articoli.durata,
+          ' ',
 					udm_durata.sigla
 				),
 				''
