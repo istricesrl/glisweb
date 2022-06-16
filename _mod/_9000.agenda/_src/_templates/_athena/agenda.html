@@ -152,7 +152,7 @@
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
-            <b>{{ e.nome }}</b>{% if e.id_todo %} per {{ e.nome_todo }} su {{ e.progetto_todo }}{% endif %}
+            <b>{{ e.nome }}</b>{% if e.id_todo %} su {{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
 		    {% if e.id_cliente %}<br>cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %}</span> {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>

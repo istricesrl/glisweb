@@ -1004,7 +1004,8 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 (10,	5,	NULL,	'DT',	'decorrenza termini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (11,	5,	NULL,	'EC',	'esito committente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (12,	5,	NULL,	'NE',	'notifica di esito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(13,	5,	NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(13,	5,	NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050800
 
@@ -1247,10 +1248,11 @@ REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_todo
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_agenda`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'produzione',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	1,	NULL,	'lavoro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000056800
 

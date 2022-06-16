@@ -7564,6 +7564,7 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		todo.id,
 		todo.id_tipologia,
 		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
 		todo.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		todo.id_cliente,
