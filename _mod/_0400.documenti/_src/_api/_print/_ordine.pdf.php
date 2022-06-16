@@ -71,8 +71,12 @@
     );
 
     if( empty($sri) ){
-        die( print_r('indirizzo assente per '. $src['denominazione_fiscale']) );
-    }
+       // die( print_r('indirizzo assente per '. $src['denominazione_fiscale']) );
+	   $sri['indirizzo_fiscale'] = '';
+    } else {
+		$sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
+
+	}
     // indirizzo fiscale
     $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
 

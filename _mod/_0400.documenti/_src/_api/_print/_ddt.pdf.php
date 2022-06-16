@@ -77,8 +77,13 @@
     );
 
     // indirizzo fiscale
-    $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
-
+    if( empty($sri) ){
+		// die( print_r('indirizzo assente per '. $src['denominazione_fiscale']) );
+		$sri['indirizzo_fiscale'] = '';
+	 } else {
+		 $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
+ 
+	 }
     $sdef['linee'][] = $src['denominazione_fiscale'];
     $sdef['linee'][] = $sri['indirizzo_fiscale'];
     $sdef['linee'][] = 'P.IVA ' . $src['partita_iva'];
@@ -117,8 +122,12 @@
         array( array( 's' => $dst['id'] ) )
     );
 
-    // indirizzo fiscale
-    $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
+	if( empty($dsi) ){
+		// die( print_r('indirizzo assente per '. $src['denominazione_fiscale']) );
+		$dsi['indirizzo_fiscale'] = '';
+	 } else {
+		$dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
+	 }
 
     $sdec['linee'][] = $dst['denominazione_fiscale'];
     $sdec['linee'][] = $dsi['indirizzo_fiscale'];
