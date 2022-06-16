@@ -704,8 +704,8 @@ select.select-tabs {
 /* stili del main */
 
 main {
-    margin-top: 45px;
-    padding-top: 60px;
+    margin-top: 60px;
+/*    padding-top: 60px; */
     padding-bottom: 15px;
     z-index: 2500;
 }
