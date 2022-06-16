@@ -2974,6 +2974,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `codice` char(8) DEFAULT NULL,
   `numerazione` char(1) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
+  `sigla` char(16) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `se_fattura` int(1) DEFAULT NULL,
@@ -3350,6 +3351,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000056900
+
+-- tipologie_zone
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 16:40 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_zone` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000060000
 
 -- todo
@@ -3516,6 +3535,87 @@ CREATE TABLE IF NOT EXISTS `video` (
   `target` char(255) DEFAULT NULL,
   `orientamento` enum('L','P') DEFAULT NULL,
   `ratio` char(8) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000100000
+
+-- zone
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE TABLE IF NOT EXISTS `zone` (
+`id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `nome` char(64) NOT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000100100
+
+-- zone_cap
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE TABLE IF NOT EXISTS `zone_cap` (
+`id` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_zona` int(11) NOT NULL,
+  `cap` char(8) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000100200
+
+-- zone_indirizzi
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE TABLE IF NOT EXISTS `zone_indirizzi` (
+`id` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_zona` int(11) NOT NULL,
+  `id_indirizzo` int(11) NOT NULL,  
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000100300
+
+-- zone_provincie
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE TABLE IF NOT EXISTS `zone_provincie` (
+`id` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_zona` int(11) NOT NULL,
+  `id_provincia` int(11) NOT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000100400
+
+-- zone_stati
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE TABLE IF NOT EXISTS `zone_stati` (
+`id` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_zona` int(11) NOT NULL,
+  `id_stato` int(11) NOT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
