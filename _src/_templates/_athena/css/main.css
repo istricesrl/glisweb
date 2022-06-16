@@ -512,7 +512,7 @@ header.subform-intestazione {
     position: absolute;
     right: 0;
     top: 45px;
-    z-index: 999;
+    z-index: 9000;
 }
 
 #info h2, #jobs h2, #alert h2 {
