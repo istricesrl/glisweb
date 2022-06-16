@@ -1900,6 +1900,8 @@ CREATE OR REPLACE VIEW zone_stati_view AS
 ; 
 
 --| 202206160510
+UPDATE `tipologie_documenti` SET `se_ordine` = '1' WHERE `id` = '7';
+
 --| 202206160520
 --| 202206160530
 --| 202206160540

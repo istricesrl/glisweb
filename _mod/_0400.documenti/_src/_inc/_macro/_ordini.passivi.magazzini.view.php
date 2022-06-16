@@ -18,10 +18,10 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'ordini_attivi';
+	$ct['view']['table'] = 'ordini_passivi';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'ordini.magazzini.form';
+	$ct['view']['open']['page'] = 'ordini.passivi.magazzini.form';
 
     // tabella per la gestione degli oggetti esistenti
 	$ct['view']['open']['table'] = 'documenti';
