@@ -1,5 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -59,6 +60,9 @@
                 </div>
             </div>
             {% else %}
+                {# SUBFORM PUBBLICAZIONI #}
+                {{ sub.pubblicazioni( 'prodotti', 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
+        <legend>articoli</legend>
                 {% include 'inc/view.html' %}
             {% endif %}
        

@@ -64,13 +64,13 @@
                         $params[] = array( 's' => $_REQUEST['__l__'] );
                     } 
 
-                    if(!empty($where)){$where = implode(' AND ', $where);}
+                    if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
                     else{ $where = '';}
                     
                     // creazione todo [andrebbe fatto un job?]
                     foreach( $restult as $data ){
                         $params[count($params)] =  array( 's' => $data );
-
+                      
                         mysqlQuery( $cf['mysql']['connection'],
                         'DELETE attivita FROM attivita LEFT JOIN todo ON todo.id = attivita.id_todo WHERE  todo.id_progetto = ? '.$where.' AND  todo.data_programmazione = ? ',
                         $params
@@ -90,8 +90,11 @@
                 mysqlQuery( $cf['mysql']['connection'], 'CALL todo_view_static( ? )', array( array( 's' => NULL ) ) );
                 logWrite( 'aggiornata todo view statica per tutti i record', 'speed' );
 
-                mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static()' );
+                mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => NULL ) ) );
                 logWrite( 'aggiornata attivita view statica per tutti i record', 'speed' );
+
+                $status['__status__'] = 'OK';
+
             }
         } else {
 
@@ -115,7 +118,7 @@
             $params[] = array( 's' => $_REQUEST['__d_i__'] );
             $params[] = array( 's' => $_REQUEST['__d_f__'] );
 
-            if(!empty($where)){$where = implode(' AND ', $where);}
+            if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
             else{ $where = '';}
 
             mysqlQuery( $cf['mysql']['connection'],
@@ -134,6 +137,9 @@
 
          mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => NULL ) )  );
          logWrite( 'aggiornata attivita view statica per tutti i record', 'speed' );
+
+         $status['__status__'] = 'OK';
+
         }
 
     } else {
