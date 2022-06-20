@@ -194,9 +194,10 @@ CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
 CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) NOT NULL,
-  `id_indirizzo` int(11) NOT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `interno` char(8) DEFAULT NULL,
+  `indirizzo` char(255) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,

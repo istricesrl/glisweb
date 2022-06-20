@@ -1675,7 +1675,7 @@ ALTER TABLE `zone_stati`
 	ADD UNIQUE KEY `unica` (`id_zona`,`id_stato`), 
 	ADD KEY `ordine` (`ordine`),	
 	ADD KEY `id_stato` (`id_stato`),
-    	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+    ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),	
 	ADD KEY `indice` (`id`,`id_zona`,`id_stato`,`ordine`);
 
@@ -1717,7 +1717,6 @@ ALTER TABLE `zone_stati`
     ADD CONSTRAINT `zone_stati_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| 202206160430
-
 CREATE
 	DEFINER = CURRENT_USER()
 	FUNCTION `zone_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci

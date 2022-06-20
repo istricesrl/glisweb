@@ -539,17 +539,12 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		anagrafica_indirizzi.id,
 		anagrafica_indirizzi.id_anagrafica,
 		anagrafica_indirizzi.id_indirizzo,
-		concat(
-			indirizzi.indirizzo,
-			' ',
-			comuni.nome,
-			' ',
-			provincie.sigla
-		) AS indirizzo,
+		IF( anagrafica_indirizzi.id_indirizzo IS NOT NULL , concat(indirizzi.indirizzo,' ',comuni.nome,' ',provincie.sigla), anagrafica_indirizzi.indirizzo) AS indirizzo,
 		anagrafica_indirizzi.id_ruolo,
 		ruoli_indirizzi.nome AS ruolo,
 		anagrafica_indirizzi.id_account_inserimento,
 		anagrafica_indirizzi.id_account_aggiornamento,
+		IF( anagrafica_indirizzi.id_indirizzo IS NOT NULL ,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
@@ -562,7 +557,14 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 			comuni.nome,
 			' ',
 			provincie.sigla
-		) AS __label__
+		),
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			' / ',
+			tipologie_indirizzi.nome,
+			' ',
+			anagrafica_indirizzi.indirizzo
+		) )AS __label__
 	FROM anagrafica_indirizzi
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
 		LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
