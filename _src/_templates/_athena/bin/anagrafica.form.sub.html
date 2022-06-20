@@ -96,7 +96,11 @@
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable }}">
+	{% if request.__preset__.anagrafica_indirizzi %}
+	{% set require = 0 %}
+	{% else %}
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+	{% endif %}
     {{ frm.subformLegend( subtable, legend ) }}
     {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}

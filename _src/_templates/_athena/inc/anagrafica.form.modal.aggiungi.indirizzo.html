@@ -13,6 +13,12 @@
 				{# CAMPI HIDDEN DI BASE #}
 				<input type="hidden" id="method" name="{{ modalTable }}[__method__]" value="{{ method }}" disabled>
 				<input type="hidden" id="reset" name="{{ modalTable }}[__reset__]" value="1" disabled>
+				{% if etc.preset %}
+				<input type="hidden" id="preset_table" name="{{ modalTable }}[__preset_table__]" value="{{ etc.preset.table }}" disabled>
+				<input type="hidden" id="preset_subtable" name="{{ modalTable }}[__preset_subtable__]" value="{{ etc.preset.subtable }}" disabled>
+				<input type="hidden" id="preset_counter" name="{{ modalTable }}[__preset_counter__]" value="{{ etc.preset.counter }}" disabled>
+				<input type="hidden" id="preset_field" name="{{ modalTable }}[__preset_field__]" value="{{ etc.preset.field }}" disabled>
+				{% endif %}
 				<input type="hidden" id="timestamp" name="{{ modalTable }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
 				<input type="hidden" id="account" name="{{ modalTable }}[id_account_inserimento]" value="{{ account }}" disabled>
 				{% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}

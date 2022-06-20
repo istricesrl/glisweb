@@ -46,6 +46,12 @@
 	    'SELECT id, __label__ FROM comuni_view'
 	);
 
+	// preset post inserimento rapido 
+	$ct['etc']['preset']['table'] = 'anagrafica';
+	$ct['etc']['preset']['subtable'] = 'anagrafica_indirizzi';
+	$ct['etc']['preset']['counter'] = isset( $_REQUEST['anagrafica']['anagrafica_indirizzi'] ) ? count( $_REQUEST['anagrafica']['anagrafica_indirizzi'] ) : 0;
+	$ct['etc']['preset']['field'] = 'id_indirizzo';
+
     // tendina sesso
 	$ct['etc']['select']['sesso'] = array( 
 	    array( 'id' => '-', '__label__' => '-' ),
