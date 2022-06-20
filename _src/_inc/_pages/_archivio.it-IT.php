@@ -355,4 +355,57 @@
 		
 	);
 
+	// vista zone
+	$p['zone.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'zone' ),
+		'h1'		=> array( $l		=> 'zone' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_zone.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'zone.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'zone' ),
+																				'priority'	=> '050' ) ) )
+	);
+
+	// gestione zone
+	$p['zone.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_zone.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'zone.form') )
 		
+	);
+	
+	// vista tipologie zone
+	$p['tipologie.zone.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.zone.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione zone
+	$p['tipologie.zone.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'tipologie.zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.zone.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.zone.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.form') )
+		
+	);
+	

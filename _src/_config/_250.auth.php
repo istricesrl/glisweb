@@ -213,6 +213,9 @@
 	    'tipologie_periodi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
+		'tipologie_zone' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
 	    'ranking' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
@@ -232,6 +235,10 @@
 #			CONTROL_FULL => array( 'roots' )
 #		),
 	    'video' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
+		),
+	    'zone' => array(
 			CONTROL_FULL => array( 'roots' ),
 			CONTROL_FILTERED => array( 'staff' )
 		)
