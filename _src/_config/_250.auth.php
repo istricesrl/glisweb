@@ -207,9 +207,9 @@
 #	    'test' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'tipologie_anagrafica' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'zone_indirizzi' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 	    'tipologie_periodi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),

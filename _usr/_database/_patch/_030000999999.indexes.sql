@@ -1253,6 +1253,14 @@ ALTER TABLE `immobili`
   ADD KEY `scala` (`scala`),
   ADD KEY `piano` (`piano`),
   ADD KEY `interno` (`interno`),
+  ADD KEY `catasto_foglio` (`catasto_foglio`),
+  ADD KEY `catasto_particella` (`catasto_particella`),
+  ADD KEY `catasto_sub` (`catasto_sub`),
+  ADD KEY `catasto_categoria` (`catasto_categoria`),
+  ADD KEY `catasto_classe` (`catasto_classe`),
+  ADD KEY `catasto_consistenza` (`catasto_consistenza`),
+  ADD KEY `catasto_superficie` (`catasto_superficie`),
+  ADD KEY `catasto_rendita` (`catasto_rendita`),
   ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
