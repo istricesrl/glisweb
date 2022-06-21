@@ -40,9 +40,9 @@
 #        'progetto' => 'progetto',
 #        'matricola' => 'matricola'
 'data' => 'data',
-'tipologia' => 'tipologia',
+'tipologia' => 'documento',
 'numero' => 'numero',
-'id_articolo' => 'codice',
+//'id_articolo' => 'codice',
 'articolo' => 'descrizione',
 'carico' => 'carico',
 'scarico' => 'scarico',
@@ -66,17 +66,20 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none',
         'id_riga' => 'd-none',
+        'numero' => 'd-none',
         'data' => 'no-wrap', 
 #        'id_listino' => 'd-none',
 #        'id_tipologia' => 'd-none',
 #        'id_emittente' => 'd-none',
-#        'data_lavorazione' => 'text-left',
+        'tipologia' => 'text-left',
+        'carico' => 'text-right',
+        'scarico' => 'text-right',
 #	    'descrizione' => 'text-left',
 #        'id_articolo' => 'text-left',
 #        'importo' => 'text-right',
 #        'cliente' => 'text-left',
 #        'emittente' => 'text-left'
-'articolo' => 'text-left',
+'articolo' => 'text-left'
 );
 
 #    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
@@ -88,8 +91,9 @@
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // trasformazione icona attivo/inattivo
-	///foreach( $ct['view']['data'] as &$row ) {
-	//}
+	foreach( $ct['view']['data'] as &$row ) {
+        $row['tipologia'] .= ' n° '.$row['numero'];
+	}
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

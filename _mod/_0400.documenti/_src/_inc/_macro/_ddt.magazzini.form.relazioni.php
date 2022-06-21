@@ -23,12 +23,12 @@
 	$ct['form']['table'] = 'documenti';
 
     // tendina  agente
-/*	$ct['etc']['select']['ruoli'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['ruoli'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_documenti_view WHERE se_relazioni IS NOT NULL'
-    );*/
+	    'SELECT id, __label__ FROM ruoli_documenti_view WHERE se_documenti = 1'
+    );
 
     // tendina documenti
 	$ct['etc']['select']['documenti'] = mysqlCachedIndexedQuery(

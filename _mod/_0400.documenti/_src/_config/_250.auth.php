@@ -75,6 +75,14 @@
             'ordini' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
+            ),
+            'ordini_attivi' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
+            ),
+            'ordini_passivi' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

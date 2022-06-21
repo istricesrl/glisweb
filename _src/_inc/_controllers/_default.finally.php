@@ -24,7 +24,17 @@
 	    case METHOD_PUT:
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
-			
+		//	print_r($d);
+
+			if( isset( $d['id'] )  && isset( $d['__preset_table__'] ) && isset( $d['__preset_field__'] ) ){
+
+				if( isset( $d['__preset_subtable__'] ) && !empty( $d['__preset_subtable__'] ) ){
+					$_REQUEST['__preset__'][ $d['__preset_table__'] ][ $d['__preset_subtable__'] ][ $d['__preset_counter__'] ][$d['__preset_field__']] = $d['id'];
+				} else {
+					$_REQUEST['__preset__'][ $d['__preset_table__'] ][$d['__preset_field__']] = $d['id'];
+				}
+				
+			}
 		// applicazione delle regole di attribuzione automatica
 		    if( isset( $_SESSION['account']['id_gruppi_attribuzione'][ $t ] ) ) {
 

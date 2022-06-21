@@ -33,6 +33,7 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    '__label__' => 'immobile',
+        'zone' => 'zona',
         'proponenti' => 'proprietario',
         'contraenti' => 'inquilini',
         'data_inizio' => 'inizio contratto',

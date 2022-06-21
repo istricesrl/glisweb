@@ -59,9 +59,10 @@
         <div class="form-group form-row">
             <div class="col-12 col-md">
                 <span class="label-top">indirizzo</span>
-                {{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
+                {{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi','', '','modal-inserimento-indirizzi' ) }}
             </div>
         </div>
+		{% include 'inc/anagrafica.form.modal.aggiungi.indirizzo.html' %}
 
         <div class="form-group form-row">
             <div class="col">

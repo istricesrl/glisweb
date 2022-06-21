@@ -1253,6 +1253,14 @@ ALTER TABLE `immobili`
   ADD KEY `scala` (`scala`),
   ADD KEY `piano` (`piano`),
   ADD KEY `interno` (`interno`),
+  ADD KEY `catasto_foglio` (`catasto_foglio`),
+  ADD KEY `catasto_particella` (`catasto_particella`),
+  ADD KEY `catasto_sub` (`catasto_sub`),
+  ADD KEY `catasto_categoria` (`catasto_categoria`),
+  ADD KEY `catasto_classe` (`catasto_classe`),
+  ADD KEY `catasto_consistenza` (`catasto_consistenza`),
+  ADD KEY `catasto_superficie` (`catasto_superficie`),
+  ADD KEY `catasto_rendita` (`catasto_rendita`),
   ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
@@ -3279,6 +3287,7 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `sigla` (`sigla`),
 	ADD KEY `numerazione`(`numerazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -3682,6 +3691,27 @@ ALTER TABLE `tipologie_url`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000056900
+
+-- tipologie_zone
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 16:40 Chiara GDL
+ALTER TABLE `tipologie_zone`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+--| 030000056901
+
+-- tipologie_zone
+-- tipologia: tabella gestita
+ALTER TABLE `tipologie_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000060000
 
 -- todo
@@ -3874,5 +3904,105 @@ ALTER TABLE `video`
 -- video
 -- tipologia: tabella gestita
 ALTER TABLE `video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000100000
+
+-- zone
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+ALTER TABLE `zone`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `nome` (`nome`),
+    ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `id_tipologia`),
+    ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_genitore` (`id_genitore`);
+	
+--| 030000100001
+
+-- zone
+-- tipologia: tabella gestita
+ALTER TABLE `zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000100100
+
+-- zone_cap
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+ALTER TABLE `zone_cap`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD UNIQUE KEY `unica` (`id_zona`,`cap`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`ordine`, `id_zona`,`cap`);
+
+--| 030000100101
+
+-- zone_cap
+-- tipologia: tabella gestita
+ALTER TABLE `zone_cap` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000100200
+
+-- zone_indirizzi
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+ALTER TABLE `zone_indirizzi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_zona`,`id_indirizzo`), 
+	ADD KEY `id_indirizzo` (`id_indirizzo`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `ordine` (`ordine`),	
+	ADD KEY `indice` (`id`,`ordine`, `id_zona`,`id_indirizzo`);
+
+--| 030000100201
+
+-- zone_indirizzi
+-- tipologia: tabella gestita
+ALTER TABLE `zone_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000100300
+
+-- zone_provincie
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+ALTER TABLE `zone_provincie`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_zona`,`id_provincia`), 
+	ADD KEY `id_provincia` (`id_provincia`), 
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),	
+	ADD KEY `indice` (`id`,`id_zona`,`id_provincia`,`ordine`);
+
+--| 030000100301
+
+-- zone_provincie
+-- tipologia: tabella gestita
+ALTER TABLE `zone_provincie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000100400
+
+-- zone_stati
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+ALTER TABLE `zone_stati`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_zona`,`id_stato`), 
+	ADD KEY `ordine` (`ordine`),	
+	ADD KEY `id_stato` (`id_stato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),	
+	ADD KEY `indice` (`id`,`id_zona`,`id_stato`,`ordine`);
+
+--| 030000100401
+
+-- zone_stati
+-- tipologia: tabella gestita
+ALTER TABLE `zone_stati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| FINE FILE

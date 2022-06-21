@@ -28,5 +28,13 @@
 	    'SELECT id, __label__ FROM comuni_view'
 	);
 
+	// tendina zone
+	$ct['etc']['select']['zone'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM zone_view'
+	);
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

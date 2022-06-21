@@ -61,6 +61,30 @@
         'fa' => 'fa-plus-circle'
     );
 
+         // tendina id_tipologia_pubblicazioni
+	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
+	);
+
+    if( isset($_REQUEST[ $ct['form']['table'] ]['id_prodotto']) ){
+        $_REQUEST['prodotti']['pubblicazioni'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT * FROM pubblicazioni WHERE id_prodotto = ?',
+                array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_prodotto']) )
+            );
+            
+        if($_REQUEST['prodotti']['pubblicazioni']){
+            foreach($_REQUEST['prodotti']['pubblicazioni'] as &$p){
+                $p['timestamp_inizio'] = date( 'Y-m-d\TH:i', $p['timestamp_inizio'] );
+                $p['timestamp_fine'] = date( 'Y-m-d\TH:i', $p['timestamp_fine'] );
+                }
+        }
+
+    }
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 

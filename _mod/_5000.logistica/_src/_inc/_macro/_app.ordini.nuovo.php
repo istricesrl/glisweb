@@ -53,7 +53,8 @@
         'nome' => 'nome',
         'categorie' => 'categorie',
         'totale' => 'totale',
-        'prodotto' => 'prodotto'   
+        'prodotto' => 'prodotto',
+        'id_prodotto' => 'id_prodotto'   
     );
 
     $ct['view']['id'] = md5(

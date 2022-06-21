@@ -539,17 +539,12 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		anagrafica_indirizzi.id,
 		anagrafica_indirizzi.id_anagrafica,
 		anagrafica_indirizzi.id_indirizzo,
-		concat(
-			indirizzi.indirizzo,
-			' ',
-			comuni.nome,
-			' ',
-			provincie.sigla
-		) AS indirizzo,
+		IF( anagrafica_indirizzi.id_indirizzo IS NOT NULL , concat(indirizzi.indirizzo,' ',comuni.nome,' ',provincie.sigla), anagrafica_indirizzi.indirizzo) AS indirizzo,
 		anagrafica_indirizzi.id_ruolo,
 		ruoli_indirizzi.nome AS ruolo,
 		anagrafica_indirizzi.id_account_inserimento,
 		anagrafica_indirizzi.id_account_aggiornamento,
+		IF( anagrafica_indirizzi.id_indirizzo IS NOT NULL ,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
@@ -562,7 +557,14 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 			comuni.nome,
 			' ',
 			provincie.sigla
-		) AS __label__
+		),
+		concat(
+			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+			' / ',
+			tipologie_indirizzi.nome,
+			' ',
+			anagrafica_indirizzi.indirizzo
+		) )AS __label__
 	FROM anagrafica_indirizzi
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
 		LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
@@ -791,7 +793,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.nome,
 		attivita.id_documento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -1912,7 +1914,7 @@ CREATE OR REPLACE VIEW `ddt_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -1973,7 +1975,7 @@ CREATE OR REPLACE VIEW `ddt_attivi_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -2035,7 +2037,7 @@ CREATE OR REPLACE VIEW `ddt_passivi_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -2111,7 +2113,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -2159,7 +2161,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
         concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -2187,22 +2189,27 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			coalesce(
 				concat(
 					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					' ',
 					udm_dimensioni.sigla
 				),
 				concat(
 					articoli.peso,
+					' ',
 					udm_peso.sigla
 				),
 				concat(
 					articoli.volume,
+					' ',
 					udm_volume.sigla
 				),
 				concat(
 					articoli.capacita,
+					' ',
 					udm_capacita.sigla
 				),
 				concat(
 					articoli.durata,
+					' ',
 					udm_durata.sigla
 				),
 				''
@@ -2232,7 +2239,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		concat(
 			documenti_articoli.data,
 			' / ',
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' / ',
 			documenti_articoli.quantita,
 			' x ',
@@ -2463,7 +2470,7 @@ CREATE OR REPLACE VIEW `fatture_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -2533,7 +2540,7 @@ CREATE OR REPLACE VIEW `fatture_attive_view` AS
 		documenti.id_account_aggiornamento,
 		documenti.timestamp_chiusura,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -2603,7 +2610,7 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		documenti.id_account_aggiornamento,
 		documenti.timestamp_chiusura,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -2847,12 +2854,21 @@ CREATE OR REPLACE VIEW immobili_view AS
 		immobili.piano,
 		immobili.interno,
 		immobili.campanello,
+		immobili.catasto_foglio,
+		immobili.catasto_particella,
+		immobili.catasto_sub,
+		immobili.catasto_categoria,
+		immobili.catasto_classe,
+		immobili.catasto_consistenza,
+		immobili.catasto_superficie,
+		immobili.catasto_rendita,
 		immobili.id_account_inserimento,
 		immobili.id_account_aggiornamento,
 		MAX(rinnovi.data_inizio) AS data_inizio,
         MAX(rinnovi.data_fine) AS data_fine,
 		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
 		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
+		group_concat( DISTINCT zone_path( zone.id ) SEPARATOR ' | ' ) AS zone,
 		concat_ws(
 			' ',
 			tipologie_immobili.nome, 
@@ -2884,6 +2900,8 @@ CREATE OR REPLACE VIEW immobili_view AS
 		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
 		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN zone_indirizzi ON zone_indirizzi.id_indirizzo = indirizzi.id 
+		LEFT JOIN zone ON zone.id = zone_indirizzi.id_zona
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN regioni ON regioni.id = provincie.id_regione
@@ -4058,7 +4076,7 @@ CREATE OR REPLACE VIEW `note_credito_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -4194,7 +4212,7 @@ CREATE OR REPLACE VIEW `ordini_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -4264,7 +4282,7 @@ CREATE OR REPLACE VIEW `ordini_attivi_view` AS
 		documenti.id_account_aggiornamento,
 		documenti.timestamp_chiusura,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -4334,7 +4352,7 @@ CREATE OR REPLACE VIEW `ordini_passivi_view` AS
 		documenti.id_account_aggiornamento,
 		documenti.timestamp_chiusura,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -4418,7 +4436,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.note_pagamento,
 		pagamenti.id_documento,
         concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -4830,7 +4848,7 @@ CREATE OR REPLACE VIEW `proforma_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -5768,7 +5786,7 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
         concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -5806,7 +5824,7 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 		concat(
 			documenti_articoli.data,
 			' / ',
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' / ',
 			documenti_articoli.quantita,
 			' x ',
@@ -5852,7 +5870,7 @@ CREATE OR REPLACE VIEW `righe_fatture_passive_view` AS
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
         concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -5890,7 +5908,7 @@ CREATE OR REPLACE VIEW `righe_fatture_passive_view` AS
 		concat(
 			documenti_articoli.data,
 			' / ',
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' / ',
 			documenti_articoli.quantita,
 			' x ',
@@ -5936,7 +5954,7 @@ CREATE OR REPLACE VIEW `righe_proforma_view` AS
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
         concat(
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
 			'/',
@@ -5974,7 +5992,7 @@ CREATE OR REPLACE VIEW `righe_proforma_view` AS
 		concat(
 			documenti_articoli.data,
 			' / ',
-			tipologie_documenti.nome,
+			tipologie_documenti.sigla,
 			' / ',
 			documenti_articoli.quantita,
 			' x ',
@@ -7053,6 +7071,7 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti.codice,
 		tipologie_documenti.numerazione,
 		tipologie_documenti.nome,
+		tipologie_documenti.sigla,
 		tipologie_documenti.html_entity,
 		tipologie_documenti.font_awesome,
 		tipologie_documenti.se_fattura,
@@ -7548,6 +7567,31 @@ CREATE OR REPLACE VIEW `tipologie_url_view` AS
 	FROM tipologie_url
 ;
 
+--| 090000056900
+
+-- tipologie_zone
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `tipologie_zone_view`;
+
+--| 090000056901
+
+-- tipologie_zone
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 16:40 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_zone_view` AS
+	SELECT
+		tipologie_zone.id,
+		tipologie_zone.id_genitore,
+		tipologie_zone.ordine,
+		tipologie_zone.nome,
+		tipologie_zone.html_entity,
+		tipologie_zone.font_awesome,
+		tipologie_zone.id_account_inserimento,
+		tipologie_zone.id_account_aggiornamento,
+		tipologie_zone_path( tipologie_zone.id ) AS __label__
+	FROM tipologie_zone
+;
+
 --| 090000060000
 
 -- todo_view
@@ -7884,5 +7928,122 @@ CREATE OR REPLACE VIEW `video_view` AS
 		LEFT JOIN lingue ON lingue.id = video.id_lingua
 		LEFT JOIN ruoli_video ON ruoli_video.id = video.id_ruolo
 ;
+
+--| 090000100000
+
+-- zone
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `zone_view`;
+
+--| 090000100001
+
+-- zone
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE OR REPLACE VIEW zone_view AS
+	SELECT
+		zone.id,
+		zone.id_genitore,
+		zone.id_tipologia,
+		tipologie_zone.nome AS tipologia,
+		zone.nome,
+		zone.id_account_inserimento,
+		zone.id_account_aggiornamento,
+		zone_path( zone.id ) AS __label__
+	FROM zone
+		LEFT JOIN tipologie_zone ON tipologie_zone.id = zone.id_tipologia
+;
+
+--| 090000100100
+
+-- zone_cap
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `zone_cap_view`;
+
+--| 090000100101
+
+-- zone_cap
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE OR REPLACE VIEW zone_cap_view AS
+	SELECT
+		zone_cap.id,
+		zone_cap.cap,
+		zone_cap.id_zona,
+		zone_cap.ordine,
+		zone_cap.id_account_inserimento,
+		zone_cap.id_account_aggiornamento,
+		concat(zone_cap.cap, ' - ', zone_cap.id_zona) AS __label__
+	FROM zone_cap
+;
+
+--| 090000100200
+
+-- zone_indirizzi
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `zone_indirizzi_view`;
+
+--| 090000100201
+
+-- zone_indirizzi
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE OR REPLACE VIEW zone_indirizzi_view AS
+	SELECT
+		zone_indirizzi.id,
+		zone_indirizzi.id_indirizzo,
+		zone_indirizzi.id_zona,
+		zone_indirizzi.ordine,
+		zone_indirizzi.id_account_inserimento,
+		zone_indirizzi.id_account_aggiornamento,
+		concat(zone_indirizzi.id_indirizzo, ' - ', zone_indirizzi.id_zona) AS __label__
+	FROM zone_indirizzi
+; 
+
+--| 090000100300
+
+-- zone_provincie
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `zone_provincie_view`; 
+
+--| 090000100301
+
+-- zone_provincie
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE OR REPLACE VIEW zone_provincie_view AS
+	SELECT
+		zone_provincie.id,
+		zone_provincie.id_provincia,
+		zone_provincie.id_zona,
+		zone_provincie.ordine,
+		zone_provincie.id_account_inserimento,
+		zone_provincie.id_account_aggiornamento,
+		concat(zone_provincie.id_provincia, ' - ', zone_provincie.id_zona) AS __label__
+	FROM zone_provincie
+; 
+
+--| 090000100400
+
+-- zone_stati
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `zone_stati_view`; 
+
+--| 090000100401
+
+-- zone_stati
+-- tipologia: tabella gestita
+-- verifica: 2022-06-16 13:16 Chiara GDL
+CREATE OR REPLACE VIEW zone_stati_view AS
+	SELECT
+		zone_stati.id,
+		zone_stati.id_stato,
+		zone_stati.id_zona,
+		zone_stati.ordine,
+		zone_stati.id_account_inserimento,
+		zone_stati.id_account_aggiornamento,
+		concat(zone_stati.id_stato, ' - ', zone_stati.id_zona) AS __label__
+	FROM zone_stati
+; 
 
 --| FINE FILE

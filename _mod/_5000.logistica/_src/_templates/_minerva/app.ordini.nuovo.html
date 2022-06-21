@@ -72,7 +72,7 @@
                       <h5>{{ row.categorie }}</h5>
                     </div>
                     <div class="col-2 justify-content-center align-self-center">
-                        <button type="button" class="btn" onclick='$("#_id_prodotto_add").val("{{ row.id }}"); $("#_prodotto_add").val("{{ row.nome }}");' data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>
+                        <button type="button" class="btn" onclick='$("#_id_prodotto_add").val("{{ row.id_prodotto }}"); $("#_prodotto_add").val("{{ row.prodotto }}");' data-toggle="modal" data-target="#aggiungi_a_ordine"><i class="fa fa-cart-plus fa-3x" aria-hidden="true"></i></button>
                     </div>
                   </div>
                   {% endfor %}
@@ -81,9 +81,13 @@
         <div class="col-6 align-items-center mt-3"  >
             <legend><b>il tuo ordine</b></legend>
             <div class="form-group form-row">
-                <div class="col col-md">
+                <div class="col col-md-12">
                     <span class="label-top">emittente</span>
 					{{ frm.selectAuto( table, '', '', 'id_emittente', '', etc.select.emittenti, request,'','','1','form-control-lg' ) }}
+                </div>
+                <div class="col col-md-12 mt-3">
+                    <span class="label-top">nome</span>
+					{{ frm.input( table, '', '', 'nome', '', '', request,'','','','form-control-lg' ) }}
                 </div>
             </div>
             <div class="box" style="height: 70vh;" >

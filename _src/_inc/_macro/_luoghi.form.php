@@ -42,5 +42,26 @@
 	    'SELECT id, __label__ FROM indirizzi_view'
 	);
 
+		// tendina tipologie indirizzi
+	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_indirizzi_view ORDER BY nome ASC'
+	);
+
+    // tendina comuni
+	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM comuni_view'
+	);
+
+	// tabella 
+	$ct['etc']['preset']['table'] = 'luoghi';
+	$ct['etc']['preset']['field'] = 'id_indirizzo';
+
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
