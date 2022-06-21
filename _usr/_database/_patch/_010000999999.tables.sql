@@ -982,7 +982,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_matricola` int(11) DEFAULT NULL,
   `quantita` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
-  `importo_netto_totale` decimal(9,2) DEFAULT NULL,
+  `importo_netto_totale` decimal(16,2) DEFAULT NULL,
   `sconto_percentuale` decimal(9,2) DEFAULT NULL,
   `sconto_valore` decimal(9,2) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,

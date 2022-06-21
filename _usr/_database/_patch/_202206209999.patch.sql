@@ -156,4 +156,7 @@ CREATE OR REPLACE VIEW immobili_view AS
 	GROUP BY immobili.id, contratti.id, contratti_anagrafica.id_contratto
 ;
 
+--| 202206200060
+ALTER TABLE `documenti_articoli` CHANGE `importo_netto_totale` `importo_netto_totale` DECIMAL(16,2) NOT NULL;
+
 --| FINE
