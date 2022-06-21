@@ -2868,6 +2868,7 @@ CREATE OR REPLACE VIEW immobili_view AS
         MAX(rinnovi.data_fine) AS data_fine,
 		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
 		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
+		group_concat( DISTINCT zone_path( zone.id ) SEPARATOR ' | ' ) AS zone,
 		concat_ws(
 			' ',
 			tipologie_immobili.nome, 
@@ -2899,6 +2900,8 @@ CREATE OR REPLACE VIEW immobili_view AS
 		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
 		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN zone_indirizzi ON zone_indirizzi.id_indirizzo = indirizzi.id 
+		LEFT JOIN zone ON zone.id = zone_indirizzi.id_zona
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN regioni ON regioni.id = provincie.id_regione
