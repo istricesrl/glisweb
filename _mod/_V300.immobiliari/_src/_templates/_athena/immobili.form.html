@@ -83,6 +83,45 @@
 				</div>
 			</div>
 
+			<legend>dati catastali</legend>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-1">
+					<span class="label-top">foglio</span>
+					{{ frm.input( table, '', '', 'catasto_foglio', '', '', request ) }}
+				</div>
+				<div class="col-2 col-md-1">
+					<span class="label-top">particella</span>
+					{{ frm.input( table, '', '', 'catasto_particella', '', '', request ) }}
+				</div>
+                <div class="col-12 col-md-1">
+					<span class="label-top">sub</span>
+					{{ frm.input( table, '', '', 'catasto_sub', '', '', request ) }}
+				</div>
+				<div class="col-2 col-md">
+					<span class="label-top">categoria</span>
+					{{ frm.input( table, '', '', 'catasto_categoria', '', '', request ) }}
+				</div>
+            </div>    
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+					<span class="label-top">classe</span>
+					{{ frm.input( table, '', '', 'catasto_classe', '', '', request ) }}
+				</div>
+				<div class="col-2 col-md-3">
+					<span class="label-top">consistenza</span>
+					{{ frm.input( table, '', '', 'catasto_consistenza', '', '', request ) }}
+				</div>
+                <div class="col-12 col-md">
+					<span class="label-top">superficie</span>
+					{{ frm.input( table, '', '', 'catasto_superficie', '', '', request ) }}
+				</div>
+				<div class="col-2 col-md-3">
+					<span class="label-top">rendita</span>
+					{{ frm.input( table, '', '', 'catasto_rendita', '', '', request ) }}
+				</div>
+			</div>
+			
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">note</span>
