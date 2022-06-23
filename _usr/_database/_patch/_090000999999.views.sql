@@ -4444,6 +4444,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 			' del ',
 			documenti.data
 		) AS documento,
+		tipologie_documenti.id AS id_tipologia_documento,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
 		pagamenti.id_mastro_destinazione,
