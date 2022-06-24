@@ -200,7 +200,7 @@
 		'parent'		=> array( 'id'		=> 'archivio' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_rinnovi.contratti.view.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'rinnovi.contratti.view' ) ),
+		'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
