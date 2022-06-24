@@ -2,7 +2,7 @@
 -- PATCH
 --
 
---| 202206240010
+--| 202206240030
 CREATE OR REPLACE VIEW `corsi_view` AS
 	SELECT
 		progetti.id,
@@ -19,6 +19,7 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		progetti.entrate_accettazione,
 		progetti.data_accettazione,
 		progetti.data_chiusura,
+		if( progetti.data_accettazione > CURRENT_DATE(), 'futuro', if( progetti.data_chiusura > CURRENT_DATE(), 'attivo', 'concluso'  ) ) AS stato,
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
@@ -47,5 +48,4 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 	WHERE tipologie_progetti.se_didattica = 1
 	GROUP BY progetti.id
 ;
-
 --| FINE

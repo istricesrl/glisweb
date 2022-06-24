@@ -34,16 +34,21 @@
         'nome' => 'nome',
         'fasce' => 'fasce',
         'discipline' => 'discipline',
-        'livelli' => 'livelli'      
+        'livelli' => 'livelli',
+        'stato' => 'stato'            
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
         'cliente' => 'text-left d-none d-md-table-cell',
+        'stato' => 'd-none',
         'tipologia' => 'text-left',
         'nome' => 'text-left',
-        'categorie' => 'text-left'
+        'categorie' => 'text-left',
+        'discipline' => 'text-left',
+        'livelli' => 'text-left',
+        'stato' => 'text-left'  
     );
 
         // tendina categorie progetti
@@ -67,6 +72,12 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_fascia = 1'
 	);
+
+    $ct['etc']['select']['stati'] = array(
+        array( 'id' => 'attivo', '__label__' => 'attivo'),
+        array( 'id' => 'concluso', '__label__' => 'concluso'),
+        array( 'id' => 'futuro', '__label__' => 'futuro'),
+    );
 
     $ct['etc']['include']['filters'] = 'inc/corsi.view.filters.html';
 
