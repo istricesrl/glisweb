@@ -1649,6 +1649,9 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
 		group_concat( DISTINCT categorie_progetti_path( progetti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id ), null ) SEPARATOR ' | ' ) AS fasce,
+		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
+		group_concat( DISTINCT if( l.id, categorie_progetti_path( l.id ), null ) SEPARATOR ' | ' ) AS livelli,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -1664,6 +1667,9 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN categorie_progetti AS f ON f.id = progetti_categorie.id_categoria AND f.se_fascia = 1
+		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
+		LEFT JOIN categorie_progetti AS l ON l.id = progetti_categorie.id_categoria AND l.se_classe = 1
 	WHERE tipologie_progetti.se_didattica = 1
 	GROUP BY progetti.id
 ;
