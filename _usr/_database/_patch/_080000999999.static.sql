@@ -114,6 +114,7 @@ CREATE TABLE `todo_view_static` (
   `id` int NOT NULL,
   `id_tipologia` int DEFAULT NULL,
   `tipologia` char(64) DEFAULT NULL,
+  `se_agenda` int DEFAULT NULL,
   `id_anagrafica` int DEFAULT NULL,
   `anagrafica` char(255) DEFAULT NULL,
   `id_cliente` int DEFAULT NULL,
