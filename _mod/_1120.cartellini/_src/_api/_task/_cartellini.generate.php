@@ -20,9 +20,13 @@ $status = array();
 
 if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empty( $_REQUEST['anno'] ) ){
 
-    #gdl
-    $idT_inps_ordinario = 1;
-    $idT_inps_straordinario = 2;
+    $info[] = 'richiesta generazione cartellino ' . date('d-m-Y H:i');
+
+    $idT_inps_ordinario = mysqlSelectValue( 
+        $cf['mysql']['connection'], 
+        'SELECT id FROM tipologie_attivita_inps WHERE codice = ?',
+        array( array( 's' => '01') )
+    );
 
     $id_anagrafica = $_REQUEST['id_anagrafica'];
     $mese = $_REQUEST['mese'];
@@ -31,9 +35,8 @@ if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empt
     // se ricevo il parametro hard elimino e ricreo il cartellino
     if( !empty( $_REQUEST['hard'] ) ){
 
-        $status[] = 'ricevuto hard, elimino il cartellino';
+        $info[] = 'hard, elimino il cartellino e relativo log per l\'anagrafica ' . $id_anagrafica . ' per mese ' . $mese . ' e anno ' . $anno;
 
-        logWrite( 'hard, elimino il cartellino per l\'anagrafica ' . $id_anagrafica . ' per mese ' . $mese . ' e anno ' . $anno, 'cartellini', LOG_ERR );
         $del = mysqlQuery(
             $cf['mysql']['connection'],
             'DELETE FROM cartellini WHERE id_anagrafica = ? AND mese = ? AND anno = ?',
@@ -45,7 +48,7 @@ if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empt
         );
     }
 
-// costruisco l'elenco giorni partendo da mese e anno
+    // costruisco l'elenco giorni partendo da mese e anno
     $giorni = array();
 
     for( $d = 1; $d <= 31; $d++ )
@@ -56,7 +59,7 @@ if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empt
         }
     }
 
-    logWrite( 'lavoro l\'anagrafica ' . $id_anagrafica , 'cartellini', LOG_ERR );
+    $info[] =  'lavoro l\'anagrafica ' . $id_anagrafica;
 
     // inserisco il cartellino
     $cartellino = mysqlQuery( $cf['mysql']['connection'], 
@@ -68,7 +71,7 @@ if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empt
         array( 's' => time() ) ) 
     );
 
-    $status[] = 'inserito il cartellino ' . $cartellino;
+    $info[] = 'inserito il cartellino ' . $cartellino;
 
     if( !empty( $cartellino ) ){
         foreach( $giorni as $giorno ){
@@ -78,17 +81,11 @@ if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empt
             // numero da 1 a 7, se la funzione date restituisce 0 (domenica) setto 7 per uniformità con i giorni degli orari_contratti
             $numgiorno = ( date( 'w', strtotime("$anno-$mese-$giorno") ) == 0 ) ? '7' : date( 'w', strtotime("$anno-$mese-$giorno") );
 
-            logWrite( 'verifico l\'anagrafica ' . $id_anagrafica.' per il  giorno  '.$data , 'cartellini', LOG_ERR );
+            $info['giorni'][$giorno][] = 'verifico l\'anagrafica ' . $id_anagrafica.' per il  giorno  '. $data;
             
-            // check if contratto valido nel giorno in analisi
-        /*    $contratto = mysqlSelectRow(
-                $cf['mysql']['connection'], 
-                'SELECT * FROM contratti WHERE id = ? AND data_inizio_rapporto <= ? AND '.
-                '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) )',
-                array( array( 's' => $cid ), array( 's' =>  $data ), array( 's' =>  $data ) )
-            );
-    */
+            // cerco il contratto attivo nel giorno in analisi
             $idCa = contrattoAttivo( $id_anagrafica, $data );
+
             $contratto = mysqlSelectRow(
                 $cf['mysql']['connection'], 
                 'SELECT * FROM contratti WHERE id = ?',
@@ -97,7 +94,8 @@ if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empt
 
             if( !empty( $contratto ) && isset( $contratto['id'] ) ){
 
-                logWrite( 'il contratto ' . $idCa . ' è valido nel giorno  '.$data , 'cartellini', LOG_ERR );
+                $info['giorni'][$giorno][] =  'il contratto ' . $idCa . ' è valido nel giorno  '.$data ;
+                
                 // verifico se la data corrente è nella tabella turni e ricavo il turno corrispondente
                 $turno = mysqlSelectValue(
                     $cf['mysql']['connection'], 
@@ -116,42 +114,29 @@ if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empt
 
                 $orecontratto = oreGiornaliereContratto( $contratto['id_anagrafica'], $data );
 
-                logWrite( 'il contratto ' . $contratto['id'].' per il giorno  '.$data.' prevede  '.$orecontratto .' orari attivi ' , 'cartellini', LOG_ERR );
+                $info['giorni'][$giorno][] = 'il contratto ' . $contratto['id'].' per il giorno  '.$data.' prevede '. $orecontratto .' ore lavoro';
 
-                // genero i cartellini
-                if( !empty ( $orecontratto ) ){
-                        
-                    $rigaCartellino = mysqlQuery( $cf['mysql']['connection'], 
-                        'INSERT INTO righe_cartellini ( id_cartellino, id_contratto, id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
-                        array( 
-                            array( 's' => $cartellino  ),
-                            array( 's' => $contratto['id'] ),
-                            array( 's' => $contratto['id_anagrafica'] ), 
-                            array( 's' => $data ),
-                            array( 's' => $idT_inps_ordinario ), // tipologia inps ordinaria
-                            array( 's' => str_replace(",",".",$orecontratto) ),  
-                            array( 's' => time() ) ) 
-                        );
-                } else {
-
-                    $rigaCartellino = mysqlQuery( $cf['mysql']['connection'], 
+                // genero la riga di cartellino con le ore da contratto previste
+                $rigaCartellino = mysqlQuery( $cf['mysql']['connection'], 
                     'INSERT INTO righe_cartellini ( id_cartellino, id_contratto, id_anagrafica, data_attivita, id_tipologia_inps, ore_previste, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ? )  ',
                     array( 
                         array( 's' => $cartellino  ),
                         array( 's' => $contratto['id'] ),
                         array( 's' => $contratto['id_anagrafica'] ), 
                         array( 's' => $data ),
-                        array( 's' => $idT_inps_straordinario ), // tipologia inps straordinaria
-                        array( 's' => 0 ),  
-                        array( 's' => time() ) ) 
-                    );
-
-                }
-
-
+                        array( 's' => $idT_inps_ordinario ), // tipologia inps ordinaria
+                        array( 's' => str_replace(",",".",$orecontratto) ),  
+                        array( 's' => time() ) 
+                    ) 
+                );
+            }
+            else{
+                $info['giorni'][$giorno][] =  'nessun contratto attivo nel giorno  '.$data ;
             }
 
         }
+
+        writeToFile( print_r( $info, true ), 'var/log/cartellini/' . $_REQUEST['anno'] . '/' . $_REQUEST['mese'] . '/anagrafica.' .  $_REQUEST['id_anagrafica'] . '.log' );
 
         if( !empty( $_REQUEST['hard'] ) ){
             // se è arrivato il parametro hard, richiamo il task cartellini.populate
@@ -161,6 +146,7 @@ if( !empty( $_REQUEST['id_anagrafica'] ) && !empty( $_REQUEST['mese'] ) && !empt
         }
         
     }
+
 }
 else{
     $status[] = 'parametri in input mancanti';
@@ -170,3 +156,4 @@ else{
 if( ! defined( 'CRON_RUNNING' ) ) {
     buildJson( $status );
 }
+
