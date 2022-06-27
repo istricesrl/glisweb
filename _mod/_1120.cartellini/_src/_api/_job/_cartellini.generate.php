@@ -1,11 +1,12 @@
 <?php
 
     /**
-     * 
+     * job che crea i cartellini relativi agli operatori con contratto attivo per il mese e l'anno specificati nel workspace
      *  
      * 
      */
 
+use Twig\Node\Expression\Binary\AndBinary;
 
     // inizializzo l'array del risultato
 	$status = array();
@@ -32,22 +33,30 @@
                 // logiche di calcolo...
                 $mese = $job['workspace']['mese'];
                 $anno = $job['workspace']['anno'];
-
-                logWrite( 'lavoro i cartellini dal '.date( 'Y-m-d', strtotime("$anno-$mese-01")).' al '.date( 'Y-m-t', strtotime("$anno-$mese-01")) , 'cartellini', LOG_ERR );
+    
                 // tutti i contratti validi in parte o del tutto nel mese/anno indicato
                 $status['result'] = mysqlSelectColumn(
 				    'id_anagrafica',
                     $cf['mysql']['connection'],
-                    'SELECT DISTINCT id_anagrafica FROM contratti WHERE ( data_inizio BETWEEN ? AND ? ) '.
+                    'SELECT DISTINCT id_anagrafica FROM contratti WHERE ( ( data_inizio BETWEEN ? AND ? ) '.
                     'OR ( data_inizio < ? AND '.
-                    '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR ( data_fine IS NOT NULL and data_fine >= ? ) ) ) )',
+                    '( data_fine_rapporto >= ? ) '.
+                    'OR '.
+                    '( data_fine_rapporto IS NULL AND ( data_fine IS NULL OR data_fine >= ? ) ) '.
+                    ') ) AND id_tipologia NOT IN (4, 5)',
                     array(
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
-                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ), // Y-m-t restituisce l'unltimo giorno del mese per l'anno indicato
-                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ),
+                        array( 's' => date( 'Y-m-t', strtotime("$anno-$mese-01") ) ), // Y-m-t restituisce l'ultimo giorno del mese per l'anno indicato
+                        array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
+                        array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) ),
                         array( 's' => date( 'Y-m-d', strtotime("$anno-$mese-01") ) )
                     )
                 );
+
+                $infojob[] = date('d-m-Y H:i') . ' avviata generazione cartellini per il mese ' . $mese . ' e l\'anno ' . $anno;
+                $infojob['anagrafiche'] =  $status['result'];
+
+                writeToFile( print_r( $infojob, true ), 'var/log/cartellini/' . $anno . '/' . $mese . '/cartellini.generate.log' );
                            
                 // creo la lista dei contratti attivi su cui generare cartellini teorici
                 $job['workspace']['list'] = $status['result'];
@@ -94,7 +103,7 @@
             $url = $cf['site']['url'] . '_mod/_1120.cartellini/_src/_api/_task/_cartellini.generate.php?mese=' . $mese . '&anno=' . $anno . '&id_anagrafica=' . $cid;
 
             $status[$cid]['esecuzione'] = restcall( $url );
-          
+
             // status
             $status['info'][] = 'ho lavorato la riga: ' . $cid;
 
@@ -122,7 +131,7 @@
                     )
                 );
 
-                // creo il per popolare i cartellini appena creati
+                // creo il job per popolare i cartellini appena creati
                 $status['job'] = mysqlQuery(
                     $cf['mysql']['connection'],
                     'INSERT INTO job ( nome, job, iterazioni, workspace, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ? )',
