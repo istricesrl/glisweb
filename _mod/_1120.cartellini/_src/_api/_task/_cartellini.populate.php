@@ -126,7 +126,7 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                         array( 's' => $car['data_attivita'] ),
                         array( 's' => $car['id_contratto'] ),
                         array( 's' => $idT_inps_festivo),
-                        array( 's' => $oreLavorate ),  
+                        array( 's' => str_replace(",", ".", $oreLavorate )  ),  
                         array( 's' => time() ) 
                     ) 
                 );
@@ -142,7 +142,7 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                     $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
                         'UPDATE righe_cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
                         array( 
-                            array( 's' => $oreLavorate ), 
+                            array( 's' => str_replace(",", ".", $oreLavorate ) ), 
                             array( 's' => time() ),
                             array( 's' => $car['id'] ) 
                         )
@@ -166,7 +166,7 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                             array( 's' => $car['data_attivita'] ),
                             array( 's' => $car['id_contratto'] ),
                             array( 's' => $idT_inps_festivo ), // tipologia inps festiva
-                            array( 's' => $oreLavorate - $car['ore_previste'] ),  
+                            array( 's' => str_replace(",", ".", $oreLavorate - $car['ore_previste'] ) ), 
                             array( 's' => time() ) 
                         ) 
                     );
@@ -184,7 +184,7 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                     $update_cartellino = mysqlQuery( $cf['mysql']['connection'], 
                         'UPDATE righe_cartellini SET ore_fatte = ?, timestamp_aggiornamento = ? WHERE id = ? ',
                         array( 
-                            array( 's' => $oreLavorate ), 
+                            array( 's' => str_replace(",", ".", $oreLavorate ) ), 
                             array( 's' => time() ),
                             array( 's' => $car['id'] ) 
                         )
@@ -210,7 +210,7 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                             array( 's' => $car['data_attivita'] ),
                             array( 's' => $car['id_contratto'] ),
                             array( 's' => $idT_inps_straordinario ), // tipologia inps straordinaria
-                            array( 's' => $oreLavorate - $car['ore_previste'] ),  
+                            array( 's' => str_replace(",", ".", $oreLavorate - $car['ore_previste'] ) ),  
                             array( 's' => time() ) 
                         ) 
                     );
@@ -245,7 +245,7 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                         array( 's' => $car['data_attivita'] ),
                         array( 's' => $car['id_contratto'] ),
                         array( 's' => $ov['id_tipologia_inps'] ),
-                        array( 's' => $ov['tot_ore'] ),  
+                        array( 's' => str_replace(",", ".", $ov['tot_ore'] ) ),  
                         array( 's' => time() ) ) 
                     );
                 }
