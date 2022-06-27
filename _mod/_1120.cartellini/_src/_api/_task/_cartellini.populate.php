@@ -191,8 +191,9 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                     );
                 }
                 else{
-                    $info['righe'][$car['id']][] = 'presenti ore in eccesso';
+                    $info['righe'][$car['id']][] = 'presenti ' . str_replace(",", ".", $oreLavorate - $car['ore_previste'] ) . ' ore in eccesso';
                     if( $car['ore_previste'] > 0 ){
+                        $info['righe'][$car['id']][] = 'aggiorno ore fatte a ore previste' ;
                         $update_ordinarie = mysqlQuery( $cf['mysql']['connection'], 
                             'UPDATE righe_cartellini SET ore_fatte = ore_previste, timestamp_aggiornamento = ? WHERE id = ? ',
                             array( 
@@ -217,50 +218,48 @@ if( !empty( $_REQUEST['id_cartellino'] ) ){
                 }
             }
         }
-        else{
 
-            // se non ci sono ore lavorate verifico se ci sono variazioni (permessi, malattie, ecc.)
-            $info['righe'][$car['id']][] = 'ore lavoro non presenti, verifico le variazioni';
+        // se non ci sono ore lavorate verifico se ci sono variazioni (permessi, malattie, ecc.)
+        $info['righe'][$car['id']][] = 'verifico le variazioni';
 
-            $variazioni = mysqlQuery( 
-                $cf['mysql']['connection'], 
-                'SELECT id_tipologia_inps, sum( ore ) AS tot_ore FROM attivita ' .
-                'WHERE id_tipologia_inps IS NOT NULL AND id_tipologia_inps <> 1 AND data_attivita = ? and id_anagrafica = ? GROUP by id_tipologia_inps',
-                array(
+        $variazioni = mysqlQuery( 
+            $cf['mysql']['connection'], 
+            'SELECT id_tipologia_inps, sum( ore ) AS tot_ore FROM attivita ' .
+            'WHERE id_tipologia_inps IS NOT NULL AND id_tipologia_inps <> 1 AND data_attivita = ? and id_anagrafica = ? GROUP by id_tipologia_inps',
+            array(
+                array( 's' => $car['data_attivita'] ),
+                array( 's' => $car['id_anagrafica'] )
+            )			
+        );
+
+        $info['righe'][$car['id']]['variazioni'] = $variazioni;
+
+        if( !empty ( $variazioni ) ){
+
+            foreach( $variazioni as $ov ){
+                $insert_variazioni = mysqlQuery( $cf['mysql']['connection'], 
+                'INSERT INTO righe_cartellini ( id_anagrafica, id_cartellino, data_attivita, id_contratto, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ?)  ',
+                array( 
+                    array( 's' => $car['id_anagrafica'] ), 
+                    array( 's' => $cid ),
                     array( 's' => $car['data_attivita'] ),
-                    array( 's' => $car['id_anagrafica'] )
-                )			
-            );
-
-            $info['righe'][$car['id']]['variazioni'] = $variazioni;
-
-            if( !empty ( $variazioni ) ){
-
-                foreach( $variazioni as $ov ){
-                    $insert_variazioni = mysqlQuery( $cf['mysql']['connection'], 
-                    'INSERT INTO righe_cartellini ( id_anagrafica, id_cartellino, data_attivita, id_contratto, id_tipologia_inps, ore_fatte, timestamp_inserimento ) VALUES ( ?, ?, ?, ?, ?, ?, ?)  ',
-                    array( 
-                        array( 's' => $car['id_anagrafica'] ), 
-                        array( 's' => $cid ),
-                        array( 's' => $car['data_attivita'] ),
-                        array( 's' => $car['id_contratto'] ),
-                        array( 's' => $ov['id_tipologia_inps'] ),
-                        array( 's' => str_replace(",", ".", $ov['tot_ore'] ) ),  
-                        array( 's' => time() ) ) 
-                    );
-                }
-
-            }
-            else{
-                // se non ci sono neanche variazioni setto le ore ordinarie a 0
-                $update_ordinarie = mysqlQuery( $cf['mysql']['connection'], 
-                    'UPDATE righe_cartellini SET ore_fatte = 0, timestamp_aggiornamento = ? WHERE id = ? ',
-                    array( 
-                        array( 's' => time() ),
-                        array( 's' => $car['id'] ) 
-                    )
+                    array( 's' => $car['id_contratto'] ),
+                    array( 's' => $ov['id_tipologia_inps'] ),
+                    array( 's' => str_replace(",", ".", $ov['tot_ore'] ) ),  
+                    array( 's' => time() ) ) 
                 );
             }
+
+        }
+        // se non ci sono variazioni né ore fatte setto le ore ordinarie a 0
+        elseif( $oreLavorate == 0 || empty( $oreLavorate ) ){           
+            $update_ordinarie = mysqlQuery( $cf['mysql']['connection'], 
+                'UPDATE righe_cartellini SET ore_fatte = 0, timestamp_aggiornamento = ? WHERE id = ?',
+                array( 
+                    array( 's' => time() ),
+                    array( 's' => $car['id'] ) 
+                )
+            );
         }
 
     }

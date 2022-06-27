@@ -98,9 +98,12 @@
                             <td>{% if v.totali.ore_lavorate > 0 %}{{'%0.2f'|format( v.totali.ore_lavorate ) }}{% endif %}</td>
                             <td>{% if v.totali.ore_variazioni > 0 %}{{'%0.2f'|format( v.totali.ore_variazioni ) }}{% endif %}</td>
                             <td>
-                                {% if v.totali.ore_contratto != v.totali.ore_lavorate and v.totali.ore_contratto != v.totali.ore_variazioni %}
+                                
+                                {% if v.totali.ore_lavorate > 0 %} {% set lav = v.totali.ore_lavorate %} {% else %} {% set lav = 0 %}{% endif %}
+                                {% if v.totali.ore_variazioni > 0 %} {% set var = v.totali.ore_variazioni %} {% else %} {% set var = 0 %}{% endif %}
+                                {% if v.totali.ore_contratto != ( lav + var ) %}
                                 <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
-                                {% elseif ( v.totali.ore_contratto == v.totali.ore_lavorate or v.totali.ore_contratto == v.totali.ore_variazioni ) and v.totali.ore_contratto > 0 %}
+                                {% elseif ( v.totali.ore_contratto == ( lav + var ) and v.totali.ore_contratto ) > 0 %}
                                 <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
                                 {% endif %}
                             </td>
@@ -116,9 +119,11 @@
                             <td>{{'%0.2f'|format( etc.ore_totali.ore_lavorate ) }}</td>
                             <td>{{'%0.2f'|format( etc.ore_totali.ore_variazioni ) }}</td>
                             <td>
-                                {% if etc.ore_totali.ore_contratto != etc.ore_totali.ore_lavorate and etc.ore_totali.ore_contratto != etc.ore_totali.ore_variazioni %}
+                                {% if etc.ore_totali.ore_lavorate > 0 %} {% set totlav = etc.ore_totali.ore_lavorate %} {% else %} {% set totlav = 0 %}{% endif %}
+                                {% if etc.ore_totali.ore_variazioni > 0 %} {% set totvar = etc.ore_totali.ore_variazioni %} {% else %} {% set totvar = 0 %}{% endif %}
+                                {% if etc.ore_totali.ore_contratto != lav + var %}
                                 <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
-                                {% elseif ( etc.ore_totali.ore_contratto == etc.ore_totali.ore_lavorate or v.ore_contratto == etc.ore_totali.ore_variazioni ) and etc.ore_totali.ore_contratto > 0 %}
+                                {% elseif ( etc.ore_totali.ore_contratto == ( totlav + totvar ) and etc.ore_totali.ore_contratto > 0 ) %}
                                 <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
                                 {% endif %}
                             </td>
