@@ -24,7 +24,7 @@
     // id della vista
     $ct['view']['id'] = md5(
 		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
-	    );
+    );
 
     // campi della vista
     $ct['view']['cols'] = array(
