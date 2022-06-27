@@ -44,7 +44,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'cartellini.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_cartellini.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'cartellini.form', 'cartellini.form.righe','cartellini.form.approvazione' ) )
+		'etc'			=> array( 'tabs'	=> array(	'cartellini.form', /*'cartellini.form.righe',*/'cartellini.form.approvazione' ) )
 	);
 
 	// gestione cartellini - righe
