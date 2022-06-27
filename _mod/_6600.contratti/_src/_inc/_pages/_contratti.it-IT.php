@@ -61,7 +61,7 @@
 
 	foreach( range( 1, 9 ) as $i ) {
 		$p['contratti.form']['etc']['tabs'][] = 'contratti.form.orari.'.  $i ;
-		$p['contratti.form']['etc']['tabs'][] = 'contratti.form.fasce.orarie.'.  $i ;
+		#$p['contratti.form']['etc']['tabs'][] = 'contratti.form.fasce.orarie.'.  $i ;
 	}
 
 	$p['contratti.form']['etc']['tabs'][] = 'contratti.form.disponibilita';
@@ -94,7 +94,7 @@
 			'turno'			=> $i	// setto il numero del turno per ciascuna pagina
 		);
 
-		$p['contratti.form.fasce.orarie.' . $i ] = array(
+	/*	$p['contratti.form.fasce.orarie.' . $i ] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'fasce orarie turno ' . $i ),
 			'h1'			=> array( $l		=> 'fasce turno ' . $i ),
@@ -105,7 +105,7 @@
 			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'turno'			=> $i	// setto il numero del turno per ciascuna pagina
 		);
-		
+	*/	
 	}
 
 	// disponibilita
