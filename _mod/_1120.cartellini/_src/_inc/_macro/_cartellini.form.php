@@ -47,5 +47,19 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_inps_view' );
 
+
+    if ( isset( $_REQUEST[ $ct['form']['table'] ]['righe_cartellini'] ) )
+    { 
+        // riordino l'array delle righe in base al giorno
+        foreach( $_REQUEST[ $ct['form']['table'] ]['righe_cartellini'] as $key => $value ) {
+            $sort_data[ $key ] = $value['data_attivita'];
+        }
+
+        if( isset( $sort_data ) ){
+            array_multisort( $sort_data, $_REQUEST[ $ct['form']['table'] ]['righe_cartellini'] );
+        }
+
+    }
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
