@@ -31,6 +31,11 @@
 	    $_SESSION['__view__'] = array();
 	}
 
+    // inizializzo l'array di lavoro
+    if( ! isset( $_SESSION['__work__'] ) ) {
+	    $_SESSION['__work__'] = array();
+	}
+
     // defaults
 	if( ! isset( $_SESSION['__view__']['__site__'] ) ) {
 	    $_SESSION['__view__']['__site__'] = SITE_CURRENT;
