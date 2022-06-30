@@ -1503,7 +1503,31 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.id_immobile,
-		immobili.nome AS immobile,
+		concat_ws(
+			' ',
+			tipologie_immobili.nome, 
+			coalesce(
+			concat('scala ', immobili.scala), 
+			''
+			), 
+			coalesce(
+			concat('piano ', immobili.piano), 
+			''
+			), 
+			coalesce(
+			concat('int. ', immobili.interno), 
+			''
+			),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS immobile,
 		contratti.codice,
 		contratti.nome,
 		contratti.id_account_inserimento,
@@ -1517,6 +1541,15 @@ CREATE OR REPLACE VIEW `contratti_view` AS
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
 		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
+		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
+		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN zone_indirizzi ON zone_indirizzi.id_indirizzo = indirizzi.id 
+		LEFT JOIN zone ON zone.id = zone_indirizzi.id_zona
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 27
 		LEFT JOIN anagrafica AS proponente ON proponente.id = contratti_anagrafica.id_anagrafica 
 		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 28
@@ -1524,6 +1557,7 @@ CREATE OR REPLACE VIEW `contratti_view` AS
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
 	GROUP BY contratti.id, contratti_anagrafica.id_contratto, tipologie_contratti.nome
 ;
+
 
 --| 090000007300
 
@@ -3504,6 +3538,8 @@ CREATE OR REPLACE VIEW `luoghi_view` AS
 			comuni.nome,
 			provincie.sigla
 		) AS indirizzo,
+		luoghi.id_tipologia,
+		tipologie_luoghi_path( luoghi.id_tipologia ) AS tipologia,
 		luoghi.id_edificio,
 		luoghi.id_immobile,		
 		luoghi.nome,

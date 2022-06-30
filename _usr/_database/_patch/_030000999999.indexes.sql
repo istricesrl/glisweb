@@ -1546,11 +1546,12 @@ ALTER TABLE `luoghi`
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`, `id_edificio`, `id_immobile`,`nome`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`,  `id_tipologia`,`id_edificio`, `id_immobile`,`nome`);
 
 --| 030000018001
 
