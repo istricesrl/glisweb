@@ -9,7 +9,7 @@
 		</select>
 	</div>
 
-    <div class="col-12 col-md-auto">
+    <div class="col-12 col-md">
 		<span class="label-top">fascia</span>
 		<select name="__view__[{{ view.id }}][__filters__][fasce][LK]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.fasce.LK == "" %}selected{% endif %}>tutte</option>
@@ -38,10 +38,12 @@
 			{% endfor %}
 		</select>
 	</div>
+</div>
+	<div class="form-row view-filters d-print-none">
 
     <div class="col">
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
-		</div>
+	</div>
 		<div class="col-auto">
 		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
 		{% if view.insert.path %}
