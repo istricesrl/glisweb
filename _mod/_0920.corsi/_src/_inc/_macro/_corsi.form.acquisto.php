@@ -69,6 +69,16 @@
 	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
 	);
 
+    $ct['etc']['select']['periodi'] = array(
+        array( 'id' => 'totale', '__label__' => 'totale' ),
+        array( 'id' => 'quadrimestrale', '__label__' => 'quadrimestrale' ),
+        array( 'id' => 'trimestrale', '__label__' => 'trimestrale' ),
+        array( 'id' => 'bimestrale', '__label__' => 'bimestrale' ),
+        array( 'id' => 'mensile', '__label__' => 'mensile' ),
+        array( 'id' => 'settimanale', '__label__' => 'settimanale' ),
+        array( 'id' => 'giornata', '__label__' => 'giornata' )
+    );
+
     if( isset($_REQUEST[ $ct['form']['table'] ]['id_prodotto']) ){
         $_REQUEST['prodotti']['pubblicazioni'] = mysqlQuery(
             $cf['mysql']['connection'],
