@@ -44,7 +44,7 @@
 
             {% if not request[ table ].id_prodotto %}
             <div class="form-row">
-                <div class="col-6 col-md-auto justify-content-center align-self-center">
+                <!--div class="col-6 col-md-auto justify-content-center align-self-center">
                     <b>acquistabile online</b>
                 </div>
                 <div class="col-6 col-md-auto">
@@ -54,7 +54,7 @@
                 <div class="col-6 col-md-auto">
                     <span class="label-top">al</span>
                     {{ frm.dateTime( table, '', '', 'timestamp_fine', '', '', request ) }}
-                </div>
+                </div-->
                 <div class="col-12 col-md">
                     {{ frm.button(  'CREA PRODOTTO' ,'button','btn btn-secondary btn-sm btn-block', 'creaProdotto()','ottieni in modo automatico il progressivo' ) }}
                 </div>

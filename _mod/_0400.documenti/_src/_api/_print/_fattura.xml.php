@@ -186,7 +186,7 @@
 	$xml->startElement( 'Anagrafica' );
 
     // azienda / privato
-	if( empty( $dst['partita_iva'] ) ) {
+	if( empty( $dst['partita_iva'] ) && ( !empty($dst['cognome']) ) ) {
 
 	    // - - - - - Nome / il nome del cliente privato
 		$xml->writeElement( 'Nome', $dst['nome'] );

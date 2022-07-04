@@ -62,6 +62,13 @@
 	$ct['etc']['preset']['table'] = 'luoghi';
 	$ct['etc']['preset']['field'] = 'id_indirizzo';
 
+    // tendina tipologie indirizzi
+	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_luoghi_view'
+	);
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
