@@ -1673,6 +1673,8 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		progetti.id_cliente,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS cliente,
 		progetti.id_indirizzo,
+		progetti.id_articolo,
+		progetti.id_prodotto,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,
