@@ -111,6 +111,33 @@
 		
 	);
 
+		// vista tipologie luoghi
+	$p['tipologie.luoghi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'luoghi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.luoghi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.luoghi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione luoghi
+	$p['tipologie.luoghi.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'tipologie.luoghi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.luoghi.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.luoghi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.luoghi.form') )
+		
+	);
+
 	// vista immagini
 	$p['immagini.view'] = array(
 		'sitemap'		=> false,

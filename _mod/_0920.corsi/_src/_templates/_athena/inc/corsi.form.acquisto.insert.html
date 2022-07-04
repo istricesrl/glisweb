@@ -22,6 +22,13 @@
             <span class="label-top">prezzo</span>
             {{ frm.input( 'articoli', 'prezzi', '0', 'prezzo', '', '', '', '', '', '', '', 2 ) }}
         </div>  
+        <input type="hidden" id="art" name="articoli[metadati][0][id_articolo]" value="__parent_id__" disabled>
+		<input type="hidden" id="listino" name=articoli[metadati][0][id_lingua]" value="1" disabled>
+		<input type="hidden" id="iva" name="articoli[metadati][0][nome]" value="periodo_iscrizione" disabled>
+        <div class="col-auto">
+            <span class="label-top">periodo</span>
+            {{ frm.select( 'articoli', 'metadati', '0', 'testo', '', etc.select.periodi, '', '', '', '', '', 2 ) }}
+        </div>
         <div class="col-auto">
             <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
         </div>

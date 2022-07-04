@@ -210,6 +210,9 @@
 	    'zone_indirizzi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
+		'tipologie_luoghi' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
 	    'tipologie_periodi' => array(
 		CONTROL_FULL => array( 'roots' )
 	    ),
