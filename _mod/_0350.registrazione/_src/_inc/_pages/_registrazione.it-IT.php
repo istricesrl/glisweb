@@ -2,7 +2,7 @@
 
     // lingua di questo file
 	$l = 'it-IT';
-	$m = '_mod/_0650.registrazione/';
+	$m = '_mod/_3650.registrazione/';
 
     // pagina principale
 	$p['registrazione'] = array(
