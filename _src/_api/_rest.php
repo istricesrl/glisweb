@@ -99,6 +99,11 @@
 		    $_REQUEST[ $cf['ws']['table'] ] = array();
 		}
 
+		// report mode
+		if( substr( $cf['ws']['table'], 0, 8 ) == '__report' ) {
+		    $_REQUEST[ $cf['ws']['table'] ]['__report_mode__'] = 1;
+		}
+
 	    // passo i dati al controller
 		switch( $cf['ws']['incoming'] ) {
 		    case 'application/json':

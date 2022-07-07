@@ -513,15 +513,6 @@
 
 			    }
 
-			// log
-			    logWrite( "eseguo ($a) la query: $q", 'controller', LOG_DEBUG );
-
-			// debug
-			    // echo 'controller ' . $t . '/' . $a . ' -> ' . $q . PHP_EOL;
-
-			// di default imposto lo stato a 'OK'
-			    $i['__status__'] = 200;
-
 			// gestione degli errori
 			    // @todo gestire gli errori
 			    // print_r( $e['__codes__'] );
@@ -536,6 +527,22 @@
 						$i['__status__'] = 400;
 						$i['__err__'] = $e['__codes__']['1054'][0];
 			    	}
+
+				} elseif( empty( $a ) ) {
+
+					// log
+					logWrite( "nessuna azione intrapresa per l'entità $t", 'controller', LOG_DEBUG );
+
+				} else {
+
+					// log
+					logWrite( "eseguo ($a) la query: $q", 'controller', LOG_DEBUG );
+
+					// debug
+						// echo 'controller ' . $t . '/' . $a . ' -> ' . $q . PHP_EOL;
+
+					// di default imposto lo stato a 'OK'
+						$i['__status__'] = 200;
 
 				}
 

@@ -482,6 +482,7 @@ select.font-awesome {
 header {
     background-color: #aaaaaa;
     height: 45px;
+    z-index: 2530 !important;
 }
 
 header a,
@@ -1009,4 +1010,8 @@ div.combobox-container > .spinner-border {
 
 .modal-content {
     margin: 2px auto;
+}
+
+.modal-dialog {
+    margin: 5em auto;
 }
