@@ -887,7 +887,7 @@
     registrazione.default.attivo          | valore booleano che indica se il nuovo account dev'essere creato come attivo o no
 
     L'array $cf['registrazione'] viene integrato da $cx['registrazione'] e da $cf['site']['registrazione'], per ulteriori dettagli vedi
-    _mod/_3650.registrazione/_src/_config/_030.common.php.
+    _mod/_0350.registrazione/_src/_config/_030.common.php.
 
     Per approfondimenti sul funzionamento del modulo registrazione, si veda /ref "moduli.0650" "la documentazione relativa al modulo registrazione".
 
