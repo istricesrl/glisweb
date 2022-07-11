@@ -111,6 +111,7 @@
         array( 'id' => 'settimanale', '__label__' => 'settimanale' ),
         array( 'id' => 'giornata', '__label__' => 'giornata' )
     );
+    
     // macro di default per l'entità articoli
     require DIR_MOD . '_4100.prodotti/_src/_inc/_macro/_articoli.form.default.php';
 

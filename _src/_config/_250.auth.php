@@ -170,10 +170,9 @@
 		'periodi' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
-#		'progetti_anagrafica' => array(
-#			CONTROL_FULL => array( 'roots' ),
-#			CONTROL_FILTERED => array( 'staff' )
-#		),
+		'pianificazioni' => array(
+			CONTROL_FULL => array( 'roots' )
+		),
 #		'progetti_certificazioni' => array(
 #            CONTROL_FULL => array( 'roots' )
 #        ),
