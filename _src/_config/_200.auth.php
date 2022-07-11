@@ -97,7 +97,8 @@
 		'id' => NULL,
 		'nome' => 'roots',
 		'privilegi' => array(
-		    'EDIT_CONFIGURAZIONE'
+		    'EDIT_CONFIGURAZIONE',
+            'GESTIONE_ACCOUNT'
 		)
 	    ),
 	    'staff' => array(

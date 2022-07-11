@@ -65,7 +65,8 @@
 														'immobili.form.audio',
 														'immobili.form.file',
 														'immobili.form.metadati',
-														'immobili.form.stampe'
+														'immobili.form.stampe',
+														'immobili.form.tools'
 													) )
 	);
 
@@ -183,6 +184,19 @@
 		'macro'		=> array( $m.'_src/_inc/_macro/_immobili.form.stampe.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['immobili.form']['etc']['tabs'] )
+	);
+
+	// gestione immobili tools
+	$p['immobili.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni' ),
+		'h1'			=> array( $l		=> 'azioni' ),
+		'parent'		=> array( 'id'		=> 'immobiliare' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_immobili.form.tools.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'			=> array( 'tabs'	=> $p['immobili.view']['etc']['tabs'] )
 	);
 
 	// vista edifici
