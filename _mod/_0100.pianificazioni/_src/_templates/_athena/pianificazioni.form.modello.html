@@ -34,6 +34,7 @@
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+        <input type="hidden" id="id_periodicita" name="{{ table }}[id_periodicita]" value="{{ request[ table ].id_periodicita }}">
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
@@ -41,31 +42,23 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-        {# MODULO PRINCIPALE #}
-        <legend>dati generali <small>{{ legend }}</small></legend>
+        {% if request[ table ].entita == 'documenti' %}
+		    {% include 'inc/pianificazioni.form.modello.documenti.html' %}
+        {% endif %}
 
-        <div class="form-group form-row">
-            <div class="col-auto">
-                <span class="label-top">tipologia</span>
-                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_zone, request ) }}
-            </div>
-            <div class="col-auto">
-                <span class="label-top">genitore</span>
-                {{ frm.select( table, '', '', 'id_genitore	', '', etc.select.zone, request ) }}
-            </div>
-            <div class="col-12 col-md">
-                <span class="label-top">nome</span>
-			    {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-            </div>
-        </div>
+        {% if request[ table ].entita == 'documenti_articoli' %}
+            {% include 'inc/pianificazioni.form.modello.documenti_articoli.html' %}
+        {% endif %}
+        
+        {% if request[ table ].entita == 'pagamenti' %}
+            {% include 'inc/pianificazioni.form.modello.pagamenti.html' %}
+        {% endif %}
 
-		<div class="form-group form-row">
-		    <div class="col-12">
-			<span class="label-top">note</span>
-			    {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
-		    </div>
-		</div>
+        {% if request[ table ].entita == 'rinnovi' %}
+            {% include 'inc/pianificazioni.form.modello.rinnovi.html' %}
+        {% endif %}
 
+        </fieldset>
         {# BOTTONI E COMANDI DEL MODULO #}
         <fieldset class="form-controls mt-auto">
             {{ def.controls( page, pages, ietf, session, table, request ) }}

@@ -20,7 +20,7 @@
 	    'SELECT id, __label__ FROM tipologie_zone_view'
 	);
 
-        // tendina luoghi genitore
+        // tendina zone genitore
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
 		$ct['etc']['select']['zone'] = mysqlCachedIndexedQuery(

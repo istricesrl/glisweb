@@ -4601,7 +4601,7 @@ DROP TABLE IF EXISTS `periodicita_view`;
 -- periodicita_view
 -- tipologia: tabella standard
 -- verifica: 2021-10-05 18:00 Fabio Mosti
-CREATE OR REPLACE VIEW `popup_view` AS
+CREATE OR REPLACE VIEW `periodicita_view` AS
 	SELECT
 		periodicita.id,
 		periodicita.nome,

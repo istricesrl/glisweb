@@ -1,6 +1,5 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{# import 'bin/default.form.pubblicazioni.sub.html' as sub #}
 
 {% extends "ext/main.html" %}
 
@@ -42,266 +41,155 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
+        {# MODULO PRINCIPALE #}
+        <fieldset>
+            <legend>dati generali <small>{{ legend }}</small></legend>
+            <div class="form-group form-row">
+                <div class="col-auto">
+                    <span class="label-top">genitore</span>
+                    {{ frm.select( table, '', '', 'id_genitore	', '', etc.select.zone, request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">nome</span>
+                    {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+                </div>
+            </div>
 
-			<div class="form-group form-row">
-				<div class="col-12 col-md-1">
-					<span class="label-top">entità</span>
-					{{ frm.select( table, '', '', 'entita', '', etc.select.entita, request, '', '', '', '', '' ) }}
-<!--
-					<select name="{{ table[entita] }}" class="form-control form-control-sm" id="{{ table }}_entita" {% if request[ table ].id %} disabled {% endif %}>
-					{% for e in etc.select.entita %}
-						<option value="{{ e.id }}" {% if request[ table ].entita == e.id %}selected{% endif %}>{{ e.__label__ }}</option>
-					{% endfor %}
-					</select>
--->
+            <div class="form-group form-row">
+                <div class="col-12">
+                <span class="label-top">note</span>
+                    {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+                </div>
+            </div>
+
+            <legend>associazione</legend>
+            <div class="form-group form-row">
+                <!--div class="col-auto">
+                    <span class="label-top">tipologia</span>
+                    {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_zone, request ) }}
+                </div-->
+                {% if '0900.progetti' in mods.active.array %}
+				<div class="col-6 col-md-6">
+					<span class="label-top">progetto</span>
+					{{ frm.selectBox( table, '', '', 'id_progetto',   '', etc.select.progetti, request, '', '', '', '', '', 'progetti.form', 'progetti.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
 				</div>
-				<div class="col-12 col-md-1">
-					<span class="label-top">id entità</span>
-					<input type="text" disabled value="{{ etc.id_oggetto }}" class="form-control form-control-sm ">
+                {% endif %}
+				{% if '0600.contratti' in mods.active.array %}
+                <div class="col-6 col-md-6">
+					<span class="label-top">contratto</span>
+					{{ frm.selectBox( table, '', '', 'id_contratto',   '', etc.select.contratti, request, '', '', '', '', '', 'contratti.form', 'contratti.form', 'contratti', 'id_contratto', page, pages, ietf, 'contratti' ) }}
 				</div>
-				<div class="col-12 col-md-2">
-					<span class="label-top">data di partenza</span>
-					<input name="__data__" type="date" disabled value="{{ etc.data }}" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+                {% endif %}
+				{% if '1200.todo' in mods.active.array %}
+                <div class="col-6 col-md-6">
+					<span class="label-top">todo</span>
+					{{ frm.selectBox( table, '', '', 'id_todo',   '', etc.select.todo, request, '', '', '', '', '', 'todo.form', 'todo.form', 'todo', 'id_todo', page, pages, ietf, 'todo' ) }}
 				</div>
-
-				<div class="col-12 col-md-1">
-					<span class="label-top">giorni rinnovo</span>
-					{{ frm.input( table, '', '', 'giorni_rinnovo', '', '', request ) }}
+                {% endif %}
+				{% if '0200.attivita' in mods.active.array %}
+                <div class="col-6 col-md-6">
+					<span class="label-top">attività</span>
+					{{ frm.selectBox( table, '', '', 'id_attivita',   '', etc.select.attivita, request, '', '', '', '', '', 'attivita.form', 'attivita.form', 'attivita', 'id_attivita', page, pages, ietf, 'attivita' ) }}
 				</div>
-				
-				<div class="col-12 col-md">
-					<span class="label-top">nome</span>
-					{{ frm.input( table, '', '', 'nome', '', '', request ) }}
+                {% endif %}
+            </div>
+
+            <legend>pianificazione</legend>
+            <div class="form-group form-row">
+                <div class="col-auto col-md-4">
+                    <span class="label-top">entità</span>
+                    {{ frm.selectRequired( table, '', '', 'entita', '', etc.select.entita, request ) }}
+                </div>
+                <div class="col-auto col-md-4">
+                    <span class="label-top">peridiocità</span>
+                    {{ frm.selectRequired( table, '', '', 'id_periodicita', '', etc.select.periodicita, request ) }}
+                </div>
+                <div class="col-1">
+                    <span class="label-top">cadenza</span>
+                    {{ frm.input( table, '', '', 'cadenza', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">schema di ripetizione</span>
+                        {{ frm.input( table, '', '', 'schema_ripetizione', '', '', request ) }}
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-4 col-md-1 col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_lunedi', 'lunedì', '', request ) }}
+                    </div>
+                </div>
+                <div class="col-4 col-md-1 col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_martedi', 'martedì', '', request ) }}
+                    </div>
+                </div>
+                <div class="col-4 col-md-1 col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_mercoledi', 'mercoledì', '', request ) }}
+                    </div>
+                </div>
+                <div class="col-4 col-md-1 col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_giovedi', 'giovedì', '', request ) }}
+                    </div>
+                </div>
+                <div class="col-4 col-md-1 col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_venerdi', 'venerdì', '', request ) }}
+                    </div>
+                </div>
+                <div class="col-4 col-md-1 col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_sabato', 'sabato', '', request ) }}
+                    </div>
+                </div>
+                <div class="col-4 col-md-1 col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_domenica', 'domenica', '', request ) }}
+                    </div>
+                </div>
+            </div>
+
+
+            <legend>elaborazione</legend>
+            <div class="form-group form-row">
+                <div class="col-auto">
+					<span class="label-top">data elaborazione</span>
+					{{ frm.date( table, '', '', 'data_elaborazione', '', '', request ) }}
 				</div>
-			</div>
-
-			<div class="form-group form-row">
-				<div class="col-12">
-				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'note', '', 1, request ) }}
+                <div class="col-auto">
+					<span class="label-top">data ultimo oggetto</span>
+					{{ frm.date( table, '', '', 'data_ultimo_oggetto', '', '', request ) }}
 				</div>
-			</div>
-	
-        </fieldset>
-
-		<fieldset>
-			<legend>periodicità</legend>
-
-			{{ frm.input( table, '' , '', 'periodicita', '', '', request, '1', 'hidden' ) }}
-
-			<div class="form-group form-row">
-				<div class="col-12">
-				<ul class="nav nav-tabs nav-tabs-secondary">
-				
-					{% for p in etc.periodicita %}
-					<li class="nav-item">
-						<a class="nav-link {% if request[ table ].periodicita == p.id or (request[ table ].periodicita is empty and p.id == 1 )%}active{% endif %}" onclick="crossShow('cke-{{p.id}}','cke-switch',this);setPeriodicita({{p.id}}); myDate();">{{ p.__label__ }}</a></li>
-					{% endfor %}
-
-				</ul>
-				</div>
-			</div>
-	
-
-			<div class="form-group form-row flex-fill">
-				<div class="col cke-switch" id="cke-1">
-					<div class="form-group form-row" id="giorno">
-						<div class="col-12 col-form-label">
-							<span>specificare il numero di giorni di ripetizione</span>
-						</div>
-					</div>
-				</div>
-
-				<div class="col cke-switch" id="cke-2" style="display: none;">
-					<div class="form-group form-row" id="settimana">
-						<div class="col-4 col-md-1 col-form-label">
-							<div class="form-check">
-								{{ frm.checkbox( table, '', '', 'se_lunedi', 'lunedì', '', request ) }}
-							</div>
-						</div>
-						<div class="col-4 col-md-1 col-form-label">
-							<div class="form-check">
-								{{ frm.checkbox( table, '', '', 'se_martedi', 'martedì', '', request ) }}
-							</div>
-						</div>
-						<div class="col-4 col-md-1 col-form-label">
-							<div class="form-check">
-								{{ frm.checkbox( table, '', '', 'se_mercoledi', 'mercoledì', '', request ) }}
-							</div>
-						</div>
-						<div class="col-4 col-md-1 col-form-label">
-							<div class="form-check">
-								{{ frm.checkbox( table, '', '', 'se_giovedi', 'giovedì', '', request ) }}
-							</div>
-						</div>
-						<div class="col-4 col-md-1 col-form-label">
-							<div class="form-check">
-								{{ frm.checkbox( table, '', '', 'se_venerdi', 'venerdì', '', request ) }}
-							</div>
-						</div>
-						<div class="col-4 col-md-1 col-form-label">
-							<div class="form-check">
-								{{ frm.checkbox( table, '', '', 'se_sabato', 'sabato', '', request ) }}
-							</div>
-						</div>
-						<div class="col-4 col-md-1 col-form-label">
-							<div class="form-check">
-								{{ frm.checkbox( table, '', '', 'se_domenica', 'domenica', '', request ) }}
-							</div>
-						</div>
-
-					</div>
-				</div>
-				<div class="col cke-switch" id="cke-3" style="display: none;">
-					<div class="form-group form-row" id="mese">
-						<div class="col-12">
-							{{ frm.select( table, '', '', 'ripetizione_mese', '', etc.select.ripetizioni_mese, request, 1, '', '', 1 ) }} 
-						</div>
-					</div>
-				</div>
-			</div>
-		</fieldset>
-
-		<fieldset>
-			<legend>ripetizioni</legend>
-			<div class="form-group form-row">
+                <div class="col-12 col-md-5">
+                    <span class="label-top">giorni estensione</span>
+                        {{ frm.input( table, '', '', 'giorni_estensione', '', '', request ) }}
+                </div>
 				<div class="col-auto">
-					<span class="label-top lbl-cad">ogni n. giorni</span>
-					{{ frm.input( table, '', '', 'cadenza', '', '', request, '1', 'number', '', '', '','1' ) }}
-				</div>
-				<div class="col-auto">
-					<span class="label-top">fino al</span>
+					<span class="label-top">data fine</span>
 					{{ frm.date( table, '', '', 'data_fine', '', '', request ) }}
 				</div>
-			</div>
-		</fieldset>
+                <div class="col-12 col-md-5">
+                    <span class="label-top">token</span>
+                        {{ frm.input( table, '', '', 'token', '', '', request ) }}
+                </div>
+            </div>
+            <div class="form-group form-row">        
+                <div class="col-12">
+                    <span class="label-top">workspace</span>
+                        {{ frm.textarea( table, '', '', 'workspace','', '5', request ) }}
+                    </div>
+            </div>
 
-		{% include 'inc/metro.html' %}
-        
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-			{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
-
+        </fieldset>
+        {# BOTTONI E COMANDI DEL MODULO #}
+        <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
+        </fieldset>
+	
 	</form>
     </div>
 </section>
-
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-<script>
-
-$(document).ready(function(){
-
-    // chiamo la funzione myDate che legge la data della pianificazione e costruisce le prime logiche
-    myDate();
-
-    // leggo il valore della periodicità e setto la tab da mostrare e la label della cadenza
-    periodicita = $('#pianificazioni_periodicita').val();
-    crossShow('cke-'+periodicita,'cke-switch');
-    setPeriodicita(periodicita);
-});
-
-
-// funzione che setta il valore della periodicità
-    function setPeriodicita(valore){
-        valore = parseInt(valore);
-        $('#pianificazioni_periodicita').val(valore);
-        setLabelCadenza(valore);
-    }
- 
-// funzione che setta la label della cadenza
-    function setLabelCadenza(valore){
-        valore = parseInt(valore);
-        switch(valore) {
-            case 1:
-                $('.lbl-cad').text('ogni n. giorni');
-                break;
-            case 2:
-                $('.lbl-cad').text('ogni n. settimane');
-                break;
-            case 3:
-                $('.lbl-cad').text('ogni n. mesi');
-                break;
-            default:
-                $('.lbl-cad').text('ogni n. giorni');
-            }
-    }
-   
-   
-
-    Date.prototype.getWeekOfMonth = function() {
-        var firstWeekday = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
-        var offsetDate = this.getDate() + firstWeekday - 1;
-        return Math.floor(offsetDate / 7);
-    }
-
-
-    function myDate() {
-        console.log('chiamata funzione myDate');
-      
-        // cerco il giorno della settimana corrispondente alla data
-        var d = $('#__data__').val();
-        d = d.split("T");
-        var a = d[0].split("-") ;
-        var date = new Date( a[0], (a[1] - 1), a[2] ) ;
-
-        var r = date.getDay() - 1;
-
-        // per la domenica setto a 6
-        if( r == -1 ){
-            r = 6;
-        }
-
-        var numeroSettimana = date.getWeekOfMonth() + 1;
-
-/*        
-        // solo se non ho una pianificazione settimanale già esistente setto la checkbox del giorno corrente
-        if( !$('#pianificazioni_id').val() || ( $('#pianificazioni_id').val() && $('#pianificazioni_periodicita').val() != 2 ) ){
-        //    console.log('myDate, setto le checkbox dei giorni settimana in base alla data');
-            $("input:checkbox").prop('checked', false);
-            $('.giorno-'+r).prop('checked', true);
-        }
-*/        
-     
-        var weekdays = new Array(7);
-        weekdays[0] = "lunedì";
-        weekdays[1] = "martedì";
-        weekdays[2] = "mercoledì";
-        weekdays[3] = "giovedì";
-        weekdays[4] = "venerdì";
-        weekdays[5] = "sabato";
-        weekdays[6] = "domenica";
-
-        var mesi = new Array(12);
-        mesi[1]  = "gennaio";
-        mesi[2] = "febbraio";
-        mesi[3] = "marzo";
-        mesi[4] = "aprile";
-        mesi[5] = "maggio";
-        mesi[6] = "giugno";
-        mesi[7] = "luglio";
-        mesi[8] = "agosto";
-        mesi[9] = "settembre";
-        mesi[10] = "ottobre";
-        mesi[11] = "novembre";
-        mesi[12] = "dicembre";
-
-
-        // inserisco nell'if di controllo per non avere errore
-        if( $('#pianificazioni_periodicita').val() == 3 ){
-            document.getElementById("pianificazioni_ripetizione_mese").options[0].text = "ogni giorno "+ a[2]+" del mese";
-            document.getElementById("pianificazioni_ripetizione_mese").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";        
-        }
-      
-    //    document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
-    //    document.getElementById("__rip_anno__").options[1].text ="il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
-      
-    }
-   
-</script>
 
 {% endblock %}

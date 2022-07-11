@@ -170,9 +170,6 @@
 		'periodi' => array(
 			CONTROL_FULL => array( 'roots' )
 		),
-		'pianificazioni' => array(
-			CONTROL_FULL => array( 'roots' )
-		),
 #		'progetti_certificazioni' => array(
 #            CONTROL_FULL => array( 'roots' )
 #        ),

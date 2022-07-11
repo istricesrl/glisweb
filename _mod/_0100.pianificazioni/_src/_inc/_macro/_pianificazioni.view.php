@@ -5,49 +5,28 @@
      *
      *
      *
-     *
-     *
-     *
-     *
-     *
-     *
-     * @todo finire di documentare
-     *
      * @file
      *
      */
 
     // tabella della vista
-    $ct['view']['table'] = 'pianificazioni';
-    
-    // id della vista
-  #  $ct['view']['id'] = md5( $ct['view']['table'] );
+	$ct['view']['table'] = 'pianificazioni';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'pianificazioni.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
-        'id' => '#',
-        'entita' => 'entità',
-        'nome' => 'pianficazione'
+	    'id' => '#',
+	    '__label__' => 'pianificazione',
+        'entita' => 'entità'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-        'nome' => 'text-left'
-    );
+	    'id' => 'd-none d-md-table-cell',
+	    '__label__' => 'text-left',
+	);
 
-    // tendina delle entita che è possibile gestire
-    $ct['etc']['select']['entita'] = array(
-        array( 'id' => 'turni', '__label__' => 'turni' )
-    );
-    
-    // inclusione filtri speciali
-//	$ct['etc']['include']['filters'] = 'inc/pianificazioni.view.filters.html';
- 
-
-    // macro di default
+    // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
-
-   
