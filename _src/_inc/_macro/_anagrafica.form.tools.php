@@ -22,7 +22,10 @@
         ),
         'archivium' => array(
 		'label' => 'Archivium'
-	    )
+	    ),
+        'account' => array(
+            'label' => 'account'
+        )
 	);
 
     // esportazione azienda in Archivium
@@ -44,6 +47,33 @@
             }
         }
     }
+
+    // TODO appare solo se account esiste e se ha una mail associata
+    // esportazione contatti anagrafica
+    $ct['page']['contents']['metro']['account'][] = array(
+        'modal' => array( 'id' => 'crea_account', 'include' => 'inc/anagrafica.form.tools.crea.account.html' ),
+        'icon' => NULL,
+        'fa' => 'fa-plus-square',
+        'title' => 'crea account',
+        'text' => 'crea un account per l\'anagrafica e invia mail di attivazione all\'utente'
+    );
+
+    foreach( $cf['registrazione']['profili'] as $k => $v ) {
+        $ct['etc']['select']['profili'][] = array(
+            'id' => $k,
+            '__label__' => $v['nome'] 
+        );
+    }
+
+    foreach( $_REQUEST['anagrafica']['mail'] as $k => $v ) {
+        $ct['etc']['select']['mail'][] = array(
+            'id' => $v['id'],
+            '__label__' => $v['indirizzo'] 
+        );
+    }
+
+    // debug
+    // print_r($_REQUEST);
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';

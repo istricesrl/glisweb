@@ -12,18 +12,19 @@
      */
 
     // comportamento di default
-	$cf['registrazione']['default'] = array(
+	$cf['registrazione']['profili']['default'] = array(
+        'nome' => 'utente di default',
 	    'gruppi' => array( 'users' ),
 	    'categorie' => array( 'lead' ),
 	    'attivo' => true
 	);
 
     // configurazione extra
-	if( isset( $cx['registrazione']['default'] ) ) {
-	    $cf['registrazione']['default'] = array_replace_recursive( $cf['registrazione']['default'], $cx['registrazione']['default'] );
+	if( isset( $cx['registrazione'] ) ) {
+	    $cf['registrazione'] = array_replace_recursive( $cf['registrazione'], $cx['registrazione'] );
 	}
 
     // configurazione extra per sito
-	if( isset( $cf['site']['registrazione']['default'] ) ) {
-	    $cf['registrazione']['default'] = array_replace_recursive( $cf['registrazione']['default'], $cf['site']['registrazione']['default'] );
+	if( isset( $cf['site']['registrazione'] ) ) {
+	    $cf['registrazione'] = array_replace_recursive( $cf['registrazione'], $cf['site']['registrazione'] );
 	}
