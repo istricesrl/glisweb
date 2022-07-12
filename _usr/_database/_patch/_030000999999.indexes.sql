@@ -373,6 +373,52 @@ ALTER TABLE `caratteristiche_prodotti`
 -- tipologia: tabella gestita
 ALTER TABLE `caratteristiche_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000003000
+
+-- carrelli
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+ALTER TABLE `carrelli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `session` (`session`), 
+	ADD KEY `id_listino` (`id_listino`), 
+	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`), 
+	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
+	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`), 
+	ADD KEY `destinatario_id_provincia` (`destinatario_id_provincia`), 
+	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`), 
+	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`);
+
+--| 030000003001
+
+-- carrelli
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli`   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000003050
+
+-- carrelli_articoli
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+ALTER TABLE `carrelli_articoli`
+  	ADD PRIMARY KEY (`id`),
+  	ADD KEY `id_carrello` (`id_carrello`),  
+  	ADD KEY `id_articolo` (`id_articolo`),  
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `id_carrello_id_articolo` (`id_carrello`,`id_articolo`),
+  	ADD KEY `indice` (`id`, `id_carrello`, `id_articolo`, `id_iva`, `prezzo_netto_unitario`, `prezzo_lordo_unitario`,`quantita`, `prezzo_netto_totale`,  `prezzo_lordo_totale`, `sconto_percentuale`, `sconto_valore`, `prezzo_netto_finale`,  `prezzo_lordo_finale`)
+  ;
+
+--| 030000003051
+
+-- carrelli_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000003100
 
 -- categorie_anagrafica

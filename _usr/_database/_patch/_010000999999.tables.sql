@@ -397,6 +397,88 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000003000
+
+-- carrelli
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+CREATE TABLE `carrelli` (
+  `id` int(11) NOT NULL,
+  `session` char(32) DEFAULT NULL,
+  `destinatario_nome` char(255) DEFAULT NULL,
+  `destinatario_cognome` char(255) DEFAULT NULL,
+  `destinatario_denominazione` char(255) DEFAULT NULL,
+  `destinatario_id_anagrafica` int(11) DEFAULT NULL,
+  `destinatario_indirizzo` char(255) DEFAULT NULL,
+  `destinatario_cap` char(16) DEFAULT NULL,
+  `destinatario_citta` char(255) DEFAULT NULL,
+  `destinatario_id_provincia` int(11) DEFAULT NULL,
+  `destinatario_id_stato` int(11) DEFAULT NULL,
+  `destinatario_telefono` char(255) DEFAULT NULL,
+  `destinatario_mail` char(255) DEFAULT NULL,
+  `destinatario_codice_fiscale` char(255) DEFAULT NULL,
+  `destinatario_partita_iva` char(255) DEFAULT NULL,
+  `intestazione_nome` char(255) DEFAULT NULL,
+  `intestazione_cognome` char(255) DEFAULT NULL,
+  `intestazione_denominazione` char(255) DEFAULT NULL,
+  `intestazione_id_anagrafica` int(11) DEFAULT NULL,
+  `intestazione_indirizzo` char(255) DEFAULT NULL,
+  `intestazione_cap` char(16) DEFAULT NULL,
+  `intestazione_citta` char(255) DEFAULT NULL,
+  `intestazione_id_provincia` int(11) DEFAULT NULL,
+  `intestazione_id_stato` int(11) DEFAULT NULL,
+  `intestazione_telefono` char(255) DEFAULT NULL,
+  `intestazione_mail` char(255) DEFAULT NULL,
+  `intestazione_codice_fiscale` char(255) DEFAULT NULL,
+  `intestazione_partita_iva` char(255) DEFAULT NULL,
+  `intestazione_sdi` char(32) DEFAULT NULL,
+  `intestazione_pec` char(255) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
+  `sconto_percentuale` decimal(16,5) DEFAULT NULL,
+  `sconto_valore` decimal(16,5) DEFAULT NULL,
+  `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,
+  `provider_checkout` char(128) DEFAULT NULL,
+  `timestamp_checkout` int(11) DEFAULT NULL,
+  `provider_pagamento` char(64) DEFAULT NULL,
+  `timestamp_pagamento` int(11) DEFAULT NULL,
+  `codice_pagamento` char(128) DEFAULT NULL,
+  `status_pagamento` char(128) DEFAULT NULL,
+  `importo_pagamento` decimal(16,5) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000003050
+
+-- carrelli_articoli
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+CREATE TABLE `carrelli_articoli` (
+  `id` int(11) NOT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `prezzo_netto_unitario` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_unitario` decimal(16,5) DEFAULT NULL,
+  `quantita` int(11) DEFAULT NULL,
+  `note` text,
+  `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
+  `sconto_percentuale` decimal(16,5) DEFAULT NULL,
+  `sconto_valore` decimal(16,5) DEFAULT NULL,
+  `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000003100
 
 -- categorie_anagrafica
