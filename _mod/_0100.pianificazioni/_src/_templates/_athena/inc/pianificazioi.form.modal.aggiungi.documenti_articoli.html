@@ -1,0 +1,72 @@
+{% import '_bin/_form.html' as frm %}
+{% set modalTable = 'pianificazioni' %}
+{% set modalSubTable = 'pianificazioni' %}
+
+<div class="modal" tabindex="-1" role="dialog" id="modal-inserimento-indirizzi">
+	<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+		<h5 class="modal-title">inserisci una pianificazione</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		</div>
+		<div class="modal-body">
+		<div class="container-fluid">
+
+			<input type="hidden" id="method" name="{{ modalTable }}[{{ modalSubTable }}][0][__method__]" value="{{ method }}" disabled>
+			<input type="hidden" id="reset" name="{{ modalTable }}[{{ modalSubTable }}][0][__reset__]" value="1" disabled>
+			<input type="hidden" id="timestamp" name="{{ modalTable }}[{{ modalSubTable }}][0][timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+			<input type="hidden" id="account" name="{{ modalTable }}[{{ modalSubTable }}][0][id_account_inserimento]" value="{{ account }}" disabled>
+			<input type="hidden" id="id_valutazione" name="{{ modalTable }}[{{ modalSubTable }}][0][id_pianificazione]" value="__parent_id__" disabled>
+			<!-- dati generali della pianificazione ereditati dal parent -->
+			<input type="hidden" id="id_progetto" name="{{ modalTable }}[{{ modalSubTable }}][0][id_progetto]" value="{{ request[ table ].id_progetto }}" disabled>
+			<input type="hidden" id="id_contratto" name="{{ modalTable }}[{{ modalSubTable }}][0][id_contratto]" value="{{ request[ table ].id_contratto }}" disabled>
+			<input type="hidden" id="id_todo" name="{{ modalTable }}[{{ modalSubTable }}][0][id_todo]" value="{{ request[ table ].id_todo }}" disabled>
+			<input type="hidden" id="id_attivita" name="{{ modalTable }}[{{ modalSubTable }}][0][id_attivita]" value="{{ request[ table ].id_attivita }}" disabled>
+			<input type="hidden" id="id_periodicita" name="{{ modalTable }}[{{ modalSubTable }}][0][id_periodicita]" value="{{ request[ table ].id_periodicita }}" disabled>
+			<input type="hidden" id="cadenza" name="{{ modalTable }}[{{ modalSubTable }}][0][cadenza]" value="{{ request[ table ].cadenza }}" disabled>
+			<input type="hidden" id="schema_ripetizione" name="{{ modalTable }}[{{ modalSubTable }}][0][schema_ripetizione]" value="{{ request[ table ].schema_ripetizione }}" disabled>
+			<input type="hidden" id="se_lunedi" name="{{ modalTable }}[{{ modalSubTable }}][0][se_lunedi]" value="{{ request[ table ].se_lunedi }}" disabled>
+			<input type="hidden" id="se_martedi" name="{{ modalTable }}[{{ modalSubTable }}][0][se_martedi]" value="{{ request[ table ].se_martedi }}" disabled>
+			<input type="hidden" id="se_mercoledi" name="{{ modalTable }}[{{ modalSubTable }}][0][se_mercoledi]" value="{{ request[ table ].se_mercoledi }}" disabled>
+			<input type="hidden" id="se_giovedi" name="{{ modalTable }}[{{ modalSubTable }}][0][se_giovedi]" value="{{ request[ table ].se_giovedi }}" disabled>
+			<input type="hidden" id="se_venerdi" name="{{ modalTable }}[{{ modalSubTable }}][0][se_venerdi]" value="{{ request[ table ].se_venerdi }}" disabled>
+			<input type="hidden" id="se_sabato" name="{{ modalTable }}[{{ modalSubTable }}][0][se_sabato]" value="{{ request[ table ].se_sabato }}" disabled>
+			<input type="hidden" id="se_domenica" name="{{ modalTable }}[{{ modalSubTable }}][0][se_domenica]" value="{{ request[ table ].se_domenica }}" disabled>
+			<input type="hidden" id="data_elaborazione" name="{{ modalTable }}[{{ modalSubTable }}][0][data_elaborazione]" value="{{ request[ table ].data_elaborazione }}" disabled>
+			<input type="hidden" id="giorni_estensione" name="{{ modalTable }}[{{ modalSubTable }}][0][giorni_estensione]" value="{{ request[ table ].giorni_estensione }}" disabled>
+			<input type="hidden" id="data_fine" name="{{ modalTable }}[{{ modalSubTable }}][0][data_fine]" value="{{ request[ table ].data_fine }}" disabled>
+			<input type="hidden" id="entita" name="{{ modalTable }}[{{ modalSubTable }}][0][entita]" value="documenti_articoli" disabled>
+
+			<!-- fine dati generali-->
+			<legend>dati pianificazione</legend>
+			<div class="form-group form-row">
+				<div class="col">
+				<span class="label-top ">nome</span>
+					{{ frm.input( modalTable, modalSubTable, '0', 'nome', '', '', '', '', '', '', '', 2 ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
+				<div class="col-12 col-md-12">
+					<span class="label-top">note</span>
+					{{ frm.input( modalTable, modalSubTable, '0', 'note', '', '', '', '', '', '', '', 2 ) }}
+				</div>
+				<div class="col-12 col-md-12">
+					<span class="label-top">workspace</span>
+					{{ frm.input( modalTable, modalSubTable, '0', 'workspace', '', '', '', '', '', '', '', 2 ) }}
+				</div>
+			</div>
+	
+			<legend>riga del documento</legend>
+			<div class="form-group form-row">
+			
+			</div>
+
+		</div>
+		</div>
+		<div class="modal-footer">
+		<button type="submit" class="btn btn-secondary btn-sm" onclick="submitFormOkay = true;" id="duplica-btn">salva</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+		</div>
+	</div>
+	</div>
+</div>
