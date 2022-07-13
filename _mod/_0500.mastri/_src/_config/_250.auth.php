@@ -39,6 +39,9 @@
             '__report_giacenza_magazzini__' => array(
                 CONTROL_FULL => array( 'roots', 'staff' )
             ),
+            '__report_giacenza_magazzini_foglie__' => array(
+                CONTROL_FULL => array( 'roots', 'staff' )
+            ),
             '__report_movimenti_magazzini__' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )

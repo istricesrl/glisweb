@@ -43,36 +43,15 @@
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 
-		// TODO aggiunta riga da stringone
-		if( isset( $_REQUEST['__evasione__'] ) ) {
-
-			// TODO spacchettare l'ID che è composto da idMagazzinoProvenienza|idArticolo|idMatricola
-			$evasione = explode( '|', $_REQUEST['__evasione__']['id_giacenza'] );
-
-			// TODO inserire la riga di documenti_articoli con i dati ricavati sopra
-			mysqlInsertRow(
-				$cf['mysql']['connection'],
-				array(
-					'id' => NULL,
-					'id_documento' => $_REQUEST[ $ct['form']['table'] ]['id'],
-					'id_articolo' => $evasione[1],
-					'id_matricola' => isset( $evasione[2] ) ? $evasione[2] : NULL,
-					'id_udm' => 1,
-					'quantita' => $_REQUEST['__evasione__']['quantita'],
-					'id_mastro_provenienza' => $evasione[0]
-				),
-				'documenti_articoli'
-			);
-
-		}
-
 		$ct['etc']['note'] = mysqlSelectValue(
 			$cf['mysql']['connection'],
 			'SELECT note_invio FROM documenti INNER JOIN relazioni_documenti ON relazioni_documenti.id_documento_collegato = documenti.id WHERE documenti.id_tipologia = 7 AND  relazioni_documenti.id_documento = ?',
 			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
 		);
-		}
-    // print_r( $ct['etc']['evasione'] );
+
+	}
+
+	// print_r( $ct['etc']['evasione'] );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

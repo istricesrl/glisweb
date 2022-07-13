@@ -1957,6 +1957,8 @@ CREATE OR REPLACE VIEW `ddt_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
+			documenti.nome,
+			' ',
 			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
@@ -2018,6 +2020,8 @@ CREATE OR REPLACE VIEW `ddt_attivi_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
+			documenti.nome,
+			' ',
 			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
@@ -2080,6 +2084,8 @@ CREATE OR REPLACE VIEW `ddt_passivi_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
+			documenti.nome,
+			' ',
 			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
