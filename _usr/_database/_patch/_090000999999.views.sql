@@ -651,7 +651,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			articoli.nome,
 			coalesce(
 				concat(
-					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					concat_ws( 'x', articoli.larghezza, articoli.lunghezza, articoli.altezza ),
 					udm_dimensioni.sigla
 				),
 				concat(

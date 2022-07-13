@@ -41,6 +41,7 @@
 #        'matricola' => 'matricola'
 'data' => 'data',
 'tipologia' => 'documento',
+'documento' => 'nome',
 'numero' => 'numero',
 //'id_articolo' => 'codice',
 'articolo' => 'descrizione',
@@ -68,6 +69,7 @@
         'id_riga' => 'd-none',
         'numero' => 'd-none',
         'data' => 'no-wrap', 
+        'documento' => 'd-none',
 #        'id_listino' => 'd-none',
 #        'id_tipologia' => 'd-none',
 #        'id_emittente' => 'd-none',
@@ -92,7 +94,7 @@
 
     // trasformazione icona attivo/inattivo
 	foreach( $ct['view']['data'] as &$row ) {
-        $row['tipologia'] .= ' n° '.$row['numero'];
+        $row['tipologia'] .= ' ' . $row['documento'] . ' ' . ' n° '.$row['numero'];
 	}
 
     // macro di default
