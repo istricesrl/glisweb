@@ -594,8 +594,13 @@
 
     }
 
-	// funzione che ritorna un array dei giorni festivi (timestamp) relativi ad un certo anno
-    function getHolidays( $anno ){
+	/**
+     * funzione che ritorna un array dei giorni festivi relativi ad un certo anno. riceve in ingresso
+     * - anno: l'anno per il quale si desiderano calcolare i giorni
+     * - formato: il formato con il quale si desiderano le date. se non passato, la funzione restituisce i timestamp
+     * 
+     *  */
+    function getHolidays( $anno, $formato = NULL ){
 
         $festivi = array(
 			strtotime( $anno . '-01-01' ), 	    // Capodanno
@@ -611,6 +616,12 @@
 			strtotime( $anno . '-12-25' ),  	// Natale
 			strtotime( $anno . '-12-26' ) 	    // Santo Stefano
 		);
+
+        if( $formato !== NULL ){
+            foreach( $festivi as &$f ){
+                $f = date( $formato, $f );
+            }
+        }
 
         return $festivi;
     }

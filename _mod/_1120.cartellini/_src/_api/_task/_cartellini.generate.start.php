@@ -28,7 +28,7 @@
 
         $nomemese = int2month( $_REQUEST['mese'] );
 
-        $nomeJob = '_mod/_1120.cartellini/_src/_api/_job/_cartellini.generate.php';
+        $job = '_mod/_1120.cartellini/_src/_api/_job/_cartellini.generate.php';
         $parametriJob = '%"mese":"' . $status['mese'] . '","anno":"' . $status['anno'] . '"%';
 
         // verifico se è già presente un job di creazione cartellino per il mese e l'anno correnti
@@ -36,7 +36,7 @@
             $cf['mysql']['connection'],
             'SELECT id FROM job WHERE job = ? AND workspace LIKE ?',
             array(
-                array( 's' => $nomeJob ),
+                array( 's' => $job ),
                 array( 's' => $parametriJob)
             )
         );

@@ -64,7 +64,7 @@
             {% endif %}
         </div>
 
-        {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ %}
+        {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ and etc.tipologie_attivita_inps %}
         <div class="form-row">
             <div class="col-md-12 table-responsive">
                 <table class="view-table cartellini warning-if-changed-cst">
@@ -73,31 +73,37 @@
                             <th>data</th>
                             <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
-                            <th>{{ t.__label__ }}</th>
+                            <th>{{ t.nome }}</th>
                             {% endfor %}
-                            <th colspan="2">totale ordinario</th>
+                            <th class="pl-3 pr-3">totale ore<br>contratto</th>
+                            <th class="pl-3 pr-3">totale ore<br>lavorate</th>
+                            <th class="pl-3 pr-3">totale ore<br>variazioni</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for k,v in etc.ore %}
                         <tr>
-                            <td style="text-align: right; {% if v.festivo == 1 %} color: red;{% endif %}">{{ v.nome }} {{ v.data }}</td>
+                            <td style="text-align: right; {% if v.festivo == 1 %} color: red;{% endif %} cursor: pointer" onclick="window.open('{{ pages['attivita.view'].url[ localization.language.ietf ]~'?__filters__[id_anagrafica][EQ]='~request.__view__[ view.id ].__filters__.id_anagrafica.EQ~'&__filters__[mese][EQ]='~request.__view__[ view.id ].__filters__.mese.EQ~'&__filters__[anno][EQ]='~request.__view__[ view.id ].__filters__.anno.EQ~'&__filters__[giorno][EQ]='~k }}');">{{ v.nome }} {{ v.data }}</td>
                             <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
-                            {% if v[ t.id ].id %}
-                            <td style="cursor: pointer" onclick="window.open('{{ pages['righe.cartellini.form'].url[ localization.language.ietf ]~'?righe_cartellini[id]='~v[ t.id ].id }}','_self');">
-                                <div>{{ v[ t.id ].ore_tot }}</div>
+                            {% if v.ore_fatte[ t.id ] %}
+                            <td style="cursor: pointer" onclick="window.open('{{ pages['righe.cartellini.form'].url[ localization.language.ietf ]~'?righe_cartellini[id]='~v.id_riga[ t.id ] }}','_self');">
+                                <div>{{ v.ore_fatte[ t.id ] }}</div>
                             {% else %}
-                            <td><div><input disabled style="border: 0ch;"> </div>
+                            <td><div><input disabled style="border: 0ch;"></div>
                             {% endif %}
                             </td>
                             {% endfor %}
-                            <td>&nbsp;</td>
-                            <td>{% if v.ordinarie_previste > 0 or v.ordinarie_fatte > 0 %}{{'%0.2f'|format( v.ordinarie_fatte ) }} ore di {{ '%0.2f'|format(v.ordinarie_previste) }}{% endif %}</td>
+                            <td>{% if v.totali.ore_contratto > 0 %}{{'%0.2f'|format( v.totali.ore_contratto ) }}{% endif %}</td>
+                            <td>{% if v.totali.ore_lavorate > 0 %}{{'%0.2f'|format( v.totali.ore_lavorate ) }}{% endif %}</td>
+                            <td>{% if v.totali.ore_variazioni > 0 %}{{'%0.2f'|format( v.totali.ore_variazioni ) }}{% endif %}</td>
                             <td>
-                                {% if v.ordinarie_previste != v.ordinarie_fatte %}
+                                
+                                {% if v.totali.ore_lavorate > 0 %} {% set lav = v.totali.ore_lavorate %} {% else %} {% set lav = 0 %}{% endif %}
+                                {% if v.totali.ore_variazioni > 0 %} {% set var = v.totali.ore_variazioni %} {% else %} {% set var = 0 %}{% endif %}
+                                {% if v.totali.ore_contratto != ( lav + var ) %}
                                 <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
-                                {% elseif v.ordinarie_previste == v.ordinarie_fatte and v.ordinarie_previste > 0 %}
+                                {% elseif ( v.totali.ore_contratto == ( lav + var ) and v.totali.ore_contratto ) > 0 %}
                                 <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
                                 {% endif %}
                             </td>
@@ -107,18 +113,17 @@
                             <td style="text-align: right;">totale</td>
                             <!-- attenzione, se si modifica questo for modificarlo allo stesso modo anche negli altri punti della pagina in cui è utilizzato -->
                             {% for t in etc.tipologie_attivita_inps|sort( ( a,b ) => a.id <=> b.id ) %}
-                            <td>{{ '%0.2f'|format(etc.tipologie[ t.id ].ore_totali) }}</td>
+                            <td>{{ '%0.2f'|format(t.ore_totali) }}</td>
                             {% endfor %}
-                            <td>&nbsp;</td>
+                            <td>{{'%0.2f'|format( etc.ore_totali.ore_contratto ) }}</td>
+                            <td>{{'%0.2f'|format( etc.ore_totali.ore_lavorate ) }}</td>
+                            <td>{{'%0.2f'|format( etc.ore_totali.ore_variazioni ) }}</td>
                             <td>
-                                {% if etc.totali_quadratura.ordinarie_fatte > 0 or etc.totali_quadratura.ordinarie_previste > 0 %}
-                                {{'%0.2f'|format( etc.totali_quadratura.ordinarie_fatte ) }} ore di {{ '%0.2f'|format( etc.totali_quadratura.ordinarie_previste ) }}
-                                {% endif %}
-                            </td>
-                            <td>
-                                {% if etc.totali_quadratura.ordinarie_fatte != etc.totali_quadratura.ordinarie_previste %}
+                                {% if etc.ore_totali.ore_lavorate > 0 %} {% set totlav = etc.ore_totali.ore_lavorate %} {% else %} {% set totlav = 0 %}{% endif %}
+                                {% if etc.ore_totali.ore_variazioni > 0 %} {% set totvar = etc.ore_totali.ore_variazioni %} {% else %} {% set totvar = 0 %}{% endif %}
+                                {% if etc.ore_totali.ore_contratto != lav + var %}
                                 <i class="fa fa-exclamation-triangle" style="padding-left: 8px;" aria-hidden="true"></i>
-                                {% else %}
+                                {% elseif ( etc.ore_totali.ore_contratto == ( totlav + totvar ) and etc.ore_totali.ore_contratto > 0 ) %}
                                 <i class="fa fa-check" style="padding-left: 8px;" aria-hidden="true"></i>
                                 {% endif %}
                             </td>

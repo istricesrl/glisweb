@@ -33,12 +33,7 @@
                             <th>ora fine</th>
 							<th>progetto</th>
 							<th>tipologia inps</th>
-							<th>ore complessive</th>
-                            <th>ore ordinarie</th>
-							<th>ore straordinarie</th>
-                            <!--
-                                <th>blocchi (es. il cliente non vuole quell'operatore)</th>
-                            -->
+							<th>ore</th>
                             <th>&nbsp;</th>
                         </tr>
                     </thead>
@@ -53,8 +48,6 @@
                             <td>{{ a.progetto }}</td>
 							<td>{{ a.tipologia_inps }}</td>
 							<td>{{ a.ore }}</td>
-							<td>{{ a.ore_ordinarie }}</td>
-							<td>{{ a.ore_straordinarie }}</td>         
                         </tr>
                         {% endfor %}
 

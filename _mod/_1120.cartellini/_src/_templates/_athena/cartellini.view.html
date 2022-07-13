@@ -54,7 +54,7 @@
 				<td class="{{ view.class[key] }}"{% if view.onclick[key] %} onclick="{{ view.onclick[key] }}"{% endif %}>{{ row[key]|raw }}</td>
 				{% endfor %}
                 <td>
-                    <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages['cartellini'].path[ localization.language.ietf ] }}?mese={{ row[ 'mese' ] }}&anno={{ row[ 'anno' ] }}&id_anagrafica={{ row[ 'id_anagrafica' ] }}','_self');" placeholder="controlla cartellino"  data-placement="bottom" data-delay="1000" title="">controlla</button>
+                    <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages['cartellini'].path[ localization.language.ietf ] }}?__filters__[mese][EQ]={{ row[ 'mese' ] }}&__filters__[anno][EQ]={{ row[ 'anno' ] }}&__filters__[id_anagrafica][EQ]={{ row[ 'id_anagrafica' ] }}','_self');" placeholder="controlla cartellino"  data-placement="bottom" data-delay="1000" title="">controlla</button>
                     <button type="button" style="width: auto; padding-left: 10px; padding-right: 10px" class="btn btn-sm btn-secondary" onclick="window.open('{{ pages['cartellini.form'].path[ localization.language.ietf ] }}?cartellini[id]={{ row[ 'id' ] }}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');" placeholder="modifica cartellino"  data-placement="bottom" data-delay="1000" title="">modifica</button>
                </td>
 				</tr>

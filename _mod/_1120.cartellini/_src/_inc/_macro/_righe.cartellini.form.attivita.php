@@ -10,8 +10,38 @@
      // tabella gestita
     $ct['form']['table'] = 'righe_cartellini';
 
-    if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+    // tipologia inps per le ore ordinarie
+	$idT_inps_ordinario = mysqlSelectValue( 
+		$cf['mysql']['connection'], 
+		'SELECT id FROM tipologie_attivita_inps WHERE codice = ?',
+		array( array( 's' => '01') )
+	);
+
+	// tipologia inps per le ore straordinarie
+	$idT_inps_straordinario = mysqlSelectValue( 
+		$cf['mysql']['connection'], 
+		'SELECT id FROM tipologie_attivita_inps WHERE codice = ?',
+		array( array( 's' => 'LS') )
+	);
+
+	// tipologia inps per le ore lavorate nei giorni festivi
+	$idT_inps_festivo = mysqlSelectValue( 
+		$cf['mysql']['connection'], 
+		'SELECT id FROM tipologie_attivita_inps WHERE codice = ?',
+		array( array( 's' => 'LF1') )
+	);  
+
+    if( !empty( $_REQUEST[ $ct['form']['table'] ]['id'] )  && !empty( $_REQUEST[ $ct['form']['table'] ]['id_tipologia_inps'] ) ){
         $car = $_REQUEST[ $ct['form']['table'] ];
+
+        $params[] = array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] );
+
+        if( $_REQUEST[ $ct['form']['table'] ]['id_tipologia_inps'] == $idT_inps_ordinario || $_REQUEST[ $ct['form']['table'] ]['id_tipologia_inps'] == $idT_inps_straordinario || $_REQUEST[ $ct['form']['table'] ]['id_tipologia_inps'] == $idT_inps_festivo ){
+            $params[] = array( 's' => $idT_inps_ordinario );
+        }
+        else{
+            $params[] = array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_tipologia_inps'] );
+        }
 
         // elenco delle attività legate alla riga di cartellino corrente
         $attivita = mysqlQuery(
@@ -30,100 +60,15 @@
             .'LEFT JOIN tipologie_attivita as t ON a.id_tipologia = t.id '
             .'LEFT JOIN tipologie_attivita_inps_view as ti ON a.id_tipologia_inps = ti.id '
             .'INNER JOIN righe_cartellini as r ON a.data_attivita = r.data_attivita AND a.id_anagrafica = r.id_anagrafica '
-            .'WHERE r.id = ? and r.id_tipologia_inps = ?',
-            array( 
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_tipologia_inps'] )
-            )
+            .'WHERE r.id = ? and a.id_tipologia_inps = ?',
+            $params
         );
 
+    
+
         if( !empty( $attivita ) ){
-
-            // ricavo l'id del contratto attivo alla data indicata
-            $contratto = $car['id_contratto'];
-
-            if( !empty(  $contratto ) ){
-
-                $dati_contratto = mysqlSelectRow(
-                    $cf['mysql']['connection'], 
-                    'SELECT * FROM contratti WHERE id = ?',
-                    array( array( 's' => $contratto ) )
-                );
-
-                // verifico se c'è un turno specificato nella tabella turni
-                $turno = mysqlSelectValue(
-                    $cf['mysql']['connection'], 
-                    'SELECT turno FROM turni WHERE id_contratto = ? AND (data_inizio <= ? AND data_fine >= ?) ORDER BY id DESC LIMIT 1',
-                    array( 
-                        array( 's' => $contratto ),
-                        array( 's' => $car['data_attivita'] ),
-                        array( 's' => $car['data_attivita'] )
-                    )
-                );
-
-                // se non ci sono turni, di base è attivo il turno 1
-                if( empty( $turno ) ){
-                    $turno = 1;
-                }
-
-                $fasce = mysqlSelectRow(
-                    $cf['mysql']['connection'],  
-                    'SELECT * FROM fasce_orarie_contratti WHERE id_contratto = ? AND turno = ? AND id_giorno = ? LIMIT 1',
-                    array(
-                        array( 's' => $contratto ),
-                        array( 's' => $turno ),
-                        array( 's' => ( date( 'w', strtotime($car['data_attivita']) ) == 0 ) ? '7' : date( 'w', strtotime($car['data_attivita']) ) )
-                    )
-                );
-
-                if( empty( $fasce ) ){
-                    $fasce['ora_inizio'] = '00:00:01';  // '06:00:00';
-                    $fasce['ora_fine'] = '23:59:59';    // '22:00:00';
-                }
-
-            } else {
-                $fasce['ora_inizio'] = '00:00:01';
-                $fasce['ora_fine'] = '23:59:59';
-            }
-
             foreach( $attivita as $a ){
-
-                $orecontratto = oreGiornaliereContratto( $dati_contratto['id_anagrafica'], $a['data_attivita'] );
-
-                $ct['etc']['attivita'][$a['id']] = $a;
-
-                if( $orecontratto > 0 ){
-                    $ct['etc']['attivita'][$a['id']]['ore_ordinarie'] = mysqlSelectValue( 
-                        $cf['mysql']['connection'], 
-                    #    'SELECT round( sum( time_to_sec( TIMEDIFF( LEAST( ?, ora_fine ),GREATEST( ora_inizio, ? )  ) )/3600 ), 2) AS tot_ore FROM attivita ' .
-                        'SELECT round( sum( ore ), 2) AS tot_ore FROM attivita ' .
-                        'WHERE attivita.id = ?',
-                        array(
-                         /*   array( 's' => $fasce['ora_fine'] ),
-                            array( 's' => $fasce['ora_inizio'] ),*/
-                            array( 's' => $a['id'] )
-                        )			
-                    );
-                    $ct['etc']['attivita'][$a['id']]['ore_straordinarie'] = 0;
-                }
-                else{
-                    $ct['etc']['attivita'][$a['id']]['ore_straordinarie'] = mysqlSelectValue( 
-                        $cf['mysql']['connection'], 
-                        #'SELECT round( sum( time_to_sec( TIMEDIFF( ?, LEAST( ora_inizio, ? )  ) )/3600 ) + sum( time_to_sec( TIMEDIFF(  GREATEST( ora_fine, ? ), ?  ) )/3600 ), 2) as tot_ore FROM attivita ' .
-                        'SELECT round( sum( ore ), 2) as tot_ore FROM attivita ' .
-                        'WHERE attivita.id = ?',
-                        array(
-                        /*    array( 's' => $fasce['ora_inizio'] ),
-                            array( 's' => $fasce['ora_inizio'] ),
-                            array( 's' => $fasce['ora_fine'] ),
-                            array( 's' => $fasce['ora_fine'] ),*/
-                            array( 's' => $a['id'] )
-                        )			
-                    );  
-
-                    $ct['etc']['attivita'][$a['id']]['ore_ordinarie'] = 0;
-                }         
-                
+                $ct['etc']['attivita'][$a['id']] = $a;                
             }
         }
 

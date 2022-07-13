@@ -14,6 +14,7 @@
 
 	 	var call = '{{ site.url }}_mod/_6600.contratti/_src/_api/_task/_orari.giorno.duplicate.php?id={{ request[table].id }}&t='+turno+'&gb='+gb+'&gn='+gn;
         getws( call,'', function() {
+            $('#btnduplicagiorno').html('<i class="fa fa-check"></i>');
 			$('#duplica-giorno').modal('toggle');
 		});
         
