@@ -134,6 +134,6 @@ CREATE OR REPLACE VIEW `tipologie_mastri_view` AS
 
 --| 202207150090
 ALTER TABLE `crediti`
-    ADD KEY `unica` (`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`, `quantita`);
+    ADD UNIQUE KEY `unica` (`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`, `quantita`);
 
 --| FINE
