@@ -80,7 +80,7 @@
 			'h1'		=> array( $l		=> 'metadati' ),
 			'parent'		=> array( 'id'		=> 'contratti.immobiliari.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.metadati.html' ),
-			'macro'		=> array( $m_v . '_src/_inc/_macro/_contratti.form.metadati.php' ),
+			'macro'		=> array( $m_c . '_src/_inc/_macro/_contratti.form.metadati.php' ),
 			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'		=> array( 'tabs'	=> $p['contratti.immobiliari.form']['etc']['tabs'] )
 		);
