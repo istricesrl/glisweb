@@ -105,8 +105,6 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
 ;
 
-
-
 --| 202207150060
 ALTER TABLE `tipologie_mastri`
 ADD `se_credito` int(1) NULL AFTER `se_registro`;
@@ -133,4 +131,9 @@ CREATE OR REPLACE VIEW `tipologie_mastri_view` AS
 		tipologie_mastri_path( tipologie_mastri.id ) AS __label__
 	FROM tipologie_mastri
 ;
+
+--| 202207150090
+ALTER TABLE `crediti`
+    ADD KEY `unica` (`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`, `quantita`);
+
 --| FINE
