@@ -74,7 +74,8 @@
                     '__articoli__' => array(
                         $_REQUEST['__carrello__']['__articolo__']['id_articolo'] => array(
                             'quantita' => $_REQUEST['__carrello__']['__articolo__']['quantita'],
-                            'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo']
+                            'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'],
+                            'id_iva' => $_REQUEST['__carrello__']['__articolo__']['id_iva']
                         )
                     )
                 )
@@ -112,7 +113,7 @@
                     // aggiorno la riga dell'articolo
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']        = $_SESSION['carrello']['id'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo']        = $dati['id_articolo'];
-                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']             = 1;                                // TODO
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']             = $dati['id_iva'];                                // TODO
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']           = $dati['quantita'];
 
                     // trovo il prezzo base dell'articolo
