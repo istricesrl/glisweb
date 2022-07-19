@@ -71,6 +71,17 @@
 	// log
 	    logWrite( 'richiesta di accesso per ' . $t . '/' . $a, 'auth', LOG_DEBUG );
 
+    // verifico se la richiesta è una ACL
+		if( substr( $t, 0, 5 ) == '__acl' ) {
+
+			// rettifica del controllo sulla tabella di riferimento
+			$t = str_replace( array( '__acl_', '__' ), NULL, $t );
+
+			// log
+			logWrite( 'tabella di riferimento: ' . $t, 'auth', LOG_DEBUG );
+
+		}
+
 	// debug
 	    // echo 'getAclPermission ' . $t . '/' . $a . PHP_EOL;
 
@@ -143,6 +154,17 @@
 
 	// log
 	    logWrite( 'richiesta di accesso per ' . $t . '/' . $id . '/' . $a, 'auth' );
+
+    // verifico se la richiesta è una ACL
+		if( substr( $t, 0, 5 ) == '__acl' ) {
+
+			// rettifica del controllo sulla tabella di riferimento
+			$t = str_replace( array( '__acl_', '__' ), NULL, $t );
+
+			// log
+			logWrite( 'tabella di riferimento: ' . $t, 'auth', LOG_DEBUG );
+
+		}
 
 	// passaggio ricorsivo dei permessi
 	    $i['__auth__'] = $_SESSION['account']['permissions'][ $t ];
@@ -410,3 +432,9 @@
 	    return NULL;
 
     }
+
+	function checkPrivilege( $p ) {
+
+		return in_array( $p, array_keys( $_SESSION['account']['privilegi'] ) );
+
+	}

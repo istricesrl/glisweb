@@ -267,8 +267,13 @@
             // verifico se la richiesta è un report
 		    $report = ( substr( $k, 0, 8 ) == '__report' ) ? true : false;
 
+            // verifico se la richiesta è una ACL
+		    $acl = ( substr( $k, 0, 5 ) == '__acl' ) ? true : false;
+
+// var_dump( $acl );
+
             // verifico se il blocco è speciale o contiene dati
-			if( ( substr( $k, 0, 2 ) !== '__' || $report !== false ) && strlen( $k ) > 1 ) {
+			if( ( substr( $k, 0, 2 ) !== '__' || $report !== false || $acl !== false ) && strlen( $k ) > 1 ) {
 
 			    // log
 				logWrite( 'blocco dati ricevuto: ' . $k . '/' . $_SERVER['REQUEST_METHOD'], 'controller' );

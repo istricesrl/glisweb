@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.gruppi.sub.html' as sub %}
+{% import 'bin/pagine.form.gruppi.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -41,6 +41,9 @@
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# SUBFORM GRUPPI #}
+		{{ sub.gruppi( table, '__acl_pagine__', 'gruppi', site, page, pages, ietf, etc, request, session, 'id_entita' ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

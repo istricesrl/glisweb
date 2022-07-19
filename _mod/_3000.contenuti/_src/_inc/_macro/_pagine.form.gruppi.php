@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * macro form anagrafica
+     * macro form gruppi
      *
      *
      *
@@ -28,7 +28,7 @@
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM gruppi_view'
-    );   
+    );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
