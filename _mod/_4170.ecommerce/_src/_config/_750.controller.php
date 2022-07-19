@@ -55,6 +55,8 @@
         $_SESSION['carrello']['prezzo_lordo_totale']        = 0;
         $_SESSION['carrello']['prezzo_netto_finale']        = 0;
         $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
+        $_SESSION['carrello']['sconto_percentuale']         = 0;
+
 
         // STEP 4 - gestione acquisto singolo articolo
         if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
