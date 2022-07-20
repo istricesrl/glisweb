@@ -359,6 +359,12 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000002300
+
+-- banner
+-- tipologia: tabella gestita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+
 --| 010000002800
 
 -- caratteristiche_immobili
@@ -3049,6 +3055,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `font_awesome` char(16) DEFAULT NULL,
   `se_anagrafica` int(1) DEFAULT NULL,
   `se_agenda` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000050500
+
+-- tipologie_banner
+-- tipologia: tabella assistita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_banner` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

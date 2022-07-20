@@ -3729,6 +3729,145 @@ CREATE
 
 END;
 
+--| 070000050500
+
+-- tipologie_banner_path
+DROP FUNCTION IF EXISTS `tipologie_banner_path`;
+
+--| 070000050501
+
+-- tipologie_banner_path
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_banner_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_banner_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_banner.id_genitore,
+				tipologie_banner.nome
+			FROM tipologie_banner
+			WHERE tipologie_banner.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+--| 070000050510
+
+-- tipologie_banner_path_check
+DROP FUNCTION IF EXISTS `tipologie_banner_path_check`;
+
+--| 070000050511
+
+-- tipologie_banner_path_check
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_banner_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_banner_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_banner.id_genitore
+			FROM tipologie_banner
+			WHERE tipologie_banner.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+--| 070000050520
+
+-- tipologie_banner_path_find_ancestor
+DROP FUNCTION IF EXISTS `tipologie_banner_path_find_ancestor`;
+
+--| 070000050521
+
+-- tipologie_banner_path_find_ancestor
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_banner_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_banner_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_banner.id_genitore,
+				tipologie_banner.id
+			FROM tipologie_banner
+			WHERE tipologie_banner.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 --| 070000050600
 
 -- tipologie_chiavi_path

@@ -3298,6 +3298,27 @@ ALTER TABLE `tipologie_attivita`
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000050500
+
+-- tipologie_banner
+-- tipologia: tabella assistita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+ALTER TABLE `tipologie_banner`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000050501
+
+-- tipologie_banner
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000050600
 
 -- tipologie_chiavi

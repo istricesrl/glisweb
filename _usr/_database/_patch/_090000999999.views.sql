@@ -7178,6 +7178,31 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 	FROM tipologie_attivita
 ;
 
+--| 090000050500
+
+-- tipologie_banner_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_banner_view`;
+
+--| 090000050501
+
+-- tipologie_banner_view
+-- tipologia: tabella assistita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_banner_view` AS
+	SELECT
+		tipologie_banner.id,
+		tipologie_banner.id_genitore,
+		tipologie_banner.ordine,
+		tipologie_banner.nome,
+		tipologie_banner.html_entity,
+		tipologie_banner.font_awesome,
+		tipologie_banner.id_account_inserimento,
+		tipologie_banner.id_account_aggiornamento,
+		tipologie_banner_path( tipologie_banner.id ) AS __label__
+	FROM tipologie_banner
+;
+
 --| 090000050600
 
 -- tipologie_chiavi_view
