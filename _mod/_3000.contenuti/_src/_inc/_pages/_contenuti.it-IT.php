@@ -253,14 +253,14 @@
 	// form pagine gruppi
 	$p['pagine.form.gruppi'] = array(
 		'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-users" aria-hidden="true"></i>',
-		'title'		=> array( $l		=> 'gruppi' ),
-		'h1'		=> array( $l		=> 'gruppi' ),
+		'icon'			=> '<i class="fa fa-users" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'gruppi' ),
+		'h1'			=> array( $l		=> 'gruppi' ),
 		'parent'		=> array( 'id'		=> 'pagine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagine.form.gruppi.html' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.gruppi.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+		'macro'			=> array( $m . '_src/_inc/_macro/_pagine.form.gruppi.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'			=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
 	
 	// form azioni pagine
