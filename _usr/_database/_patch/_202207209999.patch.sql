@@ -298,4 +298,109 @@ CREATE OR REPLACE VIEW `banner_azioni_view` AS
 		LEFT JOIN banner ON banner.id = banner_azioni.id_banner
 ;
 
+--| 202207200240
+ALTER TABLE `metadati`
+ADD COLUMN   `id_banner` int(11) DEFAULT NULL AFTER `id_tipologia_attivita`,
+ADD KEY `id_banner` (`id_banner`), 
+ADD UNIQUE KEY `unica_banner` (`id_lingua`,`id_banner`,`nome`), 
+ADD CONSTRAINT `metadati_ibfk_24` FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202207200250
+ALTER TABLE `immagini`
+ADD COLUMN   `id_banner` int(11) DEFAULT NULL AFTER `id_categoria_progetti`,
+ADD KEY `id_banner` (`id_banner`), 
+ADD UNIQUE KEY `unica_banner` (`id_banner`,`id_ruolo`,`id_lingua`,`path`), 
+ADD CONSTRAINT `immagini_ibfk_21` FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202207200260
+CREATE OR REPLACE VIEW `metadati_view` AS
+	SELECT
+		metadati.id,
+		metadati.id_lingua,
+		lingue.ietf,
+		metadati.id_anagrafica,
+		metadati.id_pagina,
+		metadati.id_prodotto,
+		metadati.id_articolo,
+		metadati.id_categoria_prodotti,
+		metadati.id_notizia,
+		metadati.id_categoria_notizie,
+		metadati.id_risorsa,
+		metadati.id_categoria_risorse,
+		metadati.id_immagine,
+		metadati.id_video,
+		metadati.id_audio,
+		metadati.id_file,
+		metadati.id_progetto,
+		metadati.id_categoria_progetti,
+		metadati.id_indirizzo,
+		metadati.id_edificio,
+		metadati.id_immobile,
+		metadati.id_contratto,
+        metadati.id_valutazione,
+        metadati.id_rinnovo,
+        metadati.id_tipologia_attivita,
+		metadati.id_banner,
+		metadati.id_account_inserimento,
+		metadati.id_account_aggiornamento,
+		concat(
+			metadati.nome,
+			':',
+			metadati.testo
+		) AS __label__
+	FROM metadati
+		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+;
+
+--| 202207200270
+CREATE OR REPLACE VIEW `immagini_view` AS
+	SELECT
+		immagini.id,
+		immagini.id_anagrafica,
+		immagini.id_pagina,
+		immagini.id_file,
+		immagini.id_prodotto,
+		immagini.id_articolo,
+		immagini.id_categoria_prodotti,
+		immagini.id_risorsa,
+		immagini.id_categoria_risorse,
+		immagini.id_notizia,
+		immagini.id_categoria_notizie,
+		immagini.id_progetto,
+		immagini.id_categoria_progetti,
+		immagini.id_indirizzo,
+		immagini.id_edificio,
+		immagini.id_immobile,
+		immagini.id_contratto,
+        immagini.id_valutazione,
+        immagini.id_rinnovo,
+		immagini.id_banner,
+		immagini.id_lingua,
+		lingue.nome AS lingua,
+		immagini.id_ruolo,
+		ruoli_immagini.nome AS ruolo,
+		immagini.ordine,
+		immagini.orientamento,
+		immagini.taglio,
+		immagini.nome,
+		immagini.path,
+		immagini.path_alternativo,
+		immagini.token,
+		immagini.timestamp_scalamento,
+		immagini.id_account_inserimento,
+		immagini.id_account_aggiornamento,
+		concat(
+			ruoli_immagini.nome,
+			' # ',
+			immagini.ordine,
+			' / ',
+			immagini.nome,
+			' / ',
+			immagini.path
+		) AS __label__
+	FROM immagini
+		LEFT JOIN lingue ON lingue.id = immagini.id_lingua
+		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
+;
+
 --| FINE

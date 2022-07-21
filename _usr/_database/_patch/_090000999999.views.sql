@@ -3021,7 +3021,8 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_immobile,
 		immagini.id_contratto,
         immagini.id_valutazione,
-         immagini.id_rinnovo,
+		immagini.id_banner,
+        immagini.id_rinnovo,
 		immagini.id_lingua,
 		lingue.nome AS lingua,
 		immagini.id_ruolo,
@@ -4240,6 +4241,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
         metadati.id_valutazione,
         metadati.id_rinnovo,
         metadati.id_tipologia_attivita,
+		metadati.id_banner,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
