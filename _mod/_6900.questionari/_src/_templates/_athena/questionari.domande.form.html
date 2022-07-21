@@ -70,6 +70,7 @@
 				</div>
 			</div>
 
+			{% if request[ table ].id_tipologia == 3 %}
 			<legend>range</legend>
 			<div class="form-group form-row">
 
@@ -90,10 +91,13 @@
 				{{ frm.input( table, '', '', 'valore_range_fine', '', '', request ) }}
 			</div>
 			</div>
+			{% endif %}
         </fieldset>
 
+		{% if request[ table ].id_tipologia == 1 or request[ table ].id_tipologia == 4 %}
 		{# SUBFORM OPZIONI #}
-        {{ sub.opzioni( table, 'opzioni', 'opzioni', site, page, pages, localization.language.ietf, etc, request, session ) }}
+        	{{ sub.opzioni( table, 'opzioni', 'opzioni', site, page, pages, localization.language.ietf, etc, request, session ) }}
+		{% endif %} 
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
