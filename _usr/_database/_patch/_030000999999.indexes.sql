@@ -345,19 +345,62 @@ ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `banner`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `nome` (`nome`),
 	ADD KEY `altezza_modulo` (`altezza_modulo`),	
 	ADD KEY `larghezza_modulo` (`larghezza_modulo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_tipologia`, `ordine`,`nome`,`altezza_modulo`,`larghezza_modulo`);
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`,`altezza_modulo`,`larghezza_modulo`);
 
 --| 030000002301
 
 -- banner
 -- tipologia: tabella gestita
 ALTER TABLE `banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000002400
+
+-- banner_azioni
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+ALTER TABLE `banner_azioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `azione` (`azione`),
+	ADD KEY `timestamp_azione` (`timestamp_azione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`azione`,`timestamp_azione`);
+
+--| 030000002401
+
+-- banner_azioni
+-- tipologia: tabella gestita
+ALTER TABLE `banner_azioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000002500
+
+-- banner_pagine
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+ALTER TABLE `banner_pagine`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_pagina`,`id_banner`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `se_presente` (`se_presente`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`se_presente`);
+
+--| 030000002501
+
+-- banner_pagine
+-- tipologia: tabella gestita
+ALTER TABLE `banner_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000002800
 

@@ -903,6 +903,7 @@ CREATE OR REPLACE VIEW `banner_view` AS
 		banner.id,
 		banner.id_tipologia,
 		tipologie_banner_path( banner.id_tipologia ) AS tipologia,
+		banner.id_sito,
 		banner.ordine,
 		banner.nome,
 		banner.altezza_modulo,
@@ -911,6 +912,65 @@ CREATE OR REPLACE VIEW `banner_view` AS
 		banner.id_account_aggiornamento,
 		concat( banner.nome, ' ', banner.altezza_modulo, 'x', banner.larghezza_modulo ) AS __label__
 	FROM banner;
+
+--| 090000002400
+
+-- banner_azioni
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_azioni_view`;
+
+--| 090000002401
+
+-- banner_azioni
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_azioni_view` AS
+	SELECT
+		banner_azioni.id,
+		banner_azioni.id_banner,
+		banner_azioni.id_pagina,
+		banner_azioni.azione,
+		banner_azioni.timestamp_azione,
+		banner_azioni.id_account_inserimento,
+		banner_azioni.id_account_aggiornamento,
+		concat(
+			banner_azioni.azione,
+			' di ',
+			banner.nome
+		) AS __label__
+	FROM banner_azioni
+		LEFT JOIN banner ON banner.id = banner_azioni.id_banner
+;
+
+--| 090000002500
+
+-- banner_pagine_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_pagine_view`;
+
+--| 090000002500
+
+-- banner_pagine_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_pagine_view` AS
+	SELECT
+		banner_pagine.id,
+		banner_pagine.id_banner,
+		banner_pagine.id_pagina,
+		banner_pagine.se_presente,
+		banner_pagine.id_account_inserimento,
+		banner_pagine.id_account_aggiornamento,
+		concat(
+			banner.nome,
+			' / ',
+			pagine_path( banner_pagine.id_pagina ),
+			' / ',
+			coalesce( banner_pagine.se_presente, 0 )
+		) AS __label__
+	FROM banner_pagine
+		LEFT JOIN banner ON banner.id = banner_pagine.id_banner
+;
 
 --| 090000002800
 

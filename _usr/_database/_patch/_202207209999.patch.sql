@@ -141,6 +141,7 @@ CREATE OR REPLACE VIEW `tipologie_banner_view` AS
 CREATE TABLE IF NOT EXISTS `banner` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `altezza_modulo` int(11) DEFAULT NULL,
@@ -156,13 +157,14 @@ CREATE TABLE IF NOT EXISTS `banner` (
 ALTER TABLE `banner`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `nome` (`nome`),
 	ADD KEY `altezza_modulo` (`altezza_modulo`),	
 	ADD KEY `larghezza_modulo` (`larghezza_modulo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_tipologia`, `ordine`,`nome`,`altezza_modulo`,`larghezza_modulo`);
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`,`altezza_modulo`,`larghezza_modulo`);
 
 --| 202207200110
 ALTER TABLE `banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -179,6 +181,7 @@ CREATE OR REPLACE VIEW `banner_view` AS
 		banner.id,
 		banner.id_tipologia,
 		tipologie_banner_path( banner.id_tipologia ) AS tipologia,
+		banner.id_sito,
 		banner.ordine,
 		banner.nome,
 		banner.altezza_modulo,
@@ -189,6 +192,110 @@ CREATE OR REPLACE VIEW `banner_view` AS
 	FROM banner;
 
 --| 202207200140
+CREATE TABLE IF NOT EXISTS `banner_pagine` (
+  `id` int(11) NOT NULL,
+  `id_pagina` int(11) NOT NULL,
+  `id_banner` int(11) NOT NULL,
+  `se_presente` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 202207200150
+ALTER TABLE `banner_pagine`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_pagina`,`id_banner`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `se_presente` (`se_presente`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`se_presente`);
+
+
+--| 202207200160
+ALTER TABLE `banner_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202207200170
+ALTER TABLE `banner_pagine`
+    ADD CONSTRAINT `banner_pagine_ibfk_01`               FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_pagine_ibfk_02_nofollow`      FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_pagine_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_pagine_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202207200180
+CREATE OR REPLACE VIEW `banner_pagine_view` AS
+	SELECT
+		banner_pagine.id,
+		banner_pagine.id_banner,
+		banner_pagine.id_pagina,
+		banner_pagine.se_presente,
+		banner_pagine.id_account_inserimento,
+		banner_pagine.id_account_aggiornamento,
+		concat(
+			banner.nome,
+			' / ',
+			pagine_path( banner_pagine.id_pagina ),
+			' / ',
+			coalesce( banner_pagine.se_presente, 0 )
+		) AS __label__
+	FROM banner_pagine
+		LEFT JOIN banner ON banner.id = banner_pagine.id_banner
+;
+
+--| 202207200190
+CREATE TABLE IF NOT EXISTS `banner_azioni` (
+  `id` int(11) NOT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_banner` int(11) NOT NULL,
+  `azione` enum('visualizzazione','click') DEFAULT NULL,
+  `timestamp_azione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202207200200
+ALTER TABLE `banner_azioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `azione` (`azione`),
+	ADD KEY `timestamp_azione` (`timestamp_azione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`azione`,`timestamp_azione`);
+
+--| 202207200210
+ALTER TABLE `banner_azioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202207200220
+ALTER TABLE `banner_azioni`
+    ADD CONSTRAINT `banner_azioni_ibfk_01`               FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_azioni_ibfk_02_nofollow`      FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_azioni_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_azioni_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202207200230
+CREATE OR REPLACE VIEW `banner_azioni_view` AS
+	SELECT
+		banner_azioni.id,
+		banner_azioni.id_banner,
+		banner_azioni.id_pagina,
+		banner_azioni.azione,
+		banner_azioni.timestamp_azione,
+		banner_azioni.id_account_inserimento,
+		banner_azioni.id_account_aggiornamento,
+		concat(
+			banner_azioni.azione,
+			' di ',
+			banner.nome
+		) AS __label__
+	FROM banner_azioni
+		LEFT JOIN banner ON banner.id = banner_azioni.id_banner
+;
 
 --| FINE

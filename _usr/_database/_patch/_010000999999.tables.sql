@@ -367,6 +367,7 @@ CREATE TABLE IF NOT EXISTS `audio` (
 CREATE TABLE IF NOT EXISTS `banner` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `altezza_modulo` int(11) DEFAULT NULL,
@@ -376,6 +377,39 @@ CREATE TABLE IF NOT EXISTS `banner` (
   `id_account_inserimento` int(11) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
   `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000002400
+
+-- banner_azioni
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `banner_azioni` (
+  `id` int(11) NOT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_banner` int(11) NOT NULL,
+  `azione` enum('visualizzazione','click') DEFAULT NULL,
+  `timestamp_azione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000002500
+
+-- banner_pagine
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `banner_pagine` (
+  `id` int(11) NOT NULL,
+  `id_pagina` int(11) NOT NULL,
+  `id_banner` int(11) NOT NULL,
+  `se_presente` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000002800
