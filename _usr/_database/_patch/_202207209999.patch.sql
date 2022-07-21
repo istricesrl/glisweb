@@ -137,4 +137,58 @@ CREATE OR REPLACE VIEW `tipologie_banner_view` AS
 	FROM tipologie_banner
 ;
 
+--| 202207200090
+CREATE TABLE IF NOT EXISTS `banner` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `altezza_modulo` int(11) DEFAULT NULL,
+  `larghezza_modulo` int(11) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202207200100
+ALTER TABLE `banner`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `altezza_modulo` (`altezza_modulo`),	
+	ADD KEY `larghezza_modulo` (`larghezza_modulo`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_tipologia`, `ordine`,`nome`,`altezza_modulo`,`larghezza_modulo`);
+
+--| 202207200110
+ALTER TABLE `banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202207200120
+ALTER TABLE `banner`
+	ADD CONSTRAINT `banner_ibfk_01` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_banner` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+   	ADD CONSTRAINT `banner_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+   	ADD CONSTRAINT `banner_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202207200130
+CREATE OR REPLACE VIEW `banner_view` AS
+	SELECT
+		banner.id,
+		banner.id_tipologia,
+		tipologie_banner_path( banner.id_tipologia ) AS tipologia,
+		banner.ordine,
+		banner.nome,
+		banner.altezza_modulo,
+		banner.larghezza_modulo,
+		banner.id_account_inserimento,
+		banner.id_account_aggiornamento,
+		concat( banner.nome, ' ', banner.altezza_modulo, 'x', banner.larghezza_modulo ) AS __label__
+	FROM banner;
+
+--| 202207200140
+--| 202207200150
+
 --| FINE

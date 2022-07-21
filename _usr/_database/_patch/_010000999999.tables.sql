@@ -364,6 +364,19 @@ CREATE TABLE IF NOT EXISTS `audio` (
 -- banner
 -- tipologia: tabella gestita
 -- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `banner` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `altezza_modulo` int(11) DEFAULT NULL,
+  `larghezza_modulo` int(11) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000002800
 

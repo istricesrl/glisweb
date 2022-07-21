@@ -887,6 +887,31 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		LEFT JOIN embed ON embed.id = audio.id_embed
 ;
 
+--| 090000002300
+
+-- banner_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_view`;
+
+--| 090000002301
+
+-- banner_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_view` AS
+	SELECT
+		banner.id,
+		banner.id_tipologia,
+		tipologie_banner_path( banner.id_tipologia ) AS tipologia,
+		banner.ordine,
+		banner.nome,
+		banner.altezza_modulo,
+		banner.larghezza_modulo,
+		banner.id_account_inserimento,
+		banner.id_account_aggiornamento,
+		concat( banner.nome, ' ', banner.altezza_modulo, 'x', banner.larghezza_modulo ) AS __label__
+	FROM banner;
+
 --| 090000002800
 
 -- caratteristiche_immobili_view

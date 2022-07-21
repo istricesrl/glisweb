@@ -337,6 +337,28 @@ ALTER TABLE `audio`
 -- tipologia: tabella gestita
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000002300
+
+-- banner
+-- tipologia: tabella gestita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+ALTER TABLE `banner`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `altezza_modulo` (`altezza_modulo`),	
+	ADD KEY `larghezza_modulo` (`larghezza_modulo`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_tipologia`, `ordine`,`nome`,`altezza_modulo`,`larghezza_modulo`);
+
+--| 030000002301
+
+-- banner
+-- tipologia: tabella gestita
+ALTER TABLE `banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000002800
 
 -- caratteristiche_immobili
