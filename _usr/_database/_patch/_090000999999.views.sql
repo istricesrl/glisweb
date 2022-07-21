@@ -906,12 +906,16 @@ CREATE OR REPLACE VIEW `banner_view` AS
 		banner.id_sito,
 		banner.ordine,
 		banner.nome,
+		banner.id_inserzionista,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS inserzionista,
 		banner.altezza_modulo,
 		banner.larghezza_modulo,
 		banner.id_account_inserimento,
 		banner.id_account_aggiornamento,
 		concat( banner.nome, ' ', banner.altezza_modulo, 'x', banner.larghezza_modulo ) AS __label__
-	FROM banner;
+	FROM banner
+		LEFT JOIN anagrafica ON anagrafica.id = banner.id_inserzionista
+	;
 
 --| 090000002400
 

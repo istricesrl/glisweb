@@ -348,11 +348,12 @@ ALTER TABLE `banner`
 	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `nome` (`nome`),
+	ADD KEY `id_inserzionista` (`id_inserzionista`),
 	ADD KEY `altezza_modulo` (`altezza_modulo`),	
 	ADD KEY `larghezza_modulo` (`larghezza_modulo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`,`altezza_modulo`,`larghezza_modulo`);
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`, `id_inserzionista`,`altezza_modulo`,`larghezza_modulo`);
 
 --| 030000002301
 

@@ -144,6 +144,7 @@ CREATE TABLE IF NOT EXISTS `banner` (
   `id_sito` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
+  `id_inserzionista` int(11) DEFAULT NULL,
   `altezza_modulo` int(11) DEFAULT NULL,
   `larghezza_modulo` int(11) DEFAULT NULL,
   `note` text,
@@ -160,11 +161,12 @@ ALTER TABLE `banner`
 	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `nome` (`nome`),
+	ADD KEY `id_inserzionista` (`id_inserzionista`),
 	ADD KEY `altezza_modulo` (`altezza_modulo`),	
 	ADD KEY `larghezza_modulo` (`larghezza_modulo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`,`altezza_modulo`,`larghezza_modulo`);
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`, `id_inserzionista`,`altezza_modulo`,`larghezza_modulo`);
 
 --| 202207200110
 ALTER TABLE `banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -172,7 +174,8 @@ ALTER TABLE `banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --| 202207200120
 ALTER TABLE `banner`
 	ADD CONSTRAINT `banner_ibfk_01` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_banner` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-   	ADD CONSTRAINT `banner_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+   	ADD CONSTRAINT `banner_ibfk_02_nofollow` FOREIGN KEY (`id_inserzionista`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	ADD CONSTRAINT `banner_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
    	ADD CONSTRAINT `banner_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| 202207200130
@@ -184,12 +187,16 @@ CREATE OR REPLACE VIEW `banner_view` AS
 		banner.id_sito,
 		banner.ordine,
 		banner.nome,
+		banner.id_inserzionista,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS inserzionista,
 		banner.altezza_modulo,
 		banner.larghezza_modulo,
 		banner.id_account_inserimento,
 		banner.id_account_aggiornamento,
 		concat( banner.nome, ' ', banner.altezza_modulo, 'x', banner.larghezza_modulo ) AS __label__
-	FROM banner;
+	FROM banner
+		LEFT JOIN anagrafica ON anagrafica.id = banner.id_inserzionista
+	;
 
 --| 202207200140
 CREATE TABLE IF NOT EXISTS `banner_pagine` (

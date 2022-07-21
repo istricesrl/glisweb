@@ -370,6 +370,7 @@ CREATE TABLE IF NOT EXISTS `banner` (
   `id_sito` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
+  `id_inserzionista` int(11) DEFAULT NULL,
   `altezza_modulo` int(11) DEFAULT NULL,
   `larghezza_modulo` int(11) DEFAULT NULL,
   `note` text,
