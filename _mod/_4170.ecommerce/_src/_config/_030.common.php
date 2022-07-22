@@ -58,8 +58,12 @@
             ),
             'paypal-advanced' => array(
                 'id'            => 'paypal-advanced',                                               // ID del provider per le tendine
-                'token'         => NULL,
+                'business'      => NULL,                                                            // 
+                'client_id'     => NULL,                                                            // 
+                'client_secret' => NULL,                                                            // 
                 'token_api'     => 'https://api-m.sandbox.paypal.com/v1/identity/generate-token',   // API alla quale richiedere il Client Token
+                'order_api'     => '',                                                              // 
+                'capture_api'   => '',                                                              // 
                 '__label__'     => 'PayPal Advanced'                                                // etichetta del provider per le tendine
             )
         )
@@ -87,6 +91,7 @@
      * 
      * NOTA SU PAYPAL
      * per avere i dati di test (business e account clienti fittizi) registrarsi su https://developer.paypal.com/developer/accounts/
+     * i dati sono nella pagina https://developer.paypal.com/developer/applications/
      */
 
     // configurazione extra

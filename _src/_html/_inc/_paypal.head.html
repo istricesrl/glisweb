@@ -1,0 +1,5 @@
+{# SCRIPT AGGIUNTIVO PER PAYPAL ADVANCED CHECKOUT #}
+
+{% if ct.etc.client_token %}
+'<script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&client-id={{ ecommerce.profile.provider['paypal-advanced'].token }}" data-client-token="{{ etc.client_token }}"></script>';
+{% endif %}

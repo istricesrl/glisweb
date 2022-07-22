@@ -1,0 +1,23 @@
+/*!
+
+    \page moduli.0350 modulo registrazione
+
+    Panoramica dei modulo registrazione.
+
+    introduzione
+    ============
+
+    profili di registrazione
+    ------------------------
+
+    meccanismo di registrazione
+    ===========================
+
+    creazione di una pagina custom di registrazione
+    -----------------------------------------------
+
+    [...] la pagina dove indirizza il modulo di registrazione deve avere settato il metadato profilo_registrazione
+
+    [...] la pagina dove indirizza il modulo di registrazione deve avere la macro _mod/_0350.registrazione/_src/_inc/_macro/_registrazione.php
+
+*/

@@ -40,8 +40,14 @@
     $t = null;
     $i = 0;
 
+    // codice aggiuntivo per PayPal Advanced
+    if( isset( $ct['etc']['client_token'] ) ) {
+        // https://developer.paypal.com/sdk/js/configuration/#disable-funding
+        $t .= '<script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id='.$ct['ecommerce']['profile']['provider']['paypal-advanced']['client_id'].'" data-client-token="'.$ct['etc']['client_token'].'"></script>';
+    }
+
     // form di esempio per l'acquisto di un prodotto
-    if( isset( $ct['etc']['meta']['action'] ) ) {
+    if( isset( $ct['etc']['meta']['action'] ) && ! empty( $ct['etc']['meta']['action'] ) && isset( $ct['etc']['meta']['method'] ) && ! empty( $ct['etc']['meta']['method'] ) ) {
         $t .= '<form action="' . $ct['etc']['meta']['action'] . '" method="' . $ct['etc']['meta']['method'] . '">';
         foreach( $ct['etc']['fields'] as $field => $value ) {
             $t .= '<input type="hidden" name="' . $field . '" value="' . $value . '" />';
@@ -49,6 +55,9 @@
         $t .= '<button type="button" onclick="window.open(\'_acquisto.02.php\',\'_self\');">MODIFICA ORDINE</button>';
         $t .= '<button type="submit">PAGA</button>';
         $t .= '</form>';
+    } elseif( isset( $ct['etc']['client_token'] ) ) {
+        $t .= '<div id="paypal-button-container" class="paypal-button-container"></div>';
+        $t .= '<script src="/_src/_js/_lib/_paypal.js"></script>';
     } else {
         $t .= '<button type="button" onclick="window.open(\'_acquisto.02.php\',\'_self\');">MODIFICA IL CARRELLO</button>';
     }
