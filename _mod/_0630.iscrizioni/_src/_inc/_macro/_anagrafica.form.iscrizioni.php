@@ -41,7 +41,16 @@
     $ct['view']['open']['field'] = 'id';
 
     // pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'contratti.form';
+	//$ct['view']['insert']['page'] = 'contratti.form';
+
+    //$_SESSION['__work__']['id_anagrafica'] 
+
+    $ct['view']['insert']['page'] = 'corsi.view';
+
+    // campi della vista
+	$ct['view']['insert']['options'] = array(
+        array( 'name' => '__work__[id_anagrafica]', 'value' => $_REQUEST[  $ct['form']['table'] ]['id'] )
+	);
 
         // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_destinatario';
