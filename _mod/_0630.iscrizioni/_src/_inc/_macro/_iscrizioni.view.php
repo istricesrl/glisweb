@@ -25,7 +25,7 @@
     $ct['view']['open']['table'] = 'contratti';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'tesseramenti.form';
+	$ct['view']['open']['page'] = 'iscrizioni.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
