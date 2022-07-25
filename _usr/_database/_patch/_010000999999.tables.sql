@@ -875,6 +875,7 @@ CREATE TABLE `contratti` (
   `codice` char(32) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text,
+  `note_cliente` text,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
