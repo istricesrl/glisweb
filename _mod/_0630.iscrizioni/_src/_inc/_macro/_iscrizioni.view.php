@@ -30,8 +30,10 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'codice' => 'tipologia',
-        'id_destinatario' => 'anagrafica'
+        'tipologia' => 'tipologia',
+        'destinatario' => 'anagrafica',
+        'data_inizio' => 'data',
+        'progetto' => 'corso'
 	);
 
     // stili della vista
@@ -43,3 +45,4 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
