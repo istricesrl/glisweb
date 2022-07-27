@@ -15,8 +15,11 @@
 	require '../../../../_src/_config.php';
 
     // debug
-    print_r( $_SESSION['carrello'] );
-    print_r( $_REQUEST );
+    // print_r( $_SESSION['carrello'] );
+    // print_r( $_REQUEST );
+
+    // inizializzazione status
+    $result = array();
 
     // ID dell'ordine per la cattura del pagamento
     if( isset( $_REQUEST['id'] ) ) {
@@ -50,9 +53,19 @@
 
         // TODO implementare le chiamate alle controller di successo
 
-        // TODO settare come URL di redirect l'URL della pagina di successo
+        // URL di ritorno
+        if( $result['purchase_units'][0]['payments']['captures'][0]['status'] == 'COMPLETED' ) {
 
-        // TODO in caso di fallimento settare come URL di redirect l'URL della pagina di errore
+            // TODO settare come URL di redirect l'URL della pagina di successo
+            // TODO un carrello potrebbe avere uno specifico URL di ritorno diverso da quello standard
+            $result['return'] = $cf['contents']['pages'][ $cf['ecommerce']['profile']['provider']['paypal-advanced']['return'] ]['url']['it-IT'];
+
+        } else {
+
+            // TODO in caso di fallimento settare come URL di redirect l'URL della pagina di errore
+            $result['return'] = 'https://www.libero.it';
+
+        }
 
     } else {
 
@@ -61,3 +74,4 @@
     }
 
     // TODO restituire l'URL di redirect
+    buildJson( $result );

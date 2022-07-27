@@ -29,15 +29,16 @@ paypal
             JSON.stringify(orderData, null, 2)
           );
           const transaction = orderData.purchase_units[0].payments.captures[0];
-          alert(`Transaction ${transaction.status}: ${transaction.id}
-            See console for all available details
-          `);
+//          alert(`Transaction ${transaction.status}: ${transaction.id}
+//            See console for all available details
+//          `);
           // When ready to go live, remove the alert and show a success message within this page. For example:
           // var element = document.getElementById('paypal-button-container');
           // element.innerHTML = '<h3>Thank you for your payment!</h3>';
           // Or go to another URL:  actions.redirect('thank_you.html');
 
           // TODO leggere l'URL di redirect dai dati e fare il redirect
+          actions.redirect( orderData.return );
 
         });
     },

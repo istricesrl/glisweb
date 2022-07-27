@@ -62,6 +62,8 @@
                 'client_id'     => NULL,                                                            // 
                 'client_secret' => NULL,                                                            // 
                 'token_api'     => 'https://api-m.sandbox.paypal.com/v1/identity/generate-token',   // API alla quale richiedere il Client Token
+                'return'        => 'carrello_esito',                                                // pagina di ritorno in caso di pagamento completato con successo o fallito
+                'cancel'        => 'carrello',                                                      // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'order_api'     => '',                                                              // 
                 'capture_api'   => '',                                                              // 
                 '__label__'     => 'PayPal Advanced'                                                // etichetta del provider per le tendine

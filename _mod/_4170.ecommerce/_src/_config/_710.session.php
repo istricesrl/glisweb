@@ -16,11 +16,15 @@
             )
         );
         
-        $_SESSION['carrello']['articoli'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello=?',
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello=?',
             array(
                 array( 's' => $_SESSION['carrello']['id'] )
             )
         );
+
+        foreach( $articoli as $articolo ) {
+            $_SESSION['carrello']['articoli'][ $articolo['id_articolo'] ] = $articolo;
+        }
 
     }
 
