@@ -410,4 +410,42 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		LEFT JOIN ruoli_immagini ON ruoli_immagini.id = immagini.id_ruolo
 ;
 
+
+--| 202207200970
+ALTER TABLE `pubblicazioni` 
+ADD `id_banner` INT(11) DEFAULT NULL AFTER `id_categoria_progetti`,
+ADD KEY `id_banner` (`id_banner`),
+ADD CONSTRAINT `pubblicazioni_ibfk_13`                  FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202207200980
+CREATE OR REPLACE VIEW `pubblicazioni_view` AS
+    SELECT
+		pubblicazioni.id,
+		pubblicazioni.id_tipologia,
+		tipologie_pubblicazioni.nome AS tipologia,
+		pubblicazioni.ordine,
+		pubblicazioni.id_prodotto,
+		pubblicazioni.id_articolo,
+		pubblicazioni.id_categoria_prodotti,
+		pubblicazioni.id_notizia,
+		pubblicazioni.id_categoria_notizie,
+		pubblicazioni.id_pagina,
+		pubblicazioni.id_popup,
+		pubblicazioni.id_risorsa,
+		pubblicazioni.id_categoria_risorse,
+		pubblicazioni.id_progetto,
+		pubblicazioni.id_categoria_progetti,
+		pubblicazioni.id_banner,
+		pubblicazioni.timestamp_inizio,
+		pubblicazioni.timestamp_fine,
+		concat_ws(
+			' ',
+			tipologie_pubblicazioni.nome,
+			pubblicazioni.timestamp_inizio,
+			pubblicazioni.timestamp_fine
+		) AS __label__
+    FROM pubblicazioni
+		LEFT JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia
+;
+
 --| FINE

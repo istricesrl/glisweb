@@ -55,8 +55,8 @@
 		'title'		=> array( $l		=> 'metadati' ),
 		'h1'		=> array( $l		=> 'metadati' ),
 		'parent'		=> array( 'id'		=> 'banner.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.metadati.html' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.metadati.php' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'banner.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_banner.form.metadati.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['banner.form']['etc']['tabs'] )
 	);
