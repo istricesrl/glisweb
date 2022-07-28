@@ -887,6 +887,95 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		LEFT JOIN embed ON embed.id = audio.id_embed
 ;
 
+--| 090000002300
+
+-- banner_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_view`;
+
+--| 090000002301
+
+-- banner_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_view` AS
+	SELECT
+		banner.id,
+		banner.id_tipologia,
+		tipologie_banner_path( banner.id_tipologia ) AS tipologia,
+		banner.id_sito,
+		banner.ordine,
+		banner.nome,
+		banner.id_inserzionista,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS inserzionista,
+		banner.altezza_modulo,
+		banner.larghezza_modulo,
+		banner.id_account_inserimento,
+		banner.id_account_aggiornamento,
+		concat( banner.nome, ' ', banner.altezza_modulo, 'x', banner.larghezza_modulo ) AS __label__
+	FROM banner
+		LEFT JOIN anagrafica ON anagrafica.id = banner.id_inserzionista
+	;
+
+--| 090000002400
+
+-- banner_azioni
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_azioni_view`;
+
+--| 090000002401
+
+-- banner_azioni
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_azioni_view` AS
+	SELECT
+		banner_azioni.id,
+		banner_azioni.id_banner,
+		banner_azioni.id_pagina,
+		banner_azioni.azione,
+		banner_azioni.timestamp_azione,
+		banner_azioni.id_account_inserimento,
+		banner_azioni.id_account_aggiornamento,
+		concat(
+			banner_azioni.azione,
+			' di ',
+			banner.nome
+		) AS __label__
+	FROM banner_azioni
+		LEFT JOIN banner ON banner.id = banner_azioni.id_banner
+;
+
+--| 090000002500
+
+-- banner_pagine_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_pagine_view`;
+
+--| 090000002500
+
+-- banner_pagine_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_pagine_view` AS
+	SELECT
+		banner_pagine.id,
+		banner_pagine.id_banner,
+		banner_pagine.id_pagina,
+		banner_pagine.se_presente,
+		banner_pagine.id_account_inserimento,
+		banner_pagine.id_account_aggiornamento,
+		concat(
+			banner.nome,
+			' / ',
+			pagine_path( banner_pagine.id_pagina ),
+			' / ',
+			coalesce( banner_pagine.se_presente, 0 )
+		) AS __label__
+	FROM banner_pagine
+		LEFT JOIN banner ON banner.id = banner_pagine.id_banner
+;
+
 --| 090000002800
 
 -- caratteristiche_immobili_view
@@ -2936,7 +3025,8 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_immobile,
 		immagini.id_contratto,
         immagini.id_valutazione,
-         immagini.id_rinnovo,
+		immagini.id_banner,
+        immagini.id_rinnovo,
 		immagini.id_lingua,
 		lingue.nome AS lingua,
 		immagini.id_ruolo,
@@ -4155,6 +4245,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
         metadati.id_valutazione,
         metadati.id_rinnovo,
         metadati.id_tipologia_attivita,
+		metadati.id_banner,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
@@ -5689,6 +5780,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 		pubblicazioni.id_categoria_risorse,
 		pubblicazioni.id_progetto,
 		pubblicazioni.id_categoria_progetti,
+		pubblicazioni.id_banner,
 		pubblicazioni.timestamp_inizio,
 		pubblicazioni.timestamp_fine,
 		concat_ws(
@@ -7188,6 +7280,31 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 		tipologie_attivita.id_account_aggiornamento,
 		tipologie_attivita_path( tipologie_attivita.id ) AS __label__
 	FROM tipologie_attivita
+;
+
+--| 090000050500
+
+-- tipologie_banner_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_banner_view`;
+
+--| 090000050501
+
+-- tipologie_banner_view
+-- tipologia: tabella assistita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_banner_view` AS
+	SELECT
+		tipologie_banner.id,
+		tipologie_banner.id_genitore,
+		tipologie_banner.ordine,
+		tipologie_banner.nome,
+		tipologie_banner.html_entity,
+		tipologie_banner.font_awesome,
+		tipologie_banner.id_account_inserimento,
+		tipologie_banner.id_account_aggiornamento,
+		tipologie_banner_path( tipologie_banner.id ) AS __label__
+	FROM tipologie_banner
 ;
 
 --| 090000050600
