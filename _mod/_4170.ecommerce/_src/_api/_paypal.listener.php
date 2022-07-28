@@ -38,6 +38,7 @@
 							'timestamp_checkout'		=> time(),
 							'timestamp_pagamento'		=> time(),
 							'codice_pagamento'			=> $_REQUEST['txn_id'],
+							'ordine_pagamento'			=> $_REQUEST['payer_id'],
 							'importo_pagamento'			=> $_REQUEST['mc_gross'],
 							'status_pagamento'			=> $_REQUEST['payment_status']
 						),

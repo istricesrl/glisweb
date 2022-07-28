@@ -24,6 +24,10 @@
     // ID dell'ordine per la cattura del pagamento
     if( isset( $_REQUEST['id'] ) ) {
 
+        // nome del file di ricevuta
+        $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
+
+        // chiamata
         $result = restCall(
             'https://api-m.sandbox.paypal.com/v2/checkout/orders/'.$_REQUEST['id'].'/capture',  // TODO leggere dalla configurazione
             METHOD_POST,
@@ -49,15 +53,52 @@
         // TODO verificare che il pagamento sia andato a buon fine qui
         // $result[purchase_units][0][payments][captures][0][status] == COMPLETED
 
-        // TODO loggare l'intera risposta nel file txt del carrello
-
-        // TODO implementare le chiamate alle controller di successo
+        // log
+        appendToFile( 'esito cattura pagamento: ' . print_r( $result, true ), $fileRicevuta );
 
         // URL di ritorno
         if( $result['purchase_units'][0]['payments']['captures'][0]['status'] == 'COMPLETED' ) {
 
-            // TODO settare come URL di redirect l'URL della pagina di successo
-            // TODO un carrello potrebbe avere uno specifico URL di ritorno diverso da quello standard
+            // dati di pagamento
+            $payment = array(
+                'id'						=> $_SESSION['carrello']['id'],
+                'session'					=> NULL,
+                'provider_checkout'			=> basename( __FILE__ ),
+                'timestamp_checkout'		=> time(),
+                'timestamp_pagamento'		=> time(),
+                'codice_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['id'],
+                'importo_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['amount']['value'],
+                'status_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['status']
+            );
+
+            // registro il pagamento
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $payment,
+                'carrelli'
+            );
+
+            // aggiorno la $_SESSION
+            $_SESSION['carrello'] = array_replace_recursive(
+                $_SESSION['carrello'],
+                $payment
+            );
+
+            // controller post checkout
+            $cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_checkout.finally.success.php' ), GLOB_BRACE );
+
+            // log
+            appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ), $fileRicevuta );
+
+            // inclusione delle controller post checkout
+            foreach( $cnts as $cnt ) {
+                require $cnt;
+            }
+
+            // log
+            logWrite( 'pagamento effettuato con successo per il carrello ' . $_SESSION['carrello']['id'], 'paypal', LOG_INFO );
+
+            // URL di redirect in caso di successo
             $result['return'] = $cf['contents']['pages'][ $cf['ecommerce']['profile']['provider']['paypal-advanced']['return'] ]['url']['it-IT'];
 
         } else {

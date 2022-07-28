@@ -38,7 +38,11 @@ paypal
           // Or go to another URL:  actions.redirect('thank_you.html');
 
           // TODO leggere l'URL di redirect dai dati e fare il redirect
-          actions.redirect( orderData.return );
+          if( typeof return_url !== 'undefined' && return_url != '' ) {
+            actions.redirect( return_url + `?idOrdine=${data.orderID}` );
+          } else {
+            actions.redirect( orderData.return + `?idOrdine=${data.orderID}` );
+          }
 
         });
     },

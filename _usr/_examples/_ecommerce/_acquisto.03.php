@@ -28,6 +28,10 @@
                 'paypal' => array(
                     'return_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.php',        // pagina di ritorno in caso di pagamento completato con successo o fallito (macro _carrello.esito.php)
                     'cancel_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_acquisto.03.php',  // pagina di ritorno in caso di interruzione della procedura di pagamento
+                ),
+                'paypal-advanced' => array(
+                    'return_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_esito.php',        // pagina di ritorno in caso di pagamento completato con successo o fallito (macro _carrello.esito.php)
+                    'cancel_url'        => 'https://glisweb.istricesrl.it/_usr/_examples/_ecommerce/_acquisto.03.php',  // pagina di ritorno in caso di interruzione della procedura di pagamento
                 )
             )
         )
@@ -40,9 +44,15 @@
     $t = null;
     $i = 0;
 
+    // debug
+    // print_r( $cf['ecommerce']['profile'] );
+
     // codice aggiuntivo per PayPal Advanced
     if( isset( $ct['etc']['client_token'] ) ) {
         // https://developer.paypal.com/sdk/js/configuration/#disable-funding
+        if( isset( $cf['ecommerce']['profile']['provider']['paypal-advanced']['return_url'] ) ) {
+            $t .= '<script> var return_url = "'.$cf['ecommerce']['profile']['provider']['paypal-advanced']['return_url'].'";</script>';
+        }
         $t .= '<script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id='.$ct['ecommerce']['profile']['provider']['paypal-advanced']['client_id'].'" data-client-token="'.$ct['etc']['client_token'].'"></script>';
     }
 
