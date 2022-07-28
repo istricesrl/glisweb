@@ -4,6 +4,33 @@
 	$l = 'it-IT';
 	$m = '_mod/_4170.ecommerce/';
 
+	// pagina principale
+	$p['ecommerce'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'ecommerce' ),
+		'h1'		=> array( $l		=> 'ecommerce' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.html' ),
+		'parent'		=> array( 'id'		=> NULL ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_ecommerce.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'ecommerce' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ecommerce' ),
+		'priority'	=> '660' ) ) )
+	);
+
+	// carrello
+	$p['ecommerce.carrello'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'carrello' ),
+		'h1'			=> array( $l		=> 'carrello' ),
+		'parent'		=> array( 'id'		=> 'ecommerce' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.carrello.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.carrello.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello' ) ),
+
+	);
+
     // carrello
 	$p['carrello'] = array(
 	    'sitemap'		=> false,
