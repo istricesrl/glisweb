@@ -51,13 +51,19 @@
         }
 
         // inizializzazione totali carrello
-        $_SESSION['carrello']['prezzo_netto_totale']        = 0;
-        $_SESSION['carrello']['prezzo_lordo_totale']        = 0;
-        $_SESSION['carrello']['prezzo_netto_finale']        = 0;
-        $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
-        $_SESSION['carrello']['sconto_percentuale']         = 0;
+    /*    $_SESSION['carrello']['prezzo_netto_totale']        = isset( $_SESSION['carrello']['prezzo_netto_totale'] ) ? $_SESSION['carrello']['prezzo_netto_totale'] : 0;
+        $_SESSION['carrello']['prezzo_lordo_totale']        = isset( $_SESSION['carrello']['prezzo_lordo_totale'] ) ? $_SESSION['carrello']['prezzo_lordo_totale'] : 0;
+        $_SESSION['carrello']['prezzo_netto_finale']        = isset( $_SESSION['carrello']['prezzo_netto_finale'] ) ? $_SESSION['carrello']['prezzo_netto_finale'] : 0;
+        $_SESSION['carrello']['prezzo_lordo_finale']        = isset( $_SESSION['carrello']['prezzo_lordo_finale'] ) ? $_SESSION['carrello']['prezzo_lordo_finale'] : 0;
+        $_SESSION['carrello']['sconto_percentuale']         = isset( $_SESSION['carrello']['sconto_percentuale'] ) ? $_SESSION['carrello']['sconto_percentuale'] : 0;
+        */
 
-
+       /* $_SESSION['carrello']['prezzo_netto_totale']        =  0;
+        $_SESSION['carrello']['prezzo_lordo_totale']        =  0;
+        $_SESSION['carrello']['prezzo_netto_finale']        =  0;
+        $_SESSION['carrello']['prezzo_lordo_finale']        =  0;
+        $_SESSION['carrello']['sconto_percentuale']   = 0;
+*/
         // STEP 4 - gestione acquisto singolo articolo
         if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
 
@@ -162,13 +168,13 @@
                     );
 
                     // incremento i totali carrello
-                    $_SESSION['carrello']['prezzo_netto_totale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'];
+                   /* $_SESSION['carrello']['prezzo_netto_totale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'];
                     $_SESSION['carrello']['prezzo_lordo_totale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'];
                     $_SESSION['carrello']['prezzo_netto_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'];
                     $_SESSION['carrello']['prezzo_lordo_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale'];
-
+*/
                     // log
-                    logWrite( 'aggiornato articolo ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'] . ' nel carrello ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'], 'cart' );
+                    logWrite( 'aggiornato articolo ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'] . ' nel carrello ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'].' prezzo tot ', 'cart' );
 
                 }
 
@@ -179,6 +185,22 @@
         // STEP 6 - calcolo coupon
 
         // STEP 7 - calcoli finali
+
+        $_SESSION['carrello']['prezzo_netto_totale']        = 0;
+        $_SESSION['carrello']['prezzo_lordo_totale']        = 0;
+        $_SESSION['carrello']['prezzo_netto_finale']        = 0;
+        $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
+
+        // ricalcolo i totali aggiornando ogni riga
+        foreach( $_SESSION['carrello']['articoli'] as $dati ) {
+
+            // aggiorno i totali
+            $_SESSION['carrello']['prezzo_netto_totale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'];
+            $_SESSION['carrello']['prezzo_lordo_totale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'];
+            $_SESSION['carrello']['prezzo_netto_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'];
+            $_SESSION['carrello']['prezzo_lordo_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale'];
+
+        }
 
         // timestamp di aggiornamento del carrello
         $_SESSION['carrello']['timestamp_aggiornamento'] = time();
