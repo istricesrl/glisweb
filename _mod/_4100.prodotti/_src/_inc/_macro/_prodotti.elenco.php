@@ -12,6 +12,7 @@
 // seleziono le sottocategorie
 if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! empty($cf['contents']['page']['metadata']['id_categoria_prodotti'] ) ) {
 
+/*
 	// cerco le categorie fra i figli della pagina
 	foreach( $cf['contents']['page']['children']['id'] as $child ) {
 		if( isset( $cf['contents']['pages'][ $child ]['metadata']['id_prodotto'] ) ) {
@@ -23,7 +24,7 @@ if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! e
 
 
 	}
-
+*/
 
 	/*
 	// parametri di base

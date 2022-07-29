@@ -125,3 +125,6 @@ composer update
 
 ## permessi
 _src/_sh/_lamp.permissions.reset.sh
+
+## fine script
+echo "se necessario, riavviare la sessione o il computer per aggiornare i gruppi dell'utente corrente"

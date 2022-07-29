@@ -39,7 +39,8 @@
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_lydia/', 'schema' => 'carrello.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_carrello.php' ),
-	    'metadati'		=> array( 'ruolo'	=> 'carrello' )
+	    'metadati'		=> array( 'ruolo'	=> 'carrello' ),
+		'menu'			=> array( 'main'	=> array(	'' => 	array(	'label'		=> array( $l => 'carrello' ), 'priority'	=> '999' ) ) )
 	);
 
     // riepilogo

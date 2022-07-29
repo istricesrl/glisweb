@@ -8,7 +8,7 @@
      * @file
      *
      */
-
+/*
     // seleziono le sottocategorie
 	if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! empty( $cf['contents']['page']['metadata']['id_categoria_prodotti']  ) ) {
 
@@ -22,8 +22,8 @@
 		    .'WHERE categorie_prodotti.id_genitore = ? '
 		    .'GROUP BY categorie_prodotti.id ',
 		    array(
-			array( 's' => $cf['localization']['language']['id'] ),
-			array( 's' => $cf['contents']['page']['metadata']['id_categoria_prodotti'] )
+				array( 's' => $cf['localization']['language']['id'] ),
+				array( 's' => $cf['contents']['page']['metadata']['id_categoria_prodotti'] )
 		    )
 		);
 
@@ -32,3 +32,4 @@
 		// print_r( $ct['catalogo']['categorie'][ $ct['page']['metadati']['id_categoria_prodotti'] ] );
 
 	}
+*/
