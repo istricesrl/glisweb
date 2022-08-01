@@ -3873,7 +3873,7 @@ CREATE OR REPLACE VIEW `magazzini_view` AS
 		concat_ws(
 			' ',
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
@@ -4129,7 +4129,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		concat_ws(
 			' ',
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
