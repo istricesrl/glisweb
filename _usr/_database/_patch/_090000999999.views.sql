@@ -1072,6 +1072,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.intestazione_sdi,
 	carrelli.intestazione_pec,
 	carrelli.id_listino,
+    carrelli.id_documento,
 	carrelli.prezzo_netto_totale,
 	carrelli.prezzo_lordo_totale,
 	carrelli.sconto_percentuale,

@@ -13,6 +13,7 @@ ADD `utm_term` CHAR(128) NULL DEFAULT NULL AFTER `utm_campaign`,
 ADD `utm_content` CHAR(128) NULL DEFAULT NULL AFTER `utm_term`,
 ADD `id_reseller` int(11) NULL DEFAULT NULL AFTER `utm_content`,
 ADD `id_affiliato` int(11) NULL DEFAULT NULL AFTER `id_reseller`,
+ADD `id_documento` int(11) NULL DEFAULT NULL AFTER `id_listino`,
 ADD KEY `ordine_pagamento` ( `ordine_pagamento` ),
 ADD KEY `utm_id` ( `utm_id` ),
 ADD KEY `utm_source` ( `utm_source` ),
@@ -20,10 +21,12 @@ ADD KEY `utm_medium` ( `utm_medium` ),
 ADD KEY `utm_campaign` ( `utm_campaign` ),
 ADD KEY `utm_term` ( `utm_term` ),
 ADD KEY `utm_content` ( `utm_content` ),
+ADD KEY `id_documento` ( `id_documento` ),
 ADD KEY `id_reseller` ( `id_reseller` ),
 ADD KEY `id_affiliato` ( `id_affiliato` ),
-ADD CONSTRAINT `carrelli_ibfk_08_nofollow`          FOREIGN KEY (`id_reseller`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-ADD CONSTRAINT `carrelli_ibfk_09_nofollow`          FOREIGN KEY (`id_affiliato`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+ADD CONSTRAINT `carrelli_ibfk_08_nofollow`          FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+ADD CONSTRAINT `carrelli_ibfk_09_nofollow`          FOREIGN KEY (`id_reseller`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+ADD CONSTRAINT `carrelli_ibfk_10_nofollow`          FOREIGN KEY (`id_affiliato`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 --| 202208010020
 ALTER TABLE `contatti` 
@@ -108,6 +111,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.intestazione_sdi,
 	carrelli.intestazione_pec,
 	carrelli.id_listino,
+    carrelli.id_documento,
 	carrelli.prezzo_netto_totale,
 	carrelli.prezzo_lordo_totale,
 	carrelli.sconto_percentuale,

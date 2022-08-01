@@ -448,6 +448,7 @@ ALTER TABLE `carrelli`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `session` (`session`), 
 	ADD KEY `id_listino` (`id_listino`), 
+	ADD KEY `id_documento` ( `id_documento` ),
 	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`), 
 	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
 	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`), 
