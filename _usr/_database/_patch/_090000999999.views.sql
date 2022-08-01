@@ -2045,6 +2045,70 @@ CREATE OR REPLACE VIEW `coupon_prodotti_view` AS
 
 --| 090000008900
 
+-- crediti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `crediti_view`;
+
+--| 090000008901
+
+-- crediti_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-15 11:56 Chiara GDL
+CREATE OR REPLACE VIEW `crediti_view` AS
+    SELECT
+		crediti.id,
+		crediti.id_documenti_articolo,
+        concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' ',
+			documenti_articoli.id_articolo
+		) AS riga_documento,
+		crediti.data,
+		crediti.id_account_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS account_emittente,
+		crediti.id_account_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS account_destinatario,
+		crediti.id_mastro_provenienza,
+		mastri_path( m1.id ) AS mastro_provenienza,
+		crediti.id_mastro_destinazione,
+		mastri_path( m2.id ) AS mastro_destinazione,
+		crediti.quantita,
+		crediti.id_pianificazione,
+		crediti.nome,
+		crediti.id_account_inserimento,
+		crediti.id_account_aggiornamento,
+		concat(
+			crediti.data,
+			' / ',
+			tipologie_documenti.sigla,
+			' / ',
+			crediti.quantita,
+			' x ',
+			documenti_articoli.id_articolo,
+			' / ',
+			crediti.nome
+		) AS __label__
+	FROM
+		crediti
+		LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
+        	LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
+        	LEFT JOIN account AS acc1 ON acc1.id = crediti.id_account_emittente
+		LEFT JOIN anagrafica AS a1 ON a1.id = acc1.id_anagrafica
+		LEFT JOIN account AS acc2 ON acc2.id = crediti.id_account_destinatario
+		LEFT JOIN anagrafica AS a2 ON a2.id = acc2.id_anagrafica
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
+;
+
+--| 090000008900
+
 -- discipline_view
 -- tipologia: vista virtuale
 DROP TABLE IF EXISTS `discipline_view`;
@@ -7572,6 +7636,7 @@ CREATE OR REPLACE VIEW `tipologie_mastri_view` AS
 		tipologie_mastri.se_magazzino,
 		tipologie_mastri.se_conto,
 		tipologie_mastri.se_registro,
+		tipologie_mastri.se_credito,
 		tipologie_mastri.id_account_inserimento,
 		tipologie_mastri.id_account_aggiornamento,
 		tipologie_mastri_path( tipologie_mastri.id ) AS __label__
