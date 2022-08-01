@@ -40,7 +40,7 @@ ADD KEY `utm_campaign` ( `utm_campaign` ),
 ADD KEY `utm_term` ( `utm_term` ),
 ADD KEY `utm_content` ( `utm_content` );
 
-
+--| 202208010030
 CREATE OR REPLACE VIEW contatti_view AS
 	SELECT
 		contatti.id,
@@ -73,5 +73,67 @@ CREATE OR REPLACE VIEW contatti_view AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = contatti.id_inviante
 		LEFT JOIN ranking ON ranking.id = contatti.id_ranking
 ;
+
+--| 202208010040
+CREATE OR REPLACE VIEW carrelli_view AS
+	SELECT
+	carrelli.id,
+	carrelli.session,
+	carrelli.destinatario_nome,
+	carrelli.destinatario_cognome,
+	carrelli.destinatario_denominazione,
+	carrelli.destinatario_id_anagrafica,
+	carrelli.destinatario_indirizzo,
+	carrelli.destinatario_cap,
+	carrelli.destinatario_citta,
+	carrelli.destinatario_id_provincia,
+	carrelli.destinatario_id_stato,
+	carrelli.destinatario_telefono,
+	carrelli.destinatario_mail,
+	carrelli.destinatario_codice_fiscale,
+	carrelli.destinatario_partita_iva,
+	carrelli.intestazione_nome,
+	carrelli.intestazione_cognome,
+	carrelli.intestazione_denominazione,
+	carrelli.intestazione_id_anagrafica,
+	carrelli.intestazione_indirizzo,
+	carrelli.intestazione_cap,
+	carrelli.intestazione_citta,
+	carrelli.intestazione_id_provincia,
+	carrelli.intestazione_id_stato,
+	carrelli.intestazione_telefono,
+	carrelli.intestazione_mail,
+	carrelli.intestazione_codice_fiscale,
+	carrelli.intestazione_partita_iva,
+	carrelli.intestazione_sdi,
+	carrelli.intestazione_pec,
+	carrelli.id_listino,
+	carrelli.prezzo_netto_totale,
+	carrelli.prezzo_lordo_totale,
+	carrelli.sconto_percentuale,
+	carrelli.sconto_valore,
+	carrelli.prezzo_netto_finale,
+	carrelli.prezzo_lordo_finale,
+	carrelli.provider_checkout,
+	carrelli.timestamp_checkout,
+	carrelli.provider_pagamento,
+	carrelli.timestamp_pagamento,
+	carrelli.codice_pagamento,
+    carrelli.ordine_pagamento,
+	carrelli.status_pagamento,
+	carrelli.importo_pagamento,
+    carrelli.utm_id,
+    carrelli.utm_source,
+    carrelli.utm_medium,
+    carrelli.utm_campaign,
+    carrelli.utm_term,
+    carrelli.utm_content,
+    carrelli.id_reseller,
+    carrelli.id_affiliato,
+	carrelli.id_account_inserimento,
+	carrelli.timestamp_inserimento,
+	carrelli.id_account_aggiornamento,
+	carrelli.timestamp_aggiornamento
+FROM carrelli;
 
 --| FINE
