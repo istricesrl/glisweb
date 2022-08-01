@@ -140,4 +140,78 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.timestamp_aggiornamento
 FROM carrelli;
 
+--| 202208010540
+ALTER TABLE `carrelli` 
+ADD `intestazione_id_account` int(11) NULL DEFAULT NULL AFTER `intestazione_id_anagrafica`,
+ADD `destinatario_id_account` int(11) NULL DEFAULT NULL AFTER `destinatario_id_anagrafica`,
+	ADD KEY `intestazione_id_account` (`intestazione_id_account`), 
+	ADD KEY `destinatario_id_account` (`destinatario_id_account`),
+	ADD CONSTRAINT `carrelli_ibfk_11_nofollow`          FOREIGN KEY (`intestazione_id_account`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	ADD CONSTRAINT `carrelli_ibfk_12_nofollow`          FOREIGN KEY (`destinatario_id_account`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202208010550
+CREATE OR REPLACE VIEW carrelli_view AS
+	SELECT
+	carrelli.id,
+	carrelli.session,
+	carrelli.destinatario_nome,
+	carrelli.destinatario_cognome,
+	carrelli.destinatario_denominazione,
+	carrelli.destinatario_id_anagrafica,
+	carrelli.destinatario_id_account,
+	carrelli.destinatario_indirizzo,
+	carrelli.destinatario_cap,
+	carrelli.destinatario_citta,
+	carrelli.destinatario_id_provincia,
+	carrelli.destinatario_id_stato,
+	carrelli.destinatario_telefono,
+	carrelli.destinatario_mail,
+	carrelli.destinatario_codice_fiscale,
+	carrelli.destinatario_partita_iva,
+	carrelli.intestazione_nome,
+	carrelli.intestazione_cognome,
+	carrelli.intestazione_denominazione,
+	carrelli.intestazione_id_anagrafica,
+	carrelli.intestazione_id_account,
+	carrelli.intestazione_indirizzo,
+	carrelli.intestazione_cap,
+	carrelli.intestazione_citta,
+	carrelli.intestazione_id_provincia,
+	carrelli.intestazione_id_stato,
+	carrelli.intestazione_telefono,
+	carrelli.intestazione_mail,
+	carrelli.intestazione_codice_fiscale,
+	carrelli.intestazione_partita_iva,
+	carrelli.intestazione_sdi,
+	carrelli.intestazione_pec,
+	carrelli.id_listino,
+    carrelli.id_documento,
+	carrelli.prezzo_netto_totale,
+	carrelli.prezzo_lordo_totale,
+	carrelli.sconto_percentuale,
+	carrelli.sconto_valore,
+	carrelli.prezzo_netto_finale,
+	carrelli.prezzo_lordo_finale,
+	carrelli.provider_checkout,
+	carrelli.timestamp_checkout,
+	carrelli.provider_pagamento,
+	carrelli.timestamp_pagamento,
+	carrelli.codice_pagamento,
+    carrelli.ordine_pagamento,
+	carrelli.status_pagamento,
+	carrelli.importo_pagamento,
+    carrelli.utm_id,
+    carrelli.utm_source,
+    carrelli.utm_medium,
+    carrelli.utm_campaign,
+    carrelli.utm_term,
+    carrelli.utm_content,
+    carrelli.id_reseller,
+    carrelli.id_affiliato,
+	carrelli.id_account_inserimento,
+	carrelli.timestamp_inserimento,
+	carrelli.id_account_aggiornamento,
+	carrelli.timestamp_aggiornamento
+FROM carrelli;
+
 --| FINE
