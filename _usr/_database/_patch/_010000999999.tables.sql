@@ -1038,6 +1038,29 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000008900
+
+-- crediti
+-- tipologia: tabella gestita
+-- verifica: 2022-07-15 11:56 Chiara GDL
+CREATE TABLE IF NOT EXISTS `crediti` (
+  `id` int(11) NOT NULL,
+  `id_documenti_articolo` int(11) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `id_account_destinatario` int(11) DEFAULT NULL,
+  `id_account_emittente` int(11) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `data` date DEFAULT NULL,
+  `quantita` decimal(9,2) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000009000
 
 -- disponibilita
@@ -3328,6 +3351,7 @@ CREATE TABLE `tipologie_mastri` (
   `se_magazzino` int DEFAULT NULL,
   `se_conto` int DEFAULT NULL,
   `se_registro` int DEFAULT NULL,
+  `se_credito` int(1) NULL,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
