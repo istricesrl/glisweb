@@ -24,6 +24,9 @@
     // ID dell'ordine per la cattura del pagamento
     if( isset( $_REQUEST['id'] ) ) {
 
+		// normalizzazione ID carrello
+		$idCarrello = $_SESSION['carrello']['id'];
+
         // nome del file di ricevuta
         $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
 
