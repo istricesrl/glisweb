@@ -2101,6 +2101,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `model_id_licenza` int(11) DEFAULT NULL,
   `model_id_listino` int(11) DEFAULT NULL,
   `model_id_luogo` int(11) DEFAULT NULL,
+  `model_id_mastro_destinazione` int(11) DEFAULT NULL,
   `model_id_mastro_provenienza` int(11) DEFAULT NULL,
   `model_id_matricola` int(11) DEFAULT NULL,
   `model_id_modalita_pagamento` int(11) DEFAULT NULL,
