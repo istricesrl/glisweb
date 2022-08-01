@@ -1047,6 +1047,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.destinatario_cognome,
 	carrelli.destinatario_denominazione,
 	carrelli.destinatario_id_anagrafica,
+	carrelli.destinatario_id_account,
 	carrelli.destinatario_indirizzo,
 	carrelli.destinatario_cap,
 	carrelli.destinatario_citta,
@@ -1060,6 +1061,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.intestazione_cognome,
 	carrelli.intestazione_denominazione,
 	carrelli.intestazione_id_anagrafica,
+	carrelli.intestazione_id_account,
 	carrelli.intestazione_indirizzo,
 	carrelli.intestazione_cap,
 	carrelli.intestazione_citta,
@@ -3873,7 +3875,7 @@ CREATE OR REPLACE VIEW `magazzini_view` AS
 		concat_ws(
 			' ',
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
@@ -4129,7 +4131,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		concat_ws(
 			' ',
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
