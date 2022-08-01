@@ -948,6 +948,10 @@
 
 	foreach( $a as $v ) {
 
+		if( is_numeric( $v ) ) {
+			$v = str_replace( ',', '.', $v );
+		}
+
 	    $r[] = array( 's' => $v );
 
 	}

@@ -57,7 +57,7 @@
 	$p['carrello.checkout'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'checkout ordine' ),
-	    'h1'			=> array( $l		=> 'nessun ordine in corso' ),
+	    'h1'			=> array( $l		=> 'conclusione ordine' ),
 	    'h2'			=> array( $l		=> NULL ),
 	    'parent'		=> array( 'id'		=> 'carrello' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_lydia/', 'schema' => 'carrello.checkout.html' ),
@@ -68,7 +68,7 @@
 	$p['carrello.esito'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'esito ordine' ),
-	    'h1'			=> array( $l		=> 'nessun ordine in corso' ),
+	    'h1'			=> array( $l		=> 'conclusione ordine' ),
 	    'h2'			=> array( $l		=> NULL ),
 	    'parent'		=> array( 'id'		=> 'carrello' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_lydia/', 'schema' => 'carrello.esito.html' ),
@@ -79,7 +79,7 @@
 	$p['carrello.successo'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'esito ordine' ),
-	    'h1'			=> array( $l		=> 'nessun ordine in corso' ),
+	    'h1'			=> array( $l		=> 'conclusione ordine' ),
 	    'h2'			=> array( $l		=> NULL ),
 	    'parent'		=> array( 'id'		=> 'carrello' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_lydia/', 'schema' => 'carrello.successo.html' ),
@@ -90,7 +90,7 @@
 	$p['carrello.fallimento'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'esito ordine' ),
-	    'h1'			=> array( $l		=> 'nessun ordine in corso' ),
+	    'h1'			=> array( $l		=> 'conclusione ordine' ),
 	    'h2'			=> array( $l		=> NULL ),
 	    'parent'		=> array( 'id'		=> 'carrello' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_lydia/', 'schema' => 'carrello.fallimento.html' ),

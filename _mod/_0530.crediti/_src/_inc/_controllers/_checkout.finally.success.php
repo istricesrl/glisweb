@@ -49,7 +49,7 @@
             $incremento = $crediti * $articolo['quantita'];
 
             // debug
-            var_dump( $crediti . 'x' . $articolo['quantita'] . '=' . $incremento );
+            // var_dump( $crediti . 'x' . $articolo['quantita'] . '=' . $incremento );
 
             // registro il movimento
             $movimento = mysqlInsertRow(
@@ -60,7 +60,8 @@
                     'id_account_destinatario' => $carrello['intestazione_id_account'],
                     'data' => date('Y-m-d'),
                     'nome' => 'acquisto ' . $crediti . 'x' . $articolo['quantita'] . '=' . $incremento . ' crediti con carrello #' . $idCarrello . ' riga #' . $articolo['id'],
-                    'quantita' => $incremento
+                    'quantita' => $incremento,
+                    'timestamp_inserimento' => time()
                 ),
                 'crediti'
             );
