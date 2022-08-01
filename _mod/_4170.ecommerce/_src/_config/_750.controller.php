@@ -205,6 +205,12 @@
 
         // STEP 7 - calcoli finali
 
+        // aggiorno l'anagrafica e l'account collegati al carrello
+        aggiornaProprietarioCarrello( $_SESSION['carrello'] );
+
+        // aggiornamento del flag se_login
+        aggiornaFlagCarrelloSeLogin( $_SESSION['carrello'] );
+
         // timestamp di aggiornamento del carrello
         $_SESSION['carrello']['timestamp_aggiornamento'] = time();
 
@@ -214,6 +220,7 @@
             array_diff_key(
                 $_SESSION['carrello'], array(
                     'articoli' => array(),
+                    'se_login' => NULL,
                     'timestamp_inserimento' => NULL
                 )
             ),

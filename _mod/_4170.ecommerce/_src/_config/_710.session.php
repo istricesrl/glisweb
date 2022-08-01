@@ -27,7 +27,23 @@
         }
 
     }
+/*
+    // PayPal
+	if( isset( $_REQUEST['item_number'] ) ) {
 
+		// normalizzazione ID carrello
+		$_SESSION['carrello']['id'] = $_REQUEST['item_number'];
+
+    }
+
+    // Nexi
+	if( isset( $_REQUEST['codTrans'] ) ) {
+
+		// normalizzazione ID carrello
+		$_SESSION['carrello']['id'] = $_REQUEST['codTrans'];
+
+    }
+*/
     // verifico se il carrello della sessione corrente va chiuso
     if( isset( $_SESSION['carrello']['id'] ) ) {
 

@@ -44,7 +44,7 @@
 	);
 
     // riepilogo
-	$p['carrello_riepilogo'] = array(
+	$p['carrello.riepilogo'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'riepilogo' ),
 	    'h1'			=> array( $l		=> 'riepilogo' ),
@@ -54,7 +54,7 @@
 	);
 
     // checkout
-	$p['carrello_checkout'] = array(
+	$p['carrello.checkout'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'checkout ordine' ),
 	    'h1'			=> array( $l		=> 'nessun ordine in corso' ),
@@ -65,7 +65,7 @@
 	);
 
     // checkout
-	$p['carrello_esito'] = array(
+	$p['carrello.esito'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'esito ordine' ),
 	    'h1'			=> array( $l		=> 'nessun ordine in corso' ),
@@ -76,7 +76,7 @@
 	);
 
     // checkout
-	$p['carrello_successo'] = array(
+	$p['carrello.successo'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'esito ordine' ),
 	    'h1'			=> array( $l		=> 'nessun ordine in corso' ),
@@ -87,7 +87,7 @@
 	);
 
     // checkout
-	$p['carrello_fallimento'] = array(
+	$p['carrello.fallimento'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'esito ordine' ),
 	    'h1'			=> array( $l		=> 'nessun ordine in corso' ),

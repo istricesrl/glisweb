@@ -15,8 +15,8 @@
         return $count;
     }
 
-
-    function aggiornaCarrelloEarticoli(){
+/*
+    function aggiornaCarrelloEarticoli() {
 
         global $cf;
 
@@ -58,5 +58,30 @@
             $_SESSION['carrello']['prezzo_lordo_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale'];
 
         }
+
+    }
+*/
+
+    function aggiornaFlagCarrelloSeLogin( &$carrello ) {
+
+        global $cf;
+    
+        $ids = array_keys( $carrello['articoli'] );
+        $par = array();
+
+        // die( print_r( $ids ) );
+        // die( 'SELECT max( testo ) FROM metadati WHERE nome = "se_login" AND id_articolo IN (' . implode( ',', array_fill( 0, count( $ids ), '?' ) ) . ')' );
+
+        foreach( $ids as $id ) {
+            $par[] = array( 's' => $id );
+        }
+
+        $carrello['se_login'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max( testo ) FROM metadati WHERE nome = "se_login" AND id_articolo IN (' . implode( ',', array_fill( 0, count( $ids ), '?' ) ) . ')',
+            $par
+        );
+
+        // die( $carrello['se_login'] );
 
     }

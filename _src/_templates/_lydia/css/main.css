@@ -5,6 +5,7 @@ body {
 
 main {
     padding: 0.5em;
+    padding-bottom: 1.5em;
 }
 
 div.categorie {
@@ -45,7 +46,7 @@ footer p {
 }
 
 h1, h2, h3, h4, h5 {
-    margin: 0.5em 0em;
+    margin: 0em;
 }
 
 h1 {
@@ -119,7 +120,7 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
 
 a.nav-link, a.nav-link:visited {
     color: #aaaaaa;
-    padding-right: 0em !important;
+    padding: 0em .5em !important;
 }
 
 a.nav-link:active, a.nav-link:hover {
@@ -129,6 +130,15 @@ a.nav-link:active, a.nav-link:hover {
 
 ul.navbar-nav {
     list-style-type: none;
+}
+
+label.label-top {
+    font-size: .75em;
+    margin: 0em;
+}
+
+form.carrello div.form-row {
+    margin: .5em 0em;
 }
 
 @media (min-width: 576px) {

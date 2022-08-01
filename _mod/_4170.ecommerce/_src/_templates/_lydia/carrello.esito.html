@@ -1,0 +1,15 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+{% if etc.esito == 1 %}
+    <p>pagamento andato a buon fine</p>
+{% elseif etc.esito == 2 %}
+    <p>ordine in lavorazione</p>
+{% else %}
+    <p>pagamento non andato a buon fine</p>
+{% endif %}
+
+{% endblock %}

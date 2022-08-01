@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
 -- verifica: 2021-05-25 10:45 Fabio Mosti
 CREATE TABLE `articoli` (
   `id` char(32) NOT NULL,
-  `id_prodotto` char(32) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
   `ordine` int DEFAULT NULL,
   `ean` char(32) DEFAULT NULL,
   `isbn` char(32) DEFAULT NULL,

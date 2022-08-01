@@ -18,6 +18,7 @@
         // dati per la costruzione del modulo
         $ct['etc']['meta']['method']	                    = ( ! isset( $k['method'] ) ) ? NULL : $k['method'];		    // metodo di chiamata al server
         $ct['etc']['meta']['action']                        = $k['action_url'];                                             // server da chiamare
+        $ct['etc']['meta']['autosubmit']                    = ( isset( $k['autosubmit'] ) ) ? $k['autosubmit'] : false;     // opzione autosubmit per la pagina di riepilogo
 
         // configurazione riepilogo e ambiente di pagamento in base al provider scelto
         switch( $_SESSION['carrello']['provider_pagamento'] ) {
