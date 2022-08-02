@@ -620,6 +620,7 @@
 	    echo '<!-- file: ' . basename( FILE_CACHE_PAGE ) . ' -->'				. PHP_EOL;
 	} else {
 		header( 'X-Proxy-Cache: BYPASS' );
+		header( 'X-GlisWeb-No-Cache: true' );
 	    echo PHP_EOL . '<!-- pagina senza autorizzazione al caching -->' . PHP_EOL;
 	}
 	echo PHP_EOL;
