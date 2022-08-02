@@ -31,7 +31,7 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'codice' => 'tipologia',
-        'id_destinatario' => 'anagrafica'
+        'iscritti' => 'iscritto'
 	);
 
     // stili della vista
