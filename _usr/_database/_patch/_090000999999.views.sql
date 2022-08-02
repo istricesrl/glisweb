@@ -3466,6 +3466,9 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
         tipologie_contratti.nome AS tipologia,
 		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
 		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
+		group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id ), null ) SEPARATOR ' | ' ) AS fasce,
+		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
+		group_concat( DISTINCT if( l.id, categorie_progetti_path( l.id ), null ) SEPARATOR ' | ' ) AS livelli,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
@@ -3482,11 +3485,14 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
 		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
 		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN categorie_progetti AS f ON f.id = progetti_categorie.id_categoria AND f.se_fascia = 1
+		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
+		LEFT JOIN categorie_progetti AS l ON l.id = progetti_categorie.id_categoria AND l.se_classe = 1
+		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_iscrizione = 1
 	GROUP BY contratti.id
 ;
-
 --| 090000015910
 
 -- iscrizioni_attivi_view
