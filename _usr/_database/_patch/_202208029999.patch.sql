@@ -603,4 +603,8 @@ CREATE OR REPLACE VIEW `tesseramenti_archiviati_view` AS
     GROUP BY contratti.id
 ;
 
+--| 202208020290
+INSERT IGNORE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(15,	1,	NULL,	NULL,	'frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| FINE
