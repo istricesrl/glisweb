@@ -24,7 +24,7 @@
 
     $ct['view']['table'] = 'todo';
 
-        // pagina per la gestione degli oggetti esistenti
+    // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'todo.form';
 
     // pagina per l'inserimento di un nuovo oggetto
