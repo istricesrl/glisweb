@@ -36,18 +36,23 @@
                 )
             );
 
-            // registro il collegamento
-            $movimento = mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id' => NULL,
-                    'id_risorsa' => $risorsa,
-                    'id_account' => $carrello['intestazione_id_account'],
-                    'note' => 'acquisto risorsa #' . $risorsa . ' con carrello #' . $idCarrello . ' riga #' . $articolo['id'],
-                    'timestamp_inserimento' => time()
-                ),
-                'risorse_account'
-            );
+            // se c'è una risorsa da collegare
+            if( ! empty( $risorsa ) ) {
+
+                // registro il collegamento
+                $movimento = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => NULL,
+                        'id_risorsa' => $risorsa,
+                        'id_account' => $carrello['intestazione_id_account'],
+                        'note' => 'acquisto risorsa #' . $risorsa . ' con carrello #' . $idCarrello . ' riga #' . $articolo['id'],
+                        'timestamp_inserimento' => time()
+                    ),
+                    'risorse_account'
+                );
+
+            }
 
         }
 

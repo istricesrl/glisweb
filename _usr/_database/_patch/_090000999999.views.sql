@@ -4840,13 +4840,13 @@ CREATE OR REPLACE VIEW `pagine_view` AS
 	FROM pagine
 ;
 
---| 090000023501
+--| 090000023500
 
 -- periodi_view
 -- tipologia: tabella di supporto
 DROP TABLE IF EXISTS `periodi_view`;
 
---| 090000023500
+--| 090000023501
 
 -- periodi_view
 -- tipologia: tabella di supporto

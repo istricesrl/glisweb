@@ -75,7 +75,8 @@
 														'corsi.form.relazioni',
 														'corsi.form.acquisto',
 														'corsi.form.iscritti',
-														'corsi.form.calendario',
+# relazione con il modulo TODO
+#														'corsi.form.calendario',
 # NOTA queste due voci vanno nel modulo contenuti
 													/*	'corsi.form.sem',
 														'corsi.form.testo', */
@@ -89,6 +90,11 @@
 														'corsi.form.stampe',
 														'corsi.form.tools' ) )
 	);
+
+	// RELAZIONI CON IL MODULO TODO
+	if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'corsi.form.iscritti', $p['corsi.form']['etc']['tabs'], 'corsi.form.calendario' );
+	}
 
 	// RELAZIONI CON IL MODULO CONTENUTI
 	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
