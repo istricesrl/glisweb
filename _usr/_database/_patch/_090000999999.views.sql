@@ -1758,7 +1758,6 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 	GROUP BY contratti.id, contratti_anagrafica.id_contratto, tipologie_contratti.nome
 ;
 
-
 --| 090000007300
 
 -- contratti_anagrafica_view
@@ -4270,6 +4269,7 @@ CREATE OR REPLACE VIEW `menu_view` AS
 		menu.id_categoria_prodotti,
 		menu.id_categoria_notizie,
 		menu.id_categoria_risorse,
+		menu.id_categoria_progetti,
 		menu.ordine,
 		menu.menu,
 		menu.nome,
@@ -6508,6 +6508,31 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 	FROM risorse
 		LEFT JOIN tipologie_risorse ON tipologie_risorse.id = risorse.id_tipologia
 		LEFT JOIN testate ON testate.id = risorse.id_testata
+;
+
+--| 090000032100
+
+-- risorse_account
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `risorse_account_view`;
+
+--| 090000032101
+
+-- risorse_account
+-- tipologia: tabella di supporto
+-- verifica: 2022-08-02 12:07 Chiara GDL
+CREATE OR REPLACE VIEW `risorse_account_view` AS
+	SELECT
+		risorse_account.id,
+		risorse_account.id_risorsa,
+		risorse.nome AS risorsa,
+		risorse_account.id_account,
+		risorse_account.ordine,
+		risorse_account.id_account_inserimento,
+		risorse_account.id_account_aggiornamento,
+		risorse.nome AS __label__
+	FROM risorse_account
+		LEFT JOIN risorse ON risorse.id = risorse_account.id_risorsa
 ;
 
 --| 090000032200

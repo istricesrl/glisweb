@@ -919,12 +919,10 @@ ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `contratti`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_emittente` (`id_emittente`),
-	ADD KEY `id_destinatario` (`id_destinatario`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY  `id_immobile` (`id_immobile`),
 	ADD KEY  `codice` ( `codice` ),
-	ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `codice`, `nome`, `id_progetto`, `id_immobile`);
+	ADD KEY `indice` ( `id_tipologia`, `codice`, `nome`, `id_progetto`, `id_immobile`);
 
 
 --| 030000007201
@@ -1944,11 +1942,13 @@ ALTER TABLE `menu`
  	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_lingua`,`id_categoria_prodotti`,`menu`), 
  	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`,`menu`), 
  	ADD UNIQUE KEY `unica_categoria_risorse` (`id_lingua`,`id_categoria_risorse`,`menu`), 
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_lingua`,`id_categoria_progetti`,`menu`), 
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `id_pagina` (`id_pagina`), 
  	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
  	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
  	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `indice` (`id`,`id_lingua`,`id_pagina`,`ordine`,`menu`,`nome`,`target`,`sottopagine`),
 	ADD KEY `indice_categorie_prodotti` (`id`,`id_lingua`,`id_categoria_prodotti`,`menu`,`nome`),
 	ADD KEY `indice_categorie_notizie` (`id`,`id_lingua`,`id_categoria_notizie`,`menu`,`nome`),
@@ -2878,6 +2878,27 @@ ALTER TABLE `risorse`
 -- risorse
 -- tipologia: tabella gestita
 ALTER TABLE `risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
+
+--| 030000032100
+
+-- risorse_account
+-- tipologia: tabella di supporto
+-- verifica: 2022-08-02 12:07 Chiara GDL
+ALTER TABLE `risorse_account`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_risorsa`,`id_account`),
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_risorsa`,`id_account`,`ordine`);
+
+--| 030000032101
+
+-- risorse_account
+-- tipologia: tabella di supporto
+ALTER TABLE `risorse_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000032200
 
