@@ -1617,6 +1617,7 @@ CREATE TABLE IF NOT EXISTS `luoghi` (
   `id_tipologia` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
+  `url` char(255) DEFAULT NULL, 
   `nome` char(255) COLLATE utf8_general_ci NOT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,

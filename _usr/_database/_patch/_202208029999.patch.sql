@@ -107,4 +107,39 @@ CREATE OR REPLACE VIEW `menu_view` AS
 		INNER JOIN lingue ON lingue.id = menu.id_lingua
 ;
 
+--| 202208020140
+ALTER TABLE `luoghi`
+    ADD `url` char(255) DEFAULT NULL AFTER `id_immobile`,
+    ADD KEY `url` (`url`);
+
+--| 202208020150
+CREATE OR REPLACE VIEW `luoghi_view` AS
+	SELECT
+		luoghi.id,
+		luoghi.id_genitore,
+		luoghi.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		luoghi.id_tipologia,
+		tipologie_luoghi_path( luoghi.id_tipologia ) AS tipologia,
+		luoghi.id_edificio,
+		luoghi.id_immobile,	
+		luoghi.url,	
+		luoghi.nome,
+		luoghi.id_account_inserimento,
+		luoghi.id_account_aggiornamento,
+		luoghi_path( luoghi.id ) AS __label__
+	FROM luoghi
+		LEFT JOIN indirizzi ON indirizzi.id = luoghi.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+;
+
 --| FINE
