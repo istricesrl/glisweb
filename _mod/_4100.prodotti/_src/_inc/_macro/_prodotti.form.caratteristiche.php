@@ -37,7 +37,7 @@
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM caratteristiche_prodotti_view'
     );
-
+/*
     // tendina stagioni
 	$ct['etc']['select']['stagioni'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -45,7 +45,7 @@
 	    $cf['mysql']['connection'],
         'SELECT id, __label__ FROM stagioni_prodotti_view'
     );
-    
+*/    
 	// tendina icona per caratteristica/opzione presente o meno
 	$ct['etc']['select']['se_non_presente'] = array(
 	    array( 'id' => NULL, '__label__' => 'sì' ),

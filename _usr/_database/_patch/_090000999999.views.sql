@@ -2125,13 +2125,13 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
 ;
 
---| 090000008900
+--| 090000008910
 
 -- discipline_view
 -- tipologia: vista virtuale
 DROP TABLE IF EXISTS `discipline_view`;
 
---| 090000008901
+--| 090000008911
 
 -- discipline_view
 -- tipologia: vista virtuale
@@ -6550,7 +6550,7 @@ CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 -- tipologia: tabella di supporto
 DROP TABLE IF EXISTS `risorse_categorie_view`;
 
---| 090000032400
+--| 090000032401
 
 -- risorse_categorie_view
 -- tipologia: tabella di supporto
