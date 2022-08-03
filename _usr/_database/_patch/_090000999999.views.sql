@@ -1120,6 +1120,7 @@ CREATE OR REPLACE VIEW carrelli_articoli_view AS
 		carrelli_articoli.id_carrello,
 		carrelli_articoli.id_articolo,
 		carrelli_articoli.id_iva,
+		carrelli_articoli.destinatario_id_anagrafica,
 		carrelli_articoli.prezzo_netto_unitario,
 		carrelli_articoli.prezzo_lordo_unitario,
 		carrelli_articoli.quantita,
