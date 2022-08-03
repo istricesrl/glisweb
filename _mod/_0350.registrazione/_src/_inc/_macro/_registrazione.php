@@ -3,10 +3,26 @@
     // debug
 	// echo 'REGISTRAZIONE';
 	// print_r( $_REQUEST );
+	// die( print_r( $cf['contents']['page'], true ) );
+
+	// recupero il profilo di registrazione
+	if( isset( $cf['contents']['page']['metadati']['profilo_registrazione'] ) ) {
+		$profilo = $cf['registrazione']['profili'][ $cf['contents']['page']['metadati']['profilo_registrazione'] ];
+	} else {
+		$profilo = $cf['registrazione']['profili']['default'];
+	}
+
+	// die( print_r( $profilo ) );
 
     // se non è impostato uno username, assumo che sia uguale alla mail
 	if( ! isset( $_REQUEST['__signup__']['username'] ) && isset( $_REQUEST['__signup__']['email'] ) ) {
 	    $_REQUEST['__signup__']['username'] = $_REQUEST['__signup__']['email'];
+	}
+
+	// TODO generare una password migliore
+    // se non è impostato una password, la genero casualmente
+	if( ! isset( $_REQUEST['__signup__']['password'] ) || empty( $_REQUEST['__signup__']['password'] ) ) {
+	    $_REQUEST['__signup__']['password'] = time();
 	}
 
     // ho ricevuto i dati per la registrazione
@@ -20,11 +36,11 @@
 		$mail = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT * FROM mail_view WHERE indirizzo = ? ',
 					    array( array( 's' => $_REQUEST['__signup__']['email'] ) ) );
 
+		// creo il token
+		$tk = $_REQUEST['__signup__']['tk'] = md5( $_REQUEST['__signup__']['username'] . $_REQUEST['__signup__']['password'] );
+
 	    // se l'utente non esiste già...
 		if( ! $utente && ! $mail ) {
-
-		    // creo il token
-			$tk = $_REQUEST['__signup__']['tk'] = md5( $_REQUEST['__signup__']['username'] . $_REQUEST['__signup__']['password'] );
 
 		    // debug
 			// echo $tk;
@@ -32,12 +48,17 @@
 			// TODO fare ramo di codice alternativo per registrazione con mail + sms
 			if( true ) {
 
+				// template di default
+				if ( !isset( $profilo['mail'] ) ) {
+					$profilo['mail'] = 'DEFAULT_NUOVO_ACCOUNT';
+				}
+
 				// invio la mail con il link e il token
 				$_REQUEST['__signup__']['activation']['mail']['id'] = queueMailFromTemplate(
 					$cf['mysql']['connection'],
 	#			    $cf['mail']['tpl']['DEFAULT_REGISTRAZIONE_ACCOUNT'],
 	#			    $cf['mail']['tpl']['NUOVO_ACCOUNT'],
-					$cf['mail']['tpl']['DEFAULT_NUOVO_ACCOUNT'],
+					$cf['mail']['tpl'][ $profilo['mail'] ],
 					array( 'dt' => array_replace_recursive( $_REQUEST['__signup__'], array( 'tk' => $tk ) ), 'ct' => $ct ),
 					strtotime( '+1 minutes' ),
 					array( $_REQUEST['__signup__']['nome'] . ' ' . $_REQUEST['__signup__']['cognome'] => $_REQUEST['__signup__']['email'] ),
@@ -92,8 +113,8 @@
 
 				// TODO prevedere la possibilità di associare categorie diverse a tipologie di registrazione diverse
 
-				// associo alle categorie
-				foreach( $cf['registrazione']['default']['categorie'] as $categoria ) {
+		    // associo alle categorie
+			foreach( $profilo['categorie'] as $categoria ) {
 
 					// recupero l'id della categoria
 					$idCategoria = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM categorie_anagrafica WHERE nome = ?', array( array( 's' => $categoria ) ) );
@@ -105,11 +126,11 @@
 
 				}
 
-				// creo l'account
-				$idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => md5( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $cf['registrazione']['default']['attivo'] === true ) ? 1 : NULL ) ) ) );
+		    // creo l'account
+			  $idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => md5( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $profilo['attivo'] === true ) ? 1 : NULL ) ) ) );
 
-				// associo ai gruppi
-				foreach( $cf['registrazione']['default']['gruppi'] as $gruppo ) {
+		    // associo ai gruppi
+			  foreach( $profilo['gruppi'] as $gruppo ) {
 
 					// recupero l'id del gruppo
 					$idGruppo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM gruppi WHERE nome = ?', array( array( 's' => $gruppo ) ) );
