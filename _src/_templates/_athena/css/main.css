@@ -1019,3 +1019,9 @@ div.combobox-container > .spinner-border {
 .modal-dialog {
     margin: 5em auto;
 }
+
+/* stile del banner cookie */
+#cookie {
+    z-index: 9999;
+    background-color: #000000dd;
+}

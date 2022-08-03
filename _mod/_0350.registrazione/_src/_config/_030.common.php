@@ -15,6 +15,7 @@
 	$cf['registrazione']['default'] = array(
 	    'gruppi' => array( 'users' ),
 	    'categorie' => array( 'lead' ),
+        'sms' => false,
 	    'attivo' => true
 	);
 
