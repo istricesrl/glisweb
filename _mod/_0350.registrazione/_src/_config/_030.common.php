@@ -16,6 +16,7 @@
         'nome' => 'utente di default',
 	    'gruppi' => array( 'users' ),
 	    'categorie' => array( 'lead' ),
+        'sms' => false,
 	    'attivo' => true
 	);
 

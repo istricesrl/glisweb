@@ -228,7 +228,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
 -- verifica: 2021-05-25 10:45 Fabio Mosti
 CREATE TABLE `articoli` (
   `id` char(32) NOT NULL,
-  `id_prodotto` char(32) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
   `ordine` int DEFAULT NULL,
   `ean` char(32) DEFAULT NULL,
   `isbn` char(32) DEFAULT NULL,
@@ -359,6 +359,60 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000002300
+
+-- banner
+-- tipologia: tabella gestita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `banner` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `id_inserzionista` int(11) DEFAULT NULL,
+  `altezza_modulo` int(11) DEFAULT NULL,
+  `larghezza_modulo` int(11) DEFAULT NULL,
+  `note` text,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000002400
+
+-- banner_azioni
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `banner_azioni` (
+  `id` int(11) NOT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
+  `id_banner` int(11) NOT NULL,
+  `azione` enum('visualizzazione','click') DEFAULT NULL,
+  `timestamp_azione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000002500
+
+-- banner_pagine
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `banner_pagine` (
+  `id` int(11) NOT NULL,
+  `id_pagina` int(11) NOT NULL,
+  `id_banner` int(11) NOT NULL,
+  `se_presente` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000002800
 
 -- caratteristiche_immobili
@@ -391,6 +445,100 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
   `se_categoria` int(1) DEFAULT NULL,
   `se_prodotto` int(1) DEFAULT NULL,
   `se_articolo` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000003000
+
+-- carrelli
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+CREATE TABLE `carrelli` (
+  `id` int(11) NOT NULL,
+  `session` char(32) DEFAULT NULL,
+  `destinatario_nome` char(255) DEFAULT NULL,
+  `destinatario_cognome` char(255) DEFAULT NULL,
+  `destinatario_denominazione` char(255) DEFAULT NULL,
+  `destinatario_id_anagrafica` int(11) DEFAULT NULL,
+  `destinatario_id_account` int(11) NULL DEFAULT NULL,
+  `destinatario_indirizzo` char(255) DEFAULT NULL,
+  `destinatario_cap` char(16) DEFAULT NULL,
+  `destinatario_citta` char(255) DEFAULT NULL,
+  `destinatario_id_provincia` int(11) DEFAULT NULL,
+  `destinatario_id_stato` int(11) DEFAULT NULL,
+  `destinatario_telefono` char(255) DEFAULT NULL,
+  `destinatario_mail` char(255) DEFAULT NULL,
+  `destinatario_codice_fiscale` char(255) DEFAULT NULL,
+  `destinatario_partita_iva` char(255) DEFAULT NULL,
+  `intestazione_nome` char(255) DEFAULT NULL,
+  `intestazione_cognome` char(255) DEFAULT NULL,
+  `intestazione_denominazione` char(255) DEFAULT NULL,
+  `intestazione_id_anagrafica` int(11) DEFAULT NULL,
+  `intestazione_id_account` int(11) NULL DEFAULT NULL,
+  `intestazione_indirizzo` char(255) DEFAULT NULL,
+  `intestazione_cap` char(16) DEFAULT NULL,
+  `intestazione_citta` char(255) DEFAULT NULL,
+  `intestazione_id_provincia` int(11) DEFAULT NULL,
+  `intestazione_id_stato` int(11) DEFAULT NULL,
+  `intestazione_telefono` char(255) DEFAULT NULL,
+  `intestazione_mail` char(255) DEFAULT NULL,
+  `intestazione_codice_fiscale` char(255) DEFAULT NULL,
+  `intestazione_partita_iva` char(255) DEFAULT NULL,
+  `intestazione_sdi` char(32) DEFAULT NULL,
+  `intestazione_pec` char(255) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `id_documento` int(11) NULL DEFAULT NULL,
+  `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
+  `sconto_percentuale` decimal(16,5) DEFAULT NULL,
+  `sconto_valore` decimal(16,5) DEFAULT NULL,
+  `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,
+  `provider_checkout` char(128) DEFAULT NULL,
+  `timestamp_checkout` int(11) DEFAULT NULL,
+  `provider_pagamento` char(64) DEFAULT NULL,
+  `timestamp_pagamento` int(11) DEFAULT NULL,
+  `codice_pagamento` char(128) DEFAULT NULL,
+  `ordine_pagamento` CHAR(128) NULL DEFAULT NULL,
+  `status_pagamento` char(128) DEFAULT NULL,
+  `importo_pagamento` decimal(16,5) DEFAULT NULL,
+  `utm_id` CHAR(128) NULL DEFAULT NULL,
+  `utm_source` CHAR(128) NULL DEFAULT NULL,
+  `utm_medium` CHAR(128) NULL DEFAULT NULL,
+  `utm_campaign` CHAR(128) NULL DEFAULT NULL,
+  `utm_term` CHAR(128) NULL DEFAULT NULL,
+  `utm_content` CHAR(128) NULL DEFAULT NULL,
+  `id_reseller` int(11) NULL DEFAULT NULL,
+  `id_affiliato` int(11) NULL DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000003050
+
+-- carrelli_articoli
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+CREATE TABLE `carrelli_articoli` (
+  `id` int(11) NOT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `prezzo_netto_unitario` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_unitario` decimal(16,5) DEFAULT NULL,
+  `quantita` int(11) DEFAULT NULL,
+  `note` text,
+  `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
+  `sconto_percentuale` decimal(16,5) DEFAULT NULL,
+  `sconto_valore` decimal(16,5) DEFAULT NULL,
+  `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
+  `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -686,6 +834,12 @@ CREATE TABLE IF NOT EXISTS `contatti` (
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_inviante` int(11) DEFAULT NULL,
   `id_ranking` int(11) DEFAULT NULL,
+  `utm_id` CHAR(128) NULL DEFAULT NULL,
+  `utm_source` CHAR(128) NULL DEFAULT NULL,
+  `utm_medium` CHAR(128) NULL DEFAULT NULL,
+  `utm_campaign` CHAR(128) NULL DEFAULT NULL,
+  `utm_term` CHAR(128) NULL DEFAULT NULL,
+  `utm_content` CHAR(128) NULL DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `json` text DEFAULT NULL,
@@ -793,6 +947,7 @@ CREATE TABLE `contratti` (
   `codice` char(32) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text,
+  `note_cliente` text,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
@@ -895,6 +1050,29 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
   `id_coupon` char(32) NOT NULL,
   `id_prodotto` char(32) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000008900
+
+-- crediti
+-- tipologia: tabella gestita
+-- verifica: 2022-07-15 11:56 Chiara GDL
+CREATE TABLE IF NOT EXISTS `crediti` (
+  `id` int(11) NOT NULL,
+  `id_documenti_articolo` int(11) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `id_account_destinatario` int(11) DEFAULT NULL,
+  `id_account_emittente` int(11) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `data` date DEFAULT NULL,
+  `quantita` decimal(9,2) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1151,6 +1329,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `id_ruolo` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_banner` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `orientamento` enum('L','P') DEFAULT NULL,
   `taglio` char(64) DEFAULT NULL,
@@ -1715,6 +1894,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_valutazione` int(11) DEFAULT NULL,
   `id_rinnovo` int(11) DEFAULT NULL,
   `id_tipologia_attivita` int(11) DEFAULT NULL,
+  `id_banner` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `testo` text,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -1921,6 +2101,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `model_id_licenza` int(11) DEFAULT NULL,
   `model_id_listino` int(11) DEFAULT NULL,
   `model_id_luogo` int(11) DEFAULT NULL,
+  `model_id_mastro_destinazione` int(11) DEFAULT NULL,
   `model_id_mastro_provenienza` int(11) DEFAULT NULL,
   `model_id_matricola` int(11) DEFAULT NULL,
   `model_id_modalita_pagamento` int(11) DEFAULT NULL,
@@ -2251,6 +2432,7 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL, 
   `id_categoria_progetti` INT(11) DEFAULT NULL, 
+  `id_banner` INT(11) DEFAULT NULL, 
   `note` char(254) DEFAULT NULL,
   `timestamp_inizio` int(11) DEFAULT NULL,
   `timestamp_fine` int(11) DEFAULT NULL,
@@ -2973,6 +3155,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000050500
+
+-- tipologie_banner
+-- tipologia: tabella assistita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_banner` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000050600
 
 -- tipologie_chiavi
@@ -3170,6 +3370,7 @@ CREATE TABLE `tipologie_mastri` (
   `se_magazzino` int DEFAULT NULL,
   `se_conto` int DEFAULT NULL,
   `se_registro` int DEFAULT NULL,
+  `se_credito` int(1) NULL,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,

@@ -36,8 +36,14 @@
                 'carrelli'
             );
 
+            // array degli articoli
+            $_SESSION['carrello']['articoli'] = array();
+
             // log
             logWrite( 'creato il carrello ' . $_SESSION['carrello']['id'], 'cart' );
+
+            // debug
+            // echo 'creato il carrello ' . $_SESSION['carrello']['id'] . PHP_EOL;
 
         } else {
 
@@ -55,6 +61,7 @@
         $_SESSION['carrello']['prezzo_lordo_totale']        = 0;
         $_SESSION['carrello']['prezzo_netto_finale']        = 0;
         $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
+        $_SESSION['carrello']['sconto_percentuale']         = 0;
 
         // STEP 4 - gestione acquisto singolo articolo
         if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
@@ -74,7 +81,8 @@
                     '__articoli__' => array(
                         $_REQUEST['__carrello__']['__articolo__']['id_articolo'] => array(
                             'quantita' => $_REQUEST['__carrello__']['__articolo__']['quantita'],
-                            'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo']
+                            'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'],
+                            'id_iva' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_iva'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_iva'] : 1
                         )
                     )
                 )
@@ -82,11 +90,28 @@
 
         }
 
-        // STEP 5 - acquisto articoli multipli
+        // debug
+        // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
+
+        // integro gli articoli
         if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
+            foreach( $_REQUEST['__carrello__']['__articoli__'] as $item ) {
+                if( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'] ] ) ) {
+                    $_SESSION['carrello']['articoli'][ $item['id_articolo'] ] = array_replace_recursive(
+                        $_SESSION['carrello']['articoli'][ $item['id_articolo'] ],
+                        $item
+                    );
+                } else {
+                    $_SESSION['carrello']['articoli'][ $item['id_articolo'] ] = $item;
+                }
+            }
+        }
+
+        // STEP 5 - acquisto articoli multipli
+        if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
 
             // ciclo sugli articoli
-            foreach( $_REQUEST['__carrello__']['__articoli__'] as $dati ) {
+            foreach( $_SESSION['carrello']['articoli'] as $dati ) {
 
                 // eliminazione articolo dal carrello
                 if( empty( $dati['quantita'] ) ) {
@@ -102,7 +127,7 @@
                     );
 
                     // log
-                    logWrite( 'eliminato articolo ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'] . ' dal carrello ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'], 'cart' );
+                    logWrite( 'eliminato articolo ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'] . ' dal carrello ' . $_SESSION['carrello']['id'], 'cart' );
 
                     // aggiorno la riga dell'articolo
                     unset( $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ] );
@@ -112,7 +137,7 @@
                     // aggiorno la riga dell'articolo
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']        = $_SESSION['carrello']['id'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo']        = $dati['id_articolo'];
-                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']             = 1;                                // TODO
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']             = $dati['id_iva'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']           = $dati['quantita'];
 
                     // trovo il prezzo base dell'articolo
@@ -164,6 +189,9 @@
                     $_SESSION['carrello']['prezzo_netto_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'];
                     $_SESSION['carrello']['prezzo_lordo_finale'] += $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale'];
 
+                    // debug
+                    // echo $_SESSION['carrello']['prezzo_lordo_finale'] . PHP_EOL;
+
                     // log
                     logWrite( 'aggiornato articolo ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'] . ' nel carrello ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'], 'cart' );
 
@@ -177,6 +205,12 @@
 
         // STEP 7 - calcoli finali
 
+        // aggiorno l'anagrafica e l'account collegati al carrello
+        aggiornaProprietarioCarrello( $_SESSION['carrello'] );
+
+        // aggiornamento del flag se_login
+        aggiornaFlagCarrelloSeLogin( $_SESSION['carrello'] );
+
         // timestamp di aggiornamento del carrello
         $_SESSION['carrello']['timestamp_aggiornamento'] = time();
 
@@ -186,6 +220,7 @@
             array_diff_key(
                 $_SESSION['carrello'], array(
                     'articoli' => array(),
+                    'se_login' => NULL,
                     'timestamp_inserimento' => NULL
                 )
             ),

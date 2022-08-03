@@ -119,13 +119,13 @@ if ($cf['contents']['cached'] === false) {
                     $pg['id'],
                     'id_prodotto'
                 );
-
+/*
                 aggiungiMenu(
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
                     'id_prodotto'
                 );
-
+*/
                 // canonical
                 $canon = $pid;
 

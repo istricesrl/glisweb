@@ -124,8 +124,13 @@
     articoli_caratteristiche        | 001600    | relazione     | principale    | mette in relazione articoli e caratteristiche_prodotti
     attivita                        | 001800    | base          | principale    | contiene le attività
     audio                           | 002100    | base          | contenuti     | contiene gli audio
+    banner                          | 002200    | base          | principale    | contiene i banner
+    banner_azioni                   | 002300    | relazione     | secondaria    | mette in relazione banner e azioni
+    banner_pagine                   | 002400    | relazione     | secondaria    | mette in relazione banner e pagine
     caratteristiche_immobili        | 002800    | base          | secondaria    | contiene le caratteristica di indirizzi, edifici e immobili
     caratteristiche_prodotti        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
+    carrelli                        | 003000    | base          | principale    | contiene i carrelli necessari per l'ecommerce
+    carrelli_articoli               | 003050    | relazione     | secondaria    | mette in relazioni articoli e carrelli
     categorie_notizie               | 003700    | ricorsiva     | categorie     | contiene le categorie di notizie
     categorie_prodotti              | 003900    | ricorsiva     | categorie     | contiene le categorie di prodotti
     categorie_progetti              | 004300    | ricorsiva     | categorie     | contiene le categorie di progetti
@@ -228,6 +233,7 @@
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
     POPUP       |           | popup, popup_pagine, pubblicazioni, tipologie_popup, tipologie_pubblicazioni
+    BANNER      |           | banner, banner_azioni, banner_pagine
     NOTIZIE     |           | audio, contenuti, file, categorie_notizie, immagini, menu, metadati, notizie notizie_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_notizie, tipologie_pubblicazioni, video
     RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
@@ -236,6 +242,7 @@
     CASSE       | 6500      | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     SOFTWARE    |           | chiavi, licenze, licenze_software, relazioni_software, software, tipologie_chiavi, tipologie_licenze
     IMMOBILIARE | V300      | caratteristiche_immobili, edifici, immobili
+    ECOMMERCE   |           | carrelli, carrelli_articoli
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -254,8 +261,13 @@
     articoli_caratteristiche        | PRODOTTI
     attivita                        | ATTIVITA
     audio                           | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
+    banner                          | BANNER
+    banner_azioni                   | BANNER
+    banner_pagine                   | BANNER
     caratteristiche_immobili        | IMMOBILIARE
     caratteristiche_prodotti        | PRODOTTI
+    carrelli                        | ECOMMERCE
+    carrelli_articoli               | ECOMMERCE
     categorie_anagrafica            | BASE
     categorie_notizie               | NOTIZIE
     categorie_prodotti              | PRODOTTI

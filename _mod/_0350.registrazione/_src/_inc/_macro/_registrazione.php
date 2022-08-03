@@ -40,7 +40,7 @@
 		$tk = $_REQUEST['__signup__']['tk'] = md5( $_REQUEST['__signup__']['username'] . $_REQUEST['__signup__']['password'] );
 
 	    // se l'utente non esiste già...
-		if( ! $utente & ! $mail ) {
+		if( ! $utente && ! $mail ) {
 
 		    // debug
 			// echo $tk;
@@ -78,10 +78,6 @@
 
 				}
 
-			} else {
-
-				// TODO autenticazione con mail + sms
-
 			}
 
 		} else {
@@ -94,95 +90,104 @@
 	    // scrivo i dati di registrazione su un file temporaneo
 		writeToFile( serialize( $_REQUEST['__signup__'] ), 'var/log/signup/' . $tk . '.txt' );
 
-	} elseif( isset( $_REQUEST['tkm'] ) && isset( $_REQUEST['tks'] ) ) {
-
-		// TODO verifica con token mail + token sms
-
 	} elseif( isset( $_REQUEST['tk'] ) ) {
 
 	    // se il token è valido
 		if( file_exists( DIR_BASE . 'var/log/signup/' . $_REQUEST['tk'] . '.txt' ) ) {
 
-		    // recupero i dati
-			$dati = unserialize( readFromFile( 'var/log/signup/' . $_REQUEST['tk'] . '.txt', FILE_READ_AS_STRING ) );
+			// se è presente o non richiesto il token aggiuntivo $_REQUEST['ts'] per l'autenticazione via SMS
+			if( true ) {
 
-		    // TODO verificare $dati['privacy']['policy'] e $dati['privacy']['account'] e $dati['privacy']['condizioni']
+				// recupero i dati
+				$dati = unserialize( readFromFile( 'var/log/signup/' . $_REQUEST['tk'] . '.txt', FILE_READ_AS_STRING ) );
 
-		    // creo l'anagrafica
-			$idAnagrafica = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO anagrafica ( nome, cognome ) VALUES ( ?, ? )', array( array( 's' => $dati['nome'] ), array( 's' => $dati['cognome'] ) ) );
+				// TODO verificare $dati['privacy']['policy'] e $dati['privacy']['account'] e $dati['privacy']['condizioni']
 
-			// TODO prevedere la possibilità di inserire altri campi dell'anagrafica (ad es. indirizzo, partita IVA, codice fiscale, eccetera)
+				// creo l'anagrafica
+				$idAnagrafica = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO anagrafica ( nome, cognome ) VALUES ( ?, ? )', array( array( 's' => $dati['nome'] ), array( 's' => $dati['cognome'] ) ) );
 
-		    // creo la mail
-			$idMail = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO mail ( id_anagrafica, indirizzo ) VALUES ( ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['email'] ) ) );
+				// TODO prevedere la possibilità di inserire altri campi dell'anagrafica (ad es. indirizzo, partita IVA, codice fiscale, eccetera)
 
-			// TODO prevedere la possibilità di associare categorie diverse a tipologie di registrazione diverse
+				// creo la mail
+				$idMail = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO mail ( id_anagrafica, indirizzo ) VALUES ( ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['email'] ) ) );
+
+				// TODO prevedere la possibilità di associare categorie diverse a tipologie di registrazione diverse
 
 		    // associo alle categorie
 			foreach( $profilo['categorie'] as $categoria ) {
 
-			    // recupero l'id della categoria
-				$idCategoria = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM categorie_anagrafica WHERE nome = ?', array( array( 's' => $categoria ) ) );
+					// recupero l'id della categoria
+					$idCategoria = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM categorie_anagrafica WHERE nome = ?', array( array( 's' => $categoria ) ) );
 
-			    // associo l'account
-				if( ! empty( $idCategoria ) ) {
-				    $idAnagraficaCategoria[] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO anagrafica_categorie ( id_anagrafica, id_categoria ) VALUES ( ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $idCategoria ) ) );
+					// associo l'account
+					if( ! empty( $idCategoria ) ) {
+						$idAnagraficaCategoria[] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO anagrafica_categorie ( id_anagrafica, id_categoria ) VALUES ( ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $idCategoria ) ) );
+					}
+
 				}
-
-			}
 
 		    // creo l'account
-			$idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => md5( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $profilo['attivo'] === true ) ? 1 : NULL ) ) ) );
+			  $idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => md5( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $profilo['attivo'] === true ) ? 1 : NULL ) ) ) );
 
 		    // associo ai gruppi
-			foreach( $profilo['gruppi'] as $gruppo ) {
+			  foreach( $profilo['gruppi'] as $gruppo ) {
 
-			    // recupero l'id del gruppo
-				$idGruppo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM gruppi WHERE nome = ?', array( array( 's' => $gruppo ) ) );
+					// recupero l'id del gruppo
+					$idGruppo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM gruppi WHERE nome = ?', array( array( 's' => $gruppo ) ) );
 
-			    // associo l'account
-				if( ! empty( $idGruppo ) ) {
-				    $idAccountGruppo[] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account_gruppi ( id_account, id_gruppo ) VALUES ( ?, ? )', array( array( 's' => $idAccount ), array( 's' => $idGruppo ) ) );
+					// associo l'account
+					if( ! empty( $idGruppo ) ) {
+						$idAccountGruppo[] = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account_gruppi ( id_account, id_gruppo ) VALUES ( ?, ? )', array( array( 's' => $idAccount ), array( 's' => $idGruppo ) ) );
+					}
+
 				}
 
-			}
+				// debug
+				// echo $idAnagrafica.'/'.$idMail.'/'.$idAccount.'/'.implode( '|', $idAccountGruppo );
 
-		    // debug
-			// echo $idAnagrafica.'/'.$idMail.'/'.$idAccount.'/'.implode( '|', $idAccountGruppo );
+				// se la registrazione è andata a buon fine, imposto il flag per il modulo
+				if( true ) {
 
-		    // se la registrazione è andata a buon fine, imposto il flag per il modulo
-			if( true ) {
+					// imposto il flag per il modulo
+					$_REQUEST['__signup__']['__tk_ok__']['testo'] = array(
+						'it-IT' => '<p>grazie per aver confermato il tuo account! ora puoi effettuare il login</p>'
+					);
 
-			    // imposto il flag per il modulo
-				$_REQUEST['__signup__']['__tk_ok__']['testo'] = array(
-				    'it-IT' => '<p>grazie per aver confermato il tuo account! ora puoi effettuare il login</p>'
-				);
+					// associo il carrello della sessione alla persona che ha appena fatto il login
+					// TODO testare
+					if( isset( $dati['carrello'] ) && ! empty( $dati['carrello'] ) ) {
 
-			    // associo il carrello della sessione alla persona che ha appena fatto il login
-				if( isset( $dati['carrello'] ) && ! empty( $dati['carrello'] ) ) {
+						//
+						if( isset( $_SESSION['account']['id_anagrafica'] ) && ! empty( $_SESSION['account']['id_anagrafica'] ) ) {
 
-				    //
-					if( isset( $_SESSION['account']['id_anagrafica'] ) && ! empty( $_SESSION['account']['id_anagrafica'] ) ) {
+							// salvataggio di sicurezza
+							$f = 'var/log/carts/cart.' . sprintf( '%08d', $dati['carrello'] ) . '.' . date('Yh') . '.signup.log';
+							appendToFile( $dati['carrello'] . ' -> ' . $_SESSION['account']['id_anagrafica'], $f );
 
-					    // salvataggio di sicurezza
-						$f = 'var/log/carts/cart.' . sprintf( '%08d', $dati['carrello'] ) . '.' . date('Yh') . '.signup.log';
-						appendToFile( $dati['carrello'] . ' -> ' . $_SESSION['account']['id_anagrafica'], $f );
+							// associo
+							mysqlQuery( $cf['mysql']['connection'], 'UPDATE carrelli SET intestazione_id_anagrafica = ? WHERE id = ?',
+								array(
+								array( 's' => $_SESSION['account']['id_anagrafica'] ),
+								array( 's' => $dati['carrello'] )
+								)
+							);
 
-					    // associo
-						mysqlQuery( $cf['mysql']['connection'], 'UPDATE carrelli SET intestazione_id_anagrafica = ? WHERE id = ?',
-						    array(
-							array( 's' => $_SESSION['account']['id_anagrafica'] ),
-							array( 's' => $dati['carrello'] )
-						    )
-						);
+						}
 
 					}
+
+				} else {
+
+					// TODO errore
 
 				}
 
 			} else {
 
-			    // TODO errore
+				// imposto il flag per il modulo
+				$_REQUEST['__signup__']['__ts_no__']['testo'] = array(
+					'it-IT' => '<p>completa la registrazione inserendo il codice che ti abbiamo inviato con un SMS</p>'
+				);
 
 			}
 

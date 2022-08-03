@@ -302,7 +302,7 @@
 						    $_SESSION['account'],
 						    mysqlSelectRow(
 								$cf['mysql']['connection'],
-								'SELECT se_collaboratore, se_cliente, se_fornitore, se_agente, se_amministrazione FROM anagrafica_view_static WHERE id = ?',
+								'SELECT se_collaboratore, se_cliente, se_fornitore, se_commerciale, se_amministrazione FROM anagrafica_view_static WHERE id = ?',
 								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 						    )
 						);

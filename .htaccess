@@ -73,7 +73,11 @@ Options -Indexes
 
     # gestione delle API speciali
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
-    RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_$1.php [L,QSA]
+    RewriteRule ^api/([a-zA-Z0-9_\-]+)/([a-zA-Z0-9\.]+)*$ _src/_api/_$1.php [L,QSA]
+
+    # gestione delle API speciali dei moduli
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_$2.php -f
+    RewriteRule ^api/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9\.]+)*$ _mod/_$1/_src/_api/_$2.php [L,QSA]
 
     # gestione delle API di login e logout
     RewriteRule ^api/login$ _src/_api/_user.php [L,QSA]

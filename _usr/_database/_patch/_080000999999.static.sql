@@ -132,7 +132,7 @@ CREATE TABLE `todo_view_static` (
   `settimana_programmazione` int DEFAULT NULL,
   `ore_programmazione` decimal(5,2) DEFAULT NULL,
   `data_chiusura` char(21) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `id_contatto` int DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_pianificazione` int DEFAULT NULL,

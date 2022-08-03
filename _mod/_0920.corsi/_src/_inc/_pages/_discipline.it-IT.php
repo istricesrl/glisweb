@@ -44,6 +44,7 @@
 		'macro'			=> array( $m.'_src/_inc/_macro/_discipline.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'discipline.form', 
+														'discipline.form.metadati',
 														'discipline.form.tools' ) )
 	);
 
@@ -52,6 +53,18 @@
 		arrayInsertSeq( 'discipline.form', $p['discipline.form']['etc']['tabs'], 'discipline.form.sem' );
 		arrayInsertSeq( 'discipline.form.sem', $p['discipline.form']['etc']['tabs'], 'discipline.form.testo' );
 	}
+
+	$p['discipline.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'discipline.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'discipline.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_discipline.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['discipline.form']['etc']['tabs'] )
+	);
 
     // tools discipline
 	$p['discipline.form.tools'] = array(

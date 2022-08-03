@@ -7,25 +7,37 @@
 	use PhpOffice\PhpSpreadsheet\Spreadsheet;
 	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-		    // debug
-			// die( 'contenuto: '.print_r( $_REQUEST, true ) );
-
+	// debug
+	// die( 'contenuto: '.print_r( $_REQUEST, true ) );
 
     // controllo autorizzazioni
 	if( true ) {
 
+		$error = array();
+
+		$view = ( isset( $_REQUEST['v'] ) ) ? json_decode( $_REQUEST['v'], true ) : array();
+
+		$view['__pager__'] = NULL;
+
 		$data = array();
 
-			controller(
-				$cf['mysql']['connection'],
-				$cf['memcache']['connection'],
-				$data,
-				$_REQUEST['t']
-			);
+		controller(
+			$cf['mysql']['connection'],
+			$cf['memcache']['connection'],
+			$data,
+			$_REQUEST['t'],
+			METHOD_GET,
+			NULL,
+			$error,
+			$view
+		);
 
-			if(! empty( $data ) ) {
+		// debug
+		// die( print_r( $view ) );
 
-				$csv[0] = array_keys( $data[0] );
+		if( ! empty( $data ) ) {
+
+			$csv[0] = array_keys( $data[0] );
 
 			// die(print_r($data ) );
 
@@ -38,10 +50,11 @@
 			foreach ($csv as $line) {fputcsv($fp, $line, ';');}
 			fclose($fp);
 
-
-			} else { buildText( 'nessun risultato per la ricerca effettuata' ); }
-
+		} else {
+			
+			buildText( 'nessun risultato per la ricerca effettuata' );
 		
+		}
 
 	} else {
 

@@ -47,7 +47,7 @@
      * @todo documentare
      *
      */
-    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $auth = CURLAUTH_BASIC ) {
+    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC ) {
 
 	// inizializzo l'oggetto CURL
 	    $curl = curl_init();
@@ -74,7 +74,11 @@
 
 			curl_setopt( $curl, CURLOPT_USERPWD, $user . ':' . $pasw );
 
-	    }
+	    } elseif( $token !== NULL ) {
+
+			$headers['Authorization'] = 'Bearer ' . $token;
+
+		}
 
 	// NOTA usare CURLAUTH_BASIC o CURLAUTH_DIGEST secondo bisogna
 

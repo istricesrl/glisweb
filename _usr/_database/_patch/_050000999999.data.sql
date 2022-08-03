@@ -1005,7 +1005,8 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 (11,	5,	NULL,	'EC',	'esito committente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (12,	5,	NULL,	'NE',	'notifica di esito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (13,	5,	NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(14,	1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(14,	1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	NULL,	NULL,	'frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050800
 
@@ -1148,17 +1149,21 @@ INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 INSERT INTO `tipologie_luoghi` (`id`, `nome`) VALUES
 (1, 'teatro'),
 (2, 'palestra'),
-(3, 'piscina');
+(3, 'piscina'),
+(4, 'sala'),
+(5, 'aula'),
+(6, 'online');
 
 --| 050000053400
 
 -- tipologie_mastri
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_magazzino`, `se_conto`, `se_registro`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'magazzino',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'conto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'registro ore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_magazzino`, `se_conto`, `se_registro`, `se_credito`,`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'magazzino',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'conto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'registro ore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'crediti',	NULL,	NULL,	NULL,	NULL,	NULL,	1, NULL,	NULL,	NULL,	NULL);
 
 --| 050000053800
 
@@ -1173,7 +1178,8 @@ INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_ent
 -- verifica: 2022-05-24 11:00 Chiara GDL
 REPLACE INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	NULL,	'feste',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000054200
 

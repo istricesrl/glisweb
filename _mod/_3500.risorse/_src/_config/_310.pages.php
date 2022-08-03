@@ -55,7 +55,7 @@ if ($cf['contents']['cached'] === false) {
             $pid = PREFX_CATEGORIE_RISORSE . $pg['id'];
             $pip = PREFX_CATEGORIE_RISORSE . $pg['id_genitore'];
 
-            if (empty($pip)) {
+            if (empty($pip)&&isset($pg['id_pagina'])) {
                 $pip = $pg['id_pagina'];
             }
 
@@ -170,7 +170,7 @@ if ($cf['contents']['cached'] === false) {
             $pid = $cid . '.' . PREFX_RISORSE . $pg['id'];
             // $pip = PREFX_RISORSE . $pg['id_genitore'];
 
-            if (empty($pip)) {
+            if (empty($pip)&&isset($pg['id_pagina'])) {
                 $pip = $pg['id_pagina'];
             }
 

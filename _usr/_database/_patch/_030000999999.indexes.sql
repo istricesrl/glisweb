@@ -337,6 +337,72 @@ ALTER TABLE `audio`
 -- tipologia: tabella gestita
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000002300
+
+-- banner
+-- tipologia: tabella gestita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+ALTER TABLE `banner`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_sito` (`id_sito`), 
+	ADD KEY `ordine` (`ordine`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_inserzionista` (`id_inserzionista`),
+	ADD KEY `altezza_modulo` (`altezza_modulo`),	
+	ADD KEY `larghezza_modulo` (`larghezza_modulo`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`, `id_inserzionista`,`altezza_modulo`,`larghezza_modulo`);
+
+--| 030000002301
+
+-- banner
+-- tipologia: tabella gestita
+ALTER TABLE `banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000002400
+
+-- banner_azioni
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+ALTER TABLE `banner_azioni`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `azione` (`azione`),
+	ADD KEY `timestamp_azione` (`timestamp_azione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`azione`,`timestamp_azione`);
+
+--| 030000002401
+
+-- banner_azioni
+-- tipologia: tabella gestita
+ALTER TABLE `banner_azioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000002500
+
+-- banner_pagine
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+ALTER TABLE `banner_pagine`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_pagina`,`id_banner`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `se_presente` (`se_presente`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`se_presente`);
+
+--| 030000002501
+
+-- banner_pagine
+-- tipologia: tabella gestita
+ALTER TABLE `banner_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000002800
 
 -- caratteristiche_immobili
@@ -372,6 +438,64 @@ ALTER TABLE `caratteristiche_prodotti`
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
 ALTER TABLE `caratteristiche_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000003000
+
+-- carrelli
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+ALTER TABLE `carrelli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `session` (`session`), 
+	ADD KEY `id_listino` (`id_listino`), 
+	ADD KEY `id_documento` ( `id_documento` ),
+	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`), 
+	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
+	ADD KEY `intestazione_id_account` (`intestazione_id_account`), 
+	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`), 
+	ADD KEY `destinatario_id_provincia` (`destinatario_id_provincia`), 
+	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`), 
+	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
+	ADD KEY `destinatario_id_account` (`destinatario_id_account`),
+	ADD KEY `ordine_pagamento` ( `ordine_pagamento` ),
+	ADD KEY `utm_id` ( `utm_id` ),
+	ADD KEY `utm_source` ( `utm_source` ),
+	ADD KEY `utm_medium` ( `utm_medium` ),
+	ADD KEY `utm_campaign` ( `utm_campaign` ),
+	ADD KEY `utm_term` ( `utm_term` ),
+	ADD KEY `utm_content` ( `utm_content` ),
+	ADD KEY `id_reseller` ( `id_reseller` ),
+	ADD KEY `id_affiliato` ( `id_affiliato` ),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`);
+
+--| 030000003001
+
+-- carrelli
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli`   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000003050
+
+-- carrelli_articoli
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+ALTER TABLE `carrelli_articoli`
+  	ADD PRIMARY KEY (`id`),
+  	ADD KEY `id_carrello` (`id_carrello`),  
+  	ADD KEY `id_articolo` (`id_articolo`),  
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `id_carrello_id_articolo` (`id_carrello`,`id_articolo`),
+  	ADD KEY `indice` (`id`, `id_carrello`, `id_articolo`, `id_iva`, `prezzo_netto_unitario`, `prezzo_lordo_unitario`,`quantita`, `prezzo_netto_totale`,  `prezzo_lordo_totale`, `sconto_percentuale`, `sconto_valore`, `prezzo_netto_finale`,  `prezzo_lordo_finale`)
+  ;
+
+--| 030000003051
+
+-- carrelli_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000003100
 
@@ -682,6 +806,12 @@ ALTER TABLE `contatti`
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_inviante` (`id_inviante`),
 	ADD KEY `id_ranking` (`id_ranking`),	
+	ADD KEY `utm_id` ( `utm_id` ),
+	ADD KEY `utm_source` ( `utm_source` ),
+	ADD KEY `utm_medium` ( `utm_medium` ),
+	ADD KEY `utm_campaign` ( `utm_campaign` ),
+	ADD KEY `utm_term` ( `utm_term` ),
+	ADD KEY `utm_content` ( `utm_content` ),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
@@ -915,6 +1045,33 @@ ALTER TABLE `coupon_prodotti`
 -- coupon_prodotti
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000008900
+
+-- crediti
+-- tipologia: tabella gestita
+-- verifica: 2022-07-15 11:56 Chiara GDL
+ALTER TABLE `crediti`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`), 
+	ADD KEY `id_account_emittente` (`id_account_emittente`), 
+	ADD KEY `id_account_destinatario` (`id_account_destinatario`), 
+	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
+	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
+    ADD KEY `id_pianificazione` (`id_pianificazione`),
+	ADD KEY `data` (`data`), 
+	ADD KEY `quantita` (`quantita`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD UNIQUE KEY `unica` (`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`, `quantita`),
+	ADD KEY `indice` (`id`,`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_pianificazione`,  `quantita`,  `nome`);
+
+--| 030000008901
+
+-- crediti
+-- tipologia: tabella gestita
+ALTER TABLE `crediti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000009000
 
@@ -1193,6 +1350,7 @@ ALTER TABLE `immagini`
  	ADD UNIQUE KEY `unica_notizie` (`id_notizia`,`id_ruolo`,`id_lingua`,`path`), 
  	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_ruolo`,`id_lingua`,`path`), 
  	ADD UNIQUE KEY `unica_indirizzi` (`id_indirizzo`,`id_ruolo`,`id_lingua`,`path`), 
+	ADD UNIQUE KEY `unica_banner` (`id_banner`,`id_ruolo`,`id_lingua`,`path`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
  	ADD KEY `id_pagina` (`id_pagina`), 
  	ADD KEY `id_file` (`id_file`), 
@@ -1213,6 +1371,7 @@ ALTER TABLE `immagini`
  	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `id_banner` (`id_banner`), 
  	ADD KEY `path` (`path`), 
  	ADD KEY `path_alternativo` (`path_alternativo`), 
  	ADD KEY `token` (`token`), 
@@ -1830,6 +1989,7 @@ ALTER TABLE `metadati`
  	ADD UNIQUE KEY `unica_valutazione` (`id_lingua`,`id_valutazione`,`nome`), 
  	ADD UNIQUE KEY `unica_rinnovo` (`id_lingua`,`id_rinnovo`,`nome`), 
  	ADD UNIQUE KEY `unica_tipologia_attivita` (`id_lingua`,`id_tipologia_attivita`,`nome`), 
+	ADD UNIQUE KEY `unica_banner` (`id_lingua`,`id_banner`,`nome`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
  	ADD KEY `id_pagina` (`id_pagina`), 
@@ -1853,6 +2013,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `id_rinnovo` (`id_rinnovo`), 
 	ADD KEY `id_tipologia_attivita` (`id_tipologia_attivita`), 
+	ADD KEY `id_banner` (`id_banner`), 
 	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255)),
 	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`,`nome`,`testo`(255)),
 	ADD KEY `indice_pagina` (`id`,`id_lingua`,`id_pagina`,`nome`,`testo`(255)),
@@ -2420,6 +2581,7 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `id_banner` (`id_banner`),
 	ADD KEY `timestamp_inizio` (`timestamp_inizio`), 
 	ADD KEY `timestamp_fine` (`timestamp_fine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
@@ -3251,6 +3413,27 @@ ALTER TABLE `tipologie_attivita`
 -- tipologie_attivita
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000050500
+
+-- tipologie_banner
+-- tipologia: tabella assistita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+ALTER TABLE `tipologie_banner`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000050501
+
+-- tipologie_banner
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000050600
 

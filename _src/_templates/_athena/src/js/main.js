@@ -136,6 +136,34 @@
 
 	}
 
+	function aggiornaCarrello( d ) {
+
+		// alert('aggiorno il carrello');
+
+		// console.log( d );
+
+		$('#widget-cart').fadeIn();
+		$('#cart-articoli').empty();
+
+		for( codice in d.articoli ) {
+
+			var articolo = d.articoli[ codice ];
+
+			var p1 = $( '<div>', { "class" : "cart-row-container" } );
+			var p2 = $( '<p>' ).text( articolo.id_articolo );
+
+			p2.appendTo( p1 );
+			p1.appendTo('#cart-articoli');
+
+			// console.log( articolo );
+			// console.log( articolo.id_articolo );
+			// console.log( articolo.quantita );
+			// console.log( articolo.prezzo_lordo_finale );
+
+		}
+
+	}
+
     // operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 

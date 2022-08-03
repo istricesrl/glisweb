@@ -505,7 +505,7 @@ header.subform-intestazione {
     margin-bottom: 10px;
 }
 
-#info, #jobs, #alert {
+#info, #jobs, #cart, #alert {
     background-color: #555555;
     color: #ffffff;
     display: none;
@@ -516,12 +516,12 @@ header.subform-intestazione {
     z-index: 9000;
 }
 
-#info h2, #jobs h2, #alert h2 {
+#info h2, #jobs h2, #cart h2, #alert h2 {
     font-size: 1.6em;
     margin: 0px;
 }
 
-#info p, #jobs p, #alert p {
+#info p, #jobs p, #cart p, #alert p {
     margin: 0px;
     margin-top: 5px;
 }
@@ -534,6 +534,10 @@ header.subform-intestazione {
 #jobs a:visited,
 #jobs a:hover,
 #jobs a:active,
+#cart a,
+#cart a:visited,
+#cart a:hover,
+#cart a:active,
 #alert a,
 #alert a:visited,
 #alert a:hover,
@@ -1014,4 +1018,10 @@ div.combobox-container > .spinner-border {
 
 .modal-dialog {
     margin: 5em auto;
+}
+
+/* stile del banner cookie */
+#cookie {
+    z-index: 9999;
+    background-color: #000000dd;
 }

@@ -110,6 +110,43 @@
                     {{ frm.checkbox( table, '', '', 'se_fascia', 'se fascia di età', '', request ) }}
                 </div>
             </div>
+
+			{% if request[ table ].id %}
+			<legend>scontistica</legend>
+			
+			<input type="hidden" id="art" name="{{table}}[metadati][0][id_categoria_progetti]" value="__parent_id__" >
+			<input type="hidden" id="lingua" name="{{table}}[metadati][0][id_lingua]" value="1" >
+			<input type="hidden" id="nome" name="{{table}}[metadati][0][nome]" value="sconto|id_disciplina" >
+			<div class="col">
+				<span class="label-top">disciplina</span>
+				{{ frm.selectBox( table, 'metadati', '0', 'testo', '', etc.select.discipline, request, request[ table ].id ) }}
+			</div>
+
+			<input type="hidden" id="art" name="{{table}}[metadati][1][id_categoria_progetti]" value="__parent_id__" >
+			<input type="hidden" id="lingua" name="{{table}}[metadati][1][id_lingua]" value="1" >
+			<input type="hidden" id="nome" name="{{table}}[metadati][1][nome]" value="sconto|%_secondo_mono" >
+			<div class="col-2">
+				<span class="label-top">% secondo corso</span>
+				{{ frm.input( table, 'metadati', '1', 'testo', '', '', request ) }}
+			</div>
+
+			<input type="hidden" id="art" name="{{table}}[metadati][2][id_categoria_progetti]" value="__parent_id__" >
+			<input type="hidden" id="lingua" name="{{table}}[metadati][2][id_lingua]" value="1" >
+			<input type="hidden" id="nome" name="{{table}}[metadati][2][nome]" value="sconto|%_terzo_mono" >
+			<div class="col-2">
+				<span class="label-top">% terzo corso</span>
+				{{ frm.input( table, 'metadati', '2', 'testo', '', '', request ) }}
+			</div>
+
+			<input type="hidden" id="art" name="{{table}}[metadati][3][id_categoria_progetti]" value="__parent_id__" >
+			<input type="hidden" id="lingua" name="{{table}}[metadati][3][id_lingua]" value="1" >
+			<input type="hidden" id="nome" name="{{table}}[metadati][3][nome]" value="sconto|%_quarto_mono" >
+			<div class="col-2">
+				<span class="label-top">% quarto corso</span>
+				{{ frm.input( table, 'metadati', '3', 'testo', '', '', request ) }}
+			</div>
+			{% endif %}
+
 		</div>
 		{% endif %}
 	    </fieldset>

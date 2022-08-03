@@ -26,9 +26,9 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
- //       'id_articolo' => 'codice',
-        'categorie' => 'categoria',
+   //     'id_articolo' => 'codice',
         'articolo' => 'descrizione',
+        'categorie' => 'categoria',
         'carico' => 'carico',
         'scarico' => 'scarico',
         'totale' => 'totale',
@@ -54,17 +54,18 @@
         'id' => 'd-none d-md-table-cell',
         'articolo' => 'text-left',
         'totale' => 'text-right',
+        'peso' => 'text-right',
         'carico' => 'text-right',
         'scarico' => 'text-right',
-        'peso' => 'text-right no-wrap',
         'sigla_udm_peso' => 'd-none',
         'categorie' => 'text-left'
     );
 
     // preset filtro custom mastro corrente
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-        $ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+        $ct['view']['__restrict__']['id_mastro']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 

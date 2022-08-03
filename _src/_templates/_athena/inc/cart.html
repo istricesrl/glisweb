@@ -1,0 +1,8 @@
+<div id="cart" class="slide-info">
+    <h2>carrello</h2>
+    <span id="cart-articoli">
+        {% for articolo in session.carrello.articoli %}<div class="cart-row-container">
+            <p>{{ articolo.id_articolo }}</p>
+        </div>{% endfor %}
+    </span>
+</div>

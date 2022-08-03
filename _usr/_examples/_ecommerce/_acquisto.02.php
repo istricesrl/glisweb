@@ -19,9 +19,10 @@
 
     // form di esempio per l'acquisto di un prodotto
     if( isset( $_SESSION['carrello']['articoli'] ) ) {
-        $t .= '<form action="_acquisto.03.php" method="POST">';
+        $t .= '<form id="carrello" action="_acquisto.03.php" method="POST">';
         $t .= '<div>NOME<input type="text" name="__carrello__[intestazione_nome]" value="'.$_SESSION['carrello']['intestazione_nome'].'" /></div>';
         $t .= '<div>COGNOME<input type="text" name="__carrello__[intestazione_cognome]" value="'.$_SESSION['carrello']['intestazione_cognome'].'" /></div>';
+        $t .= '<div>MAIL<input type="text" name="__carrello__[intestazione_mail]" value="'.$_SESSION['carrello']['intestazione_mail'].'" /></div>';
         foreach( $_SESSION['carrello']['articoli'] as $articolo => $dati ) {
             $t .= '<div>';
             $t .= '<input type="hidden" name="__carrello__[__articoli__]['.$i.'][id_articolo]" value="'.$dati['id_articolo'].'" />';
@@ -36,6 +37,7 @@
         }
         $t .= '</select></div>';
         $t .= '<button type="button" onclick="window.open(\'_acquisto.01.php\',\'_self\');">TORNA AGLI ACQUISTI</button>';
+        $t .= '<button onclick="document.getElementById(\'carrello\').action = \'\'; document.getElementById(\'carrello\').submit();">AGGIORNA</button>';
         $t .= '<button type="submit">CONFERMA</button>';
         $t .= '</form>';
     } else {

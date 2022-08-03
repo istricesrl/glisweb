@@ -660,7 +660,7 @@ foreach( $x as $ref ) {
 					    }
 					    $tDone = timerDiff( $tStart );
 					    if( count( $rows ) > 10 || $tDone > 1.5 ) {
-						logWrite($ref['TABLE_NAME'].'.'.$ref['COLUMN_NAME'].' causa overload: '.$tDone.' secondi, '.count($rows).' righe', 'speed', LOG_ERR);
+						logWrite($ref['TABLE_NAME'].' causa overload: '.$tDone.' secondi, '.count($rows).' righe', 'speed', LOG_ERR);
 					    }
 					}
 				    }

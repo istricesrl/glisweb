@@ -16,14 +16,34 @@
             )
         );
         
-        $_SESSION['carrello']['articoli'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello=?',
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello=?',
             array(
                 array( 's' => $_SESSION['carrello']['id'] )
             )
         );
 
+        foreach( $articoli as $articolo ) {
+            $_SESSION['carrello']['articoli'][ $articolo['id_articolo'] ] = $articolo;
+        }
+
+    }
+/*
+    // PayPal
+	if( isset( $_REQUEST['item_number'] ) ) {
+
+		// normalizzazione ID carrello
+		$_SESSION['carrello']['id'] = $_REQUEST['item_number'];
+
     }
 
+    // Nexi
+	if( isset( $_REQUEST['codTrans'] ) ) {
+
+		// normalizzazione ID carrello
+		$_SESSION['carrello']['id'] = $_REQUEST['codTrans'];
+
+    }
+*/
     // verifico se il carrello della sessione corrente va chiuso
     if( isset( $_SESSION['carrello']['id'] ) ) {
 

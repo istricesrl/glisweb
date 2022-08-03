@@ -651,7 +651,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			articoli.nome,
 			coalesce(
 				concat(
-					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+					concat_ws( 'x', articoli.larghezza, articoli.lunghezza, articoli.altezza ),
 					udm_dimensioni.sigla
 				),
 				concat(
@@ -887,6 +887,95 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		LEFT JOIN embed ON embed.id = audio.id_embed
 ;
 
+--| 090000002300
+
+-- banner_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_view`;
+
+--| 090000002301
+
+-- banner_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_view` AS
+	SELECT
+		banner.id,
+		banner.id_tipologia,
+		tipologie_banner_path( banner.id_tipologia ) AS tipologia,
+		banner.id_sito,
+		banner.ordine,
+		banner.nome,
+		banner.id_inserzionista,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS inserzionista,
+		banner.altezza_modulo,
+		banner.larghezza_modulo,
+		banner.id_account_inserimento,
+		banner.id_account_aggiornamento,
+		concat( banner.nome, ' ', banner.altezza_modulo, 'x', banner.larghezza_modulo ) AS __label__
+	FROM banner
+		LEFT JOIN anagrafica ON anagrafica.id = banner.id_inserzionista
+	;
+
+--| 090000002400
+
+-- banner_azioni
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_azioni_view`;
+
+--| 090000002401
+
+-- banner_azioni
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_azioni_view` AS
+	SELECT
+		banner_azioni.id,
+		banner_azioni.id_banner,
+		banner_azioni.id_pagina,
+		banner_azioni.azione,
+		banner_azioni.timestamp_azione,
+		banner_azioni.id_account_inserimento,
+		banner_azioni.id_account_aggiornamento,
+		concat(
+			banner_azioni.azione,
+			' di ',
+			banner.nome
+		) AS __label__
+	FROM banner_azioni
+		LEFT JOIN banner ON banner.id = banner_azioni.id_banner
+;
+
+--| 090000002500
+
+-- banner_pagine_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_pagine_view`;
+
+--| 090000002500
+
+-- banner_pagine_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-21 10:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_pagine_view` AS
+	SELECT
+		banner_pagine.id,
+		banner_pagine.id_banner,
+		banner_pagine.id_pagina,
+		banner_pagine.se_presente,
+		banner_pagine.id_account_inserimento,
+		banner_pagine.id_account_aggiornamento,
+		concat(
+			banner.nome,
+			' / ',
+			pagine_path( banner_pagine.id_pagina ),
+			' / ',
+			coalesce( banner_pagine.se_presente, 0 )
+		) AS __label__
+	FROM banner_pagine
+		LEFT JOIN banner ON banner.id = banner_pagine.id_banner
+;
+
 --| 090000002800
 
 -- caratteristiche_immobili_view
@@ -938,6 +1027,111 @@ CREATE OR REPLACE VIEW caratteristiche_prodotti_view AS
 		caratteristiche_prodotti.nome AS __label__
 	FROM caratteristiche_prodotti
 ;
+
+--| 090000003000
+
+-- carrelli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `carrelli_view`;
+
+--| 090000003001
+
+-- carrelli_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+CREATE OR REPLACE VIEW carrelli_view AS
+	SELECT
+	carrelli.id,
+	carrelli.session,
+	carrelli.destinatario_nome,
+	carrelli.destinatario_cognome,
+	carrelli.destinatario_denominazione,
+	carrelli.destinatario_id_anagrafica,
+	carrelli.destinatario_id_account,
+	carrelli.destinatario_indirizzo,
+	carrelli.destinatario_cap,
+	carrelli.destinatario_citta,
+	carrelli.destinatario_id_provincia,
+	carrelli.destinatario_id_stato,
+	carrelli.destinatario_telefono,
+	carrelli.destinatario_mail,
+	carrelli.destinatario_codice_fiscale,
+	carrelli.destinatario_partita_iva,
+	carrelli.intestazione_nome,
+	carrelli.intestazione_cognome,
+	carrelli.intestazione_denominazione,
+	carrelli.intestazione_id_anagrafica,
+	carrelli.intestazione_id_account,
+	carrelli.intestazione_indirizzo,
+	carrelli.intestazione_cap,
+	carrelli.intestazione_citta,
+	carrelli.intestazione_id_provincia,
+	carrelli.intestazione_id_stato,
+	carrelli.intestazione_telefono,
+	carrelli.intestazione_mail,
+	carrelli.intestazione_codice_fiscale,
+	carrelli.intestazione_partita_iva,
+	carrelli.intestazione_sdi,
+	carrelli.intestazione_pec,
+	carrelli.id_listino,
+    carrelli.id_documento,
+	carrelli.prezzo_netto_totale,
+	carrelli.prezzo_lordo_totale,
+	carrelli.sconto_percentuale,
+	carrelli.sconto_valore,
+	carrelli.prezzo_netto_finale,
+	carrelli.prezzo_lordo_finale,
+	carrelli.provider_checkout,
+	carrelli.timestamp_checkout,
+	carrelli.provider_pagamento,
+	carrelli.timestamp_pagamento,
+	carrelli.codice_pagamento,
+    carrelli.ordine_pagamento,
+	carrelli.status_pagamento,
+	carrelli.importo_pagamento,
+    carrelli.utm_id,
+    carrelli.utm_source,
+    carrelli.utm_medium,
+    carrelli.utm_campaign,
+    carrelli.utm_term,
+    carrelli.utm_content,
+    carrelli.id_reseller,
+    carrelli.id_affiliato,
+	carrelli.id_account_inserimento,
+	carrelli.timestamp_inserimento,
+	carrelli.id_account_aggiornamento,
+	carrelli.timestamp_aggiornamento
+FROM carrelli;
+
+--| 090000003050
+
+-- carrelli_articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `carrelli_articoli_view`;
+
+--| 090000003051
+
+-- carrelli_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-12 14:45 Chiara GDL
+CREATE OR REPLACE VIEW carrelli_articoli_view AS
+	SELECT
+		carrelli_articoli.id,
+		carrelli_articoli.id_carrello,
+		carrelli_articoli.id_articolo,
+		carrelli_articoli.id_iva,
+		carrelli_articoli.prezzo_netto_unitario,
+		carrelli_articoli.prezzo_lordo_unitario,
+		carrelli_articoli.quantita,
+		carrelli_articoli.prezzo_netto_totale,
+		carrelli_articoli.prezzo_lordo_totale,
+		carrelli_articoli.sconto_percentuale,
+		carrelli_articoli.sconto_valore,
+		carrelli_articoli.prezzo_netto_finale,
+		carrelli_articoli.prezzo_lordo_finale,
+		carrelli_articoli.id_account_inserimento,
+		carrelli_articoli.id_account_aggiornamento
+	FROM carrelli_articoli;
 
 --| 090000003100
 
@@ -1381,6 +1575,12 @@ CREATE OR REPLACE VIEW contatti_view AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS inviante,
 		contatti.id_ranking,
 		ranking.nome AS ranking,
+        contatti.utm_id,
+        contatti.utm_source,
+        contatti.utm_medium,
+        contatti.utm_campaign,
+        contatti.utm_term,
+        contatti.utm_content,
 		contatti.nome,
 		contatti.timestamp_contatto,
 		contatti.id_account_inserimento,
@@ -1682,6 +1882,7 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		progetti.entrate_accettazione,
 		progetti.data_accettazione,
 		progetti.data_chiusura,
+		if( progetti.data_accettazione > CURRENT_DATE(), 'futuro', if( progetti.data_chiusura > CURRENT_DATE(), 'attivo', 'concluso'  ) ) AS stato,
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
@@ -1862,11 +2063,75 @@ CREATE OR REPLACE VIEW `coupon_prodotti_view` AS
 
 --| 090000008900
 
+-- crediti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `crediti_view`;
+
+--| 090000008901
+
+-- crediti_view
+-- tipologia: tabella gestita
+-- verifica: 2022-07-15 11:56 Chiara GDL
+CREATE OR REPLACE VIEW `crediti_view` AS
+    SELECT
+		crediti.id,
+		crediti.id_documenti_articolo,
+        concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' ',
+			documenti_articoli.id_articolo
+		) AS riga_documento,
+		crediti.data,
+		crediti.id_account_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS account_emittente,
+		crediti.id_account_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS account_destinatario,
+		crediti.id_mastro_provenienza,
+		mastri_path( m1.id ) AS mastro_provenienza,
+		crediti.id_mastro_destinazione,
+		mastri_path( m2.id ) AS mastro_destinazione,
+		crediti.quantita,
+		crediti.id_pianificazione,
+		crediti.nome,
+		crediti.id_account_inserimento,
+		crediti.id_account_aggiornamento,
+		concat(
+			crediti.data,
+			' / ',
+			tipologie_documenti.sigla,
+			' / ',
+			crediti.quantita,
+			' x ',
+			documenti_articoli.id_articolo,
+			' / ',
+			crediti.nome
+		) AS __label__
+	FROM
+		crediti
+		LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
+        	LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
+        	LEFT JOIN account AS acc1 ON acc1.id = crediti.id_account_emittente
+		LEFT JOIN anagrafica AS a1 ON a1.id = acc1.id_anagrafica
+		LEFT JOIN account AS acc2 ON acc2.id = crediti.id_account_destinatario
+		LEFT JOIN anagrafica AS a2 ON a2.id = acc2.id_anagrafica
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
+;
+
+--| 090000008910
+
 -- discipline_view
 -- tipologia: vista virtuale
 DROP TABLE IF EXISTS `discipline_view`;
 
---| 090000008901
+--| 090000008911
 
 -- discipline_view
 -- tipologia: vista virtuale
@@ -1957,6 +2222,8 @@ CREATE OR REPLACE VIEW `ddt_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
+			documenti.nome,
+			' ',
 			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
@@ -2018,6 +2285,8 @@ CREATE OR REPLACE VIEW `ddt_attivi_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
+			documenti.nome,
+			' ',
 			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
@@ -2080,6 +2349,8 @@ CREATE OR REPLACE VIEW `ddt_passivi_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		concat(
+			documenti.nome,
+			' ',
 			tipologie_documenti.sigla,
 			' ',
 			documenti.numero,
@@ -2836,7 +3107,8 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_immobile,
 		immagini.id_contratto,
         immagini.id_valutazione,
-         immagini.id_rinnovo,
+		immagini.id_banner,
+        immagini.id_rinnovo,
 		immagini.id_lingua,
 		lingue.nome AS lingua,
 		immagini.id_ruolo,
@@ -3603,7 +3875,7 @@ CREATE OR REPLACE VIEW `magazzini_view` AS
 		concat_ws(
 			' ',
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
@@ -3859,7 +4131,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		concat_ws(
 			' ',
 			tipologie_indirizzi.nome,
-			indirizzo,
+			indirizzi.indirizzo,
 			indirizzi.civico,
 			indirizzi.cap,
 			indirizzi.localita,
@@ -4055,6 +4327,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
         metadati.id_valutazione,
         metadati.id_rinnovo,
         metadati.id_tipologia_attivita,
+		metadati.id_banner,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
@@ -4567,13 +4840,13 @@ CREATE OR REPLACE VIEW `pagine_view` AS
 	FROM pagine
 ;
 
---| 090000023501
+--| 090000023500
 
 -- periodi_view
 -- tipologia: tabella di supporto
 DROP TABLE IF EXISTS `periodi_view`;
 
---| 090000023500
+--| 090000023501
 
 -- periodi_view
 -- tipologia: tabella di supporto
@@ -4946,9 +5219,21 @@ CREATE OR REPLACE VIEW `proforma_view` AS
 		documenti.data,
 		documenti.nome,
 		documenti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
 		documenti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
 		documenti.timestamp_chiusura,
 		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
 		documenti.id_account_inserimento,
@@ -5577,6 +5862,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 		pubblicazioni.id_categoria_risorse,
 		pubblicazioni.id_progetto,
 		pubblicazioni.id_categoria_progetti,
+		pubblicazioni.id_banner,
 		pubblicazioni.timestamp_inizio,
 		pubblicazioni.timestamp_fine,
 		concat_ws(
@@ -6264,7 +6550,7 @@ CREATE OR REPLACE VIEW `risorse_anagrafica_view` AS
 -- tipologia: tabella di supporto
 DROP TABLE IF EXISTS `risorse_categorie_view`;
 
---| 090000032400
+--| 090000032401
 
 -- risorse_categorie_view
 -- tipologia: tabella di supporto
@@ -7078,6 +7364,31 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 	FROM tipologie_attivita
 ;
 
+--| 090000050500
+
+-- tipologie_banner_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_banner_view`;
+
+--| 090000050501
+
+-- tipologie_banner_view
+-- tipologia: tabella assistita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE OR REPLACE VIEW `tipologie_banner_view` AS
+	SELECT
+		tipologie_banner.id,
+		tipologie_banner.id_genitore,
+		tipologie_banner.ordine,
+		tipologie_banner.nome,
+		tipologie_banner.html_entity,
+		tipologie_banner.font_awesome,
+		tipologie_banner.id_account_inserimento,
+		tipologie_banner.id_account_aggiornamento,
+		tipologie_banner_path( tipologie_banner.id ) AS __label__
+	FROM tipologie_banner
+;
+
 --| 090000050600
 
 -- tipologie_chiavi_view
@@ -7343,6 +7654,7 @@ CREATE OR REPLACE VIEW `tipologie_mastri_view` AS
 		tipologie_mastri.se_magazzino,
 		tipologie_mastri.se_conto,
 		tipologie_mastri.se_registro,
+		tipologie_mastri.se_credito,
 		tipologie_mastri.id_account_inserimento,
 		tipologie_mastri.id_account_aggiornamento,
 		tipologie_mastri_path( tipologie_mastri.id ) AS __label__

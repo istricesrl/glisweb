@@ -269,8 +269,8 @@
 	    array_walk_recursive(
 		$a,
 		function( &$v, $k ) {
-		    if( in_array( $k, array( 'password', 'private', 'key', 'secret', 'sa', 'sb', 'sc' ), true ) ) {
-			$v = '***';
+		    if( in_array( $k, array( 'password', 'private', 'key', 'secret', 'sa', 'sb', 'sc', 'token' ), true ) ) {
+			    $v = '***';
 		    }
 		}
 	    );

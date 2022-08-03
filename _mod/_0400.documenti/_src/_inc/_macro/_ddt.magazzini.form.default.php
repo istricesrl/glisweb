@@ -23,3 +23,30 @@
             ['ddt.magazzini.form.ordine']
         );
     }
+
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+
+		// TODO aggiunta riga da stringone
+		if( isset( $_REQUEST['__evasione__'] ) ) {
+
+			// TODO spacchettare l'ID che è composto da idMagazzinoProvenienza|idArticolo|idMatricola
+			$evasione = explode( '|', $_REQUEST['__evasione__']['id_giacenza'] );
+
+			// TODO inserire la riga di documenti_articoli con i dati ricavati sopra
+			mysqlInsertRow(
+				$cf['mysql']['connection'],
+				array(
+					'id' => NULL,
+					'id_documento' => $_REQUEST[ $ct['form']['table'] ]['id'],
+					'id_articolo' => $evasione[1],
+					'id_matricola' => isset( $evasione[2] ) ? $evasione[2] : NULL,
+					'id_udm' => 1,
+					'quantita' => $_REQUEST['__evasione__']['quantita'],
+					'id_mastro_provenienza' => $evasione[0]
+				),
+				'documenti_articoli'
+			);
+
+		}
+
+	}

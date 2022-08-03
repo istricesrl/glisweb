@@ -2,35 +2,14 @@
 {% import 'bin/default.html' as def %}
 
 <fieldset id="{{ view.id }}-insert" class=" view-insert hidden">
-    <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
-    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
-    <input type="hidden" id="account" name="{{ table }}[id_account_inserimento]" value="{{ account }}" disabled>
-    {{ frm.input( view.open.table, '', '', view.insert.field, '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
-    {{ frm.input( view.open.table, '', '', 'data', '', '', '', now|date("Y-m-d"), 'hidden', '', '', 2 ) }}
-    {{ frm.input( view.open.table, '', '', 'id_tipologia', '', '', '', request[ table ].id_tipologia, 'hidden', '', '', 2 ) }}
-    {{ frm.input( view.open.table, '', '', 'id_udm', '', '', '', '1', 'hidden', '', '', 2 ) }}
     <div class="form-row d-print-none">
-        <div class="col-4">
+        <div class="col">
             <span class="label-top remove-after-duplicate">articolo</span>
-            {{ frm.selectBox( view.open.table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli', 2 ) }}
-        </div>
-        {% if '4110.matricole' in mods.active.array and matricole.scadenze %}
-        <div class="col">
-            <span class="label-top remove-after-duplicate">matricola</span>
-            {{ frm.selectBox( view.open.table, '', '', 'id_matricola', '', etc.select.id_matricole, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'matricole', 2 ) }}
-        </div>
-        {% endif %}
-        <div class="col">
-            <span class="label-top">nome</span>
-            {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', '', '', 2 ) }}
-        </div>
-        <div class="col">
-            <span class="label-top remove-after-duplicate">scarico da</span>
-            {{ frm.selectBox( view.open.table, '', '', 'id_mastro_provenienza', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'magazzini', 2 ) }}
+            {{ frm.selectBox( '__evasione__', '', '', 'id_giacenza', '', '', '', '', '', 1, '', 'font-awesome', '', '', '', '', page, pages, ietf, '__report_giacenza_magazzini_foglie__', 2 ) }}
         </div>
         <div class="col-1">
             <span class="label-top remove-after-duplicate">quantità</span>
-            {{ frm.input( view.open.table, '', '', 'quantita', '', '', '', '', '', '', '', 2 ) }}
+            {{ frm.input( '__evasione__', '', '', 'quantita', '', '', '', '', '', '', '', 2 ) }}
         </div>
         <div class="col-auto">
             <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>

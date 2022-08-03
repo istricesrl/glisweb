@@ -6,15 +6,18 @@
      * - gestire URL di ritorno di Nexi tipo 
      */
 
-	 // se esiste un carrello in sessione
-     if( isset( $_SESSION['carrello']['id'] ) ) {
+    // debug
+    // echo '<pre>' . print_r( $_REQUEST, true ) . '</pre>';
+
+    // se esiste un carrello in sessione
+    // if( isset( $_SESSION['carrello']['id'] ) ) {
 
         // inizializzazione esito pagamento
         $ct['etc']['esito'] = NULL;
 
         // imposto la timestamp di checkout
-        $_SESSION['carrello']['timestamp_checkout'] = time();
-        $_SESSION['carrello']['provider_checkout'] = basename( __FILE__ );
+//        $_SESSION['carrello']['timestamp_checkout'] = time();
+//        $_SESSION['carrello']['provider_checkout'] = basename( __FILE__ );
 
         // gestione esito
         if( isset( $_REQUEST['codTrans'] ) ) {
@@ -27,34 +30,64 @@
             }
 
             // nome del file di ricevuta
-            $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'nexi/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
+//            $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'nexi/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
 
             // log
-            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
+//            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
 
-        } elseif( isset( $_REQUEST['item_number'] ) ) {
+        } elseif( isset( $_REQUEST['PayerID'] ) ) {
+
+            // recupero il carrello
+            $carrello = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM carrelli WHERE ordine_pagamento = ?',
+                array( array( 's' => $_REQUEST['PayerID'] ) )
+            );
+
+            // debug
+            // echo '<pre>' . print_r( $carrello, true ) . '</pre>';
 
             // PayPal VECCHIO
-            if( isset( $_REQUEST['payment_status'] ) && $_REQUEST['payment_status'] == 'Completed' ) {
+            if( isset( $carrello['status_pagamento'] ) && $carrello['status_pagamento'] == 'Completed' ) {
+                $ct['etc']['esito'] = 1;
+            } else {
+                $ct['etc']['esito'] = 2;
+            }
+
+            // TODO implementare il caso in cui il pagamento fallisce
+
+            // nome del file di ricevuta
+//            $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
+
+            // log
+//            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
+
+        } elseif( isset( $_REQUEST['idOrdine'] ) ) {
+
+            // PayPal NUOVO
+            // TODO leggere dal carrello $_SESSION['carrello']['id'] per vedere se il pagamento è andato a buon fine
+            // oppure no, o eventualmente se non è ancora arrivato (in questo caso dare $ct['etc']['esito'] = 2)
+
+            // recupero il carrello
+            $carrello = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM carrelli WHERE ordine_pagamento = ?',
+                array( array( 's' => $_REQUEST['idOrdine'] ) )
+            );
+
+            // debug
+            // echo '<pre>' . print_r( $carrello, true ) . '</pre>';
+
+            // esito
+            if( isset( $carrello['status_pagamento'] ) && $carrello['status_pagamento'] == 'COMPLETED' ) {
                 $ct['etc']['esito'] = 1;
             } else {
                 $ct['etc']['esito'] = 0;
             }
 
-            // nome del file di ricevuta
-            $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
-
-            // log
-            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
-
-        } elseif( isset( $_REQUEST['PayerID'] ) ) {
-
-            // PayPal NUOVO
-            // TODO leggere dal carrello $_SESSION['carrello']['id'] per vedere se il pagamento è andato a buon fine
-            // oppure no, o eventualmente se non è ancora arrivato (in questo caso dare $ct['etc']['esito'] = 2)
-            
         }
 
+/*
         // se il checkout è andato a buon fine
         if( $ct['etc']['esito'] === 1 ) {
 
@@ -73,8 +106,9 @@
             logWrite( 'checkout effettuato con successo per il carrello ' . $_SESSION['carrello']['id'], 'paypal', LOG_INFO );
     
         }
+*/
 
-    }
+    // }
 
     // debug
     // var_dump( $_SESSION['carrello']['id'] );

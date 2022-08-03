@@ -89,8 +89,6 @@
         'fa' => 'fa-plus-circle'
     );
 
-	//$ct['etc']['include']['insert'] = 'inc/ddt.passivi.magazzini.form.righe.insert.html';
-
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro custom progetti aperti
 		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];

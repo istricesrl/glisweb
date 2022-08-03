@@ -1,0 +1,13 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+{% if etc.esito == session.carrello.id %}
+    <p>ordine piazzato correttamente</p>
+{% else %}
+    <p>errore nella conferma dell'ordine</p>
+{% endif %}
+
+{% endblock %}

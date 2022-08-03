@@ -19,7 +19,7 @@
         $_SESSION['carrello']['provider_checkout'] = basename( __FILE__ );
 
         // registro il checkout
-        mysqlInsertRow(
+        $ct['etc']['esito'] = mysqlInsertRow(
             $cf['mysql']['connection'],
             array(
                 'id'						=> $_SESSION['carrello']['id'],
@@ -31,9 +31,13 @@
         );
 
         // controller post checkout
-        $cnts = glob( glob2custom( DIR_BASE . '_mod/_4170.ecommerce/_src/_inc/_controllers/_checkout.finally.success.php' ), GLOB_BRACE );
+        $cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_checkout.finally.success.php' ), GLOB_BRACE );
+
+        // debug
+        // die( print_r( $cnts ) );
 
         // log
+        appendToFile( 'checkout diretto: ' . $_SESSION['carrello']['provider_checkout'] . '/' . $_SESSION['carrello']['timestamp_checkout'] . PHP_EOL, $fileRicevuta );
         appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ), $fileRicevuta );
 
         // inclusione delle controller post checkout

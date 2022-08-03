@@ -90,6 +90,9 @@
         // operazioni di chiusura
         if( empty( $job['totale'] ) || $job['corrente'] > $job['totale'] ) {
 
+            mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => NULL ) ) );
+            logWrite( 'aggiornata view statica per download note attive' , 'speed' );
+
             // scrivo la timestamp di completamento
             $jobs = mysqlQuery(
                 $cf['mysql']['connection'],

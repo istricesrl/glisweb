@@ -13,11 +13,12 @@
         $k                                                  = $cf['ecommerce']['profile']['provider'][ $_SESSION['carrello']['provider_pagamento'] ];
 
         // URL espliciti
-        $k['action_url']                                    = ( ! isset( $k['action_url'] ) || empty( $k['action_url'] ) ) ? $cf['contents']['pages'][ $k['action'] ]['url'][ $l ] : $k['action_url'];
+        $k['action_url']                                    = ( ! isset( $k['action_url'] ) || empty( $k['action_url'] ) ) ? ( ( isset( $k['action'] ) ) ? $cf['contents']['pages'][ $k['action'] ]['url'][ $l ] : NULL ) : $k['action_url'];
 
         // dati per la costruzione del modulo
-        $ct['etc']['meta']['method']	                    = $k['method'];											        // metodo di chiamata al server
+        $ct['etc']['meta']['method']	                    = ( ! isset( $k['method'] ) ) ? NULL : $k['method'];		    // metodo di chiamata al server
         $ct['etc']['meta']['action']                        = $k['action_url'];                                             // server da chiamare
+        $ct['etc']['meta']['autosubmit']                    = ( isset( $k['autosubmit'] ) ) ? $k['autosubmit'] : false;     // opzione autosubmit per la pagina di riepilogo
 
         // configurazione riepilogo e ambiente di pagamento in base al provider scelto
         switch( $_SESSION['carrello']['provider_pagamento'] ) {
@@ -57,20 +58,12 @@
             // pagamento con PayPal Advanced Checkout
             case 'paypal-advanced':
 
-                // TODO ottengo il Client Token
-/*
-                    $ct['etc']['client_token']              = restCall(
-                        $k['token_api'],
-                        METHOD_POST,
-                        array(),
-                        MIME_APPLICATION_JSON,
-                        MIME_APPLICATION_JSON,
-                        $status,
-                        array(
-                            'Authorization' => 'Bearer ' . $k['auth_token']
-                        )
-                    );
-*/
+                $ct['etc']['client_token'] = paypalAdvancedGetClientToken( $k );
+
+                // debug
+                    // print_r( $ct['etc'] );
+                    // print_r( $k );
+                    // print_r( $result );
 
             break;
 
