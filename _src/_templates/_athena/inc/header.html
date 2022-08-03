@@ -50,6 +50,10 @@
                 </div>
                 {% endif %}
 
+                <div id="widget-cart" class="widget col-auto p-0" {% if not session.carrello.articoli %}style="display: none;"{% endif %}>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-cart" onclick="$('.slide-info').not('#cart').slideUp(400,'swing');$('#cart').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-cart').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="carrello"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                </div>
+
                 <div id="widget-info" class="widget col-auto p-0">
                     <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-info" onclick="$('.slide-info').not('#info').slideUp(400,'swing');$('#info').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-info').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
                 </div>
