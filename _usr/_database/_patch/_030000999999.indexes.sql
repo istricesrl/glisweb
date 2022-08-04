@@ -1245,6 +1245,20 @@ ALTER TABLE `file`
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_mailing` (`id_mailing`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_mail_out` (`id_mail_out`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_mail_sent` (`id_mail_sent`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_indirizzo` (`id_indirizzo`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_edificio` (`id_edificio`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_valutazione` (`id_valutazione`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_rinnovo` (`id_rinnovo`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_anagrafica_certificazioni` (`id_anagrafica_certificazioni`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_valutazione_certificazioni` (`id_valutazione_certificazioni`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_licenza` (`id_licenza`,`id_ruolo`,`path`),
 	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_prodotto` (`id_prodotto`), 
@@ -1271,23 +1285,12 @@ ALTER TABLE `file`
 	ADD KEY `id_rinnovo` (`id_rinnovo`),
 	ADD KEY `id_anagrafica_certificazioni` (`id_anagrafica_certificazioni`), 
 	ADD KEY `id_valutazione_certificazioni` (`id_valutazione_certificazioni`),  
+	ADD KEY `id_licenza` (`id_licenza`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_anagrafica` (`id`,`id_ruolo`,`id_anagrafica`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_prodotti` (`id`,`id_ruolo`,`id_prodotto`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_articoli` (`id`,`id_ruolo`,`id_articolo`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_categorie_prodotti` (`id`,`id_ruolo`,`id_categoria_prodotti`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_todo` (`id`,`id_ruolo`,`id_todo`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_pagine` (`id`,`id_ruolo`,`id_pagina`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_template` (`id`,`id_ruolo`,`id_template`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_notizie` (`id`,`id_ruolo`,`id_notizia`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_categorie_notizie` (`id`,`id_ruolo`,`id_categoria_notizie`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_risorse` (`id`,`id_ruolo`,`id_risorsa`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_categorie_risorse` (`id`,`id_ruolo`,`id_categoria_risorse`,`id_lingua`,`path`,`url`);
-
+	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`path`,`url`);
 --| 030000015001
 
 -- file
@@ -2019,20 +2022,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_tipologia_attivita` (`id_tipologia_attivita`), 
 	ADD KEY `id_banner` (`id_banner`), 
 	ADD KEY `id_pianificazione` (`id_pianificazione`), 
-	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255)),
-	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`,`nome`,`testo`(255)),
-	ADD KEY `indice_pagina` (`id`,`id_lingua`,`id_pagina`,`nome`,`testo`(255)),
-	ADD KEY `indice_prodotti` (`id`,`id_lingua`,`id_prodotto`,`nome`,`testo`(255)),
-	ADD KEY `indice_articoli` (`id`,`id_lingua`,`id_articolo`,`nome`,`testo`(255)),
-	ADD KEY `indice_categorie_prodotti` (`id`,`id_lingua`,`id_categoria_prodotti`,`nome`,`testo`(255)),
-	ADD KEY `indice_notizie` (`id`,`id_lingua`,`id_notizia`,`nome`,`testo`(255)),
-	ADD KEY `indice_categoria_notizie` (`id`,`id_lingua`,`id_categoria_notizie`,`nome`,`testo`(255)),
-	ADD KEY `indice_risorse` (`id`,`id_lingua`,`id_risorsa`,`nome`,`testo`(255)),
-	ADD KEY `indice_categorie_risorse` (`id`,`id_lingua`,`id_categoria_risorse`,`nome`,`testo`(255)),
-	ADD KEY `indice_immagini` (`id`,`id_lingua`,`id_immagine`,`nome`,`testo`(255)),
-	ADD KEY `indice_video` (`id`,`id_lingua`,`id_video`,`nome`,`testo`(255)),
-	ADD KEY `indice_audio` (`id`,`id_lingua`,`id_audio`,`nome`,`testo`(255)),
-	ADD KEY `indice_file` (`id`,`id_lingua`,`id_file`,`nome`,`testo`(255));
+	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255));
 
 --| 030000021801
 
