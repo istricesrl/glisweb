@@ -45,20 +45,6 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'tesseramenti.form';
 
-    //$_SESSION['__work__']['id_anagrafica'] 
-
-    // campi per acquisto rapido
-	/*$ct['view']['insert']['options'] = array(
-        array( 'name' => '__work__[id_anagrafica]', 'value' => $_REQUEST[  $ct['form']['table'] ]['id'] ),
-        array( 'name' => '__work__[anagrafica]', 'value' => $_REQUEST[  $ct['form']['table'] ]['__label__'] )
-	);
-
-    $ct['view']['insert']['option']['fa'] = 'fa-calendar-check-o';
-    $ct['view']['insert']['option']['page'] = 'tesseramenti.view';*/
-
-    // campo per il preset di apertura
-	//$ct['view']['open']['preset']['field'] = 'id_destinatario';
-
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         
         // preset filtro custom progetti aperti

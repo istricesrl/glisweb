@@ -63,16 +63,17 @@
 		'SELECT id FROM anagrafica_view WHERE se_gestita = 1'
 	);
 
+	/*
 	if( isset( $_SESSION['__work__'] ) ){
 
 		if( isset( $_SESSION['__work__']['id_anagrafica'] ) ){
-            $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_destinatario'] = $_SESSION['__work__']['id_anagrafica'];
+            $_REQUEST['__preset__'][ $ct['form']['table'] ]['contratti_anagrafica'][0]['id_anagrafica'] = $_SESSION['__work__']['id_anagrafica'];
 		}
 
 		if( isset( $_SESSION['__work__']['id_progetto'] ) ){
             $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_progetto'] = $_SESSION['__work__']['id_progetto'];
 		}
-	}
+	}*/
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
