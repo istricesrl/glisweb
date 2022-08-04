@@ -403,6 +403,27 @@ ALTER TABLE `banner_pagine`
 -- tipologia: tabella gestita
 ALTER TABLE `banner_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000002600
+
+-- banner_zone
+-- tipologia: tabella gestita
+-- verifica: 2022-08-04 10:22 Chiara GDL
+ALTER TABLE `banner_zone`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_zona`,`id_banner`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `se_presente` (`se_presente`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_zona`,`id_banner`,`se_presente`);
+
+--| 030000002601
+
+-- banner_zone
+-- tipologia: tabella gestita
+ALTER TABLE `banner_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000002800
 
 -- caratteristiche_immobili

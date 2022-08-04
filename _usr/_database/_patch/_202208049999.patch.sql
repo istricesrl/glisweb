@@ -159,4 +159,57 @@ ALTER TABLE `file`
 	ADD UNIQUE KEY `unica_valutazione_certificazioni` (`id_valutazione_certificazioni`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_licenza` (`id_licenza`,`id_ruolo`,`path`);
 
+--| 202208040070
+CREATE TABLE IF NOT EXISTS `banner_zone` (
+  `id` int(11) NOT NULL,
+  `id_zona` int(11) NOT NULL,
+  `id_banner` int(11) NOT NULL,
+  `se_presente` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202208040080
+ALTER TABLE `banner_zone`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_zona`,`id_banner`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `se_presente` (`se_presente`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_zona`,`id_banner`,`se_presente`);
+
+--| 202208040090
+ALTER TABLE `banner_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202208040100
+ALTER TABLE `banner_zone`
+    ADD CONSTRAINT `banner_zone_ibfk_01`               FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_zone_ibfk_02_nofollow`      FOREIGN KEY (`id_zona`) REFERENCES `zone` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_zone_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `banner_zone_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202208040110
+CREATE OR REPLACE VIEW `banner_zone_view` AS
+	SELECT
+		banner_zone.id,
+		banner_zone.id_banner,
+		banner_zone.id_zona,
+		banner_zone.se_presente,
+		banner_zone.id_account_inserimento,
+		banner_zone.id_account_aggiornamento,
+		concat(
+			banner.nome,
+			' / ',
+			zone_path( banner_zone.id_zona ),
+			' / ',
+			coalesce( banner_zone.se_presente, 0 )
+		) AS __label__
+	FROM banner_zone
+		LEFT JOIN banner ON banner.id = banner_zone.id_banner
+;
+
 --| FINE

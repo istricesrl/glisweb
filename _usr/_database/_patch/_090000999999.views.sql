@@ -976,6 +976,36 @@ CREATE OR REPLACE VIEW `banner_pagine_view` AS
 		LEFT JOIN banner ON banner.id = banner_pagine.id_banner
 ;
 
+--| 090000002600
+
+-- banner_zone_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_zone_view`;
+
+--| 090000002601
+
+-- banner_zone_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-04 10:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_zone_view` AS
+	SELECT
+		banner_zone.id,
+		banner_zone.id_banner,
+		banner_zone.id_zona,
+		banner_zone.se_presente,
+		banner_zone.id_account_inserimento,
+		banner_zone.id_account_aggiornamento,
+		concat(
+			banner.nome,
+			' / ',
+			zone_path( banner_zone.id_zona ),
+			' / ',
+			coalesce( banner_zone.se_presente, 0 )
+		) AS __label__
+	FROM banner_zone
+		LEFT JOIN banner ON banner.id = banner_zone.id_banner
+;
+
 --| 090000002800
 
 -- caratteristiche_immobili_view

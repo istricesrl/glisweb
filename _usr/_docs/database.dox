@@ -124,9 +124,10 @@
     articoli_caratteristiche        | 001600    | relazione     | principale    | mette in relazione articoli e caratteristiche_prodotti
     attivita                        | 001800    | base          | principale    | contiene le attività
     audio                           | 002100    | base          | contenuti     | contiene gli audio
-    banner                          | 002200    | base          | principale    | contiene i banner
-    banner_azioni                   | 002300    | relazione     | secondaria    | mette in relazione banner e azioni
-    banner_pagine                   | 002400    | relazione     | secondaria    | mette in relazione banner e pagine
+    banner                          | 002300    | base          | principale    | contiene i banner
+    banner_azioni                   | 002400    | relazione     | secondaria    | mette in relazione banner e azioni
+    banner_pagine                   | 002500    | relazione     | secondaria    | mette in relazione banner e pagine
+    banner_zone                     | 002600    | relazione     | secondaria    | mette in relazione banner e zone
     caratteristiche_immobili        | 002800    | base          | secondaria    | contiene le caratteristica di indirizzi, edifici e immobili
     caratteristiche_prodotti        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
     carrelli                        | 003000    | base          | principale    | contiene i carrelli necessari per l'ecommerce
@@ -234,7 +235,7 @@
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
     POPUP       |           | popup, popup_pagine, pubblicazioni, tipologie_popup, tipologie_pubblicazioni
-    BANNER      |           | banner, banner_azioni, banner_pagine
+    BANNER      | 3300      | banner, banner_azioni, banner_pagine, banner_zone
     NOTIZIE     |           | audio, contenuti, file, categorie_notizie, immagini, menu, metadati, notizie notizie_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_notizie, tipologie_pubblicazioni, video
     RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_account, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
@@ -265,6 +266,7 @@
     banner                          | BANNER
     banner_azioni                   | BANNER
     banner_pagine                   | BANNER
+    banner_zone                     | BANNER
     caratteristiche_immobili        | IMMOBILIARE
     caratteristiche_prodotti        | PRODOTTI
     carrelli                        | ECOMMERCE
