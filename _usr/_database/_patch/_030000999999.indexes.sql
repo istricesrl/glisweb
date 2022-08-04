@@ -403,6 +403,27 @@ ALTER TABLE `banner_pagine`
 -- tipologia: tabella gestita
 ALTER TABLE `banner_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000002600
+
+-- banner_zone
+-- tipologia: tabella gestita
+-- verifica: 2022-08-04 10:22 Chiara GDL
+ALTER TABLE `banner_zone`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_zona`,`id_banner`), 
+	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `se_presente` (`se_presente`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_zona`,`id_banner`,`se_presente`);
+
+--| 030000002601
+
+-- banner_zone
+-- tipologia: tabella gestita
+ALTER TABLE `banner_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000002800
 
 -- caratteristiche_immobili
@@ -485,6 +506,8 @@ ALTER TABLE `carrelli_articoli`
   	ADD PRIMARY KEY (`id`),
   	ADD KEY `id_carrello` (`id_carrello`),  
   	ADD KEY `id_articolo` (`id_articolo`),  
+	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
+	ADD KEY `id_iva` (`id_iva`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `id_carrello_id_articolo` (`id_carrello`,`id_articolo`),
@@ -919,12 +942,10 @@ ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `contratti`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `id_emittente` (`id_emittente`),
-	ADD KEY `id_destinatario` (`id_destinatario`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY  `id_immobile` (`id_immobile`),
 	ADD KEY  `codice` ( `codice` ),
-	ADD KEY `indice` ( `id_tipologia`, `id_emittente`, `id_destinatario`, `codice`, `nome`, `id_progetto`, `id_immobile`);
+	ADD KEY `indice` ( `id_tipologia`, `codice`, `nome`, `id_progetto`, `id_immobile`);
 
 
 --| 030000007201
@@ -1245,6 +1266,20 @@ ALTER TABLE `file`
 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_categoria_notizie`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_risorsa` (`id_risorsa`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_categoria_risorse`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_mailing` (`id_mailing`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_mail_out` (`id_mail_out`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_mail_sent` (`id_mail_sent`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_indirizzo` (`id_indirizzo`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_edificio` (`id_edificio`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_valutazione` (`id_valutazione`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_rinnovo` (`id_rinnovo`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_anagrafica_certificazioni` (`id_anagrafica_certificazioni`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_valutazione_certificazioni` (`id_valutazione_certificazioni`,`id_ruolo`,`path`), 
+	ADD UNIQUE KEY `unica_licenza` (`id_licenza`,`id_ruolo`,`path`),
 	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_prodotto` (`id_prodotto`), 
@@ -1271,23 +1306,12 @@ ALTER TABLE `file`
 	ADD KEY `id_rinnovo` (`id_rinnovo`),
 	ADD KEY `id_anagrafica_certificazioni` (`id_anagrafica_certificazioni`), 
 	ADD KEY `id_valutazione_certificazioni` (`id_valutazione_certificazioni`),  
+	ADD KEY `id_licenza` (`id_licenza`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `url` (`url`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_anagrafica` (`id`,`id_ruolo`,`id_anagrafica`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_prodotti` (`id`,`id_ruolo`,`id_prodotto`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_articoli` (`id`,`id_ruolo`,`id_articolo`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_categorie_prodotti` (`id`,`id_ruolo`,`id_categoria_prodotti`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_todo` (`id`,`id_ruolo`,`id_todo`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_pagine` (`id`,`id_ruolo`,`id_pagina`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_template` (`id`,`id_ruolo`,`id_template`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_notizie` (`id`,`id_ruolo`,`id_notizia`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_categorie_notizie` (`id`,`id_ruolo`,`id_categoria_notizie`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_risorse` (`id`,`id_ruolo`,`id_risorsa`,`id_lingua`,`path`,`url`),
-	ADD KEY `indice_categorie_risorse` (`id`,`id_ruolo`,`id_categoria_risorse`,`id_lingua`,`path`,`url`);
-
+	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`path`,`url`);
 --| 030000015001
 
 -- file
@@ -1708,6 +1732,7 @@ ALTER TABLE `luoghi`
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`), 
+	ADD KEY `url` (`url`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`,  `id_tipologia`,`id_edificio`, `id_immobile`,`nome`);
@@ -1944,11 +1969,13 @@ ALTER TABLE `menu`
  	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_lingua`,`id_categoria_prodotti`,`menu`), 
  	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`,`menu`), 
  	ADD UNIQUE KEY `unica_categoria_risorse` (`id_lingua`,`id_categoria_risorse`,`menu`), 
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_lingua`,`id_categoria_progetti`,`menu`), 
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `id_pagina` (`id_pagina`), 
  	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
  	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
  	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `indice` (`id`,`id_lingua`,`id_pagina`,`ordine`,`menu`,`nome`,`target`,`sottopagine`),
 	ADD KEY `indice_categorie_prodotti` (`id`,`id_lingua`,`id_categoria_prodotti`,`menu`,`nome`),
 	ADD KEY `indice_categorie_notizie` (`id`,`id_lingua`,`id_categoria_notizie`,`menu`,`nome`),
@@ -1990,6 +2017,7 @@ ALTER TABLE `metadati`
  	ADD UNIQUE KEY `unica_rinnovo` (`id_lingua`,`id_rinnovo`,`nome`), 
  	ADD UNIQUE KEY `unica_tipologia_attivita` (`id_lingua`,`id_tipologia_attivita`,`nome`), 
 	ADD UNIQUE KEY `unica_banner` (`id_lingua`,`id_banner`,`nome`), 
+	ADD UNIQUE KEY `unica_pianificazione` (`id_lingua`,`id_pianificazione`,`nome`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
  	ADD KEY `id_pagina` (`id_pagina`), 
@@ -2014,20 +2042,8 @@ ALTER TABLE `metadati`
 	ADD KEY `id_rinnovo` (`id_rinnovo`), 
 	ADD KEY `id_tipologia_attivita` (`id_tipologia_attivita`), 
 	ADD KEY `id_banner` (`id_banner`), 
-	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255)),
-	ADD KEY `indice_anagrafica` (`id`,`id_lingua`,`id_anagrafica`,`nome`,`testo`(255)),
-	ADD KEY `indice_pagina` (`id`,`id_lingua`,`id_pagina`,`nome`,`testo`(255)),
-	ADD KEY `indice_prodotti` (`id`,`id_lingua`,`id_prodotto`,`nome`,`testo`(255)),
-	ADD KEY `indice_articoli` (`id`,`id_lingua`,`id_articolo`,`nome`,`testo`(255)),
-	ADD KEY `indice_categorie_prodotti` (`id`,`id_lingua`,`id_categoria_prodotti`,`nome`,`testo`(255)),
-	ADD KEY `indice_notizie` (`id`,`id_lingua`,`id_notizia`,`nome`,`testo`(255)),
-	ADD KEY `indice_categoria_notizie` (`id`,`id_lingua`,`id_categoria_notizie`,`nome`,`testo`(255)),
-	ADD KEY `indice_risorse` (`id`,`id_lingua`,`id_risorsa`,`nome`,`testo`(255)),
-	ADD KEY `indice_categorie_risorse` (`id`,`id_lingua`,`id_categoria_risorse`,`nome`,`testo`(255)),
-	ADD KEY `indice_immagini` (`id`,`id_lingua`,`id_immagine`,`nome`,`testo`(255)),
-	ADD KEY `indice_video` (`id`,`id_lingua`,`id_video`,`nome`,`testo`(255)),
-	ADD KEY `indice_audio` (`id`,`id_lingua`,`id_audio`,`nome`,`testo`(255)),
-	ADD KEY `indice_file` (`id`,`id_lingua`,`id_file`,`nome`,`testo`(255));
+	ADD KEY `id_pianificazione` (`id_pianificazione`), 
+	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255));
 
 --| 030000021801
 
@@ -2878,6 +2894,27 @@ ALTER TABLE `risorse`
 -- risorse
 -- tipologia: tabella gestita
 ALTER TABLE `risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
+
+--| 030000032100
+
+-- risorse_account
+-- tipologia: tabella di supporto
+-- verifica: 2022-08-02 12:07 Chiara GDL
+ALTER TABLE `risorse_account`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_risorsa`,`id_account`),
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_risorsa` (`id_risorsa`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_risorsa`,`id_account`,`ordine`);
+
+--| 030000032101
+
+-- risorse_account
+-- tipologia: tabella di supporto
+ALTER TABLE `risorse_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000032200
 
