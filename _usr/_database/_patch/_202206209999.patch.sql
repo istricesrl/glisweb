@@ -48,10 +48,6 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;
 
---| 202206200030
-ALTER TABLE `anagrafica_indirizzi` 
-  CHANGE `id_ruolo` `id_ruolo` int(11) NOT NULL;
-
 --| 202206200040
 ALTER TABLE `immobili` 
   ADD COLUMN `catasto_foglio` char(255) DEFAULT NULL AFTER `campanello`,
