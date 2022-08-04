@@ -21,8 +21,8 @@
 	    'type' => 'twig',
 	    'it-IT' => array(
             'from' => array( '{{ ct.site.name[ ct.localization.language.ietf ] }}' => 'noreply@{{ ct.site.fqdn }}' ),
-            'oggetto' => 'creazione nuovo account per {{ dati.nome }}',
-            'testo' => '<p>Gentile utente, utilizzi questo link per confermare il suo account:<br>{{ ct.pages.registrazione.url[ ct.localization.language.ietf ] }}?tk={{ dt.tk }}</p>'
+            'oggetto' => 'creazione nuovo account per {{ dt.nome }}',
+            'testo' => '<p>Gentile {{ dt.nome }}, utilizzi questo link per confermare il suo account:<br>{{ ct.pages.registrazione.url[ ct.localization.language.ietf ] }}?tk={{ dt.tk }}</p>'
 	    )
 	);
 
@@ -30,7 +30,7 @@
 	    'type' => 'twig',
 	    'it-IT' => array(
             'from' => array( '{{ ct.site.name[ ct.localization.language.ietf ] }}' => 'noreply@{{ ct.site.fqdn }}' ),
-            'oggetto' => 'modifica dati account per {{ dati.nome }}',
-            'testo' => '<p>Gentile utente, utilizzi questo link per confermare le modifiche al suo account:<br>{{ ct.pages.profilo.url[ ct.localization.language.ietf ] }}?tk={{ dt.tk }}</p>'
+            'oggetto' => 'modifica dati account per {{ dt.nome }}',
+            'testo' => '<p>Gentile {{ dt.nome }}, utilizzi questo link per confermare le modifiche al suo account:<br>{{ ct.pages.profilo.url[ ct.localization.language.ietf ] }}?tk={{ dt.tk }}</p>'
 	    )
 	);

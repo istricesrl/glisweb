@@ -6,22 +6,46 @@
         method="post">
         <fieldset>
             <legend>registrazione</legend>
+            {% for e in request.__signup__.__err__ %}
+            <div class="form-group form-row">
+                <div class="col-12 text-center col-form-static">{{ e.testo[ localization.language.ietf ] | raw }}</div>
+            </div>
+            {% endfor %}
             {% if request.__signup__.__tk_ok__ %}
             <div class="form-group form-row">
                 <div class="col-12 text-center col-form-static">
                     {{ request.__signup__.__tk_ok__.testo[ localization.language.ietf ] | raw }}</div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12"><a href="{{ pages[ site.home ].path[ localization.language.ietf ] }}"
+                        class="btn btn-light btn-sm btn-block">torna alla home page</a></div>
             </div>
             {% elseif request.__signup__.__tk_sent__ %}
             <div class="form-group form-row">
                 <div class="col-12 text-center col-form-static">
                     {{ request.__signup__.__tk_sent__.testo[ localization.language.ietf ] | raw }}</div>
             </div>
-            {% else %}
-            {% for e in request.__signup__.__err__ %}
             <div class="form-group form-row">
-                <div class="col-12 text-center col-form-static">{{ e.testo[ localization.language.ietf ] | raw }}</div>
+                <div class="col-12"><a href="{{ pages[ site.home ].path[ localization.language.ietf ] }}"
+                        class="btn btn-light btn-sm btn-block">torna alla home page</a></div>
             </div>
-            {% endfor %}
+            {% elseif request.__signup__.__ts_check__ %}
+            <input type="hidden" name="tk" value="{{ request.tk }}">
+            <div class="form-group form-row">
+                <div class="col-12 text-center col-form-static">
+                    {{ request.__signup__.__ts_check__.testo[ localization.language.ietf ] | raw }}</div>
+            </div>
+            <div class="form-group form-row">
+                <label class="d-none d-md-block col-md-2 col-form-label">OTP</label>
+                <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm"
+                        name="ts" value="{{ request.ts }}" placeholder="codice di attivazione ricevuto via SMS"
+                        required></div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">invia</button>
+                </div>
+            </div>
+            {% else %}
             <div class="form-group form-row">
                 <label class="d-none d-md-block col-md-2 col-form-label">nome</label>
                 <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm"
@@ -40,6 +64,14 @@
                         name="__signup__[email]" value="{{ request.__signup__.email }}" placeholder="la tua e-mail"
                         required></div>
             </div>
+            {% if etc.profilo.sms %}
+            <div class="form-group form-row">
+                <label class="d-none d-md-block col-md-2 col-form-label">cellulare</label>
+                <div class="col-12 col-md-10"><input type="phone" class="form-control form-control-sm"
+                        name="__signup__[mobile]" value="{{ request.__signup__.mobile }}" placeholder="il tuo numero di cellulare"
+                        required></div>
+            </div>
+            {% endif %}
             <div class="form-group form-row">
                 <label class="d-none d-md-block col-md-2 col-form-label">username</label>
                 <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm"
@@ -66,10 +98,6 @@
                 </div>
             </div>
             {% endif %}
-            <div class="form-group form-row">
-                <div class="col-12"><a href="{{ pages[ site.home ].path[ localization.language.ietf ] }}"
-                        class="btn btn-light btn-sm btn-block">torna alla home page</a></div>
-            </div>
         </fieldset>
     </form>
 </div>

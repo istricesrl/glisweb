@@ -24,7 +24,7 @@
 	    $cf['sms']['server']		= &$cf['sms']['servers'][ current( $cf['sms']['profile']['servers'] ) ];
 	}
 
-    // recupero dei template dal database
+	// recupero dei template dal database
 	$tpls = mysqlCachedIndexedQuery(
 		$cf['memcache']['index'],
 		$cf['memcache']['connection'],
@@ -54,14 +54,17 @@
 			    array( array( 's' => $tpl['id'] ) )
 			);
 
+			/* TODO sistemare perché la struttura è sbagliata
 		    // ciclo sui contenuti
 			foreach( $cnts as $cnt ) {
 			    $cf['sms']['tpl'][ $tpl['ruolo'] ][ $cnt['ietf'] ] = array(
+					'type' => 'twig',
                     'from' => array( $cnt['mittente_nome'] => $cnt['mittente_numero'] ),
                     'to' => $cnt['destinatario_numero'],
                     'testo' => $cnt['testo']
 			    );
 			}
+			*/
 
 		}
 
