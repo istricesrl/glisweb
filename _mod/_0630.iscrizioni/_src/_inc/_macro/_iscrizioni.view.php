@@ -31,7 +31,7 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
    //     'tipologia' => 'tipologia',
-        'destinatario' => 'anagrafica',
+        'iscritti' => 'anagrafica',
         'data_inizio' => 'data',
         'progetto' => 'corso'
 	);
@@ -39,7 +39,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
-        'destinatario' => 'text-left',
+        'iscritti' => 'text-left',
         'data_inizio' => 'text-left',
         'progetto' => 'text-left'
     );
