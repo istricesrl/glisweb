@@ -124,9 +124,10 @@
     articoli_caratteristiche        | 001600    | relazione     | principale    | mette in relazione articoli e caratteristiche_prodotti
     attivita                        | 001800    | base          | principale    | contiene le attività
     audio                           | 002100    | base          | contenuti     | contiene gli audio
-    banner                          | 002200    | base          | principale    | contiene i banner
-    banner_azioni                   | 002300    | relazione     | secondaria    | mette in relazione banner e azioni
-    banner_pagine                   | 002400    | relazione     | secondaria    | mette in relazione banner e pagine
+    banner                          | 002300    | base          | principale    | contiene i banner
+    banner_azioni                   | 002400    | relazione     | secondaria    | mette in relazione banner e azioni
+    banner_pagine                   | 002500    | relazione     | secondaria    | mette in relazione banner e pagine
+    banner_zone                     | 002600    | relazione     | secondaria    | mette in relazione banner e zone
     caratteristiche_immobili        | 002800    | base          | secondaria    | contiene le caratteristica di indirizzi, edifici e immobili
     caratteristiche_prodotti        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
     carrelli                        | 003000    | base          | principale    | contiene i carrelli necessari per l'ecommerce
@@ -194,6 +195,7 @@
     rinnovi                         | 031500    | base          | secondaria    | contiene i rinnovi dei contratti
     rinnovi_documenti_articoli      | 031550    | relazione     | secondaria    | mette in relazione rinnovi e documenti_articoli
     risorse                         | 032000    | base          | principale    | contiene le risorse
+    risorse_account                 | 032100    | relazione     | principale    | mette in relazione risorse e account per l'acquisto di risorse
     risorse_anagrafica              | 032200    | relazione     | principale    | mette in relazione risorse e anagrafica
     risorse_categorie               | 032400    | relazione     | principale    | mette in relazione risorse e categorie_risorse
     sms_out                         | 041000    | base          | principale    | contiene gli SMS in uscita
@@ -233,9 +235,9 @@
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
     POPUP       |           | popup, popup_pagine, pubblicazioni, tipologie_popup, tipologie_pubblicazioni
-    BANNER      |           | banner, banner_azioni, banner_pagine
+    BANNER      | 3300      | banner, banner_azioni, banner_pagine, banner_zone
     NOTIZIE     |           | audio, contenuti, file, categorie_notizie, immagini, menu, metadati, notizie notizie_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_notizie, tipologie_pubblicazioni, video
-    RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
+    RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_account, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
     PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, matricole, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_articoli, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
     DOCUMENTI   |           | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
@@ -264,6 +266,7 @@
     banner                          | BANNER
     banner_azioni                   | BANNER
     banner_pagine                   | BANNER
+    banner_zone                     | BANNER
     caratteristiche_immobili        | IMMOBILIARE
     caratteristiche_prodotti        | PRODOTTI
     carrelli                        | ECOMMERCE
@@ -352,6 +355,7 @@
     rinnovi                         | PRODUZIONE
     rinnovi_documenti_articoli      | PRODUZIONE
     risorse                         | RISORSE
+    risorse_account                 | RISORSE
     risorse_anagrafica              | RISORSE
     risorse_categorie               | RISORSE
     ruoli_anagrafica                | BASE, PRODUZIONE, RISORSE

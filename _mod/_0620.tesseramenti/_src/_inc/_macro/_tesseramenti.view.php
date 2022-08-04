@@ -31,14 +31,14 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'codice' => 'tipologia',
-        'id_destinatario' => 'anagrafica'
+        'iscritti' => 'iscritto'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
         'codice' => 'text-left d-none d-md-table-cell',
-        'id_destinatario' => 'text-left'
+        'iscritti' => 'text-left'
     );
 
     // macro di default

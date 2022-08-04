@@ -29,10 +29,8 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
@@ -44,8 +42,10 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_abbonamento = 1
@@ -69,10 +69,8 @@ CREATE OR REPLACE VIEW `abbonamenti_attivi_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
@@ -84,8 +82,10 @@ CREATE OR REPLACE VIEW `abbonamenti_attivi_view` AS
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_abbonamento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
@@ -109,10 +109,8 @@ CREATE OR REPLACE VIEW `abbonamenti_archiviati_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
@@ -124,8 +122,10 @@ CREATE OR REPLACE VIEW `abbonamenti_archiviati_view` AS
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+        LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_abbonamento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
@@ -976,6 +976,36 @@ CREATE OR REPLACE VIEW `banner_pagine_view` AS
 		LEFT JOIN banner ON banner.id = banner_pagine.id_banner
 ;
 
+--| 090000002600
+
+-- banner_zone_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `banner_zone_view`;
+
+--| 090000002601
+
+-- banner_zone_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-04 10:22 Chiara GDL
+CREATE OR REPLACE VIEW `banner_zone_view` AS
+	SELECT
+		banner_zone.id,
+		banner_zone.id_banner,
+		banner_zone.id_zona,
+		banner_zone.se_presente,
+		banner_zone.id_account_inserimento,
+		banner_zone.id_account_aggiornamento,
+		concat(
+			banner.nome,
+			' / ',
+			zone_path( banner_zone.id_zona ),
+			' / ',
+			coalesce( banner_zone.se_presente, 0 )
+		) AS __label__
+	FROM banner_zone
+		LEFT JOIN banner ON banner.id = banner_zone.id_banner
+;
+
 --| 090000002800
 
 -- caratteristiche_immobili_view
@@ -1120,6 +1150,7 @@ CREATE OR REPLACE VIEW carrelli_articoli_view AS
 		carrelli_articoli.id_carrello,
 		carrelli_articoli.id_articolo,
 		carrelli_articoli.id_iva,
+		carrelli_articoli.destinatario_id_anagrafica,
 		carrelli_articoli.prezzo_netto_unitario,
 		carrelli_articoli.prezzo_lordo_unitario,
 		carrelli_articoli.quantita,
@@ -1758,7 +1789,6 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 	GROUP BY contratti.id, contratti_anagrafica.id_contratto, tipologie_contratti.nome
 ;
 
-
 --| 090000007300
 
 -- contratti_anagrafica_view
@@ -1770,7 +1800,7 @@ DROP TABLE IF EXISTS `contratti_anagrafica_view`;
 -- contratti_anagrafica_view
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
-CREATE OR REPLACE VIEW  contratti_anagrafica_view AS 
+		CREATE OR REPLACE VIEW  contratti_anagrafica_view AS 
 	SELECT 
 		contratti_anagrafica.id,
 		contratti_anagrafica.id_contratto,
@@ -1781,9 +1811,16 @@ CREATE OR REPLACE VIEW  contratti_anagrafica_view AS
 		contratti_anagrafica.ordine,
 		contratti_anagrafica.id_account_inserimento ,
 		contratti_anagrafica.id_account_aggiornamento ,
+		tipologie_contratti.se_abbonamento,
+		tipologie_contratti.se_iscrizione,
+		tipologie_contratti.se_tesseramento,
+		tipologie_contratti.se_immobili,
+		tipologie_contratti.se_acquisto,
+		tipologie_contratti.se_locazione,
 		concat( 'contratto ', contratti.nome, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
 	FROM contratti_anagrafica
 		LEFT JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto
+		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
 		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica;
 
@@ -1797,27 +1834,63 @@ CREATE OR REPLACE VIEW `contratti_attivi_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.id_immobile,
+		concat_ws(
+			' ',
+			tipologie_immobili.nome, 
+			coalesce(
+			concat('scala ', immobili.scala), 
+			''
+			), 
+			coalesce(
+			concat('piano ', immobili.piano), 
+			''
+			), 
+			coalesce(
+			concat('int. ', immobili.interno), 
+			''
+			),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS immobile,
 		contratti.codice,
 		contratti.nome,
-        MAX(rinnovi.data_inizio) AS data_inizio,
-        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
+		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
+		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
+		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN zone_indirizzi ON zone_indirizzi.id_indirizzo = indirizzi.id 
+		LEFT JOIN zone ON zone.id = zone_indirizzi.id_zona
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 27
+		LEFT JOIN anagrafica AS proponente ON proponente.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 28
+		LEFT JOIN anagrafica AS contraente ON contraente.id = c_a.id_anagrafica
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
-    WHERE ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
-    GROUP BY contratti.id
+		WHERE ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
+	GROUP BY contratti.id, contratti_anagrafica.id_contratto, tipologie_contratti.nome
 ;
 
 --| 090000007202
@@ -1830,25 +1903,61 @@ CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
+		contratti.id_immobile,
+		concat_ws(
+			' ',
+			tipologie_immobili.nome, 
+			coalesce(
+			concat('scala ', immobili.scala), 
+			''
+			), 
+			coalesce(
+			concat('piano ', immobili.piano), 
+			''
+			), 
+			coalesce(
+			concat('int. ', immobili.interno), 
+			''
+			),
+			tipologie_edifici.nome,
+			edifici.nome,
+			tipologie_indirizzi.nome,
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS immobile,
 		contratti.codice,
 		contratti.nome,
-        MIN(rinnovi.data_inizio) AS data_inizio,
-        MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
+        MIN(rinnovi.data_inizio) AS data_inizio,
+        MAX(rinnovi.data_fine) AS data_fine,
+		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
+		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
+		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
+		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
+		LEFT JOIN tipologie_edifici ON tipologie_edifici.id = edifici.id_tipologia
+		LEFT JOIN indirizzi ON indirizzi.id = edifici.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN zone_indirizzi ON zone_indirizzi.id_indirizzo = indirizzi.id 
+		LEFT JOIN zone ON zone.id = zone_indirizzi.id_zona
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 27
+		LEFT JOIN anagrafica AS proponente ON proponente.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 28
+		LEFT JOIN anagrafica AS contraente ON contraente.id = c_a.id_anagrafica
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
     WHERE ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
     GROUP BY contratti.id
 ;
@@ -2993,6 +3102,7 @@ CREATE OR REPLACE VIEW `file_view` AS
         file.id_rinnovo,
 		file.id_anagrafica_certificazioni,
 		file.id_valutazione_certificazioni,
+		file.id_licenza,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
 		file.path,
@@ -3386,10 +3496,11 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
+		group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id ), null ) SEPARATOR ' | ' ) AS fasce,
+		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
+		group_concat( DISTINCT if( l.id, categorie_progetti_path( l.id ), null ) SEPARATOR ' | ' ) AS livelli,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
@@ -3401,14 +3512,19 @@ CREATE OR REPLACE VIEW `iscrizioni_view` AS
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN categorie_progetti AS f ON f.id = progetti_categorie.id_categoria AND f.se_fascia = 1
+		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
+		LEFT JOIN categorie_progetti AS l ON l.id = progetti_categorie.id_categoria AND l.se_classe = 1
+		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_iscrizione = 1
 	GROUP BY contratti.id
 ;
-
 --| 090000015910
 
 -- iscrizioni_attivi_view
@@ -3424,25 +3540,25 @@ CREATE OR REPLACE VIEW `iscrizioni_attivi_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
-        MAX(rinnovi.data_inizio) AS data_inizio,
+        MIN(rinnovi.data_inizio) AS data_inizio,
         MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
     WHERE tipologie_contratti.se_iscrizione = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
     GROUP BY contratti.id
 ;
@@ -3462,10 +3578,8 @@ CREATE OR REPLACE VIEW `iscrizioni_archiviati_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
@@ -3477,13 +3591,16 @@ CREATE OR REPLACE VIEW `iscrizioni_archiviati_view` AS
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
     WHERE tipologie_contratti.se_iscrizione = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
     GROUP BY contratti.id
 ;
+
 --| 090000016000
 
 -- iva_view
@@ -3815,7 +3932,8 @@ CREATE OR REPLACE VIEW `luoghi_view` AS
 		luoghi.id_tipologia,
 		tipologie_luoghi_path( luoghi.id_tipologia ) AS tipologia,
 		luoghi.id_edificio,
-		luoghi.id_immobile,		
+		luoghi.id_immobile,	
+		luoghi.url,	
 		luoghi.nome,
 		luoghi.id_account_inserimento,
 		luoghi.id_account_aggiornamento,
@@ -4270,6 +4388,7 @@ CREATE OR REPLACE VIEW `menu_view` AS
 		menu.id_categoria_prodotti,
 		menu.id_categoria_notizie,
 		menu.id_categoria_risorse,
+		menu.id_categoria_progetti,
 		menu.ordine,
 		menu.menu,
 		menu.nome,
@@ -4328,6 +4447,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
         metadati.id_rinnovo,
         metadati.id_tipologia_attivita,
 		metadati.id_banner,
+		metadati.id_pianificazione,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
@@ -6510,6 +6630,31 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 		LEFT JOIN testate ON testate.id = risorse.id_testata
 ;
 
+--| 090000032100
+
+-- risorse_account
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `risorse_account_view`;
+
+--| 090000032101
+
+-- risorse_account
+-- tipologia: tabella di supporto
+-- verifica: 2022-08-02 12:07 Chiara GDL
+CREATE OR REPLACE VIEW `risorse_account_view` AS
+	SELECT
+		risorse_account.id,
+		risorse_account.id_risorsa,
+		risorse.nome AS risorsa,
+		risorse_account.id_account,
+		risorse_account.ordine,
+		risorse_account.id_account_inserimento,
+		risorse_account.id_account_aggiornamento,
+		risorse.nome AS __label__
+	FROM risorse_account
+		LEFT JOIN risorse ON risorse.id = risorse_account.id_risorsa
+;
+
 --| 090000032200
 
 -- risorse_anagrafica_view
@@ -7186,10 +7331,8 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
@@ -7198,13 +7341,15 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
         MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
-		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+		concat( contratti.nome , ' - ', tipologie_contratti.nome ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
     WHERE tipologie_contratti.se_tesseramento = 1
     GROUP BY contratti.id
 ;
@@ -7222,29 +7367,29 @@ DROP TABLE IF EXISTS `tesseramenti_attivi_view`;
 -- tipologia:vista virtuale
 -- verifica: 2021-09-10 16:54 Fabio Mosti
 CREATE OR REPLACE VIEW `tesseramenti_attivi_view` AS
-	SELECT
+		SELECT
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
-        MAX(rinnovi.data_inizio) AS data_inizio,
+        MIN(rinnovi.data_inizio) AS data_inizio,
         MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
-		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+		concat( contratti.nome , ' - ', tipologie_contratti.nome ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
     WHERE tipologie_contratti.se_tesseramento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio <= CURRENT_DATE() ) AND (rinnovi.data_fine IS NULL OR rinnovi.data_fine >= CURRENT_DATE() )
     GROUP BY contratti.id
 ;
@@ -7262,14 +7407,12 @@ DROP TABLE IF EXISTS `tesseramenti_archiviati_view`;
 -- tipologia: vista virtuale
 -- verifica: 2021-09-10 16:54 Fabio Mosti
 CREATE OR REPLACE VIEW `tesseramenti_archiviati_view` AS
-	SELECT
+			SELECT
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		contratti.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
@@ -7278,13 +7421,15 @@ CREATE OR REPLACE VIEW `tesseramenti_archiviati_view` AS
         MAX(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
-		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+		concat( contratti.nome , ' - ', tipologie_contratti.nome ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-        LEFT JOIN anagrafica AS a1 ON a1.id = contratti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = contratti.id_destinatario
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+        LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
     WHERE tipologie_contratti.se_tesseramento = 1 AND ( rinnovi.data_inizio IS NULL OR rinnovi.data_inizio >= CURRENT_DATE() ) AND  rinnovi.data_fine < CURRENT_DATE() 
     GROUP BY contratti.id
 ;

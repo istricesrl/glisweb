@@ -31,7 +31,7 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'codice' => 'tipologia',
-        'id_destinatario' => 'anagrafica',
+        'iscritti' => 'anagrafica',
         'data_inizio' => 'data inizio',
         'data_fine' => 'data fine'
 	);
@@ -40,7 +40,7 @@
 	$ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
         'codice' => 'text-left d-none d-md-table-cell',
-        'id_destinatario' => 'text-left',
+        'iscritti' => 'text-left',
         'data_inizio' => 'text-left',
         'data_fine' => 'text-left'
     );

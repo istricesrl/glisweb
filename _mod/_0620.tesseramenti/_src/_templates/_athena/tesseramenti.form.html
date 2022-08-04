@@ -37,36 +37,52 @@
             <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
             <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
             <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]"
-                value="{{ 'now'|date('U') }}">
+            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
             <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
             {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
             <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
             {# CAMPI HIDDEN SPECIALI #}
-            <input type="hidden" id="reset" name="{{ table }}[data_accettazione]"
-                value="{% if request[ table ].data_accettazione %}{{ request[ table ].data_accettazione }}{% else %}{{ 'now'|date('Y-m-d') }}{% endif %}">
-
             {# MODULO PRINCIPALE #}
             <fieldset>
                 <legend>dati generali <small>{{ legend }}</small></legend>
-
-                <div class="form-group form-row">
-                    <div class="col-12 col-md">
-                        <span class="label-top">tesserato</span>
-                        {{ frm.selectBox( table, '', '', 'id_anagrafica',   '', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
-                    </div>
+                    
+                    {% set subtable = 'contratti_anagrafica' %}
+                    {{ frm.input( table, subtable, 0, 'id', '', '', request, '', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 0, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 0, 'id_ruolo', '', '', '', '29', 'hidden' ) }}
+                
+                    <div class="form-group form-row">
+                        <div class="col-md">
+                            <span class="label-top">tesserato</span>
+                            {{ frm.selectBox( table, subtable, 0, 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                        </div>
+                
+                    {{ frm.input( table, subtable, 1, 'id', '', '', request, '', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 1, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 1, 'id_ruolo', '', '', '', '30', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 1, 'id_anagrafica', '', '', request, etc.gestita, 'hidden' ) }}
+                    
                     <div class="col-12 col-md">
                         <span class="label-top">codice</span>
                         {{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
                     </div>
+                    <div class="col-3 col-md">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologia, request ) }}
+                    </div>
+                    <input type="hidden" id="id" name="{{ table }}[rinnovi][0][id]">
+                    <input type="hidden" name="{{ table }}[rinnovi][0][id_contratto]" value="__parent_id__">
+                    <input type="hidden" name="{{ table }}[rinnovi][0][id_tipologia]" value="1">
+                    <input type="hidden" id="timestamp" name="{{ table }}[rinnovi][0][timestamp_inserimento]" value="{{ 'now'|date('U') }}" >
+                    <input type="hidden" id="account" name="{{ table }}[rinnovi][0][id_account_inserimento]" value="{{ account }}" >
                     <div class="col-auto">
                         <span class="label-top">dal</span>
-                        {{ frm.date( table, '', '', 'data_inizio', '', '', request ) }}
+                        {{ frm.date( table, 'rinnovi', '0', 'data_inizio', '', '', request ) }}
                     </div>
                     <div class="col-auto">
                         <span class="label-top">al</span>
-                        {{ frm.date( table, '', '', 'data_fine', '', '', request ) }}
+                        {{ frm.date( table, 'rinnovi', '0', 'data_fine', '', '', request ) }}
                     </div>
                 </div>
 
