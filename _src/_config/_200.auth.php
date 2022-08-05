@@ -98,7 +98,8 @@
 		'nome' => 'roots',
 		'privilegi' => array(
 		    'EDIT_CONFIGURAZIONE',
-            'GESTIONE_ACCOUNT'
+            'GESTIONE_ACCOUNT',
+            'INVIO_DIRETTO_MAIL'
 		)
 	    ),
 	    'staff' => array(
@@ -126,6 +127,10 @@
         'CANCELLAZIONE_RICORSIVA' => array(
             'id' => NULL,
             'nome' => 'cancellare ricorsivamente oggetti dal database'
+        ),
+        'INVIO_DIRETTO_MAIL' => array(
+            'id' => NULL,
+            'nome' => 'inviare mail da API REST'
         )
 	);
 
