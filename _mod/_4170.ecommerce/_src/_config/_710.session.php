@@ -23,7 +23,10 @@
         );
 
         foreach( $articoli as $articolo ) {
-            $_SESSION['carrello']['articoli'][ $articolo['id_articolo'] ] = $articolo;
+
+            $key = ( isset( $articolo['destinatario_id_anagrafica'] ) ?  $articolo['destinatario_id_anagrafica'] . '|' : '' ) . $articolo['id_articolo'];
+
+            $_SESSION['carrello']['articoli'][ $key ] = $articolo;
         }
 
     }
