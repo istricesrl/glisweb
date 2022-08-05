@@ -82,6 +82,7 @@
                         $_REQUEST['__carrello__']['__articolo__']['id_articolo'] => array(
                             'quantita' => $_REQUEST['__carrello__']['__articolo__']['quantita'],
                             'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'],
+                            'destinatario_id_anagrafica' => ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL,
                             'id_iva' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_iva'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_iva'] : 1
                         )
                     )
@@ -169,16 +170,17 @@
                     mysqlInsertRow(
                         $cf['mysql']['connection'],
                         array(
-                            'id_carrello'               => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'],
-                            'id_articolo'               => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'],
-                            'id_iva'                    => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva'],
-                            'quantita'                  => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita'],
-                            'prezzo_netto_unitario'     => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'],
-                            'prezzo_lordo_unitario'     => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_unitario'],
-                            'prezzo_netto_totale'       => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'],
-                            'prezzo_lordo_totale'       => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'],
-                            'prezzo_netto_finale'       => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'],
-                            'prezzo_lordo_finale'       => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale']
+                            'id_carrello'                   => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'],
+                            'id_articolo'                   => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'],
+                            'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'],
+                            'id_iva'                        => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva'],
+                            'quantita'                      => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita'],
+                            'prezzo_netto_unitario'         => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'],
+                            'prezzo_lordo_unitario'         => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_unitario'],
+                            'prezzo_netto_totale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'],
+                            'prezzo_lordo_totale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'],
+                            'prezzo_netto_finale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'],
+                            'prezzo_lordo_finale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale']
                         ),
                         'carrelli_articoli'
                     );
