@@ -141,10 +141,11 @@
                 } else { 
 
                     // aggiorno la riga dell'articolo
-                    $_SESSION['carrello']['articoli'][ $key ]['id_carrello']        = $_SESSION['carrello']['id'];
-                    $_SESSION['carrello']['articoli'][ $key ]['id_articolo']        = $dati['id_articolo'];
-                    $_SESSION['carrello']['articoli'][ $key ]['id_iva']             = $dati['id_iva'];
-                    $_SESSION['carrello']['articoli'][ $key ]['quantita']           = $dati['quantita'];
+                    $_SESSION['carrello']['articoli'][ $key ]['id_carrello']                = $_SESSION['carrello']['id'];
+                    $_SESSION['carrello']['articoli'][ $key ]['id_articolo']                = $dati['id_articolo'];
+                    $_SESSION['carrello']['articoli'][ $key ]['id_iva']                     = $dati['id_iva'];
+                    $_SESSION['carrello']['articoli'][ $key ]['quantita']                   = $dati['quantita'];
+                    $_SESSION['carrello']['articoli'][ $key ]['destinatario_id_anagrafica'] = $dati['destinatario_id_anagrafica'];
 
                     // trovo il prezzo base dell'articolo
                     $_SESSION['carrello']['articoli'][ $key ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticolo(
