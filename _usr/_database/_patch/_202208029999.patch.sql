@@ -2,13 +2,21 @@
 -- PATCH
 --
 
---| 202208020010
+--| 202208020002
 ALTER TABLE `contratti`
 DROP CONSTRAINT `contratti_ibfk_02_nofollow`;
 
---| 202208020020
+--| 202208020004
 ALTER TABLE `contratti`
-DROP FOREIGN KEY  `contratti_ibfk_03_nofollow`
+DROP FOREIGN KEY  `contratti_ibfk_02_nofollow`;
+
+--| 202208020006
+ALTER TABLE `contratti`
+DROP CONSTRAINT `contratti_ibfk_03_nofollow`;
+
+--| 202208020008
+ALTER TABLE `contratti`
+DROP FOREIGN KEY  `contratti_ibfk_03_nofollow`;
 
 --| 202208020030
 ALTER TABLE `contratti`

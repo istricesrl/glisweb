@@ -70,7 +70,6 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 ALTER TABLE `file`
 ADD COLUMN   `id_licenza` int(11) DEFAULT NULL    AFTER `id_valutazione_certificazioni`,
 ADD KEY `id_licenza` (`id_licenza`), 
-ADD UNIQUE KEY `unica_licenza` (`id_licenza`,`id_ruolo`,`path`), 
 ADD CONSTRAINT `file_ibfk_27` FOREIGN KEY (`id_licenza`) REFERENCES `licenze` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --| 202208040040
