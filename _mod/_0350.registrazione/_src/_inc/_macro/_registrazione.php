@@ -149,6 +149,13 @@
 				// creo la mail
 				$idMail = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO mail ( id_anagrafica, indirizzo ) VALUES ( ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['email'] ) ) );
 
+				// creo il telefono
+				if( isset( $dati['mobile'] ) && ! empty( $dati['mobile'] ) ) {
+					$idMobile = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO mail ( id_anagrafica, indirizzo ) VALUES ( ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['mobile'] ) ) );
+				} else {
+					$idMobile = NULL;
+				}
+
 				// associo alle categorie
 				foreach( $ct['etc']['profilo']['categorie'] as $categoria ) {
 
