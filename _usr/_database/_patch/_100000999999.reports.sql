@@ -13,6 +13,7 @@ CREATE OR REPLACE VIEW `__report_giacenza_crediti__` AS
 SELECT
   concat_ws( '|', movimenti.id, movimenti.id_articolo ) AS id,
   movimenti.id_mastro,
+  movimenti.id_account,
   movimenti.nome,
   movimenti.id_articolo,
   movimenti.articolo,
@@ -36,6 +37,7 @@ FROM (
 SELECT
   mastri.id,
   mastri.id AS id_mastro,
+  mastri.id_account,
   mastri_path( mastri.id ) AS nome,
   documenti_articoli.id AS id_articolo,
   concat_ws(
@@ -69,6 +71,7 @@ UNION
 SELECT
   mastri.id,
   mastri.id AS id_mastro,
+  mastri.id_account,
   mastri_path( mastri.id ) AS nome,
   documenti_articoli.id AS id_articolo,
   concat_ws(

@@ -1829,6 +1829,8 @@ CREATE TABLE IF NOT EXISTS `mastri` (
   `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) NOT NULL,
   `id_anagrafica_indirizzi` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_account` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text,
   `id_account_inserimento` int(11) DEFAULT NULL,

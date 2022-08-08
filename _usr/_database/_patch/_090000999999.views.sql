@@ -4256,8 +4256,10 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 			comuni.nome,
 			provincie.sigla
 		) AS indirizzo,
-		anagrafica_indirizzi.id_anagrafica,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		coalesce( mastri.id_anagrafica, anagrafica_indirizzi.id_anagrafica ) AS id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS anagrafica,
+		mastri.id_account,
+		account.username AS account,
 		mastri.nome,
 		tipologie_mastri.se_magazzino,
 		tipologie_mastri.se_conto,
@@ -4267,6 +4269,8 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
 		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzi
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_indirizzi.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = mastri.id_anagrafica
+		LEFT JOIN account ON account.id = mastri.id_account
 		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune

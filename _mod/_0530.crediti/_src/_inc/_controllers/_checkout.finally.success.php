@@ -39,14 +39,40 @@
             // se ci sono dei crediti da accreditare
             if( ! empty( $crediti ) ) {
 
-                // recupero l mastro di destinazione
-                $mastro = mysqlSelectValue(
+                // recupero il mastro genitore
+                $genitore = mysqlSelectValue(
                     $cf['mysql']['connection'],
                     'SELECT testo FROM metadati WHERE id_articolo = ? AND nome = "crediti|mastro"',
                     array(
                         array( 's' => $articolo['id_articolo'] )
                     )
                 );
+
+                // recupero il mastro di destinazione
+                $mastro = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM mastri WHERE id_account = ? AND id_genitore = ?',
+                    array(
+                        array( 's' => $carrello['intestazione_id_account'] ),
+                        array( 's' => $genitore )
+                    )
+                );
+
+                // creo il mastro se non è presente
+                if( empty( $mastro ) ) {
+                    $mastro = mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'id_genitore' => $genitore,
+                            'id_tipologia' => 4,
+                            'id_account' => $carrello['intestazione_id_account'],
+                            'nome' => 'conto crediti SAAS per accoun #' . $carrello['intestazione_id_account'],
+                            'note' => 'creato automaticamente il ' . date('d/m/Y')
+                        ),
+                        'mastri'
+                    );
+                }
 
                 // calcolo il valore da incrementare
                 $incremento = $crediti * $articolo['quantita'];
