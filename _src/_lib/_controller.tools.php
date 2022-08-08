@@ -530,6 +530,9 @@
 
 				} elseif( empty( $a ) ) {
 
+					// di default imposto lo stato a 'OK'
+					$i['__status__'] = 200;
+
 					// log
 					logWrite( "nessuna azione intrapresa per l'entità $t", 'controller', LOG_DEBUG );
 

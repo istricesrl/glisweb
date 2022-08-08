@@ -3120,9 +3120,9 @@ CREATE TABLE `telefoni` (
 -- verifica: 2021-10-15 12:32 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `template` (
   `id` int(11) NOT NULL,
-  `ruolo` char(32) NOT NULL,
-  `nome` char(128) NOT NULL,
-  `tipo` char(32) NOT NULL,
+  `ruolo` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `tipo` char(32) DEFAULT NULL,
   `note` text,
   `latenza_invio` int(11) DEFAULT NULL,
   `se_mail` int(1) DEFAULT NULL,

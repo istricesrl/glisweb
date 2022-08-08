@@ -34,6 +34,9 @@
 	// modalità di evasione (specifica mail, evasione forzata, evasione totale, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {
 
+		// status
+		$status['info'][] = 'evasione specifico messaggio in coda';
+
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
@@ -45,6 +48,9 @@
         );
 
 	} elseif( isset( $_REQUEST['hard'] ) ) {
+
+		// status
+		$status['info'][] = 'evasione forzata della coda';
 
 		// token della riga
         $status['id'] = mysqlQuery(
@@ -58,6 +64,9 @@
 
 	} elseif( isset( $_REQUEST['full'] ) ) {
 
+		// status
+		$status['info'][] = 'forzatura elaborazione totale della coda';
+
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
@@ -66,11 +75,13 @@
 
 	} else {
 
+		// status
+		$status['info'][] = 'strategia standard di evasione della coda';
+
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET token = ? WHERE timestamp_invio <= unix_timestamp() '.
-			'AND timestamp_invio IS NOT NULL '.
+            'UPDATE mail_out SET token = ? WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ) '.
             'AND token IS NULL '.
             'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
