@@ -179,7 +179,7 @@
 
         <!-- se Slack è collegato -->
         <if>
-            <not><isset property="slck.sa" /></not>
+            <not><isset property="slack.sa" /></not>
             <then>
 
                 <!-- messaggi -->
@@ -187,6 +187,9 @@
 
             </then>
             <else>
+
+                <!-- messaggi -->
+                <echo msg="notifica deploy via Slack" />
 
                 <!-- compongo il messaggio -->
                 <property name="slack.01" value="rilasciato aggiornamento *${rev.num}* in *${dst.stg}*, vi preghiamo di prenderne visione su: " />
