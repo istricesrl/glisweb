@@ -91,7 +91,7 @@
 		}
 
 		// attivazione tramite SMS
-		if( $ct['etc']['profilo']['sms'] == true ) {
+		if( isset( $ct['etc']['profilo']['sms'] ) && $ct['etc']['profilo']['sms'] == true ) {
 
 			// testo
 			$_REQUEST['__signup__']['ts'] = str_shuffle( date('His') );
