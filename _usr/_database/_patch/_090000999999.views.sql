@@ -4429,6 +4429,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_lingua,
 		lingue.ietf,
 		metadati.id_anagrafica,
+		metadati.id_account,
 		metadati.id_pagina,
 		metadati.id_prodotto,
 		metadati.id_articolo,

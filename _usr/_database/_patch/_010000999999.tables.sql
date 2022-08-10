@@ -1893,6 +1893,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id` int(11) NOT NULL,
   `id_lingua` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
+  `id_account` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,

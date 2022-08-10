@@ -1997,6 +1997,7 @@ ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `metadati`
  	ADD PRIMARY KEY (`id`), 
  	ADD UNIQUE KEY `unica_anagrafica` (`id_lingua`,`id_anagrafica`,`nome`), 
+ 	ADD UNIQUE KEY `unica_account` (`id_lingua`,`id_account`,`nome`), 
  	ADD UNIQUE KEY `unica_pagina` (`id_lingua`,`id_pagina`,`nome`), 
  	ADD UNIQUE KEY `unica_prodotto` (`id_lingua`,`id_prodotto`,`nome`), 
  	ADD UNIQUE KEY `unica_articolo` (`id_lingua`,`id_articolo`,`nome`), 
@@ -2022,6 +2023,7 @@ ALTER TABLE `metadati`
 	ADD UNIQUE KEY `unica_pianificazione` (`id_lingua`,`id_pianificazione`,`nome`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+ 	ADD KEY `id_account` (`id_account`), 
  	ADD KEY `id_pagina` (`id_pagina`), 
  	ADD KEY `id_prodotto` (`id_prodotto`), 
  	ADD KEY `id_articolo` (`id_articolo`), 
