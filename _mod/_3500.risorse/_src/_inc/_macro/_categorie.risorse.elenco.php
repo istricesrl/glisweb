@@ -8,7 +8,7 @@
  * @file
  *
  */
-
+/*
 // seleziono le sottocategorie
 if( isset( $cf['contents']['page']['metadata']['id_categoria_risorse'] ) && ! empty($cf['contents']['page']['metadata']['id_categoria_risorse'] ) ) {
 
@@ -23,7 +23,7 @@ if( isset( $cf['contents']['page']['metadata']['id_categoria_risorse'] ) && ! em
 	}
 
 }
-
+*/
     // debug
 	// print_r( $ct['page']['metadati'] );
 	// print_r( $_REQUEST );

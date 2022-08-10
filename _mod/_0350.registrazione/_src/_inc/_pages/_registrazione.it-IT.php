@@ -20,6 +20,7 @@
 	    'title'		=> array( $l		=> 'profilo' ),
 	    'h1'		=> array( $l		=> 'il tuo profilo' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'profilo.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_profilo.php' )
+	    'template'		=> array( 'path'	=> '_src/_templates/_arianna/', 'schema' => 'profilo.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_profilo.php' ),
+		'menu'			=> array( 'icons'	=> array(	'' => 	array(	'label'		=> array( $l => '<i class="fa fa-user" aria-hidden="true"></i>' ), 'priority'	=> '900' ) ) )
 	);
