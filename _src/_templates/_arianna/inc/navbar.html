@@ -1,15 +1,17 @@
 {% import '_bin/_navigation.html' as nav %}
 
 <div class="col d-flex flex-column">
-    <div class="col mt-auto" id="navbarIcons">
-        <ul class="navbar-nav ml-auto text-right">
-            {{ nav.menu( page.template.menu.icons, localization.language.ietf ) }}
-        </ul>
-    </div>
-    <nav class="navbar navbar-expand-md navbar-light mt-auto mb-auto">
+    <nav class="navbar navbar-expand-md navbar-light mt-auto py-0">
         <button class="navbar-toggler ml-auto mb-3 mt-0" type="button" data-toggle="collapse" data-target="#navbarNav">
             <span class="navbar-toggler-icon"></span>
         </button>
+        <div class="collapse navbar-collapse nav-icons" id="navbarNav">
+            <ul class="navbar-nav flex-row ml-auto justify-content-end text-right">
+                {{ nav.menu( page.template.menu.icons, localization.language.ietf ) }}
+            </ul>
+        </div>
+    </nav>
+    <nav class="navbar navbar-expand-md navbar-light mb-2 py-0">
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav ml-auto text-right">
                 {{ nav.menu( page.template.menu.main, localization.language.ietf ) }}
