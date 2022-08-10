@@ -104,6 +104,15 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     text-decoration: underline;
 }
 
+.nav-icons a.nav-link {
+    font-size: 1.25em;
+}
+
+a.nav-link {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
 a.nav-link, a.nav-link:visited {
     color: #ffffff;
 }
@@ -115,6 +124,12 @@ a.nav-link:active, a.nav-link:hover {
 
 ul.navbar-nav {
     list-style-type: none;
+}
+
+@media (max-width: 576px) {
+    .nav-icons a.nav-link {
+        margin-left: .75em;
+    }
 }
 
 @media (min-width: 576px) {
