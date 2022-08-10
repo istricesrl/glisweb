@@ -118,6 +118,15 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     text-decoration: underline;
 }
 
+.nav-icons a.nav-link {
+    font-size: 1.25em;
+}
+
+a.nav-link {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
 a.nav-link, a.nav-link:visited {
     color: #aaaaaa;
     padding: 0em .5em !important;
@@ -139,6 +148,12 @@ label.label-top {
 
 form.carrello div.form-row {
     margin: .5em 0em;
+}
+
+@media (max-width: 576px) {
+    .nav-icons a.nav-link {
+        margin-left: .75em;
+    }
 }
 
 @media (min-width: 576px) {
