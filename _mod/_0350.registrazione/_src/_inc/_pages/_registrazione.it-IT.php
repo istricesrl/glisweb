@@ -11,6 +11,7 @@
 	    'h1'		=> array( $l		=> 'registrazione' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'registrazione.html' ),
+		'metadati'		=> array( 'profilo_registrazione'	=>	'default' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_registrazione.php' )
 	);
 
@@ -21,6 +22,8 @@
 	    'h1'		=> array( $l		=> 'il tuo profilo' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_arianna/', 'schema' => 'profilo.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_profilo.php' ),
-		'menu'			=> array( 'icons'	=> array(	'' => 	array(	'label'		=> array( $l => '<i class="fa fa-user" aria-hidden="true"></i>' ), 'priority'	=> '900' ) ) )
+		'metadati'		=> array( 'profilo_registrazione'	=>	'sito' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_profilo.php', $m . '_src/_inc/_macro/_registrazione.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'users' ) ),
+		'menu'			=> array( 'icons'	=> array(	'' => 	array(	'label'		=> array( $l => '<i class="fa fa-user" aria-hidden="true"></i>' ), 'priority'	=> '900', 'visualizza' => SHOW_ALWAYS ) ) )
 	);

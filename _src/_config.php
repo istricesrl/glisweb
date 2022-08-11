@@ -387,6 +387,9 @@
 	define( 'MIME_TEXT_HTML'		, 'text/html' );
     define( 'MIME_X_WWW_FORM_URLENCODED',   'application/x-www-form-urlencoded' );
 
+    // costanti per la visualizzazione
+    define( 'SHOW_ALWAYS'               , 'SHOW_ALWAYS' );
+
     // costanti per l'encoding
 	define( 'ENCODING_UTF8'			, 'utf-8' );
 

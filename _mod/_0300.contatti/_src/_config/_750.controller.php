@@ -69,6 +69,32 @@
 
                 }
 
+                // registro i consensi
+                if( isset( $_REQUEST['__consensi__']['__contatti__'][ $k ] ) ) {
+
+                    // per ogni consenso...
+                    foreach( $_REQUEST['__consensi__']['__contatti__'][ $k ] as $ck => $cv ) {
+
+                        // timestamp del consenso
+                        $timestamp = time();
+
+                        // contenuto del consenso
+                        $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __contatti__.' . $k;
+
+                        // se è stato salvato un contatto nel database
+                        if( isset( $idCnt ) && ! empty( $idCnt ) ) {
+                            $contenuto .= ' per il contatto #' . $idCnt;
+                        }
+
+                        // log
+                        logWrite( $contenuto, 'privacy', LOG_CRIT );
+
+                        // TODO salvare il consenso nella tabella contatti_consensi
+
+                    }
+
+                }
+
             // verifico se va registrata una hit di Analytics
                 if( isset( $cnf['analytics'] ) ) {
 

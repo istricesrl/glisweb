@@ -5,7 +5,10 @@
 {% block main %}
 
 {% if session.carrello.se_login and not session.account.id %}
-    <p>per poter completare questo ordine, devi aver effettuato il login</p>
+    <div>
+        <p>per poter completare questo ordine, devi aver effettuato il login</p>
+    </div>
+    {% include 'inc/login.html' %}
 {% elseif etc.client_token %}
     {# PAYPAL ADVANCED #}
     {% if ecommerce.profile.provider['paypal-advanced'].return_url %}

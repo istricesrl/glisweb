@@ -101,12 +101,22 @@ a:active, a:hover {
 }
 
 footer a, a:visited {
-    color: #111111;
+    color: #666666;
 }
 
 footer a:active, a:hover {
     color: #111111;
     text-decoration: underline !important;
+}
+
+div.breadcrumbs {
+    background-color: #ffffff;
+    border-bottom: 1px solid #cccccc;
+    font-size: .9em;
+}
+
+div.breadcrumbs p {
+    margin: 5px 0px;
 }
 
 a.breadcrumb-link, a.breadcrumb-link:visited {
@@ -148,6 +158,18 @@ label.label-top {
 
 form.carrello div.form-row {
     margin: .5em 0em;
+}
+
+div.row-privacy {
+    font-size: .75em;
+}
+
+div.row-privacy a {
+    font-weight: bold;
+}
+
+div.row-privacy .form-check-input {
+    padding-bottom: .5em;
 }
 
 @media (max-width: 576px) {

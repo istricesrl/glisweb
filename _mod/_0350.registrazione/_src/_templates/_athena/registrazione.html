@@ -72,6 +72,7 @@
                         required></div>
             </div>
             {% endif %}
+            {% if etc.profilo.username %}
             <div class="form-group form-row">
                 <label class="d-none d-md-block col-md-2 col-form-label">username</label>
                 <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm"
@@ -84,6 +85,7 @@
                         name="__signup__[password]" value="{{ request.__signup__.password }}"
                         placeholder="la tua password" required></div>
             </div>
+            {% endif %}
             {% if google.recaptcha.profile %}
             <div class="form-group form-row">
                 <div class="col-12 col-md-10 offset-md-2">

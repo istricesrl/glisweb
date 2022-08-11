@@ -1,4 +1,5 @@
 {% import '_bin/_default.html' as cms %}
+{% import '_bin/_privacy.html' as prv %}
 
 {% extends 'ext/main.html' %}
 
@@ -174,6 +175,10 @@
 			</div>
 		</div>
 	</fieldset>
+
+    {# CHECKBOX CONDIZIONI E PRIVACY #}
+    {{ prv.checkConsensi( '__carrello__', '', ecommerce.condizioni.vendita, localization.language.ietf, tr, pages, session ) }}
+    {{ prv.checkConsensi( '__carrello__', '', privacy.moduli.ecommerce, localization.language.ietf, tr, pages, session ) }}
 
     {# CONTROLLI DEL CARRELLO #}
     <fieldset class="conferma">

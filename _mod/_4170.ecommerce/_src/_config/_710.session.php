@@ -9,14 +9,14 @@
             
         $timestamp = intval( $_REQUEST['ti'] );
 
-        $_SESSION['carrello'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM carrelli WHERE id=? and timestamp_inserimento = ? AND timestamp_checkout IS NULL',
+        $_SESSION['carrello'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM carrelli WHERE id = ? AND timestamp_inserimento = ? AND timestamp_checkout IS NULL',
             array(
                 array( 's' => $_REQUEST['rc'] ) ,
                 array( 's' => $timestamp )
             )
         );
         
-        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello=?',
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello = ?',
             array(
                 array( 's' => $_SESSION['carrello']['id'] )
             )

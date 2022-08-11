@@ -108,6 +108,37 @@
             }
         }
 
+        // registro i consensi
+        if( isset( $_REQUEST['__consensi__']['__carrello__'] ) ) {
+
+            // per ogni consenso...
+            foreach( $_REQUEST['__consensi__']['__carrello__'] as $ck => $cv ) {
+
+                // timestamp del consenso
+                $timestamp = time();
+
+                // contenuto del consenso
+                $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __carrello__ per il carrello #' . $_SESSION['carrello']['id'];
+
+                // se è presente un ID account
+                if( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) {
+                    $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_account'];
+                }
+
+                // se è presente un ID anagrafica
+                if( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) {
+                    $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_anagrafica'];
+                }
+
+                // log
+                logWrite( $contenuto, 'privacy', LOG_CRIT );
+
+                // TODO salvare le informazioni nella tabella carrelli_consensi
+
+            }
+
+        }
+
         // STEP 5 - acquisto articoli multipli
         if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
 
@@ -172,7 +203,7 @@
                         array(
                             'id_carrello'                   => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello'],
                             'id_articolo'                   => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'],
-                            'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo'],
+                            'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['destinatario_id_anagrafica'],
                             'id_iva'                        => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva'],
                             'quantita'                      => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita'],
                             'prezzo_netto_unitario'         => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'],

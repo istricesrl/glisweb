@@ -26,6 +26,11 @@
 	    $_REQUEST['__signup__']['password'] = time();
 	}
 
+	// se è presente un carrello, lo salvo fra i dati di registrazione
+	if( isset( $_SESSION['carrello']['id'] ) ) {
+		$_REQUEST['__signup__']['carrello'] = $_SESSION['carrello']['id'];
+	}
+
 	// stage
 	$_REQUEST['__signup__']['__stage__'] = 'start';
 
@@ -63,8 +68,8 @@
 #			    $cf['mail']['tpl']['DEFAULT_REGISTRAZIONE_ACCOUNT'],
 #			    $cf['mail']['tpl']['NUOVO_ACCOUNT'],
 				$cf['mail']['tpl'][ $ct['etc']['profilo']['mail'] ],
-				array( 'dt' => $_REQUEST['__signup__'], 'ct' => $ct ),
-				strtotime( '+1 minutes' ),
+				array( 'dt' => $_REQUEST['__signup__'], 'ct' => $ct, 'pf' => $ct['etc']['profilo'] ),
+				strtotime( '-1 minute' ),
 				array( $_REQUEST['__signup__']['nome'] . ' ' . $_REQUEST['__signup__']['cognome'] => $_REQUEST['__signup__']['email'] ),
 				$cf['localization']['language']['ietf']
 			);
@@ -101,13 +106,18 @@
 				$cf['mysql']['connection'],
 				$cf['sms']['tpl'][ $ct['etc']['profilo']['sms'] ],
 				array( 'dt' => $_REQUEST['__signup__'], 'ct' => $ct ),
-				strtotime( '+1 minute' ),
+				strtotime( '-1 minute' ),
 				array( $_REQUEST['__signup__']['nome'] => $_REQUEST['__signup__']['mobile'] )
 			);
 
 		}
 
-	    // scrivo i dati di registrazione su un file temporaneo
+		// registro i consensi nella richiesta di registrazione
+		if( isset( $_REQUEST['__consensi__']['__signup__'] ) ) {
+			$_REQUEST['__signup__']['__consensi__'] = $_REQUEST['__consensi__']['__signup__'];
+		}
+
+		// scrivo i dati di registrazione su un file temporaneo
 		writeToFile( serialize( $_REQUEST['__signup__'] ), 'var/spool/signup/' . $_REQUEST['__signup__']['tk'] . '.txt' );
 
 	} elseif( isset( $_REQUEST['tk'] ) ) {
@@ -151,7 +161,7 @@
 
 				// creo il telefono
 				if( isset( $dati['mobile'] ) && ! empty( $dati['mobile'] ) ) {
-					$idMobile = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO mail ( id_anagrafica, indirizzo ) VALUES ( ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['mobile'] ) ) );
+					$idMobile = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO telefoni ( id_anagrafica, id_tipologia, numero ) VALUES ( ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => 2 ), array( 's' => $dati['mobile'] ) ) );
 				} else {
 					$idMobile = NULL;
 				}
@@ -170,7 +180,7 @@
 					}
 
 				// creo l'account
-				$idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => md5( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $ct['etc']['profilo']['attivo'] === true ) ? 1 : NULL ) ) ) );
+				$idAccount = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO account ( id_anagrafica, username, password, id_mail, se_attivo ) VALUES ( ?, ?, ?, ?, ? )', array( array( 's' => $idAnagrafica ), array( 's' => $dati['username'] ), array( 's' => md5( $dati['password'] ) ), array( 's' => $idMail ), array( 's' => ( ( $ct['etc']['profilo']['attivo'] == true ) ? 1 : NULL ) ) ) );
 
 				// associo ai gruppi
 				foreach( $ct['etc']['profilo']['gruppi'] as $gruppo ) {
@@ -193,12 +203,54 @@
 					'it-IT' => 'grazie per aver confermato il tuo account! ora puoi effettuare il login'
 				);
 
-				/*
+				// autologin dell'account appena creato
+				// TODO farlo solo se è attivo
+				if( true ) {
+
+					$_REQUEST['__login__']['user'] = $dati['username'];
+					$_REQUEST['__login__']['pasw'] = $dati['password'];
+
+					require DIR_SRC_CONFIG . '_210.auth.php';
+					require DIR_SRC_CONFIG . '_220.auth.php';
+					require DIR_SRC_CONFIG . '_250.auth.php';
+					require DIR_SRC_CONFIG . '_255.auth.php';
+
+				}
+
 				// associo il carrello della sessione alla persona che ha appena fatto il login
-				// TODO testare
 				if( isset( $dati['carrello'] ) && ! empty( $dati['carrello'] ) ) {
 
-					//
+					// riassocio il carrello
+					$_SESSION['carrello'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM carrelli WHERE id = ? AND timestamp_checkout IS NULL',
+						array(
+							array( 's' => $dati['carrello'] )
+						)
+					);
+
+					// associo i dati
+					$_SESSION['carrello']['intestazione_id_account'] = $idAccount;
+					$_SESSION['carrello']['intestazione_id_anagrafica'] = $idAnagrafica;
+
+					// riassocio la sessione
+#1					$_SESSION['carrello']['session'] = $_SESSION['id'];
+
+					// recupero gli articoli
+					$articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello = ?',
+						array(
+							array( 's' => $_SESSION['carrello']['id'] )
+						)
+					);
+			
+					// riassocio gli articoli
+					foreach( $articoli as $articolo ) {
+						$_SESSION['carrello']['articoli'][ $articolo['id_articolo'] ] = $articolo;
+					}
+
+					// reindirizzo l'utente verso il carrello in corso
+					// TODO migliorare, così è un po' grezza
+					$ct['page']['headers'][] = 'Location: ' . $cf['contents']['pages']['carrello']['path']['it-IT'];
+
+					/*
 					if( isset( $_SESSION['account']['id_anagrafica'] ) && ! empty( $_SESSION['account']['id_anagrafica'] ) ) {
 
 						// salvataggio di sicurezza
@@ -214,9 +266,30 @@
 						);
 
 					}
+					*/
+
+					// debug
+					// die( '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>' );
 
 				}
-				*/
+
+				// aggiungo i consensi all'anagrafica appena creata
+				if( isset( $dati['__consensi__'] ) ) {
+					foreach( $dati['__consensi__'] as $ck => $cv ) {
+
+                        // timestamp del consenso
+                        $timestamp = time();
+
+                        // contenuto del consenso
+                        $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __signup__ per l\'anagrafica #' . $idAnagrafica . ' account #' . $idAccount . ' token #' . $_REQUEST['tk'];
+
+                        // log
+                        logWrite( $contenuto, 'privacy', LOG_CRIT );
+
+                        // TODO salvare il consenso nella tabella contatti_consensi
+
+					}
+				}
 
 			} elseif( ! empty( $ct['etc']['profilo']['sms'] ) && ( ! isset( $_REQUEST['ts'] ) || empty( $_REQUEST['ts'] ) ) ) {
 

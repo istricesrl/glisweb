@@ -50,7 +50,8 @@
 	    'h1'			=> array( $l		=> 'riepilogo' ),
 	    'parent'		=> array( 'id'		=> 'carrello' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_lydia/', 'schema' => 'carrello.riepilogo.html' ),
-	    'macro'			=> array( $m . '_src/_inc/_macro/_carrello.riepilogo.php' )
+	    'macro'			=> array( $m . '_src/_inc/_macro/_carrello.riepilogo.php' ),
+		'metadati'		=> array( 'profilo_registrazione'	=>	'sito' )
 	);
 
     // checkout

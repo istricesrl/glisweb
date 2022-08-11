@@ -154,6 +154,9 @@
 	    $ct['page']['template']['schema'] = 'default.html';
 	}
 
+	// debug
+	// print_r( $ct['page']['template'] );
+
     // log
 	appendToFile( 'fine controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
 
@@ -559,7 +562,7 @@
     // headers / codice di stato HTTP
 	if( isset( $ct['page']['headers'] ) ) {
 	    foreach( $ct['page']['headers'] as $header ) {
-		header( $header );
+			header( $header );
 	    }
 	} elseif( isset( $ct['page']['http']['status'] ) ) {
 	    http_response_code( $ct['page']['http']['status'] );

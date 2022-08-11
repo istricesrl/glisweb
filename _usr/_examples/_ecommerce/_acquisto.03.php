@@ -54,6 +54,7 @@
             $t .= '<script> var return_url = "'.$cf['ecommerce']['profile']['provider']['paypal-advanced']['return_url'].'";</script>';
         }
         $t .= '<script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id='.$ct['ecommerce']['profile']['provider']['paypal-advanced']['client_id'].'" data-client-token="'.$ct['etc']['client_token'].'"></script>';
+
     }
 
     // form di esempio per l'acquisto di un prodotto
@@ -67,6 +68,44 @@
         $t .= '</form>';
     } elseif( isset( $ct['etc']['client_token'] ) ) {
         $t .= '<div id="paypal-button-container" class="paypal-button-container"></div>';
+        if( true ) {    // TODO mettere un'opzione nel profilo PayPal advanced
+            $t .= '<div class="card_container">';
+            $t .= '<form id="card-form">';
+            $t .= '  <label for="card-number">Card Number</label><div id="card-number" class="card_field"></div>';
+            $t .= '  <div>';
+            $t .= '    <label for="expiration-date">Expiration Date</label>';
+            $t .= '    <div id="expiration-date" class="card_field"></div>';
+            $t .= '  </div>';
+            $t .= '  <div>';
+            $t .= '    <label for="cvv">CVV</label><div id="cvv" class="card_field"></div>';
+            $t .= '  </div>';
+            $t .= '  <label for="card-holder-name">Name on Card</label>';
+            $t .= '  <input type="text" id="card-holder-name" name="card-holder-name" autocomplete="off" placeholder="card holder name"/>';
+            $t .= '  <div>';
+            $t .= '    <label for="card-billing-address-street">Billing Address</label>';
+            $t .= '    <input type="text" id="card-billing-address-street" name="card-billing-address-street" autocomplete="off" placeholder="street address"/>';
+            $t .= '  </div>';
+            $t .= '  <div>';
+            $t .= '    <label for="card-billing-address-unit">&nbsp;</label>';
+            $t .= '    <input type="text" id="card-billing-address-unit" name="card-billing-address-unit" autocomplete="off" placeholder="unit"/>';
+            $t .= '  </div>';
+            $t .= '  <div>';
+            $t .= '    <input type="text" id="card-billing-address-city" name="card-billing-address-city" autocomplete="off" placeholder="city"/>';
+            $t .= '  </div>';
+            $t .= '  <div>';
+            $t .= '    <input type="text" id="card-billing-address-state" name="card-billing-address-state" autocomplete="off" placeholder="state"/>';
+            $t .= '  </div>';
+            $t .= '  <div>';
+            $t .= '    <input type="text" id="card-billing-address-zip" name="card-billing-address-zip" autocomplete="off" placeholder="zip / postal code"/>';
+            $t .= '  </div>';
+            $t .= '  <div>';
+            $t .= '    <input type="text" id="card-billing-address-country" name="card-billing-address-country" autocomplete="off" placeholder="country code" />';
+            $t .= '  </div>';
+            $t .= '  <br/><br/>';
+            $t .= '  <button value="submit" id="submit" class="btn">Pay</button>';
+            $t .= '</form>';
+            $t .= '</div>';
+        }
         $t .= '<script src="/_src/_js/_lib/_paypal.js"></script>';
     } else {
         $t .= '<button type="button" onclick="window.open(\'_acquisto.02.php\',\'_self\');">MODIFICA IL CARRELLO</button>';

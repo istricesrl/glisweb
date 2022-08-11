@@ -1,0 +1,8 @@
+<div class="row">
+    {% if '0350.registrazione' in mods.active.array %}
+    <div class="col">{% include 'inc/login.registrazione.html' %}</div>
+    <div class="col">{% include 'inc/login.accesso.html' %}</div>
+    {% else %}
+    <div class="col col-md-6 ml-auto mr-auto">{% include 'inc/login.accesso.html' %}</div>
+    {% endif %}
+</div>
