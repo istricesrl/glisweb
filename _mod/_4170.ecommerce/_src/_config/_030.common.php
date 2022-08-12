@@ -64,11 +64,11 @@
                 'business'      => NULL,                                                            // 
                 'client_id'     => NULL,                                                            // 
                 'client_secret' => NULL,                                                            // 
+                'auth_api'      => 'https://api-m.sandbox.paypal.com/v1/oauth2/token',              // API alla quale richiedere l'Access Token
                 'token_api'     => 'https://api-m.sandbox.paypal.com/v1/identity/generate-token',   // API alla quale richiedere il Client Token
+                'order_api'     => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',           // API alla quale richiedere l'Order ID
                 'return'        => 'carrello.esito',                                                // pagina di ritorno in caso di pagamento completato con successo o fallito
                 'cancel'        => 'carrello',                                                      // pagina di ritorno in caso di interruzione della procedura di pagamento
-                'order_api'     => '',                                                              // 
-                'capture_api'   => '',                                                              // 
                 '__label__'     => 'PayPal Advanced'                                                // etichetta del provider per le tendine
             )
         )
@@ -97,6 +97,10 @@
      * NOTA SU PAYPAL
      * per avere i dati di test (business e account clienti fittizi) registrarsi su https://developer.paypal.com/developer/accounts/
      * i dati sono nella pagina https://developer.paypal.com/developer/applications/
+     * 
+     * NOTA SU PAYPAL
+     * l'URL delle API di produzione è https://api-m.paypal.com anziché https://api-m.sandbox.paypal.com
+     * 
      */
 
     // configurazione extra

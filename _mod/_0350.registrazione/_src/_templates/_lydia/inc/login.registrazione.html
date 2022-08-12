@@ -1,3 +1,5 @@
+{% import '_bin/_privacy.html' as prv %}
+
 <form action="{{ pages['profilo'].url[ localization.language.ietf ] }}" class="" id="form-login"
 method="post">
 <fieldset>
@@ -90,7 +92,7 @@ method="post">
         </div>
     </div>
     {% endif %}
-    {{ std.checkPrivacy( 'default', registrazione, pages, tr, localization.language.ietf, '', '', '__signup__' ) }}
+    {{ prv.checkConsensi( '__signup__', '', privacy.moduli.registrazione, localization.language.ietf, tr, pages, session ) }}
     <div class="form-group form-row">
         <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">registrati</button>
         </div>

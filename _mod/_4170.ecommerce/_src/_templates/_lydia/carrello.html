@@ -15,7 +15,7 @@
         <div class="form-row articolo">
             <input type="hidden" name="__carrello__[__articoli__][{{ articolo }}][id_articolo]" value="{{ articolo }}">
             <div class="d-none d-md-block col-md-3 col-form-label"><span class="id-articolo">{{ articolo }}</span></div>
-            <div class="col-12 col-md col-form-label"><b>{{ riga.prodotto }}</b><br>{{ riga.nome }}</div>
+            <div class="col-12 col-md col-form-label"><span class="descrizione">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></div>
             <div class="col-4 col-md-1"><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ articolo }}" name="__carrello__[__articoli__][{{ articolo }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></div>
             <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
             <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>

@@ -76,7 +76,7 @@
             $par[] = array( 's' => $id );
         }
 
-        $carrello['se_login'] = mysqlSelectValue(
+        $carrello['se_login'] = ( empty( $ids ) ) ? NULL : mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT max( testo ) FROM metadati WHERE nome = "se_login" AND id_articolo IN (' . implode( ',', array_fill( 0, count( $ids ), '?' ) ) . ')',
             $par

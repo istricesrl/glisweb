@@ -97,7 +97,7 @@ if (paypal.HostedFields.isEligible()) {
         .submit({
 
           // Trigger 3D Secure authentication
-          contingencies: ['SCA_ALWAYS']
+          // contingencies: ['SCA_ALWAYS']
 
           // Cardholder's first and last name
           cardholderName: document.getElementById("card-holder-name").value,
@@ -183,5 +183,5 @@ if (paypal.HostedFields.isEligible()) {
   });
 } else {
   // Hides card fields if the merchant isn't eligible
-  document.querySelector("#card-form").style = 'display: none';
+  // document.querySelector("#card-form").style = 'display: none';
 }

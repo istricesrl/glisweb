@@ -118,7 +118,7 @@
                 $timestamp = time();
 
                 // contenuto del consenso
-                $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __carrello__ per il carrello #' . $_SESSION['carrello']['id'];
+                $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ( ( empty( $cv['value'] ) ) ? ' non' : NULL ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __carrello__ per il carrello #' . $_SESSION['carrello']['id'];
 
                 // se è presente un ID account
                 if( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) {
@@ -133,7 +133,21 @@
                 // log
                 logWrite( $contenuto, 'privacy', LOG_CRIT );
 
-                // TODO salvare le informazioni nella tabella carrelli_consensi
+                // salvo le informazioni nella tabella carrelli_consensi
+                $prvId = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => NULL,
+                        'id_carrello' => $_SESSION['carrello']['id'],
+                        'id_account' => ( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) ? $_SESSION['carrello']['intestazione_id_account'] : NULL,
+                        'id_anagrafica' => ( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) ? $_SESSION['carrello']['intestazione_id_anagrafica'] : NULL,
+                        'id_consenso' => $ck,
+                        'se_prestato' => $cv['value'],
+                        'note' => $contenuto,
+                        'timestamp_consenso' => $timestamp
+                    ),
+                    'carrelli_consensi'
+                );
 
             }
 
@@ -171,6 +185,16 @@
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo']        = $dati['id_articolo'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']             = $dati['id_iva'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']           = $dati['quantita'];
+
+                    // trovo la descrizione dell'articolo
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['descrizione'] = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT nome FROM articoli_view WHERE id = ?',
+                        array(
+                            array( 's' => $dati['id_articolo'] )
+                        )
+                    );
 
                     // trovo il prezzo base dell'articolo
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticolo(

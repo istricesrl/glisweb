@@ -78,7 +78,7 @@
 			if( ! empty( $_REQUEST['__signup__']['activation']['mail']['id'] ) ) {
 
 				$_REQUEST['__signup__']['__tk_sent__']['testo'] = array(
-				'it-IT' => '<p>grazie per esserti registrato! controlla la mail fra qualche minuto per confermare il tuo account</p><p>ora puoi chiudere questa finestra</p>'
+				'it-IT' => '<p>grazie per esserti registrato! controlla la mail fra qualche minuto per confermare il tuo account</p>'
 				);
 
 			} else {
@@ -149,7 +149,8 @@
 				// stage
 				$_REQUEST['__signup__']['__stage__'] = 'attivazione';
 
-				// TODO verificare $dati['privacy']['policy'] e $dati['privacy']['account'] e $dati['privacy']['condizioni']
+				// archivio la richiesta di registrazione
+				moveFile( 'var/spool/signup/' . $_REQUEST['tk'] . '.txt', 'var/spool/signup/archive/' . $_REQUEST['tk'] . '.txt' );
 
 				// creo l'anagrafica
 				$idAnagrafica = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO anagrafica ( nome, cognome ) VALUES ( ?, ? )', array( array( 's' => $dati['nome'] ), array( 's' => $dati['cognome'] ) ) );
@@ -281,12 +282,25 @@
                         $timestamp = time();
 
                         // contenuto del consenso
-                        $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __signup__ per l\'anagrafica #' . $idAnagrafica . ' account #' . $idAccount . ' token #' . $_REQUEST['tk'];
+                        $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ( ( empty( $cv['value'] ) ) ? ' non' : NULL ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __signup__ per l\'anagrafica #' . $idAnagrafica . ' account #' . $idAccount . ' token #' . $_REQUEST['tk'];
 
                         // log
                         logWrite( $contenuto, 'privacy', LOG_CRIT );
 
                         // TODO salvare il consenso nella tabella contatti_consensi
+						$prvId = mysqlInsertRow(
+							$cf['mysql']['connection'],
+							array(
+								'id' => NULL,
+								'id_account' => $idAccount,
+								'id_anagrafica' => $idAnagrafica,
+								'id_consenso' => $ck,
+								'se_prestato' => $cv['value'],
+								'note' => $contenuto,
+								'timestamp_consenso' => $timestamp
+							),
+							'anagrafica_consensi'
+						);
 
 					}
 				}

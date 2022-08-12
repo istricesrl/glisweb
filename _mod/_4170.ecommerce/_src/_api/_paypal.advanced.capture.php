@@ -32,7 +32,7 @@
 
         // chiamata
         $result = restCall(
-            'https://api-m.sandbox.paypal.com/v2/checkout/orders/'.$_REQUEST['id'].'/capture',  // TODO leggere dalla configurazione
+            $cf['ecommerce']['profile']['provider']['paypal-advanced']['order_api'].'/'.$_REQUEST['id'].'/capture',  // TODO leggere dalla configurazione
             METHOD_POST,
             NULL,
             MIME_APPLICATION_JSON,

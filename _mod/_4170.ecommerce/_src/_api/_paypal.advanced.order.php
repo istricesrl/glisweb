@@ -24,6 +24,7 @@
 
     // debug
     // print_r( $_SESSION['carrello'] );
+    // print_r( $cf['ecommerce']['profile']['provider']['paypal-advanced'] );
 
     // verifico che esista un carrello
     if( isset( $_SESSION['carrello']['id'] ) ) {
@@ -46,7 +47,7 @@
 
         // creo l'ordine
         $result = restCall(
-            'https://api-m.sandbox.paypal.com/v2/checkout/orders',  // TODO leggere dalla configurazione
+            $cf['ecommerce']['profile']['provider']['paypal-advanced']['order_api'],
             METHOD_POST,
             $order,
             MIME_APPLICATION_JSON,
