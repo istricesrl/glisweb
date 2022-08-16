@@ -39,7 +39,7 @@
                 array(
                     'amount' => array(
                         'currency_code' => 'EUR',
-                        'value' => $_SESSION['carrello']['prezzo_lordo_finale']
+                        'value' => number_format( ( float) $_SESSION['carrello']['prezzo_lordo_finale'], 2, '.', '' )
                     )
                 )
             )
