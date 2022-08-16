@@ -61,6 +61,7 @@
             ),
             'paypal-advanced' => array(
                 'id'            => 'paypal-advanced',                                               // ID del provider per le tendine
+                'advanced'      => false,                                                           // impostare a true per consentire il pagamento con carta dal sito
                 'business'      => NULL,                                                            // 
                 'client_id'     => NULL,                                                            // 
                 'client_secret' => NULL,                                                            // 

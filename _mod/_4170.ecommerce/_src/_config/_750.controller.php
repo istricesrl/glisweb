@@ -96,7 +96,13 @@
 
         // integro gli articoli
         if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
-            foreach( $_REQUEST['__carrello__']['__articoli__'] as $item ) {
+            foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
+                foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {
+                    if( ! isset( $item[ $field ] ) || empty( $item[ $field ] ) ) {
+                        $item[ $field ] = $model['default'];
+                    }
+                }
+                // echo '<pre>' . print_r( $item, true ) . '</pre>';
                 if( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'] ] ) ) {
                     $_SESSION['carrello']['articoli'][ $item['id_articolo'] ] = array_replace_recursive(
                         $_SESSION['carrello']['articoli'][ $item['id_articolo'] ],
@@ -105,8 +111,12 @@
                 } else {
                     $_SESSION['carrello']['articoli'][ $item['id_articolo'] ] = $item;
                 }
+                // echo '<pre>' . print_r( $_SESSION['carrello']['articoli'][ $item['id_articolo'] ], true ) . '</pre>';
             }
         }
+
+        // debug
+        // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
 
         // registro i consensi
         if( isset( $_REQUEST['__consensi__']['__carrello__'] ) ) {
@@ -181,10 +191,11 @@
                 } else { 
 
                     // aggiorno la riga dell'articolo
-                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']        = $_SESSION['carrello']['id'];
-                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo']        = $dati['id_articolo'];
-                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']             = $dati['id_iva'];
-                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']           = $dati['quantita'];
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']                = $_SESSION['carrello']['id'];
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_articolo']                = $dati['id_articolo'];
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']                     = $dati['id_iva'];
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']                   = $dati['quantita'];
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['destinatario_id_anagrafica'] = $dati['destinatario_id_anagrafica'];
 
                     // trovo la descrizione dell'articolo
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['descrizione'] = mysqlSelectCachedValue(

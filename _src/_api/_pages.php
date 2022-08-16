@@ -628,6 +628,8 @@
 	}
 	echo PHP_EOL;
 
+	// NOTA per Nginx si veda https://www.ryadel.com/nginx-reverse-proxy-cache-wordpress-apache-iis-windows/
+
     // fine del buffer
 	ob_end_flush();
 

@@ -33,17 +33,19 @@
     // die( print_r( $cf['privacy']['moduli'], true ) );
 
     // aggiungo le richieste di consenso ai moduli
-    foreach( $consensi as $consenso ) {
+    if( is_array( $consensi ) ) {
+        foreach( $consensi as $consenso ) {
 
-        // aggiungo la richiesta al modulo
-        $cf['privacy']['moduli'][ $consenso['modulo'] ]['consensi'][ $consenso['id_consenso'] ] = array(
-            'informativa' => array( $cf['localization']['language']['ietf'] => $consenso['informativa'] ),
-            'label' => array( $cf['localization']['language']['ietf'] => $consenso['nome'] ),
-            'action' => $consenso['azione'],
-            'page' => $consenso['pagina'],
-            'required' => $consenso['se_richiesto']
-        );
-
+            // aggiungo la richiesta al modulo
+            $cf['privacy']['moduli'][ $consenso['modulo'] ]['consensi'][ $consenso['id_consenso'] ] = array(
+                'informativa' => array( $cf['localization']['language']['ietf'] => $consenso['informativa'] ),
+                'label' => array( $cf['localization']['language']['ietf'] => $consenso['nome'] ),
+                'action' => $consenso['azione'],
+                'page' => $consenso['pagina'],
+                'required' => $consenso['se_richiesto']
+            );
+    
+        }
     }
 
     // debug

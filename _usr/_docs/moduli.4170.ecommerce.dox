@@ -197,4 +197,15 @@
     }
     \endcode
 
+    domande frequenti
+    =================
+
+    In questa sezione sono state radunate le domande poste più di frequente sul modulo e-commerce.
+
+    come posso emettere automaticamente una fattura quando un carrello viene pagato?
+    --------------------------------------------------------------------------------
+
+    [...] creare una controller custom in mod/0400.documenti/src/inc/controllers/checkout.finally.success.php e inserire lì le logiche necessarie alla creazione
+    e all'invio della fattura.
+
 */

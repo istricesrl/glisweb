@@ -25,9 +25,9 @@
         $t .= '<div>MAIL<input type="text" name="__carrello__[intestazione_mail]" value="'.$_SESSION['carrello']['intestazione_mail'].'" /></div>';
         foreach( $_SESSION['carrello']['articoli'] as $articolo => $dati ) {
             $t .= '<div>';
-            $t .= '<input type="hidden" name="__carrello__[__articoli__]['.$i.'][id_articolo]" value="'.$dati['id_articolo'].'" />';
+            $t .= '<input type="hidden" name="__carrello__[__articoli__]['.$articolo.'][id_articolo]" value="'.$dati['id_articolo'].'" />';
             $t .= $dati['id_articolo'];
-            $t .= '<input type="text" name="__carrello__[__articoli__]['.$i.'][quantita]" value="'.$dati['quantita'].'" />';
+            $t .= '<input type="text" name="__carrello__[__articoli__]['.$articolo.'][quantita]" value="'.$dati['quantita'].'" />';
             $t .= '</div>';
             $i++;
         }

@@ -34,3 +34,11 @@
         'intestazione_mail'             => array( 'type' => 'string',   'default' => NULL ),
         'provider_pagamento'            => array( 'type' => 'string',   'default' => NULL,  'values' => array_keys( $cf['ecommerce']['profile']['provider'] ) ),
     );
+
+    $cf['ecommerce']['fields']['articoli']      = array(
+        'id'                            => array( 'tipe' => 'int',      'default' => NULL ),
+        'id_articolo'                   => array( 'tipe' => 'string',   'default' => NULL ),
+        'id_iva'                        => array( 'tipe' => 'int',      'default' => NULL ),
+        'destinatario_id_anagrafica'    => array( 'type' => 'string',   'default' => NULL ),
+        'quantita'                      => array( 'tipe' => 'int',      'default' => NULL ),
+    );

@@ -67,20 +67,32 @@
         $t .= '<button type="submit">PAGA</button>';
         $t .= '</form>';
     } elseif( isset( $ct['etc']['client_token'] ) ) {
+        $t .= '<button type="button" onclick="window.open(\'_acquisto.02.php\',\'_self\');">MODIFICA IL CARRELLO</button>';
         $t .= '<div id="paypal-button-container" class="paypal-button-container"></div>';
-        if( true ) {    // TODO mettere un'opzione nel profilo PayPal advanced
+        if( $cf['ecommerce']['profile']['provider']['paypal-advanced']['advanced'] == true ) {    // TODO mettere un'opzione nel profilo PayPal advanced
+            $t .= '<style>';
+            $t .= '  div.card_field {';
+            $t .= '    height: 1em;';
+            $t .= '    margin-bottom: .5em;';
+            $t .= '  }';
+            $t .= '</style>';
             $t .= '<div class="card_container">';
             $t .= '<form id="card-form">';
-            $t .= '  <label for="card-number">Card Number</label><div id="card-number" class="card_field"></div>';
+            $t .= '    <label for="card-number">Card Number</label>';
+            $t .= '    <div id="card-number" class="card_field"></div>';
             $t .= '  <div>';
             $t .= '    <label for="expiration-date">Expiration Date</label>';
             $t .= '    <div id="expiration-date" class="card_field"></div>';
             $t .= '  </div>';
             $t .= '  <div>';
-            $t .= '    <label for="cvv">CVV</label><div id="cvv" class="card_field"></div>';
+            $t .= '    <label for="cvv">CVV</label>';
+            $t .= '    <div id="cvv" class="card_field"></div>';
             $t .= '  </div>';
-            $t .= '  <label for="card-holder-name">Name on Card</label>';
-            $t .= '  <input type="text" id="card-holder-name" name="card-holder-name" autocomplete="off" placeholder="card holder name"/>';
+/*
+            $t .= '  <div>';
+            $t .= '    <label for="card-holder-name">Name on Card</label>';
+            $t .= '    <input type="text" id="card-holder-name" name="card-holder-name" autocomplete="off" placeholder="card holder name"/>';
+            $t .= '  </div>';
             $t .= '  <div>';
             $t .= '    <label for="card-billing-address-street">Billing Address</label>';
             $t .= '    <input type="text" id="card-billing-address-street" name="card-billing-address-street" autocomplete="off" placeholder="street address"/>';
@@ -90,18 +102,22 @@
             $t .= '    <input type="text" id="card-billing-address-unit" name="card-billing-address-unit" autocomplete="off" placeholder="unit"/>';
             $t .= '  </div>';
             $t .= '  <div>';
+            $t .= '    <label for="card-billing-address-city">&nbsp;</label>';
             $t .= '    <input type="text" id="card-billing-address-city" name="card-billing-address-city" autocomplete="off" placeholder="city"/>';
             $t .= '  </div>';
             $t .= '  <div>';
+            $t .= '    <label for="card-billing-address-state">&nbsp;</label>';
             $t .= '    <input type="text" id="card-billing-address-state" name="card-billing-address-state" autocomplete="off" placeholder="state"/>';
             $t .= '  </div>';
             $t .= '  <div>';
+            $t .= '    <label for="card-billing-address-zip">&nbsp;</label>';
             $t .= '    <input type="text" id="card-billing-address-zip" name="card-billing-address-zip" autocomplete="off" placeholder="zip / postal code"/>';
             $t .= '  </div>';
             $t .= '  <div>';
+            $t .= '    <label for="card-billing-address-country">&nbsp;</label>';
             $t .= '    <input type="text" id="card-billing-address-country" name="card-billing-address-country" autocomplete="off" placeholder="country code" />';
             $t .= '  </div>';
-            $t .= '  <br/><br/>';
+*/
             $t .= '  <button value="submit" id="submit" class="btn">Pay</button>';
             $t .= '</form>';
             $t .= '</div>';

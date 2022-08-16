@@ -280,21 +280,25 @@
 						$_SESSION['account']['permissions'] = array();
 
 					    // valorizzo i dati dei gruppi
-						foreach( $_SESSION['account']['id_gruppi'] as $g ) {
-						    $r = mysqlSelectCachedRow(
-								$cf['memcache']['connection'],
-								$cf['mysql']['connection'],
-								'SELECT * FROM gruppi_view WHERE id = ?',
-								array( array( 's' => $g ) )
-						    );
-						    if( count( $r ) > 0 ) {
-								if( isset( $cf['auth']['groups'][ $r['nome'] ] ) ) {
-									$cf['auth']['groups'][ $r['nome'] ] = array_replace_recursive( $r, $cf['auth']['groups'][ $r['nome'] ] );
-								} else {
-									$cf['auth']['groups'][ $r['nome'] ] = $r;
+						if( isset( $_SESSION['account']['id_gruppi'] ) && is_array( $_SESSION['account']['id_gruppi'] ) ) {
+							foreach( $_SESSION['account']['id_gruppi'] as $g ) {
+								$r = mysqlSelectCachedRow(
+									$cf['memcache']['connection'],
+									$cf['mysql']['connection'],
+									'SELECT * FROM gruppi_view WHERE id = ?',
+									array( array( 's' => $g ) )
+								);
+								if( count( $r ) > 0 ) {
+									if( isset( $cf['auth']['groups'][ $r['nome'] ] ) ) {
+										$cf['auth']['groups'][ $r['nome'] ] = array_replace_recursive( $r, $cf['auth']['groups'][ $r['nome'] ] );
+									} else {
+										$cf['auth']['groups'][ $r['nome'] ] = $r;
+									}
+									$_SESSION['groups'][ $r['nome'] ] = &$cf['auth']['groups'][ $r['nome'] ];
 								}
-								$_SESSION['groups'][ $r['nome'] ] = &$cf['auth']['groups'][ $r['nome'] ];
-						    }
+							}
+						} else {
+							logWrite( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
 						}
 
 					    // dati anagrafici
@@ -320,7 +324,10 @@
 	  								}
   								}
 						    }
+						} else {
+							logWrite( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
 						}
+
 /*
 					    // attribuzione dei privilegi utente
 						if( isset( $_SESSION['account']['privilegi'] ) ) {
@@ -329,7 +336,8 @@
 							}
 						}
 */
-					    // gruppi di attribuzione automatica dell'utente
+
+						// gruppi di attribuzione automatica dell'utente
 						if( ! empty( $_SESSION['account']['id_gruppi_attribuzione'] ) ) {
 						    $aGroups = explode( '|', $_SESSION['account']['id_gruppi_attribuzione'] );
 						    $_SESSION['account']['id_gruppi_attribuzione'] = array();

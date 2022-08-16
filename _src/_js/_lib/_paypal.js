@@ -49,6 +49,8 @@ paypal
   })
   .render("#paypal-button-container");
 
+// per PayPal Advanced si veda https://developer.paypal.com/docs/checkout/advanced/integrate/ e https://developer.paypal.com/docs/checkout/advanced/customize/3d-secure/sdk/
+
 // If this returns false or the card fields aren't visible, see Step #1.
 if (paypal.HostedFields.isEligible()) {
   let orderId;
@@ -65,6 +67,7 @@ if (paypal.HostedFields.isEligible()) {
       .then((res) => res.json())
       .then((orderData) => {
         orderId = orderData.id; // needed later to complete capture
+        console.log('orderData --> ',orderData);
         return orderData.id
       })
     },
@@ -97,8 +100,8 @@ if (paypal.HostedFields.isEligible()) {
         .submit({
 
           // Trigger 3D Secure authentication
-          // contingencies: ['SCA_ALWAYS']
-
+          contingencies: ['SCA_ALWAYS'],
+/*
           // Cardholder's first and last name
           cardholderName: document.getElementById("card-holder-name").value,
           // Billing Address
@@ -124,6 +127,7 @@ if (paypal.HostedFields.isEligible()) {
               "card-billing-address-country"
             ).value,
           },
+*/
         })
 /*
         .then(() => {
@@ -166,7 +170,7 @@ if (paypal.HostedFields.isEligible()) {
           */
 
           // Needed only when 3D Secure contingency applied
-
+/*
           if (payload.liabilityShift === "POSSIBLE") {
               // 3D Secure passed successfully
           }
@@ -174,13 +178,78 @@ if (paypal.HostedFields.isEligible()) {
           if (payload.liabilityShift) {
               // Handle buyer confirmed 3D Secure successfully
           }
+*/
+          console.log( 'payload --> ', payload );
+
+          switch (payload.liabilityShift) {
+
+            case "POSSIBLE":
+                // Handle no 3D Secure contingency passed scenario
+                return fetch("/api/4170.ecommerce/paypal.advanced.capture?id=" + payload.orderId).then(function(res) {
+                    return res.json();
+                }).then(function(data) {
+                    console.log("data->", data);
+                    alert("ok"); //id status=completed
+                    if( typeof return_url !== 'undefined' && return_url != '' ) {
+                      window.location.href = return_url + `?idOrdine=${payload.orderId}`;
+                    } else {
+                      window.location.href = data.return + `?idOrdine=${payload.orderId}`;
+                    }
+                    return data.id;
+                });
+
+                break;
+
+            case "NO": // esempio !
+                hostedFields.clear('number', function(clearErr) {
+                    if (clearErr) {
+                        console.error(clearErr);
+                    }
+                });
+
+                hostedFields.clear('cvv', function(clearErr) {
+                    if (clearErr) {
+                        console.error(clearErr);
+                    }
+                });
+
+                hostedFields.clear('expirationDate', function(clearErr) {
+                    if (clearErr) {
+                        console.error(clearErr);
+                    }
+                });
+
+                break;
+
+            default:
+
+                //undefined,Unknown
+
+                break;
+
+          }
 
         })
+/*
+        .then( ( data ) => {
+
+          console.log( 'data --> ', data );
+
+          if( typeof return_url !== 'undefined' && return_url != '' ) {
+            actions.redirect( return_url + `?idOrdine=${payload.orderId}` );
+          } else {
+            actions.redirect( data.return + `?idOrdine=${payload.orderId}` );
+          }
+
+        })
+*/
         .catch((err) => {
           alert("Payment could not be captured! " + JSON.stringify(err));
         });
     });
+
   });
+
 } else {
   // Hides card fields if the merchant isn't eligible
   // document.querySelector("#card-form").style = 'display: none';
