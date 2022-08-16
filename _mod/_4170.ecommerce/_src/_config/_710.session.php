@@ -4,6 +4,9 @@
      * 
      */
 
+    // debug
+    // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+
     // recupero carrelli abbandonati
     if( isset( $_REQUEST['rc'] ) && isset( $_REQUEST['ti'] ) ) {
             
@@ -62,3 +65,6 @@
         }
 
     }
+
+    // debug
+    // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';

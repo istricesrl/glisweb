@@ -11,11 +11,16 @@
 
     // seleziono le sottocategorie
 	if( isset( $ct['page']['metadata']['id_prodotto'] ) && ! empty( $ct['page']['metadata']['id_prodotto'] ) ) {
+/*
+
+		NOTA vedi _420.pages.php
 
 		// articoli
 		$ct['page']['contents']['articoli'] = mysqlQuery(
 		    $cf['mysql']['connection'],
-		    'SELECT articoli.*, coalesce( p1.prezzo, p2.prezzo ) AS prezzo, ( coalesce( p1.prezzo, p2.prezzo ) * ( ( iva.aliquota + 100 ) / 100 ) ) AS prezzo_lordo, iva.aliquota, valute.utf8 AS valuta FROM articoli '
+		    'SELECT articoli.*, coalesce( p1.prezzo, p2.prezzo ) AS prezzo, '
+			.'( coalesce( p1.prezzo, p2.prezzo ) * ( ( iva.aliquota + 100 ) / 100 ) ) AS prezzo_lordo, iva.aliquota, valute.utf8 AS valuta '
+			.'FROM articoli '
 			.'LEFT JOIN contenuti ON ( contenuti.id_articolo = articoli.id AND contenuti.id_lingua = ? ) '
 			.'LEFT JOIN prezzi AS p1 ON p1.id_prodotto = articoli.id_prodotto '
 			.'LEFT JOIN prezzi AS p2 ON p2.id_articolo = articoli.id '
@@ -32,6 +37,7 @@
 				array( 's' => $ct['page']['metadata']['id_prodotto'] )
 		    )
 		);
+*/
 /*
 	    // recensioni
 		$ct['page']['contents']['recensioni'] = mysqlQuery(

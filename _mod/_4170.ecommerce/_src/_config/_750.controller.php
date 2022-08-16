@@ -101,7 +101,7 @@
         if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
             foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
                 foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {
-                    if( ! isset( $item[ $field ] ) || empty( $item[ $field ] ) ) {
+                    if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'] ][ $field ] ) ) {
                         $item[ $field ] = $model['default'];
                     }
                 }
@@ -192,6 +192,9 @@
                     unset( $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ] );
 
                 } else { 
+
+                    // debug
+                    print_r( $dati );
 
                     // aggiorno la riga dell'articolo
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']                = $_SESSION['carrello']['id'];

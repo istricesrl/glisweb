@@ -5199,6 +5199,7 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 		valute.iso4217 AS valuta,
 		prezzi.id_iva,
 		iva.descrizione AS iva,
+		iva.aliquota AS aliquota,
 		prezzi.id_account_inserimento,
 		prezzi.id_account_aggiornamento,
 		concat_ws(
