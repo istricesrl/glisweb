@@ -8,19 +8,25 @@
 {% if key %}{% set nm = '['~ref~']['~key~']['~codice~']' %}{% set id = ref~key~codice %}{% else %}{% set nm = '['~ref~']['~codice~']' %}{% set id = ref~codice %}{% endif %}
 <div class="{{ rclass }} row-privacy">
     <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="consensi_{{ id }}_codice" name="__consensi__{{ nm }}[codice]" value="{{ codice }}">
-	    <input type="hidden" id="consensi_{{ id }}_reference" name="__consensi__{{ nm }}[reference]" value="{{ ref }}">
-	    <input type="hidden" id="consensi_{{ id }}_value" name="__consensi__{{ nm }}[value]" value="0">
-	    <input class="form-check-input" id="consensi_{{ id }}_checkbox" type="checkbox" {% if check.required %}required{% endif %}>
-	    <label class="form-check-label text-left" for="consensi_{{ id }}_checkbox">
-		{{ tr.generic[ check.action ][ ietf ] }}
-		{% if check.page %}<a href="{{ pages[ check.page ].url[ ietf ] }}">{% endif %}
-		{{ check.label[ ietf ] | raw }}
-		{% if check.page %}</a>{% endif %}
-		({% if check.required %}{{ tr.generic.obbligatorio[ ietf ] | raw }}{% else %}{{ tr.generic.facoltativo[ ietf ] | raw }}{% endif %})
-	    </label>
-	</div>
+		<div class="form-check">
+			<input type="hidden" id="consensi_{{ id }}_codice" name="__consensi__{{ nm }}[codice]" value="{{ codice }}">
+			<input type="hidden" id="consensi_{{ id }}_reference" name="__consensi__{{ nm }}[reference]" value="{{ ref }}">
+			<input type="hidden" id="consensi_{{ id }}_value" name="__consensi__{{ nm }}[value]" value="0">
+			<input class="form-check-input" id="consensi_{{ id }}_checkbox" type="checkbox" {% if check.required %}required{% endif %}>
+			<label class="form-check-label text-left" for="consensi_{{ id }}_checkbox">
+			{{ tr.generic[ check.action ][ ietf ] }}
+			{% if check.page %}<a href="{{ pages[ check.page ].url[ ietf ] }}">{% endif %}
+			{{ check.label[ ietf ] | raw }}
+			{% if check.page %}</a>{% endif %}
+			({% if check.required %}{{ tr.generic.obbligatorio[ ietf ] | raw }}{% else %}{{ tr.generic.facoltativo[ ietf ] | raw }}{% endif %})
+			</label>
+		</div>
+    </div>
+</div>
+{% else %}
+<div class="{{ rclass }} row-privacy">
+    <div class="{{ class }}">
+		<p>nessun consenso privacy richiesto per questo modulo</p>
     </div>
 </div>
 {% endfor %}

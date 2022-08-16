@@ -305,6 +305,9 @@
 					}
 				}
 
+				// TODO
+				// if( isset( $_SESSION['utm'] ) && ! empty( $_SESSION['utm'][ $field ] ) ) { ... }
+
 			} elseif( ! empty( $ct['etc']['profilo']['sms'] ) && ( ! isset( $_REQUEST['ts'] ) || empty( $_REQUEST['ts'] ) ) ) {
 
 				// imposto il flag per il modulo

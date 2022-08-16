@@ -35,6 +35,9 @@
         'provider_pagamento'            => array( 'type' => 'string',   'default' => NULL,  'values' => array_keys( $cf['ecommerce']['profile']['provider'] ) ),
     );
 
+    // TODO
+    // aggiungere $cf['utm']['fields'] ai campi del carrello
+
     $cf['ecommerce']['fields']['articoli']      = array(
         'id'                            => array( 'tipe' => 'int',      'default' => NULL ),
         'id_articolo'                   => array( 'tipe' => 'string',   'default' => NULL ),

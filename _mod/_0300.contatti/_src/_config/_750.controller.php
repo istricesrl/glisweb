@@ -60,6 +60,9 @@
             // verifico se la configurazione prevede il salvataggio nel database
                 if( isset( $cnf['backend'] ) ) {
 
+                    // TODO
+                    // if( isset( $_SESSION['utm'] ) && ! empty( $_SESSION['utm'][ $field ] ) ) { ... }
+
                     // salvataggio del blocco dati nel database
                         $idCnt = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO contatti ( nome, json, timestamp_inserimento ) VALUES ( ?, ?, ? )',
                         array( array( 's' => $k ), array( 's' => json_encode( $v ) ), array( 's' => time() ) )

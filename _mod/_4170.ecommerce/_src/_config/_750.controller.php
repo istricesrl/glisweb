@@ -36,6 +36,9 @@
                 'carrelli'
             );
 
+            // TODO
+            // if( isset( $_SESSION['utm'] ) && ! empty( $_SESSION['utm'][ $field ] ) ) { ... }
+
             // array degli articoli
             $_SESSION['carrello']['articoli'] = array();
 
