@@ -179,7 +179,7 @@
 	
 				}
 	
-				$pFiles = glob( DIR_USR_DATABASE_PATCH . '_*.*.sql' );
+				$pFiles = glob( glob2custom( DIR_USR_DATABASE_PATCH . '_*.*.sql' ), GLOB_BRACE );
 				sort( $pFiles );
 	
 				foreach( $pFiles as $pFile ) {
