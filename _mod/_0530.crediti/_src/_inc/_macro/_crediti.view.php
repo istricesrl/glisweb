@@ -36,7 +36,7 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-        'id' => 'text-center d-md-table-cell',
+        'id' => 'd-none d-md-table-cell',
         'data' => 'text-left',
         'account_emittente' => 'text-left',
         'mastro_provenienza' => 'text-left',
