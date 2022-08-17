@@ -31,54 +31,51 @@
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
-	    {# CAMPI HIDDEN DI BASE #}
-	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
-	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+			{# CAMPI HIDDEN DI BASE #}
+			<input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+			<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+			<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+			<input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+			<input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+			{% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+			<input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
+			{# MODULO PRINCIPALE #}
+			<fieldset>
+				<legend>dati generali <small>{{ legend }}</small></legend>
 
-			<div class="form-group form-row">
-				<div class="col-12 col-md-2">
-					<span class="label-top">tipologia</span>
-					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
+				<div class="form-group form-row">
+					<div class="col-12 col-md-2">
+						<span class="label-top">tipologia</span>
+						{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request ) }}
+					</div>
+					<!--div class="col-12 col-md-2">
+						<span class="label-top">tipologia INPS</span>
+						{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
+					</div-->
+
+					<!-- NOTA questi campi hanno senso solo se è attivo il modulo magazzini? -->
+					<!--div class="col-12 col-md-2">
+						<span class="label-top">scarico</span>
+						{% if not request[table].id %}
+						{% if not session.__latest__[ table ].id_mastro_provenienza %}{% set default = etc.id_mastro_provenienza %}{% else %}{% set default = session.__latest__[ table ].id_mastro_provenienza %}{% endif %}
+						{% endif %}
+						{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, default ) }}
+					</div>
+					<div class="col-12 col-md-2">
+						<span class="label-top">carico</span>
+						{% if not request[table].id %}
+						{% if not session.__latest__[ table ].id_mastro_destinazione %}{% set default = etc.id_mastro_destinazione %}{% else %}{% set default = session.__latest__[ table ].id_mastro_destinazione %}{% endif %}
+						{% endif %}
+						{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default ) }}
+					</div-->
+					<div class="col">
+						<span class="label-top">descrizione</span>
+						{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+					</div>
 				</div>
-				<!--div class="col-12 col-md-2">
-					<span class="label-top">tipologia INPS</span>
-					{{ frm.select( table, '', '', 'id_tipologia_inps', '', etc.select.id_tipologia_inps, request ) }}
-				</div-->
-<!-- NOTA questi campi hanno senso solo se è attivo il modulo magazzini?
-				<div class="col-12 col-md-2">
-					<span class="label-top">scarico</span>
-					{% if not request[table].id %}
-					{% if not session.__latest__[ table ].id_mastro_provenienza %}{% set default = etc.id_mastro_provenienza %}{% else %}{% set default = session.__latest__[ table ].id_mastro_provenienza %}{% endif %}
-					{% endif %}
-					{{ frm.select( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, default ) }}
-				</div>
-				<div class="col-12 col-md-2">
-					<span class="label-top">carico</span>
-					{% if not request[table].id %}
-					{% if not session.__latest__[ table ].id_mastro_destinazione %}{% set default = etc.id_mastro_destinazione %}{% else %}{% set default = session.__latest__[ table ].id_mastro_destinazione %}{% endif %}
-					{% endif %}
-					{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default ) }}
-				</div>
--->			
-				<div class="col">
-					<span class="label-top">descrizione</span>
-					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-				</div>
-			</div>
-
-
-	
 			</fieldset>
 
 			<fieldset>
@@ -107,8 +104,8 @@
 				</div>
 				<div class="form-group form-row">
 					<div class="col-12">
-					<span class="label-top">note programmazione</span>
-					{{ frm.textarea( table, '', '', 'note_programmazione', '', 2, request ) }}
+						<span class="label-top">note programmazione</span>
+						{{ frm.textarea( table, '', '', 'note_programmazione', '', 2, request ) }}
 					</div>
 				</div>
 			</fieldset>
@@ -116,51 +113,48 @@
 			{% if request[ table ].id_todo %}
 			<fieldset>
 				<legend>contesto della to-do {{ etc.todo.nome }}</legend>
-				<div class="form-group form-row">
-					<div class="col">
-
-						<table class="view-table">
-							<tr>
-								<th class="table-header-static">data</th>
-								<th class="table-header-static">status</th>
-								<th class="table-header-static text-left">titolo</th>
-								<th class="table-header-static text-left">note</th>
-							</tr>
-							{% for a in etc.attivita_completate %}
-							<tr>
-								<td>{{ a.data_attivita|date('d/m/Y') }}</td>
-								<td>completata</td>
-								<td class="text-left">{{ a.nome }}</td>
-								<td class="text-left">{{ a.note_cliente }}</td>
-							</tr>
-							{% endfor %}
-							{% for a in etc.attivita_programmate %}
-							<tr>
-								<td>{{ a.data_programmazione|date('d/m/Y') }}</td>
-								<td>programmata</td>
-								<td class="text-left">{{ a.nome }}</td>
-								<td class="text-left">{{ a.note_cliente }}</td>
-							</tr>
-							{% endfor %}
-						</table>
-<!--
-						{% if etc.attivita_completate %}
-				<legend style="font-size: 90%;">attività completate</legend>
-					<ul>
-					{% for a in etc.attivita_completate %}
-						<li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.note_cliente }}</li>
-					{% endfor %}
-					</ul>
-				{% endif %}
-				{% if etc.attivita_programmate %}
-				<legend style="font-size: 90%;">attività pianificate</legend>
-					<ul>
-					{% for a in etc.attivita_programmate %}
-						<li>{{ a.data_programmazione|date('d/m/Y') }} {% if a.ora_inizio_programmazione %}{{ a.ora_inizio_programmazione|date('H:i') }}{% endif %}- {{ a.nome }}: {{ a.note_programmazione }}</li>
-					{% endfor %}
-					</ul>
-				{% endif %}
-
+					<div class="form-group form-row">
+						<div class="col">
+							<table class="view-table">
+								<tr>
+									<th class="table-header-static">data</th>
+									<th class="table-header-static">status</th>
+									<th class="table-header-static text-left">titolo</th>
+									<th class="table-header-static text-left">note</th>
+								</tr>
+								{% for a in etc.attivita_completate %}
+								<tr>
+									<td>{{ a.data_attivita|date('d/m/Y') }}</td>
+									<td>completata</td>
+									<td class="text-left">{{ a.nome }}</td>
+									<td class="text-left">{{ a.note_cliente }}</td>
+								</tr>
+								{% endfor %}
+								{% for a in etc.attivita_programmate %}
+								<tr>
+									<td>{{ a.data_programmazione|date('d/m/Y') }}</td>
+									<td>programmata</td>
+									<td class="text-left">{{ a.nome }}</td>
+									<td class="text-left">{{ a.note_cliente }}</td>
+								</tr>
+								{% endfor %}
+							</table>
+<!--					{% if etc.attivita_completate %}
+					<legend style="font-size: 90%;">attività completate</legend>
+						<ul>
+						{% for a in etc.attivita_completate %}
+							<li>{{ a.data_attivita|date('d/m/Y') }} - {{ a.nome }}: {{ a.note_cliente }}</li>
+						{% endfor %}
+						</ul>
+					{% endif %}
+					{% if etc.attivita_programmate %}
+					<legend style="font-size: 90%;">attività pianificate</legend>
+						<ul>
+						{% for a in etc.attivita_programmate %}
+							<li>{{ a.data_programmazione|date('d/m/Y') }} {% if a.ora_inizio_programmazione %}{{ a.ora_inizio_programmazione|date('H:i') }}{% endif %}- {{ a.nome }}: {{ a.note_programmazione }}</li>
+						{% endfor %}
+						</ul>
+					{% endif %}
 -->
 
 					</div>
@@ -208,70 +202,67 @@
 			</fieldset>
 
 			<fieldset>
-			<legend>attribuzione</legend>
+				<legend>attribuzione</legend>
+				<div class="form-group form-row">
+					<div class="col-12 col-md-6">
+						<span class="label-top">progetto</span>
+						{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
+					</div>
+					<div class="col-12 col-md-6">
+						<span class="label-top">todo</span>
+						{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
+					</div>
+				</div>
+				<div class="form-group form-row">
+					<div class="col-12 col-md-4">
+						<span class="label-top">cliente</span>
+						{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">indirizzo</span>
+						{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
+					</div>
+				</div>
+				{% if 'V300.immobiliari' in mods.active.array %}
+				<div class="form-group form-row">
+					<div class="col-12 col-md">
+						<span class="label-top">immobile</span>
+						{{ frm.selectBox( table, '', '', 'id_immobile', '', etc.select.immobili, request, '', '','','','','immobili.form','','immobili', 'id_immobile' , page, pages, ietf,'immobili' ) }}
+					</div>
+				</div>
+				{% endif %}
+				{% if '4100.prodotti' in mods.active.array or '0400.documenti' in mods.active.array %}
+				<div class="form-group form-row">
+					{% if '4100.prodotti' in mods.active.array %}
+					<!--div class="col-12 col-md">
+						<span class="label-top">matricola</span>
+						{{ frm.selectBox( table, '', '', 'id_matricola', 'matricola', etc.select.matricole, request, '', '','','','','matricole.form','','matricole', 'id_matricola', page, pages, ietf,'matricole' ) }}
+					</div-->
 
-			<div class="form-group form-row">
-				<div class="col-12 col-md-6">
-					<span class="label-top">progetto</span>
-					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
+					<!--NOTA il campo matricola deve poter essere bippato direttamente, senza bisogno del campo barcode affianco-->
+					<!--div class="col-2 col-md-6">
+						<span class="label-top">barcode matricola</span>
+						{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
+					</div-->
+					{% endif %}
+					{% if '0400.documenti' in mods.active.array %}
+					<!--div class="col-12 col-md">
+						<span class="label-top">riga</span>
+						{{ frm.selectBox( table, '', '', 'id_documenti_articoli', '', etc.select.id_documenti_articoli, request, '', '','','','','documenti.articoli.form','documenti.articoli.form','documenti_articoli', 'id_documenti_articoli' , page, pages, ietf,'documenti_articoli' ) }}
+					</div-->
+					{% endif %}
 				</div>
-				<div class="col-12 col-md-6">
-					<span class="label-top">todo</span>
-					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, '', '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
-				</div>
-			</div>
-			<div class="form-group form-row">
-				<div class="col-12 col-md-4">
-					<span class="label-top">cliente</span>
-					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, '', '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
-				</div>
-				<div class="col-12 col-md">
-					<span class="label-top">indirizzo</span>
-					{{ frm.selectBox( table, '', '', 'id_indirizzo', 'indirizzo', etc.select.indirizzi, request, '', '','','','','indirizzi.form','','indirizzi', 'id_indirizzo', page, pages, ietf,'indirizzi' ) }}
-				</div>
-			</div>
-			{% if 'V300.immobiliari' in mods.active.array %}
-			<div class="form-group form-row">
-			<div class="col-12 col-md">
-				<span class="label-top">immobile</span>
-				{{ frm.selectBox( table, '', '', 'id_immobile', '', etc.select.immobili, request, '', '','','','','immobili.form','','immobili', 'id_immobile' , page, pages, ietf,'immobili' ) }}
-			</div>
-			</div>
-			{% endif %}
-			{% if '4100.prodotti' in mods.active.array or '0400.documenti' in mods.active.array %}
-			<div class="form-group form-row">
-				{% if '4100.prodotti' in mods.active.array %}
-				<!--div class="col-12 col-md">
-					<span class="label-top">matricola</span>
-					{{ frm.selectBox( table, '', '', 'id_matricola', 'matricola', etc.select.matricole, request, '', '','','','','matricole.form','','matricole', 'id_matricola', page, pages, ietf,'matricole' ) }}
-				</div>
- NOTA il campo matricola deve poter essere bippato direttamente, senza bisogno del campo barcode affianco
-				<div class="col-2 col-md-6">
-					<span class="label-top">barcode matricola</span>
-					{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
-				</div>
--->
 				{% endif %}
-				{% if '0400.documenti' in mods.active.array %}
-				<!--div class="col-12 col-md">
-					<span class="label-top">riga</span>
-					{{ frm.selectBox( table, '', '', 'id_documenti_articoli', '', etc.select.id_documenti_articoli, request, '', '','','','','documenti.articoli.form','documenti.articoli.form','documenti_articoli', 'id_documenti_articoli' , page, pages, ietf,'documenti_articoli' ) }}
-				</div-->
-				{% endif %}
-				
-			</div>
-			{% endif %}
 			</fieldset>
 
 			{# SUBFORM CATEGORIE #}
-	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
-        
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-			{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
-
-	</form>
+			{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
+		
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, table, request ) }}
+			</fieldset>
+		</form>
     </div>
 </section>
 
