@@ -1,6 +1,5 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{# import 'bin/default.form.pubblicazioni.sub.html' as sub #}
 
 {% extends "ext/main.html" %}
 
@@ -47,61 +46,34 @@
 				<legend>dati generali <small>{{ legend }}</small></legend>
 
 				<div class="form-group form-row">
-					<div class="col-md-3 col-auto">
-						<span class="label-top">tipologia</span>
-						{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_mastri, request ) }}
+					<div class="col-auto col-md-auto">
+						<span class="label-top">data</span>
+						{{ frm.date( table, '', '', 'data', '', '', request, 'now'|date('Y-m-d'), '', '1' ) }}
 					</div>
-					<div class="col-md-3 col-auto">
-						<span class="label-top">genitore</span>
-						{{ frm.select( table, '', '', 'id_genitore', '', etc.select.genitori, request ) }}
-					</div>
-					<div class="col col-md">
+					<div class="col-4 col-md">
 						<span class="label-top">nome</span>
 						{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 					</div>
-				</div>
-				<div class="form-group form-row">
-					<div class="col-12 col-md">
-						<span class="label-top">indirizzo</span>
-						{{ frm.selectBox( table, '', '', 'id_anagrafica_indirizzi', '', etc.select.id_anagrafica_indirizzi, request, '', '', '', '', '', '', '', '', '', page, pages, ietf, 'anagrafica_indirizzi' ) }}
-					</div>  
+					<div class="col-4 col-md-1">
+						<span class="label-top">quantita</span>
+						{{ frm.inputRequired( table, '', '', 'quantita', '', '', request ) }}
+					</div>
 				</div>
 				<div class="form-group form-row">
 					<div class="col-12">
-					<span class="label-top">note</span>
-					{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
+						<span class="label-top">note</span>
+						{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
 					</div>
 				</div>
-
-				<!--legend>ruoli</legend>
-				<div class="form-group form-row">
-					<div class="col-4 col-md-2 col-form-label">
-						<div class="form-check">
-							{{ frm.checkbox( table, '', '', 'se_amministrazione', 'amministrazione', '', request ) }}
-						</div>
-					</div>
-					<div class="col-4 col-md-2 col-form-label">
-						<div class="form-check">
-							{{ frm.checkbox( table, '', '', 'se_produzione', 'produzione', '', request ) }}
-						</div>
-					</div>
-					<div class="col-4 col-md-2 col-form-label">
-						<div class="form-check">
-							{{ frm.checkbox( table, '', '', 'se_commerciale', 'commerciale', '', request ) }}
-						</div>
-					</div>
-				</div-->
-
-				<!--TODO controllare coerenza tra account e anagrafica, non posso selezionare un account non di quella anagrafica  -->
-				<legend>attribuzione</legend>
+				<legend>movimento</legend>
 				<div class="form-group form-row">
 					<div class="col-12 col-md">
-						<span class="label-top">anagrafica</span>
-						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
+						<span class="label-top">scarico</span>
+						{{ frm.selectBox( table, '', '', 'id_mastro_provenienza', '', etc.select.scarico, request, '', '', '1', '', '', '', '', '', '', page, pages, ietf ) }}
 					</div>
 					<div class="col-12 col-md">
-						<span class="label-top">account</span>
-						{{ frm.selectBox( table, '', '', 'id_account', '', etc.select.account, request, '', '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
+						<span class="label-top">carico</span>
+						{{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', etc.select.carico, request, '', '', '1', '', '', '', '', '', '', page, pages, ietf ) }}
 					</div>
 				</div>
 			</fieldset>
@@ -110,7 +82,6 @@
 			<fieldset class="form-controls mt-auto">
 				{{ def.controls( page, pages, ietf, session, table, request ) }}
 			</fieldset>
-
 		</form>
     </div>
 </section>

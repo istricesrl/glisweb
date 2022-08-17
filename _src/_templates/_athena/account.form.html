@@ -44,35 +44,34 @@
 
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
+			<legend>dati generali <small>{{ legend }}</small></legend>
 
-		<div class="form-group form-row">
-		    <div class="col-12 col-md">
-			<span class="label-top">anagrafica</span>
-			{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
-		</div>
-		    <div class="col-12 col-md">
-			<span class="label-top">e-mail per recupero password</span>
-			{{ frm.select( table, '', '', 'id_mail', '', etc.select.mail, request ) }}
-		    </div>
-		</div>
-
-		<div class="form-group form-row">
-		    <div class="col-12 col-md-5">
-			<span class="label-top">username</span>
-			{{ frm.inputRequired( table, '', '', 'username', '', '', request ) }}
-		    </div>
-		    <div class="col">
-			<span class="label-top">password</span>
-			{{ frm.input( table, '', '', 'password', 'se possibile almeno 8-12 caratteri alfanumerici', '', request, '', 'password' ) }}
-		    </div>
-		    <div class="col-auto col-form-label">
-			<div class="form-check">
-			    {{ frm.checkbox( table, '', '', 'se_attivo', 'attivo', '', request, etc.attivo ) }}
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+					<span class="label-top">anagrafica</span>
+					{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">e-mail per recupero password</span>
+					{{ frm.select( table, '', '', 'id_mail', '', etc.select.mail, request ) }}
+				</div>
 			</div>
-		    </div>
-		</div>
 
+			<div class="form-group form-row">
+				<div class="col-12 col-md-5">
+					<span class="label-top">username</span>
+					{{ frm.inputRequired( table, '', '', 'username', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">password</span>
+					{{ frm.input( table, '', '', 'password', 'se possibile almeno 8-12 caratteri alfanumerici', '', request, '', 'password' ) }}
+				</div>
+				<div class="col-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_attivo', 'attivo', '', request, etc.attivo ) }}
+					</div>
+				</div>
+			</div>
 	    </fieldset>
 
 		{# SUBFORM GRUPPI #}
