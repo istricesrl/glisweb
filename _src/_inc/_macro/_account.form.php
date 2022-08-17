@@ -51,7 +51,11 @@
 
 	}
 
-
+	$ct['etc']['mastri'] = mysqlQuery(
+		$cf['mysql']['connection'],
+		'SELECT r.id_mastro, r.nome, r.totale FROM __report_giacenza_crediti__ AS r WHERE r.id_account=?',
+		array( array( 's' => $_REQUEST['account']['id'] ) )
+	);
 
 
 
@@ -59,10 +63,6 @@
 
 
 /* SUPER TODO :D questa roba deve stare nella controller post salvataggio dell'account, non qui!
-
-
-
-
 
     if( isset( $_REQUEST[ $ct['etc']['table'] ]['id'] ) ){
 	// attivazione dell'account

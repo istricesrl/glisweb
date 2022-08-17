@@ -74,6 +74,43 @@
 				</div>
 			</fieldset>
 
+			{% if '0530.crediti' in mods.active.array %}
+			<fieldset>
+				<legend>saldo crediti</legend>
+				<div class="form-group form-row">
+					<div class="col">
+						<table class="view-table">
+							<thead>
+								<tr>
+									<th scope="col" class="table-header-static">#</th>
+									<th scope="col" class="table-header-static">nome</th>
+									<th scope="col" class="table-header-static">n° crediti</th>
+									<th scope="col" class="table-header-static">azioni</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for mastro in etc.mastri %}
+								<tr>
+									<th scope="row">{{ mastro.id_mastro }}</th>
+									<td>{{ mastro.nome }}</td>
+									<td>{{ mastro.totale }}</td>
+									<td class="text-nowrap">
+										<a href='{{ pages["crediti.form"].url[ localization.language.ietf ] }}?__preset__[crediti][id_mastro_destinazione]={{ mastro.id_mastro }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}'>
+											<i class="fa fa-plus"></i>
+										</a>
+										<a href='{{ pages["mastri.form.movimenti"].url[ localization.language.ietf ] }}?mastri[id]={{ mastro.id_mastro }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}'>
+											<i class="fa fa-external-link"></i>
+										</a>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</fieldset>
+			{% endif %}
+
 			{# SUBFORM GRUPPI #}
 			{{ sub.gruppi( table, 'account_gruppi', 'gruppi', site, page, pages, ietf, etc, request, session ) }}
 
