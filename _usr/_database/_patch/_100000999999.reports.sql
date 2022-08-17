@@ -569,6 +569,7 @@ SELECT
   documento,
   numero,
   id_riga,
+  id_crediti,
   carico,
   scarico
 FROM (
@@ -590,6 +591,7 @@ SELECT
   documenti.nome AS documento,
   concat( documenti.numero, '/', documenti.sezionale ) AS numero,
   documenti_articoli.id AS id_riga,
+  crediti.id AS id_crediti,
   coalesce( crediti.quantita, 0 ) AS carico,
   0 AS scarico
 FROM mastri
@@ -620,6 +622,7 @@ SELECT
   concat( documenti.numero, '/', documenti.sezionale ) AS numero,
   documenti_articoli.id AS id_riga,
   0 AS carico,
+  crediti.id AS id_crediti,
   coalesce( crediti.quantita, 0 ) AS scarico
 FROM mastri
   LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_check( crediti.id_mastro_provenienza, mastri.id ) = 1
