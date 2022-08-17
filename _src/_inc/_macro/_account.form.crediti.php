@@ -11,6 +11,9 @@
 
     // tabella della vista
 	$ct['view']['table'] = 'crediti';
+    
+    // tabella gestita
+	$ct['form']['table'] = 'account';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'crediti.form';
@@ -43,6 +46,9 @@
         # $ct['view']['__restrict__']['id_progetto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     
 	#}
+
+    // gestione default
+    require DIR_SRC_INC_MACRO . '_default.form.php';
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';	
