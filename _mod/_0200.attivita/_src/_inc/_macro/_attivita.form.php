@@ -201,7 +201,7 @@
 
         $ct['etc']['attivita_programmate'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita',
+            'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL ORDER BY data_attivita',
             array( array( 's' => $_REQUEST['attivita']['id_todo']) )
         );
     
