@@ -22,6 +22,15 @@
     // tabella gestita
 	$ct['form']['table'] = 'anagrafica';
 
+	// tendina account
+	$ct['etc']['select']['accounts'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__, anagrafica, se_attivo, gruppi FROM account_view WHERE id_anagrafica=?',
+		array ( array ( 's' => $_REQUEST['anagrafica']['id'] ) )
+	);
+
     // tendina tipologie anagrafica
 	$ct['etc']['select']['tipologie_anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -115,26 +124,6 @@
 
 /*
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     // tendina regime fiscale
 	$ct['etc']['select']['id_regime_fiscale'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM regimi_view' );
 
@@ -224,6 +213,7 @@
 		'modal' => array( 'id' => 'modal-inserimento-indirizzi', 'include' => 'inc/anagrafica.form.modal.aggiungi.indirizzo.html' )
 	);
 */
+
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 

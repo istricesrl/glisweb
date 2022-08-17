@@ -49,6 +49,17 @@
 		    array( array( 's' => $_REQUEST['account']['id_anagrafica'] ) )
 		);
 
+	} elseif( isset( $_REQUEST['__preset__']['account']['id_anagrafica'] ) && ! empty( $_REQUEST['__preset__']['account']['id_anagrafica'] ) ) {
+
+		// tendina anagrafica
+		$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
+			$cf['memcache']['index'],
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+			'SELECT id, __label__ FROM anagrafica_view_static WHERE id = ?',
+		    array( array( 's' => $_REQUEST['__preset__']['account']['id_anagrafica'] ) )
+		);
+
 	}
 
 

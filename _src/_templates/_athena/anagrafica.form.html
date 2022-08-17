@@ -12,110 +12,152 @@
 
 {# ACCOUNT #}
 {% if session.account.id %}
-    {% set account = session.account.id %}
+{% set account = session.account.id %}
 {% else %}
-    {% set account = '__null__' %}
+{% set account = '__null__' %}
 {% endif %}
 
 {# TIPO DI METODO E ATTIVITA' SVOLTA #}
 {% if request[ table ].id %}
-    {% set method = 'update' %}
-    {% set activity = 'aggiornamento' %}
-    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
 {% else %}
-    {% set method = 'post' %}
-    {% set activity = 'inserimento' %}
-    {% set legend = 'inserimento nuovo oggetto' %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% set legend = 'inserimento nuovo oggetto' %}
 {% endif %}
 
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
-    <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+	<div class="col-md-12 d-flex flex-column">
+		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill"
+			action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
-	    {# CAMPI HIDDEN DI BASE #}
-	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
-	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+			{# CAMPI HIDDEN DI BASE #}
+			<input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+			<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+			<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+			<input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]"
+				value="{{ 'now'|date('U') }}">
+			<input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+			{% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+			<input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
+			{# MODULO PRINCIPALE #}
+			<fieldset>
+				<legend>dati generali <small>{{ legend }}</small></legend>
 
-		<div class="form-group form-row">
-		    <div class="col-auto">
-			<span class="label-top">sigla</span>
-			{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_anagrafica, request ) }}
-			</div>
-			<div class="col">
-			<span class="label-top">nome</span>
-			{{ frm.input( table, '', '', 'nome', '', '', request ) }}
-			</div>
-			<div class="w-100 d-block d-md-none m-0"></div>
-		    <div class="col">
-			<span class="label-top">cognome</span>
-			{{ frm.input( table, '', '', 'cognome', '', '', request ) }}
-		    </div>
-		    <div class="col-auto">
-			<span class="label-top">sesso</span>
-			{{ frm.selectRequired( table, '', '', 'sesso', '', etc.select.sesso, request, '', 1 ) }}
-			</div>
-		</div>
+				<div class="form-group form-row">
+					<div class="col-auto">
+						<span class="label-top">sigla</span>
+						{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_anagrafica, request ) }}
+					</div>
+					<div class="col">
+						<span class="label-top">nome</span>
+						{{ frm.input( table, '', '', 'nome', '', '', request ) }}
+					</div>
+					<div class="w-100 d-block d-md-none m-0"></div>
+					<div class="col">
+						<span class="label-top">cognome</span>
+						{{ frm.input( table, '', '', 'cognome', '', '', request ) }}
+					</div>
+					<div class="col-auto">
+						<span class="label-top">sesso</span>
+						{{ frm.selectRequired( table, '', '', 'sesso', '', etc.select.sesso, request, '', 1 ) }}
+					</div>
+				</div>
 
-		<div class="form-group form-row">
-		    <div class="col-12 col-md-5">
-			<span class="label-top">denominazione</span>
-			{{ frm.input( table, '', '', 'denominazione', '', '', request ) }}
-		    </div>
-		    <div class="col-12 col-md-4">
-			<span class="label-top">soprannome</span>
-			{{ frm.input( table, '', '', 'soprannome', '', '', request ) }}
-			</div>
-			<div class="col-12 col-md-3">
-				<span class="label-top">codice</span>
-				{{ frm.input( table, '', '', 'codice', '', '', request ) }}
-			</div>
-		</div>
+				<div class="form-group form-row">
+					<div class="col-12 col-md-5">
+						<span class="label-top">denominazione</span>
+						{{ frm.input( table, '', '', 'denominazione', '', '', request ) }}
+					</div>
+					<div class="col-12 col-md-4">
+						<span class="label-top">soprannome</span>
+						{{ frm.input( table, '', '', 'soprannome', '', '', request ) }}
+					</div>
+					<div class="col-12 col-md-3">
+						<span class="label-top">codice</span>
+						{{ frm.input( table, '', '', 'codice', '', '', request ) }}
+					</div>
+				</div>
 
-		<div class="form-group form-row">
-		    <div class="col-12">
-			<span class="label-top">note</span>
-			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
-		    </div>
-		</div>
+				<div class="form-group form-row">
+					<div class="col-12">
+						<span class="label-top">note</span>
+						{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+					</div>
+				</div>
+			</fieldset>
 
-	    </fieldset>
+			<fieldset>
+				<legend>account collegati</legend>
+				<div class="form-group form-row">
+					{% if etc.select.accounts %}
+					<div class="col-12">
+						<table class="view-table">
+							<thead>
+								<tr>
+									<th scope="col" class="table-header-static">#</th>
+									<th scope="col" class="table-header-static">nome</th>
+									<th scope="col" class="table-header-static">anagrafica</th>
+									<th scope="col" class="table-header-static">attivo</th>
+									<th scope="col" class="table-header-static">gruppi</th>
+									<th scope="col" class="table-header-static">azioni</th>
+								</tr>
+							</thead>
+							<tbody>
+								{% for account in etc.select.accounts %}
+								<tr>
+									<td>{{ account.id }}</td>
+									<td>{{ account.__label__ }}</td>
+									<td>{{ account.anagrafica }}</td>
+									{% if account.se_attivo == 1 %}
+									<td><i class="fa fa-check"></i></td>
+									{% endif %}
+									<td>{{ account.gruppi }}</td>
+									<td class="text-nowrap">
+										<a href=''>
+											<i class="fa fa-pencil"></i>
+										</a>
+									</td>
+								</tr>
+								{% endfor %}
+							</tbody>
+						</table>
+					</div>
+					{% endif %}
+					<div class="col-2 text-right">
+						<button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["account.form"].url[ localization.language.ietf ] }}?__preset__[account][id_anagrafica]={{ request.anagrafica.id }}&__backurl__={{ page.backurl[ localization.language.ietf ] }}', '_self')">aggiungi nuovo account</button>
+					</div>
+				</div>
+			</fieldset>
 
+			{# SUBFORM INDIRIZZI E-MAIL #}
+			{{ sub.mail( table, 'mail', 'e-mail', site, page, pages, ietf, etc, request, session ) }}
 
-		{# SUBFORM INDIRIZZI E-MAIL #}
-	    {{ sub.mail( table, 'mail', 'e-mail', site, page, pages, ietf, etc, request, session ) }}
+			{# SUBFORM NUMERI DI TELEFONO #}
+			{{ sub.telefoni( table, 'telefoni', 'telefoni', site, page, pages, ietf, etc, request, session ) }}
 
-	    {# SUBFORM NUMERI DI TELEFONO #}
-	    {{ sub.telefoni( table, 'telefoni', 'telefoni', site, page, pages, ietf, etc, request, session ) }}
+			{% if anagrafica.indirizzi.inserimento.rapido == 1 %}
+				{# SUBFORM INDIRIZZI RAPIDI #}
+				{{ sub.indirizzi_rapidi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}
+			{% else %}
+				{# SUBFORM INDIRIZZI #}
+				{{ sub.indirizzi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}
+				{% include 'inc/anagrafica.form.modal.aggiungi.indirizzo.html' %}
+			{% endif %}
 
-		{% if anagrafica.indirizzi.inserimento.rapido == 1 %}
-		{# SUBFORM INDIRIZZI RAPIDI #}
-	    {{ sub.indirizzi_rapidi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}
-		{% else %}
-	    {# SUBFORM INDIRIZZI #}
-	    {{ sub.indirizzi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}
-		{% include 'inc/anagrafica.form.modal.aggiungi.indirizzo.html' %}
-		{% endif %}
+			{# SUBFORM CATEGORIE #}
+			{{ sub.categorie( table, 'anagrafica_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
 
-	    {# SUBFORM CATEGORIE #}
-	    {{ sub.categorie( table, 'anagrafica_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
-
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-		{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
-
-	</form>
-    </div>
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, table, request ) }}
+			</fieldset>
+		</form>
+	</div>
 </section>
 
 {% endblock %}
