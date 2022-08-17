@@ -31,76 +31,87 @@
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
-	    {# CAMPI HIDDEN DI BASE #}
-	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
-	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+			{# CAMPI HIDDEN DI BASE #}
+			<input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+			<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+			<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+			<input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+			<input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+			{% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+			<input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
+			{# MODULO PRINCIPALE #}
+			<fieldset>
+				<legend>dati generali <small>{{ legend }}</small></legend>
 
-			<div class="form-group form-row">
-				<div class="col-md-3 col-auto">
-					<span class="label-top">tipologia</span>
-					{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_mastri, request ) }}
+				<div class="form-group form-row">
+					<div class="col-md-3 col-auto">
+						<span class="label-top">tipologia</span>
+						{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_mastri, request ) }}
+					</div>
+					<div class="col-md-3 col-auto">
+						<span class="label-top">genitore</span>
+						{{ frm.select( table, '', '', 'id_genitore', '', etc.select.genitori, request ) }}
+					</div>
+					<div class="col col-md">
+						<span class="label-top">nome</span>
+						{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+					</div>
 				</div>
-				<div class="col-md-3 col-auto">
-					<span class="label-top">genitore</span>
-					{{ frm.select( table, '', '', 'id_genitore', '', etc.select.genitori, request ) }}
+				<div class="form-group form-row">
+					<div class="col-12 col-md">
+						<span class="label-top">indirizzo</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica_indirizzi', '', etc.select.id_anagrafica_indirizzi, request, '', '', '', '', '', '', '', '', '', page, pages, ietf, 'anagrafica_indirizzi' ) }}
+					</div>  
 				</div>
-				<div class="col col-md">
-					<span class="label-top">nome</span>
-					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				<div class="form-group form-row">
+					<div class="col-12">
+					<span class="label-top">note</span>
+					{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
+					</div>
 				</div>
-			</div>
-            <div class="form-group form-row">
-                <div class="col-12 col-md">
-                    <span class="label-top">indirizzo</span>
-                    {{ frm.selectBox( table, '', '', 'id_anagrafica_indirizzi', '', etc.select.id_anagrafica_indirizzi, request, '', '', '', '', '', '', '', '', '', page, pages, ietf, 'anagrafica_indirizzi' ) }}
-                </div>  
-            </div>
-			<div class="form-group form-row">
-				<div class="col-12">
-				<span class="label-top">note</span>
-				{{ frm.textarea( table, '', '', 'note', 'informazioni aggiuntive (ad uso interno)', 3, request ) }}
+
+				<!--legend>ruoli</legend>
+				<div class="form-group form-row">
+					<div class="col-4 col-md-2 col-form-label">
+						<div class="form-check">
+							{{ frm.checkbox( table, '', '', 'se_amministrazione', 'amministrazione', '', request ) }}
+						</div>
+					</div>
+					<div class="col-4 col-md-2 col-form-label">
+						<div class="form-check">
+							{{ frm.checkbox( table, '', '', 'se_produzione', 'produzione', '', request ) }}
+						</div>
+					</div>
+					<div class="col-4 col-md-2 col-form-label">
+						<div class="form-check">
+							{{ frm.checkbox( table, '', '', 'se_commerciale', 'commerciale', '', request ) }}
+						</div>
+					</div>
+				</div-->
+
+				<!--TODO controllare coerenza tra account e anagrafica, non posso selezionare un account non di quella anagrafica  -->
+				<legend>attribuzione</legend>
+				<div class="form-group form-row">
+					<div class="col-12 col-md">
+						<span class="label-top">anagrafica</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">account</span>
+						{{ frm.selectBox( table, '', '', 'id_account', '', etc.select.account, request, '', '', 1, '', '', '', '', '', '', page, pages, ietf ) }}
+					</div>
 				</div>
-			</div>
+			</fieldset>
+		
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, table, request ) }}
+			</fieldset>
 
-		<!--legend>ruoli</legend>
-		<div class="form-group form-row">
-			<div class="col-4 col-md-2 col-form-label">
-                <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_amministrazione', 'amministrazione', '', request ) }}
-                </div>
-            </div>
-			<div class="col-4 col-md-2 col-form-label">
-                <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_produzione', 'produzione', '', request ) }}
-                </div>
-            </div>
-			<div class="col-4 col-md-2 col-form-label">
-                <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_commerciale', 'commerciale', '', request ) }}
-                </div>
-            </div>
-		</div-->
-
-        </fieldset>
-
-     
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-			{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
-
-	</form>
+		</form>
     </div>
 </section>
 
