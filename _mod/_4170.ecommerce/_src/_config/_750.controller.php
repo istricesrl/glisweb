@@ -194,7 +194,7 @@
                 } else { 
 
                     // debug
-                    print_r( $dati );
+                    // print_r( $dati );
 
                     // aggiorno la riga dell'articolo
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']                = $_SESSION['carrello']['id'];
