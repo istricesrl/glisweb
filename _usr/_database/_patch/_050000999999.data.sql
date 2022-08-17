@@ -82,7 +82,9 @@ INSERT INTO `certificazioni` (`id`, `nome`, `id_account_inserimento`, `timestamp
 (2,	'passaporto',	NULL,	NULL,	NULL,	NULL),
 (3,	'patente di guida',	NULL,	NULL,	NULL,	NULL),
 (4,	'certificato medico agonistico',	NULL,	NULL,	NULL,	NULL),
-(5,	'certificato medico sportivo',	NULL,	NULL,	NULL,	NULL);
+(5,	'certificato medico sportivo',	NULL,	NULL,	NULL,	NULL),
+(6,	'tessera sanitaria',	NULL,	NULL,	NULL,	NULL),
+(7,	'certificazione energetica',	NULL,	NULL,	NULL,	NULL);
 
 --| 050000005000
 
@@ -981,10 +983,10 @@ INSERT INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_de
 REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`,`se_persona_giuridica`, `se_pubblica_amministrazione`) VALUES
 (1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1,	NULL,	NULL),
 (2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1),
 (3,	1,	    10,	'sig.',	                NULL,	NULL,	1,	NULL,	NULL),
 (4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1,	NULL,	NULL),
-(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL,	NULL,	NULL);
+(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000050400
 
