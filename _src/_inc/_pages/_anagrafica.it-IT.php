@@ -343,20 +343,20 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'account.form',
 															'account.form.attribuzione',
-															'crediti.account.view' ) )
+															'account.form.crediti' ) )
 	);
 
 	// RELAZIONI CON IL MODULO CREDITI
 	if( in_array( "0530.crediti", $cf['mods']['active']['array'] ) ) {
 		
 		// vista crediti account
-		$p['crediti.account.view'] = array(
+		$p['account.form.crediti'] = array(
 			'sitemap'			=> false,
 			'title'				=> array( $l		=> 'crediti' ),
 			'h1'				=> array( $l		=> 'crediti' ),
 			'parent'			=> array( 'id'		=> 'account.form' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-			'macro'				=> array( '_src/_inc/_macro/_crediti.account.view.php' ),
+			'macro'				=> array( '_src/_inc/_macro/_account.form.crediti.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> $p['account.form']['etc']['tabs'] )
 		);
