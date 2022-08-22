@@ -1076,6 +1076,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.destinatario_nome,
 	carrelli.destinatario_cognome,
 	carrelli.destinatario_denominazione,
+    carrelli.destinatario_id_tipologia_anagrafica,
 	carrelli.destinatario_id_anagrafica,
 	carrelli.destinatario_id_account,
 	carrelli.destinatario_indirizzo,
@@ -1090,6 +1091,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.intestazione_nome,
 	carrelli.intestazione_cognome,
 	carrelli.intestazione_denominazione,
+    carrelli.intestazione_id_tipologia_anagrafica,
 	carrelli.intestazione_id_anagrafica,
 	carrelli.intestazione_id_account,
 	carrelli.intestazione_indirizzo,
@@ -1104,7 +1106,9 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.intestazione_sdi,
 	carrelli.intestazione_pec,
 	carrelli.id_listino,
-    carrelli.id_documento,
+    carrelli.fatturazione_id_tipologia_documento,
+    carrelli.fatturazione_sezionale,
+    carrelli.fatturazione_strategia,
 	carrelli.prezzo_netto_totale,
 	carrelli.prezzo_lordo_totale,
 	carrelli.sconto_percentuale,
@@ -2224,14 +2228,14 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 	FROM
 		crediti
 		LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
-        	LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-        	LEFT JOIN account AS acc1 ON acc1.id = crediti.id_account_emittente
+        LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
+		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
+        LEFT JOIN account AS acc1 ON acc1.id = m1.id_account
 		LEFT JOIN anagrafica AS a1 ON a1.id = acc1.id_anagrafica
-		LEFT JOIN account AS acc2 ON acc2.id = crediti.id_account_destinatario
+		LEFT JOIN account AS acc2 ON acc2.id = m2.id_account
 		LEFT JOIN anagrafica AS a2 ON a2.id = acc2.id_anagrafica
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-		LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
-		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
 ;
 
 --| 090000008910

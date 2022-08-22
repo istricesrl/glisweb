@@ -478,6 +478,7 @@ CREATE TABLE `carrelli` (
   `destinatario_nome` char(255) DEFAULT NULL,
   `destinatario_cognome` char(255) DEFAULT NULL,
   `destinatario_denominazione` char(255) DEFAULT NULL,
+  `destinatario_id_tipologia_anagrafica` INT(11) NULL DEFAULT NULL,
   `destinatario_id_anagrafica` int(11) DEFAULT NULL,
   `destinatario_id_account` int(11) NULL DEFAULT NULL,
   `destinatario_indirizzo` char(255) DEFAULT NULL,
@@ -492,6 +493,7 @@ CREATE TABLE `carrelli` (
   `intestazione_nome` char(255) DEFAULT NULL,
   `intestazione_cognome` char(255) DEFAULT NULL,
   `intestazione_denominazione` char(255) DEFAULT NULL,
+  `intestazione_id_tipologia_anagrafica` INT(11) NULL DEFAULT NULL,
   `intestazione_id_anagrafica` int(11) DEFAULT NULL,
   `intestazione_id_account` int(11) NULL DEFAULT NULL,
   `intestazione_indirizzo` char(255) DEFAULT NULL,
@@ -506,7 +508,9 @@ CREATE TABLE `carrelli` (
   `intestazione_sdi` char(32) DEFAULT NULL,
   `intestazione_pec` char(255) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
-  `id_documento` int(11) NULL DEFAULT NULL,
+  `fatturazione_id_tipologia_documento` INT(11) NULL DEFAULT NULL,
+  `fatturazione_sezionale` CHAR(16) NULL DEFAULT NULL,
+  `fatturazione_strategia` enum('SINGOLA','MULTIPLA') NULL DEFAULT NULL,
   `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
   `sconto_percentuale` decimal(16,5) DEFAULT NULL,
@@ -561,6 +565,12 @@ CREATE TABLE `carrelli_articoli` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000003070
+
+-- carrelli_documenti
+-- tipologia: tabella gestita
+-- verifica: 2022-08-22 11:45 Chiara GDL
 
 --| 010000003100
 

@@ -102,7 +102,7 @@ LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_ch
   WHERE crediti.quantita IS NOT NULL
 ) AS movimenti
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
-GROUP BY movimenti.id, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto;
+GROUP BY movimenti.id, movimenti.id_mastro, movimenti.id_account, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto;
 
 --| 100000020000
 -- __report_giacenza_magazzini__
