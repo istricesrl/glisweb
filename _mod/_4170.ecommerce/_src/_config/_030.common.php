@@ -28,9 +28,13 @@
 	$cf['ecommerce']['profiles'][ DEVELOPEMENT ]	=
 	$cf['ecommerce']['profiles'][ TESTING ]		    =
 	$cf['ecommerce']['profiles'][ PRODUCTION ]	    = array(
+        'merchant' => NULL,                                                                         // ID dell'anagrafica merchant (per l'emissione dei documenti)
+        'magazzino' => NULL,                                                                        // ID del mastro dal quale scaricare la merce (per l'emissione dei documenti)
+        'cassa' => NULL,                                                                            // ID del mastro sul quale caricare gli incassi (per l'emissione dei documenti)
         'provider' => array(
             'contanti' => array(
                 'id'            => 'contanti',                                                      // ID del provider per le tendine
+                'modalita'      => 1,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'action'        => 'carrello.checkout',                                             // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
                 'autosubmit'    => false,                                                           // autosubmit del modulo di riepilogo
@@ -38,6 +42,7 @@
             ),
             'nexi' => array(
                 'id'            => 'nexi',                                                          // ID del provider per le tendine
+                'modalita'      => 8,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'alias'         => NULL,                                                            // 
                 'key'           => NULL,                                                            // 
                 'action_url'    => 'https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet',   // pagina per l'action del form di riepilogo
@@ -50,6 +55,7 @@
             ),
             'paypal' => array(
                 'id'            => 'paypal',                                                        // ID del provider per le tendine
+                'modalita'      => 24,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'business'      => NULL,                                                            // 
                 'action_url'    => 'https://www.sandbox.paypal.com/cgi-bin/webscr',                 // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
@@ -61,6 +67,7 @@
             ),
             'paypal-advanced' => array(
                 'id'            => 'paypal-advanced',                                               // ID del provider per le tendine
+                'modalita'      => 24,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'advanced'      => false,                                                           // impostare a true per consentire il pagamento con carta dal sito
                 'business'      => NULL,                                                            // 
                 'client_id'     => NULL,                                                            // 

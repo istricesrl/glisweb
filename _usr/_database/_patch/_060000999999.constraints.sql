@@ -564,6 +564,9 @@ ALTER TABLE `documenti`
     ADD CONSTRAINT `documenti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `documenti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
+-- NOTA id_sede_emittente e id_sede_destinatario non dovrebbero referenziare la tabella anagrafica_indirizzi?
+-- NOTA la colonna id_listino non dovrebbe essere nel documento e comandare sull'id_listino delle voci?
+
 --| 060000010000
 
 -- documenti_articoli

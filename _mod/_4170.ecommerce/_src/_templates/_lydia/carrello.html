@@ -33,6 +33,25 @@
             <div class="col-4 col-md-1 col-form-label text-right"></div>
             <div class="col-4 col-md-1 text-center"></div>
         </div>
+        <div class="form-row">
+            <div class="col-12 col-md col-form-label">modalità di fatturazione</div>
+            <div class="col-4 col-md-auto">
+                <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__carrello__[fatturazione_id_tipologia_documento]">
+                    {% for tdoc in etc.id_tipologia_documenti %}
+                    <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == session.carrello.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-4 col-md-auto">
+                <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__carrello__[fatturazione_strategia]">
+                    {% for strf in etc.strategie_fatturazione %}
+                    <option value="{{ strf.id }}" {% if strf.id == session.carrello.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-4 col-md-1 col-form-label text-right"></div>
+            <div class="col-4 col-md-1 text-center"></div>
+        </div>
         <div class="form-row totali">
             <div class="col-12 col-md col-form-label"><b>totale carrello</b></div>
             <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
@@ -109,11 +128,19 @@
     <fieldset class="dati">
         <legend>intestazione ordine</legend>
         <div class="form-row">
-            <div class="col-6">
+			<div class="col-auto">
+			    <label class="label-top">persona</label>
+			    <select class="form-control form-control-sm" id="intestazione_id_tipologia_anagrafica" name="__carrello__[intestazione_id_tipologia_anagrafica]" required>
+				{% for tana in etc.id_tipologia_anagrafica %}
+				<option value="{{ tana.id }}"{% if tana.id == session.carrello.intestazione_id_tipologia_anagrafica %} selected{% endif %}>{{ tana.__label__ }}</option>
+				{% endfor %}
+			    </select>
+			</div>
+            <div class="col">
                 <label class="label-top">nome</label>
                 <input class="form-control form-control-sm" id="intestazione_nome" type="text" name="__carrello__[intestazione_nome]" value="{{ session.carrello.intestazione_nome }}" required>
             </div>
-            <div class="col-6">
+            <div class="col">
                 <label class="label-top">cognome</label>
                 <input class="form-control form-control-sm" id="intestazione_cognome" type="text" name="__carrello__[intestazione_cognome]" value="{{ session.carrello.intestazione_cognome }}" required>
             </div>

@@ -35,6 +35,7 @@
 
     } else {
 
+/*
         // seleziono l'ultimo progressivo utilizzato
         $status['current'] = mysqlSelectRow(
             $cf['mysql']['connection'],
@@ -53,6 +54,14 @@
         if( ! isset( $status['current']['numero'] ) ) {
             $status['current']['numero'] = 0;
         }
+*/
+
+        // seleziono l'ultimo progressivo utilizzato
+        $status['current'] = generaInfoNumeroDocumento(
+            array( 's' => $_REQUEST['idTipologia'] ),
+            array( 's' => $_REQUEST['sezionale'] ),
+            array( 's' => $_REQUEST['idAzienda'] )
+        );
 
         // propongo un nuovo progressivo
         $status['new'] = $status['current']['numero'] + 1;

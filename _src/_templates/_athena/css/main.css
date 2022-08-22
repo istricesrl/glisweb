@@ -516,6 +516,17 @@ header.subform-intestazione {
     z-index: 9000;
 }
 
+#cart {
+    white-space: nowrap;
+    width: 45%;
+}
+
+/*
+.cart-row-container {
+    border-bottom: 1px solid #747474;
+}
+*/
+
 #info h2, #jobs h2, #cart h2, #alert h2 {
     font-size: 1.6em;
     margin: 0px;
@@ -523,7 +534,8 @@ header.subform-intestazione {
 
 #info p, #jobs p, #cart p, #alert p {
     margin: 0px;
-    margin-top: 5px;
+    margin-top: 3px;
+    margin-bottom: 3px
 }
 
 #info a,
@@ -556,6 +568,14 @@ header.subform-intestazione {
     position: absolute;
     top: 2em;
     left: 2.5em;
+}
+
+@media (max-width: 991.98px) {
+
+    #cart {
+        width: 100%;
+    }
+    
 }
 
 #form-login {

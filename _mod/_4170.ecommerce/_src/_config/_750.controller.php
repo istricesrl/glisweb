@@ -36,6 +36,14 @@
                 'carrelli'
             );
 
+            // valuta del carrello
+            $_SESSION['carrello']['valuta_utf8'] = mysqlSelectCachedValue(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT utf8 FROM valute INNER JOIN listini ON valute.id = listini.id_valuta WHERE listini.id = ?',
+                array( array( 's' => $_SESSION['carrello']['id_listino'] ) )
+            );
+
             // TODO
             // if( isset( $_SESSION['utm'] ) && ! empty( $_SESSION['utm'][ $field ] ) ) { ... }
 
@@ -66,13 +74,23 @@
         $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
         $_SESSION['carrello']['sconto_percentuale']         = 0;
 
+        // debug
+        // print_r( $_SESSION['carrello']['articoli'] );
+
         // STEP 4 - gestione acquisto singolo articolo
         if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
 
             // quantità acquistata
             $_REQUEST['__carrello__']['__articolo__']['quantita'] = ( isset( $_REQUEST['__carrello__']['__articolo__']['quantita'] ) )
                 ? $_REQUEST['__carrello__']['__articolo__']['quantita']
-                : 1;
+                : (
+                    ( isset( $_SESSION['carrello']['articoli'][ $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ]['quantita'] ) )
+                    ? ( $_SESSION['carrello']['articoli'][ $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ]['quantita'] + 1 )
+                    : 1
+                );
+
+            // debug
+            // die( 'qta ' . $_REQUEST['__carrello__']['__articolo__']['quantita'] );
 
             // log
             logWrite( 'acquisto singolo articolo ' . $_REQUEST['__carrello__']['__articolo__']['id_articolo'] . ' x ' . $_REQUEST['__carrello__']['__articolo__']['quantita'], 'cart' );
@@ -194,7 +212,7 @@
                 } else { 
 
                     // debug
-                    print_r( $dati );
+                    // print_r( $dati );
 
                     // aggiorno la riga dell'articolo
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_carrello']                = $_SESSION['carrello']['id'];
@@ -294,6 +312,7 @@
             array_diff_key(
                 $_SESSION['carrello'], array(
                     'articoli' => array(),
+                    'valuta_utf8' => NULL,
                     'se_login' => NULL,
                     'timestamp_inserimento' => NULL
                 )

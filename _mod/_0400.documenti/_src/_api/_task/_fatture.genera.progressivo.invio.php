@@ -17,6 +17,7 @@
     // se è specificata l'azienda
     if( ! empty( $_REQUEST['idAzienda'] ) ) {
 
+/*
         // seleziono l'ultimo progressivo utilizzato
         $status['current'] = mysqlSelectValue(
             $cf['mysql']['connection'],
@@ -26,6 +27,8 @@
                 array( 's' => $_REQUEST['idAzienda'] )
             )
         );
+*/
+        $status['current'] = generaInfoProgressivoInvio( $_REQUEST['idAzienda'] );
 
         // debug
         $status['new'] = base_convert( $status['current'], 36, 10 );

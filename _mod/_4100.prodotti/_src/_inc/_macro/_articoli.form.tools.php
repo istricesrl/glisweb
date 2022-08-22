@@ -26,7 +26,7 @@
 	if( in_array( "4170.ecommerce", $cf['mods']['active']['array'] ) ) {
 
 		$ct['page']['contents']['metro']['ecommerce'][] = array(
-			'ws' => $ct['site']['url'] . 'task/4170.ecommerce/aggiungi.al.carrello?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_articolo]='.$_REQUEST[ $ct['form']['table'] ]['id'],
+			'ws' => $ct['site']['url'] . 'task/4170.ecommerce/aggiungi.al.carrello?__carrello__[__articolo__][id_articolo]='.$_REQUEST[ $ct['form']['table'] ]['id'],
 			'callback' => 'aggiornaCarrello',
 			'icon' => NULL,
 			'fa' => 'fa-cart-plus',

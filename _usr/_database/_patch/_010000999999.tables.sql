@@ -507,6 +507,8 @@ CREATE TABLE `carrelli` (
   `intestazione_pec` char(255) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_documento` int(11) NULL DEFAULT NULL,
+  `fatturazione_id_tipologia_documento` int(11) NULL DEFAULT NULL,
+  `fatturazione_strategia` enum('SINGOLA','MULTIPLA') DEFAULT NULL,
   `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
   `sconto_percentuale` decimal(16,5) DEFAULT NULL,

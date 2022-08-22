@@ -28,7 +28,8 @@
 	    'id_prodotto' => 'prodotto',
         'id' => 'articolo',
 	    'nome' => 'nome',
-        'ean' => 'EAN'
+        'ean' => 'EAN',
+        NULL => 'azioni'
 	);
 
     // stili della vista
@@ -37,5 +38,15 @@
 	    'ean' => 'text-left'
 	);
 
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
+    );
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    // azioni
+    foreach( $ct['view']['data'] as &$row ) {
+        $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/4170.ecommerce/aggiungi.al.carrello?__carrello__[__articolo__][id_articolo]='.$row['id'].'\', aggiornaCarrello );"><span class="media-left"><i class="fa fa-cart-plus"></i></span></a>';
+    }

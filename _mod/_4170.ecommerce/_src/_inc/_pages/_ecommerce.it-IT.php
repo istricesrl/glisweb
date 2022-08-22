@@ -14,21 +14,20 @@
 		'macro'		=> array( $m . '_src/_inc/_macro/_ecommerce.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'ecommerce' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ecommerce' ),
-		'priority'	=> '660' ) ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ecommerce' ), 'priority'	=> '660' ) ) )
 	);
 
 	// carrello
 	$p['ecommerce.carrello'] = array(
 		'sitemap'		=> false,
-		'title'			=> array( $l		=> 'carrello' ),
-		'h1'			=> array( $l		=> 'carrello' ),
+		'title'			=> array( $l		=> 'cassa' ),
+		'h1'			=> array( $l		=> 'cassa' ),
 		'parent'		=> array( 'id'		=> 'ecommerce' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.carrello.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.carrello.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello' ) ),
-
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cassa' ), 'priority'	=> '660' ) ) )
 	);
 
     // carrello

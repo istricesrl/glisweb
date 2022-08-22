@@ -134,9 +134,9 @@
                 </div>
                 {% endif %}
 
-                {% if archivium.profile %}
                 <legend>fatturazione elettronica</legend>
                 <div class="form-group form-row">
+                    {% if archivium.profile %}
                     <div class="col-12 col-md-4">
                         <span class="label-top-disabled">codice archivium</span>
                         {{ frm.inputDisabled( table, '', '', 'codice_archivium', '', '', request ) }}	
@@ -145,6 +145,7 @@
                         <span class="label-top-disabled">codice sdi</span>
                         {{ frm.inputDisabled( table, '', '', 'codice_sdi', '', '', request ) }}	
                     </div>
+                    {% endif %}
                     <div class="col-12 col-md">
                         <span class="label-top{% if request[ table ].codice_archivium %}-disabled{% endif %}">progressivo invio</span>
                         {% if not request[ table ].codice_archivium %}
@@ -159,8 +160,6 @@
                     </div>
                     {% endif %}
                 </div>
-                {% endif %}
-
             
             </fieldset>
 

@@ -1,6 +1,8 @@
 <?php
 
-    function trovaIdComune( $comune ) {
+    function trovaidComune( $comune ) {
+
+        // TODO migliorare prevedendo l'ID provincia come elemento di ricerca vedi sotto inserisciIndirizzo()
 
         global $cf;
 
@@ -427,5 +429,130 @@
         }
 
         return $r;
+
+    }
+
+    function inserisciIndirizzo( $indirizzo, $cap, $comune, $provincia, $localita = NULL, $stato = NULL, $idComune = NULL, $idProvincia = NULL, $idStato = NULL ) {
+
+        // dati globali
+        global $cf;
+
+        // pulisco gli spazi ai lati
+        $indirizzo = trim( strtolower( $indirizzo ) );
+
+        // elenco tipologie
+        $regexp = '/^\b(' . implode( '|', mysqlSelectColumn( 'nome', $cf['mysql']['connection'], 'SELECT nome FROM tipologie_indirizzi' ) ) . ')\b/';
+
+        // trovo la tipologia
+        preg_match( $regexp, $indirizzo, $matches );
+        $tipologia = ( count( $matches ) > 0 ) ? $matches[0] : NULL;
+
+        // debug
+        // echo 'tipologia: ' . $tipologia . PHP_EOL;
+
+        // trovo l'ID della tipologia
+        $idTipologia = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM tipologie_indirizzi WHERE nome = ?', array( array( 's' => $tipologia ) ) );
+
+        // debug
+        // echo 'ID tipologia: ' . $idTipologia . PHP_EOL;
+
+        // individuazione civico
+        $regexp = '/[0-9]+[0-9a-zA-Z\/]*$/';
+
+        // trovo il civico
+        preg_match( $regexp, $indirizzo, $matches );
+        $civico = $matches[0];
+
+        // debug
+        // echo 'civico: ' . $civico . PHP_EOL;
+
+        // trovo la parte nominale
+        $nominale = ucwords( trim( str_replace( array( $tipologia, $civico ), NULL, $indirizzo ) ) );
+
+        // individuazione numeri romani
+        $regexp = '/\b([IVLXCDM]{1,3}[LVCD]{0,1}[IXMC]{0,3})\b/';
+
+        // trovo eventuali numeri romani nella parte nominale
+        preg_match_all( $regexp, strtoupper( $nominale ), $matches );
+
+        // rimetto in maiuscolo i numeri romani
+        $nominale = str_replace( array_map( 'ucwords', array_map( 'strtolower', $matches[0] ) ), array_map( 'strtoupper', $matches[0] ), $nominale );
+
+        // debug
+        // echo 'parte nominale: ' . $nominale . PHP_EOL;
+
+        // trovo l'ID del comune e della provincia per CAP
+        if( empty( $idComune ) ) {
+            $row = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT indirizzi.id_comune, comuni.id_provincia FROM indirizzi INNER JOIN comuni ON comuni.id = indirizzi.id_comune WHERE indirizzi.cap = ?',
+                array( array( 's' => $cap ) )
+            );
+            if( ! empty( $row ) ) {
+                $idComune = $row['id_comune'];
+                if( empty( $idProvincia ) ) {
+                    $idProvincia = $row['id_provincia'];
+                }
+            }
+        }
+
+        // trovo l'ID della provincia
+        if( empty( $idProvincia ) ) {
+            $row = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT provincie.id AS id_provincia, provincie.id_regione, regioni.id_stato AS id_stato FROM provincie INNER JOIN regioni ON regioni.id = provincie.id_regione WHERE provincie.sigla = ? OR provincie.nome = ?',
+                array(
+                    array( 's' => $provincia ),
+                    array( 's' => $provincia )
+                )
+            );
+            if( ! empty( $row ) ) {
+                $idProvincia = $row['id_provincia'];
+            }
+        }
+
+        // trovo l'ID del comune
+        if( empty( $idComune ) ) {
+            $row = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT comuni.id FROM comuni WHERE nome = ? AND id_provincia = ?',
+                array(
+                    array( 's' => $comune ),
+                    array( 's' => $idProvincia )
+                )
+            );
+            if( ! empty( $row ) ) {
+                $idComune = $row['id'];
+            }
+        }
+
+        // località
+        $localita = ucfirst( strtolower( $localita ) );
+
+        // debug
+        // echo 'località: ' . $localita . PHP_EOL;
+        // echo 'CAP: ' . $cap . PHP_EOL;
+        // echo 'ID comune: ' . $idComune . PHP_EOL;
+        // echo 'ID provincia: ' . $idProvincia . PHP_EOL;
+
+        // inserisco l'indirizzo
+        $idIndirizzo = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id_tipologia' => $idTipologia,
+                'id_comune' => $idComune,
+                'cap' => $cap,
+                'localita' => $localita,
+                'indirizzo' => $nominale,
+                'civico' => $civico
+            ),
+            'indirizzi'
+        );
+
+        // debug
+        // echo 'ID indirizzo: ' . $idIndirizzo . PHP_EOL;
+
+        // return
+        return $idIndirizzo;
 
     }

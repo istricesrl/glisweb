@@ -1,8 +1,22 @@
 <div id="cart" class="slide-info">
-    <h2>carrello</h2>
-    <span id="cart-articoli">
-        {% for articolo in session.carrello.articoli %}<div class="cart-row-container">
-            <p>{{ articolo.id_articolo }}</p>
-        </div>{% endfor %}
-    </span>
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>carrello</h2>
+            </div>
+        </div>
+        <span id="cart-articoli" class="pb-3">
+            {% for articolo in session.carrello.articoli %}<div class="cart-row-container row">
+                <div class="col-1"><p>{{ articolo.quantita }}x</p></div>
+                <div class="col-2"><p>{{ articolo.id_articolo }}</p></div>
+                <div class="col"><p>{{ articolo.descrizione }}</p></div>
+                <div class="col-2 text-right"><p>{{ '%0.2f'|format(articolo.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</p></div>
+            </div>{% endfor %}
+        </span>
+        <div class="row">
+            <div class="col">
+                <p><button onclick="window.open('{{ pages['ecommerce.carrello'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai al checkout</button></p>
+            </div>
+        </div>
+    </div>
 </div>

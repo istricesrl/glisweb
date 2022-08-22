@@ -149,10 +149,28 @@
 
 			var articolo = d.articoli[ codice ];
 
-			var p1 = $( '<div>', { "class" : "cart-row-container" } );
-			var p2 = $( '<p>' ).text( articolo.id_articolo );
+			var p1 = $( '<div>', { "class" : "cart-row-container row" } );
 
-			p2.appendTo( p1 );
+			var p11 = $( '<div>', { "class" : "col-1" } );
+			var p12 = $( '<div>', { "class" : "col-2" } );
+			var p13 = $( '<div>', { "class" : "col" } );
+			var p14 = $( '<div>', { "class" : "col-2 text-right" } );
+
+			var p111 = $( '<p>' ).text( articolo.quantita + 'x' );
+			var p121 = $( '<p>' ).text( articolo.id_articolo );
+			var p131 = $( '<p>' ).text( articolo.descrizione );
+			var p141 = $( '<p>' ).text( articolo.prezzo_lordo_finale.toFixed(2) + ' ' + d.valuta_utf8 );
+
+			p111.appendTo( p11 );
+			p121.appendTo( p12 );
+			p131.appendTo( p13 );
+			p141.appendTo( p14 );
+
+			p11.appendTo( p1 );
+			p12.appendTo( p1 );
+			p13.appendTo( p1 );
+			p14.appendTo( p1 );
+
 			p1.appendTo('#cart-articoli');
 
 			// console.log( articolo );
