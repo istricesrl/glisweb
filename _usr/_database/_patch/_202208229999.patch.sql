@@ -559,5 +559,64 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 ;
 
 --| 202208223200
+UPDATE `ruoli_anagrafica` SET
+`id` = '27',
+`id_genitore` = NULL,
+`nome` = 'locatore',
+`html_entity` = NULL,
+`font_awesome` = NULL,
+`se_produzione` = NULL,
+`se_didattica` = NULL,
+`se_organizzazioni` = NULL,
+`se_relazioni` = NULL,
+`se_risorse` = NULL,
+`se_progetti` = NULL,
+`se_immobili` = NULL,
+`se_contratti` = '1'
+WHERE `id` = '27';
 
+--| 202208223210
+INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_didattica`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_immobili`, `se_contratti`) VALUES
+(31,	NULL,	'professionista',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL)
+ON DUPLICATE KEY UPDATE
+	id_genitore = VALUES( id_genitore ),
+	nome = VALUES(nome),
+	html_entity = VALUES(html_entity),
+	font_awesome = VALUES(font_awesome),
+	se_organizzazioni = VALUES(se_organizzazioni),
+	se_relazioni = VALUES(se_relazioni),
+	se_risorse = VALUES(se_risorse),
+	se_progetti = VALUES(se_progetti),
+	se_didattica = VALUES(se_didattica),
+	se_immobili = VALUES(se_immobili),
+	se_contratti = VALUES(se_contratti);
+
+--| 202208223220
+ALTER TABLE `carrelli_articoli`
+	ADD `id_pagamento` int(11) DEFAULT NULL AFTER `id_iva`,
+ 	ADD KEY `id_pagamento` (`id_pagamento`),
+    ADD CONSTRAINT `carrelli_articoli_ibfk_05_nofollow`    FOREIGN KEY (`id_pagamento`) REFERENCES `pagamenti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+
+--| 202208223230
+CREATE OR REPLACE VIEW carrelli_articoli_view AS
+	SELECT
+		carrelli_articoli.id,
+		carrelli_articoli.id_carrello,
+		carrelli_articoli.id_articolo,
+		carrelli_articoli.id_iva,
+		carrelli_articoli.id_pagamento,
+		carrelli_articoli.destinatario_id_anagrafica,
+		carrelli_articoli.prezzo_netto_unitario,
+		carrelli_articoli.prezzo_lordo_unitario,
+		carrelli_articoli.quantita,
+		carrelli_articoli.prezzo_netto_totale,
+		carrelli_articoli.prezzo_lordo_totale,
+		carrelli_articoli.sconto_percentuale,
+		carrelli_articoli.sconto_valore,
+		carrelli_articoli.prezzo_netto_finale,
+		carrelli_articoli.prezzo_lordo_finale,
+		carrelli_articoli.id_account_inserimento,
+		carrelli_articoli.id_account_aggiornamento
+	FROM carrelli_articoli;
+	
 --| FINE

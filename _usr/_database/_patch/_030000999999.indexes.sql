@@ -510,6 +510,7 @@ ALTER TABLE `carrelli_articoli`
   	ADD KEY `id_articolo` (`id_articolo`),  
 	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
 	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `id_pagamento` (`id_pagamento`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `id_carrello_id_articolo` (`id_carrello`,`id_articolo`),

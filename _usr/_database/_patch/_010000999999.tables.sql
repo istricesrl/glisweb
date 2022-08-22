@@ -550,6 +550,7 @@ CREATE TABLE `carrelli_articoli` (
   `id_carrello` int(11) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
   `id_iva` int(11) DEFAULT NULL,
+  `id_pagamento` int(11) DEFAULT NULL,
   `destinatario_id_anagrafica` int(11) DEFAULT NULL,
   `prezzo_netto_unitario` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_unitario` decimal(16,5) DEFAULT NULL,
