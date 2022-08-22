@@ -469,13 +469,15 @@ ALTER TABLE `carrelli`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `session` (`session`), 
 	ADD KEY `id_listino` (`id_listino`), 
-	ADD KEY `id_documento` ( `id_documento` ),
+	ADD KEY `fatturazione_id_tipologia_documento` (`fatturazione_id_tipologia_documento`),
 	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`), 
+	ADD KEY `intestazione_id_tipologia_anagrafica` (`intestazione_id_tipologia_anagrafica`),
 	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
 	ADD KEY `intestazione_id_account` (`intestazione_id_account`), 
 	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`), 
 	ADD KEY `destinatario_id_provincia` (`destinatario_id_provincia`), 
 	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`), 
+	ADD KEY `destinatario_id_tipologia_anagrafica` (`destinatario_id_tipologia_anagrafica`),
 	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
 	ADD KEY `destinatario_id_account` (`destinatario_id_account`),
 	ADD KEY `ordine_pagamento` ( `ordine_pagamento` ),
@@ -508,6 +510,7 @@ ALTER TABLE `carrelli_articoli`
   	ADD KEY `id_articolo` (`id_articolo`),  
 	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
 	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `id_pagamento` (`id_pagamento`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `id_carrello_id_articolo` (`id_carrello`,`id_articolo`),
@@ -519,6 +522,27 @@ ALTER TABLE `carrelli_articoli`
 -- carrelli_articoli
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000003070
+
+-- carrelli_documenti
+-- tipologia: tabella gestita
+-- verifica: 2022-08-22 11:45 Chiara GDL
+ALTER TABLE `carrelli_documenti`
+  	ADD PRIMARY KEY (`id`),
+  	ADD KEY `id_carrello` (`id_carrello`),  
+  	ADD KEY `id_documento` (`id_documento`),  
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unica` (`id_carrello`,`id_documento`),
+  	ADD KEY `indice` (`id`, `id_carrello`,  `id_documento`, `id_account_inserimento`, `id_account_aggiornamento` )
+  ;
+
+--| 030000003071
+
+-- carrelli_documenti
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000003100
 
@@ -2150,13 +2174,12 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `id_iban` (`id_iban`), 
 	ADD KEY `id_listino` (`id_listino`), 
-	ADD KEY `id_iva` (`id_iva`), 
 	ADD KEY `timestamp_pagamento` (`timestamp_pagamento`), 
 	ADD KEY `timestamp_scadenza` (`timestamp_scadenza`), 
-	ADD KEY `importo_netto_totale` (`importo_netto_totale`), 
+	ADD KEY `importo_lordo_totale` (`importo_lordo_totale`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_documento`,`timestamp_pagamento`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`id_iban`,`importo_netto_totale`,`id_iva`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_documento`,`timestamp_pagamento`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`id_iban`,`importo_lordo_totale`);
 
 --| 030000023101
 
@@ -3423,6 +3446,10 @@ ALTER TABLE `tipologie_anagrafica`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `se_persona_fisica` (`se_persona_fisica`),
+	ADD KEY `se_persona_giuridica` (`se_persona_giuridica`),
+	ADD KEY `se_pubblica_amministrazione` (`se_pubblica_amministrazione`),
+	ADD KEY `se_ecommerce` (`se_ecommerce`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`, `se_persona_giuridica`,`se_pubblica_amministrazione`);
