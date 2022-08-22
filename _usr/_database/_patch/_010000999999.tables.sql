@@ -475,6 +475,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
 CREATE TABLE `carrelli` (
   `id` int(11) NOT NULL,
   `session` char(32) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
   `destinatario_nome` char(255) DEFAULT NULL,
   `destinatario_cognome` char(255) DEFAULT NULL,
   `destinatario_denominazione` char(255) DEFAULT NULL,
@@ -571,6 +572,15 @@ CREATE TABLE `carrelli_articoli` (
 -- carrelli_documenti
 -- tipologia: tabella gestita
 -- verifica: 2022-08-22 11:45 Chiara GDL
+CREATE TABLE IF NOT EXISTS `carrelli_documenti` (
+  `id` int(11) NOT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000003100
 
@@ -2021,8 +2031,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_iban` int(11) DEFAULT NULL,
-  `importo_netto_totale` decimal(9,2) NOT NULL,
-  `id_iva` int(11) DEFAULT NULL,
+  `importo_lordo_totale` decimal(9,2) NOT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL, 
 	`timestamp_scadenza` int(11) DEFAULT NULL,
@@ -3177,6 +3186,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (
   `se_persona_fisica` int(1) DEFAULT NULL,
   `se_persona_giuridica` int(1) DEFAULT NULL,
   `se_pubblica_amministrazione` int(1) DEFAULT NULL,
+  `se_ecommerce` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

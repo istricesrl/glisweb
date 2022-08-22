@@ -1168,6 +1168,26 @@ CREATE OR REPLACE VIEW carrelli_articoli_view AS
 		carrelli_articoli.id_account_aggiornamento
 	FROM carrelli_articoli;
 
+--| 090000003070
+
+-- carrelli_documenti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `carrelli_documenti_view`;
+
+--| 090000003071
+
+-- carrelli_documenti_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-22 11:45 Chiara GDL
+CREATE OR REPLACE VIEW carrelli_documenti_view AS
+	SELECT
+		carrelli_documenti.id,
+		carrelli_documenti.id_carrello,
+		carrelli_documenti.id_documento,
+		carrelli_documenti.id_account_inserimento,
+		carrelli_documenti.id_account_aggiornamento
+	FROM carrelli_documenti;
+
 --| 090000003100
 
 -- categorie_anagrafica_view
@@ -4905,9 +4925,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		pagamenti.id_iban,
 		iban.iban AS iban,
-		pagamenti.importo_netto_totale,
-		pagamenti.id_iva,
-		iva.nome AS iva,
+		pagamenti.importo_lordo_totale,
 		pagamenti.id_listino,
 		listini.nome AS listino,
 		pagamenti.id_pianificazione,
@@ -4922,7 +4940,6 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN tipologie_pagamenti ON tipologie_pagamenti.id = pagamenti.id_tipologia
 		LEFT JOIN mastri AS m1 ON m1.id = pagamenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
-		LEFT JOIN iva ON iva.id = pagamenti.id_iva
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
@@ -7486,6 +7503,7 @@ CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
 		tipologie_anagrafica.se_persona_fisica,
         tipologie_anagrafica.se_persona_giuridica,
         tipologie_anagrafica.se_pubblica_amministrazione,
+        tipologie_anagrafica.se_ecommerce,
 		tipologie_anagrafica.id_account_inserimento,
 		tipologie_anagrafica.id_account_aggiornamento,
 		tipologie_anagrafica_path( tipologie_anagrafica.id ) AS __label__

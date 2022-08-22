@@ -71,18 +71,12 @@
 				</div>
 				<div class="col-4 col-md-2">
 					<span class="label-top">importo</span>
-					{{ frm.inputRequired( table, '', '', 'importo_netto_totale', '', '', request ) }}
+					{{ frm.inputRequired( table, '', '', 'importo_lordo_totale', '', '', request ) }}
 				</div>
 				<div class="col-auto">
 					<span class="label-top remove-after-duplicate">listino</span>
 					{{ frm.select( table, '', '', 'id_listino', '', etc.select.id_listini, request ) }}
 				</div>
-<!--
-				<div class="col-auto">
-					<span class="label-top remove-after-duplicate">iva</span>
-					{{ frm.select( table, '', '', 'id_iva', '', etc.select.id_iva, request ) }}
-				</div>
--->
 				<div class="col-auto">
 					<span class="label-top">scadenza</span>
 					{{ frm.datetime( table, '', '', 'timestamp_scadenza', '', '', request)  }}

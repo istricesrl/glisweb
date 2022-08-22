@@ -325,6 +325,7 @@ ALTER TABLE `carrelli`
     ADD `fatturazione_strategia` enum('SINGOLA','MULTIPLA') NULL DEFAULT NULL AFTER `fatturazione_sezionale`,
     ADD `destinatario_id_tipologia_anagrafica` INT(11) NULL DEFAULT NULL AFTER `destinatario_denominazione`,
     ADD `intestazione_id_tipologia_anagrafica` INT(11) NULL DEFAULT NULL AFTER `intestazione_denominazione`,
+	ADD  `nome` char(64) DEFAULT NULL  AFTER `session`,
 	ADD KEY `destinatario_id_tipologia_anagrafica` (`destinatario_id_tipologia_anagrafica`),
 	ADD KEY `intestazione_id_tipologia_anagrafica` (`intestazione_id_tipologia_anagrafica`),
 	ADD KEY `fatturazione_id_tipologia_documento` (`fatturazione_id_tipologia_documento`),
@@ -337,6 +338,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	SELECT
 	carrelli.id,
 	carrelli.session,
+	carrelli.nome,
 	carrelli.destinatario_nome,
 	carrelli.destinatario_cognome,
 	carrelli.destinatario_denominazione,
@@ -401,5 +403,161 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.timestamp_aggiornamento
 FROM carrelli;
 
+--| 202208223090
+CREATE TABLE IF NOT EXISTS `carrelli_documenti` (
+  `id` int(11) NOT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202208223100
+ALTER TABLE `carrelli_documenti`
+  	ADD PRIMARY KEY (`id`),
+  	ADD KEY `id_carrello` (`id_carrello`),  
+  	ADD KEY `id_documento` (`id_documento`),  
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD UNIQUE KEY `unica` (`id_carrello`,`id_documento`),
+  	ADD KEY `indice` (`id`, `id_carrello`,  `id_documento`, `id_account_inserimento`, `id_account_aggiornamento` )
+  ;
+
+--| 202208223110
+ALTER TABLE `carrelli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202208223120
+ALTER TABLE `carrelli_documenti`
+    ADD CONSTRAINT `carrelli_documenti_ibfk_01`             FOREIGN KEY (`id_carrello`) REFERENCES `carrelli` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `carrelli_documenti_ibfk_02_nofollow`    FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `carrelli_documenti_ibfk_98_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `carrelli_documenti_ibfk_99_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202208223130
+CREATE OR REPLACE VIEW carrelli_documenti_view AS
+	SELECT
+		carrelli_documenti.id,
+		carrelli_documenti.id_carrello,
+		carrelli_documenti.id_documento,
+		carrelli_documenti.id_account_inserimento,
+		carrelli_documenti.id_account_aggiornamento
+	FROM carrelli_documenti;
+
+--| 202208223140
+ALTER TABLE `tipologie_anagrafica`
+	ADD   `se_ecommerce` int(1) DEFAULT NULL AFTER `se_pubblica_amministrazione`,
+	ADD KEY `se_persona_fisica` (`se_persona_fisica`),
+	ADD KEY `se_persona_giuridica` (`se_persona_giuridica`),
+	ADD KEY `se_pubblica_amministrazione` (`se_pubblica_amministrazione`),
+	ADD KEY `se_ecommerce` (`se_ecommerce`);
+
+--| 202208223150
+CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
+	SELECT
+		tipologie_anagrafica.id,
+		tipologie_anagrafica.id_genitore,
+		tipologie_anagrafica.ordine,
+		tipologie_anagrafica.nome,
+		tipologie_anagrafica.html_entity,
+		tipologie_anagrafica.font_awesome,
+		tipologie_anagrafica.se_persona_fisica,
+        tipologie_anagrafica.se_persona_giuridica,
+        tipologie_anagrafica.se_pubblica_amministrazione,
+        tipologie_anagrafica.se_ecommerce,
+		tipologie_anagrafica.id_account_inserimento,
+		tipologie_anagrafica.id_account_aggiornamento,
+		tipologie_anagrafica_path( tipologie_anagrafica.id ) AS __label__
+	FROM tipologie_anagrafica
+;
+
+--| 202208223160
+ALTER TABLE `pagamenti`
+DROP KEY `indice`,
+DROP KEY `importo_netto_totale`,
+DROP CONSTRAINT `pagamenti_ibfk_07_nofollow`;
+
+--| 202208223170
+ALTER TABLE `pagamenti`
+DROP KEY `indice`,
+DROP KEY `importo_netto_totale`,
+DROP CONSTRAINT `pagamenti_ibfk_07_nofollow`;
+
+--| 202208223180
+ALTER TABLE `pagamenti` 
+	CHANGE `importo_netto_totale` `importo_lordo_totale` decimal(9,2) NOT NULL,
+    DROP KEY `id_iva`,
+    DROP COLUMN `id_iva`,
+	ADD KEY `importo_lordo_totale` ( `importo_lordo_totale` ),
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_documento`,`timestamp_pagamento`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`id_iban`,`importo_lordo_totale`);
+;
+
+--| 202208223190
+CREATE OR REPLACE VIEW `pagamenti_view` AS
+	SELECT
+		pagamenti.id,
+		pagamenti.id_tipologia,
+		pagamenti.id_modalita_pagamento,
+		concat(modalita_pagamento.codice, ' - ' ,modalita_pagamento.nome) AS modalita_pagamento,
+		tipologie_pagamenti.nome AS tipologia,
+		pagamenti.ordine,
+		pagamenti.nome,
+		pagamenti.note,
+		pagamenti.note_pagamento,
+		pagamenti.id_documento,
+        concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data
+		) AS documento,
+		tipologie_documenti.id AS id_tipologia_documento,
+		pagamenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		pagamenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		pagamenti.id_iban,
+		iban.iban AS iban,
+		pagamenti.importo_lordo_totale,
+		pagamenti.id_listino,
+		listini.nome AS listino,
+		pagamenti.id_pianificazione,
+		pagamenti.timestamp_scadenza,
+		from_unixtime( pagamenti.timestamp_scadenza, '%Y-%m-%d' ) AS data_ora_scadenza,
+		pagamenti.timestamp_pagamento,
+		from_unixtime( pagamenti.timestamp_pagamento, '%Y-%m-%d' ) AS data_ora_pagamento,
+		pagamenti.id_account_inserimento,
+		pagamenti.id_account_aggiornamento,
+		pagamenti.nome AS __label__
+	FROM pagamenti
+		LEFT JOIN tipologie_pagamenti ON tipologie_pagamenti.id = pagamenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = pagamenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
+		LEFT JOIN listini ON listini.id = pagamenti.id_listino
+		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
+		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN iban ON iban.id = pagamenti.id_iban
+	WHERE
+		tipologie_documenti.se_fattura = 1
+		OR
+		tipologie_documenti.se_nota_credito = 1
+		OR
+		tipologie_documenti.se_ricevuta = 1
+		OR
+		tipologie_documenti.se_pro_forma = 1
+;
+
+--| 202208223200
 
 --| FINE
