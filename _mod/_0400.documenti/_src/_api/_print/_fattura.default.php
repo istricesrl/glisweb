@@ -142,9 +142,8 @@
         $cf['mysql']['connection'],
         'SELECT modalita_pagamento.codice AS codice_pagamento, '.
         'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
-        'importo_lordo_totale, iban.iban AS iban  '.
+        'pagamenti.importo_lordo_totale, iban.iban AS iban  '.
         'FROM pagamenti '.
-        'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
         'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
         'WHERE pagamenti.id_documento = ?',

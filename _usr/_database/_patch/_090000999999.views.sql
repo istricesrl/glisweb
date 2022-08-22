@@ -1076,6 +1076,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.destinatario_nome,
 	carrelli.destinatario_cognome,
 	carrelli.destinatario_denominazione,
+    carrelli.destinatario_id_tipologia_anagrafica,
 	carrelli.destinatario_id_anagrafica,
 	carrelli.destinatario_id_account,
 	carrelli.destinatario_indirizzo,
@@ -1090,6 +1091,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.intestazione_nome,
 	carrelli.intestazione_cognome,
 	carrelli.intestazione_denominazione,
+    carrelli.intestazione_id_tipologia_anagrafica,
 	carrelli.intestazione_id_anagrafica,
 	carrelli.intestazione_id_account,
 	carrelli.intestazione_indirizzo,
@@ -1104,7 +1106,9 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.intestazione_sdi,
 	carrelli.intestazione_pec,
 	carrelli.id_listino,
-    carrelli.id_documento,
+    carrelli.fatturazione_id_tipologia_documento,
+    carrelli.fatturazione_sezionale,
+    carrelli.fatturazione_strategia,
 	carrelli.prezzo_netto_totale,
 	carrelli.prezzo_lordo_totale,
 	carrelli.sconto_percentuale,
@@ -1150,6 +1154,7 @@ CREATE OR REPLACE VIEW carrelli_articoli_view AS
 		carrelli_articoli.id_carrello,
 		carrelli_articoli.id_articolo,
 		carrelli_articoli.id_iva,
+		carrelli_articoli.id_pagamento,
 		carrelli_articoli.destinatario_id_anagrafica,
 		carrelli_articoli.prezzo_netto_unitario,
 		carrelli_articoli.prezzo_lordo_unitario,
@@ -1163,6 +1168,26 @@ CREATE OR REPLACE VIEW carrelli_articoli_view AS
 		carrelli_articoli.id_account_inserimento,
 		carrelli_articoli.id_account_aggiornamento
 	FROM carrelli_articoli;
+
+--| 090000003070
+
+-- carrelli_documenti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `carrelli_documenti_view`;
+
+--| 090000003071
+
+-- carrelli_documenti_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-22 11:45 Chiara GDL
+CREATE OR REPLACE VIEW carrelli_documenti_view AS
+	SELECT
+		carrelli_documenti.id,
+		carrelli_documenti.id_carrello,
+		carrelli_documenti.id_documento,
+		carrelli_documenti.id_account_inserimento,
+		carrelli_documenti.id_account_aggiornamento
+	FROM carrelli_documenti;
 
 --| 090000003100
 
@@ -2224,14 +2249,14 @@ CREATE OR REPLACE VIEW `crediti_view` AS
 	FROM
 		crediti
 		LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
-        	LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-        	LEFT JOIN account AS acc1 ON acc1.id = crediti.id_account_emittente
+        LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
+		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
+        LEFT JOIN account AS acc1 ON acc1.id = m1.id_account
 		LEFT JOIN anagrafica AS a1 ON a1.id = acc1.id_anagrafica
-		LEFT JOIN account AS acc2 ON acc2.id = crediti.id_account_destinatario
+		LEFT JOIN account AS acc2 ON acc2.id = m2.id_account
 		LEFT JOIN anagrafica AS a2 ON a2.id = acc2.id_anagrafica
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-		LEFT JOIN mastri AS m1 ON m1.id = crediti.id_mastro_provenienza
-		LEFT JOIN mastri AS m2 ON m2.id = crediti.id_mastro_destinazione
 ;
 
 --| 090000008910
@@ -4901,9 +4926,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		pagamenti.id_iban,
 		iban.iban AS iban,
-		pagamenti.importo_netto_totale,
-		pagamenti.id_iva,
-		iva.nome AS iva,
+		pagamenti.importo_lordo_totale,
 		pagamenti.id_listino,
 		listini.nome AS listino,
 		pagamenti.id_pianificazione,
@@ -4918,7 +4941,6 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN tipologie_pagamenti ON tipologie_pagamenti.id = pagamenti.id_tipologia
 		LEFT JOIN mastri AS m1 ON m1.id = pagamenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
-		LEFT JOIN iva ON iva.id = pagamenti.id_iva
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
@@ -7482,6 +7504,7 @@ CREATE OR REPLACE VIEW `tipologie_anagrafica_view` AS
 		tipologie_anagrafica.se_persona_fisica,
         tipologie_anagrafica.se_persona_giuridica,
         tipologie_anagrafica.se_pubblica_amministrazione,
+        tipologie_anagrafica.se_ecommerce,
 		tipologie_anagrafica.id_account_inserimento,
 		tipologie_anagrafica.id_account_aggiornamento,
 		tipologie_anagrafica_path( tipologie_anagrafica.id ) AS __label__

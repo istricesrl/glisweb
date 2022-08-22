@@ -132,6 +132,7 @@
     caratteristiche_prodotti        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
     carrelli                        | 003000    | base          | principale    | contiene i carrelli necessari per l'ecommerce
     carrelli_articoli               | 003050    | relazione     | secondaria    | mette in relazioni articoli e carrelli
+    carrelli_documenti              | 003070    | relazione     | secondaria    | mette in relazioni documenti e carrelli
     categorie_notizie               | 003700    | ricorsiva     | categorie     | contiene le categorie di notizie
     categorie_prodotti              | 003900    | ricorsiva     | categorie     | contiene le categorie di prodotti
     categorie_progetti              | 004300    | ricorsiva     | categorie     | contiene le categorie di progetti
@@ -244,7 +245,7 @@
     CASSE       | 6500      | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     SOFTWARE    |           | chiavi, licenze, licenze_software, relazioni_software, software, tipologie_chiavi, tipologie_licenze
     IMMOBILIARE | V300      | caratteristiche_immobili, edifici, immobili
-    ECOMMERCE   |           | carrelli, carrelli_articoli
+    ECOMMERCE   |           | carrelli, carrelli_articoli, carrelli_documenti
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -271,6 +272,7 @@
     caratteristiche_prodotti        | PRODOTTI
     carrelli                        | ECOMMERCE
     carrelli_articoli               | ECOMMERCE
+    carrelli_documenti              | ECOMMERCE
     categorie_anagrafica            | BASE
     categorie_notizie               | NOTIZIE
     categorie_prodotti              | PRODOTTI

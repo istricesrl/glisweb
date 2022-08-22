@@ -783,7 +783,7 @@
                                 'id' => array_shift( $idPagamenti ),
                                 'id_documento' => $i['idDocumento'],
                                 'id_modalita_pagamento' => $idModalita,
-                                'importo_netto_totale' => $row['ImportoPagamento']['#'],
+                                'importo_lordo_totale' => $row['ImportoPagamento']['#'],
                                 'timestamp_scadenza' =>( isset($row['DataScadenzaPagamento']) ? strtotime( $row['DataScadenzaPagamento']['#']) : NULL ),
                                 'id_iban' =>  $idIban
                             ),
