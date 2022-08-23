@@ -72,4 +72,49 @@ ON DUPLICATE KEY UPDATE
 	se_ricevuta= VALUES(se_ricevuta),
 	se_ecommerce= VALUES(se_ecommerce);
 
+--| 202208230040
+ALTER TABLE `testate`
+	CHANGE `nome` `nome`  char(128) DEFAULT NULL,
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+--| 202208230050
+CREATE TABLE IF NOT EXISTS `consensi` (
+  `id` char(64) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202208230060
+ALTER TABLE `consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`,`id_account_aggiornamento`);
+
+--| 202208230080
+ALTER TABLE `consensi`
+    ADD CONSTRAINT `consensi_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `consensi_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    
+--| 202208230090
+CREATE OR REPLACE VIEW `consensi_view` AS
+	SELECT
+		consensi.id,
+		consensi.nome,
+		consensi.nome AS __label__
+	FROM consensi
+;
+
+--| 202208230100
+REPLACE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+('PRIVACY_POLICY',	'la privacy e cookie policy del sito',	NULL,	NULL,	NULL,	NULL,	NULL),
+('EVASIONE_ORDINE',	"evasione dell\'ordine",	NULL,	NULL,	NULL,	NULL,	NULL),
+('INVIO_COMUNICAZIONI_MARKETING',	'invio di comunicazioni commerciali',	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| FINE

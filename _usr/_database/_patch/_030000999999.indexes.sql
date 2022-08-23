@@ -842,6 +842,18 @@ ALTER TABLE `condizioni_pagamento`
 -- tipologia: tabella standard
 ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000006500
+
+-- consensi
+-- tipologia: tabella standard
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`,`id_account_aggiornamento`);
+	
 --| 030000006700
 
 -- contatti
@@ -3427,6 +3439,8 @@ ALTER TABLE `template` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `testate`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`);
 
 --| 030000045001
