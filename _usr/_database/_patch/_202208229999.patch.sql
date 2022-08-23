@@ -482,7 +482,7 @@ DROP CONSTRAINT `pagamenti_ibfk_07_nofollow`;
 ALTER TABLE `pagamenti`
 DROP KEY `indice`,
 DROP KEY `importo_netto_totale`,
-DROP CONSTRAINT `pagamenti_ibfk_07_nofollow`;
+DROP FOREIGN KEY  `pagamenti_ibfk_07_nofollow`;
 
 --| 202208223180
 ALTER TABLE `pagamenti` 
