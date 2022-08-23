@@ -417,7 +417,7 @@ ALTER TABLE `colori`
 ALTER TABLE `comuni`
     ADD CONSTRAINT `comuni_ibfk_01_nofollow` FOREIGN KEY (`id_provincia`) REFERENCES `provincie` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000006500
+--| 060000006400
 
 -- consensi
 -- tipologia: tabella standard
@@ -425,6 +425,17 @@ ALTER TABLE `comuni`
 ALTER TABLE `consensi`
     ADD CONSTRAINT `consensi_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `consensi_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 060000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `consensi_moduli`
+    ADD CONSTRAINT `consensi_moduli_ibfk_01_nofollow`       FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `consensi_moduli_ibfk_02_nofollow`       FOREIGN KEY (`id_consenso`) REFERENCES `consensi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `consensi_moduli_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `consensi_moduli_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
     
 --| 060000006700
 

@@ -1609,6 +1609,56 @@ CREATE OR REPLACE VIEW condizioni_pagamento_view AS
 		condizioni_pagamento
 ;
 
+--| 090000006400
+
+-- consensi
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `consensi_view`;
+
+--| 090000006401
+
+-- consensi
+-- tipologia: tabella standard
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE OR REPLACE VIEW `consensi_view` AS
+	SELECT
+		consensi.id,
+		consensi.nome,
+		consensi.id_account_inserimento,
+		consensi.id_account_aggiornamento,
+		consensi.nome AS __label__
+	FROM consensi
+;
+
+--| 090000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `consensi_moduli_view`;
+
+--| 090000006501
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE OR REPLACE VIEW `consensi_moduli_view` AS
+	SELECT
+		consensi_moduli.id,
+		consensi_moduli.id_lingua,
+		consensi_moduli.id_consenso,
+		consensi_moduli.modulo,
+		consensi_moduli.ordine,
+		consensi_moduli.azione,
+		consensi_moduli.nome,
+		consensi_moduli.informativa,
+		consensi_moduli.pagina,
+		consensi_moduli.se_richiesto,
+		consensi_moduli.id_account_inserimento,
+		consensi_moduli.id_account_aggiornamento,
+		concat( 'consenso ', consensi_moduli.id_consenso, ' per modulo ', consensi_moduli.modulo ) AS __label__
+	FROM consensi_moduli
+;
+
 --| 090000006700
 
 -- contatti_view

@@ -842,7 +842,7 @@ ALTER TABLE `condizioni_pagamento`
 -- tipologia: tabella standard
 ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000006500
+--| 030000006400
 
 -- consensi
 -- tipologia: tabella standard
@@ -853,7 +853,34 @@ ALTER TABLE `consensi`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`,`id_account_aggiornamento`);
-	
+
+--| 030000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `consensi_moduli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_consenso`, `id_lingua`, `modulo`), 
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `modulo` (`modulo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `azione` (`azione`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `informativa` (`informativa`),
+	ADD KEY `pagina` (`pagina`),
+	ADD KEY `se_richiesto` (`se_richiesto`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_consenso`, `id_lingua`, `modulo`,`nome`,`ordine`,`azione`, `informativa`, `pagina`, `se_richiesto` );
+
+--| 030000006501
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+ALTER TABLE `consensi_moduli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000006700
 
 -- contatti

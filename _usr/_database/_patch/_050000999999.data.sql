@@ -202,7 +202,7 @@ REPLACE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
 (2,	    'TP02',	'pagamento completo'),
 (3,	    'TP03',	    'anticipo');
 
---| 050000006500
+--| 050000006400
 
 -- consensi
 -- tipologia: tabella standard
@@ -211,6 +211,16 @@ REPLACE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timest
 ('PRIVACY_POLICY',	'la privacy e cookie policy del sito',	NULL,	NULL,	NULL,	NULL,	NULL),
 ('EVASIONE_ORDINE',	"evasione dell\'ordine",	NULL,	NULL,	NULL,	NULL,	NULL),
 ('INVIO_COMUNICAZIONI_MARKETING',	'invio di comunicazioni commerciali',	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+REPLACE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ordine`, `azione`, `nome`, `informativa`, `note`, `pagina`, `se_richiesto`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	1,	'PRIVACY_POLICY',	'ecommerce',	10,	'letto_e_accetto',	'la privacy e cookie policy del sito',	NULL,	NULL,	'privacy',	1,	NULL,	NULL,	NULL,	NULL),
+(2,	1,	'EVASIONE_ORDINE',	'ecommerce',	20,	'autorizzo',	"il trattamento dei miei dati per l\'evasione del mio ordine",	"evasione dell\'ordine",	NULL,	'',	1,	NULL,	NULL,	NULL,	NULL),
+(3,	1,	'INVIO_COMUNICAZIONI_MARKETING',	'ecommerce',	30,	'autorizzo',	"il trattamento dei miei dati per l\'invio di comunicazioni commerciali",	'invio di comunicazioni commerciali',	NULL,	'',	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000007100
 

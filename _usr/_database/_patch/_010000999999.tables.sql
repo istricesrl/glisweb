@@ -861,7 +861,7 @@ CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
   `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000006500
+--| 010000006400
 
 -- consensi
 -- tipologia: tabella standard
@@ -870,6 +870,29 @@ CREATE TABLE IF NOT EXISTS `consensi` (
   `id` char(64) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE TABLE `consensi_moduli` (
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_consenso` char(64) DEFAULT NULL,
+  `modulo` char(32) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `azione` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `informativa` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `pagina` char(32) DEFAULT NULL,
+  `se_richiesto` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

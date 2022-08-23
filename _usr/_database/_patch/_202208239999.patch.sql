@@ -107,6 +107,8 @@ CREATE OR REPLACE VIEW `consensi_view` AS
 	SELECT
 		consensi.id,
 		consensi.nome,
+		consensi.id_account_inserimento,
+		consensi.id_account_aggiornamento,
 		consensi.nome AS __label__
 	FROM consensi
 ;
@@ -116,5 +118,81 @@ REPLACE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timest
 ('PRIVACY_POLICY',	'la privacy e cookie policy del sito',	NULL,	NULL,	NULL,	NULL,	NULL),
 ('EVASIONE_ORDINE',	"evasione dell\'ordine",	NULL,	NULL,	NULL,	NULL,	NULL),
 ('INVIO_COMUNICAZIONI_MARKETING',	'invio di comunicazioni commerciali',	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 202208230110
+CREATE TABLE `consensi_moduli` (
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_consenso` char(64) DEFAULT NULL,
+  `modulo` char(32) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `azione` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `informativa` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `pagina` char(32) DEFAULT NULL,
+  `se_richiesto` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202208230120
+ALTER TABLE `consensi_moduli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_consenso`, `id_lingua`, `modulo`), 
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `modulo` (`modulo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `azione` (`azione`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `informativa` (`informativa`),
+	ADD KEY `pagina` (`pagina`),
+	ADD KEY `se_richiesto` (`se_richiesto`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_consenso`, `id_lingua`, `modulo`,`nome`,`ordine`,`azione`, `informativa`, `pagina`, `se_richiesto` );
+
+--| 202208230130
+ALTER TABLE `consensi_moduli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202208230140
+ALTER TABLE `consensi_moduli`
+    ADD CONSTRAINT `consensi_moduli_ibfk_01_nofollow`       FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `consensi_moduli_ibfk_02_nofollow`       FOREIGN KEY (`id_consenso`) REFERENCES `consensi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `consensi_moduli_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `consensi_moduli_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    
+--| 202208230150
+CREATE OR REPLACE VIEW `consensi_moduli_view` AS
+	SELECT
+		consensi_moduli.id,
+		consensi_moduli.id_lingua,
+		consensi_moduli.id_consenso,
+		consensi_moduli.modulo,
+		consensi_moduli.ordine,
+		consensi_moduli.azione,
+		consensi_moduli.nome,
+		consensi_moduli.informativa,
+		consensi_moduli.pagina,
+		consensi_moduli.se_richiesto,
+		consensi_moduli.id_account_inserimento,
+		consensi_moduli.id_account_aggiornamento,
+		concat( 'consenso ', consensi_moduli.id_consenso, ' per modulo ', consensi_moduli.modulo ) AS __label__
+	FROM consensi_moduli
+;
+
+--| 202208230160
+REPLACE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ordine`, `azione`, `nome`, `informativa`, `note`, `pagina`, `se_richiesto`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	1,	'PRIVACY_POLICY',	'ecommerce',	10,	'letto_e_accetto',	'la privacy e cookie policy del sito',	NULL,	NULL,	'privacy',	1,	NULL,	NULL,	NULL,	NULL),
+(2,	1,	'EVASIONE_ORDINE',	'ecommerce',	20,	'autorizzo',	"il trattamento dei miei dati per l\'evasione del mio ordine",	"evasione dell\'ordine",	NULL,	'',	1,	NULL,	NULL,	NULL,	NULL),
+(3,	1,	'INVIO_COMUNICAZIONI_MARKETING',	'ecommerce',	30,	'autorizzo',	"il trattamento dei miei dati per l\'invio di comunicazioni commerciali",	'invio di comunicazioni commerciali',	NULL,	'',	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 202208230170
+--| 202208230180
+--| 202208230190
+--| 202208230200
 
 --| FINE
