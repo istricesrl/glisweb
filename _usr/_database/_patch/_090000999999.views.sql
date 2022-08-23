@@ -524,6 +524,33 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		INNER JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
 ;
 
+--| 090000000800
+
+-- anagrafica_consensi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_consensi_view`;
+
+--| 090000000801
+
+-- anagrafica_consensi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE OR REPLACE VIEW `anagrafica_consensi_view` AS
+	SELECT
+		anagrafica_consensi.id,
+		anagrafica_consensi.id_account,
+		anagrafica_consensi.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_consensi.id_consenso,
+		anagrafica_consensi.se_prestato,
+		anagrafica_consensi.timestamp_consenso,
+		anagrafica_consensi.id_account_inserimento,
+		anagrafica_consensi.id_account_aggiornamento,
+		concat( 'consenso per ', anagrafica_consensi.id_consenso, ' di ', coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) ) AS __label__
+	FROM anagrafica_consensi
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_consensi.id_anagrafica
+;
+
 --| 090000000900
 
 -- anagrafica_indirizzi_view
@@ -1169,6 +1196,33 @@ CREATE OR REPLACE VIEW carrelli_articoli_view AS
 		carrelli_articoli.id_account_aggiornamento
 	FROM carrelli_articoli;
 
+--| 090000003060
+
+-- carrelli_consensi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `carrelli_consensi_view`;
+
+--| 090000003061
+
+-- carrelli_consensi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE OR REPLACE VIEW `carrelli_consensi_view` AS
+	SELECT
+		carrelli_consensi.id,
+		carrelli_consensi.id_account,
+		carrelli_consensi.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		carrelli_consensi.id_carrello,
+		carrelli_consensi.id_consenso,
+		carrelli_consensi.se_prestato,
+		carrelli_consensi.timestamp_consenso,
+		carrelli_consensi.id_account_inserimento,
+		carrelli_consensi.id_account_aggiornamento,
+		concat( 'consenso per ', carrelli_consensi.id_consenso, ' callerro #', carrelli_consensi.id_carrello) AS __label__
+	FROM carrelli_consensi
+		LEFT JOIN anagrafica AS a1 ON a1.id = carrelli_consensi.id_anagrafica;
+
 --| 090000003070
 
 -- carrelli_documenti_view
@@ -1607,6 +1661,56 @@ CREATE OR REPLACE VIEW condizioni_pagamento_view AS
 		concat( condizioni_pagamento.codice, ' - ', condizioni_pagamento.nome) AS __label__
 	FROM
 		condizioni_pagamento
+;
+
+--| 090000006400
+
+-- consensi
+-- tipologia: tabella standard
+DROP TABLE IF EXISTS `consensi_view`;
+
+--| 090000006401
+
+-- consensi
+-- tipologia: tabella standard
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE OR REPLACE VIEW `consensi_view` AS
+	SELECT
+		consensi.id,
+		consensi.nome,
+		consensi.id_account_inserimento,
+		consensi.id_account_aggiornamento,
+		consensi.nome AS __label__
+	FROM consensi
+;
+
+--| 090000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `consensi_moduli_view`;
+
+--| 090000006501
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE OR REPLACE VIEW `consensi_moduli_view` AS
+	SELECT
+		consensi_moduli.id,
+		consensi_moduli.id_lingua,
+		consensi_moduli.id_consenso,
+		consensi_moduli.modulo,
+		consensi_moduli.ordine,
+		consensi_moduli.azione,
+		consensi_moduli.nome,
+		consensi_moduli.informativa,
+		consensi_moduli.pagina,
+		consensi_moduli.se_richiesto,
+		consensi_moduli.id_account_inserimento,
+		consensi_moduli.id_account_aggiornamento,
+		concat( 'consenso ', consensi_moduli.id_consenso, ' per modulo ', consensi_moduli.modulo ) AS __label__
+	FROM consensi_moduli
 ;
 
 --| 090000006700
@@ -7674,6 +7778,7 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti.se_offerta,
 		tipologie_documenti.se_ordine,
 		tipologie_documenti.se_ricevuta,
+		tipologie_documenti.se_ecommerce,
 		tipologie_documenti.id_account_inserimento,
 		tipologie_documenti.id_account_aggiornamento,
 		tipologie_documenti_path( tipologie_documenti.id ) AS __label__

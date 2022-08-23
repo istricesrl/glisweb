@@ -186,6 +186,25 @@ CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000000800
+
+-- anagrafica_consensi
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE TABLE `anagrafica_consensi` (
+  `id` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_consenso` char(64) DEFAULT NULL,
+  `se_prestato` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_consenso` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000000900
 
 -- anagrafica_indirizzi
@@ -568,6 +587,26 @@ CREATE TABLE `carrelli_articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000003060
+
+-- carrelli_consensi
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE TABLE `carrelli_consensi` (
+  `id` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_consenso` char(64) DEFAULT NULL,
+  `se_prestato` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_consenso` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000003070
 
 -- carrelli_documenti
@@ -859,6 +898,44 @@ CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
   `codice` char(5) NOT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000006400
+
+-- consensi
+-- tipologia: tabella standard
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE TABLE IF NOT EXISTS `consensi` (
+  `id` char(64) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE TABLE `consensi_moduli` (
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_consenso` char(64) DEFAULT NULL,
+  `modulo` char(32) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `azione` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `informativa` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `pagina` char(32) DEFAULT NULL,
+  `se_richiesto` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000006700
@@ -3163,7 +3240,7 @@ CREATE TABLE IF NOT EXISTS `template` (
 -- verifica: 2021-06-29 16:56 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `testate` (
   `id` int(11) NOT NULL,
-  `nome` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -3315,6 +3392,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `se_offerta` int(1) DEFAULT NULL,
   `se_ordine` int(1) DEFAULT NULL,
   `se_ricevuta` int(1) DEFAULT NULL,
+  `se_ecommerce` int(1) DEFAULT NULL,
   `stampa_xml` char(255) DEFAULT NULL,
   `stampa_pdf` char(255) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
