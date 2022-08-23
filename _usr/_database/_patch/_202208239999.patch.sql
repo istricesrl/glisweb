@@ -359,7 +359,7 @@ DROP FOREIGN KEY `metadati_ibfk_25`;
 ALTER TABLE `metadati`
 	ADD COLUMN   `id_account` int(11) DEFAULT NULL AFTER `id_anagrafica`,
 	ADD KEY `id_account` (`id_account`), 
-	ADD UNIQUE KEY `unica_account` (`id_lingua`,`id_account`,`nome`);
+	ADD UNIQUE KEY `unica_account` (`id_lingua`,`id_account`,`nome`),
     ADD CONSTRAINT `metadati_ibfk_03`           FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `metadati_ibfk_04`           FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `metadati_ibfk_05`           FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
