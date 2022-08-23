@@ -67,7 +67,7 @@
                             'id_genitore' => $genitore,
                             'id_tipologia' => 4,
                             'id_account' => $carrello['intestazione_id_account'],
-                            'nome' => 'conto crediti SAAS per accoun #' . $carrello['intestazione_id_account'],
+                            'nome' => 'conto crediti SAAS per account #' . $carrello['intestazione_id_account'],
                             'note' => 'creato automaticamente il ' . date('d/m/Y')
                         ),
                         'mastri'

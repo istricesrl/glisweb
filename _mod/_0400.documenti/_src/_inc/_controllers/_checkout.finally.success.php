@@ -31,13 +31,18 @@
         logWrite( 'valuto la creazione di un documento per il carrello #' . $carrello['id'], 'documenti' );
 
         // se è specificato l'ID del merchant per il profilo corrente
-        if( isset( $cf['ecommerce']['profile']['merchant'] ) && ! empty( $cf['ecommerce']['profile']['merchant'] ) ) {
+        if( isset( $cf['ecommerce']['profile']['fatturazione']['merchant'] ) && ! empty( $cf['ecommerce']['profile']['fatturazione']['merchant'] ) ) {
 
             // log
-            logWrite( 'utilizzo il merchant #' . $cf['ecommerce']['profile']['merchant'] . ' per il carrello #' . $carrello['id'], 'documenti' );
+            logWrite( 'utilizzo il merchant #' . $cf['ecommerce']['profile']['fatturazione']['merchant'] . ' per il carrello #' . $carrello['id'], 'documenti' );
 
             // debug
-            $status['info'][] = 'fatturazione per il merchant #' . $cf['ecommerce']['profile']['merchant'];
+            $status['info'][] = 'fatturazione per il merchant #' . $cf['ecommerce']['profile']['fatturazione']['merchant'];
+
+            // se è settata una tipologia di documento di default
+            if( ! isset( $carrello['fatturazione_id_tipologia_documento'] ) || empty( $carrello['fatturazione_id_tipologia_documento'] ) ) {
+                $carrello['fatturazione_id_tipologia_documento'] = $cf['ecommerce']['profile']['fatturazione']['documento'];
+            }
 
             // se è specificata la tipologia di documento da creare per il carrello
             if( isset( $carrello['fatturazione_id_tipologia_documento'] ) && ! empty( $carrello['fatturazione_id_tipologia_documento'] ) ) {
@@ -132,11 +137,11 @@
                         $numero = generaProssimoNumeroDocumento(
                             $carrello['fatturazione_id_tipologia_documento'],
                             $sezionale,
-                            $cf['ecommerce']['profile']['merchant']
+                            $cf['ecommerce']['profile']['fatturazione']['merchant']
                         );
 
                         // cerco la sede legale del merchant
-                        $idSedeEmittente = anagraficaGetIdSedeLegale( $cf['ecommerce']['profile']['merchant'] );
+                        $idSedeEmittente = anagraficaGetIdSedeLegale( $cf['ecommerce']['profile']['fatturazione']['merchant'] );
 
                         // se esiste una sede per il merchant
                         if( ! empty( $idSedeEmittente ) ) {
@@ -151,7 +156,7 @@
                                     'sezionale' => $sezionale,
                                     'data' => date( 'Y-m-d' ),
                                     'nome' => 'documento generato automaticamente per il carrello #' . $carrello['id'],
-                                    'id_emittente' => $cf['ecommerce']['profile']['merchant'],
+                                    'id_emittente' => $cf['ecommerce']['profile']['fatturazione']['merchant'],
                                     'id_sede_emittente' => $idSedeEmittente,
                                     'id_destinatario' => $idAnagrafica,
                                     'id_sede_destinatario' => $idIndirizzo,
@@ -159,7 +164,7 @@
                                     'esigibilita' => 'I',
                                     'riferimento' => 'carrello #' . $carrello['id'],
                                     'timestamp_chiusura' => time(),
-                                    'progressivo_invio' => generaNumeroProgressivoInvio( $cf['ecommerce']['profile']['merchant'] ),
+                                    'progressivo_invio' => generaNumeroProgressivoInvio( $cf['ecommerce']['profile']['fatturazione']['merchant'] ),
                                     'note_chiusura' => 'chiusura automatica contestuale al checkout del carrello #' . $carrello['id']
                                 ),
                                 'documenti'
@@ -174,7 +179,7 @@
                                         'id_documento' => $idDocumento,
                                         'id_articolo' => $articolo['id_articolo'],
                                         'id_reparto' => trovaIdRepartoDaIdIva( $articolo['id_iva'] ),
-                                        'id_mastro_provenienza' => $cf['ecommerce']['profile']['magazzino'],
+                                        'id_mastro_provenienza' => $cf['ecommerce']['profile']['fatturazione']['magazzino'],
                                         'id_udm' => 1,
                                         'quantita' => $articolo['quantita'],
                                         'id_listino' => $carrello['id_listino'],
@@ -198,6 +203,7 @@
                                     'id_modalita_pagamento' => $cf['ecommerce']['profile']['provider'][ $carrello['provider_pagamento'] ]['modalita'],
                                     'nome' => 'pagamento inserito automaticamente per il carrello #' . $carrello['id'],
                                     'id_documento' => $idDocumento,
+                                    'id_mastro_destinazione' => $cf['ecommerce']['profile']['fatturazione']['cassa'],
                                     'importo_lordo_totale' => $carrello['prezzo_lordo_finale'],
                                     'id_listino' => $carrello['id_listino'],
                                     'timestamp_scadenza' => time(),

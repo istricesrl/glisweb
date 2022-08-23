@@ -24,13 +24,14 @@
     $cf['ecommerce']['pages']['successo']			= 'carrello.successo';		                    // pagina di atterraggio per il pagamento avvenuto con successo presso provider esterni di pagamento
     $cf['ecommerce']['pages']['errore']			    = 'carrello.fallimento';		                // pagina di atterraggio per gli errori dei provider esterni di pagamento
 
-    // profili di funzionamento
-	$cf['ecommerce']['profiles'][ DEVELOPEMENT ]	=
-	$cf['ecommerce']['profiles'][ TESTING ]		    =
-	$cf['ecommerce']['profiles'][ PRODUCTION ]	    = array(
-        'merchant' => NULL,                                                                         // ID dell'anagrafica merchant (per l'emissione dei documenti)
-        'magazzino' => NULL,                                                                        // ID del mastro dal quale scaricare la merce (per l'emissione dei documenti)
-        'cassa' => NULL,                                                                            // ID del mastro sul quale caricare gli incassi (per l'emissione dei documenti)
+    // profilo di funzionamento per DEV
+	$cf['ecommerce']['profiles'][ DEVELOPEMENT ]	= array(
+        'fatturazione' => array(
+            'merchant' => NULL,                                                                     // ID dell'anagrafica merchant (per l'emissione dei documenti)
+            'magazzino' => NULL,                                                                    // ID del mastro dal quale scaricare la merce (per l'emissione dei documenti)
+            'cassa' => NULL,                                                                        // ID del mastro sul quale caricare gli incassi (per l'emissione dei documenti)
+            'documento' => NULL                                                                     // ID della tipologia di documento di default (per l'emissione dei documenti)
+        ),
         'provider' => array(
             'contanti' => array(
                 'id'            => 'contanti',                                                      // ID del provider per le tendine
@@ -81,6 +82,10 @@
             )
         )
     );
+
+    // profili di funzionamento per TEST e STABLE
+	$cf['ecommerce']['profiles'][ TESTING ]		    =
+	$cf['ecommerce']['profiles'][ PRODUCTION ]	    =     array();
 
     /**
      * NOTA
