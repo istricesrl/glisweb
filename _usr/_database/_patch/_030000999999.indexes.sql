@@ -180,6 +180,28 @@ ALTER TABLE `anagrafica_cittadinanze`
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000000800
+
+-- anagrafica_consensi
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `anagrafica_consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`, `id_consenso`), 
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `se_prestato` (`se_prestato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_account`,`id_anagrafica`, `id_consenso`, `se_prestato` );
+
+--| 030000000801
+
+-- anagrafica_consensi
+-- tipologia: tabella gestita
+ALTER TABLE `anagrafica_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000000900
 
 -- anagrafica_indirizzi

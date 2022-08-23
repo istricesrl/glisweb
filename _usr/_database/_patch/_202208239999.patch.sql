@@ -191,8 +191,68 @@ REPLACE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ord
 (3,	1,	'INVIO_COMUNICAZIONI_MARKETING',	'ecommerce',	30,	'autorizzo',	"il trattamento dei miei dati per l\'invio di comunicazioni commerciali",	'invio di comunicazioni commerciali',	NULL,	'',	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 202208230170
+CREATE TABLE `anagrafica_consensi` (
+  `id` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_consenso` char(64) DEFAULT NULL,
+  `se_prestato` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_consenso` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 202208230180
+ALTER TABLE `anagrafica_consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`, `id_consenso`), 
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `se_prestato` (`se_prestato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_account`,`id_anagrafica`, `id_consenso`, `se_prestato` );
+
 --| 202208230190
+ALTER TABLE `anagrafica_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 202208230200
+ALTER TABLE `anagrafica_consensi`
+    ADD CONSTRAINT `anagrafica_consensi_ibfk_01_nofollow`	FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `anagrafica_consensi_ibfk_02`  			FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `anagrafica_consensi_ibfk_03_nofollow`  FOREIGN KEY (`id_consenso`) REFERENCES `consensi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	ADD CONSTRAINT `anagrafica_consensi_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `anagrafica_consensi_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202208230210
+CREATE OR REPLACE VIEW `anagrafica_consensi_view` AS
+	SELECT
+		anagrafica_consensi.id,
+		anagrafica_consensi.id_account,
+		anagrafica_consensi.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_consensi.id_consenso,
+		anagrafica_consensi.se_prestato,
+		anagrafica_consensi.timestamp_consenso,
+		anagrafica_consensi.id_account_inserimento,
+		anagrafica_consensi.id_account_aggiornamento,
+		concat( 'consenso per ', anagrafica_consensi.id_consenso, ' di ', coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) ) AS __label__
+	FROM anagrafica_consensi
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_consensi.id_anagrafica
+;
+
+--| 202208230220
+--| 202208230230
+--| 202208230240
+--| 202208230250
+--| 202208230260
+--| 202208230270
+--| 202208230280
+--| 202208230290
+--| 202208230300
 
 --| FINE

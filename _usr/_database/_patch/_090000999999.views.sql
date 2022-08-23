@@ -524,6 +524,33 @@ CREATE OR REPLACE VIEW `anagrafica_cittadinanze_view` AS
 		INNER JOIN stati ON stati.id = anagrafica_cittadinanze.id_stato
 ;
 
+--| 090000000800
+
+-- anagrafica_consensi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_consensi_view`;
+
+--| 090000000801
+
+-- anagrafica_consensi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE OR REPLACE VIEW `anagrafica_consensi_view` AS
+	SELECT
+		anagrafica_consensi.id,
+		anagrafica_consensi.id_account,
+		anagrafica_consensi.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_consensi.id_consenso,
+		anagrafica_consensi.se_prestato,
+		anagrafica_consensi.timestamp_consenso,
+		anagrafica_consensi.id_account_inserimento,
+		anagrafica_consensi.id_account_aggiornamento,
+		concat( 'consenso per ', anagrafica_consensi.id_consenso, ' di ', coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) ) AS __label__
+	FROM anagrafica_consensi
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_consensi.id_anagrafica
+;
+
 --| 090000000900
 
 -- anagrafica_indirizzi_view
