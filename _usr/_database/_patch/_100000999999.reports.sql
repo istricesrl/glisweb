@@ -11,24 +11,16 @@ DROP VIEW IF EXISTS `__report_giacenza_crediti__`;
 --| 100000015001
 CREATE OR REPLACE VIEW `__report_giacenza_crediti__` AS
 SELECT
-  concat_ws( '|', movimenti.id, movimenti.id_articolo ) AS id,
+  movimenti.id,
   movimenti.id_mastro,
   movimenti.id_account,
   movimenti.nome,
-  movimenti.id_articolo,
-  movimenti.articolo,
-  movimenti.id_prodotto,
-  movimenti.prodotto,
-  group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
   sum( movimenti.carico ) AS carico,
   sum( movimenti.scarico ) AS scarico,
-  FORMAT(coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2,'es_ES') AS totale,
- concat_ws(
-			' ',
-      group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ),
-			movimenti.articolo,
-      'da',
-      movimenti.nome,
+  format( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2,'es_ES' ) AS totale,
+  concat_ws(
+      ' ',
+      movimenti.nome ,
       'giacenza',
       FORMAT(coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2,'es_ES'),
       'pz'
@@ -39,33 +31,11 @@ SELECT
   mastri.id AS id_mastro,
   mastri.id_account,
   mastri_path( mastri.id ) AS nome,
-  documenti_articoli.id AS id_articolo,
-  concat_ws(
-			' ',
-			articoli.id,
-			'/',
-			prodotti.nome,
-			' ',
-			articoli.nome
-		) AS articolo,
-articoli.id_prodotto AS id_prodotto,
-prodotti.nome AS prodotto,
   crediti.data,
-  documenti.id_tipologia,
-  tipologie_documenti.nome AS tipologia,
-  concat( documenti.numero, '/', documenti.sezionale ) AS numero,
-  documenti_articoli.id AS id_riga,
   coalesce( crediti.quantita, 0 ) AS carico,
   0 AS scarico
 FROM mastri
   LEFT JOIN crediti ON crediti.id_mastro_destinazione = mastri.id OR mastri_path_check( crediti.id_mastro_destinazione, mastri.id ) = 1
-  LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
-  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
-  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-  LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-
-LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_prodotto
   WHERE crediti.quantita IS NOT NULL
 UNION
 SELECT
@@ -73,36 +43,14 @@ SELECT
   mastri.id AS id_mastro,
   mastri.id_account,
   mastri_path( mastri.id ) AS nome,
-  documenti_articoli.id AS id_articolo,
-  concat_ws(
-			' ',
-			articoli.id,
-			'/',
-			prodotti.nome,
-			' ',
-			articoli.nome
-		) AS articolo,
-articoli.id_prodotto AS id_prodotto,
-prodotti.nome AS prodotto,
   crediti.data,
-  documenti.id_tipologia,
-  tipologie_documenti.nome AS tipologia,
-  concat( documenti.numero, '/', documenti.sezionale ) AS numero,
-  documenti_articoli.id AS id_riga,
   0 AS carico,
   coalesce( crediti.quantita, 0 ) AS scarico
 FROM mastri
 LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_check( crediti.id_mastro_provenienza, mastri.id ) = 1
-  LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
-  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
-  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-  LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-  LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_prodotto
   WHERE crediti.quantita IS NOT NULL
 ) AS movimenti
-LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
-GROUP BY movimenti.id, movimenti.id_mastro, movimenti.id_account, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto;
+GROUP BY movimenti.id, movimenti.id_mastro, movimenti.id_account, movimenti.nome;
 
 --| 100000020000
 -- __report_giacenza_magazzini__
@@ -561,14 +509,8 @@ CREATE OR REPLACE VIEW `__report_movimenti_crediti__` AS
 SELECT
   id,
   nome,
-  articolo,
-  id_articolo,
+  id_account,
   data,
-  id_tipologia,
-  tipologia,
-  documento,
-  numero,
-  id_riga,
   id_crediti,
   carico,
   scarico
@@ -576,61 +518,25 @@ FROM (
 SELECT
   mastri.id,
   mastri.nome,
-  concat_ws(
-			' ',
-			articoli.id,
-			'/',
-			prodotti.nome,
-			' ',
-			articoli.nome
-  ) AS articolo,
-  articoli.id AS id_articolo,
+  mastri.id_account,
   crediti.data,
-  documenti.id_tipologia,
-  tipologie_documenti.sigla AS tipologia,
-  documenti.nome AS documento,
-  concat( documenti.numero, '/', documenti.sezionale ) AS numero,
-  documenti_articoli.id AS id_riga,
   crediti.id AS id_crediti,
   coalesce( crediti.quantita, 0 ) AS carico,
   0 AS scarico
 FROM mastri
   LEFT JOIN crediti ON crediti.id_mastro_destinazione = mastri.id OR mastri_path_check( crediti.id_mastro_destinazione, mastri.id ) = 1
-  LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
-  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
-  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-  LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   WHERE crediti.quantita IS NOT NULL
 UNION
 SELECT
   mastri.id,
   mastri.nome,
-  concat_ws(
-			' ',
-			articoli.id,
-			'/',
-			prodotti.nome,
-			' ',
-			articoli.nome
-  ) AS articolo,
-  articoli.id AS id_articolo,
+  mastri.id_account,
   crediti.data,
-  documenti.id_tipologia,
-  tipologie_documenti.sigla AS tipologia,
-  documenti.nome AS documento,
-  concat( documenti.numero, '/', documenti.sezionale ) AS numero,
-  documenti_articoli.id AS id_riga,
   crediti.id AS id_crediti,
   0 AS carico,
   coalesce( crediti.quantita, 0 ) AS scarico
 FROM mastri
   LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_check( crediti.id_mastro_provenienza, mastri.id ) = 1
-  LEFT JOIN documenti_articoli ON documenti_articoli.id = crediti.id_documenti_articolo
-  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
-  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-  LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   WHERE crediti.quantita IS NOT NULL
 ) AS movimenti;
 
