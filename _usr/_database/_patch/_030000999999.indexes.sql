@@ -180,6 +180,28 @@ ALTER TABLE `anagrafica_cittadinanze`
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000000800
+
+-- anagrafica_consensi
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `anagrafica_consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`, `id_consenso`), 
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `se_prestato` (`se_prestato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_account`,`id_anagrafica`, `id_consenso`, `se_prestato` );
+
+--| 030000000801
+
+-- anagrafica_consensi
+-- tipologia: tabella gestita
+ALTER TABLE `anagrafica_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000000900
 
 -- anagrafica_indirizzi
@@ -523,6 +545,29 @@ ALTER TABLE `carrelli_articoli`
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000003060
+
+-- carrelli_consensi
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `carrelli_consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_carrello`, `id_consenso`), 
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `se_prestato` (`se_prestato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_account`, `id_anagrafica`, `id_carrello`, `id_consenso`, `se_prestato` );
+
+--| 030000003061
+
+-- carrelli_consensi
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000003070
 
 -- carrelli_documenti
@@ -841,6 +886,45 @@ ALTER TABLE `condizioni_pagamento`
 -- condizioni_pagamento
 -- tipologia: tabella standard
 ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000006400
+
+-- consensi
+-- tipologia: tabella standard
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`,`id_account_aggiornamento`);
+
+--| 030000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `consensi_moduli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_consenso`, `id_lingua`, `modulo`), 
+	ADD KEY `id_lingua` (`id_lingua`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `modulo` (`modulo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `azione` (`azione`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `informativa` (`informativa`),
+	ADD KEY `pagina` (`pagina`),
+	ADD KEY `se_richiesto` (`se_richiesto`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_consenso`, `id_lingua`, `modulo`,`nome`,`ordine`,`azione`, `informativa`, `pagina`, `se_richiesto` );
+
+--| 030000006501
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+ALTER TABLE `consensi_moduli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000006700
 
@@ -3427,6 +3511,8 @@ ALTER TABLE `template` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `testate`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`);
 
 --| 030000045001
@@ -3585,6 +3671,14 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `sigla` (`sigla`),
 	ADD KEY `numerazione`(`numerazione`),
+	ADD KEY `se_fattura` (`se_fattura`),
+	ADD KEY `se_nota_credito` (`se_nota_credito`),
+	ADD KEY `se_trasporto` (`se_trasporto`),
+	ADD KEY `se_pro_forma` (`se_pro_forma`),
+	ADD KEY `se_offerta` (`se_offerta`),
+	ADD KEY `se_ordine` (`se_ordine`),
+	ADD KEY `se_ricevuta` (`se_ricevuta`),
+	ADD KEY `se_ecommerce` (`se_ecommerce`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
