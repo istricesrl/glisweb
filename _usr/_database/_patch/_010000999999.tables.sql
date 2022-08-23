@@ -3315,6 +3315,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `se_offerta` int(1) DEFAULT NULL,
   `se_ordine` int(1) DEFAULT NULL,
   `se_ricevuta` int(1) DEFAULT NULL,
+  `se_ecommerce` int(1) DEFAULT NULL,
   `stampa_xml` char(255) DEFAULT NULL,
   `stampa_pdf` char(255) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

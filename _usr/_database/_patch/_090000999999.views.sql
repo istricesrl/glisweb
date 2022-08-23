@@ -7674,6 +7674,7 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti.se_offerta,
 		tipologie_documenti.se_ordine,
 		tipologie_documenti.se_ricevuta,
+		tipologie_documenti.se_ecommerce,
 		tipologie_documenti.id_account_inserimento,
 		tipologie_documenti.id_account_aggiornamento,
 		tipologie_documenti_path( tipologie_documenti.id ) AS __label__
