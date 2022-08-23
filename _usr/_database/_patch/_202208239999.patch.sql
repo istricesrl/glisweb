@@ -427,4 +427,84 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
 ;
 
+--| 202208230310
+CREATE OR REPLACE VIEW `__report_giacenza_crediti__` AS
+SELECT
+  movimenti.id,
+  movimenti.id_mastro,
+  movimenti.id_account,
+  movimenti.nome,
+  sum( movimenti.carico ) AS carico,
+  sum( movimenti.scarico ) AS scarico,
+  format( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2,'es_ES' ) AS totale,
+  concat_ws(
+      ' ',
+      movimenti.nome ,
+      'giacenza',
+      FORMAT(coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2,'es_ES'),
+      'pz'
+		) AS __label__
+FROM (
+SELECT
+  mastri.id,
+  mastri.id AS id_mastro,
+  mastri.id_account,
+  mastri_path( mastri.id ) AS nome,
+  crediti.data,
+  coalesce( crediti.quantita, 0 ) AS carico,
+  0 AS scarico
+FROM mastri
+  LEFT JOIN crediti ON crediti.id_mastro_destinazione = mastri.id OR mastri_path_check( crediti.id_mastro_destinazione, mastri.id ) = 1
+  WHERE crediti.quantita IS NOT NULL
+UNION
+SELECT
+  mastri.id,
+  mastri.id AS id_mastro,
+  mastri.id_account,
+  mastri_path( mastri.id ) AS nome,
+  crediti.data,
+  0 AS carico,
+  coalesce( crediti.quantita, 0 ) AS scarico
+FROM mastri
+LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_check( crediti.id_mastro_provenienza, mastri.id ) = 1
+  WHERE crediti.quantita IS NOT NULL
+) AS movimenti
+GROUP BY movimenti.id, movimenti.id_mastro, movimenti.id_account, movimenti.nome;
+
+--| 202208230320
+CREATE OR REPLACE VIEW `__report_movimenti_crediti__` AS
+SELECT
+  id,
+  nome,
+  id_account,
+  data,
+  id_crediti,
+  carico,
+  scarico
+FROM (
+SELECT
+  mastri.id,
+  mastri.nome,
+  mastri.id_account,
+  crediti.data,
+  crediti.id AS id_crediti,
+  coalesce( crediti.quantita, 0 ) AS carico,
+  0 AS scarico
+FROM mastri
+  LEFT JOIN crediti ON crediti.id_mastro_destinazione = mastri.id OR mastri_path_check( crediti.id_mastro_destinazione, mastri.id ) = 1
+  WHERE crediti.quantita IS NOT NULL
+UNION
+SELECT
+  mastri.id,
+  mastri.nome,
+  mastri.id_account,
+  crediti.data,
+  crediti.id AS id_crediti,
+  0 AS carico,
+  coalesce( crediti.quantita, 0 ) AS scarico
+FROM mastri
+  LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_check( crediti.id_mastro_provenienza, mastri.id ) = 1
+  WHERE crediti.quantita IS NOT NULL
+) AS movimenti;
+
 --| FINE
