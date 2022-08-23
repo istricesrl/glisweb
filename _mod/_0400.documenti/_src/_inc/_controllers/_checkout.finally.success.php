@@ -122,6 +122,11 @@
                     'anagrafica_indirizzi'
                 );
 
+                // se è settata una strategia di default
+                if( ! isset( $carrello['fatturazione_strategia'] ) || empty( $carrello['fatturazione_strategia'] ) ) {
+                    $carrello['fatturazione_strategia'] = $cf['ecommerce']['profile']['fatturazione']['strategia'];
+                }
+
                 // strategia di fatturazione del carrello
                 switch( $carrello['fatturazione_strategia'] ) {
 
@@ -246,7 +251,7 @@
                         $status['info'][] = 'nessuna strategia di fatturazione specificata';
 
                         // log
-                        logWrite( 'strategia non riconosciuta o non impostata per la fatturazione del carrello #' . $carrello['id'], 'cart', LOG_ERR );
+                        logWrite( 'strategia non riconosciuta o non impostata per la fatturazione del carrello #' . $carrello['id'], 'documenti', LOG_ERR );
 
                     break;
 
@@ -258,7 +263,7 @@
                 $status['info'][] = 'nessuna tipologia di documento per la fatturazione specificata';
 
                 // log
-                logWrite( 'tipologia di documento per la fatturazione non impostata nel carrello #' . $carrello['id'], 'cart', LOG_ERR );
+                logWrite( 'tipologia di documento per la fatturazione non impostata nel carrello #' . $carrello['id'], 'documenti', LOG_ERR );
 
             }
 
@@ -268,7 +273,7 @@
             $status['info'][] = 'nessun merchant per la fatturazione specificato';
 
             // log
-            logWrite( 'merchant non specificato per la fatturazione del carrello #' . $carrello['id'], 'cart', LOG_ERR );
+            logWrite( 'merchant non specificato per la fatturazione del carrello #' . $carrello['id'], 'documenti', LOG_ERR );
 
         }
 

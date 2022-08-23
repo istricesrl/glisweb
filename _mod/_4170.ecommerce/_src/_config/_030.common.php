@@ -30,7 +30,8 @@
             'merchant' => NULL,                                                                     // ID dell'anagrafica merchant (per l'emissione dei documenti)
             'magazzino' => NULL,                                                                    // ID del mastro dal quale scaricare la merce (per l'emissione dei documenti)
             'cassa' => NULL,                                                                        // ID del mastro sul quale caricare gli incassi (per l'emissione dei documenti)
-            'documento' => NULL                                                                     // ID della tipologia di documento di default (per l'emissione dei documenti)
+            'documento' => NULL,                                                                    // ID della tipologia di documento di default (per l'emissione dei documenti)
+            'strategia' => NULL                                                                     // strategia di fatturazione di default (per l'emissione dei documenti)
         ),
         'provider' => array(
             'contanti' => array(
