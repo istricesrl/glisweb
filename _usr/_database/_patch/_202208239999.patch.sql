@@ -304,8 +304,127 @@ CREATE OR REPLACE VIEW `carrelli_consensi_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = carrelli_consensi.id_anagrafica;
 
 --| 202208230270
+ALTER TABLE `metadati`
+DROP CONSTRAINT `metadati_ibfk_03`,
+DROP CONSTRAINT `metadati_ibfk_04`,
+DROP CONSTRAINT `metadati_ibfk_05`,
+DROP CONSTRAINT `metadati_ibfk_06`,
+DROP CONSTRAINT `metadati_ibfk_07`,
+DROP CONSTRAINT `metadati_ibfk_08`,
+DROP CONSTRAINT `metadati_ibfk_09`,
+DROP CONSTRAINT `metadati_ibfk_10`,
+DROP CONSTRAINT `metadati_ibfk_11`,
+DROP CONSTRAINT `metadati_ibfk_12`,
+DROP CONSTRAINT `metadati_ibfk_13`,
+DROP CONSTRAINT `metadati_ibfk_14`,
+DROP CONSTRAINT `metadati_ibfk_15`,
+DROP CONSTRAINT `metadati_ibfk_16`,
+DROP CONSTRAINT `metadati_ibfk_17`,
+DROP CONSTRAINT `metadati_ibfk_18`,
+DROP CONSTRAINT `metadati_ibfk_19`,
+DROP CONSTRAINT `metadati_ibfk_20`,
+DROP CONSTRAINT `metadati_ibfk_21`,
+DROP CONSTRAINT `metadati_ibfk_22`,
+DROP CONSTRAINT `metadati_ibfk_23`,
+DROP CONSTRAINT `metadati_ibfk_24`,
+DROP CONSTRAINT `metadati_ibfk_25`;
+
 --| 202208230280
+ALTER TABLE `metadati`
+DROP FOREIGN KEY `metadati_ibfk_03`,
+DROP FOREIGN KEY `metadati_ibfk_04`,
+DROP FOREIGN KEY `metadati_ibfk_05`,
+DROP FOREIGN KEY `metadati_ibfk_06`,
+DROP FOREIGN KEY `metadati_ibfk_07`,
+DROP FOREIGN KEY `metadati_ibfk_08`,
+DROP FOREIGN KEY `metadati_ibfk_09`,
+DROP FOREIGN KEY `metadati_ibfk_10`,
+DROP FOREIGN KEY `metadati_ibfk_11`,
+DROP FOREIGN KEY `metadati_ibfk_12`,
+DROP FOREIGN KEY `metadati_ibfk_13`,
+DROP FOREIGN KEY `metadati_ibfk_14`,
+DROP FOREIGN KEY `metadati_ibfk_15`,
+DROP FOREIGN KEY `metadati_ibfk_16`,
+DROP FOREIGN KEY `metadati_ibfk_17`,
+DROP FOREIGN KEY `metadati_ibfk_18`,
+DROP FOREIGN KEY `metadati_ibfk_19`,
+DROP FOREIGN KEY `metadati_ibfk_20`,
+DROP FOREIGN KEY `metadati_ibfk_21`,
+DROP FOREIGN KEY `metadati_ibfk_22`,
+DROP FOREIGN KEY `metadati_ibfk_23`,
+DROP FOREIGN KEY `metadati_ibfk_24`,
+DROP FOREIGN KEY `metadati_ibfk_25`;
+
 --| 202208230290
+ALTER TABLE `metadati`
+	ADD COLUMN   `id_account` int(11) DEFAULT NULL AFTER `id_anagrafica`,
+	ADD KEY `id_account` (`id_account`), 
+	ADD UNIQUE KEY `unica_account` (`id_lingua`,`id_account`,`nome`);
+    ADD CONSTRAINT `metadati_ibfk_03`           FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_04`           FOREIGN KEY (`id_pagina`) REFERENCES `pagine` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_05`           FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_06`           FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_07`           FOREIGN KEY (`id_categoria_prodotti`) REFERENCES `categorie_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_08`           FOREIGN KEY (`id_notizia`) REFERENCES `notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_09`           FOREIGN KEY (`id_categoria_notizie`) REFERENCES `categorie_notizie` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_10`           FOREIGN KEY (`id_risorsa`) REFERENCES `risorse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_11`           FOREIGN KEY (`id_categoria_risorse`) REFERENCES `categorie_risorse` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_12`           FOREIGN KEY (`id_immagine`) REFERENCES `immagini` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_13`           FOREIGN KEY (`id_video`) REFERENCES `video` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_14`           FOREIGN KEY (`id_audio`) REFERENCES `audio` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_15`           FOREIGN KEY (`id_file`) REFERENCES `file` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_16`           FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_17`           FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_18`           FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_19`           FOREIGN KEY (`id_edificio`) REFERENCES `edifici` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_20`           FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_21`           FOREIGN KEY (`id_contratto`) REFERENCES `contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_22`           FOREIGN KEY (`id_valutazione`) REFERENCES `valutazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_23`           FOREIGN KEY (`id_rinnovo`) REFERENCES `rinnovi` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_24`           FOREIGN KEY (`id_tipologia_attivita`) REFERENCES `tipologie_attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_25`           FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_26`           FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
 --| 202208230300
+CREATE OR REPLACE VIEW `metadati_view` AS
+	SELECT
+		metadati.id,
+		metadati.id_lingua,
+		lingue.ietf,
+		metadati.id_anagrafica,
+		metadati.id_account,
+		metadati.id_pagina,
+		metadati.id_prodotto,
+		metadati.id_articolo,
+		metadati.id_categoria_prodotti,
+		metadati.id_notizia,
+		metadati.id_categoria_notizie,
+		metadati.id_risorsa,
+		metadati.id_categoria_risorse,
+		metadati.id_immagine,
+		metadati.id_video,
+		metadati.id_audio,
+		metadati.id_file,
+		metadati.id_progetto,
+		metadati.id_categoria_progetti,
+		metadati.id_indirizzo,
+		metadati.id_edificio,
+		metadati.id_immobile,
+		metadati.id_contratto,
+        metadati.id_valutazione,
+        metadati.id_rinnovo,
+        metadati.id_tipologia_attivita,
+		metadati.id_banner,
+		metadati.id_pianificazione,
+		metadati.id_account_inserimento,
+		metadati.id_account_aggiornamento,
+		concat(
+			metadati.nome,
+			':',
+			metadati.testo
+		) AS __label__
+	FROM metadati
+		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+;
 
 --| FINE
