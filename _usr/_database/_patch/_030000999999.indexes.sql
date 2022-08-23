@@ -545,6 +545,29 @@ ALTER TABLE `carrelli_articoli`
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000003060
+
+-- carrelli_consensi
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+ALTER TABLE `carrelli_consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_carrello`, `id_consenso`), 
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `se_prestato` (`se_prestato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_account`, `id_anagrafica`, `id_carrello`, `id_consenso`, `se_prestato` );
+
+--| 030000003061
+
+-- carrelli_consensi
+-- tipologia: tabella gestita
+ALTER TABLE `carrelli_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000003070
 
 -- carrelli_documenti

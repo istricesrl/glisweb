@@ -587,6 +587,26 @@ CREATE TABLE `carrelli_articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000003060
+
+-- carrelli_consensi
+-- tipologia: tabella gestita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+CREATE TABLE `carrelli_consensi` (
+  `id` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_consenso` char(64) DEFAULT NULL,
+  `se_prestato` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_consenso` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000003070
 
 -- carrelli_documenti

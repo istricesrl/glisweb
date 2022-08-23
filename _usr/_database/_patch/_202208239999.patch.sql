@@ -246,10 +246,63 @@ CREATE OR REPLACE VIEW `anagrafica_consensi_view` AS
 ;
 
 --| 202208230220
+CREATE TABLE `carrelli_consensi` (
+  `id` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
+  `id_consenso` char(64) DEFAULT NULL,
+  `se_prestato` int(1) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_consenso` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 202208230230
+ALTER TABLE `carrelli_consensi`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_carrello`, `id_consenso`), 
+	ADD KEY `id_account` (`id_account`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_consenso` (`id_consenso`),
+	ADD KEY `se_prestato` (`se_prestato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_account`, `id_anagrafica`, `id_carrello`, `id_consenso`, `se_prestato` );
+
 --| 202208230240
+ALTER TABLE `carrelli_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 202208230250
+ALTER TABLE `carrelli_consensi`
+    ADD CONSTRAINT `carrelli_consensi_ibfk_01_nofollow`	FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `carrelli_consensi_ibfk_02_nofollow`  FOREIGN KEY (`id_anagrafica`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+	ADD CONSTRAINT `carrelli_consensi_ibfk_03`  		FOREIGN KEY (`id_carrello`) REFERENCES `carrelli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `carrelli_consensi_ibfk_04_nofollow`  FOREIGN KEY (`id_consenso`) REFERENCES `consensi` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+	ADD CONSTRAINT `carrelli_consensi_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `carrelli_consensi_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 --| 202208230260
+CREATE OR REPLACE VIEW `carrelli_consensi_view` AS
+	SELECT
+		carrelli_consensi.id,
+		carrelli_consensi.id_account,
+		carrelli_consensi.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		carrelli_consensi.id_carrello,
+		carrelli_consensi.id_consenso,
+		carrelli_consensi.se_prestato,
+		carrelli_consensi.timestamp_consenso,
+		carrelli_consensi.id_account_inserimento,
+		carrelli_consensi.id_account_aggiornamento,
+		concat( 'consenso per ', carrelli_consensi.id_consenso, ' callerro #', carrelli_consensi.id_carrello) AS __label__
+	FROM carrelli_consensi
+		LEFT JOIN anagrafica AS a1 ON a1.id = carrelli_consensi.id_anagrafica;
+
 --| 202208230270
 --| 202208230280
 --| 202208230290
