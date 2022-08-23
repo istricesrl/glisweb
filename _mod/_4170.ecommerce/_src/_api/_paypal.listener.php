@@ -48,6 +48,9 @@
 					// controller post checkout
 					$cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_checkout.finally.success.php' ), GLOB_BRACE );
 
+					// ordinamento delle controller
+					sort( $cnts );
+
 					// log
 					appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ), $fileRicevuta );
 
