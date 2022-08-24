@@ -113,6 +113,25 @@
 
                 }
 
+            // verifico se la configurazione prevede l'invio di un messaggio su Slack
+                if( isset( $cnf['slack']['webhook'] ) ) {
+
+                    // TODO templatizzare i messaggi Slack come le mail
+
+                    // composizione del messaggio
+                    $m = 'nuovo modulo ricevuto: ' . $k . PHP_EOL;
+                    foreach( array_diff_key( $_REQUEST['__contatti__'][ $k ], array( 'modulo' => NULL ) ) as $ks => $vs ) {
+                        $m .= $ks . ': ' . $vs . PHP_EOL;
+                    }
+
+                    // invio del messaggio
+                    slackTxtMsg(
+                        $cf['slack']['profile']['webhooks'][ $cnf['slack']['webhook'] ],
+                        $m
+                    );
+
+                }
+
             // verifico se la configurazione prevede l'invio di una mail
                 if( isset( $cnf['mail'] ) ) {
 
