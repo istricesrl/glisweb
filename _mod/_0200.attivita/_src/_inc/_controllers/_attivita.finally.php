@@ -26,14 +26,14 @@
         case METHOD_UPDATE:
 
             // view statica naturale
-            // mysqlQuery( $c, 'CALL anagrafica_view_static( ? )', array( array( 's' => $d['id'] ) ) );
-            mysqlQuery( $c, 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            // mysqlQuery( $c, 'CALL attivita_view_static( ? )', array( array( 's' => $d['id'] ) ) );
+            mysqlQuery( $c, 'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
 
         break;
         case METHOD_DELETE:
 
-            mysqlQuery( $c, 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            mysqlQuery( $c, 'DELETE FROM attivita_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
 
         break;

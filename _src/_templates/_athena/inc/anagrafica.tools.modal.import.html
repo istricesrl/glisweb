@@ -3,7 +3,7 @@
 <script>
     function importa() {
 	var data = $('#__upload_____anagrafica__').val();
-	getws('/_src/_api/_task/_importazione.anagrafica.start.php?file='+data);
+	getws('/_src/_api/_task/_anagrafica.importazione.start.php?file='+data);
 	$('#importa_contatti').modal('toggle');
 	location.reload();
     }

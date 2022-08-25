@@ -17,7 +17,7 @@
         'INSERT INTO job ( nome, job, iterazioni, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ? )',
         array(
             array( 's' => 'importazione automatica contatti anagrafica' ),
-            array( 's' => '_src/_api/_job/_importazione.anagrafica.php' ),
+            array( 's' => '_src/_api/_job/_anagrafica.importazione.php' ),
             array( 's' => 1 ),
             array( 's' => 1 ),
             array( 's' => json_encode(

@@ -98,7 +98,7 @@
             // prelevo la riga da lavorare
             $row = $arr[ $widx ];
 
-            // controlli formali
+            // controlli formali e lavorazione riga
             if( ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) ) {
 
                 // status
