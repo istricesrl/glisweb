@@ -188,7 +188,9 @@
 
     $sdec['linee'][] = $dst['denominazione_fiscale'];
     $sdec['linee'][] = $dsi['indirizzo_fiscale'];
-    $sdec['linee'][] = 'P.IVA ' . $dst['partita_iva'];
+    if( isset( $dst['partita_iva'] ) && ! empty( $dst['partita_iva'] ) ) {
+        $sdec['linee'][] = 'P.IVA ' . $dst['partita_iva'];
+    }
 	$sdec['linee'][] = 'cod.fisc. ' . $dst['codice_fiscale'];
 	if( isset($dst['codice_sdi']) && ! empty( $dst['codice_sdi'] ) ) {
 	    $sdec['linee'][] = 'SDI ' . $dst['codice_sdi'];
@@ -199,25 +201,21 @@
 
     // oggetto del documento
 	$dobj = 'fattura n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
-
   
     // recupero i dati dell'azienda emittente
 	$emittente = mysqlSelectRow( $cf['mysql']['connection'],
 	    'SELECT * FROM anagrafica_view WHERE id = ?',
 	    array( array( 's' => $doc['id_emittente'] ) )
 	);
-
   
     // recupero i dati del destinatario
 	$cliente = mysqlSelectRow( $cf['mysql']['connection'],
 	    'SELECT * FROM anagrafica_view WHERE id = ?',
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
-
   
     // creazione del PDF
 	$pdf = new TCPDF( 'P', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
-
     $pdf->SetTitle( $dobj.' di .pdf');
 
     // tipografia
