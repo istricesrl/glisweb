@@ -279,6 +279,30 @@
             <isset property="src.fld" />
             <then>
 
+                <!-- se non esiste il file di versione all'interno del progetto -->
+                <if>
+                    <not>
+                        <available file="${src.dir}/etc/version.conf"/>
+                    </not>
+                    <then>
+
+                        <!-- messaggi -->
+                        <echo msg="creo e inizializzo il file: ${src.dir}/etc/version.conf" />
+
+                        <!-- creo la cartella e il file di versione -->
+                        <mkdir dir="${src.dir}/etc" />
+                        <touch file="${src.dir}/etc/version.conf"/>
+                        <echo msg="0.0.0" file="${src.dir}/etc/version.conf" />
+
+                    </then>
+                    <else>
+
+                        <!-- messaggi -->
+                        <echo msg="trovato file: ${src.dir}/etc/version.conf" />
+
+                    </else>
+                </if>
+
                 <!-- se è dichiarato il tipo di deploy o no -->
                 <if>
                     <equals arg1="${prj.inc}" arg2="" />
@@ -287,32 +311,11 @@
                         <!-- messaggi -->
                         <echo msg="deploy senza incremento di versione" />
 
+                        <!-- leggo la versione dal file -->
+                        <loadfile property="rev.num" file="${src.dir}/etc/version.conf"/>
+
                     </then>
                     <else>
-
-                        <!-- se non esiste il file di versione all'interno del progetto -->
-                        <if>
-                            <not>
-                                <available file="${src.dir}/etc/version.conf"/>
-                            </not>
-                            <then>
-
-                                <!-- messaggi -->
-                                <echo msg="creo e inizializzo il file: ${src.dir}/etc/version.conf" />
-
-                                <!-- creo la cartella e il file di versione -->
-                                <mkdir dir="${src.dir}/etc" />
-                                <touch file="${src.dir}/etc/version.conf"/>
-                                <echo msg="0.0.0" file="${src.dir}/etc/version.conf" />
-
-                            </then>
-                            <else>
-
-                                <!-- messaggi -->
-                                <echo msg="trovato file: ${src.dir}/etc/version.conf" />
-
-                            </else>
-                        </if>
 
                         <!-- incremento la versione in base al tipo di deploy -->
                         <version releasetype="${prj.inc}" file="${src.dir}/etc/version.conf" property="rev.num"/>
