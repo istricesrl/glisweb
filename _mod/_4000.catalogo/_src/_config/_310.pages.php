@@ -145,6 +145,7 @@ if ($cf['contents']['cached'] === false) {
 
     // timer
     timerCheck($cf['speed'], ' -> fine elaborazione categorie catalogo prelevate dal database');
+
 } else {
 
     // recupero la timestamp di aggiornamento più recente

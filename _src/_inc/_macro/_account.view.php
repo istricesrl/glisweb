@@ -39,7 +39,7 @@
 
     // trasformazione icona attivo/inattivo
 	foreach( $ct['view']['data'] as &$row ) {
-			if( $row['se_attivo'] == 1 ) { $row['se_attivo'] = '<i class="fa fa-check"></i>'; }
+			if( $row['se_attivo'] == 1 ) { $row['se_attivo'] = '<i class="fa fa-check"></i>'; } else { $row['se_attivo'] = NULL; }
 	}
 	
 

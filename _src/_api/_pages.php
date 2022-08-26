@@ -163,6 +163,9 @@
     // log
 	appendToFile( 'inizio inclusione macro' . PHP_EOL, FILE_LATEST_RUN );
 
+	// debug
+	$includes = array();
+
     // esecuzione delle macro richieste per la pagina corrente
 	if( isset( $ct['page']['macro'] ) && is_array( $ct['page']['macro'] ) ) {
 	    foreach( $ct['page']['macro'] as $macro ) {
@@ -174,6 +177,7 @@
 				require fullPath( $macroAlternative );
 				timerCheck( $cf['speed'], $macroAlternative );
 				appendToFile( 'inclusione macro -> ' . $macroAlternative . PHP_EOL, FILE_LATEST_RUN );
+				$includes[] = $macroAlternative;
 
 			} else {
 
@@ -184,12 +188,14 @@
 					require fullPath( $macroLocal );
 					timerCheck( $cf['speed'], $macroLocal );
 					appendToFile( 'inclusione macro -> ' . $macroLocal . PHP_EOL, FILE_LATEST_RUN );
+					$includes[] = $macroLocal;
 
 				} elseif( file_exists( fullPath( $macro ) ) ) {
 
-					timerCheck( $cf['speed'], fullPath( $macro ) );
 					require fullPath( $macro );
+					timerCheck( $cf['speed'], fullPath( $macro ) );
 					appendToFile( 'inclusione macro -> ' . $macro . PHP_EOL, FILE_LATEST_RUN );
+					$includes[] = $macro;
 
 				} else {
 
@@ -418,6 +424,11 @@
 
 		if( ! empty( $ct['page']['template']['theme'] ) ) {
 			echo PHP_EOL . '<!-- tema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
+		}
+
+		echo PHP_EOL;
+		foreach( $includes as $include ) {
+			echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
 		}
 
 		switch( $ct['page']['template']['type'] ) {

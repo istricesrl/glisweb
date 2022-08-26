@@ -34,11 +34,16 @@
         'intestazione_id_provincia'             => array( 'tipe' => 'int',      'default' => NULL ),
         'intestazione_telefono'                 => array( 'type' => 'string',   'default' => NULL ),
         'intestazione_mail'                     => array( 'type' => 'string',   'default' => NULL ),
-        'provider_pagamento'                    => array( 'type' => 'string',   'default' => NULL,  'values' => array_keys( $cf['ecommerce']['profile']['provider'] ) ),
+        'provider_pagamento'                    => array( 'type' => 'string',   'default' => NULL ),
         'fatturazione_id_tipologia_documento'   => array( 'type' => 'string',   'default' => NULL ),
         'fatturazione_sezionale'                => array( 'type' => 'string',   'default' => 'E' ),
         'fatturazione_strategia'                => array( 'type' => 'string',   'default' => NULL,  'values' => array( 'SINGOLA', 'MULTIPLA', NULL ) )
     );
+
+    // provider di pagamento ammessi
+    if( isset( $cf['ecommerce']['profile']['provider'] ) && is_array( $cf['ecommerce']['profile']['provider'] ) ) {
+        $cf['ecommerce']['fields']['carrello']['provider_pagamento']['values'] = array_keys( $cf['ecommerce']['profile']['provider'] );
+    }
 
     // TODO
     // aggiungere $cf['utm']['fields'] ai campi del carrello

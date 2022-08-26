@@ -82,6 +82,7 @@
 		    $r['rwu']	= trim( getenv( 'REDIRECT_URL' ) );
 		    $r['sfn']	= trim( getenv( 'SCRIPT_FILENAME' ) . '?' . getenv( 'QUERY_STRING' ) );
 		    $r['ses']	= session_id();
+			$r['sts']   = $s;
 
 		// compongo il nome del file di log
 		    $r['log']	= $d . $f . '.' . $r['lrd'] . '.' . $r['lvs'] . '.log';
@@ -95,6 +96,7 @@
 		// compongo il messaggio in formato testo
 		    $msg	= $r['cdt']
 				. ( ( ! empty( $r['pid'] ) ) ? 'pid: '				.$r['pid'] : '' )
+				. ( ( ! empty( $r['sts'] ) ) ? ' status: '			.$r['sts'] : '' )
 				. ( ( ! empty( $r['lvl'] ) ) ? ' level: '			.$r['lvl'] : '' )
 				. ( ( ! empty( $r['rad'] ) ) ? ' remote address: '		.$r['rad'] : '' )
 				. ( ( ! empty( $r['ses'] ) ) ? ' session: '			.$r['ses'] : '' )
