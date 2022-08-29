@@ -22,6 +22,12 @@
 
 {% if smartsupp.key %}{% include '_inc/_smartsupp.html' %}{% endif %}
 
-{% for ruolo,modals in page.contents.modals %}{% for modal in modals %}{% include modal.schema %}{% endfor %}{% endfor %}
+{% for ruolo,modals in page.contents.modals %}{% for modal in modals %}
+<!-- ID modal: {{ modal.id }} -->
+<!-- schema modal: {{ modal.schema }} -->
+<div class="modal popup-modal {{ modal.tipologia }}" tabindex="-1" role="dialog" popup-delay="{{ modal.n_secondi }}" popup-scroll="{{ modal.n_scroll }}" id="popup-{{ modal.id }}" popup-used="">    
+{% include modal.schema %}
+</div>
+{% endfor %}{% endfor %}
 
 {# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
