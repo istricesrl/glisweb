@@ -392,6 +392,7 @@ CREATE TABLE IF NOT EXISTS `banner` (
   `id_inserzionista` int(11) DEFAULT NULL,
   `altezza_modulo` int(11) DEFAULT NULL,
   `larghezza_modulo` int(11) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
   `note` text,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
