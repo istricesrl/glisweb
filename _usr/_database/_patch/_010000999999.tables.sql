@@ -998,6 +998,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_colore` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_banner` INT(11) DEFAULT NULL,
   `path_custom` char(255) DEFAULT NULL,
   `url_custom` char(255) DEFAULT NULL,
   `rewrite_custom` char(255) DEFAULT NULL,
