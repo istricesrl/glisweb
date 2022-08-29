@@ -35,19 +35,19 @@
     // redirect da CMS
 	if( ! empty( $cf['mysql']['connection'] ) ) {
 	    $r = array_merge(
-		$r,
-		mysqlQuery(
-		    $cf['mysql']['connection'],
-		    'SELECT codice,sorgente,destinazione FROM redirect_view'
-		)
+			$r,
+			mysqlQuery(
+				$cf['mysql']['connection'],
+				'SELECT id,codice,sorgente,destinazione FROM redirect_view'
+			)
 	    );
 	}
 
     // configurazione extra
 	if( isset( $cx['redirect'] ) ) {
-	    $r = array_merge(
-		$r,
-		$cx['redirect']
+	    $r = array_replace_recursive(
+			$r,
+			$cx['redirect']
 	    );
 	}
 
@@ -56,7 +56,7 @@
     // 301,/vecchia/pagina.html,http://host.domain.bogus/nuova/pagina.html
 
     // debug
-	// print_r( $cf['redirect'] );
+	// print_r( $r );
 	// die( 'cx -> ' . print_r( $cx, true ) );
 	// print_r( $cx['redirect'] );
 	// var_dump( strtok( $_SERVER['REQUEST_URI'], '?' ) );

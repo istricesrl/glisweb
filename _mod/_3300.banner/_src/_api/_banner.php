@@ -13,7 +13,7 @@
 
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../../../../_src/_config.php';
+	    require '../../../../_src/_config.php';
 	}
 
     // inizializzo l'array del risultato
@@ -50,10 +50,9 @@
 		$status['info'][] = 'strategia standard di visualizzazione banner';
 
 		// token della riga
-        $status['id'] = mysqlQuery(
+        $status['aggiornamento'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE banner SET token = ? FROM banner LEFT JOIN banner_azioni ON ( banner_azioni.id_banner = banner.id AND banner_azioni.azione = "visualizzazione" ) WHERE token IS NULL '.
-            'ORDER BY banner_azioni.timestamp_azione ASC LIMIT 1',
+            'UPDATE banner SET banner.token = ? WHERE banner.id = ( SELECT banner.id FROM banner LEFT JOIN banner_azioni ON ( banner_azioni.id_banner = banner.id AND banner_azioni.azione = "visualizzazione" ) WHERE banner.token IS NULL GROUP BY banner_azioni.id_banner ORDER BY ( max( banner_azioni.timestamp_azione ) - unix_timestamp( now() ) ) ASC LIMIT 1 ) ',
             array(
                 array( 's' => $status['token'] )
             )
@@ -64,7 +63,7 @@
 	// prelevo un banner dalla coda
 	$banner = mysqlSelectRow(
 		$cf['mysql']['connection'],
-		'SELECT banner.*, immagini.path AS src, contenuti.url_custom AS href FROM banner LEFT JOIN immagini ON immagini.id_banner = banner.id LEFT JOIN contenuti ON contenuti.id_banner = banner.id WHERE token = ?',
+		'SELECT banner.*, immagini.path AS src, contenuti.url_custom AS href FROM banner LEFT JOIN immagini ON immagini.id_banner = banner.id LEFT JOIN contenuti ON contenuti.id_banner = banner.id WHERE banner.token = ?',
 		array(
 			array( 's' => $status['token'] )
 		)
@@ -75,6 +74,7 @@
 
 		// status
 		$status['info'][] = 'trovato un banner da visualizzare';
+		$status['info'][] = 'visualizzo banner #' . $banner['id'];
 
         // aggiorno le visualizzazioni
         $status['visualizzazione'] = mysqlInsertRow(
@@ -82,7 +82,7 @@
             array(
                 'id_banner' => $banner['id'],
                 'azione' => 'visualizzazione',
-                'timestamp_azione' => time()
+                'timestamp_azione' => microtime( true )
             ),
             'banner_azioni'
         );
@@ -99,9 +99,14 @@
         // salvo l'URL in $_SESSION
         $_SESSION['banner']['token'][ $status['token'] ] = $banner;
 
+        // debug
+        // print_r( $banner );
+        // print_r( $_SESSION['banner']['token'][ $status['token'] ] );
+        $status['id'] = $banner['id'];
+
         // se esiste un file di immagine...
         if( file_exists( DIR_VAR_CONTENUTI . 'banner/' . $banner['id'] . '.jpg' ) ) {
-            $status['src'] = DIR_VAR_CONTENUTI . 'banner/' . $banner['id'] . '.jpg';
+            $status['src'] = getShortPath( DIR_VAR_CONTENUTI . 'banner/' . $banner['id'] . '.jpg' );
         } else {
             $status['src'] = $banner['src'];
         }

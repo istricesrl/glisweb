@@ -183,9 +183,9 @@
 #	    'recensioni' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
-#	    'redirect' => array(
-#		CONTROL_FULL => array( 'roots' )
-#	    ),
+	    'redirect' => array(
+		CONTROL_FULL => array( 'roots' )
+	    ),
 #	    'settori' => array(
 #		CONTROL_FULL => array( 'roots' )
 #	    ),

@@ -95,6 +95,17 @@
      * @todo documentare
      *
      */
+    function getShortPath( $f ) {
+
+        return shortPath( $f );
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function getFileNameWithoutExtension( $f ) {
 
         fullPath( $f );
