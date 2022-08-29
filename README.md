@@ -108,5 +108,5 @@ molto utili anche quando sarete divenuti più esperti!
 # utilizzo
 Utilizzare GlisWeb è semplice e intuitivo! Una guida per gli utenti è in fase di sviluppo ed è disponibile a questo
 indirizzo http://s-url.it/gliswebdocs inoltre stiamo pubblicando una serie di video tutorial su questa playlist di YouTube
-http://s-url.it/gliswebvideos. https://glisweb.istricesrl.it/prova
+http://s-url.it/gliswebvideos.
 
