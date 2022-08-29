@@ -1796,6 +1796,7 @@ CREATE OR REPLACE VIEW contenuti_view AS
 		contenuti.id_colore,
 		contenuti.id_progetto,
 		contenuti.id_categoria_progetti,
+		contenuti.id_banner,
 		contenuti.title,
 		contenuti.h1,
 		contenuti.id_account_inserimento,
