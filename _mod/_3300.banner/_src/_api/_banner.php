@@ -69,8 +69,8 @@
 		)
 	);
 
-	// se c'è almeno una mail da inviare
-	if( ! empty( $banner ) ) {
+	// se c'è un banner da visualizzare
+	if( ! empty( $banner ) && ! empty( $banner['src'] ) ) {
 
 		// status
 		$status['info'][] = 'trovato un banner da visualizzare';
@@ -109,6 +109,11 @@
             $status['src'] = getShortPath( DIR_VAR_CONTENUTI . 'banner/' . $banner['id'] . '.jpg' );
         } else {
             $status['src'] = $banner['src'];
+        }
+
+        // se non c'è un href non restituisco il token per il click
+        if( empty( $banner['href'] ) ) {
+            $status['token'] = NULL;
         }
 
 	} else {
