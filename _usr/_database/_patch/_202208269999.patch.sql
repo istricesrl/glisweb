@@ -3,7 +3,7 @@
 --
 
 --| 202208260010
-DROP TABLEtodo_view_static;
+DROP TABLE todo_view_static;
 
 --| 202208260020
 CREATE TABLE `todo_view_static` (
