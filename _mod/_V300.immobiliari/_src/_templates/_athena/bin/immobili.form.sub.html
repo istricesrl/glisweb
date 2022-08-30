@@ -18,14 +18,18 @@
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
 	{{ frm.input( table, subtable, i, 'id_immobile', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
-        <div class="col-md">
+        <div class="col-4">
             <span class="label-top">anagrafica</span>
 			{{ frm.selectBox( table, subtable, i, 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, lang, 'anagrafica', disabled ) }}
         </div>
-	    <div class="col-md">
+	    <div class="col-auto">
 		    <span class="label-top">ruolo</span>
 		    {{ frm.selectRequired( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_anagrafica, request, '', '', '', disabled ) }}
         </div>
+		<div class="col-12 col-md">
+            <span class="label-top">note</span>
+			{{ frm.input( table, subtable, i, 'note', '', '', request, '', '', '', '', disabled ) }}
+		</div>
         {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
