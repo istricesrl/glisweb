@@ -30,10 +30,13 @@
     // recupero i dati
     if( isset( $_REQUEST['tkb'] ) && ! empty( $_REQUEST['tkb'] ) ) {
 
+        // status
+        $status['info'][] = 'ricevuto token ' . $_REQUEST['tkb'];
+
         // recupero i dati del banner
         $banner = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT banner.*, immagini.path AS src, contenuti.url_custom AS href FROM banner LEFT JOIN immagini ON immagini.id_banner = banner.id LEFT JOIN contenuti ON contenuti.id_banner = banner.id WHERE banner_azioni.token = ? LIMIT 1',
+            'SELECT banner.*, immagini.path AS src, contenuti.url_custom AS href FROM banner LEFT JOIN immagini ON immagini.id_banner = banner.id LEFT JOIN contenuti ON contenuti.id_banner = banner.id LEFT JOIN banner_azioni ON banner_azioni.id_banner = banner.id WHERE banner_azioni.token = ? LIMIT 1',
             array(
                 array( 's' => $_REQUEST['tkb'] )
             )
@@ -60,7 +63,7 @@
             http_response_code( 301 );
 
             // redirect
-            header( 'Location: ' . $_SESSION['banner']['token'][ $_REQUEST['tkb'] ]['href'] ); 
+            header( 'Location: ' . $banner['href'] ); 
 
             // status
             buildJson( $status );
@@ -71,6 +74,7 @@
         } else {
             $status['err'][] = 'informazioni non trovate per il token';
         }
+
     } else {
         $status['err'][] = 'token non presente';
     }

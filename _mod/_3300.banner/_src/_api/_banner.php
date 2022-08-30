@@ -26,7 +26,7 @@
 	logWrite( 'richiesta di visualizzazione banner', 'banner' );
 
     // chiave di lock
-	$status['token'] = getToken( __FILE__ );
+	$status['token'] = getToken( __FILE__ . microtime( true ) );
 
 	// visualizzazione di uno specifico banner
 	if( isset( $_REQUEST['id'] ) ) {
