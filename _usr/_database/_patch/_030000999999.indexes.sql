@@ -395,9 +395,10 @@ ALTER TABLE `banner_azioni`
 	ADD KEY `id_pagina` (`id_pagina`),
 	ADD KEY `azione` (`azione`),
 	ADD KEY `timestamp_azione` (`timestamp_azione`),
+	ADD KEY `token` (`token`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`azione`,`timestamp_azione`);
+	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`azione`,`timestamp_azione`,`token`);
 
 --| 030000002401
 
