@@ -1502,6 +1502,7 @@ CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
+  `note` text,
   `timestamp_inserimento` int(11) DEFAULT NULL,	
   `id_account_inserimento` int(11) DEFAULT NULL,	
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
