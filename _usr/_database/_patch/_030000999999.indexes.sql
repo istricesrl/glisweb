@@ -3652,6 +3652,9 @@ ALTER TABLE `tipologie_contratti`
   	ADD KEY `se_immobili`(`se_immobili`),
   	ADD KEY `se_acquisto`(`se_acquisto`),
   	ADD KEY `se_locazione`(`se_locazione`),
+	ADD KEY `se_libero` (`se_libero`),
+  	ADD KEY `se_prenotazione`(`se_prenotazione`),
+  	ADD KEY `se_scalare`(`se_scalare`),
   	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`,`se_immobili`,`se_acquisto`,`se_locazione`);
