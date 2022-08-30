@@ -31,6 +31,7 @@ CREATE OR REPLACE VIEW `banner_azioni_view` AS
 		LEFT JOIN banner ON banner.id = banner_azioni.id_banner
 ;
 
+--| 202208300040
 ALTER TABLE`immobili_anagrafica`    ADD COLUMN `note` text AFTER `ordine`;
 
 --| FINE
