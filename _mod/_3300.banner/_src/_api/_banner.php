@@ -82,7 +82,8 @@
             array(
                 'id_banner' => $banner['id'],
                 'azione' => 'visualizzazione',
-                'timestamp_azione' => microtime( true )
+                'timestamp_azione' => microtime( true ),
+                'token' => $status['token']
             ),
             'banner_azioni'
         );
@@ -97,7 +98,7 @@
         );
 
         // salvo l'URL in $_SESSION
-        $_SESSION['banner']['token'][ $status['token'] ] = $banner;
+        // $_SESSION['banner']['token'][ $status['token'] ] = $banner;
 
         // debug
         // print_r( $banner );

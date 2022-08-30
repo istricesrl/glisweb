@@ -65,7 +65,7 @@
 
                     // salvataggio del blocco dati nel database
                         $idCnt = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO contatti ( nome, json, timestamp_inserimento ) VALUES ( ?, ?, ? )',
-                        array( array( 's' => $k ), array( 's' => json_encode( $v ) ), array( 's' => time() ) )
+                            array( array( 's' => $k ), array( 's' => json_encode( $v ) ), array( 's' => time() ) )
                         );
 
                     // TODO prevedere la possibilità di mappare campi del modulo su colonne del database anziché salvare tutto il mappazzone nel campo json

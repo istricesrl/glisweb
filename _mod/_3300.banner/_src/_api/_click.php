@@ -29,18 +29,29 @@
 
     // recupero i dati
     if( isset( $_REQUEST['tkb'] ) && ! empty( $_REQUEST['tkb'] ) ) {
-        if( isset( $_SESSION['banner']['token'][ $_REQUEST['tkb'] ] ) ) {
+
+        // recupero i dati del banner
+        $banner = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT banner.*, immagini.path AS src, contenuti.url_custom AS href FROM banner LEFT JOIN immagini ON immagini.id_banner = banner.id LEFT JOIN contenuti ON contenuti.id_banner = banner.id WHERE banner_azioni.token = ? LIMIT 1',
+            array(
+                array( 's' => $_REQUEST['tkb'] )
+            )
+        );
+    
+        if( ! empty( $banner ) ) {
 
             // debug
-            print_r( $_SESSION['banner']['token'][ $_REQUEST['tkb'] ] );
+            // print_r( $_SESSION['banner']['token'][ $_REQUEST['tkb'] ] );
 
             // registro il click
             $status['visualizzazione'] = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
-                    'id_banner' => $_SESSION['banner']['token'][ $_REQUEST['tkb'] ]['id'],
+                    'id_banner' => $banner['id'],
                     'azione' => 'click',
-                    'timestamp_azione' => microtime( true )
+                    'timestamp_azione' => microtime( true ),
+                    'token' => $_REQUEST['tkb']
                 ),
                 'banner_azioni'
             );
