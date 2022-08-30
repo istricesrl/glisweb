@@ -963,6 +963,7 @@ CREATE OR REPLACE VIEW `banner_azioni_view` AS
 		banner_azioni.id_pagina,
 		banner_azioni.azione,
 		banner_azioni.timestamp_azione,
+		banner_azioni.token,
 		banner_azioni.id_account_inserimento,
 		banner_azioni.id_account_aggiornamento,
 		concat(

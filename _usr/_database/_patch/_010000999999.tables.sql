@@ -411,6 +411,7 @@ CREATE TABLE IF NOT EXISTS `banner_azioni` (
   `id_banner` int(11) NOT NULL,
   `azione` enum('visualizzazione','click') DEFAULT NULL,
   `timestamp_azione` int(11) DEFAULT NULL,
+  `token` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
