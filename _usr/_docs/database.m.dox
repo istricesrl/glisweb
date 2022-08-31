@@ -459,50 +459,7 @@
     menu_view.id_account_inserimento        | -
     menu_view.id_account_aggiornamento      | -
     menu_view.__label__                     | etichetta descrittiva della voce di menu
-    
-    messaggi
-    --------
-    Questa tabella *gestita* serve per la gestione della messaggistica
-
-    colonna                             | descrizione
-    ------------------------------------|---------------------------------------------------------------------------------------
-    messaggi.id                         | l'ID del messaggio
-    messaggi.id_emittente               | l'ID dell'anagrafica emittente del messaggio
-    messaggi.id_destintario             | l'ID dell'anagrafica destinataria del messaggio
-    messaggi.testo                      | il testo del messaggio
-    messaggi.timestamp_invio            | la timestamp in cui il messaggio viene inviato
-    messaggi.timestamp_lettura          | la timestamp in cui il messaggio viene letto
-    messaggi.id_account_inserimetno     | l'ID dell'account che ha inserito la riga
-    messaggi.timestamp_inserimento      | la timestamp dell'inserimento della riga
-    messaggi.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
-    messaggi.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
-   
-    La tabella ha le seguenti chiavi esterne:
-
-    chiave                              | campo                         | tabella e campo collegati     | comportamento
-    ------------------------------------|-------------------------------|-------------------------------|----------------------
-    messaggi_ibfk_01_nofollow           | id_emittente                  | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
-    messaggi_ibfk_02_nofollow           | id_destintario                | anagrafica.id                 | ON DELETE NO ACTION ON UPDATE NO ACTION
-    messaggi_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
-    messaggi_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
-
-    La vista *messaggi_view* relativa alla tabella *messaggi* presenta le seguenti colonne:
-
-    colonna                                  | descrizione
-    -----------------------------------------|---------------------------------------------------------------------------------------
-    messaggi_view.id                         | -
-    messaggi_view.id_emittente               | -                
-    messaggi_view.emittente                  | l'anagrafica emittente del messaggio
-    messaggi_view.id_destintario             | -
-    messaggi_view.destinatario               | l'anagrafica destinataria del messaggio
-    messaggi_view.testo                      | -
-    messaggi_view.timestamp_invio            | -
-    messaggi_view.timestamp_lettura          | -
-    messaggi_view.id_account_inserimetno     | -
-    messaggi_view.id_account_aggiornamento   | -
-    messaggi_view.__label__                  | l'etichetta descrittiva del messaggio
-
-    
+      
     metadati
     --------
     Questa tabella *gestita* contiene i metadati associati a diverse entità principali del framework; i metadati
