@@ -459,7 +459,7 @@
     menu_view.id_account_inserimento        | -
     menu_view.id_account_aggiornamento      | -
     menu_view.__label__                     | etichetta descrittiva della voce di menu
-    
+      
     metadati
     --------
     Questa tabella *gestita* contiene i metadati associati a diverse entità principali del framework; i metadati

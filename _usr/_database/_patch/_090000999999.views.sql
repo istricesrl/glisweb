@@ -2096,6 +2096,51 @@ CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
 
 --| 090000007500
 
+-- conversazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `conversazioni_view`;
+
+--| 090000007501
+
+-- conversazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+CREATE OR REPLACE VIEW conversazioni_view AS
+	SELECT
+		conversazioni.id,
+		conversazioni.nome,
+		conversazioni.timestamp_apertura,
+		conversazioni.timestamp_chiusura,
+		conversazioni.nome AS __label__
+	FROM
+		conversazioni
+;
+
+--| 090000007600
+
+-- conversazioni_account_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `conversazioni_account_view`;
+
+--| 090000007601
+
+-- conversazioni_account_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+CREATE OR REPLACE VIEW conversazioni_account_view AS
+	SELECT
+		conversazioni_account.id,
+		conversazioni_account.id_conversazione,
+		conversazioni_account.id_account,
+		conversazioni_account.timestamp_entrata,
+		conversazioni_account.timestamp_uscita,
+		concat( conversazioni_account.id_conversazione, ' - ', conversazioni_account.id_account) AS __label__
+	FROM
+		conversazioni_account
+;
+
+--| 090000008000
+
 -- corsi_view
 -- tipologia: vista virtuale
 DROP TABLE IF EXISTS `corsi_view`;
@@ -4544,6 +4589,29 @@ CREATE OR REPLACE VIEW `menu_view` AS
 		INNER JOIN lingue ON lingue.id = menu.id_lingua
 ;
 
+--| 090000021700
+
+-- messaggi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `messaggi_view`;
+
+--| 090000021701
+
+-- messaggi_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 17:32 Chiara GDL
+CREATE OR REPLACE VIEW `messaggi_view` AS
+	SELECT
+		messaggi.id,
+		messaggi.id_conversazione,
+		messaggi.timestamp_invio,
+		messaggi.timestamp_lettura,
+		messaggi.id_account_inserimento,
+		messaggi.id_account_aggiornamento,
+		concat( 'messaggio #', messaggi.id )AS __label__
+	FROM messaggi
+;
+
 --| 090000021800
 
 -- metadati_view
@@ -6018,7 +6086,8 @@ CREATE OR REPLACE VIEW progetti_certificazioni_view AS
  		concat_ws(
 			' ',
 			progetti.nome,
-			certificazioni.nome
+			'/',
+			certificazioni.nome 
 		) AS __label__
 	FROM progetti_certificazioni
 		LEFT JOIN progetti ON progetti.id = progetti_certificazioni.id_progetto
@@ -6754,6 +6823,7 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 		risorse.giorno_pubblicazione,
 		risorse.mese_pubblicazione,
 		risorse.anno_pubblicazione,
+		group_concat( DISTINCT categorie_risorse_path( categorie_risorse.id ) SEPARATOR ' | ' ) AS categorie,
 		risorse.id_account_inserimento,
 		risorse.id_account_aggiornamento,
 		concat_ws(
@@ -6764,6 +6834,9 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 	FROM risorse
 		LEFT JOIN tipologie_risorse ON tipologie_risorse.id = risorse.id_tipologia
 		LEFT JOIN testate ON testate.id = risorse.id_testata
+		LEFT JOIN risorse_categorie ON risorse_categorie.id_risorsa = risorse.id
+		LEFT JOIN categorie_risorse ON categorie_risorse.id = risorse_categorie.id_categoria
+	GROUP BY risorse.id
 ;
 
 --| 090000032100
@@ -8076,7 +8149,7 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.se_volume,
 		tipologie_prodotti.se_capacita,
-		tipologie_prodotti.se_peso,
+		tipologie_prodotti.se_massa,
 		tipologie_prodotti.id_account_inserimento,
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
@@ -8360,6 +8433,39 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+;
+
+--| 090000060100
+
+-- todo_matricole_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `todo_matricole_view`;
+
+--| 090000060101
+
+-- todo_matricole_view
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 15:07 Chiara GDL
+CREATE OR REPLACE VIEW todo_matricole_view AS
+	SELECT
+		todo_matricole.id,
+		todo_matricole.id_todo,
+		todo.nome AS todo,
+		todo_matricole.id_matricola,
+		matricole.matricola AS matricola,
+		todo_matricole.id_ruolo,
+		ruoli_matricole_path( todo_matricole.id_ruolo ) AS ruolo,
+		todo_matricole.ordine,
+		todo_matricole.id_account_inserimento,
+		todo_matricole.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			todo.nome,
+			matricole.matricola
+		) AS __label__
+	FROM todo_matricole
+		LEFT JOIN todo ON todo.id = todo_matricole.id_todo
+		LEFT JOIN matricole ON matricole.id = todo_matricole.id_matricola
 ;
 
 --| 090000062000

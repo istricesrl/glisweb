@@ -508,6 +508,7 @@
     risorse_view.giorno_pubblicazione       | -
     risorse_view.mese_pubblicazione         | -
     risorse_view.anno_pubblicazione         | -
+    risorse_view.categorie                  | elenco delle categorie associate alla risorsa
     risorse_view.id_account_inserimento     | -
     risorse_view.id_account_aggiornamento   | -
     risorse_view.__label__                  | etichetta descrittiva della risorsa

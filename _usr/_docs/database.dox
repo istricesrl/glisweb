@@ -194,6 +194,7 @@
     progetti_anagrafica             | 027200    | relazione     | principale    | mette in relazione progetti e anagrafica
     progetti_articoli               | 027300    | relazione     | secondaria    | mette in relazione i progetti e gli articoli
     progetti_categorie              | 027400    | relazione     | principale    | mette in relazione progetti e categorie_progetti
+    progetti_certificazioni         | 027600    | relazione     | principale    | mette in relazione progetti e certificazioni
     progetti_matricole              | 027800    | relazione     | principale    | mette in relazione progetti e matricole
     pubblicazioni                   | 028400    | base          | principale    | contiene le pubblicazioni
     redirect                        | 029400    | base          | principale    | contiene i redirect HTTP
@@ -210,6 +211,7 @@
     template                        | 044000    | base          | principale    | contiene i template per le mail e gli SMS
     testate                         | 045000    | base          | principale    | contiene le testate
     todo                            | 060000    | base          | principale    | contiene le todo
+    todo_matricole                  | 060100    | relazione     | principale    | contiene le relazioni tra todo e matricole
     url                             | 062600    | base          | principale    | contiene gli URL
     video                           | 065000    | base          | contenuti     | contiene i video
 
@@ -235,7 +237,7 @@
     ------------|-----------|----------------------------------------------------------
     BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, liste, liste_mail, luoghi, mail, mail_out, mail_sent, mailing, mailing_liste, mailing_mail, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_luoghi, tipologie_telefoni, tipologie_url, udm, url, valute
     CONTATTI    | 0300      | anagrafica_consensi, consensi, consensi_moduli, contatti, tipologie_contatti
-    PRODUZIONE  | 1000      | categorie_progetti, contratti,pianificazioni, progetti, progetti_anagrafica, progetti_articoli, progetti_categorie, relazioni_progetti, rinnovi, rinnovi_documenti_articoli, ruoli_anagrafica, tipologie_contratti,tipologie_progetti, todo
+    PRODUZIONE  | 1000      | categorie_progetti, contratti,pianificazioni, progetti, progetti_anagrafica, progetti_categorie, progetti_certificazioni,relazioni_progetti, rinnovi, rinnovi_documenti_articoli, ruoli_anagrafica, tipologie_contratti,tipologie_progetti, todo, todo_matricole
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
@@ -350,6 +352,7 @@
     progetti_anagrafica             | PRODUZIONE
     progetti_articoli               | PRODUZIONE
     progetti_categorie              | PRODUZIONE
+    progetti_certificazioni         | PRODUZIONE
     pubblicazioni                   | CONTENUTI, POPUP, PRODOTTI, NOTIZIE, RISORSE
     ranking                         | BASE
     redirect                        | CONTENUTI
@@ -407,6 +410,7 @@
     tipologie_todo                  | PRODUZIONE, ATTIVITA
     tipologie_url                   | BASE
     todo                            | PRODUZIONE, ATTIVITA
+    todo_matricole                  | PRODUZIONE
     udm                             | BASE
     url                             | BASE
     valute                          | BASE

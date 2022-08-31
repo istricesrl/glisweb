@@ -25,6 +25,7 @@
    udm.se_massa                     | flag che indica se l'unità di misura riguarda la massa
    udm.se_tempo                     | flag che indica se l'unità di misura riguarda il tempo
    udm.se_quantita                  | flag che indica se l'unità di misura riguarda la quantità
+   udm.se_area                      | flag che indica se l'unità di misura riguarda l'area 
 
    La tabella ha le seguenti chiavi esterne:
 
@@ -46,6 +47,7 @@
    udm_view.se_massa                   | -
    udm_view.se_tempo                   | -
    udm_view.se_quantita                | -
+   udm_view.se_area                    | -
    udm_view.__label__                  | etichetta descrittiva dell'unità di misura
 
    url

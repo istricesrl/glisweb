@@ -815,6 +815,46 @@
     progetti_categorie_view.id_account_aggiornamento  | -
     progetti_categorie_view.__label__                 | etichetta descrittiva dell'associazione fra progetto e categoria
 
+    progetti_certificazioni
+    ------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *progetti* con l'entità secondaria *certificazioni*.
+    
+    colonna                                            | descrizione
+    ---------------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_certificazioni.id                         | l'ID dell'associazione fra progetto e certificazione
+    progetti_certificazioni.id_progetto                | l'ID del progetto
+    progetti_certificazioni.id_certificazione          | l'ID della certificazione
+    progetti_certificazioni.ordine                     | campo di ordinamento
+    progetti_certificazioni.se_richiesta		       | flag che indica se quella certificazione è richiesta
+    progetti_certificazioni.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    progetti_certificazioni.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    progetti_certificazioni.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    progetti_certificazioni.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------------------|---------------------------|-------------------------------|----------------------
+    progetti_certificazioni_ibfk_01             | id_progetto               | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_certificazioni_ibfk_02_nofollow    | id_certificazione         | certificazioni.id             | ON DELETE CASCADE ON UPDATE CASCADE
+    progetti_certificazioni_ibfk_98_nofollow    | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    progetti_certificazioni_ibfk_99_nofollow    | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *progetti_certificazioni_view* relativa alla tabella *progetti_certificazioni* presenta le seguenti colonne:
+    
+    colonna                                                | descrizione
+    -------------------------------------------------------|---------------------------------------------------------------------------------------
+    progetti_certificazioni_view.id                        | -
+    progetti_certificazioni_view.id_progetto               | -
+    progetti_certificazioni_view.progetto                  | il progetto
+    progetti_certificazioni_view.id_certificazione         | -
+    progetti_certificazioni_view.certificazione            | la certificazione
+    progetti_certificazioni_view.ordine                    | -    
+    progetti_certificazioni_view.se_richiesta              | -
+    progetti_certificazioni_view.id_account_inserimento    | -
+    progetti_certificazioni_view.id_account_aggiornamento  | -
+    progetti_certificazioni_view.__label__                 | etichetta descrittiva dell'associazione fra progetto e certificazione
+
     progetti_matricole
     ------------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *progetti* con l'entità secondaria *matricole*.

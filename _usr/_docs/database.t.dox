@@ -756,7 +756,7 @@
     tipologie_prodotti.se_servizio                 | -
     tipologie_prodotti.se_volume                   | -
 	tipologie_prodotti.se_capacita                 | -
-	tipologie_prodotti.se_peso                     | -  
+	tipologie_prodotti.se_massa                     | -  
     tipologie_prodotti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
     tipologie_prodotti.timestamp_inserimento       | la timestamp dell'inserimento della riga
     tipologie_prodotti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
@@ -790,7 +790,7 @@
     tipologie_prodotti_view.se_servizio                     | -
     tipologie_prodotti_view.se_volume                       | -
 	tipologie_prodotti_view.se_capacita                     | -
-	tipologie_prodotti_view.se_peso                         | -  
+	tipologie_prodotti_view.se_massa                        | -  
     tipologie_prodotti_view.id_account_inserimento          | -
     tipologie_prodotti_view.id_account_aggiornamento        | -
     tipologie_prodotti_view.__label__                       | etichetta descrittiva della tipologia
@@ -1152,6 +1152,48 @@
     todo_archiviati
     ---------------------
     Questa tabella *virtuale* contiene le todo archiviate, individuate in base al fatto che il campo data_archiviazione è NOT NULL.
+
+    todo_matricole
+    ------------------
+    Questa tabella *gestita* mette in relazione molti a molti l'entità principale *todo* con l'entità secondaria *matricole*.
+    
+    colonna                                   | descrizione
+    ------------------------------------------|---------------------------------------------------------------------------------------
+    todo_matricole.id                         | l'ID dell'associazione fra todo e categoria
+    todo_matricole.id_todo                    | l'ID del todo
+    todo_matricole.id_matricola               | l'ID della categoria
+    todo_matricole.id_ruolo                   | l'ID del ruolo svolto dalla matricola nel todo
+    todo_matricole.ordine                     | campo di ordinamento
+    todo_matricole.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    todo_matricole.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    todo_matricole.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    todo_matricole.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+    
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                      | campo                     | tabella e campo collegati     | comportamento
+    --------------------------------------------|---------------------------|-------------------------------|----------------------
+    todo_matricole_ibfk_01                      | id_todo                   | todo.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    todo_matricole_ibfk_02_nofollow             | id_matricola              | matricole.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    todo_matricole_ibfk_03_nofollow             | id_ruolo                  | ruoli_matricole.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
+    todo_matricole_ibfk_98_nofollow             | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    todo_matricole_ibfk_99_nofollow             | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *todo_matricole_view* relativa alla tabella *todo_matricole* presenta le seguenti colonne:
+    
+    colonna                                       | descrizione
+    ----------------------------------------------|---------------------------------------------------------------------------------------
+    todo_matricole_view.id                        | -
+    todo_matricole_view.id_todo                   | -
+    todo_matricole_view.todo                      | la todo
+    todo_matricole_view.id_matricola              | -
+    todo_matricole_view.matricola                 | la matricola
+    todo_matricole_view.id_ruolo                  | -
+    todo_matricole_view.ruolo                     | il ruolo
+    todo_matricole_view.ordine                    | -
+    todo_matricole_view.id_account_inserimento    | -
+    todo_matricole_view.id_account_aggiornamento  | -
+    todo_matricole_view.__label__                 | etichetta descrittiva dell'associazione fra todo e matricola
 
 */
 

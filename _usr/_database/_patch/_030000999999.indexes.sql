@@ -1088,6 +1088,44 @@ ALTER TABLE `contratti_anagrafica`
 -- tipologia: tabella gestita
 ALTER TABLE `contratti_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000007500
+
+-- conversazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+ALTER TABLE `conversazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `timestamp_apertura` (`timestamp_apertura`),
+	ADD KEY `timestamp_chiusura` (`timestamp_chiusura`),
+	ADD KEY `indice` (`id`,`nome`,`timestamp_chiusura`,`timestamp_apertura`);
+
+--| 030000007501
+
+-- conversazioni
+-- tipologia: tabella gestita
+ALTER TABLE `conversazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000007600
+
+-- conversazioni_account
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+ALTER TABLE `conversazioni_account`
+ 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_conversazione`,`id_account`),
+	ADD KEY `id_conversazione` (`id_conversazione`),
+	ADD KEY `id_account` (`id_account`),
+ 	ADD KEY `timestamp_entrata` (`timestamp_entrata`), 
+ 	ADD KEY `timestamp_uscita` (`timestamp_uscita`), 
+	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_entrata`, `timestamp_uscita`);
+	
+--| 030000007601
+
+-- conversazioni_account
+-- tipologia: tabella gestita
+ALTER TABLE `conversazioni_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000008000
 
 -- coupon
@@ -2101,6 +2139,24 @@ ALTER TABLE `menu`
 -- tipologia: tabella gestita
 ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000021700
+
+-- messaggi
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 17:32 Chiara GDL
+ALTER TABLE `messaggi`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_conversazione` (`id_conversazione`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_conversazione`,`timestamp_invio`,`timestamp_lettura`);
+
+--| 030000021701
+
+-- messaggi
+-- tipologia: tabella gestita
+ALTER TABLE `messaggi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000021800
 
 -- metadati
@@ -2639,6 +2695,7 @@ ALTER TABLE `progetti_certificazioni`
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_certificazione` (`id_certificazione`), 
 	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_richiesta` (`se_richiesta`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -4137,6 +4194,28 @@ ALTER TABLE `todo`
 -- tipologia: tabella gestita
 ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000060100
+
+-- todo_matricole
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 15:00 Chiara GDL
+ALTER TABLE `todo_matricole`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_todo`,`id_matricola`,`id_ruolo`), 
+	ADD KEY `id_todo` (`id_todo`), 
+	ADD KEY `id_matricola` (`id_matricola`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_todo`,`id_matricola`,`ordine`,`id_ruolo`);
+
+--| 030000060101
+
+-- todo_matricole
+-- tipologia: tabella gestita
+ALTER TABLE `todo_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000062000
 
 -- udm
@@ -4151,6 +4230,7 @@ ALTER TABLE `udm`
 	ADD KEY `se_tempo`(`se_tempo`),
 	ADD KEY `se_lunghezza`(`se_lunghezza`),
 	ADD KEY `se_quantita`(`se_quantita`),
+ 	ADD KEY `se_area` (`se_area`),
 	ADD KEY `indice` (`id`,`id_base`,`conversione`,`nome`,`sigla`,`se_tempo`,`se_lunghezza`,`se_volume`,`se_quantita`);
 
 --| 030000062001

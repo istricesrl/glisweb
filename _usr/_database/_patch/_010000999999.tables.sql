@@ -1087,6 +1087,32 @@ CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000007500
+
+-- conversazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+CREATE TABLE IF NOT EXISTS `conversazioni` (
+  `id` int(11) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `note` text,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `timestamp_chiusura` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000007600
+
+-- conversazioni_account
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+CREATE TABLE IF NOT EXISTS `conversazioni_account` (
+  `id` int(11) NOT NULL,
+  `id_conversazione` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `timestamp_entrata` int(11) DEFAULT NULL,
+  `timestamp_uscita` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000008000
 
 -- coupon
@@ -1450,7 +1476,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `ordine` int(11) DEFAULT NULL,
   `orientamento` enum('L','P') DEFAULT NULL,
   `taglio` char(64) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `path_alternativo` char(255) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
@@ -1986,6 +2012,23 @@ CREATE TABLE IF NOT EXISTS `menu` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000021700
+
+-- messaggi
+-- tipologia: tabella gestita
+-- verifica: 2022-04-26 17:32 Chiara GDL
+CREATE TABLE IF NOT EXISTS `messaggi` (
+  `id` int(11) NOT NULL,
+  `id_conversazione` int(11) DEFAULT NULL,
+  `testo` text,
+  `timestamp_invio` int DEFAULT NULL,
+  `timestamp_lettura` int DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB;
+
 --| 010000021800
 
 -- metadati
@@ -2485,6 +2528,7 @@ CREATE TABLE IF NOT EXISTS `progetti_categorie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL,	
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 --| 010000027600
 
@@ -3612,7 +3656,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `se_dimensioni` tinyint(1) DEFAULT NULL,
   `se_volume` tinyint(1) DEFAULT NULL,
   `se_capacita` tinyint(1) DEFAULT NULL,
-  `se_peso` tinyint(1) DEFAULT NULL,
+  `se_massa` tinyint(1) DEFAULT NULL,
   `se_imballo` tinyint(1) DEFAULT NULL,
   `se_spedizione` tinyint(1) DEFAULT NULL,
   `se_trasporto` tinyint(1) DEFAULT NULL,
@@ -3823,6 +3867,23 @@ CREATE TABLE IF NOT EXISTS `todo` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000060100
+
+-- todo_matricole
+-- tipologia: tabella gestita
+-- verifica: 2022-04-27 14:58 Chiara GDL
+CREATE TABLE IF NOT EXISTS `todo_matricole` (
+  `id` int(11) NOT NULL,
+  `id_todo` int(11) NOT NULL,
+  `id_matricola` int(11) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000062000
