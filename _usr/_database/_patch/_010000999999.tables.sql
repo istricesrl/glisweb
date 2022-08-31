@@ -990,7 +990,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `ordine` int(11) DEFAULT NULL,
   `orientamento` enum('L','P') DEFAULT NULL,
   `taglio` char(64) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `path` char(255) NOT NULL,
   `path_alternativo` char(255) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
