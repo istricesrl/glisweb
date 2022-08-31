@@ -1415,8 +1415,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
 -- verifica: 2022-04-26 17:32 Chiara GDL
 CREATE TABLE IF NOT EXISTS `messaggi` (
   `id` int(11) NOT NULL,
-  `id_emittente` int(11) DEFAULT NULL,
-  `id_destinatario` int(11) DEFAULT NULL,
+  `id_conversazione` int(11) DEFAULT NULL,
   `testo` text,
   `timestamp_invio` int DEFAULT NULL,
   `timestamp_lettura` int DEFAULT NULL,

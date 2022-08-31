@@ -3097,18 +3097,13 @@ DROP TABLE IF EXISTS `messaggi_view`;
 CREATE OR REPLACE VIEW `messaggi_view` AS
 	SELECT
 		messaggi.id,
-		messaggi.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		messaggi.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		messaggi.id_conversazione,
 		messaggi.timestamp_invio,
 		messaggi.timestamp_lettura,
 		messaggi.id_account_inserimento,
 		messaggi.id_account_aggiornamento,
 		concat( 'messaggio #', messaggi.id )AS __label__
 	FROM messaggi
-        LEFT JOIN anagrafica AS a1 ON a1.id = messaggi.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = messaggi.id_destinatario
 ;
 
 --| 090000021800

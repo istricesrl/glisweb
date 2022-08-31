@@ -2,64 +2,12 @@
 -- PATCH
 --
 
---| 202204260010
-CREATE TABLE IF NOT EXISTS `messaggi` (
-  `id` int(11) NOT NULL,
-  `id_emittente` int(11) DEFAULT NULL,
-  `id_destinatario` int(11) DEFAULT NULL,
-  `testo` text,
-  `timestamp_invio` int DEFAULT NULL,
-  `timestamp_lettura` int DEFAULT NULL,
-  `id_account_inserimento` int(11) DEFAULT NULL,
-  `timestamp_inserimento` int(11) DEFAULT NULL,
-  `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB;
-
---| 202204260020
-ALTER TABLE `messaggi`
-	ADD PRIMARY KEY (`id`), 
-	ADD KEY `id_emittente` (`id_emittente`), 
-	ADD KEY `id_destinatario` (`id_destinatario`), 
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_emittente`,`id_destinatario`,`timestamp_invio`,`timestamp_lettura`);
-
---| 202204260030
-ALTER TABLE `messaggi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---| 202204260040
-ALTER TABLE `messaggi` 
-  ADD CONSTRAINT `messaggi_ibfk_01_nofollow` FOREIGN KEY (`id_emittente`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `messaggi_ibfk_02_nofollow` FOREIGN KEY (`id_destinatario`) REFERENCES `anagrafica` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
-  ADD CONSTRAINT `messaggi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-  ADD CONSTRAINT `messaggi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
-
---| 202204260050
-CREATE OR REPLACE VIEW `messaggi_view` AS
-	SELECT
-		messaggi.id,
-		messaggi.id_emittente,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		messaggi.id_destinatario,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
-		messaggi.timestamp_invio,
-		messaggi.timestamp_lettura,
-		messaggi.id_account_inserimento,
-		messaggi.id_account_aggiornamento,
-		concat( 'messaggio #', messaggi.id ) AS __label__
-	FROM messaggi
-        LEFT JOIN anagrafica AS a1 ON a1.id = messaggi.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = messaggi.id_destinatario
-;
-
-
---| 202204260060
+--| 202208310060
 ALTER TABLE udm
 ADD COLUMN `se_area` int(1) DEFAULT NULL AFTER se_quantita,
 ADD KEY `se_area` (`se_area`);
 
---| 202204260070
+--| 202208310070
 REPLACE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_massa`, `se_tempo`, `se_quantita`, `se_area`) VALUES
 (1,	NULL,	NULL,	'pezzi',	'pz.',	'unità di misura usata genericamente per misurare le quantità',	NULL,	NULL,	NULL,	NULL,	1,	NULL),
 (2,	NULL,	1,	'millimetro',	'mm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -112,7 +60,7 @@ ON DUPLICATE KEY UPDATE
 	se_quantita = VALUES(se_quantita),
 	se_area = VALUES(se_area);
 
---| 202204260080
+--| 202208310080
 CREATE OR REPLACE VIEW udm_view AS
 	SELECT
 		udm.id,
@@ -130,7 +78,7 @@ CREATE OR REPLACE VIEW udm_view AS
 	FROM udm
 ;
 
---| 202204260090
+--| 202208310090
 CREATE OR REPLACE VIEW `risorse_view` AS
 	SELECT
 		risorse.id, 
@@ -159,11 +107,11 @@ CREATE OR REPLACE VIEW `risorse_view` AS
 	GROUP BY risorse.id
 ;
 
---| 202204260100
+--| 202208310100
 alter table tipologie_prodotti
 change `se_peso`  `se_massa` tinyint(1) DEFAULT NULL;
 
---| 202204260110
+--| 202208310110
 CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 	SELECT
 		tipologie_prodotti.id,
@@ -189,7 +137,7 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 	FROM tipologie_prodotti
 ;
 
---| 202204260120
+--| 202208310120
 CREATE TABLE IF NOT EXISTS `progetti_certificazioni` (
   `id` int NOT NULL,
   `id_progetto` char(32) NOT NULL,
@@ -203,11 +151,11 @@ CREATE TABLE IF NOT EXISTS `progetti_certificazioni` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB;
 
---| 202204260130
+--| 202208310130
 ALTER TABLE `progetti_certificazioni`
 ADD COLUMN   `ordine` int(11) DEFAULT NULL AFTER `id_certificazione`;
 
---| 202204260140
+--| 202208310140
 ALTER TABLE `progetti_certificazioni`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_progetto`,`id_certificazione`), 
@@ -219,17 +167,17 @@ ALTER TABLE `progetti_certificazioni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_certificazione`,`ordine`);
 
---| 202204260150
+--| 202208310150
 ALTER TABLE `progetti_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 202204260160
+--| 202208310160
 ALTER TABLE `progetti_certificazioni`
     ADD CONSTRAINT `progetti_certificazioni_ibfk_01`             FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `progetti_certificazioni_ibfk_02_nofollow`    FOREIGN KEY (`id_certificazione`) REFERENCES `certificazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `progetti_certificazioni_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_certificazioni_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 202204260170
+--| 202208310170
 CREATE OR REPLACE VIEW progetti_certificazioni_view AS
 	SELECT
 		progetti_certificazioni.id,
@@ -252,7 +200,7 @@ CREATE OR REPLACE VIEW progetti_certificazioni_view AS
 		LEFT JOIN certificazioni ON certificazioni.id = progetti_certificazioni.id_certificazione
 ;
 
---| 202204260180
+--| 202208310180
 CREATE TABLE IF NOT EXISTS `todo_matricole` (
   `id` int(11) NOT NULL,
   `id_todo` int(11) NOT NULL,
@@ -265,7 +213,7 @@ CREATE TABLE IF NOT EXISTS `todo_matricole` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 202204260190
+--| 202208310190
 ALTER TABLE `todo_matricole`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_todo`,`id_matricola`,`id_ruolo`), 
@@ -277,10 +225,10 @@ ALTER TABLE `todo_matricole`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_todo`,`id_matricola`,`ordine`,`id_ruolo`);
 
---| 202204260200
+--| 202208310200
 ALTER TABLE `todo_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 202204260210
+--| 202208310210
 ALTER TABLE `todo_matricole`
     ADD CONSTRAINT `todo_matricole_ibfk_01`             FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `todo_matricole_ibfk_02_nofollow`    FOREIGN KEY (`id_matricola`) REFERENCES `matricole` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -288,7 +236,7 @@ ALTER TABLE `todo_matricole`
     ADD CONSTRAINT `todo_matricole_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `todo_matricole_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 202204260220
+--| 202208310220
 CREATE OR REPLACE VIEW todo_matricole_view AS
 	SELECT
 		todo_matricole.id,
@@ -309,6 +257,121 @@ CREATE OR REPLACE VIEW todo_matricole_view AS
 	FROM todo_matricole
 		LEFT JOIN todo ON todo.id = todo_matricole.id_todo
 		LEFT JOIN matricole ON matricole.id = todo_matricole.id_matricola
+;
+
+--| 202208310300
+CREATE TABLE IF NOT EXISTS `conversazioni` (
+  `id` int(11) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `note` text,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `timestamp_chiusura` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202208310310
+ALTER TABLE `conversazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `timestamp_apertura` (`timestamp_apertura`),
+	ADD KEY `timestamp_chiusura` (`timestamp_chiusura`),
+	ADD KEY `indice` (`id`,`nome`,`timestamp_chiusura`,`timestamp_apertura`);
+
+--| 202208310320
+ALTER TABLE `conversazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202208310330
+CREATE OR REPLACE VIEW conversazioni_view AS
+	SELECT
+		conversazioni.id,
+		conversazioni.nome,
+		conversazioni.timestamp_apertura,
+		conversazioni.timestamp_chiusura,
+		conversazioni.nome AS __label__
+	FROM
+		conversazioni
+;
+
+--| 202208310340
+CREATE TABLE IF NOT EXISTS `conversazioni_account` (
+  `id` int(11) NOT NULL,
+  `id_conversazione` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `timestamp_entrata` int(11) DEFAULT NULL,
+  `timestamp_uscita` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 202208310350
+ALTER TABLE `conversazioni_account`
+ 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_conversazione`,`id_account`),
+	ADD KEY `id_conversazione` (`id_conversazione`),
+	ADD KEY `id_account` (`id_account`),
+ 	ADD KEY `timestamp_entrata` (`timestamp_entrata`), 
+ 	ADD KEY `timestamp_uscita` (`timestamp_uscita`), 
+	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_entrata`, `timestamp_uscita`);
+
+--| 202208310360
+ALTER TABLE `conversazioni_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202208310370
+ALTER TABLE `conversazioni_account`
+    ADD CONSTRAINT `conversazioni_account_ibfk_01_nofollow`    FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    ADD CONSTRAINT `conversazioni_account_ibfk_02_nofollow`    FOREIGN KEY (`id_conversazione`) REFERENCES `conversazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+--| 202208310380
+CREATE OR REPLACE VIEW conversazioni_account_view AS
+	SELECT
+		conversazioni_account.id,
+		conversazioni_account.id_conversazione,
+		conversazioni_account.id_account,
+		conversazioni_account.timestamp_entrata,
+		conversazioni_account.timestamp_uscita,
+		concat( conversazioni_account.id_conversazione, ' - ', conversazioni_account.id_account) AS __label__
+	FROM
+		conversazioni_account
+;
+
+--| 202208310390
+CREATE TABLE IF NOT EXISTS `messaggi` (
+  `id` int(11) NOT NULL,
+  `id_conversazione` int(11) DEFAULT NULL,
+  `testo` text,
+  `timestamp_invio` int DEFAULT NULL,
+  `timestamp_lettura` int DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB;
+
+--| 202208310400
+ALTER TABLE `messaggi`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_conversazione` (`id_conversazione`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_conversazione`,`timestamp_invio`,`timestamp_lettura`);
+
+--| 202208310410
+ALTER TABLE `messaggi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 202208310420
+ALTER TABLE `messaggi` 
+  ADD CONSTRAINT `messaggi_ibfk_01_nofollow` FOREIGN KEY (`id_conversazione`) REFERENCES `conversazioni` (`id`),
+  ADD CONSTRAINT `messaggi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+  ADD CONSTRAINT `messaggi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
+--| 202208310430
+CREATE OR REPLACE VIEW `messaggi_view` AS
+	SELECT
+		messaggi.id,
+		messaggi.id_conversazione,
+		messaggi.timestamp_invio,
+		messaggi.timestamp_lettura,
+		messaggi.id_account_inserimento,
+		messaggi.id_account_aggiornamento,
+		concat( 'messaggio #', messaggi.id )AS __label__
+	FROM messaggi
 ;
 
 -- FINE
