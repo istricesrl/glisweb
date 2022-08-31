@@ -374,4 +374,8 @@ CREATE OR REPLACE VIEW `messaggi_view` AS
 	FROM messaggi
 ;
 
+--| 202208310440
+ALTER TABLE  immagini
+  CHANGE `nome` `nome` char(255) DEFAULT NULL;
+  
 -- FINE
