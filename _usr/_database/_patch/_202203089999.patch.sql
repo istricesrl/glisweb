@@ -42,4 +42,4 @@ CREATE OR REPLACE VIEW rinnovi_documenti_articoli_view AS
 	ORDER BY __label__
 ;
 
--- FINE
+--| FINE FILE

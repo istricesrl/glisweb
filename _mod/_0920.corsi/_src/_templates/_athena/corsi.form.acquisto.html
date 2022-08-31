@@ -1,0 +1,115 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+            {% if not request[ table ].id_prodotto %}
+            <div class="form-row">
+                <!--div class="col-6 col-md-auto justify-content-center align-self-center">
+                    <b>acquistabile online</b>
+                </div>
+                <div class="col-6 col-md-auto">
+                    <span class="label-top">dal</span>
+                    {{ frm.dateTime( table, '', '', 'timestamp_inizio', '', '', request ) }}
+                </div>
+                <div class="col-6 col-md-auto">
+                    <span class="label-top">al</span>
+                    {{ frm.dateTime( table, '', '', 'timestamp_fine', '', '', request ) }}
+                </div-->
+                <div class="col-12 col-md">
+                    {{ frm.button(  'CREA PRODOTTO' ,'button','btn btn-secondary btn-sm btn-block', 'creaProdotto()','ottieni in modo automatico il progressivo' ) }}
+                </div>
+            </div>
+            {% else %}
+                {# SUBFORM PUBBLICAZIONI #}
+                {{ sub.pubblicazioni( 'prodotti', 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
+        	    <fieldset class="">
+                    {{ def.controls( page, pages, ietf, session, table, request ) }}
+                </fieldset>
+                <legend>articoli</legend>
+                {% include 'inc/view.html' %}
+            {% endif %}
+       
+	</form>
+    </div>
+</section>
+<script>
+	function creaProdotto() {
+			
+		//	$('#btncrea').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> GENERAZIONE IN CORSO');
+
+            console.log( 'creo' );
+            var inizio = $( '#progetti_timestamp_inizio' ).val();
+            var fine = $( '#progetti_timestamp_fine' ).val();
+
+            var par = '';
+
+            if( inizio != '' ){
+                par += '&__timestamp_inizio__=' + inizio;
+            }
+
+            if( fine != '' ){
+                par += '&__timestamp_fine__=' + fine;
+            }
+			var call = '{{ site.url }}_mod/_0900.progetti/_src/_api/_task/_progetti.genera.prodotto.php';
+
+            console.log( par );
+			getws(
+				call + '?id={{ request[form.table].id }}'+ par,
+				null,
+				function( data ) {
+					console.log( data );
+				//	$( '#'+id ).val( data.new );
+					if( data.err ) { 
+						alert( data.err ); 
+					} else if( data.__status__ == 'OK' )  {
+						location.reload();
+						//alert("sono state generate "+data.__new__+" lezioni" );
+					}
+					//$('#btncrea').html('GENERA');
+
+				}
+			);
+
+			}
+</script>
+{% endblock %}

@@ -2,56 +2,104 @@
 
 {% block main %}
 <div class="row no-gutters flex-fill align-items-center justify-content-center">
-    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item col-4" id="form-login" method="post">
+    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item col-4" id="form-login"
+        method="post">
         <fieldset>
             <legend>registrazione</legend>
+            {% for e in request.__signup__.__err__ %}
+            <div class="form-group form-row">
+                <div class="col-12 text-center col-form-static">{{ e.testo[ localization.language.ietf ] | raw }}</div>
+            </div>
+            {% endfor %}
             {% if request.__signup__.__tk_ok__ %}
             <div class="form-group form-row">
-            <div class="col-12 text-center col-form-static">{{ request.__signup__.__tk_ok__.testo[ localization.language.ietf ] | raw }}</div>
+                <div class="col-12 text-center col-form-static">
+                    {{ request.__signup__.__tk_ok__.testo[ localization.language.ietf ] | raw }}</div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12"><a href="{{ pages[ site.home ].path[ localization.language.ietf ] }}"
+                        class="btn btn-light btn-sm btn-block">torna alla home page</a></div>
             </div>
             {% elseif request.__signup__.__tk_sent__ %}
             <div class="form-group form-row">
-            <div class="col-12 text-center col-form-static">{{ request.__signup__.__tk_sent__.testo[ localization.language.ietf ] | raw }}</div>
+                <div class="col-12 text-center col-form-static">
+                    {{ request.__signup__.__tk_sent__.testo[ localization.language.ietf ] | raw }}</div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12"><a href="{{ pages[ site.home ].path[ localization.language.ietf ] }}"
+                        class="btn btn-light btn-sm btn-block">torna alla home page</a></div>
+            </div>
+            {% elseif request.__signup__.__ts_check__ %}
+            <input type="hidden" name="tk" value="{{ request.tk }}">
+            <div class="form-group form-row">
+                <div class="col-12 text-center col-form-static">
+                    {{ request.__signup__.__ts_check__.testo[ localization.language.ietf ] | raw }}</div>
+            </div>
+            <div class="form-group form-row">
+                <label class="d-none d-md-block col-md-2 col-form-label">OTP</label>
+                <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm"
+                        name="ts" value="{{ request.ts }}" placeholder="codice di attivazione ricevuto via SMS"
+                        required></div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">invia</button>
+                </div>
             </div>
             {% else %}
-            {% for e in request.__signup__.__err__ %}
             <div class="form-group form-row">
-            <div class="col-12 text-center col-form-static">{{ e.testo[ localization.language.ietf ] | raw }}</div>
-            </div>
-            {% endfor %}
-            <div class="form-group form-row">
-            <label class="d-none d-md-block col-md-2 col-form-label">nome</label>
-            <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm" name="__signup__[nome]" value="{{ request.__signup__.nome }}" placeholder="il tuo nome" required></div>
+                <label class="d-none d-md-block col-md-2 col-form-label">nome</label>
+                <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm"
+                        name="__signup__[nome]" value="{{ request.__signup__.nome }}" placeholder="il tuo nome"
+                        required></div>
             </div>
             <div class="form-group form-row">
-            <label class="d-none d-md-block col-md-2 col-form-label">cognome</label>
-            <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm" name="__signup__[cognome]" value="{{ request.__signup__.cognome }}" placeholder="il tuo cognome" required></div>
+                <label class="d-none d-md-block col-md-2 col-form-label">cognome</label>
+                <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm"
+                        name="__signup__[cognome]" value="{{ request.__signup__.cognome }}" placeholder="il tuo cognome"
+                        required></div>
             </div>
             <div class="form-group form-row">
-            <label class="d-none d-md-block col-md-2 col-form-label">e-mail</label>
-            <div class="col-12 col-md-10"><input type="email" class="form-control form-control-sm" name="__signup__[email]" value="{{ request.__signup__.email }}" placeholder="la tua e-mail" required></div>
+                <label class="d-none d-md-block col-md-2 col-form-label">e-mail</label>
+                <div class="col-12 col-md-10"><input type="email" class="form-control form-control-sm"
+                        name="__signup__[email]" value="{{ request.__signup__.email }}" placeholder="la tua e-mail"
+                        required></div>
+            </div>
+            {% if etc.profilo.sms %}
+            <div class="form-group form-row">
+                <label class="d-none d-md-block col-md-2 col-form-label">cellulare</label>
+                <div class="col-12 col-md-10"><input type="phone" class="form-control form-control-sm"
+                        name="__signup__[mobile]" value="{{ request.__signup__.mobile }}" placeholder="il tuo numero di cellulare"
+                        required></div>
+            </div>
+            {% endif %}
+            {% if etc.profilo.username %}
+            <div class="form-group form-row">
+                <label class="d-none d-md-block col-md-2 col-form-label">username</label>
+                <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm"
+                        name="__signup__[username]" value="{{ request.__signup__.username }}"
+                        placeholder="il tuo username" required></div>
             </div>
             <div class="form-group form-row">
-            <label class="d-none d-md-block col-md-2 col-form-label">username</label>
-            <div class="col-12 col-md-10"><input type="text" class="form-control form-control-sm" name="__signup__[username]" value="{{ request.__signup__.username }}" placeholder="il tuo username" required></div>
+                <label class="d-none d-md-block col-md-2 col-form-label">password</label>
+                <div class="col-12 col-md-10"><input type="password" class="form-control form-control-sm"
+                        name="__signup__[password]" value="{{ request.__signup__.password }}"
+                        placeholder="la tua password" required></div>
             </div>
-            <div class="form-group form-row">
-            <label class="d-none d-md-block col-md-2 col-form-label">password</label>
-            <div class="col-12 col-md-10"><input type="password" class="form-control form-control-sm" name="__signup__[password]" value="{{ request.__signup__.password }}" placeholder="la tua password" required></div>
-            </div>
+            {% endif %}
             {% if google.recaptcha.profile %}
             <div class="form-group form-row">
-            <div class="col-12 col-md-10 offset-md-2"><div class="g-recaptcha" style="display: inline-block;" data-sitekey="{{ google.recaptcha.profile.keys.public }}"></div></div>
+                <div class="col-12 col-md-10 offset-md-2">
+                    <div class="g-recaptcha" style="display: inline-block;"
+                        data-sitekey="{{ google.recaptcha.profile.keys.public }}"></div>
+                </div>
             </div>
             {% endif %}
             {{ std.checkPrivacy( 'default', registrazione, pages, tr, localization.language.ietf, '', '', '__signup__' ) }}
             <div class="form-group form-row">
-            <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">registrati</button></div>
+                <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">registrati</button>
+                </div>
             </div>
             {% endif %}
-            <div class="form-group form-row">
-            <div class="col-12"><a href="{{ pages[ site.home ].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block">torna alla home page</a></div>
-            </div>
         </fieldset>
     </form>
 </div>

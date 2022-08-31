@@ -28,6 +28,9 @@
     chiamata diretta dei task
     -------------------------
 
+    task autochiamanti
+    ------------------
+
     struttura base dei task
     =======================
     Quando si scrive un nuovo task è importante rispettare la struttura base che vedremo per garantire al task stesso le caratteristiche
@@ -224,6 +227,15 @@
         if( ! defined( 'CRON_RUNNING' ) ) {
             buildJson( $status );
         }
+    \endcode
+
+    task di importazione dati
+    -------------------------
+
+    [...] ad esempio:
+
+    \code{.php}
+    
     \endcode
 
 */

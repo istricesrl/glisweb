@@ -86,7 +86,8 @@ if ($cf['contents']['cached'] === false) {
                     'parent'        => array('id'        => $cid),
                     'canonical'        => $canon,
                     'template'        => array('path'    => $cf['prodotti']['pages']['scheda']['template'], 'schema' => $cf['prodotti']['pages']['scheda']['schema'], 'theme' => $cf['prodotti']['pages']['scheda']['css']),
-                    'metadata'      => array('id_prodotto' => $pg['id'])
+                    'metadata'      => array('id_prodotto' => $pg['id']),
+                    'macro'            => $cf['prodotti']['pages']['scheda']['macro']
                 );
 
                 aggiungiGruppi(
@@ -118,13 +119,13 @@ if ($cf['contents']['cached'] === false) {
                     $pg['id'],
                     'id_prodotto'
                 );
-
+/*
                 aggiungiMenu(
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
                     'id_prodotto'
                 );
-
+*/
                 // canonical
                 $canon = $pid;
 

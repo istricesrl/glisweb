@@ -3,21 +3,65 @@
 -- questo file contiene le query per l'inserimento dei dati standard nelle tabelle
 --
 
+--| 050000002800
+
+-- caratteristiche_immobili
+-- tipologia: tabella gestita
+-- verifica: 2022-05-02 17:22 Chiara GDL
+INSERT INTO `caratteristiche_immobili` (`id`, `nome`, `font_awesome`, `html_entity`, `se_indirizzo`, `se_edificio`, `se_immobile`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'balcone',	'fa-picture-o',	'&#xf03e;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	'giardino',	'fa-tree',	'&#xf1bb;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(3,	'cantina',	'fa-key',	'&#xf084;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	'tavernetta',	'fa-key',	'&#xf084;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(5,	'ascensore',	'fa-sort',	'&#xf0dc;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(6,	'giardino privato',	'fa-tree',	'&#xf1bb;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(7,	'posto auto',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(8,	'garage',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(9,	'riscaldamento autonomo',	'fa-thermometer-full',	'&#xf2c7;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(10,	'riscaldamento centralizzato',	'fa-thermometer-half',	'&#xf2c9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(11,	'arredato',	'fa-check',	'&#xf00c;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(12,	'non arredato',	'fa-times',	'&#xf00d;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(13,	'parzialmente arredato',	'fa-minus',	'&#xf068;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(14,	'terrazza abitabile',	'fa-picture-o',	'&#xf03e;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(15,	'senza riscaldamento',	'fa-thermometer-empty',	'&#xf2cb;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(16,	'volendo arredato',	'fa-truck',	'&#xf0d1;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(17,	'arredato solo cucina',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(18,	'garage doppio',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(19,	'posto auto coperto',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	'nessun posto auto',	'fa-road',	'&#xf018;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(21,	'posto auto condominiale',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(22,	'cucina abitabile',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	'mansarda',	'fa-angle-up',	'&#xf106;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(24,	'camino',	'fa-fire',	'&#xf06d;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(25,	'angolo cottura',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(26,	'giardino condominiale',	'fa-tree',	'&#xf1bb;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(27,	'aria condizionata',	'fa-snowflake-o',	'&#xf2dc;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(28,	'portineria',	'fa-user',	'&#xf007;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(29,	'mezzi pubblici',	'fa-bus',	'&#xf207;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(30,	'palazzo storico',	'fa-university',	'&#xf19c;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(31,	'stile Liberty',	'fa-building',	'&#xf1ad;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(32,	'pietra vista',	'fa-cubes',	'&#xf1b3;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(33,	'intonaco',	'fa-clone',	'&#xf24d;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL)
+ON DUPLICATE KEY UPDATE
+	nome = VALUES( nome ), font_awesome = VALUES( font_awesome ), html_entity = VALUES( html_entity ), se_edificio = VALUES(se_edificio), se_immobile = VALUES( se_immobile), se_indirizzo = VALUES( se_indirizzo ) 
+;
+
 --| 050000003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 -- verifica: 2021-05-28 19:56 Fabio Mosti
-REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `note`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_commerciale`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_produzione`, `se_notizie`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'contatti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'collaboratori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	2,	NULL,	'agenti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	'fornitori',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	NULL,	'aziende gestite',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	NULL,	NULL,	'rivenditori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	1,	NULL,	'lead',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	1,	NULL,	'prospect',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	1,	NULL,	'clienti',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `note`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_produzione`, `se_commerciale`, `se_notizie`, `se_corriere`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'contatti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'collaboratori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	2,	NULL,	'agenti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'fornitori',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	'aziende gestite',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	'rivenditori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	1,	NULL,	'lead',	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	1,	NULL,	'prospect',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	1,	NULL,	'clienti',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	NULL,	'corriere',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000004300
 
@@ -38,7 +82,31 @@ INSERT INTO `certificazioni` (`id`, `nome`, `id_account_inserimento`, `timestamp
 (2,	'passaporto',	NULL,	NULL,	NULL,	NULL),
 (3,	'patente di guida',	NULL,	NULL,	NULL,	NULL),
 (4,	'certificato medico agonistico',	NULL,	NULL,	NULL,	NULL),
-(5,	'certificato medico sportivo',	NULL,	NULL,	NULL,	NULL);
+(5,	'certificato medico sportivo',	NULL,	NULL,	NULL,	NULL),
+(6,	'tessera sanitaria',	NULL,	NULL,	NULL,	NULL),
+(7,	'certificazione energetica',	NULL,	NULL,	NULL,	NULL);
+
+--| 050000005000
+
+-- classi_energetiche
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 22:22 Chiara GDL
+INSERT INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`) VALUES
+(1, 'G', NULL, NULL, 'ff2a1a'),
+(2, 'F', NULL, NULL, 'c0504d'),
+(3, 'E', NULL, NULL, 'e46c1c'),
+(4, 'D', NULL, NULL, 'ffc02b'),
+(5, 'C', NULL, NULL, 'fef934'),
+(6, 'B', NULL, NULL, '99cc26'),
+(7, 'A1', NULL, NULL, '00cc22'),
+(8, 'A2', NULL, NULL, '009917'),
+(9, 'A3', NULL, NULL, '00660c'),
+(10, 'A4', NULL, NULL, '33660d')
+ON DUPLICATE KEY UPDATE
+	nome = VALUES( nome ),
+	ep_min = VALUES( ep_min ),
+	ep_max = VALUES( ep_max ),
+	rgb = VALUES( rgb );
 
 --| 050000005100
 
@@ -114,6 +182,16 @@ REPLACE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_cat
 (12594,	1,	'Valsamoggia',	                    '037061',	'M320'),
 (12595,	1,	'Alto Reno Terme',	                '037062',	'M369');
 
+--| 050000006000
+
+-- condizioni
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+INSERT INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'nuovo',	1,	1),
+(2,	'usato',	1,	NULL),
+(3,	'da ristrutturare',	NULL,	1);
+
 --| 050000006200
 
 -- condizioni_pagamento
@@ -123,6 +201,26 @@ REPLACE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
 (1,	    'TP01',	'pagamento a rate'),
 (2,	    'TP02',	'pagamento completo'),
 (3,	    'TP03',	    'anticipo');
+
+--| 050000006400
+
+-- consensi
+-- tipologia: tabella standard
+-- verifica: 2022-08-23 11:12 Chiara GDL
+REPLACE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+('PRIVACY_POLICY',	'la privacy e cookie policy del sito',	NULL,	NULL,	NULL,	NULL,	NULL),
+('EVASIONE_ORDINE',	"evasione dell\'ordine",	NULL,	NULL,	NULL,	NULL,	NULL),
+('INVIO_COMUNICAZIONI_MARKETING',	'invio di comunicazioni commerciali',	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000006500
+
+-- consensi_moduli
+-- tipologia: tabella assistita
+-- verifica: 2022-08-23 11:12 Chiara GDL
+REPLACE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ordine`, `azione`, `nome`, `informativa`, `note`, `pagina`, `se_richiesto`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	1,	'PRIVACY_POLICY',	'ecommerce',	10,	'letto_e_accetto',	'la privacy e cookie policy del sito',	NULL,	NULL,	'privacy',	1,	NULL,	NULL,	NULL,	NULL),
+(2,	1,	'EVASIONE_ORDINE',	'ecommerce',	20,	'autorizzo',	"il trattamento dei miei dati per l\'evasione del mio ordine",	"evasione dell\'ordine",	NULL,	'',	1,	NULL,	NULL,	NULL,	NULL),
+(3,	1,	'INVIO_COMUNICAZIONI_MARKETING',	'ecommerce',	30,	'autorizzo',	"il trattamento dei miei dati per l\'invio di comunicazioni commerciali",	'invio di comunicazioni commerciali',	NULL,	'',	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000007100
 
@@ -137,6 +235,17 @@ REPLACE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (5,	'AU',	'Oceania'),
 (6,	'LA',	'America Latina'),
 (7,	'AN',	'Antartide');
+
+--| 050000009000
+
+-- disponibilita
+-- tipologia: tabella standard
+-- verifica: 2022-04-28 16:12 Chiara GDL
+INSERT INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+(1,	'disponibile',	1,	1),
+(2,	'in riassortimento',	1,	NULL),
+(3,	'nuda proprietà',	NULL,	1),
+(4,	'occupato',	NULL,	1);
 
 --| 050000010000
 
@@ -448,74 +557,107 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 -- ruoli_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:11 Fabio Mosti
-REPLACE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_didattica`) VALUES
-(1,		NULL,	'titolare',						NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(2,		NULL,	'amministratore',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(3,		NULL,	'socio',						NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(4,		NULL,	'dipendente',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(5,		NULL,	'direttore',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(6,		NULL,	'presidente',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(7,		NULL,	'tesoriere',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(8,		NULL,	'coordinatore',					NULL,	NULL,	1,		NULL,	NULL,	1,		NULL),
-(9,		NULL,	'vicepresidente',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	'vicedirettore',				NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	'segretario',					NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(13,	NULL,	'responsabile acquisti',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(14,	NULL,	'responsabile operativo',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL),
-(15,	NULL,	'operatore',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
-(16,	NULL,	'responsabile',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
-(17,	NULL,	'assistente',					NULL,	NULL,	1,		NULL,	NULL,	1,		NULL),
-(18,	NULL,	'autore',						NULL,	NULL,	NULL,	NULL,	1,		NULL,	NULL),
-(19,	NULL,	'genitore',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(20,	NULL,	'fratello',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(21,	NULL,	'tutore',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(22,	NULL,	'coniuge',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(23,	NULL,	'collega',						NULL,	NULL,	NULL,	1,		NULL,	NULL,	NULL),
-(24,	NULL,	'docente',						NULL,	NULL,	NULL,	NULL,	NULL,	1,		1),
-(25,	NULL,	'istruttore',					NULL,	NULL,	NULL,	NULL,	NULL,	1,		1);
+INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_didattica`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_immobili`, `se_contratti`) VALUES
+(1,	NULL,	'titolare',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'amministratore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'socio',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'dipendente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'direttore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'presidente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'tesoriere',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'coordinatore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(9,	NULL,	'vicepresidente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'vicedirettore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	'segretario',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	'responsabile acquisti',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	'responsabile operativo',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	'operatore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(16,	NULL,	'responsabile',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	1,	NULL,	NULL),
+(17,	NULL,	'assistente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(18,	NULL,	'autore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(19,	NULL,	'genitore',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	NULL,	'fratello',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(21,	NULL,	'tutore',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(22,	NULL,	'coniuge',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	NULL,	'collega',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(24,	NULL,	'docente',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(25,	NULL,	'istruttore',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(26,	NULL,	'proprietario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(27,	NULL,	'locatore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(28,	NULL,	'conduttore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(29,	NULL,	'iscritto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(30,	NULL,	'istituto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL)
+ON DUPLICATE KEY UPDATE
+	id_genitore = VALUES( id_genitore ),
+	nome = VALUES(nome),
+	html_entity = VALUES(html_entity),
+	font_awesome = VALUES(font_awesome),
+	se_organizzazioni = VALUES(se_organizzazioni),
+	se_relazioni = VALUES(se_relazioni),
+	se_risorse = VALUES(se_risorse),
+	se_progetti = VALUES(se_progetti),
+	se_didattica = VALUES(se_didattica),
+	se_immobili = VALUES(se_immobili),
+	se_contratti = VALUES(se_contratti);
 
 --| 050000034200
 
 -- ruoli_audio
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:28 Fabio Mosti
-REPLACE INTO `ruoli_audio` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_prodotti`, `se_articoli`) VALUES
-(1,	    'audio',	    1,	    1,	    1,	    1,	    1),
-(2,	    'commento',	    NULL,	1,	    NULL,	1,	    1);
+INSERT INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+(1,	NULL,	'audio',	NULL,	NULL,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	1),
+(2,	NULL,	'commento',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+
+--| 050000034300
+
+-- ruoli_documenti
+-- tipologia: tabella di supporto
+-- verifica: 2022-06-09 16:21 Chiara GDL
+REPLACE INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_documenti`, `se_documenti_articoli`, `se_conferma`, `se_consuntivo`, `se_evasione`) VALUES
+(1,	NULL,	'conferma',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL),
+(2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL),
+(3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1);
 
 --| 050000034400
 
 -- ruoli_file
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:14 Fabio Mosti
-REPLACE INTO `ruoli_file` (`id`, `nome`, `se_anagrafica`, `se_pagine`, `se_categorie_prodotti`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_risorse`, `se_mail`) VALUES
-(1,	    'allegato',	        1,	    1,	    1,	    1,	    1,	    1,	    NULL,	    1),
-(2,	    'brochure',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(3,	    'documentazione',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(4,	    'driver',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(5,	    'manualistica',	    NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(6,	    'press kit',	    1,	    NULL,	NULL,	NULL,	1,	    NULL,	NULL,	    NULL),
-(7,	    'schede tecniche',	NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL),
-(8,	    'software',	        NULL,	NULL,	NULL,	NULL,	1,	    1,	    NULL,	    NULL);
+REPLACE INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_mail`, `se_immobili`) VALUES
+(1,	NULL,	'allegato',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	1,	1),
+(2,	NULL,	'brochure',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'documentazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(4,	NULL,	'driver',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'manualistica',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(6,	NULL,	'press kit',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'schede tecniche',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'software',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	'contratto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(10,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(11,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000034600
 
 -- ruoli_immagini
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-REPLACE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
-(1,		NULL,	900,	'immagine',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(2,		NULL,	600,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(3,		NULL,	200,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(4,		NULL,	200,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(5,		NULL,	200,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1),
-(6,		NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(7,		NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(8,		NULL,	900,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(9,		NULL,	200,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	100,	'avatar',		NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	300,	'logo',			NULL,	NULL,	1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+(1,	NULL,	900,	'immagine',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(2,	NULL,	600,	'gallery',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(3,	NULL,	200,	'carousel',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(4,	NULL,	200,	'card',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(5,	NULL,	200,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	1,	1,	NULL),
+(6,	NULL,	600,	'jumbotron',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(7,	NULL,	300,	'intestazione',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(8,	NULL,	900,	'sfondo',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(9,	NULL,	200,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	100,	'avatar',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	300,	'logo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	NULL,	'contratto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(13,	NULL,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(14,	NULL,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000034800
 
@@ -548,24 +690,34 @@ REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font
 (2,	    NULL,	'principale',	NULL,	NULL),
 (3,	    NULL,	'suggerito',	NULL,	NULL);
 
+--| 050000035100
+
+-- ruoli_progetti
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-20 10:45 chiara GDL
+REPLACE INTO `ruoli_progetti` (`id`, `nome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`) VALUES
+(1,	    'proseguimento',	    NULL,	    1,	    NULL),
+(2,	    'bundle',	    1,	NULL,	    NULL);
+
 --| 050000035200
 
 -- ruoli_video
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`) VALUES
-(1,		NULL,	'video',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(2,		NULL,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(3,		NULL,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(4,		NULL,	'card',			NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1),
-(5,		NULL,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		1),
-(6,		NULL,	'jumbotron',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(7,		NULL,	'intestazione',	NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(8,		NULL,	'sfondo',		NULL,	NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1),
-(9,		NULL,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	'lezione',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL),
-(11,	NULL,	'episodio',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,		NULL);
-
+REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+(1,	NULL,	'video',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(2,	NULL,	'gallery',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(3,	NULL,	'carousel',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(4,	NULL,	'card',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(5,	NULL,	'copertina',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	1,	1,	NULL),
+(6,	NULL,	'jumbotron',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(7,	NULL,	'intestazione',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(8,	NULL,	'sfondo',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
+(9,	NULL,	'dettaglio',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(10,	NULL,	'lezione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(11,	NULL,	'episodio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(12,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
+(13,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 --| 050000037000
 
 -- settori
@@ -853,10 +1005,10 @@ INSERT INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_de
 REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`,`se_persona_giuridica`, `se_pubblica_amministrazione`) VALUES
 (1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1,	NULL,	NULL),
 (2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1),
 (3,	1,	    10,	'sig.',	                NULL,	NULL,	1,	NULL,	NULL),
 (4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1,	NULL,	NULL),
-(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL,	NULL,	NULL);
+(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000050400
 
@@ -876,7 +1028,9 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 (10,	5,	NULL,	'DT',	'decorrenza termini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (11,	5,	NULL,	'EC',	'esito committente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (12,	5,	NULL,	'NE',	'notifica di esito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(13,	5,	NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(13,	5,	NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	NULL,	NULL,	'frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050800
 
@@ -890,28 +1044,41 @@ REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 (4,	NULL,	NULL,	'form web',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (5,	NULL,	NULL,	'chat',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+--| 050000050900
+
+-- tipologie_contratti
+-- tipologia: tabella assistita
+-- verifica: 2021-10-15 16:17 Fabio Mosti
+INSERT INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_tesseramento`, `se_abbonamento`, `se_iscrizione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(4,	NULL,	'abbonamento',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'iscrizione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'locazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'tesseramento',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(1,	NULL,	'vendita',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| 050000052600
 
 -- tipologie_documenti
 -- tipologia: tabella di supporto
 -- verifica: 2021-12-07 17:00 Chiara GDL
-INSERT INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `numerazione`, `nome`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `stampa_xml`, `stampa_pdf`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'TD01',	'F',	'fattura',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'TD01',	'F',	'fattura accompagnatoria',	NULL,	NULL,	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'TD04',	'F',	'nota di credito',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	NULL,	'T',	'documento di trasporto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	NULL,	NULL,	'P',	'pro forma',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	NULL,	NULL,	NULL,	'O',	'offerta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	NULL,	NULL,	NULL,	'E',	'ordine',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	NULL,	NULL,	NULL,	'R',	'ricevuta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	NULL,	NULL,	NULL,	'S',	'scontrino',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	NULL,	NULL,	'G',	'documento di ritiro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	NULL,	NULL,	'H',	'documento di consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(12,	NULL,	NULL,	NULL,	'I',	'documento di reso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL)
+INSERT INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `numerazione`, `nome`, `sigla`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `se_ecommerce`, `stampa_xml`, `stampa_pdf`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'TD01',	'F',	'fattura',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'TD01',	'F',	'fattura accompagnatoria',	'fatt. acc.',	NULL,	NULL,	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'TD04',	'F',	'nota di credito',	'n. di credito',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	NULL,	'T',	'documento di trasporto',	'DDT',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	NULL,	'P',	'pro forma',	'profroma',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	NULL,	'O',	'offerta',	'off.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	NULL,	NULL,	'E',	'ordine',	'ord.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	NULL,	NULL,	'R',	'ricevuta',	'ric.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	NULL,	NULL,	'S',	'scontrino',	'scontr.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	NULL,	NULL,	'G',	'documento di ritiro',	'doc. di ritiro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	NULL,	NULL,	'H',	'documento di consegna',	'doc. di consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	NULL,	NULL,	'I',	'documento di reso',	'doc. di reso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL) 
 ON DUPLICATE KEY UPDATE
 	id_genitore = VALUES( id_genitore ),
 	ordine = VALUES( ordine ),
 	nome = VALUES(nome),
+    sigla = VALUES(sigla),
 	html_entity = VALUES(html_entity),
 	font_awesome = VALUES(font_awesome),
 	codice = VALUES( codice ),
@@ -922,17 +1089,82 @@ ON DUPLICATE KEY UPDATE
 	se_pro_forma = VALUES(se_pro_forma),
 	se_offerta = VALUES(se_offerta),
 	se_ordine = VALUES(se_ordine),
-	se_ricevuta= VALUES(se_ricevuta);
-	
+	se_ricevuta= VALUES(se_ricevuta),
+	se_ecommerce= VALUES(se_ecommerce);
+
+--| 050000052800
+
+-- tipologie_edifici
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+INSERT INTO `tipologie_edifici` (`id`, `id_genitore`, `nome`) VALUES
+(1, NULL, 'palazzo'),
+(2, NULL, 'palazzo storico'),
+(3, NULL, 'palazzina'),
+(4, NULL, 'complesso'),
+(5, NULL, 'residence'),
+(6, NULL, 'edificio indipendente');
+
+--| 050000052900
+
+-- tipologie_immobili
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-27 17:00 Chiara GDL
+INSERT INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_industriale`) VALUES
+(1, 'appartamento', 1, NULL),
+(3, 'abitazione', 1, NULL),
+(6, 'garage', 1, NULL),
+(7, 'magazzino', 1, 1),
+(8, 'ufficio', NULL, 1),
+(9, 'negozio', NULL, 1);
+
 --| 050000053000
 
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
 INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'via',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'viale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'piazza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(1,	NULL,	NULL,	'calle',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'campiello',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'campo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'carraia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	'carrarone',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	'chiasso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	NULL,	'circondario',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	NULL,	'circonvallazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	NULL,	'contrà',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	NULL,	'contrada',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	NULL,	'corso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	NULL,	'diga',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	NULL,	'discesa',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	NULL,	'frazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	NULL,	'giardino',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(16,	NULL,	NULL,	'largo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(17,	NULL,	NULL,	'località',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(18,	NULL,	NULL,	'lungoargine',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(19,	NULL,	NULL,	'lungolago',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(20,	NULL,	NULL,	'lungomare',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(21,	NULL,	NULL,	'maso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(22,	NULL,	NULL,	'parallela',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(23,	NULL,	NULL,	'passeggiata',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(24,	NULL,	NULL,	'piazza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(25,	NULL,	NULL,	'piazzale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(26,	NULL,	NULL,	'piazzetta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(27,	NULL,	NULL,	'rotonda',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(28,	NULL,	NULL,	'salita',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(29,	NULL,	NULL,	'strada',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(30,	NULL,	NULL,	'stradella',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(31,	NULL,	NULL,	'stradello',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(32,	NULL,	NULL,	'traversa',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(33,	NULL,	NULL,	'via',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(34,	NULL,	NULL,	'viale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(35,	NULL,	NULL,	'vico',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(36,	NULL,	NULL,	'vicoletto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(37,	NULL,	NULL,	'vicolo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(38,	NULL,	NULL,	'vietta',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(39,	NULL,	NULL,	'viottolo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(40,	NULL,	NULL,	'viuzza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(41,	NULL,	NULL,	'viuzzo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000053300
 
@@ -942,23 +1174,37 @@ INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 INSERT INTO `tipologie_luoghi` (`id`, `nome`) VALUES
 (1, 'teatro'),
 (2, 'palestra'),
-(3, 'piscina');
+(3, 'piscina'),
+(4, 'sala'),
+(5, 'aula'),
+(6, 'online');
 
 --| 050000053400
 
 -- tipologie_mastri
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_magazzino`, `se_conto`, `se_registro`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'magazzino',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'conto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'registro ore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_magazzino`, `se_conto`, `se_registro`, `se_credito`,`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'magazzino',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'conto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'registro ore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	'crediti',	NULL,	NULL,	NULL,	NULL,	NULL,	1, NULL,	NULL,	NULL,	NULL);
 
 --| 050000053800
 
 -- tipologie_notizie
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+
+--| 050000054100
+
+-- tipologie_periodi
+-- tipologia: tabella gestita
+-- verifica: 2022-05-24 11:00 Chiara GDL
+REPLACE INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	NULL,	'feste',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000054200
 
@@ -1001,6 +1247,15 @@ INSERT IGNORE INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `no
 (2,	NULL,	NULL,	'pubblicato',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'in evidenza',	    NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
+--| 050000055700
+
+-- tipologie_rinnovi
+-- tipologia: tabella di supporto
+-- verifica: 2022-04-29 17:45 Chiara GDL
+INSERT IGNORE INTO `tipologie_rinnovi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_tesseramenti`, `se_iscrizioni`, `se_abbonamenti`, `se_licenze`, `se_contratti`, `se_progetti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'ordinario',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'ridotto',	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| 050000055800
 
 -- tipologie_risorse
@@ -1025,10 +1280,11 @@ REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_todo
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_agenda`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'produzione',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	1,	NULL,	'lavoro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000056800
 

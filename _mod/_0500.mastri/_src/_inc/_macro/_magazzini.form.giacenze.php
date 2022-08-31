@@ -26,8 +26,9 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
-        'id_articolo' => 'codice',
+   //     'id_articolo' => 'codice',
         'articolo' => 'descrizione',
+        'categorie' => 'categoria',
         'carico' => 'carico',
         'scarico' => 'scarico',
         'totale' => 'totale',
@@ -54,19 +55,27 @@
         'articolo' => 'text-left',
         'totale' => 'text-right',
         'peso' => 'text-right',
-        'sigla_udm_peso' => 'd-none'
+        'carico' => 'text-right',
+        'scarico' => 'text-right',
+        'sigla_udm_peso' => 'd-none',
+        'categorie' => 'text-left'
     );
 
     // preset filtro custom mastro corrente
-	$ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
-  
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+        $ct['view']['__restrict__']['id_mastro']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+    }
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // trasformazione icona attivo/inattivo
-	foreach( $ct['view']['data'] as &$row ) {
-        $row['peso'] = $row['peso'].' '.$row['sigla_udm_peso'];
-	}
+    if( isset(  $ct['view']['data'] ) && !empty( $ct['view']['data'] ) ){
+        foreach( $ct['view']['data'] as &$row ) {
+           if(isset($row['peso'])){ $row['peso'] = $row['peso'].' '.$row['sigla_udm_peso'];}
+        }
+    
+    }
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

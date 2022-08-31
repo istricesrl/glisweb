@@ -470,7 +470,8 @@
 
         // pulizia chiave FatturaElettronica
         foreach( $r as $k => $v ) {
-            if( strpos( $k, 'FatturaElettronica' ) ) {
+            
+            if( strpos( $k, 'FatturaElettronica' ) >= 0 ) {
                 $fe = $v;
             }
         }
@@ -555,215 +556,241 @@
         // print_r( $d );
         // print_r( $f );
 
-        // cerco o creo il fornitore
-        if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
-            $i['idCliente'] = mysqlInsertRow(
+        // verifico la validità dell'anagrafica
+        $fornitore = $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica'];
+
+        // controllo formale
+        if( ( isset( $fornitore['Denominazione']['#'] ) && ! empty( $fornitore['Denominazione']['#'] ) ) || ( isset( $fornitore['Nome']['#'] ) && isset( $fornitore['Cognome']['#'] ) && ! empty( $fornitore['Nome']['#'] . $fornitore['Cognome']['#'] ) ) ) {
+
+            // cerco o creo il fornitore
+            if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
+                $i['idCliente'] = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => NULL,
+                        'denominazione' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'],
+                        'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
+                        'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
+                    ),
+                    'anagrafica'
+                );
+            } else {
+                $i['idCliente'] = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => NULL,
+                        'nome' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Nome']['#'],
+                        'cognome' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Cognome']['#'],
+                        'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
+                        'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
+                    ),
+                    'anagrafica'
+                );
+            }
+
+            // TODO
+            // aggiungere la categoria azienda gestita al cliente
+            mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
                     'id' => NULL,
-                    'denominazione' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'],
-                    'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
-                    'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
+                    'id_anagrafica' => $i['idCliente'],
+                    'id_categoria' => mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM categorie_anagrafica WHERE se_gestita = 1 LIMIT 1')
                 ),
-                'anagrafica'
+                'anagrafica_categorie'
             );
-        } else {
-            $i['idCliente'] = mysqlInsertRow(
+
+            // cerco o creo il destinatario
+            if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
+                $i['idFornitore'] = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => NULL,
+                        'denominazione' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'],
+                        'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
+                        'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
+                    ),
+                    'anagrafica'
+                );
+            } else {
+                $i['idFornitore'] = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => NULL,
+                        'nome' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Nome']['#'],
+                        'cognome' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Cognome']['#'],
+                        'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
+                        'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
+                    ),
+                    'anagrafica'
+                );
+            }
+
+            // TODO
+            // aggiungere la categoria fornitore al fornitore
+            mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
                     'id' => NULL,
-                    'nome' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Nome']['#'],
-                    'cognome' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['Anagrafica']['Cognome']['#'],
-                    'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
-                    'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CessionarioCommittente']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
+                    'id_anagrafica' => $i['idFornitore'],
+                    'id_categoria' => mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM categorie_anagrafica WHERE se_fornitore = 1 LIMIT 1')
                 ),
-                'anagrafica'
-            );
-        }
-
-        // TODO
-        // aggiungere la categoria azienda gestita al cliente
-
-        // cerco o creo il destinatario
-        if( isset( $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'] ) ) {
-            $i['idFornitore'] = mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id' => NULL,
-                    'denominazione' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Denominazione']['#'],
-                    'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
-                    'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
-                ),
-                'anagrafica'
-            );
-        } else {
-            $i['idFornitore'] = mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id' => NULL,
-                    'nome' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Nome']['#'],
-                    'cognome' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['Anagrafica']['Cognome']['#'],
-                    'partita_iva' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#'],
-                    'codice_fiscale' => $d['FatturaElettronica']['FatturaElettronicaHeader']['CedentePrestatore']['DatiAnagrafici']['IdFiscaleIVA']['IdCodice']['#']
-                ),
-                'anagrafica'
-            );
-        }
-
-        // TODO
-        // aggiungere la categoria fornitore al fornitore
-
-        // aggiornamento view statica
-        mysqlQuery( $cf['mysql']['connection'], 'CALL anagrafica_view_static( ? )', array( array( 's' => $i['idFornitore'] ) ) );
-
-        // pre elaborazione dati
-        $i['numero'] = explode( '/', $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Numero']['#'] );
-
-        // se è presente il codice Archivium
-        if( isset( $d['IDArchivium'] ) && ! empty( $d['IDArchivium'] ) ) {
-
-            // TODO inserisco la riga nella tabella documenti
-            $i['idDocumento'] = mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id' => NULL,
-                    'id_tipologia' => 1,
-                    'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
-                    'numero' => $i['numero'][0],
-                    'sezionale' => ( isset( $i['numero'][1] ) ? $i['numero'][1] : NULL ),
-                    'codice_archivium' => $d['IDArchivium'],
-                    'id_emittente' => $i['idFornitore'],
-                    'id_destinatario' => $i['idCliente']
-                ),
-                'documenti'
+                'anagrafica_categorie'
             );
 
-            // recupero le righe esistenti
-            $idRighe = mysqlSelectColumn(
-                'id',
-                $cf['mysql']['connection'],
-                'SELECT id FROM documenti_articoli WHERE id_documento = ?',
-                array( array( 's' => $i['idDocumento'] ) )
-            );
+            // aggiornamento view statica
+            mysqlQuery( $cf['mysql']['connection'], 'CALL anagrafica_view_static( ? )', array( array( 's' => $i['idFornitore'] ) ) );
 
-            // se è presente l'oggetto righe
-            if( ! empty( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] ) ) {
+            // pre elaborazione dati
+            $i['numero'] = explode( '/', $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Numero']['#'] );
 
-                // gestisco le righe multiple
-                $arrayRighe = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] ) )
-                    ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] )
-                    : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'];
+            // se è presente il codice Archivium
+            if( isset( $d['IDArchivium'] ) && ! empty( $d['IDArchivium'] ) ) {
 
-                // TODO inserisco le righe nella tabella documenti_articoli
-                foreach( $arrayRighe as $row ) {
+                // TODO inserisco la riga nella tabella documenti
+                $i['idDocumento'] = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id' => NULL,
+                        'id_tipologia' => 1,
+                        'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
+                        'numero' => $i['numero'][0],
+                        'sezionale' => ( isset( $i['numero'][1] ) ? $i['numero'][1] : NULL ),
+                        'codice_archivium' => $d['IDArchivium'],
+                        'id_emittente' => $i['idFornitore'],
+                        'id_destinatario' => $i['idCliente']
+                    ),
+                    'documenti'
+                );
 
-                    // debug
-                    // print_r( $row );
+                // recupero le righe esistenti
+                $idRighe = mysqlSelectColumn(
+                    'id',
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM documenti_articoli WHERE id_documento = ?',
+                    array( array( 's' => $i['idDocumento'] ) )
+                );
 
-                    // trovo il reparto in base all'aliquota
-                    $idReparto = mysqlSelectValue(
-                        $cf['mysql']['connection'],
-                        'SELECT reparti.id FROM reparti INNER JOIN iva ON iva.id = reparti.id_iva WHERE iva.aliquota = ?',
-                        array( array( 's' => $row['AliquotaIVA']['#'] ) )
-                    );
+                // se è presente l'oggetto righe
+                if( ! empty( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] ) ) {
 
-                    // se il reparto non esiste, lo creo
-                    if( empty( $idReparto ) ) {
+                    // gestisco le righe multiple
+                    $arrayRighe = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] ) )
+                        ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'] )
+                        : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiBeniServizi']['DettaglioLinee'];
 
-                        $idIva = mysqlSelectValue(
+                    // TODO inserisco le righe nella tabella documenti_articoli
+                    foreach( $arrayRighe as $row ) {
+
+                        // debug
+                        // print_r( $row );
+
+                        // trovo il reparto in base all'aliquota
+                        $idReparto = mysqlSelectValue(
                             $cf['mysql']['connection'],
-                            'SELECT id FROM iva WHERE iva.aliquota = ?',
+                            'SELECT reparti.id FROM reparti INNER JOIN iva ON iva.id = reparti.id_iva WHERE iva.aliquota = ?',
                             array( array( 's' => $row['AliquotaIVA']['#'] ) )
                         );
 
-                        $idReparto = mysqlInsertRow(
+                        // se il reparto non esiste, lo creo
+                        if( empty( $idReparto ) ) {
+
+                            $idIva = mysqlSelectValue(
+                                $cf['mysql']['connection'],
+                                'SELECT id FROM iva WHERE iva.aliquota = ?',
+                                array( array( 's' => $row['AliquotaIVA']['#'] ) )
+                            );
+
+                            $idReparto = mysqlInsertRow(
+                                $cf['mysql']['connection'],
+                                array(
+                                    'id' => NULL,
+                                    'nome' => 'REPARTO IVA ' . rtrim( $row['AliquotaIVA']['#'], '.0' ) . '%',
+                                    'id_iva' => $idIva
+                                ),
+                                'reparti'
+                            );
+
+                        }
+
+                        // inserisco la riga
+                        mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
-                                'id' => NULL,
-                                'nome' => 'REPARTO IVA ' . rtrim( $row['AliquotaIVA']['#'], '.0' ) . '%',
-                                'id_iva' => $idIva
+                                'id' => array_shift( $idRighe ),
+                                'ordine' => $row['NumeroLinea']['#'],
+                                'nome' => $row['Descrizione']['#'],
+                                'id_documento' => $i['idDocumento'],
+                                'importo_netto_totale' => $row['PrezzoTotale']['#'],
+                                'id_reparto' => $idReparto
                             ),
-                            'reparti'
+                            'documenti_articoli'
                         );
 
                     }
 
-                    // inserisco la riga
-                    mysqlInsertRow(
-                        $cf['mysql']['connection'],
-                        array(
-                            'id' => array_shift( $idRighe ),
-                            'ordine' => $row['NumeroLinea']['#'],
-                            'nome' => $row['Descrizione']['#'],
-                            'id_documento' => $i['idDocumento'],
-                            'importo_netto_totale' => $row['PrezzoTotale']['#'],
-                            'id_reparto' => $idReparto
-                        ),
-                        'documenti_articoli'
-                    );
-
                 }
 
-            }
+                // recupero i pagamenti esistenti
+                $idPagamenti = mysqlSelectColumn(
+                    'id',
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM pagamenti WHERE id_documento = ?',
+                    array( array( 's' => $i['idDocumento'] ) )
+                );
 
-            // recupero i pagamenti esistenti
-            $idPagamenti = mysqlSelectColumn(
-                'id',
-                $cf['mysql']['connection'],
-                'SELECT id FROM pagamenti WHERE id_documento = ?',
-                array( array( 's' => $i['idDocumento'] ) )
-            );
+                // se è presente l'oggetto righe
+                if( ! empty( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] ) ) {
 
-            // se è presente l'oggetto righe
-            if( ! empty( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] ) ) {
+                    // gestisco i pagamenti multipli
+                    $arrayPagamenti = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] ) )
+                        ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] )
+                        : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'];
 
-                // gestisco i pagamenti multipli
-                $arrayPagamenti = ( is_associative_array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] ) )
-                    ? array( $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'] )
-                    : $d['FatturaElettronica']['FatturaElettronicaBody']['DatiPagamento']['DettaglioPagamento'];
+                    // TODO inserisco le righe nella tabella pagamenti
+                    foreach( $arrayPagamenti as $row ) {
 
-                // TODO inserisco le righe nella tabella pagamenti
-                foreach( $arrayPagamenti as $row ) {
+                        // debug
+                        // print_r( $row );
 
-                    // debug
-                    // print_r( $row );
+                        // recupero la modalità di pagamento
+                        $idModalita = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM modalita_pagamento WHERE codice = ?',
+                            array( array( 's' => $row['ModalitaPagamento']['#'] ) )
+                        );
 
-                    // recupero la modalità di pagamento
-                    $idModalita = mysqlSelectValue(
-                        $cf['mysql']['connection'],
-                        'SELECT id FROM modalita_pagamento WHERE codice = ?',
-                        array( array( 's' => $row['ModalitaPagamento']['#'] ) )
-                    );
+                        // cerco iban nel database
+                        if( ! empty( $row['IBAN']['#'] ) ){
 
-                    // cerco iban nel database
-                    if( ! empty( $row['IBAN']['#'] ) ){
+                            $idIban = mysqlInsertRow($cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_anagrafica' => $i['idFornitore'],
+                                'iban' => $row['IBAN']['#']
+                            ),
+                            'iban'
+                        );
 
-                        $idIban = mysqlInsertRow($cf['mysql']['connection'],
-                        array(
-                            'id' => NULL,
-                            'id_anagrafica' => $i['idFornitore'],
-                            'iban' => $row['IBAN']['#']
-                        ),
-                        'iban'
-                    );
+                        } else {
+                            $idIban = NULL;
+                        }
 
-                    } else {
-                        $idIban = NULL;
+                        // inserisco il pagamento
+                        mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => array_shift( $idPagamenti ),
+                                'id_documento' => $i['idDocumento'],
+                                'id_modalita_pagamento' => $idModalita,
+                                'importo_lordo_totale' => $row['ImportoPagamento']['#'],
+                                'timestamp_scadenza' =>( isset($row['DataScadenzaPagamento']) ? strtotime( $row['DataScadenzaPagamento']['#']) : NULL ),
+                                'id_iban' =>  $idIban
+                            ),
+                            'pagamenti'
+                        );
+
                     }
-
-                    // inserisco il pagamento
-                    mysqlInsertRow(
-                        $cf['mysql']['connection'],
-                        array(
-                            'id' => array_shift( $idPagamenti ),
-                            'id_documento' => $i['idDocumento'],
-                            'id_modalita_pagamento' => $idModalita,
-                            'importo_netto_totale' => $row['ImportoPagamento']['#'],
-                            'timestamp_scadenza' => strtotime( $row['DataScadenzaPagamento']['#'] ),
-                            'id_iban' =>  $idIban
-                        ),
-                        'pagamenti'
-                    );
 
                 }
 

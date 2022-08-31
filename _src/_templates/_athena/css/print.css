@@ -1,0 +1,33 @@
+body {
+    background-color: #ffffff;
+    font-family: Helvetica, Verdana, FontAwesome;
+    font-size: 0.8em;
+}
+
+div.slide-info,
+div.sidebar,
+.d-print-none,
+ol.breadcrumbs > li:not(:last-child),
+table select {
+    display: none;
+}
+
+ol.breadcrumbs {
+    list-style-type: none;
+}
+
+.view-table th {
+    border-bottom: 1px solid #cccccc;
+}
+
+.view-table tbody tr td {
+    border-bottom: 1px solid #eeeeee;
+}
+
+.view-table tbody tr:last-child td {
+    border-bottom: 1px solid #cccccc;
+}
+
+td {
+    text-align: center;
+}

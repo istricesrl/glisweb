@@ -1,0 +1,109 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati generali <small>{{ legend }}</small></legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12 col-md-1">
+			<span class="label-top">ordine</span>
+				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+		    </div>
+			<div class="col-12 col-md-3">
+				<span class="label-top">tipologia</span>
+				{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_banner, request) }}
+			</div>
+			<div class="col-12 col-md">
+				<span class="label-top">nome</span>
+				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+			</div>
+		</div>
+		</fieldset>
+
+		<fieldset>
+			<div class="form-group form-row">
+				<div class="col-12 col-md-auto">
+					<span class="label-top">sito</span>
+					{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
+				</div>  
+				<div class="col-12 col-md-2">
+					<span class="label-top">altezza</span>
+					{{ frm.input( table, '', '', 'altezza_modulo', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-2">
+					<span class="label-top">larghezza</span>
+					{{ frm.input( table, '', '', 'larghezza_modulo', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">inserzionista</span>
+					{{ frm.selectBox( table, '', '', 'id_inserzionista', '', etc.select.anagrafica, request, '', '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+				</div>
+			</div>
+
+		</fieldset>
+
+		<fieldset>
+			<div class="form-group form-row">
+				<div class="col">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+				</div>
+			</div>	
+		</fieldset>
+
+		{# SUBFORM PUBBLICAZIONI #}
+        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_banner' ) }}
+
+
+		{# BOTTONI E COMANDI DEL MODULO #}
+		<fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+		</fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

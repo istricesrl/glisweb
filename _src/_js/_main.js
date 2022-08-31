@@ -32,7 +32,8 @@
 		return false;
 	};
 
-	 // abilita un attributo se assente e lo disabilita se presente
+	// abilita un attributo se assente e lo disabilita se presente
+	// TODO adesso funziona solo col disabled, farlo per tutti
 	$.fn.toggleAttribute = function( a ) {
 
 		var el = $(this).get(0);
@@ -54,6 +55,25 @@
 	    // console.log( this );
 	    // console.log( $(this) );
 
+	}
+
+	// abilita un attributo
+	// TODO adesso funziona solo col disabled, farlo per tutti
+	$.fn.setAttribute = function( a ) {
+
+		var el = $(this).get(0);
+	    var e = this;
+
+		$( e ).find(':input').each( function( i, obj ) {
+			console.log( $( obj ) );
+			console.log( 'aggiungo disabled ' + $( obj ).attr( 'id' ) );
+			$( obj ).attr( "disabled", true );
+		});
+
+	    // console.log( el );
+		// console.log( e );
+	    // console.log( this );
+	    // console.log( $(this) );
 
 	}
 

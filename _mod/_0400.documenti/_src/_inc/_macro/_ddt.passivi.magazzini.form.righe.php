@@ -46,7 +46,7 @@
 #        'tipologia' => 'tipologia',
 #        'data' => 'data',
 #        'nome' => 'nome',
-		'id_articolo' => 'codice',
+//		'id_articolo' => 'codice',
 		'articolo' => 'articolo',
 		'mastro_provenienza' => 'scarico',
 		'mastro_destinazione' => 'carico',
@@ -64,6 +64,8 @@
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data' => 'no-wrap', 
+		'mastro_provenienza' => 'text-left',
+		'mastro_destinazione' => 'text-left',
 #        'tipologia' => 'text-left',
 		'articolo' => 'text-left'
     );
@@ -86,7 +88,6 @@
         'file' => 'inc/ddt.passivi.magazzini.form.righe.insert.html',
         'fa' => 'fa-plus-circle'
     );
-	//$ct['etc']['include']['insert'] = 'inc/ddt.passivi.magazzini.form.righe.insert.html';
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro custom progetti aperti

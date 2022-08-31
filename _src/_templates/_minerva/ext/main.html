@@ -18,12 +18,13 @@
             <div class="container-fluid">
                 <div class="row">
                     {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
+                    {% block widget %}{% include 'inc/widget.html' %}{% endblock %}
                 </div>
             </div>
         </header>
         {% endif %}
 
-        <main class="d-flex flex-column container-fluid w-100 vh-100">
+        <main class="d-flex flex-column container-fluid">
 
             {% block subnav %}{% include 'inc/subnav.html' %}{% endblock %}
 

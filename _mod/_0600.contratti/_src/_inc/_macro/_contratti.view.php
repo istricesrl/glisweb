@@ -18,16 +18,22 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data_inizio' => 'data inizio',
-        'data_fine' => 'data fine',
-        'data_inizio_rapporto' => 'data inizio rapporto',
-        'data_fine_rapporto' => 'data fine rapporto',
+        'contraenti' => 'contraenti',
+        'proponenti' => 'proponenti',
+        'progetto' => 'progetto',
+        'immobile' => 'immobile',
+        'tipologia' => 'tipologia',
 	    '__label__' => 'contratto'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    '__label__' => 'text-left no-wrap'
+	    '__label__' => 'text-left no-wrap',
+        'contraenti' => 'text-left',
+        'proponenti' => 'text-left',
+        'progetto' => 'text-left',
+        'immobile' => 'text-left',
+        'tipologia' => 'text-left',
 	);
 
     // inclusione filtri speciali

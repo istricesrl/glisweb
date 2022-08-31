@@ -18,6 +18,8 @@
     ranking.nome                            | il nome del ranking
     ranking.note                            | le note del ranking
     ranking.ordine                          | campo di ordinamento
+    ranking.se_cliente                      | flag che indica se il ranking fa riferimento a clienti
+    ranking.se_fornitore                    | flag che indica se il ranking fa riferimento a fornitori
     ranking.id_account_inserimento          | l'ID dell'account che ha inserito la riga
     ranking.timestamp_inserimento           | la timestamp dell'inserimento della riga
     ranking.id_account_aggiornamento        | l'ID dell'ultimo account che ha modificato la riga
@@ -37,6 +39,8 @@
     ranking_view.id                             | -
     ranking_view.nome                           | -
     ranking_view.ordine                         | -
+    ranking_view.se_cliente                     | -
+    ranking_view.se_fornitore                   | -
     ranking_view.id_account_inserimento         | -
     ranking_view.id_account_aggiornamento       | -
     ranking_view.__label__                      | etichetta descrittiva del ranking
@@ -459,6 +463,13 @@
     risorse.codice                              | il codice della risorsa
     risorse.nome                                | il nome della risorsa
     risorse.note                                | note aggiuntive sulla risorsa
+    risorse.id_sito                             | l'ID del sito cui è collegata la risorsa
+    risorse.template                            | il template da utilizzare per renderizzare la risorsa
+    risorse.schema_html                         | lo schema da utilizzare per renderizzare la risorsa
+    risorse.tema_css                            | il tema CSS da utilizzare per renderizzare la risorsa
+    risorse.id_contenuti                        | l'ID del testo della risorsa
+    risorse.se_sitemap                          | flag che indica se la risorsa va inclusa o no nella sitemap
+    risorse.se_cacheable                        | flag che indica se la risorsa può essere salvata nella cache statica
     risorse.id_testata                          | l'ID della testata su cui è stata pubblicata la risorsa
     risorse.giorno_pubblicazione                | il giorno di pubblicazione della risorsa
     risorse.mese_pubblicazione                  | il mese di pubblicazione della risorsa
@@ -486,6 +497,12 @@
     risorse_view.tipologia                  | la tipologia della risorsa
     risorse_view.codice                     | -
     risorse_view.nome                       | -
+    risorse_view.template                   | -
+    risorse_view.schema_html                | -
+    risorse_view.tema_css                   | -
+    risorse_view.id_contenuti               | -
+    risorse_view.se_sitemap                 | -
+    risorse_view.se_cacheable               | -
     risorse_view.id_testata                 | -
     risorse_view.testata                    | la testata su cui è stata pubblicata la risorsa
     risorse_view.giorno_pubblicazione       | -
@@ -570,10 +587,13 @@
     ruoli_anagrafica.id                    | l'ID del ruolo
     ruoli_anagrafica.id_genitore           | l'ID del ruolo genitore
     ruoli_anagrafica.nome                  | il nome del ruolo
+    ruoli_anagrafica.se_produzione         | flag che indica se il ruolo è pertinente alla produzione
+    ruoli_anagrafica.se_didattica          | flag che indica se il ruolo è pertinente alla didattica
     ruoli_anagrafica.se_organizzazioni     | flag che indica se il ruolo è pertinente alle organizzazioni
     ruoli_anagrafica.se_relazioni          | flag che indica se il ruolo è pertinente alle relazioni
     ruoli_anagrafica.se_risorse            | flag che indica se il ruolo è pertinente alle risorse
     ruoli_anagrafica.se_progetti           | flag che indica se il ruolo è pertinente ai progetti
+
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -588,11 +608,52 @@
     ruoli_anagrafica_view.id                    | -
     ruoli_anagrafica_view.id_genitore           | -
     ruoli_anagrafica_view.nome                  | -
+    ruoli_anagrafica_view.se_produzione         | -
+    ruoli_anagrafica_view.se_didattica          | -
     ruoli_anagrafica_view.se_organizzazioni     | -
     ruoli_anagrafica_view.se_relazioni          | -
     ruoli_anagrafica_view.se_risorse            | -
     ruoli_anagrafica_view.se_progetti           | -
     ruoli_anagrafica_view.__label__             | etichetta descrittiva del ruolo
+
+    ruoli_articoli
+    ----------------
+    Questa tabella *standard* contiene i ruoli che l'entità *articoli* può svolgere in relazione a diverse
+    entità principali.
+
+    colonna                                | descrizione
+    ---------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_articoli.id                      | l'ID del ruolo
+    ruoli_articoli.id_genitore             | l'ID del ruolo genitore
+    ruoli_articoli.nome                    | il nome del ruolo
+    ruoli_articoli.html_entity             | entità HTML che rappresenta visivamente il ruolo
+    ruoli_articoli.font_awesome            | classe Font Awesome dell'icona che rappresenta visivamente il ruolo
+    ruoli_articoli.se_progetti             | flag che indica se il ruolo è pertinente ai progetti
+    ruoli_articoli.se_risorse              | flag che indica se il ruolo è pertinente alle risorse
+    ruoli_articoli.se_acquisto             | flag che indica se il ruolo è pertinente agli acquisti
+    ruoli_articoli.se_rinnovo              | flag che indica se il ruolo è pertinente ai rinnovi
+
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                                  | campo                 | tabella e campo collegati     | comportamento
+    ----------------------------------------|-----------------------|-------------------------------|------------------
+    ruoli_articoli_ibfk_01                  | id_genitore           | ruoli_articoli.id           | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *ruoli_articoli_view* relativa alla tabella *ruoli_articoli* presenta le seguenti colonne:
+ 
+    colonna                                     | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    ruoli_articoli_view.id                      | -
+    ruoli_articoli_view.id_genitore             | -
+    ruoli_articoli_view.nome                    | -
+    ruoli_articoli_view.html_entity             | -
+    ruoli_articoli_view.font_awesome            | -
+    ruoli_articoli_view.se_progetti             | -
+    ruoli_articoli_view.se_risorse              | -
+    ruoli_articoli_view.se_acquisto             | -
+    ruoli_articoli_view.se_rinnovo              | -
+    ruoli_articoli_view.__label__               | etichetta descrittiva del ruolo
     
     ruoli_audio
     -----------

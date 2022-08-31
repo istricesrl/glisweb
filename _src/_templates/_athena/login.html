@@ -20,14 +20,12 @@
 	    <div class="form-group form-row">
 		<div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">login</button></div>
 	    </div>
-	    {% if '0600.password' in mods.active.array %}
 	    <div class="form-group form-row">
-		<div class="col-12"><a href="{{ pages['password.reset'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block">password dimenticata?</a></div>
+		<div class="col-12"><a href="{{ pages['password.reset'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">password dimenticata?</a></div>
 	    </div>
-	    {% endif %}
-	    {% if '0650.registrazione' in mods.active.array %}
+	    {% if '0350.registrazione' in mods.active.array %}
 	    <div class="form-group form-row">
-		<div class="col-12"><a href="{{ pages.registrazione.path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block">registrati</a></div>
+		<div class="col-12"><a href="{{ pages['registrazione'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">registrati</a></div>
 	    </div>
 	    {% endif %}
 	</fieldset>

@@ -151,6 +151,17 @@
 			<legend>attribuzione</legend>
 
 			<div class="form-group form-row">
+				<div class="col-12 col-md-6">
+					<span class="label-top">cliente</span>
+                    {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_cliente %}{% else %}{% set default = '' %}{% endif %}
+					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, default, '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
+				</div>
+				{% if 'V300.immobiliari' in mods.active.array %}
+				<div class="col-12 col-md-6">
+					<span class="label-top">immobile</span>
+					{{ frm.selectBox( table, '', '', 'id_immobile', '', etc.select.immobili, request, '', '','','','','immobili.form','','immobili', 'id_immobile' , page, pages, ietf,'immobili' ) }}
+				</div>
+				{% endif %}
 				{% if '1200.todo' in mods.active.array %}
 				<div class="col-12 col-md-6">
 					<span class="label-top">todo</span>
@@ -165,11 +176,7 @@
 					{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, default, '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
 				</div>
 				{% endif %}
-				<div class="col-12 col-md-6">
-					<span class="label-top">cliente</span>
-                    {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_cliente %}{% else %}{% set default = '' %}{% endif %}
-					{{ frm.selectBox( table, '', '', 'id_cliente', 'cliente', etc.select.id_cliente, request, default, '','','','','anagrafica.form','anagrafica.form','anagrafica', 'id_cliente' , page, pages, ietf,'anagrafica' ) }}
-				</div>
+
 				<div class="col-12 col-md-6">
 					<span class="label-top">indirizzo</span>
                     {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_indirizzo %}{% else %}{% set default = '' %}{% endif %}

@@ -27,7 +27,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_agente IS NOT NULL'
+	    'SELECT id, __label__ FROM anagrafica_view_static'
     );
 
     // tendina responsabile operativo
@@ -43,7 +43,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ranking_view'
+	    'SELECT id, __label__ FROM ranking_view WHERE se_cliente = 1'
 	);
 
     // tendina settori e attività

@@ -24,12 +24,26 @@
     // verifico se è arrivato un progetto
     if( ! empty( $_REQUEST['id'] ) ) {
 
-        $update = mysqlQuery( 
-            $cf['mysql']['connection'], 
-            'UPDATE documenti SET timestamp_chiusura = ? WHERE id = ?',
-            array( 
-                array( 's' => time() ), 
-                array( 's' => $_REQUEST['id'] ) ) );
+        if( isset( $_REQUEST['note_invio'] ) && !empty( $_REQUEST['note_invio']) ){
+            
+            $update = mysqlQuery( 
+                $cf['mysql']['connection'], 
+                'UPDATE documenti SET timestamp_chiusura = ?, note_invio = ? WHERE id = ?',
+                array( 
+                    array( 's' => time() ), 
+                    array( 's' => $_REQUEST['note_invio'] ),
+                    array( 's' => $_REQUEST['id'] ) ) );
+
+        } else {
+
+            $update = mysqlQuery( 
+                $cf['mysql']['connection'], 
+                'UPDATE documenti SET timestamp_chiusura = ? WHERE id = ?',
+                array( 
+                    array( 's' => time() ), 
+                    array( 's' => $_REQUEST['id'] ) ) );
+        }
+
 
     } else {
 

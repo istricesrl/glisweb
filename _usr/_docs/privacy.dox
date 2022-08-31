@@ -28,9 +28,36 @@
     }
     \endcode
 
-    [...] configurare le finalità del trattamento:
+    [...] per ogni modulo (registrazione, contatti, carrello, eccetera) configurare le finalità del trattamento:
 
+    \code{.json}
+    "privacy": {
+        [...]
+        "moduli": {
+            "esempio": {
+                "titolo": {
+                "it-IT": "modulo di esempio"
+                },
+                "descrizione": {
+                "it-IT": "Descrizione del modulo di esempio."
+                },
+                "consensi": {
+                "PRIVACY_POLICY": {
+                    "label": {
+                    "it-IT": "la privacy e cookie policy del sito"
+                    },
+                    "action": "letto_e_accetto",
+                    "page": "privacy",
+                    "required": true
+                }
+                }
+            },
+        [...]
+        }
+    }
+    \endcode
 
+    [...] si faccia riferimento alla documentazione delle variabili per sapere quali chiavi sono disponibili per questo ramo
 
     la pagina delle policy
     ======================

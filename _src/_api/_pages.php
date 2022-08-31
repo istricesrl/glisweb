@@ -154,11 +154,17 @@
 	    $ct['page']['template']['schema'] = 'default.html';
 	}
 
+	// debug
+	// print_r( $ct['page']['template'] );
+
     // log
 	appendToFile( 'fine controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
 
     // log
 	appendToFile( 'inizio inclusione macro' . PHP_EOL, FILE_LATEST_RUN );
+
+	// debug
+	$includes = array();
 
     // esecuzione delle macro richieste per la pagina corrente
 	if( isset( $ct['page']['macro'] ) && is_array( $ct['page']['macro'] ) ) {
@@ -171,6 +177,7 @@
 				require fullPath( $macroAlternative );
 				timerCheck( $cf['speed'], $macroAlternative );
 				appendToFile( 'inclusione macro -> ' . $macroAlternative . PHP_EOL, FILE_LATEST_RUN );
+				$includes[] = $macroAlternative;
 
 			} else {
 
@@ -181,12 +188,14 @@
 					require fullPath( $macroLocal );
 					timerCheck( $cf['speed'], $macroLocal );
 					appendToFile( 'inclusione macro -> ' . $macroLocal . PHP_EOL, FILE_LATEST_RUN );
+					$includes[] = $macroLocal;
 
 				} elseif( file_exists( fullPath( $macro ) ) ) {
 
-					timerCheck( $cf['speed'], fullPath( $macro ) );
 					require fullPath( $macro );
+					timerCheck( $cf['speed'], fullPath( $macro ) );
 					appendToFile( 'inclusione macro -> ' . $macro . PHP_EOL, FILE_LATEST_RUN );
+					$includes[] = $macro;
 
 				} else {
 
@@ -417,6 +426,11 @@
 			echo PHP_EOL . '<!-- tema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
 		}
 
+		echo PHP_EOL;
+		foreach( $includes as $include ) {
+			echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
+		}
+
 		switch( $ct['page']['template']['type'] ) {
 
 		case 'twig':
@@ -559,7 +573,7 @@
     // headers / codice di stato HTTP
 	if( isset( $ct['page']['headers'] ) ) {
 	    foreach( $ct['page']['headers'] as $header ) {
-		header( $header );
+			header( $header );
 	    }
 	} elseif( isset( $ct['page']['http']['status'] ) ) {
 	    http_response_code( $ct['page']['http']['status'] );
@@ -619,9 +633,13 @@
 	    echo '<!-- expire: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_LIMIT ) . ' -->'	. PHP_EOL;
 	    echo '<!-- file: ' . basename( FILE_CACHE_PAGE ) . ' -->'				. PHP_EOL;
 	} else {
+		header( 'X-Proxy-Cache: BYPASS' );
+		header( 'X-GlisWeb-No-Cache: true' );
 	    echo PHP_EOL . '<!-- pagina senza autorizzazione al caching -->' . PHP_EOL;
 	}
 	echo PHP_EOL;
+
+	// NOTA per Nginx si veda https://www.ryadel.com/nginx-reverse-proxy-cache-wordpress-apache-iis-windows/
 
     // fine del buffer
 	ob_end_flush();

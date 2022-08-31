@@ -73,7 +73,7 @@ else
         fi
 
         # aggiorno composer
-        composer update
+        composer update -n
 
         ## permessi
         ./_src/_sh/_lamp.permissions.reset.sh

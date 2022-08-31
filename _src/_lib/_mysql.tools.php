@@ -881,7 +881,11 @@
      * @todo documentare
      *
      */
-    function mysqlInsertRow( $c, $r, $t, $d = true ) {
+    function mysqlInsertRow( $c, $r, $t, $d = true, $n = false ) {
+
+		if( ! array_key_exists( 'id', $r ) && $n == false ) {
+			$r['id'] = NULL;
+		}
 
 		$r = array_map( 'empty2null', $r );
 
@@ -947,6 +951,10 @@
 	$r = array();
 
 	foreach( $a as $v ) {
+
+		if( is_numeric( $v ) ) {
+			$v = str_replace( ',', '.', $v );
+		}
 
 	    $r[] = array( 's' => $v );
 

@@ -55,8 +55,8 @@
 	// vista scadenze certificazioni
 	$p['anagrafica.certificazioni.view'] = array(
 	    'sitemap'		=> false,
-		'title'		=> array( $l		=> 'scadenze' ),
-	    'h1'		=> array( $l		=> 'scadenze' ),
+		'title'		=> array( $l		=> 'scadenze anagrafica' ),
+	    'h1'		=> array( $l		=> 'scadenze anagrafica' ),
 	    'parent'		=> array( 'id'		=> 'certificazioni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_anagrafica.certificazioni.view.php' ),
@@ -91,6 +91,7 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['anagrafica.certificazioni.form']['etc']['tabs'] )
 	);
+
 
 /*
 	// vista certificazioni
@@ -278,3 +279,4 @@
 		'etc'		=> array( 'tabs'	=> $p['anagrafica.certificazioni.form']['etc']['tabs'] )
 	);
 */
+	

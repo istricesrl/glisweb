@@ -1,46 +1,32 @@
 {# MACRO PER LA RAPPRESENTAZIONE DEI CONTENUTI #}
 {# NOTA: IMPORTARE SEMPRE COME PRV #}
 
-{% macro checkPrivacy( form, contatti, pages, tr, lang, class, rclass, modulo ) %}
+{% macro checkConsensi( ref, key, items, ietf, tr, pages ) %}
 {% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
 {% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
-{% if not modulo %}{% set modulo = '__contatti__[' ~ form ~ ']' %}{% endif %}
+{% for codice,check in items.consensi %}
+{% if key %}{% set nm = '['~ref~']['~key~']['~codice~']' %}{% set id = ref~key~codice %}{% else %}{% set nm = '['~ref~']['~codice~']' %}{% set id = ref~codice %}{% endif %}
 <div class="{{ rclass }} row-privacy">
     <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="privacy_policy" name="{{ modulo }}[privacy][policy]" value="0">
-	    <input class="form-check-input" type="checkbox" required>
-	    <label class="form-check-label text-left" for="privacy_policy">
-		{{ tr.accetto_privacy[ lang ] | raw }}
-		<a href="{{ pages.privacy.path[ lang ] }}" target="_blank">{{ tr.privacy_policy_sito[ lang ] | raw }}</a> ({{ tr.obbligatorio[ lang ] | raw }})
-	    </label>
-	</div>
+		<div class="form-check">
+			<input type="hidden" id="consensi_{{ id }}_codice" name="__consensi__{{ nm }}[codice]" value="{{ codice }}">
+			<input type="hidden" id="consensi_{{ id }}_reference" name="__consensi__{{ nm }}[reference]" value="{{ ref }}">
+			<input type="hidden" id="consensi_{{ id }}_value" name="__consensi__{{ nm }}[value]" value="0">
+			<input class="form-check-input" id="consensi_{{ id }}_checkbox" type="checkbox" {% if check.required %}required{% endif %}>
+			<label class="form-check-label text-left" for="consensi_{{ id }}_checkbox">
+			{{ tr.generic[ check.action ][ ietf ] }}
+			{% if check.page %}<a href="{{ pages[ check.page ].url[ ietf ] }}">{% endif %}
+			{{ check.label[ ietf ] | raw }}
+			{% if check.page %}</a>{% endif %}
+			({% if check.required %}{{ tr.generic.obbligatorio[ ietf ] | raw }}{% else %}{{ tr.generic.facoltativo[ ietf ] | raw }}{% endif %})
+			</label>
+		</div>
     </div>
 </div>
-{% for label,check in contatti[ form ].privacy[ lang ].finalita %}
+{% else %}
 <div class="{{ rclass }} row-privacy">
     <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="privacy_{{ label }}" name="{{ modulo }}[privacy][{{ label }}]" value="0">
-	    <input class="form-check-input" type="checkbox" {% if check.required %}required{% endif %}>
-	    <label class="form-check-label text-left" for="privacy_{{ label }}">
-		{{ check.label | raw }} ({% if check.required %}{{ tr.obbligatorio[ lang ] | raw }}{% else %}{{ tr.facoltativo[ lang ] | raw }}{% endif %})
-	    </label>
-	</div>
-    </div>
-</div>
-{% endfor %}
-{% for label,check in contatti[ form ].condizioni[ lang ] %}
-<div class="{{ rclass }} row-privacy">
-    <div class="{{ class }}">
-	<div class="form-check">
-	    <input type="hidden" id="condizioni_{{ label }}" name="{{ modulo }}[condizioni][{{ label }}]" value="0">
-	    <input class="form-check-input" type="checkbox" {% if check.required %}required{% endif %}>
-	    <label class="form-check-label text-left" for="condizioni_{{ label }}">
-		{{ tr.accetto_privacy[ lang ] | raw }}
-		<a href="{{ pages[ check.page ].path[ lang ] }}" target="_blank">{{ check.label | raw }}</a> ({% if check.required %}{{ tr.obbligatorio[ lang ] | raw }}{% else %}{{ tr.facoltativo[ lang ] | raw }}{% endif %})
-	    </label>
-	</div>
+		<p>nessun consenso privacy richiesto per questo modulo</p>
     </div>
 </div>
 {% endfor %}

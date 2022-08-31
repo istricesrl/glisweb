@@ -108,12 +108,8 @@
         </div>
         <div class="col-1">
             <span class="label-top">importo</span>
-            {{ frm.input( table, subtable, i, 'importo_netto_totale', '', '', request ) }}
+            {{ frm.input( table, subtable, i, 'importo_lordo_totale', '', '', request ) }}
         </div>
-        <div class="col-auto">
-		    <span class="label-top">iva</span>
-            {{ frm.select( table, subtable, i, 'id_iva', '', etc.select.iva, request) }}
-	    </div>
         <div class="col-auto">
 		    <span class="label-top">listino</span>
             {{ frm.select( table, subtable, i, 'id_listino', '', etc.select.listini, request) }}

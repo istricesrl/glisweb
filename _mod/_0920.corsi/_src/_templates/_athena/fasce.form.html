@@ -1,0 +1,152 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E progetti' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati generali <small>{{ legend }}</small></legend>
+
+		<div class="form-group form-row">
+			{% if '3000.contenuti' in mods.active.array %}
+			<div class="col-12 col-md-auto">
+				<span class="label-top">sito</span>
+				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
+			</div>  
+			{% endif %}
+		    <div class="col-12 col-md">
+			<span class="label-top">genitore</span>
+			{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.categorie_progetti, request, '', '', '', '', '', 'categorie.progetti.form', 'categorie.progetti.form', 'categorie_progetti', 'id_genitore', page, pages, ietf ) }}
+			</div>
+		    <div class="col-12 col-md">
+			<span class="label-top">nome della categoria</span>
+			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+		    </div>
+			{% if '3000.contenuti' in mods.active.array %}
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
+                </div>
+            </div>
+            <div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
+                </div>
+            </div>
+			{% endif %}
+		</div>
+		<div class="form-group form-row">
+			<div class="col-12">
+			<span class="label-top">descrizione</span>
+			{{ frm.textarea( table, '', '', 'note', '', 2, request ) }}
+			</div>
+		</div>
+
+		<div class="form-group form-row">
+			<legend>gestione progetti</legend>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_ordinario', 'se ordinario', '', request ) }}
+                </div>
+            </div>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_straordinario', 'se straordinario', '', request ) }}
+                </div>
+            </div>
+		</div>
+		{% if '0920.corsi' in mods.active.array %}
+		<div class="form-group form-row">
+			<legend>gestione corsi</legend>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_disciplina', 'se disciplina', '', request ) }}
+                </div>
+            </div>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_classe', 'se livello', '', request ) }}
+                </div>
+            </div>
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_fascia', 'se fascia di età', '', request, '1' ) }}
+                </div>
+            </div>
+		</div>
+		{% endif %}
+	    </fieldset>
+
+		{% if '3000.contenuti' in mods.active.array %}
+		<fieldset>
+			<legend>aspetto</legend>
+	
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+					<span class="label-top">template</span>
+					{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
+				</div>  
+				<div class="col-12 col-md">
+					<span class="label-top">schema</span>
+					{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
+				</div>  
+				<div class="col-12 col-md">
+					<span class="label-top">tema</span>
+					{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
+				</div>  
+			</div>  
+	
+		</fieldset>
+			
+		{# SUBFORM PUBBLICAZIONI #}
+        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_progetti' ) }}
+
+		{% endif %}
+
+        {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

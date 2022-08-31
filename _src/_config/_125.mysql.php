@@ -33,6 +33,7 @@
 
 			    // log
 				logWrite( 'tento la connessione a: ' . $server, 'mysql' );
+    			appendToFile( 'connessione database -> ' . $server . PHP_EOL, FILE_LATEST_RUN );
 
 			    // inizializzo la connessione
 				$cn = mysqli_init();
@@ -56,6 +57,7 @@
 
 				    // log
 					logWrite( 'errore di connessione a ' . $server . ': ' . mysqli_connect_errno() . ' ' . mysqli_connect_error(), 'mysql', LOG_ERR );
+					appendToFile( 'errore connessione database -> ' . $server . PHP_EOL, FILE_LATEST_RUN );
 
 				} else {
 
@@ -65,8 +67,10 @@
 				    // selezione database
 					if( mysqli_select_db( $cn, $cf['mysql']['servers'][ $server ]['db'] ) ) {
 					    logWrite( 'database selezionato: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql' );
+						appendToFile( 'connesso database -> ' . $server . PHP_EOL, FILE_LATEST_RUN );
 					} else {
 					    logWrite( 'impossibile selezionare il database: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql', LOG_ERR );
+						appendToFile( 'fallita selezione database -> ' . $server . PHP_EOL, FILE_LATEST_RUN );
 						die('impossibile selezionare il database, verificare i permessi sul server MySQL');
 					}
 
@@ -175,11 +179,13 @@
 	
 				}
 	
-				$pFiles = glob( DIR_USR_DATABASE_PATCH . '_*.*.sql' );
+				$pFiles = glob( glob2custom( DIR_USR_DATABASE_PATCH . '_*.*.sql' ), GLOB_BRACE );
 				sort( $pFiles );
 	
 				foreach( $pFiles as $pFile ) {
 	
+					appendToFile( 'elaborazione file patch -> ' . $pFile . PHP_EOL, FILE_LATEST_RUN );
+
 					$pFilePatchLevel = substr( basename( $pFile ), 1, 12 );
 	
 					// echo 'patch level del file ' . $pFilePatchLevel . HTML_EOL;
@@ -203,6 +209,8 @@
 									// echo 'eseguo la patch ' . $pId . PHP_EOL;
 	
 									if( $pId > $patchLevel ) {
+
+											appendToFile( 'elaborazione patch -> ' . $patchLevel . PHP_EOL, FILE_LATEST_RUN );
 
 											$pEx = mysqlQuery(
 												$cf['mysql']['connection'],

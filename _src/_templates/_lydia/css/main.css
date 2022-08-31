@@ -5,6 +5,7 @@ body {
 
 main {
     padding: 0.5em;
+    padding-bottom: 1.5em;
 }
 
 div.categorie {
@@ -45,7 +46,7 @@ footer p {
 }
 
 h1, h2, h3, h4, h5 {
-    margin: 0.5em 0em;
+    margin: 0em;
 }
 
 h1 {
@@ -100,12 +101,22 @@ a:active, a:hover {
 }
 
 footer a, a:visited {
-    color: #111111;
+    color: #666666;
 }
 
 footer a:active, a:hover {
     color: #111111;
     text-decoration: underline !important;
+}
+
+div.breadcrumbs {
+    background-color: #ffffff;
+    border-bottom: 1px solid #cccccc;
+    font-size: .9em;
+}
+
+div.breadcrumbs p {
+    margin: 5px 0px;
 }
 
 a.breadcrumb-link, a.breadcrumb-link:visited {
@@ -117,9 +128,18 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     text-decoration: underline;
 }
 
+.nav-icons a.nav-link {
+    font-size: 1.25em;
+}
+
+a.nav-link {
+    padding-top: 0px;
+    padding-bottom: 0px;
+}
+
 a.nav-link, a.nav-link:visited {
     color: #aaaaaa;
-    padding-right: 0em !important;
+    padding: 0em .5em !important;
 }
 
 a.nav-link:active, a.nav-link:hover {
@@ -129,6 +149,33 @@ a.nav-link:active, a.nav-link:hover {
 
 ul.navbar-nav {
     list-style-type: none;
+}
+
+label.label-top {
+    font-size: .75em;
+    margin: 0em;
+}
+
+form.carrello div.form-row {
+    margin: .5em 0em;
+}
+
+div.row-privacy {
+    font-size: .75em;
+}
+
+div.row-privacy a {
+    font-weight: bold;
+}
+
+div.row-privacy .form-check-input {
+    padding-bottom: .5em;
+}
+
+@media (max-width: 576px) {
+    .nav-icons a.nav-link {
+        margin-left: .75em;
+    }
 }
 
 @media (min-width: 576px) {

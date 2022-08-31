@@ -12,7 +12,7 @@
 
 	// tabella gestita
 	$ct['form']['table'] = 'contratti';
-	
+/*	
     // percorsi
 	$base = $ct['site']['url'] . '/_mod/_0600.contratti/_src/_api/_task/';
 
@@ -114,7 +114,7 @@
 
 	// macro di default per l'entità contratti
 	require '_contratti.form.default.php';
-
+*/
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 

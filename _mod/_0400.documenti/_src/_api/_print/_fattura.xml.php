@@ -186,7 +186,7 @@
 	$xml->startElement( 'Anagrafica' );
 
     // azienda / privato
-	if( empty( $dst['partita_iva'] ) ) {
+	if( empty( $dst['partita_iva'] ) && ( !empty($dst['cognome']) ) ) {
 
 	    // - - - - - Nome / il nome del cliente privato
 		$xml->writeElement( 'Nome', $dst['nome'] );
@@ -451,6 +451,7 @@
 	    header( 'Content-disposition: attachment; filename=' . basename( $outFile ) );
         buildXml( implode( $rows ) );
 	} else {
+	    header( 'Content-disposition: inline; filename=' . basename( $outFile ) );
 		if( $dst['se_pubblica_amministrazione'] == 1 ){
 			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaPA_v1.2.1.xsl" ?>' . PHP_EOL ) );
 		} else {

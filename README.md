@@ -100,13 +100,13 @@ verrà letto automaticamente dal framework. Per qualsiasi dubbio fate riferiment
 oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_doxygen.build.sh) in modo
 da poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _usr/_docs/_build/html/.
 
-## esempi
-Ricordate inoltre che trovate numerosi esempi e file utili nella cartella _usr/_examples/, che è un'ottima base di
-partenza per iniziare a capire come funziona GlisWeb. Alcuni degli strumenti che troverete in questa cartella vi saranno
-molto utili anche quando sarete divenuti più esperti!
-
 # utilizzo
 Utilizzare GlisWeb è semplice e intuitivo! Una guida per gli utenti è in fase di sviluppo ed è disponibile a questo
 indirizzo http://s-url.it/gliswebdocs inoltre stiamo pubblicando una serie di video tutorial su questa playlist di YouTube
 http://s-url.it/gliswebvideos.
+
+## esempi
+Ricordate che numerosi esempi e file utili sono a disposizione nella cartella _usr/_examples/, che è un'ottima base di
+partenza per iniziare a capire come funziona GlisWeb. Alcuni degli strumenti che troverete in questa cartella vi saranno
+molto utili anche quando sarete divenuti più esperti!
 

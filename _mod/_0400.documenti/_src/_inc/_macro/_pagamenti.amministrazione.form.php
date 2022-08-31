@@ -65,13 +65,8 @@
 			'SELECT id, __label__ FROM iban_view'
 		);
 	}
-	// tendina iva
-	$ct['etc']['select']['id_iva'] = mysqlCachedIndexedQuery(
-		$cf['memcache']['index'],
-		$cf['memcache']['connection'],
-		$cf['mysql']['connection'],
-		'SELECT id, __label__ FROM iva_view '
-	);
+
+	
 
 	// tendina listini
 	$ct['etc']['select']['id_listini'] = mysqlCachedIndexedQuery(

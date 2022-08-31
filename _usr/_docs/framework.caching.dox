@@ -88,4 +88,27 @@
     Se $cf['contents']['cached'] è valorizzato a false nel file _src/_config/_330.pages.php, il risultato dell'elaborazione viene scritto su Memcache e le relative chiavi vengono
     valorizzate di conseguenza.
 
+    Twig
+    ----
+    Twig ha un suo sistema di caching [...]
+
+    [...] per favorire le operazioni di sviluppo e di test, è opportuno che la cache di Twig sia disabilitata a questi stage; una buona configurazione può essere:
+
+    \code{.json}
+    "twig": {
+      "profiles": {
+        "DEV": {
+          "debug": true
+        },
+        "TEST": {
+          "debug": false
+        },
+        "PROD": {
+          "debug": false,
+          "cache": "var/cache/twig/"
+        }
+      }
+    }
+    \endcode
+
 */

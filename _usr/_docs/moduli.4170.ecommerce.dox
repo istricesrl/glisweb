@@ -35,8 +35,7 @@
     - _usr/_examples/_ecommerce/_acquisto.03.php che simula la pagina di riepilogo del carrello che prepara la chiusura dell'ordine
     - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento, che deve capire se c'è stato un successo o un fallimento
     - _usr/_examples/_ecommerce/_esito.ck.php che simula la pagina di chiusura diretta del carrello
-    - _usr/_examples/_ecommerce/_esito.ok.php che simula la pagina di esito positivo del pagamento
-    - _usr/_examples/_ecommerce/_esito.ko.php che simula la pagina di esito negativo del pagamento
+    - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento
 
     le pagine di prodotto
     ---------------------
@@ -131,13 +130,50 @@
     Il lavoro del framework relativamente a questa forma di pagamento si riassume quindi nella compilazione del form con i dati corretti (compito svolto
     dalla pagina di riepilogo del carrello), al suo invio a PayPal, e alla gestione delle informazioni di ritorno tramite l'API vista sopra.
 
+    pagamento tramite PayPal Advanced checkout
+    ------------------------------------------
+
     pagamento tramite Nexi
     ----------------------
 
     [...] Nexi si comporta come PayPal per esito e annullamento (vedi https://ecommerce.nexi.it/specifiche-tecniche/codicebase.html)
 
-    personalizzazione delle pagine del carrello
-    ===========================================
+    note sull'implementazione di nuove forme di pagamento
+    -----------------------------------------------------
+
+    correlazioni fra il modulo e-commerce e gli altri moduli
+    ========================================================
+
+
+    correlazione con il modulo 0530.crediti
+    ---------------------------------------
+
+
+    correlazione con il modulo 3500.risorse
+    ---------------------------------------
+
+    [...] affinché un articolo metta una data risorsa in disponibilità dell'account che effettua l'acquisto, è necessario specificare i metadati:
+    - risorse|acquisto per indicare l'ID della risorsa da mettere disponibile all'account che ha effettuato l'acquisto
+    - se_login per indicare che è necessario aver effettuato il login per completare l'acquisto (diversamente non sarebbe possibile associare la risorsa)
+
+    correlazione con il modulo 0920.corsi
+    -------------------------------------
+
+    [...] 
+
+    correlazione con il modulo 0400.documenti
+    -----------------------------------------
+
+    [...] affinché un articolo incrementi il numero di crediti SAAS dell'account che effettua l'acquisto, è necessario specificare i metadati:
+    - crediti|incremento per indicare il numero di crediti da incrementare
+    - crediti|mastro per indicare l'ID del mastro su cui incrementare i crediti
+    - se_login per indicare che è necessario aver effettuato il login per completare l'acquisto (diversamente non sarebbe possibile attribuire i crediti)
+
+    personalizzazione dell'aspetto dell'e-commerce
+    ==============================================
+
+    note sul template Lydia
+    -----------------------
 
     personalizzazione delle pagine del carrello specifica per sito
     --------------------------------------------------------------
@@ -161,7 +197,15 @@
     }
     \endcode
 
-    guida all'implementazione di nuove forme di pagamento
-    =====================================================
+    domande frequenti
+    =================
+
+    In questa sezione sono state radunate le domande poste più di frequente sul modulo e-commerce.
+
+    come posso emettere automaticamente una fattura quando un carrello viene pagato?
+    --------------------------------------------------------------------------------
+
+    [...] creare una controller custom in mod/0400.documenti/src/inc/controllers/checkout.finally.success.php e inserire lì le logiche necessarie alla creazione
+    e all'invio della fattura.
 
 */

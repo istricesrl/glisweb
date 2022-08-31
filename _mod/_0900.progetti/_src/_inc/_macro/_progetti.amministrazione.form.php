@@ -69,7 +69,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_progetti_view'
     );
-    
+
     // tendina ruoli progetti
 	$ct['etc']['select']['ruoli_anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -140,8 +140,13 @@
         // controllo file
         if( file_exists( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] . '/etc/template.conf' ) ) {
 
+            // ricerca schemi
+            $schemi = array_merge(
+                glob( DIR_BASE . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE ),
+                glob( DIR_MOD_ATTIVI . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE )
+            );
+
             // tendina schemi
-            $schemi = glob( DIR_BASE . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE );
             foreach( $schemi as $t ) {
                 $ct['etc']['select']['schemi'][] = array( 'id' => basename( $t ), '__label__' => basename( $t ) );
             }

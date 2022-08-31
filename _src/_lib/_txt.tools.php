@@ -95,10 +95,14 @@
 
 	$t = wordwrap( $t, $w, "\n" );
 
-	if( $j === true ) {
+    if( substr( $t, 0, 1 ) == '-' ) {
+        $j = false;
+    }
+
+    if( $j === true ) {
 	    $lines = explode( "\n", $t );
-	    foreach( $lines as &$line ) {
-		if( substr( $line, -1 ) != '.' ) {
+	    foreach( $lines as $key => &$line ) {
+		if( substr( $line, -1 ) != '.' && $key !== array_key_last( $lines ) ) {
 		    $line = justify( $line );
 		}
 	    }
@@ -108,6 +112,21 @@
 	}
 
     }
+
+    function txtFullText( $t, $j = true, $w = REPORT_WIDTH ) {
+        return txtText( $t, $j, $w ) . PHP_EOL;
+    }
+
+    function txtSubtitle( $t, $c = '-', $d = NULL, $w = REPORT_WIDTH ) {
+
+        $t .= ' ';
+
+        $w -= strlen( $t );
+    
+        return $t . txtLine( $c, $w ) . PHP_EOL;
+    
+    }
+    
 
 function justify( $str, $maxlen = REPORT_WIDTH) {
 

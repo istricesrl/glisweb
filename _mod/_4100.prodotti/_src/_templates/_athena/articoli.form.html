@@ -61,6 +61,15 @@
                     <span class="label-top">nome</span>
                     {{ frm.input( table, '', '', 'nome', 'nome dell\'articolo', '', request ) }}
                 </div>
+                {% if '0920.corsi' in mods.active.array %}
+                <input type="hidden" id="art" name="articoli[metadati][0][id_articolo]" value="__parent_id__" >
+                <input type="hidden" id="lingua" name=articoli[metadati][0][id_lingua]" value="1" >
+                <input type="hidden" id="nome" name="articoli[metadati][0][nome]" value="periodo_iscrizione" >
+                <div class="col-auto">
+                    <span class="label-top">periodo</span>
+                    {{ frm.select( 'articoli', 'metadati', '0', 'testo', '', etc.select.periodi, request ) }}
+                </div>
+                {% endif %}
             </div>
         </fieldset>
 

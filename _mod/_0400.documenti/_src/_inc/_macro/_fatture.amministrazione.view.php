@@ -18,7 +18,7 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'fatture';
+	$ct['view']['table'] = 'fatture_attive';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'fatture.amministrazione.form';

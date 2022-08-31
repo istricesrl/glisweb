@@ -49,7 +49,7 @@
     }
 %}
 
-<fieldset style="margin-bottom: 25px">
+<fieldset>
     
     <div class="form-row">
     <div class="col-6">
@@ -57,7 +57,7 @@
         <div class="form-row">
         {% for b in etc.id_tipologia_todo %}
         <div class="col-4 text-right">
-            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
+            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
         </div>
         {% endfor %}
     </div>
@@ -76,7 +76,8 @@
     </div>
 </fieldset>
 {% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
-<legend>da fissare</legend>
+<fieldset>
+    <legend>da fissare</legend>
 {% for  e in etc.agenda_da_fissare.attivita %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
@@ -102,19 +103,21 @@
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
-            {% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if not data_programmazione %}il {{ data_programmazione|date('d/m/Y') }}{% else %}la settimana {{settimana_programmazione}}/{{anno_programmazione}}{% endif %}<br>
-		    {{ e.nome }}</span> &mdash; responsabile {{ e.anagrafica }}
+            <b>{{ e.__label__ }}</b><br>
+		    &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
 		</div>
 	    </div>
 	</div>
     </div>
 {% endfor %}
+</fieldset>
 {% endif %}
 
 {% for a,anno in etc.agenda %}
 
 {% for settimana, attivita in anno %}
-<legend>settimana {{ settimana }}</legend>
+<fieldset>
+    <legend>settimana {{ settimana }}</legend>
 
 {% if etc.todo_todo[a][settimana]|length > 0 %}
 {% for e in etc.todo_todo[a][settimana] %}
@@ -132,11 +135,13 @@
     </div>
     </div>
     {% endfor %}
+</fieldset>
 {% endif %}
 
 {% for  data,eventi_per_data in attivita %}
 {% if data %}
-<legend style="font-size: 100%; color:#383838;">{{ trans_day_hash[data|date('l', "Europe/Rome")] }} {{ data|date('d') }} {{ trans_month_hash[data|date('m')] }} {{ data|date('Y') }}</legend>
+<fieldset>
+    <legend style="font-size: 100%; color:#383838;">{{ trans_day_hash[data|date('l', "Europe/Rome")] }} {{ data|date('d') }} {{ trans_month_hash[data|date('m')] }} {{ data|date('Y') }}</legend>
     {% for ora,eventi_per_ora in eventi_per_data %}
     {% for e in eventi_per_ora %}
     {% if e.entita == 'a' %}
@@ -147,8 +152,8 @@
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
-            <span style="color:#747577; font-size: larger;">{% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %} <b>{{ e.nome }}</b> </span>
-		    {% if e.id_cliente %}<br><b>{{ e.cliente }}</b></span><span style="font-weight:normal;">{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %}</span> {% endif %} {% endif %}
+            <b>{{ e.nome }}</b>{% if e.id_todo %} su {{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
+		    {% if e.id_cliente %}<br>cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %}</span> {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>
 	    </div>
@@ -176,8 +181,10 @@
     {% endfor %}
     
     {% endfor %}
-    {% endif %}
+</fieldset>
+{% endif %}
 {% endfor %}
+
 {% endfor %}
 {% endfor %}
 

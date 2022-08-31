@@ -56,7 +56,8 @@ CREATE TABLE `attivita_view_static` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 --| 202204129030
-insert into  attivita_view_static select * from attivita_view
+INSERT INTO attivita_view_static select * from attivita_view
 
 
--- FINE
+--| FINE FILE
+

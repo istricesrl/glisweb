@@ -148,13 +148,15 @@
     function arraySortBy( $field, &$array, $direction = ARRAY_SORT_ASC ) {
 
 	usort( $array,
-	    create_function('$a, $b', '
-		$a = $a["' . $field . '"];
-		$b = $b["' . $field . '"];
-		if ( $a == $b ) return 0;
-		return ( $a ' . ( $direction == ARRAY_SORT_DSC ? '>' : '<' ) .' $b ) ? -1 : 1;
-	    ')
-	);
+	    function( $a, $b ) use ( $field, $direction ) {
+            $direction = ( $direction == ARRAY_SORT_ASC ) ? -1 : 1;
+            $a = $a[ $field ];
+            $b = $b[ $field ];
+            if ( $a == $b ) return 0;
+            if ( $a > $b ) return -1 * $direction;
+            if ( $a < $b ) return 1 * $direction;
+        }
+    );
 
 	return true;
 

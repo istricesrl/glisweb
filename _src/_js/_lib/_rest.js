@@ -61,16 +61,16 @@
 	    // $.when( getws( ws ) ).done( function( el ) { console.log( 'done' ); console.log( el ); } );
 
 	    $.ajax({
-		async: true,
-		url: ws,
-		method: 'GET',
-		headers: { accept: 'application/json' }
-	    }).done( function( data ) {
-//		console.log( e );
-		console.log(data);
-		// TODO se data è vuoto o se contiene errori, mostrare un'icona di avvertimento o una x
-		e.find('.media-left').first().html('<i class="fa fa-check">');
-		callback();
+			async: true,
+			url: ws,
+			method: 'GET',
+			headers: { accept: 'application/json' }
+			}).done( function( data ) {
+	//		console.log( e );
+			console.log(data);
+			// TODO se data è vuoto o se contiene errori, mostrare un'icona di avvertimento o una x
+			e.find('.media-left').first().html('<i class="fa fa-check">');
+			callback( data );
 	    });
 
 	}

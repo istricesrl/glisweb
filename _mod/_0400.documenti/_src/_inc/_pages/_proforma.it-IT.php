@@ -10,31 +10,30 @@
 	if( in_array( "6000.amministrazione", $cf['mods']['active']['array'] ) ) {
 
 		// vista proforma
-	$p['proforma.amministrazione.view'] = array(
-			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'proforma' ),
-			'h1'			=> array( $l		=> 'proforma' ),
-			'parent'		=> array( 'id'		=> 'amministrazione' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-			'macro'			=> array( $m . '_src/_inc/_macro/_proforma.amministrazione.view.php' ),
-			'etc'			=> array( 'tabs'	=> array(   'proforma.amministrazione.view' , 'righe.proforma.amministrazione.view') ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'proforma' ),
-															'priority'	=> '040' ) ) )	
+		$p['proforma.amministrazione.view'] = array(
+				'sitemap'		=> false,
+				'title'			=> array( $l		=> 'proforma' ),
+				'h1'			=> array( $l		=> 'proforma' ),
+				'parent'		=> array( 'id'		=> 'amministrazione' ),
+				'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+				'macro'			=> array( $m . '_src/_inc/_macro/_proforma.amministrazione.view.php' ),
+				'etc'			=> array( 'tabs'	=> array(   'proforma.amministrazione.view' , 'righe.proforma.amministrazione.view') ),
+				'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+				'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'proforma' ),
+																'priority'	=> '040' ) ) )	
 		);
 
 		// vista righe proforma
-	$p['righe.proforma.amministrazione.view'] = array(
-		'sitemap'		=> false,
-		'title'			=> array( $l		=> 'righe' ),
-		'h1'			=> array( $l		=> 'righe' ),
-		'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'			=> array( $m . '_src/_inc/_macro/_righe.proforma.amministrazione.view.php' ),
-		'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.view']['etc']['tabs'] ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
-	);
-
+		$p['righe.proforma.amministrazione.view'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'righe' ),
+			'h1'			=> array( $l		=> 'righe' ),
+			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_righe.proforma.amministrazione.view.php' ),
+			'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.view']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+		);
 
 		// gestione proforma
 		$p['proforma.amministrazione.form'] = array(

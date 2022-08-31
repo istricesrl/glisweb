@@ -57,20 +57,52 @@
 
     }
 
-    // prelevo una riga dalla coda
-    $row = mysqlSelectRow(
-        $cf['mysql']['connection'],
-        'SELECT mailing.*, '.
-		'mail.indirizzo, concat_ws( \' \', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS destinatario '.
-        'FROM mailing_mail '.
-		'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
-		'INNER JOIN mail ON mail.id = mailing_mail.id_mail '.
-		'INNER JOIN anagrafica ON anagrafica.id = mail.id_anagrafica '.
-        'WHERE token = ? ',
-        array(
-			array( 's' => $status['token'] )
-		)
-    );
+	// debug
+	// print_r( $status );
+	// print_r( $_REQUEST );
+
+	// se è specificata una mail di test
+	if( isset( $_REQUEST['mt'] ) && isset( $_REQUEST['mid'] ) && in_array( 'INVIO_DIRETTO_MAIL', array_keys( $_SESSION['account']['privilegi'] ) ) ) {
+
+		// simulo l'estrazione di una riga dalla coda
+		$row = array_replace_recursive(
+			mysqlSelectRow(
+				$cf['mysql']['connection'],
+				'SELECT mailing.* '.
+				'FROM mailing '.
+				'WHERE id = ? ',
+				array(
+					array( 's' => $_REQUEST['mid'] )
+				)
+			),
+			array(
+				'indirizzo' => $_REQUEST['mt'],
+				'destinatario' => 'DESTINATARIO DI TEST',
+				'timestamp_invio' => time()
+			)
+		);
+
+	} else {
+
+		// prelevo una riga dalla coda
+		$row = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT mailing.*, '.
+			'mail.indirizzo, concat_ws( \' \', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS destinatario '.
+			'FROM mailing_mail '.
+			'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
+			'INNER JOIN mail ON mail.id = mailing_mail.id_mail '.
+			'INNER JOIN anagrafica ON anagrafica.id = mail.id_anagrafica '.
+			'WHERE token = ? ',
+			array(
+				array( 's' => $status['token'] )
+			)
+		);
+
+	}
+
+	// debug
+	// print_r( $row );
 
     // se c'è almeno una mail da inviare
     if( ! empty( $row ) ) {
@@ -136,21 +168,29 @@
 		// aggiorno la coda
 		if( $invio ) {
 
-			// aggiorno la riga
-			$status['id'] = mysqlQuery(
-				$cf['mysql']['connection'],
-				'UPDATE mailing_mail '.
-				'SET mailing_mail.timestamp_generazione = ?, '.
-				'mailing_mail.id_mail_out = ?, '.
-				'token = NULL '.
-				'WHERE token = ? ',
-				array(
-					array( 's' => time() ),
-					array( 's' => $invio ),
-					array( 's' => $status['token'] )
-				)
-			);
-			
+			// se ho inviato dalla tabella mailing_mail
+			if( isset( $status['id'] ) && ! empty( $status['id'] ) ) {
+
+				// aggiorno la riga
+				$status['id'] = mysqlQuery(
+					$cf['mysql']['connection'],
+					'UPDATE mailing_mail '.
+					'SET mailing_mail.timestamp_generazione = ?, '.
+					'mailing_mail.id_mail_out = ?, '.
+					'token = NULL '.
+					'WHERE token = ? ',
+					array(
+						array( 's' => time() ),
+						array( 's' => $invio ),
+						array( 's' => $status['token'] )
+					)
+				);
+				
+			}
+
+			// status
+			$status['info'][] = 'mail generata correttamente con id #' . $invio;
+
 		} else {
 
 			// status

@@ -1,0 +1,23 @@
+<form action="{{ page.path[ localization.language.ietf ] }}" class="" id="form-login" method="post">
+	{% for e,d in request %}{% if d.id %}
+	<input type="hidden" name="{{ e }}[id]" value="{{ d.id }}">
+	<input type="hidden" name="{{ e }}[__method__]" value="get">
+	{% endif %}{% endfor %}
+	<fieldset>
+	    <legend>accesso utenti registrati</legend>
+	    <div class="form-group form-row">
+		<label class="d-none d-md-block col-md-4 col-form-label">username</label>
+		<div class="col-12 col-md-8"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username"></div>
+	    </div>
+	    <div class="form-group form-row">
+		<label class="d-none d-md-block col-md-4 col-form-label">password</label>
+		<div class="col-12 col-md-8"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
+	    </div>
+	    <div class="form-group form-row">
+		<div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">login</button></div>
+	    </div>
+	    <div class="form-group form-row">
+		<div class="col-12"><a href="{{ pages['password.reinsert'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">password dimenticata?</a></div>
+	    </div>
+	</fieldset>
+</form>

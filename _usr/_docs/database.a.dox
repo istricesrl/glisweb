@@ -68,7 +68,7 @@
     account_view.__label__                    | l'etichetta che descrive l'account
 
     Per approfondire la procedura di login si veda _src/_config/_210.auth.php; per il logout, si veda _src/_config/_220.auth.php. Per la registrazione
-    automatica degli account e per le logiche legate al token, si veda principalmente _mod/_0650.registrazione/_src/_inc/_macro/_registrazione.php.
+    automatica degli account e per le logiche legate al token, si veda principalmente _mod/_0350.registrazione/_src/_inc/_macro/_registrazione.php.
 
     account_gruppi
     --------------

@@ -54,8 +54,9 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 				    if( ! empty( $mv['label'] ) || ( count( $v ) > 0 && in_array( $k, $pages[ $active ]['parents']['id'] ) ) ) {
 
 					// se l'utente può visualizzare la pagina
+					// TODO trovare un modo per visualizzare nel menu con un'opzione anche le pagine per cui è richiesto poi il login
 					// @todo if( getPagePermission( $k ) )
-					    if( ! isset( $pages[ $k ]['auth']['groups'] ) || ( isset( $_SESSION['account']['gruppi'] ) && count( array_intersect( $pages[ $k ]['auth']['groups'], $_SESSION['account']['gruppi'] ) ) > 0 ) ) {
+					    if( ! isset( $pages[ $k ]['auth']['groups'] ) || ( isset( $_SESSION['account']['gruppi'] ) && count( array_intersect( $pages[ $k ]['auth']['groups'], $_SESSION['account']['gruppi'] ) ) > 0 ) || ( isset( $mv['visualizza'] ) && $mv['visualizza'] == SHOW_ALWAYS ) ) {
 
 						// debug
 						    // echo print_r( $mv, true );

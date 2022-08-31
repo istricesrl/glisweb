@@ -18,7 +18,7 @@
      */
 
     // tabella della vista
-    $ct['view']['table'] = 'righe_fatture';
+    $ct['view']['table'] = 'righe_fatture_attive';
 
     $ct['view']['open']['page'] = 'fatture.amministrazione.righe.form';
     $ct['view']['open']['table'] = 'documenti_articoli';

@@ -8,7 +8,8 @@
     {% include obj.include %}
     {% else %}
     {% if cnt == 0 %}<div class="form-row metro">{% endif %}
-    <div class="col-12 col-md-4">
+	{% if obj.colspan %}{% set colspan = obj.colspan %}{% else %}{% set colspan = 4 %}{% endif %}
+    <div class="col-12 col-md-{{ colspan }}">
 	{% if obj.url %}
 	<a href="{{ obj.host }}{{ obj.url }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
 	{% elseif obj.modal %}
@@ -22,7 +23,13 @@
 	{% endif %}
 	    <div class="media">
 		<div class="media-left">
+			{% if obj.fa %}
 		    <i class="fa {{ obj.fa }}"></i>
+			{% elseif obj.h4 %}
+			<h4>{{ obj.h4 }}</h4>
+			{% else %}
+			{{ obj.icon }}
+			{% endif %}
 		</div>
 		<div class="media-body">
 		    <h5 class="media-title">{{ obj.title }}</h5>
@@ -31,10 +38,10 @@
 	    </div>
 	</a>
     </div>
-    {% if cnt == 2 or loop.last %}</div>
+    {% if cnt == 12 or loop.last %}</div>
 	{% set cnt = 0 %}
 	{% else %}
-	{% set cnt = cnt + 1 %}
+	{% set cnt = cnt + colspan %}
     {% endif %}
     {% endif %}
 {% endfor %}

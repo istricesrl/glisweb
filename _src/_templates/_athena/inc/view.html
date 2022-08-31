@@ -10,12 +10,15 @@
 	    {% if view.insert.path %}
 	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
 	    {% endif %}
-	    {% if page.parents.path|length() > 1 and view.dashboard.sezione %}
+		{% if view.insert.options and view.insert.option.page %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ pages[ view.insert.option.page ].url[localization.language.ietf] }}?{% for o in view.insert.options %}{{ o.name }}={{ o.value }}{% if loop.index < (view.insert.options|length) %}&{% endif %}{% endfor %}','_self');"><i class="fa {{ view.insert.option.fa }}"></i></button>
+		{% endif %}
+		{% if page.parents.path|length() > 1 and view.dashboard.sezione %}
 	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
 	    {% endif %}
 		{% if etc.include.insert %}
 			{% for insert in etc.include.insert %}
-			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#{{ view.id }}-{{ insert.name }}').toggleAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').slideToggle(400,'swing');"><i class="fa {{ insert.fa }}"></i></button>
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('.view-insert:not(#{{ view.id }}-{{ insert.name }})').slideUp(400,'swing');$('.view-insert').setAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').toggleAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').slideToggle(400,'swing');"><i class="fa {{ insert.fa }}"></i></button>
 			{% endfor %}
 		{% endif %}
 	</div>
@@ -97,10 +100,11 @@
 		{{ session.__view__[ view.id ].__pager__.total }}
 	    </div>
 	    <div class="col-2 text-right">
-		{% if view.insert.path %}
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('/print/default.csv?t={{ view.table }}&v={{ session.__view__[ view.id ]|json_encode() }}','_blank');"><i class="fa fa-file-excel-o"></i></button>
+			{% if view.insert.path %}
 		    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
 		{% endif %}
-	    </div>
+		</div>
 	    {% else %}
 	    <div class="col col-form-label text-center">
 		nessun dato trovato

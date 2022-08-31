@@ -16,6 +16,9 @@
 	$base = shortPath( $base );
 	$parent = dirname( $path );
 
+	// TODO ognuna delle azioni seguenti dev'essere preceduta da un controllo sui privilegi dell'utente corrente
+	// bisogna essere sicuri che i guest non possano agire sul filesystem
+
     // creazione cartella
 	if( isset( $_REQUEST['cartella'] ) ) {
 		$cartella = $path . $_REQUEST['cartella'];

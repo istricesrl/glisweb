@@ -1,0 +1,113 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/documenti.form.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# MODULO RAPIDO #}
+		{% if etc.note %}
+		<fieldset>
+			<legend>note d'invio dell'ordine</legend>
+			<div class="form-group form-row">
+				<div class="col">
+				{{ etc.note }}
+				</div>
+			</div>
+		</fieldset>
+		{% endif %}
+	    <fieldset>
+			<legend>inserimento rapido riga</legend>
+			<div class="form-group form-row">
+				{% if '0500.mastri' in mods.active.array %}
+				<div class="col">
+					<span class="label-top remove-after-duplicate">scarico</span>
+					{{ frm.selectBox( '__evasione__', '', '-1', 'id_giacenza', '', '', '', '', '', 1, '', 'font-awesome', '', '', '', '', page, pages, ietf, '__report_giacenza_magazzini_foglie__' ) }}
+				</div>
+				{% endif %}
+				<div class="col-1">
+					<span class="label-top remove-after-duplicate">quantità</span>
+					{{ frm.input( '__evasione__', '', '-1', 'quantita', '', '', '', '', '', 1 ) }}
+				</div>
+				<div class="col-auto" >
+					<button type="sumbit" class="btn btn-sm btn-secondary btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">aggiungi</button>
+				</div>
+			</div>
+		
+			<legend>status evasione ordine</legend>
+
+			<div class="form-group form-row">
+				<div class="col">
+			
+					<table class="view-table">
+						<tr>
+							<th class="table-header-static">codice</th>
+							<th class="table-header-static">prodotto</th>
+							<th class="table-header-static">richiesto</th>
+							<th class="table-header-static">inserito</th>
+							<th class="table-header-static">mancante</th>
+						</tr>
+						{% for row in etc.evasione %}
+						<tr>
+							<td>{{ row.codice_prodotto }}</td>
+							<td>{{ row.prodotto }}</td>
+							<td>{{ row.quantita_ordinata }} {{ row.udm }}</td>
+							<td>{{ row.quantita_evasa }} {{ row.udm }}</td>
+							<td>{% if row.quantita_da_evadere > 0 %}{{ row.quantita_da_evadere }} {{ row.udm }}{% else %}<i class="fa fa-check"></i>{% endif %}</td>
+						</tr>
+						{% endfor %}
+					</table>
+			
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12" >
+					<button type="button" class="btn btn-secondary btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard" onclick="window.open('{{ pages['ordini.magazzini.form.chiusura'].url[localization.language.ietf] }}?documenti[id]={{ etc.ordine.id }}&__backurl__={{ page.backurl[ ietf ] }}','_self');">concludi evasione ordine</button>
+				</div>
+			</div>
+
+        </fieldset>
+
+    </form>
+</div>
+</section>
+
+{% endblock %}

@@ -17,5 +17,5 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'commerciale' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'commerciale' ),
-														'priority'	=> '310' ) ) )	
+														'priority'	=> '190' ) ) )	
     );

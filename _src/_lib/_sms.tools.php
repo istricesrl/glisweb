@@ -24,6 +24,9 @@
      */
     function queueSmsFromTemplate( $c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $server = NULL ) {
 
+        // debug
+        // print_r( $t );
+
         // valuto il template manager
         switch( $t['type'] ) {
 

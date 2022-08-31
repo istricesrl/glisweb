@@ -76,7 +76,7 @@
 			<div class="form-group form-row">
 				<div class="col-12">
 				<span class="label-top">descrizione</span>
-				{{ frm.textarea( table, '', '', 'testo', '', 2, request ) }}
+				{{ frm.textarea( table, '', '', 'testo', '', 5, request ) }}
 				</div>
 			</div>
 	
@@ -126,12 +126,22 @@
 			<fieldset>
 				<legend>attribuzione</legend>
 		
+				{% if '0900.progetti' in mods.active.array %}
 				<div class="form-group form-row">
 					<div class="col-12">
 						<span class="label-top">progetto</span>
-						{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetto, request, '', 1,'','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
+						{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetto, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
 					</div>
 				</div>
+				{% endif %}
+				{% if 'V300.immobiliari' in mods.active.array %}
+				<div class="form-group form-row">
+					<div class="col-12">
+						<span class="label-top">immobile</span>
+						{{ frm.selectBox( table, '', '', 'id_immobile', '', etc.select.immobili, request, '', '','','','','immobili.form','','immobili', 'id_immobile' , page, pages, ietf,'immobili' ) }}
+					</div>
+				</div>
+				{% endif %}
 
 				{% if request[table].id %}
 

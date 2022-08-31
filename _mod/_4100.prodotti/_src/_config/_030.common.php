@@ -8,8 +8,8 @@
      * 
      */
 
-    $cf['prodotti']['pages']['scheda']['template']        = '_src/_templates/_arianna/';
-    $cf['prodotti']['pages']['scheda']['schema']            = 'scheda.prodotti.html';
+    $cf['prodotti']['pages']['scheda']['template']        = '_src/_templates/_lydia/';
+    $cf['prodotti']['pages']['scheda']['schema']            = 'scheda.prodotto.html';
     $cf['prodotti']['pages']['scheda']['css']            = 'main.css';
     $cf['prodotti']['pages']['scheda']['macro']            = array('_mod/_4100.prodotti/_src/_inc/_macro/_prodotti.scheda.php');
     

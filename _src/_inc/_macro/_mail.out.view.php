@@ -50,10 +50,16 @@
     // trasformazione indirizzi
 	foreach( $ct['view']['data'] as $key => &$row ) {
 
-        $row['timestamp_invio'] = date( 'Y-m-d H:i', $row['timestamp_invio']);
+        if( ! empty( $row['timestamp_invio'] ) ) {
+            $row['timestamp_invio'] = date( 'Y-m-d H:i', $row['timestamp_invio'] );
+        } else {
+            $row['timestamp_invio'] = 'in uscita';
+        }
+
         foreach( $row as $k => $v ) {
             if( in_array( $k, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
                 $row[ $k ] = htmlentities( array2mailString( unserialize( $v ) ) );
             }
         }
-	}
+
+    }

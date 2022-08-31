@@ -60,16 +60,19 @@
                     </div>
                     {% if not request[ table ].numero %}
                     <div class="col-12 col-md-auto">
-                        {{ frm.button(  'OTTIENI NUMERO' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroFattura(\'documenti_numero\',$(\'#documenti_id_emittente\').val(),$(\'#documenti_sezionale\').val(),$(\'#documenti_id_tipologia\').val());','ottieni in modo automatico il progressivo' ) }}
+                        {{ frm.button(  'OTTIENI NUMERO' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroDocumento(\'documenti_numero\',$(\'#documenti_id_emittente\').val(),$(\'#documenti_sezionale\').val(),$(\'#documenti_id_tipologia\').val());','ottieni in modo automatico il progressivo' ) }}
                     </div>
                     {% endif %}
                     <div class="col-4 col-md-1">
                         <span class="label-top">numero</span>
                         {{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
                     </div>
+                    {% if request.__ordine_da_evadere__ %}
+                        {% set default_nome = 'evasione '  ~ etc.ordine.nome  ~ ' numero '  ~ etc.ordine.numero  ~ '/' ~ etc.ordine.sezionale ~ ' del '  ~ etc.ordine.data %}
+                    {% endif %}
                     <div class="col-4 col-md">
                         <span class="label-top">nome</span>
-                        {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+                        {{ frm.inputRequired( table, '', '', 'nome', '', '', request, default_nome ) }}
                     </div>
                 </div>
 
@@ -84,7 +87,7 @@
 				<div class="form-group form-row">
 					<div class="col-12 col-md">
 						<span class="label-top">emittente</span>
-						{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_emittente' , page, pages, ietf,'anagrafica' ) }}
+						{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, etc.ordine.id_destinatario, '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_emittente' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 					{% if request[ table ].id %}
 					<div class="col-12 col-md-8">
@@ -98,7 +101,7 @@
 				<div class="form-group form-row">
 					<div class="col-12 col-md">
 						<span class="label-top">destinatario</span>
-						{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
+						{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request,  etc.ordine.id_emittente, '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
 					</div>
 					{% if request[ table ].id %}
 					<div class="col-12 col-md-8">
@@ -109,6 +112,14 @@
 				</div>
 
             </fieldset>
+
+            {% if request.__ordine_da_evadere__ %}
+            {% set subtable = 'relazioni_documenti' %}
+            <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][__reset__]" value="">
+            <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][id_documento]" value="__parent_id__">
+            <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][id_ruolo]" value="3">
+            <input type="hidden" id="reset" name="{{ table }}[{{ subtable }}][0][id_documento_collegato]" value="{{ request.__ordine_da_evadere__ }}">
+            {% endif %}
 
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">

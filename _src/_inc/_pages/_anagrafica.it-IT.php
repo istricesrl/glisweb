@@ -114,7 +114,7 @@
 	}
 
 	// RELAZIONI CON IL MODULO AGENDA
-	if( in_array( "9000.agenda", $cf['mods']['active']['array'] ) ) {
+	if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.attivita' );
 	}
 

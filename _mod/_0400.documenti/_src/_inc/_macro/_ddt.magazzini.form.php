@@ -84,5 +84,17 @@
 	    );
 	   } 
 
+	if( isset( $_REQUEST['__ordine_da_evadere__'] ) ){
+
+		$ct['etc']['ordine'] = mysqlSelectRow(
+	        $cf['mysql']['connection'],
+	        'SELECT * FROM documenti WHERE id = ? ',
+            array( array( 's' => $_REQUEST['__ordine_da_evadere__'] ) )
+	    );
+	}
+
+	// macro di default per l'entità DDT
+	require DIR_BASE . '_mod/_0400.documenti/_src/_inc/_macro/_ddt.magazzini.form.default.php';
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

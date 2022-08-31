@@ -32,6 +32,18 @@
 	    )
 	);
 
+    if( empty( $_REQUEST[ $ct['form']['table'] ]['timestamp_chiusura'] ) ) {
+
+        // chiusura documento
+        $ct['page']['contents']['metro']['amministrazione'][] = array(
+            'host' => $ct['site']['url'],
+            'ws' => $base . '_chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'icon' => NULL,
+            'fa' => 'fa-check-square-o',
+            'title' => 'chiudi documento',
+            'text' => 'chiudi con data e ora attuale il documento'
+        );
+    }
 /*
 
     // amministrazione documento

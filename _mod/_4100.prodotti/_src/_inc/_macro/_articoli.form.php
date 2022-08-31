@@ -45,11 +45,11 @@
 	);
 
     // tendina taglie
-	$ct['etc']['select']['taglie'] = mysqlCachedIndexedQuery(
+	/*$ct['etc']['select']['taglie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM taglie_view' );
+        'SELECT id, __label__ FROM taglie_view' );*/
 
     // tendina unità di misura
 	$ct['etc']['select']['udm'] = mysqlCachedIndexedQuery(
@@ -101,7 +101,16 @@
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] ) ));
     }
 */
-
+    // tendina per mascherare il periodo di riferimento degli articoli rispetto ai corsi
+    $ct['etc']['select']['periodi'] = array(
+        array( 'id' => 'totale', '__label__' => 'totale' ),
+        array( 'id' => 'quadrimestrale', '__label__' => 'quadrimestrale' ),
+        array( 'id' => 'trimestrale', '__label__' => 'trimestrale' ),
+        array( 'id' => 'bimestrale', '__label__' => 'bimestrale' ),
+        array( 'id' => 'mensile', '__label__' => 'mensile' ),
+        array( 'id' => 'settimanale', '__label__' => 'settimanale' ),
+        array( 'id' => 'giornata', '__label__' => 'giornata' )
+    );
     // macro di default per l'entità articoli
     require DIR_MOD . '_4100.prodotti/_src/_inc/_macro/_articoli.form.default.php';
 

@@ -16,6 +16,9 @@
 		    // creo il token
 			$tk = md5( $account['id'] . $_REQUEST['__pwreset__']['email'] . rand( 0, rand( 10000, 99999 ) ) . microtime() );
 
+			// se non è settata una pagina di ritorno, la imposto a default
+			$pg = ( isset( $_REQUEST['pg'] ) ) ? $_REQUEST['pg'] : 'password.reset';
+
 		    // debug
 			// echo $tk;
 
@@ -30,7 +33,7 @@
 			$invio = queueMailFromTemplate(
 			    $cf['mysql']['connection'],
 			    $cf['mail']['tpl'][ 'DEFAULT_REIMPOSTAZIONE_PASSWORD'],
-			    array( 'dt' => array( 'tk' => $tk ), 'ct' => $ct ),
+			    array( 'dt' => array( 'tk' => $tk, 'pg' => $pg ), 'ct' => $ct ),
 			    strtotime( '+1 minutes' ),
 			    array( $_REQUEST['__pwreset__']['email'] => $_REQUEST['__pwreset__']['email'] ),
 			    $cf['localization']['language']['ietf']

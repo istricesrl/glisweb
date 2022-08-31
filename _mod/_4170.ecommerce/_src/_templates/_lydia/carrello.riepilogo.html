@@ -1,0 +1,54 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+{% if session.carrello.se_login and not session.account.id %}
+    <div>
+        <p>per poter completare questo ordine, devi aver effettuato il login</p>
+    </div>
+    {% include 'inc/login.html' %}
+{% elseif etc.client_token %}
+    {# PAYPAL ADVANCED #}
+    {% if ecommerce.profile.provider['paypal-advanced'].return_url %}
+    <script> var return_url = "{{ ecommerce.profile.provider['paypal-advanced'].return_url }}";</script>';
+    {% endif %}
+    <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id={{ ecommerce.profile.provider['paypal-advanced'].client_id }}" data-client-token="{{ etc.client_token }}"></script>
+    <div id="paypal-button-container" class="paypal-button-container"></div>
+    <script src="/_src/_js/_lib/_paypal.js"></script>
+{% else %}
+    {# ALTRE FORME DI PAGAMENTO #}
+    <div class="container d-flex flex-fill">
+        <div class="row d-flex flex-fill">
+            <div class="col d-flex flex-fill">
+                <form id="carrello" class="carrello d-flex flex-fill" method="{{ etc.meta.method }}" action="{{ etc.meta.action }}">
+                    {% for name,value in etc.fields %}
+                    <input type="hidden" name="{{ name }}" value="{{ value }}">
+                    {% endfor %}
+
+                    <div class="row d-none d-flex flex-fill">
+                        <div class="col-12 col-form-label col-form-label-sm justify-content-center d-flex">
+                            <button class="btn btn-sm btn-secondary align-self-center text-center btn-loader p-3" type="submit">
+                                <p class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></p>
+                                <p>clicca qui se non vieni indirizzato automaticamente alla pagina di pagamento</p>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endif %}
+
+{% endblock %}
+
+{% block javascript %}
+{% if etc.meta.autosubmit %}
+<script>
+    window.addEventListener( 'DOMContentLoaded', function() {
+	    $('#carrello').submit();
+    });
+</script>
+{% endif %}
+{% endblock %}

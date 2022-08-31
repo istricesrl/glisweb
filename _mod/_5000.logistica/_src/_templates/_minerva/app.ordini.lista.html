@@ -1,0 +1,64 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends 'ext/main.html' %}
+
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{% block main %}
+
+<form id="form-filtro" class="form-main form-horizontal d-flex flex-column flex-fill" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+    <div class="container-fluid pannello-cassa form-row" style="overflow: hidden;">
+
+        <div class="col-12 align-items-center mt-3"  >
+            <legend><b>lista ordini</b></legend>
+            <div class="form-row">
+                <div class="col">
+                    <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+                </div>
+            </div>
+            <div class="box mt-2" style="height: 70vh;" >
+                {% for row in view.data %}
+                <div class="media" style="background-color: rgb(192, 192, 192); color: black;">
+                   
+                    <div class="media-body p-3 col-10 " style="background-color: rgb(192, 192, 192); color: black;">
+                      <h3 class="mt-0">{{ row.__label__ }}</h3>
+                      <h4>emittente: {{ row.emittente }}</h4>
+                      <h5>creato il {{ row.data|date("d/m/Y") }} | {% if row.timestamp_invio %}confermato il {{ row.timestamp_invio|date('d/m/Y H:i') }} {% if row.timestamp_chiusura %}| evaso il {{ row.timestamp_chiusura|date('d/m/Y H:i') }}{% else %}| da evadere{% endif %} {% else %}da confermare{% endif %} </h5>
+                    </div>
+                    <div class="col-2 justify-content-center align-self-center">
+                        <button type="button" class="btn" onclick=" window.open( '{{ site.url }}_mod/_0400.documenti/_src/_api/_print/_ordine.pdf.php?__documento__={{row.id}}', '_blank');" ><i class="fa fa-file-pdf-o fa-3x" aria-hidden="true"></i></button>
+                        {% if not row.timestamp_invio %}<button type="button" class="btn" onclick=" window.open( '{{ pages[ "app.ordini.nuovo" ].path[ietf] }}__documento__={{row.id}}', '_self');" ><i class="fa fa-pencil fa-3x" aria-hidden="true"></i></button>{% endif %}
+                    </div>
+                  </div>
+                  {% endfor %}
+            </div>
+        </div>
+    </div>  
+</form>
+{% endblock %}

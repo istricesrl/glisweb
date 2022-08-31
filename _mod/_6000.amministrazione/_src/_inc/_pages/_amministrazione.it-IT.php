@@ -17,5 +17,5 @@
 		'etc'			=> array( 'tabs'	=> array(	'amministrazione' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'amministrazione' ),
-														'priority'	=> '320' ) ) )
+														'priority'	=> '210' ) ) )
 	);

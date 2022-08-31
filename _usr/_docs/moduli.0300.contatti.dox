@@ -88,6 +88,18 @@
     }
     \endcode
 
+    [...] specificare una o più controller custom da attivare all'invio del modulo:
+
+    \code{.json}
+    "contatti": {
+        "esempio": {
+            "controller": [
+                "percorso/per/la/controller.php"
+            ]
+        }
+    }
+    \endcode
+
     gestione dei dati in arrivo
     ===========================
 
@@ -139,6 +151,21 @@
             )
 	    )
     );
+    \endcode
+
+    invio di un messaggio su Slack
+    ------------------------------
+
+    [...] creare un modulo che invii i dati tramite Slack (per il nome del webhook si faccia riferimento a $cf['slack]['profile]['webhooks]):
+
+    \code{.json}
+    "contatti": {
+        "esempio": {
+            "slack": {
+                "webhook": "nomeWebHook"
+            }
+        }
+    }
     \endcode
 
     salvataggio sul database

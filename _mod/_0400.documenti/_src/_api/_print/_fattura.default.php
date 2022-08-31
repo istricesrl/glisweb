@@ -25,6 +25,9 @@
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
 
+    // debug
+    // print_r( $doc );
+
     // verifico la presenza del progressivo di invio
 	if( empty( $doc['progressivo_invio'] ) ) { dieText( 'progressivo invio mancante' ); }
 
@@ -50,7 +53,6 @@
      */
 
     // TODO
-
     $doc['condizioni_pagamento'] = $doc['codice_pagamento'];
 
     /**
@@ -140,9 +142,8 @@
         $cf['mysql']['connection'],
         'SELECT modalita_pagamento.codice AS codice_pagamento, '.
         'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
-        ' importo_netto_totale AS importo_lordo_totale, iban.iban AS iban  '.
+        'pagamenti.importo_lordo_totale, iban.iban AS iban  '.
         'FROM pagamenti '.
-        'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
         'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
         'WHERE pagamenti.id_documento = ?',
@@ -186,7 +187,7 @@
 	);
 
     // verifico la presenza del progressivo di invio
-	if( empty( $src['codice_archivium'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }
+	if( empty( $src['codice_archivium'] ) && ! empty( $cf['archivium']['profile'] ) ) { dieText( 'codice archivium azienda inviante vuoto' ); }
 
     // denominazione fiscale
     $src['denominazione_fiscale'] = trim( $src['nome'] . ' ' . $src['cognome'] . ' ' . $src['denominazione'] );
@@ -226,18 +227,8 @@
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
 
-
-/**
- * NOTA è possibile emettere fattura elettronica verso privati senza SDI e PEC specificando '0000000'
- * lasciando vuoto il campo PECDestinatario e omettendo il campo IdFiscaleIVA
-    // verifico la presenza di SDI o PEC del destinatario
-    if( $dst['codice_sdi'] == '0000000' && empty( $dst['pec_sdi'] ) ) {
-        dieText('PEC e SDI assenti' );
-    }
- */
-
-    // codice SDI di default a '0000000' per i destinatari senza codice SDI
-    if( empty( $dst['codice_sdi'] ) && ! empty( $dst['id_pec_sdi'] ) ) {
+    // codice SDI di default a '0000000' per i privati senza codice SDI
+    if( empty( $dst['codice_sdi'] ) && empty( $dst['partita_iva'] ) ) {
         $dst['codice_sdi'] = '0000000';
     }
 
@@ -246,7 +237,8 @@
         dieText('valore non corretto per codice SDI: ' . $dst['codice_sdi'] );
     }
 
-    if( !empty($dst['id_pec_sdi'])){
+    // destinatari con PEC
+    if( ! empty( $dst['id_pec_sdi'] ) ) {
         $dst['pec_sdi'] =  mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT indirizzo from mail where id = ?',
@@ -272,6 +264,9 @@
         'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
         array( array( 's' => $dst['id'] ) )
     );
+
+    // debug
+    // print_r( $dsi );
 
     // indirizzo fiscale
     $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
@@ -313,4 +308,48 @@
 
     // file di output
 	$outFile = $outFilePath . $outFileName;
+
+    /**
+     * Fattura elettronica a privato senza p iva: obbligo di legge
+     * Emettere Fattura elettronica a privato senza p iva è obbligatorio. È la legge a stabilirlo. Ed è obbligatorio sin dal primo gennaio 2019 per effetto della Legge di Bilancio. Una regola che riguarda tutte le operazioni B2C che hanno per oggetto la cessione di beni mobili e immobili effettuate da un soggetto IVA verso un cliente o un consumatore finale. Nonostante questa specifica esistono come 4 eccezioni alla regola principale. In altre parole alcuni soggetti sono esonerati dall’obbligo di emettere fattura elettronica a privato senza p iva. È questo il caso, ad esempio, dei contribuenti che agiscono nel regime forfettario. È comunque sempre possibile adottarla come scelta libera.
+     * 
+     * Fattura elettronica a privato senza p iva, senza codice destinatario e senza PEC
+     * I privati senza partita Iva non hanno alcun obbligo di dotarsi di PEC, oppure di codice destinatario, anche se devono ricevere una fattura elettronica. Resta il fatto che, in alcuni casi, un’azienda o un professionista debba emettere fattura elettronica a privato senza p iva. In questo caso, in fase di compilazione della e-fattura, deve:
+     * 
+     * inserire il codice convenzionale: “0000000” (7 zeri) nel campo “CodiceDestinatario”
+     * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
+     * Lasciare vuoto il campo “PECDestinatario”.
+     * Inoltre il Provvedimento 89757 del Direttore dell’Agenzia delle entrate ha stabilito che:
+     * 
+     * Il Sistema di Interscambio recapita la fattura elettronica al destinatario direttamente nell’area riservata del sito di AdE
+     * È obbligatorio consegnare al cliente una copia cartacea o digitale ed informarlo che l’originale si trova sul sito dell’Agenzia delle Entrate
+     * Inoltre è importante sapere che alcuni software/piattaforme sono in grado di convertire il formato XML in uno leggibile in altri formati desiderati.
+     * 
+     * Fattura elettronica a privato senza p iva, senza codice univoco, ma con PEC
+     * Può capitare che qualche privato abbia la PEC, ma non per questo il codice univoco. In questi casi allora bisogna:
+     * 
+     * inserire il codice convenzionale: “0000000” (7 zeri) nel campo “CodiceDestinatario”
+     * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
+     * compilare il campo “PECDestinatario”.
+     * Il sistema di Interscambio, questa volta, recapiterà alla PEC del destinatario la fattura elettronica. SDI mette comunque a disposizione del destinatario una copia della fattura all’interno dell’area privata sul sito di agenzia delle Entrate.
+     * 
+     * Fattura elettronica a privato senza p iva
+     * 
+     * Privato senza p iva, con codice univoco
+     * Anche se si tratta di un caso davvero molto raro, è pur sempre probabile. In questo caso, in fase di compilazione della fattura elettronica bisogna:
+     * 
+     * inserire nel campo “CodiceDestinatario” il codice comunicato
+     * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
+     * Compilare o meno il campo “PECDestinatario”.
+     * Per quanto riguarda l’invio invece SDI recapita la fattura elettronica all’indirizzo corrispondente al codice destinatario.
+     * 
+     * Privato senza p iva e cliente estero
+     * Si tratta di un caso piuttosto frequente, che deve essere gestito come segue:
+     * 
+     * inserire il codice convenzionale: “XXXXXXX” (7 volte X) nel campo “CodiceDestinatario”
+     * indicare nel campo “CodiceFiscale” il codice fiscale del destinatario
+     * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
+     * In questo specifico caso però il Sistema di Interscambio non è in grado di recapitare la fattura elettronica al destinatario. Questo perché non la può recapitare all’estero, visto che il sistema di fatturazione elettronica esiste (al momento) solo in Italia. Questo significa che la fattura deve essere consegnata a mano al cliente. Il formato può essere cartaceo, oppure digitale nella forma che lui desidera.
+     * 
+     */
 

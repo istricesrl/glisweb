@@ -25,7 +25,7 @@
 		// se sono presenti dati
 		    if( isset( $d ) && is_array( $d ) ) {
 
-			// se i dati riguardano un singolo oggetto
+				// se i dati riguardano un singolo oggetto
 			    if( in_array( 'id', $ks ) ) {
 
 				// elaboro i campi

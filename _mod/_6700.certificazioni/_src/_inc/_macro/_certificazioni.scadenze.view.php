@@ -15,9 +15,9 @@
    // tabella della vista
    $ct['view']['table'] = 'anagrafica_certificazioni';
 
-   $ct['view']['id'] = md5(
+  /* $ct['view']['id'] = md5(
       $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
-   );
+   );*/
     
    // pagina per la gestione degli oggetti esistenti
   $ct['view']['open']['page'] = 'anagrafica.certificazioni.form';

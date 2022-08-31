@@ -55,6 +55,7 @@
     regimi                          | 029800    | base          | principale    | contiene i regimi fiscali
     regioni                         | 030200    | base          | principale    | contiene le regioni
     ruoli_anagrafica                | 034000    | ricorsiva     | ruoli         | contiene i ruoli svolti dalle anagrafiche
+    ruoli_articoli                  | 034100    | ricorsiva     | ruoli         | contiene i ruoli svolti dagli articoli
     ruoli_audio                     | 034200    | ricorsiva     | ruoli         | contiene i ruoli svolti dagli audio
     ruoli_file                      | 034400    | ricorsiva     | ruoli         | contiene i ruoli svolti dai file
     ruoli_immagini                  | 034600    | ricorsiva     | ruoli         | contiene i ruoli svolti dalle immagini
@@ -117,18 +118,32 @@
     anagrafica_categorie            | 000500    | relazione     | principale    | mette in relazione anagrafica e categorie_anagrafica
     anagrafica_certificazioni       | 000600    | relazione     | secondaria    | mette in relazione anagrafica e certificazioni
     anagrafica_cittadinanze         | 000700    | relazione     | principale    | mette in relazione anagrafica e stati
+    anagrafica_consensi             | 000800    | relazione     | principale    | mette in relazione anagrafica e conesnis
     anagrafica_indirizzi            | 000900    | relazione     | principale    | mette in relazione anagrafica e indirizzi
     anagrafica_settori              | 001200    | relazione     | principale    | mette in relazione anagrafica e settori
     articoli                        | 001300    | base          | principale    | contiene gli articoli
     articoli_caratteristiche        | 001600    | relazione     | principale    | mette in relazione articoli e caratteristiche_prodotti
     attivita                        | 001800    | base          | principale    | contiene le attività
     audio                           | 002100    | base          | contenuti     | contiene gli audio
+    banner                          | 002300    | base          | principale    | contiene i banner
+    banner_azioni                   | 002400    | relazione     | secondaria    | mette in relazione banner e azioni
+    banner_pagine                   | 002500    | relazione     | secondaria    | mette in relazione banner e pagine
+    banner_zone                     | 002600    | relazione     | secondaria    | mette in relazione banner e zone
+    caratteristiche_immobili        | 002800    | base          | secondaria    | contiene le caratteristica di indirizzi, edifici e immobili
     caratteristiche_prodotti        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
+    carrelli                        | 003000    | base          | principale    | contiene i carrelli necessari per l'ecommerce
+    carrelli_articoli               | 003050    | relazione     | secondaria    | mette in relazioni articoli e carrelli
+    carrelli_consensi               | 003060    | relazione     | secondaria    | mette in relazione carrelli e consensi
+    carrelli_documenti              | 003070    | relazione     | secondaria    | mette in relazioni documenti e carrelli
     categorie_notizie               | 003700    | ricorsiva     | categorie     | contiene le categorie di notizie
     categorie_prodotti              | 003900    | ricorsiva     | categorie     | contiene le categorie di prodotti
     categorie_progetti              | 004300    | ricorsiva     | categorie     | contiene le categorie di progetti
     categorie_risorse               | 004500    | ricorsiva     | categorie     | contiene le categorie di risorse
+    causali                         | 004600    | base          | principale    | contiene le causali per i documenti
     chiavi                          | 004800    | base          | principale    | contiene le chiavi
+    colli                           | 005000    | base          | principale    | contiene i colli
+    consensi                        | 006400    | base          | principale    | contiene i consensi
+    consensi_moduli                 | 006500    | relazione     | principale    | mette in relazione i consensi ed i moduli
     contatti                        | 006700    | base          | principale    | contiene i contatti
     contenuti                       | 006900    | base          | contenuti     | contiene i testi
     contratti                       | 007200    | base          | principale    | contiene i contratti
@@ -177,6 +192,7 @@
     prodotti_categorie              | 026400    | relazione     | principale    | mette in relazione prodotti e categorie_prodotti
     progetti                        | 027000    | base          | principale    | contiene i progetti
     progetti_anagrafica             | 027200    | relazione     | principale    | mette in relazione progetti e anagrafica
+    progetti_articoli               | 027300    | relazione     | secondaria    | mette in relazione i progetti e gli articoli
     progetti_categorie              | 027400    | relazione     | principale    | mette in relazione progetti e categorie_progetti
     progetti_certificazioni         | 027600    | relazione     | principale    | mette in relazione progetti e certificazioni
     progetti_matricole              | 027800    | relazione     | principale    | mette in relazione progetti e matricole
@@ -185,6 +201,7 @@
     rinnovi                         | 031500    | base          | secondaria    | contiene i rinnovi dei contratti
     rinnovi_documenti_articoli      | 031550    | relazione     | secondaria    | mette in relazione rinnovi e documenti_articoli
     risorse                         | 032000    | base          | principale    | contiene le risorse
+    risorse_account                 | 032100    | relazione     | principale    | mette in relazione risorse e account per l'acquisto di risorse
     risorse_anagrafica              | 032200    | relazione     | principale    | mette in relazione risorse e anagrafica
     risorse_categorie               | 032400    | relazione     | principale    | mette in relazione risorse e categorie_risorse
     sms_out                         | 041000    | base          | principale    | contiene gli SMS in uscita
@@ -219,19 +236,22 @@
     modulo      | codice    | tabella
     ------------|-----------|----------------------------------------------------------
     BASE        | 0000      | account, account_gruppi, account_gruppi_attribuzione, anagrafica, anagrafica_categorie, anagrafica_certificazioni, anagrafica_cittadinanze, anagrafica_indirizzi, anagrafica_settori, categorie_anagrafica, certificazioni, colori, comuni, continenti, embed, gruppi, iban, indirizzi, iva, job, lingue, liste, liste_mail, luoghi, mail, mail_out, mail_sent, mailing, mailing_liste, mailing_mail, metadati, periodicita, ranking, regimi, regioni, relazioni_anagrafica, ruoli_anagrafica, ruoli_indirizzi, settori, sms_out, sms_sent, stati, stati_lingue, task, telefoni, template, tipologie_anagrafica, tipologie_indirizzi, tipologie_luoghi, tipologie_telefoni, tipologie_url, udm, url, valute
-    CONTATTI    | 0300      | contatti, tipologie_contatti
+    CONTATTI    | 0300      | anagrafica_consensi, consensi, consensi_moduli, contatti, tipologie_contatti
     PRODUZIONE  | 1000      | categorie_progetti, contratti,pianificazioni, progetti, progetti_anagrafica, progetti_categorie, progetti_certificazioni,relazioni_progetti, rinnovi, rinnovi_documenti_articoli, ruoli_anagrafica, tipologie_contratti,tipologie_progetti, todo, todo_matricole
     ATTIVITA    | 1100      | attivita, matricole, pianificazioni, tipologie_attivita, todo
     MAGAZZINI   |           | mastri, matricole, tipologie_mastri
     CONTENUTI   | 3000      | audio, contenuti, file, immagini, menu, metadati, pagine, pubblicazioni, redirect, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_pubblicazioni, video
     POPUP       |           | popup, popup_pagine, pubblicazioni, tipologie_popup, tipologie_pubblicazioni
+    BANNER      | 3300      | banner, banner_azioni, banner_pagine, banner_zone
     NOTIZIE     |           | audio, contenuti, file, categorie_notizie, immagini, menu, metadati, notizie notizie_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_notizie, tipologie_pubblicazioni, video
-    RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
+    RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_account, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
-    PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, matricole, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
+    PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, matricole, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_articoli, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
     DOCUMENTI   |           | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     CASSE       | 6500      | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     SOFTWARE    |           | chiavi, licenze, licenze_software, relazioni_software, software, tipologie_chiavi, tipologie_licenze
+    IMMOBILIARE | V300      | caratteristiche_immobili, edifici, immobili
+    ECOMMERCE   |           | carrelli, carrelli_articoli, carrelli_documenti, carrelli_consensi
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
 
@@ -244,23 +264,37 @@
     anagrafica_categorie            | BASE
     anagrafica_certificazioni       | BASE
     anagrafica_cittadinanze         | BASE
+    anagrafica_consensi             | CONTATTI, ECOMMERCE
     anagrafica_indirizzi            | BASE
     anagrafica_settori              | BASE
     articoli                        | PRODOTTI
     articoli_caratteristiche        | PRODOTTI
     attivita                        | ATTIVITA
     audio                           | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
+    banner                          | BANNER
+    banner_azioni                   | BANNER
+    banner_pagine                   | BANNER
+    banner_zone                     | BANNER
+    caratteristiche_immobili        | IMMOBILIARE
     caratteristiche_prodotti        | PRODOTTI
+    carrelli                        | ECOMMERCE
+    carrelli_articoli               | ECOMMERCE
+    carrelli_consensi               | ECOMMERCE
+    carrelli_documenti              | ECOMMERCE
     categorie_anagrafica            | BASE
     categorie_notizie               | NOTIZIE
     categorie_prodotti              | PRODOTTI
     categorie_progetti              | PRODUZIONE
     categorie_risorse               | RISORSE
+    causali                         | DOCUMENTI
     certificazioni                  | BASE
     chiavi                          | SOFTWARE
     colori                          | BASE, PRODOTTI
+    colli                           | DOCUMENTI
     comuni                          | BASE
     condizioni_pagamento            | DOCUMENTI, CASSE
+    consensi                        | CONTATTI, ECOMMERCE
+    consensi_moduli                 | CONTATTI, ECOMMERCE
     contatti                        | CONTATTI
     contenuti                       | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     continenti                      | BASE
@@ -316,6 +350,7 @@
     prodotti_caratteristiche        | PRODOTTI
     progetti                        | PRODUZIONE
     progetti_anagrafica             | PRODUZIONE
+    progetti_articoli               | PRODUZIONE
     progetti_categorie              | PRODUZIONE
     progetti_certificazioni         | PRODUZIONE
     pubblicazioni                   | CONTENUTI, POPUP, PRODOTTI, NOTIZIE, RISORSE
@@ -333,9 +368,11 @@
     rinnovi                         | PRODUZIONE
     rinnovi_documenti_articoli      | PRODUZIONE
     risorse                         | RISORSE
+    risorse_account                 | RISORSE
     risorse_anagrafica              | RISORSE
     risorse_categorie               | RISORSE
     ruoli_anagrafica                | BASE, PRODUZIONE, RISORSE
+    ruoli_articoli                  | PRODOTTI
     ruoli_audio                     | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     ruoli_file                      | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE
     ruoli_immagini                  | CONTENUTI, PRODOTTI, NOTIZIE, RISORSE

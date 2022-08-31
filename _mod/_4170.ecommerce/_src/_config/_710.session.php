@@ -4,26 +4,49 @@
      * 
      */
 
+    // debug
+    // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+
     // recupero carrelli abbandonati
     if( isset( $_REQUEST['rc'] ) && isset( $_REQUEST['ti'] ) ) {
             
         $timestamp = intval( $_REQUEST['ti'] );
 
-        $_SESSION['carrello'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM carrelli WHERE id=? and timestamp_inserimento = ? AND timestamp_checkout IS NULL',
+        $_SESSION['carrello'] = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM carrelli WHERE id = ? AND timestamp_inserimento = ? AND timestamp_checkout IS NULL',
             array(
                 array( 's' => $_REQUEST['rc'] ) ,
                 array( 's' => $timestamp )
             )
         );
         
-        $_SESSION['carrello']['articoli'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello=?',
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello = ?',
             array(
                 array( 's' => $_SESSION['carrello']['id'] )
             )
         );
 
+        foreach( $articoli as $articolo ) {
+            $_SESSION['carrello']['articoli'][ $articolo['id_articolo'] ] = $articolo;
+        }
+
+    }
+/*
+    // PayPal
+	if( isset( $_REQUEST['item_number'] ) ) {
+
+		// normalizzazione ID carrello
+		$_SESSION['carrello']['id'] = $_REQUEST['item_number'];
+
     }
 
+    // Nexi
+	if( isset( $_REQUEST['codTrans'] ) ) {
+
+		// normalizzazione ID carrello
+		$_SESSION['carrello']['id'] = $_REQUEST['codTrans'];
+
+    }
+*/
     // verifico se il carrello della sessione corrente va chiuso
     if( isset( $_SESSION['carrello']['id'] ) ) {
 
@@ -42,3 +65,6 @@
         }
 
     }
+
+    // debug
+    // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';

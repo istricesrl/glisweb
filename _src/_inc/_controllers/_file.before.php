@@ -31,3 +31,20 @@
         break;
 
 	}
+
+    // controllo validità del pacchetto dati
+	switch( strtoupper( $a ) ) {
+
+        case METHOD_POST:
+        case METHOD_UPDATE:
+
+            if( empty( $d['path'] ) ) {
+
+                $i['__status__'] = 422;
+                $a = NULL;
+
+            }
+
+        break;
+
+	}

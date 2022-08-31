@@ -109,11 +109,11 @@ if ($cf['contents']['cached'] === false) {
                     'id_categoria_prodotti'
                 );
 
-                aggiungiContenuti(
+             /*   aggiungiContenuti(
                     $cf['contents']['pages'][$pid],
                     $pg['id'],
                     'id_categoria_prodotti'
-                );
+                );*/
 
                 aggiungiImmagini(
                     $cf['contents']['pages'][$pid],
@@ -145,6 +145,7 @@ if ($cf['contents']['cached'] === false) {
 
     // timer
     timerCheck($cf['speed'], ' -> fine elaborazione categorie catalogo prelevate dal database');
+
 } else {
 
     // recupero la timestamp di aggiornamento più recente

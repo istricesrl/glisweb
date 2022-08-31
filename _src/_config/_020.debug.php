@@ -39,3 +39,12 @@
 
     // costante che descrive il livello corrente di log
 	define( 'LOG_CURRENT_LEVEL'		, $cf['debug'][ SITE_STATUS ]['*']['log']['lvl'] );
+
+    // tempo massimo di esecuzione
+    ini_set( 'max_execution_time', 900 );
+
+    // timeout delle connessioni MySQL
+    ini_set( 'mysql.connect_timeout', 900 );
+
+    // timeout dei socket
+    ini_set( 'default_socket_timeout', 900 );

@@ -11,6 +11,7 @@
         'id' => '#',
         'minuto' => 'min',
         'ora' => 'ora',
+        'mese' => 'mese',
         'giorno_del_mese' => 'giorno/mese',
         'settimana' => 'settimana',
         'giorno_della_settimana' => 'giorno/settimana',

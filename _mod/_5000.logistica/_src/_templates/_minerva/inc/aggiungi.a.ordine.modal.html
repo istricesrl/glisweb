@@ -1,0 +1,81 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = '' %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account %}
+    {% set account = session.account.id %}
+    {% set anagrafica = session.account.id_anagrafica %}
+{% else %}
+    {% set account = '__null__' %}
+    {% set anagrafica = '__null__' %}
+{% endif %}
+
+{% if request.table.id %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% else %}
+{% set method = 'post' %}
+{% set activity = 'inserimento' %}
+{% endif %}
+<script>
+    function aggiungi() {
+
+		var qta = $( '#_quantita' ).val().replace(",", ".");
+		var udm = $( '#_id_udm' ).val();
+        var p = $( '#_id_prodotto_add' ).val();
+
+
+    if( qta != '' && udm != '' && p != ''  ){
+
+
+        window.open('{{ pages[ "app.ordini.nuovo" ].path[ietf] }}?__action__=add&__p__='+p+'&__qta__='+qta+'&__udm__='+udm,'_self');
+        
+    } 
+    
+    if(qta == ''){ document.getElementById("_quantita").style.borderColor="#FF0000";
+    } else { document.getElementById("_quantita").style.borderColor="#ced4da"; }
+    
+    if ( udm == '' ) { document.getElementById("_id_udm").style.borderColor="#FF0000";
+    } else { document.getElementById("_id_udm").style.borderColor="#ced4da"; }
+    
+
+    }
+</script>
+
+<div class="modal fade" id="aggiungi_a_ordine" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Aggiungi prodotto al tuo ordine</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div class="form-row form-group">
+                <legend>dettaglio</legend>
+                <input type="hidden" id="_id_prodotto_add" name="_id_prodotto_add" >
+                <div class="col-12 form-control-lg">
+                    <span class="label-top">prodotto</span>
+                    {{ frm.inputDisabled( '', '', '', 'prodotto_add', '', '', request, '', '', 'form-control-lg' ) }}
+                </div>
+                <div class="col-4 mt-4 form-control-lg">
+                    <span class="label-top">quantità</span>
+                    {{ frm.input( '', '', '', 'quantita', '', '', request, '', 'number', '', 'form-control-lg', '', '0.5' ) }}
+                 </div>
+                 <div class="col mt-4 form-control-lg " >
+                    <span class="label-top">unità di misura</span>
+                    {{ frm.select( table, '', '', 'id_udm', '', etc.select.udm, request, '', '', '', '', 'form-control-lg' ) }}
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn" data-dismiss="modal">annulla</button>
+          <button type="button" class="btn  btn-secondary" onclick="aggiungi()">aggiungi</button>
+        </div>
+      </div>
+    </div>
+  </div>

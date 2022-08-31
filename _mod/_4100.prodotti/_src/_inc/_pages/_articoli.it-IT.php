@@ -54,7 +54,8 @@
 													'articoli.form.audio',
 													'articoli.form.file',
 													'articoli.form.stampe',
-													'articoli.form.metadati'
+													'articoli.form.metadati',
+													'articoli.form.tools'
 												) )
 	);
 
@@ -203,4 +204,17 @@
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.metadati.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// form azioni articoli
+	$p['articoli.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni pagina' ),
+	    'h1'		=> array( $l		=> 'azioni pagina' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);

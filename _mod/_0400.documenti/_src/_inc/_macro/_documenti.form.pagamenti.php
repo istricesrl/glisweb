@@ -43,9 +43,9 @@
         'id' => '#',
         'data_ora_scadenza' => 'scadenza',
         'nome' => 'nome',
-#		'mastro_provenienza' => 'scarico',
-#		'mastro_destinazione' => 'carico',
-        'importo_netto_totale' => 'importo netto',
+		'modalita_pagamento' => 'modalita pagamento',
+		'iban' => 'iban',
+        'importo_lordo_totale' => 'importo',
         'data_ora_pagamento' => 'pagato',
 		'id_documento' => 'id_documento'
 	);
@@ -53,7 +53,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
-        'importo_netto_totale' => 'text-right',
+        'importo_lordo_totale' => 'text-right',
         'quantita' => 'text-right',
 		'totale_riga' => 'text-right',
         'id_documento' => 'd-none',

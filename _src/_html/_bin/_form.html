@@ -83,7 +83,7 @@
 <input type="text" class="{% if disabled %}disabled{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" value="{{ val }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf, api, disabled, change ) %}
+{% macro selectBox( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, edit, add, entity, key, page, pages, ietf, api, disabled, change, modal ) %}
 {% if subtable %}
     {% if key %}{% set bl = request[ table ][ subtable ][ counter ][ key ] %}{% endif %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
@@ -134,6 +134,9 @@
     </div>{% endif %}
     {% if add %}<div class="col-auto p-0 pl-1">
 	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+    </div>{% endif %}
+    {% if modal %}<div class="col-auto p-0 pl-1">
+    <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#{{ modal }}').setAttribute('disabled');$('#{{ modal }}').toggleAttribute('disabled');$('#{{ modal }}').appendTo('#form-{{ table }}').modal('show');$('.modal-backdrop').appendTo('#form-{{ table }}');" data-toggle="modal" data-target=""><i class="fa fa-plus-circle"></i></button>
     </div>{% endif %}
 </div>
 {% endmacro %}
@@ -187,7 +190,7 @@
 {% endif %}
 {% endmacro %}
 
-{% macro textarea( table, subtable, counter, field, placeholder, rows, request, default, required, class, height, console, disabled ) %}
+{% macro textarea( table, subtable, counter, field, placeholder, rows, request, default, required, class, height, console, disabled, modalDisabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -203,7 +206,7 @@
 <input  type="hidden" name="{{ nm }}" value="{{ vl }}">
 <div class="form-control-plaintext {{ class }}">{{ vl }}</div>
 {% else %}
-<textarea   placeholder="{{ placeholder }}" name="{{ nm }}" id="{{ id }}" {% if height %}height="{{ height }}"{% else %}style="min-height: {{ rows * 30 }}px;"{% endif %} class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" placeholder="{{ placeholder }}" {% if console %}console="{{ console }}"{% endif %} {% if required %}required{% endif %}>{{ vl }}</textarea>
+<textarea {% if modalDisabled %}disabled{% endif %} placeholder="{{ placeholder }}" name="{{ nm }}" id="{{ id }}" {% if height %}height="{{ height }}"{% else %}style="min-height: {{ rows * 30 }}px;"{% endif %} class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" placeholder="{{ placeholder }}" {% if console %}console="{{ console }}"{% endif %} {% if required %}required{% endif %}>{{ vl }}</textarea>
 {% endif %}
 {% endmacro %}
 
@@ -265,8 +268,8 @@
 {{ frm.datetime( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class ) }}
 {% endmacro %}
 
-{% macro button( text, type, class, onclick, placeholder ) %}
-<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} >{{ text|raw }}</button>
+{% macro button( text, type, class, onclick, placeholder, id ) %}
+<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" {% if id %}id="{{id}}"{% endif %} class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} >{{ text|raw }}</button>
 {% endmacro %}
 
 {% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback ) %}

@@ -36,12 +36,14 @@
         'destinatario' => 'a',
 #		'mastro_provenienza' => 'scarico',
 #		'mastro_destinazione' => 'carico',
-        'importo_netto_totale' => 'importo netto',
+		'id_tipologia_documento' => 'id_tipologia_documento',
+        'importo_lordo_totale' => 'importo',
         'data_ora_pagamento' => 'pagato'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
+        'id_tipologia_documento' => 'd-none',
         'nome' => 'text-left',
         'documento' => 'text-left',
         'numero' => 'text-left',
@@ -52,7 +54,7 @@
         'emittente' => 'text-left',
         'destinatario' => 'text-left',
         'tipologia' => 'text-left',
-        'importo_netto_totale' => 'text-right' 
+        'importo_lordo_totale' => 'text-right' 
     );
 
 	// RELAZIONI CON IL MODULO MASTRI
@@ -77,6 +79,14 @@
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1 ORDER BY __label__'
+	);
+
+    // tendina tipologie
+	$ct['etc']['select']['tipologie_documenti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
 
     // macro di default

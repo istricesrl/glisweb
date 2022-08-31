@@ -7,7 +7,16 @@
     introduzione
     ============
 
-    il versionamento semantico 
+    release del framework e versioni del framework
+    ----------------------------------------------
+
+    il file _etc/_current.release.conf
+    ----------------------------------
+
+    il file _etc/_current.version.conf
+    ----------------------------------
+
+    il versionamento semantico
     ==========================
 
     major release

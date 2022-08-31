@@ -40,7 +40,8 @@
     // id della vista
 	if( ! isset( $ct['view']['id'] ) ) {
 	    $ct['view']['id'] = md5(
-		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
+			$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__'] .
+			( ( isset( $ct['form']['table'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id'] : NULL )
 	    );
 	}
 

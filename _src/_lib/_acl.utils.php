@@ -69,7 +69,7 @@
     function getAclPermission( $t, $a, &$i = NULL ) {
 
 	// log
-	    logWrite( 'richiesta di accesso per ' . $t . '/' . $a, 'auth', LOG_DEBUG );
+	    logWrite( 'richiesta di accesso per ' . $t . '/' . $a, 'auth' );
 
 	// debug
 	    // echo 'getAclPermission ' . $t . '/' . $a . PHP_EOL;
@@ -111,7 +111,7 @@
 		    } else {
 
 			// log
-			    logWrite( 'accesso non consentito per ' . $t . '/' . $a . ' in ' . $auth, 'auth', LOG_ERR );
+			    logWrite( 'accesso non consentito per ' . $t . '/' . $a . ' in ' . $auth, 'auth', LOG_INFO );
 
 			// negazione del permesso
 			    return false;
@@ -124,7 +124,7 @@
 	    // echo 'getAclPermission ' . $t . '/' . $a . ' NO' . PHP_EOL;
 
 	// log
-	    logWrite( 'permessi non settati in SESSION per ' . $t, 'auth', LOG_ERR );
+	    logWrite( 'permessi non settati in SESSION per ' . $t, 'auth', LOG_INFO );
 
 	// default
 	    return false;
@@ -373,7 +373,7 @@
 	    if( $_SESSION['account']['username'] == 'root' || in_array( 'roots', $_SESSION['account']['gruppi'] ) ) {
 
 			// log
-			logWrite( 'accesso root concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') per ' . $t, 'auth', LOG_DEBUG );
+			logWrite( 'accesso root concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') per ' . $t, 'auth' );
 
 			// default
 			return NULL;
@@ -381,7 +381,7 @@
 		} elseif( in_array( CONTROL_FULL, $_SESSION['account']['permissions'][ $t ] ) ) {
 
 			// log
-			logWrite( 'accesso FULL concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') per ' . $t, 'auth', LOG_DEBUG );
+			logWrite( 'accesso FULL concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') per ' . $t, 'auth' );
 
 			// default
 			return NULL;
@@ -396,7 +396,7 @@
 		    );
 
 		// log
-		    logWrite( $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') tabella di ACL ' . $r . ' trovata per ' . $t, 'auth', LOG_DEBUG );
+		    logWrite( $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') tabella di ACL ' . $r . ' trovata per ' . $t, 'auth' );
 
 		// risultato
 		    return $r;
@@ -404,7 +404,7 @@
 	    }
 
 	// log
-	    logWrite( 'accesso non filtrato concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') per ' . $t, 'auth', LOG_DEBUG );
+	    logWrite( 'accesso non filtrato concesso a ' . $_SESSION['account']['username'] . ' (' . implode(',',$_SESSION['account']['gruppi']) . ') per ' . $t, 'auth' );
 
 	// default
 	    return NULL;

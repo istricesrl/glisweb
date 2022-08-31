@@ -19,11 +19,11 @@
  */
 
 // controllo cache
-if ($cf['contents']['cached'] === false) {
+if( $cf['contents']['cached'] === false ) {
 
     // log
     if( ! empty( $cf['memcache']['connection'] ) ) {
-        logWrite('struttura delle categorie catalogo NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
+        logWrite('struttura delle categorie risorse NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
     }
 
     // recupero le pagine dal database
@@ -43,7 +43,7 @@ if ($cf['contents']['cached'] === false) {
     );
 
     // timer
-    timerCheck($cf['speed'], ' -> fine recupero categorie catalogo dal database');
+    timerCheck($cf['speed'], ' -> fine recupero categorie risorse dal database');
 
     // se ci sono pagine trovate le inserisco nell'array principale
     if (is_array($pgs)) {
@@ -55,7 +55,7 @@ if ($cf['contents']['cached'] === false) {
             $pid = PREFX_CATEGORIE_RISORSE . $pg['id'];
             $pip = PREFX_CATEGORIE_RISORSE . $pg['id_genitore'];
 
-            if (empty($pip)) {
+            if (empty($pip)&&isset($pg['id_pagina'])) {
                 $pip = $pg['id_pagina'];
             }
 
@@ -170,7 +170,7 @@ if ($cf['contents']['cached'] === false) {
             $pid = $cid . '.' . PREFX_RISORSE . $pg['id'];
             // $pip = PREFX_RISORSE . $pg['id_genitore'];
 
-            if (empty($pip)) {
+            if (empty($pip)&&isset($pg['id_pagina'])) {
                 $pip = $pg['id_pagina'];
             }
 
@@ -239,7 +239,7 @@ if ($cf['contents']['cached'] === false) {
     }
 
     // timer
-    timerCheck($cf['speed'], ' -> fine elaborazione risorse prelevati dal database');
+    timerCheck($cf['speed'], ' -> fine elaborazione risorse prelevate dal database');
 
 } else {
 

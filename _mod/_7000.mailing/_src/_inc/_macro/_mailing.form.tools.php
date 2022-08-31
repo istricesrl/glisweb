@@ -48,5 +48,15 @@
 
     }
 
-    // macro di default
+    // duplica pagina
+	$ct['page']['contents']['metro']['invio'][] = array(
+        'modal' => array('id' => 'invia', 'include' => 'inc/mailing.form.tools.invio.test.html' ),
+	    'icon' => NULL,
+        'fa' => 'fa-share-square',
+	    'title' => 'invio di test',
+	    'text' => 'invia una mail di test'
+	);
+
+	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+    require DIR_SRC_INC_MACRO . '_default.tools.php';

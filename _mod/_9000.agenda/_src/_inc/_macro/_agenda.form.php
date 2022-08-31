@@ -109,6 +109,14 @@
 	    'SELECT id, __label__ FROM matricole_view'
     );
 
+    // tendina matricole
+	$ct['etc']['select']['immobili'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM immobili_view'
+    );
+
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
 	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 
         array( array( 's' => $_REQUEST['__preset__']['attivita']['id_todo'] ) ) );

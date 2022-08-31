@@ -1,0 +1,66 @@
+{% import '_bin/_form.html' as frm %}
+{% set modalTable = 'indirizzi' %}
+<div class="modal" tabindex="-1" role="dialog" id="modal-inserimento-indirizzi">
+	<div class="modal-dialog" role="document">
+	<div class="modal-content">
+		<div class="modal-header">
+		<h5 class="modal-title">inserisci un nuovo indirizzo</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		</div>
+		<div class="modal-body">
+		<div class="container-fluid">
+
+				{# CAMPI HIDDEN DI BASE #}
+				<input type="hidden" id="method" name="{{ modalTable }}[__method__]" value="{{ method }}" disabled>
+				<input type="hidden" id="reset" name="{{ modalTable }}[__reset__]" value="1" disabled>
+				{% if etc.preset %}
+				<input type="hidden" id="preset_table" name="{{ modalTable }}[__preset_table__]" value="{{ etc.preset.table }}" disabled>
+				<input type="hidden" id="preset_subtable" name="{{ modalTable }}[__preset_subtable__]" value="{{ etc.preset.subtable }}" disabled>
+				<input type="hidden" id="preset_counter" name="{{ modalTable }}[__preset_counter__]" value="{{ etc.preset.counter }}" disabled>
+				<input type="hidden" id="preset_field" name="{{ modalTable }}[__preset_field__]" value="{{ etc.preset.field }}" disabled>
+				{% endif %}
+				<input type="hidden" id="timestamp" name="{{ modalTable }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+				<input type="hidden" id="account" name="{{ modalTable }}[id_account_inserimento]" value="{{ account }}" disabled>
+				{% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+		
+			<div class="form-group form-row">
+				<div class="col-auto">
+				<span class="label-top">tipo</span>
+				{{ frm.select( modalTable, '', '', 'id_tipologia', '', etc.select.tipologie_indirizzi, '', '', '', '', '', '', 2 ) }}
+			</div>
+				<div class="col">
+				<span class="label-top ">indirizzo</span>
+					{{ frm.inputRequired(  modalTable, '', '', 'indirizzo', '', '', '', '', '', '', 2 ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
+				<div class="col-2 col-md-2">
+					<span class="label-top ">civico</span>
+					{{ frm.input(  modalTable, '', '', 'civico', '', '', '', '', '', '', '', 2 ) }}
+				</div>
+				<div class="col-3 col-md-3">
+				<span class="label-top">cap</span>
+				{{ frm.input(  modalTable, '', '', 'cap', '', '', '', '', '', '', '', 2 ) }}
+				</div>
+				<div class="col">
+					<span class="label-top ">località</span>
+					{{ frm.input(  modalTable,  '', '', 'localita', '', '', '', '', '', '', '', 2 ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
+
+				<div class="col-12 col-md">
+				<span class="label-top ">comune</span>
+					{{ frm.selectBox(  modalTable, '', '', 'id_comune', 'comune', etc.select.comuni, '', '', '', 1, '', '', '', '', '', '', '', '', '', '', 2 ) }}
+				</div>
+			</div>
+	
+		</div>
+		</div>
+		<div class="modal-footer">
+		<button type="submit" class="btn btn-secondary btn-sm" onclick="submitFormOkay = true;" id="duplica-btn">salva</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+		</div>
+	</div>
+	</div>
+</div>

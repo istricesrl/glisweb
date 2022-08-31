@@ -76,6 +76,7 @@
     categorie_anagrafica.se_produzione                     | -
     categorie_anagrafica.se_commerciale                    | -
     categorie_anagrafica.se_notizie                        | -
+    categorie_anagrafica.se_corriere                       | -    
     categorie_anagrafica.id_account_inserimento            | l'ID dell'account che ha inserito la riga
     categorie_anagrafica.timestamp_inserimento             | la timestamp dell'inserimento della riga
     categorie_anagrafica.id_account_aggiornamento          | l'ID dell'ultimo account che ha modificato la riga
@@ -119,6 +120,7 @@
     categorie_anagrafica_view.se_produzione                 | -
     categorie_anagrafica_view.se_commerciale                | -
     categorie_anagrafica_view.se_notizie                    | -
+    categorie_anagrafica_view.se_corriere                   | -
     categorie_anagrafica_view.figli                         | il numero di categorie figlie di questa categoria
     categorie_anagrafica_view.membri                        | il numero di anagrafiche collegate a questa categoria
     categorie_anagrafica_view.id_account_inserimento        | -
@@ -345,13 +347,46 @@
     categorie_risorse_view.id_account_aggiornamento         | -
     categorie_risorse_view.__label__                        | l'etichetta descrittiva della categoria
  
+    causali
+    -------
+    Questa tabella *gestita* contiene le causali per i documenti di trasporto
+
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    causali.id                              | l'ID della causale
+    causali.nome                            | il nome descrittivo della causale
+    causali.se_trasporto                    | flag che indica se la causale si riferisce a un documento di trasporto
+    causali.id_account_inserimento          | l'ID dell'account che ha inserito la riga
+    causali.timestamp_inserimento           | la timestamp dell'inserimento della riga
+    causali.id_account_aggiornamento        | l'ID dell'ultimo account che ha modificato la riga
+    causali.timestamp_aggiornamento         | la timestamp dell'ultimo aggiornamento della riga
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                            | campo                         | tabella e campo collegati     | comportamento
+    ----------------------------------|-------------------------------|-------------------------------|----------------------
+    causali_ibfk_98_nofollow          | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    causali_ibfk_99_nofollow          | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+    La vista *causali_view* relativa alla tabella *causali* presenta le seguenti colonne:
+
+    colonna                                    | descrizione
+    -------------------------------------------|---------------------------------------------------------------------------------------
+    causali_view.id                            | -
+    causali_view.nome                          | -
+    causali_view.se_trasporto                  | -
+    causali_view.id_account_inserimento        | -
+    causali_view.id_account_aggiornamento      | -
+    causali_view.__label__                     | l'etichetta descrittiva della certificazione
+
+
     certificazioni
     --------------
     Questa tabella *assistita* contiene l'entità principale *certificazioni*
 
     colonna                                        | descrizione
     -----------------------------------------------|---------------------------------------------------------------------------------------
-    certificazioni.id                              | l'ID della chiave
+    certificazioni.id                              | l'ID della certificazione
     certificazioni.nome                            | il nome descrittivo della certificazione
     certificazioni.id_account_inserimento          | l'ID dell'account che ha inserito la riga
     certificazioni.timestamp_inserimento           | la timestamp dell'inserimento della riga
@@ -416,6 +451,64 @@
     chiavi_view.id_account_inserimento        | -
     chiavi_view.id_account_aggiornamento      | -
     chiavi_view.__label__                     | l'etichetta descrittiva della chiave
+
+    colli
+    ------
+    Questa tabella *gestita* contiene i colli 
+
+    colonna                 | descrizione
+    ------------------------|----------------------------------------------------------------------------------------------------------------------
+    colli.id                            | l'ID del collo
+    colli.id_documento                  | l'ID del documento a cui il collo è associato
+    colli.ordine                        | campo di ordinamento
+    colli.codice                        | il codice parlante del collo
+    colli.larghezza                     | la larghezza dell'articolo, in millimetri
+    colli.lunghezza                     | la lunghezza dell'articolo, in millimetri
+    colli.altezza                       | l'altezza dell'articolo, in millimetri
+    colli.id_udm_dimensioni             | l'ID dell'udm dell'altezza
+    colli.peso                          | il peso dell'articolo, in grammi
+    colli.id_udm_peso                   | l'ID dell'udm del peso
+    colli.volume                        | il volume dell'articolo in millimetri cubi
+    colli.id_udm_volume                 | l'ID dell'udm del id_udm_volume
+    colli.nome                          | il nome del collo, a uso interno
+    colli.id_account_inserimento        | l'ID dell'account che ha inserito la riga
+    colli.timestamp_inserimento         | la timestamp dell'inserimento della riga
+    colli.id_account_aggiornamento      | l'ID dell'ultimo account che ha modificato la riga
+    colli.timestamp_aggiornamento       | la timestamp dell'ultimo aggiornamento della riga
+
+
+    La tabella ha le seguenti chiavi esterne:
+
+    chiave                              | campo                     | tabella e campo collegati     | comportamento
+    ------------------------------------|---------------------------|-------------------------------|----------------------
+    colli_ibfk_01_nofollow              | id_documento              | documenti.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    colli_ibfk_02_nofollow              | id_udm_dimensioni         | udm.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    colli_ibfk_03_nofollow              | id_udm_peso               | udm.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    colli_ibfk_04_nofollow              | id_udm_volume             | udm.id                        | ON DELETE NO ACTION ON UPDATE NO ACTION
+    colli_ibfk_98_nofollow              | id_account_inserimento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    colli_ibfk_99_nofollow              | id_account_aggiornamento  | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+
+
+    La vista *colli_view* relativa alla tabella *colli* presenta le seguenti colonne:
+
+    colonna                              | descrizione
+    -------------------------------------|-----------------------------------------------------------------------------
+    colli_view.id                        | -
+    colli_view.id_documento              | -
+    colli_view.ordine                    | - 
+    colli_view.codice                    | - 
+    colli_view.larghezza                 | - 
+    colli_view.lunghezza                 | - 
+    colli_view.altezza                   | - 
+    colli_view.id_udm_dimensioni         | - 
+    colli_view.peso                      | - 
+    colli_view.id_udm_peso               | - 
+    colli_view.volume                    | - 
+    colli_view.id_udm_volume             | - 
+    colli_view.nome                      | - 
+    colli_view.id_account_inserimento    | - 
+    colli_view.id_account_aggiornamento  | - 
+    colli_view.__label__                 | l'etichetta descrittiva del collo
 
     colori
     ------
@@ -532,6 +625,7 @@
     contatti.id_tipologia                  | l'ID della tipologia di contatto
     contatti.id_anagrafica                 | l'ID dell'anagrafica che ha effettuato il contatto
     contatti.id_inviante                   | l'ID dell'anagrafica che ha generato il contatto
+    contatti.id_ranking                    | l'ID del ranking del contatto
     contatti.nome                          | una descrizione sintetica del contatto ed eventuali riferimenti della persona
     contatti.note                          | annotazioni estese sul contatto, le richieste, e simili
     contatti.json                          | il JSON dei contatti via web
@@ -548,6 +642,7 @@
     contatti_ibfk_01_nofollow           | id_tipologia                  | tipologie_contatti.id         | ON DELETE NO ACTION ON UPDATE NO ACTION
     contatti_ibfk_02_nofollow           | id_anagrafica                 | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     contatti_ibfk_03_nofollow           | id_inviante                   | anagrafica.id                 | ON DELETE SET NULL ON UPDATE SET NULL
+    contatti_ibfk_04_nofollow           | id_ranking                    | ranking.id                 | ON DELETE SET NULL ON UPDATE SET NULL
     contatti_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     contatti_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -561,6 +656,8 @@
     contatti_view.id_anagrafica                 | -
     contatti_view.anagrafica                    | l'anagrafica che ha effettuato il contatto
     contatti_view.id_inviante                   | -
+    contatti_view.id_ranking                    | -
+    contatti_view.ranking                       | il nome del ranking del contatto
     contatti_view.inviante                      | l'anagrafica che ha generato il contatto
     contatti_view.nome                          | -
     contatti_view.timestamp_contatto            | -

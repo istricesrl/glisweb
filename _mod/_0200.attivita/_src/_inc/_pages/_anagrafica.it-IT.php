@@ -6,7 +6,7 @@
     // modulo di questo file
 	$m = DIR_MOD . '_0200.attivita/';
 
-	// gestione pagamenti fatture
+	// subview attività dell'anagrafica 
     $p['anagrafica.form.attivita'] = array(
     	'sitemap'		=> false,
         'icon'			=> '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>',

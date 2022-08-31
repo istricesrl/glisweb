@@ -19,45 +19,74 @@
     // pagine di default
     $cf['ecommerce']['pages']['acquisto']		    = 'carrello';			                        // pagina di visualizzazione articoli aggiunti, gestisce anche l'aggiunta vera e propria
     $cf['ecommerce']['pages']['dettagli']		    = 'carrello';			                        // usare carrello_dettagli per two-step checkout
-    $cf['ecommerce']['pages']['riepilogo']		    = 'carrello_riepilogo';		                    // gestisce i dettagli inserendoli nel carrello e prepara il pacchetto dati per il perfezionamento
-    $cf['ecommerce']['pages']['esito']			    = 'carrello_esito';		                        // gestisce il perfezionamento dell'ordine e presenta il risultato all'utente
-    $cf['ecommerce']['pages']['successo']			= 'carrello_successo';		                    // pagina di atterraggio per il pagamento avvenuto con successo presso provider esterni di pagamento
-    $cf['ecommerce']['pages']['errore']			    = 'carrello_fallimento';		                // pagina di atterraggio per gli errori dei provider esterni di pagamento
+    $cf['ecommerce']['pages']['riepilogo']		    = 'carrello.riepilogo';		                    // gestisce i dettagli inserendoli nel carrello e prepara il pacchetto dati per il perfezionamento
+    $cf['ecommerce']['pages']['esito']			    = 'carrello.esito';		                        // gestisce il perfezionamento dell'ordine e presenta il risultato all'utente
+    $cf['ecommerce']['pages']['successo']			= 'carrello.successo';		                    // pagina di atterraggio per il pagamento avvenuto con successo presso provider esterni di pagamento
+    $cf['ecommerce']['pages']['errore']			    = 'carrello.fallimento';		                // pagina di atterraggio per gli errori dei provider esterni di pagamento
 
-    // profili di funzionamento
-	$cf['ecommerce']['profiles'][ DEVELOPEMENT ]	=
-	$cf['ecommerce']['profiles'][ TESTING ]		    =
-	$cf['ecommerce']['profiles'][ PRODUCTION ]	    = array(
+    // profilo di funzionamento per DEV
+	$cf['ecommerce']['profiles'][ DEVELOPEMENT ]	= array(
+        'fatturazione' => array(
+            'merchant' => NULL,                                                                     // ID dell'anagrafica merchant (per l'emissione dei documenti)
+            'magazzino' => NULL,                                                                    // ID del mastro dal quale scaricare la merce (per l'emissione dei documenti)
+            'cassa' => NULL,                                                                        // ID del mastro sul quale caricare gli incassi (per l'emissione dei documenti)
+            'documento' => NULL,                                                                    // ID della tipologia di documento di default (per l'emissione dei documenti)
+            'strategia' => NULL                                                                     // strategia di fatturazione di default (per l'emissione dei documenti)
+        ),
         'provider' => array(
             'contanti' => array(
                 'id'            => 'contanti',                                                      // ID del provider per le tendine
-                'action'        => 'carrello_checkout',                                             // pagina per l'action del form di riepilogo
+                'modalita'      => 1,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
+                'action'        => 'carrello.checkout',                                             // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
+                'autosubmit'    => false,                                                           // autosubmit del modulo di riepilogo
                 '__label__'     => 'contrassegno'                                                   // etichetta del provider per le tendine
             ),
             'nexi' => array(
                 'id'            => 'nexi',                                                          // ID del provider per le tendine
+                'modalita'      => 8,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'alias'         => NULL,                                                            // 
                 'key'           => NULL,                                                            // 
                 'action_url'    => 'https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet',   // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
-                'success'       => 'carrello_esito',                                                // pagina di ritorno in caso di pagamento effettuato con successo
+                'autosubmit'    => false,                                                           // autosubmit del modulo di riepilogo
+                'success'       => 'carrello.esito',                                                // pagina di ritorno in caso di pagamento effettuato con successo
                 'error'         => 'carrello',                                                      // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_nexi.listener.php',             // listener per la conferma di pagamento in background
                 '__label__'     => 'carta di credito'                                               // etichetta del provider per le tendine
             ),
             'paypal' => array(
                 'id'            => 'paypal',                                                        // ID del provider per le tendine
+                'modalita'      => 24,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'business'      => NULL,                                                            // 
                 'action_url'    => 'https://www.sandbox.paypal.com/cgi-bin/webscr',                 // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
-                'return'        => 'carrello_esito',                                                // pagina di ritorno in caso di pagamento completato con successo o fallito
+                'autosubmit'    => false,                                                           // autosubmit del modulo di riepilogo
+                'return'        => 'carrello.esito',                                                // pagina di ritorno in caso di pagamento completato con successo o fallito
                 'cancel'        => 'carrello',                                                      // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_paypal.listener.php',           // listener per la conferma di pagamento in background
                 '__label__'     => 'PayPal'                                                         // etichetta del provider per le tendine
+            ),
+            'paypal-advanced' => array(
+                'id'            => 'paypal-advanced',                                               // ID del provider per le tendine
+                'modalita'      => 24,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
+                'advanced'      => false,                                                           // impostare a true per consentire il pagamento con carta dal sito
+                'business'      => NULL,                                                            // 
+                'client_id'     => NULL,                                                            // 
+                'client_secret' => NULL,                                                            // 
+                'auth_api'      => 'https://api-m.sandbox.paypal.com/v1/oauth2/token',              // API alla quale richiedere l'Access Token
+                'token_api'     => 'https://api-m.sandbox.paypal.com/v1/identity/generate-token',   // API alla quale richiedere il Client Token
+                'order_api'     => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',           // API alla quale richiedere l'Order ID
+                'return'        => 'carrello.esito',                                                // pagina di ritorno in caso di pagamento completato con successo o fallito
+                'cancel'        => 'carrello',                                                      // pagina di ritorno in caso di interruzione della procedura di pagamento
+                '__label__'     => 'PayPal Advanced'                                                // etichetta del provider per le tendine
             )
         )
     );
+
+    // profili di funzionamento per TEST e STABLE
+	$cf['ecommerce']['profiles'][ TESTING ]		    =
+	$cf['ecommerce']['profiles'][ PRODUCTION ]	    =     array();
 
     /**
      * NOTA
@@ -81,6 +110,11 @@
      * 
      * NOTA SU PAYPAL
      * per avere i dati di test (business e account clienti fittizi) registrarsi su https://developer.paypal.com/developer/accounts/
+     * i dati sono nella pagina https://developer.paypal.com/developer/applications/
+     * 
+     * NOTA SU PAYPAL
+     * l'URL delle API di produzione è https://api-m.paypal.com anziché https://api-m.sandbox.paypal.com
+     * 
      */
 
     // configurazione extra

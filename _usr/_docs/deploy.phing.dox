@@ -42,8 +42,9 @@
     il nome dello step target quindi nel caso del deploy a tre step creeremo test.properties e stable.properties.
 
     Come punto di partenza, si può utilizzare l'esempio _usr/_examples/_phing/build.properties, copiandolo in usr/deploy/phing/ e rinominandolo
-    opportunamente; fatto questo, si può procedere a modificarne il contenuto seguendo le indicazioni dei commenti contenuti nel file stesso,
-    che riassumiamo comunque nella seguente tabella:
+    opportunamente (ad esempio test.properties per il deploy su test e stable.properties per il deploy su stable); fatto questo, si può
+    procedere a modificarne il contenuto seguendo le indicazioni dei commenti contenuti nel file stesso, che riassumiamo comunque nella
+    seguente tabella:
 
     chiave          | valore                | note
     ----------------|-----------------------|---------------------------------------------------------------------

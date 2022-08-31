@@ -60,12 +60,41 @@
             // verifico se la configurazione prevede il salvataggio nel database
                 if( isset( $cnf['backend'] ) ) {
 
+                    // TODO
+                    // if( isset( $_SESSION['utm'] ) && ! empty( $_SESSION['utm'][ $field ] ) ) { ... }
+
                     // salvataggio del blocco dati nel database
                         $idCnt = mysqlQuery( $cf['mysql']['connection'], 'INSERT INTO contatti ( nome, json, timestamp_inserimento ) VALUES ( ?, ?, ? )',
-                        array( array( 's' => $k ), array( 's' => json_encode( $v ) ), array( 's' => time() ) )
+                            array( array( 's' => $k ), array( 's' => json_encode( $v ) ), array( 's' => time() ) )
                         );
 
                     // TODO prevedere la possibilità di mappare campi del modulo su colonne del database anziché salvare tutto il mappazzone nel campo json
+
+                }
+
+                // registro i consensi
+                if( isset( $_REQUEST['__consensi__']['__contatti__'][ $k ] ) ) {
+
+                    // per ogni consenso...
+                    foreach( $_REQUEST['__consensi__']['__contatti__'][ $k ] as $ck => $cv ) {
+
+                        // timestamp del consenso
+                        $timestamp = time();
+
+                        // contenuto del consenso
+                        $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __contatti__.' . $k;
+
+                        // se è stato salvato un contatto nel database
+                        if( isset( $idCnt ) && ! empty( $idCnt ) ) {
+                            $contenuto .= ' per il contatto #' . $idCnt;
+                        }
+
+                        // log
+                        logWrite( $contenuto, 'privacy', LOG_CRIT );
+
+                        // TODO salvare il consenso nella tabella contatti_consensi
+
+                    }
 
                 }
 
@@ -81,6 +110,25 @@
                             $cnf['analytics']['label']
                         );
                     }
+
+                }
+
+            // verifico se la configurazione prevede l'invio di un messaggio su Slack
+                if( isset( $cnf['slack']['webhook'] ) ) {
+
+                    // TODO templatizzare i messaggi Slack come le mail
+
+                    // composizione del messaggio
+                    $m = 'nuovo modulo ricevuto: ' . $k . PHP_EOL;
+                    foreach( array_diff_key( $_REQUEST['__contatti__'][ $k ], array( 'modulo' => NULL ) ) as $ks => $vs ) {
+                        $m .= $ks . ': ' . $vs . PHP_EOL;
+                    }
+
+                    // invio del messaggio
+                    slackTxtMsg(
+                        $cf['slack']['profile']['webhooks'][ $cnf['slack']['webhook'] ],
+                        $m
+                    );
 
                 }
 

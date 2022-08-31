@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'todo';
+	$ct['form']['table'] = 'valutazioni';
 
 	$ct['page']['contents']['metros'] = array(
 	    'general' => array(

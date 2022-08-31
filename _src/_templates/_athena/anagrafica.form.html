@@ -90,14 +90,21 @@
 
 	    </fieldset>
 
-	    {# SUBFORM INDIRIZZI E-MAIL #}
+
+		{# SUBFORM INDIRIZZI E-MAIL #}
 	    {{ sub.mail( table, 'mail', 'e-mail', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# SUBFORM NUMERI DI TELEFONO #}
 	    {{ sub.telefoni( table, 'telefoni', 'telefoni', site, page, pages, ietf, etc, request, session ) }}
 
+		{% if anagrafica.indirizzi.inserimento.rapido == 1 %}
+		{# SUBFORM INDIRIZZI RAPIDI #}
+	    {{ sub.indirizzi_rapidi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}
+		{% else %}
 	    {# SUBFORM INDIRIZZI #}
 	    {{ sub.indirizzi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}
+		{% include 'inc/anagrafica.form.modal.aggiungi.indirizzo.html' %}
+		{% endif %}
 
 	    {# SUBFORM CATEGORIE #}
 	    {{ sub.categorie( table, 'anagrafica_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}

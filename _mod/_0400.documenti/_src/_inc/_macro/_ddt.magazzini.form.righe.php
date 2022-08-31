@@ -46,7 +46,7 @@
 #        'tipologia' => 'tipologia',
 #        'data' => 'data',
 #        'nome' => 'nome',
-		'id_articolo' => 'codice',
+//		'id_articolo' => 'codice',
 		'articolo' => 'articolo',
 		'mastro_provenienza' => 'scarico',
 		'mastro_destinazione' => 'carico',
@@ -64,6 +64,8 @@
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data' => 'no-wrap', 
+		'mastro_provenienza' => 'text-left',
+		'mastro_destinazione' => 'text-left',
 #        'tipologia' => 'text-left',
 		'articolo' => 'text-left'
     );
@@ -80,18 +82,20 @@
 		}
 
 	}
-	
-    $ct['etc']['include']['insert'][] = array(
+
+	$ct['etc']['include']['insert'][] = array(
         'name' => 'insert',
         'file' => 'inc/ddt.magazzini.form.righe.insert.html',
         'fa' => 'fa-plus-circle'
     );
- //   $ct['etc']['include']['insert'] = 'inc/ddt.magazzini.form.righe.insert.html';
 
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		// preset filtro custom progetti aperti
 		$ct['view']['__restrict__']['id_documento']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 	}
+
+    // macro di default per l'entità DDT
+	require DIR_BASE . '_mod/_0400.documenti/_src/_inc/_macro/_ddt.magazzini.form.default.php';
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

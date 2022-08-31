@@ -38,6 +38,7 @@
 							'timestamp_checkout'		=> time(),
 							'timestamp_pagamento'		=> time(),
 							'codice_pagamento'			=> $_REQUEST['txn_id'],
+							'ordine_pagamento'			=> $_REQUEST['payer_id'],
 							'importo_pagamento'			=> $_REQUEST['mc_gross'],
 							'status_pagamento'			=> $_REQUEST['payment_status']
 						),
@@ -45,7 +46,10 @@
 					);
 
 					// controller post checkout
-					$cnts = glob( glob2custom( DIR_BASE . '_mod/_4170.ecommerce/_src/_inc/_controllers/_checkout.finally.success.php' ), GLOB_BRACE );
+					$cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_checkout.finally.success.php' ), GLOB_BRACE );
+
+					// ordinamento delle controller
+					sort( $cnts );
 
 					// log
 					appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ), $fileRicevuta );

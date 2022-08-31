@@ -163,3 +163,13 @@
 
     // collegamento all'array $ct
     $ct['common']					= &$cf['common'];
+
+    $cf['anagrafica'] = array();
+
+    if( isset( $cx['anagrafica'] ) ) {
+	    $cf['anagrafica'] = array_replace_recursive( $cf['anagrafica'], $cx['anagrafica'] );
+	}
+
+    // collegamento all'array $ct
+    $ct['anagrafica']					= &$cf['anagrafica'];
+

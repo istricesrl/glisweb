@@ -425,4 +425,7 @@
     presente in _src/_api/_cron.php. La modalità standalone invece prevede un job completamente autonomo che viene chiamato direttamente utilizzando
     il suo URL e quindi deve essere completamente autosufficiente.
 
+    Si noti che per i job che non possono essere eseguiti in modalità standalone la scrittura della timestamp_esecuzione e del workspace è
+    effettuata in _src/_api/_job.php.
+
 */

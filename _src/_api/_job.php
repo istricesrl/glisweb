@@ -23,13 +23,18 @@
 
     // verifico la presenza di un ID
     if( isset( $_REQUEST['__id__'] ) ) {
+
+        // debug
         // echo "id del job " . $_REQUEST['__id__'];
+
+        // status
+        $status['info'][] = 'richiesta lavorazione del job #' . $_REQUEST['__id__'];
 
         // metto il lock sui job richiesto
         mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE job SET token = ? WHERE id = ? AND ('.
-            'timestamp_apertura <= ? OR timestamp_apertura IS NULL ) AND timestamp_completamento IS NULL AND token IS NULL ',
+            'UPDATE job SET token = ? WHERE id = ? AND '.
+            '( timestamp_apertura <= ? OR timestamp_apertura IS NULL ) AND timestamp_completamento IS NULL AND token IS NULL ',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['__id__'] ),
@@ -49,12 +54,15 @@
         // se il job è stato correttamente recuperato dal database
         if( isset( $job['workspace'] ) ) {
 
+            // status
+            $status['info'][] = 'lavoro il job #' . $job['id'];
+
             // log
             logWrite( 'workspace per il job #' . $job['id'] . print_r( $job['workspace'], true ), 'job' );
 
             // decodifica del workspace
             $job['workspace'] = json_decode( $job['workspace'], true );
-
+            
             /* CODICE PRINCIPALE DEL JOB */
             require DIR_BASE . $job['job'];
 
@@ -69,7 +77,10 @@
                 )
             );
 
-        } else {
+        } elseif( isset( $job['id'] ) ) {
+
+            // status
+            $status['info'][] = 'workspace vuoto per il job #' . $job['id'];
 
             // log
             logWrite( 'workspace vuoto per il job #' . $job['id'], 'job' );
@@ -83,10 +94,20 @@
                 )
             );
 
+        } else {
+
+            // status
+            $status['info'][] = 'nessun job trovato per il token' . $status['token'];
+
+            // log
+            logWrite( 'nessun job trovato per il token' . $status['token'], 'job' );
+
         }
 
         // log
-        appendToFile( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+        if( isset( $job['id'] ) ) {
+            appendToFile( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+        }
 
         // output
         buildJson( array_replace_recursive( $job, $status ) );

@@ -513,15 +513,6 @@
 
 			    }
 
-			// log
-			    logWrite( "eseguo ($a) la query: $q", 'controller', LOG_DEBUG );
-
-			// debug
-			    // echo 'controller ' . $t . '/' . $a . ' -> ' . $q . PHP_EOL;
-
-			// di default imposto lo stato a 'OK'
-			    $i['__status__'] = 200;
-
 			// gestione degli errori
 			    // @todo gestire gli errori
 			    // print_r( $e['__codes__'] );
@@ -536,6 +527,25 @@
 						$i['__status__'] = 400;
 						$i['__err__'] = $e['__codes__']['1054'][0];
 			    	}
+
+				} elseif( empty( $a ) ) {
+
+					// di default imposto lo stato a 'OK'
+					$i['__status__'] = 200;
+
+					// log
+					logWrite( "nessuna azione intrapresa per l'entità $t", 'controller', LOG_DEBUG );
+
+				} else {
+
+					// log
+					logWrite( "eseguo ($a) la query: $q", 'controller', LOG_DEBUG );
+
+					// debug
+						// echo 'controller ' . $t . '/' . $a . ' -> ' . $q . PHP_EOL;
+
+					// di default imposto lo stato a 'OK'
+						$i['__status__'] = 200;
 
 				}
 
@@ -607,7 +617,20 @@
 #C					$x = mysqlQuery( $c, 'SELECT * FROM information_schema.key_column_usage WHERE referenced_table_name = ? AND constraint_name NOT LIKE "%_nofollow" AND table_schema = database()', array( array( 's' => $t ) ) );
 #echo "cerco le referenze a $t" . PHP_EOL;
 #print_r( $x );
-					foreach( $x as $ref ) {
+$xrefs = array();
+foreach( $x as $ref ) {
+	$xrefs[ $ref['TABLE_NAME'] ]['TABLE_NAME'] = $ref['TABLE_NAME'];
+	$xrefs[ $ref['TABLE_NAME'] ]['COLUMN_NAME'][] = $ref['COLUMN_NAME'];
+}
+
+#1					foreach( $x as $ref ) {
+					foreach( $xrefs as $ref ) {
+
+						$refCols = array();
+						foreach( $ref['COLUMN_NAME'] as $colName ) {
+							$refCols[] = $colName ." = '".$d['id']."'";
+						}
+
 #print_r( $ref );
 #if( ! is_array($d) ) {
 #	var_dump($t);
@@ -615,9 +638,9 @@
 #	var_dump($d);
 #}
 					    $idx = array_column( mysqlQuery( $c, 'SHOW INDEX FROM ' . $ref['TABLE_NAME'] . ' WHERE key_name = "SORTING"' ), 'Column_name' );
-					    $q = "SELECT id FROM ".$ref['TABLE_NAME']." WHERE ".$ref['COLUMN_NAME']." = '".$d['id']."'" . ( ( count( $idx ) ) ? ' ORDER BY ' . implode( ', ', $idx ) : NULL );
+					    $q = "SELECT id FROM ".$ref['TABLE_NAME']." WHERE ".implode( ' OR ', $refCols ).( ( count( $idx ) ) ? ' ORDER BY ' . implode( ', ', $idx ) : NULL );
 					    $rows = mysqlQuery( $c, $q );
-					    logWrite( "cerco le referenze a ".$ref['TABLE_NAME']." dove ".$ref['COLUMN_NAME']." è ".$d['id'].", ".count( $rows )." referenze trovate", 'controller', LOG_DEBUG );
+					    logWrite( "cerco le referenze a ".$ref['TABLE_NAME']." dove ".implode( $ref['COLUMN_NAME'] )." è ".$d['id'].", ".count( $rows )." referenze trovate", 'controller', LOG_DEBUG );
 					    $tStart = timerNow();
 					    $ix = 0;
 					    foreach( $rows as $row ) {
@@ -635,11 +658,12 @@
 //						    controller( $c, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $r, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ] );
 						    controller( $c, $mc, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ], $i['__auth__'] );
 						    $ix++;
+#print_r( $d[ $ref['TABLE_NAME'] ][ $ix ] );
 						}
 					    }
 					    $tDone = timerDiff( $tStart );
 					    if( count( $rows ) > 10 || $tDone > 1.5 ) {
-						logWrite($ref['TABLE_NAME'].'.'.$ref['COLUMN_NAME'].' causa overload: '.$tDone.' secondi, '.count($rows).' righe', 'speed', LOG_ERR);
+						logWrite($ref['TABLE_NAME'].' causa overload: '.$tDone.' secondi, '.count($rows).' righe', 'speed', LOG_ERR);
 					    }
 					}
 				    }

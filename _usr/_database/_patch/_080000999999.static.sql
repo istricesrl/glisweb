@@ -85,11 +85,13 @@ CREATE TABLE `attivita_view_static` (
   `id_anagrafica` int DEFAULT NULL,
   `anagrafica` char(255) DEFAULT NULL,
   `ore` decimal(5,2) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `id_documento` int DEFAULT NULL,
   `documento` char(255) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `progetto` char(255) DEFAULT NULL,
+  `id_matricola` int DEFAULT NULL,
+  `id_immobile` int DEFAULT NULL,
   `id_todo` int DEFAULT NULL,
   `todo` char(255) DEFAULT NULL,
   `id_mastro_provenienza` int DEFAULT NULL,
@@ -105,10 +107,14 @@ CREATE TABLE `attivita_view_static` (
 
 --| 080000060000
 
+-- todo_view_static
+-- tipologia: tabella gestita
+-- verifica: 2021-05-28 13:12 Fabio Mosti
 CREATE TABLE `todo_view_static` (
   `id` int NOT NULL,
   `id_tipologia` int DEFAULT NULL,
   `tipologia` char(64) DEFAULT NULL,
+  `se_agenda` int DEFAULT NULL,
   `id_anagrafica` int DEFAULT NULL,
   `anagrafica` char(255) DEFAULT NULL,
   `id_cliente` int DEFAULT NULL,
@@ -126,10 +132,11 @@ CREATE TABLE `todo_view_static` (
   `settimana_programmazione` int DEFAULT NULL,
   `ore_programmazione` decimal(5,2) DEFAULT NULL,
   `data_chiusura` char(21) DEFAULT NULL,
-  `nome` char(255) NOT NULL,
+  `nome` char(255) DEFAULT NULL,
   `id_contatto` int DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_pianificazione` int DEFAULT NULL,
+  `id_immobile` int DEFAULT NULL,
   `data_archiviazione` char(32) DEFAULT NULL,
   `id_account_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,

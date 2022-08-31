@@ -55,6 +55,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM progetti_view' );
 
+    // tendina immobili
+	$ct['etc']['select']['immobili'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM immobili_view' );
+
     // tendina categorie attivita
 	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

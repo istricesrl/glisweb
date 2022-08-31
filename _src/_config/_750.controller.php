@@ -264,8 +264,11 @@
 	    // verifico se l'elemento è un blocco dati o un dato singolo
 		if( is_array( $v ) ) {
 
-		    // verifico se il blocco è speciale o contiene dati
-			if( substr( $k, 0, 2 ) !== '__' && strlen( $k ) > 1 ) {
+            // verifico se la richiesta è un report
+		    $report = ( substr( $k, 0, 8 ) == '__report' ) ? true : false;
+
+            // verifico se il blocco è speciale o contiene dati
+			if( ( substr( $k, 0, 2 ) !== '__' || $report !== false ) && strlen( $k ) > 1 ) {
 
 			    // log
 				logWrite( 'blocco dati ricevuto: ' . $k . '/' . $_SERVER['REQUEST_METHOD'], 'controller' );

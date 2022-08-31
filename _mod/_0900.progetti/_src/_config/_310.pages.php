@@ -19,11 +19,11 @@
  */
 
 // controllo cache
-if ($cf['contents']['cached'] === false) {
+if( $cf['contents']['cached'] === false ) {
 
     // log
     if( ! empty( $cf['memcache']['connection'] ) ) {
-        logWrite('struttura delle categorie catalogo NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
+        logWrite('struttura delle categorie progetti NON presente in cache, elaborazione DAL DATABASE...', 'performances', LOG_ERR);
     }
 
     // recupero le pagine dal database
@@ -43,7 +43,7 @@ if ($cf['contents']['cached'] === false) {
     );
 
     // timer
-    timerCheck($cf['speed'], ' -> fine recupero categorie catalogo dal database');
+    timerCheck($cf['speed'], ' -> fine recupero categorie progetti dal database');
 
     // se ci sono pagine trovate le inserisco nell'array principale
     if (is_array($pgs)) {
@@ -144,7 +144,8 @@ if ($cf['contents']['cached'] === false) {
     }
 
     // timer
-    timerCheck($cf['speed'], ' -> fine elaborazione categorie catalogo prelevate dal database');
+    timerCheck($cf['speed'], ' -> fine elaborazione categorie progetti prelevate dal database');
+
 } else {
 
     // recupero la timestamp di aggiornamento più recente

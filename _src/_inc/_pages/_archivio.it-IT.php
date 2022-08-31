@@ -84,6 +84,60 @@
 	    'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
 	);
 
+	// vista luoghi
+	$p['luoghi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'luoghi' ),
+		'h1'		=> array( $l		=> 'luoghi' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_luoghi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'luoghi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'luoghi' ),
+																				'priority'	=> '050' ) ) )
+	);
+
+	// gestione luoghi
+	$p['luoghi.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'luoghi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'luoghi.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_luoghi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'luoghi.form') )
+		
+	);
+
+		// vista tipologie luoghi
+	$p['tipologie.luoghi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'luoghi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.luoghi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.luoghi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione luoghi
+	$p['tipologie.luoghi.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'tipologie.luoghi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.luoghi.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.luoghi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.luoghi.form') )
+		
+	);
+
 	// vista immagini
 	$p['immagini.view'] = array(
 		'sitemap'		=> false,
@@ -245,3 +299,197 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['video.form']['etc']['tabs'] )
 	);
+
+	// vista valutazioni
+	$p['valutazioni.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'valutazioni' ),
+		'h1'		=> array( $l		=> 'valutazioni' ),
+		'parent'		=> array( 'id'		=> 'archivio' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_valutazioni.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'valutazioni.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'valutazioni' ),
+		'priority'	=> '300' ) ) )
+	);
+
+	// gestione video
+	$p['valutazioni.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'video.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'valutazioni.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_valutazioni.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 
+												'valutazioni.form'
+												 ) )	
+	);
+
+	// vista periodi
+	$p['periodi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'periodi' ),
+		'h1'		=> array( $l		=> 'periodi' ),
+		'parent'		=> array( 'id'		=> 'archivio' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_periodi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'periodi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'periodi' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione periodi
+	$p['periodi.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'periodi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'periodi.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_periodi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'periodi.form') )
+		
+	);
+
+	// vista tipologie periodi
+	$p['tipologie.periodi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'periodi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.periodi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.periodi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione periodi
+	$p['tipologie.periodi.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'tipologie.periodi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.periodi.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.periodi.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.periodi.form') )
+		
+	);
+
+	// vista zone
+	$p['zone.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'zone' ),
+		'h1'		=> array( $l		=> 'zone' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_zone.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'zone.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'zone' ),
+																				'priority'	=> '050' ) ) )
+	);
+
+	// gestione zone
+	$p['zone.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_zone.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'zone.form') )
+		
+	);
+	
+	// vista tipologie zone
+	$p['tipologie.zone.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.zone.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione zone
+	$p['tipologie.zone.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'tipologie.zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.zone.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.zone.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.form') )
+		
+	);
+
+/* TODO se non è attivo il modulo contenuti, i redirect dovrebbero comunque trovarsi in archivio
+
+	// vista redirect
+	$p['redirect.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'redirect' ),
+	    'h1'		=> array( $l		=> 'redirect' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'redirect.view',
+									'redirect.stats' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'redirect' ),
+									'priority'	=> '070' ) ) )										
+    );
+
+	// statistiche redirect
+	$p['redirect.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche' ),
+	    'h1'		=> array( $l		=> 'statistiche' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['redirect.view']['etc']['tabs'] )
+    );
+
+    // form redirect
+	$p['redirect.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'redirect.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'redirect.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'redirect.form',
+													'redirect.form.stats') )
+	);
+
+	// statistiche form redirect
+	$p['redirect.form.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche redirect' ),
+	    'h1'		=> array( $l		=> 'statistiche redirect' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['redirect.form']['etc']['tabs'] )
+    );
+
+*/

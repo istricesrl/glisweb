@@ -48,10 +48,10 @@
 	);
     
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'todo.form';
+	$ct['view']['open']['page'] = 'todo.amministrazione.form';
 
     // pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'todo.form';
+	$ct['view']['insert']['page'] = 'todo.amministrazione.form';
 
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_progetto';
@@ -60,7 +60,8 @@
         // preset filtro custom progetti aperti
 	    $ct['view']['__restrict__']['id_progetto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
-    // gestione default
+
+	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
 	// preset ordinamento

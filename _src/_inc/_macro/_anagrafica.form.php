@@ -30,6 +30,28 @@
 	    'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY nome ASC'
 	);
 
+	// tendina tipologie indirizzi
+	$ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_indirizzi_view ORDER BY nome ASC'
+	);
+
+    // tendina comuni
+	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM comuni_view'
+	);
+
+	// preset post inserimento rapido 
+	$ct['etc']['preset']['table'] = 'anagrafica';
+	$ct['etc']['preset']['subtable'] = 'anagrafica_indirizzi';
+	$ct['etc']['preset']['counter'] = isset( $_REQUEST['anagrafica']['anagrafica_indirizzi'] ) ? count( $_REQUEST['anagrafica']['anagrafica_indirizzi'] ) : 0;
+	$ct['etc']['preset']['field'] = 'id_indirizzo';
+
     // tendina sesso
 	$ct['etc']['select']['sesso'] = array( 
 	    array( 'id' => '-', '__label__' => '-' ),
@@ -138,7 +160,7 @@
 	$ct['etc']['select']['diritti'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM categorie_diritto_view' );
 
     // tendina agenti
-	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_agente = 1' );
+	$ct['etc']['select']['id_agente'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_commerciale = 1' );
 
     // tendina mandanti/fornitori
 	$ct['etc']['select']['id_mandante_fornitore'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM anagrafica_view_static WHERE se_mandante = 1 OR se_fornitore = 1' );
@@ -186,7 +208,7 @@
 	}
 
     // gli agenti possono solo inserire le attività
-#	if( isset( $_REQUEST['anagrafica']['id'] ) && isset( $_SESSION['account']['se_agente'] ) && ! empty( $_SESSION['account']['se_agente'] ) ) {
+#	if( isset( $_REQUEST['anagrafica']['id'] ) && isset( $_SESSION['account']['se_commerciale'] ) && ! empty( $_SESSION['account']['se_commerciale'] ) ) {
 	if( isset( $_REQUEST['anagrafica']['id'] ) ) {
 	    $ct['etc']['attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_cliente = ? ORDER BY data DESC', array( array( 's' => $_REQUEST['anagrafica']['id'] ) ) );
 #	    $_REQUEST['anagrafica']['attivita'] = array();
@@ -197,9 +219,15 @@
 	    $ct['etc']['select']['id_pec_sdi'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM mail_view WHERE id_anagrafica = ? AND se_pec = 1', array( array( 's' => $_REQUEST['anagrafica']['id'] ) ) );
 	}
 */
-
+/*
+	$ct['page']['contents']['metro'][NULL][] = array(
+		'modal' => array( 'id' => 'modal-inserimento-indirizzi', 'include' => 'inc/anagrafica.form.modal.aggiungi.indirizzo.html' )
+	);
+*/
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+	require DIR_SRC_INC_MACRO . '_default.tools.php';

@@ -158,18 +158,6 @@
     contatti.<m>.mail.<n>.exclude                          | arrai dei campi da escludere nella mail <n> per il modulo <m>
     contatti.<m>.mail.<n>.language                         | la lingua della mail <n>
     contatti.<m>.mail.<n>.template                         | il ruolo del template da utilizzare per la mail <n> oppure una definizione di template valida
-    contatti.<m>.privacy                                   | configurazioni relative alla privacy per il modulo <m>
-    contatti.<m>.privacy.titolo                            | titolo per la malleveria privacy del modulo <m>
-    contatti.<m>.privacy.titolo.<l>                        | titolo per la malleveria privacy del modulo <m> nella lingua <l>
-    contatti.<m>.privacy.descrizione                       | descrizione per la malleveria privacy del modulo <m>
-    contatti.<m>.privacy.descrizione.<l>                   | descrizione per la malleveria privacy del modulo <m> nella lingua <l>
-    contatti.<m>.privacy.finalita                          | array delle finalità di raccolta dei dati per la malleveria privacy del modulo <m>
-    contatti.<m>.privacy.finalita.<f>                      | descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m>
-    contatti.<m>.privacy.finalita.<f>.informativa          | testo di descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m>
-    contatti.<m>.privacy.finalita.<f>.informativa.<l>      | testo di descrizione della finalità <f> di raccolta dei dati per la malleveria privacy del modulo <m> nella lingua <l>
-    contatti.<m>.privacy.finalita.<f>.modulo               | label della finalità <f> di raccolta dei dati per le checkbox del modulo <m>
-    contatti.<m>.privacy.finalita.<f>.modulo.<l>           | label della finalità <f> di raccolta dei dati per le checkbox del modulo <m> nella lingua <l>
-    contatti.<m>.privacy.finalita.<f>.required             | valore booleano che indica se l'accettazione della finalità <f> di raccolta dei dati è obbligatoria per la gestione del modulo <m>
 
     L'array $cf['contatti'] è definito in _mod/_0300.contatti/_src/_config/_030.common.php e integrato con $cx['contatti'] in
     _mod/_0300.contatti/_src/_config/_035.common.php. Per la definizione di template mail valida, si veda la documentazione relativa a $cf['mail']['tpl'].
@@ -763,6 +751,19 @@
     privacy.finalita.<f>                                        | informazioni sulla finalità <f>
     privacy.finalita.<f>.descrizione                            | descrizioni della finalità <f>
     privacy.finalita.<f>.descrizione.<l>                        | descrizione della finalità <f> nella lingua <l>
+    privacy.moduli                                              | descrizione della privacy relativa ai moduli presenti sul sito
+    privacy.moduli.<m>                                          | descrizione della privacy per il modulo <m>
+    privacy.moduli.<m>.titolo                                   | titolo per la malleveria privacy del modulo <m>
+    privacy.moduli.<m>.titolo.<l>                               | titolo per la malleveria privacy del modulo <m> nella lingua <l>
+    privacy.moduli.<m>.descrizione                              | descrizione per la malleveria privacy del modulo <m>
+    privacy.moduli.<m>.descrizione.<l>                          | descrizione per la malleveria privacy del modulo <m> nella lingua <l>
+    privacy.moduli.<m>.consensi                                 | array dei consensi per la raccolta dei dati per la malleveria privacy del modulo <m>
+    privacy.moduli.<m>.consensi.<f>                             | descrizione del consenso <f> per la raccolta dei dati per la malleveria privacy del modulo <m>
+    privacy.moduli.<m>.consensi.<f>.informativa                 | testo di descrizione del consenso <f> per la raccolta dei dati per la malleveria privacy del modulo <m>
+    privacy.moduli.<m>.consensi.<f>.informativa.<l>             | testo di descrizione del consenso <f> per la raccolta dei dati per la malleveria privacy del modulo <m> nella lingua <l>
+    privacy.moduli.<m>.consensi.<f>.modulo                      | label del consenso <f> per la raccolta dei dati per le checkbox del modulo <m>
+    privacy.moduli.<m>.consensi.<f>.modulo.<l>                  | label del consenso <f> per la raccolta dei dati per le checkbox del modulo <m> nella lingua <l>
+    privacy.moduli.<m>.consensi.<f>.required                    | valore booleano che indica se l'accettazione del consenso <f> per la raccolta dei dati è obbligatoria per la gestione del modulo <m>
     privacy.responsabili                                        | array dei dettagli dei responsabili del trattamento
     privacy.responsabili.<r>                                    | dettagli del responsabile <r> del trattamento
     privacy.responsabili.<r>.cap                                | CAP della sede del responsabile <r> del trattamento
@@ -887,7 +888,7 @@
     registrazione.default.attivo          | valore booleano che indica se il nuovo account dev'essere creato come attivo o no
 
     L'array $cf['registrazione'] viene integrato da $cx['registrazione'] e da $cf['site']['registrazione'], per ulteriori dettagli vedi
-    _mod/_0650.registrazione/_src/_config/_030.common.php.
+    _mod/_0350.registrazione/_src/_config/_030.common.php.
 
     Per approfondimenti sul funzionamento del modulo registrazione, si veda /ref "moduli.0650" "la documentazione relativa al modulo registrazione".
 

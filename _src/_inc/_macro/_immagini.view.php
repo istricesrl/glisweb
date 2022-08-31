@@ -17,8 +17,7 @@
 	    'id' => '#',
 	    'nome' => 'titolo',
 	    '__label__' => 'path',
-	    'ruolo' => 'ruolo',
-	    'associato' => 'oggetto associato'
+	    'ruolo' => 'ruolo'
 	);
 
     // stili della vista

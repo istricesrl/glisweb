@@ -82,6 +82,9 @@
     // collegamento all'array $ct
 	$ct['memcache']					            = &$cf['memcache'];
 
+    // stringa di unicità per sito
+	define( 'REDIS_UNIQUE_SEED'			    , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
+
     // server redis disponibili
 	$cf['redis']['servers']				= array();
 

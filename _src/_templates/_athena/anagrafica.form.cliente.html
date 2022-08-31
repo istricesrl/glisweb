@@ -46,23 +46,22 @@
 	    {# MODULO PRINCIPALE #}
 
 	    <fieldset>
-		<legend>dati commerciali</legend>
-		
-		<div class="form-group form-row">
-			<div class="col">
-				<span class="label-top">ranking</span>
-				{{ frm.select( table, '', '', 'id_ranking', '', etc.select.ranking, request ) }}
-			</div>
-		    <div class="col">
-				<span class="label-top">agente</span>
-				{{ frm.selectBox( table, '', '', 'id_agente', '', etc.select.agenti, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_agente', page, pages, ietf ) }}
-			</div>
-			<div class="col">
-				<span class="label-top">responsabile operativo</span>
-				{{ frm.selectBox( table, '', '', 'id_responsabile_operativo', '', etc.select.responsabili_operativi, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_responsabile_operativo', page, pages, ietf ) }}
-			</div>
-		</div>
+			<legend>dati commerciali</legend>
 
+			<div class="form-group form-row">
+				<div class="col">
+					<span class="label-top">ranking</span>
+					{{ frm.select( table, '', '', 'id_ranking', '', etc.select.ranking, request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">agente</span>
+					{{ frm.selectBox( table, '', '', 'id_agente', '', etc.select.agenti, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_agente', page, pages, ietf ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">responsabile operativo</span>
+					{{ frm.selectBox( table, '', '', 'id_responsabile_operativo', '', etc.select.responsabili_operativi, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_responsabile_operativo', page, pages, ietf ) }}
+				</div>
+			</div>
 		</fieldset>
 
 	    <fieldset>
@@ -70,16 +69,16 @@
 			
 			<div class="form-group form-row">
 				<div class="col">
-					<span class="label-top">note amministrative</span>
-					{{ frm.textarea( table, '', '', 'note_amministrative', '', 3, request ) }}
+					<span class="label-top">note commerciali</span>
+					{{ frm.textarea( table, '', '', 'note_commerciali', '', 5, request ) }}
 				</div>
 				<div class="col">
 					<span class="label-top">condizioni di vendita</span>
-					{{ frm.textarea( table, '', '', 'condizioni_vendita', '', 3, request ) }}
+					{{ frm.textarea( table, '', '', 'condizioni_vendita', '', 5, request ) }}
 				</div>
 				<div class="col">
-					<span class="label-top">note commerciali</span>
-					{{ frm.textarea( table, '', '', 'note_commerciali', '', 3, request ) }}
+					<span class="label-top">note amministrative</span>
+					{{ frm.textarea( table, '', '', 'note_amministrative', '', 5, request ) }}
 				</div>
 			</div>
 		</fieldset>
@@ -101,17 +100,17 @@
 					{{ frm.selectRequired( table, '', '', 'id_regime', '', etc.select.regimi, request, '', 1 ) }}
 				</div>
 			</div>
-			</fieldset>
-	
-			<fieldset>
-				<legend>fatturazione elettronica</legend>
-	
+		</fieldset>
+
+		<fieldset>
+			<legend>fatturazione elettronica</legend>
+
 			<div class="form-group form-row">
 				<div class="col-12 col-md-4">
 					<span class="label-top-disabled">codice archivium</span>
 					{{ frm.inputDisabled( table, '', '', 'codice_archivium', '', '', request ) }}	
 				</div>
-	
+
 				<div class="col-12 col-md-4">
 					<span class="label-top">cod. destinatario SDI</span>
 					{{ frm.input( table, '', '', 'codice_sdi', '', '', request, '', '', '', '', '', '', '[A-Z0-9]+' ) }}
@@ -122,8 +121,8 @@
 					{{ frm.select( table, '', '', 'id_pec_sdi', '', etc.select.pec, request ) }}
 				</div>
 			</div>
-	
-			</fieldset>
+
+		</fieldset>
 			
 		{# SUBFORM SETTORI E ATTIVITA #}
 		{{ dfs.settori( table, 'anagrafica_settori', 'settori e attività', site, page, pages, localization.language.ietf, etc, request, session ) }}
