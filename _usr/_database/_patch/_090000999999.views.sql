@@ -1380,6 +1380,51 @@ CREATE OR REPLACE VIEW `contratti_archiviati_view` AS
     GROUP BY contratti.id
 ;
 
+--| 090000007500
+
+-- conversazioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `conversazioni_view`;
+
+--| 090000007501
+
+-- conversazioni_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+CREATE OR REPLACE VIEW conversazioni_view AS
+	SELECT
+		conversazioni.id,
+		conversazioni.nome,
+		conversazioni.timestamp_apertura,
+		conversazioni.timestamp_chiusura,
+		conversazioni.nome AS __label__
+	FROM
+		conversazioni
+;
+
+--| 090000007600
+
+-- conversazioni_account_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `conversazioni_account_view`;
+
+--| 090000007601
+
+-- conversazioni_account_view
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+CREATE OR REPLACE VIEW conversazioni_account_view AS
+	SELECT
+		conversazioni_account.id,
+		conversazioni_account.id_conversazione,
+		conversazioni_account.id_account,
+		conversazioni_account.timestamp_entrata,
+		conversazioni_account.timestamp_uscita,
+		concat( conversazioni_account.id_conversazione, ' - ', conversazioni_account.id_account) AS __label__
+	FROM
+		conversazioni_account
+;
+
 --| 090000008000
 
 -- coupon_view

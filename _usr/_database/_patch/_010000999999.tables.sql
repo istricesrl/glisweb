@@ -699,6 +699,32 @@ CREATE TABLE `contratti` (
   `timestamp_aggiornamento` int DEFAULT NULL
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000007500
+
+-- conversazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+CREATE TABLE IF NOT EXISTS `conversazioni` (
+  `id` int(11) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `note` text,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `timestamp_chiusura` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000007600
+
+-- conversazioni_account
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+CREATE TABLE IF NOT EXISTS `conversazioni_account` (
+  `id` int(11) NOT NULL,
+  `id_conversazione` int(11) NOT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `timestamp_entrata` int(11) DEFAULT NULL,
+  `timestamp_uscita` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000008000
 
 -- coupon

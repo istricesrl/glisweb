@@ -694,6 +694,44 @@ ADD PRIMARY KEY (`id`),
 -- tipologia: tabella gestita
 ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000007500
+
+-- conversazioni
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+ALTER TABLE `conversazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `timestamp_apertura` (`timestamp_apertura`),
+	ADD KEY `timestamp_chiusura` (`timestamp_chiusura`),
+	ADD KEY `indice` (`id`,`nome`,`timestamp_chiusura`,`timestamp_apertura`);
+
+--| 030000007501
+
+-- conversazioni
+-- tipologia: tabella gestita
+ALTER TABLE `conversazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000007600
+
+-- conversazioni_account
+-- tipologia: tabella gestita
+-- verifica: 2022-08-31 11:50 Chiara GDL
+ALTER TABLE `conversazioni_account`
+ 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_conversazione`,`id_account`),
+	ADD KEY `id_conversazione` (`id_conversazione`),
+	ADD KEY `id_account` (`id_account`),
+ 	ADD KEY `timestamp_entrata` (`timestamp_entrata`), 
+ 	ADD KEY `timestamp_uscita` (`timestamp_uscita`), 
+	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_entrata`, `timestamp_uscita`);
+	
+--| 030000007601
+
+-- conversazioni_account
+-- tipologia: tabella gestita
+ALTER TABLE `conversazioni_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000008000
 
 -- coupon
