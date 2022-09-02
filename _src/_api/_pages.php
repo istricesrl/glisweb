@@ -332,68 +332,77 @@
     // timer
 	timerCheck( $cf['speed'], 'fine check memoria' );
 
-    // ricerca delle risorse CSS minificate
-	if( isset( $ct['page']['css'] ) && is_array( $ct['page']['css'] ) ) {
-	    foreach( $ct['page']['css'] as $tier => &$rCss ) {
-		foreach( $rCss as &$css ) {
-		    switch( $tier ) {
-			case 'internal':
-			    $pre = DIR_BASE;
-			break;
-			case 'template':
-			    $pre = DIR_BASE . $ct['page']['template']['path'];
-			break;
-			default:
-			    $pre = NULL;
-			break;
-		    }
-		    if( strpos( $css, '.min.css' ) === false ) {
-			$new = str_replace( '.css', '.min.css', $css );
-			if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
-			    logWrite( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
-			    $css = $new;
+	// ricerca delle risorse minificate
+	if( $cf['site']['status'] == PRODUCTION ) {
+
+		// ricerca delle risorse CSS minificate
+		if( isset( $ct['page']['css'] ) && is_array( $ct['page']['css'] ) ) {
+			foreach( $ct['page']['css'] as $tier => &$rCss ) {
+				foreach( $rCss as &$css ) {
+					switch( $tier ) {
+						case 'internal':
+							$pre = DIR_BASE;
+						break;
+						case 'template':
+							$pre = DIR_BASE . $ct['page']['template']['path'];
+						break;
+						default:
+							$pre = NULL;
+						break;
+					}
+					if( strpos( $css, '.min.css' ) === false ) {
+						$new = str_replace( '.css', '.min.css', $css );
+						if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
+							logWrite( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
+							$css = $new;
+						} else {
+							logWrite( $new . ' non trovato', 'speed', LOG_WARNING );
+						}
+					}
+				}
 			}
-		    }
 		}
-	    }
-	}
 
-    // timer
-	timerCheck( $cf['speed'], 'fine ricerca CSS minificati' );
+		// timer
+		timerCheck( $cf['speed'], 'fine ricerca CSS minificati' );
 
-    // ricerca delle risorse JS minificate
-	if( isset( $ct['page']['js'] ) && is_array( $ct['page']['js'] ) ) {
-	    foreach( $ct['page']['js'] as $tier => &$rJs ) {
-		foreach( $rJs as &$js ) {
-		    switch( $tier ) {
-			case 'internal':
-			    $pre = DIR_BASE;
-			break;
-			case 'template':
-			    $pre = DIR_BASE . $ct['page']['template']['path'];
-			break;
-			default:
-			    $pre = NULL;
-			break;
-		    }
-		    if( strpos( $js, '.min.js' ) === false ) {
-			$new = str_replace( '.js', '.min.js', $js );
-			if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
-			    logWrite( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
-			    $js = $new;
+		// ricerca delle risorse JS minificate
+		if( isset( $ct['page']['js'] ) && is_array( $ct['page']['js'] ) ) {
+			foreach( $ct['page']['js'] as $tier => &$rJs ) {
+				foreach( $rJs as &$js ) {
+					switch( $tier ) {
+						case 'internal':
+							$pre = DIR_BASE;
+						break;
+						case 'template':
+							$pre = DIR_BASE . $ct['page']['template']['path'];
+						break;
+						default:
+							$pre = NULL;
+						break;
+					}
+					if( strpos( $js, '.min.js' ) === false ) {
+						$new = str_replace( '.js', '.min.js', $js );
+						if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
+							logWrite( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
+							$js = $new;
+						} else {
+							logWrite( $new . ' non trovato', 'speed', LOG_WARNING );
+						}
+					}
+				}
 			}
-		    }
 		}
-	    }
+
+		// debug
+		// print_r( $ct['page'] );
+		// print_r( $ct['contatti'] );
+		// print_r( $ct['view']['open'] );
+
+		// timer
+		timerCheck( $cf['speed'], 'fine ricerca JS minificati' );
+
 	}
-
-    // debug
-	// print_r( $ct['page'] );
-	// print_r( $ct['contatti'] );
-	// print_r( $ct['view']['open'] );
-
-    // timer
-	timerCheck( $cf['speed'], 'fine ricerca JS minificati' );
 
     // timer
 	timerCheck( $cf['speed'], 'censura e ordinamento array $ct' );
