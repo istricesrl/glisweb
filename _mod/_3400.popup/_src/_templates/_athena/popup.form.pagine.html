@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row flex-fill">
-    <div class="col-md-12 d-flex flex-column">
-		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+<section class="row">
+    <div class="col-md-12">
+	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -44,7 +44,7 @@
 
 	    {# MODULO PRINCIPALE #}
 	  
-		{{ sub.pagine( table, 'popup_pagine', 'pagine', site, page, pages, lang, etc, request, session ) }}
+		{{ sub.pagine( table, 'popup_pagine', 'pagine', site, page, pages, ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls">

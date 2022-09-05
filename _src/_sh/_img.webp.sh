@@ -19,18 +19,18 @@ apt-get install webp
 ## converto i jpg in webp
 find ./var -iname "*.jpg" | while read i; do
     if [[ ! -f "${i%.jpg}.webp" || "$i" -nt "${i%.jpg}.webp" ]]; then
-	cwebp -q 85 "$i" -o "${i%.jpg}.webp"
+	    cwebp -q 85 "$i" -o "${i%.jpg}.webp"
     else
-	echo "skipped $i"
+	    echo "skipped $i"
     fi
 done
 
 ## converto i png in webp
 find ./var -iname "*.png" | while read i; do
     if [[ ! -f "${i%.png}.webp" || "$i" -nt "${i%.png}.webp" ]]; then
-	cwebp -q 85 "$i" -o "${i%.png}.webp"
+	    cwebp -q 85 "$i" -o "${i%.png}.webp"
     else
-	echo "skipped $i"
+	    echo "skipped $i"
     fi
 done
 

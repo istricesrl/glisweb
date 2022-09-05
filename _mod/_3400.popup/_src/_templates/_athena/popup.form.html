@@ -29,9 +29,9 @@
 {% endif %}
 
 {# FORM DI GESTIONE #}
-<section class="row flex-fill">
-    <div class="col-md-12 d-flex flex-column">
-		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+<section class="row">
+    <div class="col-md-12">
+	<form id="form-{{ table }}" class="warning-if-changed" action="{{ page.path[ ietf ] }}" method="post">
 
 	    {# CAMPI HIDDEN DI BASE #}
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
@@ -53,11 +53,11 @@
 		    </div>
 		    <div class="col-12 col-md-4">
 			<span class="label-top">id html</span>
-			{{ frm.input( table, '', '', 'id_html', '', '', request ) }}
+			{{ frm.inputRequired( table, '', '', 'html_id', '', '', request ) }}
             </div>
             <div class="col-12 col-md-4">
             <span class="label-top">classi html</span>
-            {{ frm.input( table, '', '', 'classi_html', '', '', request ) }}
+            {{ frm.input( table, '', '', 'html_class', '', '', request ) }}
 			</div>
 		</div>
 		</fieldset>
@@ -88,8 +88,12 @@
 				</div>
 				<div class="col-12 col-md-3">
 					<span class="label-top">classe attivazione</span>
-					{{ frm.input( table, '', '', 'classe_attivazione', '', '', request ) }}
-					</div>
+					{{ frm.input( table, '', '', 'html_class_attivazione', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-auto">
+					<span class="label-top">sito</span>
+					{{ frm.selectRequired( table, '', '', 'id_sito', '', etc.select.siti, request) }}
+				</div>  
 				<div class="col-auto col-form-label">
 					<span class="label-top">&nbsp;</span>
 					<div class="form-check">
@@ -113,10 +117,10 @@
 			</div>  
 		</fieldset>
 
-		{# SUBFORM PUBBLICAZIONI #}
+		{# SUBFORM PUBBLICAZIONE #}
         {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_popup' ) }}
 
-		{# BOTTONI E COMANDI DEL MODULO #}
+        {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 		</fieldset>
