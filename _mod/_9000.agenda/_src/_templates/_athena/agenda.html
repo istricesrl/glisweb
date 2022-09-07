@@ -50,31 +50,34 @@
 %}
 
 <fieldset>
-    
     <div class="form-row">
-    <div class="col-6">
-        <legend>nuova todo</legend>
-        <div class="form-row">
-        {% for b in etc.id_tipologia_todo %}
-        <div class="col-4 text-right">
-            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
+        {% if '1200.todo' in mods.active.array %}
+        <div class="col">
+            <legend>nuova todo</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_todo %}
+            <div class="col-4 text-right">
+                <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
+            </div>
+            {% endfor %}
+            </div>
         </div>
-        {% endfor %}
-    </div>
-    </div>
-    <div class="col-6">
-        <legend>nuovo promemoria</legend>
-        <div class="form-row">
-        {% for b in etc.id_tipologia_attivita %}
-        <div class="col-4 text-right">
-            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}', '_self')">{{ b.__label__ }}</button>
+        {% endif %}
+        {% if '0200.attivita' in mods.active.array %}
+        <div class="col">
+            <legend>nuovo promemoria</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_attivita %}
+            <div class="col-4 text-right">
+                <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}', '_self')">{{ b.__label__ }}</button>
+            </div>
+            {% endfor %}
+            </div>
         </div>
-        {% endfor %}
-        </div>
-    </div>
-
+        {% endif %}
     </div>
 </fieldset>
+
 {% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
 <fieldset>
     <legend>da fissare</legend>
