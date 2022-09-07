@@ -38,7 +38,7 @@
 	    'icon' => NULL,
 	    'fa' => 'fa-list',
 	    'title' => 'lista anagrafica',
-	    'text' => 'mostra la lista delle anagrafica',
+	    'text' => 'mostra la lista delle anagrafiche',
         'colspan' => 3
 	);
 
