@@ -6,9 +6,9 @@
 		return $d && $d->format($format) == $date;
 	}
 	
-	if( isset( $_SESSION['account']['id_anagrafica'] ) ){
-/*
-		// soluzioni
+	if( isset( $_SESSION['account']['id_anagrafica'] ) ) {
+
+		// attività
 		$ct['etc']['attivita'] = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT \'a\' AS entita, a2.telefoni, a2.mail, todo.id_progetto AS progetto_todo, todo.nome AS nome_todo, concat( todo.id_progetto, " " ,todo.nome ) AS label_todo, '.
@@ -31,7 +31,7 @@
 			'ORDER BY attivita.data_programmazione, attivita.ora_inizio_programmazione',
 			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 		);
-*/
+
 		$ct['etc']['agenda_da_fissare']['todo'] = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT  todo_view.*, count(attivita.id) AS n_attivita FROM todo_view LEFT JOIN attivita ON attivita.id_todo = todo_view.id WHERE attivita.data_attivita IS NULL AND todo_view.id_anagrafica = ? AND todo_view.data_chiusura IS NULL GROUP BY todo_view.id HAVING n_attivita = 0',
@@ -50,9 +50,9 @@
 			'WHERE tipologie_todo.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND (todo.id_anagrafica = ? AND attivita.id_anagrafica_programmazione <> ?) AND todo.data_chiusura IS NULL '.( isset($todo) && count($todo)>0 ? ' AND todo.id NOT IN ('.implode(',',$todo).') ' : ' ' ).' GROUP BY todo.id  HAVING n_attivita > 0',
 			array( array( 's' => $_SESSION['account']['id_anagrafica'] ),  array( 's' => $_SESSION['account']['id_anagrafica'] )  ) );
 
-		} else {
+	} else {
 
-		// elenco attivita
+		// attivita
 		$ct['etc']['attivita'] = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT \'a\' AS entita,a2.telefoni, a2.mail, todo.nome AS nome_todo, todo.testo AS testo_todo, attivita.note_programmazione, '.
@@ -83,9 +83,10 @@
 		$ct['etc']['todo'] = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT \'t\' AS entita, todo_view.*, count(attivita.id) AS n_attivita FROM todo_view LEFT JOIN attivita ON attivita.id_todo = todo_view.id WHERE todo_view.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND todo_view.data_chiusura IS NULL GROUP BY todo_view.id HAVING n_attivita > 0');
+
 	}
 
-	if( !empty( $ct['etc']['todo'] ) ){
+	if( ! empty( $ct['etc']['todo'] ) ) {
 
 		foreach( $ct['etc']['todo']  as $evento ) {
 		
@@ -100,7 +101,7 @@
 
 	}
 
-	if( !empty( $ct['etc']['attivita'] ) ){
+	if( ! empty( $ct['etc']['attivita'] ) ) {
 		
 		foreach( $ct['etc']['attivita']  as $evento ) {
 			
@@ -115,7 +116,7 @@
 	}
 
 	// tendina tipologia attivita
-	 $ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
+	$ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
 	// tendina tipologia attivita
 	$ct['etc']['id_tipologia_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view WHERE se_agenda IS NOT NULL' );
