@@ -216,7 +216,7 @@
     video                           | 065000    | base          | contenuti     | contiene i video
 
     le tabelle di relazione
-    ------------------
+    -----------------------
     Le tabelle di relazione servono per mettere in relazioni molti a molti oggetti di tabelle principali con altri oggetti della stessa tabella
 
     tabella                         | codice    | modello       | gruppo        | descrizione
@@ -227,6 +227,21 @@
     relazioni_pagamenti             | 030440    | relazione     | secondario    | mette in relazione pagamenti e pagamenti
     relazioni_progetti              | 030490    | relazione     | secondario    | mette in relazione progetti e progetti
     relazioni_software              | 030500    | relazione     | secondario    | mette in relazione software e software
+
+    tabelle virtuali
+    ----------------
+    Le tabelle virtuali sono entità fittizie per cui esiste una view ma non una tabella; si appoggiano a tabelle di entità già esistenti suddivise per tipologia, secondo
+    questo schema:
+
+    tabella reale                   | tabella di tipologia          | ID tipologia      | tipologia             | flag              | tabella virtuale
+    --------------------------------|-------------------------------|-------------------|-----------------------|-------------------|--------------------------------
+    progetti                        | tipologie_progetti            | 6                 | corso                 | se_didattica      | corsi
+
+    La corrispondenza inversa fra tabelle virtuali e tabelle reali è la seguente:
+
+    tabella virtuale                | tabella reale
+    --------------------------------|----------------------------------------
+    corsi                           | progetti
 
     tabelle e moduli
     ================

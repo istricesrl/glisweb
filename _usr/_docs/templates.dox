@@ -196,6 +196,27 @@
     - il file di schema estende il file base tramite la direttiva extends
     - nel file di schema vengono dichiarati e valorizzati solo i blocchi effettivamente utilizzati
 
+    le favicons
+    -----------
+    Il framework consente di impostare le favicons per i siti web realizzati.
+    Di default, le favicons vengono lette dalla cartella img/favicons del template standard utilizzato. È possibile tuttavia utilizzare delle favicons personalizzate nel modo seguente:
+    - in caso di sito singolo, le immagini relative alle favicons possono essere inserite nella cartella img/favicons del template custom utilizzato
+    - in caso di multisito:
+      - se più siti utilizzano lo stesso template e devono avere la stessa favicon, procedere come nel caso di sito singolo
+      - se più siti utilizzano lo stesso template ma devono avere favicons differenti, è necessario creare nella cartella img/favicons del template custom una cartella per ogni sito, denominandola con l'id del sito stesso. All'interno di tali cartelle andranno caricate le favicons da utilizzare.
+
+    esempi:
+    - sito singolo che utilizza template arianna: caricare le immagini relative alle favicons nella cartella src/templates/arianna/img/favicons
+    - multisito con più siti che utilizzano template arianna ma devono avere favicons differenti, con id_sito rispettivamente pari a 1 e 2:
+      - per il sito di id = 1 creare la cartella src/templates/arianna/img/favicons/1 e qui caricare le immagini da utilizzare per questo sito
+      - per il sito di id = 2 creare la cartella src/templates/arianna/img/favicons/2 e qui caricare le immagini da utilizzare per questo sito
+
+    I file di immagini relativi alle favicons devono essere denominati in modo da contenere il dettaglio su tipologia e dimensione.
+    Ad esempio "android-icon-192x192", "apple-icon-144x144.png", "favicon-32x32.png"
+    È possibile creare le favicons, partendo da un'immagine di riferimento, utilizzando il tool al link seguente: https://www.favicon-generator.org/
+
+
+
     file di libreria e file includibili
     -----------------------------------
     Il framework mette a disposizione degli sviluppatori di template alcune librerie di macro Twig molto utili per sveltire

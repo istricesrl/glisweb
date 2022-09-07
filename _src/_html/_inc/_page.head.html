@@ -14,7 +14,7 @@
 <meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
 <meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
 
-{% for icon in page.template.favicons %}<link rel="{{ icon.rel }}" sizes="{{ icon.sizes }}"{% if icon.type %} type="{{ icon.type }}"{% endif %} href="{{ site.url }}/{{ page.template.path }}img/favicons/{{ icon.file }}">{% endfor %}
+{% for icon in page.template.favicons %}<link rel="{{ icon.rel }}" sizes="{{ icon.sizes }}"{% if icon.type %} type="{{ icon.type }}"{% endif %} href="{{ site.url }}{{ icon.file }}">{% endfor %}
 
 {% if page.canonical %}<link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">{% endif %}
 

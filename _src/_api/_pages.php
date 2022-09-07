@@ -249,34 +249,49 @@
     // timer
 	timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
 
-    // ricerca favicons
-	$favicons = glob( DIR_BASE . $ct['page']['template']['path'] . 'img/favicons/*.png', GLOB_BRACE );
+    // ricerca favicons per il sito corrente custom
+	$favicons = glob( path2custom( DIR_BASE . $ct['page']['template']['path'] . 'img/favicons/'.$cf['site']['id'].'/*.png' ), GLOB_BRACE );
+
+    // ricerca favicons per il template corrente custom
+	if( empty( $favicons ) ) {
+		$favicons = glob( path2custom( DIR_BASE . $ct['page']['template']['path'] . 'img/favicons/*.png' ), GLOB_BRACE );
+	}
+
+    // ricerca favicons per il template corrente standard
+	if( empty( $favicons ) ) {
+		$favicons = glob( DIR_BASE . $ct['page']['template']['path'] . 'img/favicons/*.png', GLOB_BRACE );
+	}
+
+	// inizializzazione array delle favicons
 	$ct['page']['template']['favicons'] = array();
+
+    // popolazione array delle favicons
 	foreach( $favicons as $favicon ) {
-	    $favicon = basename( $favicon );
-	    preg_match_all( '/([a-z\-]*)\-([0-9x]*)\.([a-z]*)/', $favicon, $details );
+	    preg_match_all( '/([a-z\-]*)\-([0-9x]*)\.([a-z]*)/', basename( $favicon ), $details );
 	    if( ! empty( $details[0][0] ) ) {
-		switch( $details[1][0] ) {
-		    case 'apple-icon':
-			$ct['page']['template']['favicons'][] = array(
-			    'rel' => 'apple-touch-icon',
-			    'sizes' => $details[2][0],
-			    'file' => $details[0][0]
-			);
-		    break;
-		    case 'android-icon':
-		    case 'favicon':
-			$ct['page']['template']['favicons'][] = array(
-			    'rel' => 'icon',
-			    'sizes' => $details[2][0],
-			    'file' => $details[0][0],
-			    'type' => 'image/png'
-			);
-		    break;
-		}
+			switch( $details[1][0] ) {
+				case 'apple-icon':
+					$ct['page']['template']['favicons'][] = array(
+						'rel' => 'apple-touch-icon',
+						'sizes' => $details[2][0],
+						'file' => shortPath( $favicon )
+					);
+				break;
+				case 'android-icon':
+				case 'favicon':
+					$ct['page']['template']['favicons'][] = array(
+						'rel' => 'icon',
+						'sizes' => $details[2][0],
+						'file' => shortPath( $favicon ),
+						'type' => 'image/png'
+					);
+				break;
+			}
 	    }
 	}
-#	asort( $ct['page']['template']['favicons'] );
+
+	// ordinamento
+	// asort( $ct['page']['template']['favicons'] );
 
     // debug
 	// print_r( $ct['page']['template']['favicons'] );
