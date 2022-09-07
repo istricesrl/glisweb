@@ -191,7 +191,7 @@
 					// echo 'patch level del file ' . $pFilePatchLevel . HTML_EOL;
 					// echo 'patch level del database ' . $patchLevel . HTML_EOL;
 	
-					if( $pFilePatchLevel > $patchLevel ) {
+					if( $pFilePatchLevel > $patchLevel || isset( $_REQUEST['dbPatch'] ) ) {
 	
 						// echo 'prelevo le patch dal file ' . $pFilePatchLevel . HTML_EOL;
 	
@@ -208,36 +208,49 @@
 	
 									// echo 'eseguo la patch ' . $pId . PHP_EOL;
 	
-									if( $pId > $patchLevel ) {
+									if( $pId > $patchLevel || isset( $_REQUEST['dbPatch'] ) ) {
 
 											appendToFile( 'elaborazione patch -> ' . $patchLevel . PHP_EOL, FILE_LATEST_RUN );
 
-											$pEx = mysqlQuery(
+											$checkOk = mysqlSelectColumn(
+												'note_esecuzione',
 												$cf['mysql']['connection'],
-												$pQuery
-											);
-			
-											// echo 'scrivo la patch ' . $pId . HTML_EOL;
-			
-											$pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
-			
-											if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
-												// echo $pQuery . HTML_EOL;
-												// echo $pStatus . HTML_EOL;
-											}
-			
-											mysqlInsertRow(
-												$cf['mysql']['connection'],
+												'SELECT note_esecuzione FROM __patch__ WHERE id = ?',
 												array(
-													'id' => $pId,
-													'patch' => trim( $pQuery ),
-													'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
-													'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
-												),
-												'__patch__',
-												false
+													array( 's' => $pId )
+												)
 											);
-		
+
+											if( $checkOk !== 'OK' ) {
+
+												$pEx = mysqlQuery(
+													$cf['mysql']['connection'],
+													$pQuery
+												);
+				
+												// echo 'scrivo la patch ' . $pId . HTML_EOL;
+				
+												$pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
+				
+												if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
+													// echo $pQuery . HTML_EOL;
+													// echo $pStatus . HTML_EOL;
+												}
+				
+												mysqlInsertRow(
+													$cf['mysql']['connection'],
+													array(
+														'id' => $pId,
+														'patch' => trim( $pQuery ),
+														'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
+														'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
+													),
+													'__patch__',
+													false
+												);
+
+											}
+
 											$patchLevel = $pId;
 
 										} else {
@@ -255,9 +268,9 @@
 								$pId = substr( $row, 4, 12 );
 								if( $pId == '------------' ) { $pId = date( 'YmdHis' ); }
 
-                $pQuery = null;
+							$pQuery = null;
 
-                // echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
+							// echo 'inizio la lettura della patch ' . $pId . HTML_EOL;
 								
 							} elseif( substr( trim( $row ), 0, 2 ) !== '--' ) {
 		
