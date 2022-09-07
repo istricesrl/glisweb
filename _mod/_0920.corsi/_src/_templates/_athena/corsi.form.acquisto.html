@@ -60,11 +60,6 @@
                 </div>
             </div>
             {% else %}
-                {# SUBFORM PUBBLICAZIONI #}
-                {{ sub.pubblicazioni( 'prodotti', 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
-        	    <fieldset class="">
-                    {{ def.controls( page, pages, ietf, session, table, request ) }}
-                </fieldset>
                 <legend>articoli</legend>
                 {% include 'inc/view.html' %}
             {% endif %}
