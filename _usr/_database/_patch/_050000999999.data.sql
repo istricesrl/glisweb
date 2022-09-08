@@ -472,10 +472,11 @@ REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) V
 -- ranking
 -- tipologia: tabella assistita
 -- verifica: 2021-10-11 17:48 Fabio Mosti
-REPLACE INTO `ranking` (`id`, `nome`, `ordine`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	'GOLD',	    100,	NULL,	NULL,	NULL,	NULL),
-(2,	'SILVER',	200,	NULL,	NULL,	NULL,	NULL),
-(3,	'BRONZE',	300,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_fornitore`, `se_progetti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'PLATINUM',	NULL,	100,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	'GOLD',	NULL,	200,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	'SILVER',	NULL,	300,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	'BRONZE',	NULL,	400,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000029800
 

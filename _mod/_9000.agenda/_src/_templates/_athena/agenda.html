@@ -50,31 +50,34 @@
 %}
 
 <fieldset>
-    
     <div class="form-row">
-    <div class="col-6">
-        <legend>nuova todo</legend>
-        <div class="form-row">
-        {% for b in etc.id_tipologia_todo %}
-        <div class="col-4 text-right">
-            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
+        {% if '1200.todo' in mods.active.array %}
+        <div class="col">
+            <legend>nuova todo</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_todo %}
+            <div class="col-4 text-right">
+                <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.todo.form"].url[ localization.language.ietf ] }}?__preset__[todo][id_tipologia]={{ b.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}', '_self')">{{ b.__label__ }}</button>
+            </div>
+            {% endfor %}
+            </div>
         </div>
-        {% endfor %}
-    </div>
-    </div>
-    <div class="col-6">
-        <legend>nuovo promemoria</legend>
-        <div class="form-row">
-        {% for b in etc.id_tipologia_attivita %}
-        <div class="col-4 text-right">
-            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}', '_self')">{{ b.__label__ }}</button>
+        {% endif %}
+        {% if '0200.attivita' in mods.active.array %}
+        <div class="col">
+            <legend>nuovo promemoria</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_attivita %}
+            <div class="col-4 text-right">
+                <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}', '_self')">{{ b.__label__ }}</button>
+            </div>
+            {% endfor %}
+            </div>
         </div>
-        {% endfor %}
-        </div>
-    </div>
-
+        {% endif %}
     </div>
 </fieldset>
+
 {% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
 <fieldset>
     <legend>da fissare</legend>
@@ -86,8 +89,8 @@
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
-            <span style="color:#747577; font-size: larger;">{% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %} <b>{{ e.nome }}</b> </span>
-		    {% if e.id_cliente %}<br><b>{{ e.cliente }}</b></span><span style="font-weight:normal;">{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %}</span> {% endif %} {% endif %}
+            {% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %} <b>{{ e.nome }}</b>
+		    {% if e.id_cliente %}<br><b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>
 	    </div>
@@ -128,8 +131,9 @@
     <div class="col">
         <div class="form-row">
         <div class="col">
-            <span style="color:#747577; font-size: larger;">{% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if e.data_programmazione  %}il {{ e.data_programmazione|date('d/m/Y') }}{% else %}la settimana {{e.settimana_programmazione}}/{{e.anno_programmazione}}{% endif %} per cliente {% if e.id_cliente %}<b>{{ e.cliente }}</b>{% endif %}</span><br>
-              {{ e.nome }}</span> &mdash; {{ e.testo }} {{ e.note_programmazione }}
+            {% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if e.data_programmazione  %}il {{ e.data_programmazione|date('d/m/Y') }}{% else %}la settimana {{e.settimana_programmazione}}/{{e.anno_programmazione}}{% endif %} per cliente {% if e.id_cliente %}<b>{{ e.cliente }}</b>{% endif %}
+            <br>
+            {{ e.nome }} &mdash; {{ e.testo }} {{ e.note_programmazione }}
         </div>
         </div>
     </div>
@@ -147,13 +151,13 @@
     {% if e.entita == 'a' %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
-	    <p>{% if ora != ora_old %}<span style="color:#747577; font-size: larger;">{{ ora|date(' H:i') }}</span>{% else %}&mdash;{% endif %}</p>
+	    <p>{% if ora != ora_old %}{{ ora|date(' H:i') }}{% else %}&mdash;{% endif %}</p>
 	</div>
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
             <b>{{ e.nome }}</b>{% if e.id_todo %} su {{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
-		    {% if e.id_cliente %}<br>cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %}</span> {% endif %} {% endif %}
+		    {% if e.id_cliente %}<br>cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>
 	    </div>
@@ -171,8 +175,9 @@
         <div class="col">
             <div class="form-row">
             <div class="col">
-                <span style="color:#747577; font-size: larger;">{% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if e.data_programmazione %}il {{ e.data_programmazione|date('d/m/Y') }}{% else %}la settimana {{e.settimana_programmazione}}/{{e.anno_programmazione}}{% endif %} per cliente {% if e.id_cliente %}<b>{{ e.cliente }}</b>{% endif %}</span><br>
-                {{ e.nome }}</span> &mdash; {{ e.testo }} {{ e.note_programmazione }}
+                {% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if e.data_programmazione %}il {{ e.data_programmazione|date('d/m/Y') }}{% else %}la settimana {{e.settimana_programmazione}}/{{e.anno_programmazione}}{% endif %} per cliente {% if e.id_cliente %}<b>{{ e.cliente }}</b>{% endif %}
+                <br>
+                {{ e.nome }} &mdash; {{ e.testo }} {{ e.note_programmazione }}
             </div>
             </div>
         </div>
