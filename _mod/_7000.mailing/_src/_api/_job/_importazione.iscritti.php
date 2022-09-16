@@ -111,16 +111,6 @@
 
             } else {
 
-                // trovo l'ID della lista
-                $idLista = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id' => NULL,
-                        'nome' => $row['lista']
-                    ),
-                    'liste'
-                );
-
                 // trovo l'ID dell'anagrafica
                 $idAnagrafica = mysqlInsertRow(
                     $cf['mysql']['connection'],
@@ -135,26 +125,37 @@
                     'anagrafica'
                 );
 
-                // trovo l'ID della categoria
-                if( isset( $row['categoria'] ) ) {
-                    $idCategoria = mysqlSelectValue(
-                        $cf['mysql']['connection'],
-                        'SELECT coalesce( id, 1 ) FROM categorie_anagrafica_view WHERE __label__ = ?',
-                        array( array( 's' => $row['categoria'] ) )
-                    );
-                    if( ! empty( $idCategoria ) ) {
-                        mysqlInsertRow(
+                // se sono presenti delle categorie...
+                if( isset( $row['categorie'] ) && ! empty( $row['categorie'] ) ) {
+
+                    // esplodo le categorie per pipe
+                    $categorie = explode( '|', $row['categorie'] );
+
+                    // per ogni categoria...
+                    foreach( $categorie as $categoria ) {
+
+                        // trovo l'ID della categoria
+                        $idCategoria = mysqlSelectValue(
                             $cf['mysql']['connection'],
-                            array(
-                                'id' => NULL,
-                                'id_anagrafica' => $idAnagrafica,
-                                'id_categoria' => $idCategoria
-                            ),
-                            'anagrafica_categorie'
+                            'SELECT id FROM categorie_anagrafica_view WHERE __label__ = ?',
+                            array( array( 's' => $categoria ) )
                         );
-                    } else {
-                        $job['workspace']['status']['error'][] = 'categoria ' . $row['categoria'] . ' per la riga ' . $job['corrente'];
+
+                        // inserisco la categoria
+                        if( ! empty( $idCategoria ) ) {
+                            mysqlInsertRow(
+                                $cf['mysql']['connection'],
+                                array(
+                                    'id' => NULL,
+                                    'id_anagrafica' => $idAnagrafica,
+                                    'id_categoria' => $idCategoria
+                                ),
+                                'anagrafica_categorie'
+                            );
+                        }
+
                     }
+
                 }
 
                 // trovo l'ID della mail
@@ -169,16 +170,39 @@
                     'mail'
                 );
 
-                // iscrivo la mail alla lista
-                $idIscrizione = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id' => NULL,
-                        'id_lista' => $idLista,
-                        'id_mail' => $idMail
-                    ),
-                    'liste_mail'
-                );
+                // se sono presenti delle liste...
+                if( isset( $row['liste'] ) && ! empty( $row['liste'] ) ) {
+
+                    // esplodo le liste per pipe
+                    $liste = explode( '|', $row['liste'] );
+
+                    // per ogni categoria...
+                    foreach( $liste as $lista ) {
+
+                        // trovo l'ID della lista
+                        $idLista = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'nome' => $lista
+                            ),
+                            'liste'
+                        );
+
+                        // iscrivo la mail alla lista
+                        $idIscrizione = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_lista' => $idLista,
+                                'id_mail' => $idMail
+                            ),
+                            'liste_mail'
+                        );
+
+                    }
+
+                }
 
             }
 

@@ -76,7 +76,7 @@
 			'from' => array( 'GlisWeb' => 'noreply@{{ ct.site.fqdn }}' ),
 			'oggetto' => 'nuovo account per il sito {{ ct.site.fqdn }}',
 			'testo' => '<p>caro {{ dt.nome }} {{ dt.cognome }},</p><p>siamo lieti di informarla che il suo account per accedere al sito è attivo; può effettuare il login utilizzando i seguenti parametri:</p>'.
-				'<ul><li>indirizzo: {{ dt.url }}</li><li>username: {{ dt.user }}</li><li>password: {{ dt.password }}</li></ul><p>Cordiali saluti.</p>',
+				'<ul>{% if dt.url %}<li>indirizzo: {{ dt.url }}</li>{% endif %}<li>username: {{ dt.username }}</li><li>password: {{ dt.password }}</li></ul><p>Cordiali saluti.</p>',
 			'attach' => array( 'sitemap' => DIR_ETC . '_current.conf' )
 	    )
 	);

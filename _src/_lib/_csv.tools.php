@@ -23,13 +23,13 @@
         $grezzo = readFromFile( $file );
 
         // debug
-        logWrite( 'grezzo' . print_r( $grezzo, true ), 'csv' );
+        logWrite( 'grezzo' . PHP_EOL . print_r( $grezzo, true ), 'csv' );
 
         // faccio il parsing CSV di ogni riga
         $lavorato = csv2array( $grezzo, $s, $c, $e );
 
         // debug
-        logWrite( 'lavorato' . print_r( $lavorato, true ), 'csv' );
+        logWrite( 'lavorato' . PHP_EOL . print_r( $lavorato, true ), 'csv' );
 
         // restituisco l'array associativo
         return( $lavorato );
@@ -53,22 +53,24 @@
 
         logWrite( 'dati pre ' . print_r( $data, true ), 'csv' );
 
+        $result = array();
+
         foreach( $data as &$row ) {
             $row = str_getcsv( $row, $s, $c, $e );
             if( count( $data[0] ) == count( $row ) ) {
-                $row = array_combine( $data[0], $row );
+                $result[] = array_combine( $data[0], $row );
             } else {
-                logWrite( 'errore nel numero delle colonne ' . print_r( $data[0], true ) . print_r( $row, true ), 'csv', LOG_ERR );
+                logWrite( 'errore nel numero delle colonne (' . count( $data[0] ) . '/' . count( $row ) . ') ' . print_r( $data[0], true ) . print_r( $row, true ), 'csv', LOG_ERR );
             }
         }
 
-        logWrite( 'dati post ' . print_r( $data, true ), 'csv' );
+        logWrite( 'dati post ' . print_r( $result, true ), 'csv' );
 
-        array_shift( $data );
+        array_shift( $result );
 
-        logWrite( 'dati finally ' . print_r( $data, true ), 'csv' );
+        logWrite( 'dati finally ' . print_r( $result, true ), 'csv' );
 
-        return $data;
+        return $result;
 
     }
 

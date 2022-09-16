@@ -327,9 +327,23 @@
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'				=> array( '_src/_inc/_macro/_account.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'				=> array( 'tabs'	=> array(	'account.view' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'account.view',
+															'account.tools' ) ),
 	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'account' ),
 																			'priority'	=> '010' ) ) )
+	);
+
+    // tools account
+	$p['account.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'account.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( '_src/_inc/_macro/_account.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['account.view']['etc']['tabs'] )
 	);
 
     // gestione account

@@ -124,39 +124,165 @@
                 // status
                 $job['workspace']['status']['info'][] = 'anagrafica inserita con ID ' . $idAnagrafica . ' per la riga ' . $job['corrente'];
 
-                // trovo l'ID della categoria
-                if( isset( $row['categoria'] ) ) {
-                    $idCategoria = mysqlSelectValue(
-                        $cf['mysql']['connection'],
-                        'SELECT id FROM categorie_anagrafica_view WHERE __label__ = ?',
-                        array( array( 's' => $row['categoria'] ) )
-                    );
-                    if( ! empty( $idCategoria ) ) {
-                        mysqlInsertRow(
+                // se sono presenti delle categorie...
+                if( isset( $row['categorie'] ) && ! empty( $row['categorie'] ) ) {
+
+                    // esplodo le categorie per pipe
+                    $categorie = explode( '|', $row['categorie'] );
+
+                    // per ogni categoria...
+                    foreach( $categorie as $categoria ) {
+
+                        // trovo l'ID della categoria
+                        $idCategoria = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM categorie_anagrafica_view WHERE __label__ = ?',
+                            array( array( 's' => $categoria ) )
+                        );
+
+                        // inserisco la categoria
+                        if( ! empty( $idCategoria ) ) {
+                            mysqlInsertRow(
+                                $cf['mysql']['connection'],
+                                array(
+                                    'id' => NULL,
+                                    'id_anagrafica' => $idAnagrafica,
+                                    'id_categoria' => $idCategoria
+                                ),
+                                'anagrafica_categorie'
+                            );
+                        }
+
+                    }
+
+                }
+
+                // se sono presenti delle mail...
+                if( isset( $row['mail'] ) && ! empty( $row['mail'] ) ) {
+
+                    // esplodo le categorie per pipe
+                    $indirizzi = explode( '|', $row['mail'] );
+
+                    // per ogni categoria...
+                    foreach( $indirizzi as $indirizzo ) {
+
+                        // trovo l'ID della mail
+                        $idMail = mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
                                 'id' => NULL,
                                 'id_anagrafica' => $idAnagrafica,
-                                'id_categoria' => $idCategoria
+                                'indirizzo' => $indirizzo,
+                                'se_pec' => NULL
                             ),
-                            'anagrafica_categorie'
+                            'mail'
                         );
-                    } else {
-                        $job['workspace']['status']['error'][] = 'categoria ' . $row['categoria'] . ' per la riga ' . $job['corrente'];
+
                     }
+
                 }
 
-                // trovo l'ID della mail
-                $idMail = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id' => NULL,
-                        'id_anagrafica' => $idAnagrafica,
-                        'indirizzo' => $row['mail'],
-                        'se_pec' => NULL
-                    ),
-                    'mail'
-                );
+                // se sono presenti dei telefoni...
+                if( isset( $row['tel'] ) && ! empty( $row['tel'] ) ) {
+
+                    // esplodo le categorie per pipe
+                    $numeri = explode( '|', $row['tel'] );
+
+                    // per ogni categoria...
+                    foreach( $numeri as $numero ) {
+
+                        // trovo l'ID della mail
+                        $idTel = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_tipologia' => 1,
+                                'id_anagrafica' => $idAnagrafica,
+                                'numero' => $numero
+                            ),
+                            'telefoni'
+                        );
+
+                    }
+
+                }
+
+                // se è richiesta la creazione di un account...
+                if( isset( $row['username'] ) && ! empty( $row['username'] ) ) {
+
+                    // TODO se lo username esiste già aggiungo un numero finché non trovo un username non usato
+                    // ...
+
+                    // se la password non è settata, ne creo una casuale
+                    if( ! isset( $row['password'] ) || empty( $row['password'] ) ) {
+                        $row['password'] = getPassword();
+                    }
+
+                    // trovo l'ID dell'account
+                    $idAccount = mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'id_anagrafica' => $idAnagrafica,
+                            'id_mail' => ( ( isset( $idMail ) && ! empty( $idMail ) ) ? $idMail : NULL ),
+                            'username' => $row['username'],
+                            'password' => md5( $row['password'] ),
+                            'se_attivo' => 1
+                        ),
+                        'account'
+                    );
+
+                    // esplodo i gruppi per pipe
+                    $gruppi = explode( '|', $row['gruppi'] );
+
+                    // per ogni gruppo...
+                    foreach( $gruppi as $gruppo ) {
+
+                        // trovo l'ID del gruppo
+                        $idGruppo = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'nome' => $gruppo,
+                                'password' => md5( $row['password'] ),
+                                'se_attivo' => 1
+                            ),
+                            'account'
+                        );
+    
+                        // aggiungo il gruppo all'account
+                        $idIscrizione = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_account' => $idAccount,
+                                'id_gruppo' => $idGruppo
+                            ),
+                            'account_gruppi'
+                        );
+
+                    }
+
+                    // se è richiesta la notifica via mail ed è settata una mail per l'anagrafica, invio la notifica
+                    if( isset( $row['notify'] ) && $row['notify'] == 'mail' ) {
+                        if( is_array( $indirizzi ) && count( $indirizzi ) > 0 ) {
+                            $idMailNotifica = queueMailFromTemplate(
+                                $cf['mysql']['connection'],
+                                $cf['mail']['tpl']['NOTIFICA_NUOVO_ACCOUNT'],
+                                array( 'dt' => $row, 'ct' => $ct ),
+                                strtotime( '+100 minute' ),
+                                array( $row['nome'] . ' ' . $row['cognome'] => $indirizzi[0] ),
+                                $cf['localization']['language']['ietf']
+                            );
+                        }
+                    }
+
+                    // TODO se è richiesta la notifica via SMS ed è settato un telefono per l'anagrafica, invio la notifica
+                    // if( isset( $row['notify'] ) && $row['notify'] == 'sms' ) {
+                    // 
+                    // }
+
+                }
 
             }
 
