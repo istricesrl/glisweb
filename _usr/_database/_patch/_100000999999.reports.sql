@@ -16,12 +16,13 @@ SELECT
   movimenti.nome,
   sum( movimenti.carico ) AS carico,
   sum( movimenti.scarico ) AS scarico,
-  format( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2,'es_ES' ) AS totale,
+  coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ) AS totale_float,
+  format( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2, 'es_ES' ) AS totale,
   concat_ws(
       ' ',
       movimenti.nome ,
       'giacenza',
-      FORMAT( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2,'es_ES'),
+      FORMAT( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2, 'es_ES' ),
       'pz'
 		) AS __label__
 FROM (

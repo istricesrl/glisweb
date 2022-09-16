@@ -81,20 +81,24 @@
 	    $ct['view']['__restrict__']['id_cliente']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 
-
-
-     // tendina tipologia attivita
+    // tendina tipologia attivita
 	 $ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
-
-
-        // gestione default
+     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'DESC';
+    } 
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'DESC';
+    } 
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){

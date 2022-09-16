@@ -17,11 +17,12 @@
             array( 's' => '_mod/_0400.documenti/_src/_api/_job/_download.fe.passive.php' ),
             array( 's' => 1 ),
             array( 's' => json_encode(
-                array(
-                    'aziende' => mysqlSelectColumn( 'codice_archivium', $cf['mysql']['connection'], 'SELECT DISTINCT codice_archivium FROM anagrafica WHERE codice_archivium IS NOT NULL' ),
-                    'data' => date( 'Y-m-d', strtotime( '-1 day' ) )
+                    array(
+                        'aziende' => mysqlSelectColumn( 'codice_archivium', $cf['mysql']['connection'], 'SELECT DISTINCT codice_archivium FROM anagrafica WHERE codice_archivium IS NOT NULL' ),
+                        'data' => ( ( isset( $_REQUEST['dateFrom'] ) ) ? $_REQUEST['dateFrom'] : date( 'Y-m-d', strtotime( '-1 day' ) ) )
+                    )
                 )
-            ) )
+            )
         )
     );
 
