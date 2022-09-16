@@ -145,7 +145,7 @@ FROM mastri
 ) AS movimenti;
 
 --| 202206160020
-ALTER TABLE tipologie_documenti
+ALTER TABLE `tipologie_documenti`
     ADD COLUMN   `sigla` char(16) DEFAULT NULL AFTER  `nome`,
 	ADD KEY `sigla` (`sigla`);
 
