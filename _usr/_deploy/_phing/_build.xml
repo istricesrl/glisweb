@@ -390,6 +390,16 @@
 
     </target>
 
+    <!-- distribuzione via gcloud compute scp -->
+    <target name="dist.gcscp">
+
+        <!-- copia remota -->
+        <echo msg="gcloud scp ${src.dir}/* -> ${key.usr}@${dst.hst}:${dst.dir} in ${dst.gzn}/${dst.gpj}" />
+        <exec command="gcloud compute scp --recurse ${src.dir}/* ${dst.hst}:${dst.dir} --project '${dst.gpj}' --zone '${dst.gzn}'" />
+        <exec command="gcloud compute scp ${src.dir}/.htaccess ${dst.hst}:${dst.dir} --project '${dst.gpj}' --zone '${dst.gzn}'" />
+
+    </target>
+
     <!-- distribuzione via rsync in remoto -->
     <target name="dist.rsync.remote">
 
@@ -555,6 +565,18 @@
 
                         <!-- esecuzione del deploy tramite scp -->
                         <phingcall target="dist.scp" />
+
+                        </then>
+                    </elseif>
+                    <elseif>
+                        <equals arg1="${dst.cmd}" arg2="gcscp" />
+                        <then>
+
+                            <!-- messaggi -->
+                            <echo msg="deploy remoto via gcloud scp" />
+
+                        <!-- esecuzione del deploy tramite scp -->
+                        <phingcall target="dist.gcscp" />
 
                         </then>
                     </elseif>
