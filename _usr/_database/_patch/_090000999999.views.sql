@@ -792,6 +792,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		tipologie_attivita.nome AS tipologia,
 		attivita.id_cliente,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		attivita.id_contatto,
+		c1.nome AS contatto,
 		attivita.id_indirizzo,
 		indirizzi.indirizzo AS indirizzo,
 		attivita.id_luogo,
@@ -855,6 +857,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
 		LEFT JOIN anagrafica AS a3 ON a3.id = attivita.id_anagrafica_programmazione
+		LEFT JOIN contatti AS c1 ON c1.id = attivita.id_contatto
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
 		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
 		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
