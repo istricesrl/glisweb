@@ -121,7 +121,7 @@
 
 				wscall = setTimeout( function() {
 
-				var call = '/api/' + $( select ).attr( 'populate-api' ) + '?__info__[' + $( select ).attr( 'populate-api' ) + '][__search__]=' + filtro;
+				var call = '/api/' + $( select ).attr( 'populate-api' ) + '?__info__[' + $( select ).attr( 'populate-api' ) + '][__search__]=' + filtro + '&__info__[' + $( select ).attr( 'populate-api' ) + '][__fields__][]=id&__info__[' + $( select ).attr( 'populate-api' ) + '][__fields__][]=__label__';
 
 				console.log( 'chiamata API ' + call );
 

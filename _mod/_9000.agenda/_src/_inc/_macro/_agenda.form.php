@@ -150,12 +150,54 @@
         }
 	}
 
-
     // tendina tipologia attivita
 	$ct['etc']['id_tipologia_attivita_new'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
+	// tipologie di attività a seguire nelle procedure
+	$attivitaSeguenti = mysqlQuery(
+		$cf['mysql']['connection'],
+		'SELECT * FROM metadati WHERE id_tipologia_attivita = ? AND nome LIKE ?',
+		array(
+			array( 's' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] : ( ( isset( $_REQUEST['__preset__']['attivita']['id_tipologia'] ) ) ? $_REQUEST['__preset__']['attivita']['id_tipologia'] : NULL ) ) ),
+            array( 's' => '%procedure|attivita|seguenti|%' )
+		)
+	);
 
-	// macro di default
+    // debug
+    // print_r( $attivitaSeguenti );
+    // print_r( metadata2associativeArray( $attivitaSeguenti ) );
+
+    // attività seguenti
+    $seguenti = metadata2associativeArray( $attivitaSeguenti );
+    if( isset( $seguenti['procedure']['attivita']['seguenti'] ) ) {
+        foreach( $seguenti['procedure']['attivita']['seguenti'] as $seg ) {
+            $ct['etc']['procedure'][ $seg['id'] ] = array_merge(
+                $seg,
+                mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM tipologie_attivita_view WHERE id = ?',
+                    array(
+                        array( 's' => $seg['id'] )
+                    )
+                )
+            );
+        }
+    }
+
+    // debug
+    // print_r( $ct['etc']['procedure'] );
+
+/*
+    // creo l'array delle attività seguenti
+    foreach( $attivitaSeguenti as $att ) {
+        $dettagli = explode( '|', $att );
+        $ct['etc']['procedura']['attivita']['seguenti'][ $dettagli[3] ][ $dettagli[3] ]
+#            'id' = 
+#        );
+    }
+*/
+
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
  

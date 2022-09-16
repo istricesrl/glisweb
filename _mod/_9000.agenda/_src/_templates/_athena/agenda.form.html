@@ -34,8 +34,10 @@
 	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
-        
-	    <input type="hidden" id="continue" name="__continue__" value="">
+
+		<input type="hidden" id="continue" name="__continue__" value="">
+		<input type="hidden" id="next_step" name="__next_step__" value="">
+		<input type="hidden" id="next_label" name="__next_label__" value="">
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
@@ -49,7 +51,7 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
-				<div class="col-12 col-md-2">
+				<div class="col-12 col-md-auto">
 					<span class="label-top">tipologia</span>
                     {% if request.__continue__ %}{% set default = request.__continue__  %}{% else  %}{% set default = '' %}{% endif %}
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request, default ) }}
@@ -72,18 +74,19 @@
 				{% endif %}
 				<div class="col">
 					<span class="label-top">descrizione</span>
-					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+					{% if request.__next_label__ %}{% set default = request.__next_label__ %}{% else %}{% set default = '' %}{% endif %}
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, default ) }}
 				</div>
 			</div>
 			</fieldset>
-
 
 			<fieldset>
 				<legend>programmazione</legend>
 				<div class="form-group form-row">
 					<div class="col-6 col-md-auto">
 						<span class="label-top">data</span>
-						{{ frm.date( table, '', '', 'data_programmazione', '', '', request ) }}
+						{% if request.__next_step__ %}{% set default = request.__next_step__ %}{% else %}{% set default = '' %}{% endif %}
+						{{ frm.date( table, '', '', 'data_programmazione', '', '', request, default ) }}
 					</div>
 					<div class="col-2 col-md-1">
 						<span class="label-top">ora inizio</span>
@@ -98,8 +101,8 @@
 						{{ frm.input( table, '', '', 'ore_programmazione', '', '', request, '', 'number', '', '', '','0.25' ) }}
 					</div>
 					<div class="col-12 col-md">
-						<span class="label-top">esecutore</span>
-						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+						<span class="label-top">incaricato</span>
+						{{ frm.selectBox( table, '', '', 'id_anagrafica_programmazione', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 				</div>
 				<div class="form-group form-row">
@@ -128,6 +131,11 @@
 					<div class="col-2 col-md-1">
 						<span class="label-top">ore</span>
 						{{ frm.input( table, '', '', 'ore', '', '', request, '', 'number', '', '', '','0.25' ) }}
+					</div>
+					<div class="col-12 col-md">
+						<span class="label-top">esecutore</span>
+						{% if request.attivita.id_anagrafica_programmazione %}{% set id_esecutore = session.account.id_anagrafica %}{% endif %}
+						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, id_esecutore, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 
 					<!--div class="col-auto">
@@ -198,28 +206,40 @@
 
 			{# SUBFORM CATEGORIE #}
 	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
-	
-        
 
+			{% if etc.procedure %}
+			<fieldset>
+				<legend>passi successivi nella procedura</legend>
+				<div class="form-row">
+				{% for b in etc.procedure %}
+				<div class="col-2 text-right">
+					{% if b.next_step %}{% set nstep = '$("#next_step").val( addDays( ( ( $("#attivita_data_attivita").val() != "" ) ? new Date( $("#attivita_data_attivita").val() ) : new Date() ) , "' ~ b.next_step ~ '" ) );' %}{% endif %}
+					{% if b.next_label %}{% set nlbl = '$("#next_label").val("' ~ b.next_label ~ '");' %}{% endif %}
+					{{ frm.button(  b.nome ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#continue").val(' ~ b.id ~ '); ' ~ nstep ~ ' $("#reset").val(1); $("#form-' ~ table ~ '").submit();','salva e crea una nuova attività/promemoria di tipo '~ b.__label__ ) }}
+				</div>
+				{% endfor %}
+				</div>
+			</fieldset>
+			{% endif %}
 
-        <fieldset style="margin-bottom: 25px">
-            <legend>salva e inserisci una nuova attività di tipo</legend>
-            <div class="form-row">
-            {% for b in etc.id_tipologia_attivita_new %}
-            <div class="col-2 text-right">
-        <!--	    <button type="submit" class="btn btn-secondary btn-sm btn-block" onclick="'{{ pages.agenda_gestione.url[ localization.language.ietf ] }}?id_tipologia={{ b.id }}', '_self')">{{ b.__label__ }}</button> -->
-                {{ frm.button(  b.__label__ ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#continue").val(' ~ b.id ~ '); $("#reset").val(1); $("#form-' ~ table ~ '").submit();','salva e crea una nuova attività/promemoria di tipo '~ b.__label__ ) }}
-        
-            </div>
-            {% endfor %}
-            </div>
-        </fieldset>
+			<fieldset>
+				<legend>salva e inserisci una nuova attività di tipo</legend>
+				<div class="form-row">
+				{% for b in etc.id_tipologia_attivita_new %}
+				<div class="col-2 text-right">
+			<!--	    <button type="submit" class="btn btn-secondary btn-sm btn-block" onclick="'{{ pages.agenda_gestione.url[ localization.language.ietf ] }}?id_tipologia={{ b.id }}', '_self')">{{ b.__label__ }}</button> -->
+					{{ frm.button(  b.__label__ ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#continue").val(' ~ b.id ~ '); $("#reset").val(1); $("#form-' ~ table ~ '").submit();','salva e crea una nuova attività/promemoria di tipo '~ b.__label__ ) }}
+			
+				</div>
+				{% endfor %}
+				</div>
+			</fieldset>
 
-        {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-			{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
-	</form>
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, table, request ) }}
+			</fieldset>
+		</form>
     </div>
 </section>
 

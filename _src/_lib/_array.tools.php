@@ -329,3 +329,37 @@
     function is_associative_array( array $a ) {
         return count( array_filter( array_keys( $a ), 'is_string' ) ) > 0;
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function metadata2associativeArray( $r, &$a = array() ) {
+
+        foreach( $r as $row ) {
+
+            $dettagli = explode( '|', $row['nome'] );
+
+            $lvl =& $a;
+
+            foreach( $dettagli as $chiave ) {
+
+                $lvl = array_replace_recursive(
+                    $lvl,
+                    array(
+                        $chiave => array()
+                    )
+                );
+
+                $lvl =& $lvl[ $chiave ];
+
+            }
+
+            $lvl = $row['testo'];
+
+        }
+
+        return( $a );
+
+    }

@@ -89,7 +89,8 @@
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
-            {% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %} <b>{{ e.nome }}</b>
+            {% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %}
+            <b>{% if e.id_anagrafica_assegnante %}{% if e.id_anagrafica_assegnante != session.account.id_anagrafica %}da {{ e.anagrafica_assegnante }}: {% endif %}{% endif %}{{ e.nome }}</b>
 		    {% if e.id_cliente %}<br><b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>
