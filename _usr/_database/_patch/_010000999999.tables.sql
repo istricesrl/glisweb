@@ -301,6 +301,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
+  `id_contatto` int(11) DEFAULT NULL,
   `referenti` char(255) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_luogo` int(11) DEFAULT NULL,
