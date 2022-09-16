@@ -628,6 +628,7 @@
     attivita.id                                         | l'ID dell'attività
     attivita.id_tipologia                               | l'ID della tipologia
     attivita.id_cliente                                 | l'ID del cliente a cui è riferita l'attività
+    attivita.id_contatto                                | l'ID del contatto a cui è riferita l'attività
     attivita.referenti                                  | testo descrittivo del referente (lato cliente) per l'attività
     attivita.id_indirizzo                               | l'ID dell'indirizzo dove è svolta l'attività
     attivita.id_luogo                                   | l'ID del luogo dove è svolta l'attività
@@ -680,6 +681,10 @@
     attivita_ibfk_09_nofollow       | id_todo                       | todo.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
     attivita_ibfk_10_nofollow       | id_mastro_provenienza         | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     attivita_ibfk_11_nofollow       | id_mastro_destinazione        | mastri.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_12_nofollow       | id_matricola                  | matricole.id                  | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_13_nofollow       | id_immobile                   | immobili.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_14_nofollow       | id_pianificazione             | pianificazioni.id             | ON DELETE NO ACTION ON UPDATE NO ACTION
+    attivita_ibfk_15_nofollow       | id_contatto                   | contatti.id                   | ON DELETE NO ACTION ON UPDATE NO ACTION
     attivita_ibfk_98_nofollow       | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     attivita_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
