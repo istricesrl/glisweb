@@ -11,35 +11,45 @@
     ----
     Questa tabella *gestita* contiene i riferimenti ai file caricati e le loro relazioni con le altre entità del framework.
 
-    colonna                         | descrizione
-    --------------------------------|---------------------------------------------------------------------------------------
-    file.id                         | l'ID del file
-    file.ordine                     | campo di ordinamento
-    file.id_ruolo                   | l'ID del ruolo del file rispetto all'entità collegata
-    file.id_anagrafica              | l'ID dell'anagrafica cui si riferisce al file
-    file.id_prodotto                | l'ID del prodotto cui si riferisce al file
-    file.id_articolo                | l'ID dell'articolo cui si riferisce al file
-    file.id_categoria_prodotti      | l'ID della categoria prodotti cui si riferisce al file
-    file.id_todo                    | l'ID della todo cui si riferisce al file
-    file.id_pagina                  | l'ID della pagina cui si riferisce al file
-    file.id_template                | l'ID del template mail cui si riferisce al file
-    file.id_mailing                 | l'ID della mailing cui si riferisce al file
-    file.id_notizia                 | l'ID della notizia cui si riferisce al file
-    file.id_categoria_notizie       | l'ID della categoria di notizie cui si riferisce al file
-    file.id_risorsa                 | l'ID della risorsa cui si riferisce al file
-    file.id_categoria_risorse       | l'ID della categoria di risorse cui si riferisce al file
-    file.id_lingua                  | l'ID della lingua del file
-    file.id_mail_out                | l'ID della mail in uscita a cui si riferisce il file
-    file.id_mail_sent               | l'ID della mail inviata a cui si riferisce il file
-    file.id_progetto                | l'ID del progetto a cui si riferisce il file
-    file.id_categoria_progetti      | l'ID della categoria di progetto a cui si riferisce il file
-    file.path                       | il percorso del file relativo alla document root per i file locali
-    file.url                        | l'URL per i file esterni
-    file.nome                       | il nome del file
-    file.id_account_inserimento     | l'ID dell'account che ha inserito la riga
-    file.timestamp_inserimento      | la timestamp dell'inserimento della riga
-    file.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
-    file.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+    colonna                             | descrizione
+    ------------------------------------|---------------------------------------------------------------------------------------
+    file.id                             | l'ID del file
+    file.ordine                         | campo di ordinamento
+    file.id_ruolo                       | l'ID del ruolo del file rispetto all'entità collegata
+    file.id_anagrafica                  | l'ID dell'anagrafica cui si riferisce al file
+    file.id_prodotto                    | l'ID del prodotto cui si riferisce al file
+    file.id_articolo                    | l'ID dell'articolo cui si riferisce al file
+    file.id_categoria_prodotti          | l'ID della categoria prodotti cui si riferisce al file
+    file.id_todo                        | l'ID della todo cui si riferisce al file
+    file.id_pagina                      | l'ID della pagina cui si riferisce al file
+    file.id_template                    | l'ID del template mail cui si riferisce al file
+    file.id_mailing                     | l'ID della mailing cui si riferisce al file
+    file.id_notizia                     | l'ID della notizia cui si riferisce al file
+    file.id_categoria_notizie           | l'ID della categoria di notizie cui si riferisce al file
+    file.id_risorsa                     | l'ID della risorsa cui si riferisce al file
+    file.id_categoria_risorse           | l'ID della categoria di risorse cui si riferisce al file
+    file.id_lingua                      | l'ID della lingua del file
+    file.id_mail_out                    | l'ID della mail in uscita a cui si riferisce il file
+    file.id_mail_sent                   | l'ID della mail inviata a cui si riferisce il file
+    file.id_progetto                    | l'ID del progetto a cui si riferisce il file
+    file.id_categoria_progetti          | l'ID della categoria di progetto a cui si riferisce il file
+    file.id_indirizzo                   | l'ID dell'indirizzo a cui si riferisce il file
+	file.id_edificio                    | l'ID delledificio a cui si riferisce il file
+	file.id_immobile                    | l'ID dell'immobile a cui si riferisce il file
+	file.id_contratto                   | l'ID del contratto a cui si riferisce il file
+    file.id_valutazione                 | l'ID della valutazione a cui si riferisce il file
+	file.id_rinnovo                     | l'ID del rinnovo a cui si riferisce il file
+	file.id_anagrafica_certificazioni   | l'ID della certificazione dell'anagrafica a cui si riferisce il file
+	file.id_valutazione_certificazioni  | l'ID della valutazione della certificazione a cui si riferisce il file
+	file.id_licenza                     | l'ID della licenza a cui si riferisce il file
+	file.id_attivita                    | l'ID dell'attività a cui si riferisce il file
+    file.path                           | il percorso del file relativo alla document root per i file locali
+    file.url                            | l'URL per i file esterni
+    file.nome                           | il nome del file
+    file.id_account_inserimento         | l'ID dell'account che ha inserito la riga
+    file.timestamp_inserimento          | la timestamp dell'inserimento della riga
+    file.id_account_aggiornamento       | l'ID dell'ultimo account che ha modificato la riga
+    file.timestamp_aggiornamento        | la timestamp dell'ultimo aggiornamento della riga
 
     La tabella ha le seguenti chiavi esterne:
 
@@ -63,40 +73,60 @@
     file_ibfk_16                    | id_mail_sent                  | mail_sent.id                  | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_17                    | id_progetto                   | progetti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_18                    | id_categoria_progetti         | categorie_progetti.id         | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_19                    | id_indirizzo                  | indirizzi.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_20                    | id_edificio                   | edifici.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_21                    | id_immobile                   | immobili.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_22                    | id_contratto                  | contratti.id                  | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_23                    | id_valutazione                | valutazioni.id                | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_24                    | id_rinnovo                    | rinnovi.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_25                    | id_anagrafica_certificazioni  | anagrafica_certificazioni.id  | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_26                    | id_valutazione_certificazioni | valutazioni_certificazioni.id | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_27                    | id_licenza                    | licenze.id                    | ON DELETE SET NULL ON UPDATE SET NULL
+    file_ibfk_28                    | id_attivita                   | attivita.id                   | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     file_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
     La vista *file_view* relativa alla tabella *file* presenta le seguenti colonne:
 
-    colonna                             | descrizione
-    ------------------------------------|---------------------------------------------------------------------------------------
-    file_view.id                        | -
-    file_view.ordine                    | -
-    file_view.id_ruolo                  | -
-    file_view.ruolo                     | il ruolo del file rispetto all'entità collegata
-    file_view.id_anagrafica             | -
-    file_view.id_prodotto               | -
-    file_view.id_articolo               | -
-    file_view.id_categoria_prodotti     | -
-    file_view.id_todo                   | -
-    file_view.id_pagina                 | -
-    file_view.id_template               | -
-    file_view.id_mailing                | -
-    file_view.id_notizia                | -
-    file_view.id_categoria_notizie      | -
-    file_view.id_risorsa                | -
-    file_view.id_categoria_risorse      | -
-    file_view.id_lingua                 | -
-    file_view.lingua                    | la lingua del file
-    file_view.id_mail_out               | -
-    file_view.id_mail_sent              | -
-    file_view.id_progetto               | -
-    file_view.id_categoria_progetti     | -
-    file_view.path                      | -
-    file_view.url                       | -
-    file_view.nome                      | -
-    file_view.id_account_inserimento    | -
-    file_view.id_account_aggiornamento  | -
-    file_view.__label__                 | etichetta descrittiva del file
+    colonna                                 | descrizione
+    ----------------------------------------|---------------------------------------------------------------------------------------
+    file_view.id                            | -
+    file_view.ordine                        | -
+    file_view.id_ruolo                      | -
+    file_view.ruolo                         | il ruolo del file rispetto all'entità collegata
+    file_view.id_anagrafica                 | -
+    file_view.id_prodotto                   | -
+    file_view.id_articolo                   | -
+    file_view.id_categoria_prodotti         | -
+    file_view.id_todo                       | -
+    file_view.id_pagina                     | -
+    file_view.id_template                   | -
+    file_view.id_mailing                    | -
+    file_view.id_notizia                    | -
+    file_view.id_categoria_notizie          | -
+    file_view.id_risorsa                    | -
+    file_view.id_categoria_risorse          | -
+    file_view.id_lingua                     | -
+    file_view.lingua                        | la lingua del file
+    file_view.id_mail_out                   | -
+    file_view.id_mail_sent                  | -
+    file_view.id_progetto                   | -
+    file_view.id_categoria_progetti         | -
+    file_view.id_indirizzo                  | -
+    file_view.id_edificio                   | -
+    file_view.id_immobile                   | -
+    file_view.id_contratto                  | -
+    file_view.id_valutazione                | -
+    file_view.id_rinnovo                    | -
+    file_view.id_anagrafica_certificazioni  | -
+    file_view.id_valutazione_certificazioni | -
+    file_view.id_licenza                    | -
+	file_view.id_attivita                   | -
+    file_view.path                          | -
+    file_view.url                           | -
+    file_view.nome                          | -
+    file_view.id_account_inserimento        | -
+    file_view.id_account_aggiornamento      | -
+    file_view.__label__                     | etichetta descrittiva del file
 
 */
