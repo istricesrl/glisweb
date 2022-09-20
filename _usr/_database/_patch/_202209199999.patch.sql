@@ -11,9 +11,9 @@ ALTER TABLE `file`
     ADD KEY `id_attivita` (`id_attivita`);
 
 --| 202209190030
-ALTER TABLE `attivita`
+ALTER TABLE `file`
     ADD CONSTRAINT `file_ibfk_28` FOREIGN KEY (`id_attivita`) REFERENCES `attivita` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
-    
+
 --| 202209190040
 CREATE OR REPLACE VIEW `file_view` AS
 	SELECT
