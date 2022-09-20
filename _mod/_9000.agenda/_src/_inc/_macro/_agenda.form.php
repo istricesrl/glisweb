@@ -27,14 +27,16 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static' );
+        'SELECT id, __label__ FROM anagrafica_view_static'
+    );
 
 
 	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM anagrafica_view_static' );
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static'
+    );
 	
 
     // tendina tipologia
@@ -42,14 +44,16 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view' );
+        'SELECT id, __label__ FROM tipologie_attivita_view'
+    );
 
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static' );
+        'SELECT id, __label__ FROM anagrafica_view_static'
+    );
 
     // tendina categorie attivita
 	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
@@ -64,7 +68,9 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ FROM progetti_view WHERE data_chiusura IS NULL ORDER BY __label__' );
+            'SELECT id, concat( cliente, " | ", __label__ ) AS __label__ '.
+            'FROM progetti_view WHERE data_chiusura IS NULL ORDER BY __label__'
+        );
 	
 
     // tendina todo
@@ -83,7 +89,8 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM todo_view' );
+            'SELECT id, __label__ FROM todo_view'
+        );
 	}
 
     // tendina indirizzi
@@ -91,7 +98,8 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM indirizzi_view' );
+        'SELECT id, __label__ FROM indirizzi_view'
+    );
 
     // tendina mastri
 	$ct['etc']['select']['mastri'] = mysqlCachedIndexedQuery(
