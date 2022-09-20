@@ -172,6 +172,7 @@
         $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita_view_static WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
     
     }
+    
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
     require DIR_SRC_INC_MACRO . '_default.tools.php';

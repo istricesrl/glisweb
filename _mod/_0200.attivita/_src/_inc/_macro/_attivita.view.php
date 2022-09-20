@@ -26,7 +26,7 @@
     // id della vista
     $ct['view']['id'] = md5(
 		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
-	    );
+	);
         
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.form';
@@ -40,7 +40,7 @@
         'cliente' => 'cliente',
         'tipologia' => 'tipologia',
         'nome' => 'attivita',
-        'ore' => 'ore',
+        'ore' => 'ore'
     //    'tipologia_inps' => 'tipologia INPS',
         
 	);
@@ -119,6 +119,8 @@
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-             if(!empty($row['data_attivita'])){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
-          	}
+             if(!empty($row['data_attivita'])){
+                $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+            }
+        }
 	}
