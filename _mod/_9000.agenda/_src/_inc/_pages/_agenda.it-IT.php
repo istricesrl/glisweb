@@ -33,7 +33,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['agenda']['etc']['tabs'] )
 	);
 
-	// gestione attivita
+	// gestione agenda
 	$p['agenda.form'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'gestione' ),
@@ -42,7 +42,9 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_agenda.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'agenda.form', 'agenda.form.feedback' ) )
+		'etc'			=> array( 'tabs'	=> array(	'agenda.form',
+														'agenda.form.feedback',
+														'agenda.form.file' ) )
 	);
 
 	// gestione agenda - feedback
@@ -54,6 +56,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.form.feedback.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_agenda.form.feedback.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['agenda.form']['etc']['tabs'] )
+	);
+
+	// form gestione agenda file
+	$p['agenda.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'file' ),
+		'h1'			=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'agenda.form' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.form.file.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_agenda.form.file.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['agenda.form']['etc']['tabs'] )
 	);
 
