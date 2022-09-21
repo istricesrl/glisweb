@@ -189,6 +189,20 @@
         if( $disponibile > 0 ){
             $punti = 100;
         }
+        else{
+            // verifico se l'operatore è eventualmente disponibile ad essere contattato
+            $disponibile_eventuale = mysqlSelectValue(
+                $cf['mysql']['connection'], 
+                'SELECT se_disponibile FROM contratti WHERE id = ? ',
+                array(
+                    array( 's' => $cId )
+                )
+            );
+
+            if( $disponibile_eventuale == 1 ){
+                $punti = 50;
+            }
+        }
 
         //return $result;
         return $punti;
@@ -383,6 +397,13 @@
     function sostitutiAttivita( $id_attivita ){
 
         global $cf;
+
+        // reset operatori
+        $reset = mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE FROM __report_sostituzioni_attivita__ WHERE id_attivita = ?',
+            array( array( 's' => $id_attivita ) )
+        );
 
         // estraggo i dati che mi occorrono per l'attività
         $a = mysqlSelectRow(

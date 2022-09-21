@@ -42,6 +42,14 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
+        <div class="form-group form-row mt-2 mb-3">
+		    <div class="col-12">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_disponibile', 'disponibile eventualmente per sostituzioni senza giorni e orari prestabiliti', '', request ) }}
+                </div>
+		    </div>
+		</div>
+
         {# SUBFORM ORARI CONTRATTI #}
         {{ sub.disponibilita( table, 'orari_contratti', 'orari', site, page, pages, ietf, etc, request, session ) }}
 
