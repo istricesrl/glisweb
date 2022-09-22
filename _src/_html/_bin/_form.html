@@ -339,7 +339,10 @@
 	{% if vl %}
 	<button title="apri il file in una nuova pagina" class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ site.root }}{{ vl|replace({ ( constant("DIR_BASE") ) : ( site.url[ lang ] ) }) }}','_blank');"><i class="fa fa-external-link"></i></button>
 	{% if edit %}
+    {% if request[ table ][ subtable ][ ks[ counter ] ].id %}
 	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ pages[ edit ].path[ lang ] }}?{{ subtable }}[id]={{ request[ table ][ subtable ][ ks[ counter ] ].id }}','_blank');"><i class="fa fa-pencil"></i></button>
+    {% endif %}
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="$(this).metroWs('/task/aggiungi.bookmark?__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][path]={{ vl }}&__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][label]={{ vl|split("/")|last }}', aggiornaBookmarks );"><i class="fa fa-bookmark-o"></i></button>
 	{% endif %}
     {% endif %}
 	{% if not hidden %}

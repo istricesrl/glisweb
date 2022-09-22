@@ -126,3 +126,12 @@
 
     // output
 	buildJson( $status );
+
+    // NOTA per vedere da quanto tempo non viene cliccato o visualizzato un banner, utilizzare la query:
+    // SELECT banner.id, banner.nome, banner_azioni.azione, banner.token, max( banner_azioni.timestamp_azione ) AS t_azione, from_unixtime( max( banner_azioni.timestamp_azione ) ) AS dh_azione,
+    // unix_timestamp() AS t_current, from_unixtime( unix_timestamp() ) as dh_current, ( unix_timestamp() - max( banner_azioni.timestamp_azione ) ) AS t_delta,
+    // sec_to_time( unix_timestamp() - max( banner_azioni.timestamp_azione ) ) AS dh_delta FROM banner LEFT JOIN banner_azioni ON banner_azioni.id_banner = banner.id GROUP BY banner.id;
+
+    // NOTA per resettare i token dei banner non visualizzati da troppo tempo utilizzare la query:
+    // UPDATE banner LEFT JOIN banner_azioni ON banner_azioni.id_banner = banner.id SET banner.token = NULL
+    // WHERE banner_azioni.timestamp_azione < ( unix_timestamp() - ( 60 * 3 ) ) OR banner_azioni.timestamp_azione IS NULL

@@ -182,6 +182,75 @@
 
 	}
 
+	function aggiornaBookmarks( d ) {
+
+		// alert('aggiorno i bookmarks');
+
+		// console.log( d );
+
+		$('#widget-bookmarks').fadeIn();
+		$('#list-bookmarks').empty();
+
+		for( section in d ) {
+
+			// console.log( section );
+			// console.log( d[ section ] );
+			// console.log( d[ section ].label );
+			// console.log( d[ section ].items );
+
+			var sezione = d[ section ];
+
+			// console.log( sezione );
+			// console.log( sezione.label );
+
+			var t1 = $( '<div>', { "class" : "row" } );
+			var t11 = $( '<div>', { "class" : "col" } );
+			var t111 = $( '<h2>' ).text( sezione.label );
+
+			// console.log( t1 );
+
+			t111.appendTo( t11 );
+			t11.appendTo( t1 );
+
+			t1.appendTo('#list-bookmarks');
+
+			var s1 = $( '<span>', { "class" : "pb-3" } );
+
+			for( item in sezione.items ) {
+
+				// console.log( d[ section ].items[ item ] );
+
+				var oggetto = sezione.items[ item ];
+
+				var o1 = $( '<div>', { "class" : "bookmarks-row-container row" } );
+				var o11 = $( '<div>', { "class" : "col" } );
+				var o111 = $( '<p>' ).text( oggetto.label );
+
+				o111.appendTo( o11 );
+				o11.appendTo( o1 );
+				o1.appendTo( s1 );
+	
+			}
+
+			s1.appendTo('#list-bookmarks');
+
+			var b1 = $( '<div>', { "class" : "row" } );
+			var b11 = $( '<div>', { "class" : "col" } );
+			var b111 = $( '<p>' );
+			var b1111 = $( '<button>', { "class" : "btn btn-secondary btn-sm btn-block", "onclick" : "window.open('" + sezione.action.url + "','_self');" } ).text( sezione.action.label );
+
+			b1111.appendTo( b111 );
+			b111.appendTo( b11 );
+			b11.appendTo( b1 );
+
+			b1.appendTo('#list-bookmarks');
+
+			// console.log( d[ section ].action );
+
+		}
+
+	}
+
     // operazioni da eseguire al caricamento della pagina
 	$( document ).ready( function() {
 

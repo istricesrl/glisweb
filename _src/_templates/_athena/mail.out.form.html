@@ -109,6 +109,24 @@
 
         </fieldset>
     
+        {% if session.__work__.mailattach.items %}
+        <!--
+        <fieldset>
+            <legend>memoria di lavoro</legend>
+            
+            <div class="form-row">
+				<div class="col-2 text-right">
+					{{ frm.button(  'aggiungi allegati' ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#form-' ~ table ~ '").submit();','aggiungi allegati' ) }}
+				</div>
+				<div class="col-2 text-right">
+					{{ frm.button(  'aggiungi allegati e svuota memoria' ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#form-' ~ table ~ '").submit();','aggiungi allegati e svuota memoria di lavoro' ) }}
+				</div>
+			</div>
+
+        </fieldset>
+        -->
+        {% endif %}
+
         {# BOTTONI E COMANDI DEL MODULO #}
         <fieldset class="form-controls mt-auto">
             {{ def.controls( page, pages, ietf, session, table, request ) }}

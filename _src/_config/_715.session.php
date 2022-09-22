@@ -29,7 +29,7 @@
 
     // ribalto sulla $_SESSION i dati di $_REQUEST
 	if( array_key_exists( '__work__', $_REQUEST ) ) {
-	    $_SESSION['__work__'] = array_merge( $_SESSION['__work__'], $_REQUEST['__work__'] );
+	    $_SESSION['__work__'] = array_replace_recursive( $_SESSION['__work__'], $_REQUEST['__work__'] );
 	}
 
     // ribalto sulla $_REQUEST i dati di $_SESSION
