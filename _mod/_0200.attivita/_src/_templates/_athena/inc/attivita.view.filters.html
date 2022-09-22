@@ -1,29 +1,29 @@
 <div class="form-row view-filters d-print-none">
     <div class="col-6 col-md-auto">
     <span class="label-top">giorno</span>
-	<select name="__view__[{{ view.id }}][__filters__][giorno][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-	    <option value="" {% if request.__view__[ view.id ].__filters__.giorno.EQ == "" %}selected{% endif %}>tutti</option>
+	<select name="__view__[{{ view.id }}][__filters__][giorno_attivita][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.giorno_attivita.EQ == "" %}selected{% endif %}>tutti</option>
 	{% for i in 1..31 %}
-	    <option value="{{ i }}" {% if request.__view__[ view.id ].__filters__.giorno.EQ == i %}selected{% endif %}>{{ i }}</option>
+	    <option value="{{ i }}" {% if request.__view__[ view.id ].__filters__.giorno_attivita.EQ == i %}selected{% endif %}>{{ i }}</option>
 	{% endfor %}
 	</select>
     </div>
 
     <div class="col-6 col-md-auto">
     <span class="label-top">mese</span>
-	<select name="__view__[{{ view.id }}][__filters__][mese][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-	    <option value="" {% if request.__view__[ view.id ].__filters__.mese.EQ == "" %}selected{% endif %}>tutti</option>
+	<select name="__view__[{{ view.id }}][__filters__][mese_attivita][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.mese_attivita.EQ == "" %}selected{% endif %}>tutti</option>
 	{% for idmese, nomemese in etc.select.mesi %}
-	    <option value="{{ idmese }}"   {% if request.__view__[ view.id ].__filters__.mese.EQ == idmese %}selected{% endif %}>{{ nomemese }}</option>
+	    <option value="{{ idmese }}"   {% if request.__view__[ view.id ].__filters__.mese_attivita.EQ == idmese %}selected{% endif %}>{{ nomemese }}</option>
 	{% endfor %}
 	</select>
     </div>
     <div class="col-6 col-md-auto">
     <span class="label-top">anno</span>
-	<select name="__view__[{{ view.id }}][__filters__][anno][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-	    <option value="" {% if request.__view__[ view.id ].__filters__.anno.EQ == "" %}selected{% endif %}>tutti</option>
+	<select name="__view__[{{ view.id }}][__filters__][anno_attivita][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.anno_attivita.EQ == "" %}selected{% endif %}>tutti</option>
 	{% for idanno, nomeanno in etc.select.anni %}
-	    <option value="{{ idanno }}" {% if request.__view__[ view.id ].__filters__.anno.EQ == idanno %}selected{% endif %}>{{ nomeanno }}</option>
+	    <option value="{{ idanno }}" {% if request.__view__[ view.id ].__filters__.anno_attivita.EQ == idanno %}selected{% endif %}>{{ nomeanno }}</option>
 	{% endfor %}
 	</select>
     </div>

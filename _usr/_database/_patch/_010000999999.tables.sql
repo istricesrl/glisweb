@@ -1402,6 +1402,7 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_anagrafica_certificazioni` int(11) DEFAULT NULL,
   `id_valutazione_certificazioni` int(11) DEFAULT NULL,
   `id_licenza` int(11) DEFAULT NULL,
+  `id_attivita` int(11) DEFAULT NULL,
   `path` char(255) DEFAULT NULL,
   `url` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,

@@ -16,21 +16,21 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini', 'attivita.tools' ) ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attività' ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attività' ),
 																		'priority'	=> '100' ) ) )	
 	);
 
     // tools attività
 	$p['attivita.tools'] = array(
 		'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-	    'title'		=> array( $l		=> 'azioni' ),
-	    'h1'		=> array( $l		=> 'azioni' ),
+		'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'			=> array( $l		=> 'azioni' ),
+	    'h1'			=> array( $l		=> 'azioni' ),
 	    'parent'		=> array( 'id'		=> 'attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_attivita.tools.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] )
+	    'macro'			=> array( $m . '_src/_inc/_macro/_attivita.tools.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'			=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] )
 	);
 
 	// gestione attivita
@@ -43,11 +43,24 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
 	    'parser'		=> array( $m . '_src/_inc/_parser/_attivita.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'attivita.form' ) )
+		'etc'			=> array( 'tabs'	=> array(	'attivita.form',
+														'attivita.form.file' ) )
+	);
+
+	// form gestione attivita file
+	$p['attivita.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'file' ),
+		'h1'			=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'attivita.form' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.file.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.form.file.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
 
 /*
-
 	// gestione attivita - feedback
 	$p['attivita.form.feedback'] = array(
 	    'sitemap'		=> false,

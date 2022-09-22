@@ -206,7 +206,7 @@
 			$cf['mysql']['connection'], 
 			'SELECT DISTINCT tipologie_attivita_inps_view.id, tipologie_attivita_inps_view.__label__ FROM tipologie_attivita_inps_view ' .
 			'INNER JOIN attivita_view_static ON tipologie_attivita_inps_view.id = attivita_view_static.id_tipologia_inps '.
-			'WHERE attivita_view_static.anno = ? AND attivita_view_static.mese = ? AND attivita_view_static.id_anagrafica = ? '.
+			'WHERE attivita_view_static.anno_attivita = ? AND attivita_view_static.mese_attivita = ? AND attivita_view_static.id_anagrafica = ? '.
 			'AND tipologie_attivita_inps_view.id NOT IN (1,2)',
 			array(
 				array( 's' => $anno ),
@@ -232,7 +232,7 @@
 			'WHERE id NOT IN (1,2) '. 			// escludo le tipologie fisse
 			( ( isset( $ta ) && !empty( $ta ) ) ? 'AND id <> ' . $ta[0]['id'] : '' ) . ' ' . 	// escludo l'eventuale valore già selezionato con la tendina
 			'AND id NOT IN (SELECT DISTINCT id_tipologia_inps FROM attivita_view_static '.		// escludo le tipologie di attività fatte dall'operatore
-			'WHERE attivita_view_static.anno = ? AND attivita_view_static.mese = ? AND attivita_view_static.id_anagrafica = ? )',
+			'WHERE attivita_view_static.anno_attivita = ? AND attivita_view_static.mese_attivita = ? AND attivita_view_static.id_anagrafica = ? )',
 			array(
 				array( 's' => $anno ),
 				array( 's' => $mese ),
@@ -245,7 +245,7 @@
 			$cf['mysql']['connection'], 
 			'SELECT giorno, id_tipologia_inps, tipologie_attivita_inps.se_quadratura, sum(ore) as tot_ore FROM attivita_view_static ' .
 			'INNER JOIN tipologie_attivita_inps ON attivita_view_static.id_tipologia_inps = tipologie_attivita_inps.id ' .
-			'WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by data_attivita, id_tipologia_inps',
+			'WHERE anno_attivita = ? AND mese_attivita = ? and id_anagrafica = ? GROUP by data_attivita, id_tipologia_inps',
 			array(
 				array( 's' => $anno ),
 				array( 's' => $mese ),
@@ -277,7 +277,7 @@
 
 		// riepilogo ore per tipologia (colonna)
 		$ore_tipologia = mysqlQuery( $cf['mysql']['connection'], 
-			'SELECT id_tipologia_inps, sum(ore) as tot_ore FROM attivita_view_static WHERE anno = ? AND mese = ? and id_anagrafica = ? GROUP by id_tipologia_inps',
+			'SELECT id_tipologia_inps, sum(ore) as tot_ore FROM attivita_view_static WHERE anno_attivita = ? AND mese_attivita = ? and id_anagrafica = ? GROUP by id_tipologia_inps',
 			array(
 				array( 's' => $anno ),
 				array( 's' => $mese ),

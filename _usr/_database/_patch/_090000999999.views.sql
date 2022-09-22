@@ -3285,6 +3285,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_licenza,
 		file.id_lingua,
 		lingue.iso6393alpha3 AS lingua,
+		file.id_attivita,
 		file.path,
 		file.url,
 		file.nome,
