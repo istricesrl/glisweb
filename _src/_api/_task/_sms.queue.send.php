@@ -181,6 +181,9 @@
 
 	} else {
 
+        // chiudo il ciclo
+        $iter = $task['iterazioni'];
+
 	    // log
 		logWrite( 'nessun SMS in coda da processare', 'sms' );
 

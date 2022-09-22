@@ -67,9 +67,8 @@
 			array( 's' => $cf['cron']['task']['results']['token'] )
 		)
 	);
-	
 
-    // log
+	// log
 	logWrite( 'criteri di ricerca -> '
 	    . date( 'i', $time ) . ' '
 	    . date( 'G', $time ) . ' '

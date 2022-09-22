@@ -54,7 +54,7 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static'
     );
-
+/*
     // tendina categorie attivita
 	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -62,7 +62,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_attivita_view'
 	);
-
+*/
     // tendina progetti
 	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],

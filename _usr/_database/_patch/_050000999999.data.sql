@@ -987,16 +987,17 @@ REPLACE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 -- task
 -- tipologia: tabella assistita
 -- verifica: 2021-10-12 15:42 Fabio Mosti
-INSERT INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	1,	NULL,	NULL,	1644330841,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	20,	2,	NULL,	1644330841,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	NULL,	1644330841,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	1,	NULL,	NULL,	1644330781,	NULL,	NULL,	NULL,	NULL),
-(5,	6,		2,		6,		2,		NULL,	NULL,	'_src/_api/_task/_comuni.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	6,		6,		6,		6,		NULL,	NULL,	'_src/_api/_task/_settori.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	6,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.fe.passive.start.php',	1,	NULL,	NULL,	1644293161,	NULL,	NULL,	NULL,	NULL),
-(8,	7,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.note.attive.start.php',	1,	NULL,	NULL,	1644293221,	NULL,	NULL,	NULL,	NULL),
-(9,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_7000.mailing/_src/_api/_task/_genera.mail.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,		6,		2,		6,		2,		NULL,	NULL,	'_src/_api/_task/_comuni.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,		6,		6,		6,		6,		NULL,	NULL,	'_src/_api/_task/_settori.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,		6,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.fe.passive.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,		7,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.note.attive.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_7000.mailing/_src/_api/_task/_genera.mail.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_0200.attivita/_src/_api/_task/_autotask.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050000
 

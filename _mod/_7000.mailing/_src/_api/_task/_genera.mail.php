@@ -200,7 +200,10 @@
 				
     } else {
 
-        // status
+        // chiudo il ciclo
+        $iter = $task['iterazioni'];
+
+		// status
         $status['info'][] = 'nessuna mail da generare';
 
         // log

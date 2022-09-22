@@ -182,6 +182,9 @@
 
     } else {
 
+        // chiudo il ciclo
+        $iter = $task['iterazioni'];
+
         // status
         $status['info'][] = 'nessuna immagine da scalare';
 

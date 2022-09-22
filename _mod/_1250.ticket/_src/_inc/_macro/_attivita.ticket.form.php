@@ -49,7 +49,7 @@
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM esiti_attivita_view' );
-
+/*
     // tendina categorie attivita
 	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -57,7 +57,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_attivita_view'
 	);
-
+*/
     // tendina progetti
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
 	    $ct['etc']['select']['progetti'] = mysqlCachedIndexedQuery(
