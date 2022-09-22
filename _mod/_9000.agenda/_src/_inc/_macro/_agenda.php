@@ -121,7 +121,26 @@
 	}
 
 	// tendina tipologia attivita
-	 $ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
+	$ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
+
+	// integrazione metadati
+	foreach( $ct['etc']['id_tipologia_attivita'] as &$row ) {
+		$meta = mysqlQuery(
+			$cf['mysql']['connection'],
+			'SELECT * FROM metadati WHERE id_tipologia_attivita = ? AND nome LIKE ?',
+			array(
+				array( 's' => $row['id'] ),
+				array( 's' => '%procedure|attivita|corrente|%' )
+			)
+		);
+		$row = array_replace_recursive(
+			$row,
+			metadata2associativeArray( $meta )
+		);
+	}
+
+	// debug
+	// print_r( $ct['etc']['id_tipologia_attivita'] );
 
 	// tendina tipologia attivita
 	$ct['etc']['id_tipologia_todo'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view WHERE se_agenda IS NOT NULL' );

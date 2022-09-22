@@ -93,11 +93,13 @@
 	function addDays( date, days, working = true ) {
 		var result = new Date( date );
 		console.log( result );
-		if( working == true ) {
-			var day = result.getDay();
-			result.setDate( result.getDate() + parseInt( days ) + ( day === 6 ? 2 : + ! day ) + ( Math.floor( ( parseInt( days ) - 1 + ( day % 6 || 1 ) ) / 5 ) * 2 ) );
-		} else {
-			result.setDate( result.getDate() + parseInt( days ) );
+		if( days != '-' ) {
+			if( working == true ) {
+				var day = result.getDay();
+				result.setDate( result.getDate() + parseInt( days ) + ( day === 6 ? 2 : + ! day ) + ( Math.floor( ( parseInt( days ) - 1 + ( day % 6 || 1 ) ) / 5 ) * 2 ) );
+			} else {
+				result.setDate( result.getDate() + parseInt( days ) );
+			}
 		}
 		console.log( result );
 		return formatDate( result );

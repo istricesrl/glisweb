@@ -158,7 +158,7 @@
 		$cf['mysql']['connection'],
 		'SELECT * FROM metadati WHERE id_tipologia_attivita = ? AND nome LIKE ?',
 		array(
-			array( 's' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] : ( ( isset( $_REQUEST['__preset__']['attivita']['id_tipologia'] ) ) ? $_REQUEST['__preset__']['attivita']['id_tipologia'] : NULL ) ) ),
+			array( 's' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] : ( ( isset( $_REQUEST['__preset__']['attivita']['id_tipologia'] ) ) ? $_REQUEST['__preset__']['attivita']['id_tipologia'] : ( ( isset( $_REQUEST['__continue__'] ) ) ? $_REQUEST['__continue__'] : NULL ) ) ) ),
             array( 's' => '%procedure|attivita|seguenti|%' )
 		)
 	);

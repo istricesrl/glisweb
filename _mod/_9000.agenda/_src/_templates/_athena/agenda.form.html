@@ -80,6 +80,7 @@
 			</div>
 			</fieldset>
 
+			{% if not request.__preset__.attivita.data_attivita and not ( request.attivita.data_attivita and not request.attivita.data_programmazione ) %}
 			<fieldset>
 				<legend>programmazione</legend>
 				<div class="form-group form-row">
@@ -112,6 +113,7 @@
 					</div>
 				</div>
 			</fieldset>
+			{% endif %}
 
 			<fieldset>
 				<legend>esecuzione</legend>
@@ -213,9 +215,9 @@
 				<div class="form-row">
 				{% for b in etc.procedure %}
 				<div class="col-2 text-right">
-					{% if b.next_step %}{% set nstep = '$("#next_step").val( addDays( ( ( $("#attivita_data_attivita").val() != "" ) ? new Date( $("#attivita_data_attivita").val() ) : new Date() ) , "' ~ b.next_step ~ '" ) );' %}{% endif %}
+					{% if b.next_step %}{% set nstep = '$("#attivita_data_attivita").prop("required",true);$("#next_step").val( addDays( ( ( $("#attivita_data_attivita").val() != "" ) ? new Date( $("#attivita_data_attivita").val() ) : new Date() ) , "' ~ b.next_step ~ '" ) );' %}{% endif %}
 					{% if b.next_label %}{% set nlbl = '$("#next_label").val("' ~ b.next_label ~ '");' %}{% endif %}
-					{{ frm.button(  b.nome ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#continue").val(' ~ b.id ~ '); ' ~ nstep ~ ' $("#reset").val(1); $("#form-' ~ table ~ '").submit();','salva e crea una nuova attività/promemoria di tipo '~ b.__label__ ) }}
+					{{ frm.button(  b.nome ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#continue").val(' ~ b.id ~ '); ' ~ nstep ~ nlbl ~ ' $("#reset").val(1); $("#form-' ~ table ~ '").submit();','salva e crea una nuova attività/promemoria di tipo '~ b.__label__ ) }}
 				</div>
 				{% endfor %}
 				</div>

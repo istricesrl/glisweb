@@ -235,6 +235,9 @@
                     // esplodo i gruppi per pipe
                     $gruppi = explode( '|', $row['gruppi'] );
 
+                    // status
+                    $job['workspace']['status']['info'][] = 'gruppi trovati ' . implode( ',', $gruppi ) . ' per la riga ' . $job['corrente'];
+
                     // per ogni gruppo...
                     foreach( $gruppi as $gruppo ) {
 
@@ -243,11 +246,9 @@
                             $cf['mysql']['connection'],
                             array(
                                 'id' => NULL,
-                                'nome' => $gruppo,
-                                'password' => md5( $row['password'] ),
-                                'se_attivo' => 1
+                                'nome' => $gruppo
                             ),
-                            'account'
+                            'gruppi'
                         );
     
                         // aggiungo il gruppo all'account
@@ -270,7 +271,7 @@
                                 $cf['mysql']['connection'],
                                 $cf['mail']['tpl']['NOTIFICA_NUOVO_ACCOUNT'],
                                 array( 'dt' => $row, 'ct' => $ct ),
-                                strtotime( '+100 minute' ),
+                                strtotime( '-1 minute' ),
                                 array( $row['nome'] . ' ' . $row['cognome'] => $indirizzi[0] ),
                                 $cf['localization']['language']['ietf']
                             );
