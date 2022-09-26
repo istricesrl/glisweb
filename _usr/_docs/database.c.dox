@@ -829,8 +829,9 @@
     ------------------------------------|---------------------------------------------------------------------------------------
     contratti.id                        | l'ID del contratto
 	contratti.id_tipologia              | l'ID della tipologia contratti
-	contratti.id_emittente              | l'ID dell'anagrafica emittente del contratto
-	contratti.id_destinatario           | l'ID dell'anagrafica destinataria del contratto
+    contratti.id_immobile               | l'ID dell'immobile
+    contratti.codice                    | il codice del contratto
+    contratti.codice_affiliazione       | il codice di affiliazione
 	contratti.id_progetto               | l'ID del progetto a cui il contratto si riferisce
 	contratti.nome                      | il nome eidentificativo del contratto
     contratti.note                      | note del contatto
@@ -844,9 +845,8 @@
     chiave                                      | campo                         | tabella e campo collegati         | comportamento
     --------------------------------------------|-------------------------------|-----------------------------------|------------------
     contratti_ibfk_01_nofollow                  | id_tipologia                  | tipologie_contratti.id            | ON DELETE NO ACTION ON UPDATE NO ACTION
-    contratti_ibfk_02_nofollow                  | id_emittente                  | anagrafica.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
-    contratti_ibfk_03_nofollow                  | id_destinatario               | anagrafica.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     contratti_ibfk_04_nofollow                  | id_progetto                   | progetti.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
+    contratti_ibfk_05_nofollow                  | id_immobile                   | immobili.id                       | ON DELETE NO ACTION ON UPDATE NO ACTION
     contratti_ibfk_98_nofollow                  | id_account_inserimento        | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
     contratti_ibfk_99_nofollow                  | id_account_aggiornamento      | account.id                        | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -857,13 +857,13 @@
     contratti_view.id                           | -
 	contratti_view.id_tipologia                 | -
     contratti_view.tipologia                    | la tipologia del contratto
-	contratti_view.id_emittente                 | -
-	contratti_view.emittente                    | la denominazione anagrafica dell'emittente del contratto
-	contratti_view.id_destinatario              | -
-	contratti_view.destinatario                 | la denominazione anagrafica del destinataria del contratto
 	contratti_view.id_progetto                  | -
 	contratti_view.progetto                     | -
-	contratti_view.nome                         | -
+	contratti_view.id_immobile                  | -
+	contratti_view.immobile                     | -
+    contratti_view.codice                       | -
+	contratti_view.codice_affiliazione          | -
+    contratti_view.nome                         | -
 	contratti_view.id_account_inserimento       | -
 	contratti_view.id_account_aggiornamento     | -
 	contratti_view.__label__                    | l'etichetta descrittiva del contratto

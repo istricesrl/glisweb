@@ -16,6 +16,7 @@
     account.id                          | l'ID dell'account
     account.id_anagrafica               | l'ID dell'anagrafica collegata all'account (referenzia la tabella anagrafica)
     account.id_mail                     | l'ID della mail collegata all'account (referenzia la tabella mail)
+    account.id_affiliazione             | l'ID del contratto collegato all'account (referenzia la tabella contratti)
     account.username                    | il nome utente dell'account (usato per il login)
     account.password                    | la password dell'account cifrata in MD5
     account.se_attivo                   | se valorizzato a 1 indica che l'account è attivo, qualsiasi altro valore indica un account inattivo
@@ -41,6 +42,7 @@
     ------------------------------|------------------------------|----------------------------------|-------------------
     account_ibfk_01_nofollow      | id_anagrafica                | anagrafica.id                    | ON DELETE CASCADE ON UPDATE CASCADE
     account_ibfk_02_nofollow      | id_mail                      | mail.id                          | ON DELETE SET NULL ON UPDATE SET NULL
+    account_ibfk_03_nofollow      | id_affiliazione              | contratti.id                     | ON DELETE SET NULL ON UPDATE SET NULL
     account_ibfk_98_nofollow      | id_account_inserimento       | account.id                       | ON DELETE SET NULL ON UPDATE SET NULL
     account_ibfk_99_nofollow      | id_account_aggiornamento     | account.id                       | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -52,6 +54,7 @@
     account_view.id_anagrafica                | -
     account_view.anagrafica                   | l'anagrafica collegata all'account
     account_view.id_mail                      | -
+    account_view.id_affiliazione              | -
     account_view.username                     | -
     account_view.password                     | -
     account_view.se_attivo                    | -
