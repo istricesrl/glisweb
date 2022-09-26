@@ -26,10 +26,11 @@ ALTER TABLE `account`
 	ADD UNIQUE KEY `unica` (`username`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_mail` (`id_mail`),
+	ADD KEY `id_affiliazione` (`id_affiliazione`),
 	ADD KEY `se_attivo` (`se_attivo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_anagrafica`,`username`,`id_mail`,`password`,`se_attivo`,`token`),
+	ADD KEY `indice` (`id`, `id_anagrafica`, `username`, `id_mail`, `id_affiliazione`, `password`, `se_attivo`, `token`),
 	ADD KEY `indice_token` (`id`,`token`);
 
 --| 030000000101
@@ -514,6 +515,7 @@ ALTER TABLE `carrelli`
 	ADD KEY `utm_content` ( `utm_content` ),
 	ADD KEY `id_reseller` ( `id_reseller` ),
 	ADD KEY `id_affiliato` ( `id_affiliato` ),
+	ADD KEY `id_affiliazione` ( `id_affiliazione` ),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`);
@@ -1058,7 +1060,8 @@ ALTER TABLE `contratti`
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY  `id_immobile` (`id_immobile`),
 	ADD KEY  `codice` ( `codice` ),
-	ADD KEY `indice` ( `id_tipologia`, `codice`, `nome`, `id_progetto`, `id_immobile`);
+	ADD KEY  `codice_affiliazione` ( `codice_affiliazione` ),
+	ADD KEY `indice` ( `id_tipologia`, `codice`, `codice_affiliazione`, `nome`, `id_progetto`, `id_immobile`);
 
 
 --| 030000007201
@@ -3714,9 +3717,10 @@ ALTER TABLE `tipologie_contratti`
 	ADD KEY `se_libero` (`se_libero`),
   	ADD KEY `se_prenotazione`(`se_prenotazione`),
   	ADD KEY `se_scalare`(`se_scalare`),
+	ADD KEY `se_affiliazione`(`se_affiliazione`),
   	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`,`se_immobili`,`se_acquisto`,`se_locazione`);
+  	ADD KEY `indice` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`, `se_immobili`, `se_acquisto`, `se_locazione`, `se_affiliazione`);
 
 --| 030000050901
 

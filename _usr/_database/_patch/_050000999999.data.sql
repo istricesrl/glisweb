@@ -1051,12 +1051,13 @@ REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_contratti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_tesseramento`, `se_abbonamento`, `se_iscrizione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(4,	NULL,	'abbonamento',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	'iscrizione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	'locazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	'tesseramento',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(1,	NULL,	'vendita',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_tesseramento`, `se_abbonamento`, `se_iscrizione`, `se_affiliazione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	'vendita',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'locazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'tesseramento',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'abbonamento',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'iscrizione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'affiliazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000052600
 
