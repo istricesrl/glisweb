@@ -36,8 +36,8 @@
 	// gestione agenda
 	$p['agenda.form'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'gestione' ),
-	    'h1'			=> array( $l		=> 'gestione' ),
+	    'title'			=> array( $l		=> 'gestione attività' ),
+	    'h1'			=> array( $l		=> 'gestione attività' ),
 	    'parent'		=> array( 'id'		=> 'agenda' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_agenda.form.php' ),
@@ -71,7 +71,7 @@
 		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['agenda.form']['etc']['tabs'] )
 	);
-
+/*
 	// dashboard contenuti
 	$p['agenda.todo.view'] = array(
 	    'sitemap'	=> false,
@@ -165,3 +165,4 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['agenda.todo.form']['etc']['tabs'] )
 	);
+*/

@@ -65,7 +65,7 @@
         {% endif %}
         {% if '0200.attivita' in mods.active.array %}
         <div class="col">
-            <legend>nuovo promemoria</legend>
+            <legend>nuova attività</legend>
             <div class="form-row">
             {% for b in etc.id_tipologia_attivita %}
             <div class="col-4 text-right">
@@ -83,7 +83,7 @@
 {% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
 <fieldset>
     <legend>da fissare</legend>
-{% for  e in etc.agenda_da_fissare.attivita %}
+    {% for  e in etc.agenda_da_fissare.attivita %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
 	    <p>&mdash;</p>
@@ -93,29 +93,30 @@
 		<div class="col">
             {% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %}
             <b>{% if e.id_anagrafica_assegnante %}{% if e.id_anagrafica_assegnante != session.account.id_anagrafica %}da {{ e.anagrafica_assegnante }}: {% endif %}{% endif %}{{ e.nome }}</b>
-		    {% if e.id_cliente %}<br><b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+		    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>
 	    </div>
 	    </div>
 	</div>
-{% endfor %}
+    {% endfor %}
 
-{% for  e in etc.agenda_da_fissare.todo %}
-    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+    {% for e in etc.agenda_da_fissare.todo %}
+    <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
 	    <p>&mdash;</p>
 	</div>
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
-            <b>{{ e.__label__ }}</b><br>
-		    &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+            <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+		    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+			<br>{{ e.testo }}
 		</div>
 	    </div>
 	</div>
     </div>
-{% endfor %}
+    {% endfor %}
 </fieldset>
 {% endif %}
 
@@ -125,25 +126,25 @@
 <fieldset>
     <legend>settimana {{ settimana }}</legend>
 
-{% if etc.todo_todo[a][settimana]|length > 0 %}
-{% for e in etc.todo_todo[a][settimana] %}
-<div  class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
-    <div class="col-1 lemma text-right">
-        <p>&mdash;</p>
-    </div>
-    <div class="col">
-        <div class="form-row">
-        <div class="col">
-            {% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if e.data_programmazione  %}il {{ e.data_programmazione|date('d/m/Y') }}{% else %}la settimana {{e.settimana_programmazione}}/{{e.anno_programmazione}}{% endif %} per cliente {% if e.id_cliente %}<b>{{ e.cliente }}</b>{% endif %}
-            <br>
-            {{ e.nome }} &mdash; {{ e.testo }} {{ e.note_programmazione }}
-        </div>
-        </div>
-    </div>
-    </div>
-    {% endfor %}
-</fieldset>
-{% endif %}
+        {% if etc.todo_da_monitorare[a][settimana] %}
+        {% for e in etc.todo_da_monitorare[a][settimana] %}
+        <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+            <div class="col-1 lemma text-right">
+                <p>&mdash;</p>
+            </div>
+            <div class="col">
+                <div class="form-row">
+                <div class="col">
+                    <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>{{ e.testo }} {{ e.note_programmazione }}
+                </div>
+                </div>
+            </div>
+            </div>
+            {% endfor %}
+        </fieldset>
+        {% endif %}
 
 {% for  data,eventi_per_data in attivita %}
 {% if data %}
@@ -160,7 +161,7 @@
 	    <div class="form-row">
 		<div class="col">
             <b>{{ e.nome }}</b>{% if e.id_todo %} su {{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
-		    {% if e.id_cliente %}<br>cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+		    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>
 	    </div>

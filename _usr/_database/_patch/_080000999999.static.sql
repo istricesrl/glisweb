@@ -13,7 +13,7 @@
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 18:47 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
-  `id` int(11) NOT NULL,
+  `id` int(11) PRIMARY KEY NOT NULL,
   `tipologia` char(32) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
   `riferimento` char(32) DEFAULT NULL,
@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 13:12 Fabio Mosti
 CREATE TABLE `attivita_view_static` (
-  `id` int NOT NULL,
+  `id` int(11) PRIMARY KEY NOT NULL,
   `id_tipologia` int DEFAULT NULL,
   `tipologia` char(64) DEFAULT NULL,
   `id_cliente` int DEFAULT NULL,
@@ -114,7 +114,7 @@ CREATE TABLE `attivita_view_static` (
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 13:12 Fabio Mosti
 CREATE TABLE `todo_view_static` (
-  `id` int NOT NULL,
+  `id` int(11) PRIMARY KEY NOT NULL,
   `id_tipologia` int DEFAULT NULL,
   `tipologia` char(64) DEFAULT NULL,
   `se_agenda` int DEFAULT NULL,

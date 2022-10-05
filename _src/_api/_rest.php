@@ -71,25 +71,25 @@
 	if( isset( $_REQUEST['__ws__'] ) ) {
 
 	    // entità su cui si sta lavorando
-		$cf['ws']['table']		= $_REQUEST['__ws__'];
+		$cf['ws']['table']			= $_REQUEST['__ws__'];
 
 	    // ID dell'entità su cui si sta lavorando
-		$cf['ws']['id']			= $_REQUEST['__id__'];
+		$cf['ws']['id']				= $_REQUEST['__id__'];
 
 	    // codifica del contenuto in arrivo
 		$cf['ws']['incoming']		= ( isset( $_SERVER['CONTENT_TYPE'] ) ) ? $_SERVER['CONTENT_TYPE'] : NULL;
 
 	    // codifica del contenuto richiesto
-		$cf['ws']['accept']		= $_SERVER['HTTP_ACCEPT'];
+		$cf['ws']['accept']			= $_SERVER['HTTP_ACCEPT'];
 
 	    // ricezione dell'input
-		$cf['ws']['input']		= file_get_contents('php://input');
+		$cf['ws']['input']			= file_get_contents('php://input');
 
 	    // charset dell'input
 		$cf['ws']['charset']		= mb_detect_encoding( $cf['ws']['input'] );
 
 	    // ip chiamante
-		$cf['ws']['from']		= $_SERVER['REMOTE_ADDR'];
+		$cf['ws']['from']			= $_SERVER['REMOTE_ADDR'];
 
 	    // debug
 		// die( print_r( $cf['ws'], true ) );
@@ -106,33 +106,39 @@
 
 	    // passo i dati al controller
 		switch( $cf['ws']['incoming'] ) {
-		    case 'application/json':
-			$data = json_decode( $cf['ws']['input'], true );
-			if( is_array( $data ) && ! empty( $data ) ) {
-			    $_REQUEST[ $cf['ws']['table'] ] = array_replace_recursive(
-				$_REQUEST[ $cf['ws']['table'] ],
-				$data
-			    );
-			}
-			$incoming = print_r( $_REQUEST[ $cf['ws']['table'] ], true );
+
+			case 'application/json':
+
+				$data = json_decode( $cf['ws']['input'], true );
+				if( is_array( $data ) && ! empty( $data ) ) {
+					$_REQUEST[ $cf['ws']['table'] ] = array_replace_recursive(
+					$_REQUEST[ $cf['ws']['table'] ],
+					$data
+					);
+				}
+				$incoming = print_r( $_REQUEST[ $cf['ws']['table'] ], true );
 /*
-			$incoming = json_decode( $cf['ws']['input'] , true );
-			if( is_array( $incoming ) ) {
-			    $_REQUEST[ $cf['ws']['table'] ] = array_replace_recursive(
-				$_REQUEST[ $cf['ws']['table'] ],
-				$incoming
-			    );
-			}
+				$incoming = json_decode( $cf['ws']['input'] , true );
+				if( is_array( $incoming ) ) {
+					$_REQUEST[ $cf['ws']['table'] ] = array_replace_recursive(
+					$_REQUEST[ $cf['ws']['table'] ],
+					$incoming
+					);
+				}
 */
 		    break;
-		    case 'application/x-www-form-urlencoded':
-			parse_str( $cf['ws']['input'], $_REQUEST[ $cf['ws']['table'] ] );
-			$incoming = print_r( $_REQUEST[ $cf['ws']['table'] ], true );
-		    break;
-		    default:
-#			$_REQUEST[ $cf['ws']['table'] ] = array();
-			$incoming = 'formato non riconosciuto: ' . $cf['ws']['incoming'];
-		    break;
+
+			case 'application/x-www-form-urlencoded':
+
+				parse_str( $cf['ws']['input'], $_REQUEST[ $cf['ws']['table'] ] );
+				$incoming = print_r( $_REQUEST[ $cf['ws']['table'] ], true );
+				break;
+				default:
+	#			$_REQUEST[ $cf['ws']['table'] ] = array();
+				$incoming = 'formato non riconosciuto: ' . $cf['ws']['incoming'];
+
+			break;
+
 		}
 
 	    // debug
@@ -168,9 +174,12 @@
 		    '400', '420',
 		    '520', '525', '550', '555', '580', '585',
 		    '610', '615', '620', '625', '640', '645', '650', '655', '660', '665', '680', '685',
-		    '780',
+		    '770', '775', '780',
 		    '920', '925', '950', '960', '980', '990'
 		);
+
+		// debug
+		// print_r( $_REQUEST[ $cf['ws']['table'] ] );
 
 	    // inclusione del framework
 		require '../_config.php';
@@ -182,7 +191,10 @@
 		logWrite( $_REQUEST['__ws__'] . '/' . $_SERVER['REQUEST_METHOD'] . '/' . print_r( $cf['ws'], true ), 'rest' );
 
 		// output
-			$response = $_REQUEST[ $cf['ws']['table'] ];
+		$response = $_REQUEST[ $cf['ws']['table'] ];
+
+		// debug
+		// print_r( $response );
 
 	    // codice di stato HTTP generato in base all'esito delle operazioni del controller
 		if( isset( $cf['controller']['status'][ $cf['ws']['table'] ] ) ) {

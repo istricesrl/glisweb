@@ -85,7 +85,7 @@ Options -Indexes
     RewriteRule ^api/logout$ _src/_api/_user.php?__logout__=1 [L,QSA]
 
     # gestione dell'API di download
-    RewriteRule ^var/(.+)$ _src/_api/_download.php?__download__=$1 [L,QSA]
+    RewriteRule ^var/(.+)$ _src/_api/_download.php?__download__=var/$1 [L,QSA]
 
     # gestione delle API generiche
     RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_rest.php?__ws__=$1&__id__=$2 [L,QSA]

@@ -1,11 +1,10 @@
 <?php
 
-	function validateDate($date, $format = 'Y-m-d')
-	{
+	function validateDate( $date, $format = 'Y-m-d' )	{
 		$d = DateTime::createFromFormat($format, $date);
 		return $d && $d->format($format) == $date;
 	}
-	
+
 	if( isset( $_SESSION['account']['id_anagrafica'] ) ) {
 
 		// attività
@@ -36,25 +35,47 @@
 		);
 
 		// print_r( $ct['etc']['attivita'] );
-
+/*
 		$ct['etc']['agenda_da_fissare']['todo'] = mysqlQuery(
 			$cf['mysql']['connection'],
-			'SELECT  todo_view.*, count(attivita.id) AS n_attivita FROM todo_view LEFT JOIN attivita ON attivita.id_todo = todo_view.id WHERE attivita.data_attivita IS NULL AND todo_view.id_anagrafica = ? AND todo_view.data_chiusura IS NULL GROUP BY todo_view.id HAVING n_attivita = 0',
-			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) ) );
+			'SELECT  todo_view.*, count( attivita.id ) AS n_attivita FROM todo_view LEFT JOIN attivita ON attivita.id_todo = todo_view.id '.
+			'WHERE ( attivita.data_attivita IS NULL OR coalesce( todo_view.data_programmazione, todo_view.anno_programmazione ) IS NULL ) '.
+			'AND todo_view.id_anagrafica = ? AND todo_view.data_chiusura IS NULL GROUP BY todo_view.id HAVING n_attivita = 0',
+			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+		);
 
-			if( !empty($ct['etc']['attivita']) ){
-				$todo = array();
-				foreach( $ct['etc']['attivita'] as $a ){
-					if(!empty( $a['id_todo'])){$todo[] = $a['id_todo'];}	
-				}		
-			}
-
+		if( ! empty($ct['etc']['attivita'] ) ) {
+			$todo = array();
+			foreach( $ct['etc']['attivita'] as $a ) {
+				if( ! empty( $a['id_todo'] ) ) {
+					$todo[] = $a['id_todo'];
+				}	
+			}		
+		}
+*/
 		$ct['etc']['todo'] = mysqlQuery(
 			$cf['mysql']['connection'],
-			'SELECT \'t\' AS entita, todo.testo, todo.id,todo.id_tipologia,tipologie_todo.nome AS tipologia,todo.id_anagrafica,coalesce( a1.denominazione, concat( a1.cognome, \' \', a1.nome ), \'\' ) AS anagrafica,todo.id_cliente,coalesce( a2.denominazione, concat( a2.cognome, \' \', a2.nome ), \'\' ) AS cliente,todo.id_indirizzo,concat_ws(\'\',indirizzo,indirizzi.civico,indirizzi.cap,indirizzi.localita,comuni.nome,provincie.sigla) AS indirizzo,todo.id_luogo,luoghi_path( todo.id_luogo ) AS luogo,todo.data_scadenza,todo.ora_scadenza,todo.data_programmazione,todo.ora_inizio_programmazione,todo.ora_fine_programmazione,todo.anno_programmazione,todo.settimana_programmazione,todo.ore_programmazione,todo.data_chiusura,todo.nome,todo.note_programmazione,todo.id_contatto,todo.id_progetto,todo.id_pianificazione,todo.data_archiviazione,todo.id_account_inserimento,todo.id_account_aggiornamento,concat(todo.nome,\' per \',coalesce( a2.denominazione, concat( a2.cognome, \' \', a2.nome ), \'\' ),\' su \',todo.id_progetto) AS __label__,count(attivita.id) AS n_attivita FROM todo LEFT JOIN attivita ON attivita.id_todo = todo.id LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo LEFT JOIN comuni ON comuni.id = indirizzi.id_comune LEFT JOIN provincie ON provincie.id = comuni.id_provincia LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia '.
-			'WHERE tipologie_todo.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND (todo.id_anagrafica = ? AND attivita.id_anagrafica_programmazione <> ?) AND todo.data_chiusura IS NULL '.( isset($todo) && count($todo)>0 ? ' AND todo.id NOT IN ('.implode(',',$todo).') ' : ' ' ).' GROUP BY todo.id  HAVING n_attivita > 0',
-			array( array( 's' => $_SESSION['account']['id_anagrafica'] ),  array( 's' => $_SESSION['account']['id_anagrafica'] )  ) );
+			'SELECT \'t\' AS entita, todo.nome, todo.testo, todo.id,todo.id_tipologia,tipologie_todo.nome AS tipologia,todo.id_anagrafica,coalesce( a1.denominazione, '.
+			'concat( a1.cognome, \' \', a1.nome ), \'\' ) AS anagrafica,todo.id_cliente,coalesce( a2.denominazione, concat( a2.cognome, \' \', a2.nome ), \'\' ) AS cliente, '.
+			'todo.id_indirizzo,concat_ws(\'\',indirizzo,indirizzi.civico,indirizzi.cap,indirizzi.localita,comuni.nome,provincie.sigla) AS indirizzo,todo.id_luogo, '.
+			'luoghi_path( todo.id_luogo ) AS luogo,todo.data_scadenza,todo.ora_scadenza,todo.data_programmazione,todo.ora_inizio_programmazione,todo.ora_fine_programmazione,'.
+			'todo.anno_programmazione,todo.settimana_programmazione,todo.ore_programmazione,todo.data_chiusura,todo.nome,todo.note_programmazione,todo.id_contatto,'.
+			'todo.id_progetto,todo.id_pianificazione,todo.data_archiviazione,todo.id_account_inserimento,todo.id_account_aggiornamento,'.
+			'concat(todo.nome,\' per \',coalesce( a2.denominazione, concat( a2.cognome, \' \', a2.nome ), \'\' ),\' su \',todo.id_progetto) AS __label__,'.
+			'count(attivita.id) AS n_attivita FROM todo LEFT JOIN attivita ON attivita.id_todo = todo.id LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica '.
+			'LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo LEFT JOIN comuni ON comuni.id = indirizzi.id_comune '.
+			'LEFT JOIN provincie ON provincie.id = comuni.id_provincia LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia '.
+			'WHERE tipologie_todo.se_agenda IS NOT NULL AND ( todo.id_anagrafica = ? ) GROUP BY todo.id',
+//			'WHERE tipologie_todo.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND ( todo.id_anagrafica = ? AND ( attivita.id_anagrafica_programmazione != ? OR attivita.id_anagrafica_programmazione IS NULL ) ) ',
+//			'WHERE tipologie_todo.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND (todo.id_anagrafica = ? AND attivita.id_anagrafica_programmazione <> ?) '.
+//			'AND todo.data_chiusura IS NULL '.( isset($todo) && count($todo)>0 ? ' AND todo.id NOT IN ('.implode(',',$todo).') ' : ' ' ).' GROUP BY todo.id',
+//			array( array( 's' => $_SESSION['account']['id_anagrafica'] ),  array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+		);
 
+		// print_r( $ct['etc']['todo'] );
+
+/*
 	} else {
 
 		// elenco attivita
@@ -88,30 +109,41 @@
 		$ct['etc']['todo'] = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT \'t\' AS entita, todo_view.*, count(attivita.id) AS n_attivita FROM todo_view LEFT JOIN attivita ON attivita.id_todo = todo_view.id WHERE todo_view.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND todo_view.data_chiusura IS NULL GROUP BY todo_view.id HAVING n_attivita > 0');
-
+*/
 	}
 
-	if( ! empty( $ct['etc']['todo'] ) ){
+	if( ! empty( $ct['etc']['todo'] ) ) {
 
 		foreach( $ct['etc']['todo']  as $evento ) {
-		
-			if( !empty( $evento['data_programmazione']) ){
-				$ct['etc']['agenda'][ date('Y', strtotime($evento['data_programmazione'])) ][ date('W', strtotime($evento['data_programmazione'])) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][] = $evento;
+/*		
+			if( ! empty( $evento['data_programmazione'] ) ) {
+				$ct['etc']['agenda'][ date( 'Y', strtotime( $evento['data_programmazione'] ) ) ][ date('W', strtotime( $evento['data_programmazione'] ) ) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][] = $evento;
 			} else {
 				$ct['etc']['todo_todo'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = $evento;
 				$ct['etc']['agenda'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = array();
 			}
-	
+*/	
+			if( ! empty( $evento['data_programmazione'] ) && empty( $evento['n_attivita'] ) ) {
+				$ct['etc']['agenda'][ date( 'Y', strtotime( $evento['data_programmazione'] ) ) ][ date('W', strtotime( $evento['data_programmazione'] ) ) ][ $evento['data_programmazione'] ][ $evento['ora_inizio_programmazione'] ][] = $evento;
+			} elseif( ! empty( $evento['anno_programmazione'] ) && empty( $evento['n_attivita'] ) ) {
+				$ct['etc']['todo_da_monitorare'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = $evento;
+				$ct['etc']['agenda'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = array();
+			} else {
+				$ct['etc']['agenda_da_fissare']['todo'][] = $evento;
+			}
+
 		}
 
 	}
 
-	if( ! empty( $ct['etc']['attivita'] ) ){
+	// print_r( $ct['etc']['todo_da_monitorare'] );
+
+	if( ! empty( $ct['etc']['attivita'] ) ) {
 		
 		foreach( $ct['etc']['attivita']  as $evento ) {
 			
-			if(  validateDate($evento['data_programmazione'], 'Y-m-d') == 1 ){
-				$ct['etc']['agenda'][ date('Y', strtotime($evento['data_programmazione'])) ][ date('W', strtotime($evento['data_programmazione'])) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][] = $evento;
+			if( validateDate( $evento['data_programmazione'], 'Y-m-d' ) == 1 ) {
+				$ct['etc']['agenda'][ date( 'Y', strtotime( $evento['data_programmazione'] ) ) ][ date( 'W', strtotime( $evento['data_programmazione'] ) ) ][ $evento['data_programmazione'] ][ $evento['ora_inizio_programmazione'] ][] = $evento;
 			} else {
 				$ct['etc']['agenda_da_fissare']['attivita'][] = $evento;
 			}

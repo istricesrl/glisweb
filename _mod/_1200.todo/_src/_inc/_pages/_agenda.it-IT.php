@@ -5,7 +5,7 @@
 
     // modulo di questo file
 	$m = DIR_MOD . '_1200.todo/';
-
+/*
 	// RELAZIONI CON IL MODULO PRODUZIONE
 	if( in_array( "9000.agenda", $cf['mods']['active']['array'] ) ) {
 
@@ -22,13 +22,13 @@
             'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'todo' ),
                                         'priority'	=> '040' ) ) )	
         );
-
+*/
         // gestione attivita
         $p['agenda.todo.form'] = array(
             'sitemap'		=> false,
-            'title'			=> array( $l		=> 'gestione' ),
-            'h1'			=> array( $l		=> 'gestione' ),
-            'parent'		=> array( 'id'		=> 'agenda.todo.view' ),
+            'title'			=> array( $l		=> 'gestione todo' ),
+            'h1'			=> array( $l		=> 'gestione todo' ),
+            'parent'		=> array( 'id'		=> 'agenda' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.form.html' ),
             'macro'			=> array( $m.'_src/_inc/_macro/_agenda.todo.form.php' ),
             'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -44,7 +44,7 @@
             'sitemap'		=> false,
             'title'			=> array( $l		=> 'attivita' ),
             'h1'			=> array( $l		=> 'attivita' ),
-            'parent'		=> array( 'id'		=> 'agenda.todo.view' ),
+            'parent'		=> array( 'id'		=> 'agenda' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.form.attivita.html' ),
             'macro'			=> array( $m.'_src/_inc/_macro/_agenda.todo.form.attivita.php' ),
             'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -57,7 +57,7 @@
             'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
             'title'			=> array( $l		=> 'azioni' ),
             'h1'			=> array( $l		=> 'azioni' ),
-            'parent'		=> array( 'id'		=> 'agenda.todo.view' ),
+            'parent'		=> array( 'id'		=> 'agenda' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
             'macro'			=> array( $m . '_src/_inc/_macro/_agenda.todo.form.tools.php' ),
             'etc'			=> array( 'tabs'	=> $p['agenda.todo.form']['etc']['tabs'] ),
@@ -70,7 +70,7 @@
             'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
             'title'		=> array( $l		=> 'stampe' ),
             'h1'		=> array( $l		=> 'stampe' ),
-            'parent'		=> array( 'id'		=> 'agenda.todo.view' ),
+            'parent'		=> array( 'id'		=> 'agenda' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
             'macro'		=> array( $m . '_src/_inc/_macro/_agenda.todo.form.stampe.php' ),
             'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -83,7 +83,7 @@
             'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
             'title'			=> array( $l		=> 'chiusura' ),
             'h1'			=> array( $l		=> 'chiusura' ),
-            'parent'		=> array( 'id'		=> 'agenda.todo.view' ),
+            'parent'		=> array( 'id'		=> 'agenda' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.form.chiusura.html' ),
             'macro'			=> array( $m.'_src/_inc/_macro/_agenda.todo.form.chiusura.php' ),
             'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -96,11 +96,12 @@
             'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
             'title'		=> array( $l		=> 'archiviazione' ),
             'h1'		=> array( $l		=> 'archiviazione' ),
-            'parent'		=> array( 'id'		=> 'agenda.todo.view' ),
+            'parent'		=> array( 'id'		=> 'agenda' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.form.archiviazione.html' ),
             'macro'		=> array( $m . '_src/_inc/_macro/_agenda.todo.form.archiviazione.php' ),
             'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
             'etc'		=> array( 'tabs'	=> $p['agenda.todo.form']['etc']['tabs'] )
         );
-
+/*
     }
+*/
