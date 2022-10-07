@@ -102,20 +102,20 @@
 		// gestione anagrafica stampe
 		$p['todo.form.stampe'] = array(
 			'sitemap'		=> false,
-			'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
-			'title'		=> array( $l		=> 'stampe_todo' ),
-			'h1'		=> array( $l		=> 'stampe_todo' ),
+			'icon'			=> '<i class="fa fa-print" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'stampe_todo' ),
+			'h1'			=> array( $l		=> 'stampe_todo' ),
 			'parent'		=> array( 'id'		=> 'todo.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-			'macro'		=> array( $m . '_src/_inc/_macro/_todo.form.stampe.php' ),
-			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.form.stampe.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 		);
 
 		// gestione progetti chiusura
 		$p['todo.form.chiusura'] = array(
 			'sitemap'		=> false,
-			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'icon'			=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
 			'title'			=> array( $l		=> 'chiusura' ),
 			'h1'			=> array( $l		=> 'chiusura' ),
 			'parent'		=> array( 'id'		=> 'todo.view' ),
@@ -128,14 +128,14 @@
 		// gestione anagrafica stampe
 		$p['todo.form.archiviazione'] = array(
 			'sitemap'		=> false,
-			'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
-			'title'		=> array( $l		=> 'archiviazione' ),
-			'h1'		=> array( $l		=> 'archiviazione' ),
+			'icon'			=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'archiviazione' ),
+			'h1'			=> array( $l		=> 'archiviazione' ),
 			'parent'		=> array( 'id'		=> 'todo.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.archiviazione.html' ),
-			'macro'		=> array( $m . '_src/_inc/_macro/_todo.form.archiviazione.php' ),
-			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.form.archiviazione.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 		);
 
 		// gestione todo - feedback
@@ -152,28 +152,67 @@
 
 		// vista archivio anagrafica
 		$p['todo.archivio.view'] = array(
-			'sitemap'			=> false,
-			'icon'				=> '<i class="fa fa-archive" aria-hidden="true"></i>',
-			'title'				=> array( $l		=> 'archivio' ),
-			'h1'				=> array( $l		=> 'archivio' ),
-			'parent'			=> array( 'id'		=> 'todo.view' ),
-			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-			'macro'				=> array( $m . '_src/_inc/_macro/_todo.archivio.view.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'				=> array( 'tabs'	=> $p['todo.view']['etc']['tabs'] )
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'archivio' ),
+			'h1'			=> array( $l		=> 'archivio' ),
+			'parent'		=> array( 'id'		=> 'todo.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.archivio.view.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.view']['etc']['tabs'] )
 		);
 
 		// vista archivio anagrafica
 		$p['todo.stampe'] = array(
-			'sitemap'			=> false,
-			'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
-			'title'				=> array( $l		=> 'stampe' ),
-			'h1'				=> array( $l		=> 'stampe' ),
-			'parent'			=> array( 'id'		=> 'todo.view' ),
-			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-			'macro'				=> array( $m . '_src/_inc/_macro/_todo.stampe.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'				=> array( 'tabs'	=> $p['todo.view']['etc']['tabs'] )
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-print" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'stampe' ),
+			'h1'			=> array( $l		=> 'stampe' ),
+			'parent'		=> array( 'id'		=> 'todo.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.stampe.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.view']['etc']['tabs'] )
+		);
+
+		$p['tipologie.todo.view'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'tipologie' ),
+			'h1'			=> array( $l		=> 'tipologie' ),
+			'parent'		=> array( 'id'		=> 'todo.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'			=> array(  $m . '_src/_inc/_macro/_tipologie.todo.view.php' ),
+			'etc'			=> array( 'tabs'	=> array( 'tipologie.todo.view' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																			'priority'	=> '115' ) ) )	
+		);
+	
+		// gestione categorie todo
+		$p['tipologie.todo.form'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione' ),
+			'parent'		=> array( 'id'		=> 'tipologie.todo.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.todo.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.todo.form.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'tipologie.todo.form',
+															'tipologie.todo.form.metadati' ) )
+		);
+	
+		// form tipologie todo metadati
+		$p['tipologie.todo.form.metadati'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-code" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'metadati' ),
+			'h1'			=> array( $l		=> 'metadati' ),
+			'parent'		=> array( 'id'		=> 'tipologie.todo.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.todo.form.metadati.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_tipologie.todo.form.metadati.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'			=> array( 'tabs'	=> $p['tipologie.todo.form']['etc']['tabs'] )
 		);
 
 	}
@@ -191,7 +230,7 @@
 			'macro'			=> array( $m . '_src/_inc/_macro/_todo.amministrazione.view.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'todo.amministrazione.view', 'todo.archivio.view', 'todo.stampe' ) ),
-			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'to-do' ),
+			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'to-do' ),
 															'priority'	=> '090' ) ) )	
 		);
 
@@ -274,20 +313,20 @@
 		// gestione anagrafica stampe
 		$p['todo.amministrazione.form.stampe'] = array(
 			'sitemap'		=> false,
-			'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
-			'title'		=> array( $l		=> 'stampe_todo' ),
-			'h1'		=> array( $l		=> 'stampe_todo' ),
+			'icon'			=> '<i class="fa fa-print" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'stampe_todo' ),
+			'h1'			=> array( $l		=> 'stampe_todo' ),
 			'parent'		=> array( 'id'		=> 'todo.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-			'macro'		=> array( $m . '_src/_inc/_macro/_todo.form.stampe.php' ),
-			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> $p['todo.amministrazione.form']['etc']['tabs'] )
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.form.stampe.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.form']['etc']['tabs'] )
 		);
 
 		// gestione progetti chiusura
 		$p['todo.amministrazione.form.chiusura'] = array(
 			'sitemap'		=> false,
-			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'icon'			=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
 			'title'			=> array( $l		=> 'chiusura' ),
 			'h1'			=> array( $l		=> 'chiusura' ),
 			'parent'		=> array( 'id'		=> 'todo.amministrazione.view' ),
@@ -300,14 +339,14 @@
 		// gestione anagrafica stampe
 		$p['todo.amministrazione.form.archiviazione'] = array(
 			'sitemap'		=> false,
-			'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
-			'title'		=> array( $l		=> 'archiviazione' ),
-			'h1'		=> array( $l		=> 'archiviazione' ),
+			'icon'			=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'archiviazione' ),
+			'h1'			=> array( $l		=> 'archiviazione' ),
 			'parent'		=> array( 'id'		=> 'todo.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.archiviazione.html' ),
-			'macro'		=> array( $m . '_src/_inc/_macro/_todo.form.archiviazione.php' ),
-			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> $p['todo.amministrazione.form']['etc']['tabs'] )
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.form.archiviazione.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.form']['etc']['tabs'] )
 		);
 
 		// gestione todo - feedback
@@ -324,28 +363,28 @@
 
 		// vista archivio anagrafica
 		$p['todo.archivio.view'] = array(
-			'sitemap'			=> false,
-			'icon'				=> '<i class="fa fa-archive" aria-hidden="true"></i>',
-			'title'				=> array( $l		=> 'archivio' ),
-			'h1'				=> array( $l		=> 'archivio' ),
-			'parent'			=> array( 'id'		=> 'todo.amministrazione.view' ),
-			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-			'macro'				=> array( $m . '_src/_inc/_macro/_todo.archivio.view.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'				=> array( 'tabs'	=> $p['todo.amministrazione.view']['etc']['tabs'] )
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'archivio' ),
+			'h1'			=> array( $l		=> 'archivio' ),
+			'parent'		=> array( 'id'		=> 'todo.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.archivio.view.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.view']['etc']['tabs'] )
 		);
 
 		// vista archivio anagrafica
 		$p['todo.stampe'] = array(
-			'sitemap'			=> false,
-			'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
-			'title'				=> array( $l		=> 'stampe' ),
-			'h1'				=> array( $l		=> 'stampe' ),
-			'parent'			=> array( 'id'		=> 'todo.amministrazione.view' ),
-			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-			'macro'				=> array( $m . '_src/_inc/_macro/_todo.stampe.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'				=> array( 'tabs'	=> $p['todo.amministrazione.view']['etc']['tabs'] )
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-print" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'stampe' ),
+			'h1'			=> array( $l		=> 'stampe' ),
+			'parent'		=> array( 'id'		=> 'todo.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.stampe.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.view']['etc']['tabs'] )
 		);
 
 	}
