@@ -19,7 +19,15 @@
 
 		$view['__pager__'] = NULL;
 
+		if( isset( $ct['view']['__restrict__'] ) ) {
+			$_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];
+		}
+
 		$data = array();
+
+		if( isset( $view['__report_mode__'] ) ) {
+			$data['__report_mode__'] = $view['__report_mode__'];
+		}
 
 		controller(
 			$cf['mysql']['connection'],
@@ -33,7 +41,7 @@
 		);
 
 		// debug
-		// die( print_r( $view ) );
+		// die( print_r( $view, true ) );
 
 		if( ! empty( $data ) ) {
 

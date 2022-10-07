@@ -57,6 +57,11 @@
 		}
 	}
 
+	// report mode
+	if( isset( $ct['view']['data']['__report_mode__'] ) ) {
+		$_REQUEST['__view__'][ $ct['view']['id'] ]['__report_mode__'] = $ct['view']['data']['__report_mode__'];
+	}
+
 	// filtri presettati
 	if( isset( $ct['view']['__restrict__'] ) ) {
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];
