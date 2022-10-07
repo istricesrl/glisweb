@@ -4657,6 +4657,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
         metadati.id_tipologia_attivita,
 		metadati.id_banner,
 		metadati.id_pianificazione,
+		metadati.id_tipologia_todo,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(

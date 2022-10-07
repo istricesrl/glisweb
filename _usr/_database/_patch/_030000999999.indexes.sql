@@ -2190,7 +2190,8 @@ ALTER TABLE `metadati`
  	ADD UNIQUE KEY `unica_rinnovo` (`id_lingua`,`id_rinnovo`,`nome`), 
  	ADD UNIQUE KEY `unica_tipologia_attivita` (`id_lingua`,`id_tipologia_attivita`,`nome`), 
 	ADD UNIQUE KEY `unica_banner` (`id_lingua`,`id_banner`,`nome`), 
-	ADD UNIQUE KEY `unica_pianificazione` (`id_lingua`,`id_pianificazione`,`nome`), 
+	ADD UNIQUE KEY `unica_pianificazione` (`id_lingua`,`id_pianificazione`,`nome`),
+	ADD UNIQUE KEY `unica_tipologia_todo` (`id_lingua`,`id_tipologia_todo`,`nome`),
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
  	ADD KEY `id_account` (`id_account`), 
@@ -2217,6 +2218,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_tipologia_attivita` (`id_tipologia_attivita`), 
 	ADD KEY `id_banner` (`id_banner`), 
 	ADD KEY `id_pianificazione` (`id_pianificazione`), 
+	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
 	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255));
 
 --| 030000021801
