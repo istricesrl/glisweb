@@ -15,11 +15,15 @@
     $ct['form']['table'] = 'mastri';
     $ct['view']['data']['__report_mode__'] = 1;
 
-    // TODO
-    // rendere dinamiche le verifiche sulla tipologia
+    // verifiche dinamiche sulla tipologia
+    $checkType = mysqlSelectRow(
+        $cf['mysql']['connection'],
+        'SELECT * FROM tipologie_mastri WHERE id = ?',
+        array( array( 's' => $_REQUEST['mastri']['id_tipologia'] ) )
+    );
 
     // magazzino
-     if( in_array( $_REQUEST['mastri']['id_tipologia'], array( 1 ) ) ) {
+     if( ! empty( $checkType['se_magazzino'] ) ) {
     
         // tabella della vista
         $ct['view']['table'] = '__report_giacenza_magazzini__';
@@ -44,6 +48,38 @@
         $ct['view']['class'] = array(
             'id' => 'd-none d-md-table-cell',
             'articolo' => 'text-left',
+            'carico' => 'text-right',
+            'scarico' => 'text-right',
+            'totale' => 'text-right'
+        );
+    }
+
+    // crediti
+    if( ! empty( $checkType['se_credito'] ) ) {
+    
+        // tabella della vista
+        $ct['view']['table'] = '__report_giacenza_crediti__';
+
+        // pagina per la gestione degli oggetti esistenti
+        $ct['view']['open']['page'] = 'articoli.form';
+        $ct['view']['open']['table'] = 'articoli';
+        $ct['view']['open']['field'] = 'id_articolo'; 
+
+        // campi della vista
+        $ct['view']['cols'] = array(
+            'id' => '#',
+            'account' => 'account',
+            'carico' => 'carico',
+            'scarico' => 'scarico',
+            'totale' => 'totale'
+        );
+
+        // stili della vista
+        $ct['view']['class'] = array(
+            'id' => 'd-none d-md-table-cell',
+            'account' => 'text-left',
+            'carico' => 'text-right',
+            'scarico' => 'text-right',
             'totale' => 'text-right'
         );
     }
