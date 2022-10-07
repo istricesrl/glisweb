@@ -13,6 +13,7 @@ CREATE OR REPLACE VIEW `__report_giacenza_crediti__` AS
 SELECT
   movimenti.id,
   movimenti.id_account,
+  movimenti.account,
   movimenti.nome,
   sum( movimenti.carico ) AS carico,
   sum( movimenti.scarico ) AS scarico,
@@ -29,26 +30,30 @@ FROM (
 SELECT
   mastri.id,
   mastri.id_account,
+  account.username AS account,
   mastri_path( mastri.id ) AS nome,
   crediti.data,
   coalesce( crediti.quantita, 0 ) AS carico,
   0 AS scarico
 FROM mastri
   LEFT JOIN crediti ON crediti.id_mastro_destinazione = mastri.id OR mastri_path_check( crediti.id_mastro_destinazione, mastri.id ) = 1
-  WHERE crediti.quantita IS NOT NULL
+  LEFT JOIN account ON account.id = mastri.id_account
+WHERE crediti.quantita IS NOT NULL
 UNION ALL
 SELECT
   mastri.id,
   mastri.id_account,
+  account.username AS account,
   mastri_path( mastri.id ) AS nome,
   crediti.data,
   0 AS carico,
   coalesce( crediti.quantita, 0 ) AS scarico
 FROM mastri
-LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_check( crediti.id_mastro_provenienza, mastri.id ) = 1
-  WHERE crediti.quantita IS NOT NULL
+  LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_check( crediti.id_mastro_provenienza, mastri.id ) = 1
+  LEFT JOIN account ON account.id = mastri.id_account
+WHERE crediti.quantita IS NOT NULL
 ) AS movimenti
-GROUP BY movimenti.id, movimenti.id_account, movimenti.nome;
+GROUP BY movimenti.id, movimenti.id_account, movimenti.account, movimenti.nome;
 
 --| 100000020000
 -- __report_giacenza_magazzini__
