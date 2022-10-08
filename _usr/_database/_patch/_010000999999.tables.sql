@@ -2067,6 +2067,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_tipologia_attivita` int(11) DEFAULT NULL,
   `id_banner` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
+  `id_tipologia_todo` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `testo` text,
   `id_account_inserimento` int(11) DEFAULT NULL,

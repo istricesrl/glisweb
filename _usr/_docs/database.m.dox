@@ -487,6 +487,18 @@
     metadati.id_video                   | l'ID del video cui si riferisce il metadato
     metadati.id_audio                   | l'ID dell'audio cui si riferisce il metadato
     metadati.id_file                    | l'ID del file cui si riferisce il metadato
+    metadati.id_progetto                | l'ID del progetto cui si riferisce il metadato
+    metadati.id_categoria_progetti      | l'ID della categoria progetti cui si riferisce il metadato
+    metadati.id_indirizzo               | l'ID dell'indirizzo cui si riferisce il metadato
+    metadati.id_edificio                | l'ID del'edificio cui si riferisce il metadato
+    metadati.id_immobile                | l'ID dell'immobile cui si riferisce il metadato
+    metadati.id_contratto               | l'ID del contratto cui si riferisce il metadato
+    metadati.id_valutazione             | l'ID della valutazione cui si riferisce il metadato
+    metadati.id_rinnovo                 | l'ID del rinnovo cui si riferisce il metadato
+    metadati.id_tipologia_attivita      | l'ID della tipologia di attività cui si riferisce il metadato
+    metadati.id_banner                  | l'ID del banner cui si riferisce il metadato
+    metadati.id_pianificazione          | l'ID della pianificazione cui si riferisce il metadato
+    metadati.id_tipologia_todo          | l'ID della tipologia di todo cui si riferisce il metadato
     metadati.nome                       | la chiave del metadato
     metadati.testo                      | il valore del metadato
     metadati.id_account_inserimento     | l'ID dell'account che ha inserito la riga
@@ -500,18 +512,31 @@
     ------------------------------------|-------------------------------|-------------------------------|----------------------
     metadati_ibfk_01_nofollow           | id_lingua                     | lingue.id                     | ON DELETE NO ACTION ON UPDATE NO ACTION
     metadati_ibfk_02                    | id_anagrafica                 | anagrafica.id                 | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_03                    | id_pagina                     | pagine.id                     | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_04                    | id_prodotto                   | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_05                    | id_articolo                   | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_06                    | id_categoria_prodotti         | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_07                    | id_notizia                    | notizie.id                    | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_08                    | id_categoria_notizie          | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_09                    | id_risorsa                    | risorse.id                    | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_10                    | id_categoria_risorse          | categorie_risorse.id          | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_11                    | id_immagine                   | immagini.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_12                    | id_video                      | video.id                      | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_13                    | id_audio                      | audio.id                      | ON DELETE CASCADE ON UPDATE CASCADE
-    metadati_ibfk_14                    | id_file                       | file.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_03                    | id_account                    | account.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_04                    | id_pagina                     | pagine.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_05                    | id_prodotto                   | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_06                    | id_articolo                   | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_07                    | id_categoria_prodotti         | categorie_prodotti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_08                    | id_notizia                    | notizie.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_09                    | id_categoria_notizie          | categorie_notizie.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_10                    | id_risorsa                    | risorse.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_11                    | id_categoria_risorse          | categorie_risorse.id          | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_12                    | id_immagine                   | immagini.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_13                    | id_video                      | video.id                      | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_14                    | id_audio                      | audio.id                      | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_15                    | id_file                       | file.id                       | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_16                    | id_progetto                   | progetti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_17                    | id_categoria_progetti         | categorie_progetti.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_18                    | id_indirizzo                  | indirizzi.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_19                    | id_edificio                   | edifici.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_20                    | id_immobile                   | immobili.id                   | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_21                    | id_contratto                  | contratti.id                  | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_22                    | id_valutazione                | valutazioni.id                | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_23                    | id_rinnovo                    | rinnovi.id                    | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_24                    | id_tipologia_attivita         | tipologie_attivita.id         | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_25                    | id_banner                     | banner.id                     | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_26                    | id_pianificazione             | pianificazioni.id             | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_27                    | id_tipologia_todo             | tipologie_todo.id             | ON DELETE CASCADE ON UPDATE CASCADE
     metadati_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     metadati_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -535,6 +560,18 @@
     metadati_view.id_video                  | -
     metadati_view.id_audio                  | -
     metadati_view.id_file                   | -
+    metadati_view.id_progetto               | -
+    metadati_view.id_categoria_progetti     | -
+    metadati_view.id_indirizzo              | -
+    metadati_view.id_edificio               | -
+    metadati_view.id_immobile               | -
+    metadati_view.id_contratto              | -
+    metadati_view.id_valutazione            | -
+    metadati_view.id_rinnovo                | -
+    metadati_view.id_tipologia_attivita     | -
+    metadati_view.id_banner                 | -
+    metadati_view.id_pianificazione         | -
+    metadati_view.id_tipologia_todo         | -
     metadati_view.nome                      | -
     metadati_view.testo                     | -
     metadati_view.id_account_inserimento    | -
