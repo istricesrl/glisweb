@@ -57,47 +57,47 @@
 					{{ frm.input( table, '', '', 'partita_iva', '', '', request ) }}
 				</div>
 			</div>
-			</fieldset>
-	    <fieldset>
+		</fieldset>
 		{% endif %}
 
-		<legend>data e luogo di nascita</legend>
+		<fieldset>
+			<legend>data e luogo di nascita</legend>
 
-		<div class="form-group form-row">
-		    <div class="col-auto">
-				<span class="label-top">giorno</span>
-				{{ frm.select( table, '', '', 'giorno_nascita', '', etc.select.giorni, request ) }}
+			<div class="form-group form-row">
+				<div class="col-auto">
+					<span class="label-top">giorno</span>
+					{{ frm.select( table, '', '', 'giorno_nascita', '', etc.select.giorni, request ) }}
+				</div>
+				<div class="col-auto">
+					<span class="label-top">mese</span>
+					{{ frm.select( table, '', '', 'mese_nascita', '', etc.select.mesi, request ) }}
+				</div>
+				<div class="col col-md-1">
+					<span class="label-top">anno</span>
+					{{ frm.input( table, '', '', 'anno_nascita', '', '', request ) }}
+				</div>
+				<div class="w-100 d-block d-md-none m-0"></div>
+				<div class="col-12 col-md">
+					<span class="label-top">luogo</span>
+					{{ frm.input( table, '', '', 'luogo_nascita', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">stato</span>
+					{{ frm.selectBox( table, '', '', 'id_stato_nascita', 'comune', etc.select.stati, request ) }}
+				</div>
 			</div>
-		    <div class="col-auto">
-				<span class="label-top">mese</span>
-				{{ frm.select( table, '', '', 'mese_nascita', '', etc.select.mesi, request ) }}
-			</div>
-			<div class="col col-md-1">
-				<span class="label-top">anno</span>
-				{{ frm.input( table, '', '', 'anno_nascita', '', '', request ) }}
-		    </div>
-			<div class="w-100 d-block d-md-none m-0"></div>
-			<div class="col-12 col-md">
-				<span class="label-top">luogo</span>
-				{{ frm.input( table, '', '', 'luogo_nascita', '', '', request ) }}
-		    </div>
-			<div class="col-12 col-md-4">
-				<span class="label-top">stato</span>
-				{{ frm.selectBox( table, '', '', 'id_stato_nascita', 'comune', etc.select.stati, request ) }}
-		    </div>
-		</div>
-		
+			
 <!--
-		<div class="form-group form-row">
-            <div class="col-12 col-md-6">
-                <span class="label-top">codice fiscale</span>
-                {{ frm.input( table, '', '', 'codice_fiscale', '', '', request ) }}
-                </div>
-            <div class="col-12 col-md-6">
-                <span class="label-top">partita IVA</span>
-                {{ frm.input( table, '', '', 'partita_iva', '', '', request ) }}
-            </div>
-		</div>
+			<div class="form-group form-row">
+				<div class="col-12 col-md-6">
+					<span class="label-top">codice fiscale</span>
+					{{ frm.input( table, '', '', 'codice_fiscale', '', '', request ) }}
+					</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">partita IVA</span>
+					{{ frm.input( table, '', '', 'partita_iva', '', '', request ) }}
+				</div>
+			</div>
 -->
 	    </fieldset>
 
