@@ -150,6 +150,8 @@ CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), NULL ) AS anagrafica,
 		account.id_mail,
 		mail.indirizzo AS mail,
+		account.id_affiliazione,
+		contratti.codice_affiliazione,
 		account.username,
 		account.password,
 		account.se_attivo,
@@ -169,6 +171,7 @@ CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 	FROM account
 		LEFT JOIN anagrafica ON anagrafica.id = account.id_anagrafica
 		LEFT JOIN mail ON mail.id = account.id_mail
+		LEFT JOIN contratti ON contratti.id = account.id_affiliazione
 		LEFT JOIN account_gruppi ON account_gruppi.id_account = account.id
 		LEFT JOIN account_gruppi_attribuzione ON account_gruppi_attribuzione.id_account = account.id
 		LEFT JOIN gruppi ON gruppi.id = account_gruppi.id_gruppo
@@ -1163,6 +1166,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
     carrelli.utm_content,
     carrelli.id_reseller,
     carrelli.id_affiliato,
+	carrelli.id_affiliazione,
 	carrelli.id_account_inserimento,
 	carrelli.timestamp_inserimento,
 	carrelli.id_account_aggiornamento,
@@ -1895,6 +1899,7 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 			provincie.sigla
 		) AS immobile,
 		contratti.codice,
+		contratti.codice_affiliazione,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -4657,6 +4662,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
         metadati.id_tipologia_attivita,
 		metadati.id_banner,
 		metadati.id_pianificazione,
+		metadati.id_tipologia_todo,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
@@ -7826,6 +7832,7 @@ CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 		tipologie_contratti.se_libero,
 		tipologie_contratti.se_prenotazione,
 		tipologie_contratti.se_scalare,
+		tipologie_contratti.se_affiliazione,
 		tipologie_contratti.id_account_inserimento,
 		tipologie_contratti.id_account_aggiornamento,
 		tipologie_contratti_path( tipologie_contratti.id ) AS __label__

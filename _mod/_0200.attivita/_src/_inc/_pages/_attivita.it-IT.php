@@ -170,14 +170,14 @@
 
 	$p['tipologie.attivita.view'] = array(
 		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'tipologie' ),
-		'h1'		=> array( $l		=> 'tipologie' ),
+		'title'			=> array( $l		=> 'tipologie' ),
+		'h1'			=> array( $l		=> 'tipologie' ),
 		'parent'		=> array( 'id'		=> 'attivita.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.attivita.view.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'tipologie.attivita.view' ) ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+		'macro'			=> array(  $m . '_src/_inc/_macro/_tipologie.attivita.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'tipologie.attivita.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
 																		'priority'	=> '115' ) ) )	
 	);
 
@@ -190,18 +190,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.attivita.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'tipologie.attivita.form','tipologie.attivita.form.metadati' ) )
+		'etc'			=> array( 'tabs'	=> array(	'tipologie.attivita.form',
+														'tipologie.attivita.form.metadati' ) )
 	);
 
 	// form tipologie attivita metadati
 	$p['tipologie.attivita.form.metadati'] = array(
 		'sitemap'		=> false,
-		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
-		'title'		=> array( $l		=> 'metadati' ),
-		'h1'		=> array( $l		=> 'metadati' ),
+		'icon'			=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'metadati' ),
+		'h1'			=> array( $l		=> 'metadati' ),
 		'parent'		=> array( 'id'		=> 'tipologie.attivita.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.attivita.form.metadati.html' ),
-		'macro'		=> array( $m . '_src/_inc/_macro/_tipologie.attivita.form.metadati.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'		=> array( 'tabs'	=> $p['tipologie.attivita.form']['etc']['tabs'] )
+		'macro'			=> array( $m . '_src/_inc/_macro/_tipologie.attivita.form.metadati.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'			=> array( 'tabs'	=> $p['tipologie.attivita.form']['etc']['tabs'] )
 	);

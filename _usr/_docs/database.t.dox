@@ -363,6 +363,13 @@
     tipologie_contratti.se_abbonamento              | flag che indica se la tipologia rappresenta un abbonamento
     tipologie_contratti.se_iscrizione               | flag che indica se la tipologia rappresenta un'iscrizione
     tipologie_contratti.se_tesseramento             | flag che indica se la tipologia rappresenta un tesseramento
+    tipologie_contratti.se_immobili                 | flag che indica se la tipologia rappresenta un immobile
+    tipologie_contratti.se_acquisto                 | flag che indica se la tipologia rappresenta un acquisto
+    tipologie_contratti.se_locazione                | flag che indica se la tipologia rappresenta una locazione
+    tipologie_contratti.se_libero                   | 
+	tipologie_contratti.se_prenotazione             | flag che indica se la tipologia rappresenta una prenotazione 
+	tipologie_contratti.se_scalare                  | 
+    tipologie_contratti.se_affiliazione             | flag che indica se la tipologia rappresenta un codice affiliazione
     tipologie_contratti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
     tipologie_contratti.timestamp_inserimento       | la timestamp dell'inserimento della riga
     tipologie_contratti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
