@@ -157,7 +157,14 @@
 		    $_REQUEST[ $cf['ws']['table'] ]['id'] = $_REQUEST['__id__'];
 		}
 
-	    // debug
+		// paginazione
+		// TODO farla un po' meglio
+		if( ! isset( $cf['ws']['all'] ) ) {
+			$_REQUEST['__info__'][ $cf['ws']['table'] ]['__pager__']['page'] = 0;
+			$_REQUEST['__info__'][ $cf['ws']['table'] ]['__pager__']['rows'] = 100;
+		}
+
+		// debug
 		// print_r( $_SERVER['REDIRECT_URL'] );
 		// die( print_r( $_REQUEST, true ) );
 		// die( $_SERVER['CONTENT_TYPE'] );
