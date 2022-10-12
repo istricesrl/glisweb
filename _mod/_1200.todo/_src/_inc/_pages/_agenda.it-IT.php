@@ -43,6 +43,7 @@
         $p['agenda.todo.form.attivita'] = array(
             'sitemap'		=> false,
             'title'			=> array( $l		=> 'attivita' ),
+            'icon'			=> '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>',
             'h1'			=> array( $l		=> 'attivita' ),
             'parent'		=> array( 'id'		=> 'agenda' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.form.attivita.html' ),

@@ -80,6 +80,43 @@
 			</div>
 			</fieldset>
 
+			{% if request.attivita.id_todo %}
+			<fieldset>
+				<legend>contesto della to-do {{ etc.todo.nome }}</legend>
+				{% if etc.attivita_completate or etc.attivita_programmate %}
+				<div class="form-group form-row">
+					<div class="col">
+
+						<table class="view-table">
+							<tr>
+								<th class="table-header-static">data</th>
+								<th class="table-header-static">status</th>
+								<th class="table-header-static text-left">titolo</th>
+								<th class="table-header-static text-left">note</th>
+							</tr>
+							{% for a in etc.attivita_completate %}
+							<tr>
+								<td>{{ a.data_attivita|date('d/m/Y') }}</td>
+								<td>completata</td>
+								<td class="text-left"><b>{{ a.nome }}</b> {{ a.note }}</td>
+								<td class="text-left">{{ a.note_cliente }}</td>
+							</tr>
+							{% endfor %}
+							{% for a in etc.attivita_programmate %}
+							<tr>
+								<td>{{ a.data_programmazione|date('d/m/Y') }}</td>
+								<td>programmata</td>
+								<td class="text-left"><b>{{ a.nome }}</b> {{ a.note_programmazione }}</td>
+								<td class="text-left">{{ a.note_cliente }}</td>
+							</tr>
+							{% endfor %}
+						</table>
+					</div>
+				</div>
+				{% endif %}
+			</fieldset>
+			{% endif %}
+
 			{% if not request.__preset__.attivita.data_attivita and not ( request.attivita.data_attivita and not request.attivita.data_programmazione ) %}
 			<fieldset>
 				<legend>programmazione</legend>
@@ -115,6 +152,7 @@
 			</fieldset>
 			{% endif %}
 
+			{% if request.attivita.data_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}
 			<fieldset>
 				<legend>esecuzione</legend>
 				<div class="form-group form-row">
@@ -156,6 +194,7 @@
 					</div>
 				</div>
 			</fieldset>
+			{% endif %}
 
 			<fieldset>
 			<legend>attribuzione</legend>
@@ -209,6 +248,8 @@
 			{# SUBFORM CATEGORIE #}
 	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
 
+			{% if request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}
+
 			{% if etc.procedure %}
 			<fieldset>
 				<legend>passi successivi nella procedura</legend>
@@ -236,6 +277,8 @@
 				{% endfor %}
 				</div>
 			</fieldset>
+
+			{% endif %}
 
 			{# BOTTONI E COMANDI DEL MODULO #}
 			<fieldset class="form-controls mt-auto">

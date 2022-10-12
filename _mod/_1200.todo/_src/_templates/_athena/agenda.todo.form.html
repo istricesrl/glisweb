@@ -165,13 +165,26 @@
 	    	{# sub.categorie( table, 'todo_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
 
 			{% endif %}
-		   
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-			{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
 
-	</form>
+			{% if etc.id_tipologia_attivita and request[ table ].id %}
+			<fieldset>
+				<legend>inizia una nuova attività di tipo</legend>
+				<div class="form-row">
+				{% for b in etc.id_tipologia_attivita %}
+				<div class="col-2 text-right">
+					<button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}&__preset__[attivita][id_todo]={{ request[ table ].id }}&__preset__[attivita][id_cliente]={{ request[ table ].id_cliente }}&__preset__[attivita][id_progetto]={{ request[ table ].id_progetto }}', '_self')">{{ b.nome }}</button>
+				</div>
+				{% endfor %}
+				</div>
+			</fieldset>
+			{% endif %}
+
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, table, request ) }}
+			</fieldset>
+
+		</form>
     </div>
 </section>
 

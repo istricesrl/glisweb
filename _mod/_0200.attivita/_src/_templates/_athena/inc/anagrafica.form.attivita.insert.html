@@ -10,11 +10,11 @@
     <div class="form-row d-print-none">
         <div class="col-12 col-md-2">
             <span class="label-top">data</span>
-            {{ frm.date( view.open.table, '', '', 'data_attivita', '', '', '', '', '', '', '', 2 ) }}
+            {{ frm.date( view.open.table, '', '', 'data_attivita', '', '', '', now|date("Y-m-d"), '', '', '', 2 ) }}
         </div>  
         <div class="col-12 col-md-2">
             <span class="label-top">tipologia</span>
-            {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.id_tipologia, '', '', '', '', '', '', 2  ) }}
+            {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.id_tipologia, '', '', '', 1, '', '', 2  ) }}
         </div>
         <div class="col-1">
             <span class="label-top">ore</span>
@@ -22,7 +22,7 @@
         </div>
         <div class="col">
             <span class="label-top">nome</span>
-            {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', '', '', 2 ) }}
+            {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', 1, '', 2 ) }}
         </div>
         <div class="col-auto">
             <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>

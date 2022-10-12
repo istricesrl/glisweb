@@ -82,7 +82,7 @@
 
 {% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
 <fieldset>
-    <legend>da fissare</legend>
+    <legend>da fissare / gestire</legend>
     {% for  e in etc.agenda_da_fissare.attivita %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
@@ -111,6 +111,7 @@
 		<div class="col">
             <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
 		    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+            <br>&mdash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
 			<br>{{ e.testo }}
 		</div>
 	    </div>
@@ -137,7 +138,7 @@
                 <div class="col">
                     <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
                     {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
-                    <br>{{ e.testo }} {{ e.note_programmazione }}
+                    <br>{{ e.testo }}
                 </div>
                 </div>
             </div>
@@ -171,7 +172,7 @@
     
     {% endif %}
     {% if e.entita == 't' %}
-    <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+    <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
         <div class="col-1 lemma text-right">
             <p>&mdash;</p>
         </div>
@@ -179,9 +180,9 @@
         <div class="col">
             <div class="form-row">
             <div class="col">
-                {% if e.id %}<b>responsabile di {{ e.__label__ }}</b>{% endif %} pianificata per {% if e.data_programmazione %}il {{ e.data_programmazione|date('d/m/Y') }}{% else %}la settimana {{e.settimana_programmazione}}/{{e.anno_programmazione}}{% endif %} per cliente {% if e.id_cliente %}<b>{{ e.cliente }}</b>{% endif %}
-                <br>
-                {{ e.nome }} &mdash; {{ e.testo }} {{ e.note_programmazione }}
+                <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                <br>{{ e.testo }}
             </div>
             </div>
         </div>

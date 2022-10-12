@@ -113,5 +113,24 @@
         );
     }
 
-	// macro di default
+    // ricerca tipologie attività collegate alla tipologia todo per la creazione delle shortcut
+    $ct['etc']['id_tipologia_attivita'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT tipologie_attivita_view.id, tipologie_attivita_view.nome FROM metadati LEFT JOIN tipologie_attivita_view ON tipologie_attivita_view.id = metadati.testo '.
+        'WHERE metadati.id_tipologia_todo = ? AND metadati.nome LIKE "procedure|todo|attivita|avviabili|%"',
+        array( array( 's' => (
+            ( 
+                isset( $_REQUEST['__preset__']['todo']['id_tipologia'] ) )
+                ? $_REQUEST['__preset__']['todo']['id_tipologia']
+                : ( ( isset( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) )
+                    ? $_REQUEST[ $ct['form']['table'] ]['id_tipologia']
+                    : NULL 
+                ) ) )
+            )
+    );
+
+    // debug
+    // print_r( $ct['etc']['id_tipologia_attivita'] );
+
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

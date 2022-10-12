@@ -59,7 +59,6 @@
 	$ct['view']['open']['preset']['field'] = 'id_todo';
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
-        // preset filtro custom progetti aperti
 	    $ct['view']['__restrict__']['id_todo']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 
@@ -69,18 +68,31 @@
         'fa' => 'fa-plus-circle'
     );
 
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert_memo',
+        'file' => 'inc/todo.form.attivita.insert.promemoria.html',
+        'fa' => 'fa-calendar-plus-o'
+    );
+
     $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view' );
-        
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'DESC';
+    } 
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'DESC';
+    } 
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){

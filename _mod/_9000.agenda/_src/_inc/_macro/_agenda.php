@@ -62,10 +62,11 @@
 			'todo.anno_programmazione,todo.settimana_programmazione,todo.ore_programmazione,todo.data_chiusura,todo.nome,todo.note_programmazione,todo.id_contatto,'.
 			'todo.id_progetto,todo.id_pianificazione,todo.data_archiviazione,todo.id_account_inserimento,todo.id_account_aggiornamento,'.
 			'concat(todo.nome,\' per \',coalesce( a2.denominazione, concat( a2.cognome, \' \', a2.nome ), \'\' ),\' su \',todo.id_progetto) AS __label__,'.
-			'count(attivita.id) AS n_attivita FROM todo LEFT JOIN attivita ON attivita.id_todo = todo.id LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica '.
+			'count(distinct attivita.id) AS n_attivita, count(distinct attivita_chiuse.id) AS n_attivita_chiuse FROM todo LEFT JOIN attivita ON ( attivita.id_todo = todo.id AND attivita.data_attivita IS NULL ) '.
+			'LEFT JOIN attivita AS attivita_chiuse ON ( attivita_chiuse.id_todo = todo.id AND attivita_chiuse.data_attivita IS NOT NULL ) LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica '.
 			'LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo LEFT JOIN comuni ON comuni.id = indirizzi.id_comune '.
 			'LEFT JOIN provincie ON provincie.id = comuni.id_provincia LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia '.
-			'WHERE tipologie_todo.se_agenda IS NOT NULL AND ( todo.id_anagrafica = ? ) GROUP BY todo.id',
+			'WHERE tipologie_todo.se_agenda IS NOT NULL AND ( todo.id_anagrafica = ? ) AND todo.data_archiviazione IS NULL AND todo.data_chiusura IS NULL GROUP BY todo.id',
 //			'WHERE tipologie_todo.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND ( todo.id_anagrafica = ? AND ( attivita.id_anagrafica_programmazione != ? OR attivita.id_anagrafica_programmazione IS NULL ) ) ',
 //			'WHERE tipologie_todo.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND (todo.id_anagrafica = ? AND attivita.id_anagrafica_programmazione <> ?) '.
 //			'AND todo.data_chiusura IS NULL '.( isset($todo) && count($todo)>0 ? ' AND todo.id NOT IN ('.implode(',',$todo).') ' : ' ' ).' GROUP BY todo.id',
@@ -112,31 +113,7 @@
 */
 	}
 
-	if( ! empty( $ct['etc']['todo'] ) ) {
-
-		foreach( $ct['etc']['todo']  as $evento ) {
-/*		
-			if( ! empty( $evento['data_programmazione'] ) ) {
-				$ct['etc']['agenda'][ date( 'Y', strtotime( $evento['data_programmazione'] ) ) ][ date('W', strtotime( $evento['data_programmazione'] ) ) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][] = $evento;
-			} else {
-				$ct['etc']['todo_todo'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = $evento;
-				$ct['etc']['agenda'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = array();
-			}
-*/	
-			if( ! empty( $evento['data_programmazione'] ) && empty( $evento['n_attivita'] ) ) {
-				$ct['etc']['agenda'][ date( 'Y', strtotime( $evento['data_programmazione'] ) ) ][ date('W', strtotime( $evento['data_programmazione'] ) ) ][ $evento['data_programmazione'] ][ $evento['ora_inizio_programmazione'] ][] = $evento;
-			} elseif( ! empty( $evento['anno_programmazione'] ) && empty( $evento['n_attivita'] ) ) {
-				$ct['etc']['todo_da_monitorare'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = $evento;
-				$ct['etc']['agenda'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = array();
-			} else {
-				$ct['etc']['agenda_da_fissare']['todo'][] = $evento;
-			}
-
-		}
-
-	}
-
-	// print_r( $ct['etc']['todo_da_monitorare'] );
+	$todoGestite = array();
 
 	if( ! empty( $ct['etc']['attivita'] ) ) {
 		
@@ -148,9 +125,44 @@
 				$ct['etc']['agenda_da_fissare']['attivita'][] = $evento;
 			}
 
+			$todoGestite[] = $evento['id_todo'];
+
 		}
 
 	}
+
+	if( ! empty( $ct['etc']['todo'] ) ) {
+
+		foreach( $ct['etc']['todo']  as $evento ) {
+
+			if( ! in_array( $evento['id'], $todoGestite ) ) {
+
+/*		
+			if( ! empty( $evento['data_programmazione'] ) ) {
+				$ct['etc']['agenda'][ date( 'Y', strtotime( $evento['data_programmazione'] ) ) ][ date('W', strtotime( $evento['data_programmazione'] ) ) ][ $evento['data_programmazione']  ][  $evento['ora_inizio_programmazione'] ][] = $evento;
+			} else {
+				$ct['etc']['todo_todo'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = $evento;
+				$ct['etc']['agenda'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = array();
+			}
+*/	
+//			if( ! empty( $evento['data_programmazione'] ) && empty( $evento['n_attivita'] ) ) {
+			if( ! empty( $evento['data_programmazione'] ) ) {
+				$ct['etc']['agenda'][ date( 'Y', strtotime( $evento['data_programmazione'] ) ) ][ date('W', strtotime( $evento['data_programmazione'] ) ) ][ $evento['data_programmazione'] ][ $evento['ora_inizio_programmazione'] ][] = $evento;
+//			} elseif( ! empty( $evento['anno_programmazione'] ) && empty( $evento['n_attivita'] ) ) {
+			} elseif( ! empty( $evento['anno_programmazione'] ) ) {
+				$ct['etc']['todo_da_monitorare'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = $evento;
+				$ct['etc']['agenda'][ $evento['anno_programmazione'] ][ $evento['settimana_programmazione'] ][] = array();
+			} else {
+				$ct['etc']['agenda_da_fissare']['todo'][] = $evento;
+			}
+
+			}
+
+		}
+
+	}
+
+	// print_r( $ct['etc']['todo_da_monitorare'] );
 
 	// tendina tipologia attivita
 	$ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );

@@ -24,11 +24,12 @@
 	$ct['view']['open']['preset']['field'] = 'id_cliente';
 
      // campi della vista
-	$ct['view']['cols'] = array(
+     $ct['view']['cols'] = array(
 	    'id' => '#',
         'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
         'ora_fine_programmazione' => 'ora fine',
+        'anagrafica_programmazione' => 'assegnata a',
         'data_attivita' => 'eseguita',
 	    'anagrafica' => 'svolta da',
         'nome' => 'attività',
@@ -41,6 +42,7 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
+        'anagrafica_programmazione' => 'text-left',
 	    'data_programmazione' => 'text-left no-wrap',
 	    'ora_inizio_programmazione' => 'd-none',
         'ora_fine_programmazione' => 'd-none',
@@ -82,9 +84,9 @@
     }
 
     // tendina tipologia attivita
-	 $ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
+	$ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
-     // gestione default
+    // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // macro di default
@@ -97,7 +99,7 @@
     } 
 
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione'] ) ) {
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'DESC';
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'DESC';
     } 
 
     if( !empty( $ct['view']['data'] ) ){
