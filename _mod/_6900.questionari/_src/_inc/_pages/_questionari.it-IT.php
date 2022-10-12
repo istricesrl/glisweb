@@ -96,69 +96,69 @@
 
 	$p['app.audit.elenco'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'audit' ),
-	    'h1'		=> array( $l		=> 'audit' ),
+	    'title'			=> array( $l		=> 'audit' ),
+	    'h1'			=> array( $l		=> 'audit' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.elenco.html' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_app.audit.elenco.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'		=> array( 
-						'app'=> array(	
-								'' => 	array(	
-										'label'	=> array( $l => 'audit' ),
-										'priority'	=> '030' 
+	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.elenco.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 
+									'app'=> array(	
+											'' => 	array(	
+													'label'	=> array( $l => 'audit' ),
+													'priority'	=> '030' 
+											)
+									) 
 								)
-						) 
-					)
 	);
 
 	$p['app.audit.dettaglio'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestione' ),
-	    'h1'		=> array( $l		=> 'gestione' ),
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.dettaglio.html' ),
 	    'parent'		=> array( 'id'		=> 'app.audit.elenco' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_app.audit.dettaglio.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.dettaglio.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
 /*	$p['app.audit.crea'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'crea audit' ),
-	    'h1'		=> array( $l		=> 'crea audit' ),
+	    'title'			=> array( $l		=> 'crea audit' ),
+	    'h1'			=> array( $l		=> 'crea audit' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.crea.html' ),
 	    'parent'		=> array( 'id'		=> 'cartellini_app_agenda' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_app.audit.crea.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.crea.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
 
 	$p['app.audit.controlli.crea'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'crea audit' ),
-	    'h1'		=> array( $l		=> 'crea audit' ),
+	    'title'			=> array( $l		=> 'crea audit' ),
+	    'h1'			=> array( $l		=> 'crea audit' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.controlli.crea.html' ),
 	    'parent'		=> array( 'id'		=> 'cartellini_app_agenda' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_app.audit.controlli.crea.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.controlli.crea.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 */
 	$p['app.audit.controlli.dettaglio.progetto'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'crea audit' ),
-	    'h1'		=> array( $l		=> 'crea audit' ),
+	    'title'			=> array( $l		=> 'crea audit' ),
+	    'h1'			=> array( $l		=> 'crea audit' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.controlli.dettaglio.progetto.html' ),
 	    'parent'		=> array( 'id'		=> 'cartellini_app_agenda' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_app.audit.controlli.dettaglio.progetto.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.controlli.dettaglio.progetto.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
 	$p['app.audit.controlli.dettaglio.anagrafica'] = array(
 	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'crea audit' ),
-	    'h1'		=> array( $l		=> 'crea audit' ),
+	    'title'			=> array( $l		=> 'crea audit' ),
+	    'h1'			=> array( $l		=> 'crea audit' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.controlli.dettaglio.anagrafica.html' ),
 	    'parent'		=> array( 'id'		=> 'cartellini_app_agenda' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_app.audit.controlli.dettaglio.anagrafica.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.controlli.dettaglio.anagrafica.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
