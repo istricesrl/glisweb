@@ -1,0 +1,25 @@
+{% import '_bin/_default.html' as frm %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+<form action="" method="POST" id="form_controlli">
+    <div class="form-row">
+        <div class="form-group col-auto">
+            <select class="form-control">
+                {% for anagrafica in etc.controlli.anagrafica %}
+                <option value="{{anagrafica.__label__}}"></option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group col-auto">
+            <select class="form-control">
+                {% for progetto in etc.controlli.progetti %}
+                <option value="{{progetto.__label__}}"></option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-secondary">crea</button>
+</form>
+{% endblock %}
