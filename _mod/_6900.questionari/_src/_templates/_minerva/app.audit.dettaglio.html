@@ -3,23 +3,19 @@
 {% extends 'ext/main.html' %}
 
 {% block main %}
-<form action="" method="POST" id="form_controlli">
-    <div class="form-row">
-        <div class="form-group col-auto">
-            <select class="form-control">
-                {% for anagrafica in etc.controlli.anagrafica %}
-                <option value="{{anagrafica.__label__}}"></option>
-                {% endfor %}
-            </select>
-        </div>
-        <div class="form-group col-auto">
-            <select class="form-control">
-                {% for progetto in etc.controlli.progetti %}
-                <option value="{{progetto.__label__}}"></option>
-                {% endfor %}
-            </select>
+<div class="row">
+    <div class="col-12 mt-3 d-inline d-flex align-items-center justify-content-center justify-content-md-start">
+        <a href='{{ pages["app.audit.controlli.crea"].url[ localization.language.ietf ] }}'
+            class="btn btn-secondary">crea controllo</a>
+        <div class="row">
+            <hr>
+            {% for audit in etc.audit %}
+            <div class="col-auto">
+                <span>{{audit.nome}}</span>
+            </div>
+            <hr>
+            {% endfor %}
         </div>
     </div>
-    <button type="submit" class="btn btn-secondary">crea</button>
-</form>
+</div>
 {% endblock %}

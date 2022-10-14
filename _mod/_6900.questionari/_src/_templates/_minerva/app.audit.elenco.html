@@ -25,9 +25,20 @@
         </div>
       </form>
       <div class="row subnav">
+        <div class="col-12 col-md-6 mb-3">
+          <a href='{{ pages["app.audit.dettaglio"].url[ localization.language.ietf ] }}?audit=1'
+            {% if obj.target %} target="{{ obj.target }}" {% endif %}>
+            <div class="media">
+              <div class="media-body">
+                <h5 class="media-title">prova</h5>
+                <p class="media-text">via tal dei tali</p>
+              </div>
+            </div>
+          </a>
+        </div>
         {% for obj in etc.audit %}
         <div class="col-12 col-md-6 mb-3">
-          <a href="{{ pages.app.audit.scheda.url[ localization.language.ietf ] }}?audit={{ obj.id }}"
+          <a href="{{ pages.app.audit.dettaglio.url[ localization.language.ietf ] }}?audit={{ obj.id }}"
             {% if obj.target %} target="{{ obj.target }}" {% endif %}>
             <div class="media">
               <div class="media-body">
