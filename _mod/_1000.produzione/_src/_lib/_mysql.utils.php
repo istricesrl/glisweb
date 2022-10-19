@@ -150,7 +150,8 @@
     }
 
     /* funzione che verifica se un operatore da contratto è disponibile in una certa data/fascia oraria e restituisce:
-        - 50 punti se sì
+        - 100 punti se sì
+        - 50 punti se non ci sono disponibilità ma è settato il flag se_disponibile nel contratto
         - 0 punti se no
     */
     function puntiDisponibilitaOperatore( $id_anagrafica, $data, $ora_inizio = '00:00:01', $ora_fine = '23:59:59' ){
