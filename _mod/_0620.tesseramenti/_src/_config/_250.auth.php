@@ -27,6 +27,9 @@
             ),
             'tesseramenti_archiviati' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            '__report_tesseramenti_anagrafica__' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);

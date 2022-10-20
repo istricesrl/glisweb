@@ -15,13 +15,16 @@
     $ct['form']['table'] = 'anagrafica';
     
     // tabella della vista
-	$ct['view']['table'] = 'contratti_anagrafica';
+	$ct['view']['table'] = '__report_tesseramenti_anagrafica__';
+    $ct['view']['data']['__report_mode__'] = 1;
 
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
         'id_anagrafica' => 'anagrafica',
-        'codice' => 'numero tessera',
+        'se_tesseramento' => 'tesseramento',
+#        'codice' => 'numero tessera',
+        'id_contratto' => 'numero contratto',
         'tipologia' => 'tipologia',
         'data_inizio' => 'inizio',
         'data_fine' => 'fine'
@@ -31,7 +34,9 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
         'id_anagrafica' => 'd-none',
-        'codice' => 'text-left d-none d-md-table-cell',
+        'se_tesseramento' => 'd-none',
+#        'codice' => 'text-left d-none d-md-table-cell',
+        'id_contratto' => 'd-none',
         'tipologia' => 'text-left',
         'data_inizio' => 'text-left',
         'data_fine' => 'text-left'

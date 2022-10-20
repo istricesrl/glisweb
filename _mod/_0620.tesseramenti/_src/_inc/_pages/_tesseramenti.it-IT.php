@@ -75,16 +75,29 @@
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.form.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> array(	'tesseramenti.form',
+																'tesseramenti.form.rinnovi',
 																'tesseramenti.form.stampe',
 																'tesseramenti.form.tools' 
 															) )
+		);
+
+		// gestione progetti
+		$p['tesseramenti.form.rinnovi'] = array(
+			'sitemap'			=> false,
+			'title'				=> array( $l		=> 'rinnovi' ),
+			'h1'				=> array( $l		=> 'rinnovi' ),
+			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tesseramenti.form.rinnovi.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.form.rinnovi.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'				=> array( 'tabs'	=> $p['tesseramenti.form']['etc']['tabs'] )
 		);
 
 		// stampe form tesseramenti
 		$p['tesseramenti.form.stampe'] = array(
 			'sitemap'			=> false,
 			'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
-			'title'				=> array( $l		=> 'stampe corso' ),
+			'title'				=> array( $l		=> 'stampe tesseramento' ),
 			'h1'				=> array( $l		=> 'stampe' ),
 			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
@@ -97,7 +110,7 @@
 		$p['tesseramenti.form.tools'] = array(
 			'sitemap'			=> false,
 			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-			'title'				=> array( $l		=> 'azioni corso' ),
+			'title'				=> array( $l		=> 'azioni tesseramento' ),
 			'h1'				=> array( $l		=> 'azioni' ),
 			'parent'			=> array( 'id'		=> 'tesseramenti.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
