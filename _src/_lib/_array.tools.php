@@ -363,3 +363,15 @@
         return( $a );
 
     }
+
+    if( ! function_exists( 'array_key_last' ) ) {
+
+        function array_key_last( $a ) {
+
+            $ks = array_keys( $a );
+
+            return $ks[ ( count( $ks ) - 1 ) ];
+
+        }
+
+    }
