@@ -1256,8 +1256,9 @@ INSERT IGNORE INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `no
 -- tipologia: tabella di supporto
 -- verifica: 2022-04-29 17:45 Chiara GDL
 INSERT IGNORE INTO `tipologie_rinnovi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_tesseramenti`, `se_iscrizioni`, `se_abbonamenti`, `se_licenze`, `se_contratti`, `se_progetti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'ordinario',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'ridotto',	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(1,	NULL,	NULL,	'ordinario',		NULL,	NULL,	1,	1,	1,	1,		1,		1,		NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'straordinario',	NULL,	NULL,	1,	1,	1,	1,		1,		1,		NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'ridotto',			NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000055800
 

@@ -70,6 +70,7 @@ SELECT
   movimenti.articolo,
   movimenti.id_prodotto,
   movimenti.prodotto,
+  movimenti.codice_produttore,
   group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
   movimenti.id_matricola,
   movimenti.matricola,
@@ -132,8 +133,9 @@ SELECT
 				''
 			)
 		) AS articolo,
-articoli.id_prodotto AS id_prodotto,
-prodotti.nome AS prodotto,
+  articoli.id_prodotto AS id_prodotto,
+  prodotti.nome AS prodotto,
+  prodotti.codice_produttore,
   matricole.id AS id_matricola,
   matricole.matricola,
   matricole.data_scadenza,
@@ -170,43 +172,44 @@ SELECT
   mastri.id AS id_mastro,
   mastri_path( mastri.id ) AS nome,
   articoli.id AS id_articolo,
-				concat_ws(
-			' ',
-			articoli.id,
-			'/',
-			prodotti.nome,
-			articoli.nome,
-			coalesce(
-				concat(
-					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
-					' ',
-					udm_dimensioni.sigla
-				),
-				concat(
-					articoli.peso,
-					' ',
-					udm_peso.sigla
-				),
-				concat(
-					articoli.volume,
-					' ',
-					udm_volume.sigla
-				),
-				concat(
-					articoli.capacita,
-					' ',
-					udm_capacita.sigla
-				),
-				concat(
-					articoli.durata,
-					' ',
-					udm_durata.sigla
-				),
-				''
-			)
-		) AS articolo,
-		articoli.id_prodotto AS id_prodotto,
-prodotti.nome AS prodotto,
+	concat_ws(
+    ' ',
+    articoli.id,
+    '/',
+    prodotti.nome,
+    articoli.nome,
+    coalesce(
+      concat(
+        articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+        ' ',
+        udm_dimensioni.sigla
+      ),
+      concat(
+        articoli.peso,
+        ' ',
+        udm_peso.sigla
+      ),
+      concat(
+        articoli.volume,
+        ' ',
+        udm_volume.sigla
+      ),
+      concat(
+        articoli.capacita,
+        ' ',
+        udm_capacita.sigla
+      ),
+      concat(
+        articoli.durata,
+        ' ',
+        udm_durata.sigla
+      ),
+      ''
+    )
+  ) AS articolo,
+	articoli.id_prodotto AS id_prodotto,
+  prodotti.nome AS prodotto,
+  prodotti.codice_produttore,
   matricole.id AS id_matricola,
   matricole.matricola,
   matricole.data_scadenza,
@@ -239,7 +242,7 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_pro
   AND documenti_articoli.id_articolo IS NOT NULL
 ) AS movimenti
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
-GROUP BY movimenti.id, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
+GROUP BY movimenti.id, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.codice_produttore, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 
 --| 100000020002
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini_foglie__` AS
@@ -555,8 +558,12 @@ CREATE OR REPLACE VIEW `__report_movimenti_magazzini__` AS
 SELECT
   id,
   nome,
-  articolo,
+  group_concat( DISTINCT categorie_prodotti_path( id_categoria ) SEPARATOR ' | ' ) AS categorie,
+  id_prodotto,
+  prodotto,
+  codice_produttore,
   id_articolo,
+  articolo,
   matricola,
   data_scadenza,
   data,
@@ -564,76 +571,25 @@ SELECT
   tipologia,
   documento,
   numero,
+  emittente,
+  destinatario,
   id_riga,
   carico,
-  scarico
+  mastro_carico,
+  qta_carico,
+  scarico,
+  mastro_scarico,
+  qta_scarico,
+  udm_qta
 FROM (
 SELECT
   mastri.id,
   mastri.nome,
-  concat_ws(
-			' ',
-			prodotti.nome,
-			articoli.nome,
-			coalesce(
-				concat(
-					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
-          ' ',
-					udm_dimensioni.sigla
-				),
-				concat(
-					articoli.peso,
-          ' ',
-					udm_peso.sigla
-				),
-				concat(
-					articoli.volume,
-          ' ',
-					udm_volume.sigla
-				),
-				concat(
-					articoli.capacita,
-          ' ',
-					udm_capacita.sigla
-				),
-				concat(
-					articoli.durata,
-          ' ',
-					udm_durata.sigla
-				),
-				''
-			)
-		)AS articolo,
+  prodotti_categorie.id_categoria,
+  prodotti.id AS id_prodotto,
+  prodotti.nome AS prodotto,
+  prodotti.codice_produttore,
   articoli.id AS id_articolo,
-  matricole.matricola,
-  matricole.data_scadenza,
-  documenti.data,
-  documenti.id_tipologia,
-  tipologie_documenti.sigla AS tipologia,
-  documenti.nome AS documento,
-  concat( documenti.numero, '/', documenti.sezionale ) AS numero,
-  documenti_articoli.id AS id_riga,
-  coalesce( documenti_articoli.quantita, 0 ) AS carico,
-  0 AS scarico
-FROM mastri
-  LEFT JOIN documenti_articoli
-    ON documenti_articoli.id_mastro_destinazione = mastri.id
-      OR mastri_path_check( documenti_articoli.id_mastro_destinazione, mastri.id ) = 1
-  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
-  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-  LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-  LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-  LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
-		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
-		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
-		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
-		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
-  WHERE documenti_articoli.quantita IS NOT NULL
-UNION
-SELECT
-  mastri.id,
-  mastri.nome,
   concat_ws(
 			' ',
 			prodotti.nome,
@@ -667,7 +623,6 @@ SELECT
 				''
 			)
 		) AS articolo,
-  articoli.id AS id_articolo,
   matricole.matricola,
   matricole.data_scadenza,
   documenti.data,
@@ -675,16 +630,103 @@ SELECT
   tipologie_documenti.sigla AS tipologia,
   documenti.nome AS documento,
   concat( documenti.numero, '/', documenti.sezionale ) AS numero,
+  concat_ws( ' ', a1.nome, a1.cognome, a1.denominazione ) AS emittente,
+  concat_ws( ' ', a2.nome, a2.cognome, a2.denominazione ) AS destinatario,
+  documenti_articoli.id AS id_riga,
+  coalesce( documenti_articoli.quantita, 0 ) AS carico,
+  0 AS scarico,
+  ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 0 ) / coalesce( udm_peso.conversione, udm_volume.conversione, udm_capacita.conversione, udm_durata.conversione, 1 ) ) AS qta_carico,
+  0 AS qta_scarico,
+  coalesce( udm_peso.sigla, udm_volume.sigla, udm_capacita.sigla, udm_durata.sigla ) AS udm_qta,
+  mastri.nome AS mastro_carico,
+  NULL AS mastro_scarico
+FROM mastri
+  LEFT JOIN documenti_articoli
+    ON documenti_articoli.id_mastro_destinazione = mastri.id
+      OR mastri_path_check( documenti_articoli.id_mastro_destinazione, mastri.id ) = 1
+  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+  LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
+  LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
+  LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+  LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+  LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
+  LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
+	LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+	LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+	LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+	LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
+  WHERE documenti_articoli.quantita IS NOT NULL
+UNION
+SELECT
+  mastri.id,
+  mastri.nome,
+  prodotti_categorie.id_categoria,
+  prodotti.id AS id_prodotto,
+  prodotti.nome AS prodotto,
+  prodotti.codice_produttore,
+  articoli.id AS id_articolo,
+  concat_ws(
+			' ',
+			prodotti.nome,
+			articoli.nome,
+			coalesce(
+				concat(
+					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
+          ' ',
+					udm_dimensioni.sigla
+				),
+				concat(
+					articoli.peso,
+          ' ',
+					udm_peso.sigla
+				),
+				concat(
+					articoli.volume,
+          ' ',
+					udm_volume.sigla
+				),
+				concat(
+					articoli.capacita,
+          ' ',
+					udm_capacita.sigla
+				),
+				concat(
+					articoli.durata,
+          ' ',
+					udm_durata.sigla
+				),
+				''
+			)
+		) AS articolo,
+  matricole.matricola,
+  matricole.data_scadenza,
+  documenti.data,
+  documenti.id_tipologia,
+  tipologie_documenti.sigla AS tipologia,
+  documenti.nome AS documento,
+  concat( documenti.numero, '/', documenti.sezionale ) AS numero,
+  concat_ws( ' ', a1.nome, a1.cognome, a1.denominazione ) AS emittente,
+  concat_ws( ' ', a2.nome, a2.cognome, a2.denominazione ) AS destinatario,
   documenti_articoli.id AS id_riga,
   0 AS carico,
-  coalesce( documenti_articoli.quantita, 0 ) AS scarico
+  coalesce( documenti_articoli.quantita, 0 ) AS scarico,
+  0 AS qta_carico,
+  ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 0 ) / coalesce( udm_peso.conversione, udm_volume.conversione, udm_capacita.conversione, udm_durata.conversione, 1 ) ) AS qta_scarico,
+  coalesce( udm_peso.sigla, udm_volume.sigla, udm_capacita.sigla, udm_durata.sigla ) AS udm_qta,
+  NULL AS mastro_carico,
+  mastri.nome AS mastro_scarico
 FROM mastri
   LEFT JOIN documenti_articoli
     ON documenti_articoli.id_mastro_provenienza = mastri.id
       OR mastri_path_check( documenti_articoli.id_mastro_provenienza, mastri.id ) = 1
   LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
   LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+  LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
   LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
+  LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+  LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
   LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
   LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
   LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
@@ -693,7 +735,8 @@ FROM mastri
 		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
   WHERE documenti_articoli.quantita IS NOT NULL
-) AS movimenti;
+) AS movimenti
+GROUP BY id_riga;
 
 --| 100000022700
 -- __report_evasione_ordini__
@@ -797,5 +840,48 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
     LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td1.data_chiusura IS NULL )
     LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
   GROUP BY progetti.id
+
+
+--| 100000031510
+-- __report_tesseramenti_anagrafica__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_tesseramenti_anagrafica__`;
+
+--| 100000031511
+-- __report_tesseramenti_anagrafica__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_tesseramenti_anagrafica__` AS
+	SELECT
+		rinnovi.id,
+		rinnovi.id_tipologia,
+    contratti_anagrafica.id_anagrafica,
+		tipologie_rinnovi.nome AS tipologia,
+		tipologie_contratti.se_abbonamento,
+		tipologie_contratti.se_iscrizione,
+		tipologie_contratti.se_tesseramento,
+		tipologie_contratti.se_immobili,
+		tipologie_contratti.se_acquisto,
+		tipologie_contratti.se_locazione,
+		rinnovi.id_contratto,
+		contratti.nome AS contratto,
+		rinnovi.id_licenza,
+		licenze.nome AS licenza,
+		rinnovi.id_progetto,
+		progetti.nome AS progetto,
+		rinnovi.data_inizio,
+		rinnovi.data_fine,
+		rinnovi.codice,
+		rinnovi.id_pianificazione,
+		rinnovi.id_account_inserimento,
+		rinnovi.id_account_aggiornamento,
+		concat('rinnovo ', rinnovi.id, ' dal ',CONCAT_WS('-',rinnovi.data_inizio),' al ',CONCAT_WS('-',rinnovi.data_fine)) AS __label__
+	FROM rinnovi
+		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
+		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto 
+    LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+    LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
+		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
+	;
 
 --| FINE FILE

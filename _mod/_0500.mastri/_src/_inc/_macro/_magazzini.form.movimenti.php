@@ -43,10 +43,19 @@
 'tipologia' => 'documento',
 'documento' => 'nome',
 'numero' => 'numero',
-//'id_articolo' => 'codice',
+'emittente' => 'emittente',
+'destinatario' => 'destinatario',
+'categorie' => 'categorie',
+'id_prodotto' => 'codice prodotto',
+'prodotto' => 'prodotto',
+'codice_produttore' => 'cod. produttore',
+'id_articolo' => 'codice articolo',
 'articolo' => 'descrizione',
 'carico' => 'carico',
+'qta_carico' => 'q.tà carico',
 'scarico' => 'scarico',
+'qta_scarico' => 'q.tà scarico',
+'udm_qta' => 'udm'
 
 	);
 
@@ -73,15 +82,24 @@
 #        'id_listino' => 'd-none',
 #        'id_tipologia' => 'd-none',
 #        'id_emittente' => 'd-none',
+'emittente' => 'd-none',
+'destinatario' => 'd-none',
         'tipologia' => 'text-left',
         'carico' => 'text-right',
         'scarico' => 'text-right',
+        'qta_carico' => 'd-none',
+        'qta_scarico' => 'd-none',
 #	    'descrizione' => 'text-left',
-#        'id_articolo' => 'text-left',
+'categorie' => 'd-none',
+'id_prodotto' => 'd-none',
+'prodotto' => 'd-none',
+'codice_produttore' => 'd-none',
+        'id_articolo' => 'd-none',
 #        'importo' => 'text-right',
 #        'cliente' => 'text-left',
 #        'emittente' => 'text-left'
-'articolo' => 'text-left'
+'articolo' => 'text-left',
+'udm_qta' => 'd-none'
 );
 
 #    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';

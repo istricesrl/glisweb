@@ -26,7 +26,10 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
-   //     'id_articolo' => 'codice',
+        'id_prodotto' => 'codice prodotto',
+        'prodotto' => 'prodotto',
+        'codice_produttore' => 'cod. produttore',
+        'id_articolo' => 'codice articolo',
         'articolo' => 'descrizione',
         'categorie' => 'categoria',
         'carico' => 'carico',
@@ -52,6 +55,10 @@
     // stili della vista
     $ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
+        'id_prodotto' => 'd-none',
+        'prodotto' => 'd-none',
+        'codice_produttore' => 'd-none',
+        'id_articolo' => 'd-none',
         'articolo' => 'text-left',
         'totale' => 'text-right',
         'peso' => 'text-right',

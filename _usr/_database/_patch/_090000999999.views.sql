@@ -7550,6 +7550,8 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
+		rinnovi.id_tipologia AS id_tipologia_rinnovo,
+		tipologie_rinnovi.nome AS tipologia_rinnovo,
 		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
 		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
@@ -7569,8 +7571,9 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
 		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
+		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
     WHERE tipologie_contratti.se_tesseramento = 1
-    GROUP BY contratti.id
+    GROUP BY contratti.id, tipologie_rinnovi.id
 ;
 
 --| 090000044510
