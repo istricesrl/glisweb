@@ -24,6 +24,7 @@
 #	    'data_programmazione' => 'pianificato',
 #	    'priorita' => 'priorità',
 		'tipologia' => 'tipologia',
+		'progetto' => 'progetto',
 	    'nome' => 'titolo',
 	    'anagrafica' => 'assegnato a',
 #		'settimana_programmazione' => 'settimana',
@@ -43,6 +44,7 @@
 	    'priorita' => 'text-left',
 	    'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
 	    'progresso' => 'text-right no-wrap d-none d-sm-table-cell',
+		'progetto' => 'text-left'
 #	    'completato' => 'text-left'
 	);
     
@@ -53,7 +55,7 @@
 	$ct['view']['insert']['page'] = 'todo.form';
 
 	// filtro per le todo di produzione
-	$ct['view']['__restrict__']['se_produzione']['EQ'] = 1;
+	// $ct['view']['__restrict__']['se_produzione']['EQ'] = 1;
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

@@ -28,7 +28,15 @@
 	}
 */
 
-    // contatore per i campi della vista
+	// NOTA verificare che questa cosa non crei conflitti con il backurl generato in _default.form.php nelle sotto viste dei form
+	if( ! isset( $ct['page']['backurl'] ) ) {
+	    $backurl = $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ];
+	    $backmd5 = md5( $backurl );
+	    $_SESSION['backurls'][ $backmd5 ] = $backurl;
+	    $ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
+	}
+
+	// contatore per i campi della vista
 	$i = 10;
 
     // campi della vista

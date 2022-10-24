@@ -926,6 +926,13 @@ CREATE OR REPLACE VIEW `__report_backlog_todo__` AS
 		todo.nome,
 		todo.id_contatto,
 		todo.id_progetto,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			' cliente ',
+			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' )
+		) AS progetto,    
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
@@ -992,6 +999,13 @@ CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
 		todo.nome,
 		todo.id_contatto,
 		todo.id_progetto,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			' cliente ',
+			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' )
+		) AS progetto,    
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
@@ -1064,6 +1078,13 @@ CREATE OR REPLACE VIEW `__report_planned_todo__` AS
 		todo.nome,
 		todo.id_contatto,
 		todo.id_progetto,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			' cliente ',
+			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' )
+		) AS progetto,    
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
@@ -1130,6 +1151,13 @@ CREATE OR REPLACE VIEW `__report_done_todo__` AS
 		todo.nome,
 		todo.id_contatto,
 		todo.id_progetto,
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			' cliente ',
+			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' )
+		) AS progetto,    
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
