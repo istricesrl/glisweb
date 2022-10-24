@@ -56,6 +56,7 @@
                     {% if request.__continue__ %}{% set default = request.__continue__  %}{% else  %}{% set default = '' %}{% endif %}
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request, default ) }}
 				</div>
+				<!--
 				{% if '0500.mastri' in mods.active.array %}
 				<div class="col-12 col-md-2">
 					<span class="label-top">scarico</span>
@@ -72,6 +73,7 @@
 					{{ frm.select( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default ) }}
 				</div>
 				{% endif %}
+				-->
 				<div class="col">
 					<span class="label-top">descrizione</span>
 					{% if request.__next_label__ %}{% set default = request.__next_label__ %}{% else %}{% set default = '' %}{% endif %}

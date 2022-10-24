@@ -65,7 +65,7 @@
         {% endif %}
         {% if '0200.attivita' in mods.active.array %}
         <div class="col">
-            <legend>nuova attività</legend>
+            <legend>nuovo promemoria</legend>
             <div class="form-row">
             {% for b in etc.id_tipologia_attivita %}
             <div class="col-4 text-right">
@@ -138,6 +138,7 @@
                 <div class="col">
                     <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
                     {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>&mdash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
                     <br>{{ e.testo }}
                 </div>
                 </div>
@@ -182,6 +183,7 @@
             <div class="col">
                 <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
                 {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                <br>&mdash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
                 <br>{{ e.testo }}
             </div>
             </div>
