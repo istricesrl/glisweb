@@ -841,7 +841,6 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
     LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
   GROUP BY progetti.id
 
-
 --| 100000031510
 -- __report_tesseramenti_anagrafica__
 -- tipologia: report
@@ -883,5 +882,274 @@ CREATE OR REPLACE VIEW `__report_tesseramenti_anagrafica__` AS
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
 		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
 	;
+
+--| 100000056610
+-- __report_backlog_todo__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_backlog_todo__`;
+
+--| 100000056611
+-- __report_backlog_todo__
+-- tipologia: report
+-- NOTA: questo report è ancora da documentare
+CREATE OR REPLACE VIEW `__report_backlog_todo__` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+  WHERE ( todo.data_chiusura IS NULL OR todo.data_archiviazione IS NULL )
+    AND coalesce( todo.data_programmazione, todo.settimana_programmazione ) IS NULL
+--    AND tipologie_todo.se_produzione IS NOT NULL
+;
+
+--| 100000056612
+-- __report_sprint_todo__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_sprint_todo__`;
+
+--| 100000056613
+-- __report_sprint_todo__
+-- tipologia: report
+-- NOTA: questo report è ancora da documentare
+CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+  WHERE ( todo.data_chiusura IS NULL OR todo.data_archiviazione IS NULL )
+    AND ( todo.data_programmazione = date_format( now(), '%Y-%m-%d' )
+      OR (
+        todo.anno_programmazione = date_format( now(), '%Y' )
+        AND
+        todo.settimana_programmazione = date_format( now(), '%u' )
+      )
+    )
+--    AND tipologie_todo.se_produzione IS NOT NULL
+;
+
+--| 100000056614
+-- __report_planned_todo__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_planned_todo__`;
+
+--| 100000056615
+-- __report_planned_todo__
+-- tipologia: report
+-- NOTA: questo report è ancora da documentare
+CREATE OR REPLACE VIEW `__report_planned_todo__` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+  WHERE ( todo.data_chiusura IS NULL OR todo.data_archiviazione IS NULL )
+    AND coalesce( todo.data_programmazione, todo.settimana_programmazione ) IS NOT NULL
+--    AND tipologie_todo.se_produzione IS NOT NULL
+;
+
+--| 100000056618
+-- __report_done_todo__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_done_todo__`;
+
+--| 100000056619
+-- __report_done_todo__
+-- tipologia: report
+-- NOTA: questo report è ancora da documentare
+CREATE OR REPLACE VIEW `__report_done_todo__` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+  WHERE ( todo.data_chiusura IS NOT NULL AND todo.data_archiviazione IS NOT NULL )
+--    AND tipologie_todo.se_produzione IS NOT NULL
+;
 
 --| FINE FILE
