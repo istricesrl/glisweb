@@ -40,3 +40,4 @@
 	// print_r( $arrayDizionari );
 	// echo DIR_ETC_LOC . '_*.{' . LINGUE_ATTIVE . '}.php' . PHP_EOL;
 	// echo DIR_MOD_ATTIVI_ETC_LOC . '_*.{' . LINGUE_ATTIVE . '}.php' . PHP_EOL;
+    // echo 'OUTPUT';

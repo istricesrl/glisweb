@@ -36,3 +36,6 @@
 
     // NOTA a questo punto non hanno ancora girato le macro, quindi le stampe migliori
     // si fanno non da qui ma da /_src/_api/_pages.php
+
+    // debug
+    // echo 'OUTPUT';

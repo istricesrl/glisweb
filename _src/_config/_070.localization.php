@@ -91,6 +91,7 @@
 
     // lingue attive in base ai titoli del sito nelle varie lingue
 	foreach( array_keys( $cf['site']['name'] ) as $l ) {
+	    $cf['localization']['languages'][ $l ]['id'] = NULL;
 	    $cf['localization']['languages'][ $l ]['ietf'] = $l;
 	}
 
@@ -125,3 +126,6 @@
     // lingua corrente del sito
 	$cf['site']['ietf']				= &$cf['localization']['language']['ietf'];
 */
+
+    // debug
+    // echo 'OUTPUT';

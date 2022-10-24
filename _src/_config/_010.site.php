@@ -100,3 +100,6 @@
 
     // link al multisito
 	$ct['sites'] = &$cf['sites'];
+
+    // debug
+    // echo 'OUTPUT';

@@ -40,3 +40,6 @@
 
     // collegamento con l'array $ct
 	$ct['privacy'] = &$cf['privacy'];
+
+    // debug
+    // echo 'OUTPUT';

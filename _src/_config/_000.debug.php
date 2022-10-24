@@ -112,3 +112,6 @@
 
     // collegamento a $ct
 	$ct['debug']						                        = &$cf['debug'];
+
+    // debug
+    // echo 'OUTPUT';
