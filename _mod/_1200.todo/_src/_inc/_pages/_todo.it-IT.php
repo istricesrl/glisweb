@@ -19,8 +19,8 @@
 			'macro'			=> array( $m . '_src/_inc/_macro/_todo.view.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'todo.view', 'todo.archivio.view', 'todo.stampe' ) ),
-			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'to-do' ),
-															'priority'	=> '090' ) ) )	
+//			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'to-do' ),
+//															'priority'	=> '090' ) ) )	
 		);
 
 		// gestione todo
@@ -185,8 +185,8 @@
 			'macro'			=> array(  $m . '_src/_inc/_macro/_tipologie.todo.view.php' ),
 			'etc'			=> array( 'tabs'	=> array( 'tipologie.todo.view' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
-			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
-																			'priority'	=> '115' ) ) )	
+//			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+//																			'priority'	=> '115' ) ) )	
 		);
 	
 		// gestione categorie todo

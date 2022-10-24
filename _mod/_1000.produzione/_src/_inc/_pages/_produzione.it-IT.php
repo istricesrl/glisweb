@@ -19,3 +19,11 @@
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'produzione' ),
 																		'priority'	=> '200' ) ) )														
 	);
+
+	// RELAZIONI CON IL MODULO TODO
+	if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'produzione', $p['produzione']['etc']['tabs'], 'produzione.done' );
+		arrayInsertSeq( 'produzione', $p['produzione']['etc']['tabs'], 'produzione.planned' );
+		arrayInsertSeq( 'produzione', $p['produzione']['etc']['tabs'], 'produzione.sprint' );
+		arrayInsertSeq( 'produzione', $p['produzione']['etc']['tabs'], 'produzione.backlog' );
+	}

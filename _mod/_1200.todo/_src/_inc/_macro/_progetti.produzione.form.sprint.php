@@ -15,9 +15,11 @@
     $ct['form']['table'] = 'progetti';
     
     // tabella della vista
-	$ct['view']['table'] = 'todo';
+	$ct['view']['table'] = '__report_sprint_todo__';
+    $ct['view']['data']['__report_mode__'] = 1;
 
     // pagina per la gestione degli oggetti esistenti
+	$ct['view']['open']['table'] = 'todo';
 	$ct['view']['open']['page'] = 'todo.form';
 
     $ct['view']['cols'] = array(
@@ -27,8 +29,8 @@
 		'tipologia' => 'tipologia',
 	    'nome' => 'titolo',
 	    'anagrafica' => 'assegnato a',
-		'settimana_programmazione' => 'settimana',
-		'anno_programmazione' => 'anno'
+#		'settimana_programmazione' => 'settimana',
+#		'anno_programmazione' => 'anno'
 #	    'progresso' => 'ore',
 #	    'completato' => 'stato',
 #	    'id_priorita' => 'id_priorita'

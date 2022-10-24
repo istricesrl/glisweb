@@ -28,6 +28,18 @@
             ),
             'tipologie_todo' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            '__report_backlog_todo__' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            '__report_sprint_todo__' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            '__report_planned_todo__' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            '__report_done_todo__' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);

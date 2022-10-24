@@ -82,7 +82,10 @@
 
 		// RELAZIONI CON IL MODULO TODO
 		if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
-			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.todo' );
+			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.done' );
+			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.planned' );
+			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.sprint' );
+			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.backlog' );
 		}
 
 		// RELAZIONI CON IL MODULO COMMERCIALE
