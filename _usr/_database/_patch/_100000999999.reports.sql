@@ -635,7 +635,7 @@ SELECT
   documenti_articoli.id AS id_riga,
   coalesce( documenti_articoli.quantita, 0 ) AS carico,
   0 AS scarico,
-  ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 0 ) / coalesce( udm_peso.conversione, udm_volume.conversione, udm_capacita.conversione, udm_durata.conversione, 1 ) ) AS qta_carico,
+  ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 1 ) ) AS qta_carico,
   0 AS qta_scarico,
   coalesce( udm_peso.sigla, udm_volume.sigla, udm_capacita.sigla, udm_durata.sigla ) AS udm_qta,
   mastri.nome AS mastro_carico,
@@ -713,7 +713,7 @@ SELECT
   0 AS carico,
   coalesce( documenti_articoli.quantita, 0 ) AS scarico,
   0 AS qta_carico,
-  ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 0 ) / coalesce( udm_peso.conversione, udm_volume.conversione, udm_capacita.conversione, udm_durata.conversione, 1 ) ) AS qta_scarico,
+  ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 1 ) ) AS qta_scarico,
   coalesce( udm_peso.sigla, udm_volume.sigla, udm_capacita.sigla, udm_durata.sigla ) AS udm_qta,
   NULL AS mastro_carico,
   mastri.nome AS mastro_scarico
