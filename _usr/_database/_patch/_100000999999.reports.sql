@@ -829,9 +829,11 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
   SELECT
     progetti.id,
     progetti.nome,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
     count( DISTINCT td1.id ) AS backlog,
     count( DISTINCT td2.id ) AS sprint,
     count( DISTINCT td3.id ) AS fatto,
+    concat( round( ( count( DISTINCT td3.id ) ) / ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ), 2 ) * 100, '%' ) AS completed,
     round( datediff( now(), progetti.data_accettazione ) / 7, 0 ) AS elapsed,
     coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) AS speed,
     coalesce( date_add( now(), interval ( ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ) / ( coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) ) ) week ), '-' ) AS eta
@@ -839,6 +841,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
     LEFT JOIN todo AS td1 ON ( td1.id_progetto = progetti.id AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL )
     LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td1.data_chiusura IS NULL )
     LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
+		LEFT JOIN anagrafica AS a2 ON a2.id = progetti.id_cliente
   GROUP BY progetti.id
 
 --| 100000031510

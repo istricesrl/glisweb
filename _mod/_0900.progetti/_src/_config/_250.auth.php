@@ -64,6 +64,9 @@
             'todo' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
+            ),
+            '__report_avanzamento_progetti__' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);
