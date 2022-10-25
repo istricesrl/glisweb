@@ -833,7 +833,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
     count( DISTINCT td1.id ) AS backlog,
     count( DISTINCT td2.id ) AS sprint,
     count( DISTINCT td3.id ) AS fatto,
-    concat( round( ( count( DISTINCT td3.id ) ) / ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ), 2 ) * 100, '%' ) AS completed,
+    coalesce( concat( round( ( count( DISTINCT td3.id ) ) / ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ), 2 ) * 100, '%' ), '-' ) AS completed,
     round( datediff( now(), progetti.data_accettazione ) / 7, 0 ) AS elapsed,
     coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) AS speed,
     coalesce( date_add( now(), interval ( ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ) / ( coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) ) ) week ), '-' ) AS eta
