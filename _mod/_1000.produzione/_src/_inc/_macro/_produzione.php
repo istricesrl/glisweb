@@ -59,7 +59,7 @@
             ),
             'class' => array(
                 'nome' => 'text-left',
-                'completed' => 'text-left'
+                'completed' => 'text-right'
             )
         );
 
