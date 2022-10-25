@@ -115,4 +115,75 @@
 			'etc'			=> array( 'tabs'	=>$p['abbonamenti.form']['etc']['tabs'] ),
 			'auth'			=> array( 'groups'	=> array(	'roots' ) )
 		);
+
 	}
+
+	// vista abbonamenti
+	$p['tipologie.abbonamenti.view']	= array(
+		'sitemap'			=> false,
+		'title'				=> array( $l		=> 'abbonamenti' ),
+		'h1'				=> array( $l		=> 'abbonamenti' ),
+		'parent'			=> array( 'id'		=> NULL ),
+		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.abbonamenti.view.php' ),
+		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'				=> array( 'tabs'	=> array(	'tipologie.abbonamenti.view',
+															'tipologie.abbonamenti.tools' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'abbonamenti' ),
+																			'priority'	=> '250' ) ) )
+	);
+
+	// stampe abbonamenti
+	$p['tipologie.abbonamenti.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'				=> array( $l		=> 'azioni' ),
+		'h1'				=> array( $l		=> 'azioni' ),
+		'parent'			=> array( 'id'		=> 'tipologie.abbonamenti.view' ),
+		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.abbonamenti.tools.php' ),
+		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'				=> array( 'tabs'	=> $p['tipologie.abbonamenti.view']['etc']['tabs'] )
+	);
+
+	// gestione progetti
+	$p['tipologie.abbonamenti.form'] = array(
+		'sitemap'			=> false,
+		'title'				=> array( $l		=> 'gestione' ),
+		'h1'				=> array( $l		=> 'gestione' ),
+		'parent'			=> array( 'id'		=> 'tipologie.abbonamenti.view' ),
+		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.abbonamenti.form.html' ),
+		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.abbonamenti.form.php' ),
+		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'				=> array( 'tabs'	=> array(	'tipologie.abbonamenti.form',
+															'tipologie.abbonamenti.form.acquisto',	// TODO questa è una sinergia con il modulo catalogo, gestirla di conseguenza
+															'tipologie.abbonamenti.form.tools' 
+														) )
+	);
+
+	// tools form abbonamenti
+	// TODO questa è una sinergia con il modulo catalogo, gestirla di conseguenza
+	$p['tipologie.abbonamenti.form.acquisto'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'				=> array( $l		=> 'azioni abbonamento' ),
+		'h1'				=> array( $l		=> 'azioni' ),
+		'parent'			=> array( 'id'		=> 'tipologie.abbonamenti.view' ),
+		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.abbonamenti.form.acquisto.html' ),
+		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.abbonamenti.form.acquisto.php' ),
+		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'				=> array( 'tabs'	=> $p['tipologie.abbonamenti.form']['etc']['tabs'] )
+	);
+
+	// tools form abbonamenti
+	$p['tipologie.abbonamenti.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'				=> array( $l		=> 'azioni abbonamento' ),
+		'h1'				=> array( $l		=> 'azioni' ),
+		'parent'			=> array( 'id'		=> 'tipologie.abbonamenti.view' ),
+		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.abbonamenti.form.tools.php' ),
+		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'				=> array( 'tabs'	=> $p['tipologie.abbonamenti.form']['etc']['tabs'] )
+	);

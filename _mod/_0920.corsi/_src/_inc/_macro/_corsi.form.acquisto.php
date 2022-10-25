@@ -48,10 +48,11 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'articoli.form';
 
-        // campo per il preset di apertura
+    // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_prodotto';
 
     // preset filtro custom progetti aperti
+    // TODO il prodotto non va più selezionato in base al campo, ma al metadato (vedi abbonamenti e tesseramenti)
 	$ct['view']['__restrict__']['id_prodotto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id_prodotto'];
 
     // inserimento rapido articolo e prezzo
@@ -100,4 +101,6 @@
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
-//print_r( strtotime("2022-07-01T15:56") );
+
+    // debug
+    // print_r( strtotime("2022-07-01T15:56") );
