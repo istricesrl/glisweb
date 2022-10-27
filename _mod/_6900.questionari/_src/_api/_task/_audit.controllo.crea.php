@@ -48,13 +48,14 @@
 
         $status['controllo'] =  mysqlQuery(
             $cf['mysql']['connection'],
-            'INSERT INTO controlli ( id_audit, id_progetto, id_questionario, id_anagrafica, id_account_inserimento, timestamp_inserimento ) VALUES( ?, ?, ?, ?, ?, ? )',
+            'INSERT INTO controlli ( id_audit, id_progetto, id_questionario, id_anagrafica, id_account_inserimento, timestamp_inserimento, timestamp_richiesta ) VALUES( ?, ?, ?, ?, ?, ?, ? )',
             array(
                 array( 's' => $status['id_audit'] ),
                 array( 's' => $status['id_progetto'] ),
                 array( 's' => $status['id_questionario'] ),
                 array( 's' => $status['id_anagrafica'] ),
                 array( 's' => $status['id_account'] ),
+                array( 's' => time() ),
                 array( 's' => time() )
             )
         );
