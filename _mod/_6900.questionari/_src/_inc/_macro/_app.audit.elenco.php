@@ -24,6 +24,13 @@
                 'WHERE a.id_somministratore = ? AND a.data_audit = ?',
                 array( array( 's' => $_SESSION['account']['id_anagrafica'] ), array( 's' => $_REQUEST['__d__'] ) )
             );
+
+            // tendina progetti
+            $ct['etc']['select']['progetti'] = mysqlCachedIndexedQuery(
+                $cf['memcache']['index'],
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'], 
+                'SELECT id, __label__ FROM progetti_view' );
     
         }
     }

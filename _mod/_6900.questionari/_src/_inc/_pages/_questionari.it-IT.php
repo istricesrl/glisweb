@@ -145,20 +145,20 @@
 */
 	$p['app.audit.controlli.dettaglio.progetto'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'crea audit' ),
-	    'h1'			=> array( $l		=> 'crea audit' ),
+	    'title'			=> array( $l		=> 'risposte progetto' ),
+	    'h1'			=> array( $l		=> 'risposte progetto' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.controlli.dettaglio.progetto.html' ),
-	    'parent'		=> array( 'id'		=> 'cartellini_app_agenda' ),
+	    'parent'		=> array( 'id'		=> 'app.audit.elenco' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.controlli.dettaglio.progetto.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
 	$p['app.audit.controlli.dettaglio.anagrafica'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'crea audit' ),
-	    'h1'			=> array( $l		=> 'crea audit' ),
+	    'title'			=> array( $l		=> 'risposte anagrafica' ),
+	    'h1'			=> array( $l		=> 'risposte anagrafica' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.controlli.dettaglio.anagrafica.html' ),
-	    'parent'		=> array( 'id'		=> 'cartellini_app_agenda' ),
+	    'parent'		=> array( 'id'		=> 'app.audit.elenco' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.controlli.dettaglio.anagrafica.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
