@@ -94,6 +94,84 @@
 		'etc'			=> array( 'tabs'	=> array(	'questionari.domande.form') )
 	);
 
+	// vista questionari
+	$p['audit.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'audit' ),
+	    'h1'			=> array( $l		=> 'audit' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_audit.view.php' ),
+		'etc'			=> array( 'tabs'	=> array(	'audit.view', 'controlli.view' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'audit' ),
+														'priority'	=> '105' ) ) )
+	);
+
+	// gestione audit
+	$p['audit.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'audit.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'audit.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_audit.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'audit.form', 
+														'audit.form.controlli' ) )
+	);
+
+	// elenco controlli audit
+	$p['audit.form.controlli'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'controlli' ),
+		'h1'			=> array( $l		=> 'controlli' ),
+		'parent'		=> array( 'id'		=> 'audit.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'audit.form.controlli.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_audit.form.controlli.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['audit.form']['etc']['tabs'] )
+	);
+
+	// vista controlli
+	$p['controlli.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'controlli' ),
+	    'h1'			=> array( $l		=> 'controlli' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_controlli.view.php' ),
+		'etc'			=> array( 'tabs'	=> $p['audit.view']['etc']['tabs'] ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	// gestione controlli
+	$p['controlli.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'controlli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'controlli.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_controlli.form.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'controlli.form', 'controlli.form.risposte' ) )
+	);
+
+	// gestione controlli risposte
+	$p['controlli.form.risposte'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'risposte' ),
+	    'h1'		=> array( $l		=> 'risposte' ),
+	    'parent'		=> array( 'id'		=> 'controlli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m.'_src/_inc/_macro/_controlli.form.risposte.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['controlli.form']['etc']['tabs'] )
+	);
+
+
+
+
 	$p['app.audit.elenco'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'audit' ),
@@ -122,27 +200,6 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
-/*	$p['app.audit.crea'] = array(
-	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'crea audit' ),
-	    'h1'			=> array( $l		=> 'crea audit' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.crea.html' ),
-	    'parent'		=> array( 'id'		=> 'cartellini_app_agenda' ),
-	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.crea.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
-	);
-
-
-	$p['app.audit.controlli.crea'] = array(
-	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'crea audit' ),
-	    'h1'			=> array( $l		=> 'crea audit' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.audit.controlli.crea.html' ),
-	    'parent'		=> array( 'id'		=> 'cartellini_app_agenda' ),
-	    'macro'			=> array( $m . '_src/_inc/_macro/_app.audit.controlli.crea.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
-	);
-*/
 	$p['app.audit.controlli.dettaglio.progetto'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'risposte progetto' ),
