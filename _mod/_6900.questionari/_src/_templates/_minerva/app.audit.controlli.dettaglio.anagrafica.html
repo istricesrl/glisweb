@@ -1,0 +1,116 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column mt-3">
+
+        <form action="{{ page.url[ localization.language.ietf ] }}?audit[id]={{ request.audit.id }}&audit[id_questionario]={{ request.audit.id_questionario }}" method='POST' id="form-dettaglio-progetto">
+            <div class="form-group">
+                <div class="row subnav">
+                    <div class="col-12 d-flex justify-content-between">
+                        <p>{{ etc.questionario }}</p>
+                        {% if etc.chiusura > 0 %}<i class="fa fa-check" aria-hidden="true"></i>{% endif %}
+                    </div>
+                </div>
+            </div>
+
+            {% if etc.domande %}
+            <div class="form-group">
+                <div class="row subnav">
+
+                    {% for d in etc.domande %}
+                    <div class="col-12 col-md-6 mb-3">           
+                        <div class="media">
+                            <div class="media-body">
+                                <p class="media-text"><b>{{ d.domanda }}</b></p>
+
+                                {% if etc.controlli %}
+                                <div class="mt-2" id="accordion">
+                                    {% for c in etc.controlli %}
+                                    <div class="card">
+                                        <div class="card-header" id="anagrafica_controllo_{{ c.id }}">
+                                            <h5 class="mb-0">
+                                                <div class="btn-link" data-toggle="collapse" data-target="#controllo_{{ c.id }}" aria-expanded="true" aria-controls="controllo_{{ c.id }}">
+                                                {{ c.anagrafica }}
+                                                </div>
+                                            </h5>
+                                        </div>
+                                    
+                                        <div id="controllo_{{ c.id }}" class="collapse" aria-labelledby="anagrafica_controllo_{{ c.id }}" data-parent="#accordion">
+                                            <div class="card-body">
+                                                <!-- sì/no -->
+                                                {% if d.id_tipologia == 1 %}
+                                                <div class="d-flex justify-content-between">
+                                                    <label for="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]_1">Sì</label><br>
+                                                    <input type="radio" id="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]_1" name="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]" value="1" {% if etc.risposte['controlli'][c.id]['domande'][d.id] == 1 %}checked{% endif %}>
+                                                </div>
+                                                <div class="d-flex justify-content-between">
+                                                    <label for="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]_0">No</label><br>
+                                                    <input type="radio" id="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]_0" name="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]" value="0" {% if etc.risposte['controlli'][c.id]['domande'][d.id] == 0 and etc.risposte['controlli'][c.id]['domande'][d.id] is not empty %}checked{% endif %}>
+                                                </div>
+                                                
+                                                <!-- aperta/note -->
+                                                {% elseif d.id_tipologia == 2 %}
+                                                <textarea id="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]" name="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]" class="form-control form-control-sm" rows="4">{% if etc.risposte['controlli'][c.id]['domande'][d.id] is not empty %}{{ etc.risposte['controlli'][c.id]['domande'][d.id] }}{% endif %}</textarea>
+
+                                                <!-- range -->
+                                                {% elseif d.id_tipologia == 3 %}
+                                                <p>{{ d.range_inizio }} - {{ d.valore_range_inizio }}</p>
+                                                <p>{{ d.range_fine }} - {{ d.valore_range_fine }}</p>
+                                                <select name="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]" class="form-control form-control-sm">
+                                                    {% for i in d.range_inizio..d.range_fine %}
+                                                        <option value="{{ i }}" {% if etc.risposte['controlli'][c.id]['domande'][d.id] == i %}selected{% endif %}>{{ i }}</option>
+                                                    {% endfor %}
+                                                </select>
+
+                                                <!-- opzioni -->
+                                                {% elseif d.id_tipologia == 4 %}
+                                                {% for o in d.opzioni %}
+                                                <div class="d-flex justify-content-between">
+                                                    <label for="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]_{{ o.id }}">{{ o.nome }}</label><br>
+                                                    <input type="radio" id="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]_{{ o.id }}" name="__risposte__[controllo{{ c.id }}_domanda{{ d.id }}]" value="{{ o.id }}" {% if etc.risposte['controlli'][c.id]['domande'][d.id] == o.id %}checked{% endif %}>
+                                                </div>
+                                                {% endfor %}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>     
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+                
+            <div class="form-group form-row mt-4">
+                <div class="col-12">
+                    <button type="submit" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary">salva modifiche</button>
+                </div>
+            </div>
+        </form>
+
+        {% if etc.chiusura is empty or etc.chiusura == 0 %}
+        <div class="form-group form-row mt-2">
+            <div class="col-12">
+                <button type="button" style="height: 31px" onclick="window.open('{{ pages[ localization.language.ietf ]~'?audit[id]='~request.audit.id~'&audit[id_questionario]='~request.audit.id_questionario~'&audit[chiusura]='~1 }}', '_self');" class="form-control form-control-sm btn btn-sm btn-secondary">chiudi tutti i controlli</button>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="form-group form-row mt-2">
+            <div class="col-12">
+                <button type="button" style="height: 31px" onclick="window.open('{{ pages['app.audit.dettaglio'].path[ localization.language.ietf ]~'?audit[id]='~request.audit.id }}', '_self');" class="form-control form-control-sm btn btn-sm btn-secondary">torna all'elenco controlli</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

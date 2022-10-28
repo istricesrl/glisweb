@@ -1,0 +1,58 @@
+<div class="form-row view-filters d-print-none">
+    <div class="col-6 col-md-auto">
+    <span class="label-top">giorno</span>
+	<select name="__view__[{{ view.id }}][__filters__][giorno_audit][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.giorno_audit.EQ == "" %}selected{% endif %}>tutti</option>
+	{% for i in 1..31 %}
+	    <option value="{{ i }}" {% if request.__view__[ view.id ].__filters__.giorno_audit.EQ == i %}selected{% endif %}>{{ i }}</option>
+	{% endfor %}
+	</select>
+    </div>
+
+    <div class="col-6 col-md-auto">
+    <span class="label-top">mese</span>
+	<select name="__view__[{{ view.id }}][__filters__][mese_audit][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.mese_audit.EQ == "" %}selected{% endif %}>tutti</option>
+	{% for idmese, nomemese in etc.select.mesi %}
+	    <option value="{{ idmese }}"   {% if request.__view__[ view.id ].__filters__.mese_audit.EQ == idmese %}selected{% endif %}>{{ nomemese }}</option>
+	{% endfor %}
+	</select>
+    </div>
+    <div class="col-6 col-md-auto">
+    <span class="label-top">anno</span>
+	<select name="__view__[{{ view.id }}][__filters__][anno_audit][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.anno_audit.EQ == "" %}selected{% endif %}>tutti</option>
+	{% for idanno, nomeanno in etc.select.anni %}
+	    <option value="{{ idanno }}" {% if request.__view__[ view.id ].__filters__.anno_audit.EQ == idanno %}selected{% endif %}>{{ nomeanno }}</option>
+	{% endfor %}
+	</select>
+    </div>
+    <div class="col-6 col-md-auto">
+    <span class="label-top">somministratore</span>
+	<select name="__view__[{{ view.id }}][__filters__][id_somministratore][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.id_somministratore.EQ == "" %}selected{% endif %}>tutti</option>
+	{% for somministratore  in etc.select.somministratori %}
+	    <option value="{{ somministratore.id }}"   {% if request.__view__[ view.id ].__filters__.id_somministratore.EQ == somministratore.id %}selected{% endif %}>{{ somministratore.__label__ }}</option>
+	{% endfor %}
+	</select>
+    </div>
+    <div class="col-2">
+    <span class="label-top">progetto</span>
+	<select name="__view__[{{ view.id }}][__filters__][id_progetto][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm selectpicker" data-live-search="true" >
+	    <option value="" {% if request.__view__[ view.id ].__filters__.id_progetto == "" %}selected{% endif %}>tutti</option>
+	    {% for progetto in etc.select.progetti %}
+		<option value="{{ progetto.id }}" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ == progetto.id %}selected{% endif %} >{{ progetto.__label__ }}</option>
+	    {% endfor %}
+	</select>
+	</div>
+	<div class="col">
+		<div class="label-top">ricerca per parola chiave</div>
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+		</div>
+		<div class="col-auto">
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
+	</div>
+</div>

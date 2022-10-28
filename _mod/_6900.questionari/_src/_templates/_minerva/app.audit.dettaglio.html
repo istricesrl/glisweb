@@ -1,0 +1,138 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<!-- modal per creare un controllo -->
+<div class="modal fade" id="crea-controllo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Creazione controllo</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <div>
+                <p>questionario<br>
+                {{ frm.selectBox( table, '', '', 'id_questionario', '', etc.select.questionari, request ) }}
+                </p>
+
+                <p>anagrafica<br>
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request ) }}
+                </p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="btncrea" type="button" class="btn btn-success" onclick="crea()">crea</button>
+            <button type="button" class="btn btn-danger" data-dismiss="modal">annulla</button> 
+        </div>
+      </div>
+    </div>
+</div>
+
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column mt-3">
+
+        <div class="form-group form-row">
+            <div class="col-12">
+                {% set obj = etc.audit %}
+                <h3>{{ obj.data_audit }}</h3>
+                <p><b>{{ obj.progetto }}</b></p>
+            </div>
+        </div>
+
+        <div class="form-group form-row mb-5">
+            <div class="col-12">
+                <button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#crea-controllo').modal('toggle');">crea controllo</button>
+            </div>
+        </div>
+
+        {% if etc.controlli.progetto %}
+        <fieldset>
+            <legend>controlli cantiere</legend>
+            <div class="form-group">
+                <div class="row subnav">
+                    {% for cnt in etc.controlli.progetto %}
+                    <div class="col-12 col-md-6 mb-3">
+                        <a href="{{ pages['app.audit.controlli.dettaglio.progetto'].url[ localization.language.ietf ] }}?controlli[id]={{ cnt.id }}"
+                            {% if cnt.target %} target="{{ obj.target }}" {% endif %}>
+                            <div class="media">
+                                <div class="media-body">
+                                    <p class="media-text">{{ cnt.questionario }}</p>
+                                </div>
+                                <div class="media-left align-middle">
+                                    {% if cnt.timestamp_completamento > 0 %}
+                                    <i class="fa fa-check" aria-hidden="true"></i>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+                    {% endfor %}
+                </div>
+                    
+            </div>
+        </fieldset>
+        {% endif %}
+
+        {% if etc.controlli.anagrafica %}
+        <fieldset>
+            <legend>controlli operatore</legend>
+            <div class="form-group row subnav">
+                {% for cnt in etc.controlli.anagrafica %}
+                <div class="col-12 col-md-6 mb-3">
+                <a href="{{ pages['app.audit.controlli.dettaglio.anagrafica'].url[ localization.language.ietf ] }}?audit[id]={{ request[table].id }}&audit[id_questionario]={{ cnt.id_questionario }}"
+                    {% if cnt.target %} target="{{ obj.target }}" {% endif %}>
+                    <div class="media">
+                        <div class="media-body">
+                            <p class="media-text">{{ cnt.questionario }}</p>
+                        </div>
+                        <div class="media-left align-middle">
+                            {% if cnt.completamento > 0 %}
+                            <i class="fa fa-check" aria-hidden="true"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                </a>
+                </div>
+                {% endfor %}
+            </div>
+        </fieldset>
+        {% endif %}
+    </div>
+</section>
+
+<div class="form-group form-row mt-2">
+    <div class="col-12">
+        <button type="button" style="height: 31px" onclick="window.open('{{ pages['app.audit.elenco'].path[ localization.language.ietf ] }}', '_self');" class="form-control form-control-sm btn btn-sm btn-secondary">torna all'elenco audit</button>
+    </div>
+</div>
+
+<script>
+    function crea() {
+       idanagrafica = $('#audit_id_anagrafica').val();
+       idquestionario = $('#audit_id_questionario').val();
+
+       var call = '{{ site.url }}_mod/_6900.questionari/_src/_api/_task/_audit.controllo.crea.php?id_audit={{ request[table].id }}&id_questionario='+idquestionario;
+
+       if( idanagrafica ){
+            call += '&id_anagrafica=' + idanagrafica;
+       }
+
+       getws( call,'', function() {
+            window.open( '{{ page.url[ietf] }}?{{table}}[id]={{ request[table].id }}', '_self');
+       });
+       
+   }
+
+</script>
+
+{% endblock %}

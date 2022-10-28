@@ -1,0 +1,103 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = 'audit' %}
+{% set ietf = localization.language.ietf %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+  function data_cambiata() {
+    console.log('Submiting form');
+    $('#form1').submit();
+  }
+</script>
+
+<!-- modal per creare un audit -->
+<div class="modal fade" id="crea-audit" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Creazione audit</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div>
+              <p>data<br>
+              {{ frm.date( table, '', '', 'data', '', '', request, "now"|date("Y-m-d") ) }}
+              </p>
+
+              <p>cantiere<br>
+              {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request ) }}
+              </p>
+          </div>
+      </div>
+      <div class="modal-footer">
+          <button id="btncrea" type="button" class="btn btn-success" onclick="crea()">crea</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">annulla</button> 
+      </div>
+    </div>
+  </div>
+</div>
+
+<section id="">
+  <div class="row">
+    <div class="col-12 mt-3 d-inline">
+      <form action="{{ page.url[ localization.language.ietf ] }}" method='GET' id="form1">
+        <div class="form-row">
+          <div class="col-auto">
+            <label><b>data audit</b></label>
+            <input type="date" id='__d__' name="__d__" onchange="data_cambiata()" min="1000-01-01" max="3000-12-31"
+              class="form-control" placeholder="Calendario" {% if not request.__d__  %}
+              value='{{ "now"|date("Y-m-d") }}' {% else %}value='{{ request.__d__  }}' {% endif %}>
+          </div>
+        </div>
+      </form>
+
+      <div class="form-group form-row mt-4 mb-4">
+        <div class="col-12">
+            <button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#crea-audit').modal('toggle');">crea audit</button>
+        </div>
+      </div>
+
+      <div class="row subnav">
+        {% for obj in etc.audit %}
+        <div class="col-12 col-md-6 mb-3">
+          <a href="{{ pages['app.audit.dettaglio'].url[ localization.language.ietf ] }}?audit[id]={{ obj.id }}"
+            {% if obj.target %} target="{{ obj.target }}" {% endif %}>
+            <div class="media">
+              <div class="media-body">
+                <h5 class="media-title">{{ obj.progetto }}</h5>
+                <p class="media-text">{{ obj.indirizzo }}</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function crea() {
+     idprogetto = $('#audit_id_progetto').val();
+     data = $('#audit_data').val();
+
+     var call = '{{ site.url }}_mod/_6900.questionari/_src/_api/_task/_audit.crea.php?id_progetto='+idprogetto+'&data='+data;
+
+     getws( call,'', function() {
+          window.open( '{{ page.url[ietf] }}?__d__='+data, '_self');
+     });
+     
+ }
+
+</script>
+
+{% endblock %}
