@@ -73,9 +73,61 @@
 			'macro'				=> array( $m . '_src/_inc/_macro/_abbonamenti.form.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> array(	'abbonamenti.form',
+																'abbonamenti.form.rinnovi',
+																'abbonamenti.form.entrate',
+																'abbonamenti.form.lezioni',
+																'abbonamenti.form.tornelli',
 																'abbonamenti.form.stampe',
 																'abbonamenti.form.tools' 
 															) )
+		);
+
+		// rinnovi contratti
+		$p['abbonamenti.form.rinnovi' ] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'rinnovi' ),
+			'h1'			=> array( $l		=> 'rinnovi' ),
+			'parent'		=> array( 'id'		=> 'abbonamenti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.rinnovi.html' ),
+			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.rinnovi.php' ),
+			'etc'			=> array( 'tabs'	=> $p['abbonamenti.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) )
+		);
+
+		// rinnovi contratti
+		$p['abbonamenti.form.lezioni' ] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'lezioni' ),
+			'h1'			=> array( $l		=> 'lezioni' ),
+			'parent'		=> array( 'id'		=> 'abbonamenti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.lezioni.html' ),
+			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.lezioni.php' ),
+			'etc'			=> array( 'tabs'	=> $p['abbonamenti.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) )
+		);
+
+		// rinnovi contratti
+		$p['abbonamenti.form.entrate' ] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'entrate' ),
+			'h1'			=> array( $l		=> 'entrate' ),
+			'parent'		=> array( 'id'		=> 'abbonamenti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.entrate.html' ),
+			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.entrate.php' ),
+			'etc'			=> array( 'tabs'	=> $p['abbonamenti.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) )
+		);
+
+		// rinnovi contratti
+		$p['abbonamenti.form.tornelli' ] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'tornelli' ),
+			'h1'			=> array( $l		=> 'tornelli' ),
+			'parent'		=> array( 'id'		=> 'abbonamenti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.tornelli.html' ),
+			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.tornelli.php' ),
+			'etc'			=> array( 'tabs'	=> $p['abbonamenti.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) )
 		);
 
 		// stampe form abbonamenti
@@ -102,18 +154,6 @@
 			'macro'				=> array( $m . '_src/_inc/_macro/_abbonamenti.form.tools.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> $p['abbonamenti.form']['etc']['tabs'] )
-		);
-
-		// rinnovi contratti
-		$p['abbonamenti.form.rinnovi' ] = array(
-			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'rinnovi' ),
-			'h1'			=> array( $l		=> 'rinnovi' ),
-			'parent'		=> array( 'id'		=> 'abbonamenti.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.rinnovi.html' ),
-			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.rinnovi.php' ),
-			'etc'			=> array( 'tabs'	=>$p['abbonamenti.form']['etc']['tabs'] ),
-			'auth'			=> array( 'groups'	=> array(	'roots' ) )
 		);
 
 	}
@@ -157,6 +197,7 @@
 		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'				=> array( 'tabs'	=> array(	'tipologie.abbonamenti.form',
 															'tipologie.abbonamenti.form.acquisto',	// TODO questa è una sinergia con il modulo catalogo, gestirla di conseguenza
+															'tipologie.abbonamenti.form.metadati',
 															'tipologie.abbonamenti.form.tools' 
 														) )
 	);
@@ -165,13 +206,26 @@
 	// TODO questa è una sinergia con il modulo catalogo, gestirla di conseguenza
 	$p['tipologie.abbonamenti.form.acquisto'] = array(
 		'sitemap'			=> false,
-		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-		'title'				=> array( $l		=> 'azioni abbonamento' ),
-		'h1'				=> array( $l		=> 'azioni' ),
+		'icon'				=> '<i class="fa fa-shopping-cart" aria-hidden="true"></i>',
+		'title'				=> array( $l		=> 'acquisto' ),
+		'h1'				=> array( $l		=> 'acquisto' ),
 		'parent'			=> array( 'id'		=> 'tipologie.abbonamenti.view' ),
 		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.abbonamenti.form.acquisto.html' ),
 		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.abbonamenti.form.acquisto.php' ),
 		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'				=> array( 'tabs'	=> $p['tipologie.abbonamenti.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica metadati
+	$p['tipologie.abbonamenti.form.metadati'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'				=> array( $l		=> 'metadati' ),
+		'h1'				=> array( $l		=> 'metadati' ),
+		'parent'			=> array( 'id'		=> 'tipologie.abbonamenti.view' ),
+		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.abbonamenti.form.metadati.html' ),
+		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.abbonamenti.form.metadati.php' ),
+		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'				=> array( 'tabs'	=> $p['tipologie.abbonamenti.form']['etc']['tabs'] )
 	);
 

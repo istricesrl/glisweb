@@ -1058,11 +1058,11 @@ ALTER TABLE `contratti`
 	ADD PRIMARY KEY (`id`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_progetto` (`id_progetto`),
-	ADD KEY  `id_immobile` (`id_immobile`),
-	ADD KEY  `codice` ( `codice` ),
-	ADD KEY  `codice_affiliazione` ( `codice_affiliazione` ),
+	ADD KEY `id_categoria_progetti` (`id_progetto`),
+	ADD KEY `id_immobile` (`id_immobile`),
+	ADD KEY `codice` ( `codice` ),
+	ADD KEY `codice_affiliazione` ( `codice_affiliazione` ),
 	ADD KEY `indice` ( `id_tipologia`, `codice`, `codice_affiliazione`, `nome`, `id_progetto`, `id_immobile`);
-
 
 --| 030000007201
 
@@ -2195,6 +2195,7 @@ ALTER TABLE `metadati`
 	ADD UNIQUE KEY `unica_banner` (`id_lingua`,`id_banner`,`nome`), 
 	ADD UNIQUE KEY `unica_pianificazione` (`id_lingua`,`id_pianificazione`,`nome`),
 	ADD UNIQUE KEY `unica_tipologia_todo` (`id_lingua`,`id_tipologia_todo`,`nome`),
+ 	ADD UNIQUE KEY `unica_tipologia_contratti` (`id_lingua`,`id_tipologia_contratti`,`nome`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
  	ADD KEY `id_account` (`id_account`), 
@@ -2222,6 +2223,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_banner` (`id_banner`), 
 	ADD KEY `id_pianificazione` (`id_pianificazione`), 
 	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
+	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`), 
 	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255));
 
 --| 030000021801
@@ -3710,6 +3712,9 @@ ALTER TABLE `tipologie_contratti`
 	ADD KEY `id_genitore` (`id_genitore`),
   	ADD KEY `ordine` (`ordine`),
   	ADD KEY `nome` (`nome`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
   	ADD KEY `se_tesseramento`(`se_tesseramento`),
   	ADD KEY `se_abbonamento`(`se_abbonamento`),
   	ADD KEY `se_iscrizione`(`se_iscrizione`),

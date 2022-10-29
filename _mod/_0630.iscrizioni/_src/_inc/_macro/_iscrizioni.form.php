@@ -47,9 +47,7 @@
 	    'SELECT id, __label__ FROM corsi_view '
     );
 
-
-
-    // tendina per le tipologie di contratto
+	// tendina per le tipologie di contratto
     $ct['etc']['select']['tipologie_contratti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -74,6 +72,15 @@
             $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_progetto'] = $_SESSION['__work__']['id_progetto'];
 		}
 	}*/
+
+    // ...
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['rinnovi'] ) ) {
+		arraySortBy( 'data_inizio', $_REQUEST[ $ct['form']['table'] ]['rinnovi'] );
+    	$ct['etc']['sub']['primo_rinnovo']['key'] = $_REQUEST[ $ct['form']['table'] ]['rinnovi'][0];
+	}
+
+	// ...
+	$ct['etc']['sub']['primo_rinnovo']['key'] = 0;
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

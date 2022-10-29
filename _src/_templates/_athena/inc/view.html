@@ -103,7 +103,7 @@
 			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('/print/default.csv?t={{ view.table }}&v={{ session.__view__[ view.id ]|json_encode() }}','_blank');"><i class="fa fa-file-excel-o"></i></button>
 			{% if view.insert.path %}
 		    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
-		{% endif %}
+			{% endif %}
 		</div>
 	    {% else %}
 	    <div class="col col-form-label text-center">

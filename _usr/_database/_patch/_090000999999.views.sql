@@ -1870,8 +1870,8 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		contratti.id,
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
-		contratti.id_progetto,
-		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.codice_affiliazione,
 		contratti.id_immobile,
 		concat_ws(
 			' ',
@@ -1898,8 +1898,10 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 			comuni.nome,
 			provincie.sigla
 		) AS immobile,
-		contratti.codice,
-		contratti.codice_affiliazione,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.id_categoria_progetti,
+		categorie_progetti_path( contratti.id_categoria_progetti ) AS categoria_progetti,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -4663,6 +4665,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_banner,
 		metadati.id_pianificazione,
 		metadati.id_tipologia_todo,
+		metadati.id_tipologia_contratti,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
 		concat(
@@ -7809,13 +7812,13 @@ CREATE OR REPLACE VIEW `tipologie_contatti_view` AS
 
 --| 090000050900
 
--- tipologie_contratti
+-- tipologie_contratti_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `tipologie_contratti_view`;
 
 --| 090000050901
 
--- tipologie_contratti
+-- tipologie_contratti_view
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:47 Chiara GDL
 CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
@@ -7824,6 +7827,9 @@ CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 		tipologie_contratti.id_genitore,
 		tipologie_contratti.ordine,
 		tipologie_contratti.nome,
+		tipologie_contratti.id_prodotto,
+		tipologie_contratti.id_progetto,
+		tipologie_contratti.id_categoria_progetti,
 		tipologie_contratti.html_entity,
 		tipologie_contratti.font_awesome,
 		tipologie_contratti.se_abbonamento,

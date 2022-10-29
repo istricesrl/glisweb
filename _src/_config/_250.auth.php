@@ -96,6 +96,9 @@
 	    'anagrafica_settori' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),
+	    'badge' => array(
+			CONTROL_FULL => array( 'roots' )
+	    ),
 	    'relazioni_anagrafica' => array(
 			CONTROL_FULL => array( 'roots' )
 	    ),

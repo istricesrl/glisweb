@@ -465,6 +465,10 @@
     performance. Le viste devono avere la colonna '__label__', che viene utilizzata normalmente nella creazione
     dei selettori a tendina assieme al campo 'id'.
 
+    logica di selezione dei campi per le view
+    -----------------------------------------
+
+
     view virtuali
     -------------
 
@@ -570,5 +574,89 @@
     patch di installazione da zero
     ------------------------------
 
+
+    come creare una patch
+    ---------------------
+
+    [...] ogni volta che si modifica il database, occorre quindi:
+
+    - modificare i file di patch di base integrando la modifica
+        - _010000999999.tables.sql
+        - _030000999999.indexes.sql
+        - _050000999999.data.sql (se necessario)
+        - _060000999999.constraints.sql
+        - _090000999999.views.sql
+    - aggiornare la documentazione integrando la modifica
+    - creare un file di patch incrementale per propagare la modifica
+
+    Si noti che è importante, al fine di garantire una corretta propagazione della patch, non modificare direttamente il
+    database di DEV, ma lasciare che sia la patch appena creata a farlo; in questo modo si sarà sicuri che essa sia
+    corretta e che verrà eseguita senza errori una volta propagata.
+
+    esempi di patch frequenti
+    -------------------------
+
+    [...] per aggiungere una colonna con chiave esterna a una tabella:
+
+    \code{.sql}
+    --
+    -- PATCH
+    --
+
+    --| 202210070010
+    ALTER TABLE `metadati`
+        ADD COLUMN `id_tipologia_todo` int(11) DEFAULT NULL AFTER `id_pianificazione`,
+        ADD UNIQUE KEY `unica_tipologia_todo` (`id_lingua`,`id_tipologia_todo`,`nome`),
+        ADD KEY `id_tipologia_todo` (`id_tipologia_todo`);
+
+    --| 202210070020
+    ALTER TABLE `metadati`
+        ADD CONSTRAINT `metadati_ibfk_27` FOREIGN KEY (`id_tipologia_todo`) REFERENCES `tipologie_todo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+    --| 202210070030
+    CREATE OR REPLACE VIEW `metadati_view` AS
+        SELECT
+            metadati.id,
+            metadati.id_lingua,
+            lingue.ietf,
+            metadati.id_anagrafica,
+            metadati.id_account,
+            metadati.id_pagina,
+            metadati.id_prodotto,
+            metadati.id_articolo,
+            metadati.id_categoria_prodotti,
+            metadati.id_notizia,
+            metadati.id_categoria_notizie,
+            metadati.id_risorsa,
+            metadati.id_categoria_risorse,
+            metadati.id_immagine,
+            metadati.id_video,
+            metadati.id_audio,
+            metadati.id_file,
+            metadati.id_progetto,
+            metadati.id_categoria_progetti,
+            metadati.id_indirizzo,
+            metadati.id_edificio,
+            metadati.id_immobile,
+            metadati.id_contratto,
+            metadati.id_valutazione,
+            metadati.id_rinnovo,
+            metadati.id_tipologia_attivita,
+            metadati.id_banner,
+            metadati.id_pianificazione,
+            metadati.id_tipologia_todo,
+            metadati.id_account_inserimento,
+            metadati.id_account_aggiornamento,
+            concat(
+                metadati.nome,
+                ':',
+                metadati.testo
+            ) AS __label__
+        FROM metadati
+            LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+    ;
+
+    --| FINE
+    \endcode
 
 */

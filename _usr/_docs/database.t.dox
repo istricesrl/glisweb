@@ -360,6 +360,9 @@
     tipologie_contratti.nome                        | il nome della tipologia
     tipologie_contratti.html_entity                 | entità HTML che rappresenta visivamente la tipologia
     tipologie_contratti.font_awesome                | classe Font Awesome dell'icona che rappresenta visivamente la tipologia
+    tipologie_contratti.id_prodotto                 | ID del prodotto collegato alla tipologia di contratto (tipicamente per l'acquisto)
+    tipologie_contratti.id_progetto                 | ID del progetto collegato alla tipologia di contratto (per gli abbonamenti)
+    tipologie_contratti.id_categoria_progetti       | ID della categoria di progetti collegata alla tipologia di contratto (per gli abbonamenti)
     tipologie_contratti.se_abbonamento              | flag che indica se la tipologia rappresenta un abbonamento
     tipologie_contratti.se_iscrizione               | flag che indica se la tipologia rappresenta un'iscrizione
     tipologie_contratti.se_tesseramento             | flag che indica se la tipologia rappresenta un tesseramento
@@ -379,6 +382,10 @@
 
     chiave                                  | campo                         | tabella e campo collegati     | comportamento
     ----------------------------------------|-------------------------------|-------------------------------|----------------------
+    tipologie_contratti_ibfk_01_nofollow    | id_genitore                   | tipologie_contratti.id        | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_contratti_ibfk_02_nofollow    | id_prodotto                   | prodotti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_contratti_ibfk_03_nofollow    | id_progetto                   | progetti.id                   | ON DELETE SET NULL ON UPDATE SET NULL
+    tipologie_contratti_ibfk_04_nofollow    | id_categoria_progetti         | categorie_progetti.id         | ON DELETE SET NULL ON UPDATE SET NULL
     tipologie_contratti_ibfk_98_nofollow    | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     tipologie_contratti_ibfk_99_nofollow    | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -390,11 +397,21 @@
     tipologie_contratti_view.id_genitore                    | -
     tipologie_contratti_view.ordine                         | -
     tipologie_contratti_view.nome                           | -
+    tipologie_contratti_view.id_prodotto                    | -
+    tipologie_contratti_view.id_progetto                    | -
+    tipologie_contratti_view.id_categoria_progetti          | -
     tipologie_contratti_view.html_entity                    | -
     tipologie_contratti_view.font_awesome                   | -
-    tipologie_contratti.se_abbonamento                      | - 
-    tipologie_contratti.se_iscrizione                       | -
-    tipologie_contratti.se_tesseramento                     | -
+    tipologie_contratti_view.se_abbonamento                 | - 
+    tipologie_contratti_view.se_iscrizione                  | -
+    tipologie_contratti_view.se_tesseramento                | -
+    tipologie_contratti_view.se_immobili                    | -
+    tipologie_contratti_view.se_acquisto                    | -
+    tipologie_contratti_view.se_locazione                   | -
+    tipologie_contratti_view.se_libero                      | -
+	tipologie_contratti_view.se_prenotazione                | -
+	tipologie_contratti_view.se_scalare                     | -
+    tipologie_contratti_view.se_affiliazione                | -
     tipologie_contratti_view.id_account_inserimento         | -
     tipologie_contratti_view.id_account_aggiornamento       | -
     tipologie_contratti_view.__label__                      | etichetta descrittiva della tipologia

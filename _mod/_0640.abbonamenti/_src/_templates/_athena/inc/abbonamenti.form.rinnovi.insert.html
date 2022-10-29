@@ -1,0 +1,30 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+<fieldset id="{{ view.id }}-rinnovi" class=" view-insert hidden">
+    <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
+    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+    <input type="hidden" id="account" name="{{ table }}[id_account_inserimento]" value="{{ account }}" disabled>
+    {{ frm.input( view.open.table, '', '', view.insert.field, '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
+    <div class="form-row d-print-none">
+        <div class="col">
+            <span class="label-top">tipologia</span>
+            {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.tipologie_rinnovi, '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col-auto">
+            <span class="label-top">codice</span>
+            {{ frm.input( view.open.table, '', '', 'codice', '', '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col-auto">
+            <span class="label-top remove-after-duplicate">data inizio</span>
+            {{ frm.date( view.open.table, '', '', 'data_inizio', '', '', '', '', '', '', '', 2) }}
+        </div>
+        <div class="col-auto">
+            <span class="label-top remove-after-duplicate">data fine</span>
+            {{ frm.date( view.open.table, '', '', 'data_fine','', '', '', '', '', '', '', 2) }}
+        </div>
+        <div class="col-auto">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>

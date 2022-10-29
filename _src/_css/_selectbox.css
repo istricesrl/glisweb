@@ -62,7 +62,7 @@ ul.combobox-dropdown {
     position: absolute;
     width: 100%;
     padding: 0px;
-    z-index: 4000;
+    z-index: 9990;
     overflow-y: auto;
     max-height: 24em;
 }

@@ -30,7 +30,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'codice' => 'tipologia',
+        'tipologia' => 'tipologia',
         'iscritti' => 'anagrafica',
         'data_inizio' => 'data inizio',
         'data_fine' => 'data fine'
@@ -39,7 +39,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
         'id' => 'd-none d-md-table-cell',
-        'codice' => 'text-left d-none d-md-table-cell',
+        'tipologia' => 'text-left d-none d-md-table-cell',
         'iscritti' => 'text-left',
         'data_inizio' => 'text-left',
         'data_fine' => 'text-left'

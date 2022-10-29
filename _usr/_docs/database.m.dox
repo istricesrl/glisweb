@@ -499,6 +499,7 @@
     metadati.id_banner                  | l'ID del banner cui si riferisce il metadato
     metadati.id_pianificazione          | l'ID della pianificazione cui si riferisce il metadato
     metadati.id_tipologia_todo          | l'ID della tipologia di todo cui si riferisce il metadato
+    metadati.id_tipologia_contratti     | l'ID della tipologia di contratti cui si riferisce il metadato
     metadati.nome                       | la chiave del metadato
     metadati.testo                      | il valore del metadato
     metadati.id_account_inserimento     | l'ID dell'account che ha inserito la riga
@@ -537,6 +538,7 @@
     metadati_ibfk_25                    | id_banner                     | banner.id                     | ON DELETE CASCADE ON UPDATE CASCADE
     metadati_ibfk_26                    | id_pianificazione             | pianificazioni.id             | ON DELETE CASCADE ON UPDATE CASCADE
     metadati_ibfk_27                    | id_tipologia_todo             | tipologie_todo.id             | ON DELETE CASCADE ON UPDATE CASCADE
+    metadati_ibfk_28                    | id_tipologia_contratti        | tipologie_contratti.id        | ON DELETE CASCADE ON UPDATE CASCADE
     metadati_ibfk_98_nofollow           | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     metadati_ibfk_99_nofollow           | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
@@ -572,6 +574,7 @@
     metadati_view.id_banner                 | -
     metadati_view.id_pianificazione         | -
     metadati_view.id_tipologia_todo         | -
+    metadati_view.id_tipologia_contratti    | -
     metadati_view.nome                      | -
     metadati_view.testo                     | -
     metadati_view.id_account_inserimento    | -

@@ -521,7 +521,8 @@ ALTER TABLE `contenuti`
 ALTER TABLE `contratti` 
   ADD CONSTRAINT `contratti_ibfk_01_nofollow` FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_contratti` (`id`),
   ADD CONSTRAINT `contratti_ibfk_04_nofollow` FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`),
-  ADD CONSTRAINT `contratti_ibfk_05_nofollow` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`),
+  ADD CONSTRAINT `contratti_ibfk_05_nofollow` FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`),
+  ADD CONSTRAINT `contratti_ibfk_06_nofollow` FOREIGN KEY (`id_immobile`) REFERENCES `immobili` (`id`),
   ADD CONSTRAINT `contratti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `contratti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -1086,6 +1087,7 @@ ALTER TABLE `metadati`
     ADD CONSTRAINT `metadati_ibfk_25`           FOREIGN KEY (`id_banner`) REFERENCES `banner` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `metadati_ibfk_26`           FOREIGN KEY (`id_pianificazione`) REFERENCES `pianificazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `metadati_ibfk_27`           FOREIGN KEY (`id_tipologia_todo`) REFERENCES `tipologie_todo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_28`           FOREIGN KEY (`id_tipologia_contratti`) REFERENCES `tipologie_contratti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `metadati_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `metadati_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
@@ -1760,6 +1762,9 @@ ALTER TABLE `tipologie_contatti`
 -- verifica: 2022-02-21 11:47 Chiara GDL
 ALTER TABLE `tipologie_contratti`
     ADD CONSTRAINT `tipologie_contratti_ibfk_01_nofollow`        FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_contratti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `tipologie_contratti_ibfk_02_nofollow`        FOREIGN KEY (`id_prodotto`) REFERENCES `prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `tipologie_contratti_ibfk_03_nofollow`        FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `tipologie_contratti_ibfk_04_nofollow`        FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categoria_progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_contratti_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_contratti_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
