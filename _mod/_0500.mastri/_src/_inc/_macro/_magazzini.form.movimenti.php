@@ -105,8 +105,9 @@
 #    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
 
     // preset filtro mastro corrente
-	$ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
-  
+	// $ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+    $ct['view']['__restrict__']['mastri_path_check( id, '.$_REQUEST[ $ct['form']['table'] ]['id'].' )']['EQ'] = 1;
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
