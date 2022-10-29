@@ -32,20 +32,35 @@
 			// TODO spacchettare l'ID che è composto da idMagazzinoProvenienza|idArticolo|idMatricola
 			$evasione = explode( '|', $_REQUEST['__evasione__']['id_giacenza'] );
 
-			// TODO inserire la riga di documenti_articoli con i dati ricavati sopra
-			mysqlInsertRow(
+			// trovo la quantità massima
+			$cap = str_replace( ',', '.', mysqlSelectValue(
 				$cf['mysql']['connection'],
-				array(
-					'id' => NULL,
-					'id_documento' => $_REQUEST[ $ct['form']['table'] ]['id'],
-					'id_articolo' => $evasione[1],
-					'id_matricola' => isset( $evasione[2] ) ? $evasione[2] : NULL,
-					'id_udm' => 1,
-					'quantita' => $_REQUEST['__evasione__']['quantita'],
-					'id_mastro_provenienza' => $evasione[0]
-				),
-				'documenti_articoli'
-			);
+				'SELECT totale FROM __report_giacenza_magazzini_foglie_attive__ WHERE id = ?',
+				array( array( 's' => $_REQUEST['__evasione__']['id_giacenza'] ) )
+			) );
+	
+			// debug
+			// echo $_REQUEST['__evasione__']['quantita'].' vs. '.$cap.PHP_EOL;
+
+			// cap della quantità
+			if( $_REQUEST['__evasione__']['quantita'] <= $cap ) {
+
+				// TODO inserire la riga di documenti_articoli con i dati ricavati sopra
+				mysqlInsertRow(
+					$cf['mysql']['connection'],
+					array(
+						'id' => NULL,
+						'id_documento' => $_REQUEST[ $ct['form']['table'] ]['id'],
+						'id_articolo' => $evasione[1],
+						'id_matricola' => isset( $evasione[2] ) ? $evasione[2] : NULL,
+						'id_udm' => 1,
+						'quantita' => $_REQUEST['__evasione__']['quantita'],
+						'id_mastro_provenienza' => $evasione[0]
+					),
+					'documenti_articoli'
+				);
+
+			}
 
 		}
 
