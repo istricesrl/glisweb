@@ -19,16 +19,27 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    '00.notifiche' => array(
-			'label' => 'notifiche'
+	    '00.scorciatoie' => array(
+			'label' => 'azioni rapide'
 		),
-        '10.scorciatoie' => array(
-            'label' => 'azioni rapide'
-        ),
         '20.andamento' => array(
             'label' => 'riepilogo progetti'
         )
 	);
+
+    // ...
+	if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
+
+        // esportazione contatti anagrafica
+        $ct['page']['contents']['metro']['00.scorciatoie'][] = array(
+            'modal' => array( 'id' => 'scorciatoia_todo', 'include' => 'inc/produzione.modal.todo.html' ),
+            'icon' => NULL,
+            'fa' => 'fa-plus-square',
+            'title' => 'aggiungi todo',
+            'text' => 'inserisce rapidamente una todo nel backlog o nello sprint'
+        );
+
+    }
 
     // ...
 	if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ) {
@@ -62,6 +73,25 @@
                 'completed' => 'text-right'
             )
         );
+
+        // tendina tipologie
+        $ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM tipologie_todo_view'
+        );
+
+        // tendina collaboratori
+        $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM anagrafica_view_static'
+        );
+
+        // gestione default
+	    require DIR_SRC_INC_MACRO . '_default.tools.php';
 
 	    // gestione default
 	    require DIR_SRC_INC_MACRO . '_default.view.php';

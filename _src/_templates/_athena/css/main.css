@@ -1044,6 +1044,11 @@ div.combobox-container > .spinner-border {
     margin: 5em auto;
 }
 
+.modal-title {
+    font-weight: bold;
+    font-size: 1.2em;
+}
+
 /* stile del banner cookie */
 #cookie {
     z-index: 9999;

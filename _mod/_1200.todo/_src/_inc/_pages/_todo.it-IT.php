@@ -50,8 +50,10 @@
 			arrayInsertSeq( 'todo.form', $p['todo.form']['etc']['tabs'], 'todo.form.attivita' );
 		}
 
+/* spostato nel modulo attività
 		$p['todo.form.attivita'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>',
 			'title'			=> array( $l		=> 'attivita' ),
 			'h1'			=> array( $l		=> 'attivita' ),
 			'parent'		=> array( 'id'		=> 'todo.view' ),
@@ -60,7 +62,7 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 		);
-
+*/
 		$p['todo.form.documenti'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'documenti' ),
@@ -261,8 +263,10 @@
 			arrayInsertSeq( 'todo.form', $p['todo.amministrazione.form']['etc']['tabs'], 'todo.form.attivita' );
 		}
 
+/* spostato nel modulo attività
 		$p['todo.amministrazione.form.attivita'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>',
 			'title'			=> array( $l		=> 'attivita' ),
 			'h1'			=> array( $l		=> 'attivita' ),
 			'parent'		=> array( 'id'		=> 'todo.amministrazione.view' ),
@@ -271,7 +275,7 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.form']['etc']['tabs'] )
 		);
-
+*/
 		$p['todo.amministrazione.form.documenti'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'documenti' ),

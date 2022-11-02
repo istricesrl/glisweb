@@ -687,6 +687,7 @@ foreach( $x as $ref ) {
 			    if( $r ) {
 				$_SESSION['__latest__'][ $t ] = $d;
 				$d = array();
+				$d['__reset__'] = 1;
 			    } else {
 // echo "${t}$rm";
 				switch( strtoupper( $a ) ) {

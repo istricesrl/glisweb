@@ -40,6 +40,7 @@
 	// gestione ticket vista attività
 	$p['ticket.form.attivita'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>',
 	    'title'			=> array( $l		=> 'attivita' ),
 	    'h1'			=> array( $l		=> 'attivita' ),
 	    'parent'		=> array( 'id'		=> 'ticket.view' ),

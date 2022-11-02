@@ -209,6 +209,7 @@
 	
 		$p['progetti.amministrazione.form.macro'] = array(
 			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-caret-square-o-right" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'macro' ),
 			'h1'		=> array( $l		=> 'macro' ),
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),

@@ -2395,7 +2395,7 @@ ALTER TABLE `periodicita`
 
 --| 030000023601
 
--- pianificazioni
+-- periodicita
 -- tipologia: tabella gestita
 ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 

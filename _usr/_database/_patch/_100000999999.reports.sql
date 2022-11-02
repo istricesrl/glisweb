@@ -1022,7 +1022,10 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
     LEFT JOIN todo AS td1 ON ( td1.id_progetto = progetti.id AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL )
     LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td1.data_chiusura IS NULL )
     LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
-		LEFT JOIN anagrafica AS a2 ON a2.id = progetti.id_cliente
+	LEFT JOIN anagrafica AS a2 ON a2.id = progetti.id_cliente
+	LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+  WHERE
+  	( tipologie_progetti.se_progetto IS NOT NULL OR tipologie_progetti.se_forfait IS NOT NULL )
   GROUP BY progetti.id
 
 --| 100000031510

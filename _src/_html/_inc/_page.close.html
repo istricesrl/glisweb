@@ -22,7 +22,7 @@
 
 {% if smartsupp.key %}{% include '_inc/_smartsupp.html' %}{% endif %}
 
-{% for ruolo,modals in page.contents.modals %}{% for modal in modals %}{% include modal.schema %}{% endfor %}{% endfor %}
+{% for ruolo,modals in page.contents.modals %}{% for modal in modals %}<!-- modal: {{ modal.schema }} -->{% include modal.schema %}{% endfor %}{% endfor %}
 
 {# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
 {# vedi _src/_inc/_macro/_default.tools.php #}
