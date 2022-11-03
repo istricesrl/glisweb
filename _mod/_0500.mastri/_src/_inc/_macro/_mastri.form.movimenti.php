@@ -74,14 +74,15 @@
 
     } 
 
-/*
     // mastro orario
-    if( $_REQUEST['mastri']['id_tipologia'] == 3 ){
+    if( $_REQUEST['mastri']['id_tipologia'] == 3 ) {
     
         // tabella della vista
-    $ct['view']['table'] = '__report_mastri_orari__';
+    $ct['view']['table'] = '__report_movimenti_ore__';
 
-         // pagina per la gestione degli oggetti esistenti
+    // pagina per la gestione degli oggetti esistenti
+	$ct['view']['insert']['page'] = 'attivita.form';
+	$ct['view']['open']['preset']['field'] = 'id_mastro_destinazione';
 	$ct['view']['open']['page'] = 'attivita.form';
     $ct['view']['open']['table'] = 'attivita';
     $ct['view']['open']['field'] = 'id_attivita';
@@ -91,14 +92,15 @@
 	    'id' => '#',
         'data' => 'data',
 	    'progetto' => 'progetto',
-        'nome_attivita' => 'attività',
-        'ore' => 'ore',
-        'id_todo' => 'id_todo',
+        'attivita' => 'attività',
+        'carico' => 'carico',
+        'scarico' => 'scarico',
+#        'id_todo' => 'id_todo',
         'id_attivita' => 'id_attivita',
         'id_progetto' => 'id_progetto',
-        'id_cliente' => 'id_cliente',
-        'cliente' => 'cliente',
-        'id_tipologia' => 'id_tipologia'
+#        'id_cliente' => 'id_cliente',
+#        'cliente' => 'cliente',
+#        'id_tipologia' => 'id_tipologia'
 	);
 
     // stili della vista
@@ -109,17 +111,17 @@
         'id_cliente' => 'd-none',
         'id_tipologia' => 'd-none',
         'data' => 'no-wrap', 
-	    'nome_attivita' => 'text-left',
+	    'attivita' => 'text-left',
         'id_progetto' => 'd-none',
         'importo' => 'text-right',
         'cliente' => 'text-left',
 
 	);
 
-    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
+    // $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
 
     } 
-
+/*
     // mastro quantitativo
      if(  $_REQUEST['mastri']['id_tipologia'] == 1 ){
             // tabella della vista
@@ -210,6 +212,9 @@
 	    'SELECT id, __label__ FROM listini_view'
 	);
 */
+
+    // debug
+    // var_dump( $_REQUEST['mastri']['id_tipologia'] );
 
     // preset filtro mastro corrente
 	$ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];

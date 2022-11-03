@@ -4206,6 +4206,51 @@ CREATE OR REPLACE VIEW `magazzini_view` AS
 	WHERE tipologie_mastri.se_magazzino = 1
 ;
 
+--| 090000018410
+-- registri_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `registri_view`;
+
+--| 090000018411
+-- registri_view
+-- tipologia: vista virtuale
+-- verifica: 2022-01-28 14:51 Chiara GDL
+CREATE OR REPLACE VIEW `registri_view` AS
+	SELECT
+		mastri.id,
+		mastri.id_tipologia,
+		tipologie_mastri.nome AS tipologia,
+		mastri.id_anagrafica_indirizzi,
+		concat_ws(
+			' ',
+			tipologie_indirizzi.nome,
+			indirizzi.indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		anagrafica_indirizzi.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		mastri.id_account,
+		mastri.id_progetto,
+		mastri.nome,
+		tipologie_mastri.se_magazzino,
+		tipologie_mastri.se_conto,
+		tipologie_mastri.se_registro,
+		mastri_path( mastri.id ) AS __label__
+	FROM mastri
+		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
+		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzi
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_indirizzi.id_anagrafica
+		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
+		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+	WHERE tipologie_mastri.se_registro = 1
+;
+
 --| 090000018600
 
 -- mail_view
@@ -4448,6 +4493,8 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS anagrafica,
 		mastri.id_account,
 		account.username AS account,
+		mastri.id_progetto,
+		progetti.nome AS progetto,
 		mastri.nome,
 		tipologie_mastri.se_magazzino,
 		tipologie_mastri.se_conto,
@@ -4459,6 +4506,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_indirizzi.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = mastri.id_anagrafica
 		LEFT JOIN account ON account.id = mastri.id_account
+		LEFT JOIN progetti ON progetti.id = mastri.id_progetto
 		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
@@ -7729,6 +7777,7 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 		tipologie_attivita.font_awesome,
 		tipologie_attivita.se_anagrafica,
 		tipologie_attivita.se_agenda,
+		tipologie_attivita.se_sistema,
 		tipologie_attivita.id_account_inserimento,
 		tipologie_attivita.id_account_aggiornamento,
 		tipologie_attivita_path( tipologie_attivita.id ) AS __label__

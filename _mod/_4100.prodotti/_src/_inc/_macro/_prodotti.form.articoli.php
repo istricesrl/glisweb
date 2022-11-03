@@ -40,7 +40,7 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'articoli.form';
 
-        // campo per il preset di apertura
+    // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_prodotto';
 
     // preset filtro custom progetti aperti

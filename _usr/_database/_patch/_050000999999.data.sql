@@ -1017,22 +1017,26 @@ REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `htm
 -- tipologie_attivita
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	NULL,	'permessi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	NULL,	'malattie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	NULL,	NULL,	'sdi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	5,	NULL,	'RC',	'ricevuta di consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	5,	NULL,	'MC',	'mancata consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	5,	NULL,	'NS',	'notifica di scarto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	5,	NULL,	'AT',	'presa in carico con impossibilità di recapito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	5,	NULL,	'DT',	'decorrenza termini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	5,	NULL,	'EC',	'esito committente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(12,	5,	NULL,	'NE',	'notifica di esito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(13,	5,	NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(14,	1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(15,	NULL,	NULL,	NULL,	'frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `se_sistema`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,		NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,		NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,		NULL,	NULL,	NULL,	'permessi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,		NULL,	NULL,	NULL,	'malattie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,		NULL,	NULL,	NULL,	'SDI',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(6,		5,		NULL,	'RC',	'ricevuta di consegna',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(7,		5,		NULL,	'MC',	'mancata consegna',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(8,		5,		NULL,	'NS',	'notifica di scarto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(9,		5,		NULL,	'AT',	'presa in carico con impossibilità di recapito',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(10,	5,		NULL,	'DT',	'decorrenza termini',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(11,	5,		NULL,	'EC',	'esito committente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(12,	5,		NULL,	'NE',	'notifica di esito',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(13,	5,		NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(14,	1,		NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	18,		NULL,	NULL,	'frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(16,	1,		NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(17,	1,		NULL,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(18,	NULL,	NULL,	NULL,	'didattica',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(19,	18,		NULL,	NULL,	'assenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050800
 

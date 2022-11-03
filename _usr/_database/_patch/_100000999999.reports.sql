@@ -55,6 +55,58 @@ WHERE crediti.quantita IS NOT NULL
 ) AS movimenti
 GROUP BY movimenti.id, movimenti.id_account, movimenti.account, movimenti.nome;
 
+--| 100000015010
+-- __report_giacenza_ore__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_giacenza_ore__`;
+
+--| 100000015011
+CREATE OR REPLACE VIEW `__report_giacenza_ore__` AS
+SELECT
+  movimenti.id,
+  movimenti.id_progetto,
+  movimenti.progetto,
+  movimenti.nome,
+  sum( movimenti.carico ) AS carico,
+  sum( movimenti.scarico ) AS scarico,
+  coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ) AS totale_float,
+  format( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2, 'es_ES' ) AS totale,
+  concat_ws(
+      ' ',
+      movimenti.nome ,
+      'giacenza',
+      FORMAT( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2, 'es_ES' ),
+      'h'
+		) AS __label__
+FROM (
+SELECT
+  mastri.id,
+  mastri.id_progetto,
+  progetti.nome AS progetto,
+  mastri_path( mastri.id ) AS nome,
+  attivita.data_attivita AS data,
+  coalesce( attivita.ore, 0 ) AS carico,
+  0 AS scarico
+FROM mastri
+  LEFT JOIN attivita ON attivita.id_mastro_destinazione = mastri.id OR mastri_path_check( attivita.id_mastro_destinazione, mastri.id ) = 1
+  LEFT JOIN progetti ON progetti.id = mastri.id_progetto
+WHERE attivita.ore IS NOT NULL
+UNION ALL
+SELECT
+  mastri.id,
+  mastri.id_progetto,
+  progetti.nome AS progetto,
+  mastri_path( mastri.id ) AS nome,
+  attivita.data_attivita AS data,
+  0 AS carico,
+  coalesce( attivita.ore, 0 ) AS scarico
+FROM mastri
+  LEFT JOIN attivita ON attivita.id_mastro_provenienza = mastri.id OR mastri_path_check( attivita.id_mastro_provenienza, mastri.id ) = 1
+  LEFT JOIN progetti ON progetti.id = mastri.id_progetto
+WHERE attivita.ore IS NOT NULL
+) AS movimenti
+GROUP BY movimenti.id, movimenti.id_progetto, movimenti.progetto, movimenti.nome;
+
 --| 100000020000
 -- __report_giacenza_magazzini__
 -- tipologia: report
@@ -725,6 +777,65 @@ SELECT
 FROM mastri
   LEFT JOIN crediti ON crediti.id_mastro_provenienza = mastri.id OR mastri_path_check( crediti.id_mastro_provenienza, mastri.id ) = 1
   WHERE crediti.quantita IS NOT NULL
+) AS movimenti;
+
+--| 100000020910
+-- __report_movimenti_ore__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_movimenti_ore__`;
+
+--| 100000020911
+-- __report_movimenti_ore__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_movimenti_ore__` AS
+SELECT
+  id,
+  nome,
+  id_progetto,
+  progetto,
+  data,
+  id_attivita,
+  attivita,
+  id_todo,
+  todo,
+  carico,
+  scarico
+FROM (
+SELECT
+  mastri.id,
+  mastri.nome,
+  mastri.id_progetto,
+  progetti.nome AS progetto,
+  attivita.data_attivita AS data,
+  attivita.id AS id_attivita,
+  attivita.nome AS attivita,
+  attivita.id_todo,
+  todo.nome AS todo,
+  coalesce( attivita.ore, 0 ) AS carico,
+  0 AS scarico
+FROM mastri
+  LEFT JOIN attivita ON attivita.id_mastro_destinazione = mastri.id OR mastri_path_check( attivita.id_mastro_destinazione, mastri.id ) = 1
+  LEFT JOIN todo ON todo.id = attivita.id_todo
+  LEFT JOIN progetti ON progetti.id = mastri.id_progetto
+  WHERE attivita.ore IS NOT NULL
+UNION
+SELECT
+  mastri.id,
+  mastri.nome,
+  mastri.id_progetto,
+  progetti.nome AS progetto,
+  attivita.data_attivita AS data,
+  attivita.id AS id_attivita,
+  attivita.nome AS attivita,
+  attivita.id_todo,
+  todo.nome AS todo,
+  0 AS carico,
+  coalesce( attivita.ore, 0 ) AS scarico
+FROM mastri
+  LEFT JOIN attivita ON attivita.id_mastro_provenienza = mastri.id OR mastri_path_check( attivita.id_mastro_provenienza, mastri.id ) = 1
+  LEFT JOIN todo ON todo.id = attivita.id_todo
+  LEFT JOIN progetti ON progetti.id = mastri.id_progetto
+  WHERE attivita.ore IS NOT NULL
 ) AS movimenti;
 
 --| 100000021000

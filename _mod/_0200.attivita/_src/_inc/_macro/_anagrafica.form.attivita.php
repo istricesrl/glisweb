@@ -70,7 +70,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view' );
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__' );
         
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.form';

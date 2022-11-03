@@ -11,6 +11,7 @@
 				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 				<input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 				<input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+				<input type="hidden" id="todo_id_progetto" name="{{ table }}[id_progetto]" value="">
 
 				<div class="modal-header">
 					<h5 class="modal-title">inserimento rapido todo</h5>
@@ -19,12 +20,14 @@
 
 				<div class="modal-body">
 					<div class="container-fluid">
-						<div class="form-row">
+<!--
+						<div class="form-row" id="form-row-progetto">
 							<div class="col">
 								<span class="label-top">progetto</span>
 								{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetto, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
 							</div>
 						</div>
+-->
 						<div class="form-row">
 							<div class="col-auto">
 								<span class="label-top">tipologia</span>

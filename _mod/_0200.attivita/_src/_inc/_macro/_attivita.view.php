@@ -90,7 +90,7 @@
 	$ct['etc']['select']['tipologie_attivita'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view ORDER BY __label__');
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__');
 /*
     // tendina tipologie attività inps
 	$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(

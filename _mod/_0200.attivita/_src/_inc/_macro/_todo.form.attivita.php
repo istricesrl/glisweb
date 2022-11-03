@@ -73,8 +73,20 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM tipologie_attivita_view' );
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__' );
         
+    // tendina mastri
+	$ct['etc']['select']['registri'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM registri_view WHERE id_progetto = ?',
+        array(
+            array(
+                's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto']
+            )
+        )
+    );
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

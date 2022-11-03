@@ -93,6 +93,7 @@
 	// gestione articoli SEM/SMM
 	$p['articoli.form.sem'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'articoli.view' ),
@@ -105,6 +106,7 @@
 	// gestione articoli testo
 	$p['articoli.form.testo'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'articoli.view' ),

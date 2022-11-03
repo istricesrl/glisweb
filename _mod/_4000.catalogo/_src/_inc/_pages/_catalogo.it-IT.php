@@ -100,6 +100,7 @@
 	// gestione categorie SEM/SMM
 	$p['categorie.prodotti.form.sem'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
@@ -112,6 +113,7 @@
 	// gestione categorie testo
 	$p['categorie.prodotti.form.testo'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
@@ -136,6 +138,7 @@
 	// gestione categorie menu
 	$p['categorie.prodotti.form.menu'] = array(
 	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bars" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'menu' ),
 	    'h1'		=> array( $l		=> 'menu' ),
 	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),

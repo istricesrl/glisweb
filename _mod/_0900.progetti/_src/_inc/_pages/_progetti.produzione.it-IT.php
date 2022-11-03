@@ -80,6 +80,11 @@
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.attivita' );
 		}
 
+		// RELAZIONI CON IL MODULO MASTRI
+		if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.mastri' );
+		}
+
 		// RELAZIONI CON IL MODULO TODO
 		if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.done' );
@@ -113,6 +118,7 @@
 
 		$p['progetti.produzione.form.sem'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'SEM/SMM' ),
 			'h1'		=> array( $l		=> 'SEM/SMM' ),
 			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
@@ -125,6 +131,7 @@
 		// form progetti.produzione testo
 		$p['progetti.produzione.form.testo'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'testo' ),
 			'h1'		=> array( $l		=> 'testo' ),
 			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
@@ -213,6 +220,7 @@
 		// form progetti.produzione menu
 		$p['progetti.produzione.form.menu'] = array(
 			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-bars" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'menu' ),
 			'h1'		=> array( $l		=> 'menu' ),
 			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
@@ -369,6 +377,7 @@
 
 		$p['categorie.progetti.form.sem'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'SEM/SMM' ),
 			'h1'		=> array( $l		=> 'SEM/SMM' ),
 			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
@@ -381,6 +390,7 @@
 		// form categorie.progetti testo
 		$p['categorie.progetti.form.testo'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'testo' ),
 			'h1'		=> array( $l		=> 'testo' ),
 			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
@@ -469,6 +479,7 @@
 		// form categorie.progetti menu
 		$p['categorie.progetti.form.menu'] = array(
 			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-bars" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'menu' ),
 			'h1'		=> array( $l		=> 'menu' ),
 			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),

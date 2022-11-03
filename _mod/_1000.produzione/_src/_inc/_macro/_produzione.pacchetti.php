@@ -56,26 +56,32 @@
 
         // definisco la vista andamento progetti
         $ct['view'] = array(
-            'table' => '__report_avanzamento_progetti__',
+            'table' => '__report_giacenza_ore__',
             'open' => array(
                 'table' => 'progetti',
-                'page' => 'progetti.produzione.form'
+                'page' => 'progetti.produzione.form',
+                'field' => 'id_progetto'
             ),
             'data' => array(
                 '__report_mode__' => 1
             ),
             'cols' => array(
                 'id' => '#',
-                'nome' => 'titolo',
-                'backlog' => 'da fare',
-                'sprint' => 'in corso',
-                'fatto' => 'fatte',
-                'completed' => '%',
-                'eta' => 'previsione',
+                'id_progetto' => 'id_progetto',
+                'progetto' => 'titolo',
+#                'backlog' => 'da fare',
+#                'sprint' => 'in corso',
+#                'fatto' => 'fatte',
+#                'completed' => '%',
+#                'eta' => 'previsione'
+                'carico' => 'carico',
+                'scarico' => 'scarico',
+                'totale' => 'totale',
                 NULL => 'azioni'
             ),
             'class' => array(
-                'nome' => 'text-left',
+                'id_progetto' => 'd-none',
+                'progetto' => 'text-left',
                 'completed' => 'text-right'
             ),
             'onclick' => array(
@@ -83,6 +89,11 @@
             ),
             'etc' => array(
                 '__force_backurl__' => 1
+            ),
+            '__restrict__' => array(
+                'id_progetto' => array(
+                    'NN' => 1
+                )
             )
         );
 
@@ -110,7 +121,7 @@
 
         // icone
         foreach( $ct['view']['data'] as &$row ) {
-            $row[ NULL ] =  '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-plus-square"></i></a>';
+            $row[ NULL ] =  '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id_progetto'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-plus-square"></i></a>';
         }
 
         // debug

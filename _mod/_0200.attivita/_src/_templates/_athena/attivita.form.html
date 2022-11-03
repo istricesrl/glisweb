@@ -263,6 +263,27 @@
 			{% endif %}
 			</fieldset>
 
+			{% if '0500.mastri' in mods.active.array %}
+			<legend>magazzino</legend>
+			{% if  session.__latest__[ table ].id_mastro_provenienza %}
+				{% set default_mp = session.__latest__[ table ].id_mastro_provenienza %}
+			{% endif %}
+			<div class="form-group form-row">
+				<div class="col-md-6 col">
+					<span class="label-top remove-after-duplicate">scarico</span>
+					{{ frm.selectBox( table, '', '', 'id_mastro_provenienza', '', etc.select.mastri, request, default_mp, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_provenienza', page, pages, ietf ) }}
+				</div>
+				{% if  session.__latest__[ table ].id_mastro_destinazione %}
+					{% set default_md = session.__latest__[ table ].id_mastro_destinazione %}
+				{% endif %}
+				<div class="col-md-6 col">
+					<span class="label-top remove-after-duplicate">carico</span>
+					{{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default_md, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_destinazione', page, pages, ietf ) }}
+				</div>
+			</div>	
+			{% endif %}
+			</fieldset>
+
 			{# SUBFORM CATEGORIE #}
 	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
         

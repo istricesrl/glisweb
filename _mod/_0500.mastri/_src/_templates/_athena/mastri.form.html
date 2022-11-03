@@ -94,8 +94,22 @@
 
         </fieldset>
 
-     
-	    {# BOTTONI E COMANDI DEL MODULO #}
+		<fieldset>
+			<legend>attribuzione</legend>
+	
+			{% if '0900.progetti' in mods.active.array %}
+			<div class="form-group form-row">
+				<div class="col-12">
+					<span class="label-top">progetto</span>
+					{% if request[ table ].__reset__ %}{% set default = session.__latest__[ table ].id_progetto %}{% else %}{% set default = '' %}{% endif %}
+					{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetto, request, default, '','','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
+				</div>
+			</div>
+			{% endif %}
+
+		</fieldset>
+
+		{# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>

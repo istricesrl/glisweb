@@ -71,8 +71,9 @@
 			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.metadati' );
 		}
 		
-				$p['progetti.commerciale.form.sem'] = array(
+		$p['progetti.commerciale.form.sem'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'SEM/SMM' ),
 			'h1'		=> array( $l		=> 'SEM/SMM' ),
 			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
@@ -85,6 +86,7 @@
 		// form progetti.commerciale testo
 		$p['progetti.commerciale.form.testo'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 			'title'		=> array( $l		=> 'testo' ),
 			'h1'		=> array( $l		=> 'testo' ),
 			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),

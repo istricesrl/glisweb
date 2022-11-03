@@ -84,35 +84,37 @@
         );
     }
 
-/*
     // conto
-    if( in_array( $_REQUEST['mastri']['id_tipologia'], array( 2 ) ) ) {
+    if( in_array( $_REQUEST['mastri']['id_tipologia'], array( 3 ) ) ) {
 
     // tabella della vista
-        $ct['view']['table'] = '__report_giacenza_mastri_orari__';
+        $ct['view']['table'] = '__report_giacenza_ore__';
 
-                    // pagina per la gestione degli oggetti esistenti
-    $ct['view']['open']['page'] = 'progetti.produzione.form.attivita';
-    $ct['view']['open']['table'] = 'progetti';
-    $ct['view']['open']['field'] = 'id_progetto'; 
+        // pagina per la gestione degli oggetti esistenti
+        $ct['view']['open']['page'] = 'progetti.produzione.form.attivita';
+        $ct['view']['open']['table'] = 'progetti';
+        $ct['view']['open']['field'] = 'id_progetto'; 
 
-    // campi della vista
-    $ct['view']['cols'] = array(
+        // campi della vista
+        $ct['view']['cols'] = array(
         'id' => '#',
         'id_progetto' => 'progetto',
-        'ore' => 'ore',
-        'cliente' => 'cliente'
-    );
+        'carico' => 'carico',
+        'scarico' => 'scarico',
+        'totale' => 'totale'
+        );
 
-    // stili della vista
-    $ct['view']['class'] = array(
+        // stili della vista
+        $ct['view']['class'] = array(
         'id' => 'd-none',
-        'id_progetto' => 'text-left',
-        'descrizione' => 'text-left',
-        'cliente' => 'text-left'
-    );
+        'carico' => 'text-right',
+        'scarico' => 'text-right',
+        'totale' => 'text-right'
+        );
+
     }
 
+    /*
     // registro
     if( in_array( $_REQUEST['mastri']['id_tipologia'], array( 3 ) ) ) {
     

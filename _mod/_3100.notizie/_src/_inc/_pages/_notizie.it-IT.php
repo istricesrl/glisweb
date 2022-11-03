@@ -45,6 +45,7 @@
 	// form notizie SEM/SMM
 	$p['notizie.form.sem'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'notizie.view' ),
@@ -54,7 +55,9 @@
 	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 
+/*
 	// form notizie testo
+	// ???
 	$p['notizie.form.testo'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'testo' ),
@@ -65,9 +68,11 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
+*/
 
 	$p['notizie.form.contenuti'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'notizie.view' ),
@@ -193,6 +198,7 @@
 	// form notizie SEM/SMM
 	$p['categorie.notizie.form.sem'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'SEM/SMM' ),
 	    'h1'		=> array( $l		=> 'SEM/SMM' ),
 	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
@@ -205,6 +211,7 @@
 	// form notizie testo
 	$p['categorie.notizie.form.testo'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'testo' ),
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
@@ -217,6 +224,7 @@
 	// form categorie notizie menu
 	$p['categorie.notizie.form.menu'] = array(
 	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bars" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'menu' ),
 	    'h1'		=> array( $l		=> 'menu' ),
 	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),

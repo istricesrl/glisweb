@@ -35,7 +35,33 @@
 	    'anagrafica' => 'text-left',
 	    'nome' => 'text-left'
 	);
-    
+
+    // inserimento rapido
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/progetti.produzione.form.attivita.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
+
+    $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__' );
+        
+    // tendina mastri
+	$ct['etc']['select']['registri'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM registri_view WHERE id_progetto = ?',
+        array(
+            array(
+                's' => $_REQUEST[ $ct['form']['table'] ]['id']
+            )
+        )
+    );
+
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.form';
 
