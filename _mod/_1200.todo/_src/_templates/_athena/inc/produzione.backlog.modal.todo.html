@@ -23,17 +23,17 @@
 						<div class="form-row">
 							<div class="col">
 								<span class="label-top">anno</span>
-								{# frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, request, '+1 week'|date('Y') ) #}
-								{{ frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, request, 'now'|date('Y') ) }}
+								{# frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, '', '+1 week'|date('Y') ) #}
+								{{ frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, '', 'now'|date('Y') ) }}
 							</div>
 							<div class="col">
 								<span class="label-top">settimana</span>
-								{# frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, request, '+1 week'|date('W') ) #}
-								{{ frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, request, 'now'|date('W') ) }}
+								{# frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, '', '+1 week'|date('W') ) #}
+								{{ frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, '', 'now'|date('W') ) }}
 							</div>
 							<div class="col">
 								<span class="label-top">ore programmate</span>
-								{{ frm.input( table, '', '', 'ore_programmazione', '', '', request, '', 'number', '', '', '', '0.25' ) }}
+								{{ frm.input( table, '', '', 'ore_programmazione', '', '', '', '', 'number', '', '', '', '0.25' ) }}
 							</div>
 						</div>
 					</div>

@@ -24,44 +24,44 @@
 						<div class="form-row" id="form-row-progetto">
 							<div class="col">
 								<span class="label-top">progetto</span>
-								{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetto, request, '', '','','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
+								{{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.id_progetto, '', '', '','','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti' ) }}
 							</div>
 						</div>
 -->
 						<div class="form-row">
 							<div class="col-auto">
 								<span class="label-top">tipologia</span>
-								{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request, 4 ) }}
+								{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, '', 4 ) }}
 							</div>
 							<div class="col">
 								<span class="label-top">responsabile</span>
-								{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf,'anagrafica' ) }}
+								{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, '', session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf,'anagrafica' ) }}
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="col">
 								<span class="label-top">nome</span>
-								{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+								{{ frm.inputRequired( table, '', '', 'nome', '', '', '' ) }}
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="col">
 								<span class="label-top">descrizione</span>
-								{{ frm.textarea( table, '', '', 'testo', '', 2, request ) }}
+								{{ frm.textarea( table, '', '', 'testo', '', 2, '' ) }}
 							</div>
 						</div>
 						<div class="form-row">
 							<div class="col">
 								<span class="label-top">anno</span>
-								{{ frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, request ) }}
+								{{ frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, '' ) }}
 							</div>
 							<div class="col">
 								<span class="label-top">settimana</span>
-								{{ frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, request ) }}
+								{{ frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, '' ) }}
 							</div>
 							<div class="col">
 								<span class="label-top">ore programmate</span>
-								{{ frm.input( table, '', '', 'ore_programmazione', '', '', request, '', 'number', '', '', '', '0.25' ) }}
+								{{ frm.input( table, '', '', 'ore_programmazione', '', '', '', '', 'number', '', '', '', '0.25' ) }}
 							</div>
 						</div>
 					</div>
