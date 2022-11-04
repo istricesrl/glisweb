@@ -78,7 +78,7 @@
 	    'SELECT id, __label__ FROM mastri_view WHERE se_conto = 1'
     );
 
-     // tendina anni
+    // tendina anni
 	foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
 	    $ct['etc']['select']['anni'][] = array( 'id' => $y, '__label__' => $y );
 	}

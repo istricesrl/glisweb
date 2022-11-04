@@ -24,6 +24,7 @@
 	    'id' => '#',
 #	    'data_programmazione' => 'pianificato',
 #	    'priorita' => 'priorità',
+		'id_progetto' => 'ID progetto',
 		'tipologia' => 'tipologia',
 		'progetto' => 'progetto',
 	    'nome' => 'titolo',
@@ -33,6 +34,7 @@
 #	    'progresso' => 'ore',
 #	    'completato' => 'stato',
 #	    'id_priorita' => 'id_priorita'
+		NULL => 'azioni'
 	);
 
     // stili della vista
@@ -42,6 +44,7 @@
 #		'completato' => 'd-none',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
+	    'id_progetto' => 'd-none',
 	    'priorita' => 'text-left',
 	    'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
 	    'progresso' => 'text-right no-wrap d-none d-sm-table-cell',
@@ -55,8 +58,39 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'todo.form';
 
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
+    );
+
+    $ct['page']['contents']['modals']['metro'][] = array(
+        'schema' => 'inc/produzione.modal.attivita.html'
+    );
+
+	// tendina tipologie
+	$ct['etc']['select']['tipologie_attivita'] = mysqlCachedIndexedQuery(
+		$cf['memcache']['index'],
+		$cf['memcache']['connection'],
+		$cf['mysql']['connection'],
+		'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL'
+	);
+
+	// tendina collaboratori
+	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
+		$cf['memcache']['index'],
+		$cf['memcache']['connection'],
+		$cf['mysql']['connection'], 
+		'SELECT id, __label__ FROM anagrafica_view_static'
+	);
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+	// icone
+	foreach( $ct['view']['data'] as &$row ) {
+		$row['id_mastro_provenienza'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM __report_giacenza_ore__ WHERE id_progetto = ?', array( array( 's' => $row['id_progetto'] ) ) );
+		$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id_progetto'].'\');$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id_mastro_provenienza'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
+	}
 
 	// preset ordinamento
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'] ) ) {

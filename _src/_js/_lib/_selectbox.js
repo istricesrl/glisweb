@@ -304,7 +304,7 @@
 	$( document ).ready( function() {
 
 	    $('.selectbox').each( function() {
-		$(this).selectBox();
+			$(this).selectBox();
 	    });
 
 	});

@@ -1,0 +1,48 @@
+{% import '_bin/_form.html' as frm %}
+
+{% set table = 'todo' %}
+{% set method = 'update' %}
+{% set activity = 'aggiornamento' %}
+{% set account = session.account.id %}
+<div class="modal" tabindex="-1" role="dialog" id="scorciatoia_todo_backlog">
+    <div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<form action="" method="post">
+				<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+				<input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+				<input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+				<input type="hidden" id="{{ table }}_id" name="{{ table }}[id]" value="">
+
+				<div class="modal-header">
+					<h5 class="modal-title">pianificazione rapida todo</h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+				</div>
+
+				<div class="modal-body">
+					<div class="container-fluid">
+						<div class="form-row">
+							<div class="col">
+								<span class="label-top">anno</span>
+								{# frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, request, '+1 week'|date('Y') ) #}
+								{{ frm.select( table, '', '', 'anno_programmazione', '', etc.select.anni, request, 'now'|date('Y') ) }}
+							</div>
+							<div class="col">
+								<span class="label-top">settimana</span>
+								{# frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, request, '+1 week'|date('W') ) #}
+								{{ frm.select( table, '', '', 'settimana_programmazione', '', etc.select.settimane, request, 'now'|date('W') ) }}
+							</div>
+							<div class="col">
+								<span class="label-top">ore programmate</span>
+								{{ frm.input( table, '', '', 'ore_programmazione', '', '', request, '', 'number', '', '', '', '0.25' ) }}
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="submit();">aggiungi</button>
+					<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+				</div>
+			</form>
+		</div>
+    </div>
+</div>

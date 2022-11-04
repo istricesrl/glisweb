@@ -264,6 +264,7 @@
 			</fieldset>
 
 			{% if '0500.mastri' in mods.active.array %}
+			<fieldset>
 			<legend>magazzino</legend>
 			{% if  session.__latest__[ table ].id_mastro_provenienza %}
 				{% set default_mp = session.__latest__[ table ].id_mastro_provenienza %}
@@ -281,8 +282,8 @@
 					{{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', etc.select.mastri, request, default_md, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_destinazione', page, pages, ietf ) }}
 				</div>
 			</div>	
-			{% endif %}
 			</fieldset>
+			{% endif %}
 
 			{# SUBFORM CATEGORIE #}
 	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}

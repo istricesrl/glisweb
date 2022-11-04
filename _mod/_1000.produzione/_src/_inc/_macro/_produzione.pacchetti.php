@@ -46,6 +46,10 @@
         'schema' => 'inc/produzione.modal.todo.html'
     );
 
+    $ct['page']['contents']['modals']['metro'][] = array(
+        'schema' => 'inc/produzione.modal.attivita.html'
+    );
+
     // ...
 	if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ) {
 
@@ -66,8 +70,8 @@
                 '__report_mode__' => 1
             ),
             'cols' => array(
-                'id' => '#',
-                'id_progetto' => 'id_progetto',
+                'id' => 'id_mastro',
+                'id_progetto' => '#',
                 'progetto' => 'titolo',
 #                'backlog' => 'da fare',
 #                'sprint' => 'in corso',
@@ -80,7 +84,7 @@
                 NULL => 'azioni'
             ),
             'class' => array(
-                'id_progetto' => 'd-none',
+                'id' => 'd-none',
                 'progetto' => 'text-left',
                 'completed' => 'text-right'
             ),
@@ -105,6 +109,14 @@
             'SELECT id, __label__ FROM tipologie_todo_view'
         );
 
+        // tendina tipologie
+        $ct['etc']['select']['tipologie_attivita'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL'
+        );
+
         // tendina collaboratori
         $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
@@ -121,7 +133,8 @@
 
         // icone
         foreach( $ct['view']['data'] as &$row ) {
-            $row[ NULL ] =  '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id_progetto'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-plus-square"></i></a>';
+            $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id_progetto'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.
+                '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
         }
 
         // debug
