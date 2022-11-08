@@ -58,7 +58,7 @@
 		)
 	);
 
-	// se c'è almeno una mail da inviare
+	// se c'è almeno un'attività da sbrigare
 	if( ! empty( $attivita ) ) {
 
         // timestamp di inizio attività
@@ -68,6 +68,9 @@
         if( isset( $attivita['macro'] ) && ! empty( $attivita['macro'] ) ) {
             require DIR_BASE . $attivita['macro'];
         }
+
+        // timestamp di fine attività
+        $tsFine = time();
 
         // aggiorno la timestamp di completamento
         mysqlQuery(

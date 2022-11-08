@@ -233,7 +233,8 @@
     }
 
     // funzione per la creazione di un'array di date pianificate in base a criteri specifici
-    function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
+    // function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
+    function creazionePianificazione( $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1, $solo_future=true ){ 
 
         logWrite( 'richiesta generazione '.$data, 'todo', LOG_ERR );
 
@@ -244,7 +245,10 @@
         $days = ['Monday', 'Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday' ];
         $months = ['January','February','March','April','May','June','July','August','September','October','November','December' ];
         //$attivita[] = array();
-            // in base al tipo di periodicità della pianificazione vengono generate le attività
+
+        if( empty( $cadenza ) ) { $cadenza = 1; }
+
+        // in base al tipo di periodicità della pianificazione vengono generate le attività
         switch($id_periodicita){
     
             // l'attività non si ripete
@@ -343,6 +347,10 @@
     
             }
     
+            if( $solo_future == true ) {
+                array_shift( $attivita );
+            };
+
             return $attivita;
     
         }

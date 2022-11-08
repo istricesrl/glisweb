@@ -114,6 +114,16 @@
             'SELECT id, __label__ FROM anagrafica_view_static'
         );
 
+        // tendina anni
+        foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
+            $ct['etc']['select']['anni'][] = array( 'id' => $y, '__label__' => $y );
+        }
+
+        // tendina settimane
+        foreach( range( 1, 52 ) as $w ) {
+            $ct['etc']['select']['settimane'][] = array( 'id' => $w, '__label__' => $w . ' / ' . substr( int2month( ceil( $w / 4.348125 ) ), 0, 3 ) );
+        }
+
         // gestione default
 	    require DIR_SRC_INC_MACRO . '_default.tools.php';
 

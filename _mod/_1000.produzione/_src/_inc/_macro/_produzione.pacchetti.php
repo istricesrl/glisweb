@@ -125,6 +125,16 @@
             'SELECT id, __label__ FROM anagrafica_view_static'
         );
 
+        // tendina anni
+        foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
+            $ct['etc']['select']['anni'][] = array( 'id' => $y, '__label__' => $y );
+        }
+
+        // tendina settimane
+        foreach( range( 1, 52 ) as $w ) {
+            $ct['etc']['select']['settimane'][] = array( 'id' => $w, '__label__' => $w . ' / ' . substr( int2month( ceil( $w / 4.348125 ) ), 0, 3 ) );
+        }
+
         // gestione default
 	    require DIR_SRC_INC_MACRO . '_default.tools.php';
 
@@ -134,7 +144,7 @@
         // icone
         foreach( $ct['view']['data'] as &$row ) {
             $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id_progetto'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.
-                '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
+                '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id_progetto'].'\');$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
         }
 
         // debug

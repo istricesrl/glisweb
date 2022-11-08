@@ -57,10 +57,17 @@
 */
 
         // seleziono l'ultimo progressivo utilizzato
+/*
         $status['current'] = generaInfoNumeroDocumento(
             array( 's' => $_REQUEST['idTipologia'] ),
             array( 's' => $_REQUEST['sezionale'] ),
             array( 's' => $_REQUEST['idAzienda'] )
+        );
+*/
+        $status['current'] = generaInfoNumeroDocumento(
+            $_REQUEST['idTipologia'],
+            $_REQUEST['sezionale'],
+            $_REQUEST['idAzienda']
         );
 
         // propongo un nuovo progressivo

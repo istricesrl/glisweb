@@ -39,7 +39,7 @@
 		'ws' => $base . 'mail.queue.clean.sent',
         'confirm' => true,
 		'icon' => NULL,
-		'fa' => 'fa-envelope-o',
+		'fa' => 'fa-trash-o',
 		'title' => 'svuotamento coda mail inviate',
 		'text' => 'cancella la coda delle mail inviate'
 	    );
@@ -54,7 +54,7 @@
 		'ws' => $base . 'mail.queue.clean.out',
         'confirm' => true,
 		'icon' => NULL,
-		'fa' => 'fa-exclamation-triangle',
+		'fa' => 'fa-trash',
 		'title' => 'svuotamento coda mail in uscita',
 		'text' => 'cancella la coda delle mail in uscita senza inviare'
 		);

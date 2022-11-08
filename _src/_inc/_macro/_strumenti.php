@@ -86,7 +86,7 @@
 	    $ct['page']['contents']['metro']['sms'][] = array(
 		'ws' => $base . 'sms.queue.clean.sent',
 		'icon' => NULL,
-		'fa' => 'fa-commenting',
+		'fa' => 'fa-trash-o',
 		'title' => 'svuotamento coda SMS inviati',
 		'text' => 'cancella la coda degli SMS inviati'
 	    );
@@ -97,7 +97,7 @@
 	    $ct['page']['contents']['metro']['sms'][] = array(
 		'ws' => $base . 'sms.queue.clean.out',
 		'icon' => NULL,
-		'fa' => 'fa-commenting-o',
+		'fa' => 'fa-trash',
 		'title' => 'svuotamento coda SMS in uscita',
 		'text' => 'cancella la coda degli SMS in uscita'
 	    );

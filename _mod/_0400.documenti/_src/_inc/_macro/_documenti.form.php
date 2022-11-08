@@ -37,7 +37,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
-	
+
 	// tendina condizioni_pagamento
 	$ct['etc']['select']['condizioni_pagamento'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -89,7 +89,7 @@
 	        'SELECT indirizzi_view.id, __label__ FROM indirizzi_view LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id  WHERE anagrafica_indirizzi.id_anagrafica = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) )
 	    );
-	   } 
+	} 
 
 #	if( !isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] ) && !isset( $_REQUEST['__latest__'][ $ct['form']['table'] ]['id_emittente'] ) && !empty( $ct['etc']['select']['id_emittenti'] ) ){
 #		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] = $ct['etc']['select']['id_emittenti'][0]['id'];

@@ -22,11 +22,13 @@
     // tabella gestita
 	$ct['form']['table'] = 'pianificazioni';
 
-    // tendina delle entita che è possibile gestire
+    // tendina delle entita che è possibile generare
+    // 'todo','attivita','rinnovi','documenti','documenti_articoli','pagamenti')
     $ct['etc']['select']['entita'] = array(
-        array( 'id' => 'progetti', '__label__' => 'progetti' ),
+        array( 'id' => 'rinnovi', '__label__' => 'rinnovi' ),
+        array( 'id' => 'documenti', '__label__' => 'documenti' ),
         array( 'id' => 'todo', '__label__' => 'todo' ),
-        array( 'id' => 'turni', '__label__' => 'turni' )
+        array( 'id' => 'attivita', '__label__' => 'attività' )
     );
 
     //tendina periodi
@@ -38,10 +40,11 @@
     );
 
     //elenco periodicità
-    $ct['etc']['periodicita'] = array(
+    $ct['etc']['select']['periodicita'] = array(
         array( 'id' => 1, '__label__' => 'giornaliera' ),
         array( 'id' => 2, '__label__' => 'settimanale' ),
-        array( 'id' => 3, '__label__' => 'mensile' )
+        array( 'id' => 3, '__label__' => 'mensile' ),
+        array( 'id' => 4, '__label__' => 'annuale' )
     );
 
     //tendina ripetizioni mensili

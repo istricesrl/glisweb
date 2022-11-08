@@ -13,11 +13,14 @@
 	$ct['form']['table'] = 'pianificazioni';
 
     $ct['page']['contents']['metros'] = array(
+	    'oggetti' => array(
+		    'label' => 'oggetti'
+        ),
 	    'azioni' => array(
-		'label' => 'azioni'
+		    'label' => 'azioni'
 	    )
 	);
-
+/*
     $ct['page']['contents']['metro']['azioni'][] = array(
         'modal' => array('id' => 'crea', 'include' => 'inc/pianificazioni.form.tools.modal.crea.html' ),
         'icon' => NULL,
@@ -43,6 +46,6 @@
         'title' => 'ferma pianificazione',
         'text' => 'interrompe la pianificazione'
     );
-
+*/
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';

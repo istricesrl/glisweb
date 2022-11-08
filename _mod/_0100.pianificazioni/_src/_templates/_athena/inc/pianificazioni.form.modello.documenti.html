@@ -1,0 +1,65 @@
+{% import '_bin/_form.html' as frm %}
+
+{# MODULO PRINCIPALE #}
+<fieldset>
+<legend>dati generali <small>data e numero del documento verranno compilati automaticamente</small></legend>
+
+	<div class="form-group form-row">
+		<div class="col-md-auto col-4">
+			<span class="label-top">tipologia</span>
+			{{ frm.selectRequired( table, '', '', 'model_id_tipologia', '', etc.select.tipologie_documenti, request ) }}
+		</div>
+		<div class="col-4 col-md-1">
+			<span class="label-top">sezionale</span>
+			{{ frm.inputRequired( table, '', '', 'model_sezionale', '', '', request ) }}
+		</div>
+		<div class="col-md-auto col-4">
+			<span class="label-top">condizioni pagamento</span>
+			{{ frm.select( table, '', '', 'model_id_condizione_pagamento', '', etc.select.condizioni_pagamento, request ) }}
+		</div>
+		<div class="col-auto">
+			<span class="label-top">esigibilità</span>
+			{{ frm.select( table, '', '', 'model_esigibilita', '', etc.select.esigibilita, request ) }}
+		</div>
+		<div class="col-4 col-md">
+			<span class="label-top">nome</span>
+			{{ frm.inputRequired( table, '', '', 'model_nome', '', '', request ) }}
+		</div>
+	</div>
+
+	<div class="form-group form-row">
+		<div class="col-12">
+		<span class="label-top">note</span>
+		{{ frm.textarea( table, '', '', 'model_note', '', 3, request ) }}
+		</div>
+	</div>
+
+	<legend>dati emittente</legend>
+	<div class="form-group form-row">
+		<div class="col-12 col-md">
+			<span class="label-top">emittente</span>
+			{{ frm.selectBox( table, '', '', 'model_id_emittente', '', etc.select.id_emittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_emittente' , page, pages, ietf,'anagrafica' ) }}
+		</div>
+		{% if request[ table ].id %}
+		<div class="col-12 col-md-8">
+			<span class="label-top">sede mittente</span>
+			{{ frm.selectBox( table, '', '', 'model_id_sede_emittente', '', etc.select.id_sedi_emittente, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_emittente' , page, pages, ietf ) }}
+		</div>
+		{% endif %}
+	</div>
+
+	<legend>dati destinatario</legend>
+	<div class="form-group form-row">
+		<div class="col-12 col-md">
+			<span class="label-top">destinatario</span>
+			{{ frm.selectBox( table, '', '', 'model_id_destinatario', '', etc.select.id_destinatari, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
+		</div>
+		{% if request[ table ].id %}
+		<div class="col-12 col-md-8">
+			<span class="label-top">sede destinatario</span>
+			{{ frm.selectBox( table, '', '', 'model_id_sede_destinatario', '', etc.select.id_sedi_destinatario, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_destinatario' , page, pages, ietf ) }}
+		</div>
+		{% endif %}
+	</div>
+
+</fieldset>

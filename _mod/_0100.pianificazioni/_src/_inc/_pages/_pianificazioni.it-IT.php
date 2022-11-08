@@ -4,7 +4,7 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_0750.pianificazioni/';
+	$m = DIR_MOD . '_0100.pianificazioni/';
 
 	// vista pianificazioni
 	$p['pianificazioni.view'] = array(
@@ -29,7 +29,19 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pianificazioni.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_pianificazioni.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.form', 'pianificazioni.form.tools' ) )
+		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.form', 'pianificazioni.form.modello', 'pianificazioni.form.tools' ) )
+	);
+
+	// gestione tools pianificazioni
+	$p['pianificazioni.form.modello'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'modello' ),
+	    'h1'			=> array( $l		=> 'modello' ),
+	    'parent'		=> array( 'id'		=> 'pianificazioni.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pianificazioni.form.modello.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_pianificazioni.form.modello.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['pianificazioni.form']['etc']['tabs'] )
 	);
 
 	// gestione tools pianificazioni

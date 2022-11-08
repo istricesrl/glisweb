@@ -294,8 +294,7 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_pro
   AND documenti_articoli.id_articolo IS NOT NULL
 ) AS movimenti
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
-GROUP BY movimenti.id, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.codice_produttore, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
-
+GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.codice_produttore, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 --| 100000020002
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini_foglie__` AS
 SELECT
@@ -473,7 +472,7 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_pro
   AND documenti_articoli.id_articolo IS NOT NULL
 ) AS movimenti
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
-GROUP BY movimenti.id, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
+GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 
 --| 100000020003
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini_foglie_attive__` AS
@@ -652,7 +651,7 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_pro
   AND documenti_articoli.id_articolo IS NOT NULL
 ) AS movimenti
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
-GROUP BY movimenti.id, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso
+GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso
 HAVING totale > 0
 ;
 
@@ -1028,6 +1027,7 @@ FROM mastri
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
   WHERE documenti_articoli.quantita IS NOT NULL
 ) AS movimenti
+-- GROUP BY id, nome, id_prodotto, prodotto, codice_produttore, id_articolo, articolo, matricola, data_scadenza, data, id_tipologia, tipologia, documento, numero, emittente, destinatario, id_riga, carico, mastro_carico, qta_carico, scarico, mastro_scarico, qta_scarico, udm_qta;
 GROUP BY id_riga;
 
 --| 100000022700

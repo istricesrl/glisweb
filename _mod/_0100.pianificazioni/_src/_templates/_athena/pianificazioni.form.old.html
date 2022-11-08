@@ -1,0 +1,310 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{# import 'bin/default.form.pubblicazioni.sub.html' as sub #}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# CAMPI HIDDEN SPECIALI #}
+	    <input type="hidden" id="id_contratto" name="{{ table }}[id_contratto]" value="{{ request[ table ].id_contratto }}">
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati generali <small>{{ legend }}</small></legend>
+
+			<div class="form-group form-row">
+				<div class="col-12 col-md-auto">
+					<span class="label-top">entità</span>
+					{{ frm.select( table, '', '', 'entita', '', etc.select.entita, request, '', '', '', '', '' ) }}
+<!--
+					<select name="{{ table[entita] }}" class="form-control form-control-sm" id="{{ table }}_entita" {% if request[ table ].id %} disabled {% endif %}>
+					{% for e in etc.select.entita %}
+						<option value="{{ e.id }}" {% if request[ table ].entita == e.id %}selected{% endif %}>{{ e.__label__ }}</option>
+					{% endfor %}
+					</select>
+-->
+				</div>
+<!--
+				<div class="col-12 col-md-1">
+					<span class="label-top">id entità</span>
+					<input type="text" disabled value="{{ etc.id_oggetto }}" class="form-control form-control-sm ">
+				</div>
+				<div class="col-12 col-md-2">
+					<span class="label-top">data di partenza</span>
+					<input name="__data__" type="date" disabled value="{{ etc.data }}" class="form-control form-control-sm " data-toggle="tooltip" data-placement="bottom" data-delay="1000" id="__data__">
+				</div>
+				<div class="col-12 col-md-1">
+					<span class="label-top">giorni rinnovo</span>
+					{{ frm.input( table, '', '', 'giorni_rinnovo', '', '', request ) }}
+				</div>
+-->
+				<div class="col-12 col-md">
+					<span class="label-top">nome</span>
+					{{ frm.input( table, '', '', 'nome', '', '', request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'note', '', 1, request ) }}
+				</div>
+			</div>
+	
+        </fieldset>
+
+		<fieldset>
+			<legend>periodicità</legend>
+
+			{{ frm.input( table, '' , '', 'periodicita', '', '', request, '1', 'hidden' ) }}
+
+			<div class="form-group form-row">
+				<div class="col-12">
+				<ul class="nav nav-tabs nav-tabs-secondary">
+				
+					{% for p in etc.periodicita %}
+					<li class="nav-item">
+						<a class="nav-link {% if request[ table ].periodicita == p.id or (request[ table ].periodicita is empty and p.id == 1 )%}active{% endif %}" onclick="crossShow('cke-{{p.id}}','cke-switch',this);setPeriodicita({{p.id}}); myDate();">{{ p.__label__ }}</a></li>
+					{% endfor %}
+
+				</ul>
+				</div>
+			</div>
+	
+
+			<div class="form-group form-row flex-fill">
+				<div class="col cke-switch" id="cke-1">
+					<div class="form-group form-row" id="giorno">
+						<div class="col-12 col-form-label">
+							<span>specificare il numero di giorni di ripetizione</span>
+						</div>
+					</div>
+				</div>
+
+				<div class="col cke-switch" id="cke-2" style="display: none;">
+					<div class="form-group form-row" id="settimana">
+						<div class="col-4 col-md-1 col-form-label">
+							<div class="form-check">
+								{{ frm.checkbox( table, '', '', 'se_lunedi', 'lunedì', '', request ) }}
+							</div>
+						</div>
+						<div class="col-4 col-md-1 col-form-label">
+							<div class="form-check">
+								{{ frm.checkbox( table, '', '', 'se_martedi', 'martedì', '', request ) }}
+							</div>
+						</div>
+						<div class="col-4 col-md-1 col-form-label">
+							<div class="form-check">
+								{{ frm.checkbox( table, '', '', 'se_mercoledi', 'mercoledì', '', request ) }}
+							</div>
+						</div>
+						<div class="col-4 col-md-1 col-form-label">
+							<div class="form-check">
+								{{ frm.checkbox( table, '', '', 'se_giovedi', 'giovedì', '', request ) }}
+							</div>
+						</div>
+						<div class="col-4 col-md-1 col-form-label">
+							<div class="form-check">
+								{{ frm.checkbox( table, '', '', 'se_venerdi', 'venerdì', '', request ) }}
+							</div>
+						</div>
+						<div class="col-4 col-md-1 col-form-label">
+							<div class="form-check">
+								{{ frm.checkbox( table, '', '', 'se_sabato', 'sabato', '', request ) }}
+							</div>
+						</div>
+						<div class="col-4 col-md-1 col-form-label">
+							<div class="form-check">
+								{{ frm.checkbox( table, '', '', 'se_domenica', 'domenica', '', request ) }}
+							</div>
+						</div>
+
+					</div>
+				</div>
+				<div class="col cke-switch" id="cke-3" style="display: none;">
+					<div class="form-group form-row" id="mese">
+						<div class="col-12">
+							{{ frm.select( table, '', '', 'ripetizione_mese', '', etc.select.ripetizioni_mese, request, 1, '', '', 1 ) }} 
+						</div>
+					</div>
+				</div>
+			</div>
+		</fieldset>
+
+		<fieldset>
+			<legend>ripetizioni</legend>
+			<div class="form-group form-row">
+				<div class="col-auto">
+					<span class="label-top lbl-cad">ogni n. giorni</span>
+					{{ frm.input( table, '', '', 'cadenza', '', '', request, '1', 'number', '', '', '','1' ) }}
+				</div>
+				<div class="col-auto">
+					<span class="label-top">fino al</span>
+					{{ frm.date( table, '', '', 'data_fine', '', '', request ) }}
+				</div>
+			</div>
+		</fieldset>
+
+		{% include 'inc/metro.html' %}
+        
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script>
+
+$(document).ready(function(){
+
+    // chiamo la funzione myDate che legge la data della pianificazione e costruisce le prime logiche
+    myDate();
+
+    // leggo il valore della periodicità e setto la tab da mostrare e la label della cadenza
+    periodicita = $('#pianificazioni_periodicita').val();
+    crossShow('cke-'+periodicita,'cke-switch');
+    setPeriodicita(periodicita);
+});
+
+
+// funzione che setta il valore della periodicità
+    function setPeriodicita(valore){
+        valore = parseInt(valore);
+        $('#pianificazioni_periodicita').val(valore);
+        setLabelCadenza(valore);
+    }
+ 
+// funzione che setta la label della cadenza
+    function setLabelCadenza(valore){
+        valore = parseInt(valore);
+        switch(valore) {
+            case 1:
+                $('.lbl-cad').text('ogni n. giorni');
+                break;
+            case 2:
+                $('.lbl-cad').text('ogni n. settimane');
+                break;
+            case 3:
+                $('.lbl-cad').text('ogni n. mesi');
+                break;
+            default:
+                $('.lbl-cad').text('ogni n. giorni');
+            }
+    }
+   
+   
+
+    Date.prototype.getWeekOfMonth = function() {
+        var firstWeekday = new Date(this.getFullYear(), this.getMonth(), 1).getDay();
+        var offsetDate = this.getDate() + firstWeekday - 1;
+        return Math.floor(offsetDate / 7);
+    }
+
+
+    function myDate() {
+        console.log('chiamata funzione myDate');
+      
+        // cerco il giorno della settimana corrispondente alla data
+        var d = $('#__data__').val();
+        d = d.split("T");
+        var a = d[0].split("-") ;
+        var date = new Date( a[0], (a[1] - 1), a[2] ) ;
+
+        var r = date.getDay() - 1;
+
+        // per la domenica setto a 6
+        if( r == -1 ){
+            r = 6;
+        }
+
+        var numeroSettimana = date.getWeekOfMonth() + 1;
+
+/*        
+        // solo se non ho una pianificazione settimanale già esistente setto la checkbox del giorno corrente
+        if( !$('#pianificazioni_id').val() || ( $('#pianificazioni_id').val() && $('#pianificazioni_periodicita').val() != 2 ) ){
+        //    console.log('myDate, setto le checkbox dei giorni settimana in base alla data');
+            $("input:checkbox").prop('checked', false);
+            $('.giorno-'+r).prop('checked', true);
+        }
+*/        
+     
+        var weekdays = new Array(7);
+        weekdays[0] = "lunedì";
+        weekdays[1] = "martedì";
+        weekdays[2] = "mercoledì";
+        weekdays[3] = "giovedì";
+        weekdays[4] = "venerdì";
+        weekdays[5] = "sabato";
+        weekdays[6] = "domenica";
+
+        var mesi = new Array(12);
+        mesi[1]  = "gennaio";
+        mesi[2] = "febbraio";
+        mesi[3] = "marzo";
+        mesi[4] = "aprile";
+        mesi[5] = "maggio";
+        mesi[6] = "giugno";
+        mesi[7] = "luglio";
+        mesi[8] = "agosto";
+        mesi[9] = "settembre";
+        mesi[10] = "ottobre";
+        mesi[11] = "novembre";
+        mesi[12] = "dicembre";
+
+
+        // inserisco nell'if di controllo per non avere errore
+        if( $('#pianificazioni_periodicita').val() == 3 ){
+            document.getElementById("pianificazioni_ripetizione_mese").options[0].text = "ogni giorno "+ a[2]+" del mese";
+            document.getElementById("pianificazioni_ripetizione_mese").options[1].text ="ogni "+numeroSettimana+"° "+weekdays[r]+" del mese";        
+        }
+      
+    //    document.getElementById("__rip_anno__").options[0].text = "il "+ a[2]+"/"+a[1]+" ogni anno";
+    //    document.getElementById("__rip_anno__").options[1].text ="il "+numeroSettimana+"° "+weekdays[r]+" del mese di "+mesi[a[1]]+" di ogni anno";
+      
+    }
+   
+</script>
+
+{% endblock %}

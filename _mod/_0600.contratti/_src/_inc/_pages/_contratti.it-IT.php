@@ -59,10 +59,25 @@
 		'etc'		=> array( 'tabs'	=> array(
 													'contratti.form',
 													'contratti.form.rinnovi',
+													'contratti.form.pianificazioni',	// TODO in sinergia con il modulo pianificazioni, spostare sotto dentro a un if()
 													'contratti.form.immagini',
 													'contratti.form.file',
 													'contratti.form.metadati',
 													'contratti.form.tools' ) )
+	);
+
+	// form contratti pianificazioni
+	// TODO spostare nel modulo pianificazioni
+	$p['contratti.form.pianificazioni'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'pianificazioni' ),
+		'h1'		=> array( $l		=> 'pianificazioni' ),
+		'parent'		=> array( 'id'		=> 'contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.pianificazioni.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_contratti.form.pianificazioni.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['contratti.form']['etc']['tabs'] )
 	);
 
 	// form contratti immagini
