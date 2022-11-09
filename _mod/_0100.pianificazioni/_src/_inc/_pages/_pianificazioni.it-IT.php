@@ -29,7 +29,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pianificazioni.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_pianificazioni.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.form', 'pianificazioni.form.modello', 'pianificazioni.form.tools' ) )
+		'etc'			=> array( 'tabs'	=> array(	'pianificazioni.form', 'pianificazioni.form.modello', 'pianificazioni.form.macro', 'pianificazioni.form.metadati', 'pianificazioni.form.tools' ) )
 	);
 
 	// gestione tools pianificazioni
@@ -42,6 +42,32 @@
 	    'macro'			=> array( $m.'_src/_inc/_macro/_pianificazioni.form.modello.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['pianificazioni.form']['etc']['tabs'] )
+	);
+
+	// gestione tools pianificazioni
+	$p['pianificazioni.form.macro'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-caret-square-o-right" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'macro' ),
+		'h1'		=> array( $l		=> 'macro' ),
+		'parent'		=> array( 'id'		=> 'pianificazioni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pianificazioni.form.macro.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pianificazioni.form.macro.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pianificazioni.form']['etc']['tabs'] )
+	);
+
+	// gestione tools pianificazioni
+	$p['pianificazioni.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'pianificazioni.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pianificazioni.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_pianificazioni.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pianificazioni.form']['etc']['tabs'] )
 	);
 
 	// gestione tools pianificazioni
