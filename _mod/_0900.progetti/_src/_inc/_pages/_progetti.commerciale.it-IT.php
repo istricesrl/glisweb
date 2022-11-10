@@ -32,12 +32,30 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'progetti.commerciale.form' ) )
-		);
+			'etc'			=> array( 'tabs'	=> array(	'progetti.commerciale.form', 
+														/*	'progetti.commerciale.form.mastri',*/
+	#														'progetti.commerciale.form.todo',
+	# NOTA questa va nel modulo pianificazioni
+	#														'progetti.commerciale.form.pause',
+															'progetti.commerciale.form.archiviazione',
+	# NOTA questa va nel modulo pianificazioni
+	#														'progetti.commerciale.form.pianificazioni',
+															
+															'progetti.commerciale.form.tools' ) )		);
+
+		// RELAZIONI CON IL MODULO PRODUZIONE
+		if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'progetti.commerciale.form', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.accettazione' );
+		}
 
 		// RELAZIONI CON IL MODULO MATRICOLE
 		if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
 			arrayInsertSeq( 'progetti.commerciale.form', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.matricole' );
+		}
+
+		// RELAZIONI CON IL MODULO ATTIVITA
+		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'progetti.commerciale.form', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.attivita' );
 		}
 
 		// RELAZIONI CON IL MODULO TODO
@@ -45,7 +63,7 @@
 			arrayInsertSeq( 'progetti.commerciale.form', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.todo' );
 		}
 
-	/*	
+		/*	
 			// gestione todo progetti
 			$p['progetti.commerciale.form.todo'] = array(
 				'sitemap'		=> false,
@@ -61,14 +79,14 @@
 
 		// RELAZIONI CON IL MODULO contenuti
 		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
-			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.sem');
-			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.testo');
-			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.immagini');
-			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.video');
-			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.audio');
-			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.file');
-			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.macro');
-			arrayInsertBefore( 'progetti.commerciale.form.todo', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.metadati' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.sem');
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.testo');
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.immagini');
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.video');
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.audio');
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.file');
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.macro');
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.metadati' );
 		}
 		
 		$p['progetti.commerciale.form.sem'] = array(
@@ -170,6 +188,19 @@
 			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.metadati.php' ),
 			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'		=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
+		// gestione progetti accettazione
+		$p['progetti.commerciale.form.accettazione'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-handshake-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'accettazione' ),
+			'h1'			=> array( $l		=> 'accettazione' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.accettazione.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.accettazione.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
 		);
 
 	}

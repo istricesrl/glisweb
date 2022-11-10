@@ -1139,6 +1139,37 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
   	( tipologie_progetti.se_progetto IS NOT NULL OR tipologie_progetti.se_forfait IS NOT NULL )
   GROUP BY progetti.id
 
+--| 100000027010
+-- __report_avanzamento_trattative__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_avanzamento_trattative__`;
+
+--| 100000027011
+-- __report_avanzamento_trattative__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_avanzamento_trattative__` AS
+  SELECT
+    progetti.id,
+    progetti.nome,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS account,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+    progetti.entrate_previste,
+    progetti.costi_previsti,
+    progetti.ore_previste,
+    ( progetti.entrate_previste - progetti.costi_previsti ) AS margine_previsto,
+    coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
+    coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita
+  FROM progetti
+	LEFT JOIN anagrafica AS a2 ON a2.id = progetti.id_cliente
+	LEFT JOIN anagrafica AS a1 ON a1.id = a2.id_agente
+	LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+  LEFT JOIN attivita AS at1 ON ( at1.id_progetto = progetti.id AND at1.data_attivita IS NOT NULL )
+  LEFT JOIN attivita AS at2 ON ( at2.id_progetto = progetti.id AND at2.data_attivita IS NULL AND at2.data_programmazione IS NOT NULL )
+	WHERE progetti.data_accettazione IS NULL
+		AND progetti.data_chiusura IS NULL
+		AND progetti.data_archiviazione IS NULL
+  GROUP BY progetti.id
+
 --| 100000031510
 -- __report_tesseramenti_anagrafica__
 -- tipologia: report

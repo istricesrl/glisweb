@@ -67,6 +67,9 @@
             ),
             '__report_avanzamento_progetti__' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            '__report_avanzamento_trattative__' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);

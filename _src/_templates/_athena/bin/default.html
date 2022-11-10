@@ -28,9 +28,10 @@
 {% if short is null %}
 	    {{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ lang ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
 	    {{ frm.button( '<span><i class="fa fa-floppy-o"></i><i class="fa fa-caret-right" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '");','salva e crea un nuovo oggetto' ) }}
-	    {% if page.parents.path|length() > 1 %}{{ frm.button( '<i class="fa fa-area-chart" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.parents.path[1][ lang ] ~ '");','salva e vai alle statistiche' ) }}{% endif %}
-	    {{ frm.button( '<i class="fa fa-object-group" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ pages.dashboard.path[ lang ] ~ '");','salva e torna alla dashboard' ) }}
-{% endif %}
+
+		{# if page.parents.path|length() > 1 #}{# frm.button( '<i class="fa fa-area-chart" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.parents.path[1][ lang ] ~ '");','salva e vai alle statistiche' ) #}{# endif #}
+	    {# frm.button( '<i class="fa fa-object-group" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ pages.dashboard.path[ lang ] ~ '");','salva e torna alla dashboard' ) #}
+		{% endif %}
 {# gdl #}
 	    {% if download %}{{ frm.button( '<i class="fa fa-download"></i>', 'button', 'btn-secondary', 'window.open("' ~ download ~ '","_self")','scarica' ) }}{% endif %}
 	    {% endif %}

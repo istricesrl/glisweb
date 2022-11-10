@@ -1,0 +1,186 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/progetti.produzione.form.sub.html' as sub %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as pub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+		{# MODULO PRINCIPALE #}
+	    <fieldset>
+		<legend>dati generali <small>{{ legend }}</small></legend>
+		   
+            <div class="form-group form-row">
+                <div class="col-12 col-md-2">
+                    <span class="label-top">codice</span>
+                    {{ frm.inputRequired( table, '', '', 'id', '', '', request, 'now'|date('YmdHi') ) }}
+                </div>
+				<div class="col col-md">
+					<span class="label-top">cliente</span>
+					{{ frm.selectBox( table, '', '', 'id_cliente', '', etc.select.clienti, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_cliente', page, pages, ietf, 'anagrafica' ) }}
+				</div>
+				{% if etc.select.indirizzi %}
+				<div class="col-12 col-md">
+					<span class="label-top">indirizzo</span>
+					{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, '','','','','', 'indirizzi.form', 'indirizzi.form', 'indirizzi', 'id_indirizzo', page, pages, ietf, 'indirizzi' ) }}	</div>
+				{% else %}
+				<div class="col-auto">
+					<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="submitFormOkay = true; submit();">TROVA INDIRIZZI</button>
+				</div>
+				{% endif %}
+				<div class="col-12 col-md-auto">
+					<span class="label-top">data apertura</span>
+					{{ frm.date( table, '', '', 'data_apertura', '', '', request, 'now'|date('Y-m-d') ) }}
+				</div>
+			</div>
+            
+	        <div class="form-group form-row">
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">tipologia</span>
+                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request, '', '', '', '', 'nomeProgetto()' ) }}
+  				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">nome</span>
+					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
+				</div>
+            </div>
+            
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top">descrizione</span>
+				{{ frm.textarea( table, '', '', 'note', '', 2, request ) }}
+				</div>
+			</div>
+				
+		</fieldset>
+		<fieldset>
+			<legend>valutazione progetto</legend>
+			<div class="form-group form-row">
+				<div class="col-12 col-md">
+					<span class="label-top">valore progetto (€)</span>
+					{{ frm.inputRequired( table, '', '', 'entrate_previste', '', '', request, __preset__[table].nome ) }}
+				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">stima costi (€)</span>
+					{{ frm.inputRequired( table, '', '', 'costi_previsti', '', '', request, __preset__[table].nome ) }}
+				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">stima ore</span>
+					{{ frm.inputRequired( table, '', '', 'ore_previste', '', '', request, __preset__[table].nome ) }}
+				</div>
+			</div>  
+			<div class="form-group form-row">
+				<div class="col-12">
+				<span class="label-top">note sulle stime</span>
+				{{ frm.textarea( table, '', '', 'note_previsioni', '', 2, request ) }}
+				</div>
+			</div>
+		</fieldset>
+		{% if '3000.contenuti' in mods.active.array %}
+		<fieldset>
+			<legend>contenuti e aspetto</legend>
+			<div class="form-group form-row">
+				<div class="col-12 col-md-auto">
+					<span class="label-top">sito</span>
+					{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
+				</div>  
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
+					</div>
+				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">template</span>
+					{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
+				</div>  
+				<div class="col-12 col-md">
+					<span class="label-top">schema</span>
+					{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
+				</div>  
+				<div class="col-12 col-md">
+					<span class="label-top">tema</span>
+					{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
+				</div>  
+			</div>  
+		</fieldset>
+		{# SUBFORM PUBBLICAZIONI #}
+		{{ pub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_progetto' ) }}
+
+		{% endif %}
+
+		{# SUBFORM CATEGORIE #}
+		{{ sub.categorie( table, 'progetti_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
+
+        {# SUBFORM RUOLI #}
+        {{ sub.ruoli( table, 'progetti_anagrafica', 'ruoli', site, page, pages, ietf, etc, request, session ) }}
+
+
+		{# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script src="jquery-3.5.1.min.js"></script>
+
+<script>
+function nomeProgetto(){
+	var tipologia = $('#progetti_id_tipologia option:selected').text();
+
+	var cliente = $('#progetti_id_cliente_inputbox').val();
+
+	var testo = ""+tipologia+" per "+cliente;
+	$('#progetti_nome').val(testo);
+}
+</script>
+
+
+{% endblock %}

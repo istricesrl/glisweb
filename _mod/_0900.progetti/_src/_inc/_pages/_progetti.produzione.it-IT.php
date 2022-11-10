@@ -75,6 +75,11 @@
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.matricole' );
 		}
 
+		// RELAZIONI CON IL MODULO COMMERCIALE
+		if( in_array( "2000.commerciale", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.accettazione' );
+		}
+
 		// RELAZIONI CON IL MODULO ATTIVITA
 		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.attivita' );
@@ -91,11 +96,6 @@
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.planned' );
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.sprint' );
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.backlog' );
-		}
-
-		// RELAZIONI CON IL MODULO COMMERCIALE
-		if( in_array( "2000.commerciale", $cf['mods']['active']['array'] ) ) {
-			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.accettazione' );
 		}
 
 		// RELAZIONI CON IL MODULO AMMINISTRAZIONE

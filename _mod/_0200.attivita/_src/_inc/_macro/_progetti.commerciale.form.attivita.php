@@ -35,7 +35,26 @@
 	    'anagrafica' => 'text-left',
 	    'nome' => 'text-left'
 	);
-    
+
+    // inserimento rapido
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/progetti.commerciale.form.attivita.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
+
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert_memo',
+        'file' => 'inc/progetti.commerciale.form.attivita.insert.promemoria.html',
+        'fa' => 'fa-calendar-plus-o'
+    );
+
+    $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__' );
+
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.form';
 
