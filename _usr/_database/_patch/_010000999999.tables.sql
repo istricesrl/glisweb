@@ -380,6 +380,24 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000002250
+
+-- badge
+-- tipologia: tabella gestita
+CREATE TABLE `badge` (
+  `id` int NOT NULL,
+  `id_tipologia` int NULL,
+  `id_contratto` int NULL,
+  `codice` char(32) NULL,
+  `rfid` char(32) NULL,
+  `nome` char(255) NULL,
+  `note` text NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000002300
 
 -- banner
@@ -2251,8 +2269,11 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `se_sabato` int(1) DEFAULT NULL,
   `se_domenica` int(1) DEFAULT NULL,
   `schema_ripetizione` int(11) DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
   `data_elaborazione` date DEFAULT NULL,
+  `timestamp_elaborazione` int(11) DEFAULT NULL,
   `data_ultimo_oggetto`  date DEFAULT NULL,
+  `giorni_elaborazione` int(11) DEFAULT NULL,
   `giorni_estensione` int(11) DEFAULT NULL,
   `data_fine` date DEFAULT NULL,
   `entita`	enum('todo','attivita','rinnovi','documenti','documenti_articoli','pagamenti') DEFAULT NULL,
@@ -2466,6 +2487,7 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `se_cacheable` int(1) DEFAULT NULL,
   `id_sito` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,	
+  `data_apertura` DATE DEFAULT NULL,
   `entrate_previste` decimal(16,2) DEFAULT NULL,
   `ore_previste` decimal(16,2) DEFAULT NULL,
   `costi_previsti` decimal(16,2) DEFAULT NULL,
@@ -3344,6 +3366,24 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `se_anagrafica` int(1) DEFAULT NULL,
   `se_agenda` int(1) DEFAULT NULL,
   `se_sistema` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000050450
+
+-- tipologie_badge
+-- tipologia: tabella assistita
+-- verifica: 2022-07-20 17:22 Chiara GDL
+CREATE TABLE IF NOT EXISTS `tipologie_badge` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

@@ -24,6 +24,14 @@
       }
     }
   },
+  "debug": {
+    "%stage del sito%": {
+      "*" : {
+        "log": { "lvl": "%livello di log da 1 a 7%" },
+        "report": { "lvl": "%livello di report 2 o 32767%" }
+      }
+    }
+  },
   "mysql": {
     "servers": {
       "default": {

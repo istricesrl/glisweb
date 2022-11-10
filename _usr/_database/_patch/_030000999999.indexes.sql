@@ -361,6 +361,27 @@ ALTER TABLE `audio`
 -- tipologia: tabella gestita
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000002250
+
+-- badge
+-- tipologia: tabella gestita
+ALTER TABLE `badge`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`), 
+	ADD KEY `id_contratto` (`id_contratto`), 
+	ADD KEY `codice` (`codice`), 
+	ADD KEY `rfid` (`rfid`), 
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`, `id_tipologia`, `id_contratto`, `codice`, `rfid`,`nome`);
+
+--| 030000002251
+
+-- badge
+-- tipologia: tabella gestita
+ALTER TABLE `badge` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000002300
 
 -- banner
@@ -2416,9 +2437,11 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `token` (`token`), 
 	ADD KEY `data_fine` (`data_fine`),
+	ADD KEY `data_inizio` (`data_inizio`),
 	ADD KEY `data_elaborazione` (`data_elaborazione`),
+	ADD KEY `timestamp_elaborazione` (`timestamp_elaborazione`),
 	ADD KEY `entita` (`entita`),
-	ADD KEY  `model_id_luogo` (`model_id_luogo`),
+	ADD KEY `model_id_luogo` (`model_id_luogo`),
 	ADD KEY `model_id_anagrafica`  (`model_id_anagrafica`),
 	ADD KEY `model_id_anagrafica_programmazione`  (`model_id_anagrafica_programmazione`),
 	ADD KEY `model_id_articolo`  (`model_id_articolo`),
@@ -2462,7 +2485,7 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `model_se_automatico`  (`model_se_automatico`),
 	ADD KEY `model_sezionale`  (`model_sezionale`),
 	ADD KEY `model_settimana_programmazione`  (`model_settimana_programmazione`),
-	ADD KEY  `model_timestamp_scadenza`  (`model_timestamp_scadenza`),
+	ADD KEY `model_timestamp_scadenza`  (`model_timestamp_scadenza`),
 	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
 	ADD KEY `indice_progetto` (`id`,`id_progetto`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
 	ADD KEY `indice_todo` (`id`,`id_todo`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
@@ -2622,6 +2645,7 @@ ALTER TABLE `progetti`
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
 	ADD KEY `se_cacheable` (`se_cacheable`),
+	ADD KEY `data_apertura` (`data_apertura`),
 	ADD KEY `data_accettazione` (`data_accettazione`),
 	ADD KEY `data_chiusura` (`data_chiusura`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
@@ -3629,15 +3653,38 @@ ALTER TABLE `tipologie_attivita`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `codice` (`codice`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `se_anagrafica` (`se_anagrafica`),
+	ADD KEY `se_agenda` (`se_agenda`),
+	ADD KEY `se_sistema` (`se_sistema`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`);
 
 --| 030000050401
 
 -- tipologie_attivita
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000050450
+
+-- tipologie_badge
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_badge`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+--| 030000050451
+
+-- tipologie_badge
+-- tipologia: tabella assistita
+ALTER TABLE `tipologie_badge` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000050500
 

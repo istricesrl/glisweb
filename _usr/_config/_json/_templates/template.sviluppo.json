@@ -24,6 +24,14 @@
       }
     }
   },
+  "debug": {
+    "DEV": {
+      "*" : {
+        "log": { "lvl": 7 },
+        "report": { "lvl": 32767 }
+      }
+    }
+  },
   "mysql": {
     "servers": {
       "default": {
@@ -39,6 +47,13 @@
         "servers": [
           "default"
         ]
+      }
+    }
+  },
+  "twig": {
+    "profiles": {
+      "DEV": {
+        "debug": true
       }
     }
   },%opzioni%

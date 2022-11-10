@@ -920,6 +920,25 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		LEFT JOIN embed ON embed.id = audio.id_embed
 ;
 
+--| 090000002250
+
+-- badge_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `badge_view`;
+
+--| 090000002301
+
+-- badge_view
+-- tipologia: tabella gestita
+CREATE OR REPLACE VIEW badge_view AS
+	SELECT
+		badge.id,
+		badge.nome,
+		badge.codice,
+		badge.rfid,
+		concat_ws( ' | ', lpad( badge.id, 8, 0), coalesce( badge.codice, badge.rfid, badge.nome ) ) AS __label__
+	FROM badge
+
 --| 090000002300
 
 -- banner_view
@@ -5295,8 +5314,11 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.se_sabato,
 		pianificazioni.se_domenica,
 		pianificazioni.schema_ripetizione,
+		pianificazioni.data_inizio,
 		pianificazioni.data_elaborazione,
+		pianificazioni.timestamp_elaborazione,
         pianificazioni.data_ultimo_oggetto,
+        pianificazioni.giorni_elaborazione,
 		pianificazioni.giorni_estensione,
 		pianificazioni.data_fine,
 		pianificazioni.entita,
@@ -5682,6 +5704,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		progetti.tema_css,
 		progetti.se_sitemap,
 		progetti.se_cacheable,
+		progetti.data_apertura,
 		progetti.entrate_previste,
 		progetti.ore_previste,
 		progetti.costi_previsti,
@@ -7782,6 +7805,30 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 		tipologie_attivita.id_account_aggiornamento,
 		tipologie_attivita_path( tipologie_attivita.id ) AS __label__
 	FROM tipologie_attivita
+;
+
+--| 090000050450
+
+-- tipologie_badge_view
+-- tipologia: tabella assistita
+DROP TABLE IF EXISTS `tipologie_badge_view`;
+
+--| 090000050451
+
+-- tipologie_badge_view
+-- tipologia: tabella assistita
+CREATE OR REPLACE VIEW `tipologie_badge_view` AS
+	SELECT
+		tipologie_banner.id,
+		tipologie_banner.id_genitore,
+		tipologie_banner.ordine,
+		tipologie_banner.nome,
+		tipologie_banner.html_entity,
+		tipologie_banner.font_awesome,
+		tipologie_banner.id_account_inserimento,
+		tipologie_banner.id_account_aggiornamento,
+		tipologie_banner_path( tipologie_banner.id ) AS __label__
+	FROM tipologie_banner
 ;
 
 --| 090000050500
