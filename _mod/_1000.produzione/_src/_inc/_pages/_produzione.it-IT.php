@@ -16,7 +16,8 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_produzione.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'produzione',
-														'produzione.pacchetti'	// TODO in relazione col modulo mastri
+														'produzione.pacchetti',	// TODO in relazione col modulo mastri
+														'produzione.contratti'	// TODO in relazione col modulo contratti?
 														 ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'produzione' ),
 																		'priority'	=> '200' ) ) )														
@@ -24,10 +25,10 @@
 
 	// RELAZIONI CON IL MODULO TODO
 	if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'produzione.pacchetti', $p['produzione']['etc']['tabs'], 'produzione.done' );
-		arrayInsertSeq( 'produzione.pacchetti', $p['produzione']['etc']['tabs'], 'produzione.planned' );
-		arrayInsertSeq( 'produzione.pacchetti', $p['produzione']['etc']['tabs'], 'produzione.sprint' );
-		arrayInsertSeq( 'produzione.pacchetti', $p['produzione']['etc']['tabs'], 'produzione.backlog' );
+		arrayInsertSeq( 'produzione.contratti', $p['produzione']['etc']['tabs'], 'produzione.done' );
+		arrayInsertSeq( 'produzione.contratti', $p['produzione']['etc']['tabs'], 'produzione.planned' );
+		arrayInsertSeq( 'produzione.contratti', $p['produzione']['etc']['tabs'], 'produzione.sprint' );
+		arrayInsertSeq( 'produzione.contratti', $p['produzione']['etc']['tabs'], 'produzione.backlog' );
 	}
 
 	// TODO tutta 'sta cosa dei pacchetti andrebbe nel modulo mastri
@@ -43,3 +44,14 @@
 		'etc'			=> array( 'tabs'	=> $p['produzione']['etc']['tabs'] )
 	);
 
+	// ...
+	$p['produzione.contratti'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'contratti' ),
+		'h1'			=> array( $l		=> 'contratti' ),
+		'parent'		=> array( 'id'		=> 'produzione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'produzione.contratti.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_produzione.contratti.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> $p['produzione']['etc']['tabs'] )
+	);

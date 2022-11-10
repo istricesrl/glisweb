@@ -2,7 +2,7 @@
 
     // modulo di questo file
 	$m = DIR_MOD . '_0500.mastri/';
-
+/*
     // RELAZIONI CON IL MODULO PRODUZIONE
 	if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ) {
 
@@ -33,3 +33,4 @@
 		);
 
 	}
+*/

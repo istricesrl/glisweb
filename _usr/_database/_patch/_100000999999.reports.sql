@@ -3,6 +3,43 @@
 -- questo file contiene le query per la creazione dei report
 --
 
+--| 100000007200
+-- __report_status_contratti__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_status_contratti__`;
+
+--| 100000007201
+CREATE OR REPLACE VIEW `__report_status_contratti__` AS
+  SELECT
+    progetti.id,
+    progetti.nome,
+    tipologie_progetti_path( progetti.id_tipologia ) AS tipologia,
+    coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+    count( DISTINCT td1.id ) AS backlog,
+    count( DISTINCT td2.id ) AS sprint,
+    count( DISTINCT td3.id ) AS fatto,
+    coalesce( sum( at1.ore ), 0 ) AS ore_fatte,
+    coalesce( m1.testo, '-' ) AS ore_mese,
+    coalesce( ( m1.testo - sum( at1.ore ) ), '-' ) AS ore_residue
+  FROM progetti
+    LEFT JOIN todo AS td1 ON ( td1.id_progetto = progetti.id AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL )
+    LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td1.data_chiusura IS NULL )
+    LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
+    LEFT JOIN anagrafica AS a2 ON a2.id = progetti.id_cliente
+    LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+    LEFT JOIN attivita AS at1 ON (
+      at1.id_progetto = progetti.id
+      AND
+      at1.data_attivita BETWEEN
+        DATE_SUB( LAST_DAY( NOW() ), INTERVAL DAY( LAST_DAY( NOW() ) ) - 1 DAY )
+        AND
+        last_day( now() )
+    )
+    LEFT JOIN metadati AS m1 ON ( m1.id_progetto = progetti.id AND m1.nome = 'contratto|monte_ore' )
+  WHERE
+    ( tipologie_progetti.se_contratto IS NOT NULL )
+  GROUP BY progetti.id
+
 --| 100000015000
 -- __report_giacenza_crediti__
 -- tipologia: report
@@ -295,6 +332,7 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_pro
 ) AS movimenti
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
 GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.codice_produttore, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
+
 --| 100000020002
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini_foglie__` AS
 SELECT
@@ -1137,6 +1175,10 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
 	LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
   WHERE
   	( tipologie_progetti.se_progetto IS NOT NULL OR tipologie_progetti.se_forfait IS NOT NULL )
+    AND
+    progetti.data_accettazione IS NOT NULL
+    AND
+    progetti.data_chiusura IS NULL
   GROUP BY progetti.id
 
 --| 100000027010

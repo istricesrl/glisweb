@@ -70,6 +70,9 @@
             ),
             '__report_avanzamento_trattative__' => array(
                 CONTROL_FULL => array( 'roots' )
+            ),
+            '__report_status_contratti__' => array(
+                CONTROL_FULL => array( 'roots' )
             )
         )
 	);
