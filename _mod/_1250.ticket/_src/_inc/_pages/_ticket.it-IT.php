@@ -15,9 +15,21 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_ticket.view.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'ticket.view', 'ticket.archivio.view' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'ticket.view', 'ticket.gestiti.view', 'ticket.archivio.view' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ticket' ),
 														'priority'	=> '120' ) ) )	
+	);
+
+	// vista ticket
+	$p['ticket.gestiti.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestiti' ),
+	    'h1'			=> array( $l		=> 'gestiti' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'			=> array( $m . '_src/_inc/_macro/_ticket.gestiti.view.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['ticket.view']['etc']['tabs'] )
 	);
 
 	// gestione ticket
@@ -36,7 +48,7 @@
 														'ticket.form.tools' 
 													) )
 	);
-
+/*
 	// gestione ticket vista attività
 	$p['ticket.form.attivita'] = array(
 	    'sitemap'		=> false,
@@ -49,7 +61,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['ticket.form']['etc']['tabs'] )
 	);
-
+*/
 	// gestione ticket file
 	$p['ticket.form.file'] = array(
 		'sitemap'	=> false,

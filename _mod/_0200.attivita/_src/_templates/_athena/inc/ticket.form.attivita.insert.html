@@ -1,0 +1,52 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+<script>submitFormOkay = true;</script>
+<fieldset id="{{ view.id }}-insert" class=" view-insert hidden">
+    <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
+    <input type="hidden" id="timestamp" name="{{ view.open.table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+    <input type="hidden" id="account" name="{{ view.open.table }}[id_account_inserimento]" value="{{ account }}" disabled>
+    {{ frm.input( view.open.table, '', '', 'id_todo', '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
+    {{ frm.input( view.open.table, '', '', 'id_cliente', '', '', '', request[ table ].id_cliente, 'hidden', '', '', 2 ) }}
+    {{ frm.input( view.open.table, '', '', 'id_progetto', '', '', '', request[ table ].id_progetto, 'hidden', '', '', 2 ) }}
+    {{ frm.input( view.open.table, '', '', 'id_anagrafica', '', '', '', session.account.id_anagrafica, 'hidden', '', '', 2 ) }}
+    <div class="form-row d-print-none">
+        <div class="col-12 col-md-auto">
+            <span class="label-top">data</span>
+            {{ frm.date( view.open.table, '', '', 'data_attivita', '', '', '', now|date("Y-m-d"), '', '', '', 2 ) }}
+        </div>  
+        <div class="col-12 col-md-auto">
+            <span class="label-top">tipologia</span>
+            {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.id_tipologia, '', '', '', 1, '', '', 2  ) }}
+        </div>
+<!--
+        <div class="col-auto">
+            <span class="label-top">ora inizio</span>
+            {{ frm.time( view.open.table, '', '', 'ora_inizio', '', '', request, '', '', '','',2) }} 
+        </div>
+-->
+        <div class="col-1">
+            <span class="label-top">ore</span>
+            {{ frm.input( view.open.table, '', '', 'ore', '', '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col">
+            <span class="label-top">nome</span>
+            {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', 1, '', 2 ) }}
+        </div>
+<!--
+
+        <div class="col-12 col-md-auto">
+            <span class="label-top">tipologia</span>
+            {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.id_tipologia, '', '', '', 1, '', '', 2  ) }}
+        </div>
+-->
+        {% if '0500.mastri' in mods.active.array and etc.select.registri %}
+        <div class="col-auto">
+            <span class="label-top remove-after-duplicate">scarico da</span>
+            {{ frm.select( view.open.table, '', '', 'id_mastro_provenienza', '', etc.select.registri, '', '', '', '', '', '', 2 ) }}
+        </div>
+        {% endif %}
+        <div class="col-auto">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>

@@ -26,9 +26,9 @@
 	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
-        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_ticket = 1' );
-    
-    // tendina collaboratori
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view WHERE se_ticket = 1' );
+
+        // tendina collaboratori
 	$ct['etc']['select']['anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
         $cf['memcache']['connection'],

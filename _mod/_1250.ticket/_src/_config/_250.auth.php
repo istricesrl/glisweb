@@ -23,11 +23,15 @@
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),
-            'ticket_archivio' => array(
+            'ticket_archiviati' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),
-            'ticket_lavoro' => array(
+            'ticket_attivi' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
+            ),
+            'ticket_gestiti' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),

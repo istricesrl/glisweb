@@ -1395,7 +1395,7 @@ CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
-  WHERE ( todo.data_chiusura IS NULL OR todo.data_archiviazione IS NULL )
+  WHERE ( todo.data_chiusura IS NULL )
     AND ( todo.data_programmazione = date_format( now(), '%Y-%m-%d' )
       OR (
         todo.anno_programmazione = date_format( now(), '%Y' )
