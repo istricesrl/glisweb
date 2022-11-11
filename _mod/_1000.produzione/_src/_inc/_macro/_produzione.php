@@ -80,7 +80,8 @@
             ),
             'class' => array(
                 'nome' => 'text-left',
-                'completed' => 'text-right'
+                'completed' => 'text-right',
+                'eta' => 'nowrap'
             ),
             'onclick' => array(
                 NULL => 'event.stopPropagation();'
