@@ -8430,6 +8430,7 @@ CREATE OR REPLACE VIEW `tipologie_todo_view` AS
 		tipologie_todo.html_entity,
 		tipologie_todo.font_awesome,
 		tipologie_todo.se_agenda,
+		tipologie_todo.se_ticket,
 		tipologie_todo.id_account_inserimento,
 		tipologie_todo.id_account_aggiornamento,
 		tipologie_todo_path( tipologie_todo.id ) AS __label__
@@ -8549,6 +8550,408 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+;
+
+--| 090000060020
+
+-- ticket_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ticket_view`;
+
+--| 090000060021
+
+-- ticket_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `ticket_view` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		ranking.nome AS ranking_cliente,
+		ranking.ordine AS priorita_ranking_cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		progetti.nome AS progetto,
+		tipologie_progetti.nome AS tipologia_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+    	coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
+    	coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN ranking ON ranking.id = a2.id_ranking
+		LEFT JOIN attivita AS at1 ON ( at1.id_todo = todo.id AND at1.data_attivita IS NOT NULL )
+		LEFT JOIN attivita AS at2 ON ( at2.id_todo = todo.id AND at2.data_attivita IS NULL AND at2.data_programmazione IS NOT NULL )
+	WHERE
+		tipologie_todo.se_ticket IS NOT NULL
+	GROUP BY todo.id
+;
+
+--| 090000060022
+
+-- ticket_attivi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ticket_attivi_view`;
+
+--| 090000060023
+
+-- ticket_attivi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `ticket_attivi_view` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		ranking.nome AS ranking_cliente,
+		ranking.ordine AS priorita_ranking_cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		progetti.nome AS progetto,
+		tipologie_progetti.nome AS tipologia_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+    	coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
+    	coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN ranking ON ranking.id = a2.id_ranking
+		LEFT JOIN attivita AS at1 ON ( at1.id_todo = todo.id AND at1.data_attivita IS NOT NULL )
+		LEFT JOIN attivita AS at2 ON ( at2.id_todo = todo.id AND at2.data_attivita IS NULL AND at2.data_programmazione IS NOT NULL )
+	WHERE
+		tipologie_todo.se_ticket IS NOT NULL
+		AND
+		todo.data_chiusura IS NULL
+	GROUP BY todo.id
+	HAVING ( min( at2.data_programmazione ) IS NULL OR min( at2.data_programmazione ) <= CURRENT_DATE() )
+;
+
+--| 090000060024
+
+-- ticket_gestiti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ticket_gestiti_view`;
+
+--| 090000060025
+
+-- ticket_gestiti_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `ticket_gestiti_view` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		ranking.nome AS ranking_cliente,
+		ranking.ordine AS priorita_ranking_cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		progetti.nome AS progetto,
+		tipologie_progetti.nome AS tipologia_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+    	coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
+    	coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN ranking ON ranking.id = a2.id_ranking
+		LEFT JOIN attivita AS at1 ON ( at1.id_todo = todo.id AND at1.data_attivita IS NOT NULL )
+		LEFT JOIN attivita AS at2 ON ( at2.id_todo = todo.id AND at2.data_attivita IS NULL AND at2.data_programmazione IS NOT NULL )
+	WHERE
+		tipologie_todo.se_ticket IS NOT NULL
+		AND
+		todo.data_chiusura IS NULL
+	GROUP BY todo.id
+	HAVING ( min( at2.data_programmazione ) IS NOT NULL AND min( at2.data_programmazione ) > CURRENT_DATE() )
+;
+
+--| 090000060026
+
+-- ticket_chiusi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ticket_chiusi_view`;
+
+--| 090000060027
+
+-- ticket_chiusi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `ticket_chiusi_view` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		ranking.nome AS ranking_cliente,
+		ranking.ordine AS priorita_ranking_cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		progetti.nome AS progetto,
+		tipologie_progetti.nome AS tipologia_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+    	coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
+    	coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN ranking ON ranking.id = a2.id_ranking
+		LEFT JOIN attivita AS at1 ON ( at1.id_todo = todo.id AND at1.data_attivita IS NOT NULL )
+		LEFT JOIN attivita AS at2 ON ( at2.id_todo = todo.id AND at2.data_attivita IS NULL AND at2.data_programmazione IS NOT NULL )
+	WHERE
+		tipologie_todo.se_ticket IS NOT NULL
+		AND
+		todo.data_chiusura IS NOT NULL
+		AND
+		todo.data_archiviazione IS NULL
+	GROUP BY todo.id
+;
+
+--| 090000060028
+
+-- ticket_archiviati_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `ticket_archiviati_view`;
+
+--| 090000060029
+
+-- ticket_archiviati_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-19 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `ticket_archiviati_view` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		ranking.nome AS ranking_cliente,
+		ranking.ordine AS priorita_ranking_cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		progetti.nome AS progetto,
+		tipologie_progetti.nome AS tipologia_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+    	coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
+    	coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN ranking ON ranking.id = a2.id_ranking
+		LEFT JOIN attivita AS at1 ON ( at1.id_todo = todo.id AND at1.data_attivita IS NOT NULL )
+		LEFT JOIN attivita AS at2 ON ( at2.id_todo = todo.id AND at2.data_attivita IS NULL AND at2.data_programmazione IS NOT NULL )
+	WHERE
+		tipologie_todo.se_ticket IS NOT NULL
+		AND
+		todo.data_archiviazione IS NOT NULL
+	GROUP BY todo.id
 ;
 
 --| 090000060100
