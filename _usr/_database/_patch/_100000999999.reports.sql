@@ -1376,7 +1376,10 @@ CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
 			progetti.nome,
 			' cliente ',
 			coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' )
-		) AS progetto,    
+		) AS progetto,
+    tipologie_progetti.id AS id_tipologia_progetto,
+    tipologie_progetti.nome AS tipologia_progetto,
+    tipologie_progetti.se_pacchetto,
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
@@ -1395,6 +1398,7 @@ CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+    LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
   WHERE ( todo.data_chiusura IS NULL )
     AND ( todo.data_programmazione = date_format( now(), '%Y-%m-%d' )
       OR (
