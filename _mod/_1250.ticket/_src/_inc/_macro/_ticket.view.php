@@ -68,8 +68,21 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view WHERE se_ticket = 1' );
-		
-    // macro di default
+
+    // tendina collaboratori
+	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
+
+	$ct['etc']['include']['insert'][] = array(
+		'name' => 'insert',
+		'file' => 'inc/ticket.view.insert.html',
+		'fa' => 'fa-plus-circle'
+	);
+
+	// macro di default
     require DIR_SRC_INC_MACRO . '_default.view.php';
     
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) ){

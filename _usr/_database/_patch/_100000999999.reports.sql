@@ -1322,7 +1322,7 @@ CREATE OR REPLACE VIEW `__report_backlog_todo__` AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
-  WHERE ( todo.data_chiusura IS NULL OR todo.data_archiviazione IS NULL )
+  WHERE ( todo.data_chiusura IS NULL AND todo.data_archiviazione IS NULL )
     AND coalesce( todo.data_programmazione, todo.settimana_programmazione ) IS NULL
 --    AND tipologie_todo.se_produzione IS NOT NULL
 ;
@@ -1399,12 +1399,26 @@ CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
     LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
-  WHERE ( todo.data_chiusura IS NULL )
-    AND ( todo.data_programmazione = date_format( now(), '%Y-%m-%d' )
-      OR (
+  WHERE ( todo.data_chiusura IS NULL AND todo.data_archiviazione IS NULL )
+    AND (
+      (
+        date_format( todo.data_programmazione, '%Y' ) = date_format( now(), '%Y' )
+        AND
+        date_format( todo.data_programmazione, '%u' ) <= date_format( now(), '%u' )
+      )
+      OR
+      (
+        date_format( todo.data_programmazione, '%Y' ) < date_format( now(), '%Y' )
+      )
+      OR
+      (
         todo.anno_programmazione = date_format( now(), '%Y' )
         AND
-        todo.settimana_programmazione = date_format( now(), '%u' )
+        todo.settimana_programmazione <= date_format( now(), '%u' )
+      )
+      OR
+      (
+        todo.anno_programmazione < date_format( now(), '%Y' )
       )
     )
 --    AND tipologie_todo.se_produzione IS NOT NULL
@@ -1478,8 +1492,28 @@ CREATE OR REPLACE VIEW `__report_planned_todo__` AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
-  WHERE ( todo.data_chiusura IS NULL OR todo.data_archiviazione IS NULL )
-    AND coalesce( todo.data_programmazione, todo.settimana_programmazione ) IS NOT NULL
+  WHERE ( todo.data_chiusura IS NULL AND todo.data_archiviazione IS NULL )
+    AND (
+      (
+        date_format( todo.data_programmazione, '%Y' ) = date_format( now(), '%Y' )
+        AND
+        date_format( todo.data_programmazione, '%u' ) > date_format( now(), '%u' )
+      )
+      OR
+      (
+        date_format( todo.data_programmazione, '%Y' ) > date_format( now(), '%Y' )
+      )
+      OR
+      (
+        todo.anno_programmazione = date_format( now(), '%Y' )
+        AND
+        todo.settimana_programmazione > date_format( now(), '%u' )
+      )
+      OR
+      (
+        todo.anno_programmazione > date_format( now(), '%Y' )
+      )
+    )
 --    AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
