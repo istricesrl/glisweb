@@ -50,12 +50,12 @@
 		
 			<div class="form-group form-row">
 			<div class="col-auto">
-					<span class="label-top">data completamento</span>
-					{{ frm.datetime( table, '', '', 'timestamp_completamento', '', '', request)  }}
+					<span class="label-top">data archiviazione</span>
+					{{ frm.date( table, '', '', 'data_archiviazione', '', '', request)  }}
 			</div>
 			<div class="col col-md">
-                <span class="label-top">testo completamento</span>
-                {{ frm.textarea( table, '', '', 'testo_completamento', '', 3, request )  }}
+                <span class="label-top">note archiviazione</span>
+                {{ frm.textarea( table, '', '', 'note_archiviazione', '', 3, request )  }}
             </div>
 			</div>
 

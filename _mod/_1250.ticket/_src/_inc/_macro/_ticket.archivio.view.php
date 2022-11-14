@@ -32,8 +32,12 @@
 		'tipologia' => 'tipologia',
 	    'nome' => 'titolo',
 	    'cliente' => 'da fare per',
-	    'responsabile' => 'assegnato a',
-	    'completato' => 'stato'
+		'ranking_cliente' => 'priorità',
+		'tipologia_progetto' => 'progetto',
+		'progetto' => 'riferimento',
+		'data_archiviazione' => 'archiviato',
+#	    'responsabile' => 'assegnato a',
+#	    'completato' => 'stato'
 	);
 
     // stili della vista
@@ -42,8 +46,9 @@
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
 		'tipologia' => 'text-left',
-	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
-	    'completato' => 'text-left'
+		'tipologia_progetto' => 'd-none',
+#	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
+#	    'completato' => 'text-left'
 	);
 
     // tendina clienti
