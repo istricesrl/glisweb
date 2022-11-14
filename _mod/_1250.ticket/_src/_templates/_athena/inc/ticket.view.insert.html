@@ -11,13 +11,13 @@
             <span class="label-top">data</span>
             {{ frm.datetime( table, '', '', 'timestamp_apertura', '', '', '', 'now'|date('Y-m-d\\TH:i'), '', 1, '', 2 ) }}
         </div>
-        <div class="col">
-            <span class="label-top">nome</span>
-            {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', 1, '', 2 ) }}
-        </div>
         <div class="col-12 col-md">
             <span class="label-top">responsabile</span>
             {{ frm.selectBox( view.open.table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, '', session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf,'anagrafica' ) }}
+        </div>
+        <div class="col">
+            <span class="label-top">nome</span>
+            {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', 1, '', 2 ) }}
         </div>
     </div>
     <div class="form-row d-print-none">
