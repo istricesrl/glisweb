@@ -73,8 +73,8 @@
                 'id' => 'id_mastro',
                 'id_progetto' => '#',
                 'progetto' => 'titolo',
-#                'backlog' => 'da fare',
-#                'sprint' => 'in corso',
+                'backlog' => 'da fare',
+                'sprint' => 'in corso',
 #                'fatto' => 'fatte',
 #                'completed' => '%',
 #                'eta' => 'previsione'

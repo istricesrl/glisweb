@@ -23,7 +23,7 @@ CREATE OR REPLACE VIEW `__report_status_contratti__` AS
     coalesce( ( m1.testo - sum( at1.ore ) ), '-' ) AS ore_residue
   FROM progetti
     LEFT JOIN todo AS td1 ON ( td1.id_progetto = progetti.id AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL )
-    LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td1.data_chiusura IS NULL )
+    LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td2.data_chiusura IS NULL )
     LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
     LEFT JOIN anagrafica AS a2 ON a2.id = progetti.id_cliente
     LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
@@ -104,6 +104,9 @@ SELECT
   movimenti.id_progetto,
   movimenti.progetto,
   movimenti.nome,
+    count( DISTINCT td1.id ) AS backlog,
+    count( DISTINCT td2.id ) AS sprint,
+    count( DISTINCT td3.id ) AS fatto,
   sum( movimenti.carico ) AS carico,
   sum( movimenti.scarico ) AS scarico,
   coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ) AS totale_float,
@@ -142,6 +145,9 @@ FROM mastri
   LEFT JOIN progetti ON progetti.id = mastri.id_progetto
 WHERE attivita.ore IS NOT NULL
 ) AS movimenti
+    LEFT JOIN todo AS td1 ON ( td1.id_progetto = movimenti.id_progetto AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL AND td1.data_archiviazione IS NULL )
+    LEFT JOIN todo AS td2 ON ( td2.id_progetto = movimenti.id_progetto AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND ( td2.data_chiusura IS NULL AND td2.data_archiviazione IS NULL ) )
+    LEFT JOIN todo AS td3 ON ( td3.id_progetto = movimenti.id_progetto AND td3.data_chiusura IS NOT NULL )
 GROUP BY movimenti.id, movimenti.id_progetto, movimenti.progetto, movimenti.nome;
 
 --| 100000020000
@@ -1169,7 +1175,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
     coalesce( date_add( now(), interval ( ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ) / ( coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) ) ) week ), '-' ) AS eta
   FROM progetti
     LEFT JOIN todo AS td1 ON ( td1.id_progetto = progetti.id AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL )
-    LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td1.data_chiusura IS NULL )
+    LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td2.data_chiusura IS NULL )
     LEFT JOIN todo AS td3 ON ( td3.id_progetto = progetti.id AND td3.data_chiusura IS NOT NULL )
 	LEFT JOIN anagrafica AS a2 ON a2.id = progetti.id_cliente
 	LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
