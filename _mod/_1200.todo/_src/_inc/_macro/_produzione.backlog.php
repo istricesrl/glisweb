@@ -81,6 +81,25 @@
 	    $ct['etc']['select']['settimane'][] = array( 'id' => $w, '__label__' => $w . ' / ' . substr( int2month( ceil( $w / 4.348125 ) ), 0, 3 ) );
 	}
 
+	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
+		$cf['memcache']['index'],
+		$cf['memcache']['connection'],
+		$cf['mysql']['connection'], 
+		'SELECT id, __label__ FROM anagrafica_view_static' );
+
+    // tendina tipologie
+	$ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 'SELECT id, __label__ FROM tipologie_todo_view' );
+
+    // inserimento rapido
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/produzione.backlog.insert.todo.html',
+        'fa' => 'fa-plus-circle'
+    );
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
