@@ -29,7 +29,7 @@
             if( empty( $vs['id_cliente']['s'] ) ) {
                 if( ! empty( $vs['id_progetto']['s'] ) ) {
                     $vs['id_cliente']['s'] = mysqlSelectValue( $c, 'SELECT id_cliente FROM progetti WHERE id = ?', array( array( 's' => $vs['id_progetto']['s'] ) ) );
-                    $ks[] = 'id_cliente';
+                    if( ! array_key_exists( 'id_cliente', $ks ) ) { $ks[] = 'id_cliente'; }
                 }
             }
 
