@@ -71,13 +71,11 @@
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] ) ){
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__extra__']['assegnato'] = '__tutti__'; 
 	}
-
+/*
 	if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
 			if( $row['completato'] == 2 ){ $row['completato']='chiuso';  }
 			else { $row['completato']='';  }
 		}
 	}
-    
-
-   
+*/
