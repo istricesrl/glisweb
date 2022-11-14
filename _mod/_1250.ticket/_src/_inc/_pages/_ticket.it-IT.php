@@ -15,7 +15,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_ticket.view.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'			=> array( 'tabs'	=> array(	'ticket.view', 'ticket.gestiti.view', 'ticket.archivio.view' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'ticket.view', 'ticket.gestiti.view', 'ticket.chiusi.view', 'ticket.archivio.view' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ticket' ),
 														'priority'	=> '120' ) ) )	
 	);
@@ -32,6 +32,18 @@
 		'etc'		=> array( 'tabs'	=> $p['ticket.view']['etc']['tabs'] )
 	);
 
+	// vista ticket
+	$p['ticket.chiusi.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'chiusi' ),
+	    'h1'			=> array( $l		=> 'chiusi' ),
+	    'parent'		=> array( 'id'		=> 'produzione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'			=> array( $m . '_src/_inc/_macro/_ticket.chiusi.view.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['ticket.view']['etc']['tabs'] )
+	);
+
 	// gestione ticket
 	$p['ticket.form'] = array(
 	    'sitemap'		=> false,
@@ -44,6 +56,7 @@
 		'etc'			=> array( 'tabs'	=> array(	'ticket.form', 
 														'ticket.form.attivita',
 														'ticket.form.file',
+														'ticket.form.chiusura',
 														'ticket.form.archiviazione',
 														'ticket.form.tools' 
 													) )
@@ -86,6 +99,19 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_ticket.form.tools.php' ),
 		'etc'			=> array( 'tabs'	=> $p['ticket.form']['etc']['tabs'] ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	// gestione ticket archiviazione
+	$p['ticket.form.chiusura'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'chiusura' ),
+	    'h1'		=> array( $l		=> 'chiusura' ),
+	    'parent'		=> array( 'id'		=> 'ticket.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ticket.form.chiusura.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_ticket.form.chiusura.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['ticket.form']['etc']['tabs'] )
 	);
 
 	// gestione ticket archiviazione
