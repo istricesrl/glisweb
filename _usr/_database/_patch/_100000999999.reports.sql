@@ -1585,7 +1585,7 @@ CREATE OR REPLACE VIEW `__report_done_todo__` AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
-  WHERE ( todo.data_chiusura IS NOT NULL AND todo.data_archiviazione IS NOT NULL )
+  WHERE ( todo.data_chiusura IS NOT NULL AND todo.data_archiviazione IS NULL )
 --    AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
