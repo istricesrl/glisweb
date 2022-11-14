@@ -35,6 +35,7 @@
 		'ranking_cliente' => 'priorità',
 		'tipologia_progetto' => 'progetto',
 		'progetto' => 'riferimento',
+		'data_chiusura' => 'chiuso',
 		'data_archiviazione' => 'archiviato',
 #	    'responsabile' => 'assegnato a',
 #	    'completato' => 'stato'
