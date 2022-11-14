@@ -26,20 +26,24 @@
         case METHOD_UPDATE:
 
             // ...
-            if( empty( $d['id_progetto'] ) ) {
-                if( ! empty( $d['id_mastro_destinazione'] ) ) {
-                    $d['id_progetto'] = mysqlSelectValue( $c, 'SELECT id_progetto FROM mastri WHERE id = ?', array( array( 's' => $d['id_mastro_destinazione'] ) ) );
-                } elseif( ! empty( $d['id_mastro_provenienza'] ) ) {
-                    $d['id_progetto'] = mysqlSelectValue( $c, 'SELECT id_progetto FROM mastri WHERE id = ?', array( array( 's' => $d['id_mastro_provenienza'] ) ) );
-                } elseif( ! empty( $d['id_todo'] ) ) {
-                    $d['id_progetto'] = mysqlSelectValue( $c, 'SELECT id_progetto FROM todo WHERE id = ?', array( array( 's' => $d['id_todo'] ) ) );
+            if( empty( $vs['id_progetto']['s'] ) ) {
+                if( ! empty( $vs['id_mastro_destinazione']['s'] ) ) {
+                    $vs['id_progetto']['s'] = mysqlSelectValue( $c, 'SELECT id_progetto FROM mastri WHERE id = ?', array( array( 's' => $vs['id_mastro_destinazione']['s'] ) ) );
+                    $ks[] = 'id_cliente';
+                } elseif( ! empty( $vs['id_mastro_provenienza']['s'] ) ) {
+                    $vs['id_progetto']['s'] = mysqlSelectValue( $c, 'SELECT id_progetto FROM mastri WHERE id = ?', array( array( 's' => $vs['id_mastro_provenienza']['s'] ) ) );
+                    $ks[] = 'id_cliente';
+                } elseif( ! empty( $vs['id_todo']['s'] ) ) {
+                    $vs['id_progetto']['s'] = mysqlSelectValue( $c, 'SELECT id_progetto FROM todo WHERE id = ?', array( array( 's' => $vs['id_todo']['s'] ) ) );
+                    $ks[] = 'id_cliente';
                 }
             }
 
             // ...
-            if( empty( $d['id_cliente'] ) ) {
-                if( ! empty( $d['id_progetto'] ) ) {
-                    $d['id_cliente'] = mysqlSelectValue( $c, 'SELECT id_cliente FROM progetti WHERE id = ?', array( array( 's' => $d['id_progetto'] ) ) );
+            if( empty( $vs['id_cliente']['s'] ) ) {
+                if( ! empty( $vs['id_progetto']['s'] ) ) {
+                    $vs['id_cliente']['s'] = mysqlSelectValue( $c, 'SELECT id_cliente FROM progetti WHERE id = ?', array( array( 's' => $vs['id_progetto']['s'] ) ) );
+                    $ks[] = 'id_cliente';
                 }
             }
 
