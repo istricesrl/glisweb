@@ -142,8 +142,8 @@
                 array( array( 's' => $row['id'] ) )
             );
 
-            if( ! empty( $row['data_ultima_attivita'] ) ) {
-                $row['data_ultima_attivita'] .= ' ' . $lastAction['nome'] . ' ' . $lastAction['note'];
+            if( ! empty( $lastAction ) ) {
+                $row['data_ultima_attivita'] .= ' ' . implode( '<br>', array( $lastAction['nome'], $lastAction['note'] ) );
             }
 
             $nextAction = mysqlSelectRow(
@@ -153,7 +153,7 @@
             );
 
             if( ! empty( $row['data_prossima_attivita'] ) ) {
-                $row['data_prossima_attivita'] .= ' ' . $nextAction['nome'] . ' ' . $nextAction['note_programmazione'];
+                $row['data_prossima_attivita'] .= ' ' . implode( '<br>', array( $lastAction['nome'], $lastAction['note_programmazione'] ) );
             }
 
             $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.
