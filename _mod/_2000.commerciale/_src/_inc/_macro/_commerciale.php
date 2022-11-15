@@ -135,9 +135,31 @@
 
         // icone
         foreach( $ct['view']['data'] as &$row ) {
+
+            $lastAction = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM attivita WHERE attivita.id_progetto = ? ORDER BY data_attivita DESC LIMIT 1',
+                array( array( 's' => $row['id'] ) )
+            );
+
+            if( ! empty( $row['data_ultima_attivita'] ) ) {
+                $row['data_ultima_attivita'] .= ' ' . $lastAction['nome'] . ' ' . $lastAction['note'];
+            }
+
+            $nextAction = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM attivita WHERE attivita.id_progetto = ? AND data_attivita IS NULL ORDER BY data_programmazione ASC LIMIT 1',
+                array( array( 's' => $row['id'] ) )
+            );
+
+            if( ! empty( $row['data_prossima_attivita'] ) ) {
+                $row['data_prossima_attivita'] .= ' ' . $nextAction['nome'] . ' ' . $nextAction['note_programmazione'];
+            }
+
             $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.
                 '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
                 '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="$(\'#attivita_id_progetto_promemoria\').val(\''.$row['id'].'\');$(\'#scorciatoia_promemoria\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>';
+
         }
 
         // debug
