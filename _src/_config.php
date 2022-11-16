@@ -322,6 +322,7 @@
     define( 'DIR_VAR_LOG_JOB'   , DIR_VAR_LOG . 'job/' );
     define( 'DIR_VAR_LOG_MYSQL'   , DIR_VAR_LOG . 'mysql/' );
     define( 'DIR_VAR_LOG_MYSQL_PATCH'   , DIR_VAR_LOG_MYSQL . 'patch/' );
+    define( 'DIR_VAR_LOG_PIANIFICAZIONI'   , DIR_VAR_LOG . 'pianificazioni/' );
 	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
     define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );

@@ -2259,7 +2259,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `id_contratto` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text,
-  `id_periodicita` int(11) NOT NULL,
+  `id_periodicita` int(11) DEFAULT NULL,
   `cadenza` int(11) DEFAULT NULL,
   `se_lunedi` int(1) DEFAULT NULL,
   `se_martedi` int(1) DEFAULT NULL,

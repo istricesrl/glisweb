@@ -345,6 +345,9 @@
 
         }
 
+        // log
+        appendToFile( print_r( $status, true ), DIR_VAR_LOG_PIANIFICAZIONI . $current['id'] . '.log' );
+
         // rilascio il token
         mysqlQuery(
             $cf['mysql']['connection'],
