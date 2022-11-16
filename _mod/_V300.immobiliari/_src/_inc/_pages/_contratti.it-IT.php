@@ -37,6 +37,7 @@
 			'etc'		=> array( 'tabs'	=> array(
 														'contratti.immobiliari.form',
 														'contratti.immobiliari.form.rinnovi',
+														'contratti.immobiliari.form.pianificazioni',
 														'contratti.immobiliari.form.immagini',
 														'contratti.immobiliari.form.file',
 														'contratti.immobiliari.form.metadati',
@@ -44,6 +45,19 @@
 														'contratti.immobiliari.form.tools' ) )
 		);
 
+		// form contratti pianificazioni
+		// TODO spostare nel modulo pianificazioni
+		$p['contratti.immobiliari.form.pianificazioni'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'pianificazioni' ),
+			'h1'		=> array( $l		=> 'pianificazioni' ),
+			'parent'		=> array( 'id'		=> 'contratti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'contratti.form.pianificazioni.html' ),
+			'macro'		=> array( $m_c . '_src/_inc/_macro/_contratti.form.pianificazioni.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['contratti.form']['etc']['tabs'] )
+		);
 
 		// form contratti immagini
 		$p['contratti.immobiliari.form.immagini'] = array(
