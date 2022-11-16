@@ -11,7 +11,7 @@
 		</div>
 		<div class="col-4 col-md-1">
 			<span class="label-top">sezionale</span>
-			{{ frm.inputRequired( table, '', '', 'model_sezionale', '', '', request ) }}
+			{{ frm.inputRequired( table, '', '', 'model_sezionale', '', '', request, '{{ dt.now.anno }}' ) }}
 		</div>
 		<div class="col-md-auto col-4">
 			<span class="label-top">condizioni pagamento</span>
@@ -23,7 +23,7 @@
 		</div>
 		<div class="col-4 col-md">
 			<span class="label-top">nome</span>
-			{{ frm.inputRequired( table, '', '', 'model_nome', '', '', request ) }}
+			{{ frm.inputRequired( table, '', '', 'model_nome', '', '', request, 'rif. {{ dt.now.nome_mese }} {{ dt.now.anno }}' ) }}
 		</div>
 	</div>
 
