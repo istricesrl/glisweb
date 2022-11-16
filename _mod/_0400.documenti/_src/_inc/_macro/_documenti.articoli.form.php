@@ -86,8 +86,6 @@
 	    'SELECT id, __label__ FROM reparti_view '
 	);
 
-
-
 	// tendina progetti
 	$ct['etc']['select']['id_progetti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

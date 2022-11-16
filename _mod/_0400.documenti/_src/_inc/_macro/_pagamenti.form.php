@@ -22,12 +22,12 @@
     // tabella gestita
 	$ct['form']['table'] = 'pagamenti';
 
-   // tendina tipologie anagrafica
-   $ct['etc']['select']['modalita_pagamento'] = mysqlCachedIndexedQuery(
-	$cf['memcache']['index'],
-	$cf['memcache']['connection'],
-	$cf['mysql']['connection'],
-	'SELECT id, __label__ FROM modalita_pagamento_view'
+	// tendina tipologie anagrafica
+	$ct['etc']['select']['modalita_pagamento'] = mysqlCachedIndexedQuery(
+		$cf['memcache']['index'],
+		$cf['memcache']['connection'],
+		$cf['mysql']['connection'],
+		'SELECT id, __label__ FROM modalita_pagamento_view'
 	);
 
 	if( isset( $_REQUEST['pagamenti']['id_documento'] ) ){

@@ -234,7 +234,7 @@
 
     // funzione per la creazione di un'array di date pianificate in base a criteri specifici
     // function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
-    function creazionePianificazione( $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1, $solo_future=true ){ 
+    function creazionePianificazione( $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1, $solo_future=false ){ 
 
         logWrite( 'richiesta generazione '.$data, 'todo', LOG_ERR );
 
@@ -346,6 +346,9 @@
     
     
             }
+    
+            // debug
+            // print_r( $attivita );
     
             if( $solo_future == true ) {
                 array_shift( $attivita );

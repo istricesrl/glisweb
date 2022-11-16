@@ -1,0 +1,89 @@
+<!-- pianificazioni.form.modello.sub.html -->
+{% macro pianificazioni( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable }}">
+	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {{ frm.subformLegend( subtable, legend ) }}
+    {% if request[ table ][ subtable ]|length %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = require %}{% endif %}
+	{% for i in -1..t %}
+	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
+	{{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
+	<div class="form-group form-row">
+		{% if request[ table ][ subtable ][ i ].entita %}
+		{{ frm.input( table, subtable, i, 'entita', '', '', request, '', 'hidden', '', '', disabled ) }}
+		{% if request[ table ][ subtable ][ i ].entita == 'documenti_articoli' %}
+		<div class="col-2 col-md">
+			<span class="label-top">nome</span>
+			{{ frm.input( table, subtable, i, 'model_nome', '', '', request, '', '', '', '', disabled  ) }}
+		</div>
+		<div class="col-2 col-md-1">
+			<span class="label-top">quantità</span>
+			{{ frm.inputRequired( table, subtable, i, 'model_quantita', '', '', request, 1, '', '', disabled  ) }}
+		</div>
+		<div class="col-auto">
+			<span class="label-top">UDM</span>
+			{{ frm.selectRequired( table, subtable, i, 'model_id_udm', '', etc.select.udm, request, '', '', '', disabled ) }}
+	    </div>
+		<div class="col-md-3">
+			<span class="label-top">articolo</span>
+			{{ frm.selectBox( table, '', '', 'model_id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli',disabled, 'chiediPrezzoListino();' ) }}
+		</div>
+		<div class="col-2">
+			<span class="label-top">importo</span>
+			{{ frm.input( table, subtable, i, 'model_importo_netto_totale', '', '', request, '', '', '', '', disabled  ) }}
+		</div>
+		<div class="col-auto">
+			<span class="label-top">reparto</span>
+			{{ frm.select( table, subtable, i, 'model_id_reparto', '', etc.select.reparti, request, '', '', '', '', '', disabled ) }}
+	    </div>
+		<div class="col-auto">
+			<span class="label-top">listino</span>
+			{{ frm.select( table, subtable, i, 'model_id_listino', '', etc.select.listini, request, '', '', '', '', '', disabled ) }}
+	    </div>
+		{% elseif request[ table ][ subtable ][ i ].entita == 'pagamenti' %}
+		<div class="col-auto">
+			<span class="label-top">modalità</span>
+			{{ frm.selectRequired( table, subtable, i, 'model_id_modalita_pagamento', '', etc.select.modalita_pagamento, request, '', '', '', disabled ) }}
+	    </div>
+		<div class="col-2 col-md">
+			<span class="label-top">nome</span>
+			{{ frm.input( table, subtable, i, 'model_nome', '', '', request, '', '', '', '', disabled  ) }}
+		</div>
+		<div class="col-2">
+			<span class="label-top">importo</span>
+			{{ frm.input( table, subtable, i, 'model_importo_lordo_totale', '', '', request, '', '', '', '', disabled  ) }}
+		</div>
+		<div class="col-auto">
+			<span class="label-top">listino</span>
+			{{ frm.selectRequired( table, subtable, i, 'model_id_listino', '', etc.select.listini, request, '', '', '', disabled ) }}
+	    </div>
+		{% endif %}
+		{% else %}
+		<div class="col">
+			<span class="label-top">entità</span>
+			{{ frm.selectRequired( table, subtable, i, 'entita', '', etc.select.entita, request, '', '', '', disabled ) }}
+	    </div>
+		{% endif %}
+		{% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+	    </div>
+	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
+		</div>
+		{% else %}
+	    <div class="col-auto text-right d-print-none">
+		{{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
+		</div>
+		{% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}
