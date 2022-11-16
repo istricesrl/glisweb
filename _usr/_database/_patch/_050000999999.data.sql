@@ -998,7 +998,7 @@ REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_d
 (8,		7,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.note.attive.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (9,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_7000.mailing/_src/_api/_task/_genera.mail.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (10,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_0200.attivita/_src/_api/_task/_autotask.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_0100.pianificazioni/_src/_api/_task/_pianificazioni.populate.php	',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(11,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_0100.pianificazioni/_src/_api/_task/_pianificazioni.populate.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050000
 

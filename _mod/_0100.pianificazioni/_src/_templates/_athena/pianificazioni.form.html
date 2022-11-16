@@ -58,6 +58,10 @@
 					<span class="label-top">periodicità</span>
 					{{ frm.select( table, '', '', 'id_periodicita', '', etc.select.periodicita, request, '', '', '', '', '' ) }}
 				</div>
+				<div class="col-auto col-md-auto">
+					<span class="label-top">attiva dal</span>
+					{{ frm.date( table, '', '', 'data_avvio', '', '', request, '+1 day'|date('Y-m-d'), '', '1' ) }}
+				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.input( table, '', '', 'nome', '', '', request ) }}

@@ -56,7 +56,7 @@
             $cf['mysql']['connection'],
             'UPDATE pianificazioni SET token = ? '.
             'WHERE ( timestamp_elaborazione < ? OR timestamp_elaborazione IS NULL OR timestamp_aggiornamento > timestamp_elaborazione ) '.
-            'AND ( ( ? BETWEEN data_inizio AND data_fine ) OR ( data_inizio <= ? AND data_fine IS NULL ) )'.
+            'AND ( ( ? BETWEEN data_avvio AND data_fine ) OR ( data_avvio <= ? AND data_fine IS NULL ) )'.
             'AND token IS NULL '.
             'AND id_genitore IS NULL '.
             'ORDER BY timestamp_elaborazione ASC LIMIT 1',
