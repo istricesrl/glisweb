@@ -47,8 +47,9 @@
 	    'id' => 'd-none d-md-table-cell',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
-		'tipologia' => 'text-left',
+		'tipologia' => 'd-none',
 		'tipologia_progetto' => 'd-none',
+		'progetto' => 'text-left'
 #	    'responsabile' => 'text-left no-wrap d-none d-sm-table-cell',
 #	    'completato' => 'text-left'
 	);
