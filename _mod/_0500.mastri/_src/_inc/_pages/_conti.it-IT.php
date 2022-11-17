@@ -16,8 +16,8 @@
 			'macro'			=> array( $m . '_src/_inc/_macro/_conti.view.php' ),
 			'etc'			=> array( 'tabs'	=> array(	'conti.view' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'conti' ),
-															'priority'	=> '230' ) ) )
+#			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'conti' ),
+#															'priority'	=> '230' ) ) )
 		);
 
 		// gestione conti

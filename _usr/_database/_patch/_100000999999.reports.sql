@@ -919,7 +919,7 @@ SELECT
 FROM (
 SELECT
   mastri.id,
-  mastri.nome,
+  mastri_path( mastri.id ) AS nome,
   prodotti_categorie.id_categoria,
   prodotti.id AS id_prodotto,
   prodotti.nome AS prodotto,
@@ -973,7 +973,7 @@ SELECT
   ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 1 ) ) AS qta_carico,
   0 AS qta_scarico,
   coalesce( udm_peso.sigla, udm_volume.sigla, udm_capacita.sigla, udm_durata.sigla ) AS udm_qta,
-  mastri.nome AS mastro_carico,
+  mastri_path( documenti_articoli.id_mastro_destinazione ) AS mastro_carico,
   NULL AS mastro_scarico
 FROM mastri
   LEFT JOIN documenti_articoli
@@ -996,7 +996,7 @@ FROM mastri
 UNION
 SELECT
   mastri.id,
-  mastri.nome,
+  mastri_path( mastri.id ) AS nome,
   prodotti_categorie.id_categoria,
   prodotti.id AS id_prodotto,
   prodotti.nome AS prodotto,
@@ -1051,7 +1051,7 @@ SELECT
   ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 1 ) ) AS qta_scarico,
   coalesce( udm_peso.sigla, udm_volume.sigla, udm_capacita.sigla, udm_durata.sigla ) AS udm_qta,
   NULL AS mastro_carico,
-  mastri.nome AS mastro_scarico
+  mastri_path( documenti_articoli.id_mastro_provenienza ) AS mastro_scarico
 FROM mastri
   LEFT JOIN documenti_articoli
     ON documenti_articoli.id_mastro_provenienza = mastri.id

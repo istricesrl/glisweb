@@ -232,8 +232,8 @@
 			'macro'			=> array( $m . '_src/_inc/_macro/_todo.amministrazione.view.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'todo.amministrazione.view', 'todo.archivio.view', 'todo.stampe' ) ),
-			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'to-do' ),
-															'priority'	=> '090' ) ) )	
+#			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'to-do' ),
+#															'priority'	=> '090' ) ) )	
 		);
 
 		// gestione todo

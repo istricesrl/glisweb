@@ -14,6 +14,15 @@
     // tabella gestita
     $ct['form']['table'] = 'contratti';
 
+	// gestione richiesta in lista d'attesa
+	if( isset( $_REQUEST['idAttesa'] ) ) {
+		if( ! isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) || empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
+			$_REQUEST[ $ct['form']['table'] ]['id_progetto'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_progetto FROM anagrafica_progetti WHERE id = ?', array( array( 's' => $_REQUEST['idAttesa'] ) ) );
+			$ct['etc']['richiedente'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_anagrafica FROM anagrafica_progetti WHERE id = ?', array( array( 's' => $_REQUEST['idAttesa'] ) ) );
+		} else {
+			// TODO qui archiviare la richiesta
+		}
+	}
 
     // tendina ruoli progetti
 	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
