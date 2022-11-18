@@ -118,6 +118,7 @@
 			</fieldset>
 			{% endif %}
 
+			{% if not request.__preset__.attivita.data_attivita and not ( request.attivita.data_attivita and not request.attivita.data_programmazione ) %}
 			<fieldset>
 				<legend>programmazione</legend>
 				<div class="form-group form-row">
@@ -145,10 +146,11 @@
 				<div class="form-group form-row">
 					<div class="col-12">
 					<span class="label-top">note programmazione</span>
-					{{ frm.textarea( table, '', '', 'note_programmazione', '', 2, request ) }}
+					{{ frm.textarea( table, '', '', 'note_programmazione', '', 3, request ) }}
 					</div>
 				</div>
 			</fieldset>
+			{% endif %}
 <!--
 			{% if request[ table ].id_todo %}
 			<fieldset>
@@ -204,6 +206,7 @@
 			{% endif %}
 -->
 
+			{% if request.attivita.data_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}
 			<fieldset>
 				<legend>esecuzione</legend>
 				<div class="form-group form-row">
@@ -225,7 +228,7 @@
 					</div>
 					<div class="col-12 col-md">
 						<span class="label-top">esecutore</span>
-						{% if request.attivita.id_anagrafica_programmazione %}{% set id_esecutore = session.account.id_anagrafica %}{% endif %}
+						{% if request.attivita.id_anagrafica_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}{% set id_esecutore = session.account.id_anagrafica %}{% endif %}
 						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, id_esecutore, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 						{# frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) #}
 					</div>
@@ -244,6 +247,7 @@
 					</div>
 				</div>
 			</fieldset>
+			{% endif %}
 
 			<fieldset>
 				<legend>attribuzione</legend>

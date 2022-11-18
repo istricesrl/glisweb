@@ -176,7 +176,7 @@
 					</div>
 					<div class="col-12 col-md">
 						<span class="label-top">esecutore</span>
-						{% if request.attivita.id_anagrafica_programmazione %}{% set id_esecutore = session.account.id_anagrafica %}{% endif %}
+						{% if request.attivita.id_anagrafica_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}{% set id_esecutore = session.account.id_anagrafica %}{% endif %}
 						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, id_esecutore, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
 
