@@ -83,7 +83,10 @@
             ),
             'class' => array(
                 'nome' => 'text-left',
-                'margine_previsto' => 'text-right'
+                'margine_previsto' => 'text-right',
+                'data_ultima_attivita' => 'test-left',
+                'data_prossima_attivita' => 'text-left',
+                NULL => 'no-wrap'
             ),
             'onclick' => array(
                 NULL => 'event.stopPropagation();',
