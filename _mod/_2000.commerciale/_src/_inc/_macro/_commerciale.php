@@ -84,7 +84,7 @@
             'class' => array(
                 'nome' => 'text-left',
                 'margine_previsto' => 'text-right',
-                'data_ultima_attivita' => 'test-left',
+                'data_ultima_attivita' => 'text-left',
                 'data_prossima_attivita' => 'text-left',
                 NULL => 'no-wrap'
             ),
@@ -142,7 +142,7 @@
 
             $lastAction = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                'SELECT * FROM attivita WHERE attivita.id_progetto = ? ORDER BY data_attivita DESC LIMIT 1',
+                'SELECT * FROM attivita WHERE attivita.id_progetto = ? WHERE data_attivita IS NOT NULL ORDER BY data_attivita DESC LIMIT 1',
                 array( array( 's' => $row['id'] ) )
             );
 
