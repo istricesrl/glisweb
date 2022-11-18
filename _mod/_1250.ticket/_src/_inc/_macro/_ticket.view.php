@@ -47,6 +47,7 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    'cliente' => 'text-left d-none d-md-table-cell',
+		'ranking_cliente' => 'd-none',
 	    'nome' => 'text-left',
 		'tipologia' => 'd-none',
 		'tipologia_progetto' => 'd-none',

@@ -48,6 +48,7 @@
 	    'id' => 'd-none d-md-table-cell',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
+		'ranking_cliente' => 'd-none',
 		'tipologia' => 'd-none',
 		'tipologia_progetto' => 'd-none',
 		'progetto' => 'text-left',
