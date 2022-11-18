@@ -142,7 +142,7 @@
 
             $lastAction = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                'SELECT * FROM attivita WHERE attivita.id_progetto = ? WHERE data_attivita IS NOT NULL ORDER BY data_attivita DESC LIMIT 1',
+                'SELECT * FROM attivita WHERE attivita.id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita DESC LIMIT 1',
                 array( array( 's' => $row['id'] ) )
             );
 
