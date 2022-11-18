@@ -938,6 +938,7 @@ CREATE OR REPLACE VIEW badge_view AS
 		badge.rfid,
 		concat_ws( ' | ', lpad( badge.id, 8, 0), coalesce( badge.codice, badge.rfid, badge.nome ) ) AS __label__
 	FROM badge
+;
 
 --| 090000002300
 

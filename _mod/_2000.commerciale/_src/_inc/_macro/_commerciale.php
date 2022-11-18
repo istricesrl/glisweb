@@ -86,7 +86,8 @@
                 'margine_previsto' => 'text-right'
             ),
             'onclick' => array(
-                NULL => 'event.stopPropagation();'
+                NULL => 'event.stopPropagation();',
+#                'data_prossima_attivita' => 'event.stopPropagation();'
             ),
             'etc' => array(
                 '__force_backurl__' => 1
@@ -153,7 +154,7 @@
             );
 
             if( ! empty( $nextAction ) ) {
-                $row['data_prossima_attivita'] .= ' ' . implode( '<br>', array( $nextAction['nome'], $nextAction['note_programmazione'] ) );
+                $row['data_prossima_attivita'] = '<a href="'.$cf['contents']['pages']['attivita.form']['url'][LINGUA_CORRENTE].'?attivita[id]='.$nextAction['id'].'&__backurl__='.$ct['page']['backurl'][LINGUA_CORRENTE].'" onclick="event.stopPropagation();">' . $row['data_prossima_attivita'] . ' ' . implode( '<br>', array( $nextAction['nome'], $nextAction['note_programmazione'] ) ) . '</a>';
             }
 
             $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.

@@ -217,7 +217,7 @@
 				<div class="col-12 col-md-6">
 					<span class="label-top">todo</span>
                     {% if request.__continue__ %}{% set default = session.__latest__[ table ].id_todo %}{% else %}{% set default = '' %}{% endif %}
-					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, default, '','','','','todo.form','todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
+					{{ frm.selectBox( table, '', '', 'id_todo', 'todo', etc.select.id_todo, request, default, '','','','','agenda.todo.form','agenda.todo.form','todo', 'id_todo', page, pages, ietf,'todo' ) }}
 				</div>
 				{% endif %}
 				{% if '0900.progetti' in mods.active.array %}

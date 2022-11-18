@@ -92,6 +92,11 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
 
 .view-table td a,
 .view-table td a:visited {
+    color: #212529;
+}
+
+.view-table td a i.fa,
+.view-table td a:visited i.fa {
     color: #555555;
 }
 

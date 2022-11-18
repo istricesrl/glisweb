@@ -80,6 +80,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__' );
 
+    // tendina collaboratori
+	$ct['etc']['select']['id_anagrafica'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static' );
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 

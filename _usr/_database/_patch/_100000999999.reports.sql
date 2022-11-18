@@ -39,6 +39,7 @@ CREATE OR REPLACE VIEW `__report_status_contratti__` AS
   WHERE
     ( tipologie_progetti.se_contratto IS NOT NULL )
   GROUP BY progetti.id
+;
 
 --| 100000015000
 -- __report_giacenza_crediti__
@@ -339,7 +340,11 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_pro
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
 GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.codice_produttore, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 
+
 --| 100000020002
+DROP TABLE IF EXISTS `__report_giacenza_magazzini_foglie__`;
+
+--| 100000020003
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini_foglie__` AS
 SELECT
   concat_ws( '|', movimenti.id, movimenti.id_articolo, movimenti.id_matricola ) AS id,
@@ -519,6 +524,9 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_pr
 GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 
 --| 100000020003
+DROP TABLE IF EXISTS `__report_giacenza_magazzini_foglie_attive__`;
+
+--| 100000020004
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini_foglie_attive__` AS
 SELECT
   concat_ws( '|', movimenti.id, movimenti.id_articolo, movimenti.id_matricola ) AS id,
@@ -1186,6 +1194,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
     AND
     progetti.data_chiusura IS NULL
   GROUP BY progetti.id
+;
 
 --| 100000027010
 -- __report_avanzamento_trattative__
@@ -1217,6 +1226,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_trattative__` AS
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NULL
   GROUP BY progetti.id
+;
 
 --| 100000031510
 -- __report_tesseramenti_anagrafica__
