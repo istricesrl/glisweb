@@ -25,6 +25,7 @@
 #	    'data_programmazione' => 'pianificato',
 #	    'priorita' => 'priorità',
 		'tipologia' => 'tipologia',
+		'id_progetto' => 'ID progetto',
 		'progetto' => 'progetto',
 	    'nome' => 'titolo',
 	    'anagrafica' => 'assegnato a',

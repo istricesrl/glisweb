@@ -93,8 +93,43 @@
 							<tr>
 								<th class="table-header-static">data</th>
 								<th class="table-header-static">status</th>
-								<th class="table-header-static text-left">titolo</th>
-								<th class="table-header-static text-left">note</th>
+								<th class="table-header-static text-left">attività</th>
+								<th class="table-header-static text-left">note cliente</th>
+							</tr>
+							{% for a in etc.attivita_completate %}
+							<tr>
+								<td>{{ a.data_attivita|date('d/m/Y') }}</td>
+								<td>completata</td>
+								<td class="text-left"><b>{{ a.nome }}</b> {{ a.note }}</td>
+								<td class="text-left">{{ a.note_cliente }}</td>
+							</tr>
+							{% endfor %}
+							{% for a in etc.attivita_programmate %}
+							<tr>
+								<td>{{ a.data_programmazione|date('d/m/Y') }}</td>
+								<td>programmata</td>
+								<td class="text-left"><b>{{ a.nome }}</b> {{ a.note_programmazione }}</td>
+								<td class="text-left">{{ a.note_cliente }}</td>
+							</tr>
+							{% endfor %}
+						</table>
+					</div>
+				</div>
+				{% endif %}
+			</fieldset>
+			{% elseif request.attivita.id_progetto %}
+			<fieldset>
+				<legend>contesto del progetto {{ etc.progetto.nome }}</legend>
+				{% if etc.attivita_completate or etc.attivita_programmate %}
+				<div class="form-group form-row">
+					<div class="col">
+
+						<table class="view-table">
+							<tr>
+								<th class="table-header-static">data</th>
+								<th class="table-header-static">status</th>
+								<th class="table-header-static text-left">attività</th>
+								<th class="table-header-static text-left">note cliente</th>
 							</tr>
 							{% for a in etc.attivita_completate %}
 							<tr>
