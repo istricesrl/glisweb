@@ -11,12 +11,18 @@
             {# TODO QUI METTERE GLI ARTICOLI DEL CARRELLO #}
         </fieldset>
 	    <fieldset>
+            <legend>dettagli</legend>
+            {# TODO QUI METTERE I DATI DEL CARRELLO #}
+        </fieldset>
+	    <fieldset>
             <legend>dati cliente</legend>
             {# TODO QUI METTERE I DATI DELL'INTESTATARIO E DEL DESTINATARIO #}
         </fieldset>
-	    <fieldset>
+	    <fieldset class="mt-auto">
             <legend>azioni</legend>
             {# TODO QUI METTERE I TASTI RICALCOLA E PAGA #}
+            {# TODO SE È ATTIVO IL MODULO DOCUMENTI AGGIUNGERE I TASTI PER CREARE RICEVUTA, FATTURA O SCONTRINO #}
+            {# TODO SE C'È UNA RICEVUTA, FATTURA O SCONTRINO AGGIUNGERE IL TASTO PER STAMPARLI #}
         </fieldset>
         {% else %}
 	    <fieldset>
@@ -28,18 +34,26 @@
     </div>
     <div class="col-md-4 d-flex flex-column">
 	    <fieldset>
-            <legend>aggiunta articoli</legend>
+            <legend>gestione articoli</legend>
+            {# TODO QUI FARE UN SELETTORE AGGIUNGI/RIMUOVI #}
+            {# TODO QUI AGGIUNGERE CAMPO PER BIPPARE GLI ARTICOLI PER CODICE O MATRICOLA CON AUTOFOCUS (INPUT) #}
+            {# TODO QUI BOX AGGIUNTA ARTICOLO PER CODICE O MATRICOLA (TENDINA INTELLIGENTE) #}
             <div class="form-group form-row">
                 <div class="col-12 col-md">
                     <button onclick="window.open('{{ pages['articoli.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai agli articoli</button>
                 </div>
             </div>
-            {# TODO QUI BOX AGGIUNTA ARTICOLO PER CODICE O MATRICOLA (TENDINA INTELLIGENTE) #}
         </fieldset>
 	    <fieldset>
             <legend>articoli frequenti</legend>
             {# TODO QUI BOX ARTICOLI FREQUENTI #}
         </fieldset>
+<!--
+	    <fieldset>
+            <legend>riga libera</legend>
+            {# TODO QUI METTERE I CAMPI PER L'AGGIUNTA DI UNA RIGA SENZA ARTICOLO (OPPURE UN BOTTONE PER ANDARE AL FORM DI INSERIMENTO RIGHE?) #}
+        </fieldset>
+-->
     </div>
 </section>
 {% endblock %}

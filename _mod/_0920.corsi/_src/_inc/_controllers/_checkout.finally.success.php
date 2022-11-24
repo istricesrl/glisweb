@@ -1,5 +1,9 @@
 <?php
 
+    // NOTA
+    // la logica è la seguente, al corso (progetto) è associato un prodotto, gli articoli rappresentano le varie modalità e periodi di iscrizione al corso stesso; l'anagrafica iscritta
+    // la ricavo da destinatario_id_anagrafica e i dettagli dell'iscrizione dai metadati dell'articolo
+
     // debug
     // die( print_r( $_SESSION['carrello'] ) );
 

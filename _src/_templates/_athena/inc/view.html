@@ -1,6 +1,9 @@
-    {% if etc.include.filters %}
+	{% import '_bin/_form.html' as frm %}
+	{% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ localization.language.ietf ] %}{% endif %}
+
+	{% if etc.include.filters %}
 	{% include etc.include.filters %}
-    {% else %}
+	{% else %}
     <div class="form-row view-filters d-print-none">
 	<div class="col">
 	    <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
@@ -72,6 +75,12 @@
     {% endif %}
     <div class="row view-controls mt-auto no-gutters d-print-none">
 
+		{% if form.table %}
+		<div class="col-auto mr-1">
+			{{ frm.button( '<i class="fa fa-undo"></i>', 'button', 'btn-secondary', 'window.open("' ~ back ~ '","_self")','torna indietro senza salvare le modifiche' ) }}
+		</div>
+		{% endif %}
+		
 	    <div class="col-auto text-left">
 		{% if view.data %}
 		<div class="input-group">
@@ -111,4 +120,36 @@
 	    </div>
 	    {% endif %}
 
+		{% if request[ table ].id %}
+	    <div class="col text-center">
+			{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ pages.cancellazione.path[ localization.language.ietf ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) #}
+			{{ frm.trashButton( table, '', page, pages, '', lang, request, back ) }}
+		</div>
+		{% endif %}
+	
+		{% if form.table %}
+		<div class="col-auto ml-1">
+			{% if request.__backurl__ %}
+			{% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
+			{{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");','salva e torna alla pagina precedente' ) }}
+			{% endif %}
+			{{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e inserisci altri dati' ) }}
+			{{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ localization.language.ietf ] ~ '?__backurl__=' ~ request.__backurl__ ~ '");','salva e inserisci altri dati' ) }}
+			{% else %}
+			{{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
+	{# gdl - se short è valorizzato viene mostrato solo il pulsante di salvataggio #}
+	{% if short is null %}
+			{{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ localization.language.ietf ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
+			{{ frm.button( '<span><i class="fa fa-floppy-o"></i><i class="fa fa-caret-right" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ localization.language.ietf ] ~ '");','salva e crea un nuovo oggetto' ) }}
+	
+			{# if page.parents.path|length() > 1 #}{# frm.button( '<i class="fa fa-area-chart" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.parents.path[1][ localization.language.ietf ] ~ '");','salva e vai alle statistiche' ) #}{# endif #}
+			{# frm.button( '<i class="fa fa-object-group" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ pages.dashboard.path[ localization.language.ietf ] ~ '");','salva e torna alla dashboard' ) #}
+			{% endif %}
+	{# gdl #}
+			{% if download %}{{ frm.button( '<i class="fa fa-download"></i>', 'button', 'btn-secondary', 'window.open("' ~ download ~ '","_self")','scarica' ) }}{% endif %}
+			{% endif %}
+
+		</div>
+	    {% endif %}
+	
     </div>

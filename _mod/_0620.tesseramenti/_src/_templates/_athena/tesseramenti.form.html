@@ -64,13 +64,14 @@
                     {{ frm.input( table, subtable, 1, 'id_anagrafica', '', '', request, etc.gestita, 'hidden' ) }}
                     
                     <div class="col-12 col-md">
-                        <span class="label-top">codice</span>
+                        <span class="label-top">numero di tessera</span>
                         {{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
                     </div>
                     <div class="col-3 col-md">
                         <span class="label-top">tipologia</span>
-                        {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologia, request ) }}
+                        {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologia, request ) }}
                     </div>
+<!--
                     <input type="hidden" id="id" name="{{ table }}[rinnovi][0][id]">
                     <input type="hidden" name="{{ table }}[rinnovi][0][id_contratto]" value="__parent_id__">
                     <input type="hidden" name="{{ table }}[rinnovi][0][id_tipologia]" value="1">
@@ -85,14 +86,24 @@
                         {{ frm.date( table, 'rinnovi', '0', 'data_fine', '', '', request ) }}
                     </div>
                 </div>
+-->
+            </fieldset>
+<!--
+            {# BOTTONI E COMANDI DEL MODULO #}
+-->
+            {% if request[ table ].id %}
+            <fieldset class="d-flex flex-column flex-fill">
+                <legend>periodi di validità</legend>
+
+                {# VIEW PRINCIPALE #}
+                {% include 'inc/view.html' %}
 
             </fieldset>
-
-
-            {# BOTTONI E COMANDI DEL MODULO #}
+            {% else %}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, table, request ) }}
             </fieldset>
+            {% endif %}
 
         </form>
     </div>

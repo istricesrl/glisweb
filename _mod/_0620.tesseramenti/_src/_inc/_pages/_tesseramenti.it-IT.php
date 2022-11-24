@@ -75,7 +75,7 @@
 			'macro'				=> array( $m . '_src/_inc/_macro/_tesseramenti.form.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> array(	'tesseramenti.form',
-																'tesseramenti.form.rinnovi',
+//																'tesseramenti.form.rinnovi',
 																'tesseramenti.form.stampe',
 																'tesseramenti.form.tools' 
 															) )

@@ -12,10 +12,10 @@
      *
      */
 
+    $ct['form']['table'] = 'contratti';
+
     // tabella della vista
     $ct['view']['table'] = 'rinnovi';
-
-    $ct['form']['table'] = 'contratti';
 
     $ct['view']['open']['page'] = 'rinnovi.contratti.form';
     $ct['view']['open']['table'] = 'rinnovi';
