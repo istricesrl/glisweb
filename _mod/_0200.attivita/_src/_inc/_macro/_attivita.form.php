@@ -166,16 +166,32 @@
         'modal' => array('id' => 'sostituisci-operatore', 'include' => 'inc/attivita.form.modal.sostituisci.operatore.html' )
     );
     
-    if( isset( $_REQUEST['attivita']['id_todo'] ) && ! empty( $_REQUEST['attivita']['id_todo'] )  ){
+    // debug
+    // die( $_REQUEST['__continue__'] );
+    // die( $_SESSION['__latest__']['attivita']['id_todo'] );
+    // die( $_SESSION['__latest__']['attivita']['id_progetto'] );
+
+    if( isset( $_REQUEST['attivita']['id_todo'] ) && ! empty( $_REQUEST['attivita']['id_todo'] ) ){
         $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
         $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
         $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_REQUEST['attivita']['id_todo']) ));
+    } elseif( isset( $_REQUEST['__continue__'] ) && isset( $_SESSION['__latest__']['attivita']['id_todo'] ) && ! empty( $_SESSION['__latest__']['attivita']['id_todo'] ) ){
+        $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_SESSION['__latest__']['attivita']['id_todo']) ));
+        $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NOT NULL ORDER BY data_attivita', array( array( 's' => $_SESSION['__latest__']['attivita']['id_todo']) ));
+        $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_todo = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita', array( array( 's' => $_SESSION['__latest__']['attivita']['id_todo']) ));
     } elseif( isset( $_REQUEST['attivita']['id_progetto'] ) && ! empty( $_REQUEST['attivita']['id_progetto'] )  ){
         $ct['etc']['progetto'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM progetti_view WHERE id = ?', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
         $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita LIMIT 5', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
         $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita LIMIT 5', array( array( 's' => $_REQUEST['attivita']['id_progetto']) ));
-        // print_r( $ct['etc']['attivita_completate'] );
+    } elseif( isset( $_REQUEST['__continue__'] ) && isset( $_SESSION['__latest__']['attivita']['id_progetto'] ) && ! empty( $_SESSION['__latest__']['attivita']['id_progetto'] ) ){
+        $ct['etc']['todo'] = mysqlSelectRow($cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $_SESSION['__latest__']['attivita']['id_progetto']) ));
+        $ct['etc']['attivita_completate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita LIMIT 5', array( array( 's' => $_SESSION['__latest__']['attivita']['id_progetto']) ));
+        $ct['etc']['attivita_programmate'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM attivita WHERE id_progetto = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL  ORDER BY data_attivita LIMIT 5', array( array( 's' => $_SESSION['__latest__']['attivita']['id_progetto']) ));
     }
+
+    // debug
+    // print_r( $ct['etc']['attivita_completate'] );
+    // print_r( $ct['etc']['attivita_programmate'] );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
