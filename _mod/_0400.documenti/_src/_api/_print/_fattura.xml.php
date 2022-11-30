@@ -74,7 +74,7 @@
     // - - - ProgressivoInvio / identificativo univoco del documento
 	$xml->writeElement( 'ProgressivoInvio', $doc['progressivo_invio'] );
 
-	if( !$dst['se_pubblica_amministrazione'] == 1 ){
+	if( ! $dst['se_pubblica_amministrazione'] == 1 ) {
 		// - - - FormatoTrasmissione / privati
 		$xml->writeElement( 'FormatoTrasmissione', 'FPR12' );
 	} else {

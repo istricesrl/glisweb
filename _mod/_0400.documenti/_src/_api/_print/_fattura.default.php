@@ -85,6 +85,11 @@
         array( array( 's' => $doc['id'] ) )
     );
 
+    // controllo contenuto
+    if( empty( $doc['righe'] ) ) {
+        dieText('inserire almeno una riga');
+    }
+
     // elaboro i totali
     foreach( $doc['righe'] as &$riga ) {
 
@@ -209,6 +214,10 @@
         array( array( 's' => $src['id'] ) )
     );
 
+    // controllo indirizzo
+    if( empty( $sri ) ) {
+        dieText('richiesto indirizzo sede emittente');
+    }
 
     // indirizzo fiscale
     $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
@@ -245,10 +254,23 @@
             array( array( 's' => $dst['id_pec_sdi'] ) ) );
     }
 
+    // controllo CIG
+    if( ! empty( $dst['se_pubblica_amministrazione'] ) ) {
+        if( empty( $doc['cig'] ) ) {
+            dieText('richiesto CIG per emettere fattura PA' );
+        }
+        if( empty( $doc['cup'] ) ) {
+            dieText('richiesto CUP per emettere fattura PA' );
+        }
+        if( empty( $doc['riferimento'] ) ) {
+            dieText('richiesto riferimento per emettere fattura PA' );
+        }
+    }
+
     // denominazione fiscale
     $dst['denominazione_fiscale'] = trim( $dst['nome'] . ' ' . $dst['cognome'] . ' ' . $dst['denominazione'] );
 
-    // recupero i dati della sede dell'emittente
+    // recupero i dati della sede destinatario
     $dsi = mysqlSelectRow(
         $cf['mysql']['connection'],
         'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
@@ -267,6 +289,11 @@
 
     // debug
     // print_r( $dsi );
+
+    // controllo indirizzo
+    if( empty( $dsi ) ) {
+        dieText('richiesto indirizzo sede destinatario');
+    }
 
     // indirizzo fiscale
     $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
