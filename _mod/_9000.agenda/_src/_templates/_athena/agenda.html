@@ -83,7 +83,7 @@
 {% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
 <fieldset>
     <legend>da fissare / gestire</legend>
-    {% for  e in etc.agenda_da_fissare.attivita %}
+    {% for e in etc.agenda_da_fissare.attivita %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
 	    <p>&mdash;</p>
@@ -148,8 +148,8 @@
         </fieldset>
         {% endif %}
 
-{% for  data,eventi_per_data in attivita %}
-{% if data %}
+{% for data,eventi_per_data in attivita %}
+{% if data and eventi_per_data %}
 <fieldset>
     <legend style="font-size: 100%; color:#383838;">{{ trans_day_hash[data|date('l', "Europe/Rome")] }} {{ data|date('d') }} {{ trans_month_hash[data|date('m')] }} {{ data|date('Y') }}</legend>
     {% for ora,eventi_per_ora in eventi_per_data %}
