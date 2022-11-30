@@ -1,7 +1,7 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
 
-<fieldset id="{{ view.id }}-rinnovi" class=" view-insert hidden">
+<fieldset id="{{ view.id }}-rinnovi" class="view-insert hidden">
     <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
     <input type="hidden" id="timestamp" name="{{ table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
     <input type="hidden" id="account" name="{{ table }}[id_account_inserimento]" value="{{ account }}" disabled>

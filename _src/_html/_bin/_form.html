@@ -190,7 +190,7 @@
 {% endif %}
 {% endmacro %}
 
-{% macro textarea( table, subtable, counter, field, placeholder, rows, request, default, required, class, height, console, disabled, modalDisabled ) %}
+{% macro textarea( table, subtable, counter, field, placeholder, rows, request, default, required, class, height, console, static, disabled ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -202,11 +202,11 @@
     {% set vl = request[ table ][ field ] %}
 {% endif %}
 {% if not vl %}{% set vl = default %}{% endif %}
-{% if disabled %}
+{% if static %}
 <input  type="hidden" name="{{ nm }}" value="{{ vl }}">
 <div class="form-control-plaintext {{ class }}">{{ vl }}</div>
 {% else %}
-<textarea {% if modalDisabled %}disabled{% endif %} placeholder="{{ placeholder }}" name="{{ nm }}" id="{{ id }}" {% if height %}height="{{ height }}"{% else %}style="min-height: {{ rows * 30 }}px;"{% endif %} class="{% if disabled %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" placeholder="{{ placeholder }}" {% if console %}console="{{ console }}"{% endif %} {% if required %}required{% endif %}>{{ vl }}</textarea>
+<textarea {% if disabled %}disabled{% endif %} placeholder="{{ placeholder }}" name="{{ nm }}" id="{{ id }}" {% if height %}height="{{ height }}"{% else %}style="min-height: {{ rows * 30 }}px;"{% endif %} class="{% if static %}form-control-plaintext{% else %}form-control form-control-sm{% endif %} {% if class %}{{ class }}{% endif %}" placeholder="{{ placeholder }}" {% if console %}console="{{ console }}"{% endif %} {% if required %}required{% endif %}>{{ vl }}</textarea>
 {% endif %}
 {% endmacro %}
 

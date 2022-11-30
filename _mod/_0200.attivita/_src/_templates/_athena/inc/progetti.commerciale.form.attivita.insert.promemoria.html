@@ -1,7 +1,7 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
 <script>submitFormOkay = true;</script>
-<fieldset id="{{ view.id }}-insert_memo" class=" view-insert hidden">
+<fieldset id="{{ view.id }}-insert_memo" class="view-insert hidden">
     <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
     <input type="hidden" id="timestamp" name="{{ view.open.table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
     <input type="hidden" id="account" name="{{ view.open.table }}[id_account_inserimento]" value="{{ account }}" disabled>

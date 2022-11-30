@@ -18,7 +18,7 @@
         </div>
         <div class="col-12 col-md">
             <span class="label-top">responsabile</span>
-            {{ frm.selectBox( view.open.table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, '', session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf, 'anagrafica' ) }}
+            {{ frm.selectBox( view.open.table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, '', session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_responsabile', page, pages, ietf, 'anagrafica', 2 ) }}
         </div>
         <div class="col">
             <span class="label-top">nome</span>
@@ -28,13 +28,13 @@
     <div class="form-row d-print-none">
         <div class="col-12">
             <span class="label-top">descrizione</span>
-            {{ frm.textarea( view.open.table, '', '', 'testo', '', 3 ) }}
+            {{ frm.textarea( view.open.table, '', '', 'testo', '', 3, '', '', '', '', '', '', '', 2 ) }}
         </div>
     </div>
     <div class="form-row d-print-none">
         <div class="col-12 col-md">
             <span class="label-top">progetto</span>
-            {{ frm.selectBox( view.open.table, '', '', 'id_progetto', '', '', '', '', '','','','','','','', '' , page, pages, ietf, 'progetti' ) }}
+            {{ frm.selectBox( view.open.table, '', '', 'id_progetto', '', '', '', '', '','','','','','','', '' , page, pages, ietf, 'progetti', 2 ) }}
         </div>
         <div class="col-auto">
             <span class="label-top">anno</span>

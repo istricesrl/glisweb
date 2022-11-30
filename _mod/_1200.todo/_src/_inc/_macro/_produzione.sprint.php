@@ -46,7 +46,7 @@
 #		'completato' => 'd-none',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
-	    'id_progetto' => 'd-none',
+#	    'id_progetto' => 'd-none',
 	    'priorita' => 'text-left',
 	    'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
 	    'progresso' => 'text-right no-wrap d-none d-sm-table-cell',
