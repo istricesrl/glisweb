@@ -93,7 +93,7 @@
 		<div class="col">
             {% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %}
             <b>{% if e.id_anagrafica_assegnante %}{% if e.id_anagrafica_assegnante != session.account.id_anagrafica %}da {{ e.anagrafica_assegnante }}: {% endif %}{% endif %}{{ e.nome }}</b>
-		    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+		    {% if e.id_cliente %}<br>&bull; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>
 	    </div>
@@ -109,9 +109,9 @@
 	<div class="col">
 	    <div class="form-row">
 		<div class="col">
-            <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
-		    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
-            <br>&mdash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
+            <b>{{ e.nome }}</b> &bull; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+		    {% if e.id_cliente %}<br>&bull; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+            <br>&bull; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
 			<br>{{ e.testo }}
 		</div>
 	    </div>
@@ -136,9 +136,9 @@
             <div class="col">
                 <div class="form-row">
                 <div class="col">
-                    <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
-                    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
-                    <br>&mdash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
+                    <b>{{ e.nome }}</b> &bull; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                    {% if e.id_cliente %}<br>&bull; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>&bull; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
                     <br>{{ e.testo }}
                 </div>
                 </div>
@@ -163,7 +163,7 @@
 	    <div class="form-row">
 		<div class="col">
             <b>{{ e.nome }}</b>{% if e.id_todo %} su {{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
-		    {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+		    {% if e.id_cliente %}<br>&bull; cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
 			<br>{{ e.note_programmazione }}
 		</div>
 	    </div>
@@ -181,9 +181,9 @@
         <div class="col">
             <div class="form-row">
             <div class="col">
-                <b>{{ e.nome }}</b> &mdash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
-                {% if e.id_cliente %}<br>&mdash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
-                <br>&mdash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
+                <b>{{ e.nome }}</b> &bull; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                {% if e.id_cliente %}<br>&bull; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                <br>&bull; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
                 <br>{{ e.testo }}
             </div>
             </div>
