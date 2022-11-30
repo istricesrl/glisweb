@@ -414,6 +414,14 @@ fieldset.static-history > .form-row > div:first-child {
     max-width: 100%;
 }
 
+.form-row p {
+    margin-bottom: .5em;
+}
+
+.form-row p:last-child {
+    margin-bottom: 0em;
+}
+
 select {
     cursor: pointer;
 }
