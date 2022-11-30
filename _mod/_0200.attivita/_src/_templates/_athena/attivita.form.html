@@ -84,6 +84,13 @@
 			{% if request.attivita.id_todo or ( request.__continue__ and session.__latest__[ table ].id_todo ) %}
 			<fieldset>
 				<legend>contesto della to-do {{ etc.todo.nome }}</legend>
+				{% if etc.todo.testo %}
+				<div class="form-group form-row">
+					<div class="col">
+						<p>{{ etc.todo.testo }}</p>
+					</div>
+				</div>
+				{% endif %}
 				{% if etc.attivita_completate or etc.attivita_programmate %}
 				<div class="form-group form-row">
 					<div class="col">
