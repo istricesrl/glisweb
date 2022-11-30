@@ -81,7 +81,8 @@
             'class' => array(
                 'nome' => 'text-left',
                 'completed' => 'text-right',
-                'eta' => 'nowrap'
+                'eta' => 'nowrap',
+                NULL => 'no-wrap'
             ),
             'onclick' => array(
                 NULL => 'event.stopPropagation();'

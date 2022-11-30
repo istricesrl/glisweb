@@ -86,7 +86,8 @@
             'class' => array(
                 'id' => 'd-none',
                 'progetto' => 'text-left',
-                'completed' => 'text-right'
+                'completed' => 'text-right',
+                NULL => 'no-wrap'
             ),
             'onclick' => array(
                 NULL => 'event.stopPropagation();'
