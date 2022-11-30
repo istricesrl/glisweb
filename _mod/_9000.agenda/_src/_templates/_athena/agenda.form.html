@@ -82,9 +82,16 @@
 			</div>
 			</fieldset>
 
-			{% if request.attivita.id_todo or ( request.__continue__ and session.__latest__[ table ].id_todo ) %}
+			{% if request.attivita.id_todo or ( request.__continue__ and session.__latest__[ table ].id_todo ) or __preset__[ table ].id_todo %}
 			<fieldset>
 				<legend>contesto della to-do {{ etc.todo.nome }}</legend>
+				{% if etc.todo.testo %}
+				<div class="form-group form-row">
+					<div class="col">
+						<p>{{ etc.todo.testo }}</p>
+					</div>
+				</div>
+				{% endif %}
 				{% if etc.attivita_completate or etc.attivita_programmate %}
 				<div class="form-group form-row">
 					<div class="col">
@@ -117,7 +124,7 @@
 				</div>
 				{% endif %}
 			</fieldset>
-			{% elseif request.attivita.id_progetto or ( request.__continue__ and session.__latest__[ table ].id_progetto ) %}
+			{% elseif request.attivita.id_progetto or ( request.__continue__ and session.__latest__[ table ].id_progetto ) or __preset__[ table ].id_progetto %}
 			<fieldset>
 				<legend>contesto del progetto {{ etc.progetto.nome }}</legend>
 				{% if etc.attivita_completate or etc.attivita_programmate %}
