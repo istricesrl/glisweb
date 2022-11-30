@@ -82,7 +82,7 @@
 
 {% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
 <fieldset>
-    <legend>da fissare / gestire</legend>
+    <legend>da fissare / gestire <small>cose da fare non programmate</small></legend>
     {% for e in etc.agenda_da_fissare.attivita %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
 	<div class="col-1 lemma text-right">
@@ -125,7 +125,7 @@
 
 {% for settimana, attivita in anno %}
 <fieldset>
-    <legend>settimana {{ settimana }}</legend>
+    <legend>settimana {{ settimana }}/{{ a }} <small>dal {{ etc.intervalli[ a ][ settimana ].inizio }} al {{ etc.intervalli[ a ][ settimana ].fine }}</small></legend>
 
         {% if etc.todo_da_monitorare[a][settimana] %}
         {% for e in etc.todo_da_monitorare[a][settimana] %}

@@ -164,6 +164,18 @@
 
 	// print_r( $ct['etc']['todo_da_monitorare'] );
 
+	foreach( $ct['etc']['agenda'] as $anno => $settimane ) {
+		foreach( array_keys( $settimane ) as $settimana ) {
+			$dto = new DateTime();
+			$ct['etc']['intervalli'][ $anno ][ $settimana ] = array(
+				'inizio' => $dto->setISODate($anno, $settimana)->format('d-m-Y'),
+				'fine' => $dto->modify('+4 days')->format('d-m-Y')
+			);
+		}
+	}
+
+	// print_r( $ct['etc']['intervalli'] );
+
 	// tendina tipologia attivita
 	$ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
