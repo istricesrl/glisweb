@@ -79,14 +79,14 @@
 
 		// RELAZIONI CON IL MODULO contenuti
 		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
-			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.sem');
-			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.testo');
-			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.immagini');
-			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.video');
-			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.audio');
-			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.file');
-			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.macro');
-			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'],'progetti.commerciale.form.metadati' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.sem' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.testo' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.immagini' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.video' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.audio' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.file' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.macro' );
+			arrayInsertBefore( 'progetti.commerciale.form.archiviazione', $p['progetti.commerciale.form']['etc']['tabs'], 'progetti.commerciale.form.metadati' );
 		}
 		
 		$p['progetti.commerciale.form.sem'] = array(
@@ -199,6 +199,19 @@
 			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.accettazione.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.accettazione.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
+		// gestione progetti archiviazione
+		$p['progetti.commerciale.form.archiviazione'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'archiviazione' ),
+			'h1'			=> array( $l		=> 'archiviazione' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.archiviazione.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.archiviazione.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
 		);

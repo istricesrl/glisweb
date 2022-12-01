@@ -40,7 +40,7 @@
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
         'anagrafica_programmazione' => 'text-left',
-	    'data_programmazione' => 'text-left no-wrap',
+	    'data_programmazione' => 'no-wrap',
 	    'ora_inizio_programmazione' => 'd-none',
         'ora_fine_programmazione' => 'd-none',
 	    'anagrafica' => 'text-left no-wrap',
@@ -67,6 +67,12 @@
         'name' => 'insert',
         'file' => 'inc/todo.form.attivita.insert.html',
         'fa' => 'fa-plus-circle'
+    );
+
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert_memo',
+        'file' => 'inc/todo.form.attivita.insert.promemoria.html',
+        'fa' => 'fa-calendar-plus-o'
     );
 
     $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
