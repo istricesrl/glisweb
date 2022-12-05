@@ -11,7 +11,7 @@
 	<div class="col-auto">
 	    <button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
 	    {% if view.insert.path %}
-	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
+	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}{% for f,v in view.open.preset.fields %}&__preset__[{{ view.open.table }}][{{ f }}]={{ v }}{% endfor %}','_self');"><i class="fa fa-plus"></i></button>
 	    {% endif %}
 		{% if view.insert.options and view.insert.option.page %}
 		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ pages[ view.insert.option.page ].url[localization.language.ietf] }}?{% for o in view.insert.options %}{{ o.name }}={{ o.value }}{% if loop.index < (view.insert.options|length) %}&{% endif %}{% endfor %}','_self');"><i class="fa {{ view.insert.option.fa }}"></i></button>

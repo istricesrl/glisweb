@@ -219,6 +219,9 @@
     // preset filtro mastro corrente
 	$ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
   
+    // campo per il preset di apertura
+	$ct['view']['open']['preset']['fields']['data_attivita'] = date('Y-m-d');
+
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
