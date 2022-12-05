@@ -122,8 +122,8 @@
 
 		{% if request[ table ].id %}
 	    <div class="col text-center">
-			{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ pages.cancellazione.path[ localization.language.ietf ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) #}
-			{{ frm.trashButton( table, '', page, pages, '', lang, request, back ) }}
+			{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ contents.pages.delete.path[ localization.language.ietf ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) #}
+			{{ frm.trashButton( table, '', page, pages, '', localization.language.ietf, request, back ) }}
 		</div>
 		{% endif %}
 	

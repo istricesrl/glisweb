@@ -49,7 +49,6 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM progetti_view' );
 
-
     $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
