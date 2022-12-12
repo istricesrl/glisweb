@@ -373,9 +373,9 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha ) %}
 {% if recaptcha.keys.public %}
 <script>
-	function onSubmit{{ form }}(token) {
-	  document.getElementById("{{ form }}").submit();
-	  console.log('invocata protezione reCAPTCHA');
+	function onSubmit{{ form }}( token ) {
+		document.getElementById("{{ form }}").submit();
+		console.log('invocata protezione reCAPTCHA');
 	}
 </script>
 {% endif %}
