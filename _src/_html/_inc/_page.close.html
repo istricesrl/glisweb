@@ -14,6 +14,8 @@
 
 {% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}"></script>{% endfor %}
 
+{% include '_inc/_recaptcha.close.html' %}
+
 {% if facebook.messenger.page.id %}{% include '_inc/_facebook.messenger.html' %}{% endif %}
 
 {% if criteo.account %}{% include '_inc/_criteo.html' %}{% endif %}

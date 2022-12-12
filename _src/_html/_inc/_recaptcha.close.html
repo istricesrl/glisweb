@@ -1,0 +1,22 @@
+
+{# FILE PER LA GENERAZIONE DEL TAG <script> DI GOOGLE ANALYTICS ALL'INTERNO DEL TAG <head> #}
+
+{% if google.profile.recaptcha %}
+<script src="https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>
+<script type="text/javascript">
+  var CaptchaCallback = function() {
+    console.log('attivata protezione reCAPTCHA');
+    jQuery('.g-recaptcha').each(function(index, el) {
+        grecaptcha.render(el, {
+            'sitekey' : jQuery(el).attr('data-sitekey')
+            ,'theme' : jQuery(el).attr('data-theme')
+            ,'size' : jQuery(el).attr('data-size')
+            ,'tabindex' : jQuery(el).attr('data-tabindex')
+            ,'callback' : jQuery(el).attr('data-callback')
+            ,'expired-callback' : jQuery(el).attr('data-expired-callback')
+            ,'error-callback' : jQuery(el).attr('data-error-callback')
+        });
+    });
+  };
+</script>
+{% endif %}

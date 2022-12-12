@@ -2,6 +2,7 @@
 {# NOTA: IMPORTARE SEMPRE COME PRV #}
 
 {% macro checkConsensi( ref, key, items, ietf, tr, pages ) %}
+<!-- macro checkConsensi() -->
 {% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
 {% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
 {% for codice,check in items.consensi %}
