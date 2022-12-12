@@ -2,6 +2,8 @@
 {# FILE PER LA GENERAZIONE DEL TAG <script> DI GOOGLE ANALYTICS ALL'INTERNO DEL TAG <head> #}
 
 {% if google.profile.recaptcha %}
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+<!--
 <script src="https://www.google.com/recaptcha/api.js?onload=CaptchaCallback&render=explicit" async defer></script>
 <script type="text/javascript">
   var CaptchaCallback = function() {
@@ -19,4 +21,5 @@
     });
   };
 </script>
+-->
 {% endif %}

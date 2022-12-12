@@ -370,10 +370,13 @@ window.addEventListener( 'DOMContentLoaded', function() {
 <a class="btn {{ class }}" target="_blank" href="{{ a }}"></a>
 {% endmacro %}
 
-{% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha ) %}
+{% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo ) %}
 {% if recaptcha.keys.public %}
+<input type="hidden" name="{{ prefisso }}[{{ modulo }}][__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">
 <script>
 	function onSubmit{{ form }}( token ) {
+		console.log( token );
+		document.getElementById("{{ form }}RecaptchaToken").value = token;
 		document.getElementById("{{ form }}").submit();
 		console.log('invocata protezione reCAPTCHA');
 	}

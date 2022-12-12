@@ -41,12 +41,14 @@
                         required></div>
             </div>
             {% if google.profile.recaptcha %}
+            <!-- V2
             <div class="form-group form-row">
                 <div class="col-12 col-md-10 offset-md-2">
                     <div class="g-recaptcha" style="display: inline-block;"
                         data-sitekey="{{ google.profile.recaptcha.keys.public }}"></div>
                 </div>
             </div>
+            -->
             {% endif %}
             {{ std.checkPrivacy( 'default', registrazione, pages, tr, localization.language.ietf, '', '', '__profile__' ) }}
             <div class="form-group form-row">
