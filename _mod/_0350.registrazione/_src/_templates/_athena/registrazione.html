@@ -86,11 +86,11 @@
                         placeholder="la tua password" required></div>
             </div>
             {% endif %}
-            {% if google.recaptcha.profile %}
+            {% if google.profile.recaptcha %}
             <div class="form-group form-row">
                 <div class="col-12 col-md-10 offset-md-2">
                     <div class="g-recaptcha" style="display: inline-block;"
-                        data-sitekey="{{ google.recaptcha.profile.keys.public }}"></div>
+                        data-sitekey="{{ google.profile.recaptcha.keys.public }}"></div>
                 </div>
             </div>
             {% endif %}

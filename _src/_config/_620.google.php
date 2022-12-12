@@ -33,3 +33,6 @@
 
     // collegamento all'array $ct
 	$ct['google']					= &$cf['google'];
+
+    // debug
+    // print_r( $cx['google'] );

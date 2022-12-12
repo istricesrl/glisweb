@@ -389,6 +389,14 @@
     -------------
     Questa chiave contiene le configurazioni relative ai prodotti Google.
 
+    chiave                                      | descrizione
+    --------------------------------------------|---------------------------------------------------------------------------------------
+    google.profile                              | il profilo corrente per i servizi Google (è una scorciatoia per google.profiles.<site.status>)
+    google.profiles                             | i profili Google disponibili
+    google.profiles.<j>                         | dettagli del profilo Google <j>
+    google.profiles.<j>.analytics               | dettagli del profilo Google Analytics <j>
+    google.profiles.<j>.recaptcha               | dettagli del profilo Google reCAPTCHA <j>
+
     $cf['hotjar']
     -------------
     Questa chiave contiene informazioni sulla configurazione dell'integrazione con Hotjar.
