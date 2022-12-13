@@ -17,7 +17,8 @@
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'produzione',
 														'produzione.pacchetti',	// TODO in relazione col modulo mastri
-														'produzione.contratti'	// TODO in relazione col modulo contratti?
+														'produzione.contratti',	// TODO in relazione col modulo contratti?
+														'produzione.tools'
 														 ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'produzione' ),
 																		'priority'	=> '200' ) ) )														
@@ -54,4 +55,17 @@
 		'macro'			=> array( $m.'_src/_inc/_macro/_produzione.contratti.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['produzione']['etc']['tabs'] )
+	);
+
+    // tools produzione
+	$p['produzione.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'produzione' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['produzione']['etc']['tabs'] )
 	);

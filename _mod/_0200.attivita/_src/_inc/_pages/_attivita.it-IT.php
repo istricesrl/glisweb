@@ -15,7 +15,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini', 'attivita.tools' ) ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attività' ),
 																		'priority'	=> '100' ) ) )	
 	);
@@ -29,7 +29,7 @@
 	    'parent'		=> array( 'id'		=> 'attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_attivita.tools.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'			=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] )
 	);
 
@@ -42,7 +42,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
 	    'parser'		=> array( $m . '_src/_inc/_parser/_attivita.form.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.form',
 														'attivita.form.file' ) )
 	);
@@ -69,7 +69,7 @@
 	    'parent'		=> array( 'id'		=> 'attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.feedback.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.feedback.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
 
@@ -83,7 +83,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_turni.view.php' ),
 		'etc'			=> array( 'tabs'	=> array( 'turni.view', 'turni.schema' ) ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'turni' ),
 																		'priority'	=> '110' ) ) )	
 	);
@@ -98,7 +98,7 @@
 	    'parent'		=> array( 'id'		=> 'produzione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.tools.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_turni.tools.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['turni.view']['etc']['tabs'] )
 	);
 	*/
@@ -113,7 +113,7 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.schema.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_turni.schema.php' ),
 		'etc'			=> array( 'tabs'	=> $p['turni.view']['etc']['tabs'] ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+		'auth'			=> array( 'groups'	=> array(	'roots' ) )
 	);
 
 	// gestione turni
@@ -124,7 +124,7 @@
 	    'parent'		=> array( 'id'		=> 'turni.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_turni.form.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'turni.form', 'turni.form.pianificazioni' ) )
 	);
 	
@@ -137,7 +137,7 @@
 		'parent'		=> array( 'id'		=> 'turni.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'turni.form.pianificazioni.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_turni.form.pianificazioni.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['turni.form']['etc']['tabs'] )
 	);
 
@@ -163,7 +163,7 @@
 	    'parent'		=> array( 'id'		=> 'categorie.attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_categorie.attivita.form.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'categorie.attivita.form' ) )
 	);
 */
@@ -189,7 +189,7 @@
 	    'parent'		=> array( 'id'		=> 'tipologie.attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_tipologie.attivita.form.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'tipologie.attivita.form',
 														'tipologie.attivita.form.metadati' ) )
 	);

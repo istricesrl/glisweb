@@ -304,6 +304,7 @@
 	);
 
 	// vista valutazioni
+	// TODO ma questa dovrebbe stare qui? non fa parte di un modulo?
 	$p['valutazioni.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'valutazioni' ),

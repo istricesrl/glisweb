@@ -1,0 +1,141 @@
+/*!
+
+    \page howto come fare a...
+
+    Guide pratiche passo passo all'utilizzo del framework, per sviluppatori.
+
+    introduzione
+    ============
+
+    come creare un'importazione custom
+    ==================================
+    Creare un'importazione custom può essere necessario qualora gli utenti debbano caricare, come parte normale dell'utilizzo dell'applicazione, dati che hanno salvati
+    in formati legibili dal framework come Excel o CSV. Normalmente, le importazioni vengono gestite con un job (avviato da un task) data la loro natura di lavoro che
+    ha un inizio e una fine chiaramente predeterminate, come meglio spiegato nella \ref crontab "pagina sui meccanismi di esecuzione pianificata del framework".
+
+    creazione del tool per il caricamento del file
+    ----------------------------------------------
+    Per agevolare il caricamento del file da parte degli utenti, la cosa migliore è predisporre un tool apposito nell'interfaccia. Questo tool andrà collocato nella pagina
+    che anche intuitivamente è più facile associare alla natura dei dati importati (ad esempio un'importazione di dati anagrafici sarà cercata dagli utenti nei
+    tools dell'anagrafica); in caso di forte ambiguità è possibile anche collocare lo stesso tool in più punti.
+
+    Tipicamente, dovendo caricare un file, il metro tool più indicato per avviare l'importazione è il modal (vedi \ref templates_athena "la guida al template athena") che
+    consente l'inserimento di un campo input di tipo file. Ricapitolando, andiamo a creare il metro button che avvia il task di creazione del job; se per esempio dobbiamo
+    avviare un'importazione di dati amministrativi andremo a modificare _mod/_6000.amministrazione/_src/_inc/_macro/_amministrazione.tools.php (o la sua controparte custom
+    se si tratta di un'importazione custom) aggiungendo un metro tool alla sezione importazioni:
+
+    \code{.php}
+    // importazione bonifici in formato WRI/CSV
+    $ct['page']['contents']['metro']['importazioni'][] = array(
+        'modal' => array( 'id' => 'importa_wri', 'include' => 'inc/amministrazione.tools.modal.import.wri.html' ),
+        'icon' => NULL,
+        'fa' => 'fa-upload',
+        'title' => 'importazione file WRI bonifici',
+        'text' => 'importa i bonifici ricevuti in formato WRI (un tipo di CSV)'
+    );
+    \endcode
+
+    Questo richiederà la creazione di un modal, che andremo a piazzare nella sottocartella _mod/_6000.amministrazione/_src/_templates/_athena/inc (o la sua controparte
+    custom) e che ci consentirà di caricare il file richiamando il task che farà il setup del job. Il codice del modal sarà simile a questo:
+
+    \code{.html}
+    <!-- Twig file included: {{ _self }} -->
+
+    {% import '_bin/_form.html' as frm %}
+
+    <script>
+        function importa() {
+          var data = $('#__upload_____wri__').val();
+          getws('/task/6000.amministrazione/amministrazione.importazione.wri.start?file='+data);
+          $('#importa_wri').modal('toggle');
+          location.reload();
+        }
+    </script>
+
+    <div class="modal" tabindex="-1" role="dialog" id="importa_wri">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">importa WRI/CSV bonifici</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+              </div>
+              <div class="modal-body">
+                <div class="container-fluid">
+                    <div class="form-row">
+                      <div class="col">
+                          {{ frm.uploader( '__upload__', '', '', '__wri__', '', '', '', 'var/contenuti/upload/', site ) }}
+                      </div>
+                    </div>
+                    <div class="form-row">
+                      <div class="col">
+                        <p>scarica il <a href="/usr/examples/wri/wri.import.wri">modello WRI/CSV di esempio</a> per l'importazione</p>
+                      </div>
+                    </div>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="importa();">importa</button>
+                <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+              </div>
+          </div>
+        </div>
+    </div>
+    \endcode
+
+    Sul codice qui sopra visto vanno fatte alcune considerazioni di carattere formale. Innanzitutto si noti che il modal contiene un link a un file di esempio,
+    che si suggerisce sempre di inserire anche e soprattutto nel caso delle importazioni custom, che gli utenti possono utilizzare per controllare la correttezza
+    sintattica e formale del file che stanno per caricare.
+
+    Si noti inoltre la funzione Javascript che richiama il task leggendo il percorso del file appena caricato, consentendo di fatto l'avvio del job; si noti anche
+    che il task è richiamato con il percorso sintetico. Vediamo ora nel dettaglio il codice del task di avvio che andremo a creare in
+    _mod/_6000.amministrazione/_src/_api/_task o nella sua controparte custom:
+
+    \code{.php}
+    <?php
+
+        // inclusione del framework
+      if( ! defined( 'CRON_RUNNING' ) ) {
+          require '../../../../../_src/_config.php';
+      }
+
+        // inizializzo l'array del risultato
+      $status = array();
+
+        // nome file di default
+        if( ! isset( $_REQUEST['file'] ) ) { 
+
+            $status['err'][] = 'file da importare non specificato';
+
+        } else {
+
+            // creo il job
+            $status['inserimento'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO job ( nome, job, iterazioni, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ? )',
+                array(
+                    array( 's' => 'importazione tracciato WRI/CSV bonifici' ),
+                    array( 's' => 'mod/6000.amministrazione/src/api/job/amministrazione.importazione.wri.php' ),
+                    array( 's' => 1 ),
+                    array( 's' => 1 ),
+                    array( 's' => json_encode(
+                        array(
+                            'file' => 'var/contenuti/upload/'.basename( $_REQUEST['file'] )
+                        )
+                    ) )
+                )
+            );
+
+        }
+
+        // output
+      if( ! defined( 'CRON_RUNNING' ) ) {
+          buildJson( $status );
+      }
+    \endcode
+
+    Il compito di questo task è piuttosto semplice, si limita a creare un job inserendo il nome del file da elaborare nel suo workspace. Si noti il meccanismo di
+    protezione che impedisce la creazione del job nel caso in cui non sia specificato alcun file. Task più complessi possono prevedere una verifica formale del file,
+    oppure una sua elaborazione preliminare (per esempio una conversione da XLS a CSV per comodità di lavoro, oppure trasformazioni o semplificazioni dei dati per
+    facilitare il lavoro del job, eccetera).
+
+*/

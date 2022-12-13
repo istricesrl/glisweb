@@ -1,0 +1,39 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+<script>submitFormOkay = true;</script>
+<fieldset id="{{ view.id }}-insert_memo" class="view-insert hidden">
+    <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
+    <input type="hidden" id="timestamp" name="{{ view.open.table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+    <input type="hidden" id="account" name="{{ view.open.table }}[id_account_inserimento]" value="{{ account }}" disabled>
+    {{ frm.input( view.open.table, '', '', 'id_cliente', '', '', '', request[ table ].id_cliente, 'hidden', '', '', 2 ) }}
+    {{ frm.input( view.open.table, '', '', 'id_progetto', '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
+    <div class="form-row d-print-none">
+        <div class="col-12 col-md-auto">
+            <span class="label-top">data promemoria</span>
+            {{ frm.date( view.open.table, '', '', 'data_programmazione', '', '', '', '', '', 1, '', 2 ) }}
+        </div>
+        <div class="col-12 col-md-auto">
+            <span class="label-top">ora inizio</span>
+             {{ frm.time( view.open.table, '', '', 'ora_inizio_programmazione', '', '', request, '', '', '', '', 2) }} 
+        </div>
+        <div class="col-12 col-md-auto">
+            <span class="label-top">ora fine</span>
+             {{ frm.time( view.open.table, '', '', 'ora_fine_programmazione', '', '', request, '', '', '', '', 2) }} 
+        </div>
+        <div class="col-12 col-md-2">
+            <span class="label-top">tipologia</span>
+            {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.id_tipologia, '', 16, '', 1, '', '', 2  ) }}
+        </div>
+        <div class="col-12 col-md-2">
+            <span class="label-top">programmata per</span>
+            {{ frm.selectBox( view.open.table, '', '', 'id_anagrafica_programmazione', '', etc.select.id_anagrafica, request, session.account.id_anagrafica, '', 1,'','','','','', '' , page, pages, ietf,'anagrafica', '2' ) }}
+        </div>
+        <div class="col">
+            <span class="label-top">nome</span>
+            {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', 1, '', 2 ) }}
+        </div>
+        <div class="col-auto">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>

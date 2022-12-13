@@ -14,7 +14,7 @@
 		'etc'			=> array( 'tabs'	=> array(	'documenti.view',
 														'documenti.articoli.view',
 														'pagamenti.view' ) ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'documenti' ),
 														'priority'	=> '100' ) ) )
 	);
@@ -28,7 +28,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.php' ),
 		'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.form', 
 														'documenti.form.relazioni',
 														'documenti.form.righe',
@@ -46,7 +46,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.relazioni.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.relazioni.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
@@ -58,7 +58,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.righe.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.righe.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
@@ -70,7 +70,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.xml.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.xml.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
@@ -82,7 +82,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
@@ -95,7 +95,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.chiusura.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.chiusura.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
@@ -108,7 +108,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.tools.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
@@ -121,7 +121,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array( $m.'_src/_inc/_macro/_documenti.form.stampe.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);
 
@@ -133,7 +133,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_documenti.articoli.view.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.view']['etc']['tabs'] )
 	);
 
@@ -145,7 +145,7 @@
 	    'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.articoli.form','documenti.articoli.form.aggregate','documenti.articoli.form.attivita', 'documenti.articoli.form.tools' ) )
 	);
 
@@ -158,7 +158,7 @@
 		'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.attivita.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.attivita.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
 	);
 
@@ -170,7 +170,7 @@
 			'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
 	);
 
@@ -183,6 +183,6 @@
 		'parent'		=> array( 'id'		=> 'documenti.articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 		'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.tools.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.articoli.form']['etc']['tabs'] )
 	);

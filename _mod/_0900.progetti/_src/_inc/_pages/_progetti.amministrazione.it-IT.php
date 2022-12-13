@@ -18,7 +18,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_progetti.amministrazione.view.php' ),
 			'etc'			=> array( 'tabs'	=> array( 'progetti.amministrazione.view', 'progetti.amministrazione.archivio.view', 'progetti.amministrazione.tools' ) ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'progetti' ),
 																			'priority'	=> '010' ) ) )									
 		);
@@ -33,20 +33,20 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_progetti.amministrazione.archivio.view.php' ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.view']['etc']['tabs'] ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+			'auth'			=> array( 'groups'	=> array(	'roots' ) )
 		);
 
 		// progetti tools
 		$p['progetti.amministrazione.tools'] = array(
 			'sitemap'		=> false,
 			'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-			'title'			=> array( $l		=> 'azioni' ),
+			'title'			=> array( $l		=> 'azioni progetti' ),
 			'h1'			=> array( $l		=> 'azioni' ),
 			'parent'		=> array( 'id'		=> 'amministrazione' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_progetti.amministrazione.tools.php' ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.view']['etc']['tabs'] ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+			'auth'			=> array( 'groups'	=> array(	'roots' ) )
 		);
 
 		// gestione progetti
@@ -57,7 +57,7 @@
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.amministrazione.form.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'progetti.amministrazione.form',
 															'progetti.amministrazione.form.archiviazione',
 															'progetti.amministrazione.form.tools' ) )
@@ -111,7 +111,7 @@
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.amministrazione.form.todo.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.amministrazione.form.todo.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
 		);
 	*/
@@ -126,7 +126,7 @@
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.amministrazione.form.attivita.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.amministrazione.form.attivita.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
 		);
 	*/
@@ -141,7 +141,7 @@
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.amministrazione.form.accettazione.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.amministrazione.form.accettazione.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
 		);
 
@@ -154,7 +154,7 @@
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.amministrazione.form.chiusura.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.amministrazione.form.chiusura.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
 		);
 
@@ -167,7 +167,7 @@
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.amministrazione.form.archiviazione.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.amministrazione.form.archiviazione.php' ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
 		);
 
@@ -181,7 +181,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_progetti.amministrazione.form.tools.php' ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+			'auth'			=> array( 'groups'	=> array(	'roots' ) )
 		);
 
 		$p['progetti.amministrazione.form.sem'] = array(
@@ -205,7 +205,7 @@
 			'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.testo.html' ),
 			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.testo.php' ),
-			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'		=> array( 'tabs'	=> $p['progetti.amministrazione.form']['etc']['tabs'] )
 		);
 	

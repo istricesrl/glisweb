@@ -64,7 +64,7 @@
 
         // definisco la vista andamento progetti
         $ct['view'] = array(
-            'table' => '__report_avanzamento_amministrazione_attiva__',
+            'table' => '__report_avanzamento_amministrazione_gestita__',
             'open' => array(
                 'table' => 'progetti',
                 'page' => 'progetti.amministrazione.form'

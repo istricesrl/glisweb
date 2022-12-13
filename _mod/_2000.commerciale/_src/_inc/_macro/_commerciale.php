@@ -64,7 +64,7 @@
 
         // definisco la vista andamento progetti
         $ct['view'] = array(
-            'table' => '__report_avanzamento_trattative__',
+            'table' => '__report_avanzamento_trattative_attive__',
             'open' => array(
                 'table' => 'progetti',
                 'page' => 'progetti.commerciale.form'
@@ -147,7 +147,7 @@
             );
 
             if( ! empty( $lastAction ) ) {
-                $row['data_ultima_attivita'] .= ' ' . implode( '<br>', array( $lastAction['nome'], $lastAction['note'] ) );
+                $row['data_ultima_attivita'] .= ' ' . implode( '<br>', array( $lastAction['nome'], ( ( ! empty( $lastAction['note_programmazione'] ) ) ? $lastAction['note_programmazione'] . ' &mdash; ' : NULL ) . $lastAction['note'] ) );
             }
 
             $nextAction = mysqlSelectRow(

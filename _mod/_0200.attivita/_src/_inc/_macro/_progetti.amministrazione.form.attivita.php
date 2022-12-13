@@ -42,6 +42,19 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'attivita.form';
 
+    // inserimento rapido
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/progetti.amministrazione.form.attivita.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
+
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert_memo',
+        'file' => 'inc/progetti.amministrazione.form.attivita.insert.promemoria.html',
+        'fa' => 'fa-calendar-plus-o'
+    );
+
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_progetto';
 

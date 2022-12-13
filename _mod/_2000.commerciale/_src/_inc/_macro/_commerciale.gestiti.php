@@ -14,7 +14,7 @@
 
     // ID della vista
     $ct['view']['id'] = md5(
-		$ct['page']['id'] . 'amministrazione' . $_SESSION['__view__']['__site__']
+		$ct['page']['id'] . 'commerciale' . $_SESSION['__view__']['__site__']
 	);
 
     // gruppi di controlli
@@ -32,7 +32,7 @@
 
         // esportazione contatti anagrafica
         $ct['page']['contents']['metro']['00.scorciatoie'][] = array(
-            'modal' => array( 'id' => 'scorciatoia_todo', 'include' => 'inc/amministrazione.modal.todo.html' ),
+            'modal' => array( 'id' => 'scorciatoia_todo', 'include' => 'inc/commerciale.modal.todo.html' ),
             'icon' => NULL,
             'fa' => 'fa-plus-square',
             'title' => 'aggiungi todo',
@@ -43,31 +43,31 @@
 */
 
     $ct['page']['contents']['modals']['metro'][] = array(
-        'schema' => 'inc/amministrazione.modal.todo.html'
+        'schema' => 'inc/commerciale.modal.todo.html'
     );
 
     $ct['page']['contents']['modals']['metro'][] = array(
-        'schema' => 'inc/amministrazione.modal.attivita.html'
+        'schema' => 'inc/commerciale.modal.attivita.html'
     );
 
     $ct['page']['contents']['modals']['metro'][] = array(
-        'schema' => 'inc/amministrazione.modal.promemoria.html'
+        'schema' => 'inc/commerciale.modal.promemoria.html'
     );
 
     // ...
-	if( in_array( "6000.amministrazione", $cf['mods']['active']['array'] ) ) {
+	if( in_array( "2000.commerciale", $cf['mods']['active']['array'] ) ) {
 
         // andamento progetti
         $ct['page']['contents']['metro']['20.andamento'][] = array(
-            'include' => 'inc/amministrazione.dashboard.html'
+            'include' => 'inc/commerciale.dashboard.html'
         );
 
         // definisco la vista andamento progetti
         $ct['view'] = array(
-            'table' => '__report_avanzamento_amministrazione_attiva__',
+            'table' => '__report_avanzamento_trattative_gestite__',
             'open' => array(
                 'table' => 'progetti',
-                'page' => 'progetti.amministrazione.form'
+                'page' => 'progetti.commerciale.form'
             ),
             'data' => array(
                 '__report_mode__' => 1
@@ -173,9 +173,5 @@
         // si potrebbe sfruttare il fatto che ogni vista ha un suo ID? per esempio creare un array
         // $ct['views'] con sottochiave l'ID della vista e copiare lì il $ct['view'] di turno
         // prima di resettarlo?
-
-    } else {
-
-        // die();
 
     }
