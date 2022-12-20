@@ -11,10 +11,10 @@
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'ordini attivi' ),
 			'h1'			=> array( $l		=> 'ordini attivi' ),
-			'parent'		=> array( 'id'		=> 'logistica' ),
+			'parent'		=> array( 'id'		=> 'logistica.documenti.attivi' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_ordini.magazzini.view.php' ),
-			'etc'			=> array( 'tabs'	=> array(   'ordini.magazzini.view', 'ordini.passivi.magazzini.view' ) ),
+			'etc'			=> array( 'tabs'	=> array(   'ordini.magazzini.view' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ordini' ),
 															'priority'	=> '200' ) ) )	
@@ -94,11 +94,13 @@
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'ordini passivi' ),
 			'h1'			=> array( $l		=> 'ordini passivi' ),
-			'parent'		=> array( 'id'		=> 'logistica' ),
+			'parent'		=> array( 'id'		=> 'logistica.documenti.passivi' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_ordini.passivi.magazzini.view.php' ),
-			'etc'			=> array( 'tabs'	=> $p['ordini.magazzini.view']['etc']['tabs'] ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+			'etc'			=> array( 'tabs'	=> array(   'ordini.passivi.magazzini.view' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ordini' ),
+															'priority'	=> '200' ) ) )	
 		);
 
 			// gestione ddt

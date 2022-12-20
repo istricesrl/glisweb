@@ -6570,16 +6570,16 @@ CREATE OR REPLACE VIEW reparti_view AS
 
 --| 090000031400
 
--- righe_fatture_view
+-- righe_fatture_attive_view
 -- tipologia: vista virtuale
-DROP TABLE IF EXISTS `righe_fatture_view`;
+DROP TABLE IF EXISTS `righe_fatture_attive_view`;
 
 --| 090000031401
 
--- righe_fatture_view
+-- righe_fatture_attive_view
 -- tipologia: vista virtuale
 -- verifica: 2021-10-09 16:02 Fabio Mosti
-CREATE OR REPLACE VIEW `righe_fatture_view` AS
+CREATE OR REPLACE VIEW `righe_fatture_attive_view` AS
        SELECT
 		documenti_articoli.id,
 		documenti_articoli.id_genitore,
@@ -6641,15 +6641,16 @@ CREATE OR REPLACE VIEW `righe_fatture_view` AS
 	FROM
 		documenti_articoli
         LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		WHERE tipologie_documenti.id = 1
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
 ;
 
 --| 090000031402
@@ -6725,15 +6726,16 @@ CREATE OR REPLACE VIEW `righe_fatture_passive_view` AS
 	FROM
 		documenti_articoli
         LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti_articoli.id_mastro_destinazione
 		LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-		WHERE tipologie_documenti.id = 11
+   	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
 --| 090000031404

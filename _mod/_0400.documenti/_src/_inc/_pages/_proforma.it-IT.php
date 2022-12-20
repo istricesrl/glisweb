@@ -14,7 +14,7 @@
 				'sitemap'		=> false,
 				'title'			=> array( $l		=> 'proforma' ),
 				'h1'			=> array( $l		=> 'proforma' ),
-				'parent'		=> array( 'id'		=> 'amministrazione' ),
+				'parent'		=> array( 'id'		=> 'amministrazione.documenti.attivi' ),
 				'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 				'macro'			=> array( $m . '_src/_inc/_macro/_proforma.amministrazione.view.php' ),
 				'etc'			=> array( 'tabs'	=> array(   'proforma.amministrazione.view' , 'righe.proforma.amministrazione.view') ),

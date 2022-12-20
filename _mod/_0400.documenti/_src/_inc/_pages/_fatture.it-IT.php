@@ -14,13 +14,11 @@
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'fatture attive' ),
 			'h1'			=> array( $l		=> 'fatture attive' ),
-			'parent'		=> array( 'id'		=> 'amministrazione' ),
+			'parent'		=> array( 'id'		=> 'amministrazione.documenti.attivi' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_fatture.amministrazione.view.php' ),
 			'etc'			=> array( 'tabs'	=> array(   'fatture.amministrazione.view',
-															'righe.fatture.amministrazione.view',
-															'fatture.passive.amministrazione.view',
-															'righe.fatture.passive.amministrazione.view' ) ),
+															'righe.fatture.amministrazione.view' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'fatture' ),
 															'priority'	=> '050' ) ) )	
@@ -166,13 +164,14 @@
 		'sitemap'		=> false,
 		'title'			=> array( $l		=> 'fatture passive' ),
 		'h1'			=> array( $l		=> 'fatture passive' ),
-		'parent'		=> array( 'id'		=> 'amministrazione' ),
+		'parent'		=> array( 'id'		=> 'amministrazione.documenti.passivi' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_fatture.passive.amministrazione.view.php' ),
-		'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.view']['etc']['tabs'] ),
-		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
-	#	'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'fatture passive' ),
-	#													'priority'	=> '060' ) ) )	
+		'etc'			=> array( 'tabs'	=> array(   'fatture.passive.amministrazione.view',
+														'righe.fatture.passive.amministrazione.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'fatture' ),
+														'priority'	=> '060' ) ) )	
 		);
 
 		// vista righe fatture.passive
@@ -183,7 +182,7 @@
 		'parent'		=> array( 'id'		=> 'fatture.passive.amministrazione.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_righe.fatture.passive.amministrazione.view.php' ),
-		'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.view']['etc']['tabs'] ),
+		'etc'			=> array( 'tabs'	=> $p['fatture.passive.amministrazione.view']['etc']['tabs'] ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 

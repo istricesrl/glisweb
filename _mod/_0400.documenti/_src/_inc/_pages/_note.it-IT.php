@@ -14,7 +14,7 @@
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'note di credito' ),
 			'h1'			=> array( $l		=> 'note di credito' ),
-			'parent'		=> array( 'id'		=> 'amministrazione' ),
+			'parent'		=> array( 'id'		=> 'amministrazione.documenti.attivi' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_note.credito.amministrazione.view.php' ),
 			'etc'			=> array( 'tabs'	=> array(   'note.credito.amministrazione.view'
@@ -23,7 +23,7 @@
 #															'righe.note.debito.amministrazione.view' 
 														) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'note' ),
+			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'note di credito' ),
 															'priority'	=> '060' ) ) )	
 		);
 
@@ -57,12 +57,11 @@
 															'note.credito.amministrazione.form.stampe',
 															'note.credito.amministrazione.form.tools' ) )
 		);
-/*
+
 		// RELAZIONI CON IL MODULO ATTIVITA
 		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
-			arrayInsertSeq( 'fatture.amministrazione.form', $p['fatture.amministrazione.form']['etc']['tabs'], 'fatture.amministrazione.form.attivita' );
+			arrayInsertSeq( 'note.credito.amministrazione.form', $p['note.credito.amministrazione.form']['etc']['tabs'], 'note.credito.amministrazione.form.attivita' );
 		}
-*/
 
 		// gestione relazioni note di credito
 		$p['note.credito.amministrazione.form.relazioni'] = array(

@@ -44,7 +44,7 @@
             'title' => 'chiudi documento',
             'text' => 'chiudi con data e ora attuale il documento'
         );
-
+/*
         // aggregazione righe
         $ct['page']['contents']['metro']['amministrazione'][] = array(
             'host' => $ct['site']['url'],
@@ -54,7 +54,7 @@
             'title' => 'aggrega righe',
             'text' => 'aggrega a questo documento tutte le righe non associate'
         );
-
+*/
     } elseif( empty( $_REQUEST[ $ct['form']['table'] ]['codice_archivium'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['progressivo_invio'] ) ) {
 
         // invio a SDI

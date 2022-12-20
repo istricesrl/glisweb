@@ -11,10 +11,10 @@
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'DDT attivi' ),
 			'h1'			=> array( $l		=> 'DDT attivi' ),
-			'parent'		=> array( 'id'		=> 'logistica' ),
+			'parent'		=> array( 'id'		=> 'logistica.documenti.attivi' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_ddt.magazzini.view.php' ),
-			'etc'			=> array( 'tabs'	=> array(   'ddt.magazzini.view', 'ddt.passivi.magazzini.view' ) ),
+			'etc'			=> array( 'tabs'	=> array(   'ddt.magazzini.view' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'DDT' ),
 															'priority'	=> '010' ) ) )	
@@ -104,11 +104,13 @@
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'DDT passivi' ),
 			'h1'			=> array( $l		=> 'DDT passivi' ),
-			'parent'		=> array( 'id'		=> 'logistica' ),
+			'parent'		=> array( 'id'		=> 'logistica.documenti.passivi' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_ddt.passivi.magazzini.view.php' ),
-			'etc'			=> array( 'tabs'	=> array(   'ddt.magazzini.view', 'ddt.passivi.magazzini.view' ) ),
-			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+			'etc'			=> array( 'tabs'	=> array(   'ddt.passivi.magazzini.view' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'DDT' ),
+															'priority'	=> '010' ) ) )	
 		);
 
 		// gestione ddt
