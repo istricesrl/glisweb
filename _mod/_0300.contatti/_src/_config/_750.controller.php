@@ -37,6 +37,7 @@
 
             // integrazione dati
                 $v['modulo'] = $k;
+                $v['sito'] = $cf['site']['url'];
 
             // se esiste una configurazione specifica
                 $cnf = ( isset( $cf['contatti'][ $k ] ) ) ? $cf['contatti'][ $k ] : $cf['contatti']['default'];
@@ -56,8 +57,22 @@
                     // punteggio di spam
                     $spamCheck = ( $bot > 0.1 ) ? true : false;
 
+                } elseif( ! isset( $v['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+
+                    // integrazione dei dati
+                    $v['spam'] = 'token non ricevuto';
+
+                    // punteggio di spam
+                    $spamCheck = false;
+
                 } else {
+
+                    // integrazione dei dati
+                    $v['spam'] = 'n/a';
+
+                    // punteggio di spam
                     $spamCheck = true;
+
                 }
 
             // verifico se è stato superato il check antispam

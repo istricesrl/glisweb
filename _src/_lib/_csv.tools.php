@@ -75,7 +75,9 @@
     }
 
     /**
-     *
+     * converte una matrice in un CSV, considerando la prima riga come intestazione
+     * 
+     * 
      * @todo servirebbe una versione con un parametro solo $data che ritorna la stringa CSV
      * @todo documentare
      *

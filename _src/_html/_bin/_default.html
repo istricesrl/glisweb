@@ -372,7 +372,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 
 {% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo ) %}
 {% if recaptcha.keys.public %}
-<input type="hidden" name="{{ prefisso }}[{{ modulo }}][__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">
+<input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">
 <script>
 	function onSubmit{{ form }}( token ) {
 		console.log( token );
