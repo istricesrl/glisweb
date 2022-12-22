@@ -259,9 +259,10 @@
         if( empty( $doc['cig'] ) ) {
             dieText('richiesto CIG per emettere fattura PA' );
         }
-        if( empty( $doc['cup'] ) ) {
-            dieText('richiesto CUP per emettere fattura PA' );
-        }
+# TODO verificare se è sempre obbligatorio
+#        if( empty( $doc['cup'] ) ) {
+#            dieText('richiesto CUP per emettere fattura PA' );
+#        }
         if( empty( $doc['riferimento'] ) ) {
             dieText('richiesto riferimento per emettere fattura PA' );
         }
