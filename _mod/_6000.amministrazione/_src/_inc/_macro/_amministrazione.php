@@ -42,21 +42,21 @@
     }
 */
 
-    $ct['page']['contents']['modals']['metro'][] = array(
-        'schema' => 'inc/amministrazione.modal.todo.html'
-    );
-
-    $ct['page']['contents']['modals']['metro'][] = array(
-        'schema' => 'inc/amministrazione.modal.attivita.html'
-    );
-
-    $ct['page']['contents']['modals']['metro'][] = array(
-        'schema' => 'inc/amministrazione.modal.promemoria.html'
-    );
-
     // ...
-	if( in_array( "6000.amministrazione", $cf['mods']['active']['array'] ) ) {
+	if( in_array( "0900.progetti", $cf['mods']['active']['array'] ) ) {
 
+        $ct['page']['contents']['modals']['metro'][] = array(
+            'schema' => 'inc/amministrazione.modal.todo.html'
+        );
+    
+        $ct['page']['contents']['modals']['metro'][] = array(
+            'schema' => 'inc/amministrazione.modal.attivita.html'
+        );
+    
+        $ct['page']['contents']['modals']['metro'][] = array(
+            'schema' => 'inc/amministrazione.modal.promemoria.html'
+        );
+    
         // andamento progetti
         $ct['page']['contents']['metro']['20.andamento'][] = array(
             'include' => 'inc/amministrazione.dashboard.html'

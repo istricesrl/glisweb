@@ -2183,7 +2183,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_iban` int(11) DEFAULT NULL,
-  `importo_lordo_totale` decimal(9,2) NOT NULL,
+  `importo_lordo_totale` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL, 
 	`timestamp_scadenza` int(11) DEFAULT NULL,

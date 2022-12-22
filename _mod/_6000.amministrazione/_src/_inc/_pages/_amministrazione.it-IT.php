@@ -20,19 +20,23 @@
 														'priority'	=> '210' ) ) )
 	);
 
-	// dashboard amministrazione
-	$p['amministrazione.gestiti'] = array(
-	    'sitemap'		=> false,
-	    'title'		=> array( $l		=> 'gestita' ),
-	    'h1'		=> array( $l		=> 'gestita' ),
-	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'amministrazione.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_amministrazione.gestita.php' ),
-	    'parent'	=> array( 'id'		=> 'amministrazione' ),
-		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> $p['amministrazione']['etc']['tabs'] )
-    );
+	if( in_array( "0900.progetti", $cf['mods']['active']['array'] ) ) {
 
-    // tools produzione
+		// dashboard amministrazione
+		$p['amministrazione.gestiti'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'gestita' ),
+			'h1'		=> array( $l		=> 'gestita' ),
+			'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'amministrazione.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_amministrazione.gestita.php' ),
+			'parent'	=> array( 'id'		=> 'amministrazione' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['amministrazione']['etc']['tabs'] )
+		);
+
+	}
+
+	// tools produzione
 	$p['amministrazione.tools'] = array(
 		'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
