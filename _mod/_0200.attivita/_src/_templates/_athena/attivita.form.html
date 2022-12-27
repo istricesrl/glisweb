@@ -320,7 +320,6 @@
 						{{ frm.selectBox( table, '', '', 'id_progetto', 'progetto', etc.select.id_progetto, request, default, '','','','','progetti.produzione.form','','progetti', 'id_progetto', page, pages, ietf,'progetti' ) }}
 					</div>
 					{% endif %}
-	
 					<div class="col-12 col-md-6">
 						<span class="label-top">indirizzo</span>
 						{% if request.__continue__ %}{% set default = session.__latest__[ table ].id_indirizzo %}{% else %}{% set default = '' %}{% endif %}
@@ -336,6 +335,13 @@
 						<span class="label-top">barcode matricola</span>
 						{{ frm.input( table, '', '', '__matricola__', '', '', request ) }}
 					</div-->
+					{% endif %}
+					{% if '0400.documenti' in mods.active.array %}
+					<div class="col-12 col-md-6">
+						<span class="label-top">documento</span>
+						{% if request.__continue__ %}{% set default = session.__latest__[ table ].id_documento %}{% else %}{% set default = '' %}{% endif %}
+						{{ frm.selectBox( table, '', '', 'id_documento', 'documento', etc.select.id_documento, request, default, '','','','','documenti.form','','progetti', 'id_documento', page, pages, ietf, 'documenti' ) }}
+					</div>
 					{% endif %}
 				</div>
 			</fieldset>

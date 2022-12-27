@@ -3,6 +3,26 @@
     /**
      * libreria per la gestione di Google reCaptcha
      * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * vedi:
+     * - https://stackoverflow.com/questions/51507695/google-recaptcha-v3-example-demo
+     * - https://stackoverflow.com/questions/48224799/test-invisible-recaptcha
+     * - https://www.flood.io/blog/how-to-test-recaptcha-when-running-load-tests
+     * - https://stackoverflow.com/questions/48600034/recaptchaerror-for-site-owner-invalid-site-key
+     * - https://stackoverflow.com/questions/1241947/how-do-i-show-multiple-recaptchas-on-a-single-page
+     * - https://developers.google.com/recaptcha/docs/v3
+     * 
+     * pannello di controllo reCAPTCHA:
+     * - https://www.google.com/recaptcha/about/
+     * 
+     * 
+     * 
      * @todo documentare
      * 
      * @file

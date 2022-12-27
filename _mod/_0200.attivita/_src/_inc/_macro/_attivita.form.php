@@ -89,6 +89,25 @@
             'SELECT id, __label__ FROM todo_view' );
 	}
 
+    // tendina todo
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_documento'] ) ) {
+	    $ct['etc']['select']['id_documento'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM documenti_view WHERE id_documento = ? ', 
+            array( 
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_documento'] )
+            )
+            );
+	} else {
+	    $ct['etc']['select']['id_documento'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM documenti_view' );
+	}
+
     // tendina indirizzi
     $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

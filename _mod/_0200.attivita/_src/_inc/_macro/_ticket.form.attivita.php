@@ -58,6 +58,9 @@
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_todo';
 
+	// campo preset per la data attività
+	$ct['view']['open']['preset']['fields']['data_attivita'] = date( 'Y-m-d' );
+
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
         // preset filtro custom progetti aperti
 	    $ct['view']['__restrict__']['id_todo']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];

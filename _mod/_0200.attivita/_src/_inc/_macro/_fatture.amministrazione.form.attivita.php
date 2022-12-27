@@ -41,6 +41,9 @@
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_documento';
 
+	// campo preset per la data attività
+	$ct['view']['open']['preset']['fields']['data_attivita'] = date( 'Y-m-d' );
+
 	$ct['view']['cols'] = array(
         'id' => '#',
         'data_attivita' => 'data',
