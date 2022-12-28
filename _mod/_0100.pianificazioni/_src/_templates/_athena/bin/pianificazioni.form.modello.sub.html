@@ -63,6 +63,14 @@
 			<span class="label-top">listino</span>
 			{{ frm.selectRequired( table, subtable, i, 'model_id_listino', '', etc.select.listini, request, '', '', '', disabled ) }}
 	    </div>
+		<div class="col-2 col-md-1">
+			<span class="label-top">giorni</span>
+			{{ frm.input( table, subtable, i, 'offset_giorni', '', '', request, '', '', '', '', disabled  ) }}
+		</div>
+		<div class="col-2 col-md-auto">
+			<span class="label-top">fine mese</span>
+			{{ frm.select( table, subtable, i, 'offset_fine_mese', '', etc.select.fine_mese, request, '', '', '', disabled ) }}
+		</div>
 		{% endif %}
 		{% else %}
 		<div class="col">

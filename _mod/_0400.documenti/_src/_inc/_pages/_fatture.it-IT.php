@@ -51,6 +51,7 @@
 															'fatture.amministrazione.form.righe',
 															'fatture.amministrazione.form.pagamenti',
 															'fatture.amministrazione.form.chiusura',
+															'fatture.amministrazione.form.file',
 															'fatture.amministrazione.form.stampe',
 															'fatture.amministrazione.form.tools' ) )
 		);
@@ -134,6 +135,19 @@
 		);
 
 		// gestione tools fatture
+		$p['fatture.amministrazione.form.file'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'file' ),
+			'h1'			=> array( $l		=> 'file' ),
+			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.file.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.file.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione tools fatture
 		$p['fatture.amministrazione.form.tools'] = array(
 			'sitemap'		=> false,
 			'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -198,6 +212,7 @@
 			'etc'			=> array( 'tabs'	=> array(	'fatture.passive.amministrazione.form',
 															'fatture.passive.amministrazione.form.righe',
 															'fatture.passive.amministrazione.form.pagamenti',
+															'fatture.passive.amministrazione.form.file',
 															'fatture.passive.amministrazione.form.stampe',
 															'fatture.passive.amministrazione.form.tools' ) )
 		);
@@ -259,6 +274,19 @@
 			'parent'		=> array( 'id'		=> 'fatture.passive.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.passive.amministrazione.form.chiusura.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.passive.amministrazione.form.tools.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['fatture.passive.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione tools fatture
+		$p['fatture.passive.amministrazione.form.file'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'file' ),
+			'h1'			=> array( $l		=> 'file' ),
+			'parent'		=> array( 'id'		=> 'fatture.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.passive.amministrazione.form.file.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.passive.amministrazione.form.file.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['fatture.passive.amministrazione.form']['etc']['tabs'] )
 		);

@@ -3301,6 +3301,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_mail_sent, 
 		file.id_progetto,
 		file.id_categoria_progetti,
+		file.id_documento,
 		file.id_indirizzo,
 		file.id_edificio,
 		file.id_immobile,
@@ -7157,6 +7158,7 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_categorie_risorse,
 		ruoli_file.se_mail,
 		ruoli_file.se_immobili,
+		ruoli_file.se_documenti,
 	 	ruoli_file_path( ruoli_file.id ) AS __label__
 	FROM ruoli_file
 ;

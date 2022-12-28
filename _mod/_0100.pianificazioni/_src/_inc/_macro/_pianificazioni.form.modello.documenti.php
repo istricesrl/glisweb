@@ -73,5 +73,10 @@
 	    );
 	} 
 
-    // gestione default
+    // tendina fine mese
+	$ct['etc']['select']['fine_mese'] = array( 
+	    array( 'id' => '1', '__label__' => 'fine mese' )
+	);
+
+	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';

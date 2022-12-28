@@ -269,15 +269,66 @@ REPLACE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `id_acc
 
 --| 050000016000
 
-REPLACE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`) VALUES
-(1,	22.00,	'IVA 22%',                                                          'IVA 22%',	                                                                                                                                NULL),
-(2,	10.00,	'IVA agevolata 10%',	                                            'IVA agevolata 10%',	                                                                                                                    NULL),
-(3,	4.00,	'IVA agevolata 4%',	                                                'IVA agevolata 4%',	                                                                                                                        NULL),
-(4,	0.00,	'escluso ex art. 15 d.P.R. n. 633/1972',	                        'operazione esclusa ex art. 15 del d.P.R. n. 633/1972',	                                                                                    'N1'),
-(5,	0.00,	'non soggetto ex art.7 d.P.R. 633/1972',	                        'operazione non soggetta a IVA ex art. 7 del d.P.R. 633/1972',	                                                                            'N2'),
-(6,	0.00,	'non imponibile ex art. 8 d.P.R. 633/1972',	                        'operazione non imponibile ex art. 8 del d.P.R. 633/1972',	                                                                                'N3'),
-(7,	0.00,	'fuori campo IVA ex art. 2 d.P.R. 633/1972',	                    'operazione non imponibile ex art. 2 del d.P.R. 633/1972',	                                                                                'N2'),
-(8,	0.00,	'non soggetto ex art. 1 ll. nn. 190/2014, 208/2015 e 145/2018',     'operazione non soggetta a IVA ai sensi ex art. 1 legge 190/2014 come modificato dalla legge n. 208/2015 e dalla legge n. 145/2018',	    'N2');
+-- iva
+REPLACE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestamp_archiviazione`) VALUES
+(1,	22.00,	'IVA 22%',	'IVA 22%',	NULL,	NULL),
+(2,	10.00,	'IVA agevolata 10%',	'IVA agevolata 10%',	NULL,	NULL),
+(3,	4.00,	'IVA agevolata 4%',	'IVA agevolata 4%',	NULL,	NULL),
+(4,	0.00,	'escluso ex art. 15 d.P.R. n. 633/1972',	'operazione esclusa ex art. 15 del d.P.R. n. 633/1972',	'N1',	NULL),
+(5,	0.00,	'non soggetto ex art.7 bis d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 7 bis del d.P.R. 633/1972 (cessione di beni extra UE)',	'N2.1',	NULL),
+(6,	0.00,	'non imponibile ex art. 8 c. 1 lett. a d.P.R. 633/1972',	'operazione non imponibile ex art. 8 comma 1 lettera a del d.P.R. 633/1972',	'N3.1',	NULL),
+(7,	0.00,	'fuori campo IVA ex art. 2 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 2 del d.P.R. 633/1972',	'N2.2',	NULL),
+(8,	0.00,	'non soggetto ex art. 1 cc. 54-89 l. 190/2014 e succ. mod.',	'operazione non soggetta a IVA ai sensi ex art. 1 legge 190/2014 commi 54-89 e successive modificazioni (regime forfettario)',	'N2.2',	NULL),
+(9,	0.00,	'fuori campo IVA ex art. 3 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 3 del d.P.R. 633/1972',	'N2.2',	NULL),
+(10,	0.00,	'fuori campo IVA ex art. 4 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 4 del d.P.R. 633/1972',	'N2.2',	NULL),
+(11,	0.00,	'fuori campo IVA ex art. 5 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 5 del d.P.R. 633/1972',	'N2.2',	NULL),
+(12,	0.00,	'non soggetto ex art.7 ter d.P.R. 633/1972 (servizi UE)',	'operazione non soggetta a IVA ex art. 7 ter del d.P.R. 633/1972 (prestazione di servizi UE)',	'N2.1',	NULL),
+(13,	0.00,	'non soggetto ex art.7 ter d.P.R. 633/1972 (servizi extra UE)',	'operazione non soggetta a IVA ex art. 7 ter del d.P.R. 633/1972 (prestazione di servizi extra UE)',	'N2.1',	NULL),
+(14,	0.00,	'non soggetto ex art.7 quater d.P.R. 633/1972 (servizi UE)',	'operazione non soggetta a IVA ex art. 7 quater del d.P.R. 633/1972 (prestazione di servizi UE)',	'N2.1',	NULL),
+(15,	0.00,	'non soggetto ex art.7 quater d.P.R. 633/1972 (servizi extra UE)',	'operazione non soggetta a IVA ex art. 7 quater del d.P.R. 633/1972 (prestazione di servizi extra UE)',	'N2.1',	NULL),
+(16,	0.00,	'non soggetto ex art.7 quinquies d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 7 quinquies del d.P.R. 633/1972 (prestazione di servizi)',	'N2.1',	NULL),
+(17,	0.00,	'non soggetto ex art.7 sexies, septies d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 7 sexies, septies del d.P.R. 633/1972 (prestazione di servizi)',	'N2.1',	NULL),
+(18,	0.00,	'non soggetto ex art. 38 c. 5 d.l. 331/1993',	'operazione non soggetta a IVA ex art. 38 comma 5 d.l. 331/1993',	'N2.2',	NULL),
+(19,	0.00,	'non soggetto ex art. 50 bis c. 4 d.l. 331/1993',	'operazione non soggetta a IVA ex art. 50 bis comma 4 d.l. 331/1993',	'N2.2',	NULL),
+(20,	0.00,	'non soggetto ex art. 17 c. 3 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 17 comma 3 del d.P.R. 633/1972',	'N2.2',	NULL),
+(21,	0.00,	'non soggetto ex art. 19 c. 3 lett. b d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 19 comma 3 lettera b del d.P.R. 633/1972',	'N2.2',	NULL),
+(22,	0.00,	'non soggetto ex art. 74 cc. 1 e 2 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 74 commi 1 e 2 del d.P.R. 633/1972',	'N2.2',	NULL),
+(23,	0.00,	'non soggetto ex art. 19 c. 3 lett. e d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 19 comma 3 lettera e del d.P.R. 633/1972',	'N2.2',	NULL),
+(24,	0.00,	'non soggetto ex art. 13 d.l. 331/1993',	'operazione non soggetta a IVA ex art. 13 d.l. 331/1993',	'N2.2',	NULL),
+(25,	0.00,	'non soggetto ex art. 27 cc. 1 e 2 d.l. 98/2011 (contrib. minimi)',	'operazione non soggetta a IVA ex art. 27 commi 1 e 2 del d.l. 98/2011 (contribuenti minimi)',	'N2.2',	NULL),
+(26,	0.00,	'non soggetto ex art. 26 c. 3 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 26 comma 3 del d.P.R. 633/1972',	'N2.2',	NULL),
+(27,	0.00,	'non soggetto ex d.m. 9/4/1993',	'operazione non soggetta a IVA ex d.m. 9/4/1993',	'N2.2',	NULL),
+(28,	0.00,	'non soggetto ex art. 26 bis l. 196/1997',	'operazione non soggetta a IVA ex art. 26 bis l. 196/1997',	'N2.2',	NULL),
+(29,	0.00,	'non soggetto ex art. 8 c. 35 l. 671/1988',	'operazione non soggetta a IVA ex art. 8 comma 35 l. 671/1988',	'N2.2',	NULL),
+(30,	0.00,	'non imponibile ex art. 8 c. 1 lett. b d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 8 comma 1 lettera b del d.P.R. 633/1972',	'N3.1',	NULL),
+(31,	0.00,	'non imponibile ex art. 2 c. 2 n. 4 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 2 comma 2 numero 4 del d.P.R. 633/1972',	'N3.6',	NULL),
+(32,	0.00,	'non imponibile ex art. 8 bis d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 8 bis del d.P.R. 633/1972',	'N3.4',	NULL),
+(33,	0.00,	'non imponibile ex art. 9 c. 1 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 9 comma 1 del d.P.R. 633/1972',	'N3.6',	NULL),
+(34,	0.00,	'non imponibile ex art. 72 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 72 del d.P.R. 633/1972',	'N3.6',	NULL),
+(35,	0.00,	'non imponibile ex art. 71 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 71 del d.P.R. 633/1972',	'N3.6',	NULL),
+(36,	0.00,	'non imponibile ex art. 8 c. 1 lett. b bis d.P.R. 633/1972',	'operazione non imponibile ex art. 8 comma 1 lettera b bis del d.P.R. 633/1972',	'N3.1',	NULL),
+(37,	0.00,	'non imponibile ex art. 8 c. 1 lett. c d.P.R. 633/1972',	'operazione non imponibile ex art. 8 comma 1 lettera c del d.P.R. 633/1972',	'N3.5',	NULL),
+(38,	0.00,	'non imponibile ex art. 8 bis c. 2 d.P.R. 633/1972',	'operazione non imponibile ex art. 8 bis comma 2 del d.P.R. 633/1972',	'N3.4',	NULL),
+(39,	0.00,	'non imponibile ex art. 9 c. 2 d.P.R. 633/1972',	'operazione non imponibile ex art. 9 comma 2 del d.P.R. 633/1972',	'N3.1',	NULL),
+(40,	0.00,	'non imponibile ex art. 72 c. 1 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 72 comma 1 del d.P.R. 633/1972',	'N3.1',	NULL),
+(41,	0.00,	'non imponibile ex art. 50 bis c. 4 lett. g d.l. 331/93',	'operazione non soggetta a IVA ex art. 50 comma 4 lettera g del d.l. 331/93',	'N3.1',	NULL),
+(42,	0.00,	'non imponibile ex art. 50 bis c. 4 lett. f d.l. 331/93',	'operazione non soggetta a IVA ex art. 50 comma 4 lettera f del d.l. 331/93',	'N3.2',	NULL),
+(43,	0.00,	'non imponibile ex art. 41 d.l. 331/93',	'operazione non soggetta a IVA ex art. 41 del d.l. 331/93',	'N3.2',	NULL),
+(44,	0.00,	'non imponibile ex art. 58 c. 1 d.l. 331/93',	'operazione non soggetta a IVA ex art. 58 comma 1 del d.l. 331/93',	'N3.2',	NULL),
+(45,	0.00,	'non imponibile ex art. 38 quater c. 1 d.P.R. 633/1972',	'operazione non soggetta a IVA ex art. 38 quater comma 1 del d.P.R. 633/1972',	'N3.6',	NULL),
+(46,	0.00,	'non imponibile ex art. 14 l. 49/1987',	'operazione non soggetta a IVA ex art. 14 l. 49/1987',	'N3.1',	NULL),
+(47,	0.00,	'esente ex art. 10 d.P.R. 633/1972',	'operazione esente IVA ex art. 10 del d.P.R. 633/1972',	'N4',	NULL),
+(48,	0.00,	'esente ex art. 19 c. 3 lett. a bis d.P.R. 633/1972',	'operazione esente IVA ex art. 19 comma 3 lettera a bis del d.P.R. 633/1972',	'N4',	NULL),
+(49,	0.00,	'esente ex art. 10 n. 27 quinquies d.P.R. 633/1972',	'operazione esente IVA ex art. 10 num. 27 quinquies del d.P.R. 633/1972',	'N4',	NULL),
+(50,	0.00,	'esente ex art. 10 n. 18 d.P.R. 633/1972',	'operazione esente IVA ex art. 10 num. 18 del d.P.R. 633/1972',	'N4',	NULL),
+(51,	0.00,	'esente ex art. 10 n. 19 d.P.R. 633/1972',	'operazione esente IVA ex art. 10 num. 19 del d.P.R. 633/1972',	'N4',	NULL),
+(52,	0.00,	'regime ex art. 36 d.l. 41/1995',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 36 d.l. 41/1995',	'N5',	NULL),
+(53,	0.00,	'regime ex art. 36 c. 1 d.l. 41/1995',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 36 comma 1 d.l. 41/1995',	'N5',	NULL),
+(54,	0.00,	'regime ex art. 36 c. 5 d.l. 41/1995',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 36 comma 5 d.l. 41/1995',	'N5',	NULL),
+(55,	0.00,	'regime ex art. 36 c. 6 d.l. 41/1995',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 36 comma 6 d.l. 41/1995',	'N5',	NULL),
+(56,	0.00,	'regime ex art. 74 ter d.P.R. 633/1972 (ag. di viaggio)',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 74 ter del d.P.R. 633/1972 (regime speciale agenzie di viaggio)',	'N5',	NULL),
+(57,	0.00,	'regime ex art. 17 c. 6 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 comma 6 del d.P.R. 633/1972',	'N6',	NULL),
+(58,	0.00,	'regime ex art. 17 cc. 7 e 8 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 commi 7 e 8 del d.P.R. 633/1972',	'N6',	NULL);
 
 --| 050000016800
 
@@ -551,7 +602,8 @@ REPLACE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 -- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:34 Fabio Mosti
 INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_inserimento`, `id_account_inserimento`, `timestamp_aggiornamento`, `id_account_aggiornamento`) VALUES
-(1,	1,	NULL,	'VENDITA IVA 22%',	NULL,	NULL,	NULL,	NULL,	NULL);
+(1,	1,	NULL,	'VENDITA IVA 22%',	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	9,	NULL,	'CANONI LOCAZIONE',	'fuori campo IVA ex art. 3 d.P.R. 633/1972',	NULL,	NULL,	NULL,	NULL);
 
 --| 050000034000
 
@@ -626,18 +678,19 @@ REPLACE INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 -- ruoli_file
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:14 Fabio Mosti
-REPLACE INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_mail`, `se_immobili`) VALUES
-(1,	NULL,	'allegato',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	1,	1),
-(2,	NULL,	'brochure',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	'documentazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(4,	NULL,	'driver',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	'manualistica',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(6,	NULL,	'press kit',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	NULL,	'schede tecniche',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	NULL,	'software',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	NULL,	'contratto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(10,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
-(11,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+REPLACE INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_mail`, `se_immobili`, `se_documenti`) VALUES
+(1,	NULL,	'allegato',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
+(2,	NULL,	'brochure',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'documentazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(4,	NULL,	'driver',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'manualistica',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(6,	NULL,	'press kit',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'schede tecniche',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'software',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	'contratto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(10,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(11,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(12,	NULL,	'scansione',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 --| 050000034600
 
@@ -1070,36 +1123,35 @@ INSERT INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_
 -- tipologie_documenti
 -- tipologia: tabella di supporto
 -- verifica: 2021-12-07 17:00 Chiara GDL
-INSERT INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `numerazione`, `nome`, `sigla`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `se_ecommerce`, `stampa_xml`, `stampa_pdf`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'TD01',	'F',	'fattura',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	'TD01',	'F',	'fattura accompagnatoria',	'fatt. acc.',	NULL,	NULL,	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	'TD04',	'F',	'nota di credito',	'n. di credito',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	NULL,	'T',	'documento di trasporto',	'DDT',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	NULL,	NULL,	'P',	'pro forma',	'profroma',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	NULL,	NULL,	NULL,	'O',	'offerta',	'off.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	NULL,	NULL,	NULL,	'E',	'ordine',	'ord.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	NULL,	NULL,	NULL,	'R',	'ricevuta',	'ric.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	NULL,	NULL,	NULL,	'S',	'scontrino',	'scontr.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	NULL,	NULL,	'G',	'documento di ritiro',	'doc. di ritiro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	NULL,	NULL,	'H',	'documento di consegna',	'doc. di consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(12,	NULL,	NULL,	NULL,	'I',	'documento di reso',	'doc. di reso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL) 
-ON DUPLICATE KEY UPDATE
-	id_genitore = VALUES( id_genitore ),
-	ordine = VALUES( ordine ),
-	nome = VALUES(nome),
-    sigla = VALUES(sigla),
-	html_entity = VALUES(html_entity),
-	font_awesome = VALUES(font_awesome),
-	codice = VALUES( codice ),
-	numerazione = VALUES(numerazione),
-	se_fattura = VALUES(se_fattura),
-	se_nota_credito = VALUES(se_nota_credito),
-	se_trasporto = VALUES(se_trasporto),
-	se_pro_forma = VALUES(se_pro_forma),
-	se_offerta = VALUES(se_offerta),
-	se_ordine = VALUES(se_ordine),
-	se_ricevuta= VALUES(se_ricevuta),
-	se_ecommerce= VALUES(se_ecommerce);
+REPLACE INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `numerazione`, `nome`, `sigla`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_nota_debito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `se_ecommerce`, `stampa_xml`, `stampa_pdf`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'TD01',	'F',	'fattura',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	1,	NULL,	'TD01',	'F',	'fattura accompagnatoria',	'fatt. acc.',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'TD04',	'F',	'nota di credito',	'n. di credito',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	NULL,	'T',	'documento di trasporto',	'DDT',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	NULL,	'P',	'pro forma',	'profroma',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	NULL,	NULL,	'O',	'offerta',	'off.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	NULL,	NULL,	'E',	'ordine',	'ord.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	NULL,	NULL,	'R',	'ricevuta',	'ric.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	NULL,	NULL,	'S',	'scontrino',	'scontr.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	NULL,	NULL,	'G',	'documento di ritiro',	'doc. di ritiro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	NULL,	NULL,	NULL,	'H',	'documento di consegna',	'doc. di consegna',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	NULL,	NULL,	NULL,	'I',	'documento di reso',	'doc. di reso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	NULL,	NULL,	'TD02',	'F',	'acconto/anticipo su fattura',	'acc.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	NULL,	NULL,	'TD03',	'F',	'acconto/anticipo su parcella',	'acc.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	NULL,	NULL,	'TD05',	'F',	'nota di debito',	'n. di debito',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(16,	NULL,	NULL,	'TD06',	'F',	'parcella',	'parcella',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(17,	1,	NULL,	'TD16',	'F',	'integrazione fattura reverse charge interno',	'integr.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(18,	1,	NULL,	'TD17',	'F',	'integrazione autofattura acquisto servizi dall\'estero',	'integr.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(19,	1,	NULL,	'TD18',	'F',	'integrazione per acquisto beni intracomunitari',	'integr.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(20,	1,	NULL,	'TD19',	'F',	'integrazione/autofattura per acquisto beni',	'integr.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(21,	1,	NULL,	'TD20',	'F',	'autofattura per regolarizzazione e integrazione fatture',	'autofatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(22,	1,	NULL,	'TD21',	'F',	'autofattura per splafonamento',	'autofatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(23,	1,	NULL,	'TD22',	'F',	'estrazione beni da deposito IVA',	'estr.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(24,	1,	NULL,	'TD23',	'F',	'estrazione beni da deposito IVA con versamento dell\'IVA',	'estr.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(25,	1,	NULL,	'TD24',	'F',	'fattura differita ex art. 21 c. 4 terzo per. lett. a d.P.R. 633/1972',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(26,	1,	NULL,	'TD25',	'F',	'fattura differita ex art. 21 c. 4 terzo per. lett. b d.P.R. 633/1972',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(27,	1,	NULL,	'TD26',	'F',	'cessione beni ammortizzabili e per passaggi interni',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(28,	1,	NULL,	'TD27',	'F',	'fattura per autoconsumo o cessioni gratuite senza rivalsa',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000052800
 

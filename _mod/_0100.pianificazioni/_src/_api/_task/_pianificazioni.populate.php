@@ -318,8 +318,21 @@
 
                 $twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $row ) );
                 $importo_lordo_totale = $twig->render( 'model_importo_lordo_totale', $d );
+                $scadenza = $data . ' 00:00:00';
 
-                $timestamp_scadenza = strtotime( $data . ' 00:00:00' );
+                if( ! empty( $row['offset_giorni'] ) ) {
+                    $mesi = floor( $row['offset_giorni'] / 30 );
+                    $giorni = $row['offset_giorni'] - ( $mesi * 30 );
+                    $scadenza .= ' +' . $mesi . ' months +' . $giorni . ' days';
+                    $status['dettagli'][ $data ][] = 'pagamento differito: '.$scadenza;
+                }
+
+                if( ! empty( $row['offset_fine_mese'] ) ) {
+                    $scadenza = date( 'Y-m-t H:m:s', strtotime( $scadenza ) );
+                    $status['dettagli'][ $data ][] = 'pagamento differito a fine mese: '.$scadenza;
+                }
+
+                $timestamp_scadenza = strtotime( $scadenza );
 
                 $detail = mysqlInsertRow(
                     $cf['mysql']['connection'],
