@@ -24,6 +24,11 @@
 																		'priority'	=> '200' ) ) )														
 	);
 
+	// RELAZIONI CON IL MODULO ATTIVITÀ
+	if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'produzione.contratti', $p['produzione']['etc']['tabs'], 'produzione.attivita' );
+	}
+
 	// RELAZIONI CON IL MODULO TODO
 	if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
 		arrayInsertSeq( 'produzione.contratti', $p['produzione']['etc']['tabs'], 'produzione.done' );
@@ -45,6 +50,7 @@
 		'etc'			=> array( 'tabs'	=> $p['produzione']['etc']['tabs'] )
 	);
 
+	// TODO questa andrebbe nel modulo contratti?
 	// ...
 	$p['produzione.contratti'] = array(
 		'sitemap'		=> false,

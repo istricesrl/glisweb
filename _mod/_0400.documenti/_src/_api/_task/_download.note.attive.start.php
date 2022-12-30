@@ -19,7 +19,7 @@
             array( 's' => json_encode(
                     array(
                         'aziende' => mysqlSelectColumn( 'codice_archivium', $cf['mysql']['connection'], 'SELECT DISTINCT codice_archivium FROM anagrafica WHERE codice_archivium IS NOT NULL' ),
-                        'data' => ( ( isset( $_REQUEST['dateFrom'] ) ) ? $_REQUEST['dateFrom'] : date( 'Y-m-d', strtotime( '-1 day' ) ) )
+                        'data' => ( ( isset( $_REQUEST['dateFrom'] ) ) ? $_REQUEST['dateFrom'] : date( 'Y-m-d', strtotime( '-7 day' ) ) )
                     )
                 )
             )

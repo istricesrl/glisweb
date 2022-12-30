@@ -1,0 +1,21 @@
+/*!
+
+    \page moduli.0400 modulo documenti
+
+    Panoramica dei modulo documenti.
+
+    introduzione
+    ============
+
+    logica di funzionamento
+    -----------------------
+
+
+    debug del sistema di interscambio
+    ---------------------------------
+
+    [...] si può anche chiamare il task task/0400.documenti/download.note.attive specificando i parametri idAzienda e idDocumento [...]
+
+    [...] per attivare manualmente il job di download delle note chiamare il task task/0400.documenti/download.note.attive.start [...]
+
+*/

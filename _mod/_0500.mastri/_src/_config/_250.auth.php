@@ -20,30 +20,36 @@
 	    $cf['auth']['permissions'],
         array(
             'mastri' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'magazzini' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),
             'conti' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'registri' => array(
                 CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_mastri__' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_giacenza_magazzini__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_giacenza_magazzini_foglie__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_giacenza_magazzini_foglie_attive__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_movimenti_magazzini__' => array(
                 CONTROL_FULL => array( 'roots' ),

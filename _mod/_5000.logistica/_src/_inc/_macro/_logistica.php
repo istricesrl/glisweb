@@ -22,7 +22,7 @@
 			'label' => 'azioni rapide'
 		)
 	);
-
+/*
 	if( in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
 
         // ricerca ordini da evadere
@@ -63,3 +63,4 @@
         );
 
     }
+*/

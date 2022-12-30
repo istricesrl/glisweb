@@ -184,8 +184,6 @@
 	
 				foreach( $pFiles as $pFile ) {
 	
-					appendToFile( 'elaborazione file patch -> ' . $pFile . PHP_EOL, FILE_LATEST_RUN );
-
 					$pFilePatchLevel = substr( basename( $pFile ), 1, 12 );
 	
 					// echo 'patch level del file ' . $pFilePatchLevel . HTML_EOL;
@@ -193,6 +191,8 @@
 	
 					if( $pFilePatchLevel > $patchLevel ) {
 	
+						appendToFile( 'elaborazione file patch -> ' . $pFile . PHP_EOL, FILE_LATEST_RUN );
+
 						// echo 'prelevo le patch dal file ' . $pFilePatchLevel . HTML_EOL;
 	
 						$rows = readFromFile( $pFile );

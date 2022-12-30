@@ -48,7 +48,7 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 			<div class="form-group form-row">
-				<div class="col-12 col-md-2">
+				<div class="col-12 col-md-auto">
 					<span class="label-top">tipologia</span>
 					{% if request.__continue__ %}{% set default = session.__latest__[ table ].id_tipologia %}{% else %}{% set default = '' %}{% endif %}
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request, default ) }}

@@ -23,6 +23,7 @@
      // campi della vista
      $ct['view']['cols'] = array(
 	    'id' => '#',
+        'tipologia' => 'tipologia',
         'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
         'ora_fine_programmazione' => 'ora fine',
@@ -40,7 +41,7 @@
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
         'anagrafica_programmazione' => 'text-left',
-	    'data_programmazione' => 'text-left no-wrap',
+	    'data_programmazione' => 'no-wrap',
 	    'ora_inizio_programmazione' => 'd-none',
         'ora_fine_programmazione' => 'd-none',
 	    'anagrafica' => 'text-left no-wrap',
@@ -97,7 +98,7 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
-    if( !empty( $ct['view']['data'] ) ){
+    if( !empty( $ct['view']['data'] ) ) {
 		foreach ( $ct['view']['data'] as &$row ){
             if( !empty($row['data_programmazione']) && (!empty($row['ora_inizio_programmazione']) || !empty($row['ora_fine_programmazione']) )){ 
                 $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']) ).'  '.( empty($row['ora_inizio_programmazione']) ? ' '  : date('H:i', strtotime($row['ora_inizio_programmazione']))).' &mdash; '.( empty($row['ora_fine_programmazione']) ? ' ' :date('H:i', strtotime($row['ora_fine_programmazione']) ));}

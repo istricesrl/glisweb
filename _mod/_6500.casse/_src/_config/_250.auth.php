@@ -15,6 +15,7 @@
      *
      */
 
+    // TODO tutta 'sta roba non sta già nei rispettivi moduli?
     // array dei permessi
 	$cf['auth']['permissions'] = array_merge_recursive( 
 	    $cf['auth']['permissions'],

@@ -20,13 +20,16 @@
 	    $cf['auth']['permissions'],
 	    array(
             'iscrizioni' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'iscrizioni_attivi' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'iscrizioni_archiviati' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

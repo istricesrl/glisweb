@@ -20,16 +20,20 @@
 	    $cf['auth']['permissions'],
 	    array(
             'pagine' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'menu' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'macro' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             'pubblicazioni' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
 	    )
 	);

@@ -26,8 +26,13 @@
         $status['static'] = mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => NULL ) ) );
 
         // debug
-        print_r( $status );
+        // print_r( $status );
 
+    } else {
+
+        // status
+        $status['err'][] = 'idDocumento e idAzienda non specificati';
+    
     }
 
     // output

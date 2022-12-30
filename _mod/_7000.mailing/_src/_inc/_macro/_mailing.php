@@ -22,7 +22,7 @@
 			'label' => 'azioni rapide'
 		)
 	);
-
+/*
     // inserimento nuovo invio mailing
     $ct['page']['contents']['metro']['scorciatoie'][] = array(
         'url' => $cf['contents']['pages']['mailing.form']['url'][ LINGUA_CORRENTE ],
@@ -32,3 +32,4 @@
         'text' => 'crea nuovo invio mailing',
         'colspan' => 3
     );
+*/

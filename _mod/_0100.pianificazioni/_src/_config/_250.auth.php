@@ -20,7 +20,8 @@
 	    $cf['auth']['permissions'],
 	    array(
             'pianificazioni' => array(
-                CONTROL_FULL => array( 'roots' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

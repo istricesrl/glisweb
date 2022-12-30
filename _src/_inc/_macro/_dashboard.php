@@ -31,7 +31,7 @@
 			'label' => 'scorciatoie mailing'
 		)
 	);
-
+/*
     // view anagrafica
 	$ct['page']['contents']['metro']['10.scorciatoie_anagrafica'][] = array(
 	    'url' => $cf['contents']['pages']['anagrafica.view']['url'][ LINGUA_CORRENTE ],
@@ -126,3 +126,4 @@
         );
 
     }
+*/

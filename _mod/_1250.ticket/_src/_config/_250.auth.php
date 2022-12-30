@@ -38,10 +38,11 @@
             'ticket_chiusi' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
-            ),
-            'todo' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
+// NOTA i permessi per le todo sono già definiti nel modulo todo
+//            ),
+//            'todo' => array(
+//                CONTROL_FULL => array( 'roots' ),
+//                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

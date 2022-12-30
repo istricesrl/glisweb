@@ -41,7 +41,7 @@
 
     // campi della vista
 	foreach( $ct['view']['cols'] as $field => $label ) {
-	    $ct['view']['fields'][ $i ] = $field;
+		$ct['view']['fields'][ $i ] = $field;
 	    $i += 10;
 	}
 
@@ -160,6 +160,30 @@
 	    $ct['view']['insert']['path'] = $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
 	}
 
+	if( isset( $ct['view']['footer']['cols'] ) ) {
+		foreach( $ct['view']['footer']['cols'] as $field => $data ) {
+			$ct['view']['footer']['cols'][ $field ]['colspan'] = array_search( $field, array_values( $ct['view']['cols'] ) );
+		}
+	}
+
+    if( ! empty( $ct['view']['data'] ) ) {
+		foreach ( $ct['view']['data'] as &$row ) {
+			foreach( $row as $field => $value ) {
+				if( isset( $ct['view']['footer']['cols'][ $field ] ) ) {
+					switch( $ct['view']['footer']['cols'][ $field ]['function'] ) {
+						case 'SUM':
+							if( isset( $ct['view']['footer']['cols'][ $field ]['value'] ) ) {
+								$ct['view']['footer']['cols'][ $field ]['value'] += $value;
+							} else {
+								$ct['view']['footer']['cols'][ $field ]['value'] = $value;
+							}
+						break;
+					}
+				}
+			}
+		}
+	}	
+
     // debug
 	// print_r( $_REQUEST['__view__'][ $ct['view']['id'] ] );
 	// print_r( $_SESSION );
@@ -170,3 +194,4 @@
 	// print_r( $ct['view']['data'] );
 	// print_r( $ct['view']['open'] );
 	// print_r( $ct['pages'] );
+	// print_r( $ct['view']['footer']['cols'] );

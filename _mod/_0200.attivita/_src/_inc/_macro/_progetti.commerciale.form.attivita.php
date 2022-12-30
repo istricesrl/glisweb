@@ -20,21 +20,35 @@
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'attivita.form';
 
-    $ct['view']['cols'] = array(
-		'id' => '#',
-        'data_attivita' => 'data',
+     // campi della vista
+     $ct['view']['cols'] = array(
+	    'id' => '#',
         'tipologia' => 'tipologia',
-        'anagrafica' => 'persona',
-        'nome' => 'attivita',
-        'ore' => 'ore'
-	);
+        'data_programmazione' => 'programmata',
+        'ora_inizio_programmazione' => 'ora',
+        'ora_fine_programmazione' => 'ora fine',
+        'anagrafica_programmazione' => 'assegnata a',
+        'data_attivita' => 'eseguita',
+	    'anagrafica' => 'svolta da',
+        'nome' => 'attività',
+	    'ore' => 'ore',
+        'ora_inizio' => 'oi',
+        'ora_fine' => 'of'
+      );
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
-	    'anagrafica' => 'text-left',
-	    'nome' => 'text-left'
-	);
+	    '__label__' => 'text-left',
+        'anagrafica_programmazione' => 'text-left',
+	    'data_programmazione' => 'no-wrap',
+        'ora_inizio_programmazione' => 'd-none',
+        'ora_fine_programmazione' => 'd-none',
+	    'anagrafica' => 'text-left no-wrap',
+        'nome' => 'text-left no-wrap',
+        'ora_inizio' => 'd-none',
+        'ora_fine' => 'd-none'
+    );
 
     // inserimento rapido
     $ct['etc']['include']['insert'][] = array(
@@ -73,3 +87,17 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    if( !empty( $ct['view']['data'] ) ) {
+		foreach ( $ct['view']['data'] as &$row ){
+            if( !empty($row['data_programmazione']) && (!empty($row['ora_inizio_programmazione']) || !empty($row['ora_fine_programmazione']) )){ 
+                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']) ).'  '.( empty($row['ora_inizio_programmazione']) ? ' '  : date('H:i', strtotime($row['ora_inizio_programmazione']))).' &mdash; '.( empty($row['ora_fine_programmazione']) ? ' ' :date('H:i', strtotime($row['ora_fine_programmazione']) ));}
+            elseif( !empty($row['data_programmazione']) ){$row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));}
+
+            if( !empty( $row['data_attivita'] ) ){$row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));}
+            if( !empty( $row['ora_inizio'] ) || !empty( $row['ora_fine'] ) ){ 
+                $row['data_attivita'] = $row['data_attivita'].'  '.( empty($row['ora_inizio']) ? ' '  : date('H:i', strtotime($row['ora_inizio']))).' &mdash; '.( empty($row['ora_fine']) ? ' ' :date('H:i', strtotime($row['ora_fine']) ));
+             }
+          //s  $row['__label__'] = $row['note_interne'].( empty($row['note_interne']) ? '' : '; <br>').$row['testo'];
+		}
+	}

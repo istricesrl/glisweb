@@ -136,7 +136,19 @@
     pagamento tramite Nexi
     ----------------------
 
+    [...] vedi https://ecommerce.nexi.it/sviluppatori
+
     [...] Nexi si comporta come PayPal per esito e annullamento (vedi https://ecommerce.nexi.it/specifiche-tecniche/codicebase.html)
+
+    pagamento tramite Soisy
+    -----------------------
+
+    [...] vedi https://www.soisy.it/integrazione/api-ordine-crea/
+
+    pagamento tramite Satispay
+    --------------------------
+
+    [...] vedi anche https://developers.satispay.com/docs/welcome
 
     note sull'implementazione di nuove forme di pagamento
     -----------------------------------------------------
@@ -196,6 +208,12 @@
       }
     }
     \endcode
+
+    tracciatura delle conversioni
+    =============================
+
+    [...] https://developers.google.com/analytics/devguides/collection/protocol/v1/parameters#ecomm
+    [...] https://developers.google.com/analytics/devguides/collection/protocol/ga4/reference/events#purchase
 
     domande frequenti
     =================

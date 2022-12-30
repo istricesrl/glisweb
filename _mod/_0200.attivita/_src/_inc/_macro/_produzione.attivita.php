@@ -21,8 +21,10 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-    $ct['view']['table'] = 'attivita';
-    
+    $ct['view']['table'] = 'cartellini';
+    $ct['view']['open']['table'] = 'attivita';
+    $ct['view']['etc']['__force_backurl__'] = 1;
+
     // id della vista
     $ct['view']['id'] = md5(
 		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
@@ -64,16 +66,16 @@
 	    'id' => '#',
         'tipologia' => 'tipologia',
         'cliente' => 'cliente',
-        'data_programmazione' => 'programmata',
-        'ora_inizio_programmazione' => 'ora',
-        'ora_fine_programmazione' => 'ora fine',
-        'anagrafica_programmazione' => 'assegnata a',
+//        'data_programmazione' => 'programmata',
+//        'ora_inizio_programmazione' => 'ora',
+//        'ora_fine_programmazione' => 'ora fine',
+//        'anagrafica_programmazione' => 'assegnata a',
         'data_attivita' => 'eseguita',
 	    'anagrafica' => 'svolta da',
         'nome' => 'attività',
 	    'ore' => 'ore',
-        'ora_inizio' => 'oi',
-        'ora_fine' => 'of'
+//        'ora_inizio' => 'oi',
+//        'ora_fine' => 'of'
       );
 
     // stili della vista
@@ -91,8 +93,20 @@
         'ora_fine' => 'd-none'
     );
 
+    // totali della vista
+	$ct['view']['footer']['cols'] = array(
+        'ore' => array( 'label' => 'totale ore', 'function' => 'SUM' )
+    );
+
     // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/attivita.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/produzione.attivita.filters.html';
+
+    // inserimento rapido
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/produzione.attivita.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
 
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
@@ -117,12 +131,28 @@
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static WHERE se_cliente = 1 ORDER BY __label__');
-
+/*
     // tendina tipologie attività
 	$ct['etc']['select']['tipologie_attivita'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__');
+*/
+    // tendina tipologie
+    $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__' );
+        
+    // tendina mastri
+	$ct['etc']['select']['registri'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM registri_view'
+    );
+
 /*
     // tendina tipologie attività inps
 	$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(
@@ -138,9 +168,24 @@
 	//    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno']['EQ'] = date('d');
     }
 */
-/*	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
-	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
-	} */
+/*
+ */
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
+    }
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno_attivita']['EQ'] ) ){
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['anno_attivita']['EQ'] = date( 'Y' ) ;
+    }
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese_attivita']['EQ'] ) ){
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese_attivita']['EQ'] = date( 'm' ) ;
+    }
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno_attivita']['EQ'] ) ){
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno_attivita']['EQ'] = date( 'd' ) ;
+    }
 
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']) ){
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'ASC';

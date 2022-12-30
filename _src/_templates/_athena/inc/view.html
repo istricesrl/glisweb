@@ -68,6 +68,17 @@
 		    {% endfor %}
 		</tbody>
 
+		{% if view.footer.cols %}
+		<tfoot>
+			<tr>
+				{% for col in view.footer.cols %}
+				<td colspan="{{ col.colspan }}" class="text-right">{{ col.label }}</td>
+				<td>{{ col.value }}</td>
+				{% endfor %}
+			</tr>
+		</tfoot>
+		{% endif %}
+
 	    </table>
 
 	</div>

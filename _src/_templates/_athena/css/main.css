@@ -152,6 +152,7 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
 .view-table tfoot tr {
     background-color: #eeeeee;
     border-bottom: 1px solid #cccccc;
+    font-weight: bold;
 }
 
 .view-insert {

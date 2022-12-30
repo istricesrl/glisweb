@@ -14,6 +14,6 @@
     debug delle pianificazioni
     --------------------------
 
-    [...] si può anche chiamare il task /task/0100.pianificazioni/pianificazioni.populate [...]
+    [...] si può anche chiamare il task task/0100.pianificazioni/pianificazioni.populate [...]
 
 */

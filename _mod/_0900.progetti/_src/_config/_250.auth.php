@@ -79,28 +79,36 @@
                 CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_avanzamento_progetti__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_avanzamento_trattative__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_avanzamento_trattative_attive__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_avanzamento_trattative_gestite__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_avanzamento_amministrazione__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_avanzamento_amministrazione_attiva__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_avanzamento_amministrazione_gestita__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             ),
             '__report_status_contratti__' => array(
-                CONTROL_FULL => array( 'roots', 'staff' )
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);
