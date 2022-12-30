@@ -11,7 +11,7 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'certificazioni' ),
 	    'h1'		=> array( $l		=> 'certificazioni' ),
-	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'parent'		=> array( 'id'		=> 'archivio.amministrazione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_certificazioni.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),

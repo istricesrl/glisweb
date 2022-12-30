@@ -8,7 +8,7 @@
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'contatti' ),
 		'h1'		=> array( $l		=> 'contatti' ),
-		'parent'		=> array( 'id'		=> 'archivio' ),
+		'parent'		=> array( 'id'		=> 'archivio.commerciale' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_contatti.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'contatti.view' ) ),

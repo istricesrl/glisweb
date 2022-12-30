@@ -4,7 +4,9 @@
      * generazione della sitemap
      *
      *
-     *
+	 *
+	 * - https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap?hl=it
+     * - https://developers.google.com/search/docs/advanced/sitemaps/image-sitemaps?hl=it
      *
      *
      *

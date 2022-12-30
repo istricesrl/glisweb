@@ -17,12 +17,26 @@
 		'priority'	=> '930' ) ) )
 	);
 
+    // pagina dell'archivio
+	$p['archivio.logistica'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'archivio logistica' ),
+	    'h1'		=> array( $l		=> 'archivio logistica' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'archivio.logistica.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_archivio.logistica.php' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'archivio.logistica' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'logistica' ),
+		'priority'	=> '910' ) ) )
+	);
+
 	// vista indirizzi
 	$p['indirizzi.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'indirizzi' ),
 		'h1'		=> array( $l		=> 'indirizzi' ),
-		'parent'		=> array( 'id'		=> 'archivio' ),
+		'parent'		=> array( 'id'		=> 'archivio.logistica' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'indirizzi.view' ) ),
@@ -89,7 +103,7 @@
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'luoghi' ),
 		'h1'		=> array( $l		=> 'luoghi' ),
-		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'parent'		=> array( 'id'		=> 'archivio.logistica' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_luoghi.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'luoghi.view' ) ),
@@ -111,7 +125,7 @@
 		
 	);
 
-		// vista tipologie luoghi
+	// vista tipologie luoghi
 	$p['tipologie.luoghi.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'tipologie' ),
@@ -138,12 +152,80 @@
 		
 	);
 
+	// vista zone
+	$p['zone.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'zone' ),
+		'h1'		=> array( $l		=> 'zone' ),
+		'parent'		=> array( 'id'		=> 'archivio.logistica' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_zone.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'zone.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'zone' ),
+																				'priority'	=> '050' ) ) )
+	);
+
+	// gestione zone
+	$p['zone.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_zone.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'zone.form') )
+		
+	);
+	
+	// vista tipologie zone
+	$p['tipologie.zone.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie' ),
+		'h1'		=> array( $l		=> 'tipologie' ),
+		'parent'		=> array( 'id'		=> 'zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.zone.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione zone
+	$p['tipologie.zone.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'tipologie.zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.zone.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.zone.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.form') )
+		
+	);
+
+    // pagina dell'archivio
+	$p['archivio.media'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'archivio media' ),
+	    'h1'		=> array( $l		=> 'archivio media' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'archivio.media.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_archivio.media.php' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots','staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'archivio.media' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'media' ),
+		'priority'	=> '070' ) ) )
+	);
+
 	// vista immagini
 	$p['immagini.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'immagini' ),
 		'h1'		=> array( $l		=> 'immagini' ),
-		'parent'		=> array( 'id'		=> 'archivio' ),
+		'parent'		=> array( 'id'		=> 'archivio.media' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_immagini.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'immagini.view' ) ),
@@ -253,7 +335,7 @@
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'video' ),
 		'h1'		=> array( $l		=> 'video' ),
-		'parent'		=> array( 'id'		=> 'archivio' ),
+		'parent'		=> array( 'id'		=> 'archivio.media' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_video.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'video.view' ) ),
@@ -302,7 +384,7 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> $p['video.form']['etc']['tabs'] )
 	);
-
+/*
 	// vista valutazioni
 	// TODO ma questa dovrebbe stare qui? non fa parte di un modulo?
 	$p['valutazioni.view'] = array(
@@ -331,13 +413,13 @@
 												'valutazioni.form'
 												 ) )	
 	);
-
+*/
 	// vista periodi
 	$p['periodi.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'periodi' ),
 		'h1'		=> array( $l		=> 'periodi' ),
-		'parent'		=> array( 'id'		=> 'archivio' ),
+		'parent'		=> array( 'id'		=> 'archivio.amministrazione' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_periodi.view.php' ),
 		'etc'		=> array( 'tabs'	=> array( 'periodi.view' ) ),
@@ -383,60 +465,6 @@
 		'macro'		=> array( '_src/_inc/_macro/_tipologie.periodi.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.periodi.form') )
-		
-	);
-
-	// vista zone
-	$p['zone.view'] = array(
-		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'zone' ),
-		'h1'		=> array( $l		=> 'zone' ),
-		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_zone.view.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'zone.view' ) ),
-		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'zone' ),
-																				'priority'	=> '050' ) ) )
-	);
-
-	// gestione zone
-	$p['zone.form'] = array(
-		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
-		'parent'		=> array( 'id'		=> 'zone.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.form.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_zone.form.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-		'etc'		=> array( 'tabs'	=> array( 'zone.form') )
-		
-	);
-	
-	// vista tipologie zone
-	$p['tipologie.zone.view'] = array(
-		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'tipologie' ),
-		'h1'		=> array( $l		=> 'tipologie' ),
-		'parent'		=> array( 'id'		=> 'zone.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_tipologie.zone.view.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.view' ) ),
-		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie' ),
-																				'priority'	=> '060' ) ) )
-	);
-
-	// gestione zone
-	$p['tipologie.zone.form'] = array(
-		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'gestione' ),
-		'h1'		=> array( $l		=> 'gestione' ),
-		'parent'		=> array( 'id'		=> 'tipologie.zone.view' ),
-		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.zone.form.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_tipologie.zone.form.php' ),
-		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.form') )
 		
 	);
 
@@ -497,3 +525,45 @@
     );
 
 */
+
+    // pagina dell'archivio
+	$p['archivio.produzione'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'archivio produzione' ),
+	    'h1'		=> array( $l		=> 'archivio produzione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'archivio.produzione.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_archivio.produzione.php' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'archivio.produzione' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'produzione' ),
+		'priority'	=> '910' ) ) )
+	);
+
+    // pagina dell'archivio
+	$p['archivio.amministrazione'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'archivio amministrazione' ),
+	    'h1'		=> array( $l		=> 'archivio amministrazione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'archivio.amministrazione.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_archivio.logistica.php' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'archivio.amministrazione' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'amministrazione' ),
+		'priority'	=> '930' ) ) )
+	);
+
+    // pagina dell'archivio
+	$p['archivio.commerciale'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'archivio commerciale' ),
+	    'h1'		=> array( $l		=> 'archivio commerciale' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'archivio.commerciale.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_archivio.commerciale.php' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'archivio.commerciale' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'commerciale' ),
+		'priority'	=> '940' ) ) )
+	);

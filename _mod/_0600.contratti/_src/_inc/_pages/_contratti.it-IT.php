@@ -11,7 +11,7 @@
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'contratti' ),
 	    'h1'		=> array( $l		=> 'contratti' ),
-	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'parent'		=> array( 'id'		=> 'archivio.amministrazione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.view.php' ),
 	    'etc'		=> array( 'tabs'	=> array(	'contratti.view',

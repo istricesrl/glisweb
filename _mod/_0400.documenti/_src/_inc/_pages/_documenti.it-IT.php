@@ -8,7 +8,7 @@
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'documenti' ),
 	    'h1'			=> array( $l		=> 'documenti' ),
-	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'parent'		=> array( 'id'		=> 'archivio.amministrazione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_documenti.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'documenti.view',
