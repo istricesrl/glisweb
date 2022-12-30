@@ -749,9 +749,11 @@ REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font
 -- ruoli_progetti
 -- tipologia: tabella di supporto
 -- verifica: 2022-04-20 10:45 chiara GDL
-REPLACE INTO `ruoli_progetti` (`id`, `nome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`) VALUES
-(1,	    'proseguimento',	    NULL,	    1,	    NULL),
-(2,	    'bundle',	    1,	NULL,	    NULL);
+INSERT INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`, `se_attesa`) VALUES
+(1,	'proseguimento',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(2,	'bundle',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(3,	'attesa',	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+
 
 --| 050000035200
 
@@ -1092,6 +1094,11 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 (18,	NULL,	NULL,	NULL,	'didattica',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (19,	18,	NULL,	NULL,	'assenza',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (20,	17,	NULL,	NULL,	'carico ore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+--| 050000050450
+
+-- tipologie_badge
+-- TODO
 
 --| 050000050800
 

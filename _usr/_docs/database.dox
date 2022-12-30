@@ -585,6 +585,7 @@
         - _030000999999.indexes.sql
         - _050000999999.data.sql (se necessario)
         - _060000999999.constraints.sql
+        - _080000999999.static.sql (se necessario)
         - _090000999999.views.sql
     - aggiornare la documentazione integrando la modifica
     - creare un file di patch incrementale per propagare la modifica
@@ -592,6 +593,12 @@
     Si noti che è importante, al fine di garantire una corretta propagazione della patch, non modificare direttamente il
     database di DEV, ma lasciare che sia la patch appena creata a farlo; in questo modo si sarà sicuri che essa sia
     corretta e che verrà eseguita senza errori una volta propagata.
+
+    Se la patch riguarda un report, andrà modificato il file:
+    - _100000999999.reports.sql
+
+    Mentre se la patch riguarda una procedura, andrà modificato il file:
+    - _070000999999.procedures.sql
 
     esempi di patch frequenti
     -------------------------

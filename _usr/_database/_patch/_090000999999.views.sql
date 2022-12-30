@@ -604,6 +604,76 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;
 
+--| 090000000940
+
+-- anagrafica_progetti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `anagrafica_progetti_view`;
+
+--| 090000000941
+
+-- anagrafica_progetti_view
+CREATE OR REPLACE VIEW anagrafica_progetti_view AS
+	SELECT
+		anagrafica_progetti.id,
+		anagrafica_progetti.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_progetti.id_progetto,
+		progetti.nome AS progetto,
+		anagrafica_progetti.id_ruolo,
+		ruoli_progetti.nome as ruolo,
+		anagrafica_progetti.ordine,
+		anagrafica_progetti.se_attesa,
+		anagrafica_progetti.id_account_inserimento,
+		anagrafica_progetti.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+			ruoli_progetti.nome
+		) AS __label__
+	FROM anagrafica_progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_progetti.id_anagrafica
+		LEFT JOIN progetti ON progetti.id = anagrafica_progetti.id_progetto
+		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = anagrafica_progetti.id_ruolo
+;
+
+--| 090000000960
+
+-- attesa_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `attesa_view`;
+
+--| 090000000961
+
+-- attesa_view
+CREATE OR REPLACE VIEW attesa_view AS
+	SELECT
+		anagrafica_progetti.id,
+		anagrafica_progetti.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		anagrafica_progetti.id_progetto,
+		progetti.nome AS progetto,
+		anagrafica_progetti.id_ruolo,
+		ruoli_progetti.nome as ruolo,
+		anagrafica_progetti.ordine,
+		anagrafica_progetti.se_attesa,
+		from_unixtime( anagrafica_progetti.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
+		anagrafica_progetti.id_account_inserimento,
+		anagrafica_progetti.id_account_aggiornamento,
+ 		concat_ws(
+			' ',
+			progetti.nome,
+			coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+			ruoli_progetti.nome
+		) AS __label__
+	FROM anagrafica_progetti
+		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_progetti.id_anagrafica
+		LEFT JOIN progetti ON progetti.id = anagrafica_progetti.id_progetto
+		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = anagrafica_progetti.id_ruolo
+WHERE anagrafica_progetti.se_attesa IS NOT NULL
+;
+
 --| 090000001200
 
 -- anagrafica_settori_view
@@ -2960,6 +3030,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.sconto_valore,
 		documenti_articoli.id_matricola,
 		matricole.matricola AS matricola,
+		documenti_articoli.id_rinnovo,
 		documenti_articoli.id_collo,
 		matricole.data_scadenza,
 		documenti_articoli.nome,
@@ -5459,10 +5530,12 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.model_data_fine,
 		pianificazioni.model_data_inizio,
 		pianificazioni.model_data_programmazione,
-		pianificazioni.model_esigibilita,      
+		pianificazioni.model_esigibilita,
 		pianificazioni.model_importo_netto_totale,
+		pianificazioni.model_importo_lordo_totale,
 		pianificazioni.model_nome,
 		pianificazioni.model_note,
+		pianificazioni.model_note_cliente,
 		pianificazioni.model_note_programmazione,
 		pianificazioni.model_numero,
 		pianificazioni.model_ore_programmazione,
@@ -5479,6 +5552,8 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.model_id_luogo,
 		pianificazioni.model_ora_inizio_programmazione,
 		pianificazioni.model_ora_fine_programmazione,
+		pianificazioni.offset_giorni,
+		pianificazioni.offset_fine_mese,
 		pianificazioni.workspace,
 		pianificazioni.token,
 		pianificazioni.id_account_inserimento,
@@ -5797,12 +5872,13 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		progetti.id_prodotto,
 		progetti.id_periodo,
 		progetti.nome,
-        progetti.id_sito,
 		progetti.template,
 		progetti.schema_html,
 		progetti.tema_css,
 		progetti.se_sitemap,
 		progetti.se_cacheable,
+        progetti.id_sito,
+        progetti.id_pagina,
 		progetti.data_apertura,
 		progetti.entrate_previste,
 		progetti.ore_previste,
@@ -6942,6 +7018,8 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		licenze.nome AS licenza,
 		rinnovi.id_progetto,
 		progetti.nome AS progetto,
+		rinnovi.id_categoria_progetti,
+		categorie_progetti_path( rinnovi.id_categoria_progetti ) AS categoria_progetti,
 		rinnovi.data_inizio,
 		rinnovi.data_fine,
 		rinnovi.codice,
@@ -7381,6 +7459,7 @@ CREATE OR REPLACE VIEW ruoli_progetti_view AS
 		ruoli_progetti.se_sottoprogetto,
 		ruoli_progetti.se_proseguimento,
 		ruoli_progetti.se_sostituto,
+		ruoli_progetti.se_attesa,
 	 	ruoli_progetti.nome AS __label__
 	FROM ruoli_progetti
 ;
@@ -7910,6 +7989,100 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 	FROM tipologie_attivita
 ;
 
+--| 090000050420
+
+-- cartellini_view
+DROP TABLE IF EXISTS `cartellini_view`;
+
+--| 090000050421
+
+-- cartellini_view
+CREATE OR REPLACE VIEW `cartellini_view` AS
+	SELECT	
+		attivita.id,
+		attivita.id_tipologia,
+		tipologie_attivita.nome AS tipologia,
+		attivita.id_cliente,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		attivita.id_contatto,
+		c1.nome AS contatto,
+		attivita.id_indirizzo,
+		indirizzi.indirizzo AS indirizzo,
+		attivita.id_luogo,
+		luoghi_path( attivita.id_luogo ) AS luogo,
+		attivita.data_scadenza,
+		attivita.ora_scadenza,
+		attivita.data_programmazione,
+		attivita.ora_inizio_programmazione,
+		attivita.ora_fine_programmazione,
+		attivita.id_anagrafica_programmazione,
+		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS anagrafica_programmazione,
+		attivita.ore_programmazione,
+		attivita.data_attivita,
+		day( data_attivita ) as giorno_attivita,
+		month( data_attivita ) as mese_attivita,
+		year( data_attivita ) as anno_attivita,
+		attivita.ora_inizio,
+		attivita.latitudine_ora_inizio,
+		attivita.longitudine_ora_inizio,
+		attivita.ora_fine,
+		attivita.latitudine_ora_fine,
+		attivita.longitudine_ora_fine,
+		attivita.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		attivita.ore,
+		attivita.nome,
+		attivita.id_documento,
+		concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			documenti.sezionale,
+			' del ',
+			documenti.data
+		) AS documento,
+		attivita.id_progetto,
+		progetti.nome AS progetto,
+		attivita.id_matricola,
+        attivita.id_immobile,
+		attivita.id_pianificazione,
+		attivita.id_todo,
+		todo.nome AS todo,
+		attivita.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		attivita.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		attivita.codice_archivium,
+		attivita.token,
+		attivita.id_account_inserimento,
+		attivita.id_account_aggiornamento,
+		concat(
+			attivita.nome,
+			' / ',
+			attivita.ore,
+			' / ',
+			coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM attivita
+		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
+		LEFT JOIN anagrafica AS a3 ON a3.id = attivita.id_anagrafica_programmazione
+		LEFT JOIN contatti AS c1 ON c1.id = attivita.id_contatto
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
+		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
+		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
+		LEFT JOIN todo ON todo.id = attivita.id_todo
+		LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo
+		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
+		LEFT JOIN documenti ON documenti.id = attivita.id_documento
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+	WHERE
+		tipologie_attivita.se_cartellini IS NOT NULL
+;
+
 --| 090000050450
 
 -- tipologie_badge_view
@@ -8071,6 +8244,7 @@ CREATE OR REPLACE VIEW `tipologie_documenti_view` AS
 		tipologie_documenti.font_awesome,
 		tipologie_documenti.se_fattura,
 		tipologie_documenti.se_nota_credito,
+		tipologie_documenti.se_nota_debito,
 		tipologie_documenti.se_trasporto,
 		tipologie_documenti.se_pro_forma,
 		tipologie_documenti.se_offerta,
@@ -8534,6 +8708,9 @@ CREATE OR REPLACE VIEW `tipologie_todo_view` AS
 		tipologie_todo.font_awesome,
 		tipologie_todo.se_agenda,
 		tipologie_todo.se_ticket,
+		tipologie_todo.se_commerciale,
+		tipologie_todo.se_produzione,
+		tipologie_todo.se_amministrazione,
 		tipologie_todo.id_account_inserimento,
 		tipologie_todo.id_account_aggiornamento,
 		tipologie_todo_path( tipologie_todo.id ) AS __label__
@@ -8623,6 +8800,7 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		) AS indirizzo,
 		todo.id_luogo,
 		luoghi_path( todo.id_luogo ) AS luogo,
+		todo.timestamp_apertura,
 		todo.data_scadenza,
 		todo.ora_scadenza,
 		todo.data_programmazione,

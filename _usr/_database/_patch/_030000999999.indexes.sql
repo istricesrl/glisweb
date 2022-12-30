@@ -224,6 +224,26 @@ ALTER TABLE `anagrafica_indirizzi`
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+--| 030000000940
+
+-- anagrafica_progetti
+ALTER TABLE `anagrafica_progetti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_progetto`,`id_ruolo`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `se_attesa` (`se_attesa`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_anagrafica`,`id_progetto`,`id_ruolo`,`ordine`);
+
+--| 030000000941
+
+-- anagrafica_progetti
+ALTER TABLE `anagrafica_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 --| 030000001200
 
 -- anagrafica_settori
@@ -1344,6 +1364,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_udm` (`id_udm`), 
 	ADD KEY `id_listino` (`id_listino`), 
 	ADD KEY `id_matricola` (`id_matricola`), 
+	ADD KEY `id_rinnovo` (`id_rinnovo`), 
 	ADD KEY `id_collo` (`id_collo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
@@ -1444,8 +1465,9 @@ ALTER TABLE `file`
 	ADD UNIQUE KEY `unica_mailing` (`id_mailing`,`id_ruolo`,`path`), 
 	ADD UNIQUE KEY `unica_mail_out` (`id_mail_out`,`id_ruolo`,`path`), 	
 	ADD UNIQUE KEY `unica_mail_sent` (`id_mail_sent`,`id_ruolo`,`path`), 	
-	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`id_ruolo`,`path`),
 	ADD UNIQUE KEY `unica_categoria_progetti` (`id_categoria_progetti`,`id_ruolo`,`path`), 	
+	ADD UNIQUE KEY `unica_documento` (`id_documento`,`id_ruolo`,`path`), 	
 	ADD UNIQUE KEY `unica_indirizzo` (`id_indirizzo`,`id_ruolo`,`path`), 	
 	ADD UNIQUE KEY `unica_edificio` (`id_edificio`,`id_ruolo`,`path`), 	
 	ADD UNIQUE KEY `unica_immobile` (`id_immobile`,`id_ruolo`,`path`), 	
@@ -1473,6 +1495,7 @@ ALTER TABLE `file`
 	ADD KEY `id_mail_sent` (`id_mail_sent`), 
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `id_documento` (`id_documento`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
@@ -2486,11 +2509,7 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `model_sezionale`  (`model_sezionale`),
 	ADD KEY `model_settimana_programmazione`  (`model_settimana_programmazione`),
 	ADD KEY `model_timestamp_scadenza`  (`model_timestamp_scadenza`),
-	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
-	ADD KEY `indice_progetto` (`id`,`id_progetto`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
-	ADD KEY `indice_todo` (`id`,`id_todo`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
-	ADD KEY `indice_attivita` (`id`,`id_attivita`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`),
-	ADD KEY `indice_contratto` (`id`,`id_contratto`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
+	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
 
 --| 030000023801
 
@@ -3041,7 +3060,8 @@ ALTER TABLE `rinnovi`
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
-	ADD KEY `indice` ( `id_contratto`, `id_tipologia`, `id_licenza`, `id_progetto`, `data_inizio`, `data_fine`, `codice`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `indice` ( `id_contratto`, `id_tipologia`, `id_licenza`, `id_progetto`, `id_categoria_progetti`, `data_inizio`, `data_fine`, `codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD UNIQUE KEY `unica_codice` (`codice`),
@@ -3280,7 +3300,8 @@ ALTER TABLE `ruoli_file`
 	ADD KEY `se_categorie_risorse` (`se_categorie_risorse`), 
 	ADD KEY `se_mail` (`se_mail`), 
 	ADD KEY `se_immobili` (`se_immobili`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`, `se_mail`);
+	ADD KEY `se_documenti` (`se_documenti`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`, `se_mail`,`se_immobili`,`se_documenti`);
 
 --| 030000034401
 
@@ -3382,7 +3403,8 @@ ALTER TABLE `ruoli_progetti`
 	ADD KEY `se_sottoprogetto` (`se_sottoprogetto`),
 	ADD KEY `se_proseguimento` (`se_proseguimento`),
 	ADD KEY `se_sostituto` (`se_sostituto`), 
-	ADD KEY `indice` (`id`,`nome`,`se_sottoprogetto`,`se_proseguimento`,`se_sostituto`);
+	ADD KEY `se_attesa` (`se_attesa`), 
+	ADD KEY `indice` (`id`,`nome`,`se_sottoprogetto`,`se_proseguimento`,`se_sostituto`,`se_attesa`);
 
 --| 030000035101
 
@@ -3798,6 +3820,7 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `numerazione`(`numerazione`),
 	ADD KEY `se_fattura` (`se_fattura`),
 	ADD KEY `se_nota_credito` (`se_nota_credito`),
+	ADD KEY `se_nota_debito` (`se_nota_debito`),
 	ADD KEY `se_trasporto` (`se_trasporto`),
 	ADD KEY `se_pro_forma` (`se_pro_forma`),
 	ADD KEY `se_offerta` (`se_offerta`),
@@ -3806,7 +3829,7 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `se_ecommerce` (`se_ecommerce`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_nota_debito`,`se_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
 
 --| 030000052601
 
@@ -4175,9 +4198,13 @@ ALTER TABLE `tipologie_todo`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `se_agenda` (`se_agenda`),
+	ADD KEY `se_ticket` (`se_ticket`),
+	ADD KEY `se_commerciale` (`se_commerciale`),
+	ADD KEY `se_produzione` (`se_produzione`),
+	ADD KEY `se_amministrazione` (`se_amministrazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_agenda`);
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_agenda`,`se_ticket`,`se_commerciale`,`se_produzione`,`se_amministrazione`);
 
 --| 030000056601
 

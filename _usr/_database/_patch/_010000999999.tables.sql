@@ -225,6 +225,27 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+--| 010000000940
+
+-- anagrafica_progetti
+CREATE TABLE IF NOT EXISTS `anagrafica_progetti` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `se_attesa` int(1) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `note_inserimento` text NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `note_aggiornamento` text NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
+  `id_account_archiviazione` int(11) DEFAULT NULL,
+  `note_archiviazione` text NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 --| 010000001200
 
 -- anagrafica_settori
@@ -799,14 +820,14 @@ CREATE TABLE IF NOT EXISTS `causali` (
 -- certificazioni
 -- tipologia: tabella assistita
 -- verifica: 2022-02-03 11:12 Chiara GDL
-CREATE TABLE `certificazioni` (
+CREATE TABLE IF NOT EXISTS `certificazioni` (
   `id` int NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB
+) ENGINE=InnoDB;
 
 --| 010000004800
 
@@ -1325,6 +1346,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_udm` int(11) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
+  `id_rinnovo` int(11) DEFAULT NULL,
   `quantita` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `importo_netto_totale` decimal(16,2) DEFAULT NULL,
@@ -1415,6 +1437,7 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_mail_sent` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_documento` INT(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
@@ -2269,6 +2292,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `se_sabato` int(1) DEFAULT NULL,
   `se_domenica` int(1) DEFAULT NULL,
   `schema_ripetizione` int(11) DEFAULT NULL,
+  `data_avvio` date DEFAULT NULL,
   `data_inizio` date DEFAULT NULL,
   `data_elaborazione` date DEFAULT NULL,
   `timestamp_elaborazione` int(11) DEFAULT NULL,
@@ -2317,9 +2341,11 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `model_data_inizio` date DEFAULT NULL,
   `model_data_programmazione` date DEFAULT NULL,
   `model_esigibilita`	enum('I','D','S') DEFAULT NULL,      
-  `model_importo_netto_totale` decimal(9,2) DEFAULT NULL,
+  `model_importo_netto_totale` char(32) DEFAULT NULL,
+  `model_importo_lordo_totale` char(32) DEFAULT NULL,
   `model_nome` char(255) DEFAULT NULL,
   `model_note` text DEFAULT NULL,
+  `model_note_cliente` text DEFAULT NULL,
   `model_note_programmazione` text,
   `model_numero` char(32) DEFAULT NULL,
   `model_ora_inizio_programmazione` time DEFAULT NULL,
@@ -2335,6 +2361,8 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `model_settimana_programmazione` int(11) DEFAULT NULL,
   `model_specifiche` char(255) DEFAULT NULL,
   `model_timestamp_scadenza` int(11) DEFAULT NULL,
+  `offset_giorni` int(11) DEFAULT NULL,
+  `offset_fine_mese` int(1) DEFAULT NULL,
   `workspace` text,
   `token` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2821,6 +2849,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id_contratto` int(11) DEFAULT NULL,
   `id_licenza` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
+  `id_categoria_progetti` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL, 
   `data_inizio` date DEFAULT NULL,
   `data_fine` date DEFAULT NULL,
@@ -3029,7 +3058,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_risorse` int(1) DEFAULT NULL,
   `se_categorie_risorse` int(1) DEFAULT NULL,
   `se_mail` int(1) DEFAULT NULL,
-  `se_immobili` int(1) DEFAULT NULL 
+  `se_immobili` int(1) DEFAULT NULL,
+  `se_documenti` int(1) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034600
@@ -3111,7 +3141,8 @@ CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `font_awesome` char(16) DEFAULT NULL,
   `se_sottoprogetto`int(1) DEFAULT NULL,
   `se_proseguimento` int(1) DEFAULT NULL,
-  `se_sostituto` int(1) DEFAULT NULL
+  `se_sostituto` int(1) DEFAULT NULL,
+  `se_attesa` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000035200
@@ -3366,6 +3397,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `se_anagrafica` int(1) DEFAULT NULL,
   `se_agenda` int(1) DEFAULT NULL,
   `se_sistema` int(1) DEFAULT NULL,
+  `se_cartellini` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -3492,6 +3524,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `font_awesome` char(16) DEFAULT NULL,
   `se_fattura` int(1) DEFAULT NULL,
   `se_nota_credito` int(1) DEFAULT NULL,
+  `se_nota_debito` int(1) DEFAULT NULL,
   `se_trasporto` int(1) DEFAULT NULL,
   `se_pro_forma` int(1) DEFAULT NULL,
   `se_offerta` int(1) DEFAULT NULL,
@@ -3843,6 +3876,9 @@ CREATE TABLE IF NOT EXISTS `tipologie_todo` (
   `font_awesome` char(16) DEFAULT NULL,
   `se_agenda` int(1) DEFAULT NULL,
   `se_ticket` int(1) DEFAULT NULL,
+  `se_commerciale` int(1) DEFAULT NULL,
+  `se_produzione` int(1) DEFAULT NULL,
+  `se_amministrazione` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -3897,6 +3933,7 @@ CREATE TABLE IF NOT EXISTS `todo` (
   `id_cliente` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_luogo` int(11) DEFAULT NULL,
+  `timestamp_apertura` int(11) DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
   `ora_scadenza` time DEFAULT NULL,
   `note_scadenza` text,

@@ -100,63 +100,61 @@ DROP VIEW IF EXISTS `__report_giacenza_ore__`;
 
 --| 100000015011
 CREATE OR REPLACE VIEW `__report_giacenza_ore__` AS
-SELECT report.*,
-    count( DISTINCT td1.id ) AS backlog,
-    count( DISTINCT td2.id ) AS sprint,
-    count( DISTINCT td3.id ) AS fatto
- FROM (
-SELECT
-  movimenti.id,
-  movimenti.id_progetto,
-  movimenti.progetto,
-  movimenti.nome,
-  sum( movimenti.carico ) AS carico,
-  sum( movimenti.scarico ) AS scarico,
-  coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ) AS totale_float,
-  format( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2, 'es_ES' ) AS totale,
-  concat_ws(
-      ' ',
-      movimenti.nome ,
-      'giacenza',
-      FORMAT( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2, 'es_ES' ),
-      'h'
-		) AS __label__
-FROM (
-SELECT
-  mastri.id,
-  mastri.id_progetto,
-  progetti.nome AS progetto,
-  mastri_path( mastri.id ) AS nome,
-  attivita.data_attivita AS data,
-  coalesce( attivita.ore, 0 ) AS carico,
-  0 AS scarico
-FROM mastri
-  LEFT JOIN attivita ON attivita.id_mastro_destinazione = mastri.id OR mastri_path_check( attivita.id_mastro_destinazione, mastri.id ) = 1
-  LEFT JOIN progetti ON progetti.id = mastri.id_progetto
-WHERE attivita.ore IS NOT NULL
-UNION ALL
-SELECT
-  mastri.id,
-  mastri.id_progetto,
-  progetti.nome AS progetto,
-  mastri_path( mastri.id ) AS nome,
-  attivita.data_attivita AS data,
-  0 AS carico,
-  coalesce( attivita.ore, 0 ) AS scarico
-FROM mastri
-  LEFT JOIN attivita ON attivita.id_mastro_provenienza = mastri.id OR mastri_path_check( attivita.id_mastro_provenienza, mastri.id ) = 1
-  LEFT JOIN progetti ON progetti.id = mastri.id_progetto
-WHERE attivita.ore IS NOT NULL
-) AS movimenti
-GROUP BY movimenti.id, movimenti.id_progetto, movimenti.progetto, movimenti.nome
-
-) AS report
+  SELECT report.*,
+      count( DISTINCT td1.id ) AS backlog,
+      count( DISTINCT td2.id ) AS sprint,
+      count( DISTINCT td3.id ) AS fatto
+  FROM (
+    SELECT
+      movimenti.id,
+      movimenti.id_progetto,
+      movimenti.progetto,
+      movimenti.nome,
+      sum( movimenti.carico ) AS carico,
+      sum( movimenti.scarico ) AS scarico,
+      coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ) AS totale_float,
+      format( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2, 'es_ES' ) AS totale,
+      concat_ws(
+          ' ',
+          movimenti.nome ,
+          'giacenza',
+          FORMAT( coalesce( ( sum( movimenti.carico ) - sum( movimenti.scarico ) ), 0 ), 2, 'es_ES' ),
+          'h'
+        ) AS __label__
+    FROM (
+      SELECT
+        mastri.id,
+        mastri.id_progetto,
+        progetti.nome AS progetto,
+        mastri_path( mastri.id ) AS nome,
+        attivita.data_attivita AS data,
+        coalesce( attivita.ore, 0 ) AS carico,
+        0 AS scarico
+      FROM mastri
+        LEFT JOIN attivita ON attivita.id_mastro_destinazione = mastri.id OR mastri_path_check( attivita.id_mastro_destinazione, mastri.id ) = 1
+        LEFT JOIN progetti ON progetti.id = mastri.id_progetto
+      WHERE attivita.ore IS NOT NULL
+      UNION ALL
+      SELECT
+        mastri.id,
+        mastri.id_progetto,
+        progetti.nome AS progetto,
+        mastri_path( mastri.id ) AS nome,
+        attivita.data_attivita AS data,
+        0 AS carico,
+        coalesce( attivita.ore, 0 ) AS scarico
+      FROM mastri
+        LEFT JOIN attivita ON attivita.id_mastro_provenienza = mastri.id OR mastri_path_check( attivita.id_mastro_provenienza, mastri.id ) = 1
+        LEFT JOIN progetti ON progetti.id = mastri.id_progetto
+      WHERE attivita.ore IS NOT NULL
+    ) AS movimenti
+    GROUP BY movimenti.id, movimenti.id_progetto, movimenti.progetto, movimenti.nome
+  ) AS report
     LEFT JOIN todo AS td1 ON ( td1.id_progetto = report.id_progetto AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL AND td1.data_archiviazione IS NULL )
     LEFT JOIN todo AS td2 ON ( td2.id_progetto = report.id_progetto AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND ( td2.data_chiusura IS NULL AND td2.data_archiviazione IS NULL ) )
     LEFT JOIN todo AS td3 ON ( td3.id_progetto = report.id_progetto AND td3.data_chiusura IS NOT NULL )
-
-GROUP BY report.id, report.id_progetto, report.progetto, report.nome;
-
+  GROUP BY report.id, report.id_progetto, report.progetto, report.nome
+;
 --| 100000020000
 -- __report_giacenza_magazzini__
 -- tipologia: report
