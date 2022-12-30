@@ -15,6 +15,7 @@
 			// gestione todo progetti
 			$p['progetti.amministrazione.form.todo'] = array(
 				'sitemap'		=> false,
+				'icon'			=> '<i class="fa fa-tasks" aria-hidden="true"></i>',
 				'title'			=> array( $l		=> 'todo' ),
 				'h1'			=> array( $l		=> 'to-do' ),
 				'parent'		=> array( 'id'		=> 'progetti.amministrazione.view' ),

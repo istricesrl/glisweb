@@ -20,7 +20,7 @@ CREATE OR REPLACE VIEW `__report_status_contratti__` AS
     count( DISTINCT td3.id ) AS fatto,
     coalesce( sum( at1.ore ), 0 ) AS ore_fatte,
     coalesce( m1.testo, '-' ) AS ore_mese,
-    coalesce( ( m1.testo - sum( at1.ore ) ), '-' ) AS ore_residue
+    coalesce( ( m1.testo - sum( at1.ore ) ), m1.testo, '-' ) AS ore_residue
   FROM progetti
     LEFT JOIN todo AS td1 ON ( td1.id_progetto = progetti.id AND td1.data_programmazione IS NULL AND td1.settimana_programmazione IS NULL AND td1.data_chiusura IS NULL )
     LEFT JOIN todo AS td2 ON ( td2.id_progetto = progetti.id AND ( td2.data_programmazione IS NOT NULL OR td2.settimana_programmazione IS NOT NULL ) AND td2.data_chiusura IS NULL )
@@ -1507,7 +1507,7 @@ CREATE OR REPLACE VIEW `__report_backlog_todo__` AS
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
   WHERE ( todo.data_chiusura IS NULL AND todo.data_archiviazione IS NULL )
     AND coalesce( todo.data_programmazione, todo.settimana_programmazione ) IS NULL
---    AND tipologie_todo.se_produzione IS NOT NULL
+    AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
 --| 100000056612
@@ -1598,7 +1598,7 @@ CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
         todo.anno_programmazione < date_format( now(), '%Y' )
       )
     )
---    AND tipologie_todo.se_produzione IS NOT NULL
+    AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
 --| 100000056614
@@ -1685,7 +1685,7 @@ CREATE OR REPLACE VIEW `__report_planned_todo__` AS
         todo.anno_programmazione > date_format( now(), '%Y' )
       )
     )
---    AND tipologie_todo.se_produzione IS NOT NULL
+    AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
 --| 100000056618
@@ -1751,7 +1751,7 @@ CREATE OR REPLACE VIEW `__report_done_todo__` AS
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
   WHERE ( todo.data_chiusura IS NOT NULL AND todo.data_archiviazione IS NULL )
---    AND tipologie_todo.se_produzione IS NOT NULL
+    AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
 --| FINE FILE
