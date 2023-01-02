@@ -16,7 +16,7 @@
     
     // tabella della vista
 	$ct['view']['table'] = '__report_tesseramenti_anagrafica__';
-    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['etc']['__report_mode__'] = 1;
 
     // campi della vista
 	$ct['view']['cols'] = array(

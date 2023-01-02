@@ -66,8 +66,8 @@
 	}
 
 	// report mode
-	if( isset( $ct['view']['data']['__report_mode__'] ) ) {
-		$_REQUEST['__view__'][ $ct['view']['id'] ]['__report_mode__'] = $ct['view']['data']['__report_mode__'];
+	if( isset( $ct['view']['etc']['__report_mode__'] ) ) {
+		$_REQUEST['__view__'][ $ct['view']['id'] ]['__report_mode__'] = $ct['view']['etc']['__report_mode__'];
 	}
 
 	// filtri presettati

@@ -16,7 +16,7 @@
     
     $ct['view']['table'] = '__report_mastri_articoli__';
 
-    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['etc']['__report_mode__'] = 1;
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';

@@ -13,7 +13,7 @@
 
     // tabella della vista
 	$ct['view']['table'] = '__report_planned_todo__';
-    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['etc']['__report_mode__'] = 1;
 	$ct['view']['etc']['__force_backurl__'] = 1;
 
     // pagina per la gestione degli oggetti esistenti

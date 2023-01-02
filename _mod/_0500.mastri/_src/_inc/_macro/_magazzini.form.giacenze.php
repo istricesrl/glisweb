@@ -13,7 +13,7 @@
 
     // tabella gestita
     $ct['form']['table'] = 'mastri';
-    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['etc']['__report_mode__'] = 1;
 
     // tabella della vista
     $ct['view']['table'] = '__report_giacenza_magazzini__';

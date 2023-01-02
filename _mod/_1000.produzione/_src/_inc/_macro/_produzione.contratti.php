@@ -66,9 +66,6 @@
                 'page' => 'progetti.produzione.form',
                 'field' => 'id'
             ),
-            'data' => array(
-                '__report_mode__' => 1
-            ),
             'cols' => array(
                 'id' => '#',
                 'nome' => 'titolo',
@@ -93,7 +90,8 @@
                 NULL => 'event.stopPropagation();'
             ),
             'etc' => array(
-                '__force_backurl__' => 1
+                '__force_backurl__' => 1,
+                '__report_mode__' => 1
             )
         );
 

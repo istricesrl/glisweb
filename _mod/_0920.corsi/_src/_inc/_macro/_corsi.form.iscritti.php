@@ -22,7 +22,7 @@
      // tabella gestita
 	$ct['form']['table'] = 'progetti';
     
-    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['etc']['__report_mode__'] = 1;
     $ct['view']['table'] = '__report_iscritti_corsi__';
 
 
