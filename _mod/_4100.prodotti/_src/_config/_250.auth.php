@@ -56,10 +56,6 @@
             'listini' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
-            ),
-            'reparti' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
             )
         )
 	);

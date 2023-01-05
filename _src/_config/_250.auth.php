@@ -211,19 +211,27 @@
 #		CONTROL_FULL => array( 'roots' )
 #	    ),
 	    'zone_indirizzi' => array(
-		CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' )
 	    ),
 		'tipologie_luoghi' => array(
-			CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' ),
+			METHOD_GET => array( 'staff' )
 		),
 	    'tipologie_periodi' => array(
-		CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' ),
+			METHOD_GET => array( 'staff' )
 	    ),
 		'tipologie_zone' => array(
-			CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' ),
+			METHOD_GET => array( 'staff' )
 		),
 	    'ranking' => array(
-			CONTROL_FULL => array( 'roots' )
+			CONTROL_FULL => array( 'roots' ),
+			METHOD_GET => array( 'staff' )
+		),
+		'reparti' => array(
+			CONTROL_FULL => array( 'roots' ),
+			METHOD_GET => array( 'staff' )
 		),
 #		'todo' => array(
 #			CONTROL_FULL => array( 'roots' ),

@@ -5,7 +5,7 @@
 
     // modulo di questo file
 	$m = DIR_MOD . '_4100.prodotti/';
-
+/*
 	// vista listini
 	$p['listini.view'] = array(
 	    'sitemap'		=> false,
@@ -44,7 +44,7 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
 	);
-    
+
 	// vista reparti
 	$p['reparti.view'] = array(
 	    'sitemap'		=> false,
@@ -70,6 +70,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'reparti.form' ) )
 	);
+*/
 /*
 	TODO spostare nel modulo coupon
 

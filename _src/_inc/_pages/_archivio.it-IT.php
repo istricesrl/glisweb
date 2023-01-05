@@ -477,7 +477,7 @@
 	    'h1'		=> array( $l		=> 'redirect' ),
 	    'parent'		=> array( 'id'		=> 'archivio' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.view.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_redirect.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'redirect.view',
 									'redirect.stats' ) ),
@@ -493,7 +493,7 @@
 	    'h1'		=> array( $l		=> 'statistiche' ),
 	    'parent'		=> array( 'id'		=> 'archivio' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.stats.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_redirect.stats.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['redirect.view']['etc']['tabs'] )
     );
@@ -505,7 +505,7 @@
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'parent'		=> array( 'id'		=> 'redirect.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'redirect.form.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_redirect.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'redirect.form',
 													'redirect.form.stats') )
@@ -519,7 +519,7 @@
 	    'h1'		=> array( $l		=> 'statistiche redirect' ),
 	    'parent'		=> array( 'id'		=> 'archivio' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.stats.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_redirect.form.stats.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['redirect.form']['etc']['tabs'] )
     );
@@ -546,12 +546,78 @@
 	    'title'		=> array( $l		=> 'archivio amministrazione' ),
 	    'h1'		=> array( $l		=> 'archivio amministrazione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'archivio.amministrazione.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_archivio.logistica.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_archivio.amministrazione.php' ),
 	    'parent'		=> array( 'id'		=> 'archivio' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'archivio.amministrazione' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'amministrazione' ),
 		'priority'	=> '930' ) ) )
+	);
+
+	// vista listini
+	$p['listini.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'listini' ),
+	    'h1'			=> array( $l		=> 'listini' ),
+	    'parent'		=> array( 'id'		=> 'archivio.amministrazione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( '_src/_inc/_macro/_listini.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'listini.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'listini' ),
+								'priority'	=> '035' ) ) )
+	);
+
+	// gestione listini
+	$p['listini.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'listini.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_listini.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'listini.form'	, 'listini.form.gruppi'	) )
+	);
+
+	// gestione listini gruppi
+	$p['listini.form.gruppi'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-users" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'gruppi' ),
+		'h1'		=> array( $l		=> 'gruppi' ),
+		'parent'		=> array( 'id'		=> 'listini.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.gruppi.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_listini.form.gruppi.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
+	);
+
+	// vista tipologie periodi
+	$p['reparti.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'reparti' ),
+		'h1'		=> array( $l		=> 'reparti' ),
+		'parent'		=> array( 'id'		=> 'archivio.amministrazione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_reparti.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'reparti.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'reparti' ),
+																				'priority'	=> '265' ) ) )
+	);
+
+	// gestione periodi
+	$p['reparti.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'reparti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'reparti.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_reparti.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'reparti.form') )
+		
 	);
 
     // pagina dell'archivio

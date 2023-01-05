@@ -350,8 +350,11 @@
 		if( ! empty( $row['codice_iva'] ) ) {
 		    $xml->writeElement( 'Natura', $row['codice_iva'] );
 		}
-		if( $row['importo_netto_unitario'] * $row['qtd'] != $row['importo_netto_totale'] ){
-			die( 'errore di arrotondamento riga '.($num+1).': '.$row['nome'].' importo totale '.$row['importo_netto_totale'] );
+
+		// controllo arrotondamento
+		// TODO questo non andrebbe fatto nel file _fattura.default.php in modo da impattare anche sul PDF?
+		if( sprintf( '%0.2f', $row['importo_netto_unitario'] * $row['qtd'] ) != sprintf( '%0.2f',$row['importo_netto_totale'] ) ) {
+			die( 'errore di arrotondamento riga '.($num+1).': '.$row['nome'].' importo totale '.$row['importo_netto_totale'] . ' diverso da ' . ( $row['importo_netto_unitario'] * $row['qtd'] ) );
 		}
 		
 	    // - - - /DettaglioLinee

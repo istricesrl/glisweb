@@ -5,7 +5,7 @@
 
     // modulo di questo file
 	$m = DIR_MOD . '_4100.prodotti/';
-
+/*
 	// vista reparti
 	$p['reparti.view'] = array(
 	    'sitemap'		=> false,
@@ -31,3 +31,4 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'reparti.form' ) )
 	);
+*/

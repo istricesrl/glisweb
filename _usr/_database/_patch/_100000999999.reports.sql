@@ -1181,7 +1181,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
     count( DISTINCT td1.id ) AS backlog,
     count( DISTINCT td2.id ) AS sprint,
     count( DISTINCT td3.id ) AS fatto,
-    coalesce( concat( round( ( count( DISTINCT td3.id ) ) / ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ), 2 ) * 100, '%' ), '-' ) AS completed,
+    coalesce( concat( round( ( count( DISTINCT td3.id ) ) / ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) + count( DISTINCT td3.id ) ), 2 ) * 100, '%' ), '-' ) AS completed,
     round( datediff( now(), progetti.data_accettazione ) / 7, 0 ) AS elapsed,
     coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) AS speed,
     coalesce( date_add( now(), interval ( ( count( DISTINCT td1.id ) + count( DISTINCT td2.id ) ) / ( coalesce( ( count( DISTINCT td3.id ) ) / round( datediff( now(), progetti.data_accettazione ) / 7, 0 ), 0 ) ) ) week ), '-' ) AS eta
@@ -1751,5 +1751,96 @@ CREATE OR REPLACE VIEW `__report_done_todo__` AS
   WHERE ( todo.data_chiusura IS NOT NULL AND todo.data_archiviazione IS NULL )
     AND tipologie_todo.se_produzione IS NOT NULL
 ;
+
+--| 100000056620
+-- __report_coda_todo__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_coda_todo__`;
+
+--| 100000056621
+-- __report_coda_todo__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_coda_todo__` AS
+SELECT
+andamento.anno,
+andamento.settimana,
+count( andamento.id_aperta ) AS aperte,
+count( andamento.id_chiusa ) AS chiuse,
+
+sum( count( andamento.id_aperta ) ) over( ORDER BY anno, settimana ) AS saldo_aperte,
+sum( count( andamento.id_chiusa ) ) over( ORDER BY anno, settimana ) AS saldo_chiuse,
+
+(
+count( andamento.id_aperta )
+-
+count( andamento.id_chiusa )
+) AS saldo_settimana,
+
+(
+sum( count( andamento.id_aperta ) ) over( ORDER BY anno, settimana )
+-
+sum( count( andamento.id_chiusa ) ) over( ORDER BY anno, settimana )
+) AS saldo_totale
+
+FROM (
+
+SELECT 
+todo.id AS id_aperta,
+NULL AS id_chiusa,
+date_format( from_unixtime( todo.timestamp_inserimento ), "%Y" ) AS anno,
+date_format( from_unixtime( todo.timestamp_inserimento ), "%u" ) AS settimana
+FROM todo 
+WHERE timestamp_inserimento IS NOT NULL
+
+UNION 
+
+SELECT 
+NULL AS id_aperta,
+todo.id AS id_chiusa,
+date_format( todo.data_chiusura, "%Y" ) AS anno,
+date_format( todo.data_chiusura, "%u" ) AS settimana
+FROM todo
+WHERE data_chiusura IS NOT NULL
+
+) AS andamento
+GROUP BY andamento.anno, andamento.settimana
+ORDER BY andamento.anno, andamento.settimana
+
+;
+
+--| 100000056621
+-- __report_pianificazione_todo__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_pianificazione_todo__`;
+
+--| 100000056622
+-- __report_pianificazione_todo__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_pianificazione_todo__` AS
+
+SELECT
+
+todo.id,
+todo.nome,
+todo.ore_programmazione AS previsione_todo,
+sum( attivita.ore_programmazione ) AS previsione_attivita,
+sum( attivita.ore ) AS consuntivo_attivita,
+
+coalesce( sum( attivita.ore_programmazione ), todo.ore_programmazione, 0 ) - sum( attivita.ore ) AS errore_pianificazione
+
+FROM todo
+INNER JOIN attivita ON attivita.id_todo = todo.id
+
+GROUP BY todo.id
+ORDER BY todo.id
+
+;
+-- NOTA per avere le medie usare
+-- SELECT
+--  avg( previsione_todo ) AS previsione_media_todo,
+--  avg( previsione_attivita ) AS previsione_media_todo_attivita,
+--  avg( consuntivo_attivita ) AS consuntivo_attivita,
+--  avg( errore_pianificazione ) AS errore_pianificazione
+-- FROM __report_pianificazione_todo__
 
 --| FINE FILE
