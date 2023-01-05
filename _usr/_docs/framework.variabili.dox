@@ -755,10 +755,6 @@
     privacy.dpo.piva                                            | partita IVA del DPO
     privacy.dpo.provincia                                       | provincia della sede del DPO
     privacy.dpo.telefono                                        | telefono della sede del DPO
-    privacy.finalita                                            | array di informazioni sulle finalità
-    privacy.finalita.<f>                                        | informazioni sulla finalità <f>
-    privacy.finalita.<f>.descrizione                            | descrizioni della finalità <f>
-    privacy.finalita.<f>.descrizione.<l>                        | descrizione della finalità <f> nella lingua <l>
     privacy.moduli                                              | descrizione della privacy relativa ai moduli presenti sul sito
     privacy.moduli.<m>                                          | descrizione della privacy per il modulo <m>
     privacy.moduli.<m>.titolo                                   | titolo per la malleveria privacy del modulo <m>

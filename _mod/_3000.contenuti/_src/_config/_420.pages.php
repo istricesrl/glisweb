@@ -94,6 +94,7 @@
                 if( empty( $cf['contents']['page'][ $k ] ) ) {
                     $cf['contents']['page'][ $k ][ $cf['localization']['language']['ietf'] ] =
                         "{% import '_bin/_default.html' as cms %}\n\n".
+                        "{% import '_bin/_privacy.html' as prv %}\n\n".
                         "{% import 'bin/default.html' as tpl %}\n\n".
                         $cnt[ $k ];
                 }

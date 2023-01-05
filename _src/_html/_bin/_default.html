@@ -2,6 +2,8 @@
 {# MACRO PER LA RAPPRESENTAZIONE DEI CONTENUTI #}
 {# NOTA: IMPORTARE SEMPRE COME CNT #}
 
+<!-- Twig file included: {{ _self }} -->
+
 {% macro picture( img, lang, site, set, alt, pictureclass, imgclass ) %}
 {% if img.path %}
 {% if img.path is iterable %}
@@ -377,7 +379,16 @@ window.addEventListener( 'DOMContentLoaded', function() {
 	function onSubmit{{ form }}( token ) {
 		console.log( token );
 		document.getElementById("{{ form }}RecaptchaToken").value = token;
-		document.getElementById("{{ form }}").submit();
+
+		var contactForm = document.getElementById("{{ form }}");
+        if(contactForm.checkValidity()) {
+//			document.getElementById("{{ form }}").submit();
+			contactForm.submit();
+		} else {
+            grecaptcha.reset();
+            contactForm.reportValidity();
+        } 
+
 		console.log('invocata protezione reCAPTCHA');
 	}
 </script>

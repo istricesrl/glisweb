@@ -49,6 +49,17 @@ footer {
     bottom: 0px;
     min-height: 75vh;
     position: fixed;
+    background-color: #000000dd;
+}
+
+#cookie .row {
+    margin: .75em 0em;
+}
+
+#cookie h4 {
+    color: #ffffff;
+    font-weight: bold;
+    font-size: 1.2em;
 }
 
 /* stili per il numero verde */

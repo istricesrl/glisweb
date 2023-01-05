@@ -11,22 +11,9 @@
       "telefono": "telefonoSedeTitolare",
       "mail": "mailTitolare"
     },
-    "finalita": {
-      "finalita1": {
-        "descrizione": {
-          "it-IT": "descrizioneFinalitaTrattamento1"
-        }
-      },
-      "finalita2": {
-        "descrizione": {
-          "it-IT": "descrizioneFinalitaTrattamento2"
-        }
-      },
-      "finalitaN": {
-        "descrizione": {
-          "it-IT": "descrizioneFinalitaTrattamentoN"
-        }
-      }
+    "moduli": {
+    },
+    "cookie": {
     }
   }
 }

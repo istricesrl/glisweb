@@ -2,6 +2,7 @@
 {# NOTA: IMPORTARE SEMPRE COME PRV #}
 
 {% macro checkConsensi( ref, key, items, ietf, tr, pages ) %}
+<!-- Twig file included: {{ _self }} -->
 <!-- macro checkConsensi() -->
 {% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
 {% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
@@ -16,9 +17,7 @@
 			<input class="form-check-input" id="consensi_{{ id }}_checkbox" type="checkbox" {% if check.required %}required{% endif %}>
 			<label class="form-check-label text-left" for="consensi_{{ id }}_checkbox">
 			{{ tr.generic[ check.action ][ ietf ] }}
-			{% if check.page %}<a href="{{ pages[ check.page ].url[ ietf ] }}">{% endif %}
-			{{ check.label[ ietf ] | raw }}
-			{% if check.page %}</a>{% endif %}
+			{% if check.page %}<a href="{{ pages[ check.page ].url[ ietf ] }}">{% endif %}{{ check.label[ ietf ] | raw }}{% if check.page %}</a>{% endif %}
 			({% if check.required %}{{ tr.generic.obbligatorio[ ietf ] | raw }}{% else %}{{ tr.generic.facoltativo[ ietf ] | raw }}{% endif %})
 			</label>
 		</div>

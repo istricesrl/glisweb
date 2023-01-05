@@ -31,6 +31,7 @@
                 'type' =>  DB_MYSQL,
                 'table' => 'contatti'
             )
+/*
         ),
         'privacy' => array(
             'titolo' => array(
@@ -59,6 +60,7 @@
                     'required' => false
                 )
             )
+*/
         )
 	);
 

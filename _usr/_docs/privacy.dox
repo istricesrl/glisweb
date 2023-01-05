@@ -9,8 +9,28 @@
 
     inserimento dei dati
     --------------------
+    Le informazioni relative alla gestione della privacy sono organizzate sotto la chiave principale privacy, che presenza tre sotto sezioni relative ai
+    dati del titolare del trattamento, ai consensi relativi ai form presenti sul sito, e ai cookie:
 
-    [...] i dati del titolare:
+    \code{.json}
+    "privacy": {
+        "titolare": {
+            [...]
+        },
+        "moduli": {
+            [...]
+        },
+        "cookie": {
+            [...]
+        }
+    }
+    \endcode
+
+    Ognuna di queste tre sezioni dev'essere correttamente compilata per avere una corrispondenza piena del sito rispetto alla normativa vigente; è importante
+    capire a fondo la struttura di queste chiavi e le relazioni che intercorrono fra i dati inseriti qui e il resto della configurazione, specialmente per
+    quanto riguarda i moduli più sensibili riguardo alle implicazioni di privacy come il modulo registrazione, il modulo contatti e l'e-commerce.
+
+    [...] per prima cosa i dati del titolare:
 
     \code{.json}
     "privacy": {
@@ -36,23 +56,60 @@
         "moduli": {
             "esempio": {
                 "titolo": {
-                "it-IT": "modulo di esempio"
+                    "it-IT": "modulo di esempio"
                 },
                 "descrizione": {
-                "it-IT": "Descrizione del modulo di esempio."
+                    "it-IT": "Descrizione del modulo di esempio."
                 },
                 "consensi": {
-                "PRIVACY_POLICY": {
-                    "label": {
-                    "it-IT": "la privacy e cookie policy del sito"
-                    },
-                    "action": "letto_e_accetto",
-                    "page": "privacy",
-                    "required": true
-                }
+                    "PRIVACY_POLICY": {
+                        "informativa": {
+                            "it-IT": "risposta all'utente"
+                        },
+                        "label": {
+                            "it-IT": "la privacy e cookie policy del sito"
+                        },
+                        "action": "letto_e_accetto",
+                        "page": "privacy",
+                        "required": true
+                    }
                 }
             },
         [...]
+        }
+    }
+    \endcode
+
+    Al fine di una corretta compilazione di questa sezione, è importante capire come i dati inseriti vengono visualizzati nella malleveria per la privacy. In particolare,
+    il titolo e la descrizione compongono il corpo principale del paragrafo relativo al form sotto la sezione "tipologie di dati trattati e finalità del trattamento", mentre
+    ogni blocco dati sotto la chiave consensi forma un elemento dell'elenco aggiunto a questo paragrafo, dove ogni finalità e trattamento è elencato separatamente utilizzando
+    la chiave informativa, e specificando se è obbligatorio o meno in base alla chiave required.
+
+    [...] infine, le informazioni relative ai cookie:
+
+    \code{.json}
+    "privacy": {
+        [...]
+        "cookie": {
+            "terzi": {
+                "analitici": {
+                    "GoogleTagManager": {
+                        "nome": {
+                            "it-IT": "Google Tag Manager"
+                        },
+                        "policy": "https://policies.google.com/privacy",
+                        "motivazione": {
+                            "it-IT": "analisi statistica di utilizzo del sito da parte dei visitatori e monitoraggio del funzionamento del sito"
+                        },
+                        "conservazione" :{
+                            "it-IT": "DUE ANNI"
+                        }
+                    },
+                    [...]
+                },
+                [...]
+            },
+            [...]
         }
     }
     \endcode

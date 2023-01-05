@@ -2,10 +2,11 @@
 <h2>informativa resa ai sensi degli artt. 13 e 14 del GDPR 2016/679</h2>
 
 <p>In questa pagina vengono descritte le modalità e le finalità di gestione dei dati personali di coloro
-che consultano questo sito, accessibile all'indirizzo <a href="{{ site.url }}">{{ site.fqdn }}</a>; questa informativa è resa ai sensi
-dell'<a href="http://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/1311248#articolo13" target="_blank">art. 13 del D.Lg. n. 196/2003</a>
-(codice in materia di protezione dei dati personali) e
-dell'<a href="http://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/6264597" target="_blank">art. 13 del Regolamento UE n. 2016/679</a> (GDPR 2016/679).</p>
+che consultano questo sito, accessibile all'indirizzo <a href="{{ site.url }}">{{ site.fqdn }}</a> (d'ora in poi per brevità anche semplicemente "il sito"); questa informativa
+è resa ai sensi dell'<a href="http://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/1311248#articolo13" target="_blank">art. 13 del D.Lg. n. 196/2003</a>
+(codice in materia di protezione dei dati personali) e dell'<a href="http://www.garanteprivacy.it/web/guest/home/docweb/-/docweb-display/docweb/6264597" target="_blank">art. 13
+del Regolamento UE n. 2016/679</a> (GDPR 2016/679). La presente informativa si applica soltanto alla navigazione e all'interazione col sito, e non a siti di terze parti
+eventualmente raggiunti dall'utente navigando verso di essi tramite link esterni presenti sul sito stesso.</p>
 
 <h3>titolare del trattamento dei dati</h3>
 
@@ -64,26 +65,30 @@ mittente, necessario per rispondere alle richieste, nonché degli eventuali altr
 <p>Specifiche informative sono predisposte nelle pagine del sito che richiedono la trasmissione di dati da parte dell'utente per l'erogazione
 di servizi e per l'invio di informazioni.</p>
 
-{% for form in contatti %}
-{% set dati = form.privacy %}
+{% for form, dettagli in contatti %}
+{% set dati = privacy.moduli[ form ] %}
+{% if dati.consensi %}
 <h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
-<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} Nel caso di utilizzo del form, i dati trasmessi vengono trattati per le seguenti finalità per ognuna delle quali il consenso può
+<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} Nel caso di utilizzo del form, i dati trasmessi vengono trattati per le seguenti finalità, per ognuna delle quali il consenso può
 essere prestato separatamente:</p>
-<ul>{% for finalita in dati.finalita %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}obbligatorio{% else %}facoltativo{% endif %})</li>{% endfor %}</ul>
+<ul>{% for finalita in dati.consensi %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}obbligatorio{% else %}facoltativo{% endif %})</li>{% endfor %}</ul>
+{% endif %}
 {% endfor %}
 
 {% for form in registrazione %}
-{% set dati = form.privacy %}
+{% set dati = privacy.moduli[ form ] %}
+{% if dati.consensi %}
 <h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
-<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} Nel caso di utilizzo del form, i dati trasmessi vengono trattati per le seguenti finalità per ognuna delle quali il consenso può
+<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} Nel caso di utilizzo del form, i dati trasmessi vengono trattati per le seguenti finalità, per ognuna delle quali il consenso può
 essere prestato separatamente:</p>
-<ul>{% for finalita in dati.finalita %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}obbligatorio{% else %}facoltativo{% endif %})</li>{% endfor %}</ul>
+<ul>{% for finalita in dati.consensi %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}obbligatorio{% else %}facoltativo{% endif %})</li>{% endfor %}</ul>
+{% endif %}
 {% endfor %}
 
 <h3>modalità di conferimento dei dati</h3>
 
-<p>A parte quanto specificato per i dati di navigazione, l'utente è libero di fornire i propri dati personali compilando i moduli presenti sul sito
-per richiedere l'invio di newsletter, di materiale informativo o di altre comunicazioni; l'utente è avvisato e consapevole che il mancato
+<p>A parte quanto specificato per i dati di navigazione, l'utente è libero di fornire i propri dati personali compilando i moduli presenti sul sito come specificato nella
+sezione precedente per richiedere l'invio di newsletter, di materiale informativo o di altre comunicazioni; l'utente è avvisato e consapevole che il mancato
 conferimento di tali dati può comportare l'impossibilità di ottenere quanto richiesto.</p>
 
 <h3>modalità del trattamento dei dati</h3>
@@ -95,17 +100,10 @@ dei dati trattati.</p>
 
 <h3>finalità del trattamento dei dati</h3>
 
-<p>Tutte le attività di raccolta e successivo trattamento dei dati sono finalizzate, se non diversamente specificato, al perseguimento dei seguenti scopi:</p>
-<ul>
-{% for scopo in privacy.finalita %}
-    <li>{{ scopo.descrizione[ localization.language.ietf ] }}</li>
-{% else %}
-	<li>risposta alle richieste degli utenti</li>
-{% endfor %}
-</ul>
+<p>Tutte le attività di raccolta e successivo trattamento dei dati sono finalizzate, se non diversamente specificato, sono finalizzate alla gestione e all'evasione delle
+richieste dei clienti, e i dati raccolti vengono conservati esclusivamente per il tempo necessario allo svolgimento di tale attività.</p>
 <p>In nessun caso il titolare del trattamento utilizza i dati forniti per finalità diverse da quelle elencate. Informative dettagliate
-vengono fornite contestualmente alla richiesta del consenso nei moduli del sito eventualmente predisposti per la raccolta di dati
-degli interessati.</p>
+vengono fornite contestualmente alla richiesta del consenso nei moduli del sito eventualmente predisposti per la raccolta di dati degli interessati.</p>
 
 <h3>diritti degli interessati</h3>
 
