@@ -6034,6 +6034,7 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 		progetti.id_ranking,
 		ranking.nome AS ranking,
 		progetti.nome,
+		group_concat( concat( matricole.id_articolo, ' ', matricole.matricola ) SEPARATOR ' | ' ) AS matricole,
 		progetti.entrate_previste,
 		progetti.ore_previste,
 		progetti.costi_previsti,
@@ -6057,6 +6058,8 @@ CREATE OR REPLACE VIEW `progetti_produzione_view` AS
 		LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
 		LEFT JOIN ranking ON ranking.id = progetti.id_ranking
+		LEFT JOIN progetti_matricole ON progetti_matricole.id_progetto = progetti.id
+		LEFT JOIN matricole ON matricole.id = progetti_matricole.id_matricola
 	WHERE progetti.data_accettazione IS NOT NULL
 		AND progetti.data_chiusura IS NULL
 		AND progetti.data_archiviazione IS NULL

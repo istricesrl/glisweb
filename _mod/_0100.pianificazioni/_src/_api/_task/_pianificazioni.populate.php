@@ -269,6 +269,8 @@
             // creo gli oggetti collegati di tipo documenti_articoli
             foreach( $rows as $row ) {
 
+                $row['model_importo_netto_totale'] = str_replace( ',', '.', $row['model_importo_netto_totale'] );
+
                 $detail = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
