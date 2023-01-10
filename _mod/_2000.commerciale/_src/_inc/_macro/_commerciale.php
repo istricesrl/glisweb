@@ -70,6 +70,7 @@
                 'page' => 'progetti.commerciale.form'
             ),
             'data' => array(
+                '__report_mode__' => 1
             ),
             'cols' => array(
                 'id' => '#',
@@ -92,8 +93,7 @@
 #                'data_prossima_attivita' => 'event.stopPropagation();'
             ),
             'etc' => array(
-                '__force_backurl__' => 1,
-                '__report_mode__' => 1
+                '__force_backurl__' => 1
             )
         );
 

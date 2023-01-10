@@ -309,17 +309,34 @@
     // output
 	echo PHP_EOL;
 
-    // pixel di Facebook
-	if( ! isset( $cf['facebook']['pixel']['id'] ) || empty( $cf['facebook']['pixel']['id'] ) ) {
-	    echo '[ -- ] pixel di Facebook non settato' . PHP_EOL;
-	} else {
-	    echo '[ OK ] pixel di Facebook: ' . $cf['facebook']['pixel']['id'] . PHP_EOL;
-	}
+    // configurazione Google
+    if( empty( $cf['google']['profile'] ) ) {
+	    echo '[WARN] servizi Google non configurati' . PHP_EOL;
+    } else {
+        echo '[ -- ] profilo Google esistente per lo status ' . $cf['site']['status'] . PHP_EOL;
+        if( empty( $cf['google']['profile']['analytics']['ua'] ) ) {
+            echo '[WARN] servizi Google non configurati' . PHP_EOL;
+        } else {
+            echo '[ -- ] profilo Google Analytics: ' . $cf['google']['profile']['analytics']['ua'] . PHP_EOL;
+        }
+    }
+
+    // configurazione Facebook
+    if( empty( $cf['facebook']['profile'] ) ) {
+	    echo '[WARN] servizi Facebook non configurati' . PHP_EOL;
+    } else {
+        echo '[ -- ] profilo Facebook esistente per lo status ' . $cf['site']['status'] . PHP_EOL;
+        if( empty( $cf['facebook']['profile']['pixel']['id'] ) ) {
+            echo '[WARN] servizi Facebook non configurati' . PHP_EOL;
+        } else {
+            echo '[ -- ] pixel di Facebook attivo: ' . $cf['facebook']['profile']['pixel']['id'] . PHP_EOL;
+        }
+    }
 
     // output
 	echo PHP_EOL;
 
-    // controllo moduli
+	// controllo moduli
 	foreach( $cf['mods']['active']['array'] as $mod ) {
 
 	    // output

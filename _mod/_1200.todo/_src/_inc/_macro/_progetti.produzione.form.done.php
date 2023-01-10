@@ -16,7 +16,7 @@
     
     // tabella della vista
 	$ct['view']['table'] = '__report_done_todo__';
-    $ct['view']['etc']['__report_mode__'] = 1;
+    $ct['view']['data']['__report_mode__'] = 1;
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['table'] = 'todo';

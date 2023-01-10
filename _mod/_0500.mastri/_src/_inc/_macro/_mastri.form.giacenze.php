@@ -13,7 +13,7 @@
 
     // tabella gestita
     $ct['form']['table'] = 'mastri';
-    $ct['view']['etc']['__report_mode__'] = 1;
+    $ct['view']['data']['__report_mode__'] = 1;
 
     // verifiche dinamiche sulla tipologia
     $checkType = mysqlSelectRow(

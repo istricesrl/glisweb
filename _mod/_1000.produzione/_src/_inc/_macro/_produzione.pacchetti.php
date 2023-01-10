@@ -90,8 +90,7 @@
                 NULL => 'event.stopPropagation();'
             ),
             'etc' => array(
-                '__force_backurl__' => 1,
-                '__report_mode__' => 1
+                '__force_backurl__' => 1
             ),
             '__restrict__' => array(
                 'id_progetto' => array(

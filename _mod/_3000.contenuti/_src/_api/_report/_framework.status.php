@@ -7,7 +7,7 @@
 
     // inclusione del framework
 	// require_once '../../../../../_src/_config/_config.php';
-
+/*
     // configurazione Google
     if( empty( $cf['google']['profile'] ) ) {
 	    echo '[WARN] servizi Google non configurati' . PHP_EOL;
@@ -31,3 +31,4 @@
             echo '[ -- ] pixel di Facebook attivo: ' . $cf['facebook']['profile']['pixel']['id'] . PHP_EOL;
         }
     }
+*/

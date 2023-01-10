@@ -61,7 +61,7 @@
         $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
         );
 
-    $ct['view']['etc']['__report_mode__'] = 1;
+    $ct['view']['data']['__report_mode__'] = 1;
 
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['nome'] = 'ASC';
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__']['rows'] = 20000;
