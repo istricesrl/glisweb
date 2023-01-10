@@ -74,6 +74,9 @@
         $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
         $_SESSION['carrello']['sconto_percentuale']         = 0;
 
+        // inizializzazione calcolatore articoli aggiunti
+        $deltaArticoli = array();
+
         // debug
         // print_r( $_SESSION['carrello']['articoli'] );
 
@@ -89,11 +92,71 @@
                     : 1
                 );
 
+            // dettaglio articolo aggiunto
+            $deltaArticoli[ $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ] = array(
+                'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'],
+                'quantita' => ( isset( $_REQUEST['__carrello__']['__articolo__']['quantita'] ) )
+                ? $_REQUEST['__carrello__']['__articolo__']['quantita']
+                : 1
+            );
+
             // debug
             // die( 'qta ' . $_REQUEST['__carrello__']['__articolo__']['quantita'] );
 
             // log
             logWrite( 'acquisto singolo articolo ' . $_REQUEST['__carrello__']['__articolo__']['id_articolo'] . ' x ' . $_REQUEST['__carrello__']['__articolo__']['quantita'], 'cart' );
+
+/*
+            if( isset( $cf['facebook']['profile']['pixel']['id'] ) && isset( $cf['facebook']['profile']['pixel']['token'] ) ) {
+
+                // dati
+                $data = array(
+                    'access_token' => $cf['facebook']['profile']['pixel']['token'],
+                    'data' => json_encode(
+                        array(
+                            array(
+                                'event_name' => 'AddToCart',
+                                'event_time' => time(),
+                                'action_source' => 'website',
+                                'user_data' => array(
+                                    'external_id' => array(
+                                        hash( 'sha256', $_REQUEST['__carrello__']['id'] )
+                                    )
+                                ),
+                                'custom_data' => array(
+                                    'currency' => 'EUR',
+                                    'value' => '142.52'
+                                )
+                            )
+                        )
+                    )
+                );
+
+                // chiamata
+                restCall(
+                    'https://graph.facebook.com/v15.0/'.$cf['facebook']['profile']['pixel']['id'].'/events',
+                    METHOD_POST,
+                    $data,
+                    MIME_X_WWW_FORM_URLENCODED,
+                    MIME_APPLICATION_JSON,
+                    $status,
+                    array(),
+                    NULL,
+                    NULL,
+                    $error
+                );
+
+                // debug
+                // echo '<pre>';
+                // print_r( $_REQUEST['__carrello__'] );
+                // print_r( $_REQUEST['__carrello__']['__articolo__'] );
+                // print_r( $data );
+                // print_r( $status );
+                // print_r( $error );
+                // echo '</pre>';
+
+            }
+*/
 
             // aggiunta articolo al carrello
             $_REQUEST['__carrello__'] = array_replace_recursive(
@@ -118,6 +181,12 @@
         // integro gli articoli
         if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
             foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
+                $deltaArticoli[ $item['id_articolo'] ] = array(
+                    'id_articolo' => $item['id_articolo'],
+                    'quantita' => ( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'] ][ $field ] ) )
+                    ? $_SESSION['carrello']['articoli'][ $item['id_articolo'] ][ $field ] - $item['quantita']
+                    : $item['quantita']
+                );
                 foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {
                     if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'] ][ $field ] ) ) {
                         $item[ $field ] = $model['default'];
@@ -319,6 +388,9 @@
             ),
             'carrelli'
         );
+
+        // evento Facebook
+        fbEventAddToCart( $cf['memcache']['connection'], $cf['mysql']['connection'], $cf['facebook']['profile'], $_SESSION['carrello'], $deltaArticoli );
 
         // log
         logWrite( 'aggiornato il carrello ' . $_SESSION['carrello']['id'], 'cart' );
