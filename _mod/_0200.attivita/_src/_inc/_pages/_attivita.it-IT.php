@@ -15,7 +15,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.view', 'cartellini', 'attivita.tools' ) ),
-	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attività' ),
 																		'priority'	=> '100' ) ) )	
 	);
@@ -29,7 +29,7 @@
 	    'parent'		=> array( 'id'		=> 'attivita.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_attivita.tools.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'			=> array( 'tabs'	=> $p['attivita.view']['etc']['tabs'] )
 	);
 
@@ -42,7 +42,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_attivita.form.php' ),
 	    'parser'		=> array( $m . '_src/_inc/_parser/_attivita.form.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.form',
 														'attivita.form.file' ) )
 	);
@@ -56,7 +56,7 @@
 		'parent'		=> array( 'id'		=> 'attivita.form' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'attivita.form.file.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_attivita.form.file.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
 
