@@ -80,6 +80,9 @@
                 'totale' => 'totale',
                 NULL => 'azioni'
             ),
+            'data' => array(
+                '__report_mode__' => 1
+            ),
             'class' => array(
                 'id' => 'd-none',
                 'progetto' => 'text-left',
