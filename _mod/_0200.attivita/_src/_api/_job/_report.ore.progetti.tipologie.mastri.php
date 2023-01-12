@@ -125,8 +125,7 @@
                     $ore[$of['id_tipologia']][$of['id_mastro']]['ore_fatte'] = $of['tot_ore'];
                 }
             }
-         
-           
+
             if( isset( $ore ) && !empty( $ore ) ){
                 foreach( $ore as $kt => $t ){
                     foreach( $t as $km => $m){

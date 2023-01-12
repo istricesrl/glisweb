@@ -12,7 +12,7 @@
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
 	    'esportazioni' => array(
-		'label' => 'esportazioni'
+		'label' => 'popolazione report statici'
 	    )
 	);
 
@@ -58,7 +58,7 @@
     }
 
     // tendina anni
-    foreach( range( date( 'Y' ),  date( 'Y' ) ) as $y ) {
+    foreach( range( date( 'Y' ) - 1,  date( 'Y' ) + 1 ) as $y ) {
         $ct['etc']['select']['anni'][ $y ] = array( 'id' => $y, '__label__' => $y ) ;
     }
 
