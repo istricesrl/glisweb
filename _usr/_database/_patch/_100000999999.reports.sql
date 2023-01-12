@@ -38,6 +38,10 @@ CREATE OR REPLACE VIEW `__report_status_contratti__` AS
     LEFT JOIN metadati AS m1 ON ( m1.id_progetto = progetti.id AND m1.nome = 'contratto|monte_ore' )
   WHERE
     ( tipologie_progetti.se_contratto IS NOT NULL )
+    AND
+    progetti.data_accettazione IS NOT NULL
+    AND
+    progetti.data_chiusura IS NULL
   GROUP BY progetti.id
 ;
 
