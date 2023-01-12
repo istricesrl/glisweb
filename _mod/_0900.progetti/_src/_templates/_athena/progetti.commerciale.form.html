@@ -97,15 +97,16 @@
 			<div class="form-group form-row">
 				<div class="col-12 col-md">
 					<span class="label-top">valore progetto (€)</span>
-					{{ frm.inputRequired( table, '', '', 'entrate_previste', '', '', request, __preset__[table].nome ) }}
+					{{ frm.inputRequired( table, '', '', 'entrate_previste', '', '', request, '', 'number', '', '', '0.01' ) }}
 				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">stima costi (€)</span>
-					{{ frm.inputRequired( table, '', '', 'costi_previsti', '', '', request, __preset__[table].nome ) }}
+					{{ frm.inputRequired( table, '', '', 'costi_previsti', '', '', request, '', 'number', '', '', '0.01' ) }}
 				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">stima ore</span>
-					{{ frm.inputRequired( table, '', '', 'ore_previste', '', '', request, __preset__[table].nome ) }}
+					{# frm.inputRequired( table, '', '', 'ore_previste', '', '', request, __preset__[table].nome ) #}
+					{{ frm.inputRequired( table, '', '', 'ore_previste', '', '', request, '', 'number', '', '', '0.5' ) }}
 				</div>
 			</div>  
 			<div class="form-group form-row">
