@@ -55,7 +55,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
-        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1 OR se_referente = 1' );
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
         
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

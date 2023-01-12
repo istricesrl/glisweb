@@ -273,7 +273,6 @@
     anagrafica_view.se_docente                             | flag che identifica se il contatto è un docente
     anagrafica_view.se_allievo                             | flag che identifica se il contatto è un allievo
     anagrafica_view.se_agenzia_interinale                  | flag che identifica se il contatto è un'agenzia interinale
-    anagrafica_view.se_referente                           | flag che identifica se il contatto è un referente
     anagrafica_view.se_sostituto                           | flag che identifica se il contatto è un sostituto
     anagrafica_view.se_squadra                             | flag che identifica se il contatto è un membro della squadra emergenze
     anagrafica_view.categorie                              | -
