@@ -955,3 +955,16 @@
         return $j;
 
     }
+
+    /**
+     * 
+     * TODO implementare due costanti per dire alla funzione se togliere le righe dall'inizio o dalla fine e aggiungere il parametro alla funzione
+     * 
+     */
+    function fileTrimLines( $f, $n ) {
+
+        $a = file2array( $f );
+        $a = array_slice( $a, $n );
+        array2file( $f, $a );
+    
+    }

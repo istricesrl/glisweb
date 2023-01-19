@@ -24,12 +24,58 @@
         $arr = $xls->getActiveSheet()->toArray();
 
         // nuovo file
-        $nFile = str_replace( array( '.xls', '.xlsx' ), '.csv', $file );
+        $nFile = str_replace( array( '.xlsx', '.xls' ), '.csv', $file );
 
         // converto l'array in CSV
-        array2csvFile( $arr, $nFile );
+        array2csvFile( $arr, $nFile, FILE_WRITE_OVERWRITE, ';' );
 
         // restituisco il nome del file creato
         return $nFile;
+
+    }
+
+    function array2xlsFile( $file, $data ) {
+
+        // normalizzo il percorso
+        fullPath( $file );
+
+        // ...
+        $spreadSheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+        $workSheet = $spreadSheet->getActiveSheet();
+
+        // prelevo le intestazioni dalla prima riga
+        $sheet = array( array_keys( $data[0] ) );
+
+        // debug
+        // die( '<pre>' . print_r( $sheet, true ) . '</pre>' );
+
+        array_walk( $data, function( &$row, $key ) { $row = array_values( $row ); } );
+
+        // debug
+        // die( '<pre>' . print_r( $data, true ) . '</pre>' );
+
+        // ...
+        $sheet = array_merge( $sheet, $data );
+
+        // debug
+        // die( '<pre>' . print_r( $sheet, true ) . '</pre>' );
+
+        // scrivo l'intestazione
+        $workSheet->fromArray( $sheet, NULL, 'A1' );
+
+        // creo il writer
+        // $writer = \PhpOffice\PhpSpreadsheet\IOFactory::createWriter( $spreadSheet, "Xlsx" );
+        $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx( $spreadSheet );
+
+        // debug
+        // header('Content-Disposition: attachment; filename="myfile.xlsx"');
+        // header('Cache-Control: max-age=0');
+        // $writer->save( 'php://output' );
+
+        // debug
+        // die( $file );
+
+        // scrivo i dati
+        $writer->save( $file );
 
     }

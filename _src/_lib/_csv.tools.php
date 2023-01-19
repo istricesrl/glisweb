@@ -90,15 +90,15 @@
      * }
      * 
      */
-    function array2csvFile( $data, $file, $mode = FILE_WRITE_OVERWRITE ) {
+    function array2csvFile( $data, $file, $mode = FILE_WRITE_OVERWRITE, $s = ",", $c = "\"", $e = '\\' ) {
 
         $h = openFile( $file, $mode );
     
         $h = openFile( $file );
-        fputcsv( $h, array_keys( $data[0] ) );
+        fputcsv( $h, array_keys( $data[0] ), $s, $c, $e );
     
         foreach( $data as $row ) {
-            fputcsv( $h, $row );
+            fputcsv( $h, $row, $s, $c, $e );
         }
     
     }
