@@ -85,4 +85,19 @@
     notifiche via mail
     ------------------
 
+    come attivare il sistema di deploy tramite Phing per un progetto
+    ================================================================
+    Attivare il sistema di deploy tramite Phing per un progetto è semplicissimo, basta copiare il file _usr/_examples/_phing/build.properties
+    in usr/deploy/phing/ rinominandolo in base al target di destinazione che si intende assegnare al file, ad esempio per il file che
+    contiene le istruzioni per il deploy su stable si rinominerà il file da build.properties a stable.properties.
+
+    Una volta creato il file, si dovranno inserire le informazioni per il deploy, tenendo conto di quanto visto sopra; fatto questo,
+    il sistema di deploy sarà utilizzabile tramite il comando:
+
+    \code{.sh}
+    _src/_sh/_phing.deploy.sh [nomeDeploy]
+    \endcode
+
+    Dove il primo argomento è il nome del file properties che si desidera utilizzare.
+
 */

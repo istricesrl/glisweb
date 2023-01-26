@@ -1,0 +1,32 @@
+/*!
+
+    \page howto.configurazione come fare a configurare il framework
+
+    Guide pratiche passo passo alla configurazione del framework.
+
+    introduzione
+    ============
+
+    come imposto l'URL personalizzato della documentazione in Google Docs?
+    ======================================================================
+    Il framework supporta la possibilità di specificare una cartella su Google Docs che contiene la documentazione custom di uno specifico deploy. Questa
+    informazione è contenuta nella direttiva $cf['common']['docs']['user']['html'] che può essere valorizzata nel file src/config/030.common.php oppure nel
+    JSON di configurazione src/config.json, ad esempio:
+
+    \code{.json}
+    "common": {
+      "docs": {
+        "user": {
+          "html": {
+            "url": "<urlDellaCartellaGoogleDrive>"
+          }
+        }
+      }
+    }
+    \endcode
+
+    Per poter essere visualizzata dai destinatari, la cartella contenente la documentazione dev'essere correttamente condivisa con loro in Google Docs
+    attivando la condivisione tramite link oppure specificando i singoli account che possono accedervi; quest'ultima soluzione è caldamente consigliata
+    qualora la documentazione contenga informazioni riservate (ad esempio password).
+
+*/
