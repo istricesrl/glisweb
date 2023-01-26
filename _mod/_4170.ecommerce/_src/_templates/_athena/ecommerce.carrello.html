@@ -6,26 +6,190 @@
 <section class="row flex-fill">
     <div class="col-md-8 d-flex flex-column">
         {% if session.carrello.id %}
-	    <fieldset>
-            <legend>carrello <small>#{{ session.carrello.id }}</small></legend>
-            {# TODO QUI METTERE GLI ARTICOLI DEL CARRELLO #}
-        </fieldset>
-	    <fieldset>
-            <legend>dettagli</legend>
-            {# TODO QUI METTERE I DATI DEL CARRELLO #}
-        </fieldset>
-	    <fieldset>
-            <legend>dati cliente</legend>
-            {# TODO QUI METTERE I DATI DELL'INTESTATARIO E DEL DESTINATARIO #}
-        </fieldset>
-	    <fieldset class="mt-auto">
+        {% if session.carrello.timestamp_checkout %}
+        <fieldset class="">
             <legend>azioni</legend>
-            {# TODO QUI METTERE I TASTI RICALCOLA E PAGA #}
-            {# TODO SE È ATTIVO IL MODULO DOCUMENTI AGGIUNGERE I TASTI PER CREARE RICEVUTA, FATTURA O SCONTRINO #}
-            {# TODO SE C'È UNA RICEVUTA, FATTURA O SCONTRINO AGGIUNGERE IL TASTO PER STAMPARLI #}
+            {# TODO QUI METTERE ... #}
+            <div class="form-row">
+                <div class="col">
+                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="segna pagato in contanti e chiudi" onclick="">
+                </div>
+                <div class="col">
+                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="segna pagato con carta di credito o bancomat e chiudu" onclick="">
+                </div>
+                <div class="col">
+                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="invia tramite mail per il pagamento online" onclick="">
+                </div>
+                <div class="col">
+                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="invia tramite SMS per il pagamento online" onclick="">
+                </div>
+            </div>
         </fieldset>
         {% else %}
-	    <fieldset>
+        <form id="carrello" class="carrello d-flex flex-column flex-fill" action="" method="post">
+            <input type="hidden" id="ts_checkout" name="__carrello__[timestamp_checkout]" value="">
+            <fieldset>
+                <legend>carrello <small>#{{ session.carrello.id }}</small></legend>
+                {# ARTICOLI DEL CARRELLO #}
+                {% for articolo, dati in session.carrello.articoli  %}
+                <div class="form-row articolo">
+                    <input type="hidden" name="__carrello__[__articoli__][{{ articolo }}][id_articolo]" value="{{ articolo }}">
+                    <div class="d-none d-md-block col-md-auto col-form-label"><span class="id-articolo">{{ articolo }}</span></div>
+                    <div class="col-12 col-md col-form-label"><span class="descrizione">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></div>
+                    <div class="col-4 col-md-1"><label class="label-top">sc. %</label><input class="form-control form-control-sm text-right" type="text" id="scperc{{ articolo }}" name="__carrello__[__articoli__][{{ articolo }}][sconto_percentuale]" value="{{ '%0.2f'|format(dati.sconto_percentuale) }}"></div>
+                    <div class="col-4 col-md-1"><label class="label-top">sc. €</label><input class="form-control form-control-sm text-right" type="text" id="scval{{ articolo }}" name="__carrello__[__articoli__][{{ articolo }}][sconto_valore]" value="{{ '%0.2f'|format(dati.sconto_valore) }}"></div>
+                    <div class="col-4 col-md-1"><label class="label-top">q.tà</label><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ articolo }}" name="__carrello__[__articoli__][{{ articolo }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
+                    <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
+                </div>
+                {% endfor %}
+            </fieldset>
+            <fieldset>
+                <legend>dettagli</legend>
+                {# DATI DEL CARRELLO #}
+                <div class="form-row">
+                    <div class="col-12 col-md col-form-label">coupon</div>
+                    <div class="col-4 col-md-2"><input class="form-control form-control-sm text-right quantita" type="text" id="coupon" name="__carrello__[codice_coupon]" value="{{ session.carrello.codice_coupon }}"></div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{% if session.carrello.sconto_percentuale_coupon %}{{ '%0.2f'|format(session.carrello.sconto_percentuale_coupon) }}%{% else %}-{% endif %}</div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{% if session.carrello.sconto_valore_coupon %}{{ '%0.2f'|format(session.carrello.sconto_valore_coupon) }} {{ session.carrello.valuta_utf8 }}{% endif %}</div>
+                    <div class="col-4 col-md-1 text-center">{% if session.carrello.codice_coupon %}<input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#coupon').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">{% endif %}</div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12 col-md col-form-label">modalità di pagamento</div>
+                    <div class="col-4 col-md-4">
+                        <select class="form-control form-control-sm hint-toggle" id="costo-pagamento" hint-toggle="modalita_pagamento" name="__carrello__[provider_pagamento]">
+                            {% for cons in ecommerce.profile.provider %}
+                            <option value="{{ cons.id }}" min="{{ cons.importo_min }}" max="{{ cons.importo_max }}" prezzo="{{ cons.prezzo }}" relativo="{{ cons.prezzo_relativo }}" {% if cons.id == session.carrello.provider_pagamento %}selected{% endif %}>{{ cons.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-4 col-md-1 col-form-label text-right"></div>
+                    <div class="col-4 col-md-1 text-center"></div>
+                </div>
+                <div class="form-row">
+                    <div class="col-12 col-md col-form-label">modalità di fatturazione</div>
+                    <div class="col-4 col-md-auto">
+                        <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__carrello__[fatturazione_id_tipologia_documento]">
+                            {% for tdoc in etc.id_tipologia_documenti %}
+                            <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == session.carrello.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-4 col-md-auto">
+                        <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__carrello__[fatturazione_strategia]">
+                            {% for strf in etc.strategie_fatturazione %}
+                            <option value="{{ strf.id }}" {% if strf.id == session.carrello.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-4 col-md-1 col-form-label text-right"></div>
+                    <div class="col-4 col-md-1 text-center"></div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>totali</legend>
+                {# TOTALI DEL CARRELLO #}
+                <div class="form-row">
+                    <div class="col-4 col-md-10 col-form-label text-right">totale generale</div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_totale) }} {{ session.carrello.valuta_utf8 }}</div>
+                    <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="ricalcola" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
+                </div>
+            </fieldset>
+            <fieldset>
+                <legend>dati cliente</legend>
+                {# DATI DELL'INTESTATARIO E DEL DESTINATARIO #}
+                <div class="form-row">
+                    <div class="col-auto">
+                        <label class="label-top">persona</label>
+                        <select class="form-control form-control-sm" id="intestazione_id_tipologia_anagrafica" name="__carrello__[intestazione_id_tipologia_anagrafica]" required>
+                        <option></option>
+                        {% for tana in etc.id_tipologia_anagrafica %}
+                        <option value="{{ tana.id }}"{% if tana.id == session.carrello.intestazione_id_tipologia_anagrafica %} selected{% endif %}>{{ tana.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="label-top">nome</label>
+                        <input class="form-control form-control-sm" id="intestazione_nome" type="text" name="__carrello__[intestazione_nome]" value="{{ session.carrello.intestazione_nome }}" required>
+                    </div>
+                    <div class="col">
+                        <label class="label-top">cognome</label>
+                        <input class="form-control form-control-sm" id="intestazione_cognome" type="text" name="__carrello__[intestazione_cognome]" value="{{ session.carrello.intestazione_cognome }}" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <label class="label-top">ragione sociale (solo aziende)</label>
+                        <input class="form-control form-control-sm" id="intestazione_denominazione" type="text" name="__carrello__[intestazione_denominazione]" value="{{ session.carrello.intestazione_denominazione }}">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="label-top">codice SDI (solo aziende)</label>
+                        <input class="form-control form-control-sm" id="intestazione_sdi" type="text" name="__carrello__[intestazione_sdi]" value="{{ session.carrello.intestazione_sdi }}">
+                    </div>
+                    <div class="col-6 col-md-3">
+                        <label class="label-top">indirizzo PEC (solo aziende)</label>
+                        <input class="form-control form-control-sm" id="intestazione_pec" type="text" name="__carrello__[intestazione_pec]" value="{{ session.carrello.intestazione_pec }}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <label class="label-top">codice fiscale</label>
+                        <input class="form-control form-control-sm" id="intestazione_codice_fiscale" type="text" name="__carrello__[intestazione_codice_fiscale]" value="{{ session.carrello.intestazione_codice_fiscale }}" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="label-top">partita IVA</label>
+                        <input class="form-control form-control-sm" id="intestazione_partita_iva" type="text" name="__carrello__[intestazione_partita_iva]" value="{{ session.carrello.intestazione_partita_iva }}">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-9 col-md-5">
+                        <label class="label-top">indirizzo</label>
+                        <input class="form-control form-control-sm" id="intestazione_indirizzo" type="text" name="__carrello__[intestazione_indirizzo]" value="{{ session.carrello.intestazione_indirizzo }}" required>
+                    </div>
+                    <div class="col-3 col-md-1">
+                        <label class="label-top">CAP</label>
+                        <input class="form-control form-control-sm" id="intestazione_cap" type="text" name="__carrello__[intestazione_cap]" value="{{ session.carrello.intestazione_cap }}" required>
+                    </div>
+                    <div class="col-7 col-md-4">
+                        <label class="label-top">città</label>
+                        <input class="form-control form-control-sm" id="intestazione_citta" type="text" name="__carrello__[intestazione_citta]" value="{{ session.carrello.intestazione_citta }}" required>
+                    </div>
+                    <div class="col-5 col-md-2">
+                        <label class="label-top">provincia</label>
+                        <select class="form-control form-control-sm" id="intestazione_id_provincia" name="__carrello__[intestazione_id_provincia]" required>
+                        <option></option>
+                        {% for prov in etc.id_provincia %}
+                        <option value="{{ prov.id }}"{% if prov.id == session.carrello.intestazione_id_provincia %} selected{% endif %}>{{ prov.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-6">
+                        <label class="label-top">telefono</label>
+                        <input class="form-control form-control-sm" id="intestazione_telefono" type="tel" name="__carrello__[intestazione_telefono]" value="{{ session.carrello.intestazione_telefono }}" required>
+                    </div>
+                    <div class="col-6">
+                        <label class="label-top">e-mail</label>
+                        <input class="form-control form-control-sm" id="intestazione_mail" type="email" name="__carrello__[intestazione_mail]" value="{{ session.carrello.intestazione_mail }}" required>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="mt-auto">
+                <legend>azioni</legend>
+                {# TODO QUI METTERE I TASTI RICALCOLA E PAGA #}
+                {# TODO SE È ATTIVO IL MODULO DOCUMENTI AGGIUNGERE I TASTI PER CREARE RICEVUTA, FATTURA O SCONTRINO #}
+                {# TODO SE C'È UNA RICEVUTA, FATTURA O SCONTRINO AGGIUNGERE IL TASTO PER STAMPARLI #}
+                <div class="form-row">
+                    <div class="col">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="vai al pagamento" onclick="$('#ts_checkout').val( Math.floor( Date.now() / 1000 ) );$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">
+                    </div>
+                </div>
+            </fieldset>
+            {% endif %}
+        </form>
+        {% else %}
+        <fieldset>
             <legend>apri un carrello o aggiungi un articolo per iniziare</legend>
             {# TODO QUI MOSTRARE I CARRELLI DA CATTURARE #}
             <p>nessun carrello aperto</p>

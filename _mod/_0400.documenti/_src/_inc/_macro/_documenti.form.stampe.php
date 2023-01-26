@@ -34,6 +34,7 @@
 
     if( isset( $_REQUEST[ $ct['form']['table'] ] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ){
 
+        // TODO fare lo switch sui flag della tabella tipologie_documenti e non sull'ID?
         switch ( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) {
 
             case 1:
@@ -87,6 +88,21 @@
                 );
 
             break;
+
+            case 8:
+
+                $ct['page']['contents']['metro']['pdf'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $base . '_ricevuta.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF',
+                    'text' => 'stampa la ricevuta in formato PDF'
+                );
+
+
+            break;
+
         }
 
     }

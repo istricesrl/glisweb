@@ -40,6 +40,14 @@
                 'action'        => 'carrello.checkout',                                             // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
                 'autosubmit'    => false,                                                           // autosubmit del modulo di riepilogo
+                '__label__'     => 'contanti'                                                       // etichetta del provider per le tendine
+            ),
+            'contrassegno' => array(
+                'id'            => 'contrassegno',                                                  // ID del provider per le tendine
+                'modalita'      => 1,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
+                'action'        => 'carrello.checkout',                                             // pagina per l'action del form di riepilogo
+                'method'        => 'post',                                                          // metodo per il form di riepilogo
+                'autosubmit'    => false,                                                           // autosubmit del modulo di riepilogo
                 '__label__'     => 'contrassegno'                                                   // etichetta del provider per le tendine
             ),
             'nexi' => array(
@@ -57,7 +65,7 @@
             ),
             'paypal' => array(
                 'id'            => 'paypal',                                                        // ID del provider per le tendine
-                'modalita'      => 24,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
+                'modalita'      => 24,                                                              // ID della modalità di pagamento (per l'emissione dei documenti)
                 'business'      => NULL,                                                            // 
                 'action_url'    => 'https://www.sandbox.paypal.com/cgi-bin/webscr',                 // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
@@ -69,7 +77,7 @@
             ),
             'paypal-advanced' => array(
                 'id'            => 'paypal-advanced',                                               // ID del provider per le tendine
-                'modalita'      => 24,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
+                'modalita'      => 24,                                                              // ID della modalità di pagamento (per l'emissione dei documenti)
                 'advanced'      => false,                                                           // impostare a true per consentire il pagamento con carta dal sito
                 'business'      => NULL,                                                            // 
                 'client_id'     => NULL,                                                            // 

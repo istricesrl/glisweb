@@ -236,6 +236,7 @@ label.form-check-label {
     border-image: linear-gradient(to bottom, rgba(206,212,218,0) 25%,rgba(206,212,218,1) 25%,rgba(206,212,218,1) 75%,rgba(206,212,218,0) 75%);
     border-image-slice: 1;
 
+    height: auto;
 
 /*
     border-left: 1px solid #ced4da;

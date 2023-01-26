@@ -114,10 +114,11 @@
         // data di partenza di default
         if( ! isset( $start ) || empty( $start ) ) {
             $start = $current['data_inizio'];
+            $status['info'][] = 'nessun oggetto trovato per questa pianificazione, inizio dal ' . $start;
         }
 
         // status
-        $status['info'][] = 'elaboro per ' . $current['giorni_elaborazione'] . ' giorni a partire dal ' . $start;
+        $status['info'][] = 'elaboro per ' . $current['giorni_elaborazione'] . ' giorni ';
 
         // fine della finestra di lavoro
         $stop = date( 'Y-m-d', strtotime( ' +' . $current['giorni_elaborazione'] . ' days' ) );
@@ -145,7 +146,12 @@
         }
 
         // status
-        $status['info'][] = 'inizio dal ' . $last . ' e finisco il ' . $stop;
+        if( isset( $last ) ) {
+            $status['info'][] = 'data ultimo oggetto generato ' . $last;
+            $status['info'][] = 'inizio dal ' . $last . ' e finisco il ' . $stop;
+        } else {
+            $status['info'][] = 'nessun oggetto già generato, inizio dal ' . $last . ' e finisco il ' . $stop;
+        }
 
         // array dei giorni della settimana
         $giorni = array();

@@ -204,7 +204,7 @@
 	$sdc = $sdec['linee'];
 
     // oggetto del documento
-	$dobj = 'fattura n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
+	$dobj = 'ricevuta n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
   
     // recupero i dati dell'azienda emittente
 	$emittente = mysqlSelectRow( $cf['mysql']['connection'],

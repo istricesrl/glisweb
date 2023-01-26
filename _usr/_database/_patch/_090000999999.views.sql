@@ -3367,6 +3367,76 @@ CREATE OR REPLACE VIEW `fatture_attive_view` AS
 	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
 ;
 
+--| 090000013255
+
+-- ricevute_attive_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `ricevute_attive_view`;
+
+--| 090000013256
+
+-- ricevute_attive_view
+-- tipologia:  vista virtuale
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `ricevute_attive_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+		coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
+		documenti.id_destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
+		concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   	WHERE tipologie_documenti.se_ricevuta IS NOT NULL
+	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
+;
+
 --| 090000013500
 
 -- fatture_passive_view
@@ -3434,6 +3504,76 @@ CREATE OR REPLACE VIEW `fatture_passive_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
    	WHERE tipologie_documenti.se_fattura IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
+;
+
+--| 090000013505
+
+-- ricevute_passive_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `ricevute_passive_view`;
+
+--| 090000013506
+
+-- ricevute_passive_view
+-- tipologia:  vista virtuale
+-- verifica: 2021-09-03 17:25 Fabio Mosti
+CREATE OR REPLACE VIEW `ricevute_passive_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		documenti.cig,
+		documenti.cup,
+		documenti.riferimento,
+				coalesce(
+			a1.soprannome,
+			a1.denominazione,
+			concat_ws(' ', coalesce(a1.cognome, ''),
+			coalesce(a1.nome, '') ),
+			''
+		) AS emittente,
+		documenti.id_destinatario,
+		coalesce(
+			a2.soprannome,
+			a2.denominazione,
+			concat_ws(' ', coalesce(a2.cognome, ''),
+			coalesce(a2.nome, '') ),
+			''
+		) AS destinatario,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		documenti.timestamp_chiusura,
+		concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM
+		documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+   	WHERE tipologie_documenti.se_ricevuta IS NOT NULL
 	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
@@ -6742,8 +6882,6 @@ CREATE OR REPLACE VIEW reparti_view AS
 	FROM reparti
 		LEFT JOIN iva ON iva.id = reparti.id_iva
 ;
-
-
 
 --| 090000031400
 

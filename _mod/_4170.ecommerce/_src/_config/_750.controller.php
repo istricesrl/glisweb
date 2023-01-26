@@ -73,6 +73,7 @@
         $_SESSION['carrello']['prezzo_netto_finale']        = 0;
         $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
         $_SESSION['carrello']['sconto_percentuale']         = 0;
+        $_SESSION['carrello']['sconto_valore']              = 0;
 
         // inizializzazione calcolatore articoli aggiunti
         $deltaArticoli = array();
@@ -167,7 +168,9 @@
                             'quantita' => $_REQUEST['__carrello__']['__articolo__']['quantita'],
                             'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'],
                             'destinatario_id_anagrafica' => ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL,
-                            'id_iva' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_iva'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_iva'] : 1
+                            'id_iva' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_iva'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_iva'] : 1,
+#                            'sconto_percentuale' => 0,
+#                            'sconto_valore' => 0
                         )
                     )
                 )
@@ -192,6 +195,7 @@
                         $item[ $field ] = $model['default'];
                     }
                 }
+                // TODO IMPORTANTE nel ciclo qui sopra, oppure a parte qui sotto, accettare il valore di sconto solo se l'utente ha i privilegi appropriati (altrimenti la gente si mette gli sconti da sola)
                 // echo '<pre>' . print_r( $item, true ) . '</pre>';
                 if( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'] ] ) ) {
                     $_SESSION['carrello']['articoli'][ $item['id_articolo'] ] = array_replace_recursive(
@@ -289,6 +293,8 @@
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['id_iva']                     = $dati['id_iva'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita']                   = $dati['quantita'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['destinatario_id_anagrafica'] = $dati['destinatario_id_anagrafica'];
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['sconto_percentuale']         = $dati['sconto_percentuale'];
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['sconto_valore']              = $dati['sconto_valore'];
 
                     // trovo la descrizione dell'articolo
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['descrizione'] = mysqlSelectCachedValue(
@@ -321,6 +327,9 @@
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_unitario'] * $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_unitario'] * $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['quantita'];
 
+                    // TODO calcolo e applico lo sconto per riga
+                    // ...
+
                     // TODO trovo i prezzi finali
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'];
@@ -338,6 +347,8 @@
                             'prezzo_lordo_unitario'         => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_unitario'],
                             'prezzo_netto_totale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_totale'],
                             'prezzo_lordo_totale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_totale'],
+                            'sconto_percentuale'            => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['sconto_percentuale'],
+                            'sconto_valore'                 => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['sconto_valore'],
                             'prezzo_netto_finale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_netto_finale'],
                             'prezzo_lordo_finale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'] ]['prezzo_lordo_finale']
                         ),
@@ -363,6 +374,45 @@
         }
 
         // STEP 6 - calcolo coupon
+
+        // se è stato inviato un codice coupon...
+        if( $_SESSION['carrello']['codice_coupon'] ) {
+
+            // TODO verifico se il coupon può essere utilizzato con questo carrello
+
+            // TODO trovo l'ID del coupon
+
+            // debug
+             $_SESSION['carrello']['id_coupon'] = 1;
+
+        } else {
+
+            // rimuovo il coupon inutilizzabile
+            $_SESSION['carrello']['id_coupon'] = NULL;
+
+        }
+
+        // TODO se il coupon può essere utilizzato ne calcolo il valore altrimenti lo elimino
+        if( ! empty( $_SESSION['carrello']['id_coupon'] ) ) {
+
+            // TODO calcolo il valore percentuale del coupon se applicabile
+
+            // debug
+             $_SESSION['carrello']['sconto_percentuale_coupon'] = 10;
+
+            // TODO calcolo il valore assoluto del coupon (direttamente o in conseguenza dello sconto percentuale)
+
+            // debug
+             $_SESSION['carrello']['sconto_valore_coupon'] = 100;
+
+        } else {
+
+            // rimuovo il coupon inutilizzabile
+            $_SESSION['carrello']['codice_coupon'] =
+            $_SESSION['carrello']['sconto_valore_coupon'] =
+            $_SESSION['carrello']['sconto_percentuale_coupon'] = NULL;
+
+        }
 
         // STEP 7 - calcoli finali
 

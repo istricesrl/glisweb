@@ -37,8 +37,12 @@
         'provider_pagamento'                    => array( 'type' => 'string',   'default' => NULL ),
         'fatturazione_id_tipologia_documento'   => array( 'type' => 'string',   'default' => NULL ),
         'fatturazione_sezionale'                => array( 'type' => 'string',   'default' => 'E' ),
-        'fatturazione_strategia'                => array( 'type' => 'string',   'default' => NULL,  'values' => array( 'SINGOLA', 'MULTIPLA', NULL ) )
+        'fatturazione_strategia'                => array( 'type' => 'string',   'default' => NULL,  'values' => array( 'SINGOLA', 'MULTIPLA', NULL ) ),
+        'codice_coupon'                         => array( 'type' => 'string',   'default' => NULL ),
+        'timestamp_checkout'                    => array( 'tipe' => 'int',      'default' => NULL ),
     );
+
+    // TODO occhio la timestamp_checkout dev'essere modificabile solo se l'utente ha i privilegi giusti (aggiuntere un campo all'array?)
 
     // provider di pagamento ammessi
     if( isset( $cf['ecommerce']['profile']['provider'] ) && is_array( $cf['ecommerce']['profile']['provider'] ) ) {
@@ -54,4 +58,8 @@
         'id_iva'                        => array( 'tipe' => 'int',      'default' => NULL ),
         'destinatario_id_anagrafica'    => array( 'type' => 'string',   'default' => NULL ),
         'quantita'                      => array( 'tipe' => 'int',      'default' => NULL ),
+        'sconto_percentuale'            => array( 'tipe' => 'int',      'default' => NULL ),
+        'sconto_valore'                 => array( 'tipe' => 'int',      'default' => NULL ),
     );
+
+    // TODO occhio le colonne degli sconti devono essere modificabili solo se l'utente ha i privilegi giusti (aggiuntere un campo all'array?)
