@@ -106,7 +106,7 @@
 
         // log
         if( isset( $job['id'] ) ) {
-            appendToFile( print_r( $status, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+            appendToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
         }
 
         // output

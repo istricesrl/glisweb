@@ -236,7 +236,7 @@
     // function creazionePianificazione( $c, $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1 ){ 
     function creazionePianificazione( $data, $id_periodicita, $cadenza=NULL, $data_fine=NULL, $numero_ripetizioni=1, $giorni_settimana=NULL,$ripetizione_mese=1, $ripetizione_anno=1, $solo_future=false ){ 
 
-        logWrite( 'richiesta generazione '.$data, 'todo', LOG_ERR );
+        logWrite( 'richiesta generazione '.$data, 'todo' );
 
         // TODO controlli
                // la data inizio è successiva alla data fine
@@ -272,7 +272,7 @@
     
                 // attività con ripetizione settimanale
                 case 2:
-                    logWrite( 'richiesta generazione settimanale data '.$data, 'todo', LOG_ERR );
+                    logWrite( 'richiesta generazione settimanale data '.$data, 'todo' );
                     // lunedì della settimana di inizio
                     $d_inizio = date('Y-m-d',strtotime('monday this week ', strtotime($data) ));
                     if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($d_inizio. ' + '.($cadenza * $numero_ripetizioni ).' weeks -1 day')); }

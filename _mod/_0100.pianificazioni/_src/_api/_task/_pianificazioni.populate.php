@@ -275,13 +275,16 @@
             // creo gli oggetti collegati di tipo documenti_articoli
             foreach( $rows as $row ) {
 
+                $twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $row ) );
+                $nome = $twig->render( 'model_nome', $d );
+
                 $row['model_importo_netto_totale'] = str_replace( ',', '.', $row['model_importo_netto_totale'] );
 
                 $detail = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
                         'id_documento'                  => $object,
-                        'nome'                          => $row['model_nome'],
+                        'nome'                          => $nome,
                         'quantita'                      => $row['model_quantita'],
                         'id_udm'                        => $row['model_id_udm'],
                         'id_articolo'                   => $row['model_id_articolo'],
@@ -326,6 +329,7 @@
 
                 $twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $row ) );
                 $importo_lordo_totale = $twig->render( 'model_importo_lordo_totale', $d );
+                $nome = $twig->render( 'model_nome', $d );
                 $scadenza = $data . ' 00:00:00';
 
                 if( ! empty( $row['offset_giorni'] ) ) {
@@ -346,7 +350,7 @@
                     $cf['mysql']['connection'],
                     array(
                         'id_documento'                  => $object,
-                        'nome'                          => $row['model_nome'],
+                        'nome'                          => $nome,
                         'id_modalita_pagamento'         => $row['model_id_modalita_pagamento'],
                         'importo_lordo_totale'          => $importo_lordo_totale,
                         'id_listino'                    => $row['model_id_listino'],

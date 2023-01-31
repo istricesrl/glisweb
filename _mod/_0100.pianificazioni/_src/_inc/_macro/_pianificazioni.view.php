@@ -30,7 +30,10 @@
 	$ct['view']['cols'] = array(
         'id' => '#',
         'entita' => 'entità',
-        'nome' => 'pianficazione'
+        'nome' => 'pianficazione',
+        'data_avvio' => 'attiva dal',
+        'data_inizio' => 'primo oggetto',
+        'giorni_elaborazione' => 'crea oggetti per'
 	);
 
     // stili della vista
@@ -46,8 +49,13 @@
     // inclusione filtri speciali
 //	$ct['etc']['include']['filters'] = 'inc/pianificazioni.view.filters.html';
  
+    // ...
+    $ct['view']['__restrict__']['id_genitore']['NL'] = true;
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
-   
+    // trasformazione icona attivo/inattivo
+	foreach( $ct['view']['data'] as &$row ) {
+        $row['giorni_elaborazione'] = ( ! empty( $row['giorni_elaborazione'] ) ) ? $row['giorni_elaborazione'] . 'gg' : '-';
+    }
