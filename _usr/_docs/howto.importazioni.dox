@@ -146,6 +146,83 @@
     oppure una sua elaborazione preliminare (per esempio una conversione da XLS a CSV per comodità di lavoro, oppure trasformazioni o semplificazioni dei dati per
     facilitare il lavoro del job, eccetera).
 
+    Il task di avvio che abbiamo appena visto è pensato per girare quando chiamato con un percorso di file come argomento; un altro caso frequente è che il task giri
+    in continuo controllando se il file da elaborare appare in una determinata cartella (ad esempio perché è stato caricato via FTP). Per gestire questo tipo di
+    scenario è necessario automatizzare l'esecuzione del task a intervalli regolari (si veda la documentazione sull'esecuzione automatica di operazioni pianificate
+    per i dettagli) e il codice avrà una struttura simile a questa:
+
+    \code{.php}
+    <?php
+
+        // inclusione del framework
+        if( ! defined( 'CRON_RUNNING' ) ) {
+            require '../../../../../_src/_config.php';
+        }
+
+        // inizializzo l'array del risultato
+        $status = array();
+
+        // cerco file CSV in tmp/upload/csv/anagrafica
+        $status['files'] = glob( DIR_BASE . 'tmp/upload/csv/anagrafica/*.csv' );
+
+        // se è presente almeno un file
+        if( count( $status['files'] ) > 0 ) {
+
+            // elaboro il primo file
+            $status['file']['sorgente'] = array_shift( $status['files'] );
+
+            // definisco la posizione di lavoro del file
+            $status['file']['destinazione'] = str_replace( 'tmp/upload', 'tmp/elaborazione', $status['file']['sorgente'] );
+
+            // sposto il file dall'area di upload
+            $status['spostamento'] = moveFile( $status['file']['sorgente'], $status['file']['destinazione'] );
+
+            // creo il job
+            if( $status['spostamento'] !== false ) {
+
+                // creo il job
+                $status['inserimento'] = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO job ( nome, job, iterazioni, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ? )',
+                    array(
+                        array( 's' => 'importazione tracciato WRI/CSV bonifici' ),
+                        array( 's' => 'mod/6000.amministrazione/src/api/job/amministrazione.importazione.wri.php' ),
+                        array( 's' => 1 ),
+                        array( 's' => 1 ),
+                        array( 's' => json_encode(
+                            array(
+                                'file' => $status['file']['destinazione']
+                            )
+                        ) )
+                    )
+                );
+
+                // status
+                $status['info'][] = 'file ' . $status['file']['sorgente'] . ' spostato in ' . $status['file']['destinazione'];
+
+            } else {
+
+                // status
+                $status['err'][] = 'errore nello spostamento del file da importare';
+
+            }
+
+        } else {
+
+                // status
+                $status['info'][] = 'nessun file da importare';
+
+        }
+
+        // output
+        if( ! defined( 'CRON_RUNNING' ) ) {
+            buildJson( $status );
+        }
+    \endcode
+
+    Tipicamente, quando si crea un job di importazione che lavora su un file, può essere opportuno eliminare quel file alla fine del job. Più avanti vedremo come creare il file del job
+    e come gestire, fra le altre, anche questa evenienza.
+
     creazione del job di importazione
     ---------------------------------
     Per quanto riguarda il codice del job, rimandiamo alla \ref crontab_job "sezione relativa ai job della documentazione", ci limitiamo qui a dare alcune indicazioni
@@ -182,12 +259,12 @@
             // status
             $job['workspace']['status']['error'][] = 'questo job richiede un file su cui lavorare';
 
-        } elseif( ! file_exists( DIR_BASE . $job['workspace']['file'] ) ) {
+        } elseif( ! file_exists( fullPath( $job['workspace']['file'] ) ) ) {
 
             // status
             $job['workspace']['status']['error'][] = 'impossibile trovare il file ' . $job['workspace']['file'];
 
-        } elseif( ! is_readable( DIR_BASE . $job['workspace']['file'] ) ) {
+        } elseif( ! is_readable( fullPath( $job['workspace']['file'] ) ) ) {
 
             // status
             $job['workspace']['status']['error'][] = 'impossibile leggere il file ' . $job['workspace']['file'];
@@ -263,12 +340,12 @@
                 if( empty( $row ) ) {
 
                     // status
-                    $job['workspace']['status']['error'][] = 'riga vuota ' . $job['corrente'];
+                    $job['workspace']['status']['righe'][ $job['corrente'] ]['error'][] = 'riga vuota ' . $job['corrente'];
 
                 } else {
 
                     // status
-                    $job['workspace']['status']['righe'][ $job['corrente'] ][] = 'inizio a lavorare la riga ' . $job['corrente'];
+                    $job['workspace']['status']['righe'][ $job['corrente'] ]['info'][] = 'inizio a lavorare la riga ' . $job['corrente'];
 
                     // TODO qui inserire le logiche di importazione della singola riga
 
