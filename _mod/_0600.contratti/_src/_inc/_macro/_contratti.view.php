@@ -18,12 +18,16 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
+        'codici_contraenti' => 'codice cliente',
         'contraenti' => 'contraenti',
         'proponenti' => 'proponenti',
-        'progetto' => 'progetto',
-        'immobile' => 'immobile',
+//        'progetto' => 'progetto', TODO solo se il modulo progetti è attivo
+//        'immobile' => 'immobile', TODO solo se il modulo immobili è attivo
         'tipologia' => 'tipologia',
-	    '__label__' => 'contratto'
+        'licenze' => 'licenze', // TODO se è attivo il modulo ???
+        'data_inizio' => 'inizio',
+        'data_fine' => 'fine'
+//	    '__label__' => 'contratto'
 	);
 
     // stili della vista

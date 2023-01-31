@@ -604,7 +604,7 @@ REPLACE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 -- verifica: 2021-10-09 15:34 Fabio Mosti
 INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_inserimento`, `id_account_inserimento`, `timestamp_aggiornamento`, `id_account_aggiornamento`) VALUES
 (1,	1,	NULL,	'VENDITA IVA 22%',	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	9,	NULL,	'CANONI LOCAZIONE',	'fuori campo IVA ex art. 3 d.P.R. 633/1972',	NULL,	NULL,	NULL,	NULL);
+(9,	9,	NULL,	'LOCAZIONE IVA 0%',	'fuori campo IVA ex art. 3 d.P.R. 633/1972',	NULL,	NULL,	NULL,	NULL);
 
 --| 050000034000
 

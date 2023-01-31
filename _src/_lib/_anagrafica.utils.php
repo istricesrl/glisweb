@@ -37,9 +37,13 @@
 		)
 	    );
 
-
 	// full path
+	if( ! empty( $r ) ) {
+
 	    fullPath( $r );
+
+		}
+
 
 	// debug
 	    // die( 'risultato -> ' . $r );

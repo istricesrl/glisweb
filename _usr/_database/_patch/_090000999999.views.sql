@@ -2092,10 +2092,14 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
-        MIN(rinnovi.data_inizio) AS data_inizio,
-        MAX(rinnovi.data_fine) AS data_fine,
+        coalesce( min(rinnovi.data_inizio), '-' ) AS data_inizio,
+        coalesce( max(rinnovi.data_fine), '-' ) AS data_fine,
 		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
+		group_concat( DISTINCT contraente.codice  SEPARATOR ', ' ) AS codici_contraenti,
 		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
+		group_concat( licenze.codice SEPARATOR ', ' ) AS licenze,
+		licenze.postazioni,
+		tipologie_licenze.nome AS tipologia_licenza,
 		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
@@ -2110,12 +2114,16 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		LEFT JOIN zone ON zone.id = zone_indirizzi.id_zona
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 27
-		LEFT JOIN anagrafica AS proponente ON proponente.id = contratti_anagrafica.id_anagrafica 
-		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 28
-		LEFT JOIN anagrafica AS contraente ON contraente.id = c_a.id_anagrafica
+		LEFT JOIN ruoli_anagrafica AS ruoli_proponenti ON ruoli_proponenti.se_proponente IS NOT NULL
+		LEFT JOIN contratti_anagrafica AS proponenti ON proponenti.id_contratto = contratti.id AND proponenti.id_ruolo = ruoli_proponenti.id
+		LEFT JOIN anagrafica AS proponente ON proponente.id = proponenti.id_anagrafica 
+		LEFT JOIN ruoli_anagrafica AS ruoli_contraenti ON ruoli_contraenti.se_contraente IS NOT NULL
+		LEFT JOIN contratti_anagrafica AS contraenti ON contraenti.id_contratto = contratti.id AND contraenti.id_ruolo = ruoli_contraenti.id
+		LEFT JOIN anagrafica AS contraente ON contraente.id = contraenti.id_anagrafica
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
-	GROUP BY contratti.id, contratti_anagrafica.id_contratto, tipologie_contratti.nome
+		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza
+		LEFT JOIN tipologie_licenze ON tipologie_licenze.id = licenze.id_tipologia
+	GROUP BY contratti.id, licenze.codice
 ;
 
 --| 090000007300
@@ -5624,9 +5632,11 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.se_sabato,
 		pianificazioni.se_domenica,
 		pianificazioni.schema_ripetizione,
+		pianificazioni.data_avvio,
 		pianificazioni.data_inizio,
 		pianificazioni.data_elaborazione,
 		pianificazioni.timestamp_elaborazione,
+		from_unixtime( pianificazioni.timestamp_elaborazione, '%Y-%m-%d %H:%i' ) AS data_ora_elaborazione,
         pianificazioni.data_ultimo_oggetto,
         pianificazioni.giorni_elaborazione,
 		pianificazioni.giorni_estensione,

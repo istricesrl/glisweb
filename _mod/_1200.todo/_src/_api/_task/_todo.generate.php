@@ -24,7 +24,7 @@
     if( ! empty( $_REQUEST['progetto'] ) ) {
 
     // log
-	logWrite( 'richiesta generazione todo', 'todo', LOG_ERR );
+	logWrite( 'richiesta generazione todo', 'todo' );
     //var par = '&__g__=' + giorno + '&__d_i__=' + data_inizio + '&__d_f__=' + data_fine + '&__o_i__=' + ora_inizio + '&__o_f__=' + ora_fine + '&__l__=' + luogo + '&__'
 
  

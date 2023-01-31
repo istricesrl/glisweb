@@ -113,6 +113,7 @@
                     array(
                         'id' => NULL,
                         'codice' => ( ! empty( $row['codice'] ) ) ? $row['codice'] : NULL,
+                        'partita_iva' => ( ! empty( $row['partita_iva'] ) ) ? $row['partita_iva'] : NULL,
                         'codice_fiscale' => ( ! empty( $row['codice_fiscale'] ) ) ? $row['codice_fiscale'] : NULL,
                         'nome' => $row['nome'],
                         'cognome' => $row['cognome'],
@@ -123,6 +124,20 @@
 
                 // status
                 $job['workspace']['status']['info'][] = 'anagrafica inserita con ID ' . $idAnagrafica . ' per la riga ' . $job['corrente'];
+
+                // se è presente un indirizzo...
+                if( isset( $row['indirizzo'] ) ) {
+
+                    // TODO trovo il paese
+
+                    // TODO trovo il comune
+
+                    // TODO trovo l'indirizzo
+                    // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, paese
+
+                    // TODO associo l'indirizzo all'anagrafica
+
+                }
 
                 // se sono presenti delle categorie...
                 if( isset( $row['categorie'] ) && ! empty( $row['categorie'] ) ) {
@@ -136,7 +151,7 @@
                         // trovo l'ID della categoria
                         $idCategoria = mysqlSelectValue(
                             $cf['mysql']['connection'],
-                            'SELECT id FROM categorie_anagrafica_view WHERE __label__ = ?',
+                            'SELECT id FROM categorie_anagrafica_view WHERE __label__ = ? OR id = ?',
                             array( array( 's' => $categoria ) )
                         );
 

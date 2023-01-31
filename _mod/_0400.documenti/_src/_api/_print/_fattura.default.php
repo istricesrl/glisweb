@@ -13,11 +13,14 @@
     // verifico la presenza di un ID documento
     if( ! isset( $_REQUEST['__documento__'] ) || empty( $_REQUEST['__documento__'] ) ) { dieText('ID documento mancante'); }
 
-     // recupero i dati del documento
-     $doc = mysqlSelectRow(
+    // recupero i dati del documento
+    $doc = mysqlSelectRow(
         $cf['mysql']['connection'],
-	    'SELECT documenti.*,  '.
-	    'tipologie_documenti.codice AS codice_tipologia, condizioni_pagamento.codice AS codice_pagamento '.
+	    'SELECT documenti.*, '.
+	    'tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, '.
+        'greatest( tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito ) AS se_progressivo_invio_richiesto, '.
+        'tipologie_documenti.codice AS codice_tipologia, '.
+        'condizioni_pagamento.codice AS codice_pagamento '.
 	    'FROM documenti '.
 	    'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
         'INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
@@ -25,11 +28,16 @@
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
 
+    // verifico l'identità dell'utente
+    if( ! in_array( 'roots', array_keys( $_SESSION['groups'] ) ) && $doc['id_destinatario'] != $_SESSION['account']['id_anagrafica'] ) {
+        dieText('autorizzazioni insufficienti a visualizzare il documento');
+    }
+
     // debug
     // print_r( $doc );
 
     // verifico la presenza del progressivo di invio
-	if( empty( $doc['progressivo_invio'] ) ) { dieText( 'progressivo invio mancante' ); }
+	if( ! empty( $doc['se_progressivo_invio_richiesto'] ) && empty( $doc['progressivo_invio'] ) ) { dieText( 'progressivo invio mancante' ); }
 
     // TODO
     $doc['divisa'] = 'EUR';
@@ -145,7 +153,7 @@
     // carico i pagamenti per il documento
     $doc['pagamenti'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT modalita_pagamento.codice AS codice_pagamento, '.
+        'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, '.
         'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
         'pagamenti.importo_lordo_totale, iban.iban AS iban  '.
         'FROM pagamenti '.
@@ -221,6 +229,7 @@
 
     // indirizzo fiscale
     $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];
+    $sri['comune_indirizzo_fiscale'] = $sri['cap'] . ' ' . $sri['comune'] . ' ' . $sri['provincia'];
 
     // regime fiscale dell'emittente
     $srr = mysqlSelectRow(
@@ -298,6 +307,7 @@
 
     // indirizzo fiscale
     $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
+    $dsi['comune_indirizzo_fiscale'] = $dsi['cap'] . ' ' . $dsi['comune'] . ' ' . $dsi['provincia'];
 
     // documenti collegati
     // TODO selezionare in base al ruolo

@@ -20,7 +20,7 @@
 	$status = array();
 
     // log
-	logWrite( 'richiesta generazione todo', 'todo', LOG_ERR );
+	logWrite( 'richiesta generazione todo', 'todo' );
 
     if( isset($_REQUEST) && !empty($_REQUEST['__data__']) && !empty($_REQUEST['__anagrafica__']) && !empty($_REQUEST['__cliente__']) && !empty($_REQUEST['__luogo__']) ){
 

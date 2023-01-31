@@ -120,7 +120,13 @@
 
     // multisito corrente
 	if( ! defined( 'SITE_CURRENT' ) ) {
-	    define( 'SITE_CURRENT'		, SITE_DEFAULT );
+
+	    // TODO questo comportamento causa problemi nel caso in cui il framework sia chiamato per indirizzo IP
+		// define( 'SITE_CURRENT'		, SITE_DEFAULT );
+
+		// TODO questa è una soluzione temporanea e un po' brutale
+		die( 'impossibile chiamare il framework per ' . $_SERVER['HTTP_HOST'] );
+
 	}
 
     // link al sito corrente

@@ -387,9 +387,9 @@ ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `badge`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `codice` (`codice`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_contratto` (`id_contratto`), 
-	ADD KEY `codice` (`codice`), 
 	ADD KEY `rfid` (`rfid`), 
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -806,7 +806,7 @@ ALTER TABLE `certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `chiavi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_licenza`,`codice`),
-	ADD KEY `codice` (`codice`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `seriale` (`seriale`),
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
@@ -1097,11 +1097,11 @@ ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-02-21 11:50 Chiara GDL
 ALTER TABLE `contratti`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` ( `codice` ),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_progetto`),
 	ADD KEY `id_immobile` (`id_immobile`),
-	ADD KEY `codice` ( `codice` ),
 	ADD KEY `codice_affiliazione` ( `codice_affiliazione` ),
 	ADD KEY `indice` ( `id_tipologia`, `codice`, `codice_affiliazione`, `nome`, `id_progetto`, `id_immobile`);
 
@@ -1392,10 +1392,10 @@ ALTER TABLE `documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-04-27 16:56 Chiara GDL
 ALTER TABLE `edifici`
   ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `codice` (`codice`),
   ADD KEY `id_tipologia` (`id_tipologia`),
   ADD KEY `id_indirizzo` (`id_indirizzo`),
   ADD KEY `nome` (`nome`),
-  ADD KEY `codice` (`codice`),
   ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   ADD KEY `indice` (`id`, `id_tipologia`, `id_indirizzo`, `nome`, `codice`);
@@ -1627,11 +1627,11 @@ ALTER TABLE `immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-04-27 12:20 Chiara GDL
 ALTER TABLE `immobili`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`, `nome`, `codice`),
+  ADD UNIQUE KEY `unica` (`id_tipologia`,`id_edificio`, `scala`,  `piano`, `interno`, `nome`),
+  ADD UNIQUE KEY `codice` (`codice`),
   ADD KEY `id_tipologia` (`id_tipologia`),
   ADD KEY `id_edificio` (`id_edificio`),
   ADD KEY `nome` (`nome`),
-  ADD KEY `codice` (`codice`),
   ADD KEY `scala` (`scala`),
   ADD KEY `piano` (`piano`),
   ADD KEY `interno` (`interno`),
@@ -1784,9 +1784,9 @@ ALTER TABLE `job` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-11-15 12:41 Fabio Mosti
 ALTER TABLE `licenze`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `codice` (`codice`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `giorni_validita` (`giorni_validita`),
 	ADD KEY `giorni_rinnovo` (`giorni_rinnovo`),
@@ -3671,9 +3671,9 @@ ALTER TABLE `tipologie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `tipologie_attivita`
 	ADD PRIMARY KEY (`id`),
   	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `ordine` (`ordine`),
-	ADD KEY `codice` (`codice`),
 	ADD KEY `nome` (`nome`),
 	ADD KEY `se_anagrafica` (`se_anagrafica`),
 	ADD KEY `se_agenda` (`se_agenda`),
@@ -4383,7 +4383,7 @@ ALTER TABLE `valutazioni_certificazioni`
 	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `id_emittente` (`id_emittente`), 
 	ADD KEY `nome` (`nome`), 
-	ADD KEY `codice` (`codice`), 
+	ADD KEY `codice` (`codice`),
 	ADD KEY `data_emissione` (`data_emissione`), 
 	ADD KEY `data_scadenza` (`data_scadenza`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
