@@ -21,7 +21,7 @@
         array(
             'mastri' => array(
                 CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
+                METHOD_GET => array( 'staff' )
             ),
             'magazzini' => array(
                 CONTROL_FULL => array( 'roots' ),
@@ -29,11 +29,11 @@
             ),
             'conti' => array(
                 CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
+                METHOD_GET => array( 'staff' )
             ),
             'registri' => array(
                 CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
+                METHOD_GET => array( 'staff' )
             ),
             '__report_mastri__' => array(
                 CONTROL_FULL => array( 'roots' ),

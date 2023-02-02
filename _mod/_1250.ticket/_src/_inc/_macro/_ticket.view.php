@@ -28,9 +28,10 @@
 	$ct['view']['open']['table'] = 'todo';
 
      // campi della vista
-	$ct['view']['cols'] = array(
+	 $ct['view']['cols'] = array(
 	    'id' => '#',
 		'tipologia' => 'tipologia',
+		'data_ora_apertura' => 'aperto',
 	    'nome' => 'titolo',
 	    'cliente' => 'da fare per',
 		'ranking_cliente' => 'priorità',
@@ -48,6 +49,7 @@
 	    'id' => 'd-none d-md-table-cell',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 		'ranking_cliente' => 'd-none',
+		'data_ora_apertura' => 'no-wrap',
 	    'nome' => 'text-left',
 		'tipologia' => 'd-none',
 		'tipologia_progetto' => 'd-none',

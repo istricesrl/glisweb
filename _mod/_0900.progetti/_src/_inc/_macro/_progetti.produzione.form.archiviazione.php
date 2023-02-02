@@ -14,7 +14,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'anagrafica_progetti';
+	$ct['form']['table'] = 'progetti';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

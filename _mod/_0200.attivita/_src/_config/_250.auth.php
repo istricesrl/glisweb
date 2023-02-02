@@ -20,8 +20,7 @@
 	    $cf['auth']['permissions'],
 	    array(
             'attivita' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
+                CONTROL_FULL => array( 'roots', 'staff' ) // TODO creare gruppo supervisori per CONTROL_FULL e riservare a staff CONTROL_FILTERED
             ),
             // TODO questa va nel modulo cartellini
             'cartellini' => array(

@@ -12,7 +12,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_mastri.view.php' ),
 		'etc'			=> array( 'tabs'	=> array(	'mastri.view' ) ),
-	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'mastri' ),
 														'priority'	=> '130' ) ) )
 	);
@@ -25,7 +25,7 @@
 	    'parent'		=> array( 'id'		=> 'mastri.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mastri.form.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_mastri.form.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'mastri.form', 'mastri.form.giacenze', 'mastri.form.movimenti', 'mastri.form.stampe', 'mastri.form.tools' ) )
 	);
 
@@ -37,7 +37,7 @@
 	    'parent'		=> array( 'id'		=> 'mastri.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mastri.form.giacenze.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_mastri.form.giacenze.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['mastri.form']['etc']['tabs'] )
 	);
 
@@ -49,7 +49,7 @@
 	    'parent'		=> array( 'id'		=> 'mastri.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mastri.form.movimenti.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_mastri.form.movimenti.php' ),
-	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['mastri.form']['etc']['tabs'] )
 	);
 

@@ -41,7 +41,9 @@ CREATE OR REPLACE VIEW `__report_status_contratti__` AS
     AND
     progetti.data_accettazione IS NOT NULL
     AND
-    progetti.data_chiusura IS NULL
+    ( progetti.data_chiusura IS NULL
+    AND
+    progetti.data_archiviazione IS NULL )
   GROUP BY progetti.id
 ;
 
