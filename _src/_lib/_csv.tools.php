@@ -57,6 +57,7 @@
 
         foreach( $data as &$row ) {
             $row = str_getcsv( $row, $s, $c, $e );
+            $row = array_map('trim', $row );
             if( count( $data[0] ) == count( $row ) ) {
                 $result[] = array_combine( $data[0], $row );
             } else {

@@ -881,7 +881,20 @@
      * @todo documentare
      *
      */
-    function mysqlInsertRow( $c, $r, $t, $d = true, $n = false ) {
+    function mysqlInsertRow( $c, $r, $t, $d = true, $n = false, $u = array() ) {
+
+		if( ! empty( $u ) ) {
+
+			$uQuery = 'SELECT id FROM ' . $t . ' WHERE ';
+
+			foreach( $u as $uFld ) {
+				$uQuery .= ' ' . $uFld . ' = "' . $r[ $uFld ] . '" ';
+			}
+
+			// TODO migliorare questa query con i parametri posizionali
+			$r['id'] = mysqlSelectValue( $c, $uQuery . implode( ' AND ', $u ) );
+
+		}
 
 		if( ! array_key_exists( 'id', $r ) && $n == false ) {
 			$r['id'] = NULL;

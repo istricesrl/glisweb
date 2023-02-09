@@ -99,10 +99,12 @@
             $row = $arr[ $widx ];
 
             // controlli formali e lavorazione riga
-            if( ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) ) {
+            if( ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && 
+                ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) && 
+                ( ! isset( $row['partita_iva'] ) || empty( $row['partita_iva'] ) ) ) {
 
                 // status
-                $job['workspace']['status']['error'][] = 'codice utente e codice fiscale non settati per la riga ' . $job['corrente'];
+                $job['workspace']['status']['error'][] = 'codice utente, codice fiscale e partita IVA non settati per la riga ' . $job['corrente'];
                 $job['workspace']['status']['error'][] = $row;
 
             } else {
@@ -126,7 +128,8 @@
                 $job['workspace']['status']['info'][] = 'anagrafica inserita con ID ' . $idAnagrafica . ' per la riga ' . $job['corrente'];
 
                 // se è presente un indirizzo...
-                if( isset( $row['indirizzo'] ) ) {
+                if( ( isset( $row['indirizzo'] ) && ! empty( $row['indirizzo'] ) ) &&
+                    ( isset( $row['comune'] ) && ! empty( $row['comune'] ) ) ) {
 
                     // TODO trovo il paese
 
@@ -137,6 +140,12 @@
 
                     // TODO associo l'indirizzo all'anagrafica
 
+                } else {
+
+                    // status
+                    $job['workspace']['status']['error'][] = 'indirizzo e comune non settati per la riga ' . $job['corrente'];
+                    $job['workspace']['status']['error'][] = $row;
+                    
                 }
 
                 // se sono presenti delle categorie...
@@ -152,11 +161,16 @@
                         $idCategoria = mysqlSelectValue(
                             $cf['mysql']['connection'],
                             'SELECT id FROM categorie_anagrafica_view WHERE __label__ = ? OR id = ?',
-                            array( array( 's' => $categoria ) )
+                            array(
+                                array( 's' => $categoria ),
+                                array( 's' => $categoria )
+                            )
                         );
 
-                        // inserisco la categoria
+                        // se esiste la categoria
                         if( ! empty( $idCategoria ) ) {
+
+                            // inserisco la categoria
                             mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
@@ -166,6 +180,13 @@
                                 ),
                                 'anagrafica_categorie'
                             );
+
+                        } else {
+
+                            // status
+                            $job['workspace']['status']['error'][] = 'categoria ' . $categoria . ' non trovata per la riga ' . $job['corrente'];
+                            $job['workspace']['status']['error'][] = $row;
+
                         }
 
                     }

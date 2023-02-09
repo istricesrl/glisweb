@@ -378,3 +378,32 @@
             return $aryRange;
             
         }
+
+        function daysBetweenDates( $a, $b ) {
+
+            $origin = new DateTimeImmutable( $a );
+            $target = new DateTimeImmutable( $b );
+            $interval = $origin->diff( $target );
+    
+            $years = $interval->format('%r%y') * 12;
+            $months = $interval->format('%r%m');
+    
+            return $interval->format( '%r%a' );
+    
+        }
+    
+        function monthsBetweenDates( $a, $b = NULL ) {
+
+            if( empty( $a ) ) return 0;
+            if( empty( $b ) ) $b = date( 'Y-m-d' );
+    
+            $origin = new DateTimeImmutable( $a );
+            $target = new DateTimeImmutable( $b );
+            $interval = $origin->diff( $target );
+    
+            $years = $interval->format('%r%y') * 12;
+            $months = $interval->format('%r%m');
+    
+            return $years + $months;
+    
+        }

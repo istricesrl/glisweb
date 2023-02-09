@@ -207,3 +207,9 @@ function justify( $str, $maxlen = REPORT_WIDTH) {
         ( ( $s == STR_PAD_RIGHT ) ? ' ' : NULL );
 
     }
+
+    function betterUrlEncode( $u ) {
+
+        return implode('/', array_map('rawurlencode', explode('/', $u)));
+
+    }

@@ -719,37 +719,49 @@
 
     /**
      *
+     * NOTA se si passa un URL come parametro $f1, utilizzare la funzione betterUrlEncode() sulla stringa prima di passarla
+     * 
+     * TODO questa cosa non si potrebbe implementare qui? fare prova
+     * 
      * @todo documentare
      *
      */
     function copyFile( $f1, $f2 ) {
 
-	fullPath( $f2 );
-	checkFolder( dirname( $f2 ) );
+        fullPath( $f2 );
+        checkFolder( dirname( $f2 ) );
 
-	if( filter_var( $f1, FILTER_VALIDATE_URL ) ) {
+        logWrite( 'copio: ' . $f1, 'filesystem' );
 
-	    $ch = curl_init();
-	    curl_setopt( $ch, CURLOPT_URL, $f1 );
-	    curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
-	    $data = curl_exec( $ch );
-	    $error = curl_error( $ch );
-	    curl_close( $ch );
+        if( filter_var( $f1, FILTER_VALIDATE_URL ) ) {
 
-	    $h = fopen( $f2, FILE_WRITE_OVERWRITE );
-	    fputs( $h, $data );
-	    fclose( $h );
+            logWrite( 'copio da URL: ' . $f1, 'filesystem' );
 
-	    return ( ( empty( $error ) && file_exists( $f2 ) ) ? true : false );
+            $ch = curl_init();
+            curl_setopt( $ch, CURLOPT_URL, $f1 );
+            curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+            $data = curl_exec( $ch );
+            $error = curl_error( $ch );
+            curl_close( $ch );
 
-	} else {
+            $h = fopen( $f2, FILE_WRITE_OVERWRITE );
+            fputs( $h, $data );
+            fclose( $h );
 
-	    fullPath( $f1 );
-	    checkFolder( dirname( $f1 ) );
+            if( ! empty( $error ) ) { logWrite( print_r( $error ), 'rest', LOG_ERR ); }
 
-	    return copy( $f1, $f2 );
+            return ( ( empty( $error ) && file_exists( $f2 ) ) ? true : false );
 
-	}
+        } else {
+
+            logWrite( filter_var( $f1, FILTER_SANITIZE_URL) . ' non è un URL, procedo con la copia normale', 'filesystem' );
+
+            fullPath( $f1 );
+            checkFolder( dirname( $f1 ) );
+
+            return copy( $f1, $f2 );
+
+        }
 
     }
 
@@ -802,9 +814,9 @@
      */
     function findFileExtension( $f ) {
 
-	$e = explode( '.', $f );
-	$a = array_reverse( $e );
-	return array_shift( $a );
+        $e = explode( '.', $f );
+        $a = array_reverse( $e );
+        return array_shift( $a );
 
     }
 
@@ -815,10 +827,10 @@
      */
     function findFileType( $f ) {
 
-	fullPath( $f );
-
-	return mime_content_type( $f );
-
+        fullPath( $f );
+    
+        return ( file_exists( $f ) ) ? mime_content_type( $f ) : NULL;
+    
     }
 
     /**
