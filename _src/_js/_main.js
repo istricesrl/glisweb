@@ -222,23 +222,47 @@
 	    // ???
 		$('.hint-toggle').change();
 
-	    // attivo l'hover per gli elementi li delle navbar con classe navbar-slider
+	    // attivo l'hover per gli elementi li delle navbar con classe navbar-slider per il menu a tendina
 		$('nav.navbar-slider ul li').hover(
 		    function() {
-			$(this).children('ul').slideDown( 200 );
+				$(this).children('ul').slideDown( 200 );
 		    },
 		    function() {
-			$(this).find('ul').hide();
+				$(this).find('ul').hide();
 		    }
 		);
 
-	    // attivo l'hover per gli elementi ul.nav delle navbar con classe navbar-slider-mega
-		$('nav.navbar-slider-mega ul.nav').children('li').hover(
+	    // la nav.navbar-megamenu contiene gli elementi che attivano il megamenu
+		// mentre invece .megamenu è il contenitore del megamenu vero e proprio
+		$('nav.navbar-megamenu ul.navbar-nav').children('li').hover(
 		    function() {
-			$(this).children('ul').slideDown( 200 );
+				var id = $(this).attr('page-id');
+				console.log('megamenu on ' + id);
+				// $(this).children('ul').slideDown( 200 );
+				// megamenu = 1;
+				$('.megamenu li').not('.child-of-' + id).hide();
+				$('.megamenu .child-of-' + id ).parents().show();
+				$('.megamenu .child-of-' + id ).show();
 		    },
 		    function() {
-			$(this).children('ul').hide();
+				// var id = $(this).attr('page-id');
+				// console.log('megamenu off ' + id);
+				// $(this).children('ul').hide();
+				// if( megamenu == 0 ) {
+				//	$('.child-of-' + id ).hide();
+				// }
+				// $('.megamenu li').hide();
+		    }
+		);
+
+		// il .container-megamenu è l'elemento che contiene sia il megamenu sia
+		// il menu che lo attiva, e uscirne comporta la chiusura del megamenu
+		$('.container-megamenu').hover(
+		    function() {
+				// 
+		    },
+		    function() {
+				$('.megamenu li').hide();
 		    }
 		);
 

@@ -80,7 +80,9 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
 							,
 							'ancora' => ( isset( $mv['ancora'] ) ) ? $mv['ancora'] : NULL
 							,
-							'location' => ( ( isset( $pages[ $k ]['forced'] ) ) ? $pages[ $k ]['url'] : $pages[ $k ]['path'] )
+//							'location' => ( ( isset( $pages[ $k ]['forced'] ) ) ? $pages[ $k ]['url'] : $pages[ $k ]['path'] )
+// TODO questa soluzione non è soddisfacente in quanto non tiene conto del fatto che forced potrebbe contenere un valore in una lingua e non in un altra... come si può fare?
+							'location' => ( ( isset( $pages[ $k ]['forced'] ) && ! isEmptyArray( $pages[ $k ]['forced'] ) ) ? $pages[ $k ]['url'] : $pages[ $k ]['path'] )
 							,
 							'target' => ( ( isset( $mv['target'] ) && ! empty( $mv['target'] ) ) ? $mv['target'] : NULL ) 
 							,

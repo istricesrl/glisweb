@@ -10,7 +10,7 @@ main {
 
 div.categorie {
     background-color: #cccccc;
-    padding: 0.5em;
+    padding: 0em;
 }
 
 div.categorie nav {
@@ -128,18 +128,20 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     text-decoration: underline;
 }
 
+div.search-box {
+    padding: 0.5em;
+}
+
 .nav-icons a.nav-link {
     font-size: 1.25em;
 }
 
 a.nav-link {
-    padding-top: 0px;
-    padding-bottom: 0px;
+    padding: 0.5em 0em;
 }
 
 a.nav-link, a.nav-link:visited {
     color: #aaaaaa;
-    padding: 0em .5em !important;
 }
 
 a.nav-link:active, a.nav-link:hover {
@@ -147,8 +149,26 @@ a.nav-link:active, a.nav-link:hover {
     text-decoration: underline;
 }
 
-ul.navbar-nav {
+nav ul {
     list-style-type: none;
+}
+
+div.megamenu {
+    background-color: #eeeeee;
+    position: absolute;
+    width: 100%;
+}
+
+div.megamenu nav {
+    padding: 0px;
+}
+
+div.megamenu ul.navbar-nav ul {
+    list-style-type: none;
+}
+
+div.megamenu ul ul li.nav-item {
+    display: none;
 }
 
 label.label-top {

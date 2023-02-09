@@ -267,6 +267,8 @@
 			    // calcolo il percorso della pagina corrente
 				if( isset( $v['forced'][ $lk ] ) ) {
 				    $v['path'][ $lk ]	= NULL;
+				} elseif( empty( $v['title'][ $lk ] ) ) { // NOTA aggiunta di recente, controllare che non dia problemi
+				    $v['path'][ $lk ]	= NULL;
 				} else {
 				    $v['path'][ $lk ]	= $cf['site']['root'] . $path;
 				}

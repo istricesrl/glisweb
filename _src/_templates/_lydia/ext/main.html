@@ -13,7 +13,6 @@
 
         {% include '_inc/_page.open.html' %}
 
-
         <header>
             <div class="container">
                 <div class="row">
@@ -25,10 +24,13 @@
 
         <div class="sticky-top">
             <div class="categorie">
-                <div class="container">
-                    <div class="row">
+                <div class="container container-megamenu">
+                    <div class="row categorie">
                         {% block categorie %}{% include 'inc/categorie.html' %}{% endblock %}
                         {% block search %}{% include 'inc/search.html' %}{% endblock %}
+                    </div>
+                    <div class="row megamenu">
+                        {% block megamenu %}{% include 'inc/megamenu.html' %}{% endblock %}
                     </div>
                 </div>
             </div>

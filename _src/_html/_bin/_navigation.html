@@ -2,11 +2,11 @@
 {# MACRO PER GLI ELEMENTI DI NAVIGAZIONE #}
 {# NOTA: IMPORTARE SEMPRE COME NAV #}
 
-{% macro menu( links, lang, site, query ) %}
+{% macro menu( links, lang, site, query, parent ) %}
 {% import _self as nav %}
-{% for link in links %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %}">
-    {% if link.label[ lang ] %}<a href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}" class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
-    {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query ) }}</ul>{% endif %}
+{% for id,link in links %}{% set id = id|replace({'|': "-", "." : "-"}) %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %} {% if parent %}child-of-{{ parent }}{% endif %}" page-id="{{ id }}">
+    {% if link.label[ lang ] %}<a {% if link.location[ lang ] %}href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}"{% endif %} class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
+    {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query, id ) }}</ul>{% endif %}
 </li>{% endfor %}
 {% endmacro %}
 

@@ -375,3 +375,16 @@
         }
 
     }
+
+    function isEmptyArray($value)
+    {
+            if (is_array($value)) {
+                    $empty = TRUE;
+                    array_walk_recursive($value, function($item) use (&$empty) {
+                            $empty = $empty && empty($item);
+                    });
+            } else {
+                    $empty = empty($value);
+            }
+            return $empty;
+    }

@@ -4,6 +4,7 @@
  * - stili dei bottoni
  * - stili del footer
  * - stili per i jumbotron
+ * - stili per i megamenu
  * - stili per il banner cookie
  * - stili per font awesome
  * - stili per il numero verde
@@ -35,6 +36,11 @@ footer {
 .jumbotron {
     border-radius: 0px;
     margin: 0em;
+}
+
+/* stili per i megamenu */
+nav.navbar-slider-mega ul.navbar-nav {
+    display: none;
 }
 
 /* stili per FontAwesome */
