@@ -368,6 +368,16 @@
         /* FINE CODICE JOB */
     \endcode
 
+    importazione di file e immagini
+    -------------------------------
+    Una nota a parte merita l'importazione di file e immagini rispetto alla semplice lettura e scrittura di dati dal database [...].
+
+    \code{.php}
+
+    
+
+    \endcode
+
     come creare un'importazione custom da database
     ==============================================
     Questa strategia è da applicare in tutti i casi nei quali i dati da importare si trovano su un altro database; lo scenario cambia leggermente a seconda se è possibile modificare o meno
