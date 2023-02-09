@@ -16,11 +16,16 @@
     // testo della pagina
     $t = null;
 
-    // chiamo la funzione archiviumGetListaAziende()
-    $l = archiviumGetDownloadFePassiva( $_REQUEST['idAzienda'],  $_REQUEST['idFattura'] );
+    // se ho i dati
+    if( isset( $_REQUEST['idAzienda'] ) && isset( $_REQUEST['idFattura'] ) ) {
 
-    // output
-    $t .= '<pre>' . print_r( $l, true ) . '</pre>';
+        // chiamo la funzione archiviumGetListaAziende()
+        $l = archiviumGetDownloadFePassiva( $_REQUEST['idAzienda'],  $_REQUEST['idFattura'] );
 
-    // output
-    buildHTML( $t );
+        // header
+        header( 'content-type: text/plain');
+
+        // output
+        print_r( $l );
+
+    }

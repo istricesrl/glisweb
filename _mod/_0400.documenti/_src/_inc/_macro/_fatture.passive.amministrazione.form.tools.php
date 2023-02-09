@@ -44,6 +44,21 @@
             'text' => 'chiudi con data e ora attuale il documento'
         );
     }
+
+    // TODO dare l'opzione solo se c'è l'XML da scaricare
+    if( true ) {
+
+        $ct['page']['contents']['metro']['amministrazione'][] = array(
+            'target' => '_blank' ,
+            'url' => $print . '_fattura.passiva.xml.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+            'icon' => NULL,
+            'fa' => 'fa-file-code-o',
+            'title' => 'scarica XML',
+            'text' => 'scarica il documento originale in formato XML'
+        );
+
+    }
+
 /*
 
     // amministrazione documento

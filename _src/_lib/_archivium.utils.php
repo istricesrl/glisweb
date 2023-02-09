@@ -461,7 +461,7 @@
         $u      = $cf['archivium']['profile']['url'] . $e;
 
         // effettuo la chiamata
-        $r      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_XML, $s );
+        $r      = restCall( $u, METHOD_GET, NULL, MIME_APPLICATION_JSON, MIME_APPLICATION_XML, $s, array(), NULL, NULL, $error, NULL, NULL, $raw );
 
         // debug
         // var_dump( $u );
@@ -477,7 +477,7 @@
         }
 
         // restituisco il risultato
-        return array( 'FatturaElettronica' => $fe );
+        return array( 'FatturaElettronica' => $fe, 'xml' => $raw );
 
     }
 
@@ -550,6 +550,7 @@
         $f = archiviumGetDownloadFePassiva( $idAzienda, $idFattura );
 
         // unisco gli array
+        // SE DÀ ERRORI LA RIGA SOTTO USARE $d['FatturaElettronica'] = $f['FatturaElettronica'];
         $d = array_replace_recursive( $d, $f );
 
         // debug
@@ -658,7 +659,8 @@
                         'sezionale' => ( isset( $i['numero'][1] ) ? $i['numero'][1] : NULL ),
                         'codice_archivium' => $d['IDArchivium'],
                         'id_emittente' => $i['idFornitore'],
-                        'id_destinatario' => $i['idCliente']
+                        'id_destinatario' => $i['idCliente'],
+                        'xml' => $f['xml']
                     ),
                     'documenti'
                 );

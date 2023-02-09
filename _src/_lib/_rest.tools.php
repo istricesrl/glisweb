@@ -47,7 +47,7 @@
      * @todo documentare
      *
      */
-    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC ) {
+    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC, &$raw = NULL ) {
 
 	// inizializzo l'oggetto CURL
 	    $curl = curl_init();
@@ -169,6 +169,9 @@
 
 	// chiusura della richiesta
 	    curl_close( $curl );
+
+	// salvataggio del risultato grezzo
+		$raw = $result;
 
 	// decodifica della risposta
 	    switch( $answertype ) {
