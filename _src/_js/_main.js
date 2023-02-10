@@ -106,6 +106,21 @@
 	}
 
 	// ...
+	function checkAndSubmit( form ) {
+
+		// var f = document.getElementById( form );
+		// console.log( form );
+
+		if( $( form )[0].checkValidity() ) {
+			form.submit();
+		} else {
+//			alert('form non compilato correttamente');
+			$( form )[0].reportValidity();
+		}
+	
+	}
+
+	// ...
 	function formatDate( date ) {
 
 		var d = new Date( date ),
