@@ -166,18 +166,20 @@
 		}
 	}
 
-    if( ! empty( $ct['view']['data'] ) ) {
+    if( ! empty( $ct['view']['data'] ) && is_array( $ct['view']['data'] ) ) {
 		foreach ( $ct['view']['data'] as &$row ) {
-			foreach( $row as $field => $value ) {
-				if( isset( $ct['view']['footer']['cols'][ $field ] ) ) {
-					switch( $ct['view']['footer']['cols'][ $field ]['function'] ) {
-						case 'SUM':
-							if( isset( $ct['view']['footer']['cols'][ $field ]['value'] ) ) {
-								$ct['view']['footer']['cols'][ $field ]['value'] += $value;
-							} else {
-								$ct['view']['footer']['cols'][ $field ]['value'] = $value;
-							}
-						break;
+			if( ! empty( $row ) && is_array( $row ) ) {
+				foreach( $row as $field => $value ) {
+					if( isset( $ct['view']['footer']['cols'][ $field ] ) ) {
+						switch( $ct['view']['footer']['cols'][ $field ]['function'] ) {
+							case 'SUM':
+								if( isset( $ct['view']['footer']['cols'][ $field ]['value'] ) ) {
+									$ct['view']['footer']['cols'][ $field ]['value'] += $value;
+								} else {
+									$ct['view']['footer']['cols'][ $field ]['value'] = $value;
+								}
+							break;
+						}
 					}
 				}
 			}

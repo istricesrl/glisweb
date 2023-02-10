@@ -132,10 +132,17 @@
 	    // gestione default
 	    require DIR_SRC_INC_MACRO . '_default.view.php';
 
+        // debug
+        // print_r( $ct['view']['data'] );
+
         // icone
-        foreach( $ct['view']['data'] as &$row ) {
-            $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.
-                '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
+        if( isset( $ct['view']['data'] ) && is_array( $ct['view']['data'] ) ) {
+            foreach( $ct['view']['data'] as &$row ) {
+                if( is_array( $row ) ) {
+                    $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.
+                        '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
+                }
+            }
         }
 
         // debug

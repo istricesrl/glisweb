@@ -79,7 +79,9 @@
     // trasformazione icona attivo/inattivo
     if( isset(  $ct['view']['data'] ) && !empty( $ct['view']['data'] ) ){
         foreach( $ct['view']['data'] as &$row ) {
-           if(isset($row['peso'])){ $row['peso'] = $row['peso'].' '.$row['sigla_udm_peso'];}
+            if( is_array( $row ) ) {
+                if(isset($row['peso'])){ $row['peso'] = $row['peso'].' '.$row['sigla_udm_peso'];}
+            }
         }
     
     }

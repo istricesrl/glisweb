@@ -113,7 +113,9 @@
 
     // trasformazione icona attivo/inattivo
 	foreach( $ct['view']['data'] as &$row ) {
-        $row['tipologia'] .= ' ' . $row['documento'] . ' ' . ' n° '.$row['numero'];
+        if( is_array( $row ) ) {
+            $row['tipologia'] .= ' ' . $row['documento'] . ' ' . ' n° '.$row['numero'];
+        }
 	}
 
     // macro di default

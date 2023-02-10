@@ -59,5 +59,7 @@
 
     // trasformazione icona attivo/inattivo
 	foreach( $ct['view']['data'] as &$row ) {
-	    $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
+        if( is_array( $row ) ) {
+            $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
+        }
 	}

@@ -42,8 +42,10 @@
 
     if( isset($ct['view']['data']) ){
         foreach( $ct['view']['data'] as &$row ) {
-            if( !empty($row['timestamp_valutazione']) ){
-                $row['timestamp_valutazione'] = date('d/m/Y H:s', $row['timestamp_valutazione']);
+            if( is_array( $row ) ) {
+                if( !empty($row['timestamp_valutazione']) ){
+                    $row['timestamp_valutazione'] = date('d/m/Y H:s', $row['timestamp_valutazione']);
+                }
             }
         }
     }

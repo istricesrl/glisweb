@@ -74,8 +74,10 @@
 
     if( isset($ct['view']['data']) ){
         foreach( $ct['view']['data'] as &$row ) {
-            if($row['timestamp_chiusura']>0 ){
-                $row['timestamp_chiusura'] = '<i class="fa fa-check" aria-hidden="true"></i>';
+            if( is_array( $row ) ) {
+                if($row['timestamp_chiusura']>0 ){
+                    $row['timestamp_chiusura'] = '<i class="fa fa-check" aria-hidden="true"></i>';
+                }
             }
         }
     }

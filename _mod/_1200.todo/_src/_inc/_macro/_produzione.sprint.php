@@ -90,14 +90,16 @@
 
 	// icone
 	foreach( $ct['view']['data'] as &$row ) {
-		if( ! empty( $row['se_pacchetto'] ) ) {
-			$idMastro = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM mastri INNER JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia WHERE mastri.id_progetto = ? AND tipologie_mastri.se_registro IS NOT NULL', array( array( 's' => $row['id_progetto'] ) ) );
-			$mastro = '$(\'#attivita_id_mastro_provenienza\').val(\''.$idMastro.'\');$(\'#attivita_note_mastro_provenienza\').html(\'<b>ATTENZIONE!</b> queste ore verranno scaricate dal pacchetto ore principale del progetto\');';
-		} else {
-			$mastro = '$(\'#attivita_id_mastro_provenienza\').val(\'\');$(\'#attivita_note_mastro_provenienza\').html(\'\');';
+		if( is_array( $row ) ) {
+			if( ! empty( $row['se_pacchetto'] ) ) {
+				$idMastro = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM mastri INNER JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia WHERE mastri.id_progetto = ? AND tipologie_mastri.se_registro IS NOT NULL', array( array( 's' => $row['id_progetto'] ) ) );
+				$mastro = '$(\'#attivita_id_mastro_provenienza\').val(\''.$idMastro.'\');$(\'#attivita_note_mastro_provenienza\').html(\'<b>ATTENZIONE!</b> queste ore verranno scaricate dal pacchetto ore principale del progetto\');';
+			} else {
+				$mastro = '$(\'#attivita_id_mastro_provenienza\').val(\'\');$(\'#attivita_note_mastro_provenienza\').html(\'\');';
+			}
+			$row['id_mastro_provenienza'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM __report_giacenza_ore__ WHERE id_progetto = ?', array( array( 's' => $row['id_progetto'] ) ) );
+			$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id_progetto'].'\');'.$mastro.'$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id_mastro_provenienza'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
 		}
-		$row['id_mastro_provenienza'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM __report_giacenza_ore__ WHERE id_progetto = ?', array( array( 's' => $row['id_progetto'] ) ) );
-		$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id_progetto'].'\');'.$mastro.'$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id_mastro_provenienza'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
 	}
 
 	// preset ordinamento

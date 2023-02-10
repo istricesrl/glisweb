@@ -139,31 +139,33 @@
 
         // icone
         foreach( $ct['view']['data'] as &$row ) {
+            if( is_array( $row ) ) {
 
-            $lastAction = mysqlSelectRow(
-                $cf['mysql']['connection'],
-                'SELECT * FROM attivita WHERE attivita.id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita DESC LIMIT 1',
-                array( array( 's' => $row['id'] ) )
-            );
+                $lastAction = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM attivita WHERE attivita.id_progetto = ? AND data_attivita IS NOT NULL ORDER BY data_attivita DESC LIMIT 1',
+                    array( array( 's' => $row['id'] ) )
+                );
 
-            if( ! empty( $lastAction ) ) {
-                $row['data_ultima_attivita'] .= ' ' . implode( '<br>', array( $lastAction['nome'], ( ( ! empty( $lastAction['note_programmazione'] ) ) ? $lastAction['note_programmazione'] . ' &mdash; ' : NULL ) . $lastAction['note'] ) );
+                if( ! empty( $lastAction ) ) {
+                    $row['data_ultima_attivita'] .= ' ' . implode( '<br>', array( $lastAction['nome'], ( ( ! empty( $lastAction['note_programmazione'] ) ) ? $lastAction['note_programmazione'] . ' &mdash; ' : NULL ) . $lastAction['note'] ) );
+                }
+
+                $nextAction = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM attivita WHERE attivita.id_progetto = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL ORDER BY data_programmazione ASC LIMIT 1',
+                    array( array( 's' => $row['id'] ) )
+                );
+
+                if( ! empty( $nextAction ) ) {
+                    $row['data_prossima_attivita'] = '<a href="'.$cf['contents']['pages']['attivita.form']['url'][LINGUA_CORRENTE].'?attivita[id]='.$nextAction['id'].'&__backurl__='.$ct['page']['backurl'][LINGUA_CORRENTE].'" onclick="event.stopPropagation();">' . $row['data_prossima_attivita'] . ' ' . implode( '<br>', array( $nextAction['nome'], $nextAction['note_programmazione'] ) ) . '</a>';
+                }
+
+                $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.
+                    '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
+                    '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="$(\'#attivita_id_progetto_promemoria\').val(\''.$row['id'].'\');$(\'#scorciatoia_promemoria\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>';
+
             }
-
-            $nextAction = mysqlSelectRow(
-                $cf['mysql']['connection'],
-                'SELECT * FROM attivita WHERE attivita.id_progetto = ? AND data_attivita IS NULL AND data_programmazione IS NOT NULL ORDER BY data_programmazione ASC LIMIT 1',
-                array( array( 's' => $row['id'] ) )
-            );
-
-            if( ! empty( $nextAction ) ) {
-                $row['data_prossima_attivita'] = '<a href="'.$cf['contents']['pages']['attivita.form']['url'][LINGUA_CORRENTE].'?attivita[id]='.$nextAction['id'].'&__backurl__='.$ct['page']['backurl'][LINGUA_CORRENTE].'" onclick="event.stopPropagation();">' . $row['data_prossima_attivita'] . ' ' . implode( '<br>', array( $nextAction['nome'], $nextAction['note_programmazione'] ) ) . '</a>';
-            }
-
-            $row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo" onclick="$(\'#todo_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_todo\').modal(\'show\');"><i class="fa fa-tasks"></i></a>'.
-                '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
-                '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="$(\'#attivita_id_progetto_promemoria\').val(\''.$row['id'].'\');$(\'#scorciatoia_promemoria\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>';
-
         }
 
         // debug

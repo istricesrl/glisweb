@@ -56,6 +56,8 @@
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // trasformazione icona attivo/inattivo
-	foreach( $ct['view']['data'] as &$row ) {
-        $row['giorni_elaborazione'] = ( ! empty( $row['giorni_elaborazione'] ) ) ? $row['giorni_elaborazione'] . 'gg' : '-';
+    if( ! empty( $ct['view']['data'] ) && is_array( $ct['view']['data'] ) ) {
+        foreach( $ct['view']['data'] as &$row ) {
+            $row['giorni_elaborazione'] = ( ! empty( $row['giorni_elaborazione'] ) ) ? $row['giorni_elaborazione'] . 'gg' : '-';
+        }
     }

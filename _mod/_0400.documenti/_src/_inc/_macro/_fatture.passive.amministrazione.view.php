@@ -72,10 +72,12 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
-    if( isset($ct['view']['data']) ){
+    if( ! empty( $ct['view']['data'] ) && is_array( $ct['view']['data'] ) ) {
         foreach( $ct['view']['data'] as &$row ) {
-            if($row['timestamp_chiusura']>0 ){
-                $row['timestamp_chiusura'] = '<i class="fa fa-check" aria-hidden="true"></i>';
+            if( is_array( $row ) ) {
+                if($row['timestamp_chiusura']>0 ){
+                    $row['timestamp_chiusura'] = '<i class="fa fa-check" aria-hidden="true"></i>';
+                }
             }
         }
     }

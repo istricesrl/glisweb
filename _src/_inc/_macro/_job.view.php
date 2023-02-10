@@ -34,6 +34,8 @@
 
     // trasformazione icona attivo/inattivo
 	foreach( $ct['view']['data'] as &$row ) {
-	    if( $row['se_foreground'] == 1 ) { $row['se_foreground'] = '<i class="fa fa-check"></i>'; }
-        // $row['avanzamento'] = sprintf( '%01.2f', ( $row['totale'] > 0 ) ? ( ( $row['corrente'] / $row['totale'] ) * 100 ) : 0 ) . '%';
+        if( is_array( $row ) ) {
+            if( $row['se_foreground'] == 1 ) { $row['se_foreground'] = '<i class="fa fa-check"></i>'; }
+            // $row['avanzamento'] = sprintf( '%01.2f', ( $row['totale'] > 0 ) ? ( ( $row['corrente'] / $row['totale'] ) * 100 ) : 0 ) . '%';
+        }
 	}
