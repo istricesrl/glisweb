@@ -17,7 +17,7 @@
     $doc = mysqlSelectRow(
         $cf['mysql']['connection'],
 	    'SELECT documenti.*, '.
-	    'tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, '.
+	    'tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito, tipologie_documenti.nome AS tipologia, '.
         'greatest( tipologie_documenti.se_fattura, tipologie_documenti.se_nota_credito, tipologie_documenti.se_nota_debito ) AS se_progressivo_invio_richiesto, '.
         'tipologie_documenti.codice AS codice_tipologia, '.
         'condizioni_pagamento.codice AS codice_pagamento '.
@@ -36,6 +36,11 @@
     // debug
     // print_r( $doc );
 
+    // TODO
+    if( empty( $doc ) ) {
+        die('esigibilità IVA o mdalità pagamento non impostate');
+    }
+
     // verifico la presenza del progressivo di invio
 	if( ! empty( $doc['se_progressivo_invio_richiesto'] ) && empty( $doc['progressivo_invio'] ) ) { dieText( 'progressivo invio mancante' ); }
 
@@ -43,10 +48,11 @@
     $doc['divisa'] = 'EUR';
 
     // TODO
-    if($doc['esigibilita'] != NULL ){
+    if( ! empty( $doc['esigibilita'] ) ) {
         $doc['codice_esigibilita'] = $doc['esigibilita'];
     } else {
-        $doc['codice_esigibilita'] = 'I';
+        // $doc['codice_esigibilita'] = 'I';
+        die('codice esigibilità IVA non impostato');
     }
     
     /**
@@ -153,7 +159,7 @@
     // carico i pagamenti per il documento
     $doc['pagamenti'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, '.
+        'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, modalita_pagamento.nome AS modalita ,'.
         'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
         'pagamenti.importo_lordo_totale, iban.iban AS iban  '.
         'FROM pagamenti '.
@@ -226,6 +232,9 @@
     if( empty( $sri ) ) {
         dieText('richiesto indirizzo sede emittente');
     }
+
+    // recupero il logo dell'azienda emittente
+	$sri['logo'] = anagraficaGetLogo( $doc['id_emittente'] );
 
     // indirizzo fiscale
     $sri['indirizzo_fiscale'] = $sri['tipologia'] . ' ' . $sri['indirizzo'] . ', ' . $sri['civico'];

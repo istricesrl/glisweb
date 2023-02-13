@@ -51,6 +51,10 @@
 			<span class="label-top">modalità</span>
 			{{ frm.selectRequired( table, subtable, i, 'model_id_modalita_pagamento', '', etc.select.modalita_pagamento, request, '', '', '', disabled ) }}
 	    </div>
+		<div class="col-auto">
+			<span class="label-top">IBAN</span>
+			{{ frm.selectRequired( table, subtable, i, 'model_id_iban', '', etc.select.id_iban, request, '', '', '', disabled ) }}
+	    </div>
 		<div class="col-2 col-md">
 			<span class="label-top">nome</span>
 			{{ frm.input( table, subtable, i, 'model_nome', '', '', request, '', '', '', '', disabled  ) }}

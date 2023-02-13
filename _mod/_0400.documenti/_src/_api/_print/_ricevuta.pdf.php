@@ -128,11 +128,10 @@
 	    'SELECT * FROM anagrafica WHERE id = ?',
 	    array( array( 's' => $doc['id_emittente'] ) )
 	);
-*/
+
     // recupero il logo dell'azienda emittente
 	$sri['logo'] = anagraficaGetLogo( $doc['id_emittente'] );
 
-/* DEPRECATO
     // denominazione fiscale
     $src['denominazione_fiscale'] = trim( $src['nome'] . ' ' . $src['cognome'] . ' ' . $src['denominazione'] );
 
@@ -214,7 +213,7 @@
 	$sdc = $sdec['linee'];
 
     // oggetto del documento
-	$dobj = 'ricevuta n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
+	$dobj = $doc['tipologia'] . ' n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
   
     // recupero i dati dell'azienda emittente
 	$emittente = mysqlSelectRow( $cf['mysql']['connection'],
@@ -308,7 +307,7 @@
         $tmp = $ml;
     }
 
-        // intestazione azienda emittente
+    // intestazione azienda emittente
 	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 	foreach( $sdef['linee'] as $k => $sdel ) {
 	    if( $k !== key( $sdef['linee'] ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
@@ -353,7 +352,7 @@
 	$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 1, 0, 'udm', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 1, 0, 'p. unitario', $brdh, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 2, 0, 'tot. netto', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->Cell( $col * 2, 0, 'tot. netto', $brdh, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 1, 0, 'IVA', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 2, 0, 'tot. lordo', $brdh, 1, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
@@ -362,13 +361,20 @@
 
     // tabella di dettaglio
 	$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
-	foreach( $doc['righe'] as $row ) {
-	    $trh = $pdf->GetStringHeight( $col * 4,$row['nome'] , false, true, '', 'B' );				// 
-	$pdf->SetFont( $fnt, '', $fnts );
-	    // controllo se la riga di dettaglio entra nella parte rimanente del foglio
-	    if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){
-		    $pdf->AddPage(); 
-		    // intestazione tabella nel nuovo foglio
+
+    // righe della tabella di dettaglio
+    foreach( $doc['righe'] as $row ) {
+
+        $trh = $pdf->GetStringHeight( $col * 4, $row['nome'], false, true, '', 'B' );				// calcolo l'altezza della riga
+	    $pdf->SetFont( $fnt, '', $fnts );
+/*
+        // controllo se la riga di dettaglio entra nella parte rimanente del foglio
+	    if( ( $pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() - 15)  ) {
+
+            // aggiungo una pagina
+            $pdf->AddPage(); 
+
+            // intestazione tabella nel nuovo foglio
 		    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 		    $pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
 		    $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
@@ -377,10 +383,11 @@
 		    $pdf->Cell( $col * 2, 0, 'tot. netto', $brdh, 0, 'C' );			// larghezza, altezza, testo, bordo, newline, allineamento
 		    $pdf->Cell( $col * 1, 0, 'IVA', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
 		    $pdf->Cell( $col * 2, 0, 'tot. lordo', $brdh, 1, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		    // reimposto il font
+
+            // reimposto il font
 		    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
 
-								    }
+		}
 
         if( ! empty( $row['aggregate'] ) ) {
             $pdf->SetFont( $fnt, 'B', $fnts );
@@ -392,61 +399,61 @@
         } else {
             $pdf->SetFillColor(255, 255, 255);
         }
-
-        $pdf->MultiCell( $col * 4, $lh, $row['nome'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+*/
+        $pdf->MultiCell( $col * 4, $lh, $row['nome'], $brdc, 'L', 0, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 
 //	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
-	    $pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 0, 'L', 1, '', 0, false, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 1, $trh, $row['udm'], $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 1, $trh, $row['importo_netto_unitario'] , $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 2, $trh, $row['importo_netto_totale'].' €', $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 1, $trh, $row['importo_iva_totale'].' €', $brdc, 0, 'R', 1, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 2, $trh, $row['importo_lordo_totale'].' €', $brdc, 1, 'R', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
+	    $pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 0, 'L', 0, '', 0, false, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	    $pdf->Cell( $col * 1, $trh, $row['udm'], $brdc, 0, 'C', 0, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
+	    $pdf->Cell( $col * 1, $trh, $row['importo_netto_unitario'] , $brdc, 0, 'R', 0, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+	    $pdf->Cell( $col * 2, $trh, $row['importo_netto_totale'].' €', $brdc, 0, 'R', 0, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
+	    $pdf->Cell( $col * 1, $trh, $row['importo_iva_totale'].' €', $brdc, 0, 'R', 0, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+	    $pdf->Cell( $col * 2, $trh, $row['importo_lordo_totale'].' €', $brdc, 1, 'R', 0, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
 
     }
 
-  // totale tabella di dettaglio
-  $pdf->SetFont( $fnt, 'B', $fnts );										// font, stile, dimensione
-  $pdf->Cell( $col * 7, 0, 'totali', 0, 0, 'L', false, '', 0 );						// w, h, testo, bordo, allineamento, riempimento, newline
-  $pdf->Cell( $col * 2, 0,  $doc['tot']['importo_netto_totale'].' €', 0, 0, 'C', false, '', 0 );		// larghezza, altezza, testo, bordo, newline, allineamento
-  $pdf->Cell( $col * 2, 0,  $doc['tot']['importo_iva_totale'].' €', 0, 0, 'L', false, '', 0 );			// larghezza, altezza, testo, bordo, newline, allineamento
-  $pdf->Cell( $col * 2, 0, $doc['tot']['importo_lordo_totale'].' €', 0, 1, 'L', false, '', 0 );		// larghezza, altezza, testo, bordo, newline, allineamento
+    // totale tabella di dettaglio
+    $pdf->SetFont( $fnt, 'B', $fnts );										// font, stile, dimensione
+    $pdf->Cell( $col * 7, 0, 'totali', 0, 0, 'L', false, '', 0 );						// w, h, testo, bordo, allineamento, riempimento, newline
+    $pdf->Cell( $col * 2, 0,  $doc['tot']['importo_netto_totale'].' €', 0, 0, 'R', false, '', 0 );		// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 1, 0,  $doc['tot']['importo_iva_totale'].' €', 0, 0, 'R', false, '', 0 );			// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 2, 0, $doc['tot']['importo_lordo_totale'].' €', 0, 1, 'R', false, '', 0 );		// larghezza, altezza, testo, bordo, newline, allineamento
 
-// spazio sotto la tabella di dettaglio
-$pdf->SetY( $pdf->GetY() + $stdsp );
+    // spazio sotto la tabella di dettaglio
+    $pdf->SetY( $pdf->GetY() + $stdsp );
 
-// intestazione tabella IVA
-$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-$pdf->Cell( $col * 1, 0, '', $brdh, 0, 'C' );					// larghezza, altezza, testo, bordo, newline, allineamento
-$pdf->Cell( $col * 4, 0, 'dettaglio IVA', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-$pdf->Cell( $col * 2, 0, 'importo', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    // intestazione tabella IVA
+    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+    $pdf->Cell( $col * 1, 0, '', $brdh, 0, 'C' );					// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 4, 0, 'dettaglio IVA', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 2, 0, 'importo', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
-$pdf->SetFont( $fnt, '', $fnts );	
-if( isset($doc['iva']) ){									// font, stile, dimensione
-foreach( $doc['iva'] as $iva => $row ) {
-    $trh = $pdf->GetStringHeight( $col * 4, $row['nome'], false, true, '', 'B' );				// 
-    $pdf->Cell( $col * 1, $trh, $row['codice'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// w, h, testo, bordo, allineamento, riempimento, newline
-    $pdf->MultiCell( $col * 4, $lh, $row['nome'], $brdc, 'L', false, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
-    $pdf->Cell( $col * 2, $trh, $row['tot'].' €', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );		// larghezza, altezza, testo, bordo, newline, allineamento
-}
-}
-// spazio sotto la tabella IVA
-$pdf->SetY( $pdf->GetY() + $stdsp );
-/*
-    // carico i pagamenti per il documento
-    $doc['pagamenti'] = mysqlQuery(
-        $cf['mysql']['connection'],
-        'SELECT modalita_pagamento.codice AS codice_pagamento, '.
-        'date_format( from_unixtime(timestamp_scadenza, "%Y-%m-%d" ) AS data_standard, '.
-        '( importo_netto_totale + ( importo_netto_totale / 100 * iva.aliquota ) ) AS importo_lordo_totale  '.
-        'FROM pagamenti '.
-        'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
-        'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
-        'WHERE pagamenti.id_documento = ?',
-        array( array( 's' => $doc['id'] ) )
-    );
-*/
-if (strlen($tx[1])>0){
+    $pdf->SetFont( $fnt, '', $fnts );	
+    if( isset($doc['iva']) ){									// font, stile, dimensione
+    foreach( $doc['iva'] as $iva => $row ) {
+        $trh = $pdf->GetStringHeight( $col * 4, $row['nome'], false, true, '', 'B' );				// 
+        $pdf->Cell( $col * 1, $trh, $row['codice'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// w, h, testo, bordo, allineamento, riempimento, newline
+        $pdf->MultiCell( $col * 4, $lh, $row['nome'], $brdc, 'L', false, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+        $pdf->Cell( $col * 2, $trh, $row['tot'].' €', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );		// larghezza, altezza, testo, bordo, newline, allineamento
+    }
+    }
+    // spazio sotto la tabella IVA
+    $pdf->SetY( $pdf->GetY() + $stdsp );
+    /*
+        // carico i pagamenti per il documento
+        $doc['pagamenti'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT modalita_pagamento.codice AS codice_pagamento, '.
+            'date_format( from_unixtime(timestamp_scadenza, "%Y-%m-%d" ) AS data_standard, '.
+            '( importo_netto_totale + ( importo_netto_totale / 100 * iva.aliquota ) ) AS importo_lordo_totale  '.
+            'FROM pagamenti '.
+            'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
+            'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
+            'WHERE pagamenti.id_documento = ?',
+            array( array( 's' => $doc['id'] ) )
+        );
+    */
+    if (strlen($tx[1])>0){
 
 	// note per il cliente
 	    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
@@ -459,21 +466,22 @@ if (strlen($tx[1])>0){
     }
 
 
-if(sizeof($doc['pagamenti'])>0){
-    // intestazione tabella scadenze
-	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-	$pdf->Cell( $col * 2, 0, 'data scadenza', $brdh, 0, 'C' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 2, 0, 'importo', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    if(sizeof($doc['pagamenti'])>0){
+        // intestazione tabella scadenze
+        $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+        $pdf->Cell( $col * 2, 0, 'data scadenza', $brdh, 0, 'C' );			// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+        $pdf->Cell( $col * 2, 0, 'importo', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
-    // tabella scadenze
-	$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
-	foreach( $doc['pagamenti'] as $row ) {
-	    $trh = $pdf->GetStringHeight( $col * 6, $row['nome'], false, true, '', 'B' );				// 
-	    $pdf->Cell( $col * 2, $trh, $row['data_standard'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// w, h, testo, bordo, allineamento, riempimento, newline
-	    $pdf->MultiCell( $col * 6, $lh, $row['nome'], $brdc, 'L', false, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
-	    $pdf->Cell( $col * 2, $trh, number_format($row['importo_lordo_totale'], 2, ',', '.' ).' €', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );		// larghezza, altezza, testo, bordo, newline, allineamento
-	}
+        // tabella scadenze
+        $pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
+        foreach( $doc['pagamenti'] as $row ) {
+            $nome = $row['nome'] . ( ( ! empty( $row['modalita'] ) ) ? ' tramite ' . $row['modalita'] : NULL ) . ( ( ! empty( $row['iban'] ) ) ? ' su ' . $row['iban'] : NULL );
+            $trh = $pdf->GetStringHeight( $col * 6, $nome, false, true, '', 'B' );				// 
+            $pdf->Cell( $col * 2, $trh, $row['data_standard'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// w, h, testo, bordo, allineamento, riempimento, newline
+            $pdf->MultiCell( $col * 6, $lh, $nome, $brdc, 'L', false, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+            $pdf->Cell( $col * 2, $trh, number_format($row['importo_lordo_totale'], 2, ',', '.' ).' €', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );		// larghezza, altezza, testo, bordo, newline, allineamento
+        }
     }
 
     if( $countAggregate > 0 ){
