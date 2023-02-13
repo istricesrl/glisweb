@@ -50,6 +50,9 @@
                 }
             }
 
+            // debug
+            // die( 'http' . ( isset( $_SERVER['HTTPS'] ) ? 's' : '' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] );
+
             // dati
             $data = array(
                 'access_token' => $fb['pixel']['token'],
@@ -59,7 +62,7 @@
                             'event_name' => 'AddToCart',
                             'event_time' => time(),
                             'action_source' => 'website',
-                            'event_source_url' => $_SERVER['REDIRECT_URL'],
+                            'event_source_url' => ( ( isset( $_SERVER['REDIRECT_URL'] ) ) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'] ),
                             'client_ip_address' => getenv("REMOTE_ADDR"),
                             'client_user_agent' => $_SERVER['HTTP_USER_AGENT'],
                             'user_data' => array(

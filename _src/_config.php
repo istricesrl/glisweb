@@ -229,6 +229,8 @@
     // debug
 	// die( 'CONFIG INIT' );
 	// die( print_r( $_REQUEST, true ) );
+    // die( $_SERVER['REDIRECT_URL'] );
+    // die( $_SERVER['REQUEST_URI'] );
 
     /**
      *

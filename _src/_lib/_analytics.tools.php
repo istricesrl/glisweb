@@ -17,6 +17,7 @@
     // indirizzo per l'invio dei dati
 	define( 'GA4_MEASUREMENT_URL', 'https://www.google-analytics.com/' );
 	define( 'GA4_MEASUREMENT_ENDPOINT_COLLECT', 'mp/collect' );
+	define( 'GA4_MEASUREMENT_ENDPOINT_DEBUG_COLLECT', 'debug/mp/collect' );
 
     /**
      *
@@ -37,7 +38,10 @@
 		);
 
 		logWrite( GA4_MEASUREMENT_URL . GA4_MEASUREMENT_ENDPOINT_COLLECT . PHP_EOL . print_r( $e, true ) . PHP_EOL . $response, 'analytics' );
-		
+
+		// print_r( $response );
+		// var_dump( $status );
+
 	}
 
     /**
@@ -78,6 +82,80 @@
           }
         ]
       }	
+
+	  *** CODICE FUNZIONANTE SU IMPORT FOR ME ***
+
+    if (!isset($_COOKIE['_cid']) || empty($_COOKIE['_cid'])) {
+        $cid = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4));
+        setcookie('_cid', $cid);
+    } else {
+        $cid = $_COOKIE['_cid'];
+    }
+
+	foreach( $carrello['articoli'] as $item ) {
+	    $items[] = array(
+		'item_id' => $item['id_articolo'],
+		'item_name' => $item['id_articolo'],
+#		'coupon' => NULL,
+		'currency' => 'EUR',
+		'discount' => 0.0,
+		'price' => $item['prezzo_lordo_totale'] / $item['quantita'],
+		'quantity' => $item['quantita']
+	    );
+	}
+
+	$data = array(
+	    'client_id' => $cid,
+	    'events' => array(
+		array(
+		    'name' => 'purchase',
+		    'params' => array(
+			'currency' => 'EUR',
+			'transaction_id' => $carrello['id'],
+			'value' => $carrello['prezzo_lordo_complessivo'],
+#			'coupon' => $carrello['coupon'],
+			'shipping' => 0.0,
+			'tax' => 0.0,
+			'items' => $items
+		    )
+		)
+	    )
+	);
+
+$secret = '';
+$ua = '';
+
+	$url = 'https://www.google-analytics.com/mp/collect?api_secret='.$secret.'&measurement_id='.$ua;
+	$url = 'https://www.google-analytics.com/debug/mp/collect?tid=fake&v=1&api_secret='.$secret.'&measurement_id='.$ua;
+	$url = 'https://www.google-analytics.com/mp/collect?api_secret='.$secret.'&measurement_id='.$ua.'&tid='.$ua.'&v=1';
+	$url = 'https://www.google-analytics.com/debug/mp/collect?tid=fake&v=1';
+	$url = 'https://www.google-analytics.com/debug/mp/collect?tid=fake&v=1&measurement_id='.$ua;
+	$url = 'https://www.google-analytics.com/debug/mp/collect?tid=fake&v=1&api_secret='.$secret.'&measurement_id='.$ua;
+	$url = 'https://www.google-analytics.com/mp/collect?tid='.$ua.'&v=1&api_secret='.$secret.'&measurement_id='.$ua;
+
+	$url = 'https://www.google-analytics.com/mp/collect?measurement_id='.$ua.'&api_secret='.$secret;
+	// $url = 'https://www.google-analytics.com/debug/mp/collect?api_secret=fake&measurement_id=fake';
+
+	$ch = curl_init();
+	curl_setopt($ch, CURLOPT_USERAGENT, $_SERVER['HTTP_USER_AGENT']);
+	curl_setopt($ch, CURLOPT_URL, $url);
+	curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+	curl_setopt($ch, CURLOPT_POST, true);
+	curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode( $data, true ) );
+	curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+	$response = curl_exec($ch);
+	$errors = curl_error($ch);
+	$status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+header( 'content-type: text/plain' );
+// var_dump( $url );
+print_r( $carrello );
+print_r( $data );
+echo $response;
+var_dump($errors);
+var_dump($status);
+
 */
 	  	// TODO nel carrello non è specificata la valuta in formato vattelapesca tre caratteri
 
@@ -85,9 +163,11 @@
 			$items[] = array(
 				'item_id' => $item['id_articolo'],
 				'item_name' => $item['descrizione'],
-				'coupon' => NULL,
+// NOTA inserire il coupon solo se c'è, altrimenti va in errore
+//				'coupon' => NULL,
 				'currency' => 'EUR',
-				'discount' => $item['sconto_valore'],
+// NOTA inserire lo sconto solo se c'è, altrimenti va in errore
+//				'discount' => $item['sconto_valore'],
 				'price' => $item['prezzo_lordo_unitario'],
 				'quantity' => $item['quantita']
 			);
@@ -102,7 +182,8 @@
 						'currency' => 'EUR',
 						'transaction_id' => $carrello['id'],
 						'value' => $carrello['prezzo_lordo_finale'],
-						'coupon' => $carrello['codice_coupon'],
+// NOTA inserire il coupon solo se c'è, altrimenti va in errore
+//						'coupon' => $carrello['codice_coupon'],
 						'shipping' => 0.0,
 						'tax' => 0.0,
 						'items' => $items
@@ -110,6 +191,8 @@
 				)
 			)
 		);
+
+		// print_r( $e );
 
 		ga4event( $ua, $secret, $e );
 
