@@ -1064,12 +1064,15 @@ REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_d
 -- tipologia: tabella standard
 -- verifica: 2021-10-15 16:15 Fabio Mosti
 REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`,`se_persona_giuridica`, `se_pubblica_amministrazione`) VALUES
-(1,	NULL,	10,	'persone fisiche',	    NULL,	NULL,	1,	NULL,	NULL),
-(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,	1,	    10,	'sig.',	                NULL,	NULL,	1,	NULL,	NULL),
-(4,	1,	    20,	'sig.ra',	            NULL,	NULL,	1,	NULL,	NULL),
-(5,	2,	    10,	'spett.',	            NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1);
+`timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	10,	'persone fisiche',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	7,	10,	'sig.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	8,	20,	'sig.ra',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	2,	10,	'spett.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	20,	'pubblica amministrazione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	1,	NULL,	'gent.mo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	1,	NULL,	'gent.ma',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050400
 

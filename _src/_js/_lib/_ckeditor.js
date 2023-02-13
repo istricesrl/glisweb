@@ -33,6 +33,13 @@
 		});
 		ckEditors.push( editor );
 		// CKEDITOR.config.protectedSource.push( /\{\%[\s\S]*?%\}/g );
+/*
+		CKEDITOR.config.protectedSource = [
+			/\{\{[\s\S]*?\}\}/g,
+			/\{\%[\s\S]*?%\}/g,
+			/\{\#[\s\S]*?#\}/g,
+		];
+*/
         CKEDITOR.config.shiftEnterMode = CKEDITOR.ENTER_DIV;
         CKEDITOR.config.enterMode = CKEDITOR.ENTER_P;
         // CKEDITOR.config.autoParagraph = false;
