@@ -23,13 +23,13 @@
     <div class="form-row d-print-none">
         <div class="col-12">
             <span class="label-top">descrizione</span>
-            {{ frm.textarea( view.open.table, '', '', 'testo', '', 3, '', '', '', '', '', '', '', 2 ) }}
+            {{ frm.textarea( view.open.table, '', '', 'testo', '', 3, '', '', '1', '', '', '', '', 2 ) }}
         </div>
     </div>
     <div class="form-row d-print-none">
         <div class="col">
             <span class="label-top">progetto</span>
-            {{ frm.selectBox( view.open.table, '', '', 'id_progetto', '', etc.select.id_progetto, '', default, '','1','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti', 2 ) }}
+            {{ frm.selectBox( view.open.table, '', '', 'id_progetto', '', etc.select.id_progetto, '', default, '1','1','','','progetti.produzione.form','','progetti', 'id_progetto' , page, pages, ietf,'progetti', 2 ) }}
         </div>
         <div class="col-auto">
             <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
