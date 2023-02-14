@@ -237,9 +237,12 @@
 			var b1 = $( '<div>', { "class" : "row" } );
 			var b11 = $( '<div>', { "class" : "col" } );
 			var b111 = $( '<p>' );
-			var b1111 = $( '<button>', { "class" : "btn btn-secondary btn-sm btn-block", "onclick" : "window.open('" + sezione.action.url + "','_self');" } ).text( sezione.action.label );
 
-			b1111.appendTo( b111 );
+			if( typeof sezione.action !== 'undefined' && typeof sezione.action.url !== 'undefined' ) {
+				var b1111 = $( '<button>', { "class" : "btn btn-secondary btn-sm btn-block", "onclick" : "window.open('" + sezione.action.url + "','_self');" } ).text( sezione.action.label );
+				b1111.appendTo( b111 );
+			}
+
 			b111.appendTo( b11 );
 			b11.appendTo( b1 );
 

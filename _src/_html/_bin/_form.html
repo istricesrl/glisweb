@@ -342,7 +342,7 @@
     {% if request[ table ][ subtable ][ ks[ counter ] ].id %}
 	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ pages[ edit ].path[ lang ] }}?{{ subtable }}[id]={{ request[ table ][ subtable ][ ks[ counter ] ].id }}','_blank');"><i class="fa fa-pencil"></i></button>
     {% endif %}
-	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="$(this).metroWs('/task/aggiungi.bookmark?__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][path]={{ vl }}&__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][label]={{ vl|split("/")|last }}', aggiornaBookmarks );"><i class="fa fa-bookmark-o"></i></button>
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="$(this).metroWs('/task/bookmark.add?__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][path]={{ vl }}&__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][label]={{ vl|split("/")|last }}', aggiornaBookmarks );"><i class="fa fa-bookmark-o"></i></button>
 	{% endif %}
     {% endif %}
 	{% if not hidden %}

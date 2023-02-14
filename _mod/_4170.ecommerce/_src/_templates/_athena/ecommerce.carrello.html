@@ -6,39 +6,65 @@
 <section class="row flex-fill">
     <div class="col-md-8 d-flex flex-column">
         {% if session.carrello.id %}
-        {% if session.carrello.timestamp_checkout %}
+        {# if session.carrello.timestamp_checkout #}
+        {% if request.ck_cassa %}
         <fieldset class="">
-            <legend>azioni</legend>
-            {# TODO QUI METTERE ... #}
+            <legend>stampa documenti</legend>
             <div class="form-row">
                 <div class="col">
-                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="segna pagato in contanti e chiudi" onclick="">
-                </div>
-                <div class="col">
-                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="segna pagato con carta di credito o bancomat e chiudu" onclick="">
-                </div>
-                <div class="col">
-                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="invia tramite mail per il pagamento online" onclick="">
-                </div>
-                <div class="col">
-                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="invia tramite SMS per il pagamento online" onclick="">
+                    {% for documento in carrello.documenti %}
+                    <input class="btn btn-secondary btn-sm btn-block" type="button" value="apri PDF documento #{{ documento }}" onclick="window.open('','_blank');">
+                    {% endfor %}
                 </div>
             </div>
         </fieldset>
+        {% elseif request.ts_checkout %}
+        <form id="carrello" class="carrello d-flex flex-column flex-fill" action="" method="post">
+            <fieldset class="">
+                <legend>registra pagamento</legend>
+                {# TODO QUI METTERE ... #}
+                <div class="form-row">
+                    <div class="col">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="segna pagato in contanti" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}?ck_cassa=1');$('#carrello').submit();">
+                    </div>
+                    <div class="col">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="segna pagato con carta" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}?ck_cassa=8');$('#carrello').submit();">
+                    </div>
+                    <div class="col">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="segna pagato con bancomat" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}?ck_cassa=23');$('#carrello').submit();">
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="">
+                <legend>altre azioni</legend>
+                {# TODO QUI METTERE ... #}
+                <div class="form-row">
+                    <div class="col-6">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="invia mail per il pagamento online" onclick="">
+                    </div>
+                    <div class="col-6">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="invia SMS per il pagamento online" onclick="">
+                    </div>
+                    <div class="col-12">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" onclick="" value="torna al carrello" onclick="">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
         {% else %}
         <form id="carrello" class="carrello d-flex flex-column flex-fill" action="" method="post">
-            <input type="hidden" id="ts_checkout" name="__carrello__[timestamp_checkout]" value="">
             <fieldset>
                 <legend>carrello <small>#{{ session.carrello.id }}</small></legend>
                 {# ARTICOLI DEL CARRELLO #}
                 {% for articolo, dati in session.carrello.articoli  %}
                 <div class="form-row articolo">
-                    <input type="hidden" name="__carrello__[__articoli__][{{ articolo }}][id_articolo]" value="{{ articolo }}">
-                    <div class="d-none d-md-block col-md-auto col-form-label"><span class="id-articolo">{{ articolo }}</span></div>
+                    <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_articolo]" value="{{ dati.id_articolo }}">
+                    <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][destinatario_id_anagrafica]" value="{{ dati.destinatario_id_anagrafica }}">
+                    <div class="d-none d-md-block col-md-auto col-form-label"><span class="id-articolo">{{ dati.id_articolo }}</span></div>
                     <div class="col-12 col-md col-form-label"><span class="descrizione">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></div>
-                    <div class="col-4 col-md-1"><label class="label-top">sc. %</label><input class="form-control form-control-sm text-right" type="text" id="scperc{{ articolo }}" name="__carrello__[__articoli__][{{ articolo }}][sconto_percentuale]" value="{{ '%0.2f'|format(dati.sconto_percentuale) }}"></div>
-                    <div class="col-4 col-md-1"><label class="label-top">sc. €</label><input class="form-control form-control-sm text-right" type="text" id="scval{{ articolo }}" name="__carrello__[__articoli__][{{ articolo }}][sconto_valore]" value="{{ '%0.2f'|format(dati.sconto_valore) }}"></div>
-                    <div class="col-4 col-md-1"><label class="label-top">q.tà</label><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ articolo }}" name="__carrello__[__articoli__][{{ articolo }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></div>
+                    <div class="col-4 col-md-1"><label class="label-top">sc. %</label><input class="form-control form-control-sm text-right" type="text" id="scperc{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_percentuale]" value="{{ '%0.2f'|format(dati.sconto_percentuale) }}"></div>
+                    <div class="col-4 col-md-1"><label class="label-top">sc. €</label><input class="form-control form-control-sm text-right" type="text" id="scval{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_valore]" value="{{ '%0.2f'|format(dati.sconto_valore) }}"></div>
+                    <div class="col-4 col-md-1"><label class="label-top">q.tà</label><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></div>
                     <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
                     <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
                 </div>
@@ -182,7 +208,9 @@
                 {# TODO SE C'È UNA RICEVUTA, FATTURA O SCONTRINO AGGIUNGERE IL TASTO PER STAMPARLI #}
                 <div class="form-row">
                     <div class="col">
-                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="vai al pagamento" onclick="$('#ts_checkout').val( Math.floor( Date.now() / 1000 ) );$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">
+<!--                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="vai al pagamento" onclick="$('#ts_checkout').val( Math.floor( Date.now() / 1000 ) );$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="vai al pagamento" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}?ts_checkout=1');$('#carrello').submit();"> -->
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="registra pagamento e crea documenti" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}?ck_cassa=' + $('#costo-pagamento option:selected').val() + '&ck_documento=' + $('#tipologia-documento-fatturazione option:selected').val());$('#carrello').submit();">
                     </div>
                 </div>
             </fieldset>

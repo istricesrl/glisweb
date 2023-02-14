@@ -50,6 +50,18 @@
 
     }
 
+    function trovaIdAziendaGestita() {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id_anagrafica FROM anagrafica_categorie WHERE id_categoria = ? LIMIT 1',
+            array( array( 's' => 5 ) )
+        );
+        
+    }
+
     function aggiungiImmagini( &$p, $id, $f, $r = null ) {
 
         aggiungiDati( $p, $id, $f, 'immagini', $r );

@@ -14,7 +14,7 @@
         {% if s.action %}
         <div class="row">
             <div class="col">
-                <p><button onclick="window.open('{{ pages[ s.action.page ].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">{{ s.action.label }}</button></p>
+                <p><button onclick="window.open('{% if s.action.url %}{{ s.action.url }}{% else %}{{ pages[ s.action.page ].url[ localization.language.ietf ] }}{% endif %}','_self');" class="btn btn-secondary btn-sm btn-block">{{ s.action.label }}</button></p>
             </div>
         </div>
         {% endif %}

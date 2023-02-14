@@ -35,7 +35,9 @@
         'fasce' => 'fasce',
         'discipline' => 'discipline',
         'livelli' => 'livelli',
-        'stato' => 'stato'            
+        'stato' => 'stato',
+        '__label__' => 'corso',
+        NULL => 'azioni'
 	);
 
     // stili della vista
@@ -48,10 +50,16 @@
         'categorie' => 'text-left',
         'discipline' => 'text-left',
         'livelli' => 'text-left',
-        'stato' => 'text-left'  
+        'stato' => 'text-left',
+        '__label__' => 'd-none'
     );
 
-        // tendina categorie progetti
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
+    );
+
+    // tendina categorie progetti
 	$ct['etc']['select']['discipline'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -83,3 +91,16 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    // bottoni
+	foreach( $ct['view']['data'] as &$row ) {
+		if( is_array( $row ) ) {
+
+            if( ! isset( $cf['session']['__work__']['iscrizioni']['items'] ) || ! array_key_exists( $row['id'], $cf['session']['__work__']['iscrizioni']['items'] ) ) {
+                $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.add?__work__[iscrizioni][items]['.$row['id'].'][id]='.$row['id'].'&__work__[iscrizioni][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark-o"></i></span></a>';
+            } else {
+                $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.del?__key__=iscrizioni&__item__='.$row['id'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark"></i></span></a>';
+            }
+
+        }
+	}

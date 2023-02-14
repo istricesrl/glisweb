@@ -58,18 +58,22 @@
         'text' => 'crea un account per l\'anagrafica e invia mail di attivazione all\'utente'
     );
 
-    foreach( $cf['registrazione']['profili'] as $k => $v ) {
-        $ct['etc']['select']['profili'][] = array(
-            'id' => $k,
-            '__label__' => $v['nome'] 
-        );
+    if( isset( $cf['registrazione']['profili'] ) ) {
+        foreach( $cf['registrazione']['profili'] as $k => $v ) {
+            $ct['etc']['select']['profili'][] = array(
+                'id' => $k,
+                '__label__' => $v['nome'] 
+            );
+        }
     }
 
-    foreach( $_REQUEST['anagrafica']['mail'] as $k => $v ) {
-        $ct['etc']['select']['mail'][] = array(
-            'id' => $v['id'],
-            '__label__' => $v['indirizzo'] 
-        );
+    if( isset( $_REQUEST['anagrafica']['mail'] ) ) {
+        foreach( $_REQUEST['anagrafica']['mail'] as $k => $v ) {
+            $ct['etc']['select']['mail'][] = array(
+                'id' => $v['id'],
+                '__label__' => $v['indirizzo'] 
+            );
+        }
     }
 
     // debug

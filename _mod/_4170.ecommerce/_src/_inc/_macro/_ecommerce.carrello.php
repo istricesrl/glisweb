@@ -30,3 +30,5 @@
         // TODO .'WHERE tipologie_anagrafica_view.se_ecommerce = 1 '
         .'ORDER BY __label__ '
     );
+
+    // print_r( $_SESSION['carrello'] );

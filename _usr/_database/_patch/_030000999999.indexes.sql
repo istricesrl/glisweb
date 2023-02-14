@@ -581,7 +581,7 @@ ALTER TABLE `carrelli_articoli`
 	ADD KEY `id_pagamento` (`id_pagamento`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `id_carrello_id_articolo` (`id_carrello`,`id_articolo`),
+	ADD UNIQUE KEY `unica` (`id_carrello`,`id_articolo`,`destinatario_id_anagrafica`),
   	ADD KEY `indice` (`id`, `id_carrello`, `id_articolo`, `id_iva`, `prezzo_netto_unitario`, `prezzo_lordo_unitario`,`quantita`, `prezzo_netto_totale`,  `prezzo_lordo_totale`, `sconto_percentuale`, `sconto_valore`, `prezzo_netto_finale`,  `prezzo_lordo_finale`)
   ;
 
