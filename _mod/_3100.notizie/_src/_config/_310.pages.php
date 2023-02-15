@@ -132,8 +132,11 @@
         // recupero le notizie dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT notizie.*, notizie_categorie.id_categoria AS id_categoria FROM notizie '.
+            'SELECT notizie.*, notizie_categorie.id_categoria AS id_categoria, '.
+            'pubblicazioni.id_tipologia AS id_tipologia_pubblicazione, tipologie_pubblicazioni.nome AS tipologia_pubblicazione '.
+            'FROM notizie '.
             'INNER JOIN pubblicazioni ON pubblicazioni.id_notizia = notizie.id '.
+            'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia '.
             'LEFT JOIN notizie_categorie ON notizie_categorie.id_notizia = notizie.id  '.
             'LEFT JOIN categorie_notizie ON notizie_categorie.id_categoria = categorie_notizie.id '.
             'WHERE categorie_notizie.id_sito = ? '.
@@ -177,7 +180,7 @@
                 // ID della pagina
                 $pid = $cid . '.' . PREFX_NOTIZIE . $pg['id'];
 
-                if (empty($pip)) {
+                if( empty( $pip ) ) {
                     $pip = $pg['id_pagina'];
                 }
 
@@ -204,7 +207,11 @@
                         'canonical'		=> $canon,
                         'parent'		=> array( 'id'		=> $cid ),
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
-                        'metadata'      => array('id_notizia' => $pg['id']),
+                        'metadata'      => array(
+                            'id_notizia' => $pg['id'],
+                            'id_tipologia_pubblicazione' => $pg['id_tipologia_pubblicazione'],
+                            'tipologia_pubblicazione' => $pg['tipologia_pubblicazione']
+                        ),
                         'macro'         => $cf['notizie']['pages']['scheda']['macro']
                     );
 
@@ -237,13 +244,13 @@
                         $pg['id'],
                         'id_notizia'
                     );
-
+/*
                     aggiungiMenu(
                         $cf['contents']['pages'][$pid],
                         $pg['id'],
                         'id_notizia'
                     );
-
+*/
                     // canonical
 				    $canon = $pid;
 

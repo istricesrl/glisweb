@@ -2139,7 +2139,7 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
 -- verifica: 2021-10-01 12:06 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `notizie` (
   `id` int(11) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text,
   `template` char(255) DEFAULT NULL,

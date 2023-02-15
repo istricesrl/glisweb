@@ -392,6 +392,12 @@ REPLACE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (23,  'MP08', 'bancomat' ),
 (24, 'MP08', 'paypal' );
 
+--| 010000022000
+
+-- notizie
+INSERT INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 --| 050000023600
 
 -- periodicita
