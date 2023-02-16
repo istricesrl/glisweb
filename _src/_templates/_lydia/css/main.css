@@ -19,7 +19,7 @@ div.categorie nav {
 
 .form-control:focus {
     border-color: #aaaaaa;
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);*/
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
 }
 
 footer {
@@ -155,8 +155,6 @@ nav ul {
 
 div.megamenu {
     background-color: #eeeeee;
-    position: absolute;
-    width: 100%;
 }
 
 div.megamenu nav {
@@ -167,8 +165,14 @@ div.megamenu ul.navbar-nav ul {
     list-style-type: none;
 }
 
-div.megamenu ul ul li.nav-item {
-    display: none;
+@media( min-width: 576px ) {
+    div.megamenu {
+        position: absolute;
+        width: 100%;
+    }
+    div.megamenu ul ul li.nav-item {
+        display: none;
+    }
 }
 
 label.label-top {

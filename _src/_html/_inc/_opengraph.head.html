@@ -1,12 +1,12 @@
 
 {# FILE PER LA GENERAZIONE DEI META TAG PER OPENGRAPH ALL'INTERNO DEL TAG <head> #}
 
-<meta property="og:title" content="{% if page.og_title[ localization.language.ietf ] %}{{ page.og_title[ localization.language.ietf ] }}{% else %}{{ page.h1[ localization.language.ietf ] }}{% endif %}" />
-<meta property="og:type" content="{% if page.og_type[ localization.language.ietf ] %}{{ page.og_type[ localization.language.ietf ] }}{% else %}website{% endif %}" />
-<meta property="og:url" content="{% if page.canonical %}{{ pages[ page.canonical ].url[ localization.language.ietf ] }}{% else %}{{ page.url[ localization.language.ietf ] }}{% endif %}" />
+<meta property="og:title" content="{% if page.og_title[ localization.language.ietf ] %}{{ page.og_title[ localization.language.ietf ] }}{% else %}{{ page.h1[ localization.language.ietf ] }}{% endif %}">
+<meta property="og:type" content="{% if page.og_type[ localization.language.ietf ] %}{{ page.og_type[ localization.language.ietf ] }}{% else %}website{% endif %}">
+<meta property="og:url" content="{% if page.canonical %}{{ pages[ page.canonical ].url[ localization.language.ietf ] }}{% else %}{{ page.url[ localization.language.ietf ] }}{% endif %}">
 
-{% if page.og_image[ localization.language.ietf ] %}<meta property="og:image" content="{{ page.og_image[ localization.language.ietf ] }}" />{% endif %}
-{% if page.og_audio[ localization.language.ietf ] %}<meta property="og:audio" content="{{ page.og_audio[ localization.language.ietf ] }}" />{% endif %}
-{% if page.og_video[ localization.language.ietf ] %}<meta property="og:video" content="{{ page.og_video[ localization.language.ietf ] }}" />{% endif %}
-{% if page.og_description[ localization.language.ietf ] %}<meta property="og:description" content="{{ page.og_description[ localization.language.ietf ] }}" />{% endif %}
-{% if page.og_determiner[ localization.language.ietf ] %}<meta property="og:determiner" content="{{ page.og_determiner[ localization.language.ietf ] }}" />{% endif %}
+{% if page.og_image[ localization.language.ietf ] %}<meta property="og:image" content="{{ page.og_image[ localization.language.ietf ] }}">{% endif %}
+{% if page.og_audio[ localization.language.ietf ] %}<meta property="og:audio" content="{{ page.og_audio[ localization.language.ietf ] }}">{% endif %}
+{% if page.og_video[ localization.language.ietf ] %}<meta property="og:video" content="{{ page.og_video[ localization.language.ietf ] }}">{% endif %}
+{% if page.og_description[ localization.language.ietf ] %}<meta property="og:description" content="{{ page.og_description[ localization.language.ietf ] }}">{% endif %}
+{% if page.og_determiner[ localization.language.ietf ] %}<meta property="og:determiner" content="{{ page.og_determiner[ localization.language.ietf ] }}">{% endif %}

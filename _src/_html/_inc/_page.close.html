@@ -28,3 +28,10 @@
 
 {# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
 {# vedi _src/_inc/_macro/_default.tools.php #}
+
+<!-- HTML5 W3C validator: https://validator.w3.org/nu/?doc={{ page.url[ localization.language.ietf ] }} -->
+{% for c in page.css.template %}
+<!-- CSS3 W3C validator: https://jigsaw.w3.org/css-validator/validator?uri={{ site.url }}{{ page.template.path }}{{ c }} -->
+{% endfor %}
+<!-- Google Mobile Friendly check: https://search.google.com/test/mobile-friendly?url={{ page.url[ localization.language.ietf ] }} -->
+<!-- Google Speed Test: https://developers.google.com/speed/pagespeed/insights/?url={{ page.url[ localization.language.ietf ] }} -->

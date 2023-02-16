@@ -251,7 +251,7 @@
 		// mentre invece .megamenu è il contenitore del megamenu vero e proprio
 		$('nav.navbar-megamenu ul.navbar-nav').children('li').hover(
 		    function() {
-				var id = $(this).attr('page-id');
+				var id = $(this).attr('data-page-id');
 				console.log('megamenu on ' + id);
 				// $(this).children('ul').slideDown( 200 );
 				// megamenu = 1;
@@ -260,7 +260,7 @@
 				$('.megamenu .child-of-' + id ).show();
 		    },
 		    function() {
-				// var id = $(this).attr('page-id');
+				// var id = $(this).attr('data-page-id');
 				// console.log('megamenu off ' + id);
 				// $(this).children('ul').hide();
 				// if( megamenu == 0 ) {

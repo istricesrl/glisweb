@@ -27,7 +27,7 @@
 			{ name: 'about', groups: [ 'about' ] }
 		    ],
 		    removeButtons: 'Save,Undo,Redo,NewPage,Preview,Print,Templates,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,Outdent,Indent,Blockquote,CreateDiv,BidiLtr,BidiRtl,Language,Flash,Smiley,PageBreak,Iframe,ShowBlocks,About,Styles,Cut,Copy,Paste,PasteText,PasteFromWord',
-		    extraPlugins: 'colorbutton,font,colordialog,ckawesome,autogrow',
+		    extraPlugins: 'colorbutton,font,colordialog,ckawesome,autogrow,htmlwriter',
 		    extraAllowedContent: 'img',
 		    filebrowserBrowseUrl: siteRoot + 'file-browser?type=Files'
 		});
@@ -46,13 +46,16 @@
 		CKEDITOR.dtd.$removeEmpty["i"] = false;
 		CKEDITOR.dtd.$removeEmpty["span"] = false;
 		CKEDITOR.plugins.basePath = siteRoot + '_src/_js/_lib/_external/ckeditor/plugins/';
-/*
-		CKEDITOR.on('instanceLoaded', function(e) {
+		CKEDITOR.on( 'instanceReady', function( event ) {
+			event.editor.dataProcessor.writer.selfClosingEnd = '>';
+		});
+/*		CKEDITOR.on('instanceLoaded', function(e) {
 			var wt = $(obj).parent().width();
 			var hg = $(obj).parent().height();
 			console.log(wt+' '+hg);
 			e.editor.resize(wt, hg, false);
+		});*/
+
 		});
-	*/
-	    });
+
 	});

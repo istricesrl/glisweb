@@ -36,6 +36,11 @@ Options -Indexes
     RewriteRule ^usr/pages/* - [L,NC]
     RewriteRule ^_usr/_pages/* - [L,NC]
 
+    # robots.txt di default
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} robots.txt
+    RewriteRule ^robots.txt _etc/_robots.txt [L]
+
     # favicon di default
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} favicon.ico
