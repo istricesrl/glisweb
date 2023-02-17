@@ -76,6 +76,9 @@ Options -Indexes
     # gestione della documentazione
     RewriteRule ^docs/([a-zA-Z0-9_\-\/\.]*)$ _usr/_docs/_build/html/$1 [L,QSA]
 
+    # gestione del browser delle variabili
+    RewriteRule ^cf$ _usr/_examples/_framework/_variabili.php [L,QSA]
+
     # gestione delle API speciali
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
     # NOTA perché era stata modificata così? RewriteRule ^api/([a-zA-Z0-9_\-]+)/([a-zA-Z0-9\.]+)*$ _src/_api/_$1.php [L,QSA]

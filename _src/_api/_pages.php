@@ -570,12 +570,15 @@
 	// print_r( $ct['page']['headers'] );
 	// print_r( $ct['contatti'] );
 
-    // headers / codice di stato HTTP
+    // headers
 	if( isset( $ct['page']['headers'] ) ) {
 	    foreach( $ct['page']['headers'] as $header ) {
 			header( $header );
 	    }
-	} elseif( isset( $ct['page']['http']['status'] ) ) {
+	}
+	
+    // codice di stato HTTP
+	if( isset( $ct['page']['http']['status'] ) ) {
 	    http_response_code( $ct['page']['http']['status'] );
 	} else {
 	    http_response_code( 200 );
