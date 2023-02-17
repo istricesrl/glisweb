@@ -6,15 +6,7 @@ body {
 }
 
 header, nav, main, footer {
-    padding: 0.5em 2.0em;
-}
-
-header {
-    padding-top: 1.0em;
-}
-
-footer {
-    padding-bottom: 1.0em;
+    padding: 1.0em 2.0em;
 }
 
 h1, h2, h3, h4, h5 {
@@ -40,6 +32,10 @@ h4, h5 {
 
 p {
     line-height: 1.5em;
+}
+
+header p, footer p {
+    margin: 0.0em;
 }
 
 li {
@@ -81,11 +77,13 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     }
 
     header {
-        padding-top: 2.0em;
+        padding-bottom: 2.0em;
+        padding-top: 1.0em;
     }
 
     footer {
-        padding-bottom: 2.0em;
+        padding-bottom: 1.0em;
+        padding-top: 2.0em;
     }
 
 }
@@ -97,11 +95,13 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     }
 
     header {
-        padding-top: 3.0em;
+        padding-bottom: 3.0em;
+        padding-top: 1.5em;
     }
 
     footer {
-        padding-bottom: 3.0em;
+        padding-bottom: 1.5em;
+        padding-top: 3.0em;
     }
 
 }
@@ -113,11 +113,13 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     }
 
     header {
-        padding-top: 4.0em;
+        padding-bottom: 4.0em;
+        padding-top: 1.5em;
     }
 
     footer {
-        padding-bottom: 4.0em;
+        padding-bottom: 1.5em;
+        padding-top: 4.0em;
     }
 
 }
@@ -129,11 +131,13 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     }
 
     header {
-        padding-top: 4.0em;
+        padding-bottom: 4.0em;
+        padding-top: 1.5em;
     }
 
     footer {
-        padding-bottom: 4.0em;
+        padding-bottom: 1.5em;
+        padding-top: 4.0em;
     }
 
 }
