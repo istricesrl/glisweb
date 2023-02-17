@@ -39,7 +39,7 @@ else
 
         # faccio il backup della cartella corrente
         rm -rf ../backup.tar.gz
-        tar -cvzf ../backup.tar.gz --exclude='*.log' .
+        tar -cvzf ../backup.tar.gz --exclude='var/log/*' --exclude='var/cache/*' .
 
         # branch da scaricare
         BRANCH=$1
