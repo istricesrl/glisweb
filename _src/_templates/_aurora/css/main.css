@@ -1,10 +1,20 @@
 body {
     font-family: monospace;
-    margin: 0px;
+    font-size: 1.25em;
+    margin: 0.0em;
+    padding: 0.0em;
 }
 
 header, nav, main, footer {
-    padding: 0.5em;
+    padding: 0.5em 2.0em;
+}
+
+header {
+    padding-top: 1.0em;
+}
+
+footer {
+    padding-bottom: 1.0em;
 }
 
 h1, h2, h3, h4, h5 {
@@ -12,12 +22,38 @@ h1, h2, h3, h4, h5 {
     margin-bottom: 0.5em;
 }
 
-.img-fluid {
-    width: 100%;
+h1 {
+    font-size: 2.25em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+h4, h5 {
+    font-size: 1.0em;
+}
+
+p {
+    line-height: 1.5em;
+}
+
+li {
+    line-height: 1.5em;
+}
+
+dd {
+    line-height: 1.5em;
+    margin: 0em;
 }
 
 a, a:visited {
     color: #666666;
+    text-decoration: none !important;
 }
 
 a:active, a:hover {
@@ -34,18 +70,70 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     text-decoration: underline;
 }
 
+.img-fluid {
+    width: 100%;
+}
+
 @media (min-width: 576px) {
-    
+
+    header, nav, main, footer {
+        padding: 0.5em 2.0em;
+    }
+
+    header {
+        padding-top: 2.0em;
+    }
+
+    footer {
+        padding-bottom: 2.0em;
+    }
+
 }
 
 @media (min-width: 768px) {
-    
+
+    header, nav, main, footer {
+        padding: 0.5em 4.0em;
+    }
+
+    header {
+        padding-top: 3.0em;
+    }
+
+    footer {
+        padding-bottom: 3.0em;
+    }
+
 }
 
 @media (min-width: 992px) {
-    
+
+    header, nav, main, footer {
+        padding: 0.5em 8.0em;
+    }
+
+    header {
+        padding-top: 4.0em;
+    }
+
+    footer {
+        padding-bottom: 4.0em;
+    }
+
 }
 
 @media (min-width: 1200px) {
-    
+
+    header, nav, main, footer {
+        padding: 0.5em 8.0em;
+    }
+
+    header {
+        padding-top: 4.0em;
+    }
+
+    footer {
+        padding-bottom: 4.0em;
+    }
+
 }
