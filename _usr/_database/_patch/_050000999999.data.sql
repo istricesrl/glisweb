@@ -394,7 +394,7 @@ REPLACE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 
 --| 010000022000
 
--- notizie
+-- tipologie_notizie
 INSERT INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
