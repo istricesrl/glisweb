@@ -180,18 +180,22 @@ window.addEventListener( 'DOMContentLoaded', function() {
     <div class="container">
 		<div class="row">
 			<div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">
-				{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% endif %}
+				{% if page.metadati.jt_h3[ lang ] %}<h3>{{ page.metadati.jt_h3[ lang ] | raw }}</h3>{% else %}<!-- metadato jt_h3 non inserito per la lingua {{ lang }} -->{% endif %}
 				{% if page.metadati.jt_h1_href %}<a href="{{ page.metadati.jt_h1_href }}" {% if page.metadati.jt_h1_onclick %}onclick="{{ page.metadati.jt_h1_onclick }}"{% endif %}>{% endif %}
-				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% endif %}
+				{% if page.metadati.jt_h1[ lang ] %}<h1>{{ page.metadati.jt_h1[ lang ] | raw }}</h1>{% else %}<!-- metadato jt_h1 non inserito per la lingua {{ lang }} -->{% endif %}
 				{% if page.metadati.jt_h1_href %}</a>{% endif %}
-				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% endif %}
+				{% if page.metadati.jt_h2[ lang ] %}<h2>{{ page.metadati.jt_h2[ lang ] | raw }}</h2>{% else %}<!-- metadato jt_h2 non inserito per la lingua {{ lang }} -->{% endif %}
 				{% if page.metadati.jt_content[ lang ] %}
 				<div class="contents">
 					{{ page.metadati.jt_content[ lang ]|raw }}
 					{% if page.metadati.jt_action[ lang ] %}
 					<p><a class="btn btn-dark btn-lg" href="{{ page.metadati.jt_href[ lang ] }}"{% if page.metadati.jt_target %} target="{{ page.metadati.jt_target }}"{% endif %}>{{ page.metadati.jt_action[ lang ] }}</a></p>
+					{% else %}
+					<!-- metadato jt_action non inserito per la lingua {{ lang }} -->
 					{% endif %}
 				</div>
+				{% else %}
+				<!-- metadato jt_content non inserito per la lingua {{ lang }} -->
 				{% endif %}
 			</div>
 		</div>

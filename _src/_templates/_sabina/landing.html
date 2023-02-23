@@ -2,17 +2,74 @@
 
 {% extends "ext/main.html" %}
 
+{% block jumbotron %}
+{% if page.contents.images.jumbotron %}
+<section class="mb-3 intestazione">
+    {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotron', '', img ) }}
+    <hr class="jumbotron-hr jumbotron-hr-right d-none d-md-block">
+</section>
+{% else %}
+<!-- inserire almeno un'immagine con ruolo "jumbotron" nella pagina -->
+{% endif %}
+{% endblock %}
+
 {% block main %}
 <section class="testo">
     <div class="container">
         <div class="row">
             <div class="col-12 col-md">
+                {% if page.content[ localization.language.ietf ] %}
                 {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
+                {% else %}
+                <!-- testo principale non presente per la lingua {{ localization.language.ietf }}-->
+                {% endif %}
             </div>
             <div class="col-12 col-md">
-                {{ include( template_from_string( page.abstract[ localization.language.ietf ] ) | raw ) }}
+                {% if page.specifiche[ localization.language.ietf ] %}
+                {{ include( template_from_string( page.specifiche[ localization.language.ietf ] ) | raw ) }}
+                {% else %}
+                <!-- testo specifiche non presente per la lingua {{ localization.language.ietf }}-->
+                {% endif %}
             </div>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block contatti %}
+{% if page.metadati.ct_form %}
+{% if page.metadati.ct_action %}
+<section class="contatti">
+    <div class="container">
+        {% if page.metadati.ct_h1[ localization.language.ietf ] %}
+        <div class="row">
+            <div class="col-12 col-md">
+                <h1>{{ page.metadati.ct_h1[ localization.language.ietf ] }}</h1>
+            </div>
+        </div>
+        {% else %}
+        <!-- metadato ct_h1 non specificato per la lingua {{ localization.language.ietf }}-->
+        {% endif %}
+        <div class="row">
+            <div class="col-12 col-md">
+                <form action="{{ page.url[ localization.language.ietf ] }}" class="w-100 mt-3" id="testForm2" method="post">
+                    <div class="row">
+                        <div class="col col-12"><input class="form-control" name="__contatti__[forminfo][email]" placeholder="E-MAIL" required="" type="email"></div>
+                    </div>
+                    <div class="row my-2">
+                        <div class="col-12"><textarea class="form-control" id="testo" name="__contatti__[forminfo][messaggio]" placeholder="MESSAGGIO" rows="3"></textarea></div>
+                    </div>
+                    {{ prv.checkConsensi( '__contatti__', 'forminfo', privacy.moduli.landingdemo, localization.language.ietf, tr, pages, session ) }} {{ cms.formButton( 'RICHIEDI INFO', 'button', 'btn-secondary btn-lg w-100 h-100 bottone-registrazione', '', '', '', 'testForm2', google.profile.recaptcha, '__contatti__', 'forminfo' ) }}
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- metadato ct_action non specificato (deve corrispondere a un ID di pagina valido, tipicamente quello della thank-you page -->
+{% endif %}
+{% else %}
+<!-- metadato ct_form non specificato (deve corrispondere a una chiave valida per il modulo contatti)-->
+{% endif %}
+
 {% endblock %}

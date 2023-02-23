@@ -7,10 +7,6 @@ main {
     padding: 0em;
 }
 
-section.testo div.col-12 {
-    margin-bottom: 2em;
-}
-
 nav {
     background-color: transparent;
     padding: 0em;
@@ -84,6 +80,7 @@ main p:last-of-type {
 div.jumbotron {
     min-height: 32em;
     padding: 3em 2em;
+    text-align: right;
 }
 
 div.jumbotron-responsive {
@@ -92,6 +89,10 @@ div.jumbotron-responsive {
 
 section.garanzia div.jumbotron {
     background-position: top !important;
+}
+
+section.testo {
+    margin: 2em 0em;
 }
 
 section.video {
@@ -126,6 +127,12 @@ section.default {
 
 section.default h1 {
     margin-bottom: 0.5em;
+}
+
+section.contatti {
+    background-color: #cccccc;
+    margin: 2em 0em;
+    padding: 1em 0em;
 }
 
 a, a:visited {

@@ -20,7 +20,7 @@
 		{% if request[ table ][ subtable ][ i ].entita == 'documenti_articoli' %}
 		<div class="col-2 col-md">
 			<span class="label-top">nome</span>
-			{{ frm.input( table, subtable, i, 'model_nome', '', '', request, '', '', '', '', disabled  ) }}
+			{{ frm.inputRequired( table, subtable, i, 'model_nome', '', '', request, '', '', '', disabled  ) }}
 		</div>
 		<div class="col-2 col-md-1">
 			<span class="label-top">quantità</span>
@@ -36,15 +36,15 @@
 		</div>
 		<div class="col-2 col-md-1">
 			<span class="label-top">importo</span>
-			{{ frm.input( table, subtable, i, 'model_importo_netto_totale', '', '', request, '', '', '', '', disabled  ) }}
+			{{ frm.inputRequired( table, subtable, i, 'model_importo_netto_totale', '', '', request, '', '', '', disabled  ) }}
 		</div>
 		<div class="col-auto">
 			<span class="label-top">reparto</span>
-			{{ frm.select( table, subtable, i, 'model_id_reparto', '', etc.select.reparti, request, '', '', '', '', '', disabled ) }}
+			{{ frm.selectRequired( table, subtable, i, 'model_id_reparto', '', etc.select.reparti, request, '', '', '', '', disabled ) }}
 	    </div>
 		<div class="col-auto">
 			<span class="label-top">listino</span>
-			{{ frm.select( table, subtable, i, 'model_id_listino', '', etc.select.listini, request, '', '', '', '', '', disabled ) }}
+			{{ frm.selectRequired( table, subtable, i, 'model_id_listino', '', etc.select.listini, request, '', '', '', '', disabled ) }}
 	    </div>
 		{% elseif request[ table ][ subtable ][ i ].entita == 'pagamenti' %}
 		<div class="col-auto">
@@ -57,11 +57,11 @@
 	    </div>
 		<div class="col-2 col-md">
 			<span class="label-top">nome</span>
-			{{ frm.input( table, subtable, i, 'model_nome', '', '', request, '', '', '', '', disabled  ) }}
+			{{ frm.inputRequired( table, subtable, i, 'model_nome', '', '', request, '', '', '', disabled  ) }}
 		</div>
 		<div class="col-2">
 			<span class="label-top">importo</span>
-			{{ frm.input( table, subtable, i, 'model_importo_lordo_totale', '', '', request, '{{ dt.articoli.totale }}', '', '', '', disabled  ) }}
+			{{ frm.inputRequired( table, subtable, i, 'model_importo_lordo_totale', '', '', request, '{{ dt.articoli.totale }}', '', '', disabled  ) }}
 		</div>
 		<div class="col-auto">
 			<span class="label-top">listino</span>

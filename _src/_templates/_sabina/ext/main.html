@@ -26,26 +26,27 @@
             </div>
         </header>
 
-        {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+        <main>
 
-        {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+            {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
 
-        {% block vantaggi %}{% include 'inc/vantaggi.html' %}{% endblock %}
+            {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
 
-        {% block video %}{% include 'inc/video.html' %}{% endblock %}
+            {% block vantaggi %}{% include 'inc/vantaggi.html' %}{% endblock %}
 
-        <main class="container d-flex flex-column flex-fill">
-            <div class="row">
-                <div class="col">
-                    <div class="main">{% block main %}{% endblock %}</div>
-                    {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
-                </div>
-            </div>
+            {% block video %}{% include 'inc/video.html' %}{% endblock %}
+
+            {% block main %}{% include 'inc/main.html' %}{% endblock %}
+
+            {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
+
+            {% block contatti %}{% include 'inc/contatti.html' %}{% endblock %}
+
+            {% block garanzia %}{% include 'inc/garanzia.html' %}{% endblock %}
+
+            {% block leads %}{% include 'inc/leads.html' %}{% endblock %}
+
         </main>
-
-        {% block garanzia %}{% include 'inc/garanzia.html' %}{% endblock %}
-
-        {% block leads %}{% include 'inc/leads.html' %}{% endblock %}
 
         <footer class="mt-auto">
             <div class="container">
