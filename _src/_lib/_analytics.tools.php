@@ -169,7 +169,7 @@ var_dump($status);
 // NOTA inserire lo sconto solo se c'è, altrimenti va in errore
 //				'discount' => $item['sconto_valore'],
 				'price' => $item['prezzo_lordo_unitario'],
-				'quantity' => $item['quantita']
+				'quantity' => sprintf( '%0.0f', $item['quantita'] )
 			);
 		}
 
@@ -181,7 +181,7 @@ var_dump($status);
 					'params' => array(
 						'currency' => 'EUR',
 						'transaction_id' => $carrello['id'],
-						'value' => $carrello['prezzo_lordo_finale'],
+						'value' => sprintf( '%0.2f', $carrello['prezzo_lordo_finale'] ),
 // NOTA inserire il coupon solo se c'è, altrimenti va in errore
 //						'coupon' => $carrello['codice_coupon'],
 						'shipping' => 0.0,
