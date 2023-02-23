@@ -51,7 +51,7 @@
 				<div class="col-12 col-md-auto">
 					<span class="label-top">tipologia</span>
 					{% if request.__continue__ %}{% set default = session.__latest__[ table ].id_tipologia %}{% else %}{% set default = '' %}{% endif %}
-					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request, default ) }}
+					{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.id_tipologia, request, default ) }}
 				</div>
 				<!--div class="col-12 col-md-2">
 					<span class="label-top">tipologia INPS</span>
