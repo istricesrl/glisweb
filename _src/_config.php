@@ -430,20 +430,20 @@
     // lettura del file di configurazione aggiuntivi YAML o JSON
 	foreach( $cf['config']['files'] as $type => $files ) {
 	    foreach( $files as $file ) {
-		if( file_exists( $file ) ) {
-		    $cf['config']['file']	= $file;
-		    switch( $type ) {
-			case 'yaml':
-			    $cx			= yaml_parse( file_get_contents( $file ) );
-			break;
-			case 'json':
-			    $cx			= json_decode( file_get_contents( $file ), true );
-			break;
-		    }
-		    if( empty( $cx ) ) {
-			die( 'file di configurazione ' . $file . ' danneggiato' );
-		    }
-		}
+            if( file_exists( $file ) ) {
+                $cf['config']['file']	= $file;
+                switch( $type ) {
+                    case 'yaml':
+                        $cx			= yaml_parse( file_get_contents( $file ) );
+                    break;
+                    case 'json':
+                        $cx			= json_decode( file_get_contents( $file ), true );
+                    break;
+                }
+                if( empty( $cx ) ) {
+                    die( 'file di configurazione ' . $file . ' danneggiato' );
+                }
+            }
 	    }
 	}
 

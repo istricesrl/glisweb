@@ -69,6 +69,8 @@
     }
 */
     // verifico se il carrello della sessione corrente va chiuso
+    // TODO cosa si rompe se spostiamo questo codice dopo la 750 controller?
+    // così si eviterebbe che il carrello rimanga aperto per un'apertura di pagina dopo essere stato chiuso
     if( isset( $_SESSION['carrello']['id'] ) ) {
 
         // se non è impostata la timestamp di checkout, la recupero dal database

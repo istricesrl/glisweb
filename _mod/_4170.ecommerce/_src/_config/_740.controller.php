@@ -8,7 +8,8 @@
      */
 
     // TODO verificare che l'utente abbia i privilegi sufficienti per chiudere il carrello
-    if( true ) {
+    // NOTA tutto da rifare qui
+    if( false ) {
 
         if( isset( $_REQUEST['ck_cassa'] ) && isset( $_SESSION['carrello']['id'] ) ) {
 
