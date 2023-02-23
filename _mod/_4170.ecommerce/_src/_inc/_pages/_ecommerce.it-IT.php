@@ -26,8 +26,20 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.carrello.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.carrello.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.pagamento' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cassa' ), 'priority'	=> '660' ) ) )
+	);
+
+	// carrello
+	$p['ecommerce.pagamento'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'pagamento' ),
+		'h1'			=> array( $l		=> 'pagamento' ),
+		'parent'		=> array( 'id'		=> 'ecommerce' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.pagamento.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.pagamento.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.pagamento' ) )
 	);
 
     // carrello
