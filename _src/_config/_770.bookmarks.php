@@ -22,12 +22,5 @@
                 'label' => 'vai alla creazione della mail',
                 'url' => $cf['contents']['pages']['mail.out.form']['url'][ LINGUA_CORRENTE ]
             )
-        ),
-        'iscrizioni' => array(
-            'label' => 'iscrizione corsi',
-            'action' => array(
-                'label' => 'vai all\'iscrizione',
-                'url' => $cf['contents']['pages']['iscrizioni.form']['url'][ LINGUA_CORRENTE ]
-            )
         )
     );
