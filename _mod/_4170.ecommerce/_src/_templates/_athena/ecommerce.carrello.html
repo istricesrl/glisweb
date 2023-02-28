@@ -164,7 +164,7 @@
                 {# TODO SE C'È UNA RICEVUTA, FATTURA O SCONTRINO AGGIUNGERE IL TASTO PER STAMPARLI #}
                 <div class="form-row">
                     <div class="col">
-                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="vai al pagamento" onclick="$('#ts_checkout').val( Math.floor( Date.now() / 1000 ) );$('#carrello').attr('action','{{ pages['ecommerce.pagamento'].url[ localization.language.ietf ] }}?ck_carrello={{ session.carrello.id }}');$('#carrello').submit();">
+                        <input class="btn btn-secondary btn-sm btn-block" type="button" value="vai al pagamento" onclick="$('#ts_checkout').val( Math.floor( Date.now() / 1000 ) );$('#carrello').attr('action','{{ pages['ecommerce.pagamento'].url[ localization.language.ietf ] }}?__pagamenti__[id_carrello]={{ session.carrello.id }}');$('#carrello').submit();">
                     </div>
                 </div>
             </fieldset>

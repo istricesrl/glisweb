@@ -888,11 +888,15 @@
 			$uQuery = 'SELECT id FROM ' . $t . ' WHERE ';
 
 			foreach( $u as $uFld ) {
-				$uQuery .= ' ' . $uFld . ' = "' . $r[ $uFld ] . '" ';
+				$uConds[] = ' ' . $uFld . ( ( ! isset( $r[ $uFld ] ) || empty( $r[ $uFld ] ) ) ? ' IS NULL' : ' = "' . $r[ $uFld ] . '" ' );
 			}
 
 			// TODO migliorare questa query con i parametri posizionali
-			$r['id'] = mysqlSelectValue( $c, $uQuery . implode( ' AND ', $u ) );
+			$r['id'] = mysqlSelectValue( $c, $uQuery . implode( ' AND ', $uConds ) );
+
+			// debug
+			// var_dump( $uQuery );
+			// var_dump( $r['id'] );
 
 		}
 

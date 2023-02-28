@@ -1,4 +1,5 @@
 {% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
 
 {% extends 'ext/main.html' %}
 
@@ -11,43 +12,60 @@
             <input type="hidden" name="__pagamenti__[id_socio]" value="{{ request.__pagamenti__.id_socio }}">
             <fieldset>
                 <legend>documenti da generare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_socio %}il socio #{{ request.__pagamenti__.id_socio }}{% endif %}</legend>
+                {% for r in etc.righe %}
+                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id]" value="{{ r.id }}">
+                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_carrello]" value="{{ r.id_carrello }}">
+                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario_id_anagrafica]" value="{{ r.destinatario_id_anagrafica }}">
+                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario]" value="{{ r.destinatario }}">
+                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_articolo]" value="{{ r.id_articolo }}">
+                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][fatturazione_id_tipologia_documento]" value="{{ r.fatturazione_id_tipologia_documento }}">
+                <div class="form-row">
+                    <div class="col-2">
+                        <p>{{ r.destinatario }}</p>
+                    </div>
+                    <div class="col-4">
+                        <p>{{ r.descrizione }}</p>
+                    </div>
+                    <div class="col-1">
+                        <p>{{ '%0.2f'|format( r.prezzo_netto_finale ) }}</p>
+                    </div>
+                    <div class="col-1">
+                        <p>{{ '%0.2f'|format( r.totale_netto_pagato ) }}</p>
+                    </div>
+                    <div class="col-1">
+                        <label class="label-top">importo</label>
+                        <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_netto_totale]" value="{{ r.totale_netto_da_pagare }}" required>
+                    </div>
+                    <div class="col d-flex flex-row align-items-stretch">
+                        {% for doc in r.documenti_da_stampare %}
+                        <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id_documento }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
             </fieldset>
-            {% for r in etc.righe %}
-            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id]" value="{{ r.id }}">
-            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_carrello]" value="{{ r.id_carrello }}">
-            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario_id_anagrafica]" value="{{ r.destinatario_id_anagrafica }}">
-            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario]" value="{{ r.destinatario }}">
-            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_articolo]" value="{{ r.id_articolo }}">
-            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][fatturazione_id_tipologia_documento]" value="{{ r.fatturazione_id_tipologia_documento }}">
-            <div class="form-row">
-                <div class="col-2">
-                    <p>{{ r.destinatario }}</p>
+            <fieldset class="mt-auto">
+                <legend>generazione documenti</legend>
+                <div class="form-row">
+                    <div class="col-4 col-md-auto">
+                        <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__pagamenti__[fatturazione_id_tipologia_documento]">
+                            {% for tdoc in etc.id_tipologia_documenti %}
+                            <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == session.carrello.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-4 col-md-auto">
+                        <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__pagamenti__[fatturazione_strategia]">
+                            {% for strf in etc.strategie_fatturazione %}
+                            <option value="{{ strf.id }}" {% if strf.id == session.carrello.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <button onclick="$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">genera documenti</button>
+                    </div>
                 </div>
-                <div class="col-4">
-                    <p>{{ r.descrizione }}</p>
-                </div>
-                <div class="col-1">
-                    <p>{{ '%0.2f'|format( r.prezzo_netto_finale ) }}</p>
-                </div>
-                <div class="col-1">
-                    <p>{{ '%0.2f'|format( r.totale_netto_pagato ) }}</p>
-                </div>
-                <div class="col-1">
-                    <label class="label-top">importo</label>
-                    <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_netto_totale]" value="{{ r.totale_netto_da_pagare }}" required>
-                </div>
-                <div class="col d-flex flex-row align-items-stretch">
-                    {% for doc in r.documenti_da_stampare %}
-                    <button onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id_documento }}','_blank');" class="btn btn-secondary btn-sm no-wrap">{{ doc.documento }}</button>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endfor %}
-            <div class="form-row">
-                <div class="col">
-                    <button onclick="$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">genera documenti</button>
-                </div>
-            </div>
+            </fieldset>
         </form>
         {% elseif session.carrello.id %}
         <fieldset>
@@ -62,7 +80,7 @@
         {% endif %}
     </div>
     <div class="col-md-4 d-flex flex-column">
-        <form id="pagamento" class="d-flex flex-column" action="{{ page.url[ localization.language.ietf ] }}" method="post">
+        <form id="pagamento_carrello" class="d-flex flex-column" action="{{ page.url[ localization.language.ietf ] }}" method="post">
             <fieldset>
                 <legend>pagamenti per carrello</legend>
                 <div class="form-row">
@@ -70,15 +88,32 @@
                         <label class="label-top">ID carrello</label>
                         <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[id_carrello]" value="">
                     </div>
-                    <div class="col">
+                    <div class="col-2">
                         <input type="submit" class="btn btn-secondary btn-sm btn-block" value="cerca">
                     </div>
                 </div>
             </fieldset>
         </form>
-	    <fieldset>
-            <legend>pagamenti per socio</legend>
-        </fieldset>
+        <form id="pagamento_socio" class="d-flex flex-column" action="{{ page.url[ localization.language.ietf ] }}" method="post">
+            <fieldset>
+                <legend>pagamenti per socio</legend>
+                <div class="form-row">
+                    <div class="col">
+                        <span class="label-top">anagrafica</span>
+                        {{ frm.selectBox( '__pagamenti__', '', '', 'id_socio', '', etc.select.anagrafica, request, '', '', 1, '', '', '', '', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                    </div>
+                    <div class="col-auto">
+                        <select class="form-control form-control-sm hint-toggle" id="" hint-toggle="" name="__pagamenti__[se_famiglia]">
+                            <option value="0">persona</option>
+                            <option value="1">famiglia</option>
+                        </select>
+                    </div>
+                    <div class="col-2">
+                        <input type="submit" class="btn btn-secondary btn-sm btn-block" value="cerca">
+                    </div>
+                </div>
+            </fieldset>
+        </form>
     </div>
 </section>
 {% endblock %}

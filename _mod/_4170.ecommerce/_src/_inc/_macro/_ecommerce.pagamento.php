@@ -3,11 +3,14 @@
     // debug
     // var_dump( $_REQUEST['__pagamenti__'] );
     // die( print_r( $_REQUEST['__pagamenti__'] ) );
+    // print_r( $_REQUEST );
 
+/*
     // checkout carrello
     if( isset( $_REQUEST['ck_carrello'] ) ) {
         $_REQUEST['__pagamenti__']['id_carrello'] = $_REQUEST['ck_carrello'];
     }
+*/
 
     // se è richiesto un carrello specifico
     if( isset( $_REQUEST['__pagamenti__'] ) ) {
@@ -93,7 +96,27 @@
 
         } elseif( isset( $_REQUEST['__pagamenti__']['id_socio'] ) && ! empty( $_REQUEST['__pagamenti__']['id_socio'] ) ) {
 
+            // seleziono le righe del carrello
+            $ct['etc']['righe'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, '.
+                'concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione, '.
+                'carrelli.fatturazione_id_tipologia_documento, '.
+                'carrelli_articoli.* '.
+                'FROM carrelli_articoli '.
+                'INNER JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica '.
+                'INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo '.
+                'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
+                'INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello '.
+                'WHERE carrelli_articoli.destinatario_id_anagrafica = ?',
+                array( array( 's' => $_REQUEST['__pagamenti__']['id_socio'] ) )
+            );
+
         }
+
+        // print_r( $_REQUEST );
+        // var_dump( $_REQUEST['__pagamenti__']['id_carrello'] );
+        // var_dump( $ct['etc']['righe'] );
 
         // per ogni riga, cerco eventuali pagamenti già effettuati
         if( isset( $ct['etc']['righe'] ) ) {
@@ -105,7 +128,7 @@
                     $cf['mysql']['connection'],
                     'SELECT documenti_articoli.*, '.
 //                    'concat_ws( " ", concat( documenti.numero, "/", documenti.sezionale ), "del", documenti.data ) AS documento '.
-                    'concat( documenti.numero, "/", documenti.data ) AS documento '.
+                    'concat( documenti.numero, "/", date_format( documenti.data, "%y" ) ) AS documento '.
                     'FROM documenti_articoli '.
                     'INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento '.
                     'WHERE id_carrelli_articoli = ?',
@@ -137,3 +160,17 @@
         }
 
     }
+
+    $ct['etc']['id_tipologia_documenti'] = mysqlCachedQuery(
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT tipologie_documenti.nome AS __label__, tipologie_documenti.id '
+        .'FROM tipologie_documenti '
+        // TODO .'WHERE tipologie_documenti.se_ecommerce = 1 '
+        .'ORDER BY __label__ '
+    );
+
+	$ct['etc']['strategie_fatturazione'] = array( 
+	    array( 'id' => 'SINGOLA', '__label__' => 'documento unico' ),
+	    array( 'id' => 'MULTIPLA', '__label__' => 'documenti separati' ),
+	);

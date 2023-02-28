@@ -267,6 +267,7 @@
                 if( empty( $dati['quantita'] ) ) {
 
                     // elimino l'articolo
+                    // TODO questa cancellazione elimina tutte le righe con l'articolo per qualunque destinatario_id_anagrafica, bisogna sistemarla ma questo richiede modifiche all'interfaccia
                     mysqlQuery(
                         $cf['mysql']['connection'],
                         'DELETE FROM carrelli_articoli WHERE id_articolo = ? AND id_carrello = ?',
@@ -364,7 +365,14 @@
                             'prezzo_netto_finale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_netto_finale'],
                             'prezzo_lordo_finale'           => $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_lordo_finale']
                         ),
-                        'carrelli_articoli'
+                        'carrelli_articoli',
+                        true,
+                        false,
+                        array(
+                            'id_carrello',
+                            'id_articolo',
+                            'destinatario_id_anagrafica'
+                        )
                     );
 
                     // incremento i totali carrello
