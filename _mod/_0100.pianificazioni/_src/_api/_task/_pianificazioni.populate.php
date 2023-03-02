@@ -185,6 +185,11 @@
             array( $last )
         );
 
+        // se l'oggetto da generare è un documento, li faccio uno alla volta
+        if( $current['entita'] == 'documenti' ) {
+            $date = array( array_shift( $date ) );
+        }
+
         // status
         $status['date'] = $date;
 
@@ -353,6 +358,7 @@
                         'nome'                          => $nome,
                         'id_modalita_pagamento'         => $row['model_id_modalita_pagamento'],
                         'importo_lordo_totale'          => $importo_lordo_totale,
+                        'id_iban'                       => $row['model_id_iban'],
                         'id_listino'                    => $row['model_id_listino'],
                         'timestamp_scadenza'            => $timestamp_scadenza,
                         'id_pianificazione'             => $current['id']
