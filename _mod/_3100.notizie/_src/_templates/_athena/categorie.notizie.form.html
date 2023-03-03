@@ -58,9 +58,18 @@
 			</div>  
 		    <div class="col">
 				<span class="label-top">etichetta</span>
-			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 		    </div>
-
+			<div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
+                </div>
+            </div>
+            <div class="col-4 col-md-auto col-form-label">
+                <div class="form-check">
+                    {{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
+                </div>
+            </div>
 		</div>
 
 		<div class="form-group form-row">
