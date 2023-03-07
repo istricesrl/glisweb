@@ -41,7 +41,7 @@
 			'parent'		=> array( 'id'		=> 'amministrazione' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_pagamenti.amministrazione.view.php' ),
-			'etc'			=> array( 'tabs'	=> array(   'pagamenti.amministrazione.view') ),
+			'etc'			=> array( 'tabs'	=> array(   'pagamenti.amministrazione.view', 'pagamenti.amministrazione.tools' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'scadenziario' ),
 															'priority'	=> '900' ) ) )	
@@ -57,6 +57,19 @@
 			'macro'			=> array( $m.'_src/_inc/_macro/_pagamenti.amministrazione.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'pagamenti.form' ) )
+		);
+
+		// tools produzione
+		$p['pagamenti.amministrazione.tools'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'azioni' ),
+			'h1'				=> array( $l		=> 'azioni' ),
+			'parent'			=> array( 'id'		=> 'pagamenti.amministrazione.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_pagamenti.amministrazione.tools.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'				=> array( 'tabs'	=> $p['pagamenti.amministrazione.view']['etc']['tabs'] )
 		);
 
 	}
