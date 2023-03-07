@@ -312,6 +312,10 @@ legend small {
     height: 31px;
 }
 
+textarea.form-control-sm {
+    padding: 0.5em 1em;    
+}
+
 label {
     height: 31px;
 }

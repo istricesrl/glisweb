@@ -11,13 +11,21 @@
     contiene i dati di funzionamento del framework è detto database di supporto, mentre gli altri sono detti
     database di lavoro.
 
+    [...]
+    - tabelle principali (es. anagrafica)
+    - tabelle secondarie (es. telefoni)
+    - tabelle di relazione (es. anagrafica_categorie)
+
     Le tabelle del database di supporto si dividono in tre categorie secondo la politica di aggiornamento dei dati
     da parte dell'utente:
 
     - tabelle standard
     - tabelle assistite
     - tabelle gestite
-    - tabelle di relazione
+
+    [...]
+    - tabelle categorie_*
+    - tabelle tipologie_*
 
     tipologie di tabelle
     ====================
