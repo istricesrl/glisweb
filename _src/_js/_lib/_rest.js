@@ -42,8 +42,18 @@
     // tool per chiamare un webservice da un bottone dell'interfaccia metro
 	$.fn.metroWs = function( ws, callback ) {
 
-	    var el = $(this).get(0);
+	    var el = $( this ).get( 0 );
 	    var e = this;
+
+		console.log( e.find('.media-left').first().html() );
+
+		if( e.find('.media-left').first().html() == '<i class="fa fa-bookmark"></i>' ) {
+			var icon = '<i class="fa fa-bookmark-o"></i>';
+		} else if( e.find('.media-left').first().html() == '<i class="fa fa-bookmark-o"></i>' ) {
+			var icon = '<i class="fa fa-bookmark"></i>';
+		} else {
+			var icon = '<i class="fa fa-check"></i>';
+		}
 
 	    // console.log( el );
 	    // console.log( this );
@@ -69,7 +79,8 @@
 	//		console.log( e );
 			console.log(data);
 			// TODO se data è vuoto o se contiene errori, mostrare un'icona di avvertimento o una x
-			e.find('.media-left').first().html('<i class="fa fa-check">');
+			console.log( icon );
+			e.find('.media-left').first().html( icon );
 			callback( data );
 	    });
 

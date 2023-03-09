@@ -85,12 +85,16 @@
     // bottoni
 	foreach( $ct['view']['data'] as &$row ) {
 		if( is_array( $row ) ) {
-
+/*
             if( ! isset( $cf['session']['__work__']['anagrafica']['items'] ) || ! array_key_exists( $row['id'], $cf['session']['__work__']['anagrafica']['items'] ) ) {
                 $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.add?__work__[anagrafica][items]['.$row['id'].'][id]='.$row['id'].'&__work__[anagrafica][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark-o"></i></span></a>';
             } else {
                 $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.del?__key__=anagrafica&__item__='.$row['id'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark"></i></span></a>';
             }
+*/
+
+            $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/api/bookmarks?__work__[anagrafica][items]['.$row['id'].'][id]='.$row['id'].'&__work__[anagrafica][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>';
+
 
         }
 	}
