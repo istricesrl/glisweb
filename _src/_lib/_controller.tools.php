@@ -358,7 +358,13 @@
 				case METHOD_PUT:
 				case METHOD_REPLACE:
 				case METHOD_UPDATE:
-				    $before = md5( serialize( mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) ) ) );
+				case METHOD_DELETE:
+					$before = md5( serialize( 
+						mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) )
+					) );
+					$befores = mysqlSelectRow( $c, 'SELECT * FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+					// var_dump( $d['id'] );
+					// print_r( $befores );
 				break;
 			    }
 #				} else {
@@ -373,10 +379,10 @@
 			// controller pre query (before)
 			    $cn = 'before.php';
 			    $ct = array_merge(
-				glob( $cb . $cn, GLOB_BRACE ),
-				glob( $cm . $cn, GLOB_BRACE ),
-				glob( path2custom( $cb . $cn ), GLOB_BRACE ),
-				glob( path2custom( $cm . $cn ), GLOB_BRACE )
+					glob( $cb . $cn, GLOB_BRACE ),
+					glob( $cm . $cn, GLOB_BRACE ),
+					glob( path2custom( $cb . $cn ), GLOB_BRACE ),
+					glob( path2custom( $cm . $cn ), GLOB_BRACE )
 			    );
 			    foreach( $ct as $f ) { require $f; }
 
@@ -463,10 +469,10 @@
 			// controller in query (append)
 			    $cn = 'append.php';
 			    $ct = array_merge(
-				glob( $cb . $cn, GLOB_BRACE ),
-				glob( $cm . $cn, GLOB_BRACE ),
-				glob( path2custom( $cb . $cn ), GLOB_BRACE ),
-				glob( path2custom( $cm . $cn ), GLOB_BRACE )
+					glob( $cb . $cn, GLOB_BRACE ),
+					glob( $cm . $cn, GLOB_BRACE ),
+					glob( path2custom( $cb . $cn ), GLOB_BRACE ),
+					glob( path2custom( $cm . $cn ), GLOB_BRACE )
 			    );
 			    foreach( $ct as $f ) { require $f; }
 

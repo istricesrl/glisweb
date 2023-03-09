@@ -35,7 +35,7 @@
 
 	// recupero la __label__ dell'oggetto da cancellare
 	    $ct['__delete__']['__label__'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $_REQUEST['__delete__']['table'] . '_view WHERE id = ? LIMIT 1', array(
-		array( 's' => $_REQUEST['__delete__']['id'] )
+		    array( 's' => $_REQUEST['__delete__']['id'] )
 	    ) );
 
     }

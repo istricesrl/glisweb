@@ -231,3 +231,6 @@
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
 	require DIR_SRC_INC_MACRO . '_default.tools.php';
+
+	// debug
+	// print_r( $_REQUEST );
