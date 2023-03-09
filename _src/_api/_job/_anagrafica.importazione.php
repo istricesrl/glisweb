@@ -199,6 +199,9 @@
                     // esplodo le categorie per pipe
                     $indirizzi = explode( '|', $row['mail'] );
 
+                    // TODO qui si potrebbe sotto esplodere per § e dare il ruolo alla mail
+                    // tipo amministrazione@stocazzo.com§4|commerciale@stocazzo.com§2 eccetera
+
                     // per ogni categoria...
                     foreach( $indirizzi as $indirizzo ) {
 
@@ -207,6 +210,7 @@
                             $cf['mysql']['connection'],
                             array(
                                 'id' => NULL,
+                                'id_ruolo' => 1,
                                 'id_anagrafica' => $idAnagrafica,
                                 'indirizzo' => $indirizzo,
                                 'se_pec' => NULL
