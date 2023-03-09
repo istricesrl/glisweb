@@ -89,7 +89,7 @@
 	$cf['debug'][ DEVELOPEMENT ]['*']['log']['rotation']		= 'Ym';
 
     // livello di PHP error_reporting()
-	$cf['debug'][ DEVELOPEMENT ]['*']['report']['lvl']		    = E_ALL;
+	$cf['debug'][ DEVELOPEMENT ]['*']['report']['lvl']		    = E_USER_WARNING;
 
     // destinazione dei log
 	$cf['debug'][ DEVELOPEMENT ]['*']['target']['*']		    = array( LOG_TO_FILE => true );
@@ -97,10 +97,12 @@
     // impostazioni aggiuntive per TESTING
 	$cf['debug'][ TESTING ]				                        = $cf['debug'][ DEVELOPEMENT ];
 	$cf['debug'][ TESTING ]['*']['log']['lvl']		            = LOG_NOTICE;
+	$cf['debug'][ TESTING ]['*']['report']['lvl']		        = E_USER_WARNING;
 
     // impostazioni aggiuntive per PRODUCTION
 	$cf['debug'][ PRODUCTION ]				                    = $cf['debug'][ DEVELOPEMENT ];
 	$cf['debug'][ PRODUCTION ]['*']['log']['lvl']		        = LOG_ERR;
+	$cf['debug'][ PRODUCTION ]['*']['report']['lvl']	        = E_USER_WARNING;
 
     // debug utilizzo memoria
 	$cf['debug']['mem']					                        = array();
