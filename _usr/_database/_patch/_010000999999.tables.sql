@@ -1852,8 +1852,9 @@ CREATE TABLE IF NOT EXISTS `macro` (
 -- verifica: 2021-09-27 18:31 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `mail` (
   `id` int(11) NOT NULL,
-  `id_anagrafica` int(11) NOT NULL,
-  `indirizzo` char(128) NOT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `indirizzo` char(128) DEFAULT NULL,
   `note` char(128) DEFAULT NULL,
   `se_notifiche` tinyint(1) DEFAULT NULL,
   `se_pec` tinyint(1) DEFAULT NULL,
@@ -3101,6 +3102,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
   `se_sede_operativa` int(1) DEFAULT NULL,
   `se_residenza` int(1) DEFAULT NULL,
   `se_domicilio` int(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--| 010000034850
+
+-- ruoli_mail
+-- tipologia: tabella di supporto
+CREATE TABLE IF NOT EXISTS `ruoli_mail` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) COLLATE utf8_general_ci NOT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` int(1) DEFAULT NULL,
+  `se_commerciale` int(1) DEFAULT NULL,
+  `se_produzione` int(1) DEFAULT NULL,
+  `se_amministrazione` int(1) DEFAULT NULL,
+  `se_acquisti` int(1) DEFAULT NULL,
+  `se_ordini` int(1) DEFAULT NULL,
+  `se_helpdesk` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000034900

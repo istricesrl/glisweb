@@ -734,6 +734,19 @@ REPLACE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se
 (4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
 
+--| 050000034850
+
+-- ruoli_mail
+-- tipologia: tabella standard
+INSERT INTO `ruoli_mail` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_commerciale`, `se_produzione`, `se_amministrazione`, `se_acquisti`, `se_ordini`, `se_helpdesk`) VALUES
+(1,	NULL,	'generica',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1),
+(2,	NULL,	'commerciale',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL),
+(5,	NULL,	'acquisti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
+(6,	NULL,	'ordini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
+(7,	NULL,	'helpdesk',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+
 --| 050000034900
 
 -- ruoli_matricole
@@ -1105,7 +1118,8 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 (17,	1,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (18,	NULL,	NULL,	NULL,	'didattica',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (19,	18,	NULL,	NULL,	'assenza',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(20,	17,	NULL,	NULL,	'carico ore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(20,	17,	NULL,	NULL,	'carico ore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(21,	17,	NULL,	NULL,	'promemoria scadenze',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050450
 

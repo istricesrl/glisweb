@@ -1,0 +1,21 @@
+/*!
+
+    \page howto.pdf come creare i file PDF
+
+    Guide pratiche passo passo alla creazione di file PDF.
+
+    introduzione
+    ============
+    Per la creazione di PDF il framework si appoggia alla libreria [...]. La logica fondamentale da capire è che in GlisWeb la preparazione dei file PDF è divisa in due fasi,
+    una di raccolta dei dati da rappresentare e una di creazione del PDF vero e proprio. Tenendo le due fasi separate in file distinti è possibile customizzare l'aspetto di un
+    PDF senza dover ripetere l'eleaborazione dei dati. Ad esempio il file che genera il PDF delle fatture, _mod/_0400.documenti/_src/_api/_print/_fattura.pdf.php, richiama
+    il file _mod/_0400.documenti/_src/_api/_print/_fattura.default.php nel quale viene preparato l'array dei dati da rappresentare. In questo modo se si desidera modificare
+    l'aspetto della fattura nel deplpoy custom sarà possibile creare un file mod/0400.documenti/src/api/print/fattura.pdf.php che includa comunque il file standard
+    _mod/_0400.documenti/_src/_api/_print/_fattura.pdf.php senza doverne ripetere le logiche. Si noti che, come si deduce dal percorso dei file, le stampe PDF sono considerate
+    API di stampa.
+
+    impostazione del file
+    ---------------------
+
+
+*/

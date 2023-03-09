@@ -1989,6 +1989,7 @@ ALTER TABLE `macro` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `mail`
   	ADD PRIMARY KEY (`id`),
   	ADD UNIQUE KEY `unica` (`id_anagrafica`,`indirizzo`),
+  	ADD KEY `id_ruolo` (`id_ruolo`),
   	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
@@ -3357,6 +3358,16 @@ ALTER TABLE `ruoli_indirizzi`
 -- ruoli_indirizzi
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--| 030000034850
+-- TODO
+
+-- ruoli_mail
+
+--| 030000034851
+
+-- ruoli_mail
+-- TODO
 
 --| 030000034900
 

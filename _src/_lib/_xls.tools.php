@@ -79,3 +79,7 @@
         $writer->save( $file );
 
     }
+
+    function xlsDate2timestamp( $d ) {
+        return ( $d - 25569 ) * 86400;
+    }
