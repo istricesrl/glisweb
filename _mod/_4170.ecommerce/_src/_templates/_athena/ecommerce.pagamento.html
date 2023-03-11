@@ -38,7 +38,7 @@
                     </div>
                     <div class="col d-flex flex-row align-items-stretch">
                         {% for doc in r.documenti_da_stampare %}
-                        <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id_documento }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
+                        <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
                         {% endfor %}
                     </div>
                 </div>
@@ -58,6 +58,13 @@
                         <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__pagamenti__[fatturazione_strategia]">
                             {% for strf in etc.strategie_fatturazione %}
                             <option value="{{ strf.id }}" {% if strf.id == session.carrello.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-4 col-md-auto">
+                        <select class="form-control form-control-sm hint-toggle" id="costo-pagamento" hint-toggle="modalita_pagamento" name="__pagamenti__[provider_pagamento]">
+                            {% for cons in ecommerce.profile.provider %}
+                            <option value="{{ cons.id }}" min="{{ cons.importo_min }}" max="{{ cons.importo_max }}" prezzo="{{ cons.prezzo }}" relativo="{{ cons.prezzo_relativo }}" {% if cons.id == session.carrello.provider_pagamento %}selected{% endif %}>{{ cons.__label__ }}</option>
                             {% endfor %}
                         </select>
                     </div>

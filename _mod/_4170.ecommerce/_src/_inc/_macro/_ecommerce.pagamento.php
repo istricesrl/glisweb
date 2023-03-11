@@ -61,7 +61,7 @@
                     'documenti_articoli'
                 );
 
-                // segno il pagamento
+                // aggiungo il pagamento
 
             }
 
