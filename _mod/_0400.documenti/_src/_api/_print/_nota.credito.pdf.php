@@ -100,14 +100,13 @@
     $doc['pagamenti'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, '.
-        'date_format( from_unixtime(timestamp_scadenza), "%Y-%m-%d" ) AS data_standard, '.
+        'pagamenti.data_scadenza AS data_standard, '.
         ' pagamenti.importo_lordo_totale  '.
         'FROM pagamenti '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
         'WHERE pagamenti.id_documento = ?',
         array( array( 's' => $doc['id'] ) )
     );
-
 
     // recupero i dati dell'emittente
 	$src = mysqlSelectRow(
@@ -408,20 +407,7 @@ foreach( $doc['iva'] as $iva => $row ) {
 }
 // spazio sotto la tabella IVA
 $pdf->SetY( $pdf->GetY() + $stdsp );
-/*
-    // carico i pagamenti per il documento
-    $doc['pagamenti'] = mysqlQuery(
-        $cf['mysql']['connection'],
-        'SELECT modalita_pagamento.codice AS codice_pagamento, '.
-        'date_format( from_unixtime(timestamp_scadenza, "%Y-%m-%d" ) AS data_standard, '.
-        '( importo_netto_totale + ( importo_netto_totale / 100 * iva.aliquota ) ) AS importo_lordo_totale  '.
-        'FROM pagamenti '.
-        'LEFT JOIN iva ON iva.id = pagamenti.id_iva '.
-        'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
-        'WHERE pagamenti.id_documento = ?',
-        array( array( 's' => $doc['id'] ) )
-    );
-*/
+
 if (strlen($tx[1])>0){
 
 	// note per il cliente

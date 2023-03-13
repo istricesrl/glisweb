@@ -786,7 +786,7 @@
                                 'id_documento' => $i['idDocumento'],
                                 'id_modalita_pagamento' => $idModalita,
                                 'importo_lordo_totale' => $row['ImportoPagamento']['#'],
-                                'timestamp_scadenza' =>( isset($row['DataScadenzaPagamento']) ? strtotime( $row['DataScadenzaPagamento']['#']) : NULL ),
+                                'data_scadenza' =>( isset($row['DataScadenzaPagamento']) ? date( 'Y-m-d', strtotime( $row['DataScadenzaPagamento']['#'] ) ) : NULL ),
                                 'id_iban' =>  $idIban
                             ),
                             'pagamenti'

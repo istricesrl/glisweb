@@ -29,7 +29,7 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data_ora_scadenza' => 'scadenza',
+        'data_scadenza' => 'scadenza',
 		'documento' => 'documento',
         'nome' => 'nome',
         'emittente' => 'da',
@@ -47,7 +47,7 @@
         'nome' => 'text-left',
         'documento' => 'text-left',
         'numero' => 'text-left',
-        'data_ora_scadenza' => 'no-wrap',
+        'data_scadenza' => 'no-wrap',
         'data_ora_pagamento' => 'no-wrap',
         '__label__' => 'text-left',
         'destinatario' => 'text-left',

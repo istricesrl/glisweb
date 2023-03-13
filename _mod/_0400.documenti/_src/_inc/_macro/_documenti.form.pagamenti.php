@@ -41,7 +41,7 @@
 
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data_ora_scadenza' => 'scadenza',
+        'data_scadenza' => 'scadenza',
         'nome' => 'nome',
 		'modalita_pagamento' => 'modalita pagamento',
 		'iban' => 'iban',

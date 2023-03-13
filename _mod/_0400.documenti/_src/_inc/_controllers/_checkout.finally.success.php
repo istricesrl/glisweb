@@ -211,7 +211,7 @@
                                     'id_mastro_destinazione' => $cf['ecommerce']['profile']['fatturazione']['cassa'],
                                     'importo_lordo_totale' => $carrello['prezzo_lordo_finale'],
                                     'id_listino' => $carrello['id_listino'],
-                                    'timestamp_scadenza' => time(),
+                                    'data_scadenza' => date( 'Y-m-d', time() ),
                                     'timestamp_pagamento' => $carrello['timestamp_pagamento']
                                 ),
                                 'pagamenti'

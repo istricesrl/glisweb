@@ -105,7 +105,7 @@
 
                 // status
                 $job['workspace']['status']['error'][] = 'codice utente, codice fiscale e partita IVA non settati per la riga ' . $job['corrente'];
-                $job['workspace']['status']['error'][] = $row;
+                // $job['workspace']['status']['error'][] = $row;
 
             } else {
 
@@ -144,7 +144,7 @@
 
                     // status
                     $job['workspace']['status']['error'][] = 'indirizzo e comune non settati per la riga ' . $job['corrente'];
-                    $job['workspace']['status']['error'][] = $row;
+                    // $job['workspace']['status']['error'][] = $row;
                     
                 }
 
@@ -185,7 +185,7 @@
 
                             // status
                             $job['workspace']['status']['error'][] = 'categoria ' . $categoria . ' non trovata per la riga ' . $job['corrente'];
-                            $job['workspace']['status']['error'][] = $row;
+                            // $job['workspace']['status']['error'][] = $row;
 
                         }
 

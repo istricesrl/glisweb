@@ -2374,7 +2374,7 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_iban` (`id_iban`), 
 	ADD KEY `id_listino` (`id_listino`), 
 	ADD KEY `timestamp_pagamento` (`timestamp_pagamento`), 
-	ADD KEY `timestamp_scadenza` (`timestamp_scadenza`), 
+	ADD KEY `data_scadenza` (`data_scadenza`), 
 	ADD KEY `importo_lordo_totale` (`importo_lordo_totale`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
@@ -2509,7 +2509,7 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `model_se_automatico`  (`model_se_automatico`),
 	ADD KEY `model_sezionale`  (`model_sezionale`),
 	ADD KEY `model_settimana_programmazione`  (`model_settimana_programmazione`),
-	ADD KEY `model_timestamp_scadenza`  (`model_timestamp_scadenza`),
+	ADD KEY `model_data_scadenza`  (`model_data_scadenza`),
 	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
 
 --| 030000023801
