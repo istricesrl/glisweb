@@ -263,6 +263,27 @@
     // output
 	echo PHP_EOL;
 
+	// cerco l'ultima esecuzione del cron
+	$rCronTime = strtotime( '-3 minutes' );
+	$lCronTime = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT coalesce( max( timestamp_esecuzione ), 0 ) FROM task' );
+	if( $lCronTime == 0 ) {
+		echo '[FAIL] cron del framework mai eseguito' . PHP_EOL;
+	} else {
+	    echo '[ -- ] ultima esecuzione del cron del framework: ' . date( 'Y-m-d H:i:s', $lCronTime ) . PHP_EOL;
+		if( $lCronTime < $rCronTime ) {
+	    	echo '[FAIL] cron del framework non funzionante' . PHP_EOL;
+		} else {
+	    	echo '[ OK ] cron del framework funzionante' . PHP_EOL;
+		}
+	}
+	$pCronTasks = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM task WHERE token IS NOT NULL AND timestamp_esecuzione < ?', array( array( 's' => $rCronTime ) ) );
+	foreach( $pCronTasks as $pCronTask ) {
+		echo '[WARN] task '. $pCronTask['task'] .' bloccato alle ' . date( 'Y-m-d H:i:s', $pCronTask['timestamp_esecuzione'] ) . ' con token ' . $pCronTask['token'] . PHP_EOL;
+	}
+
+    // output
+	echo PHP_EOL;
+
     // controllo memcache
 	if( ! empty( $cf['memcache']['profiles'][ $cf['site']['status'] ]['servers'] ) ) {
 	    echo '[ -- ] backend memcache attivato' . PHP_EOL;
