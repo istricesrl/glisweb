@@ -100,7 +100,7 @@
     $doc['pagamenti'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, '.
-        'pagamenti.data_scadenza AS data_standard, '.
+        'date_format( data_scadenza, "%d/%m/%Y" ) AS data_standard, '.
         ' pagamenti.importo_lordo_totale  '.
         'FROM pagamenti '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
