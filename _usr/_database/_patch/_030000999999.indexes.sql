@@ -3302,7 +3302,7 @@ ALTER TABLE `ruoli_file`
 	ADD KEY `se_mail` (`se_mail`), 
 	ADD KEY `se_immobili` (`se_immobili`),
 	ADD KEY `se_documenti` (`se_documenti`),
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`, `se_mail`,`se_immobili`,`se_documenti`);
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
 --| 030000034401
 

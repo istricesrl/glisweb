@@ -1082,8 +1082,7 @@ REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_d
 -- tipologie_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-15 16:15 Fabio Mosti
-REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`,`se_persona_giuridica`, `se_pubblica_amministrazione`) VALUES
-`timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`, `se_persona_giuridica`, `se_pubblica_amministrazione`, `se_ecommerce`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	10,	'persone fisiche',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	7,	10,	'sig.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
