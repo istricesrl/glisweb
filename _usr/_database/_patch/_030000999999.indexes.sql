@@ -3360,14 +3360,18 @@ ALTER TABLE `ruoli_indirizzi`
 ALTER TABLE `ruoli_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000034850
--- TODO
 
 -- ruoli_mail
+ALTER TABLE `ruoli_mail`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 
 --| 030000034851
 
 -- ruoli_mail
--- TODO
+ALTER TABLE `ruoli_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --| 030000034900
 
