@@ -653,7 +653,7 @@
                     $cf['mysql']['connection'],
                     array(
                         'id' => NULL,
-                        'id_tipologia' => 1,
+                        'id_tipologia' => mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM tipologie_documenti WHERE codice = ?', array( array( 's' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['TipoDocumento']['#'] ) ) ),
                         'data' => $d['FatturaElettronica']['FatturaElettronicaBody']['DatiGenerali']['DatiGeneraliDocumento']['Data']['#'],
                         'numero' => $i['numero'][0],
                         'sezionale' => ( isset( $i['numero'][1] ) ? $i['numero'][1] : NULL ),
