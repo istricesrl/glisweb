@@ -18,10 +18,10 @@
      */
 
     // tabella della vista
-	$ct['view']['table'] = 'note_credito_attive';
+	$ct['view']['table'] = 'note_credito_passive';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'note.credito.amministrazione.form';
+	$ct['view']['open']['page'] = 'note.credito.passive.amministrazione.form';
 
     // tabella per la gestione degli oggetti esistenti
 	$ct['view']['open']['table'] = 'documenti';
@@ -32,8 +32,8 @@
         'numero' => 'num.',
         'sezionale' => 'sez.',
         'data' => 'data',
-#        'emittente' => 'emittente',
-        'destinatario' => 'cliente',
+        'emittente' => 'emittente',
+#        'destinatario' => 'cliente',
         'nome' => 'nome'
     );
 
@@ -53,7 +53,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1 ORDER BY __label__'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_fornitore = 1 ORDER BY __label__'
 	);
 
     // tendina destinatari
@@ -61,11 +61,11 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__'
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1 ORDER BY __label__'
 	);
 
     // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/fatture.amministrazione.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/fatture.passive.amministrazione.view.filters.html';
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

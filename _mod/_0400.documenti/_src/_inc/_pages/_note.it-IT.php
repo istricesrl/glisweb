@@ -291,4 +291,157 @@
 			'etc'		=> array( 'tabs'	=> $p['note.debito.amministrazione.form']['etc']['tabs'] )
 		);
 
+		// vista note di credito
+		$p['note.credito.passive.amministrazione.view'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'note di credito' ),
+			'h1'			=> array( $l		=> 'note di credito' ),
+			'parent'		=> array( 'id'		=> 'amministrazione.documenti.passivi' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_note.credito.passive.amministrazione.view.php' ),
+			'etc'			=> array( 'tabs'	=> array(   'note.credito.passive.amministrazione.view'
+#															'righe.note.credito.passive.amministrazione.view',
+#															'note.debito.amministrazione.view',
+#															'righe.note.debito.amministrazione.view' 
+														) ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'note di credito' ),
+															'priority'	=> '090' ) ) )	
+		);
+
+		// vista righe note di credito
+		$p['righe.note.credito.passive.amministrazione.view'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'righe note di credito' ),
+			'h1'			=> array( $l		=> 'righe note di credito' ),
+			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_righe.note.credito.passive.amministrazione.view.php' ),
+			'etc'			=> array( 'tabs'	=> $p['note.credito.passive.amministrazione.view']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+		);
+
+		// gestione note di credito
+		$p['note.credito.passive.amministrazione.form'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione' ),
+			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.credito.passive.amministrazione.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.form.php' ),
+			'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'note.credito.passive.amministrazione.form',
+															'note.credito.passive.amministrazione.form.relazioni',
+															'note.credito.passive.amministrazione.form.righe',
+															'note.credito.passive.amministrazione.form.pagamenti',
+															'note.credito.passive.amministrazione.form.chiusura',
+															'note.credito.passive.amministrazione.form.stampe',
+															'note.credito.passive.amministrazione.form.tools' ) )
+		);
+
+		// RELAZIONI CON IL MODULO ATTIVITA
+		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'note.credito.passive.amministrazione.form', $p['note.credito.passive.amministrazione.form']['etc']['tabs'], 'note.credito.passive.amministrazione.form.attivita' );
+		}
+
+		// gestione relazioni note di credito
+		$p['note.credito.passive.amministrazione.form.relazioni'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'riferimenti nota di credito' ),
+			'h1'			=> array( $l		=> 'riferimenti' ),
+			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.credito.passive.amministrazione.form.relazioni.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.form.relazioni.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['note.credito.passive.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione righe note di credito
+		$p['note.credito.passive.amministrazione.form.righe'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'righe nota di credito' ),
+			'h1'			=> array( $l		=> 'righe' ),
+			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.credito.passive.amministrazione.form.righe.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.form.righe.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['note.credito.passive.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione pagamenti note di credito
+		$p['note.credito.passive.amministrazione.form.pagamenti'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'pagamenti' ),
+			'h1'			=> array( $l		=> 'pagamenti' ),
+			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['note.credito.passive.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione note di credito_righe
+		$p['note.credito.passive.amministrazione.righe.form'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'gestione righe' ),
+			'h1'			=> array( $l		=> 'gestione' ),
+			'parent'		=> array( 'id'		=> 'righe.note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.credito.passive.amministrazione.righe.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.righe.form.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'note.credito.passive.amministrazione.righe.form', 'note.credito.passive.amministrazione.righe.form.aggregate' ) )
+		);
+
+		// gestione tools documenti_articoli - attivita
+		$p['note.credito.passive.amministrazione.righe.form.aggregate'] = array(
+				'sitemap'		=> false,
+				'title'			=> array( $l		=> 'righe aggregate' ),
+				'h1'			=> array( $l		=> 'righe aggregate' ),
+				'parent'		=> array( 'id'		=> 'righe.note.credito.passive.amministrazione.view' ),
+				'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
+				'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
+				'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+				'etc'			=> array( 'tabs'	=> $p['note.credito.passive.amministrazione.righe.form']['etc']['tabs'] )
+		);
+
+		// gestione tools note di credito
+		$p['note.credito.passive.amministrazione.form.chiusura'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'chiusura nota di credito' ),
+			'h1'			=> array( $l		=> 'chiusura' ),
+			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'note.credito.passive.amministrazione.form.chiusura.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.form.chiusura.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['note.credito.passive.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione tools note di credito
+		$p['note.credito.passive.amministrazione.form.tools'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'azioni documenti' ),
+			'h1'			=> array( $l		=> 'azioni documenti' ),
+			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.form.tools.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['note.credito.passive.amministrazione.form']['etc']['tabs'] )
+		);
+
+		// gestione stampe note di credito
+		$p['note.credito.passive.amministrazione.form.stampe'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'stampe' ),
+			'h1'		=> array( $l		=> 'stampe' ),
+			'parent'		=> array( 'id'		=> 'note.credito.passive.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'		=> array( $m.'_src/_inc/_macro/_note.credito.passive.amministrazione.form.stampe.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['note.credito.passive.amministrazione.form']['etc']['tabs'] )
+		);
+
 	}
