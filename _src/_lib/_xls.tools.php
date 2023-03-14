@@ -92,3 +92,17 @@
             }
         }
     }
+
+    function xlsNumber2mysql( $d ) {
+        $dot = strpos( '.', $d );
+        $com = strpos( ',', $d );
+        if( ! empty( $com ) && empty( $dot ) ) {
+            $d = str_replace( ',', '.', $d );
+        } elseif( ! empty( $com ) && ! empty( $dot ) ) {
+            if( $dot < $com ) {
+                $d = str_replace( ',', '.', str_replace( '.', NULL, $d ) );
+            } else {
+                $d = str_replace( ',', NULL, $d );
+            }
+        }
+    }
