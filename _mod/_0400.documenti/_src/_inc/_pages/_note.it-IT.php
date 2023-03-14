@@ -332,19 +332,22 @@
 			'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'note.credito.passive.amministrazione.form',
-															'note.credito.passive.amministrazione.form.relazioni',
-															'note.credito.passive.amministrazione.form.righe',
-															'note.credito.passive.amministrazione.form.pagamenti',
-															'note.credito.passive.amministrazione.form.chiusura',
-															'note.credito.passive.amministrazione.form.stampe',
+# TODO creare queste pagine e decommentare
+#															'note.credito.passive.amministrazione.form.relazioni',
+#															'note.credito.passive.amministrazione.form.righe',
+#															'note.credito.passive.amministrazione.form.pagamenti',
+#															'note.credito.passive.amministrazione.form.chiusura',
+#															'note.credito.passive.amministrazione.form.stampe',
 															'note.credito.passive.amministrazione.form.tools' ) )
 		);
+/*
+		TODO creare questa pagina e decommentare
 
 		// RELAZIONI CON IL MODULO ATTIVITA
 		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 			arrayInsertSeq( 'note.credito.passive.amministrazione.form', $p['note.credito.passive.amministrazione.form']['etc']['tabs'], 'note.credito.passive.amministrazione.form.attivita' );
 		}
-
+*/
 		// gestione relazioni note di credito
 		$p['note.credito.passive.amministrazione.form.relazioni'] = array(
 			'sitemap'		=> false,
