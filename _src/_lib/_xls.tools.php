@@ -81,5 +81,14 @@
     }
 
     function xlsDate2timestamp( $d ) {
-        return ( $d - 25569 ) * 86400;
+        if( is_numeric( $d ) ) {
+            return ( $d - 25569 ) * 86400;
+        } else {
+            $date = explode( '/', $d );
+            if( strlen( $date[2] ) == 4 ) {
+                return strtotime( $date[2] . '-' . $date[1] . '-' . $date[0] );
+            } else {
+                return strtotime( $date[0] . '-' . $date[1] . '-' . $date[2] );
+            }
+        }
     }
