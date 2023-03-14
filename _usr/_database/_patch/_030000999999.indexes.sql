@@ -2365,6 +2365,7 @@ ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-11-12 16:00 Chiara GDL
 ALTER TABLE `pagamenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_documento`,`data_scadenza`,`nome`),
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
 	ADD KEY `ordine` (`ordine`), 
