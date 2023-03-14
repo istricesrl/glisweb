@@ -18,7 +18,7 @@
         array(
             array( 's' => 'importazione automatica contatti anagrafica' ),
             array( 's' => '_src/_api/_job/_anagrafica.importazione.php' ),
-            array( 's' => 1 ),
+            array( 's' => 15 ),
             array( 's' => 1 ),
             array( 's' => json_encode(
                 array(

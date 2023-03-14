@@ -62,9 +62,21 @@
 
             // decodifica del workspace
             $job['workspace'] = json_decode( $job['workspace'], true );
-            
-            /* CODICE PRINCIPALE DEL JOB */
-            require DIR_BASE . $job['job'];
+
+            /* ITERAZIONI */
+            if( ! empty( $job['iterazioni'] ) ) {
+
+                /* CODICE PRINCIPALE DEL JOB */
+                require DIR_BASE . $job['job'];
+
+                // delay
+                sleep( ( isset( $job['delay'] ) && ! empty( $job['delay'] ) ) ? $job['delay'] : mt_rand( 1, 2 ) );
+
+            } else {
+
+                $status['err'][] = 'numero di iterazioni vuoto'
+
+            }
 
             // aggiorno la tabella di avanzamento lavori
             mysqlQuery(
