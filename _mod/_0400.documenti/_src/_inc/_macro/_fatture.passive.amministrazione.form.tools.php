@@ -22,7 +22,7 @@
 
     // percorsi
 	$base = '/_mod/_0400.documenti/_src/_api/_task/';
-	$base = '/_mod/_0400.documenti/_src/_api/_print/';
+	$print = '/_mod/_0400.documenti/_src/_api/_print/';
 
     // NOTA la variabile $base causa problemi nel multi sito fatta in questo modo, per cui ho commentato tutto
 
