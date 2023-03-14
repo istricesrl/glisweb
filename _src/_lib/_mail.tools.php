@@ -18,7 +18,7 @@
      * invia una mail
      *
      * @param	array	$from		array che contiene il mittente in formato 'nome' => 'indirizzo'
-     * @param	array	$to		array che contiene i destinatari in formato 'nome' => 'indirizzo'
+     * @param	array	$to			array che contiene i destinatari in formato 'nome' => 'indirizzo'
      * @param	string	$oggetto	
      * @param	string	$corpo		
      * @param	array	$attach		
@@ -35,13 +35,13 @@
 
 	// log
 	    logWrite(
-		'sending: '	. $oggetto			. ' ' .
-		'to: '		. print_r( $to , true )		. ' ' .
-		'cc: '		. print_r( $cc , true )		. ' ' .
-		'bcc: '		. print_r( $bcc , true )	. ' ' .
-		'attach: '	. print_r( $attach , true )	. ' ',
-		'mail',
-		LOG_DEBUG
+			'sending: '	. $oggetto			. ' ' .
+			'to: '		. print_r( $to , true )		. ' ' .
+			'cc: '		. print_r( $cc , true )		. ' ' .
+			'bcc: '		. print_r( $bcc , true )	. ' ' .
+			'attach: '	. print_r( $attach , true )	. ' ',
+			'mail',
+			LOG_DEBUG
 	    );
 
 	// esito dell'operazione
@@ -52,29 +52,34 @@
 
 	// configurazione dell'oggetto mail
 	    $mail->IsSMTP();
-	    $mail->Host				= $host;
-	    $mail->Port				= $port;
+	    $mail->Host					= $host;
+	    $mail->Port					= $port;
 	    $mail->SMTPDebug			= PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
 	    $mail->Debugoutput			= function( $str, $level ) { logWrite( '('.$level.') '.$str, 'phpmailer' ); };
 
 	// log
 	    logWrite(
-		'server: '	. $host		. ' ' .
-		'port: '	. $port		. ' ' .
-		'user: '	. $user		. ' ' .
-		'pass: '	. $pasw		,
-		'mail',
-		LOG_DEBUG
+			'server: '	. $host		. ' ' .
+			'port: '	. $port		. ' ' .
+			'user: '	. $user		. ' ' .
+			'pass: '	. $pasw		,
+			'mail',
+			LOG_DEBUG
 	    );
 
 	// autenticazione
 	    if( ! empty( $user ) ) {
-		$mail->SMTPAuth			= true;
-		$mail->Username			= $user;
-		$mail->Password			= $pasw;
+			$mail->SMTPAuth			= true;
+			$mail->Username			= $user;
+			$mail->Password			= $pasw;
 	    } else {
-		$mail->SMTPAuth			= false;
+			$mail->SMTPAuth			= false;
 	    }
+
+	// TLS
+		if( $port == '587' ) {
+			$mail->SMTPSecure		= 'tls';
+		}
 
 	// configurazione dell'oggetto mail
 	    $mail->IsHTML			= true;
@@ -98,29 +103,29 @@
 
 	// destinatari
 	    foreach( $to as $destName => $destAddress ) {
-		$mail->AddAddress( trim( $destAddress ), trim( $destName ) );
+			$mail->AddAddress( trim( $destAddress ), trim( $destName ) );
 	    }
 
 	// destinatari CC
 	    foreach( $cc as $destName => $destAddress ) {
-		$mail->AddCC( trim( $destAddress ), trim( $destName ) );
+			$mail->AddCC( trim( $destAddress ), trim( $destName ) );
 	    }
 
 	// destinatari BCC
 	    foreach( $bcc as $destName => $destAddress ) {
-		$mail->AddBCC( trim( $destAddress ), trim( $destName ) );
+			$mail->AddBCC( trim( $destAddress ), trim( $destName ) );
 	    }
 
 	// allegati
 		if( is_array( $attach ) ) {
-	    foreach( $attach as $kAtch => $vAtch ) {
-		fullPath( $vAtch );
-		if( file_exists( $vAtch ) && is_readable( $vAtch ) ) {
-		    $mail->AddAttachment( $vAtch , basename( $vAtch ) );
-		} else {
-		    logWrite( 'impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT );
-		}
-		}
+			foreach( $attach as $kAtch => $vAtch ) {
+				fullPath( $vAtch );
+				if( file_exists( $vAtch ) && is_readable( $vAtch ) ) {
+					$mail->AddAttachment( $vAtch , basename( $vAtch ) );
+				} else {
+					logWrite( 'impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT );
+				}
+			}
 		}
 
 	// invio
@@ -128,9 +133,9 @@
 
 	// log
 	    if( $status == false ) {
-		logWrite( 'errore phpmailer, status: ' . $status . ' ' . $mail->ErrorInfo . ' sending: '.$oggetto.' via: ' . $host . ':' . $port . ' to: '.serialize( $to ), 'mail', LOG_CRIT );
+			logWrite( 'errore phpmailer, status: ' . $status . ' ' . $mail->ErrorInfo . ' sending: '.$oggetto.' via: ' . $host . ':' . $port . ' to: '.serialize( $to ), 'mail', LOG_CRIT );
 	    } else {
-		logWrite( 'messaggio inviato con successo, phpmailer status: ' . $status . ' sending: '.$oggetto.' to: '.serialize( $to ), 'mail', LOG_NOTICE );
+			logWrite( 'messaggio inviato con successo, phpmailer status: ' . $status . ' sending: '.$oggetto.' to: '.serialize( $to ), 'mail', LOG_NOTICE );
 	    }
 
 	// restituzione risultato
