@@ -113,6 +113,7 @@
             }
 
 		    // scalo e taglio l'immagine per formati alternativi
+            // TODO non va bene ! empty() usare file_exists o qualcosa del genere perché $im2 contiene il path base se è vuota
 			if( ! empty( $im2 ) ) {
 
 			    foreach( $cf['image']['formats'][ $k ] as $d1 => $d1a ) {
