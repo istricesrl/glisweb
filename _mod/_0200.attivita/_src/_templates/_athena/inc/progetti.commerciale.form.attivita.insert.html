@@ -38,13 +38,21 @@
             {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.id_tipologia, '', '', '', 1, '', '', 2  ) }}
         </div>
 -->
-        {% if '0500.mastri' in mods.active.array and etc.select.registri %}
-        <div class="col-auto">
+    </div>
+    <div class="form-row d-print-none">
+        <div class="col-12">
+            <span class="label-top">descrizione</span>
+            {{ frm.textarea( view.open.table, '', '', 'note', '', 3, '', '', '1', '', '', '', '', 2 ) }}
+        </div>
+    </div>
+    <div class="form-row d-print-none">
+    {% if '0500.mastri' in mods.active.array and etc.select.registri %}
+        <div class="col">
             <span class="label-top remove-after-duplicate">scarico da</span>
             {{ frm.select( view.open.table, '', '', 'id_mastro_provenienza', '', etc.select.registri, '', '', '', '', '', '', 2 ) }}
         </div>
         {% endif %}
-        <div class="col-auto">
+        <div class="col-auto ml-auto">
             <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
         </div>
     </div>
