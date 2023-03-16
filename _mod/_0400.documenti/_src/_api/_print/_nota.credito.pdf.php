@@ -101,7 +101,7 @@
         $cf['mysql']['connection'],
         'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, '.
         'date_format( data_scadenza, "%d/%m/%Y" ) AS data_italiana, '.
-        'date_format( data_scadenza, "%Y/%m/%d" ) AS data_standard, '.
+        'date_format( data_scadenza, "%Y-%m-%d" ) AS data_standard, '.
         'pagamenti.importo_lordo_totale  '.
         'FROM pagamenti '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.

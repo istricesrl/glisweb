@@ -31,11 +31,17 @@
             array( array( 's' => $_REQUEST['idFattura'] ) )
         );
 
+        // genero il token di autorizzazione
+        $token = md5( time() );
+
+        // imposto il token di autorizzazione per il documento
+        mysqlQuery( $cf['mysql']['connection'], 'UPDATE documenti SET token = ?', array( array( 's' => $token ) ) );
+
         // prelevo l'XML
         $x = restCall(
             $cf['site']['url'] . 'print/0400.documenti/fattura.xml',
             METHOD_GET,
-            array( '__documento__' => $_REQUEST['idFattura'], 'f' => 1 ),
+            array( '__documento__' => $_REQUEST['idFattura'], 'f' => 1, 't' => $token ),
             NULL,
             MIME_APPLICATION_JSON
         );

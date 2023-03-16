@@ -29,9 +29,12 @@
 	);
 
     // verifico l'identità dell'utente
-    if( ! in_array( 'roots', array_keys( $_SESSION['groups'] ) ) && $doc['id_destinatario'] != $_SESSION['account']['id_anagrafica'] ) {
+    if( ! in_array( 'roots', array_keys( $_SESSION['groups'] ) ) && ( $doc['id_destinatario'] != $_SESSION['account']['id_anagrafica'] ) && ( ! isset( $_REQUEST['t'] ) || $_REQUEST['t'] != $doc['token'] ) ) {
         dieText('autorizzazioni insufficienti a visualizzare il documento');
     }
+
+    // TODO svuoto il token
+    // ...
 
     // debug
     // print_r( $doc );
@@ -161,7 +164,7 @@
         $cf['mysql']['connection'],
         'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, modalita_pagamento.nome AS modalita ,'.
         'date_format( data_scadenza, "%d/%m/%Y" ) AS data_italiana, '.
-        'date_format( data_scadenza, "%Y/%m/%d" ) AS data_standard, '.
+        'date_format( data_scadenza, "%Y-%m-%d" ) AS data_standard, '.
         'pagamenti.importo_lordo_totale, iban.iban AS iban  '.
         'FROM pagamenti '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
