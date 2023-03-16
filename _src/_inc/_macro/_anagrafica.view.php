@@ -72,12 +72,46 @@
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/anagrafica.view.filters.html';
 
+    $ct['page']['contents']['modals']['metro'][] = array(
+        'schema' => 'inc/anagrafica.view.modal.attivita.html'
+    );
+
+    $ct['page']['contents']['modals']['metro'][] = array(
+        'schema' => 'inc/anagrafica.view.modal.promemoria.html'
+    );
+
     // tendina categoria
 	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
+
+    // tendina tipologie
+    $ct['etc']['select']['tipologie_attivita'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL'
+    );
+
+    // tendina collaboratori
+    $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static'
+    );
+
+    // tendina anni
+    foreach( range( date( 'Y' ) + 1, 2017 ) as $y ) {
+        $ct['etc']['select']['anni'][] = array( 'id' => $y, '__label__' => $y );
+    }
+
+    // tendina settimane
+    foreach( range( 1, 52 ) as $w ) {
+        $ct['etc']['select']['settimane'][] = array( 'id' => $w, '__label__' => $w . ' / ' . substr( int2month( ceil( $w / 4.348125 ) ), 0, 3 ) );
+    }
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
@@ -93,7 +127,9 @@
             }
 */
 
-            $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/api/bookmarks?__work__[anagrafica][items]['.$row['id'].'][id]='.$row['id'].'&__work__[anagrafica][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>';
+            $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/api/bookmarks?__work__[anagrafica][items]['.$row['id'].'][id]='.$row['id'].'&__work__[anagrafica][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>'.
+                '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_cliente\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
+                '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="$(\'#attivita_id_cliente_promemoria\').val(\''.$row['id'].'\');$(\'#scorciatoia_promemoria\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>';
 
 
         }

@@ -24,7 +24,15 @@
             <span class="label-top">nome</span>
             {{ frm.input( view.open.table, '', '', 'nome', '', '', '', '', '', 1, '', 2 ) }}
         </div>
-        <div class="col-auto">
+    </div>
+    <div class="form-row d-print-none">
+        <div class="col-12">
+            <span class="label-top">descrizione</span>
+            {{ frm.textarea( view.open.table, '', '', 'note', '', 3, '', '', '1', '', '', '', '', 2 ) }}
+        </div>
+    </div>
+    <div class="form-row d-print-none">
+        <div class="col-auto ml-auto">
             <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
         </div>
     </div>
