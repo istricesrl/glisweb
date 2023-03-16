@@ -100,8 +100,9 @@
     $doc['pagamenti'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, '.
-        'date_format( data_scadenza, "%d/%m/%Y" ) AS data_standard, '.
-        ' pagamenti.importo_lordo_totale  '.
+        'date_format( data_scadenza, "%d/%m/%Y" ) AS data_italiana, '.
+        'date_format( data_scadenza, "%Y/%m/%d" ) AS data_standard, '.
+        'pagamenti.importo_lordo_totale  '.
         'FROM pagamenti '.
         'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
         'WHERE pagamenti.id_documento = ?',
@@ -432,7 +433,7 @@ if(sizeof($doc['pagamenti'])>0){
 	$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
 	foreach( $doc['pagamenti'] as $row ) {
 	    $trh = $pdf->GetStringHeight( $col * 6, $row['nome'], false, true, '', 'B' );				// 
-	    $pdf->Cell( $col * 2, $trh, $row['data_standard'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// w, h, testo, bordo, allineamento, riempimento, newline
+	    $pdf->Cell( $col * 2, $trh, $row['data_italiana'], $brdc, 0, 'C', false, '', 0, false, 'T', 'T' );				// w, h, testo, bordo, allineamento, riempimento, newline
 	    $pdf->MultiCell( $col * 6, $lh, $row['nome'], $brdc, 'L', false, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 	    $pdf->Cell( $col * 2, $trh, number_format($row['importo_lordo_totale'], 2, ',', '.' ).' €', $brdc, 1, 'R', false, '', 0, false, 'T', 'T' );		// larghezza, altezza, testo, bordo, newline, allineamento
 	}
