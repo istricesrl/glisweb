@@ -36,6 +36,7 @@
                     <div class="col-4 col-md-1 col-form-label text-right">{% if session.carrello.sconto_valore_coupon %}{{ '%0.2f'|format(session.carrello.sconto_valore_coupon) }} {{ session.carrello.valuta_utf8 }}{% endif %}</div>
                     <div class="col-4 col-md-1 text-center">{% if session.carrello.codice_coupon %}<input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#coupon').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">{% endif %}</div>
                 </div>
+                <!--
                 <div class="form-row">
                     <div class="col-12 col-md col-form-label">modalità di pagamento</div>
                     <div class="col-4 col-md-4">
@@ -48,7 +49,6 @@
                     <div class="col-4 col-md-1 col-form-label text-right"></div>
                     <div class="col-4 col-md-1 text-center"></div>
                 </div>
-                <!--
                 <div class="form-row">
                     <div class="col-12 col-md col-form-label">modalità di fatturazione</div>
                     <div class="col-4 col-md-auto">

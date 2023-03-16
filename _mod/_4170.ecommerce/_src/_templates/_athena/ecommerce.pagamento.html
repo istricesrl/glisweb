@@ -16,16 +16,28 @@
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id]" value="{{ r.id }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_carrello]" value="{{ r.id_carrello }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario_id_anagrafica]" value="{{ r.destinatario_id_anagrafica }}">
+                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_pagamento]" value="{{ r.id_pagamento }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario]" value="{{ r.destinatario }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_articolo]" value="{{ r.id_articolo }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][fatturazione_id_tipologia_documento]" value="{{ r.fatturazione_id_tipologia_documento }}">
                 <div class="form-row">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][da_fare]" id="" class="" value="0">
+                            <input type="checkbox" class="form-check-input">
+                        </div>
+                    </div>
                     <div class="col-2">
                         <p>{{ r.destinatario }}</p>
                     </div>
-                    <div class="col-4">
+                    <div class="col-5">
                         <p>{{ r.descrizione }}</p>
                     </div>
+                    {% if r.id_pagamento %}
+                    <div class="col-1">
+                        <p>{{ '%0.2f'|format( r.importo_lordo_totale ) }}</p>
+                    </div>
+                    {% else %}
                     <div class="col-1">
                         <p>{{ '%0.2f'|format( r.prezzo_netto_finale ) }}</p>
                     </div>
@@ -33,18 +45,38 @@
                         <p>{{ '%0.2f'|format( r.totale_netto_pagato ) }}</p>
                     </div>
                     <div class="col-1">
-                        <label class="label-top">importo</label>
+                        <p>{{ '%0.2f'|format( r.totale_netto_rateizzato ) }}</p>
+                    </div>
+                    <div class="col">
+                        <label class="label-top">da pagare</label>
                         <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_netto_totale]" value="{{ r.totale_netto_da_pagare }}" required>
                     </div>
+                    {% endif %}
+                    <!--
                     <div class="col d-flex flex-row align-items-stretch">
                         {% for doc in r.documenti_da_stampare %}
                         <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
                         {% endfor %}
                     </div>
+                    -->
                 </div>
                 {% endfor %}
             </fieldset>
+            <fieldset>
+                <legend>documenti da stampare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_socio %}il socio #{{ request.__pagamenti__.id_socio }}{% endif %}</legend>
+            </fieldset>
             <fieldset class="mt-auto">
+                <legend>generazione rate</legend>
+                <div class="form-row">
+                    <div class="col-4 col-md-auto">
+                        <input type="date" class="form-control form-control-sm " name="__pagamenti__[data_rate]" id="data-rate">
+                    </div>
+                    <div class="col">
+                        <button onclick="$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">genera rate</button>
+                    </div>
+                </div>
+            </fieldset>
+            <fieldset class="">
                 <legend>generazione documenti</legend>
                 <div class="form-row">
                     <div class="col-4 col-md-auto">
