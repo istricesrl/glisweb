@@ -7575,6 +7575,7 @@ CREATE OR REPLACE VIEW ruoli_documenti_view AS
 		ruoli_documenti.se_xml,
 		ruoli_documenti.se_documenti,
 		ruoli_documenti.se_documenti_articoli,
+		ruoli_documenti.se_relazioni,
 		ruoli_documenti.se_conferma,
 		ruoli_documenti.se_consuntivo,
 		ruoli_documenti.se_evasione,

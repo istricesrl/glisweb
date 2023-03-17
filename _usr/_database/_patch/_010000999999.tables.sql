@@ -3081,6 +3081,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
   `se_xml` int(1) DEFAULT NULL,
   `se_documenti` int(1) DEFAULT NULL,
   `se_documenti_articoli` int(1) DEFAULT NULL,
+  `se_relazioni` int(1) DEFAULT NULL,
   `se_conferma` int(1) DEFAULT NULL,
   `se_consuntivo` int(1) DEFAULT NULL,
   `se_evasione` int(1) DEFAULT NULL
