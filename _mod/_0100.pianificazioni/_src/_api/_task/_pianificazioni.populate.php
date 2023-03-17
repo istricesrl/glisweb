@@ -51,20 +51,35 @@
         
     } else {
 
+	// NOTA di suo il sistema prende a riferimento la data di oggi; tuttavia è possibile simulare
+	// il funzionamento a una data specifica passando il parametro d; questo è particolarmente utile
+	// nel caso si debba fare debug oppure rilanciare pianificazioni per la generazione di documenti
+	// che vanno numerati nel tempo (ad esempio le fatture) perché consente di generare tutte
+	// le fatture di un mese prima di passare al successivo
+
+	if( isset( $_REQUEST['d'] ) ) {
+	    $data = $_REQUEST['d'];
+	} else {
+	    $data = date( 'Y-m-d' );
+	}
+
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE pianificazioni SET token = ? '.
-            'WHERE ( timestamp_elaborazione < ? OR timestamp_elaborazione IS NULL OR timestamp_aggiornamento > timestamp_elaborazione ) '.
-            'AND ( ( ? BETWEEN data_avvio AND data_fine ) OR ( data_avvio <= ? AND data_fine IS NULL ) )'.
+            'UPDATE pianificazioni SET token = ?, timestamp_elaborazione = ? '.
+#            'WHERE ( timestamp_elaborazione < ? OR timestamp_elaborazione IS NULL OR timestamp_aggiornamento > timestamp_elaborazione ) '.
+#            'WHERE ( timestamp_elaborazione IS NULL OR timestamp_aggiornamento > timestamp_elaborazione ) '.
+#            'AND ( ( ? BETWEEN data_avvio AND data_fine ) OR ( data_avvio <= ? AND data_fine IS NULL ) )'.
+            'WHERE ( ( ? BETWEEN data_avvio AND data_fine ) OR ( data_avvio <= ? AND data_fine IS NULL ) )'.
             'AND token IS NULL '.
             'AND id_genitore IS NULL '.
-            'ORDER BY timestamp_elaborazione ASC LIMIT 1',
+            'ORDER BY timestamp_elaborazione ASC, data_inizio ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] ),
-                array( 's' => strtotime( '-1 day' ) ),
-                array( 's' => date( 'Y-m-d' ) ),
-                array( 's' => date( 'Y-m-d' ) )
+                array( 's' => time() ),
+#                array( 's' => strtotime( '-1 day' ) ),
+                array( 's' => $data ),
+                array( 's' => $data )
             )
         );
 
@@ -201,6 +216,7 @@
 
         // per ogni data individuata, creo un oggetto
         foreach( $date as $data ) {
+	    if( ! empty( $data ) ) {
 
             // dati per le sostituzioni
             $d = array(
@@ -373,6 +389,13 @@
 
             // TODO includo le macro della pianificazione
             // ...
+
+	    } else {
+
+
+		$status['info'][] = 'data nulla';
+
+	    }
 
         }
 
