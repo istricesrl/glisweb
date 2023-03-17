@@ -1136,6 +1136,8 @@
     slack.profile                         | il profilo di Slack corrente (è una scorciatoia per slack.profiles.<site.status>)
     slack.profiles                        | i profili di Slack disponibili
     slack.profiles.<j>                    | dettagli del profilo di Slack per lo status <j>
+    slack.profiles.<j>.channel            | canale di Slack per l'assistenza per lo status <j>
+    slack.profiles.<j>.channel.url        | URL del canale di Slack per l'assistenza per lo status <j>
     slack.profiles.<j>.webhooks           | webhook di Slack per lo status <j>
     slack.profiles.<j>.webhooks.<w>       | dettagli del webhook <w> per il profilo dello status <j>
     slack.profiles.<j>.webhooks.<w>.sa    | chiave A per il webhook <w> per il profilo dello status <j>

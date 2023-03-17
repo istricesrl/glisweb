@@ -68,9 +68,9 @@
                 </div>
                 {% endif %}
 
-                {% if slack.channel.url %}
+                {% if slack.profile.channel.url %}
                 <div id="widget-slack" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ slack.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ slack.profile.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
 
