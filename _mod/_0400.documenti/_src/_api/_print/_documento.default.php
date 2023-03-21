@@ -36,6 +36,19 @@
     // TODO svuoto il token
     // ...
 
+    // annoto l'attività di stampa
+    mysqlInsertRow(
+        $cf['mysql']['connection'],
+        array(
+            'id_tipologia' => 22,
+            'id_documento' => $doc['id'],
+            'data_attivita' => date('Y-m-d'),
+            'ora_inizio' => date( 'H:i:s' ),
+            'ora_fine' => date( 'H:i:s' )
+        ),
+        'attivita'
+    );
+
     // debug
     // print_r( $doc );
 

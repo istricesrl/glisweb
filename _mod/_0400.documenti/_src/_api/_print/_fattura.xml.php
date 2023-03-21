@@ -17,7 +17,7 @@
     $cnf['estensione'] = 'xml';
 
     // inclusione dei dati base
-	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_fattura.default.php';
+	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
 
     // debug
 	// header( 'Content-type: text/plain;' );

@@ -17,7 +17,7 @@
     $cnf['estensione'] = 'pdf';
 
     // inclusione dei dati base
-	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_fattura.default.php';
+	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
 
     $sdef['linee'][] = $src['denominazione_fiscale'];
     $sdef['linee'][] = $sri['indirizzo_fiscale'];
