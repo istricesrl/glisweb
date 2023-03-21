@@ -21,7 +21,7 @@
 
     <!-- comandi -->
     <property name="cmd.amp" value="&amp;&amp;" />
-    <property name="cmd.bak" value="tar -cvzf /var/backups/${prj.nme}.${bak.ext}.tar.gz ${dst.dir}" />
+    <property name="cmd.bak" value="tar -cvzf ${dst.fld}/backup.deploy.${bak.ext}.tar.gz ${dst.dir}" />
     <property name="cmd.cds" value="cd ${src.dir}" />
     <property name="cmd.cdd" value="cd ${dst.dir}" />
     <property name="cmd.cps" value="composer update --quiet" />
