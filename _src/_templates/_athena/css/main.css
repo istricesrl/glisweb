@@ -95,6 +95,7 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     color: #212529;
 }
 
+.fieldset-table .form-row a i.fa,
 .view-table td a i.fa,
 .view-table td a:visited i.fa {
     color: #555555;
