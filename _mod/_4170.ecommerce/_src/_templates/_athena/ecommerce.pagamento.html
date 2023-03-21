@@ -6,10 +6,27 @@
 {% block main %}
 <section class="row flex-fill">
     <div class="col-md-8 d-flex flex-column">
-        {% if etc.righe %}
+        {% if not session.carrello.id %}
         <form id="pagamento" class="carrello d-flex flex-column flex-fill" action="{{ page.url[ localization.language.ietf ] }}" method="post">
             <input type="hidden" name="__pagamenti__[id_carrello]" value="{{ request.__pagamenti__.id_carrello }}">
             <input type="hidden" name="__pagamenti__[id_socio]" value="{{ request.__pagamenti__.id_socio }}">
+            {% if etc.stampe %}
+            <fieldset class="fieldset-table">
+                <legend>documenti da stampare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_socio %}il socio #{{ request.__pagamenti__.id_socio }}{% endif %}</legend>
+                {% for s in etc.stampe %}
+                <div class="form-row">
+                    <div class="col-auto">
+                        <a href="/print/0400.documenti/ricevuta.pdf?__documento__={{ s.id }}" class="mx-2" target="_blank"><i class="fa fa-print"></i></a>
+                        <a href="{{ pages['documenti.form'].url[ localization.language.ietf ] }}?documenti[id]={{ s.id }}" class="mx-2" target="_blank"><i class="fa fa-pencil"></i></a>
+                    </div>
+                    <div class="col">
+                        {{ s.__label__ }}
+                    </div>
+                </div>
+                {% endfor %}
+            </fieldset>
+            {% endif %}
+            {% if etc.righe %}
             <fieldset>
                 <legend>documenti da generare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_socio %}il socio #{{ request.__pagamenti__.id_socio }}{% endif %}</legend>
                 {% for r in etc.righe %}
@@ -36,6 +53,7 @@
                     {% if r.id_pagamento %}
                     <div class="col-1">
                         <p>{{ '%0.2f'|format( r.importo_lordo_totale ) }}</p>
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_netto_totale]" value="{{ r.importo_lordo_totale }}">
                     </div>
                     {% else %}
                     <div class="col-1">
@@ -61,9 +79,6 @@
                     -->
                 </div>
                 {% endfor %}
-            </fieldset>
-            <fieldset>
-                <legend>documenti da stampare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_socio %}il socio #{{ request.__pagamenti__.id_socio }}{% endif %}</legend>
             </fieldset>
             <fieldset class="mt-auto">
                 <legend>generazione rate</legend>
@@ -105,16 +120,17 @@
                     </div>
                 </div>
             </fieldset>
+            {% else %}
+            <fieldset>
+                <legend>nessun documento da generare</legend>
+                <p>effettuare una ricerca per generare una lista di documenti da generare</p>
+            </fieldset>
+            {% endif %}
         </form>
-        {% elseif session.carrello.id %}
+        {% else %}
         <fieldset>
             <legend>acquisti in corso</legend>
             <p>chiudere il carrello #{{ session.carrello.id }} prima di procedere a registrare il pagamento</p>
-        </fieldset>
-        {% else %}
-        <fieldset>
-            <legend>nessun documento da generare</legend>
-            <p>effettuare una ricerca per generare una lista di documenti da generare</p>
         </fieldset>
         {% endif %}
     </div>
