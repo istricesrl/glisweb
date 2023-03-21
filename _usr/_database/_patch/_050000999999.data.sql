@@ -1121,7 +1121,9 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 (21,	17,	NULL,	NULL,	'promemoria scadenze',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (22,	NULL,	NULL,	NULL,	'STAMPE',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (23,	22,	NULL,	NULL,	'stampa PDF',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(24,	22,	NULL,	NULL,	'stampa XML',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
+(24,	22,	NULL,	NULL,	'stampa XML',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(25,	17,	NULL,	NULL,	'sollecito insoluti',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(26,	16,	NULL,	NULL,	'invio proposta commerciale',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050450
 
