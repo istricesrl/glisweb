@@ -330,6 +330,7 @@
     define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );
     define( 'DIR_VAR_SPOOL_CART'			, DIR_BASE . 'var/spool/cart/' );
     define( 'DIR_VAR_SPOOL_DOCS'			, DIR_BASE . 'var/spool/docs/' );
+    define( 'DIR_VAR_SPOOL_EXPORT'			, DIR_BASE . 'var/spool/export/' );
     define( 'DIR_VAR_SPOOL_IMPORT'			, DIR_BASE . 'var/spool/import/' );
     define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
     define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
