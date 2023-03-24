@@ -106,6 +106,13 @@
 	    die( '[FAIL] status del framework non impostato' . PHP_EOL );
 	}
 
+	// controllo status
+	if( in_array( $cf['site']['status'], array_keys( $cf['debug'] ) ) ) {
+	    echo '[ -- ] status ' . $cf['site']['status'] . ' presente nei profili di debug' . PHP_EOL;
+	} else {
+	    die( '[FAIL] status ' . $cf['site']['status'] . ' non presente nei profili di debug' . PHP_EOL );
+	}
+
     // controllo del livello di log
 	echo '[ -- ] livello di log: ' . logLvl2string( LOG_CURRENT_LEVEL ) . ' (' . LOG_CURRENT_LEVEL . ')' . PHP_EOL;
 	if( $cf['site']['status'] == 'PROD' ) {
