@@ -2,6 +2,7 @@
 {# FILE PER LA GENERAZIONE DEL TAG <script> PER IL PIXEL DI FACEBOOK ALL'INTERNO DEL TAG <head> #}
 
 {% if facebook.profile.pixel.id %}
+{% if privacy.cookie.terzi.analitici.Facebook.consenso == 'ok' %}
 <script>
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -14,6 +15,9 @@
     fbq('init', '{{ facebook.profile.pixel.id }}');
     fbq('track', 'PageView');
 </script>
+{% else %}
+<!-- profilo Facebook settato, {% if privacy.cookie.terzi.analitici.Facebook.consenso %}consenso prestato{% else %}consenso non prestato{% endif %} -->
+{% endif %}
 {% else %}
 <!-- pixel di Facebook non settato -->
 {% endif %}

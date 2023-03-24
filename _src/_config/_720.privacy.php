@@ -22,18 +22,28 @@
 
     // debug
 	// print_r( $cf['google'] );
+	// print_r( $cf['privacy'] );
 
-    // se è stato inviato un modulo di consenso
+    // recupero i consensi dai cookie
+	if( isset( $_COOKIE['privacy'] ) ) {
+	    $cf['privacy']['cookie'] = array_replace_recursive( $cf['privacy']['cookie'], unserialize( $_COOKIE['privacy'] ) );
+	}
+
+	// se è stato inviato un modulo di consenso
 	if( isset( $_REQUEST['__cookie__'] ) ) {
-
+/*
 	    // registro il consenso nel cookie dei consensi
 		$cf['privacy']['cookie'][ $_REQUEST['__cookie__']['owner'] ][ $_REQUEST['__cookie__']['type'] ][ $_REQUEST['__cookie__']['name'] ]['consenso'] = $_REQUEST['__cookie__']['value'];
 
-	    // setto il cookie
-		setcookie( 'privacy', serialize( $cf['privacy']['cookie'] ), time()+60*60*24*30 );
-
 	    // TODO log del consenso
 		// @todo implementare il log dei consensi
+*/
+		foreach( $_REQUEST['__cookie__'] as $cookie => $val ) {
+			$cf['privacy']['cookie'][ $val['owner'] ][ $val['type'] ][ $cookie ]['consenso'] = $_REQUEST['__cookie__'][ $cookie ]['value'];
+		}
+
+	    // setto il cookie
+		setcookie( 'privacy', serialize( $cf['privacy']['cookie'] ), time()+60*60*24*30 );
 
 	}
 

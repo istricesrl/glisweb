@@ -9,7 +9,7 @@
 {% if privacy.cookie.terzi.analitici %}
 {% for cookie, dettagli in privacy.cookie.terzi.analitici %}
 {% if not dettagli.anonimo %}
-{% if dettagli.consenso == '' %}
+{% if not dettagli.consenso %}
 {% set consensi = consensi + 1 %}
 {% endif %}
 {% endif %}
@@ -18,33 +18,31 @@
 
 {# TODO rendere questo modulo un po' più user friendly (no submit a ogni click) #}
 {% if consensi > 0 %}
-<div class="container-fluid" id="cookie">
-	<div class="row">
-		<div class="col">
-			<h4>consenso all'utilizzo dei cookie</h4>
+<form action="{{ page.path[ localization.language.ietf ] }}" id="cookieForm" method="post">
+	<div class="container-fluid" id="cookie">
+		<div class="row">
+			<div class="col">
+				<h4>consenso all'utilizzo dei cookie</h4>
+			</div>
 		</div>
-	</div>
-	<div class="row">
 		{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
-		<div class="col-12 col-md-6 pb-3">
-			<form action="{{ page.path[ localization.language.ietf ] }}" method="post">
-				<input type="hidden" name="__cookie__[owner]" value="terzi">
-				<input type="hidden" name="__cookie__[type]" value="analitici">
-				<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
-				<input type="hidden" name="__cookie__[value]" value="1">
-				<input type="submit" class="btn btn-default btn-light" value="{{ tr.generic.autorizzo_cookie[ localization.language.ietf ] }} {{ dettagli.nome[ localization.language.ietf ] }}">
-			</form>
+		{% if not dettagli.consenso %}
+		<input type="hidden" id="cookie_{{ cookie }}_value" name="__cookie__[{{ cookie }}][value]" value="{{ dettagli.consenso }}">
+		<input type="hidden" name="__cookie__[{{ cookie }}][owner]" value="terzi">
+		<input type="hidden" name="__cookie__[{{ cookie }}][type]" value="analitici">
+		{# TODO terzi e analitici dovrebbero essere presi da altri due cicli #}
+		<div class="row">
+			<div class="col-12 col-md-6 pb-3">
+				<input type="button" class="btn btn-default btn-light" onclick="$('#cookie_{{ cookie }}_value').val('ok');$('#cookieForm').submit();" value="{{ tr.generic.autorizzo_cookie[ localization.language.ietf ] }} {{ dettagli.nome[ localization.language.ietf ] }}">
+			</div>
+			<div class="col-12 col-md-6 pb-3">
+				<input type="button" class="btn btn-default btn-light" onclick="$('#cookie_{{ cookie }}_value').val('no');$('#cookieForm').submit();" value="{{ tr.generic.non_autorizzo_cookie[ localization.language.ietf ] }} {{ dettagli.nome[ localization.language.ietf ] }}">
+			</div>
 		</div>
-		<div class="col-12 col-md-6 pb-3">
-			<form action="{{ page.path[ localization.language.ietf ] }}" method="post">
-				<input type="hidden" name="__cookie__[owner]" value="terzi">
-				<input type="hidden" name="__cookie__[type]" value="analitici">
-				<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
-				<input type="hidden" name="__cookie__[value]" value="0">
-				<input type="submit" class="btn btn-default btn-light" value="{{ tr.generic.non_autorizzo_cookie[ localization.language.ietf ] }} {{ dettagli.nome[ localization.language.ietf ] }}">
-			</form>
-		</div>
+		{% else %}
+		<!-- consenso espresso per {{ cookie }}: {{ dettagli.consenso }} -->
+		{% endif %}
 		{% endfor %}
 	</div>
-</div>
+</form>
 {% endif %}

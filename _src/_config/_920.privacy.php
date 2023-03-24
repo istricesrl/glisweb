@@ -23,10 +23,8 @@
     // debug
 	// print_r( $cf['google'] );
 
-    // recupero i consensi dai cookie
-	if( isset( $_COOKIE['privacy'] ) ) {
-	    $cf['privacy']['cookie'] = array_replace_recursive( unserialize( $_COOKIE['privacy'] ), $cf['privacy']['cookie'] );
-	}
+	// debug
+	// print_r( $cf['privacy']['cookie'] );
 
 	/*
     // aggiustamenti automatici ai cookie per Google Tag Manager

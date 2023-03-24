@@ -2,7 +2,13 @@
 {# FILE PER LA GENERAZIONE DEL TAG <noscript> DEL PIXEL DI FACEBOOK #}
 
 {% if facebook.profile.pixel.id %}
+{% if privacy.cookie.terzi.analitici.Facebook.consenso == 'ok' %}
 <noscript>
     <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id={{ facebook.profile.pixel.id }}&ev=PageView&noscript=1" alt="Facebook Pixel">
 </noscript>
+{% else %}
+<!-- profilo Facebook settato, {% if privacy.cookie.terzi.analitici.Facebook.consenso %}consenso prestato{% else %}consenso non prestato{% endif %} -->
+{% endif %}
+{% else %}
+<!-- pixel di Facebook non settato -->
 {% endif %}
