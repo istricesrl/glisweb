@@ -6,6 +6,25 @@
 
     introduzione
     ============
+    In questo documento vedremo come realizzare vari tipi di sistemi di importazione dati per il framework. Il documento è piuttosto corposo quindi riassumiamo qui
+    brevemente le varie tipologie di importazione e i passi necessari per realizzarle. Riguardo alla provenienza dei dati distinguiamo:
+
+    - importazioni di file caricati tramite interfaccia web
+    - importazioni di file caricati con altri sistemi (FTP, eccetera)
+    - importazioni di dati da API REST
+    - importazioni di dati da altri database
+
+    Una menzione particolare meritano le operazioni effettuate tramite file standard (_src/_config/_740.controller.php) che non vanno considerate importazioni in
+    quanto confluiscono nel normale funzionamento della controller.
+
+    Riguardo alle modalità di importazione, possiamo distinguere:
+
+    - le importazioni che girano in continuo, tramite task eseguito regolarmente
+    - le importazioni che girano occasionalmente, con un task che attiva un job il quale poi esegue l'importazione
+
+    Riguardo l'attivazione occasionale delle importazioni, questa può essere scatenata da un evento dell'interfaccia utente (il task è attivato dall'utente tramite
+    l'interfaccia) oppure dal caricamento di un file (il task gira periodicamente, e se trova il file crea il job) oppure in maniera programmatica (il task gira
+    periodicamente e crea il job ogni volta).
 
     come creare un'importazione custom da file
     ==========================================
@@ -425,7 +444,7 @@
         $headers = array();
 
         // status
-        $status['info'][] = 'inizio operazioni job ' . basename( __FILE__ );
+        $status['info'][] = 'inizio operazioni task ' . basename( __FILE__ );
 
         // chiave di lock
         $status['token'] = getToken( __FILE__ );
@@ -449,12 +468,16 @@
 
         } else {
 
+            // charset
+            mysqli_set_charset( $cOld, 'utf8' );
+            mysqli_query( $cOld, 'SET collation_connection = utf8_unicode_ci' );
+
             /* 03. LOCK DELLA RIGA DA IMPORTARE */
             if( isset( $_REQUEST['id'] ) ) {
 
                 // recupero dati in modalità riga specifica
                 mysqlQuery( $cOld,
-                    'UPDATE categorie_prodotti SET token = ? WHERE id = ? AND token IS NULL',
+                    'UPDATE oldTable SET token = ? WHERE id = ? AND token IS NULL',
                     array(
                         array( 's' => $status['token'] ),
                         array( 's' => $_REQUEST['id'] )
@@ -468,7 +491,7 @@
 
                 // recupero dati in modalità forzata
                 mysqlQuery( $cOld,
-                    'UPDATE categorie_prodotti SET token = ? WHERE token IS NULL '.
+                    'UPDATE oldTable SET token = ? WHERE token IS NULL '.
                     'ORDER BY timestamp_sincronizzazione ASC, id ASC LIMIT 1',
                     array(
                         array( 's' => $status['token'] )
@@ -482,14 +505,12 @@
 
                 // recupero dati
                 mysqlSelectRow( $cOld,
-                    'UPDATE categorie_prodotti SET token = ? '.
-                    'WHERE timestamp_sincronizzazione < timestamp_aggiornamento '.
-                    'OR timestamp_sincronizzazione < ? '.
-                    'OR timestamp_sincronizzazione IS NULL '.
+                    'UPDATE oldTable SET token = ? '.
+                    'WHERE ( timestamp_sincronizzazione < timestamp_aggiornamento '.
+                    'OR timestamp_sincronizzazione IS NULL ) AND token IS NULL '.
                     'ORDER BY timestamp_sincronizzazione ASC, id ASC LIMIT 1',
                     array(
-                        array( 's' => $status['token'] ),
-                        array( 's' => strtotime( '-2 days' ) )
+                        array( 's' => $status['token'] )
                     )
                 );
 
@@ -500,7 +521,7 @@
 
             /* 04. SELEZIONE DELLA RIGA DA IMPORTARE */
             $r = mysqlSelectRow( $cold,
-                'SELECT * FROM categorie_prodotti WHERE token = ? ',
+                'SELECT * FROM oldTable WHERE token = ? ',
                 array(
                     array( 's' => $status['token'] )
                 )
@@ -512,7 +533,16 @@
                 // status
                 $status['info'][] = 'importo la riga #' . $r['id'];
 
-                /* 05... CODICE PRINCIPALE DI IMPORTAZIONE */
+                /* 05.1 OPERAZIONI DI IMPORTAZIONE */
+
+                /* 05.2 SBLOCCO DELLA RIGA */
+                mysqlQuery( $cold,
+                    'UPDATE oldTable SET token = NULL, timestamp_sincronizzazione = ? WHERE token = ?',
+                    array(
+                        array( 's' => time() ),
+                        array( 's' => $status['token'] )
+                    )
+                );
 
             } else {
 
@@ -538,5 +568,9 @@
 
         /* FINE CODICE TASK */
     \endcode
+
+    Riguardo alle strategie di individuazione della riga su cui lavorare, si tengano presenti alcuni fattori. Innanzitutto, è importante sottolineare
+    che potrebbero esserci delle condizioni aggiuntive da considerare per le clausele WHERE (ad esempio, importando delle notizie potrei non voler importare
+    quelle troppo vecchie, eccetera); quindi bisogna riflettere attentamente su questo prima di comporre le query definitive.
 
 */
