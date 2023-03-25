@@ -573,7 +573,7 @@
     // writeToFile() dovrebbe diventare write2file()
 
     // log
-	writeToFile( date( 'Y-m-d H:i:s' ) . ' ' . $_SERVER['REDIRECT_URL'] . PHP_EOL, FILE_LATEST_RUN );
+	writeToFile( date( 'Y-m-d H:i:s' ) . ' ' . ( isset( $_SERVER['REDIRECT_URL'] ) ? $_SERVER['REDIRECT_URL'] : $_SERVER['REQUEST_URI'] ) . PHP_EOL, FILE_LATEST_RUN );
 	appendToFile( 'inizio esecuzione runlevel' . PHP_EOL, FILE_LATEST_RUN );
 
     // NOTA il framework prevede alcuni file di log speciali, utili soprattutto per il debug; questi file vengono scritti

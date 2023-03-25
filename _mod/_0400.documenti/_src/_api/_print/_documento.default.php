@@ -329,7 +329,7 @@
         'INNER JOIN stati ON stati.id = regioni.id_stato '.
         'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
         array(
-            array( 's' => $dst['id'] )
+            array( 's' => $dst['id'] ),
             array( 's' => $doc['id_sede_destinatario'] )
         )
     );
