@@ -241,8 +241,11 @@
         'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
         'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
         'INNER JOIN stati ON stati.id = regioni.id_stato '.
-        'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
-        array( array( 's' => $src['id'] ) )
+        'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
+        array(
+            array( 's' => $src['id'] ),
+            array( 's' => $doc['id_sede_emittente'] )
+        )
     );
 
     // controllo indirizzo
@@ -271,36 +274,41 @@
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
 
-    // codice SDI di default a '0000000' per i privati senza codice SDI
-    if( empty( $dst['codice_sdi'] ) && empty( $dst['partita_iva'] ) ) {
-        $dst['codice_sdi'] = '0000000';
-    }
+    // se il documento è una fattura, lo SDI è richiesto
+    if( $doc['se_fattura'] ) {
 
-    // verifico che il codice SDI risponda al pattern corretto
-    if( ! preg_match( '/[a-zA-Z0-9]+/', $dst['codice_sdi'] ) ) {
-        dieText('valore non corretto per codice SDI: ' . $dst['codice_sdi'] );
-    }
-
-    // destinatari con PEC
-    if( ! empty( $dst['id_pec_sdi'] ) ) {
-        $dst['pec_sdi'] =  mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT indirizzo from mail where id = ?',
-            array( array( 's' => $dst['id_pec_sdi'] ) ) );
-    }
-
-    // controllo CIG
-    if( ! empty( $dst['se_pubblica_amministrazione'] ) ) {
-        if( empty( $doc['cig'] ) ) {
-            dieText('richiesto CIG per emettere fattura PA' );
+        // codice SDI di default a '0000000' per i privati senza codice SDI
+        if( empty( $dst['codice_sdi'] ) && empty( $dst['partita_iva'] ) ) {
+            $dst['codice_sdi'] = '0000000';
         }
-# TODO verificare se è sempre obbligatorio
-#        if( empty( $doc['cup'] ) ) {
-#            dieText('richiesto CUP per emettere fattura PA' );
-#        }
-        if( empty( $doc['riferimento'] ) ) {
-            dieText('richiesto riferimento per emettere fattura PA' );
+
+        // verifico che il codice SDI risponda al pattern corretto
+        if( ! preg_match( '/[a-zA-Z0-9]+/', $dst['codice_sdi'] ) ) {
+            dieText('valore non corretto per codice SDI: ' . $dst['codice_sdi'] );
         }
+
+        // destinatari con PEC
+        if( ! empty( $dst['id_pec_sdi'] ) ) {
+            $dst['pec_sdi'] =  mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT indirizzo from mail where id = ?',
+                array( array( 's' => $dst['id_pec_sdi'] ) ) );
+        }
+
+        // controllo CIG
+        if( ! empty( $dst['se_pubblica_amministrazione'] ) ) {
+            if( empty( $doc['cig'] ) ) {
+                dieText('richiesto CIG per emettere fattura PA' );
+            }
+    # TODO verificare se è sempre obbligatorio
+    #        if( empty( $doc['cup'] ) ) {
+    #            dieText('richiesto CUP per emettere fattura PA' );
+    #        }
+            if( empty( $doc['riferimento'] ) ) {
+                dieText('richiesto riferimento per emettere fattura PA' );
+            }
+        }
+
     }
 
     // denominazione fiscale
@@ -319,8 +327,11 @@
         'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
         'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
         'INNER JOIN stati ON stati.id = regioni.id_stato '.
-        'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
-        array( array( 's' => $dst['id'] ) )
+        'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
+        array(
+            array( 's' => $dst['id'] )
+            array( 's' => $doc['id_sede_destinatario'] )
+        )
     );
 
     // debug

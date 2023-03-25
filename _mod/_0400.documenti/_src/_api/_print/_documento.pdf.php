@@ -340,7 +340,7 @@
         }
     }
 
-    if( $countAggregate > 0 ){
+    if( $countAggregate > 0 ) {
         // se sono presenti righe aggregate viene aggiunta la sezione di dettaglio 
         // impostazione margine inferiore della pagina
         $pdf->SetAutoPageBreak( true, $mt );
