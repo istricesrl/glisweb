@@ -5,7 +5,7 @@
         "vendor-dir": "_src/_lib/_ext"
     },
     "require": {
-        "phpoffice/phpword": "0.14.*",
+        "phpoffice/phpword": ">0.14",
         "phpoffice/phpspreadsheet": "1.*",
         "phpoffice/phppresentation": "0.9.*",
         "html2text/html2text": "4.1.*",
