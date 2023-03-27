@@ -7,7 +7,7 @@
 {# CICLO SOTTO CATEGORIE #}
 
 {% for p in page.children.id %}
-{% if pages[ p ].metadata.id_categoria_prodotti %}
+{% if pages[ p ].metadati.id_categoria_prodotti %}
 {% set p = pages[ p ] %}
 <h2><a href="{{ p.url[ localization.language.ietf ] }}">{{ p.h1[ localization.language.ietf ] }}</a></h2>
 {% endif %}
@@ -20,7 +20,7 @@
 {# CICLO PRODOTTI DELLA CATEGORIA #}
 
 {% for p in page.children.id %}
-{% if pages[ p ].metadata.id_prodotto %}
+{% if pages[ p ].metadati.id_prodotto %}
 {% set p = pages[ p ] %}
 <p><a href="{{ p.url[ localization.language.ietf ] }}">{{ p.h1[ localization.language.ietf ] }}</a></p>
 {% endif %}

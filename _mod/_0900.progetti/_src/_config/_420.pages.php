@@ -19,14 +19,14 @@
      */
 
 
-    if( isset( $cf['contents']['page']['metadata']['id_categoria_progetti'] )
-    && ! isset( $cf['contents']['page']['metadata']['id_progetto'] ) ) {
+    if( isset( $cf['contents']['page']['metadati']['id_categoria_progetti'] )
+    && ! isset( $cf['contents']['page']['metadati']['id_progetto'] ) ) {
 
       $rCnt = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT testo, abstract, keywords, description, applicazioni, specifiche FROM contenuti WHERE id_categoria_progetti = ? AND id_lingua = ?',
             array(
-                array( 's' => $cf['contents']['page']['metadata']['id_categoria_progetti'] ),
+                array( 's' => $cf['contents']['page']['metadati']['id_categoria_progetti'] ),
                 array( 's' => $cf['localization']['language']['id'] )
             )
             );

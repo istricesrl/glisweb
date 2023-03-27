@@ -106,11 +106,11 @@
     }
 
     // assegnazione del tema per specificità
-    if( isset( $cf['site']['metadata']['theme'] ) ) {
+    if( isset( $cf['site']['metadati']['theme'] ) ) {
 
         if( ! isset( $ct['page']['template']['theme'] ) ) {
 
-            $ct['page']['template']['theme'] = $cf['site']['metadata']['theme'];
+            $ct['page']['template']['theme'] = $cf['site']['metadati']['theme'];
 
         }
 

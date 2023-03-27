@@ -54,7 +54,7 @@
      * 
      * {limit}: definisce il numero massimo di record da far visualizzare, può andare da 1 a 10000 oltre questo valore la chiamata è considerata incorretta (404);
      * 
-     * {orderby}: definisce il criterio di ordinamento deve essere inserito il nome di un metadato (si veda servizio Metadata) seguito da = ed uno dei valori
+     * {orderby}: definisce il criterio di ordinamento deve essere inserito il nome di un metadato (si veda servizio metadati) seguito da = ed uno dei valori
      * tra ASC (per ordine ascendente) o DESC (per ordine discendente) ES. Data=DESC errori di formattazione portano a 404;
      * 
      * {wildcard}: parametro complementare del successivo {params} definisce il tipo di ricerca che si effettuerà sui valori di param e può assumere i seguenti valori:

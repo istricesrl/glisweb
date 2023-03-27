@@ -10,7 +10,7 @@
      */
 
     // seleziono le sottocategorie
-	if( isset( $ct['page']['metadata']['id_categoria_notizie'] ) && ! empty( $ct['page']['metadata']['id_categoria_notizie'] ) ) {
+	if( isset( $ct['page']['metadati']['id_categoria_notizie'] ) && ! empty( $ct['page']['metadati']['id_categoria_notizie'] ) ) {
 
 	    // selezione delle sotto categorie
 		$ct['page']['contents']['categorie_notizie'] = mysqlQuery(
@@ -23,7 +23,7 @@
 		    .'GROUP BY categorie_notizie.id ',
 		    array(
 			array( 's' => $cf['localization']['language']['id'] ),
-			array( 's' => $ct['page']['metadata']['id_categoria_notizie'] )
+			array( 's' => $ct['page']['metadati']['id_categoria_notizie'] )
 		    )
 		);
 
@@ -44,7 +44,7 @@
 		    .'GROUP BY notizie.id ORDER BY pubblicazioni.timestamp_inizio DESC',
 		    array(
 			array( 's' => $cf['localization']['language']['id'] ),
-			array( 's' => $ct['page']['metadata']['id_categoria_notizie'] )
+			array( 's' => $ct['page']['metadati']['id_categoria_notizie'] )
 		    )
 		);
 

@@ -271,19 +271,19 @@
 */
 #                $p['metadati'] = array_replace_recursive(
 #                    $p['metadati'],
-#                    metadata2associativeArray( $mta )
+#                    metadati2associativeArray( $mta )
 #                );
 
 if( is_array( $p['metadati'] ) ) {
 
                 $p['metadati'] = array_replace_recursive(
                     $p['metadati'],
-                    metadata2associativeArray( $meta )
+                    metadati2associativeArray( $meta )
                 );
 
             } else {
 
-                $p['metadati'] = metadata2associativeArray( $meta );
+                $p['metadati'] = metadati2associativeArray( $meta );
 
             }
 

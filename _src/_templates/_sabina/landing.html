@@ -1,19 +1,51 @@
 {% import '_bin/_default.html' as cms %}
+{% import '_bin/_privacy.html' as prv %}
 
 {% extends "ext/main.html" %}
 
 {% block jumbotron %}
-{% if page.contents.images.jumbotron %}
-<section class="mb-3 intestazione">
-    {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotron', '', img ) }}
-    <hr class="jumbotron-hr jumbotron-hr-right d-none d-md-block">
+{% include 'inc/jumbotron.html' %}
+{% endblock %}
+
+{% block vantaggi %}
+<!-- blocco vantaggi -->
+{% if page.metadati.vantaggi %}
+<section class="vantaggi">
+    <div class="container">
+        <div class="row">
+            {% for k,v in page.metadati.vantaggi %}
+            <div class="col">
+                <h2>{{ v.h2[ localization.language.ietf ] }}</h2>
+                <p>{{ v.p[ localization.language.ietf ] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 </section>
 {% else %}
-<!-- inserire almeno un'immagine con ruolo "jumbotron" nella pagina -->
+<!-- metadati di tipo vantaggi|*|h2 non presenti -->
+{% endif %}
+{% endblock %}
+
+{% block abstract %}
+<!-- blocco abstract -->
+{% if page.abstract[ localization.language.ietf ] %}
+<section class="abstract">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                {{ include( template_from_string( page.abstract[ localization.language.ietf ] ) | raw ) }}
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- abstract non presente per la lingua {{ localization.language.ietf }} -->
 {% endif %}
 {% endblock %}
 
 {% block main %}
+<!-- blocco testo principale -->
 <section class="testo">
     <div class="container">
         <div class="row">
@@ -21,14 +53,14 @@
                 {% if page.content[ localization.language.ietf ] %}
                 {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
                 {% else %}
-                <!-- testo principale non presente per la lingua {{ localization.language.ietf }}-->
+                <!-- testo principale non presente per la lingua {{ localization.language.ietf }} -->
                 {% endif %}
             </div>
             <div class="col-12 col-md">
                 {% if page.specifiche[ localization.language.ietf ] %}
                 {{ include( template_from_string( page.specifiche[ localization.language.ietf ] ) | raw ) }}
                 {% else %}
-                <!-- testo specifiche non presente per la lingua {{ localization.language.ietf }}-->
+                <!-- testo specifiche non presente per la lingua {{ localization.language.ietf }} -->
                 {% endif %}
             </div>
         </div>
@@ -36,7 +68,45 @@
 </section>
 {% endblock %}
 
+{% block offerta %}
+<!-- blocco offerta -->
+{% if page.metadati.id_prodotto %}
+{% if page.metadati.lp_offerta %}
+<section class="offerta">
+    <div class="container">
+        <div class="row d-flex flex-row justify-content-around">
+            {% for v in page.metadati.lp_offerta %}
+            {% for art in page.contents.articoli if art.id == v.articolo %}
+            <div class="col-12 col-md-4">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h2>{{ art.h1 }}</h2>
+                    </div>
+                    <div class="card-body">
+                        <p>{{ include( template_from_string( art.specifiche ) | raw ) }}</p>
+                    </div>
+                    <div class="card-footer">
+                        <h3>{{ art.prezzi.DEFAULT.prezzo|number_format(2, ',', '.') }} {{ art.prezzi.DEFAULT.utf8 }}</h3>
+                    </div>                
+                </div>
+            </div>
+            {% else %}
+            <!-- articlo non trovato {{ v.articolo }} nel prodotto {{ page.metadati.id_prodotto }} -->
+            {% endfor %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% else %}
+<!-- metadati di tipo offerta|*|articolo non presenti -->
+{% endif %}
+{% else %}
+<!-- metadato id_prodotto non presente -->
+{% endif %}
+{% endblock %}
+
 {% block contatti %}
+<!-- blocco contatti -->
 {% if page.metadati.ct_form %}
 {% if page.metadati.ct_action %}
 <section class="contatti">
@@ -45,6 +115,11 @@
         <div class="row">
             <div class="col-12 col-md">
                 <h1>{{ page.metadati.ct_h1[ localization.language.ietf ] }}</h1>
+                {% if page.metadati.ct_p[ localization.language.ietf ] %}
+                <p>{{ page.metadati.ct_p[ localization.language.ietf ] }}</p>
+                {% else %}
+                <!-- metadato ct_p non specificato per la lingua {{ localization.language.ietf }}-->
+                {% endif %}
             </div>
         </div>
         {% else %}
@@ -54,7 +129,8 @@
             <div class="col-12 col-md">
                 <form action="{{ page.url[ localization.language.ietf ] }}" class="w-100 mt-3" id="testForm2" method="post">
                     <div class="row">
-                        <div class="col col-12"><input class="form-control" name="__contatti__[forminfo][email]" placeholder="E-MAIL" required="" type="email"></div>
+                        <div class="col-12 col-md"><input class="form-control" name="__contatti__[forminfo][email]" placeholder="E-MAIL" required="1" type="email"></div>
+                        <div class="col-12 col-md"><input class="form-control" name="__contatti__[forminfo][telefono]" placeholder="TELEFONO" type="phone"></div>
                     </div>
                     <div class="row my-2">
                         <div class="col-12"><textarea class="form-control" id="testo" name="__contatti__[forminfo][messaggio]" placeholder="MESSAGGIO" rows="3"></textarea></div>

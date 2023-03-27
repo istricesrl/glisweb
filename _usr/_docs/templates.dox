@@ -272,7 +272,7 @@
         "name": {
           "it-IT": "sito di esempio"
         },
-        "metadata":{
+        "metadati":{
             "theme": "themes/green.css"
         },
         "protocols": {

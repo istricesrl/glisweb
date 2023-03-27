@@ -21,45 +21,52 @@
     // verifico se è presente una pagina
 	if( isset( $cf['contents']['page']['id'] ) && isset( $cf['localization']['language']['id'] ) ) {
 
-        if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) ) {
+        if( isset( $cf['contents']['page']['metadati']['lp_offerta'] ) ) {
+
+            $joinField = 'id_pagina';
+            $joinValue = $cf['contents']['page']['id'];
+            $joinTable = 'pagine';
+            $subPages = true;
+
+        } elseif( isset( $cf['contents']['page']['metadati']['id_categoria_prodotti'] ) ) {
 
             $joinField = 'id_categoria_prodotti';
-            $joinValue = $cf['contents']['page']['metadata']['id_categoria_prodotti'];
+            $joinValue = $cf['contents']['page']['metadati']['id_categoria_prodotti'];
             $joinTable = 'categorie_prodotti';
             $subPages = true;
 
-        } elseif( isset( $cf['contents']['page']['metadata']['id_prodotto'] ) ) {
+        } elseif( isset( $cf['contents']['page']['metadati']['id_prodotto'] ) ) {
 
             $joinField = 'id_prodotto';
-            $joinValue = $cf['contents']['page']['metadata']['id_prodotto'];
+            $joinValue = $cf['contents']['page']['metadati']['id_prodotto'];
             $joinTable = 'prodotti';
             $subPages = false;
 
-        } elseif( isset( $cf['contents']['page']['metadata']['id_categoria_notizie'] ) ) {
+        } elseif( isset( $cf['contents']['page']['metadati']['id_categoria_notizie'] ) ) {
 
             $joinField = 'id_categoria_notizie';
-            $joinValue = $cf['contents']['page']['metadata']['id_categoria_notizie'];
+            $joinValue = $cf['contents']['page']['metadati']['id_categoria_notizie'];
             $joinTable = 'categorie_notizie';
             $subPages = true;
 
-        } elseif( isset( $cf['contents']['page']['metadata']['id_notizia'] ) ) {
+        } elseif( isset( $cf['contents']['page']['metadati']['id_notizia'] ) ) {
 
             $joinField = 'id_notizia';
-            $joinValue = $cf['contents']['page']['metadata']['id_notizia'];
+            $joinValue = $cf['contents']['page']['metadati']['id_notizia'];
             $joinTable = 'notizie';
             $subPages = false;
 
-        } elseif( isset( $cf['contents']['page']['metadata']['id_categoria_risorse'] ) ) {
+        } elseif( isset( $cf['contents']['page']['metadati']['id_categoria_risorse'] ) ) {
 
             $joinField = 'id_categoria_risorse';
-            $joinValue = $cf['contents']['page']['metadata']['id_categoria_risorse'];
+            $joinValue = $cf['contents']['page']['metadati']['id_categoria_risorse'];
             $joinTable = 'categorie_risorse';
             $subPages = true;
 
-        } elseif( isset( $cf['contents']['page']['metadata']['id_risorsa'] ) ) {
+        } elseif( isset( $cf['contents']['page']['metadati']['id_risorsa'] ) ) {
 
             $joinField = 'id_risorsa';
-            $joinValue = $cf['contents']['page']['metadata']['id_risorsa'];
+            $joinValue = $cf['contents']['page']['metadati']['id_risorsa'];
             $joinTable = 'risorsa';
             $subPages = false;
 

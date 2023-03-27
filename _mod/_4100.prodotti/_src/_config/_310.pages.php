@@ -19,7 +19,7 @@
  */
 
 // controllo cache
-if ($cf['contents']['cached'] === false) {
+if( $cf['contents']['cached'] === false ) {
 
     // log
     if( ! empty( $cf['memcache']['connection'] ) ) {
@@ -44,16 +44,16 @@ if ($cf['contents']['cached'] === false) {
     );
 
     // timer
-    timerCheck($cf['speed'], ' -> fine recupero prodotti dal database');
+    timerCheck( $cf['speed'], ' -> fine recupero prodotti dal database' );
 
     // se ci sono pagine trovate le inserisco nell'array principale
-    if (is_array($pgs)) {
+    if( is_array( $pgs ) ) {
 
         // canonical
         $canon = NULL;
 
         // ciclo principale
-        foreach ($pgs as $pg) {
+        foreach( $pgs as $pg ) {
 
             // ID della categoria
             $cid = PREFX_CATEGORIE_PRODOTTI . $pg['id_categoria'];
@@ -75,7 +75,6 @@ if ($cf['contents']['cached'] === false) {
             $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
             $pgc = memcacheRead($cf['memcache']['connection'], $pid);
 
-
             // valuto se i dati in cache sono ancora validi
             if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {
 
@@ -86,7 +85,7 @@ if ($cf['contents']['cached'] === false) {
                     'parent'        => array('id'        => $cid),
                     'canonical'        => $canon,
                     'template'        => array('path'    => $cf['prodotti']['pages']['scheda']['template'], 'schema' => $cf['prodotti']['pages']['scheda']['schema'], 'theme' => $cf['prodotti']['pages']['scheda']['css']),
-                    'metadata'      => array('id_prodotto' => $pg['id']),
+                    'metadati'      => array('id_prodotto' => $pg['id']),
                     'macro'            => $cf['prodotti']['pages']['scheda']['macro']
                 );
 
@@ -130,7 +129,7 @@ if ($cf['contents']['cached'] === false) {
                 $canon = $pid;
 
                // scrivo la pagina del prodotto in cache
-               memcacheWrite($cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid]);
+               memcacheWrite( $cf['memcache']['connection'], 'PAGE_' .  $pid, $cf['contents']['pages'][$pid] );
 
             } else {
 

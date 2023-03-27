@@ -49,6 +49,12 @@ nav.navbar-slider-mega ul.navbar-nav {
     font-family: FontAwesome;
 }
 
+/* stili per reCaptcha */
+
+.grecaptcha-badge {
+    z-index: 9999;
+}
+
 /* stili per il banner cookie */
 
 #cookie {

@@ -81,7 +81,7 @@ if( $cf['contents']['cached'] === false ) {
                         'schema'    => ( !empty($pg['schema_html'])  ? $pg['schema_html'] : $ct['progetti']['pages']['elenco']['schema']) ,
                         'theme'     => ( !empty( $pg['tema_css'] ) ? $pg['tema_css'] : 'main.css') 
                     ),
-                    'metadata'      => array('id_categoria_progetti' => $pg['id']),
+                    'metadati'      => array('id_categoria_progetti' => $pg['id']),
                     'macro'            => $cf['catalogo']['pages']['elenco']['macro']
                 );
 

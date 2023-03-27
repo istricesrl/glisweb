@@ -10,14 +10,14 @@
  */
 /*
 // seleziono le sottocategorie
-if( isset( $cf['contents']['page']['metadata']['id_categoria_risorse'] ) && ! empty($cf['contents']['page']['metadata']['id_categoria_risorse'] ) ) {
+if( isset( $cf['contents']['page']['metadati']['id_categoria_risorse'] ) && ! empty($cf['contents']['page']['metadati']['id_categoria_risorse'] ) ) {
 
 	// cerco le categorie fra i figli della pagina
 	foreach( $cf['contents']['page']['children']['id'] as $child ) {
-		if( isset( $cf['contents']['pages'][ $child ]['metadata']['id_risorsa'] ) ) {
+		if( isset( $cf['contents']['pages'][ $child ]['metadati']['id_risorsa'] ) ) {
 			$cf['contents']['page']['contents']['risorse'][] = $child;
 		} else {
-			print_r( $cf['contents']['pages'][ $child ]['metadata'] );
+			print_r( $cf['contents']['pages'][ $child ]['metadati'] );
 		}
 
 	}

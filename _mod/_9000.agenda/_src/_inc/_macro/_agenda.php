@@ -192,7 +192,7 @@
 		);
 		$row = array_replace_recursive(
 			$row,
-			metadata2associativeArray( $meta )
+			metadati2associativeArray( $meta )
 		);
 	}
 */

@@ -173,11 +173,11 @@
 
     // debug
     // print_r( $attivitaSeguenti );
-    // print_r( metadata2associativeArray( $attivitaSeguenti ) );
+    // print_r( metadati2associativeArray( $attivitaSeguenti ) );
 
 /* TODO a cosa serviva questo?
     // attività seguenti
-    $seguenti = metadata2associativeArray( $attivitaSeguenti );
+    $seguenti = metadati2associativeArray( $attivitaSeguenti );
     if( isset( $seguenti['procedure']['attivita']['seguenti'] ) ) {
         foreach( $seguenti['procedure']['attivita']['seguenti'] as $seg ) {
             $ct['etc']['procedure'][ $seg['id'] ] = array_merge(

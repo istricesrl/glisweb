@@ -10,16 +10,16 @@
  */
 
 // seleziono le sottocategorie
-if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! empty($cf['contents']['page']['metadata']['id_categoria_prodotti'] ) ) {
+if( isset( $cf['contents']['page']['metadati']['id_categoria_prodotti'] ) && ! empty($cf['contents']['page']['metadati']['id_categoria_prodotti'] ) ) {
 
 /*
 	// cerco le categorie fra i figli della pagina
 	foreach( $cf['contents']['page']['children']['id'] as $child ) {
-		if( isset( $cf['contents']['pages'][ $child ]['metadata']['id_prodotto'] ) ) {
+		if( isset( $cf['contents']['pages'][ $child ]['metadati']['id_prodotto'] ) ) {
 			$cf['contents']['page']['contents']['prodotti'][] = $child;
 
 		} else {
-			print_r( $cf['contents']['pages'][ $child ]['metadata'] );
+			print_r( $cf['contents']['pages'][ $child ]['metadati'] );
 		}
 
 
@@ -32,7 +32,7 @@ if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! e
 		#1			array( 's' => $ct['page']['metadati']['id_categoria_prodotti'] ),
 		#1			array( 's' => $cf['localization']['language']['id'] )
 		array('s' => $cf['localization']['language']['id']),
-		array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti'])
+		array('s' => $cf['contents']['page']['metadati']['id_categoria_prodotti'])
 	);
 
 	// impostazioni di base
@@ -197,7 +197,7 @@ if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! e
 	$q = 'SELECT SQL_CALC_FOUND_ROWS prodotti.id, contenuti.title, contenuti.h1, contenuti.h2, contenuti.cappello, contenuti.abstract, '
 		. 'immagini.path AS immagine, contenuti_immagine.cappello AS didascalia, '
 		. '( prodotti.larghezza_prodotto + prodotti.lunghezza_prodotto ) AS somma_dimensioni, '
-		. 'concat( "CATEGORIE.PRODOTTI.' . $cf['contents']['page']['metadata']['id_categoria_prodotti'] . '.PRODOTTI.", prodotti.id ) AS id_pagina, '
+		. 'concat( "CATEGORIE.PRODOTTI.' . $cf['contents']['page']['metadati']['id_categoria_prodotti'] . '.PRODOTTI.", prodotti.id ) AS id_pagina, '
 		. 'prodotti.id_marchio, marchi.nome as marchio, '		// SDF
 		. 'mPiuVenduti.testo AS piu_venduti '
 		. 'FROM prodotti '
@@ -330,8 +330,8 @@ if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! e
 #			. 'WHERE (id = ? OR id_genitore = ?) AND id_tipologia_pubblicazioni = 2 ORDER BY categorie_prodotti.nome',
 			. 'WHERE (id = ? OR id_genitore = ?) ORDER BY categorie_prodotti.nome',
 		array(
-			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti']),
-			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti'])
+			array('s' => $cf['contents']['page']['metadati']['id_categoria_prodotti']),
+			array('s' => $cf['contents']['page']['metadati']['id_categoria_prodotti'])
 		)
 	);
 
@@ -343,8 +343,8 @@ if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! e
 			. 'ON prodotti.id = prodotti_categorie.id_prodotto INNER JOIN categorie_prodotti ON prodotti_categorie.id_categoria = categorie_prodotti.id '
 			. 'WHERE categorie_prodotti.id = ? OR categorie_prodotti.id_genitore = ? ORDER BY marchi.nome',
 		array(
-			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti']),
-			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti'])
+			array('s' => $cf['contents']['page']['metadati']['id_categoria_prodotti']),
+			array('s' => $cf['contents']['page']['metadati']['id_categoria_prodotti'])
 		)
 	);
 
@@ -356,8 +356,8 @@ if( isset( $cf['contents']['page']['metadata']['id_categoria_prodotti'] ) && ! e
 			. 'ON prodotti.id = prodotti_categorie.id_prodotto INNER JOIN categorie_prodotti ON prodotti_categorie.id_categoria = categorie_prodotti.id '
 			. 'WHERE categorie_prodotti.id = ? OR categorie_prodotti.id_genitore = ? ORDER BY taglie.id',
 		array(
-			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti']),
-			array('s' => $cf['contents']['page']['metadata']['id_categoria_prodotti'])
+			array('s' => $cf['contents']['page']['metadati']['id_categoria_prodotti']),
+			array('s' => $cf['contents']['page']['metadati']['id_categoria_prodotti'])
 		)
 	);
 */

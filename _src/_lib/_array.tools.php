@@ -335,7 +335,7 @@
      * @todo documentare
      *
      */
-    function metadata2associativeArray( $r, &$a = array() ) {
+    function metadati2associativeArray( $r, &$a = array() ) {
 
         foreach( $r as $row ) {
 

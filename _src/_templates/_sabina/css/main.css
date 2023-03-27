@@ -17,7 +17,7 @@ footer {
     border-top: 2px solid #666666;
     color: #000000;
     margin: 0em;
-    min-height: 5em;
+    min-height: 6em;
     padding: 1em;
 }
 
@@ -104,7 +104,7 @@ section.leads {
 }
 
 section.vantaggi {
-    margin: 0em;
+    margin: 2em 0em;
 }
 
 section.vantaggi .card-title {
@@ -112,13 +112,8 @@ section.vantaggi .card-title {
     font-weight: bold;
 }
 
-section.leads {
-    color: #ffffff;
-    padding: 1em 0em;
-}
-
 section.garanzia {
-    margin: 0em;
+    margin: 2em 0em;
 }
 
 section.default {
@@ -129,10 +124,21 @@ section.default h1 {
     margin-bottom: 0.5em;
 }
 
+section.abstract {
+    background-color: #cccccc;
+    margin: 2em 0em;
+    padding: 1em 0em;
+    text-align: center;
+}
+
 section.contatti {
     background-color: #cccccc;
     margin: 2em 0em;
     padding: 1em 0em;
+}
+
+section.offerta {
+    margin: 2em 0em;
 }
 
 a, a:visited {

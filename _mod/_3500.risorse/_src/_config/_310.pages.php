@@ -81,7 +81,7 @@ if( $cf['contents']['cached'] === false ) {
                         'schema'    =>  $pg['schema_html'],
                         'theme'     =>  $pg['tema_css']
                     ),
-                    'metadata'      => array('id_categoria_risorse' => $pg['id']),
+                    'metadati'      => array('id_categoria_risorse' => $pg['id']),
                     'macro'            => $cf['risorse']['pages']['elenco']['macro']
                 );
 
@@ -193,7 +193,7 @@ if( $cf['contents']['cached'] === false ) {
                     'parent'        => array('id'        => $cid),
                     'canonical'        => $canon,
                     'template'        => array('path'    => $cf['risorse']['pages']['scheda']['template'], 'schema' => $cf['risorse']['pages']['scheda']['schema'], 'theme' => $cf['risorse']['pages']['scheda']['css']),
-                    'metadata'      => array('id_risorsa' => $pg['id'])
+                    'metadati'      => array('id_risorsa' => $pg['id'])
                 );
 
                 aggiungiGruppi(

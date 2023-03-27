@@ -10,7 +10,7 @@
      */
 
     // seleziono le sottocategorie
-	if( isset( $ct['page']['metadata']['id_prodotto'] ) && ! empty( $ct['page']['metadata']['id_prodotto'] ) ) {
+	if( isset( $ct['page']['metadati']['id_prodotto'] ) && ! empty( $ct['page']['metadati']['id_prodotto'] ) ) {
 /*
 
 		NOTA vedi _420.pages.php
@@ -34,7 +34,7 @@
 		    ,
 		    array(
 				array( 's' => $cf['localization']['language']['id'] ),
-				array( 's' => $ct['page']['metadata']['id_prodotto'] )
+				array( 's' => $ct['page']['metadati']['id_prodotto'] )
 		    )
 		);
 */
@@ -50,7 +50,7 @@
 		    ,
 		    array(
 			array( 's' => $cf['localization']['language']['id'] ),
-			array( 's' => $ct['page']['metadata']['id_prodotto'] )
+			array( 's' => $ct['page']['metadati']['id_prodotto'] )
 		    )
 		);
 */

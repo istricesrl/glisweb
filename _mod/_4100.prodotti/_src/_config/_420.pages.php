@@ -18,10 +18,12 @@
      *
      */
 
-    if( isset( $ct['page']['metadata']['id_prodotto'] )  && ! empty( $ct['page']['metadata']['id_prodotto'] ) ) {
+    // print_r( $ct['page']['contents'] );
+
+    if( isset( $ct['page']['metadati']['id_prodotto'] )  && ! empty( $ct['page']['metadati']['id_prodotto'] ) ) {
 
         $ct['page']['contents']['articoli'] = mysqlQuery( $cf['mysql']['connection'],
-            'SELECT articoli.id, contenuti.h1, contenuti.cappello, '
+            'SELECT articoli.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
             .'contenuti.title, articoli.id_taglia, articoli.id_colore,  '
             .'lingue_view.ietf FROM articoli '
             .'LEFT JOIN contenuti ON ( contenuti.id_articolo = articoli.id AND contenuti.id_lingua = ? ) '
@@ -30,7 +32,7 @@
             .'GROUP BY articoli.id ',
             array(
                 array( 's' => $cf['localization']['language']['id'] ),
-                array( 's' => $ct['page']['metadata']['id_prodotto'] )
+                array( 's' => $ct['page']['metadati']['id_prodotto'] )
             )
         );
 
@@ -59,6 +61,8 @@
             );
 
         }
+
+        // die( print_r( $ct['page']['contents']['articoli'], true ) );
 
     }
 

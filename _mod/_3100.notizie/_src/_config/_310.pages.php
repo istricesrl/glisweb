@@ -77,7 +77,7 @@
                         'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                         'parent'		=> array( 'id'		=> $pip ),
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
-                        'metadata'      => array('id_categoria_notizie' => $pg['id']),
+                        'metadati'      => array('id_categoria_notizie' => $pg['id']),
                         'macro'         => $cf['notizie']['pages']['elenco']['macro']
                     );
 
@@ -207,7 +207,7 @@
                         'canonical'		=> $canon,
                         'parent'		=> array( 'id'		=> $cid ),
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] ),
-                        'metadata'      => array(
+                        'metadati'      => array(
                             'id_notizia' => $pg['id'],
                             'id_tipologia_pubblicazione' => $pg['id_tipologia_pubblicazione'],
                             'tipologia_pubblicazione' => $pg['tipologia_pubblicazione']

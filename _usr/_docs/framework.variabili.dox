@@ -189,7 +189,7 @@
     contents.pages.<x>.h1.<l>                    | il tag H1 della pagina <x> nella lingua <l>
     contents.pages.<x>.id_sito                   | l'ID del sito di appartenenza della pagina <x>
     contents.pages.<x>.macro                     | array degli script PHP da eseguire prima del rendering della pagina <x>
-    contents.pages.<x>.metadata                  | array dei metadati della pagina <x>
+    contents.pages.<x>.metadati                  | array dei metadati della pagina <x>
     contents.pages.<x>.menu                      | dettagli sui menu in cui è presente la pagina <x>
     contents.pages.<x>.menu.<m>                  | dettagli della voce di menu della pagina <x> nel menu <m>
     contents.pages.<x>.menu.<m>.<k>              | dettagli della voce di menu della pagina <x> nel menu <m> per l'ancora <k>
@@ -1025,8 +1025,8 @@
     site.hosts                   | hosts del sito <n> (ad es. www)
     site.hosts.<j>               | host del sito <n> per lo status <j>
     site.id                      | id del sito <n> (vedi _src/_config/_015.site.php)
-    site.metadata                | array dei metadati del sito <n>
-    site.metadata.theme          | tema di default del sito <n>
+    site.metadati                | array dei metadati del sito <n>
+    site.metadati.theme          | tema di default del sito <n>
     site.name                    | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     site.name.<l>                | nome del sito <n> per la lingua <l>
     site.protocols               | protocolli del sito <n> (ad es. https)
@@ -1080,7 +1080,7 @@
     sites.<n>.hosts              | hosts del sito <n> (ad es. www)
     sites.<n>.hosts.<j>          | host del sito <n> per lo status <j>
     sites.<n>.id                 | id del sito <n> (dev'essere uguale a <n>)
-    sites.<n>.metadata           | array dei metadati del sito
+    sites.<n>.metadati           | array dei metadati del sito
     sites.<n>.name               | nome del sito <n> (ad uso interno, con le sue sotto chiavi determina le lingue attive)
     sites.<n>.name.<l>           | nome del sito <n> per la lingua <l>
     sites.<n>.protocols          | protocolli del sito <n> (ad es. https)
