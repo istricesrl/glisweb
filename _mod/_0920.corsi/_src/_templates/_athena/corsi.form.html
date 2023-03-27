@@ -100,6 +100,7 @@
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
 				</div>
+<!--
 				<input type="hidden" id="metadati_id" name="{{ table }}[metadati][0][id]" value="{{ request[ table ].metadati[0].id }}">
 				<input type="hidden" id="metadati_genitore" name="{{ table }}[metadati][0][id_progetto]" value="__parent_id__">
 				<input type="hidden" id="metadati_nome" name="{{ table }}[metadati][0][nome]" value="iscritti_max">
@@ -107,7 +108,18 @@
 					<span class="label-top">massimo iscritti</span>
 					{{ frm.input( table, 'metadati', '0', 'testo', '', '', request ) }}
 				</div>  
-            </div>
+-->
+
+				<div class="col-12 col-md-2">
+					<span class="label-top">massimo iscritti</span>
+					{% set subtable = 'metadati' %}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id', '', '', '', etc.sub.iscritti_max.id, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id_progetto, '', '', '', '__parent_id__', 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'nome', '', '', '', etc.sub.iscritti_max.nome, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'testo', '', '', '', etc.sub.iscritti_max.testo ) }}
+				</div>  
+
+			</div>
 
 			<div class="form-group form-row">
 				<div class="col-12">

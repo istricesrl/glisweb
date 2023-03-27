@@ -193,6 +193,21 @@
 
         }
 
+    // metadato di default per il numero di lezioni dell'abbonamento
+    $ct['etc']['sub']['iscritti_max'] = array(
+        'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) : 0 ),
+        'nome' => 'iscritti_max'
+    );
+
+    // ricerca metadato per il numero di accessi dell'abbonamento
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
+        foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
+            if( $m['nome'] == 'iscritti_max' ) {
+                $ct['etc']['sub']['iscritti_max'] = $m;
+                $ct['etc']['sub']['iscritti_max']['idx'] = $k;
+            }
+        }
+    }
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
