@@ -175,6 +175,7 @@
     // print_r( $attivitaSeguenti );
     // print_r( metadata2associativeArray( $attivitaSeguenti ) );
 
+/* TODO a cosa serviva questo?
     // attività seguenti
     $seguenti = metadata2associativeArray( $attivitaSeguenti );
     if( isset( $seguenti['procedure']['attivita']['seguenti'] ) ) {
@@ -191,7 +192,7 @@
             );
         }
     }
-
+*/
     // debug
     // print_r( $ct['etc']['procedure'] );
 

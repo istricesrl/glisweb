@@ -179,6 +179,7 @@
 	// tendina tipologia attivita
 	$ct['etc']['id_tipologia_attivita'] = mysqlQuery( $cf['mysql']['connection'], 'SELECT id, nome AS __label__ FROM tipologie_attivita WHERE se_agenda = 1 ORDER BY nome' );
 
+/* TODO a cosa serviva questo?
 	// integrazione metadati
 	foreach( $ct['etc']['id_tipologia_attivita'] as &$row ) {
 		$meta = mysqlQuery(
@@ -194,6 +195,7 @@
 			metadata2associativeArray( $meta )
 		);
 	}
+*/
 
 	// debug
 	// print_r( $ct['etc']['id_tipologia_attivita'] );

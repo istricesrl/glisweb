@@ -356,7 +356,11 @@
 
             }
 
-            $lvl = $row['testo'];
+            if( empty( $row['ietf'] ) ) {
+                $lvl = $row['testo'];
+            } else {
+                $lvl[ $row['ietf'] ] = $row['testo'];
+            }
 
         }
 

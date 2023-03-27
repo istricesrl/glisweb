@@ -259,13 +259,24 @@
             )
         );
 
-        foreach( $meta as $mta ) {
+// print_r( $meta );
+
+#        foreach( $meta as $mta ) {
+/*
             if( empty( $mta['ietf'] ) ) {
                 $p['metadati'][ $mta['nome'] ] = $mta['testo'];
             } else {
                 $p['metadati'][ $mta['nome'] ][ $mta['ietf'] ] = $mta['testo'];
             }
-        }
+*/
+#                $p['metadati'] = array_replace_recursive(
+#                    $p['metadati'],
+#                    metadata2associativeArray( $mta )
+#                );
+
+                $p['metadati'] = metadata2associativeArray( $meta );
+
+#        }
 
     }
 
