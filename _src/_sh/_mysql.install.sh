@@ -35,21 +35,22 @@ echo "installazione del database"
         read -p "porta del server: " SRVPORT
     fi
 
-    read -p "nome utente AMMINISTRATORE: " SRVUSER
-
-    read -s -p "password utente AMMINISTRATORE: " SRVPASS && echo
-
     if [ -n "$3" ]; then
         SRVDBNAME=$3
     else
         read -p "database: " SRVDBNAME
     fi
 
-    if [ -n "$SRVPASS" ]; then
+    if [ -f "/etc/mysql.remote.conf" ]; then
+        DEFAULT="--defaults-extra-file=/etc/mysql.remote.conf"
+        SRVUSER="root"
+    elif [ -n "$SRVPASS" ]; then
+        read -p "nome utente AMMINISTRATORE: " SRVUSER
+        read -s -p "password utente AMMINISTRATORE: " SRVPASS && echo
         PASSC="-p$SRVPASS"
     fi
 
-    mysql -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE DATABASE IF NOT EXISTS \`$SRVDBNAME\` CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
+    mysql $DEFAULT -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE DATABASE IF NOT EXISTS \`$SRVDBNAME\` CHARACTER SET utf8 COLLATE utf8_unicode_ci;"
     # mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE1
     # mysql -h $SRVADDR -u $SRVUSER $PASSC $SRVDBNAME < $FILE2
 
@@ -71,10 +72,10 @@ echo "installazione del database"
             else
                 read -s -p "password utente DATABASE: " SRVDBPASS && echo
             fi
-            mysql -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE USER \`$SRVDBUSER\`@\`%\` IDENTIFIED BY '$SRVDBPASS';"
+            mysql $DEFAULT -h $SRVADDR -u $SRVUSER $PASSC -e "CREATE USER \`$SRVDBUSER\`@\`%\` IDENTIFIED BY '$SRVDBPASS';"
         fi
 
-        mysql -h $SRVADDR -u $SRVUSER $PASSC -e "GRANT ALL PRIVILEGES ON \`$SRVDBNAME\`.* TO \`$SRVDBUSER\`@\`%\`;"
+        mysql $DEFAULT -h $SRVADDR -u $SRVUSER $PASSC -e "GRANT ALL PRIVILEGES ON \`$SRVDBNAME\`.* TO \`$SRVDBUSER\`@\`%\`;"
 
     fi
 

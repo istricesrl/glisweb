@@ -162,7 +162,7 @@ if [ -f "$FILE" ]; then
 
 #	read -p "vuoi creare il database MySQL (s/n)? " SN
 
-#	if [ "$SN" == "s" ]; then
+#	if [ -n "$MYSQLIP" ]; then
 #		./_src/_sh/_mysql.install.sh $MYSQLIP $MYSQLPORT $MYSQLDB $MYSQLUSER $MYSQLPW
 #	fi
 
