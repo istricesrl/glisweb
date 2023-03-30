@@ -1119,11 +1119,14 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 (19,	18,	NULL,	NULL,	'assenza',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (20,	17,	NULL,	NULL,	'carico ore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (21,	17,	NULL,	NULL,	'promemoria scadenze',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(22,	NULL,	NULL,	NULL,	'STAMPE',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(22,	NULL,	NULL,	NULL,	'stampe',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (23,	22,	NULL,	NULL,	'stampa PDF',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (24,	22,	NULL,	NULL,	'stampa XML',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (25,	17,	NULL,	NULL,	'sollecito insoluti',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(26,	16,	NULL,	NULL,	'invio proposta commerciale',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(26,	16,	NULL,	NULL,	'invio proposta commerciale',	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(27,	NULL,	NULL,	NULL,	'invio',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(28,	27,	NULL,	NULL,	'invio via e-mail',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(29,	27,	NULL,	NULL,	'invio via PEC',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 --| 050000050450
 

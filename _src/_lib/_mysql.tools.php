@@ -305,13 +305,16 @@
 				    $aParams[0] = $pq;
 				    $aParams[1] = '';
 				    foreach( $params as $key => $val ) {
-					$type = current( array_keys( $val ) );
-					$aParams[1] .= $type;
-					$aParams[] = &$params[ $key ][ $type ];
-					if( ( $type == 'i' || $type == 'd' ) && empty( $params[ $key ][ $type ] ) ) {
-					    $params[ $key ][ $type ] = NULL;
+						$type = current( array_keys( $val ) );
+						$aParams[1] .= $type;
+						$aParams[] = &$params[ $key ][ $type ];
+						if( ( $type == 'i' || $type == 'd' ) && empty( $params[ $key ][ $type ] ) ) {
+							$params[ $key ][ $type ] = NULL;
+						}
+						if( is_array( $params[ $key ][ $type ] ) ) {
+							die( 'passare solo stringhe come parametri della query: ' . PHP_EOL . $q . PHP_EOL . PHP_EOL . 'oggetto malformato: ' . print_r( $val, true ) );
+						}
 					}
-				    }
 
 				// bind dei parametri
 				    call_user_func_array( 'mysqli_stmt_bind_param', $aParams );
@@ -913,6 +916,18 @@
 			array2mysqlStatementParameters( $r )
 		);
 
+		memcacheCleanFromIndex( $t );
+		memcacheCleanFromIndex( $t . '_static' );
+
+		$static = getStaticView( NULL, $c, $t );
+
+		if( ! empty( $static ) ) {
+
+            mysqlQuery( $c, 'REPLACE INTO ' . $static . ' SELECT * FROM ' . $t . '_view WHERE id = ?', array( array( 's' => $i ) ) );
+            logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
+
+		}
+
 		return $i;
 
     }
@@ -1002,6 +1017,25 @@
 			return $matches[1];
 		}
 		return array();
+	}
+
+	function getStaticView( $m, $c, $t ) {
+
+		// verifico se esiste la view statica
+			$stv = mysqlSelectCachedValue(
+				$m,
+				$c,
+				'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+				array( array('s' => $t . '_view_static' ) )
+			);
+
+		// se esiste la vista statica...
+			if( ! empty( $stv ) ) {
+				return $t . '_view_static';
+			} else {
+				return false;
+			}
+
 	}
 
 	function getStaticViewExtension( $m, $c, $t ) {

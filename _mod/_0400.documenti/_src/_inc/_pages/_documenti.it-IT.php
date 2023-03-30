@@ -33,10 +33,16 @@
 														'documenti.form.relazioni',
 														'documenti.form.righe',
 														'documenti.form.pagamenti',
+														'documenti.form.invio',
 														'documenti.form.chiusura',
 														'documenti.form.stampe',
 														'documenti.form.tools' ) )
 	);
+
+	// RELAZIONI CON IL MODULO ATTIVITA
+	if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'documenti.form', $p['documenti.form']['etc']['tabs'], 'documenti.form.attivita' );
+	}
 
 	// gestione tools documenti
 	$p['documenti.form.relazioni'] = array(
@@ -82,6 +88,19 @@
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.pagamenti.html' ),
 	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.pagamenti.php' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
+	);
+
+	// gestione chiusura documenti
+	$p['documenti.form.invio'] = array(
+	    'sitemap'		=> false,
+        'icon'		=> '<i class="fa fa-envelope-o" aria-hidden="true"></i>',
+	    'title'			=> array( $l		=> 'invio' ),
+	    'h1'			=> array( $l		=> 'invio' ),
+	    'parent'		=> array( 'id'		=> 'documenti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.form.invio.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_documenti.form.invio.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['documenti.form']['etc']['tabs'] )
 	);

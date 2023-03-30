@@ -1,6 +1,5 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -22,12 +21,10 @@
     {% set method = 'update' %}
     {% set activity = 'aggiornamento' %}
     {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
-    {% set composizione = request[ table ].timestamp_composizione %}
 {% else %}
     {% set method = 'post' %}
     {% set activity = 'inserimento' %}
     {% set legend = 'inserimento nuovo oggetto' %}
-    {% set composizione = 'now'|date('U') %}
 {% endif %}
 
 {# FORM DI GESTIONE #}
@@ -44,41 +41,9 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    <input type="hidden" id="se_mail" name="{{ table }}[se_mail]" value="1">
+		{# VIEW PRINCIPALE #}
+		{% include 'inc/view.html' %}
 
-        {# MODULO PRINCIPALE #}
-        <fieldset>
-            <legend>dati generali <small>{{ legend }}</small></legend>
-
-            <div class="form-group form-row">
-                <div class="col-12 col-md-4">
-                    <span class="label-top ">nome</span>
-                    {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-                </div>
-                <div class="col-12 col-md-4">
-                    <span class="label-top ">ruolo</span>
-                    {{ frm.inputRequired( table, '', '', 'ruolo', '', '', request ) }}
-                </div>
-                <div class="col-12 col-md-4">
-                    <span class="label-top ">tipo render del template</span>
-                    {{ frm.selectRequired( table, '', '', 'tipo', '', etc.select.types, request ) }}  
-                </div>
-            </div>
-
-            <div class="form-group form-row">
-                <div class="col">
-                <span class="label-top">note</span>
-                {{ frm.textarea( table, '', '', 'note', '', 3, request) }}
-                </div>
-            </div>
-
-        </fieldset>
-
-       {# BOTTONI E COMANDI DEL MODULO #}
-        <fieldset class="form-controls mt-auto">
-            {{ def.controls( page, pages, ietf, session, table, request ) }}
-        </fieldset>
-	
 	</form>
     </div>
 </section>

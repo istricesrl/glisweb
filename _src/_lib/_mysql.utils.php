@@ -274,7 +274,7 @@
 #                    metadati2associativeArray( $mta )
 #                );
 
-if( is_array( $p['metadati'] ) ) {
+if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
 
                 $p['metadati'] = array_replace_recursive(
                     $p['metadati'],

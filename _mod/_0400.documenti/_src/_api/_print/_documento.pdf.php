@@ -19,6 +19,19 @@
     // inclusione dei dati base
 	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
 
+    // annoto l'attività di stampa
+    mysqlInsertRow(
+        $cf['mysql']['connection'],
+        array(
+            'id_tipologia' => 23,
+            'id_documento' => $doc['id'],
+            'data_attivita' => date('Y-m-d'),
+            'ora_inizio' => date( 'H:i:s' ),
+            'ora_fine' => date( 'H:i:s' )
+        ),
+        'attivita'
+    );
+
     // debug
 	// header( 'Content-type: text/plain;' );
 	// die( print_r( $doc, true ) );
@@ -459,14 +472,18 @@
 
     }
 
-    
     // output
-	if( isset( $_REQUEST['d'] ) ) {
-	    $pdf->Output($dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto
+	if( isset( $_REQUEST['n'] ) ) {
+        fullPath( $_REQUEST['n'] );
+	    $pdf->Output( $_REQUEST['n'], 'F' );				// salva il file localmente con nome
+	} elseif( isset( $_REQUEST['d'] ) ) {
+	    $pdf->Output( $dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto
 	} elseif( isset( $_REQUEST['f'] ) ) {
-	    $pdf->Output( $dobj.'.pdf', 'I' );				// salva il file localmente
+	    fullPath( $dobj . 'tmp/' );
+        $pdf->Output( $dobj.'.pdf', 'F' );				// salva il file localmente
 	} elseif( isset( $_REQUEST['fi'] ) ) {
+	    fullPath( $dobj . 'tmp/' );
 	    $pdf->Output( $dobj.'.pdf', 'FI' );				// salva il file localmente e invia l'output al browser
 	} else {
-	    $pdf->Output($dobj.'.pdf');								// invia l'output al browser
+	    $pdf->Output( $dobj.'.pdf', 'I');								// invia l'output al browser
 	}

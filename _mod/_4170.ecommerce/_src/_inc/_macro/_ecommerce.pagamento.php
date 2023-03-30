@@ -194,7 +194,7 @@
             // seleziono i documenti da stampare
             $ct['etc']['stampe'] = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SELECT documenti_view.* FROM documenti_view LEFT JOIN attivita ON attivita.id_documento = documenti_view.id WHERE id_destinatario = ? AND attivita.id IS NULL',
+                'SELECT documenti_view.* FROM documenti_view LEFT JOIN attivita ON ( attivita.id_documento = documenti_view.id AND attivita.id_tipologia IN ( 22, 23, 24 ) ) WHERE id_destinatario = ? AND attivita.id IS NULL',
                 array( array( 's' => $_REQUEST['__pagamenti__']['id_socio'] ) )
             );
         

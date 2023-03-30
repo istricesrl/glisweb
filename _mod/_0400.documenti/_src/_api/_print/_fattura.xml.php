@@ -19,6 +19,20 @@
     // inclusione dei dati base
 	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
 
+    // annoto l'attività di stampa
+    mysqlInsertRow(
+        $cf['mysql']['connection'],
+        array(
+            'id_tipologia' => 24,
+            'id_documento' => $doc['id'],
+            'data_attivita' => date('Y-m-d'),
+            'nome' => 'stampa documento',
+            'ora_inizio' => date( 'H:i:s' ),
+            'ora_fine' => date( 'H:i:s' )
+        ),
+        'attivita'
+    );
+
     // debug
 	// header( 'Content-type: text/plain;' );
 	// die( print_r( $doc, true ) );
