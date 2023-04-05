@@ -17,7 +17,6 @@
         "codeception/module-phpbrowser": "^1.0.0",
         "codeception/module-asserts": "^1.0.0",
         "google/cloud-logging": "*",
-        "google/apiclient": "^2.12.1",
         "paypal/paypal-checkout-sdk": "1.0.1",
         "amzn/amazon-pay-api-sdk-php": "*"
     },
