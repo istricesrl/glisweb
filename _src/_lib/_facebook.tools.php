@@ -314,7 +314,7 @@
      * legge ID e access_token per le pagine a partire da un token di accesso utente di breve durata
      * questa funzione va chiamata una volta sola e i dati che genera vanno inseriti nel JSON di configurazione
      */
-    function getFbPageAccessToken( $tk ) {
+    function getFbPageAccessToken( $tk, $app ) {
 
 
         // ottenere un token di accesso utente di lunga data partendo da un token di accesso utente di breve durata
@@ -325,8 +325,8 @@
             METHOD_GET,
             array(
                 'grant_type' => 'fb_exchange_token',
-                'client_id' => '3565775293652588',
-                'client_secret' => '3f6fa7244bb514b1a2963be795f050c3',
+                'client_id' => $app['id'],
+                'client_secret' => $app['secret'],
                 'fb_exchange_token' => $tk
             ),
             'query',
