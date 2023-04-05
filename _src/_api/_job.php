@@ -74,7 +74,7 @@
 
             } else {
 
-                $status['err'][] = 'numero di iterazioni vuoto'
+                $status['err'][] = 'numero di iterazioni vuoto';
 
             }
 
