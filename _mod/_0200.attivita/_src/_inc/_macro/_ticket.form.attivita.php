@@ -73,6 +73,12 @@
         'fa' => 'fa-plus-circle'
     );
 
+    $ct['etc']['include']['insert'][] = array(
+        'name' => 'insert_memo',
+        'file' => 'inc/ticket.form.attivita.insert.promemoria.html',
+        'fa' => 'fa-calendar-plus-o'
+    );
+
     $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
