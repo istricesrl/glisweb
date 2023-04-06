@@ -495,20 +495,20 @@
 		switch( $m ) {
 
 		    case FILE_READ_AS_ARRAY:
-			return file( $f );
+    			return file( $f );
 		    break;
 		    case FILE_READ_AS_STRING:
-			return file_get_contents( $f );
+    			return file_get_contents( $f );
 		    break;
 		    default:
-			return false;
+    			return false;
 		    break;
 
 		}
 
 	    } else {
 
-		return false;
+    		return false;
 
 	    }
 

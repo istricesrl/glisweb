@@ -353,3 +353,15 @@
         return $m / 1000;
 
     }
+
+    /**
+     *
+     * @todo documentare
+     * @todo questa funzione va aggiunta a readFromFile() per evitare che dia fuori il testo con il BOM
+     *
+     */
+    function removeBom( $t ) {
+        $bom = pack('H*','EFBBBF');
+        $t = preg_replace("/^$bom/", '', $t);
+        return $t;
+    }

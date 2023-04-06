@@ -107,6 +107,12 @@
                 $job['workspace']['status']['error'][] = 'codice utente, codice fiscale e partita IVA non settati per la riga ' . $job['corrente'];
                 // $job['workspace']['status']['error'][] = $row;
 
+            } elseif( empty( ( ( isset( $row['nome'] ) ) ? $row['nome'] : NULL ) . ( ( isset( $row['cognome'] ) ) ? $row['cognome'] : NULL ) . ( ( isset( $row['denominazione'] ) ) ? $row['denominazione'] : NULL ) ) ) {
+
+                // status
+                $job['workspace']['status']['error'][] = 'nome, cognome e denominazione non settati per la riga ' . $job['corrente'] . ' ' . ( ( ( isset( $row['nome'] ) ) ? $row['nome'] : NULL ) . ( ( isset( $row['cognome'] ) ) ? $row['cognome'] : NULL ) . ( ( isset( $row['denominazione'] ) ) ? $row['denominazione'] : NULL ) );
+                // $job['workspace']['status']['error'][] = $row;
+
             } else {
 
                 // trovo l'ID dell'anagrafica
@@ -117,9 +123,9 @@
                         'codice' => ( ! empty( $row['codice'] ) ) ? $row['codice'] : NULL,
                         'partita_iva' => ( ! empty( $row['partita_iva'] ) ) ? $row['partita_iva'] : NULL,
                         'codice_fiscale' => ( ! empty( $row['codice_fiscale'] ) ) ? $row['codice_fiscale'] : NULL,
-                        'nome' => $row['nome'],
-                        'cognome' => $row['cognome'],
-                        'denominazione' => $row['denominazione']
+                        'nome' => ( ( isset( $row['nome'] ) ) ? $row['nome'] : NULL ),
+                        'cognome' => ( ( isset( $row['cognome'] ) ) ? $row['cognome'] : NULL ),
+                        'denominazione' => ( ( isset( $row['denominazione'] ) ) ? $row['denominazione'] : NULL )
                     ),
                     'anagrafica'
                 );
@@ -130,22 +136,88 @@
                 // se è presente un indirizzo...
                 if( ( isset( $row['indirizzo'] ) && ! empty( $row['indirizzo'] ) ) &&
                     ( isset( $row['comune'] ) && ! empty( $row['comune'] ) ) ) {
-
+/*
                     // TODO trovo il paese
-
+                    $idPaese = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id FROM stati WHERE nome = ? OR iso31661alpha2 = ? OR iso31661alpha2 = ?',
+                        array(
+                            array( 's' => $row['stato'] )
+                        )
+                    );
+*/
                     // TODO trovo il comune
+                    $idComune = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id FROM comuni WHERE nome = ?',
+                        array(
+                            array( 's' => $row['comune'] )
+                        )
+                    );
 
-                    // TODO trovo l'indirizzo
-                    // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, paese
+                    // se ho il comune
+                    if( ! empty( $idComune  ) ) {
 
-                    // TODO associo l'indirizzo all'anagrafica
+                        // TODO trovo l'indirizzo
+                        // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato
+                        $idIndirizzo = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'indirizzo' => $row['indirizzo'],
+                                'civico' => $row['civico'],
+                                'id_comune' => $idComune
+                            ),
+                            'indirizzi',
+                            true,
+                            false,
+                            array(
+                                'indirizzo',
+                                'civico',
+                                'id_comune'
+                            )
+                        );
+
+                        // TODO associo l'indirizzo all'anagrafica
+                        if( ! empty( $idIndirizzo ) ) {
+
+                            // associazione
+                            $idAssociazioneIndirizzo = mysqlInsertRow(
+                                $cf['mysql']['connection'],
+                                array(
+                                    'id_ruolo' => 1,
+                                    'id_anagrafica' => $idAnagrafica,
+                                    'id_indirizzo' => $idIndirizzo
+                                ),
+                                'anagrafica_indirizzi'
+                            );
+
+                            // status
+                            if( empty( $idAssociazioneIndirizzo ) ) {
+                                $job['workspace']['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $row['indirizzo'] . $row['civico'] . ' ' . $row['comune'] . ' non associato per la riga ' . $job['corrente'];
+                            }
+
+                        } else {
+
+                            // status
+                            $job['workspace']['status']['error'][] = 'indirizzo ' . $row['indirizzo'] . $row['civico'] . ' ' . $row['comune'] . ' non inserito per la riga ' . $job['corrente'];
+                            // $job['workspace']['status']['error'][] = $row;
+
+                        }
+
+                    } else {
+
+                        // status
+                        $job['workspace']['status']['error'][] = 'comune ' . $row['comune'] . ' non trovato per la riga ' . $job['corrente'];
+                        // $job['workspace']['status']['error'][] = $row;
+                
+                    }
 
                 } else {
 
                     // status
                     $job['workspace']['status']['error'][] = 'indirizzo e comune non settati per la riga ' . $job['corrente'];
                     // $job['workspace']['status']['error'][] = $row;
-                    
+
                 }
 
                 // se sono presenti delle categorie...
@@ -191,6 +263,12 @@
 
                     }
 
+                } else {
+
+                    // status
+                    $job['workspace']['status']['error'][] = 'categoria non settata per la riga ' . $job['corrente'];
+                    // $job['workspace']['status']['error'][] = $row;
+
                 }
 
                 // se sono presenti delle mail...
@@ -220,13 +298,19 @@
 
                     }
 
+                } else {
+
+                    // status
+                    $job['workspace']['status']['error'][] = 'mail non settata per la riga ' . $job['corrente'];
+                    // $job['workspace']['status']['error'][] = $row;
+
                 }
 
                 // se sono presenti dei telefoni...
-                if( isset( $row['tel'] ) && ! empty( $row['tel'] ) ) {
+                if( isset( $row['telefoni'] ) && ! empty( $row['telefoni'] ) ) {
 
                     // esplodo le categorie per pipe
-                    $numeri = explode( '|', $row['tel'] );
+                    $numeri = explode( '|', $row['telefoni'] );
 
                     // per ogni categoria...
                     foreach( $numeri as $numero ) {
