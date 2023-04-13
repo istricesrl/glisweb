@@ -107,15 +107,15 @@
 	}
 
 	// header della richiesta HTTP
-	$headers = apache_request_headers();
+	$httpHeaders = apache_request_headers();
 
 	// debug
-	// die( substr( $headers['Authorization'], 0, 7 ) );
+	// die( substr( $httpHeaders['Authorization'], 0, 7 ) );
 
 	// intercetto l'header bearer autentication
-	if( array_key_exists( 'Authorization', $headers ) ) {
-		if( substr( $headers['Authorization'], 0, 6 ) == 'Bearer' ) {
-			$_REQUEST['jwt'] = substr( $headers['Authorization'], 7 );
+	if( array_key_exists( 'Authorization', $httpHeaders ) ) {
+		if( substr( $httpHeaders['Authorization'], 0, 6 ) == 'Bearer' ) {
+			$_REQUEST['jwt'] = substr( $httpHeaders['Authorization'], 7 );
 		}
 	}
 
