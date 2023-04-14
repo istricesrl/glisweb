@@ -10,6 +10,19 @@
 	  if( in_array( "0920.corsi", $cf['mods']['active']['array'] ) ) {
 
 		// form corsi SEM/SMM
+		$p['corsi.form.web'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'web' ),
+			'h1'		=> array( $l		=> 'web' ),
+			'parent'		=> array( 'id'		=> 'corsi.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'corsi.form.web.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_corsi.form.web.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> 'corsi.form' )
+		);
+
+		// form corsi SEM/SMM
 		$p['corsi.form.sem'] = array(
 			'sitemap'		=> false,
 			'icon'			=> '<i class="fa fa-google" aria-hidden="true"></i>',

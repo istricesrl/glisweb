@@ -256,24 +256,24 @@
 	    $favicon = basename( $favicon );
 	    preg_match_all( '/([a-z\-]*)\-([0-9x]*)\.([a-z]*)/', $favicon, $details );
 	    if( ! empty( $details[0][0] ) ) {
-		switch( $details[1][0] ) {
-		    case 'apple-icon':
-			$ct['page']['template']['favicons'][] = array(
-			    'rel' => 'apple-touch-icon',
-			    'sizes' => $details[2][0],
-			    'file' => $details[0][0]
-			);
-		    break;
-		    case 'android-icon':
-		    case 'favicon':
-			$ct['page']['template']['favicons'][] = array(
-			    'rel' => 'icon',
-			    'sizes' => $details[2][0],
-			    'file' => $details[0][0],
-			    'type' => 'image/png'
-			);
-		    break;
-		}
+			switch( $details[1][0] ) {
+				case 'apple-icon':
+					$ct['page']['template']['favicons'][] = array(
+						'rel' => 'apple-touch-icon',
+						'sizes' => $details[2][0],
+						'file' => $details[0][0]
+					);
+				break;
+				case 'android-icon':
+				case 'favicon':
+					$ct['page']['template']['favicons'][] = array(
+						'rel' => 'icon',
+						'sizes' => $details[2][0],
+						'file' => $details[0][0],
+						'type' => 'image/png'
+					);
+				break;
+			}
 	    }
 	}
 #	asort( $ct['page']['template']['favicons'] );
@@ -298,8 +298,8 @@
     // costruzione dei menu
 	if( isset( $ct['page']['template']['menu'] ) ) {
 	    foreach( $ct['page']['template']['menu'] as $menu => &$nav) {
-		$nav = buildMenu( $menu, $cf['contents']['tree'][ NULL ], $cf['contents']['pages'], $ct['page']['id'] );
-		timerCheck( $cf['speed'], 'fine generazione menu ' . $menu );
+			$nav = buildMenu( $menu, $cf['contents']['tree'][ NULL ], $cf['contents']['pages'], $ct['page']['id'] );
+			timerCheck( $cf['speed'], 'fine generazione menu ' . $menu );
 	    }
 	}
 
@@ -335,26 +335,26 @@
     // ricerca delle risorse CSS minificate
 	if( isset( $ct['page']['css'] ) && is_array( $ct['page']['css'] ) ) {
 	    foreach( $ct['page']['css'] as $tier => &$rCss ) {
-		foreach( $rCss as &$css ) {
-		    switch( $tier ) {
-			case 'internal':
-			    $pre = DIR_BASE;
-			break;
-			case 'template':
-			    $pre = DIR_BASE . $ct['page']['template']['path'];
-			break;
-			default:
-			    $pre = NULL;
-			break;
-		    }
-		    if( strpos( $css, '.min.css' ) === false ) {
-			$new = str_replace( '.css', '.min.css', $css );
-			if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
-			    logWrite( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
-			    $css = $new;
+			foreach( $rCss as &$css ) {
+				switch( $tier ) {
+				case 'internal':
+					$pre = DIR_BASE;
+				break;
+				case 'template':
+					$pre = DIR_BASE . $ct['page']['template']['path'];
+				break;
+				default:
+					$pre = NULL;
+				break;
+				}
+				if( strpos( $css, '.min.css' ) === false ) {
+				$new = str_replace( '.css', '.min.css', $css );
+				if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
+					logWrite( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
+					$css = $new;
+				}
+				}
 			}
-		    }
-		}
 	    }
 	}
 
@@ -364,26 +364,26 @@
     // ricerca delle risorse JS minificate
 	if( isset( $ct['page']['js'] ) && is_array( $ct['page']['js'] ) ) {
 	    foreach( $ct['page']['js'] as $tier => &$rJs ) {
-		foreach( $rJs as &$js ) {
-		    switch( $tier ) {
-			case 'internal':
-			    $pre = DIR_BASE;
-			break;
-			case 'template':
-			    $pre = DIR_BASE . $ct['page']['template']['path'];
-			break;
-			default:
-			    $pre = NULL;
-			break;
-		    }
-		    if( strpos( $js, '.min.js' ) === false ) {
-			$new = str_replace( '.js', '.min.js', $js );
-			if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
-			    logWrite( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
-			    $js = $new;
+			foreach( $rJs as &$js ) {
+				switch( $tier ) {
+				case 'internal':
+					$pre = DIR_BASE;
+				break;
+				case 'template':
+					$pre = DIR_BASE . $ct['page']['template']['path'];
+				break;
+				default:
+					$pre = NULL;
+				break;
+				}
+				if( strpos( $js, '.min.js' ) === false ) {
+				$new = str_replace( '.js', '.min.js', $js );
+				if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
+					logWrite( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
+					$js = $new;
+				}
+				}
 			}
-		    }
-		}
 	    }
 	}
 
@@ -523,14 +523,19 @@
 			// print_r( $ct['contatti'] );
 
 		    // renderizzo lo schema corrente
-			$html = $twig->render( $ct['page']['template']['schema'], $ct );
+			try {
+				$html = $twig->render( $ct['page']['template']['schema'], $ct );
+			} catch( \Exception $e ) {
+				die( $e->getMessage() );
+			}
 
-		    // timer
+			// timer
 			timerCheck( $cf['speed'], '-> fine render template' );
 
 			// log
 			appendToFile( 'fine render template Twig' . PHP_EOL, FILE_LATEST_RUN );
 
+			// headers
 			if( isset( $ct['page']['headers'] ) ) {
 				foreach( $ct['page']['headers'] as $header ) {
 					header( $header );
@@ -620,9 +625,9 @@
 			);
 	*/	    $tpu = $ct;
 			foreach( $_REQUEST['u'] as $tu ) {
-			if( isset( $tpu[ $tu ] ) ) {
-				$tpu = $tpu[ $tu ];
-			}
+				if( isset( $tpu[ $tu ] ) ) {
+					$tpu = $tpu[ $tu ];
+				}
 			}
 			echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
 		}
@@ -640,9 +645,9 @@
 	    writeToFile( ob_get_contents(), DIR_VAR_CACHE_PAGES . basename( FILE_CACHE_PAGE ) );
 	    echo '<!-- pagina con autorizzazione al caching -->'				. PHP_EOL;
 	    if( FILE_CACHE_PAGE_TIME === NULL ) {
-		echo '<!-- page cached for the first time -->'					. PHP_EOL;
+			echo '<!-- page cached for the first time -->'					. PHP_EOL;
 	    } else {
-		echo '<!-- expired: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_TIME ) . ' -->'	. PHP_EOL;
+			echo '<!-- expired: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_TIME ) . ' -->'	. PHP_EOL;
 	    }
 	    echo '<!-- expire: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_LIMIT ) . ' -->'	. PHP_EOL;
 	    echo '<!-- file: ' . basename( FILE_CACHE_PAGE ) . ' -->'				. PHP_EOL;

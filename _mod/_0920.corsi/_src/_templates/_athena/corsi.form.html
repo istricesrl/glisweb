@@ -114,7 +114,7 @@
 					<span class="label-top">massimo iscritti</span>
 					{% set subtable = 'metadati' %}
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id', '', '', '', etc.sub.iscritti_max.id, 'hidden' ) }}
-					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id_progetto, '', '', '', '__parent_id__', 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'nome', '', '', '', etc.sub.iscritti_max.nome, 'hidden' ) }}
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'testo', '', '', '', etc.sub.iscritti_max.testo ) }}
 				</div>  
@@ -129,44 +129,6 @@
 			</div>
 				
 		</fieldset>
-
-		{% if '3000.contenuti' in mods.active.array %}
-		<fieldset>
-			<legend>contenuti e aspetto</legend>
-			<div class="form-group form-row">
-				<div class="col-12 col-md-auto">
-					<span class="label-top">sito</span>
-					{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
-				</div>  
-				<div class="col-4 col-md-auto col-form-label">
-					<div class="form-check">
-						{{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
-					</div>
-				</div>
-				<div class="col-4 col-md-auto col-form-label">
-					<div class="form-check">
-						{{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
-					</div>
-				</div>
-				<div class="col-12 col-md">
-					<span class="label-top">template</span>
-					{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
-				</div>  
-				<div class="col-12 col-md">
-					<span class="label-top">schema</span>
-					{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
-				</div>  
-				<div class="col-12 col-md">
-					<span class="label-top">tema</span>
-					{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
-				</div>  
-			</div>  
-	
-			</fieldset>
-			{# SUBFORM PUBBLICAZIONI #}
-       		{{ pub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_progetto' ) }}
-
-		{% endif %}
 
         {# SUBFORM RUOLI #}
         {{ sub.ruoli( table, 'progetti_anagrafica', 'ruoli', site, page, pages, ietf, etc, request, session ) }}
