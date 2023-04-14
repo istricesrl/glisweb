@@ -531,8 +531,14 @@
 			// log
 			appendToFile( 'fine render template Twig' . PHP_EOL, FILE_LATEST_RUN );
 
-		    // output
-			build( $html, MIME_TEXT_HTML );
+			if( isset( $ct['page']['headers'] ) ) {
+				foreach( $ct['page']['headers'] as $header ) {
+					header( $header );
+				}
+			}
+
+			// output
+			build( $html, MIME_TEXT_HTML, ENCODING_UTF8, ( ( isset( $ct['page']['headers'] ) ) ? $ct['page']['headers'] : array() ) );
 
 		    // timer
 			timerCheck( $cf['speed'], '-> fine build output' );
@@ -570,14 +576,19 @@
 	// print_r( $ct['page']['headers'] );
 	// print_r( $ct['contatti'] );
 
+/*
     // headers
+	// NOTA gli header vanno mandati prima del contenuto, vedi build()
+	// TODO verificare che avendo spostato la scrittura degli headers nella build() sopra non venga innescato il flush dell'output
 	if( isset( $ct['page']['headers'] ) ) {
 	    foreach( $ct['page']['headers'] as $header ) {
 			header( $header );
 	    }
 	}
-	
+*/
+
     // codice di stato HTTP
+	// TODO verificare che questa funzione possa essere effettivamente chiamata qui
 	if( isset( $ct['page']['http']['status'] ) ) {
 	    http_response_code( $ct['page']['http']['status'] );
 	} else {
@@ -588,10 +599,10 @@
 	// print_r( get_included_files() );
 
     // timer
-	timerCheck( $cf['speed'], 'fine headers' );
+	// timerCheck( $cf['speed'], 'fine headers' );
 
 	// log
-	appendToFile( 'fine invio headers HTTP' . PHP_EOL, FILE_LATEST_RUN );
+	// appendToFile( 'fine invio headers HTTP' . PHP_EOL, FILE_LATEST_RUN );
 
     // TODO documentare i parametri a una sola lettera (sono nei Google Docs?)
 	// i parametri di una lettera sono riservati a DEV e TEST

@@ -14,7 +14,8 @@
     [...]
     - tabelle principali (es. anagrafica)
     - tabelle secondarie (es. telefoni)
-    - tabelle di relazione (es. anagrafica_categorie)
+    - tabelle di relazione (es. anagrafica_progetti)
+    - tabelle per i contenuti (es. contenuti)
 
     Le tabelle del database di supporto si dividono in tre categorie secondo la politica di aggiornamento dei dati
     da parte dell'utente:
@@ -26,6 +27,7 @@
     [...]
     - tabelle categorie_*
     - tabelle tipologie_*
+    - tabelle ruoli_*
 
     tipologie di tabelle
     ====================
