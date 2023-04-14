@@ -255,37 +255,107 @@
 
 	switch( $l ) {
 	    case 0:
-		return 'LOG_EMERG';
+		    return 'LOG_EMERG';
 	    break;
 	    case 1:
-		return 'LOG_ALERT';
+		    return 'LOG_ALERT';
 	    break;
 	    case 2:
-		return 'LOG_CRIT';
+		    return 'LOG_CRIT';
 	    break;
 	    case 3:
-		return 'LOG_ERR';
+		    return 'LOG_ERR';
 	    break;
 	    case 4:
-		return 'LOG_WARNING';
+		    return 'LOG_WARNING';
 	    break;
 	    case 5:
-		return 'LOG_NOTICE';
+		    return 'LOG_NOTICE';
 	    break;
 	    case 6:
-		return 'LOG_INFO';
+		    return 'LOG_INFO';
 	    break;
 	    case 7:
-		return 'LOG_DEBUG';
+    		return 'LOG_DEBUG';
 	    break;
 	    default:
-		return NULL;
+		    return NULL;
 	    break;
 	}
 
     }
 
     /**
+     * converte in stringa il livello di report
+     *
+     *
+     * E_ERROR               |   1      | errore fatale, l'esecuzione viene terminata
+     * E_WARNING             |   2      | errore non fatale, l'esecuzione prosegue ma può dare risultati imprevisti
+     * E_PARSE               |   4      | errore di parsing durante la compilazione; questo livello è riservato al parser
+     * E_NOTICE              |   8      | evento notevole, ma non necessariamente un errore
+     * E_CORE_ERROR          |   16     | errore fatale PHP; riservato al core PHP
+     * E_CORE_WARNING        |   32     | errore non fatale PHP; riservato al core PHP
+     * E_COMPILE_ERROR       |   64     | errore fatale di compilazione; riservato allo Zend Scripting Engine
+     * E_COMPILE_WARNING     |   128    | errore non fatale di compilazione; riservato allo Zend Scripting Engine
+     * E_USER_ERROR          |   256    | errore generato tramite la funzione trigger_error()
+     * E_USER_WARNING        |   512    | avviso generato tramite la funzione trigger_error()
+     * E_USER_NOTICE         |   1024   | evento notevole segnalato tramite la funzione trigger_error()
+     * E_STRICT              |   2048   | violazione formale
+     * E_RECOVERABLE_ERROR   |   4096   | errore fatale ma gestibile, non pregiudica il funzionamento del core PHP
+     * E_DEPRECATED          |   8192   | errore di obsolescenza
+     * E_USER_DEPRECATED     |   16384  | errore di obsolescenza generato tramite la funzione trigger_error()
+     * E_ALL                 |   32767  | tutti i messaggi di errore
+     *
+     * @todo commentare
+     *
+     */
+    function reportLvl2string( $l ) {
+
+        switch( $l ) {
+            case 1:
+                return 'E_ERROR';
+            break;
+            case 2:
+                return 'E_WARNING';
+            break;
+            case 4:
+                return 'E_PARSE';
+            break;
+            case 8:
+                return 'E_NOTICE';
+            break;
+            case 16:
+                return 'E_CORE_ERROR';
+            break;
+            case 32:
+                return 'E_CORE_WARNING';
+            break;
+            case 64:
+                return 'E_COMPILE_ERROR';
+            break;
+            case 128:
+                return 'E_COMPILE_WARNING';
+            break;
+            case 256:
+                return 'E_USER_ERROR';
+            break;
+            case 512:
+                return 'E_USER_WARNING';
+            break;
+            case 1024:
+                return 'E_USER_NOTICE';
+            break;
+            case 2048:
+                return 'E_STRICT';
+            break;
+            default:
+                return NULL;
+            break;
+        }
+    
+        }
+    
+        /**
      *
      * @todo documentare
      *

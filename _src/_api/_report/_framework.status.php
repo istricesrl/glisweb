@@ -113,11 +113,19 @@
 	    die( '[FAIL] status ' . $cf['site']['status'] . ' non presente nei profili di debug' . PHP_EOL );
 	}
 
+    // controllo del livello di report
+	echo '[ -- ] livello di report: ' . reportLvl2string( REPORT_CURRENT_LEVEL ) . ' (' . REPORT_CURRENT_LEVEL . ')' . PHP_EOL;
+	if( $cf['site']['status'] == 'PROD' ) {
+	    if( REPORT_CURRENT_LEVEL > 2 ) {
+			echo '[WARN] livello di report alto per un ambiente di produzione, messaggi superflui possono confondere l\'utente' . PHP_EOL;
+	    }
+	}
+
     // controllo del livello di log
 	echo '[ -- ] livello di log: ' . logLvl2string( LOG_CURRENT_LEVEL ) . ' (' . LOG_CURRENT_LEVEL . ')' . PHP_EOL;
 	if( $cf['site']['status'] == 'PROD' ) {
 	    if( LOG_CURRENT_LEVEL > LOG_WARNING ) {
-		echo '[WARN] livello di log alto per un ambiente di produzione, un I/O disco eccessivo può rallentare il framework' . PHP_EOL;
+			echo '[WARN] livello di log alto per un ambiente di produzione, un I/O disco eccessivo può rallentare il framework' . PHP_EOL;
 	    }
 	}
 
@@ -125,11 +133,11 @@
 	if( isset( $cf['site']['fqdn'] ) && ! empty( $cf['site']['fqdn'] ) ) {
 	    echo '[ -- ] FQDN del framework: ' . $cf['site']['fqdn'] . PHP_EOL;
 	    if( checkdnsrr( $cf['site']['fqdn'], 'A' ) ) {
-		echo '[ OK ] FQDN risolvibile correttamente (record A)' . PHP_EOL;
+			echo '[ OK ] FQDN risolvibile correttamente (record A)' . PHP_EOL;
 	    } elseif( checkdnsrr( $cf['site']['fqdn'], 'CNAME' ) ) {
-		echo '[ OK ] FQDN risolvibile correttamente (record CNAME)' . PHP_EOL;
+			echo '[ OK ] FQDN risolvibile correttamente (record CNAME)' . PHP_EOL;
 	    } else {
-		echo '[WARN] FQDN non risolvibile' . PHP_EOL;
+			echo '[WARN] FQDN non risolvibile' . PHP_EOL;
 	    }
 	} else {
 	    echo '[WARN] FQDN del framework non impostato' . PHP_EOL;

@@ -31,11 +31,14 @@
      *
      */
 
+    // costante che descrive il livello corrente di report
+	define( 'REPORT_CURRENT_LEVEL'		, $cf['debug'][ SITE_STATUS ]['*']['report']['lvl'] );
+
     // imposto la visualizzazione degli errori
-	ini_set( 'display_errors', $cf['debug'][ SITE_STATUS ]['*']['report']['lvl'] );
+	ini_set( 'display_errors', REPORT_CURRENT_LEVEL );
 
     // imposto il livello di debug
-	error_reporting( $cf['debug'][ SITE_STATUS ]['*']['report']['lvl'] );
+	error_reporting( REPORT_CURRENT_LEVEL );
 
     // costante che descrive il livello corrente di log
 	define( 'LOG_CURRENT_LEVEL'		, $cf['debug'][ SITE_STATUS ]['*']['log']['lvl'] );
