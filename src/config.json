@@ -1,0 +1,69 @@
+{
+  "sites": {
+    "1": {
+      "id": 1,
+      "__label__": "localhost di Elena",
+      "name": {
+        "it-IT": "localhost di Elena"
+      },
+      "protocols": {
+        "DEV": "http"
+      },
+      "hosts": {
+        "DEV": ""
+      },
+      "domains": {
+        "DEV": "localhost"
+      }
+    }
+  },
+  "auth": {
+    "accounts": {
+      "root": {
+        "password": "1e8628d638b5fd785bb6c63720210684"
+      }
+    }
+  },
+  "debug": {
+    "DEV": {
+      "*" : {
+        "log": { "lvl": 7 },
+        "report": { "lvl": 32767 }
+      }
+    }
+  },
+  "mysql": {
+    "servers": {
+      "default": {
+        "address": "127.0.0.1",
+        "port": "3306",
+        "username": "root",
+        "password": "password",
+        "db": "glisweb"
+      }
+    },
+    "profiles": {
+      "DEV": {
+        "servers": [
+          "default"
+        ]
+      }
+    }
+  },
+  "twig": {
+    "profiles": {
+      "DEV": {
+        "debug": true
+      }
+    }
+  },
+  "mods": {
+    "active": {
+      "array": [
+        
+        "3000.contenuti"
+      
+      ]
+    }
+  }
+}
