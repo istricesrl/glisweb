@@ -2373,7 +2373,7 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		progetti.entrate_accettazione,
 		progetti.data_accettazione,
 		progetti.data_chiusura,
-		if( progetti.data_accettazione > CURRENT_DATE(), 'futuro', if( progetti.data_chiusura > CURRENT_DATE(), 'attivo', 'concluso'  ) ) AS stato,
+		if( progetti.data_accettazione > CURRENT_DATE(), 'futuro', if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), 'attivo', 'concluso'  ) ) AS stato,
 		progetti.entrate_totali,
 		progetti.uscite_totali,
 		progetti.data_archiviazione,
