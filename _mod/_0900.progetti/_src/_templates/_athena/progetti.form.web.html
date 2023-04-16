@@ -45,58 +45,43 @@
 
 		{# CAMPI HIDDEN SPECIALI #}
 	    <input type="hidden" id="reset" name="{{ table }}[data_accettazione]" value="{% if request[ table ].data_accettazione %}{{ request[ table ].data_accettazione }}{% else %}{{ 'now'|date('Y-m-d') }}{% endif %}" >
-		
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
-		   
-            <div class="form-group form-row">
-                <div class="col-12 col-md-2">
-                    <span class="label-top">codice</span>
-                    {{ frm.inputRequired( table, '', '', 'id', '', '', request,  'now'|date('YmdHi') ) }}
-                </div>
-				<div class="col col-md">
-					<span class="label-top">cliente</span>
-					{{ frm.selectBox( table, '', '', 'id_cliente', '', etc.select.clienti, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_cliente', page, pages, ietf, 'anagrafica' ) }}
-				</div>
-				{% if etc.select.indirizzi %}
-				<div class="col-12 col-md">
-					<span class="label-top">indirizzo</span>
-					{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, '','','','','', 'indirizzi.form', 'indirizzi.form', 'indirizzi', 'id_indirizzo', page, pages, ietf, 'indirizzi' ) }}	</div>
-				{% else %}
-<!--
-				<div class="col-auto">
-					<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="submitFormOkay = true; submit();">TROVA INDIRIZZI</button>
-				</div>
--->
-				{% endif %}
-        	</div>
-            
-	        <div class="form-group form-row">
-                <div class="col-12 col-md-auto">
-                    <span class="label-top">tipologia</span>
-                    {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_progetti, request, '', '', '', '', 'nomeProgetto()' ) }}
-  				</div>
-				<div class="col-12 col-md">
-					<span class="label-top">nome</span>
-					{{ frm.inputRequired( table, '', '', 'nome', '', '', request, __preset__[table].nome ) }}
-				</div>
-            </div>
-            
+
+		{# MODULO PRINCIPALE #}
+		<fieldset>
+			<legend>contenuti e aspetto</legend>
 			<div class="form-group form-row">
-				<div class="col-12">
-				<span class="label-top">descrizione</span>
-				{{ frm.textarea( table, '', '', 'note', '', 7, request ) }}
+				<div class="col-12 col-md-auto">
+					<span class="label-top">sito</span>
+					{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
+				</div>
+				<div class="col-12 col-md">
+					<span class="label-top">template</span>
+					{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
+				</div>  
+				<div class="col-12 col-md">
+					<span class="label-top">schema</span>
+					{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
+				</div>  
+				<div class="col-12 col-md">
+					<span class="label-top">tema</span>
+					{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
+				</div>  
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
+					</div>
 				</div>
 			</div>
-				
+
 		</fieldset>
 
-		{# SUBFORM CATEGORIE #}
-		{{ sub.categorie( table, 'progetti_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) }}
-
-        {# SUBFORM RUOLI #}
-        {{ sub.ruoli( table, 'progetti_anagrafica', 'ruoli', site, page, pages, ietf, etc, request, session ) }}
+		{# SUBFORM PUBBLICAZIONI #}
+       	{{ pub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_progetto' ) }}
 
 		{# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

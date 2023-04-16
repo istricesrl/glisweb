@@ -1,7 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/corsi.form.sub.html' as sub %}
-{% import 'bin/default.form.pubblicazioni.sub.html' as pub %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -43,10 +42,7 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-		{# CAMPI HIDDEN SPECIALI #}
-	    <input type="hidden" id="reset" name="{{ table }}[data_accettazione]" value="{% if request[ table ].data_accettazione %}{{ request[ table ].data_accettazione }}{% else %}{{ 'now'|date('Y-m-d') }}{% endif %}" >
-		
-	    {# MODULO PRINCIPALE #}
+        {# MODULO PRINCIPALE #}
 		<fieldset>
 			<legend>contenuti e aspetto</legend>
 			<div class="form-group form-row">
@@ -76,13 +72,14 @@
 						{{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
 					</div>
 				</div>
-			</div>  
-	
-			</fieldset>
-			{# SUBFORM PUBBLICAZIONI #}
-       		{{ pub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_progetto' ) }}
+			</div>
 
-		{# BOTTONI E COMANDI DEL MODULO #}
+		</fieldset>
+
+		{# SUBFORM PUBBLICAZIONI #}
+        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_prodotti' ) }}
+
+	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>
@@ -90,22 +87,5 @@
 	</form>
     </div>
 </section>
-
-{% endblock %}
-
-{% block javascript %}
-<script src="jquery-3.5.1.min.js"></script>
-
-<script>
-function nomeProgetto(){
-	var tipologia = $('#progetti_id_tipologia option:selected').text();
-
-	var cliente = $('#progetti_id_cliente_inputbox').val();
-
-	var testo = ""+tipologia+" per "+cliente;
-	$('#progetti_nome').val(testo);
-}
-</script>
-
 
 {% endblock %}

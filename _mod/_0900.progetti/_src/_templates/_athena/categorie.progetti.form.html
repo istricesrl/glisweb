@@ -59,18 +59,6 @@
 			<span class="label-top">nome della categoria</span>
 			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 		    </div>
-			{% if '3000.contenuti' in mods.active.array %}
-			<div class="col-4 col-md-auto col-form-label">
-                <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
-                </div>
-            </div>
-            <div class="col-4 col-md-auto col-form-label">
-                <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
-                </div>
-            </div>
-			{% endif %}
 		</div>
 
 
@@ -108,32 +96,6 @@
 		</div>
 		{% endif %}
 	    </fieldset>
-
-		{% if '3000.contenuti' in mods.active.array %}
-		<fieldset>
-			<legend>aspetto</legend>
-	
-			<div class="form-group form-row">
-				<div class="col-12 col-md">
-					<span class="label-top">template</span>
-					{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
-				</div>  
-				<div class="col-12 col-md">
-					<span class="label-top">schema</span>
-					{{ frm.select( table, '', '', 'schema_html', '', etc.select.schemi, request ) }}
-				</div>  
-				<div class="col-12 col-md">
-					<span class="label-top">tema</span>
-					{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
-				</div>  
-			</div>  
-	
-		</fieldset>
-			
-		{# SUBFORM PUBBLICAZIONI #}
-        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_progetti' ) }}
-
-		{% endif %}
 
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

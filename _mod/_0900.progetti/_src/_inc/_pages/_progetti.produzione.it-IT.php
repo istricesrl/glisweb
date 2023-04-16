@@ -105,16 +105,29 @@
 
 		// RELAZIONI CON IL MODULO contenuti
 		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.web');
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.sem');
-			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.testo');
-		//	arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.menu');
-			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.immagini');
-			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.video');
-			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.audio');
-			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.file');
-			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.macro');
-			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'],'progetti.produzione.form.metadati' );
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.testo');
+		//	arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.menu');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.immagini');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.video');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.audio');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.file');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.macro');
+			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.metadati' );
 		}
+
+		$p['progetti.produzione.form.web'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'web' ),
+			'h1'		=> array( $l		=> 'web' ),
+			'parent'		=> array( 'id'		=> 'progetti.produzione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.form.web.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_progetti.form.web.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
+		);
 
 		$p['progetti.produzione.form.sem'] = array(
 			'sitemap'		=> false,
@@ -127,7 +140,7 @@
 			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'		=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 		);
-		
+
 		// form progetti.produzione testo
 		$p['progetti.produzione.form.testo'] = array(
 			'sitemap'		=> false,
@@ -364,6 +377,7 @@
 
 		// RELAZIONI CON IL MODULO AMMINISTRAZIONE
 		if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.web');
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.sem');
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.testo');
 		//	arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.menu');
@@ -374,6 +388,18 @@
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.macro');
 			arrayInsertBefore( 'categorie.progetti.form.tools', $p['categorie.progetti.form']['etc']['tabs'], 'categorie.progetti.form.metadati' );
 		}
+
+		$p['categorie.progetti.form.web'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+			'title'		=> array( $l		=> 'web' ),
+			'h1'		=> array( $l		=> 'web' ),
+			'parent'		=> array( 'id'		=> 'categorie.progetti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.progetti.form.web.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_categorie.progetti.form.web.php' ),
+			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
+		);
 
 		$p['categorie.progetti.form.sem'] = array(
 			'sitemap'		=> false,
@@ -386,7 +412,7 @@
 			'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'		=> array( 'tabs'	=> $p['categorie.progetti.form']['etc']['tabs'] )
 		);
-		
+
 		// form categorie.progetti testo
 		$p['categorie.progetti.form.testo'] = array(
 			'sitemap'		=> false,

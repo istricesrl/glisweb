@@ -60,7 +60,8 @@
 
 	// RELAZIONI CON IL MODULO CONTENUTI
 	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'prodotti.form', $p['prodotti.form']['etc']['tabs'], 'prodotti.form.sem' );
+		arrayInsertSeq( 'prodotti.form', $p['prodotti.form']['etc']['tabs'], 'prodotti.form.web' );
+		arrayInsertSeq( 'prodotti.form.web', $p['prodotti.form']['etc']['tabs'], 'prodotti.form.sem' );
 		arrayInsertSeq( 'prodotti.form.sem', $p['prodotti.form']['etc']['tabs'], 'prodotti.form.testo' );
 	}
 
@@ -86,6 +87,19 @@
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.caratteristiche.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
+	);
+
+	// gestione prodotti SEM/SMM
+	$p['prodotti.form.web'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'web' ),
+	    'h1'		=> array( $l		=> 'web' ),
+	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.web.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.web.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
 
 	// gestione prodotti SEM/SMM

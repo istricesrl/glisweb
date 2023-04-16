@@ -123,14 +123,7 @@
 
 		</fieldset>
 
-		{% if '3000.contenuti' in mods.active.array %}
-
-		{# SUBFORM PUBBLICAZIONI #}
-        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
-
-        {% endif %}
-
-	    {# BOTTONI E COMANDI DEL MODULO #}
+        {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>

@@ -74,10 +74,11 @@
 
 	// RELAZIONI CON IL MODULO CONTENUTI
 	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'categorie.prodotti.form', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.sem' );
+		arrayInsertSeq( 'categorie.prodotti.form', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.web' );
+		arrayInsertSeq( 'categorie.prodotti.form.web', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.sem' );
 		arrayInsertSeq( 'categorie.prodotti.form.sem', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.testo' );
-		arrayInsertSeq( 'categorie.prodotti.form.prodotti', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.menu' );
-		arrayInsertSeq( 'categorie.prodotti.form.menu', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.macro' );
+		arrayInsertSeq( 'categorie.prodotti.form.testo', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.menu' );
+		arrayInsertSeq( 'categorie.prodotti.form.file', $p['categorie.prodotti.form']['etc']['tabs'], 'categorie.prodotti.form.macro' );
 	}
 
 	// RELAZIONI CON IL MODULO PRODOTTI
@@ -95,6 +96,19 @@
 		'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.caratteristiche.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
+	);
+
+	// gestione categorie SEM/SMM
+	$p['categorie.prodotti.form.web'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'web' ),
+	    'h1'		=> array( $l		=> 'web' ),
+	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.prodotti.form.web.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.web.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 
 	// gestione categorie SEM/SMM
