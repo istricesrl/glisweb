@@ -1866,6 +1866,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `note` char(128) DEFAULT NULL,
   `se_notifiche` tinyint(1) DEFAULT NULL,
   `se_pec` tinyint(1) DEFAULT NULL,
+  `server` char(128) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,

@@ -35,7 +35,7 @@
 {{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, 1, 1, noempty, class, disabled ) }}
 {% endmacro %}
 
-{% macro select( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, disabled, onchange ) %}
+{% macro select( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, required, noempty, class, disabled, onchange, edit, add ) %}
 {% if subtable %}
     {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
     {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
@@ -64,6 +64,13 @@
     <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
     {% endfor %}
 </select>
+{# TODO FINIRE DI IMPLEMENTARE MANCANO GLI ARGOMENTI KEY, PAGE, PAGES, ECC. #}
+{% if edit and vl %}<div class="col-auto p-0 pl-1">
+<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
+</div>{% endif %}
+{% if add %}<div class="col-auto p-0 pl-1">
+<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+</div>{% endif %}
 {% endif %}
 {% endmacro %}
 
@@ -114,29 +121,29 @@
 <div class="row m-0">
     {% if api %}
     <div class="col combobox-container p-0">
-	<input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" {% if disabled %}disabled{% endif %} class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if default %} default="{{ default }}"{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
+	    <input type="hidden" value="{{ vl }}" placeholder-api="{{ pl }}" name="{{ nm }}" {% if disabled %}disabled{% endif %} class="selectbox" id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" {% if change %} onchange="{{ change }}"{% endif %} {% if default %} default="{{ default }}"{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
     </div>
     {% else %}
     <div class="col combobox-container p-0">
-	<select name="{{ nm }}" {% if disabled %}disabled{% endif %} id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
-	    {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
-	    {% for option in etc %}
-	    <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
-	    {% endfor %}
-	</select>
+        <select name="{{ nm }}" {% if disabled %}disabled{% endif %} id="{{ id }}" {% if required %}data-required="true"{% endif %} min-filter="3" class="selectbox form-control form-control-sm {% if class %}{{ class }}{% endif %}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  {% if change %} onchange="{{ change }}"{% endif %}{% if default %} default="{{ default }}"{% endif %}{% if 'selectpicker' in class %} data-live-search="true" data-title="{{ placeholder }}" data-style="btn-outline-light" data-size="7" {% set placeholder = '' %}{% endif %} {% if not noempty %}empty{% endif %} default="{{ default }}" data-live-search="true" populate-api="{{ api }}">
+            {% if not noempty %}<option value="">{# placeholder #}</option>{% endif %}
+            {% for option in etc %}
+            <option value="{{ option.id }}"{% if option.id == vl %} selected{% endif %}>{{ option.__label__|raw }}</option>
+            {% endfor %}
+        </select>
     </div>
     <div class="col-auto p-0 pl-1">
         <button type="button" class="btn btn-sm btn-secondary btn-sqr" selectbox-field="{{ id }}_inputbox" onclick="$('#'+$(this).attr('selectbox-field')).trigger('all');"><i class="fa fa-chevron-down"></i></button>
     </div>
     {% endif %}
     {% if edit and vl %}<div class="col-auto p-0 pl-1">
-	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
+	    <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
     </div>{% endif %}
     {% if add %}<div class="col-auto p-0 pl-1">
-	<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+	    <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
     </div>{% endif %}
     {% if modal %}<div class="col-auto p-0 pl-1">
-    <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#{{ modal }}').setAttribute('disabled');$('#{{ modal }}').toggleAttribute('disabled');$('#{{ modal }}').appendTo('#form-{{ table }}').modal('show');$('.modal-backdrop').appendTo('#form-{{ table }}');" data-toggle="modal" data-target=""><i class="fa fa-plus-circle"></i></button>
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#{{ modal }}').setAttribute('disabled');$('#{{ modal }}').toggleAttribute('disabled');$('#{{ modal }}').appendTo('#form-{{ table }}').modal('show');$('.modal-backdrop').appendTo('#form-{{ table }}');" data-toggle="modal" data-target=""><i class="fa fa-plus-circle"></i></button>
     </div>{% endif %}
 </div>
 {% endmacro %}

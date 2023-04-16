@@ -31,6 +31,47 @@
 		'priority'	=> '910' ) ) )
 	);
 
+	// vista mail
+	$p['mail.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'mail' ),
+		'h1'		=> array( $l		=> 'mail' ),
+		'parent'		=> array( 'id'		=> 'archivio.logistica' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_mail.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'mail.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'mail' ),
+		'priority'	=> '050' ) ) )
+	);
+
+	// gestione mail
+	$p['mail.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'mail.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_mail.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'mail.form',
+												'mail.form.tools' ) )
+		
+	);
+
+	// gestione mail strumenti
+	$p['mail.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni mail' ),
+	    'h1'		=> array( $l		=> 'azioni mail' ),
+	    'parent'		=> array( 'id'		=> 'mail.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/mail.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['mail.form']['etc']['tabs'] )
+	);
+
 	// vista indirizzi
 	$p['indirizzi.view'] = array(
 		'sitemap'		=> false,

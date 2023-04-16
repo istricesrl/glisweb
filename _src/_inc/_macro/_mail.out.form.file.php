@@ -37,6 +37,7 @@
     $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
 
     // memoria di lavoro
+    /*
     if( isset( $_SESSION['__work__']['mailattach']['items'] ) ) {
         if( isset( $_POST[ $ct['form']['table'] ]['file']) ) {
             unset( $_SESSION['__work__']['mailattach'] );
@@ -53,6 +54,7 @@
             }
         }
     }
+    */
 
     // debug
     // print_r( $_SESSION['__work__']['mailattach']['items'] );

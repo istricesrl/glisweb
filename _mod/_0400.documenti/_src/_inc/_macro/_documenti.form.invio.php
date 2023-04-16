@@ -68,7 +68,7 @@
 
         $mittente = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT anagrafica, indirizzo FROM mail_view WHERE id = ?',
+            'SELECT anagrafica, indirizzo, server FROM mail_view WHERE id = ?',
             array( array( 's' => $_REQUEST['__invio__']['id_mittente'] ) ) 
         );
 
@@ -93,10 +93,15 @@
             array(),
             array(
                 'documento' => $attach
-            )
+            ),
+            array(),
+            $mittente['server']
         );
 
     }
+
+    // debug
+    // die( print_r( $mittente, true ) );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

@@ -49,11 +49,11 @@
                 <div class="form-group form-row">
                     <div class="col-12 col-md-6">
                         <span class="label-top">mittente</span>
-                        {{ frm.selectRequired( '__invio__', '', '', 'id_mittente', '', etc.select.mittenti, '' ) }}
+                        {{ frm.selectRequired( '__invio__', '', '', 'id_mittente', '', etc.select.mittenti, request ) }}
                     </div>
                     <div class="col-12 col-md-6">
                         <span class="label-top">destinatario</span>
-                        {{ frm.selectRequired( '__invio__', '', '', 'id_destinatario', '', etc.select.destinatari, '' ) }}
+                        {{ frm.selectRequired( '__invio__', '', '', 'id_destinatario', '', etc.select.destinatari, request ) }}
                     </div>
                 </div>
                 <div class="form-group form-row">

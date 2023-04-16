@@ -4607,6 +4607,7 @@ CREATE OR REPLACE VIEW `mail_view` AS
 		mail.indirizzo,
 		mail.se_notifiche,
 		mail.se_pec,
+		mail.server,
 		mail.id_account_inserimento,
 		mail.id_account_aggiornamento,
 		concat(

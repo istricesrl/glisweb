@@ -80,6 +80,9 @@
 		if( $port == '587' ) {
 			$mail->SMTPSecure		= 'tls';
 		}
+		if( $port == '465' ) {
+			$mail->SMTPSecure		= 'ssl';
+		}
 
 	// configurazione dell'oggetto mail
 	    $mail->IsHTML			= true;
@@ -329,12 +332,20 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
 
 		foreach( $ar1 as $ds ) {
 
-			$dsa = array();
+			if( filter_var( $ds , FILTER_VALIDATE_EMAIL) ) {
 
-			$r = preg_match( '/([\S\s]+)(<[\S\@\.]+>)/', $ds, $dsa );
+				$ar0[ $ds ] = $ds;
+				
+			} else {
 
-			if( ! empty( $r ) ) {
-				$ar0[ trim( $dsa[1] ) ] = trim( $dsa[2], '<>' );
+				$dsa = array();
+
+				$r = preg_match( '/([\S\s]+)\s([<]{0,1}[\S\@\.]+[>]{0,1})/', $ds, $dsa );
+	
+				if( ! empty( $r ) ) {
+					$ar0[ trim( $dsa[1] ) ] = trim( $dsa[2], '<>' );
+				}
+	
 			}
 
 		}
