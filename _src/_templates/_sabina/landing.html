@@ -86,6 +86,7 @@
                         <p>{{ include( template_from_string( art.specifiche ) | raw ) }}</p>
                     </div>
                     <div class="card-footer">
+                        {% if art.prezzi.BARRATO.prezzo %}<h3 class="prezzo-barrato">{{ art.prezzi.BARRATO.prezzo|number_format(2, ',', '.') }} {{ art.prezzi.BARRATO.utf8 }}</h3>{% endif %}
                         <h3>{{ art.prezzi.DEFAULT.prezzo|number_format(2, ',', '.') }} {{ art.prezzi.DEFAULT.utf8 }}</h3>
                     </div>                
                 </div>
