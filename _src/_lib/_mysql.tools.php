@@ -39,6 +39,8 @@
 
     /**
      *
+	 * questa funzione restituisce un array delle tabelle coinvolte in una query mysql 
+	 * 
      * @todo documentare
      *
      */
@@ -48,7 +50,7 @@
 
 	if( preg_match_all( '/((FROM|JOIN) ([a-z_]+))/', $q, $m ) ) {
 	    $r = array_unique( $m[3] );
-	    array_walk( $r, function( &$v, $k ) { $v = str_replace( '_view', NULL, $v ); } );
+	    array_walk( $r, function( &$v, $k ) { $v = str_replace( '_view', '', $v ); } );
 	}
 
 	return $r;

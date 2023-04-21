@@ -234,10 +234,12 @@
 
     /**
      *
+     * questa funzione restiuisce la versione custum di un path standard
+     * 
      * @todo documentare
      *
      */
-    function path2custom( $p, $s = NULL ) {
+    function path2custom( $p, $s = '' ) {
         $p = str_replace( $_SERVER['DOCUMENT_ROOT'], '§', $p );
         $p = str_replace(  '_', $s, $p );
         $p = str_replace( '§', $_SERVER['DOCUMENT_ROOT'], $p );
