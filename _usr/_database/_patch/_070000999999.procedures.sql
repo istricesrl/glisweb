@@ -3,12 +3,12 @@
 -- questo file contiene le query per la creazione delle stored procedure e delle stored function
 --
 
---| 070000000400
+-- | 070000000400
 
 -- anagrafica_view_static
 DROP PROCEDURE IF EXISTS `anagrafica_view_static`;
 
---| 070000000401
+-- | 070000000401
 
 -- anagrafica_view_static
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -37,12 +37,12 @@ CREATE
 
     END;
 
---| 070000000410
+-- | 070000000410
 
 -- anagrafica_check_gestita
 DROP FUNCTION IF EXISTS `anagrafica_check_gestita`;
 
---| 070000000411
+-- | 070000000411
 
 -- anagrafica_check_gestita
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -76,12 +76,12 @@ CREATE
 
 END;
 
---| 070000001000
+-- | 070000001000
 
 -- todo_view_static
 DROP PROCEDURE IF EXISTS `attivita_view_static`;
 
---| 070000001001
+-- | 070000001001
 
 -- todo_view_static
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -110,12 +110,12 @@ CREATE
 
     END;
 
---| 070000003100
+-- | 070000003100
 
 -- categorie_anagrafica_path
 DROP FUNCTION IF EXISTS `categorie_anagrafica_path`;
 
---| 070000003101
+-- | 070000003101
 
 -- categorie_anagrafica_path
 -- verifica: 2021-06-01 18:34 Fabio Mosti
@@ -161,12 +161,12 @@ CREATE
 
 END;
 
---| 070000003110
+-- | 070000003110
 
 -- categorie_anagrafica_path_check
 DROP FUNCTION IF EXISTS `categorie_anagrafica_path_check`;
 
---| 070000003111
+-- | 070000003111
 
 -- categorie_anagrafica_path_check
 -- verifica: 2021-06-01 18:35 Fabio Mosti
@@ -206,12 +206,12 @@ CREATE
 
 END;
 
---| 070000003120
+-- | 070000003120
 
 -- categorie_anagrafica_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_anagrafica_path_find_ancestor`;
 
---| 070000003121
+-- | 070000003121
 
 -- categorie_anagrafica_path_find_ancestor
 -- verifica: 2021-05-23 18:35 Fabio Mosti
@@ -249,12 +249,12 @@ CREATE
 
 END;
 
---| 070000003700
+-- | 070000003700
 
 -- categorie_notizie_path
 DROP FUNCTION IF EXISTS `categorie_notizie_path`;
 
---| 070000003701
+-- | 070000003701
 
 -- categorie_notizie_path
 -- verifica: 2021-06-01 18:34 Fabio Mosti
@@ -300,12 +300,12 @@ CREATE
 
 END;
 
---| 070000003710
+-- | 070000003710
 
 -- categorie_notizie_path_check
 DROP FUNCTION IF EXISTS `categorie_notizie_path_check`;
 
---| 070000003711
+-- | 070000003711
 
 -- categorie_notizie_path_check
 -- verifica: 2021-06-01 18:35 Fabio Mosti
@@ -345,12 +345,12 @@ CREATE
 
 END;
 
---| 070000003720
+-- | 070000003720
 
 -- categorie_notizie_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_notizie_path_find_ancestor`;
 
---| 070000003721
+-- | 070000003721
 
 -- categorie_notizie_path_find_ancestor
 -- verifica: 2021-05-23 18:35 Fabio Mosti
@@ -388,12 +388,12 @@ CREATE
 
 END;
 
---| 070000003900
+-- | 070000003900
 
 -- categorie_prodotti_path
 DROP FUNCTION IF EXISTS `categorie_prodotti_path`;
 
---| 070000003901
+-- | 070000003901
 
 -- categorie_prodotti_path
 -- verifica: 2021-06-01 19:58 Fabio Mosti
@@ -439,12 +439,12 @@ CREATE
 
 END;
 
---| 070000003910
+-- | 070000003910
 
 -- categorie_prodotti_path_check
 DROP FUNCTION IF EXISTS `categorie_prodotti_path_check`;
 
---| 070000003911
+-- | 070000003911
 
 -- categorie_prodotti_path_check
 -- verifica: 2021-06-01 18:35 Fabio Mosti
@@ -484,12 +484,12 @@ CREATE
 
 END;
 
---| 070000003920
+-- | 070000003920
 
 -- categorie_prodotti_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_prodotti_path_find_ancestor`;
 
---| 070000003921
+-- | 070000003921
 
 -- categorie_prodotti_path_find_ancestor
 -- verifica: 2021-05-23 19:59 Fabio Mosti
@@ -527,12 +527,12 @@ CREATE
 
 END;
 
---| 070000004300
+-- | 070000004300
 
 -- categorie_progetti_path
 DROP FUNCTION IF EXISTS `categorie_progetti_path`;
 
---| 070000004301
+-- | 070000004301
 
 -- categorie_progetti_path
 -- verifica: 2021-06-02 19:52 Fabio Mosti
@@ -578,12 +578,12 @@ CREATE
 
 END;
 
---| 070000004310
+-- | 070000004310
 
 -- categorie_progetti_path_check
 DROP FUNCTION IF EXISTS `categorie_progetti_path_check`;
 
---| 070000004311
+-- | 070000004311
 
 -- categorie_progetti_path_check
 -- verifica: 2021-06-02 19:55 Fabio Mosti
@@ -623,12 +623,12 @@ CREATE
 
 END;
 
---| 070000004320
+-- | 070000004320
 
 -- categorie_progetti_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_progetti_path_find_ancestor`;
 
---| 070000004321
+-- | 070000004321
 
 -- categorie_progetti_path_find_ancestor
 -- verifica: 2021-06-02 19:56 Fabio Mosti
@@ -666,12 +666,12 @@ CREATE
 
 END;
 
---| 070000004500
+-- | 070000004500
 
 -- categorie_risorse_path
 DROP FUNCTION IF EXISTS `categorie_risorse_path`;
 
---| 070000004501
+-- | 070000004501
 
 -- categorie_risorse_path
 -- verifica: 2021-06-02 20:22 Fabio Mosti
@@ -717,12 +717,12 @@ CREATE
 
 END;
 
---| 070000004510
+-- | 070000004510
 
 -- categorie_risorse_path_check
 DROP FUNCTION IF EXISTS `categorie_risorse_path_check`;
 
---| 070000004511
+-- | 070000004511
 
 -- categorie_risorse_path_check
 -- verifica: 2021-06-02 20:22 Fabio Mosti
@@ -762,12 +762,12 @@ CREATE
 
 END;
 
---| 070000004520
+-- | 070000004520
 
 -- categorie_risorse_path_find_ancestor
 DROP FUNCTION IF EXISTS `categorie_risorse_path_find_ancestor`;
 
---| 070000004521
+-- | 070000004521
 
 -- categorie_risorse_path_find_ancestor
 -- verifica: 2021-06-02 19:56 Fabio Mosti
@@ -805,12 +805,12 @@ CREATE
 
 END;
 
---| 070000005100
+-- | 070000005100
 
 -- colori_path
 DROP FUNCTION IF EXISTS `colori_path`;
 
---| 070000005101
+-- | 070000005101
 
 -- colori_path
 -- verifica: 2021-06-03 15:19 Fabio Mosti
@@ -856,12 +856,12 @@ CREATE
 
 END;
 
---| 070000005110
+-- | 070000005110
 
 -- colori_path_check
 DROP FUNCTION IF EXISTS `colori_path_check`;
 
---| 070000005111
+-- | 070000005111
 
 -- colori_path_check
 -- verifica: 2021-06-03 15:25 Fabio Mosti
@@ -901,12 +901,12 @@ CREATE
 
 END;
 
---| 070000005120
+-- | 070000005120
 
 -- colori_path_find_ancestor
 DROP FUNCTION IF EXISTS `colori_path_find_ancestor`;
 
---| 070000005121
+-- | 070000005121
 
 -- colori_path_find_ancestor
 -- verifica: 2021-06-02 19:56 Fabio Mosti
@@ -944,12 +944,12 @@ CREATE
 
 END;
 
---| 070000015200
+-- | 070000015200
 
 -- gruppi_path
 DROP FUNCTION IF EXISTS `gruppi_path`;
 
---| 070000015201
+-- | 070000015201
 
 -- gruppi_path
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -995,12 +995,12 @@ CREATE
 
 END;
 
---| 070000015210
+-- | 070000015210
 
 -- gruppi_path_check
 DROP FUNCTION IF EXISTS `gruppi_path_check`;
 
---| 070000015211
+-- | 070000015211
 
 -- gruppi_path_check
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -1040,12 +1040,12 @@ CREATE
 
 END;
 
---| 070000015220
+-- | 070000015220
 
 -- gruppi_path_find_ancestor
 DROP FUNCTION IF EXISTS `gruppi_path_find_ancestor`;
 
---| 070000015221
+-- | 070000015221
 
 -- gruppi_path_find_ancestor
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -1083,12 +1083,12 @@ CREATE
 
 END;
 
---| 070000018000
+-- | 070000018000
 
 -- luoghi_path
 DROP FUNCTION IF EXISTS `luoghi_path`;
 
---| 070000018001
+-- | 070000018001
 
 -- luoghi_path
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -1134,12 +1134,12 @@ CREATE
 
 END;
 
---| 070000018010
+-- | 070000018010
 
 -- luoghi_path_check
 DROP FUNCTION IF EXISTS `luoghi_path_check`;
 
---| 070000018011
+-- | 070000018011
 
 -- luoghi_path_check
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -1179,12 +1179,12 @@ CREATE
 
 END;
 
---| 070000018020
+-- | 070000018020
 
 -- luoghi_path_find_ancestor
 DROP FUNCTION IF EXISTS `luoghi_path_find_ancestor`;
 
---| 070000018021
+-- | 070000018021
 
 -- luoghi_path_find_ancestor
 -- verifica: 2021-09-10 18:10 Fabio Mosti
@@ -1222,12 +1222,12 @@ CREATE
 
 END;
 
---| 070000020600
+-- | 070000020600
 
 -- mastri_path
 DROP FUNCTION IF EXISTS `mastri_path`;
 
---| 070000020601
+-- | 070000020601
 
 -- mastri_path
 -- verifica: 2021-09-28 18:10 Fabio Mosti
@@ -1273,12 +1273,12 @@ CREATE
 
 END;
 
---| 070000020610
+-- | 070000020610
 
 -- mastri_path_check
 DROP FUNCTION IF EXISTS `mastri_path_check`;
 
---| 070000020611
+-- | 070000020611
 
 -- mastri_path_check
 -- verifica: 2021-09-28 18:10 Fabio Mosti
@@ -1318,12 +1318,12 @@ CREATE
 
 END;
 
---| 070000020620
+-- | 070000020620
 
 -- mastri_path_find_ancestor
 DROP FUNCTION IF EXISTS `mastri_path_find_ancestor`;
 
---| 070000020621
+-- | 070000020621
 
 -- mastri_path_find_ancestor
 -- verifica: 2021-09-28 18:10 Fabio Mosti
@@ -1361,12 +1361,12 @@ CREATE
 
 END;
 
---| 070000022800
+-- | 070000022800
 
 -- organizzazioni_path
 DROP FUNCTION IF EXISTS `organizzazioni_path`;
 
---| 070000022801
+-- | 070000022801
 
 -- organizzazioni_path
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -1417,12 +1417,12 @@ CREATE
 
 END;
 
---| 070000022810
+-- | 070000022810
 
 -- organizzazioni_path_check
 DROP FUNCTION IF EXISTS `organizzazioni_path_check`;
 
---| 070000022811
+-- | 070000022811
 
 -- organizzazioni_path_check
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -1462,12 +1462,12 @@ CREATE
 
 END;
 
---| 070000022820
+-- | 070000022820
 
 -- organizzazioni_path_find_ancestor
 DROP FUNCTION IF EXISTS `organizzazioni_path_find_ancestor`;
 
---| 070000022821
+-- | 070000022821
 
 -- organizzazioni_path_find_ancestor
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -1505,12 +1505,12 @@ CREATE
 
 END;
 
---| 070000023200
+-- | 070000023200
 
 -- pagine_path
 DROP FUNCTION IF EXISTS `pagine_path`;
 
---| 070000023201
+-- | 070000023201
 
 -- pagine_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1556,12 +1556,12 @@ CREATE
 
 END;
 
---| 070000023210
+-- | 070000023210
 
 -- pagine_path_check
 DROP FUNCTION IF EXISTS `pagine_path_check`;
 
---| 070000023211
+-- | 070000023211
 
 -- pagine_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1601,12 +1601,12 @@ CREATE
 
 END;
 
---| 070000023220
+-- | 070000023220
 
 -- pagine_path_find_ancestor
 DROP FUNCTION IF EXISTS `pagine_path_find_ancestor`;
 
---| 070000023221
+-- | 070000023221
 
 -- pagine_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1644,12 +1644,12 @@ CREATE
 
 END;
 
---| 070000023800
+-- | 070000023800
 
 -- pianificazioni_path
 DROP FUNCTION IF EXISTS `pianificazioni_path`;
 
---| 070000023801
+-- | 070000023801
 
 -- pianificazioni_path
 -- verifica: 2021-06-01 18:34 Fabio Mosti
@@ -1695,12 +1695,12 @@ CREATE
 
 END;
 
---| 070000023810
+-- | 070000023810
 
 -- pianificazioni_path_check
 DROP FUNCTION IF EXISTS `pianificazioni_path_check`;
 
---| 070000023811
+-- | 070000023811
 
 -- pianificazioni_path_check
 -- verifica: 2021-06-01 18:35 Fabio Mosti
@@ -1740,12 +1740,12 @@ CREATE
 
 END;
 
---| 070000023820
+-- | 070000023820
 
 -- pianificazioni_path_find_ancestor
 DROP FUNCTION IF EXISTS `pianificazioni_path_find_ancestor`;
 
---| 070000023821
+-- | 070000023821
 
 -- pianificazioni_path_find_ancestor
 -- verifica: 2021-05-23 18:35 Fabio Mosti
@@ -1783,12 +1783,12 @@ CREATE
 
 END;
 
---| 070000034000
+-- | 070000034000
 
 -- ruoli_anagrafica_path
 DROP FUNCTION IF EXISTS `ruoli_anagrafica_path`;
 
---| 070000034001
+-- | 070000034001
 
 -- ruoli_anagrafica_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1834,12 +1834,12 @@ CREATE
 
 END;
 
---| 070000034010
+-- | 070000034010
 
 -- ruoli_anagrafica_path_check
 DROP FUNCTION IF EXISTS `ruoli_anagrafica_path_check`;
 
---| 070000034011
+-- | 070000034011
 
 -- ruoli_anagrafica_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1879,12 +1879,12 @@ CREATE
 
 END;
 
---| 070000034020
+-- | 070000034020
 
 -- ruoli_anagrafica_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_anagrafica_path_find_ancestor`;
 
---| 070000034021
+-- | 070000034021
 
 -- ruoli_anagrafica_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1922,12 +1922,12 @@ CREATE
 
 END;
 
---| 070000034100
+-- | 070000034100
 
 -- ruoli_articoli_path
 DROP FUNCTION IF EXISTS `ruoli_articoli_path`;
 
---| 070000034101
+-- | 070000034101
 
 -- ruoli_articoli_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -1973,12 +1973,12 @@ CREATE
 
 END;
 
---| 070000034110
+-- | 070000034110
 
 -- ruoli_articoli_path_check
 DROP FUNCTION IF EXISTS `ruoli_articoli_path_check`;
 
---| 070000034111
+-- | 070000034111
 
 -- ruoli_articoli_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2018,12 +2018,12 @@ CREATE
 
 END;
 
---| 070000034120
+-- | 070000034120
 
 -- ruoli_articoli_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_articoli_path_find_ancestor`;
 
---| 070000034121
+-- | 070000034121
 
 -- ruoli_articoli_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2061,12 +2061,12 @@ CREATE
 
 END;
 
---| 070000034200
+-- | 070000034200
 
 -- ruoli_audio_path
 DROP FUNCTION IF EXISTS `ruoli_audio_path`;
 
---| 070000034201
+-- | 070000034201
 
 -- ruoli_audio_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2112,12 +2112,12 @@ CREATE
 
 END;
 
---| 070000034210
+-- | 070000034210
 
 -- ruoli_audio_path_check
 DROP FUNCTION IF EXISTS `ruoli_audio_path_check`;
 
---| 070000034211
+-- | 070000034211
 
 -- ruoli_audio_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2157,12 +2157,12 @@ CREATE
 
 END;
 
---| 070000034220
+-- | 070000034220
 
 -- ruoli_audio_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_audio_path_find_ancestor`;
 
---| 070000034221
+-- | 070000034221
 
 -- ruoli_audio_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2200,12 +2200,12 @@ CREATE
 
 END;
 
---| 070000034300
+-- | 070000034300
 
 -- ruoli_documenti_path
 DROP FUNCTION IF EXISTS `ruoli_documenti_path`;
 
---| 070000034301
+-- | 070000034301
 
 -- ruoli_documenti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2251,12 +2251,12 @@ CREATE
 
 END;
 
---| 070000034310
+-- | 070000034310
 
 -- ruoli_documenti_path_check
 DROP FUNCTION IF EXISTS `ruoli_documenti_path_check`;
 
---| 070000034311
+-- | 070000034311
 
 -- ruoli_documenti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2296,12 +2296,12 @@ CREATE
 
 END;
 
---| 070000034320
+-- | 070000034320
 
 -- ruoli_documenti_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_documenti_path_find_ancestor`;
 
---| 070000034321
+-- | 070000034321
 
 -- ruoli_documenti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2339,12 +2339,12 @@ CREATE
 
 END;
 
---| 070000034400
+-- | 070000034400
 
 -- ruoli_file_path
 DROP FUNCTION IF EXISTS `ruoli_file_path`;
 
---| 070000034401
+-- | 070000034401
 
 -- ruoli_file_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2390,12 +2390,12 @@ CREATE
 
 END;
 
---| 070000034410
+-- | 070000034410
 
 -- ruoli_file_path_check
 DROP FUNCTION IF EXISTS `ruoli_file_path_check`;
 
---| 070000034411
+-- | 070000034411
 
 -- ruoli_file_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2435,12 +2435,12 @@ CREATE
 
 END;
 
---| 070000034420
+-- | 070000034420
 
 -- ruoli_file_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_file_path_find_ancestor`;
 
---| 070000034421
+-- | 070000034421
 
 -- ruoli_file_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2478,12 +2478,12 @@ CREATE
 
 END;
 
---| 070000034600
+-- | 070000034600
 
 -- ruoli_immagini_path
 DROP FUNCTION IF EXISTS `ruoli_immagini_path`;
 
---| 070000034601
+-- | 070000034601
 
 -- ruoli_immagini_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2529,12 +2529,12 @@ CREATE
 
 END;
 
---| 070000034610
+-- | 070000034610
 
 -- ruoli_immagini_path_check
 DROP FUNCTION IF EXISTS `ruoli_immagini_path_check`;
 
---| 070000034611
+-- | 070000034611
 
 -- ruoli_immagini_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2574,12 +2574,12 @@ CREATE
 
 END;
 
---| 070000034620
+-- | 070000034620
 
 -- ruoli_immagini_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_immagini_path_find_ancestor`;
 
---| 070000034621
+-- | 070000034621
 
 -- ruoli_immagini_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2617,12 +2617,12 @@ CREATE
 
 END;
 
---| 070000034800
+-- | 070000034800
 
 -- ruoli_indirizzi_path
 DROP FUNCTION IF EXISTS `ruoli_indirizzi_path`;
 
---| 070000034801
+-- | 070000034801
 
 -- ruoli_indirizzi_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2668,12 +2668,12 @@ CREATE
 
 END;
 
---| 070000034810
+-- | 070000034810
 
 -- ruoli_indirizzi_path_check
 DROP FUNCTION IF EXISTS `ruoli_indirizzi_path_check`;
 
---| 070000034811
+-- | 070000034811
 
 -- ruoli_indirizzi_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2713,12 +2713,12 @@ CREATE
 
 END;
 
---| 070000034820
+-- | 070000034820
 
 -- ruoli_indirizzi_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_indirizzi_path_find_ancestor`;
 
---| 070000034821
+-- | 070000034821
 
 -- ruoli_indirizzi_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2756,12 +2756,12 @@ CREATE
 
 END;
 
---| 070000034900
+-- | 070000034900
 
 -- ruoli_matricole_path
 DROP FUNCTION IF EXISTS `ruoli_matricole_path`;
 
---| 070000034901
+-- | 070000034901
 
 -- ruoli_matricole_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2807,12 +2807,12 @@ CREATE
 
 END;
 
---| 070000034910
+-- | 070000034910
 
 -- ruoli_matricole_path_check
 DROP FUNCTION IF EXISTS `ruoli_matricole_path_check`;
 
---| 070000034911
+-- | 070000034911
 
 -- ruoli_matricole_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2852,12 +2852,12 @@ CREATE
 
 END;
 
---| 070000034920
+-- | 070000034920
 
 -- ruoli_matricole_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_matricole_path_find_ancestor`;
 
---| 070000034921
+-- | 070000034921
 
 -- ruoli_matricole_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2895,12 +2895,12 @@ CREATE
 
 END;
 
---| 070000035000
+-- | 070000035000
 
 -- ruoli_prodotti_path
 DROP FUNCTION IF EXISTS `ruoli_prodotti_path`;
 
---| 070000035001
+-- | 070000035001
 
 -- ruoli_prodotti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2946,12 +2946,12 @@ CREATE
 
 END;
 
---| 070000035010
+-- | 070000035010
 
 -- ruoli_prodotti_path_check
 DROP FUNCTION IF EXISTS `ruoli_prodotti_path_check`;
 
---| 070000035011
+-- | 070000035011
 
 -- ruoli_prodotti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -2991,12 +2991,12 @@ CREATE
 
 END;
 
---| 070000035020
+-- | 070000035020
 
 -- ruoli_prodotti_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_prodotti_path_find_ancestor`;
 
---| 070000035021
+-- | 070000035021
 
 -- ruoli_prodotti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3034,12 +3034,12 @@ CREATE
 
 END;
 
---| 070000035200
+-- | 070000035200
 
 -- ruoli_video_path
 DROP FUNCTION IF EXISTS `ruoli_video_path`;
 
---| 070000035201
+-- | 070000035201
 
 -- ruoli_video_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3085,12 +3085,12 @@ CREATE
 
 END;
 
---| 070000035210
+-- | 070000035210
 
 -- ruoli_video_path_check
 DROP FUNCTION IF EXISTS `ruoli_video_path_check`;
 
---| 070000035211
+-- | 070000035211
 
 -- ruoli_video_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3130,12 +3130,12 @@ CREATE
 
 END;
 
---| 070000035220
+-- | 070000035220
 
 -- ruoli_video_path_find_ancestor
 DROP FUNCTION IF EXISTS `ruoli_video_path_find_ancestor`;
 
---| 070000035221
+-- | 070000035221
 
 -- ruoli_video_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3173,12 +3173,12 @@ CREATE
 
 END;
 
---| 070000037000
+-- | 070000037000
 
 -- settori_path
 DROP FUNCTION IF EXISTS `settori_path`;
 
---| 070000037001
+-- | 070000037001
 
 -- settori_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3224,12 +3224,12 @@ CREATE
 
 END;
 
---| 070000037010
+-- | 070000037010
 
 -- settori_path_check
 DROP FUNCTION IF EXISTS `settori_path_check`;
 
---| 070000037011
+-- | 070000037011
 
 -- settori_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3269,12 +3269,12 @@ CREATE
 
 END;
 
---| 070000037020
+-- | 070000037020
 
 -- settori_path_find_ancestor
 DROP FUNCTION IF EXISTS `settori_path_find_ancestor`;
 
---| 070000037021
+-- | 070000037021
 
 -- settori_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3312,12 +3312,12 @@ CREATE
 
 END;
 
---| 070000041400
+-- | 070000041400
 
 -- software_path
 DROP FUNCTION IF EXISTS `software_path`;
 
---| 070000041401
+-- | 070000041401
 
 -- software_path
 -- verifica: 2021-11-16 10:39 Chiara GDL
@@ -3363,12 +3363,12 @@ CREATE
 
 END;
 
---| 070000041410
+-- | 070000041410
 
 -- software_path_check
 DROP FUNCTION IF EXISTS `software_path_check`;
 
---| 070000041411
+-- | 070000041411
 
 -- software_path_check
 -- verifica: 2021-11-16 10:39 Chiara GDL
@@ -3408,12 +3408,12 @@ CREATE
 
 END;
 
---| 070000041420
+-- | 070000041420
 
 -- software_path_find_ancestor
 DROP FUNCTION IF EXISTS `software_path_find_ancestor`;
 
---| 070000041421
+-- | 070000041421
 
 -- software_path_find_ancestor
 -- verifica: 2021-11-16 10:39 Chiara GDL
@@ -3451,12 +3451,12 @@ CREATE
 
 END;
 
---| 070000050000
+-- | 070000050000
 
 -- tipologie_anagrafica_path
 DROP FUNCTION IF EXISTS `tipologie_anagrafica_path`;
 
---| 070000050001
+-- | 070000050001
 
 -- tipologie_anagrafica_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3502,12 +3502,12 @@ CREATE
 
 END;
 
---| 070000050010
+-- | 070000050010
 
 -- tipologie_anagrafica_path_check
 DROP FUNCTION IF EXISTS `tipologie_anagrafica_path_check`;
 
---| 070000050011
+-- | 070000050011
 
 -- tipologie_anagrafica_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3547,12 +3547,12 @@ CREATE
 
 END;
 
---| 070000050020
+-- | 070000050020
 
 -- tipologie_anagrafica_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_anagrafica_path_find_ancestor`;
 
---| 070000050021
+-- | 070000050021
 
 -- tipologie_anagrafica_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3590,12 +3590,12 @@ CREATE
 
 END;
 
---| 070000050400
+-- | 070000050400
 
 -- tipologie_attivita_path
 DROP FUNCTION IF EXISTS `tipologie_attivita_path`;
 
---| 070000050401
+-- | 070000050401
 
 -- tipologie_attivita_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3641,12 +3641,12 @@ CREATE
 
 END;
 
---| 070000050410
+-- | 070000050410
 
 -- tipologie_attivita_path_check
 DROP FUNCTION IF EXISTS `tipologie_attivita_path_check`;
 
---| 070000050411
+-- | 070000050411
 
 -- tipologie_attivita_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3686,12 +3686,12 @@ CREATE
 
 END;
 
---| 070000050420
+-- | 070000050420
 
 -- tipologie_attivita_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_attivita_path_find_ancestor`;
 
---| 070000050421
+-- | 070000050421
 
 -- tipologie_attivita_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -3729,12 +3729,12 @@ CREATE
 
 END;
 
---| 070000050500
+-- | 070000050500
 
 -- tipologie_banner_path
 DROP FUNCTION IF EXISTS `tipologie_banner_path`;
 
---| 070000050501
+-- | 070000050501
 
 -- tipologie_banner_path
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -3780,12 +3780,12 @@ CREATE
 
 END;
 
---| 070000050510
+-- | 070000050510
 
 -- tipologie_banner_path_check
 DROP FUNCTION IF EXISTS `tipologie_banner_path_check`;
 
---| 070000050511
+-- | 070000050511
 
 -- tipologie_banner_path_check
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -3825,12 +3825,12 @@ CREATE
 
 END;
 
---| 070000050520
+-- | 070000050520
 
 -- tipologie_banner_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_banner_path_find_ancestor`;
 
---| 070000050521
+-- | 070000050521
 
 -- tipologie_banner_path_find_ancestor
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -3868,12 +3868,12 @@ CREATE
 
 END;
 
---| 070000050600
+-- | 070000050600
 
 -- tipologie_chiavi_path
 DROP FUNCTION IF EXISTS `tipologie_chiavi_path`;
 
---| 070000050601
+-- | 070000050601
 
 -- tipologie_chiavi_path
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -3919,12 +3919,12 @@ CREATE
 
 END;
 
---| 070000050610
+-- | 070000050610
 
 -- tipologie_chiavi_path_check
 DROP FUNCTION IF EXISTS `tipologie_chiavi_path_check`;
 
---| 070000050611
+-- | 070000050611
 
 -- tipologie_chiavi_path_check
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -3964,12 +3964,12 @@ CREATE
 
 END;
 
---| 070000050620
+-- | 070000050620
 
 -- tipologie_chiavi_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_chiavi_path_find_ancestor`;
 
---| 070000050621
+-- | 070000050621
 
 -- tipologie_chiavi_path_find_ancestor
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -4007,12 +4007,12 @@ CREATE
 
 END;
 
---| 070000050800
+-- | 070000050800
 
 -- tipologie_contatti_path
 DROP FUNCTION IF EXISTS `tipologie_contatti_path`;
 
---| 070000050801
+-- | 070000050801
 
 -- tipologie_contatti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4058,12 +4058,12 @@ CREATE
 
 END;
 
---| 070000050810
+-- | 070000050810
 
 -- tipologie_contatti_path_check
 DROP FUNCTION IF EXISTS `tipologie_contatti_path_check`;
 
---| 070000050811
+-- | 070000050811
 
 -- tipologie_contatti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4103,12 +4103,12 @@ CREATE
 
 END;
 
---| 070000050820
+-- | 070000050820
 
 -- tipologie_contatti_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_contatti_path_find_ancestor`;
 
---| 070000050821
+-- | 070000050821
 
 -- tipologie_contatti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4146,12 +4146,12 @@ CREATE
 
 END;
 
---| 070000050900
+-- | 070000050900
 
 -- tipologie_contratti_path
 DROP FUNCTION IF EXISTS `tipologie_contratti_path`;
 
---| 070000050901
+-- | 070000050901
 
 -- tipologie_contratti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4197,12 +4197,12 @@ CREATE
 
 END;
 
---| 070000050910
+-- | 070000050910
 
 -- tipologie_contratti_path_check
 DROP FUNCTION IF EXISTS `tipologie_contratti_path_check`;
 
---| 070000050911
+-- | 070000050911
 
 -- tipologie_contratti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4242,12 +4242,12 @@ CREATE
 
 END;
 
---| 070000050920
+-- | 070000050920
 
 -- tipologie_contratti_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_contratti_path_find_ancestor`;
 
---| 070000050921
+-- | 070000050921
 
 -- tipologie_contratti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4285,12 +4285,12 @@ CREATE
 
 END;
 
---| 070000052600
+-- | 070000052600
 
 -- tipologie_documenti_path
 DROP FUNCTION IF EXISTS `tipologie_documenti_path`;
 
---| 070000052601
+-- | 070000052601
 
 -- tipologie_documenti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4336,12 +4336,12 @@ CREATE
 
 END;
 
---| 070000052610
+-- | 070000052610
 
 -- tipologie_documenti_path_check
 DROP FUNCTION IF EXISTS `tipologie_documenti_path_check`;
 
---| 070000052611
+-- | 070000052611
 
 -- tipologie_documenti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4381,12 +4381,12 @@ CREATE
 
 END;
 
---| 070000052620
+-- | 070000052620
 
 -- tipologie_documenti_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_documenti_path_find_ancestor`;
 
---| 070000052621
+-- | 070000052621
 
 -- tipologie_documenti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4425,12 +4425,12 @@ CREATE
 END;
 
 
---| 070000052800
+-- | 070000052800
 
 -- tipologie_edifici_path
 DROP FUNCTION IF EXISTS `tipologie_edifici_path`;
 
---| 070000052801
+-- | 070000052801
 
 -- tipologie_edifici_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4476,12 +4476,12 @@ CREATE
 
 END;
 
---| 070000052810
+-- | 070000052810
 
 -- tipologie_edifici_path_check
 DROP FUNCTION IF EXISTS `tipologie_edifici_path_check`;
 
---| 070000052811
+-- | 070000052811
 
 -- tipologie_edifici_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4521,12 +4521,12 @@ CREATE
 
 END;
 
---| 070000052820
+-- | 070000052820
 
 -- tipologie_edifici_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_edifici_path_find_ancestor`;
 
---| 070000052821
+-- | 070000052821
 
 -- tipologie_edifici_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4564,12 +4564,12 @@ CREATE
 
 END;
 
---| 070000052900
+-- | 070000052900
 
 -- tipologie_immobili_path
 DROP FUNCTION IF EXISTS `tipologie_immobili_path`;
 
---| 070000052901
+-- | 070000052901
 
 -- tipologie_immobili_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4615,12 +4615,12 @@ CREATE
 
 END;
 
---| 070000052910
+-- | 070000052910
 
 -- tipologie_immobili_path_check
 DROP FUNCTION IF EXISTS `tipologie_immobili_path_check`;
 
---| 070000052911
+-- | 070000052911
 
 -- tipologie_immobili_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4660,12 +4660,12 @@ CREATE
 
 END;
 
---| 070000052920
+-- | 070000052920
 
 -- tipologie_immobili_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_immobili_path_find_ancestor`;
 
---| 070000052921
+-- | 070000052921
 
 -- tipologie_immobili_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4703,12 +4703,12 @@ CREATE
 
 END;
 
---| 070000053000
+-- | 070000053000
 
 -- tipologie_indirizzi_path
 DROP FUNCTION IF EXISTS `tipologie_indirizzi_path`;
 
---| 070000053001
+-- | 070000053001
 
 -- tipologie_indirizzi_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4754,12 +4754,12 @@ CREATE
 
 END;
 
---| 070000053010
+-- | 070000053010
 
 -- tipologie_indirizzi_path_check
 DROP FUNCTION IF EXISTS `tipologie_indirizzi_path_check`;
 
---| 070000053011
+-- | 070000053011
 
 -- tipologie_indirizzi_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4799,12 +4799,12 @@ CREATE
 
 END;
 
---| 070000053020
+-- | 070000053020
 
 -- tipologie_indirizzi_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_indirizzi_path_find_ancestor`;
 
---| 070000053021
+-- | 070000053021
 
 -- tipologie_indirizzi_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -4842,12 +4842,12 @@ CREATE
 
 END;
 
---| 070000053200
+-- | 070000053200
 
 -- tipologie_licenze_path
 DROP FUNCTION IF EXISTS `tipologie_licenze_path`;
 
---| 070000053201
+-- | 070000053201
 
 -- tipologie_licenze_path
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -4893,12 +4893,12 @@ CREATE
 
 END;
 
---| 070000053210
+-- | 070000053210
 
 -- tipologie_licenze_path_check
 DROP FUNCTION IF EXISTS `tipologie_licenze_path_check`;
 
---| 070000053211
+-- | 070000053211
 
 -- tipologie_licenze_path_check
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -4938,12 +4938,12 @@ CREATE
 
 END;
 
---| 070000053220
+-- | 070000053220
 
 -- tipologie_licenze_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_licenze_path_find_ancestor`;
 
---| 070000053221
+-- | 070000053221
 
 -- tipologie_licenze_path_find_ancestor
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -4981,12 +4981,12 @@ CREATE
 
 END;
 
---| 070000053300
+-- | 070000053300
 
 -- tipologie_luoghi_path
 DROP FUNCTION IF EXISTS `tipologie_luoghi_path`;
 
---| 070000053301
+-- | 070000053301
 
 -- tipologie_luoghi_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5032,12 +5032,12 @@ CREATE
 
 END;
 
---| 070000053310
+-- | 070000053310
 
 -- tipologie_luoghi_path_check
 DROP FUNCTION IF EXISTS `tipologie_luoghi_path_check`;
 
---| 070000053311
+-- | 070000053311
 
 -- tipologie_luoghi_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5077,12 +5077,12 @@ CREATE
 
 END;
 
---| 070000053320
+-- | 070000053320
 
 -- tipologie_luoghi_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_luoghi_path_find_ancestor`;
 
---| 070000053321
+-- | 070000053321
 
 -- tipologie_luoghi_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5120,12 +5120,12 @@ CREATE
 
 END;
 
---| 070000053400
+-- | 070000053400
 
 -- tipologie_mastri_path
 DROP FUNCTION IF EXISTS `tipologie_mastri_path`;
 
---| 070000053401
+-- | 070000053401
 
 -- tipologie_mastri_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5171,12 +5171,12 @@ CREATE
 
 END;
 
---| 070000053410
+-- | 070000053410
 
 -- tipologie_mastri_path_check
 DROP FUNCTION IF EXISTS `tipologie_mastri_path_check`;
 
---| 070000053411
+-- | 070000053411
 
 -- tipologie_mastri_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5216,12 +5216,12 @@ CREATE
 
 END;
 
---| 070000053420
+-- | 070000053420
 
 -- tipologie_mastri_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_mastri_path_find_ancestor`;
 
---| 070000053421
+-- | 070000053421
 
 -- tipologie_mastri_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5259,12 +5259,12 @@ CREATE
 
 END;
 
---| 070000053800
+-- | 070000053800
 
 -- tipologie_notizie_path
 DROP FUNCTION IF EXISTS `tipologie_notizie_path`;
 
---| 070000053801
+-- | 070000053801
 
 -- tipologie_notizie_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5310,12 +5310,12 @@ CREATE
 
 END;
 
---| 070000053810
+-- | 070000053810
 
 -- tipologie_notizie_path_check
 DROP FUNCTION IF EXISTS `tipologie_notizie_path_check`;
 
---| 070000053811
+-- | 070000053811
 
 -- tipologie_notizie_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5355,12 +5355,12 @@ CREATE
 
 END;
 
---| 070000053820
+-- | 070000053820
 
 -- tipologie_notizie_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_notizie_path_find_ancestor`;
 
---| 070000053821
+-- | 070000053821
 
 -- tipologie_notizie_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5398,12 +5398,12 @@ CREATE
 
 END;
 
---| 070000054000
+-- | 070000054000
 
 -- tipologie_pagamenti_path
 DROP FUNCTION IF EXISTS `tipologie_pagamenti_path`;
 
---| 070000054001
+-- | 070000054001
 
 -- tipologie_pagamenti_path
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -5449,12 +5449,12 @@ CREATE
 
 END;
 
---| 070000054010
+-- | 070000054010
 
 -- tipologie_pagamenti_path_check
 DROP FUNCTION IF EXISTS `tipologie_pagamenti_path_check`;
 
---| 070000054011
+-- | 070000054011
 
 -- tipologie_pagamenti_path_check
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -5494,12 +5494,12 @@ CREATE
 
 END;
 
---| 070000054020
+-- | 070000054020
 
 -- tipologie_pagamenti_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_pagamenti_path_find_ancestor`;
 
---| 070000054021
+-- | 070000054021
 
 -- tipologie_pagamenti_path_find_ancestor
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -5537,12 +5537,12 @@ CREATE
 
 END;
 
---| 070000054100
+-- | 070000054100
 
 -- tipologie_periodi_path
 DROP FUNCTION IF EXISTS `tipologie_periodi_path`;
 
---| 070000054101
+-- | 070000054101
 
 -- tipologie_periodi_path
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -5588,12 +5588,12 @@ CREATE
 
 END;
 
---| 070000054110
+-- | 070000054110
 
 -- tipologie_periodi_path_check
 DROP FUNCTION IF EXISTS `tipologie_periodi_path_check`;
 
---| 070000054111
+-- | 070000054111
 
 -- tipologie_periodi_path_check
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -5633,12 +5633,12 @@ CREATE
 
 END;
 
---| 070000054120
+-- | 070000054120
 
 -- tipologie_periodi_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_periodi_path_find_ancestor`;
 
---| 070000054121
+-- | 070000054121
 
 -- tipologie_periodi_path_find_ancestor
 -- verifica: 2021-11-15 11:29 Chiara GDL
@@ -5676,12 +5676,12 @@ CREATE
 
 END;
 
---| 070000054200
+-- | 070000054200
 
 -- tipologie_popup_path
 DROP FUNCTION IF EXISTS `tipologie_popup_path`;
 
---| 070000054201
+-- | 070000054201
 
 -- tipologie_popup_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5727,12 +5727,12 @@ CREATE
 
 END;
 
---| 070000054210
+-- | 070000054210
 
 -- tipologie_popup_path_check
 DROP FUNCTION IF EXISTS `tipologie_popup_path_check`;
 
---| 070000054211
+-- | 070000054211
 
 -- tipologie_popup_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5772,12 +5772,12 @@ CREATE
 
 END;
 
---| 070000054220
+-- | 070000054220
 
 -- tipologie_popup_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_popup_path_find_ancestor`;
 
---| 070000054221
+-- | 070000054221
 
 -- tipologie_popup_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5815,12 +5815,12 @@ CREATE
 
 END;
 
---| 070000054600
+-- | 070000054600
 
 -- tipologie_prodotti_path
 DROP FUNCTION IF EXISTS `tipologie_prodotti_path`;
 
---| 070000054601
+-- | 070000054601
 
 -- tipologie_prodotti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5866,12 +5866,12 @@ CREATE
 
 END;
 
---| 070000054610
+-- | 070000054610
 
 -- tipologie_prodotti_path_check
 DROP FUNCTION IF EXISTS `tipologie_prodotti_path_check`;
 
---| 070000054611
+-- | 070000054611
 
 -- tipologie_prodotti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5911,12 +5911,12 @@ CREATE
 
 END;
 
---| 070000054620
+-- | 070000054620
 
 -- tipologie_prodotti_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_prodotti_path_find_ancestor`;
 
---| 070000054621
+-- | 070000054621
 
 -- tipologie_prodotti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -5954,12 +5954,12 @@ CREATE
 
 END;
 
---| 070000055000
+-- | 070000055000
 
 -- tipologie_progetti_path
 DROP FUNCTION IF EXISTS `tipologie_progetti_path`;
 
---| 070000055001
+-- | 070000055001
 
 -- tipologie_progetti_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6005,12 +6005,12 @@ CREATE
 
 END;
 
---| 070000055010
+-- | 070000055010
 
 -- tipologie_progetti_path_check
 DROP FUNCTION IF EXISTS `tipologie_progetti_path_check`;
 
---| 070000055011
+-- | 070000055011
 
 -- tipologie_progetti_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6050,12 +6050,12 @@ CREATE
 
 END;
 
---| 070000055020
+-- | 070000055020
 
 -- tipologie_progetti_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_progetti_path_find_ancestor`;
 
---| 070000055021
+-- | 070000055021
 
 -- tipologie_progetti_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6093,12 +6093,12 @@ CREATE
 
 END;
 
---| 070000055400
+-- | 070000055400
 
 -- tipologie_pubblicazioni_path
 DROP FUNCTION IF EXISTS `tipologie_pubblicazioni_path`;
 
---| 070000055401
+-- | 070000055401
 
 -- tipologie_pubblicazioni_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6144,12 +6144,12 @@ CREATE
 
 END;
 
---| 070000055410
+-- | 070000055410
 
 -- tipologie_pubblicazioni_path_check
 DROP FUNCTION IF EXISTS `tipologie_pubblicazioni_path_check`;
 
---| 070000055411
+-- | 070000055411
 
 -- tipologie_pubblicazioni_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6189,12 +6189,12 @@ CREATE
 
 END;
 
---| 070000055420
+-- | 070000055420
 
 -- tipologie_pubblicazioni_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_pubblicazioni_path_find_ancestor`;
 
---| 070000055421
+-- | 070000055421
 
 -- tipologie_pubblicazioni_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6232,12 +6232,12 @@ CREATE
 
 END;
 
---| 070000055700
+-- | 070000055700
 
 -- tipologie_rinnovi_path
 DROP FUNCTION IF EXISTS `tipologie_rinnovi_path`;
 
---| 070000055701
+-- | 070000055701
 
 -- tipologie_rinnovi_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6283,12 +6283,12 @@ CREATE
 
 END;
 
---| 070000055710
+-- | 070000055710
 
 -- tipologie_rinnovi_path_check
 DROP FUNCTION IF EXISTS `tipologie_rinnovi_path_check`;
 
---| 070000055711
+-- | 070000055711
 
 -- tipologie_rinnovi_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6328,12 +6328,12 @@ CREATE
 
 END;
 
---| 070000055720
+-- | 070000055720
 
 -- tipologie_rinnovi_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_rinnovi_path_find_ancestor`;
 
---| 070000055721
+-- | 070000055721
 
 -- tipologie_rinnovi_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6371,12 +6371,12 @@ CREATE
 
 END;
 
---| 070000055800
+-- | 070000055800
 
 -- tipologie_risorse_path
 DROP FUNCTION IF EXISTS `tipologie_risorse_path`;
 
---| 070000055801
+-- | 070000055801
 
 -- tipologie_risorse_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6422,12 +6422,12 @@ CREATE
 
 END;
 
---| 070000055810
+-- | 070000055810
 
 -- tipologie_risorse_path_check
 DROP FUNCTION IF EXISTS `tipologie_risorse_path_check`;
 
---| 070000055811
+-- | 070000055811
 
 -- tipologie_risorse_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6467,12 +6467,12 @@ CREATE
 
 END;
 
---| 070000055820
+-- | 070000055820
 
 -- tipologie_risorse_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_risorse_path_find_ancestor`;
 
---| 070000055821
+-- | 070000055821
 
 -- tipologie_risorse_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6510,12 +6510,12 @@ CREATE
 
 END;
 
---| 070000056200
+-- | 070000056200
 
 -- tipologie_telefoni_path
 DROP FUNCTION IF EXISTS `tipologie_telefoni_path`;
 
---| 070000056201
+-- | 070000056201
 
 -- tipologie_telefoni_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6561,12 +6561,12 @@ CREATE
 
 END;
 
---| 070000056210
+-- | 070000056210
 
 -- tipologie_telefoni_path_check
 DROP FUNCTION IF EXISTS `tipologie_telefoni_path_check`;
 
---| 070000056211
+-- | 070000056211
 
 -- tipologie_telefoni_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6606,12 +6606,12 @@ CREATE
 
 END;
 
---| 070000056220
+-- | 070000056220
 
 -- tipologie_telefoni_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_telefoni_path_find_ancestor`;
 
---| 070000056221
+-- | 070000056221
 
 -- tipologie_telefoni_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6649,12 +6649,12 @@ CREATE
 
 END;
 
---| 070000056600
+-- | 070000056600
 
 -- tipologie_todo_path
 DROP FUNCTION IF EXISTS `tipologie_todo_path`;
 
---| 070000056601
+-- | 070000056601
 
 -- tipologie_todo_path
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6700,12 +6700,12 @@ CREATE
 
 END;
 
---| 070000056610
+-- | 070000056610
 
 -- tipologie_todo_path_check
 DROP FUNCTION IF EXISTS `tipologie_todo_path_check`;
 
---| 070000056611
+-- | 070000056611
 
 -- tipologie_todo_path_check
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6745,12 +6745,12 @@ CREATE
 
 END;
 
---| 070000056620
+-- | 070000056620
 
 -- tipologie_todo_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_todo_path_find_ancestor`;
 
---| 070000056621
+-- | 070000056621
 
 -- tipologie_todo_path_find_ancestor
 -- verifica: 2021-10-04 11:49 Fabio Mosti
@@ -6788,12 +6788,12 @@ CREATE
 
 END;
 
---| 070000056800
+-- | 070000056800
 
 -- tipologie_url_path
 DROP FUNCTION IF EXISTS `tipologie_url_path`;
 
---| 070000056801
+-- | 070000056801
 
 -- tipologie_url_path
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -6839,12 +6839,12 @@ CREATE
 
 END;
 
---| 070000056810
+-- | 070000056810
 
 -- tipologie_url_path_check
 DROP FUNCTION IF EXISTS `tipologie_url_path_check`;
 
---| 070000056811
+-- | 070000056811
 
 -- tipologie_url_path_check
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -6884,12 +6884,12 @@ CREATE
 
 END;
 
---| 070000056820
+-- | 070000056820
 
 -- tipologie_url_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_url_path_find_ancestor`;
 
---| 070000056821
+-- | 070000056821
 
 -- tipologie_url_path_find_ancestor
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -6927,12 +6927,12 @@ CREATE
 
 END;
 
---| 070000056900
+-- | 070000056900
 
 -- tipologie_zone_path
 DROP FUNCTION IF EXISTS `tipologie_zone_path`;
 
---| 070000056901
+-- | 070000056901
 
 -- tipologie_zone_path
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -6978,12 +6978,12 @@ CREATE
 
 END;
 
---| 070000056910
+-- | 070000056910
 
 -- tipologie_zone_path_check
 DROP FUNCTION IF EXISTS `tipologie_zone_path_check`;
 
---| 070000056911
+-- | 070000056911
 
 -- tipologie_zone_path_check
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -7023,12 +7023,12 @@ CREATE
 
 END;
 
---| 070000056920
+-- | 070000056920
 
 -- tipologie_zone_path_find_ancestor
 DROP FUNCTION IF EXISTS `tipologie_zone_path_find_ancestor`;
 
---| 070000056921
+-- | 070000056921
 
 -- tipologie_zone_path_find_ancestor
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -7066,12 +7066,12 @@ CREATE
 
 END;
 
---| 070000060000
+-- | 070000060000
 
 -- todo_view_static
 DROP PROCEDURE IF EXISTS `todo_view_static`;
 
---| 070000060001
+-- | 070000060001
 
 -- todo_view_static
 -- verifica: 2021-05-23 15:24 Fabio Mosti
@@ -7102,12 +7102,12 @@ CREATE
 
 
 
---| 070000100000
+-- | 070000100000
 
 -- zone_path
 DROP FUNCTION IF EXISTS `zone_path`;
 
---| 070000100001
+-- | 070000100001
 
 -- zone_path
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -7153,12 +7153,12 @@ CREATE
 
 END;
 
---| 070000100010
+-- | 070000100010
 
 -- zone_path_check
 DROP FUNCTION IF EXISTS `zone_path_check`;
 
---| 070000100011
+-- | 070000100011
 
 -- zone_path_check
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -7198,12 +7198,12 @@ CREATE
 
 END;
 
---| 070000100020
+-- | 070000100020
 
 -- zone_path_find_ancestor
 DROP FUNCTION IF EXISTS `zone_path_find_ancestor`;
 
---| 070000100021
+-- | 070000100021
 
 -- zone_path_find_ancestor
 -- verifica: 2021-11-09 12:45 Chiara GDL
@@ -7241,4 +7241,4 @@ CREATE
 
 END;
 
---| FINE FILE
+-- | FINE FILE

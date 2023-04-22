@@ -3,7 +3,7 @@
 -- questo file contiene le query per la creazione delle tabelle di ACL
 --
 
---| 040000000400
+-- | 040000000400
 
 -- __acl_anagrafica__
 -- tipologia: tabella gestita
@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS`__acl_anagrafica__` (
   CONSTRAINT `__acl_anagrafica___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 040000001800
+-- | 040000001800
 
 -- __acl_attivita__
 -- tipologia: tabella gestita
@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
   CONSTRAINT `__acl_attivita___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 040000023200
+-- | 040000023200
 
 -- __acl_pagine__
 -- tipologia: tabella gestita
@@ -66,4 +66,4 @@ CREATE TABLE IF NOT EXISTS `__acl_pagine__` (
   CONSTRAINT `__acl_pagine___ibfk_03_nofollow` FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| FINE FILE
+-- | FINE FILE

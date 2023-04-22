@@ -3,7 +3,7 @@
 -- questo file contiene le query per l'inserimento dei dati standard nelle tabelle
 --
 
---| 050000002800
+-- | 050000002800
 
 -- caratteristiche_immobili
 -- tipologia: tabella gestita
@@ -46,7 +46,7 @@ ON DUPLICATE KEY UPDATE
 	nome = VALUES( nome ), font_awesome = VALUES( font_awesome ), html_entity = VALUES( html_entity ), se_edificio = VALUES(se_edificio), se_immobile = VALUES( se_immobile), se_indirizzo = VALUES( se_indirizzo ) 
 ;
 
---| 050000003100
+-- | 050000003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
@@ -64,7 +64,7 @@ REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `not
 (10,	NULL,	NULL,	'corrieri',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (11,	2,	NULL,	'istruttori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000004300
+-- | 050000004300
 
 -- categorie_progetti
 -- tipologia: tabella gestita
@@ -73,7 +73,7 @@ INSERT INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ord
 (1,	NULL,	NULL,	'ordinario',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'straordinario',	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
---| 050000004700
+-- | 050000004700
 
 -- certificazioni
 -- tipologia: tabella assistita
@@ -87,7 +87,7 @@ INSERT INTO `certificazioni` (`id`, `nome`, `id_account_inserimento`, `timestamp
 (6,	'tessera sanitaria',	NULL,	NULL,	NULL,	NULL),
 (7,	'certificazione energetica',	NULL,	NULL,	NULL,	NULL);
 
---| 050000005000
+-- | 050000005000
 
 -- classi_energetiche
 -- tipologia: tabella standard
@@ -109,7 +109,7 @@ ON DUPLICATE KEY UPDATE
 	ep_max = VALUES( ep_max ),
 	rgb = VALUES( rgb );
 
---| 050000005100
+-- | 050000005100
 
 -- colori
 -- tipologia: tabella standard
@@ -121,7 +121,7 @@ REPLACE INTO `colori` (`id`, `nome`, `hex`, `r`, `g`, `b`) VALUES
 (5,	    'blu',	    '0000ff',	0,	    0,	    255),
 (6,	    'verde',	'00ff00',	0,	    255,	0);
 
---| 050000005300
+-- | 050000005300
 
 -- comuni
 -- tipologia: tabella standard
@@ -183,7 +183,7 @@ REPLACE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_cat
 (12594,	1,	'Valsamoggia',	                    '037061',	'M320'),
 (12595,	1,	'Alto Reno Terme',	                '037062',	'M369');
 
---| 050000006000
+-- | 050000006000
 
 -- condizioni
 -- tipologia: tabella standard
@@ -193,7 +193,7 @@ INSERT INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
 (2,	'usato',	1,	NULL),
 (3,	'da ristrutturare',	NULL,	1);
 
---| 050000006200
+-- | 050000006200
 
 -- condizioni_pagamento
 -- tipologia: tabella standard
@@ -203,7 +203,7 @@ REPLACE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
 (2,	    'TP02',	'pagamento completo'),
 (3,	    'TP03',	    'anticipo');
 
---| 050000006400
+-- | 050000006400
 
 -- consensi
 -- tipologia: tabella standard
@@ -213,7 +213,7 @@ REPLACE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timest
 ('EVASIONE_ORDINE',	"evasione dell\'ordine",	NULL,	NULL,	NULL,	NULL,	NULL),
 ('INVIO_COMUNICAZIONI_MARKETING',	'invio di comunicazioni commerciali',	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000006500
+-- | 050000006500
 
 -- consensi_moduli
 -- tipologia: tabella assistita
@@ -223,7 +223,7 @@ REPLACE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ord
 (2,	1,	'EVASIONE_ORDINE',	'ecommerce',	20,	'autorizzo',	"il trattamento dei miei dati per l\'evasione del mio ordine",	"evasione dell\'ordine",	NULL,	'',	1,	NULL,	NULL,	NULL,	NULL),
 (3,	1,	'INVIO_COMUNICAZIONI_MARKETING',	'ecommerce',	30,	'autorizzo',	"il trattamento dei miei dati per l\'invio di comunicazioni commerciali",	'invio di comunicazioni commerciali',	NULL,	'',	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000007100
+-- | 050000007100
 
 -- continenti
 -- tipologia: tabella standard
@@ -237,7 +237,7 @@ REPLACE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (6,	'LA',	'America Latina'),
 (7,	'AN',	'Antartide');
 
---| 050000009000
+-- | 050000009000
 
 -- disponibilita
 -- tipologia: tabella standard
@@ -248,7 +248,7 @@ INSERT INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
 (3,	'nuda proprietà',	NULL,	1),
 (4,	'occupato',	NULL,	1);
 
---| 050000010000
+-- | 050000010000
 
 -- embed
 -- tipologia: tabella standard
@@ -258,7 +258,7 @@ REPLACE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
 (2, 'Vimeo', 1, NULL),
 (3, 'YouTube', 1, NULL);
 
---| 050000015200
+-- | 050000015200
 
 -- gruppi
 -- tipologia: tabella gestita
@@ -268,7 +268,7 @@ REPLACE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `id_acc
 (2,	NULL,	NULL,	'staff',	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'users',	NULL,	NULL,	NULL,	NULL);
 
---| 050000016000
+-- | 050000016000
 
 -- iva
 REPLACE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestamp_archiviazione`) VALUES
@@ -331,7 +331,7 @@ REPLACE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestam
 (57,	0.00,	'regime ex art. 17 c. 6 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 comma 6 del d.P.R. 633/1972',	'N6',	NULL),
 (58,	0.00,	'regime ex art. 17 cc. 7 e 8 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 commi 7 e 8 del d.P.R. 633/1972',	'N6',	NULL);
 
---| 050000016800
+-- | 050000016800
 
 -- lingue
 -- tipologia: tabella standard
@@ -353,7 +353,7 @@ REPLACE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alpha3`, `
 (14,	'croato',	    'croato (Croazia)',	        'hr',	'hrv',	'hr-HR'),
 (15,	'rumeno',	    'rumeno (Romania)',	        'ro',	'ron',	'ro-RO');
 
---| 050000017200
+-- | 050000017200
 
 -- listini
 -- tipologia: tabella assistita
@@ -361,7 +361,7 @@ REPLACE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alpha3`, `
 REPLACE INTO `listini` (`id`, `id_valuta`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,     1,	            'DEFAULT',	                NULL,	NULL,	NULL,	NULL);
 
---| 050000021900
+-- | 050000021900
 
 -- modalita_pagamento
 -- tipologia: tabella standard
@@ -392,13 +392,13 @@ REPLACE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (23,  'MP08', 'bancomat' ),
 (24, 'MP08', 'paypal' );
 
---| 010000022000
+-- | 050000022000
 
 -- tipologie_notizie
 INSERT INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000023600
+-- | 050000023600
 
 -- periodicita
 -- tipologia: tabella standard
@@ -409,7 +409,7 @@ REPLACE INTO `periodicita` (`id`, `nome`) VALUES
 (3,	'mensile'),
 (4,	'annuale');
 
---| 050000028000
+-- | 050000028000
 
 -- provincie
 -- tipologia: tabella standard
@@ -525,7 +525,7 @@ REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) V
 (110,	21,	'Ogliastra',	                    'OG',	NULL),
 (111,	21,	'Sud Sardegna',	                    'SU',	'111');
 
---| 050000028600
+-- | 050000028600
 
 -- ranking
 -- tipologia: tabella assistita
@@ -536,7 +536,7 @@ REPLACE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_fornit
 (3,	'SILVER',	NULL,	300,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	'BRONZE',	NULL,	400,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000029800
+-- | 050000029800
 
 -- regimi
 -- tipologia: tabella standard
@@ -576,7 +576,7 @@ REPLACE INTO `regimi` (`id`, `nome`, `codice`) VALUES
 -- Altro	RF18
 -- Forfettario (art.1, commi 54-89, legge n. 190/2014)	RF19
 
---| 050000030200
+-- | 050000030200
 
 -- regioni
 -- tipologia: tabella standard
@@ -603,7 +603,7 @@ REPLACE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 (20,	1,	'Sicilia',	                        '19'),
 (21,	1,	'Sardegna',	                        '20');
 
---| 050000030800
+-- | 050000030800
 
 -- reparti
 -- tipologia: tabella assistita
@@ -612,7 +612,7 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 (1,	1,	NULL,	'VENDITA IVA 22%',	NULL,	NULL,	NULL,	NULL,	NULL),
 (9,	9,	NULL,	'LOCAZIONE IVA 0%',	'fuori campo IVA ex art. 3 d.P.R. 633/1972',	NULL,	NULL,	NULL,	NULL);
 
---| 050000034000
+-- | 050000034000
 
 -- ruoli_anagrafica
 -- tipologia: tabella standard
@@ -661,7 +661,7 @@ ON DUPLICATE KEY UPDATE
 	se_immobili = VALUES(se_immobili),
 	se_contratti = VALUES(se_contratti);
 
---| 050000034200
+-- | 050000034200
 
 -- ruoli_audio
 -- tipologia: tabella standard
@@ -670,7 +670,7 @@ INSERT INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awe
 (1,	NULL,	'audio',	NULL,	NULL,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	1),
 (2,	NULL,	'commento',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
---| 050000034300
+-- | 050000034300
 
 -- ruoli_documenti
 -- tipologia: tabella di supporto
@@ -680,7 +680,7 @@ REPLACE INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 (2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL),
 (3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1);
 
---| 050000034400
+-- | 050000034400
 
 -- ruoli_file
 -- tipologia: tabella standard
@@ -699,7 +699,7 @@ REPLACE INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awe
 (11,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
 (12,	NULL,	'scansione',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
---| 050000034600
+-- | 050000034600
 
 -- ruoli_immagini
 -- tipologia: tabella standard
@@ -722,7 +722,7 @@ INSERT INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, 
 (15,	NULL,	NULL,	'anteprima',	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
 (16,	NULL,	NULL,	'applicazioni',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000034800
+-- | 050000034800
 
 -- ruoli_indirizzi
 -- tipologia: tabella standard
@@ -734,7 +734,7 @@ REPLACE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se
 (4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
 
---| 050000034850
+-- | 050000034850
 
 -- ruoli_mail
 -- tipologia: tabella standard
@@ -747,7 +747,7 @@ INSERT INTO `ruoli_mail` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awes
 (6,	NULL,	'ordini',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
 (7,	NULL,	'helpdesk',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
---| 050000034900
+-- | 050000034900
 
 -- ruoli_matricole
 -- tipologia: tabella standard
@@ -756,7 +756,7 @@ REPLACE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome`) VAL
 (1,	'attrezzatura',	    '',	    ''),
 (2,	'prodotto',	    '',	    '');
 
---| 050000035000
+-- | 050000035000
 
 -- ruoli_prodotti
 -- tipologia: tabella standard
@@ -766,7 +766,7 @@ REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font
 (2,	    NULL,	'principale',	NULL,	NULL),
 (3,	    NULL,	'suggerito',	NULL,	NULL);
 
---| 050000035100
+-- | 050000035100
 
 -- ruoli_progetti
 -- tipologia: tabella di supporto
@@ -777,7 +777,7 @@ INSERT INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_s
 (3,	'attesa',	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
 
---| 050000035200
+-- | 050000035200
 
 -- ruoli_video
 -- tipologia: tabella standard
@@ -796,7 +796,7 @@ REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_aw
 (11,	NULL,	'episodio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
 (12,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
 (13,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
---| 050000037000
+-- | 050000037000
 
 -- settori
 -- tipologia: tabella standard
@@ -808,7 +808,7 @@ REPLACE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`) VALU
 (4,     2,      '01.11',      'Coltivazione di cereali (escluso il riso), legumi da granella e semi oleosi',          'coltivazione di cereali, legumi e semi'),
 (5,     4,      '01.11.1',    'Coltivazione di cereali (escluso il riso)',                                            'coltivazione di cereali');
 
---| 050000042000
+-- | 050000042000
 
 -- stati
 -- tipologia: tabella standard
@@ -1051,7 +1051,7 @@ REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`,
 (236,	1,	NULL,	NULL,	'Serbia e Montenegro',	'Costituite le nazioni indipendenti della Serbia e del Montenegro a seguito del distacco del Montenegro dal soppresso Stato della',	'224',	'2006-06-03'),
 (237,	4,	NULL,	NULL,	'Sint Maarten (NL)',	'Territorio incluso nella classificazione in adeguamento alle direttive di Eurostat',	'928',	'2017-04-13');
 
---| 050000042200
+-- | 050000042200
 
 -- stati_lingue
 -- tipologia: tabella standard
@@ -1059,7 +1059,7 @@ REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`,
 REPLACE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 (1,     1,	    1);
 
---| 050000043000
+-- | 050000043000
 
 -- task
 -- tipologia: tabella assistita
@@ -1077,7 +1077,7 @@ REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_d
 (10,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_0200.attivita/_src/_api/_task/_autotask.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (11,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_0100.pianificazioni/_src/_api/_task/_pianificazioni.populate.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000050000
+-- | 050000050000
 
 -- tipologie_anagrafica
 -- tipologia: tabella standard
@@ -1092,7 +1092,7 @@ REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `htm
 (7,	1,	NULL,	'gent.mo',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (8,	1,	NULL,	'gent.ma',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000050400
+-- | 050000050400
 
 -- tipologie_attivita
 -- tipologia: tabella assistita
@@ -1128,12 +1128,12 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 (28,	27,	NULL,	NULL,	'invio via e-mail',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (29,	27,	NULL,	NULL,	'invio via PEC',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000050450
+-- | 050000050450
 
 -- tipologie_badge
 -- TODO
 
---| 050000050800
+-- | 050000050800
 
 -- tipologie_contatti
 -- tipologia: tabella assistita
@@ -1145,7 +1145,7 @@ REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 (4,	NULL,	NULL,	'form web',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (5,	NULL,	NULL,	'chat',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000050900
+-- | 050000050900
 
 -- tipologie_contratti
 -- tipologia: tabella assistita
@@ -1159,7 +1159,7 @@ INSERT INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_
 (6,	NULL,	'affiliazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (7,	NULL,	'servizi',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000052600
+-- | 050000052600
 
 -- tipologie_documenti
 -- tipologia: tabella di supporto
@@ -1194,7 +1194,7 @@ REPLACE INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `nu
 (27,	1,	NULL,	'TD26',	'F',	'cessione beni ammortizzabili e per passaggi interni',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (28,	1,	NULL,	'TD27',	'F',	'fattura per autoconsumo o cessioni gratuite senza rivalsa',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000052800
+-- | 050000052800
 
 -- tipologie_edifici
 -- tipologia: tabella di supporto
@@ -1207,7 +1207,7 @@ INSERT INTO `tipologie_edifici` (`id`, `id_genitore`, `nome`) VALUES
 (5, NULL, 'residence'),
 (6, NULL, 'edificio indipendente');
 
---| 050000052900
+-- | 050000052900
 
 -- tipologie_immobili
 -- tipologia: tabella di supporto
@@ -1220,7 +1220,7 @@ INSERT INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_industria
 (8, 'ufficio', NULL, 1),
 (9, 'negozio', NULL, 1);
 
---| 050000053000
+-- | 050000053000
 
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
@@ -1268,7 +1268,7 @@ INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 (40,	NULL,	NULL,	'viuzza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (41,	NULL,	NULL,	'viuzzo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000053300
+-- | 050000053300
 
 -- tipologie_luoghi
 -- tipologia: tabella gestita
@@ -1281,7 +1281,7 @@ INSERT INTO `tipologie_luoghi` (`id`, `nome`) VALUES
 (5, 'aula'),
 (6, 'online');
 
---| 050000053400
+-- | 050000053400
 
 -- tipologie_mastri
 -- tipologia: tabella assistita
@@ -1292,13 +1292,13 @@ INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_ent
 (3,	NULL,	NULL,	'registro ore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (4,	NULL,	NULL,	'crediti',	NULL,	NULL,	NULL,	NULL,	NULL,	1, NULL,	NULL,	NULL,	NULL);
 
---| 050000053800
+-- | 050000053800
 
 -- tipologie_notizie
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
 
---| 050000054100
+-- | 050000054100
 
 -- tipologie_periodi
 -- tipologia: tabella gestita
@@ -1308,13 +1308,13 @@ REPLACE INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome
 (2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000054200
+-- | 050000054200
 
 -- tipologie_popup
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
 
---| 050000054600
+-- | 050000054600
 
 -- tipologie_prodotti
 -- tipologia: tabella assistita
@@ -1326,7 +1326,7 @@ INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_e
 (4,	1,	NULL,	'alimentare (volume)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (5,	1,	NULL,	'alimentare (pezzo)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000055000
+-- | 050000055000
 
 -- tipologie_progetti
 -- tipologia: tabella assistita
@@ -1339,7 +1339,7 @@ INSERT INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_e
 (5,	NULL,	NULL,	'forfait',	'',	'',	1,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (6,	NULL,	NULL,	'corso',	'',	'',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
---| 050000055400
+-- | 050000055400
 
 -- tipologie_pubblicazioni
 -- tipologia: tabella assistita
@@ -1349,7 +1349,7 @@ INSERT IGNORE INTO `tipologie_pubblicazioni` (`id`, `id_genitore`, `ordine`, `no
 (2,	NULL,	NULL,	'pubblicato',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'in evidenza',	    NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
---| 050000055700
+-- | 050000055700
 
 -- tipologie_rinnovi
 -- tipologia: tabella di supporto
@@ -1359,7 +1359,7 @@ INSERT IGNORE INTO `tipologie_rinnovi` (`id`, `id_genitore`, `ordine`, `nome`, `
 (2,	NULL,	NULL,	'straordinario',	NULL,	NULL,	1,	1,	1,	1,		1,		1,		NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'ridotto',			NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000055800
+-- | 050000055800
 
 -- tipologie_risorse
 -- tipologia: tabella assistita
@@ -1367,7 +1367,7 @@ INSERT IGNORE INTO `tipologie_rinnovi` (`id`, `id_genitore`, `ordine`, `nome`, `
 INSERT INTO `tipologie_risorse` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'corso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000056200
+-- | 050000056200
 
 -- tipologie_telefoni
 -- tipologia: tabella standard
@@ -1378,7 +1378,7 @@ REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 (3,	NULL,   30,     'fax',	        '&#xf02f;',     ''),
 (4,	NULL,   40,     'telefono/fax',	'&#xf1ac;',     '');
 
---| 050000056600
+-- | 050000056600
 
 -- tipologie_todo
 -- tipologia: tabella assistita
@@ -1397,13 +1397,13 @@ REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_enti
 (11,	2,	NULL,	'customer care',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (12,	2,	NULL,	'preventivazione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
---| 050000056800
+-- | 050000056800
 
 -- tipologie_url
 -- tipologia: tabella assistita
 -- verifica: 2021-11-09 12:45 Chiara GDL
 
---| 050000062000
+-- | 050000062000
 
 -- udm
 -- tipologia: tabella standard
@@ -1448,7 +1448,7 @@ REPLACE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se
 (37,	29,	100000000,	'ara',	'a',	'https://it.wikipedia.org/wiki/Ara_(unità_di_misura)',	1,	NULL,	NULL,	NULL,	NULL,	1),
 (38,	29,	10000000000,	'ettaro',	'ha',	'https://it.wikipedia.org/wiki/Ettaro',	1,	NULL,	NULL,	NULL,	NULL,	1);
 
---| 050000063000
+-- | 050000063000
 
 -- valute
 -- tipologia: tabella standard
@@ -1456,4 +1456,4 @@ REPLACE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se
 REPLACE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
 (1,	'EUR',	'&#8634;',	'€');
 
---| FINE FILE
+-- | FINE FILE

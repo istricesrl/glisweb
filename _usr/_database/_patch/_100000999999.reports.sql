@@ -3,12 +3,12 @@
 -- questo file contiene le query per la creazione dei report
 --
 
---| 100000007200
+-- | 100000007200
 -- __report_status_contratti__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_status_contratti__`;
 
---| 100000007201
+-- | 100000007201
 CREATE OR REPLACE VIEW `__report_status_contratti__` AS
   SELECT
     progetti.id,
@@ -47,12 +47,12 @@ CREATE OR REPLACE VIEW `__report_status_contratti__` AS
   GROUP BY progetti.id
 ;
 
---| 100000015000
+-- | 100000015000
 -- __report_giacenza_crediti__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_giacenza_crediti__`;
 
---| 100000015001
+-- | 100000015001
 CREATE OR REPLACE VIEW `__report_giacenza_crediti__` AS
 SELECT
   movimenti.id,
@@ -99,12 +99,12 @@ WHERE crediti.quantita IS NOT NULL
 ) AS movimenti
 GROUP BY movimenti.id, movimenti.id_account, movimenti.account, movimenti.nome;
 
---| 100000015010
+-- | 100000015010
 -- __report_giacenza_ore__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_giacenza_ore__`;
 
---| 100000015011
+-- | 100000015011
 CREATE OR REPLACE VIEW `__report_giacenza_ore__` AS
   SELECT report.*,
       count( DISTINCT td1.id ) AS backlog,
@@ -161,12 +161,12 @@ CREATE OR REPLACE VIEW `__report_giacenza_ore__` AS
     LEFT JOIN todo AS td3 ON ( td3.id_progetto = report.id_progetto AND td3.data_chiusura IS NOT NULL )
   GROUP BY report.id, report.id_progetto, report.progetto, report.nome
 ;
---| 100000020000
+-- | 100000020000
 -- __report_giacenza_magazzini__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_giacenza_magazzini__`;
 
---| 100000020001
+-- | 100000020001
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini__` AS
 SELECT
   concat_ws( '|', movimenti.id, movimenti.id_articolo, movimenti.id_matricola ) AS id,
@@ -351,10 +351,10 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_pr
 GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.codice_produttore, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 
 
---| 100000020002
+-- | 100000020002
 DROP TABLE IF EXISTS `__report_giacenza_magazzini_foglie__`;
 
---| 100000020003
+-- | 100000020003
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini_foglie__` AS
 SELECT
   concat_ws( '|', movimenti.id, movimenti.id_articolo, movimenti.id_matricola ) AS id,
@@ -533,10 +533,10 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_pro
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
 GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
 
---| 100000020003
+-- | 100000020004
 DROP TABLE IF EXISTS `__report_giacenza_magazzini_foglie_attive__`;
 
---| 100000020004
+-- | 100000020005
 CREATE OR REPLACE VIEW `__report_giacenza_magazzini_foglie_attive__` AS
 SELECT
   concat_ws( '|', movimenti.id, movimenti.id_articolo, movimenti.id_matricola ) AS id,
@@ -717,13 +717,13 @@ GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articol
 HAVING totale > 0
 ;
 
---| 100000020500
+-- | 100000020500
 
 -- __report_immagini_da_scalare__
 -- tipologia: report
 DROP TABLE IF EXISTS `__report_immagini_da_scalare__`;
 
---| 100000020501
+-- | 100000020501
 -- __report_immagini_da_scalare__
 -- tipologia: report
 CREATE OR REPLACE VIEW __report_immagini_da_scalare__ AS
@@ -733,13 +733,13 @@ CREATE OR REPLACE VIEW __report_immagini_da_scalare__ AS
 	ORDER BY immagini.timestamp_scalamento ASC, ruoli_immagini.ordine_scalamento ASC, immagini.ordine ASC
 ;
 
---| 100000020550
+-- | 100000020550
 
 -- __report_immagini_scalate__
 -- tipologia: report
 DROP TABLE IF EXISTS `__report_immagini_scalate__`;
 
---| 100000020551
+-- | 100000020551
 
 -- __report_immagini_scalate__
 -- tipologia: report
@@ -761,7 +761,7 @@ FROM
 	immagini
 ;
 
---| 100000020700
+-- | 100000020700
 
 -- __report_iscritti_corsi__
 -- tipologia: report
@@ -797,12 +797,12 @@ INNER JOIN relazioni_progetti ON relazioni_progetti.id_progetto = contratti.id_p
 INNER JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
 WHERE tipologie_contratti.se_iscrizione = 1 AND ruoli_progetti.se_sottoprogetto = 1;
 
---| 100000020900
+-- | 100000020900
 -- __report_movimenti_crediti__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_movimenti_crediti__`;
 
---| 100000020901
+-- | 100000020901
 -- __report_movimenti_crediti__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_movimenti_crediti__` AS
@@ -840,12 +840,12 @@ FROM mastri
   WHERE crediti.quantita IS NOT NULL
 ) AS movimenti;
 
---| 100000020910
+-- | 100000020910
 -- __report_movimenti_ore__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_movimenti_ore__`;
 
---| 100000020911
+-- | 100000020911
 -- __report_movimenti_ore__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_movimenti_ore__` AS
@@ -899,12 +899,12 @@ FROM mastri
   WHERE attivita.ore IS NOT NULL
 ) AS movimenti;
 
---| 100000021000
+-- | 100000021000
 -- __report_movimenti_magazzini__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_movimenti_magazzini__`;
 
---| 100000021001
+-- | 100000021001
 -- __report_movimenti_magazzini__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_movimenti_magazzini__` AS
@@ -1092,12 +1092,12 @@ FROM mastri
 -- GROUP BY id, nome, id_prodotto, prodotto, codice_produttore, id_articolo, articolo, matricola, data_scadenza, data, id_tipologia, tipologia, documento, numero, emittente, destinatario, id_riga, carico, mastro_carico, qta_carico, scarico, mastro_scarico, qta_scarico, udm_qta;
 GROUP BY id_riga;
 
---| 100000022700
+-- | 100000022700
 -- __report_evasione_ordini__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_evasione_ordini__`;
 
---| 100000022701
+-- | 100000022701
 -- __report_evasione_ordini__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_evasione_ordini__` AS
@@ -1171,12 +1171,12 @@ LEFT JOIN udm ON udm.id = (
 )
 GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, conversione, udm;
 
---| 100000027000
+-- | 100000027000
 -- __report_avanzamento_progetti__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_avanzamento_progetti__`;
 
---| 100000027001
+-- | 100000027001
 -- __report_avanzamento_progetti__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
@@ -1206,12 +1206,12 @@ CREATE OR REPLACE VIEW `__report_avanzamento_progetti__` AS
   GROUP BY progetti.id
 ;
 
---| 100000027010
+-- | 100000027010
 -- __report_avanzamento_trattative__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_avanzamento_trattative__`;
 
---| 100000027011
+-- | 100000027011
 -- __report_avanzamento_trattative__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_avanzamento_trattative__` AS
@@ -1238,12 +1238,12 @@ CREATE OR REPLACE VIEW `__report_avanzamento_trattative__` AS
   GROUP BY progetti.id
 ;
 
---| 100000027012
+-- | 100000027012
 -- __report_avanzamento_trattative_attive__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_avanzamento_trattative_attive__`;
 
---| 100000027013
+-- | 100000027013
 -- __report_avanzamento_trattative_attive__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_avanzamento_trattative_attive__` AS
@@ -1271,12 +1271,12 @@ CREATE OR REPLACE VIEW `__report_avanzamento_trattative_attive__` AS
 	HAVING ( min( at2.data_programmazione ) IS NULL OR min( at2.data_programmazione ) <= CURRENT_DATE() )
 ;
 
---| 100000027014
+-- | 100000027014
 -- __report_avanzamento_trattative_gestite__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_avanzamento_trattative_gestite__`;
 
---| 100000027015
+-- | 100000027015
 -- __report_avanzamento_trattative_gestite__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_avanzamento_trattative_gestite__` AS
@@ -1304,12 +1304,12 @@ CREATE OR REPLACE VIEW `__report_avanzamento_trattative_gestite__` AS
 	HAVING ( min( at2.data_programmazione ) IS NOT NULL AND min( at2.data_programmazione ) > CURRENT_DATE() )
 ;
 
---| 100000027016
+-- | 100000027016
 -- __report_avanzamento_amministrazione__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_avanzamento_amministrazione__`;
 
---| 100000027017
+-- | 100000027017
 -- __report_avanzamento_amministrazione__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione__` AS
@@ -1336,12 +1336,12 @@ CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione__` AS
   GROUP BY progetti.id
 ;
 
---| 100000027018
+-- | 100000027018
 -- __report_avanzamento_amministrazione_attiva__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_avanzamento_amministrazione_attiva__`;
 
---| 100000027019
+-- | 100000027019
 -- __report_avanzamento_amministrazione_attiva__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione_attiva__` AS
@@ -1369,12 +1369,12 @@ CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione_attiva__` AS
 	HAVING ( min( at2.data_programmazione ) IS NULL OR min( at2.data_programmazione ) <= CURRENT_DATE() )
 ;
 
---| 100000027020
+-- | 100000027020
 -- __report_avanzamento_amministrazione_gestita__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_avanzamento_amministrazione_gestita__`;
 
---| 100000027021
+-- | 100000027021
 -- __report_avanzamento_amministrazione_gestita__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione_gestita__` AS
@@ -1402,12 +1402,12 @@ CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione_gestita__` AS
 	HAVING ( min( at2.data_programmazione ) IS NOT NULL AND min( at2.data_programmazione ) > CURRENT_DATE() )
 ;
 
---| 100000031510
+-- | 100000031510
 -- __report_tesseramenti_anagrafica__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_tesseramenti_anagrafica__`;
 
---| 100000031511
+-- | 100000031511
 -- __report_tesseramenti_anagrafica__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_tesseramenti_anagrafica__` AS
@@ -1447,12 +1447,12 @@ CREATE OR REPLACE VIEW `__report_tesseramenti_anagrafica__` AS
   WHERE tipologie_contratti.se_tesseramento IS NOT NULL
 ;
 
---| 100000056610
+-- | 100000056610
 -- __report_backlog_todo__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_backlog_todo__`;
 
---| 100000056611
+-- | 100000056611
 -- __report_backlog_todo__
 -- tipologia: report
 -- NOTA: questo report è ancora da documentare
@@ -1514,12 +1514,12 @@ CREATE OR REPLACE VIEW `__report_backlog_todo__` AS
     AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
---| 100000056612
+-- | 100000056612
 -- __report_sprint_todo__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_sprint_todo__`;
 
---| 100000056613
+-- | 100000056613
 -- __report_sprint_todo__
 -- tipologia: report
 -- NOTA: questo report è ancora da documentare
@@ -1605,12 +1605,12 @@ CREATE OR REPLACE VIEW `__report_sprint_todo__` AS
     AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
---| 100000056614
+-- | 100000056614
 -- __report_planned_todo__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_planned_todo__`;
 
---| 100000056615
+-- | 100000056615
 -- __report_planned_todo__
 -- tipologia: report
 -- NOTA: questo report è ancora da documentare
@@ -1692,12 +1692,12 @@ CREATE OR REPLACE VIEW `__report_planned_todo__` AS
     AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
---| 100000056618
+-- | 100000056618
 -- __report_done_todo__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_done_todo__`;
 
---| 100000056619
+-- | 100000056619
 -- __report_done_todo__
 -- tipologia: report
 -- NOTA: questo report è ancora da documentare
@@ -1758,12 +1758,12 @@ CREATE OR REPLACE VIEW `__report_done_todo__` AS
     AND tipologie_todo.se_produzione IS NOT NULL
 ;
 
---| 100000056620
+-- | 100000056620
 -- __report_coda_todo__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_coda_todo__`;
 
---| 100000056621
+-- | 100000056621
 -- __report_coda_todo__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_coda_todo__` AS
@@ -1814,12 +1814,12 @@ ORDER BY andamento.anno, andamento.settimana
 
 ;
 
---| 100000056621
+-- | 100000056622
 -- __report_pianificazione_todo__
 -- tipologia: report
 DROP VIEW IF EXISTS `__report_pianificazione_todo__`;
 
---| 100000056622
+-- | 100000056623
 -- __report_pianificazione_todo__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_pianificazione_todo__` AS
@@ -1849,4 +1849,4 @@ ORDER BY todo.id
 --  avg( errore_pianificazione ) AS errore_pianificazione
 -- FROM __report_pianificazione_todo__
 
---| FINE FILE
+-- | FINE FILE

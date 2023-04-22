@@ -13,7 +13,7 @@
 -- - ogni constraint è correttamente documentato con il giusto nome, in ordine, nel relativo file dox
 --
 
---| 060000000100
+-- | 060000000100
 
 -- account
 -- tipologia: tabella gestita
@@ -25,7 +25,7 @@ ALTER TABLE `account`
     ADD CONSTRAINT `account_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `account_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000000200
+-- | 060000000200
 
 -- account_gruppi
 -- tipologia: tabella gestita
@@ -36,7 +36,7 @@ ALTER TABLE `account_gruppi`
     ADD CONSTRAINT `account_gruppi_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
     ADD CONSTRAINT `account_gruppi_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
---| 060000000300
+-- | 060000000300
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
@@ -47,7 +47,7 @@ ALTER TABLE `account_gruppi_attribuzione`
     ADD CONSTRAINT `account_gruppi_attribuzione_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
     ADD CONSTRAINT `account_gruppi_attribuzione_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
 
---| 060000000400
+-- | 060000000400
 
 -- anagrafica
 -- tipologia: tabella gestita
@@ -64,7 +64,7 @@ ALTER TABLE `anagrafica`
     ADD CONSTRAINT `anagrafica_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000000500
+-- | 060000000500
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
@@ -75,7 +75,7 @@ ALTER TABLE `anagrafica_categorie`
     ADD CONSTRAINT `anagrafica_categorie_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_categorie_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000000600
+-- | 060000000600
 
 -- anagrafica_certificazioni
 -- tipologia: tabella gestita
@@ -87,7 +87,7 @@ ALTER TABLE `anagrafica_certificazioni`
     ADD CONSTRAINT `anagrafica_certificazioni_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_certificazioni_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000000700
+-- | 060000000700
 
 -- anagrafica_cittadinanze
 -- tipologia: tabella gestita
@@ -98,7 +98,7 @@ ALTER TABLE `anagrafica_cittadinanze`
     ADD CONSTRAINT `anagrafica_cittadinanze_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_cittadinanze_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000000800
+-- | 060000000800
 
 -- anagrafica_consensi
 -- tipologia: tabella gestita
@@ -110,7 +110,7 @@ ALTER TABLE `anagrafica_consensi`
 	ADD CONSTRAINT `anagrafica_consensi_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_consensi_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000000900
+-- | 060000000900
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
@@ -122,7 +122,7 @@ ALTER TABLE `anagrafica_indirizzi`
     ADD CONSTRAINT `anagrafica_indirizzi_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_indirizzi_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000000940
+-- | 060000000940
 
 -- anagrafica_progetti
 ALTER TABLE `anagrafica_progetti`
@@ -132,7 +132,7 @@ ALTER TABLE `anagrafica_progetti`
     ADD CONSTRAINT `anagrafica_progetti_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_progetti_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000001200
+-- | 060000001200
 
 -- anagrafica_settori
 -- tipologia: tabella gestita
@@ -143,7 +143,7 @@ ALTER TABLE `anagrafica_settori`
     ADD CONSTRAINT `anagrafica_settori_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `anagrafica_settori_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000001300
+-- | 060000001300
 
 -- articoli
 -- tipologia: tabella gestita
@@ -160,7 +160,7 @@ ALTER TABLE `articoli`
     ADD CONSTRAINT `articoli_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `articoli_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000001600
+-- | 060000001600
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
@@ -169,7 +169,7 @@ ALTER TABLE `articoli_caratteristiche`
     ADD CONSTRAINT `articoli_caratteristiche_ibfk_01`           FOREIGN KEY (`id_articolo`) REFERENCES `articoli` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `articoli_caratteristiche_ibfk_02_nofollow`  FOREIGN KEY (`id_caratteristica`) REFERENCES `caratteristiche_prodotti` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---| 060000001800
+-- | 060000001800
 
 -- attivita
 -- tipologia: tabella gestita
@@ -193,7 +193,7 @@ ALTER TABLE `attivita`
     ADD CONSTRAINT `attivita_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `attivita_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000002100
+-- | 060000002100
 
 -- audio
 -- tipologia: tabella gestita
@@ -218,7 +218,7 @@ ALTER TABLE `audio`
     ADD CONSTRAINT `audio_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `audio_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000002250
+-- | 060000002250
 
 -- badge
 -- tipologia: tabella gestita
@@ -228,7 +228,7 @@ ALTER TABLE `badge`
     ADD CONSTRAINT `badge_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
    	ADD CONSTRAINT `badge_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000002300
+-- | 060000002300
 
 -- banner
 -- tipologia: tabella gestita
@@ -239,7 +239,7 @@ ALTER TABLE `banner`
     ADD CONSTRAINT `banner_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
    	ADD CONSTRAINT `banner_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000002400
+-- | 060000002400
 
 -- banner_azioni
 -- tipologia: tabella gestita
@@ -250,7 +250,7 @@ ALTER TABLE `banner_azioni`
     ADD CONSTRAINT `banner_azioni_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `banner_azioni_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000002500
+-- | 060000002500
 
 -- banner_pagine
 -- tipologia: tabella gestita
@@ -261,7 +261,7 @@ ALTER TABLE `banner_pagine`
     ADD CONSTRAINT `banner_pagine_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `banner_pagine_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000002600
+-- | 060000002600
 
 -- banner_zone
 -- tipologia: tabella gestita
@@ -272,7 +272,7 @@ ALTER TABLE `banner_zone`
     ADD CONSTRAINT `banner_zone_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `banner_zone_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000002800
+-- | 060000002800
 
 -- caratteristiche_immobili
 -- tipologia: tabella gestita
@@ -281,7 +281,7 @@ ALTER TABLE `caratteristiche_immobili`
     ADD CONSTRAINT `caratteristiche_immobili_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `caratteristiche_immobili_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000002900
+-- | 060000002900
 
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
@@ -290,7 +290,7 @@ ALTER TABLE `caratteristiche_prodotti`
     ADD CONSTRAINT `caratteristiche_prodotti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `caratteristiche_prodotti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000003000
+-- | 060000003000
 
 -- carrelli
 -- tipologia: tabella gestita
@@ -314,7 +314,7 @@ ALTER TABLE `carrelli`
     ADD CONSTRAINT `carrelli_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `carrelli_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000003050
+-- | 060000003050
 
 -- carrelli_articoli
 -- tipologia: tabella gestita
@@ -328,7 +328,7 @@ ALTER TABLE `carrelli_articoli`
     ADD CONSTRAINT `carrelli_articoli_ibfk_98_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `carrelli_articoli_ibfk_99_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000003060
+-- | 060000003060
 
 -- carrelli_consensi
 -- tipologia: tabella gestita
@@ -341,7 +341,7 @@ ALTER TABLE `carrelli_consensi`
 	ADD CONSTRAINT `carrelli_consensi_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `carrelli_consensi_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000003070
+-- | 060000003070
 
 -- carrelli_documenti
 -- tipologia: tabella gestita
@@ -352,7 +352,7 @@ ALTER TABLE `carrelli_documenti`
     ADD CONSTRAINT `carrelli_documenti_ibfk_98_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `carrelli_documenti_ibfk_99_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000003100
+-- | 060000003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
@@ -362,7 +362,7 @@ ALTER TABLE `categorie_anagrafica`
     ADD CONSTRAINT `categorie_anagrafica_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `categorie_anagrafica_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000003700
+-- | 060000003700
 
 -- categorie_notizie
 -- tipologia: tabella gestita
@@ -373,7 +373,7 @@ ALTER TABLE `categorie_notizie`
     ADD CONSTRAINT `categorie_notizie_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `categorie_notizie_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000003900
+-- | 060000003900
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
@@ -384,7 +384,7 @@ ALTER TABLE `categorie_prodotti`
     ADD CONSTRAINT `categorie_prodotti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `categorie_prodotti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000004300
+-- | 060000004300
 
 -- categorie_progetti
 -- tipologia: tabella gestita
@@ -395,7 +395,7 @@ ALTER TABLE `categorie_progetti`
     ADD CONSTRAINT `categorie_progetti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `categorie_progetti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000004500
+-- | 060000004500
 
 -- categorie_risorse
 -- tipologia: tabella gestita
@@ -406,7 +406,7 @@ ALTER TABLE `categorie_risorse`
     ADD CONSTRAINT `categorie_risorse_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `categorie_risorse_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000004600
+-- | 060000004600
 
 -- causali
 -- tipologia: tabella gestita
@@ -415,7 +415,7 @@ ALTER TABLE `causali`
     ADD CONSTRAINT `causali_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `causali_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000004700
+-- | 060000004700
 
 -- certificazioni
 -- tipologia: tabella assistita
@@ -424,7 +424,7 @@ ALTER TABLE `certificazioni`
     ADD CONSTRAINT `certificazioni_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `certificazioni_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000004800
+-- | 060000004800
 
 -- chiavi
 -- tipologia: tabella di supporto
@@ -436,7 +436,7 @@ ALTER TABLE `chiavi`
     ADD CONSTRAINT `chiavi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
 
---| 060000005050
+-- | 060000005050
 
 -- colli
 -- tipologia: tabella standard
@@ -449,7 +449,7 @@ ALTER TABLE `colli`
 	ADD CONSTRAINT `colli_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `colli_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000005100
+-- | 060000005100
 
 -- colori
 -- tipologia: tabella di supporto
@@ -457,7 +457,7 @@ ALTER TABLE `colli`
 ALTER TABLE `colori`
     ADD CONSTRAINT `colori_ibfk_01_nofollow` FOREIGN KEY (`id_genitore`) REFERENCES `colori` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000005300
+-- | 060000005300
 
 -- comuni
 -- tipologia: tabella di supporto
@@ -465,7 +465,7 @@ ALTER TABLE `colori`
 ALTER TABLE `comuni`
     ADD CONSTRAINT `comuni_ibfk_01_nofollow` FOREIGN KEY (`id_provincia`) REFERENCES `provincie` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000006400
+-- | 060000006400
 
 -- consensi
 -- tipologia: tabella standard
@@ -474,7 +474,7 @@ ALTER TABLE `consensi`
     ADD CONSTRAINT `consensi_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `consensi_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000006500
+-- | 060000006500
 
 -- consensi_moduli
 -- tipologia: tabella assistita
@@ -485,7 +485,7 @@ ALTER TABLE `consensi_moduli`
     ADD CONSTRAINT `consensi_moduli_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `consensi_moduli_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
     
---| 060000006700
+-- | 060000006700
 
 -- contatti
 -- tipologia: tabella gestita
@@ -498,7 +498,7 @@ ALTER TABLE `contatti`
     ADD CONSTRAINT `contatti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `contatti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000006900
+-- | 060000006900
 
 -- contenuti
 -- tipologia: tabella gestita
@@ -533,7 +533,7 @@ ALTER TABLE `contenuti`
     ADD CONSTRAINT `contenuti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `contenuti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000007200
+-- | 060000007200
 
 -- contratti
 -- tipologia: tabella gestita
@@ -546,7 +546,7 @@ ALTER TABLE `contratti`
   ADD CONSTRAINT `contratti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `contratti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000007300
+-- | 060000007300
 
 -- contratti_anagrafica
 -- tipologia: tabella gestita
@@ -558,7 +558,7 @@ ALTER TABLE `contratti_anagrafica`
     ADD CONSTRAINT `contratti_anagrafica_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `contratti_anagrafica_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
     
---| 060000007600
+-- | 060000007600
 
 -- conversazioni_account
 -- tipologia: tabella gestita
@@ -567,7 +567,7 @@ ALTER TABLE `conversazioni_account`
     ADD CONSTRAINT `conversazioni_account_ibfk_01_nofollow`    FOREIGN KEY (`id_account`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `conversazioni_account_ibfk_02_nofollow`    FOREIGN KEY (`id_conversazione`) REFERENCES `conversazioni` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
---| 060000008000
+-- | 060000008000
 
 -- coupon
 -- tipologia: tabella gestita
@@ -576,7 +576,7 @@ ALTER TABLE `coupon`
     ADD CONSTRAINT `coupon_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `coupon_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000008200
+-- | 060000008200
 
 -- coupon_categorie_prodotti
 -- tipologia: tabella gestita
@@ -587,7 +587,7 @@ ALTER TABLE `coupon_categorie_prodotti`
     ADD CONSTRAINT `coupon_categorie_prodotti_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `coupon_categorie_prodotti_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000008400
+-- | 060000008400
 
 -- coupon_listini
 -- tipologia: tabella gestita
@@ -598,7 +598,7 @@ ALTER TABLE `coupon_listini`
     ADD CONSTRAINT `coupon_listini_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `coupon_listini_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000008600
+-- | 060000008600
 
 -- coupon_marchi
 -- tipologia: tabella gestita
@@ -609,7 +609,7 @@ ALTER TABLE `coupon_marchi`
     ADD CONSTRAINT `coupon_marchi_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `coupon_marchi_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000008800
+-- | 060000008800
 
 -- coupon_prodotti
 -- tipologia: tabella gestita
@@ -620,7 +620,7 @@ ALTER TABLE `coupon_prodotti`
     ADD CONSTRAINT `coupon_prodotti_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `coupon_prodotti_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000008900
+-- | 060000008900
 
 -- crediti
 -- tipologia: tabella gestita
@@ -635,7 +635,7 @@ ALTER TABLE `crediti`
     ADD CONSTRAINT `crediti_ibfk_98_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `crediti_ibfk_99_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000009800
+-- | 060000009800
 
 -- documenti
 -- tipologia: tabella gestita
@@ -660,7 +660,7 @@ ALTER TABLE `documenti`
 -- NOTA id_sede_emittente e id_sede_destinatario non dovrebbero referenziare la tabella anagrafica_indirizzi?
 -- NOTA la colonna id_listino non dovrebbe essere nel documento e comandare sull'id_listino delle voci?
 
---| 060000010000
+-- | 060000010000
 
 -- documenti_articoli
 -- tipologia: tabella gestita
@@ -688,7 +688,7 @@ ALTER TABLE `documenti_articoli`
     ADD CONSTRAINT `documenti_articoli_ibfk_98_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `documenti_articoli_ibfk_99_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000012000
+-- | 060000012000
 
 -- edifici
 -- tipologia: tabella gestita
@@ -699,7 +699,7 @@ ALTER TABLE `edifici`
   ADD CONSTRAINT `edifici_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `edifici_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000012050
+-- | 060000012050
 
 -- edifici_caratteristiche
 -- tipologia: tabella gestita
@@ -710,7 +710,7 @@ ALTER TABLE `edifici_caratteristiche`
     ADD CONSTRAINT `edifici_caratteristiche_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `edifici_caratteristiche_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015000
+-- | 060000015000
 
 -- file
 -- tipologia: tabella gestita
@@ -748,7 +748,7 @@ ALTER TABLE `file`
     ADD CONSTRAINT `file_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `file_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015200
+-- | 060000015200
 
 -- gruppi
 -- tipologia: tabella gestita
@@ -759,7 +759,7 @@ ALTER TABLE `gruppi`
     ADD CONSTRAINT `gruppi_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `gruppi_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015400
+-- | 060000015400
 
 -- iban
 -- tipologia: tabella gestita
@@ -769,7 +769,7 @@ ALTER TABLE `iban`
     ADD CONSTRAINT `iban_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `iban_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015600
+-- | 060000015600
 
 -- immagini
 -- tipologia: tabella gestita
@@ -799,7 +799,7 @@ ALTER TABLE `immagini`
     ADD CONSTRAINT `immagini_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `immagini_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015700
+-- | 060000015700
 
 -- immobili
 -- tipologia: tabella gestita
@@ -810,7 +810,7 @@ ALTER TABLE `immobili`
   ADD CONSTRAINT `immobili_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `immobili_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015710
+-- | 060000015710
 
 -- immobili_anagrafica
 -- tipologia: tabella gestita
@@ -822,7 +822,7 @@ ALTER TABLE `immobili_anagrafica`
     ADD CONSTRAINT `immobili_anagrafica_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `immobili_anagrafica_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015750
+-- | 060000015750
 
 -- immobili_caratteristiche
 -- tipologia: tabella gestita
@@ -833,7 +833,7 @@ ALTER TABLE `immobili_caratteristiche`
     ADD CONSTRAINT `immobili_caratteristiche_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `immobili_caratteristiche_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015800
+-- | 060000015800
 
 -- indirizzi
 -- tipologia: tabella gestita
@@ -844,7 +844,7 @@ ALTER TABLE `indirizzi`
     ADD CONSTRAINT `indirizzi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `indirizzi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000015850
+-- | 060000015850
 
 -- indirizzi_caratteristiche
 -- tipologia: tabella gestita
@@ -855,7 +855,7 @@ ALTER TABLE `indirizzi_caratteristiche`
     ADD CONSTRAINT `indirizzi_caratteristiche_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `indirizzi_caratteristiche_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000016600
+-- | 060000016600
 
 -- licenze
 -- tipologia: tabella gestita
@@ -867,7 +867,7 @@ ALTER TABLE `licenze`
     ADD CONSTRAINT `licenze_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `licenze_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000016700
+-- | 060000016700
 
 -- licenze_software
 -- tipologia: tabella gestita
@@ -878,7 +878,7 @@ ALTER TABLE `licenze_software`
     ADD CONSTRAINT `licenze_software_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `licenze_software_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000017000
+-- | 060000017000
 
 -- liste
 -- tipolgia: tabella gestita
@@ -887,7 +887,7 @@ ALTER TABLE `liste`
     ADD CONSTRAINT `liste_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `liste_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000017100
+-- | 060000017100
 
 -- liste_mail
 -- tipolgia: tabella gestita
@@ -898,7 +898,7 @@ ADD CONSTRAINT `liste_mail_ibfk_02_nofollow` FOREIGN KEY (`id_mail`) REFERENCES 
 ADD CONSTRAINT `liste_mail_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 ADD CONSTRAINT `liste_mail_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000017200
+-- | 060000017200
 
 -- listini
 -- tipologia: tabella gestita
@@ -908,7 +908,7 @@ ALTER TABLE `listini`
     ADD CONSTRAINT `listini_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `listini_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000017400
+-- | 060000017400
 
 -- listini_clienti
 -- tipologia: tabella gestita
@@ -919,7 +919,7 @@ ALTER TABLE `listini_clienti`
     ADD CONSTRAINT `listini_clienti_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `listini_clienti_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000018000
+-- | 060000018000
 
 -- luoghi
 -- tipologia: tabella gestita
@@ -933,7 +933,7 @@ ALTER TABLE `luoghi`
     ADD CONSTRAINT `luoghi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `luoghi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000018200
+-- | 060000018200
 
 -- macro
 -- tipologia: tabella gestita
@@ -953,7 +953,7 @@ ALTER TABLE `macro`
     ADD CONSTRAINT `macro_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `macro_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000018600
+-- | 060000018600
 
 -- mail
 -- tipologia: tabella gestita
@@ -964,7 +964,7 @@ ALTER TABLE `mail`
     ADD CONSTRAINT `mail_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mail_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000018800
+-- | 060000018800
 
 -- mail_out
 -- tipolgia: tabella gestita
@@ -974,7 +974,7 @@ ALTER TABLE `mail_out`
     ADD CONSTRAINT `mail_out_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mail_out_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000018900
+-- | 060000018900
 
 -- mail_sent
 -- tipolgia: tabella gestita
@@ -984,7 +984,7 @@ ALTER TABLE `mail_sent`
     ADD CONSTRAINT `mail_sent_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mail_sent_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000019000
+-- | 060000019000
 
 -- mailing
 -- tipolgia: tabella gestita
@@ -993,7 +993,7 @@ ALTER TABLE `mailing`
     ADD CONSTRAINT `mailing_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mailing_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000019050
+-- | 060000019050
 
 -- mailing_liste
 -- tipolgia: tabella gestita
@@ -1004,7 +1004,7 @@ ADD CONSTRAINT `mailing_liste_ibfk_02` FOREIGN KEY (`id_mailing`) REFERENCES `ma
 ADD CONSTRAINT `mailing_liste_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
 ADD CONSTRAINT `mailing_liste_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000019100
+-- | 060000019100
 
 -- mailing_mail
 -- tipolgia: tabella gestita
@@ -1016,7 +1016,7 @@ ALTER TABLE `mailing_mail`
     ADD CONSTRAINT `mailing_mail_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mailing_mail_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000020200
+-- | 060000020200
 
 -- marchi
 -- tipologia: tabella gestita
@@ -1025,7 +1025,7 @@ ALTER TABLE `marchi`
     ADD CONSTRAINT `marchi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `marchi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000020600
+-- | 060000020600
 
 -- mastri
 -- tipologia: tabella gestita
@@ -1040,7 +1040,7 @@ ALTER TABLE `mastri`
     ADD CONSTRAINT `mastri_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `mastri_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000021000
+-- | 060000021000
 
 -- matricole
 -- tipologia: tabella gestita
@@ -1053,7 +1053,7 @@ ALTER TABLE `matricole`
     ADD CONSTRAINT `matricole_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
     ;
 
---| 060000021600
+-- | 060000021600
 
 -- menu
 -- tipologia: tabella gestita
@@ -1068,7 +1068,7 @@ ALTER TABLE `menu`
     ADD CONSTRAINT `menu_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `menu_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000021700
+-- | 060000021700
 
 -- messaggi
 -- tipologia: tabella gestita
@@ -1078,7 +1078,7 @@ ALTER TABLE `messaggi`
   ADD CONSTRAINT `messaggi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `messaggi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000021800
+-- | 060000021800
 
 -- metadati
 -- tipologia: tabella gestita
@@ -1115,7 +1115,7 @@ ALTER TABLE `metadati`
     ADD CONSTRAINT `metadati_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `metadati_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000022000
+-- | 060000022000
 
 -- notizie
 -- tipologia: tabella gestita
@@ -1125,7 +1125,7 @@ ALTER TABLE `notizie`
     ADD CONSTRAINT `notizie_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `notizie_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000022200
+-- | 060000022200
 
 -- notizie_categorie
 -- tipologia: tabella gestita
@@ -1136,7 +1136,7 @@ ALTER TABLE `notizie_categorie`
     ADD CONSTRAINT `notizie_categorie_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `notizie_categorie_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000022800
+-- | 060000022800
 
 -- organizzazioni
 -- tipologia: tabella gestita
@@ -1148,7 +1148,7 @@ ALTER TABLE `organizzazioni`
     ADD CONSTRAINT `organizzazioni_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `organizzazioni_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000023100
+-- | 060000023100
 
 -- pagamenti
 -- tipologia: tabella gestita
@@ -1165,7 +1165,7 @@ ALTER TABLE `pagamenti`
     ADD CONSTRAINT `pagamenti_ibfk_98_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `pagamenti_ibfk_99_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000023200
+-- | 060000023200
 
 -- pagine
 -- tipologia: tabella gestita
@@ -1176,7 +1176,7 @@ ALTER TABLE `pagine`
     ADD CONSTRAINT `pagine_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `pagine_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000023500
+-- | 060000023500
 
 -- periodi
 -- tipologia: tabella di supporto
@@ -1186,7 +1186,7 @@ ALTER TABLE `periodi`
    	ADD CONSTRAINT `periodi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
    	ADD CONSTRAINT `periodi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000023600
+-- | 060000023600
 
 -- pianificazioni
 -- tipologia: tabella gestita
@@ -1202,7 +1202,7 @@ ALTER TABLE `pianificazioni`
     ADD CONSTRAINT `pianificazioni_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `pianificazioni_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000024000
+-- | 060000024000
 
 -- popup
 -- tipologia: tabella gestita
@@ -1212,7 +1212,7 @@ ALTER TABLE `popup`
     ADD CONSTRAINT `popup_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `popup_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000024200
+-- | 060000024200
 
 -- popup_pagine
 -- tipologia: tabella gestita
@@ -1223,7 +1223,7 @@ ALTER TABLE `popup_pagine`
     ADD CONSTRAINT `popup_pagine_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `popup_pagine_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000025000
+-- | 060000025000
 
 -- prezzi
 -- tipologia: tabella gestita
@@ -1236,7 +1236,7 @@ ALTER TABLE `prezzi`
     ADD CONSTRAINT `prezzi_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `prezzi_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000026000
+-- | 060000026000
 
 -- prodotti
 -- tipologia: tabella gestita
@@ -1248,7 +1248,7 @@ ALTER TABLE `prodotti`
     ADD CONSTRAINT `prodotti_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `prodotti_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000026200
+-- | 060000026200
 
 -- prodotti_caratteristiche
 -- tipologia: tabella gestita
@@ -1259,7 +1259,7 @@ ALTER TABLE `prodotti_caratteristiche`
     ADD CONSTRAINT `prodotti_caratteristiche_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `prodotti_caratteristiche_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000026400
+-- | 060000026400
 
 -- prodotti_categorie
 -- tipologia: tabella gestita
@@ -1271,7 +1271,7 @@ ALTER TABLE `prodotti_categorie`
     ADD CONSTRAINT `prodotti_categorie_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `prodotti_categorie_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000027000
+-- | 060000027000
 
 -- progetti
 -- tipologia: tabella gestita
@@ -1288,7 +1288,7 @@ ALTER TABLE `progetti`
     ADD CONSTRAINT `progetti_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000027200
+-- | 060000027200
 
 -- progetti_anagrafica
 -- tipologia: tabella gestita
@@ -1300,7 +1300,7 @@ ALTER TABLE `progetti_anagrafica`
     ADD CONSTRAINT `progetti_anagrafica_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_anagrafica_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000027300
+-- | 060000027300
 
 -- progetti_articoli
 -- tipologia: tabella gestita
@@ -1312,7 +1312,7 @@ ALTER TABLE `progetti_articoli`
     ADD CONSTRAINT `progetti_articoli_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_articoli_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000027400
+-- | 060000027400
 
 -- progetti_categorie
 -- tipologia: tabella gestita
@@ -1323,7 +1323,7 @@ ALTER TABLE `progetti_categorie`
     ADD CONSTRAINT `progetti_categorie_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_categorie_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000027600
+-- | 060000027600
 
 -- progetti_certificazioni
 -- tipologia: tabella gestita
@@ -1334,7 +1334,7 @@ ALTER TABLE `progetti_certificazioni`
     ADD CONSTRAINT `progetti_certificazioni_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_certificazioni_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000027800
+-- | 060000027800
 
 -- progetti_matricole
 -- tipologia: tabella gestita
@@ -1346,7 +1346,7 @@ ALTER TABLE `progetti_matricole`
     ADD CONSTRAINT `progetti_matricole_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `progetti_matricole_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000028000
+-- | 060000028000
 
 -- provincie
 -- tipologia: tabella di supporto
@@ -1354,7 +1354,7 @@ ALTER TABLE `progetti_matricole`
 ALTER TABLE `provincie`
     ADD CONSTRAINT `provincie_ibfk_01_nofollow`     FOREIGN KEY (`id_regione`) REFERENCES `regioni` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000028400
+-- | 060000028400
 
 -- pubblicazioni
 -- tipologia: tabella gestita
@@ -1376,7 +1376,7 @@ ALTER TABLE `pubblicazioni`
     ADD CONSTRAINT `pubblicazioni_ibfk_98_nofollow`         FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `pubblicazioni_ibfk_99_nofollow`         FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000028600
+-- | 060000028600
 
 -- ranking
 -- tipologia: tabella assistita
@@ -1385,7 +1385,7 @@ ALTER TABLE `ranking`
     ADD CONSTRAINT `ranking_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `ranking_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000029400
+-- | 060000029400
 
 -- redirect
 -- tipologia: tabella gestita
@@ -1394,7 +1394,7 @@ ALTER TABLE `redirect`
     ADD CONSTRAINT `redirect_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `redirect_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000030200
+-- | 060000030200
 
 -- regioni
 -- tipologia: tabella di supporto
@@ -1402,7 +1402,7 @@ ALTER TABLE `redirect`
 ALTER TABLE `regioni`
     ADD CONSTRAINT `regioni_ibfk_01_nofollow`   FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000030300
+-- | 060000030300
 
 -- relazioni_anagrafica
 -- tipologia: tabella relazione
@@ -1414,7 +1414,7 @@ ALTER TABLE `relazioni_anagrafica`
     ADD CONSTRAINT `relazioni_anagrafica_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_anagrafica_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000030400
+-- | 060000030400
 
 -- relazioni_documenti
 -- tipologia: tabella relazione
@@ -1426,7 +1426,7 @@ ALTER TABLE `relazioni_documenti`
     ADD CONSTRAINT `relazioni_documenti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_documenti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000030410
+-- | 060000030410
 
 -- relazioni_documenti_articoli
 -- tipologia: tabella relazione
@@ -1438,7 +1438,7 @@ ALTER TABLE `relazioni_documenti_articoli`
     ADD CONSTRAINT `relazioni_documenti_articoli_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_documenti_articoli_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000030440
+-- | 060000030440
 
 -- relazioni_pagamenti
 -- tipologia: tabella relazione
@@ -1449,7 +1449,7 @@ ALTER TABLE `relazioni_pagamenti`
     ADD CONSTRAINT `relazioni_pagamenti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_pagamenti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000030490
+-- | 060000030490
 
 -- relazioni_progetti
 -- tipologia: tabella relazione
@@ -1461,7 +1461,7 @@ ALTER TABLE `relazioni_progetti`
     ADD CONSTRAINT `relazioni_progetti_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_progetti_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000030500
+-- | 060000030500
 
 -- relazioni_software
 -- tipologia: tabella relazione
@@ -1472,7 +1472,7 @@ ALTER TABLE `relazioni_software`
     ADD CONSTRAINT `relazioni_software_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `relazioni_software_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000030800
+-- | 060000030800
 
 -- reparti
 -- tipologia: tabella assistita
@@ -1483,7 +1483,7 @@ ALTER TABLE `reparti`
     ADD CONSTRAINT `reparti_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `reparti_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000031500
+-- | 060000031500
 
 -- rinnovi
 -- tipologia: tabella gestita
@@ -1498,7 +1498,7 @@ ALTER TABLE `rinnovi`
     ADD CONSTRAINT `rinnovi_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `rinnovi_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000031550
+-- | 060000031550
 
 -- rinnovi_documenti_articoli
 -- tipologia: tabella gestita
@@ -1509,7 +1509,7 @@ ALTER TABLE `rinnovi_documenti_articoli`
     ADD CONSTRAINT `rinnovi_documenti_articoli_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `rinnovi_documenti_articoli_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000032000
+-- | 060000032000
 
 -- risorse
 -- tipologia: tabella gestita
@@ -1521,7 +1521,7 @@ ALTER TABLE `risorse`
     ADD CONSTRAINT `risorse_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `risorse_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000032100
+-- | 060000032100
 
 -- risorse_account
 -- tipologia: tabella di supporto
@@ -1532,7 +1532,7 @@ ALTER TABLE `risorse_account`
     ADD CONSTRAINT `risorse_account_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `risorse_account_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000032200
+-- | 060000032200
 
 -- risorse_anagrafica
 -- tipologia: tabella di supporto
@@ -1544,7 +1544,7 @@ ALTER TABLE `risorse_anagrafica`
     ADD CONSTRAINT `risorse_anagrafica_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `risorse_anagrafica_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000032400
+-- | 060000032400
 
 -- risorse_categorie
 -- tipologia: tabella di supporto
@@ -1555,7 +1555,7 @@ ALTER TABLE `risorse_categorie`
     ADD CONSTRAINT `risorse_categorie_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `risorse_categorie_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000034000
+-- | 060000034000
 
 -- ruoli_anagrafica
 -- tipologia: tabella di supporto
@@ -1563,7 +1563,7 @@ ALTER TABLE `risorse_categorie`
 ALTER TABLE `ruoli_anagrafica`
     ADD CONSTRAINT `ruoli_anagrafica_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000034100
+-- | 060000034100
 
 -- ruoli_articoli
 -- tipologia: tabella di supporto
@@ -1571,7 +1571,7 @@ ALTER TABLE `ruoli_anagrafica`
 ALTER TABLE `ruoli_articoli`
     ADD CONSTRAINT `ruoli_articoli_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
     
---| 060000034200
+-- | 060000034200
 
 -- ruoli_audio
 -- tipologia: tabella di supporto
@@ -1579,7 +1579,7 @@ ALTER TABLE `ruoli_articoli`
 ALTER TABLE `ruoli_audio`
     ADD CONSTRAINT `ruoli_audio_ibfk_01`   FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_audio` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000034300
+-- | 060000034300
 
 -- ruoli_documenti
 -- tipologia: tabella di supporto
@@ -1587,7 +1587,7 @@ ALTER TABLE `ruoli_audio`
 ALTER TABLE `ruoli_documenti`
     ADD CONSTRAINT `ruoli_documenti_ibfk_01`     FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000034400
+-- | 060000034400
 
 -- ruoli_file
 -- tipologia: tabella di supporto
@@ -1595,7 +1595,7 @@ ALTER TABLE `ruoli_documenti`
 ALTER TABLE `ruoli_file`
     ADD CONSTRAINT `ruoli_file_ibfk_01`     FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_file` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000034600
+-- | 060000034600
 
 -- ruoli_immagini
 -- tipologia: tabella di supporto
@@ -1603,7 +1603,7 @@ ALTER TABLE `ruoli_file`
 ALTER TABLE `ruoli_immagini`
     ADD CONSTRAINT `ruoli_immagini_ibfk_01`     FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_immagini` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000034800
+-- | 060000034800
 
 -- ruoli_indirizzi
 -- tipologia: tabella di supporto
@@ -1611,7 +1611,7 @@ ALTER TABLE `ruoli_immagini`
 ALTER TABLE `ruoli_indirizzi`
     ADD CONSTRAINT `ruoli_indirizzi_ibfk_01`    FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000034900
+-- | 060000034900
 
 -- ruoli_matricole
 -- tipologia: tabella di supporto
@@ -1619,7 +1619,7 @@ ALTER TABLE `ruoli_indirizzi`
 ALTER TABLE `ruoli_matricole`
     ADD CONSTRAINT `ruoli_matricole_ibfk_01`    FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_matricole` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000035000
+-- | 060000035000
 
 -- ruoli_prodotti
 -- tipologia: tabella di supporto
@@ -1627,7 +1627,7 @@ ALTER TABLE `ruoli_matricole`
 ALTER TABLE `ruoli_prodotti`
     ADD CONSTRAINT `ruoli_prodotti_ibfk_01`     FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_prodotti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000035200
+-- | 060000035200
 
 -- ruoli_video
 -- tipologia: tabella di supporto
@@ -1635,7 +1635,7 @@ ALTER TABLE `ruoli_prodotti`
 ALTER TABLE `ruoli_video`
     ADD CONSTRAINT `ruoli_video_ibfk_01`        FOREIGN KEY (`id_genitore`) REFERENCES `ruoli_video` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000037000
+-- | 060000037000
 
 -- settori
 -- tipologia: tabella di supporto
@@ -1643,7 +1643,7 @@ ALTER TABLE `ruoli_video`
 ALTER TABLE `settori`
     ADD CONSTRAINT `settori_ibfk_01`            FOREIGN KEY (`id_genitore`) REFERENCES `settori` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000041000
+-- | 060000041000
 
 -- sms_out
 -- tipolgia: tabella gestita
@@ -1653,7 +1653,7 @@ ALTER TABLE `sms_out`
     ADD CONSTRAINT `sms_out_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `sms_out_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000041200
+-- | 060000041200
 
 -- sms_sent
 -- tipolgia: tabella gestita
@@ -1663,7 +1663,7 @@ ALTER TABLE `sms_sent`
     ADD CONSTRAINT `sms_sent_ibfk_98_nofollow`  FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `sms_sent_ibfk_99_nofollow`  FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000041400
+-- | 060000041400
 
 -- software
 -- tipologia: tabella gestita
@@ -1674,7 +1674,7 @@ ALTER TABLE `software`
     ADD CONSTRAINT `software_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `software_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000042000
+-- | 060000042000
 
 -- stati
 -- tipologia: tabella di supporto
@@ -1682,7 +1682,7 @@ ALTER TABLE `software`
 ALTER TABLE `stati`
     ADD CONSTRAINT `stati_ibfk_01_nofollow`     FOREIGN KEY (`id_continente`) REFERENCES `continenti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000042200
+-- | 060000042200
 
 -- stati_lingue
 -- tipologia: tabella di supporto
@@ -1691,7 +1691,7 @@ ALTER TABLE `stati_lingue`
     ADD CONSTRAINT `stati_lingue_ibfk_01_nofollow`  FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `stati_lingue_ibfk_02_nofollow`  FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000043000
+-- | 060000043000
 
 -- task
 -- tipologia: tabella gestita
@@ -1700,7 +1700,7 @@ ALTER TABLE `task`
     ADD CONSTRAINT `task_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `task_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000043600
+-- | 060000043600
 
 -- telefoni
 -- tipologia: tabella gestita
@@ -1711,7 +1711,7 @@ ALTER TABLE `telefoni`
     ADD CONSTRAINT `telefoni_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `telefoni_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000044000
+-- | 060000044000
 
 -- template
 -- tipologia: tabella gestita
@@ -1720,7 +1720,7 @@ ALTER TABLE `template`
     ADD CONSTRAINT `template_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `template_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000045000
+-- | 060000045000
 
 -- testate
 -- tipologia: tabella gestita
@@ -1729,7 +1729,7 @@ ALTER TABLE `testate`
     ADD CONSTRAINT `testate_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `testate_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000050000
+-- | 060000050000
 
 -- tipologie_anagrafica
 -- tipologia: tabella assistita
@@ -1739,7 +1739,7 @@ ALTER TABLE `tipologie_anagrafica`
     ADD CONSTRAINT `tipologie_anagrafica_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_anagrafica_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000050400
+-- | 060000050400
 
 -- tipologie_attivita
 -- tipologia: tabella assistita
@@ -1749,7 +1749,7 @@ ALTER TABLE `tipologie_attivita`
     ADD CONSTRAINT `tipologie_attivita_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_attivita_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000050450
+-- | 060000050450
 
 -- tipologie_badge
 -- tipologia: tabella assistita
@@ -1759,7 +1759,7 @@ ALTER TABLE `tipologie_badge`
     ADD CONSTRAINT `tipologie_badge_ibfk_98_nofollow`          FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_badge_ibfk_99_nofollow`          FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000050500
+-- | 060000050500
 
 -- tipologie_banner
 -- tipologia: tabella assistita
@@ -1769,7 +1769,7 @@ ALTER TABLE `tipologie_banner`
     ADD CONSTRAINT `tipologie_banner_ibfk_98_nofollow`          FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_banner_ibfk_99_nofollow`          FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000050600
+-- | 060000050600
 
 -- tipologie_chiavi
 -- tipologia: tabella assistita
@@ -1779,7 +1779,7 @@ ALTER TABLE `tipologie_chiavi`
     ADD CONSTRAINT `tipologie_chiavi_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_chiavi_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000050800
+-- | 060000050800
 
 -- tipologie_contatti
 -- tipologia: tabella assistita
@@ -1789,7 +1789,7 @@ ALTER TABLE `tipologie_contatti`
     ADD CONSTRAINT `tipologie_contatti_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_contatti_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000050900
+-- | 060000050900
 
 -- tipologie_contratti
 -- tipologia: tabella gestita
@@ -1802,7 +1802,7 @@ ALTER TABLE `tipologie_contratti`
     ADD CONSTRAINT `tipologie_contratti_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_contratti_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000052600
+-- | 060000052600
 
 -- tipologie_documenti
 -- tipologia: tabella assistita
@@ -1812,7 +1812,7 @@ ALTER TABLE `tipologie_documenti`
     ADD CONSTRAINT `tipologie_documenti_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_documenti_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000052800
+-- | 060000052800
 
 -- tipologie_edifici
 -- tipologia: tabella di supporto
@@ -1822,7 +1822,7 @@ ALTER TABLE `tipologie_edifici`
   ADD CONSTRAINT `tipologie_edifici_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `tipologie_edifici_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 050000052900
+-- | 060000052900
 
 -- tipologie_immobili
 -- tipologia: tabella di supporto
@@ -1832,7 +1832,7 @@ ALTER TABLE `tipologie_immobili`
   ADD CONSTRAINT `tipologie_immobili_ibfk_98_nofollow` FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
   ADD CONSTRAINT `tipologie_immobili_ibfk_99_nofollow` FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
   
---| 060000053000
+-- | 060000053000
 
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
@@ -1842,7 +1842,7 @@ ALTER TABLE `tipologie_indirizzi`
     ADD CONSTRAINT `tipologie_indirizzi_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_indirizzi_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000053200
+-- | 060000053200
 
 -- tipologie_licenze
 -- tipologia: tabella assistita
@@ -1852,7 +1852,7 @@ ALTER TABLE `tipologie_licenze`
     ADD CONSTRAINT `tipologie_licenze_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_licenze_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 050000053300
+-- | 060000053300
 
 -- tipologie_luoghi
 -- tipologia: tabella gestita
@@ -1862,7 +1862,7 @@ ALTER TABLE `tipologie_luoghi`
     ADD CONSTRAINT `tipologie_luoghi_ibfk_98_nofollow`          FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_luoghi_ibfk_99_nofollow`          FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000053400
+-- | 060000053400
 
 -- tipologie_mastri
 -- tipologia: tabella assistita
@@ -1872,7 +1872,7 @@ ALTER TABLE `tipologie_mastri`
     ADD CONSTRAINT `tipologie_mastri_ibfk_98_nofollow`          FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_mastri_ibfk_99_nofollow`          FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000053800
+-- | 060000053800
 
 -- tipologie_notizie
 -- tipologia: tabella assistita
@@ -1882,7 +1882,7 @@ ALTER TABLE `tipologie_notizie`
     ADD CONSTRAINT `tipologie_notizie_ibfk_98_nofollow`         FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_notizie_ibfk_99_nofollow`         FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000054000
+-- | 060000054000
 
 -- tipologie_pagamenti
 -- tipologia: tabella assistita
@@ -1892,7 +1892,7 @@ ALTER TABLE `tipologie_pagamenti`
     ADD CONSTRAINT `tipologie_pagamenti_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_pagamenti_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000054100
+-- | 060000054100
 
 -- tipologie_periodi
 -- tipologia: tabella gestita
@@ -1902,7 +1902,7 @@ ALTER TABLE `tipologie_periodi`
     ADD CONSTRAINT `tipologie_periodi_ibfk_98_nofollow`           FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_periodi_ibfk_99_nofollow`           FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000054200
+-- | 060000054200
 
 -- tipologie_popup
 -- tipologia: tabella assistita
@@ -1912,7 +1912,7 @@ ALTER TABLE `tipologie_popup`
     ADD CONSTRAINT `tipologie_popup_ibfk_98_nofollow`           FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_popup_ibfk_99_nofollow`           FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000054600
+-- | 060000054600
 
 -- tipologie_prodotti
 -- tipologia: tabella assistita
@@ -1922,7 +1922,7 @@ ALTER TABLE `tipologie_prodotti`
     ADD CONSTRAINT `tipologie_prodotti_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_prodotti_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000055000
+-- | 060000055000
 
 -- tipologie_progetti
 -- tipologia: tabella assistita
@@ -1932,7 +1932,7 @@ ALTER TABLE `tipologie_progetti`
     ADD CONSTRAINT `tipologie_progetti_ibfk_98_nofollow`        FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_progetti_ibfk_99_nofollow`        FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000055400
+-- | 060000055400
 
 -- tipologie_pubblicazioni
 -- tipologia: tabella assistita
@@ -1942,7 +1942,7 @@ ALTER TABLE `tipologie_pubblicazioni`
     ADD CONSTRAINT `tipologie_pubblicazioni_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_pubblicazioni_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000055800
+-- | 060000055800
 
 -- tipologie_risorse
 -- tipologia: tabella assistita
@@ -1952,7 +1952,7 @@ ALTER TABLE `tipologie_risorse`
     ADD CONSTRAINT `tipologie_risorse_ibfk_98_nofollow`         FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_risorse_ibfk_99_nofollow`         FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000056200
+-- | 060000056200
 
 -- tipologie_telefoni
 -- tipologia: tabella assistita
@@ -1960,7 +1960,7 @@ ALTER TABLE `tipologie_risorse`
 ALTER TABLE `tipologie_telefoni`
     ADD CONSTRAINT `tipologie_telefoni_ibfk_01_nofollow`        FOREIGN KEY (`id_genitore`) REFERENCES `tipologie_telefoni` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000056600
+-- | 060000056600
 
 -- tipologie_todo
 -- tipologia: tabella assistita
@@ -1970,7 +1970,7 @@ ALTER TABLE `tipologie_todo`
     ADD CONSTRAINT `tipologie_todo_ibfk_98_nofollow`            FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_todo_ibfk_99_nofollow`            FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000056800
+-- | 060000056800
 
 -- tipologie_url
 -- tipologia: tabella assistita
@@ -1980,7 +1980,7 @@ ALTER TABLE `tipologie_url`
     ADD CONSTRAINT `tipologie_url_ibfk_98_nofollow`            FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_url_ibfk_99_nofollow`            FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000056900
+-- | 060000056900
 
 -- tipologie_zone
 -- tipologia: tabella gestita
@@ -1990,7 +1990,7 @@ ALTER TABLE `tipologie_zone`
     ADD CONSTRAINT `tipologie_zone_ibfk_98_nofollow`            FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `tipologie_zone_ibfk_99_nofollow`            FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000060000
+-- | 060000060000
 
 -- todo
 -- tipologia: tabella gestita
@@ -2008,7 +2008,7 @@ ALTER TABLE `todo`
     ADD CONSTRAINT `todo_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `todo_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000060100
+-- | 060000060100
 
 -- todo_matricole
 -- tipologia: tabella gestita
@@ -2020,7 +2020,7 @@ ALTER TABLE `todo_matricole`
     ADD CONSTRAINT `todo_matricole_ibfk_98_nofollow`    FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `todo_matricole_ibfk_99_nofollow`    FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000062000
+-- | 060000062000
 
 -- udm
 -- tipologia: tabella di supporto
@@ -2028,7 +2028,7 @@ ALTER TABLE `todo_matricole`
 ALTER TABLE `udm`
     ADD CONSTRAINT `udm_ibfk_01_nofollow`       FOREIGN KEY (`id_base`) REFERENCES `udm` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
 
---| 060000062600
+-- | 060000062600
 
 -- url
 -- tipologia: tabella gestita
@@ -2039,7 +2039,7 @@ ALTER TABLE `url`
     ADD CONSTRAINT `url_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `url_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000062900
+-- | 060000062900
 
 -- valutazioni
 -- tipologia: tabella gestita
@@ -2054,7 +2054,7 @@ ALTER TABLE `valutazioni`
     ADD CONSTRAINT `valutazioni_ibfk_98_nofollow`       FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `valutazioni_ibfk_99_nofollow`       FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000062950
+-- | 060000062950
 
 -- valutazioni_certificazioni
 -- tipologia: tabella gestita
@@ -2066,7 +2066,7 @@ ALTER TABLE `valutazioni_certificazioni`
     ADD CONSTRAINT `valutazioni_certificazioni_ibfk_98_nofollow`      FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `valutazioni_certificazioni_ibfk_99_nofollow`      FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000065000
+-- | 060000065000
 
 -- video
 -- tipologia: tabella gestita
@@ -2094,7 +2094,7 @@ ALTER TABLE `video`
     ADD CONSTRAINT `video_ibfk_98_nofollow`     FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `video_ibfk_99_nofollow`     FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000100000
+-- | 060000100000
 
 -- zone
 -- tipologia: tabella gestita
@@ -2105,7 +2105,7 @@ ALTER TABLE `zone`
     ADD CONSTRAINT `zone_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `zone_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000100100
+-- | 060000100100
 
 -- zone_cap
 -- tipologia: tabella gestita
@@ -2115,7 +2115,7 @@ ALTER TABLE `zone_cap`
  	ADD CONSTRAINT `zone_cap_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `zone_cap_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
     
---| 060000100200
+-- | 060000100200
 
 -- zone_indirizzi
 -- tipologia: tabella gestita
@@ -2126,7 +2126,7 @@ ALTER TABLE `zone_indirizzi`
     ADD CONSTRAINT `zone_indirizzi_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `zone_indirizzi_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| 060000100300
+-- | 060000100300
 
 -- zone_provincie
 -- tipologia: tabella gestita
@@ -2137,7 +2137,7 @@ ALTER TABLE `zone_provincie`
     ADD CONSTRAINT `zone_provincie_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `zone_provincie_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
     	
---| 060000100400
+-- | 060000100400
 
 -- zone_stati
 -- tipologia: tabella gestita
@@ -2148,4 +2148,4 @@ ALTER TABLE `zone_stati`
     ADD CONSTRAINT `zone_stati_ibfk_98_nofollow`   FOREIGN KEY (`id_account_inserimento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `zone_stati_ibfk_99_nofollow`   FOREIGN KEY (`id_account_aggiornamento`) REFERENCES `account` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
 
---| FINE FILE
+-- | FINE FILE

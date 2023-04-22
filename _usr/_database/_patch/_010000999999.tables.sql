@@ -26,7 +26,7 @@
 -- - non viene riportato il valore di AUTO INCREMENT
 --
 
---| 010000000100
+-- | 010000000100
 
 -- account
 -- tipologia: tabella gestita
@@ -48,7 +48,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000200
+-- | 010000000200
 
 -- account_gruppi
 -- tipologia: tabella gestita
@@ -65,7 +65,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000300
+-- | 010000000300
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000400
+-- | 010000000400
 
 -- anagrafica
 -- tipologia: tabella gestita
@@ -132,7 +132,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000500
+-- | 010000000500
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
@@ -148,7 +148,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_categorie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000600
+-- | 010000000600
 
 -- anagrafica_certificazioni
 -- tipologia: tabella gestita
@@ -169,7 +169,7 @@ CREATE TABLE `anagrafica_certificazioni` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000700
+-- | 010000000700
 
 -- anagrafica_cittadinanze
 -- tipologia: tabella gestita
@@ -187,7 +187,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_cittadinanze` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000800
+-- | 010000000800
 
 -- anagrafica_consensi
 -- tipologia: tabella gestita
@@ -206,7 +206,7 @@ CREATE TABLE `anagrafica_consensi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000900
+-- | 010000000900
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
@@ -225,7 +225,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000000940
+-- | 010000000940
 
 -- anagrafica_progetti
 CREATE TABLE IF NOT EXISTS `anagrafica_progetti` (
@@ -246,7 +246,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_progetti` (
   `note_archiviazione` text NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000001200
+-- | 010000001200
 
 -- anagrafica_settori
 -- tipologia: tabella gestita
@@ -262,7 +262,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000001300
+-- | 010000001300
 
 -- articoli
 -- tipologia: tabella gestita
@@ -295,7 +295,7 @@ CREATE TABLE `articoli` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000001600
+-- | 010000001600
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
@@ -314,7 +314,7 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000001800
+-- | 010000001800
 
 -- attivita
 -- tipologia: tabella gestita
@@ -365,7 +365,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000002100
+-- | 010000002100
 
 -- audio
 -- tipologia: tabella gestita
@@ -401,7 +401,7 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000002250
+-- | 010000002250
 
 -- badge
 -- tipologia: tabella gestita
@@ -419,7 +419,7 @@ CREATE TABLE `badge` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000002300
+-- | 010000002300
 
 -- banner
 -- tipologia: tabella gestita
@@ -441,7 +441,7 @@ CREATE TABLE IF NOT EXISTS `banner` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000002400
+-- | 010000002400
 
 -- banner_azioni
 -- tipologia: tabella gestita
@@ -459,7 +459,7 @@ CREATE TABLE IF NOT EXISTS `banner_azioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000002500
+-- | 010000002500
 
 -- banner_pagine
 -- tipologia: tabella gestita
@@ -475,7 +475,7 @@ CREATE TABLE IF NOT EXISTS `banner_pagine` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000002600
+-- | 010000002600
 
 -- banner_zone
 -- tipologia: tabella gestita
@@ -491,7 +491,7 @@ CREATE TABLE IF NOT EXISTS `banner_zone` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000002800
+-- | 010000002800
 
 -- caratteristiche_immobili
 -- tipologia: tabella gestita
@@ -510,7 +510,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_immobili` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8;
 
---| 010000002900
+-- | 010000002900
 
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
@@ -529,7 +529,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000003000
+-- | 010000003000
 
 -- carrelli
 -- tipologia: tabella gestita
@@ -608,7 +608,7 @@ CREATE TABLE `carrelli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000003050
+-- | 010000003050
 
 -- carrelli_articoli
 -- tipologia: tabella gestita
@@ -636,7 +636,7 @@ CREATE TABLE `carrelli_articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000003060
+-- | 010000003060
 
 -- carrelli_consensi
 -- tipologia: tabella gestita
@@ -656,7 +656,7 @@ CREATE TABLE `carrelli_consensi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000003070
+-- | 010000003070
 
 -- carrelli_documenti
 -- tipologia: tabella gestita
@@ -671,7 +671,7 @@ CREATE TABLE IF NOT EXISTS `carrelli_documenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000003100
+-- | 010000003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
@@ -703,7 +703,7 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000003700
+-- | 010000003700
 
 -- categorie_notizie
 -- tipologia: tabella gestita
@@ -727,7 +727,7 @@ CREATE TABLE IF NOT EXISTS `categorie_notizie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000003900
+-- | 010000003900
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
@@ -751,7 +751,7 @@ CREATE TABLE IF NOT EXISTS `categorie_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000004300
+-- | 010000004300
 
 -- categorie_progetti
 -- tipologia: tabella gestita
@@ -781,7 +781,7 @@ CREATE TABLE IF NOT EXISTS `categorie_progetti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000004500
+-- | 010000004500
 
 -- categorie_risorse
 -- tipologia: tabella gestita
@@ -805,7 +805,7 @@ CREATE TABLE IF NOT EXISTS `categorie_risorse` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000004600
+-- | 010000004600
 
 -- causali
 -- tipologia: tabella gestita
@@ -820,7 +820,7 @@ CREATE TABLE IF NOT EXISTS `causali` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000004700
+-- | 010000004700
 
 -- certificazioni
 -- tipologia: tabella assistita
@@ -834,7 +834,7 @@ CREATE TABLE IF NOT EXISTS `certificazioni` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000004800
+-- | 010000004800
 
 -- chiavi
 -- tipologia: tabella gestita
@@ -852,7 +852,7 @@ CREATE TABLE IF NOT EXISTS `chiavi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000005000
+-- | 010000005000
 
 -- classi_energetiche
 -- tipologia: tabella standard
@@ -865,7 +865,7 @@ CREATE TABLE IF NOT EXISTS `classi_energetiche` (
   `rgb` char(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000005050
+-- | 010000005050
 
 -- colli
 -- tipologia: tabella standard
@@ -891,7 +891,7 @@ CREATE TABLE `colli` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000005100
+-- | 010000005100
 
 -- colori
 -- tipologia: tabella standard
@@ -912,7 +912,7 @@ CREATE TABLE IF NOT EXISTS `colori` (
   `k` decimal(5,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000005300
+-- | 010000005300
 
 -- comuni
 -- tipologia: tabella standard
@@ -925,7 +925,7 @@ CREATE TABLE IF NOT EXISTS `comuni` (
   `codice_catasto` char(4) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000006000
+-- | 010000006000
 
 -- condizioni
 -- tipologia: tabella standard
@@ -937,7 +937,7 @@ CREATE TABLE `condizioni` (
   `se_immobili` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000006200
+-- | 010000006200
 
 -- condizioni_pagamento
 -- tipologia: tabella standard
@@ -949,7 +949,7 @@ CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
   `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000006400
+-- | 010000006400
 
 -- consensi
 -- tipologia: tabella standard
@@ -964,7 +964,7 @@ CREATE TABLE IF NOT EXISTS `consensi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000006500
+-- | 010000006500
 
 -- consensi_moduli
 -- tipologia: tabella assistita
@@ -987,7 +987,7 @@ CREATE TABLE `consensi_moduli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000006700
+-- | 010000006700
 
 -- contatti
 -- tipologia: tabella gestita
@@ -1014,7 +1014,7 @@ CREATE TABLE IF NOT EXISTS `contatti` (
   `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000006900
+-- | 010000006900
 
 -- contenuti
 -- tipologia: tabella gestita
@@ -1086,7 +1086,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000007100
+-- | 010000007100
 
 -- continenti
 -- tipologia: tabella di supporto
@@ -1097,7 +1097,7 @@ CREATE TABLE IF NOT EXISTS `continenti` (
   `nome` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000007200
+-- | 010000007200
 
 -- contratti
 -- tipologia: tabella gestita
@@ -1119,7 +1119,7 @@ CREATE TABLE `contratti` (
   `timestamp_aggiornamento` int DEFAULT NULL
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000007300
+-- | 010000007300
 
 -- contratti_anagrafica
 -- tipologia: tabella gestita
@@ -1136,7 +1136,7 @@ CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000007500
+-- | 010000007500
 
 -- conversazioni
 -- tipologia: tabella gestita
@@ -1149,7 +1149,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni` (
   `timestamp_chiusura` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000007600
+-- | 010000007600
 
 -- conversazioni_account
 -- tipologia: tabella gestita
@@ -1162,7 +1162,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni_account` (
   `timestamp_uscita` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000008000
+-- | 010000008000
 
 -- coupon
 -- tipologia: tabella gestita
@@ -1183,7 +1183,7 @@ CREATE TABLE IF NOT EXISTS `coupon` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000008200
+-- | 010000008200
 
 -- coupon_categorie_prodotti
 -- tipologia: tabella gestita
@@ -1199,7 +1199,7 @@ CREATE TABLE IF NOT EXISTS `coupon_categorie_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000008400
+-- | 010000008400
 
 -- coupon_listini
 -- tipologia: tabella gestita
@@ -1215,7 +1215,7 @@ CREATE TABLE IF NOT EXISTS `coupon_listini` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000008600
+-- | 010000008600
 
 -- coupon_marchi
 -- tipologia: tabella gestita
@@ -1231,7 +1231,7 @@ CREATE TABLE IF NOT EXISTS `coupon_marchi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000008800
+-- | 010000008800
 
 -- coupon_prodotti
 -- tipologia: tabella gestita
@@ -1247,7 +1247,7 @@ CREATE TABLE IF NOT EXISTS `coupon_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000008900
+-- | 010000008900
 
 -- crediti
 -- tipologia: tabella gestita
@@ -1270,7 +1270,7 @@ CREATE TABLE IF NOT EXISTS `crediti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000009000
+-- | 010000009000
 
 -- disponibilita
 -- tipologia: tabella standard
@@ -1282,7 +1282,7 @@ CREATE TABLE `disponibilita` (
   `se_immobili` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000009800
+-- | 010000009800
 
 -- documenti
 -- tipologia: tabella gestita
@@ -1328,7 +1328,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000010000
+-- | 010000010000
 
 -- documenti_articoli
 -- tipologia: tabella gestita
@@ -1370,7 +1370,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000012000
+-- | 010000012000
 
 -- edifici
 -- tipologia: tabella gestita
@@ -1389,7 +1389,7 @@ CREATE TABLE IF NOT EXISTS `edifici` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000012050
+-- | 010000012050
 
 -- edifici_caratteristiche
 -- tipologia: tabella gestita
@@ -1407,7 +1407,7 @@ CREATE TABLE IF NOT EXISTS `edifici_caratteristiche` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000012800
+-- | 010000012800
 
 -- embed
 -- tipologia: tabella standard
@@ -1419,7 +1419,7 @@ CREATE TABLE IF NOT EXISTS `embed` (
   `se_video` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000015000
+-- | 010000015000
 
 -- file
 -- tipologia: tabella gestita
@@ -1465,7 +1465,7 @@ CREATE TABLE IF NOT EXISTS `file` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000015200
+-- | 010000015200
 
 -- gruppi
 -- tipologia: tabella gestita
@@ -1483,7 +1483,7 @@ CREATE TABLE IF NOT EXISTS `gruppi` (
 -- NOTE
 -- questa tabella contiene i gruppi aggiuntivi del framework
 
---| 010000015400
+-- | 010000015400
 
 -- iban
 -- tipologia: tabella gestita
@@ -1500,7 +1500,7 @@ CREATE TABLE IF NOT EXISTS `iban` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000015600
+-- | 010000015600
 
 -- immagini
 -- tipologia: tabella gestita
@@ -1542,7 +1542,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000015700
+-- | 010000015700
 
 -- immobili
 -- tipologia: tabella gestita
@@ -1572,7 +1572,7 @@ CREATE TABLE IF NOT EXISTS  `immobili` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000015710
+-- | 010000015710
 
 -- immobili_anagrafica
 -- tipologia: tabella gestita
@@ -1590,7 +1590,7 @@ CREATE TABLE IF NOT EXISTS `immobili_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000015750
+-- | 010000015750
 
 -- immobili_caratteristiche
 -- tipologia: tabella gestita
@@ -1608,7 +1608,7 @@ CREATE TABLE IF NOT EXISTS `immobili_caratteristiche` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000015800
+-- | 010000015800
 
 -- indirizzi
 -- tipologia: tabella gestita
@@ -1632,7 +1632,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000015850
+-- | 010000015850
 
 -- indirizzi_caratteristiche
 -- tipologia: tabella gestita
@@ -1650,7 +1650,7 @@ CREATE TABLE IF NOT EXISTS `indirizzi_caratteristiche` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000016000
+-- | 010000016000
 
 -- iva
 -- tipologia: tabella standard
@@ -1664,7 +1664,7 @@ CREATE TABLE IF NOT EXISTS `iva` (
   `timestamp_archiviazione` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000016200
+-- | 010000016200
 
 -- job
 -- tipologia: tabella gestita
@@ -1689,7 +1689,7 @@ CREATE TABLE IF NOT EXISTS `job` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000016600
+-- | 010000016600
 
 -- licenze
 -- tipologia: tabella standard
@@ -1715,7 +1715,7 @@ CREATE TABLE IF NOT EXISTS `licenze` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000016700
+-- | 010000016700
 
 -- licenze_software
 -- tipologia: tabella gestita
@@ -1731,7 +1731,7 @@ CREATE TABLE IF NOT EXISTS `licenze_software` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000016800
+-- | 010000016800
 
 -- lingue
 -- tipologia: tabella standard
@@ -1745,7 +1745,7 @@ CREATE TABLE IF NOT EXISTS `lingue` (
   `ietf` char(36) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000017000
+-- | 010000017000
 
 -- liste
 -- tipolgia: tabella gestita
@@ -1760,7 +1760,7 @@ CREATE TABLE `liste` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000017100
+-- | 010000017100
 
 -- liste_mail
 -- tipolgia: tabella gestita
@@ -1775,7 +1775,7 @@ CREATE TABLE `liste_mail` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000017200
+-- | 010000017200
 
 -- listini
 -- tipologia: tabella assistita
@@ -1790,7 +1790,7 @@ CREATE TABLE IF NOT EXISTS `listini` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000017400
+-- | 010000017400
 
 -- listini_clienti
 -- tipologia: tabella gestita
@@ -1806,7 +1806,7 @@ CREATE TABLE IF NOT EXISTS `listini_clienti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000018000
+-- | 010000018000
 
 -- luoghi
 -- tipologia: tabella gestita
@@ -1827,7 +1827,7 @@ CREATE TABLE IF NOT EXISTS `luoghi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000018200
+-- | 010000018200
 
 -- macro
 -- tipologia: tabella gestita
@@ -1853,7 +1853,7 @@ CREATE TABLE IF NOT EXISTS `macro` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000018600
+-- | 010000018600
 
 -- mail
 -- tipologia: tabella gestita
@@ -1873,7 +1873,7 @@ CREATE TABLE IF NOT EXISTS `mail` (
   `id_account_inserimento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000018800
+-- | 010000018800
 
 -- mail_out
 -- tipolgia: tabella gestita
@@ -1906,7 +1906,7 @@ CREATE TABLE IF NOT EXISTS `mail_out` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000018900
+-- | 010000018900
 
 -- mail_sent
 -- tipolgia: tabella gestita
@@ -1939,7 +1939,7 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000019010
+-- | 010000019010
 
 -- mailing
 -- tipolgia: tabella gestita
@@ -1955,7 +1955,7 @@ CREATE TABLE IF NOT EXISTS `mail_sent` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000019050
+-- | 010000019050
 
 -- mailing_liste
 -- tipolgia: tabella gestita
@@ -1970,7 +1970,7 @@ CREATE TABLE `mailing_liste` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000019100
+-- | 010000019100
 
 -- mailing_mail
 -- tipolgia: tabella gestita
@@ -1989,7 +1989,7 @@ CREATE TABLE `mailing_mail` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000020200
+-- | 010000020200
 
 -- marchi
 -- tipologia: tabella gestita
@@ -2004,7 +2004,7 @@ CREATE TABLE IF NOT EXISTS `marchi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000020600
+-- | 010000020600
 
 -- mastri
 -- tipologia: tabella gestita
@@ -2025,7 +2025,7 @@ CREATE TABLE IF NOT EXISTS `mastri` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000021000
+-- | 010000021000
 
 -- matricole
 -- tipologia: tabella gestita
@@ -2045,7 +2045,7 @@ CREATE TABLE `matricole` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000021600
+-- | 010000021600
 
 -- menu
 -- tipologia: tabella gestita
@@ -2070,7 +2070,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000021700
+-- | 010000021700
 
 -- messaggi
 -- tipologia: tabella gestita
@@ -2087,7 +2087,7 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000021800
+-- | 010000021800
 
 -- metadati
 -- tipologia: tabella gestita
@@ -2130,7 +2130,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000021900
+-- | 010000021900
 
 -- modalita_pagamento
 -- tipologia: tabella standard
@@ -2142,7 +2142,7 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
   `codice` char(8) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000022000
+-- | 010000022000
 
 -- notizie
 -- tipologia: tabella gestita
@@ -2164,7 +2164,7 @@ CREATE TABLE IF NOT EXISTS `notizie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000022200
+-- | 010000022200
 
 -- notizie_categorie
 -- tipologia: tabella gestita
@@ -2180,7 +2180,7 @@ CREATE TABLE IF NOT EXISTS `notizie_categorie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000022800
+-- | 010000022800
 
 -- organizzazioni
 -- tipologia: tabella gestita
@@ -2199,7 +2199,7 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000023100
+-- | 010000023100
 
 -- pagamenti
 -- tipologia: tabella gestita
@@ -2227,7 +2227,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000023200
+-- | 010000023200
 
 -- pagine
 -- tipologia: tabella gestita
@@ -2250,7 +2250,7 @@ CREATE TABLE IF NOT EXISTS `pagine` (
   `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000023500
+-- | 010000023500
 
 -- periodi
 -- tipologia: tabella di supporto
@@ -2268,7 +2268,7 @@ CREATE TABLE IF NOT EXISTS `periodi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000023600
+-- | 010000023600
 
 -- periodicita
 -- tipologia: tabella di supporto
@@ -2278,7 +2278,7 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
   `nome` char(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000023800
+-- | 010000023800
 
 -- pianificazioni
 -- tipologia: tabella gestita
@@ -2382,7 +2382,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000024000
+-- | 010000024000
 
 -- popup
 -- tipologia: tabella gestita
@@ -2407,7 +2407,7 @@ CREATE TABLE IF NOT EXISTS `popup` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000024200
+-- | 010000024200
 
 -- popup_pagine
 -- tipologia: tabella gestita
@@ -2423,7 +2423,7 @@ CREATE TABLE IF NOT EXISTS `popup_pagine` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000025000
+-- | 010000025000
 
 -- prezzi
 -- tipologia: tabella gestita
@@ -2441,7 +2441,7 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000026000
+-- | 010000026000
 
 -- prodotti
 -- tipologia: tabella gestita
@@ -2468,7 +2468,7 @@ CREATE TABLE IF NOT EXISTS `prodotti` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000026200
+-- | 010000026200
 
 -- prodotti_caratteristiche
 -- tipologia: tabella gestita
@@ -2485,7 +2485,7 @@ CREATE TABLE IF NOT EXISTS `prodotti_caratteristiche` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000026400
+-- | 010000026400
 
 -- prodotti_categorie
 -- tipologia: tabella gestita
@@ -2502,7 +2502,7 @@ CREATE TABLE IF NOT EXISTS `prodotti_categorie` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000027000
+-- | 010000027000
 
 -- progetti
 -- tipologia: tabella gestita
@@ -2548,7 +2548,7 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000027200
+-- | 010000027200
 
 -- progetti_anagrafica
 -- tipologia: tabella gestita
@@ -2566,7 +2566,7 @@ CREATE TABLE IF NOT EXISTS `progetti_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000027300
+-- | 010000027300
 
 -- progetti_articoli
 -- tipologia: tabella gestita
@@ -2583,7 +2583,7 @@ CREATE TABLE IF NOT EXISTS `progetti_articoli` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000027400
+-- | 010000027400
 
 -- progetti_categorie
 -- tipologia: tabella gestita
@@ -2600,7 +2600,7 @@ CREATE TABLE IF NOT EXISTS `progetti_categorie` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
---| 010000027600
+-- | 010000027600
 
 -- progetti_certificazioni
 -- tipologia: tabella gestita
@@ -2619,7 +2619,7 @@ CREATE TABLE `progetti_certificazioni` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000027800
+-- | 010000027800
 
 -- progetti_matricole
 -- tipologia: tabella gestita
@@ -2636,7 +2636,7 @@ CREATE TABLE IF NOT EXISTS `progetti_matricole` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000028000
+-- | 010000028000
 
 -- provincie
 -- tipologia: tabella di supporto
@@ -2649,7 +2649,7 @@ CREATE TABLE IF NOT EXISTS `provincie` (
   `codice_istat` char(3) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000028400
+-- | 010000028400
 
 -- pubblicazioni
 -- tipologia: tabella gestita
@@ -2679,7 +2679,7 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000028600
+-- | 010000028600
 
 -- ranking
 -- tipologia: tabella assistita
@@ -2698,7 +2698,7 @@ CREATE TABLE IF NOT EXISTS `ranking` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000028900
+-- | 010000028900
 
 -- recensioni
 CREATE TABLE `recensioni` (
@@ -2719,7 +2719,7 @@ CREATE TABLE `recensioni` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000029400
+-- | 010000029400
 
 -- redirect
 -- tipologia: tabella gestita
@@ -2736,7 +2736,7 @@ CREATE TABLE IF NOT EXISTS `redirect` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000029460
+-- | 010000029460
 
 -- redirect_azioni
 
@@ -2752,7 +2752,7 @@ CREATE TABLE `redirect_azioni` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000029800
+-- | 010000029800
 
 -- regimi
 -- tipologia: tabella standard
@@ -2763,7 +2763,7 @@ CREATE TABLE IF NOT EXISTS `regimi` (
   `codice` char(8) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000030200
+-- | 010000030200
 
 -- regioni
 -- tipologia: tabella standard
@@ -2775,7 +2775,7 @@ CREATE TABLE IF NOT EXISTS `regioni` (
   `codice_istat` char(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000030300
+-- | 010000030300
 
 -- relazioni_anagrafica
 -- tipologia: tabella relazione
@@ -2791,7 +2791,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000030400
+-- | 010000030400
 
 -- relazioni_documenti
 -- tipologia: tabella relazione
@@ -2807,7 +2807,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000030410
+-- | 010000030410
 
 -- relazioni_documenti_articoli
 -- tipologia: tabella relazione
@@ -2823,7 +2823,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_documenti_articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000030440
+-- | 010000030440
 
 -- relazioni_pagamenti
 -- tipologia: tabella relazione
@@ -2838,7 +2838,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000030490
+-- | 010000030490
 
 -- relazioni_progetti
 -- tipologia: tabella relazione
@@ -2854,7 +2854,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_progetti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000030500
+-- | 010000030500
 
 -- relazioni_software
 -- tipologia: tabella relazione
@@ -2869,7 +2869,7 @@ CREATE TABLE IF NOT EXISTS `relazioni_software` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000030800
+-- | 010000030800
 
 -- reparti
 -- tipologia: tabella assistita
@@ -2886,7 +2886,7 @@ CREATE TABLE IF NOT EXISTS `reparti` (
   `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000031500
+-- | 010000031500
 
 -- rinnovi
 -- tipologia: tabella gestita
@@ -2910,7 +2910,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000031550
+-- | 010000031550
 
 -- rinnovi_documenti_articoli
 -- tipologia: tabella gestita
@@ -2925,7 +2925,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi_documenti_articoli` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000032000
+-- | 010000032000
 
 -- risorse
 -- tipologia: tabella gestita
@@ -2954,7 +2954,7 @@ CREATE TABLE IF NOT EXISTS `risorse` (
   `id_account_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000032100
+-- | 010000032100
 
 -- risorse_account
 -- tipologia: tabella di supporto
@@ -2971,7 +2971,7 @@ CREATE TABLE IF NOT EXISTS `risorse_account` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000032200
+-- | 010000032200
 
 -- risorse_anagrafica
 -- tipologia: tabella di supporto
@@ -2988,7 +2988,7 @@ CREATE TABLE IF NOT EXISTS `risorse_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000032400
+-- | 010000032400
 
 -- risorse_categorie
 -- tipologia: tabella di supporto
@@ -3004,7 +3004,7 @@ CREATE TABLE IF NOT EXISTS `risorse_categorie` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034000
+-- | 010000034000
 
 -- ruoli_anagrafica
 -- tipologia: tabella di supporto
@@ -3027,7 +3027,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `se_contraente` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034100
+-- | 010000034100
 
 -- ruoli_articoli
 -- tipologia: tabella di supporto
@@ -3044,7 +3044,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
   `se_rinnovo` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034200
+-- | 010000034200
 
 -- ruoli_audio
 -- tipologia: tabella di supporto
@@ -3067,7 +3067,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `se_immobili` int(1) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034300
+-- | 010000034300
 
 -- ruoli_documenti
 -- tipologia: tabella di supporto
@@ -3087,7 +3087,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
   `se_evasione` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034400
+-- | 010000034400
 
 -- ruoli_file
 -- tipologia: tabella di supporto
@@ -3113,7 +3113,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_documenti` int(1) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034600
+-- | 010000034600
 
 -- ruoli_immagini
 -- tipologia: tabella di supporto
@@ -3137,7 +3137,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (
   `se_immobili` int(1) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034800
+-- | 010000034800
 
 -- ruoli_indirizzi
 -- tipologia: tabella standard
@@ -3154,7 +3154,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
   `se_domicilio` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034850
+-- | 010000034850
 
 -- ruoli_mail
 -- tipologia: tabella di supporto
@@ -3173,7 +3173,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (
   `se_helpdesk` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000034900
+-- | 010000034900
 
 -- ruoli_matricole
 -- tipologia: tabella standard
@@ -3186,7 +3186,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
   `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000035000
+-- | 010000035000
 
 -- ruoli_prodotti
 -- tipologia: tabella di supporto
@@ -3199,7 +3199,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `font_awesome` char(16) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000035100
+-- | 010000035100
 
 -- ruoli_progetti
 -- tipologia: tabella di supporto
@@ -3215,7 +3215,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `se_attesa` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000035200
+-- | 010000035200
 
 -- ruoli_video
 -- tipologia: tabella di supporto
@@ -3238,7 +3238,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_immobili` int(1) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000037000
+-- | 010000037000
 
 -- settori
 -- tipologia: tabella gestita
@@ -3251,7 +3251,7 @@ CREATE TABLE IF NOT EXISTS `settori` (
   `ateco` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000041000
+-- | 010000041000
 
 -- sms_out
 -- tipolgia: tabella gestita
@@ -3278,7 +3278,7 @@ CREATE TABLE IF NOT EXISTS `sms_out` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000041200
+-- | 010000041200
 
 -- sms_sent
 -- tipolgia: tabella gestita
@@ -3305,7 +3305,7 @@ CREATE TABLE IF NOT EXISTS `sms_sent` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000041400
+-- | 010000041400
 
 -- software
 -- tipologia: tabella gestita
@@ -3323,7 +3323,7 @@ CREATE TABLE IF NOT EXISTS `software` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000042000
+-- | 010000042000
 
 -- stati
 -- tipologia: tabella di supporto
@@ -3339,7 +3339,7 @@ CREATE TABLE IF NOT EXISTS `stati` (
   `data_archiviazione` date DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000042200
+-- | 010000042200
 
 -- stati_lingue
 -- tipologia: tabella di supporto
@@ -3351,7 +3351,7 @@ CREATE TABLE IF NOT EXISTS `stati_lingue` (
   `ordine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000043000
+-- | 010000043000
 
 -- task
 -- tipologia: tabella assistita
@@ -3375,7 +3375,7 @@ CREATE TABLE IF NOT EXISTS `task` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000043600
+-- | 010000043600
 
 -- telefoni
 -- tipologia: tabella gestita
@@ -3393,7 +3393,7 @@ CREATE TABLE `telefoni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000044000
+-- | 010000044000
 
 -- template
 -- tipologia: tabella gestita
@@ -3413,7 +3413,7 @@ CREATE TABLE IF NOT EXISTS `template` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000045000
+-- | 010000045000
 
 -- testate
 -- tipologia: tabella gestita
@@ -3428,7 +3428,7 @@ CREATE TABLE IF NOT EXISTS `testate` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
---| 010000050000
+-- | 010000050000
 
 -- tipologie_anagrafica
 -- tipologia: tabella standard
@@ -3451,7 +3451,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000050400
+-- | 010000050400
 
 -- tipologie_attivita
 -- tipologia: tabella gestita
@@ -3474,7 +3474,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000050450
+-- | 010000050450
 
 -- tipologie_badge
 -- tipologia: tabella assistita
@@ -3492,7 +3492,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_badge` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000050500
+-- | 010000050500
 
 -- tipologie_banner
 -- tipologia: tabella assistita
@@ -3510,7 +3510,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_banner` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000050600
+-- | 010000050600
 
 -- tipologie_chiavi
 -- tipologia: tabella gestita
@@ -3528,7 +3528,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_chiavi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000050800
+-- | 010000050800
 
 -- tipologie_contatti
 -- tipologia: tabella gestita
@@ -3546,7 +3546,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_contatti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000050900
+-- | 010000050900
 
 -- tipologie_contratti
 -- tipologia: tabella gestita
@@ -3577,7 +3577,7 @@ CREATE TABLE `tipologie_contratti` (
   `timestamp_aggiornamento` int DEFAULT NULL
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000052600
+-- | 010000052600
 
 -- tipologie_documenti
 -- tipologia: tabella di supporto
@@ -3609,7 +3609,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000052800
+-- | 010000052800
 
 -- tipologie_edifici
 -- tipologia: tabella di supporto
@@ -3627,7 +3627,7 @@ CREATE TABLE `tipologie_edifici` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000052900
+-- | 010000052900
 
 -- tipologie_immobili
 -- tipologia: tabella di supporto
@@ -3647,7 +3647,7 @@ CREATE TABLE `tipologie_immobili` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000053000
+-- | 010000053000
 
 -- tipologie_indirizzi
 -- tipologia: tabella di supporto
@@ -3665,7 +3665,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000053200
+-- | 010000053200
 
 -- tipologie_licenze
 -- tipologia: tabella gestita
@@ -3683,7 +3683,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000053300
+-- | 010000053300
 
 -- tipologie_luoghi
 -- tipologia: tabella gestita
@@ -3701,7 +3701,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000053400
+-- | 010000053400
 
 -- tipologie_mastri
 -- tipologia: tabella di supporto
@@ -3723,7 +3723,7 @@ CREATE TABLE `tipologie_mastri` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000053800
+-- | 010000053800
 
 -- tipologie_notizie
 -- tipologia: tabella di supporto
@@ -3741,7 +3741,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000054000
+-- | 010000054000
 
 -- tipologie_pagamenti
 -- tipologia: tabella gestita
@@ -3759,7 +3759,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000054100
+-- | 010000054100
 
 -- tipologie_periodi
 -- tipologia: tabella gestita
@@ -3778,7 +3778,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_periodi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000054200
+-- | 010000054200
 
 -- tipologie_popup
 -- tipologia: tabella di supporto
@@ -3796,7 +3796,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_popup` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000054600
+-- | 010000054600
 
 -- tipologie_prodotti
 -- tipologia: tabella di supporto
@@ -3825,7 +3825,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000055000
+-- | 010000055000
 
 -- tipologie_progetti
 -- tipologia: tabella gestita
@@ -3850,7 +3850,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_progetti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000055400
+-- | 010000055400
 
 -- tipologie_pubblicazioni
 -- tipologia: tabella di supporto
@@ -3871,7 +3871,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_pubblicazioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000055700
+-- | 010000055700
 
 -- tipologie_rinnovi
 -- tipologia: tabella di supporto
@@ -3895,7 +3895,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000055800
+-- | 010000055800
 
 -- tipologie_risorse
 -- tipologia: tabella di supporto
@@ -3913,7 +3913,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_risorse` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000056200
+-- | 010000056200
 
 -- tipologie_telefoni
 -- tipologia: tabella assistita
@@ -3932,7 +3932,7 @@ CREATE TABLE `tipologie_telefoni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000056600
+-- | 010000056600
 
 -- tipologie_todo
 -- tipologia: tabella gestita
@@ -3955,7 +3955,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_todo` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000056800
+-- | 010000056800
 
 -- tipologie_url
 -- tipologia: tabella gestita
@@ -3973,7 +3973,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000056900
+-- | 010000056900
 
 -- tipologie_zone
 -- tipologia: tabella gestita
@@ -3991,7 +3991,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_zone` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000060000
+-- | 010000060000
 
 -- todo
 -- tipologia: tabella gestita
@@ -4031,7 +4031,7 @@ CREATE TABLE IF NOT EXISTS `todo` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000060100
+-- | 010000060100
 
 -- todo_matricole
 -- tipologia: tabella gestita
@@ -4048,7 +4048,7 @@ CREATE TABLE IF NOT EXISTS `todo_matricole` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000062000
+-- | 010000062000
 
 -- udm
 -- tipologia: tabella di supporto
@@ -4068,7 +4068,7 @@ CREATE TABLE IF NOT EXISTS `udm` (
   `se_area` int(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000062600
+-- | 010000062600
 
 -- url
 -- tipologia: tabella gestita
@@ -4085,7 +4085,7 @@ CREATE TABLE IF NOT EXISTS `url` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000062900
+-- | 010000062900
 
 -- valutazioni
 -- tipologia: tabella gestita
@@ -4108,7 +4108,7 @@ CREATE TABLE `valutazioni` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000062950
+-- | 010000062950
 
 -- valutazioni_certificazioni
 -- tipologia: tabella gestita
@@ -4129,7 +4129,7 @@ CREATE TABLE `valutazioni_certificazioni` (
   `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000063000
+-- | 010000063000
 
 -- valute
 -- tipologia: tabella di supporto
@@ -4141,7 +4141,7 @@ CREATE TABLE IF NOT EXISTS `valute` (
   `utf8` char(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000065000
+-- | 010000065000
 
 -- video
 -- tipologia: tabella gestita
@@ -4181,7 +4181,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000100000
+-- | 010000100000
 
 -- zone
 -- tipologia: tabella gestita
@@ -4198,7 +4198,7 @@ CREATE TABLE IF NOT EXISTS `zone` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000100100
+-- | 010000100100
 
 -- zone_cap
 -- tipologia: tabella gestita
@@ -4214,7 +4214,7 @@ CREATE TABLE IF NOT EXISTS `zone_cap` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000100200
+-- | 010000100200
 
 -- zone_indirizzi
 -- tipologia: tabella gestita
@@ -4230,7 +4230,7 @@ CREATE TABLE IF NOT EXISTS `zone_indirizzi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000100300
+-- | 010000100300
 
 -- zone_provincie
 -- tipologia: tabella gestita
@@ -4246,7 +4246,7 @@ CREATE TABLE IF NOT EXISTS `zone_provincie` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| 010000100400
+-- | 010000100400
 
 -- zone_stati
 -- tipologia: tabella gestita
@@ -4262,4 +4262,4 @@ CREATE TABLE IF NOT EXISTS `zone_stati` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
---| FINE FILE
+-- | FINE FILE

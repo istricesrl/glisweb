@@ -16,7 +16,7 @@
 -- - la chiave primaria, se intera, è dichiarata AUTO_INCREMENT
 --
 
---| 030000000100
+-- | 030000000100
 
 -- account
 -- tipologia: tabella gestita
@@ -33,13 +33,13 @@ ALTER TABLE `account`
 	ADD KEY `indice` (`id`, `id_anagrafica`, `username`, `id_mail`, `id_affiliazione`, `password`, `se_attivo`, `token`),
 	ADD KEY `indice_token` (`id`,`token`);
 
---| 030000000101
+-- | 030000000101
 
 -- account
 -- tipologia: tabella gestita
 ALTER TABLE `account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000200
+-- | 030000000200
 
 -- account_gruppi
 -- tipologia: tabella gestita
@@ -53,13 +53,13 @@ ALTER TABLE `account_gruppi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_account`,`id_gruppo`,`ordine`);
 
---| 030000000201
+-- | 030000000201
 
 -- account_gruppi
 -- tipologia: tabella gestita
 ALTER TABLE `account_gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000300
+-- | 030000000300
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
@@ -73,13 +73,13 @@ ALTER TABLE `account_gruppi_attribuzione`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_account`,`id_gruppo`,`ordine`,`entita`);
 
---| 030000000301
+-- | 030000000301
 
 -- account_gruppi_attribuzione
 -- tipologia: tabella gestita
 ALTER TABLE `account_gruppi_attribuzione` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000400
+-- | 030000000400
 
 -- anagrafica
 -- tipologia: tabella gestita
@@ -110,13 +110,13 @@ ALTER TABLE `anagrafica`
 	ADD KEY `indice_riferimento` (`id`,`riferimento`),
 	ADD KEY `indice_archiviazione` (`id`,`data_archiviazione`);
 
---| 030000000401
+-- | 030000000401
 
 -- anagrafica
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
 
---| 030000000500
+-- | 030000000500
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
@@ -130,13 +130,13 @@ ALTER TABLE `anagrafica_categorie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_categoria`,`ordine`);
 
---| 030000000501
+-- | 030000000501
 
 -- anagrafica_categorie
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000600
+-- | 030000000600
 
 -- anagrafica_certificazioni
 -- tipologia: tabella gestita
@@ -155,13 +155,13 @@ ALTER TABLE `anagrafica_certificazioni`
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_certificazione`, `codice`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
 
---| 030000000601
+-- | 030000000601
 
 -- anagrafica_certificazioni
 -- tipologia: tabella gestita	
 ALTER TABLE `anagrafica_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000700
+-- | 030000000700
 
 -- anagrafica_cittadinanze
 -- tipologia: tabella gestita
@@ -175,13 +175,13 @@ ALTER TABLE `anagrafica_cittadinanze`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_stato`,`ordine`,`data_inizio`,`data_fine`);
 
---| 030000000701
+-- | 030000000701
 
 -- anagrafica_cittadinanze
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_cittadinanze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000800
+-- | 030000000800
 
 -- anagrafica_consensi
 -- tipologia: tabella gestita
@@ -197,13 +197,13 @@ ALTER TABLE `anagrafica_consensi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`, `id_account`,`id_anagrafica`, `id_consenso`, `se_prestato` );
 
---| 030000000801
+-- | 030000000801
 
 -- anagrafica_consensi
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000900
+-- | 030000000900
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
@@ -218,13 +218,13 @@ ALTER TABLE `anagrafica_indirizzi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_indirizzo`,`id_ruolo`);
 
---| 030000000901
+-- | 030000000901
 
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000000940
+-- | 030000000940
 
 -- anagrafica_progetti
 ALTER TABLE `anagrafica_progetti`
@@ -239,12 +239,12 @@ ALTER TABLE `anagrafica_progetti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_progetto`,`id_ruolo`,`ordine`);
 
---| 030000000941
+-- | 030000000941
 
 -- anagrafica_progetti
 ALTER TABLE `anagrafica_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000001200
+-- | 030000001200
 
 -- anagrafica_settori
 -- tipologia: tabella gestita
@@ -259,13 +259,13 @@ ALTER TABLE `anagrafica_settori`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_anagrafica`,`id_settore`,`ordine`);
 
---| 030000001201
+-- | 030000001201
 
 -- anagrafica_settori
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000001300
+-- | 030000001300
 
 -- articoli
 -- tipologia: tabella gestita
@@ -286,7 +286,7 @@ ALTER TABLE `articoli`
 	ADD KEY `indice` (`id`,`ordine`,`ean`,`isbn`,`id_prodotto`,`id_reparto`,`id_taglia`,`id_colore`),
 	ADD KEY `indice_dimensioni` (`id`,`ordine`,`ean`,`isbn`,`id_prodotto`,`id_reparto`,`larghezza`,`lunghezza`,`altezza`,`peso`,`volume`,`capacita`);
 
---| 030000001600
+-- | 030000001600
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
@@ -298,13 +298,13 @@ ALTER TABLE `articoli_caratteristiche`
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
 	ADD KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`,`valore`,`se_assente` );
 
---| 030000001601
+-- | 030000001601
 
 -- articoli_caratteristiche
 -- tipologia: tabella gestita
 ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000001800
+-- | 030000001800
 
 -- attivita
 -- tipologia: tabella gestita
@@ -337,13 +337,13 @@ ALTER TABLE `attivita`
 	ADD KEY `indice_sostituti` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_progetto`,`id_todo`,`timestamp_calcolo_sostituti`),
 	ADD KEY `indice_token` (`id`,`token`);
 
---| 030000001801
+-- | 030000001801
 
 -- attivita
 -- tipologia: tabella gestita
 ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000002100
+-- | 030000002100
 
 -- audio
 -- tipologia: tabella gestita
@@ -375,13 +375,13 @@ ALTER TABLE `audio`
 	ADD KEY `indice_anagrafica` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_embed`,`id_anagrafica`),
 	ADD KEY `indice_pagine` (`id`,`id_ruolo`,`id_lingua`,`ordine`,`path`,`codice_embed`,`id_embed`,`id_pagina`,`id_file`,`id_risorsa`);
 
---| 030000002101
+-- | 030000002101
 
 -- audio
 -- tipologia: tabella gestita
 ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000002250
+-- | 030000002250
 
 -- badge
 -- tipologia: tabella gestita
@@ -396,13 +396,13 @@ ALTER TABLE `badge`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`, `id_tipologia`, `id_contratto`, `codice`, `rfid`,`nome`);
 
---| 030000002251
+-- | 030000002251
 
 -- badge
 -- tipologia: tabella gestita
 ALTER TABLE `badge` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000002300
+-- | 030000002300
 
 -- banner
 -- tipologia: tabella gestita
@@ -421,13 +421,13 @@ ALTER TABLE `banner`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`, `id_tipologia`, `id_sito`, `ordine`,`nome`, `id_inserzionista`,`altezza_modulo`,`larghezza_modulo`, `token`);
 
---| 030000002301
+-- | 030000002301
 
 -- banner
 -- tipologia: tabella gestita
 ALTER TABLE `banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000002400
+-- | 030000002400
 
 -- banner_azioni
 -- tipologia: tabella gestita
@@ -443,13 +443,13 @@ ALTER TABLE `banner_azioni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`azione`,`timestamp_azione`,`token`);
 
---| 030000002401
+-- | 030000002401
 
 -- banner_azioni
 -- tipologia: tabella gestita
 ALTER TABLE `banner_azioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000002500
+-- | 030000002500
 
 -- banner_pagine
 -- tipologia: tabella gestita
@@ -464,13 +464,13 @@ ALTER TABLE `banner_pagine`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_pagina`,`id_banner`,`se_presente`);
 
---| 030000002501
+-- | 030000002501
 
 -- banner_pagine
 -- tipologia: tabella gestita
 ALTER TABLE `banner_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000002600
+-- | 030000002600
 
 -- banner_zone
 -- tipologia: tabella gestita
@@ -485,13 +485,13 @@ ALTER TABLE `banner_zone`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_zona`,`id_banner`,`se_presente`);
 
---| 030000002601
+-- | 030000002601
 
 -- banner_zone
 -- tipologia: tabella gestita
 ALTER TABLE `banner_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000002800
+-- | 030000002800
 
 -- caratteristiche_immobili
 -- tipologia: tabella gestita
@@ -503,13 +503,13 @@ ALTER TABLE `caratteristiche_immobili`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`se_indirizzo`,`se_edificio`,`se_immobile`);
 
---| 030000002801
+-- | 030000002801
 
 -- caratteristiche_immobili
 -- tipologia: tabella gestita
 ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000002900
+-- | 030000002900
 
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
@@ -521,13 +521,13 @@ ALTER TABLE `caratteristiche_prodotti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
 
---| 030000002901
+-- | 030000002901
 
 -- caratteristiche_prodotti
 -- tipologia: tabella gestita
 ALTER TABLE `caratteristiche_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000003000
+-- | 030000003000
 
 -- carrelli
 -- tipologia: tabella gestita
@@ -561,13 +561,13 @@ ALTER TABLE `carrelli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`);
 
---| 030000003001
+-- | 030000003001
 
 -- carrelli
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli`   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000003050
+-- | 030000003050
 
 -- carrelli_articoli
 -- tipologia: tabella gestita
@@ -585,13 +585,13 @@ ALTER TABLE `carrelli_articoli`
   	ADD KEY `indice` (`id`, `id_carrello`, `id_articolo`, `id_iva`, `prezzo_netto_unitario`, `prezzo_lordo_unitario`,`quantita`, `prezzo_netto_totale`,  `prezzo_lordo_totale`, `sconto_percentuale`, `sconto_valore`, `prezzo_netto_finale`,  `prezzo_lordo_finale`)
   ;
 
---| 030000003051
+-- | 030000003051
 
 -- carrelli_articoli
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000003060
+-- | 030000003060
 
 -- carrelli_consensi
 -- tipologia: tabella gestita
@@ -608,13 +608,13 @@ ALTER TABLE `carrelli_consensi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`, `id_account`, `id_anagrafica`, `id_carrello`, `id_consenso`, `se_prestato` );
 
---| 030000003061
+-- | 030000003061
 
 -- carrelli_consensi
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000003070
+-- | 030000003070
 
 -- carrelli_documenti
 -- tipologia: tabella gestita
@@ -629,13 +629,13 @@ ALTER TABLE `carrelli_documenti`
   	ADD KEY `indice` (`id`, `id_carrello`,  `id_documento`, `id_account_inserimento`, `id_account_aggiornamento` )
   ;
 
---| 030000003071
+-- | 030000003071
 
 -- carrelli_documenti
 -- tipologia: tabella gestita
 ALTER TABLE `carrelli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000003100
+-- | 030000003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
@@ -663,13 +663,13 @@ ALTER TABLE `categorie_anagrafica`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`se_lead`,`se_prospect`,`se_cliente`,`se_fornitore`,`se_produttore`,`se_collaboratore`,`se_interno`,`se_esterno`,`se_commerciale`,`se_concorrente`,`se_gestita`,`se_amministrazione`);
 
---| 030000003101
+-- | 030000003101
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000003700
+-- | 030000003700
 
 -- categorie_notizie
 -- tipologia: tabella gestita
@@ -684,13 +684,13 @@ ALTER TABLE `categorie_notizie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_sito`,`id_pagina`);
 
---| 030000003701
+-- | 030000003701
 
 -- categorie_notizie
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000003900
+-- | 030000003900
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
@@ -705,13 +705,13 @@ ALTER TABLE `categorie_prodotti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_sito`,`id_pagina`);
 
---| 030000003901
+-- | 030000003901
 
 -- categorie_prodotti
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000004300
+-- | 030000004300
 
 -- categorie_progetti
 -- tipologia: tabella gestita
@@ -733,13 +733,13 @@ ALTER TABLE `categorie_progetti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`, `id_sito`);
 
---| 030000004301
+-- | 030000004301
 
 -- categorie_progetti
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000004500
+-- | 030000004500
 
 -- categorie_risorse
 -- tipologia: tabella gestita
@@ -754,13 +754,13 @@ ALTER TABLE `categorie_risorse`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_pagina`);
 
---| 030000004501
+-- | 030000004501
 
 -- categorie_risorse
 -- tipologia: tabella gestita
 ALTER TABLE `categorie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000004600
+-- | 030000004600
 
 -- causali
 -- tipologia: tabella gestita
@@ -774,13 +774,13 @@ ALTER TABLE `causali`
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`se_trasporto`);
 
---| 030000004601
+-- | 030000004601
 
 -- causali
 -- tipologia: tabella gestita
 ALTER TABLE `causali` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000004700
+-- | 030000004700
 
 -- certificazioni
 -- tipologia: tabella assistita
@@ -792,13 +792,13 @@ ALTER TABLE `certificazioni`
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`); 
 
---| 030000004701
+-- | 030000004701
 
 -- certificazioni
 -- tipologia: tabella assistita
 ALTER TABLE `certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT; 
 
---| 030000004800
+-- | 030000004800
 
 -- chiavi
 -- tipologia: tabella di supporto
@@ -812,13 +812,13 @@ ALTER TABLE `chiavi`
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `indice` (`id`,`codice`, `seriale`,`nome`,`id_licenza`, `id_tipologia`);
 
---| 030000004801
+-- | 030000004801
 
 -- chiavi
 -- tipologia: tabella di supporto
 ALTER TABLE `chiavi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000005000
+-- | 030000005000
 
 -- classi_energetiche
 -- tipologia: tabella standard
@@ -827,13 +827,13 @@ ALTER TABLE `classi_energetiche`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `nome` (`nome`);
 
---| 030000005001
+-- | 030000005001
 
 -- classi_energetiche
 -- tipologia: tabella standard
 ALTER TABLE `classi_energetiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000005050
+-- | 030000005050
 
 -- colli
 -- tipologia: tabella standard
@@ -850,13 +850,13 @@ ALTER TABLE `colli`
 	ADD KEY `indice_dimensioni` (`id`,`ordine`,`codice`,`id_documento`,`larghezza`,`lunghezza`,`altezza`,`peso`,`volume`);
 
 
---| 030000005051
+-- | 030000005051
 
 -- colli
 -- tipologia: tabella standard
 ALTER TABLE `colli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000005100
+-- | 030000005100
 
 -- colori
 -- tipologia: tabella di supporto
@@ -874,13 +874,13 @@ ALTER TABLE `colori`
 	ADD KEY `indice_pantone` (`id`, `nome`,`id_genitore`,`pantone`),
 	ADD KEY `indice_cmyk` (`id`, `nome`,`id_genitore`,`c`,`m`,`y`,`k`);
 
---| 030000005101
+-- | 030000005101
 
 -- colori
 -- tipologia: tabella di supporto
 ALTER TABLE `colori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000005300
+-- | 030000005300
 
 -- comuni
 -- tipologia: tabella di supporto
@@ -892,13 +892,13 @@ ALTER TABLE `comuni`
 	ADD KEY `id_provincia` (`id_provincia`),
 	ADD KEY `indice` (`id`,`id_provincia`, `nome`,`codice_istat`,`codice_catasto`);
 
---| 030000005301
+-- | 030000005301
 
 -- comuni
 -- tipologia: tabella di supporto
 ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000006000
+-- | 030000006000
 
 -- condizioni
 -- tipologia: tabella standard
@@ -910,13 +910,13 @@ ALTER TABLE `condizioni`
 	ADD KEY `se_immobili` (`se_immobili`),
 	ADD UNIQUE KEY `unico` (`nome`);
 
---| 030000006001
+-- | 030000006001
 
 -- condizioni
 -- tipologia: tabella standard
 ALTER TABLE `condizioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000006200
+-- | 030000006200
 
 -- condizioni_pagamento
 -- tipologia: tabella standard
@@ -927,13 +927,13 @@ ALTER TABLE `condizioni_pagamento`
 	ADD KEY `nome` (`nome`),
 	ADD UNIQUE KEY `unico` (`codice`,`nome`);
 
---| 030000006201
+-- | 030000006201
 
 -- condizioni_pagamento
 -- tipologia: tabella standard
 ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000006400
+-- | 030000006400
 
 -- consensi
 -- tipologia: tabella standard
@@ -945,7 +945,7 @@ ALTER TABLE `consensi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`id_account_inserimento`,`id_account_aggiornamento`);
 
---| 030000006500
+-- | 030000006500
 
 -- consensi_moduli
 -- tipologia: tabella assistita
@@ -966,13 +966,13 @@ ALTER TABLE `consensi_moduli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`, `id_consenso`, `id_lingua`, `modulo`,`nome`,`ordine`,`azione`, `informativa`, `pagina`, `se_richiesto` );
 
---| 030000006501
+-- | 030000006501
 
 -- consensi_moduli
 -- tipologia: tabella assistita
 ALTER TABLE `consensi_moduli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000006700
+-- | 030000006700
 
 -- contatti
 -- tipologia: tabella gestita
@@ -994,13 +994,13 @@ ALTER TABLE `contatti`
 	ADD KEY `timestamp_contatto` (`timestamp_contatto`), 
 	ADD KEY `indice` (`id`, `id_tipologia`, `id_anagrafica`,`id_inviante`,`id_ranking`,`nome`,`timestamp_contatto`);
 
---| 030000006701
+-- | 030000006701
 
 -- contatti
 -- tipologia: tabella gestita
 ALTER TABLE `contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000006900
+-- | 030000006900
 
 -- contenuti
 -- tipologia: tabella gestita
@@ -1068,13 +1068,13 @@ ALTER TABLE `contenuti`
 	ADD KEY `indice_template` (`id`,`id_lingua`,`id_template`),
 	ADD KEY `indice_colore` (`id`,`id_lingua`,`id_colore`);
 
---| 030000006901
+-- | 030000006901
 
 -- contenuti
 -- tipologia: tabella gestita
 ALTER TABLE `contenuti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000007100
+-- | 030000007100
 
 -- continenti
 -- tipologia: tabella di supporto
@@ -1084,13 +1084,13 @@ ALTER TABLE `continenti`
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `indice` (`id`,`codice`,`nome`);
 
---| 030000007101
+-- | 030000007101
 
 -- continenti
 -- tipologia: tabella di supporto
 ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000007200
+-- | 030000007200
 
 -- contratti
 -- tipologia: tabella gestita
@@ -1105,13 +1105,13 @@ ALTER TABLE `contratti`
 	ADD KEY `codice_affiliazione` ( `codice_affiliazione` ),
 	ADD KEY `indice` ( `id_tipologia`, `codice`, `codice_affiliazione`, `nome`, `id_progetto`, `id_immobile`);
 
---| 030000007201
+-- | 030000007201
 
 -- contratti
 -- tipologia: tabella gestita
 ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000007300
+-- | 030000007300
 
 -- contratti_anagrafica
 -- tipologia: tabella gestita
@@ -1127,13 +1127,13 @@ ALTER TABLE `contratti_anagrafica`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_contratto`,`id_anagrafica`,`id_ruolo`,`ordine`);
 
---| 030000007301
+-- | 030000007301
 
 -- contratti_anagrafica
 -- tipologia: tabella gestita
 ALTER TABLE `contratti_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000007500
+-- | 030000007500
 
 -- conversazioni
 -- tipologia: tabella gestita
@@ -1145,13 +1145,13 @@ ALTER TABLE `conversazioni`
 	ADD KEY `timestamp_chiusura` (`timestamp_chiusura`),
 	ADD KEY `indice` (`id`,`nome`,`timestamp_chiusura`,`timestamp_apertura`);
 
---| 030000007501
+-- | 030000007501
 
 -- conversazioni
 -- tipologia: tabella gestita
 ALTER TABLE `conversazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000007600
+-- | 030000007600
 
 -- conversazioni_account
 -- tipologia: tabella gestita
@@ -1165,13 +1165,13 @@ ALTER TABLE `conversazioni_account`
  	ADD KEY `timestamp_uscita` (`timestamp_uscita`), 
 	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_entrata`, `timestamp_uscita`);
 	
---| 030000007601
+-- | 030000007601
 
 -- conversazioni_account
 -- tipologia: tabella gestita
 ALTER TABLE `conversazioni_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000008000
+-- | 030000008000
 
 -- coupon
 -- tipologia: tabella gestita
@@ -1182,7 +1182,7 @@ ALTER TABLE `coupon`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`timestamp_inizio`,`timestamp_fine`,`sconto_percentuale`,`sconto_fisso`,`se_multiuso`,`se_globale`);
  
---| 030000008200
+-- | 030000008200
  
 -- coupon_categorie_prodotti
 -- tipologia: tabella gestita
@@ -1196,13 +1196,13 @@ ALTER TABLE `coupon_categorie_prodotti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_coupon`,`id_categoria`,`ordine`);
 
---| 030000008201
+-- | 030000008201
  
 -- coupon_categorie_prodotti
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000008400
+-- | 030000008400
  
 -- coupon_listini
 -- tipologia: tabella gestita
@@ -1216,13 +1216,13 @@ ALTER TABLE `coupon_listini`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_coupon`,`id_listino`,`ordine`);
 
---| 030000008401
+-- | 030000008401
 
 -- coupon_listini
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
  
---| 030000008600
+-- | 030000008600
 
 -- coupon_marchi
 -- tipologia: tabella gestita
@@ -1236,13 +1236,13 @@ ALTER TABLE `coupon_marchi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_coupon`,`id_marchio`,`ordine`);
 
---| 030000008601
+-- | 030000008601
 
 -- coupon_marchi
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000008800
+-- | 030000008800
 
 -- coupon_prodotti
 -- tipologia: tabella gestita
@@ -1256,13 +1256,13 @@ ALTER TABLE `coupon_prodotti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_coupon`,`id_prodotto`,`ordine`);
 
---| 030000008801
+-- | 030000008801
 
 -- coupon_prodotti
 -- tipologia: tabella gestita
 ALTER TABLE `coupon_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000008900
+-- | 030000008900
 
 -- crediti
 -- tipologia: tabella gestita
@@ -1283,13 +1283,13 @@ ALTER TABLE `crediti`
 	ADD UNIQUE KEY `unica` (`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`, `quantita`),
 	ADD KEY `indice` (`id`,`id_documenti_articolo`,`data`,`id_account_emittente`,`id_account_destinatario`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_pianificazione`,  `quantita`,  `nome`);
 
---| 030000008901
+-- | 030000008901
 
 -- crediti
 -- tipologia: tabella gestita
 ALTER TABLE `crediti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000009000
+-- | 030000009000
 
 -- disponibilita
 -- tipologia: tabella standard
@@ -1301,13 +1301,13 @@ ALTER TABLE `disponibilita`
 	ADD KEY `se_immobili` (`se_immobili`),
 	ADD UNIQUE KEY `unico` (`nome`);
 
---| 030000009001
+-- | 030000009001
 
 -- disponibilita
 -- tipologia: tabella standard
 ALTER TABLE `disponibilita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000009800
+-- | 030000009800
 
 -- documenti
 -- tipologia: tabella gestita
@@ -1335,13 +1335,13 @@ ALTER TABLE `documenti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`numero`,`sezionale`,`data`,`id_emittente`,`id_sede_emittente`,`id_destinatario`,`id_sede_destinatario`,`id_coupon`);
 
---| 030000009801
+-- | 030000009801
 
 -- documenti
 -- tipologia: tabella gestita
 ALTER TABLE `documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000010000
+-- | 030000010000
 
 -- documenti_articoli
 -- tipologia: tabella gestita
@@ -1379,13 +1379,13 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `indice_attivita_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
 	ADD KEY `indice_attivita_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`);
 
---| 030000010001
+-- | 030000010001
 
 -- documenti_articoli
 -- tipologia: tabella gestita
 ALTER TABLE `documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000012000
+-- | 030000012000
 
 -- edifici
 -- tipologia: tabella gestita
@@ -1400,13 +1400,13 @@ ALTER TABLE `edifici`
   ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   ADD KEY `indice` (`id`, `id_tipologia`, `id_indirizzo`, `nome`, `codice`);
 
---| 030000012001
+-- | 030000012001
 
 -- edifici
 -- tipologia: tabella gestita
 ALTER TABLE `edifici`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000012050
+-- | 030000012050
 
 -- edifici_caratteristiche
 -- tipologia: tabella gestita
@@ -1422,13 +1422,13 @@ ALTER TABLE `edifici_caratteristiche`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_edificio`,`id_caratteristica`,`ordine`);
 
---| 030000012051
+-- | 030000012051
 
 -- edifici_caratteristiche
 -- tipologia: tabella gestita
 ALTER TABLE `edifici_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000012800
+-- | 030000012800
 
 -- embed
 -- tipologia: tabella standard
@@ -1438,13 +1438,13 @@ ALTER TABLE `embed`
 	ADD UNIQUE KEY `nome` (`nome`), 
 	ADD KEY `indice` (`id`,`nome`,`se_audio`,`se_video`);
 
---| 030000012801
+-- | 030000012801
 
 -- embed
 -- tipologia: tabella standard
 ALTER TABLE `embed` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000015000
+-- | 030000015000
  
 -- file
 -- tipologia: tabella gestita
@@ -1511,13 +1511,13 @@ ALTER TABLE `file`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_ruolo`,`id_lingua`,`path`,`url`);
---| 030000015001
+-- | 030000015001
 
 -- file
 -- tipologia: tabella gestita
 ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
  
---| 030000015200
+-- | 030000015200
  
 -- gruppi
 -- tipologia: tabella gestita
@@ -1531,13 +1531,13 @@ ALTER TABLE `gruppi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`id_organizzazione`,`nome`);
 
---| 030000015201
+-- | 030000015201
  
 -- gruppi
 -- tipologia: tabella gestita
 ALTER TABLE `gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000015400
+-- | 030000015400
 
 -- iban
 -- tipologia: tabella gestita
@@ -1549,13 +1549,13 @@ ALTER TABLE `iban`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_anagrafica`,`iban`);
 
---| 030000015401
+-- | 030000015401
 
 -- iban
 -- tipologia: tabella gestita
 ALTER TABLE `iban` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000015600
+-- | 030000015600
 
 -- immagini
 -- tipologia: tabella gestita
@@ -1614,13 +1614,13 @@ ALTER TABLE `immagini`
 	ADD KEY `indice_categorie_notizie` (`id`,`id_categoria_notizie`,`id_lingua`,`id_ruolo`,`ordine`,`path`,`path_alternativo`,`token`,`timestamp_scalamento`),
 	ADD KEY `indice_indirizzi` (`id`,`id_indirizzo`,`id_lingua`,`id_ruolo`,`ordine`,`path`,`path_alternativo`,`token`,`timestamp_scalamento`);
 
---| 030000015601
+-- | 030000015601
 
 -- immagini
 -- tipologia: tabella gestita
 ALTER TABLE `immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000015700
+-- | 030000015700
 
 -- immobili
 -- tipologia: tabella gestita
@@ -1646,13 +1646,13 @@ ALTER TABLE `immobili`
   ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
---| 030000015701
+-- | 030000015701
 
 -- immobili
 -- tipologia: tabella gestita
 ALTER TABLE `immobili`  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000015710
+-- | 030000015710
 
 -- immobili_anagrafica
 -- tipologia: tabella gestita
@@ -1668,13 +1668,13 @@ ALTER TABLE `immobili_anagrafica`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_immobile`,`id_anagrafica`,`id_ruolo`,`ordine`);
 
---| 030000015711
+-- | 030000015711
 
 -- immobili_anagrafica
 -- tipologia: tabella gestita
 ALTER TABLE `immobili_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000015750
+-- | 030000015750
 
 -- immobili_caratteristiche
 -- tipologia: tabella gestita
@@ -1690,13 +1690,13 @@ ALTER TABLE `immobili_caratteristiche`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_immobile`,`id_caratteristica`,`ordine`);
 
---| 030000015751
+-- | 030000015751
 
 -- immobili_caratteristiche
 -- tipologia: tabella gestita
 ALTER TABLE `immobili_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000015800
+-- | 030000015800
 
 -- indirizzi
 -- tipologia: tabella gestita
@@ -1711,13 +1711,13 @@ ALTER TABLE `indirizzi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_comune`,`indirizzo`,`civico`,`cap`,`timestamp_geolocalizzazione`);
 
---| 030000015801
+-- | 030000015801
 
 -- indirizzi
 -- tipologia: tabella gestita
 ALTER TABLE `indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000015850
+-- | 030000015850
 
 -- indirizzi_caratteristiche
 -- tipologia: tabella gestita
@@ -1733,13 +1733,13 @@ ALTER TABLE `indirizzi_caratteristiche`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_indirizzo`,`id_caratteristica`,`ordine`);
 
---| 030000015851
+-- | 030000015851
 
 -- indirizzi_caratteristiche
 -- tipologia: tabella gestita
 ALTER TABLE `indirizzi_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000016000
+-- | 030000016000
 
 -- iva
 -- tipologia: tabella di supporto
@@ -1750,13 +1750,13 @@ ALTER TABLE `iva`
 	ADD KEY `timestamp_archiviazione` (`timestamp_archiviazione`),
 	ADD KEY `indice` (`id`,`aliquota`,`nome`,`codice`,`timestamp_archiviazione`);
 
---| 030000016001
+-- | 030000016001
 
 -- iva
 -- tipologia: tabella di supporto
 ALTER TABLE `iva` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000016200
+-- | 030000016200
 
 -- job
 -- tipologia: tabella gestita
@@ -1771,13 +1771,13 @@ ALTER TABLE `job`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`job`,`totale`,`corrente`,`iterazioni`,`delay`,`token`,`timestamp_apertura`,`timestamp_esecuzione`,`timestamp_completamento`);
 
---| 030000016201
+-- | 030000016201
 
 -- job
 -- tipologia: tabella gestita
 ALTER TABLE `job` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000016600
+-- | 030000016600
 
 -- licenze
 -- tipologia: tabella standard
@@ -1797,13 +1797,13 @@ ALTER TABLE `licenze`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id_anagrafica`,`id_tipologia`,`id_rivenditore`,`codice`,`postazioni`,`nome`,`giorni_validita`,`giorni_rinnovo`,`timestamp_distribuzione`,`timestamp_inizio`,`timestamp_fine`);
 
---| 030000016601
+-- | 030000016601
 
 -- licenze
 -- tipologia: tabella standard
 ALTER TABLE `licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000016700
+-- | 030000016700
 
 -- licenze_software
 -- tipologia: tabella gestita
@@ -1817,13 +1817,13 @@ ALTER TABLE `licenze_software`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_licenza`,`id_software`,`ordine`);
 
---| 030000016701
+-- | 030000016701
 
 -- licenze_software
 -- tipologia: tabella gestita
 ALTER TABLE `licenze_software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000016800
+-- | 030000016800
 
 -- lingue
 -- tipologia: tabella di supporto
@@ -1836,13 +1836,13 @@ ALTER TABLE `lingue`
 	ADD UNIQUE KEY `unica_ietf` (`ietf`),
 	ADD KEY `indice` (`id`,`nome`,`iso6391alpha2`,`iso6393alpha3`,`ietf`);
 
---| 030000016801
+-- | 030000016801
 
 -- lingue
 -- tipologia: tabella di supporto
 ALTER TABLE `lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000017000
+-- | 030000017000
 
 -- liste
 -- tipolgia: tabella gestita
@@ -1854,13 +1854,13 @@ ALTER TABLE `liste`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`);
 	
---| 030000017001
+-- | 030000017001
 
 -- liste
 -- tipolgia: tabella gestita
 ALTER TABLE `liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000017100
+-- | 030000017100
 
 -- liste_mail
 -- tipolgia: tabella gestita
@@ -1873,13 +1873,13 @@ ALTER TABLE `liste_mail`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unica` (`id_lista`,`id_mail`);
 	
---| 030000017101
+-- | 030000017101
 
 -- liste_mail
 -- tipolgia: tabella gestita
 ALTER TABLE `liste_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000017200
+-- | 030000017200
 
 -- listini
 -- tipologia: tabella assistita
@@ -1892,13 +1892,13 @@ ALTER TABLE `listini`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_valuta`,`nome`);
 
---| 030000017201
+-- | 030000017201
 
 -- listini
 -- tipologia: tabella assistita
 ALTER TABLE `listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000017400
+-- | 030000017400
 
 -- listini_clienti
 -- tipologia: tabella gestita
@@ -1912,13 +1912,13 @@ ALTER TABLE `listini_clienti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_listino`,`id_cliente`,`ordine`);
 
---| 030000017401
+-- | 030000017401
 
 -- listini_clienti
 -- tipologia: tabella gestita
 ALTER TABLE `listini_clienti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000018000
+-- | 030000018000
 
 -- luoghi
 -- tipologia: tabella gestita
@@ -1936,13 +1936,13 @@ ALTER TABLE `luoghi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_indirizzo`,  `id_tipologia`,`id_edificio`, `id_immobile`,`nome`);
 
---| 030000018001
+-- | 030000018001
 
 -- luoghi
 -- tipologia: tabella gestita
 ALTER TABLE `luoghi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000018200
+-- | 030000018200
 
 -- macro
 -- tipologia: tabella gestita
@@ -1975,13 +1975,13 @@ ALTER TABLE `macro`
 	ADD KEY `indice_risorse` (`id`,`id_risorsa`,`ordine`,`macro`),
 	ADD KEY `indice_categorie_risorse` (`id`,`id_categoria_risorse`,`ordine`,`macro`);
 
---| 030000018201
+-- | 030000018201
 
 -- macro
 -- tipologia: tabella gestita
 ALTER TABLE `macro` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000018600
+-- | 030000018600
 
 -- mail
 -- tipologia: tabella gestita
@@ -1995,13 +1995,13 @@ ALTER TABLE `mail`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_anagrafica`,`indirizzo`,`se_notifiche`,`se_pec`);
 
---| 030000018601
+-- | 030000018601
 
 -- mail
 -- tipologia: tabella gestita
 ALTER TABLE `mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000018800
+-- | 030000018800
 
 -- mail_out
 -- tipolgia: tabella gestita
@@ -2018,13 +2018,13 @@ ALTER TABLE `mail_out`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
 	ADD KEY `indice` (`id`,`id_mail`,`id_mailing`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
 
---| 030000018801
+-- | 030000018801
 
 -- mail_out
 -- tipolgia: tabella gestita
 ALTER TABLE `mail_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000018900
+-- | 030000018900
 
 -- mail_sent
 -- tipolgia: tabella gestita
@@ -2041,7 +2041,7 @@ ALTER TABLE `mail_sent`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
 	ADD KEY `indice` (`id`,`id_mail`,`id_mailing`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
 
---| 030000019000
+-- | 030000019000
 
 -- mailing
 -- tipolgia: tabella gestita
@@ -2053,13 +2053,13 @@ ALTER TABLE `mailing`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`);
 
---| 030000019001
+-- | 030000019001
 
 -- mailing
 -- tipolgia: tabella gestita
 ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000019050
+-- | 030000019050
 
 -- mailing_liste
 -- tipolgia: tabella gestita
@@ -2072,13 +2072,13 @@ ALTER TABLE `mailing_liste`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unica` (`id_lista`,`id_mailing`);
 	
---| 030000019051
+-- | 030000019051
 
 -- mailing_liste
 -- tipolgia: tabella gestita
 ALTER TABLE `mailing_liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000019100
+-- | 030000019100
 
 -- mailing_mail
 -- tipolgia: tabella gestita
@@ -2094,13 +2094,13 @@ ALTER TABLE `mailing_mail`
 	ADD UNIQUE `unica_mail` (`id_mailing`, `id_mail`),
 	ADD KEY `indice` (`id`,`id_mailing`, `id_mail`, `id_mail_out`, `token` );
 
---| 030000019101
+-- | 030000019101
 
 -- mailing_mail
 -- tipolgia: tabella gestita	
 ALTER TABLE `mailing_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
 
---| 030000020200
+-- | 030000020200
 
 -- marchi
 -- tipologia: tabella gestita
@@ -2112,13 +2112,13 @@ ALTER TABLE `marchi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`);
 
---| 030000020201
+-- | 030000020201
 
 -- marchi
 -- tipologia: tabella gestita
 ALTER TABLE `marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000020600
+-- | 030000020600
 
 -- mastri
 -- tipologia: tabella gestita
@@ -2136,13 +2136,13 @@ ALTER TABLE `mastri`
  	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`nome`);
 
---| 030000020601
+-- | 030000020601
 
 -- mastri
 -- tipologia: tabella gestita
 ALTER TABLE `mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000021000
+-- | 030000021000
 
 -- matricole
 -- tipologia: tabella gestita
@@ -2158,10 +2158,10 @@ ALTER TABLE `matricole`
 	ADD KEY `id_articolo` (`id_articolo` ),
   	ADD KEY `indice` (`id`,`id_marchio`,`id_produttore`,`matricola`,`nome`);
 
---| 030000021001
+-- | 030000021001
 ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000021600
+-- | 030000021600
 
 -- menu
 -- tipologia: tabella gestita
@@ -2184,13 +2184,13 @@ ALTER TABLE `menu`
 	ADD KEY `indice_categorie_notizie` (`id`,`id_lingua`,`id_categoria_notizie`,`menu`,`nome`),
 	ADD KEY `indice_categorie_risorse` (`id`,`id_lingua`,`id_categoria_risorse`,`menu`,`nome`);
 
---| 030000021601
+-- | 030000021601
 
 -- menu
 -- tipologia: tabella gestita
 ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000021700
+-- | 030000021700
 
 -- messaggi
 -- tipologia: tabella gestita
@@ -2202,13 +2202,13 @@ ALTER TABLE `messaggi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_conversazione`,`timestamp_invio`,`timestamp_lettura`);
 
---| 030000021701
+-- | 030000021701
 
 -- messaggi
 -- tipologia: tabella gestita
 ALTER TABLE `messaggi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000021800
+-- | 030000021800
 
 -- metadati
 -- tipologia: tabella gestita
@@ -2272,13 +2272,13 @@ ALTER TABLE `metadati`
 	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`), 
 	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255));
 
---| 030000021801
+-- | 030000021801
 
 -- metadati
 -- tipologia: tabella gestita
 ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000021900
+-- | 030000021900
 
 -- modalita_pagamento
 -- tipologia: tabella standard
@@ -2288,13 +2288,13 @@ ALTER TABLE `modalita_pagamento`
 	ADD UNIQUE KEY `nome` (`nome`,`codice`),
 	ADD KEY `indice` (`id`,`nome`,`provider`,`codice`);
 
---| 030000021901
+-- | 030000021901
 
 -- modalita_pagamento
 -- tipologia: tabella standard
 ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000022000
+-- | 030000022000
 
 -- notizie
 -- tipologia: tabella gestita
@@ -2309,13 +2309,13 @@ ALTER TABLE `notizie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_tipologia`,`nome`, `id_sito`);
 
---| 030000022001
+-- | 030000022001
 
 -- notizie
 -- tipologia: tabella gestita
 ALTER TABLE `notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000022200
+-- | 030000022200
 
 -- notizie_categorie
 -- tipologia: tabella gestita
@@ -2330,13 +2330,13 @@ ALTER TABLE `notizie_categorie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_notizia`,`id_categoria`,`ordine`);
 
---| 030000022201
+-- | 030000022201
 
 -- notizie_categorie
 -- tipologia: tabella gestita
 ALTER TABLE `notizie_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000022800
+-- | 030000022800
 
 -- organizzazioni
 -- tipologia: tabella gestita
@@ -2352,13 +2352,13 @@ ALTER TABLE `organizzazioni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`id_anagrafica`,`id_ruolo`);
 
---| 030000022801
+-- | 030000022801
 
 -- organizzazioni
 -- tipologia: tabella gestita
 ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000023100
+-- | 030000023100
 
 -- pagamenti
 -- tipologia: tabella gestita
@@ -2381,13 +2381,13 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_documento`,`timestamp_pagamento`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`id_iban`,`importo_lordo_totale`);
 
---| 030000023101
+-- | 030000023101
 
 -- pagamenti
 -- tipologia: tabella gestita
 ALTER TABLE `pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000023200
+-- | 030000023200
 
 -- pagine
 -- tipologia: tabella gestita
@@ -2404,13 +2404,13 @@ ALTER TABLE `pagine`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_sito`,`nome`,`template`,`schema_html`,`tema_css`,`se_sitemap`,`se_cacheable`,`id_contenuti`);
 
---| 030000023201
+-- | 030000023201
 
 -- pagine
 -- tipologia: tabella gestita
 ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000023500
+-- | 030000023500
 
 -- periodi
 -- tipologia: tabella di supporto
@@ -2423,13 +2423,13 @@ ALTER TABLE `periodi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`);
 
---| 030000023501
+-- | 030000023501
 
 -- periodi
 -- tipologia: tabella di supporto
 ALTER TABLE `periodi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000023600
+-- | 030000023600
 
 -- periodicita
 -- tipologia: tabella di supporto
@@ -2440,13 +2440,13 @@ ALTER TABLE `periodicita`
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `indice` (`id`,`nome`);
 
---| 030000023601
+-- | 030000023601
 
 -- periodicita
 -- tipologia: tabella gestita
 ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000023800
+-- | 030000023800
 
 -- pianificazioni
 -- tipologia: tabella gestita
@@ -2513,13 +2513,13 @@ ALTER TABLE `pianificazioni`
 	ADD KEY `model_data_scadenza`  (`model_data_scadenza`),
 	ADD KEY `indice` (`id`,`nome`,`id_periodicita`,`cadenza`,`se_lunedi`,`se_martedi`,`se_mercoledi`,`se_giovedi`,`se_venerdi`,`se_sabato`,`se_domenica`,`schema_ripetizione`,`data_elaborazione`,`giorni_estensione`,`data_fine`,`token`);
 
---| 030000023801
+-- | 030000023801
 
 -- pianificazioni
 -- tipologia: tabella gestita
 ALTER TABLE `pianificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000024000
+-- | 030000024000
 
 -- popup
 -- tipologia: tabella gestita
@@ -2532,13 +2532,13 @@ ALTER TABLE `popup`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_sito`,`nome`,`html_id`,`html_class`,`html_class_attivazione`,`n_scroll`,`n_secondi`,`template`,`schema_html`,`se_ovunque`);
 
---| 030000024001
+-- | 030000024001
 
 -- popup
 -- tipologia: tabella gestita
 ALTER TABLE `popup` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000024200
+-- | 030000024200
 
 -- popup_pagine
 -- tipologia: tabella gestita
@@ -2553,13 +2553,13 @@ ALTER TABLE `popup_pagine`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_pagina`,`id_popup`,`se_presente`);
 
---| 030000024201
+-- | 030000024201
 
 -- popup_pagine
 -- tipologia: tabella gestita
 ALTER TABLE `popup_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000025000
+-- | 030000025000
 
 -- prezzi
 -- tipologia: tabella gestita
@@ -2579,13 +2579,13 @@ ALTER TABLE `prezzi`
 	ADD KEY `indice_prodotti` (`id`,`id_prodotto`,`prezzo`,`id_listino`,`id_iva`),
 	ADD KEY `indice_articoli` (`id`,`id_articolo`,`prezzo`,`id_listino`,`id_iva`);
 
---| 030000025001
+-- | 030000025001
 
 -- prezzi
 -- tipologia: tabella gestita
 ALTER TABLE `prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000026000
+-- | 030000026000
 
 -- prodotti
 -- tipologia: tabella gestita
@@ -2604,7 +2604,7 @@ ALTER TABLE `prodotti`
 	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_marchio`,`id_produttore`,`nome`,`codice_produttore`);
 
---| 030000026200
+-- | 030000026200
 
 -- prodotti_caratteristiche
 -- tipologia: tabella gestita
@@ -2619,13 +2619,13 @@ ALTER TABLE `prodotti_caratteristiche`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`);
 
---| 030000026201
+-- | 030000026201
 
 -- prodotti_caratteristiche
 -- tipologia: tabella gestita
 ALTER TABLE `prodotti_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000026400
+-- | 030000026400
 
 -- prodotti_categorie
 -- tipologia: tabella gestita
@@ -2641,13 +2641,13 @@ ALTER TABLE `prodotti_categorie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_prodotto`,`id_categoria`,`id_ruolo`,`ordine`);
 
---| 030000026401
+-- | 030000026401
 
 -- prodotti_categorie
 -- tipologia: tabella gestita
 ALTER TABLE `prodotti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000027000
+-- | 030000027000
 
 -- progetti
 -- tipologia: tabella gestita
@@ -2674,7 +2674,7 @@ ALTER TABLE `progetti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_chiusura`,`data_archiviazione`);
 
---| 030000027200
+-- | 030000027200
 
 -- progetti_anagrafica
 -- tipologia: tabella gestita
@@ -2691,13 +2691,13 @@ ALTER TABLE `progetti_anagrafica`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_anagrafica`,`id_ruolo`,`ordine`);
 
---| 030000027201
+-- | 030000027201
 
 -- progetti_anagrafica
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000027300
+-- | 030000027300
 
 -- progetti_articoli
 -- tipologia: tabella gestita
@@ -2712,13 +2712,13 @@ ALTER TABLE `progetti_articoli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_articolo`, `id_ruolo`,`ordine`);
 	
---| 030000027301
+-- | 030000027301
 
 -- progetti_articoli
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000027400
+-- | 030000027400
 
 -- progetti_categorie
 -- tipologia: tabella gestita
@@ -2733,13 +2733,13 @@ ALTER TABLE `progetti_categorie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_categoria`,`ordine`);
 
---| 030000027401
+-- | 030000027401
 
 -- progetti_categorie
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000027600
+-- | 030000027600
 
 -- progetti_certificazioni
 -- tipologia: tabella gestita
@@ -2756,13 +2756,13 @@ ALTER TABLE `progetti_certificazioni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_certificazione`,`ordine`,`nome`);
 
---| 030000027601
+-- | 030000027601
 
 -- progetti_certificazioni
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000027800
+-- | 030000027800
 
 -- progetti_matricole
 -- tipologia: tabella gestita
@@ -2778,13 +2778,13 @@ ALTER TABLE `progetti_matricole`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_progetto`,`id_matricola`,`ordine`,`id_ruolo`);
 
---| 030000027801
+-- | 030000027801
 
 -- progetti_matricole
 -- tipologia: tabella gestita
 ALTER TABLE `progetti_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000028000
+-- | 030000028000
 
 -- provincie
 -- tipologia: tabella di supporto
@@ -2799,13 +2799,13 @@ ALTER TABLE `provincie`
 	ADD KEY `codice_istat` (`codice_istat`),
 	ADD KEY `indice` (`id`,`id_regione`,`nome`,`sigla`,`codice_istat`);
 
---| 030000028001
+-- | 030000028001
 
 -- provincie
 -- tipologia: tabella di supporto
 ALTER TABLE `provincie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000028400
+-- | 030000028400
 
 -- pubblicazioni
 -- tipologia: tabella gestita
@@ -2831,13 +2831,13 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_prodotto`,`id_articolo`,`id_categoria_prodotti`,`id_notizia`,`id_categoria_notizie`,`id_pagina`,`id_popup`,`timestamp_inizio`,`timestamp_fine`);
 
---| 030000028401
+-- | 030000028401
 
 -- pubblicazioni
 -- tipologia: tabella gestita
 ALTER TABLE `pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000028600
+-- | 030000028600
 
 -- ranking
 -- tipologia: tabella assistita
@@ -2854,14 +2854,14 @@ ALTER TABLE `ranking`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`nome`,`ordine`,  `se_cliente`, `se_fornitore`,`se_progetti`);
 
---| 030000028601
+-- | 030000028601
 
 -- ranking
 -- tipologia: tabella assistita
 -- verifica: 2021-10-11 17:48 Fabio Mosti
 ALTER TABLE `ranking` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000029400
+-- | 030000029400
 
 -- redirect
 -- tipologia: tabella gestita
@@ -2874,13 +2874,13 @@ ALTER TABLE `redirect`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`codice`,`sorgente`,`destinazione`); 
 
---| 030000029401
+-- | 030000029401
 
 -- redirect
 -- tipologia: tabella gestita
 ALTER TABLE `redirect` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000029800
+-- | 030000029800
 
 -- regimi
 -- tipologia: tabella di supporto
@@ -2890,13 +2890,13 @@ ALTER TABLE `regimi`
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `indice` (`id`,`nome`,`codice`); 
 
---| 030000029801
+-- | 030000029801
 
 -- regimi
 -- tipologia: tabella di supporto
 ALTER TABLE `regimi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000030200
+-- | 030000030200
 
 -- regioni
 -- tipologia: tabella standard
@@ -2907,13 +2907,13 @@ ALTER TABLE `regioni`
 	ADD KEY `id_stato` (`id_stato`),
 	ADD KEY `indice` (`id`,`id_stato`,`nome`,`codice_istat`);
 
---| 030000030201
+-- | 030000030201
 
 -- regioni
 -- tipologia: tabella standard
 ALTER TABLE `regioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000030300
+-- | 030000030300
 
 -- relazioni_anagrafica
 -- tipologia: tabella relazione
@@ -2927,13 +2927,13 @@ ALTER TABLE `relazioni_anagrafica`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_anagrafica`,`id_anagrafica_collegata`, `id_ruolo`);
 
---| 030000030301
+-- | 030000030301
 
 -- relazioni_anagrafica
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000030400
+-- | 030000030400
 
 -- relazioni_documenti
 -- tipologia: tabella relazione
@@ -2947,13 +2947,13 @@ ALTER TABLE `relazioni_documenti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_documento`,`id_documento_collegato`,`id_ruolo`);
 
---| 030000030401
+-- | 030000030401
 
 -- relazioni_documenti
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000030410
+-- | 030000030410
 
 -- relazioni_documenti_articoli
 -- tipologia: tabella relazione
@@ -2967,13 +2967,13 @@ ALTER TABLE `relazioni_documenti_articoli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`);
 
---| 030000030411
+-- | 030000030411
 
 -- relazioni_documenti_articoli
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000030440
+-- | 030000030440
 
 -- relazioni_pagamenti
 -- tipologia: tabella relazione
@@ -2986,13 +2986,13 @@ ALTER TABLE `relazioni_pagamenti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_pagamento`,`id_pagamento_collegato`);
 
---| 030000030441
+-- | 030000030441
 
 -- relazioni_pagamenti
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000030490
+-- | 030000030490
 
 -- relazioni_progetti
 -- tipologia: tabella relazione
@@ -3006,13 +3006,13 @@ ALTER TABLE `relazioni_progetti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_progetto`,`id_progetto_collegato`,`id_ruolo`);
 
---| 030000030491
+-- | 030000030491
 
 -- relazioni_progetti
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000030500
+-- | 030000030500
 
 -- relazioni_software
 -- tipologia: tabella relazione
@@ -3025,13 +3025,13 @@ ALTER TABLE `relazioni_software`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_software`,`id_software_collegato`);
 
---| 030000030501
+-- | 030000030501
 
 -- relazioni_software
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000030800
+-- | 030000030800
 
 -- reparti
 -- tipologia: tabella assistita
@@ -3045,13 +3045,13 @@ ALTER TABLE `reparti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_iva`,`id_settore`,`nome`);
 
---| 030000030801
+-- | 030000030801
 
 -- reparti
 -- tipologia: tabella gestita
 ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000031500
+-- | 030000031500
 
 -- rinnovi
 -- tipologia: tabella gestita
@@ -3070,14 +3070,14 @@ ALTER TABLE `rinnovi`
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`);
 
---| 030000031501
+-- | 030000031501
 
 -- rinnovi
 -- tipologia: tabella gestita
 ALTER TABLE `rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 
---| 030000031550
+-- | 030000031550
 
 -- rinnovi_documenti_articoli
 -- tipologia: tabella gestita
@@ -3090,13 +3090,13 @@ ALTER TABLE `rinnovi_documenti_articoli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_rinnovo`);
 
---| 030000031551
+-- | 030000031551
 
 -- rinnovi_documenti_articoli
 -- tipologia: tabella gestita
 ALTER TABLE `rinnovi_documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000032000
+-- | 030000032000
 
 -- risorse
 -- tipologia: tabella gestita
@@ -3117,13 +3117,13 @@ ALTER TABLE `risorse`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_tipologia`,`codice`,`nome`,`id_testata`,`giorno_pubblicazione`,`mese_pubblicazione`,`anno_pubblicazione`);
 
---| 030000032001
+-- | 030000032001
 
 -- risorse
 -- tipologia: tabella gestita
 ALTER TABLE `risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
 
---| 030000032100
+-- | 030000032100
 
 -- risorse_account
 -- tipologia: tabella di supporto
@@ -3138,13 +3138,13 @@ ALTER TABLE `risorse_account`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_risorsa`,`id_account`,`ordine`);
 
---| 030000032101
+-- | 030000032101
 
 -- risorse_account
 -- tipologia: tabella di supporto
 ALTER TABLE `risorse_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000032200
+-- | 030000032200
 
 -- risorse_anagrafica
 -- tipologia: tabella di supporto
@@ -3160,13 +3160,13 @@ ALTER TABLE `risorse_anagrafica`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_risorsa`,`id_anagrafica`,`id_ruolo`,`ordine`);
 
---| 030000032201
+-- | 030000032201
 
 -- risorse_anagrafica
 -- tipologia: tabella di supporto
 ALTER TABLE `risorse_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000032400
+-- | 030000032400
 
 -- risorse_categorie
 -- tipologia: tabella di supporto
@@ -3180,13 +3180,13 @@ ALTER TABLE `risorse_categorie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_risorsa`,`id_categoria`,`ordine`);
 
---| 030000032401
+-- | 030000032401
 
 -- risorse_categorie
 -- tipologia: tabella di supporto
 ALTER TABLE `risorse_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034000
+-- | 030000034000
 
 -- ruoli_anagrafica
 -- tipologia: tabella di supporto
@@ -3204,13 +3204,13 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD KEY `se_contratti` (`se_contratti`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_organizzazioni`,`se_risorse`,`se_progetti`, `se_immobili`, `se_contratti`);
 
---| 030000034001
+-- | 030000034001
 
 -- ruoli_anagrafica
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034100
+-- | 030000034100
 
 -- ruoli_articoli
 -- tipologia: tabella di supporto
@@ -3225,13 +3225,13 @@ ALTER TABLE `ruoli_articoli`
 	ADD KEY `se_rinnovo` (`se_rinnovo`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`se_progetti`,`se_risorse`,`se_acquisto`, `se_rinnovo`);
 
---| 030000034101
+-- | 030000034101
 
 -- ruoli_articoli
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034200
+-- | 030000034200
 
 -- ruoli_audio
 -- tipologia: tabella di supporto
@@ -3252,13 +3252,13 @@ ALTER TABLE `ruoli_audio`
 	ADD KEY `se_immobili` (`se_immobili`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
---| 030000034201
+-- | 030000034201
 
 -- ruoli_audio
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034300
+-- | 030000034300
 
 -- ruoli_documenti
 -- tipologia: tabella di supporto
@@ -3275,13 +3275,13 @@ ALTER TABLE `ruoli_documenti`
 	ADD KEY `se_evasione` (`se_evasione`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_xml`,`se_documenti`,`se_documenti_articoli`,`se_conferma`, `se_consuntivo`,  `se_evasione`);
 
---| 030000034301
+-- | 030000034301
 
 -- ruoli_documenti
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034400
+-- | 030000034400
 
 -- ruoli_file
 -- tipologia: tabella di supporto
@@ -3305,13 +3305,13 @@ ALTER TABLE `ruoli_file`
 	ADD KEY `se_documenti` (`se_documenti`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_template`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
---| 030000034401
+-- | 030000034401
 
 -- ruoli_file
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034600
+-- | 030000034600
 
 -- ruoli_immagini
 -- tipologia: tabella di supporto
@@ -3333,13 +3333,13 @@ ALTER TABLE `ruoli_immagini`
 	ADD KEY `se_immobili` (`se_immobili`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine_scalamento`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
---| 030000034601
+-- | 030000034601
 
 -- ruoli_immagini
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034800
+-- | 030000034800
 
 -- ruoli_indirizzi
 -- tipologia: tabella standard
@@ -3354,13 +3354,13 @@ ALTER TABLE `ruoli_indirizzi`
 	ADD KEY `se_domicilio` (`se_domicilio`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`);
 
---| 030000034801
+-- | 030000034801
 
 -- ruoli_indirizzi
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034850
+-- | 030000034850
 
 -- ruoli_mail
 ALTER TABLE `ruoli_mail`
@@ -3369,12 +3369,12 @@ ALTER TABLE `ruoli_mail`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 
---| 030000034851
+-- | 030000034851
 
 -- ruoli_mail
 ALTER TABLE `ruoli_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000034900
+-- | 030000034900
 
 -- ruoli_matricole
 -- tipologia: tabella standard
@@ -3385,13 +3385,13 @@ ALTER TABLE `ruoli_matricole`
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`);
 
---| 030000034901
+-- | 030000034901
 
 -- ruoli_matricole
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000035000
+-- | 030000035000
 
 -- ruoli_prodotti
 -- tipologia: tabella di supporto
@@ -3402,13 +3402,13 @@ ALTER TABLE `ruoli_prodotti`
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 
---| 030000035001
+-- | 030000035001
 
 -- ruoli_prodotti
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000035100
+-- | 030000035100
 
 -- ruoli_progetti
 -- tipologia: tabella di supporto
@@ -3422,13 +3422,13 @@ ALTER TABLE `ruoli_progetti`
 	ADD KEY `se_attesa` (`se_attesa`), 
 	ADD KEY `indice` (`id`,`nome`,`se_sottoprogetto`,`se_proseguimento`,`se_sostituto`,`se_attesa`);
 
---| 030000035101
+-- | 030000035101
 
 -- ruoli_progetti
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000035200
+-- | 030000035200
 
 -- ruoli_video
 -- tipologia: tabella di supporto
@@ -3449,13 +3449,13 @@ ALTER TABLE `ruoli_video`
 	ADD KEY `se_immobili` (`se_immobili`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_pagine`,`se_prodotti`,`se_articoli`,`se_categorie_prodotti`,`se_notizie`,`se_categorie_notizie`,`se_risorse`,`se_categorie_risorse`);
 
---| 030000035201
+-- | 030000035201
 
 -- ruoli_video
 -- tipologia: tabella di supporto
 ALTER TABLE `ruoli_video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000037000
+-- | 030000037000
 
 -- settori
 -- tipologia: tabella di supporto
@@ -3468,13 +3468,13 @@ ALTER TABLE `settori`
 	ADD KEY `ateco` (`ateco`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`,`soprannome`,`ateco`);
 
---| 030000037001
+-- | 030000037001
 
 -- settori
 -- tipologia: tabella di supporto
 ALTER TABLE `settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000041000
+-- | 030000041000
 
 -- sms_out
 -- tipolgia: tabella gestita
@@ -3489,13 +3489,13 @@ ALTER TABLE `sms_out`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
 	ADD KEY `indice` (`id`,`id_telefono`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
 
---| 030000041001
+-- | 030000041001
 
 -- sms_out
 -- tipologia: tabella di supporto
 ALTER TABLE `sms_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000041200
+-- | 030000041200
 
 -- sms_sent
 -- tipolgia: tabella gestita
@@ -3510,7 +3510,7 @@ ALTER TABLE `sms_sent`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 	
 	ADD KEY `indice` (`id`,`id_telefono`,`timestamp_composizione`,`timestamp_invio`,`token`,`tentativi`);
 
---| 030000041400
+-- | 030000041400
 
 -- software
 -- tipologia: tabella gestita
@@ -3525,13 +3525,13 @@ ALTER TABLE `software`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json`(255));
 
---| 030000041401
+-- | 030000041401
 
 -- software
 -- tipologia: tabella di gestita
 ALTER TABLE `software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000042000
+-- | 030000042000
 
 -- stati
 -- tipologia: tabella di supporto
@@ -3544,13 +3544,13 @@ ALTER TABLE `stati`
 	ADD KEY `id_continente` (`id_continente`),
 	ADD KEY `indice` (`id`,`id_continente`,`nome`,`iso31661alpha2`,`iso31661alpha3`,`codice_istat`);
 
---| 030000042001
+-- | 030000042001
 
 -- stati
 -- tipologia: tabella di supporto
 ALTER TABLE `stati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000042200
+-- | 030000042200
 
 -- stati_lingue
 -- tipologia: tabella di supporto
@@ -3563,13 +3563,13 @@ ALTER TABLE `stati_lingue`
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `indice` (`id`,`id_stato`,`id_lingua`,`ordine`);
 
---| 030000042201
+-- | 030000042201
 
 -- stati_lingue
 -- tipologia: tabella di supporto
 ALTER TABLE `stati_lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000043000
+-- | 030000043000
 
 -- task
 -- tipologia: tabella gestita
@@ -3591,13 +3591,13 @@ ALTER TABLE `task`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`minuto`,`ora`,`giorno_del_mese`,`mese`,`giorno_della_settimana`,`settimana`,`task`,`iterazioni`,`delay`,`token`,`timestamp_esecuzione`);
 
---| 030000043001
+-- | 030000043001
 
 -- task
 -- tipologia: tabella gestita
 ALTER TABLE `task` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000043600
+-- | 030000043600
 
 -- telefoni
 -- tipologia: tabella gestita
@@ -3612,13 +3612,13 @@ ALTER TABLE `telefoni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id_anagrafica`,`id_tipologia`,`numero`,`se_notifiche`);
 
---| 030000043601
+-- | 030000043601
 
 -- telefoni
 -- tipologia: tabella gestita
 ALTER TABLE `telefoni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000044000
+-- | 030000044000
 
 -- template
 -- tipologia: tabella gestita
@@ -3630,13 +3630,13 @@ ALTER TABLE `template`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`ruolo`,`nome`,`tipo`,`latenza_invio`, `se_mail`,`se_sms`);
 
---| 030000044001
+-- | 030000044001
 
 -- template
 -- tipologia: tabella gestita
 ALTER TABLE `template` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000045000
+-- | 030000045000
 
 -- testate
 -- tipologia: tabella gestita
@@ -3648,13 +3648,13 @@ ALTER TABLE `testate`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`);
 
---| 030000045001
+-- | 030000045001
 
 -- testate
 -- tipologia: tabella gestita
 ALTER TABLE `testate` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000050000
+-- | 030000050000
 
 -- tipologie_anagrafica
 -- tipologia: tabella assistita
@@ -3673,13 +3673,13 @@ ALTER TABLE `tipologie_anagrafica`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_persona_fisica`, `se_persona_giuridica`,`se_pubblica_amministrazione`);
 
---| 030000050001
+-- | 030000050001
 
 -- tipologie_anagrafica
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000050400
+-- | 030000050400
 
 -- tipologie_attivita
 -- tipologia: tabella assistita
@@ -3698,13 +3698,13 @@ ALTER TABLE `tipologie_attivita`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`);
 
---| 030000050401
+-- | 030000050401
 
 -- tipologie_attivita
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000050450
+-- | 030000050450
 
 -- tipologie_badge
 -- tipologia: tabella assistita
@@ -3718,13 +3718,13 @@ ALTER TABLE `tipologie_badge`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000050451
+-- | 030000050451
 
 -- tipologie_badge
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_badge` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000050500
+-- | 030000050500
 
 -- tipologie_banner
 -- tipologia: tabella assistita
@@ -3739,13 +3739,13 @@ ALTER TABLE `tipologie_banner`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000050501
+-- | 030000050501
 
 -- tipologie_banner
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_banner` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000050600
+-- | 030000050600
 
 -- tipologie_chiavi
 -- tipologia: tabella assistita
@@ -3760,13 +3760,13 @@ ALTER TABLE `tipologie_chiavi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000050601
+-- | 030000050601
 
 -- tipologie_chiavi
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_chiavi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000050800
+-- | 030000050800
 
 -- tipologie_contatti
 -- tipologia: tabella assistita
@@ -3781,13 +3781,13 @@ ALTER TABLE `tipologie_contatti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000050801
+-- | 030000050801
 
 -- tipologie_contatti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000050900
+-- | 030000050900
 
 -- tipologie_contratti
 -- tipologia: tabella gestita
@@ -3815,13 +3815,13 @@ ALTER TABLE `tipologie_contratti`
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`, `se_immobili`, `se_acquisto`, `se_locazione`, `se_affiliazione`);
 
---| 030000050901
+-- | 030000050901
 
 -- tipologie_contratti
 -- tipologia: tabella gestita
 ALTER TABLE `tipologie_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000052600
+-- | 030000052600
 
 -- tipologie_documenti
 -- tipologia: tabella assistita
@@ -3847,13 +3847,13 @@ ALTER TABLE `tipologie_documenti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_fattura`,`se_nota_credito`,`se_nota_debito`,`se_trasporto`,`se_pro_forma`,`se_offerta`,`se_ordine`,`se_ricevuta`);
 
---| 030000052601
+-- | 030000052601
 
 -- tipologie_documenti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000052800
+-- | 030000052800
 
 -- tipologie_edifici
 -- tipologia: tabella di supporto
@@ -3868,13 +3868,13 @@ ALTER TABLE `tipologie_edifici`
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000052801
+-- | 030000052801
 
 -- tipologie_edifici
 -- tipologia: tabella di supporto
 ALTER TABLE `tipologie_edifici` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000052900
+-- | 030000052900
 
 -- tipologie_immobili
 -- tipologia: tabella di supporto
@@ -3891,13 +3891,13 @@ ALTER TABLE `tipologie_immobili`
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`, `se_residenziale`, `se_industriale`);
 
---| 030000052901
+-- | 030000052901
 
 -- tipologie_immobili
 -- tipologia: tabella di supporto
 ALTER TABLE `tipologie_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000053000
+-- | 030000053000
 
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
@@ -3912,13 +3912,13 @@ ALTER TABLE `tipologie_indirizzi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000053001
+-- | 030000053001
 
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000053200
+-- | 030000053200
 
 -- tipologie_licenze
 -- tipologia: tabella assistita
@@ -3933,13 +3933,13 @@ ALTER TABLE `tipologie_licenze`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000053201
+-- | 030000053201
 
 -- tipologie_licenze
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000053300
+-- | 030000053300
 
 -- tipologie_luoghi
 -- tipologia: tabella gestita
@@ -3954,13 +3954,13 @@ ALTER TABLE `tipologie_luoghi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000053301
+-- | 030000053301
 
 -- tipologie_luoghi
 -- tipologia: tabella gestita
 ALTER TABLE `tipologie_luoghi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000053400
+-- | 030000053400
 
 -- tipologie_mastri
 -- tipologia: tabella assistita
@@ -3975,13 +3975,13 @@ ALTER TABLE `tipologie_mastri`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000053401
+-- | 030000053401
 
 -- tipologie_mastri
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000053800
+-- | 030000053800
 
 -- tipologie_notizie
 -- tipologia: tabella assistita
@@ -3996,13 +3996,13 @@ ALTER TABLE `tipologie_notizie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000053801
+-- | 030000053801
 
 -- tipologie_notizie
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000054000
+-- | 030000054000
 
 -- tipologie_pagamenti
 -- tipologia: tabella assistita
@@ -4017,13 +4017,13 @@ ALTER TABLE `tipologie_pagamenti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000054001
+-- | 030000054001
 
 -- tipologie_pagamenti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000054100
+-- | 030000054100
 
 -- tipologie_periodi
 -- tipologia: tabella gestita
@@ -4038,13 +4038,13 @@ ALTER TABLE `tipologie_periodi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
 
---| 030000054101
+-- | 030000054101
 
 -- tipologie_periodi
 -- tipologia: tabella gestita
 ALTER TABLE `tipologie_periodi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000054200
+-- | 030000054200
 
 -- tipologie_popup
 -- tipologia: tabella assistita
@@ -4059,13 +4059,13 @@ ALTER TABLE `tipologie_popup`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000054201
+-- | 030000054201
 
 -- tipologie_popup
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_popup` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000054600
+-- | 030000054600
 
 -- tipologie_prodotti
 -- tipologia: tabella assistita
@@ -4080,13 +4080,13 @@ ALTER TABLE `tipologie_prodotti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_colori`,`se_taglie`,`se_dimensioni`,`se_imballo`,`se_spedizione`,`se_trasporto`,`se_prodotto`,`se_servizio`);
 
---| 030000054601
+-- | 030000054601
 
 -- tipologie_prodotti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000055000
+-- | 030000055000
 
 -- tipologie_progetti
 -- tipologia: tabella assistita
@@ -4106,13 +4106,13 @@ ALTER TABLE `tipologie_progetti`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000055001
+-- | 030000055001
 
 -- tipologie_progetti
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000055400
+-- | 030000055400
 
 -- tipologie_pubblicazioni
 -- tipologia: tabella assistita
@@ -4127,13 +4127,13 @@ ALTER TABLE `tipologie_pubblicazioni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_bozza`,`se_pubblicato`,`se_evidenza`);
 
---| 030000055401
+-- | 030000055401
 
 -- tipologie_pubblicazioni
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000055700
+-- | 030000055700
 
 -- tipologie_rinnovi
 -- tipologia: tabella di supporto
@@ -4154,13 +4154,13 @@ ALTER TABLE `tipologie_rinnovi`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`, `se_tesseramenti`,`se_iscrizioni`, `se_abbonamenti`, `se_licenze`, `se_contratti`, `se_progetti`);
 
---| 030000055701
+-- | 030000055701
 
 -- tipologie_rinnovi
 -- tipologia: tabella di supporto
 ALTER TABLE `tipologie_rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000055800
+-- | 030000055800
 
 -- tipologie_risorse
 -- tipologia: tabella assistita
@@ -4175,13 +4175,13 @@ ALTER TABLE `tipologie_risorse`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000055801
+-- | 030000055801
 
 -- tipologie_risorse
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000056200
+-- | 030000056200
 
 -- tipologie_telefoni
 -- tipologia: tabella standard
@@ -4196,13 +4196,13 @@ ALTER TABLE `tipologie_telefoni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000056201
+-- | 030000056201
 
 -- tipologie_telefoni
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_telefoni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000056600
+-- | 030000056600
 
 -- tipologie_todo
 -- tipologia: tabella assistita
@@ -4222,13 +4222,13 @@ ALTER TABLE `tipologie_todo`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_agenda`,`se_ticket`,`se_commerciale`,`se_produzione`,`se_amministrazione`);
 
---| 030000056601
+-- | 030000056601
 
 -- tipologie_todo
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000056800
+-- | 030000056800
 
 -- tipologie_url
 -- tipologia: tabella assistita
@@ -4243,13 +4243,13 @@ ALTER TABLE `tipologie_url`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000056801
+-- | 030000056801
 
 -- tipologie_url
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000056900
+-- | 030000056900
 
 -- tipologie_zone
 -- tipologia: tabella gestita
@@ -4264,13 +4264,13 @@ ALTER TABLE `tipologie_zone`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
 
---| 030000056901
+-- | 030000056901
 
 -- tipologie_zone
 -- tipologia: tabella gestita
 ALTER TABLE `tipologie_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000060000
+-- | 030000060000
 
 -- todo
 -- tipologia: tabella gestita
@@ -4292,13 +4292,13 @@ ALTER TABLE `todo`
 	ADD KEY `indice_pianificazione` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_indirizzo`,`id_luogo`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`,`id_contatto`,`id_progetto`,`id_pianificazione`),
 	ADD KEY `indice_archiviazione` (`id`,`id_tipologia`,`id_anagrafica`,`id_cliente`,`id_indirizzo`,`id_luogo`,`data_programmazione`,`ora_inizio_programmazione`,`ora_fine_programmazione`,`anno_programmazione`,`settimana_programmazione`,`id_contatto`,`id_progetto`,`id_pianificazione`,`data_archiviazione`); 
 
---| 030000060001
+-- | 030000060001
 
 -- todo
 -- tipologia: tabella gestita
 ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000060100
+-- | 030000060100
 
 -- todo_matricole
 -- tipologia: tabella gestita
@@ -4314,13 +4314,13 @@ ALTER TABLE `todo_matricole`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_todo`,`id_matricola`,`ordine`,`id_ruolo`);
 
---| 030000060101
+-- | 030000060101
 
 -- todo_matricole
 -- tipologia: tabella gestita
 ALTER TABLE `todo_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000062000
+-- | 030000062000
 
 -- udm
 -- tipologia: tabella di supporto
@@ -4337,13 +4337,13 @@ ALTER TABLE `udm`
  	ADD KEY `se_area` (`se_area`),
 	ADD KEY `indice` (`id`,`id_base`,`conversione`,`nome`,`sigla`,`se_tempo`,`se_lunghezza`,`se_volume`,`se_quantita`);
 
---| 030000062001
+-- | 030000062001
 
 -- udm
 -- tipologia: tabella di supporto
 ALTER TABLE `udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000062600
+-- | 030000062600
 
 -- url
 -- tipologia: tabella gestita
@@ -4358,13 +4358,13 @@ ALTER TABLE `url`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_tipologia`,`id_anagrafica`,`url`); 
 
---| 030000062601
+-- | 030000062601
 
 -- url
 -- tipologia: tabella di supporto
 ALTER TABLE `url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000062900
+-- | 030000062900
 
 -- valutazioni
 -- tipologia: tabella gestita
@@ -4382,13 +4382,13 @@ ALTER TABLE `valutazioni`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_matricola`,`id_anagrafica`,`id_immobile`, `id_condizione`, `id_disponibilita`, `id_classe_energetica`); 
 
---| 030000062901
+-- | 030000062901
 
 -- valutazioni
 -- tipologia: tabella gestita
 ALTER TABLE `valutazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000062950
+-- | 030000062950
 
 -- valutazioni_certificazioni
 -- tipologia: tabella gestita
@@ -4407,13 +4407,13 @@ ALTER TABLE `valutazioni_certificazioni`
 	ADD UNIQUE KEY `unica` (`id_valutazione`,`id_certificazione`, `codice`),
 	ADD KEY `indice` (`id`,`id_valutazione`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
 
---| 030000062951
+-- | 030000062951
 
 -- valutazioni_certificazioni
 -- tipologia: tabella gestita
 ALTER TABLE `valutazioni_certificazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000063000
+-- | 030000063000
 
 -- valute
 -- tipologia: tabella di supporto
@@ -4423,13 +4423,13 @@ ALTER TABLE `valute`
 	ADD UNIQUE KEY `unica` (`iso4217`),
 	ADD KEY `indice` (`id`,`iso4217`,`html_entity`,`utf8`);
 
---| 030000063001
+-- | 030000063001
 
 -- valute
 -- tipologia: tabella di supporto
 ALTER TABLE `valute` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000065000
+-- | 030000065000
 
 -- video
 -- tipologia: tabella gestita
@@ -4480,13 +4480,13 @@ ALTER TABLE `video`
 	ADD KEY `indice_notizie` (`id`,`id_notizia`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`),
 	ADD KEY `indice_categorie_notizie` (`id`,`id_categoria_notizie`,`id_lingua`,`id_ruolo`,`path`,`id_embed`,`codice_embed`,`embed_custom`,`target`,`orientamento`,`ratio`,`nome`,`ordine`);
 
---| 030000065001
+-- | 030000065001
 
 -- video
 -- tipologia: tabella gestita
 ALTER TABLE `video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000100000
+-- | 030000100000
 
 -- zone
 -- tipologia: tabella gestita
@@ -4500,13 +4500,13 @@ ALTER TABLE `zone`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `id_genitore` (`id_genitore`);
 	
---| 030000100001
+-- | 030000100001
 
 -- zone
 -- tipologia: tabella gestita
 ALTER TABLE `zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000100100
+-- | 030000100100
 
 -- zone_cap
 -- tipologia: tabella gestita
@@ -4520,13 +4520,13 @@ ALTER TABLE `zone_cap`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`ordine`, `id_zona`,`cap`);
 
---| 030000100101
+-- | 030000100101
 
 -- zone_cap
 -- tipologia: tabella gestita
 ALTER TABLE `zone_cap` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000100200
+-- | 030000100200
 
 -- zone_indirizzi
 -- tipologia: tabella gestita
@@ -4540,13 +4540,13 @@ ALTER TABLE `zone_indirizzi`
 	ADD KEY `ordine` (`ordine`),	
 	ADD KEY `indice` (`id`,`ordine`, `id_zona`,`id_indirizzo`);
 
---| 030000100201
+-- | 030000100201
 
 -- zone_indirizzi
 -- tipologia: tabella gestita
 ALTER TABLE `zone_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000100300
+-- | 030000100300
 
 -- zone_provincie
 -- tipologia: tabella gestita
@@ -4560,13 +4560,13 @@ ALTER TABLE `zone_provincie`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),	
 	ADD KEY `indice` (`id`,`id_zona`,`id_provincia`,`ordine`);
 
---| 030000100301
+-- | 030000100301
 
 -- zone_provincie
 -- tipologia: tabella gestita
 ALTER TABLE `zone_provincie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| 030000100400
+-- | 030000100400
 
 -- zone_stati
 -- tipologia: tabella gestita
@@ -4580,10 +4580,10 @@ ALTER TABLE `zone_stati`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),	
 	ADD KEY `indice` (`id`,`id_zona`,`id_stato`,`ordine`);
 
---| 030000100401
+-- | 030000100401
 
 -- zone_stati
 -- tipologia: tabella gestita
 ALTER TABLE `zone_stati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
---| FINE FILE
+-- | FINE FILE

@@ -2,8 +2,8 @@
 -- PATCH
 --
 
---| ------------
+-- | ------------
 
 FLUSH PRIVILEGES;
 
---| FINE FILE
+-- | FINE FILE

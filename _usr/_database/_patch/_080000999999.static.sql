@@ -7,7 +7,7 @@
 -- - le colonne rispecchiano esattamente in ordine le colonne della relativa view
 --
 
---| 080000000400
+-- | 080000000400
 
 -- tabella anagrafica_view_static
 -- tipologia: tabella gestita
@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
   `__label__` char(255) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---| 080000001800
+-- | 080000001800
 
 -- attivita_view_static
 -- tipologia: tabella gestita
@@ -108,7 +108,7 @@ CREATE TABLE `attivita_view_static` (
   `__label__` varchar(320) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---| 080000060000
+-- | 080000060000
 
 -- todo_view_static
 -- tipologia: tabella gestita
@@ -146,4 +146,4 @@ CREATE TABLE `todo_view_static` (
   `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
---| FINE FILE
+-- | FINE FILE
