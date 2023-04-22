@@ -21,7 +21,7 @@
     il modulo gestisce i dati inviati da form simili a questo:
 
     \code{.html}
-    <form method="post" action="">
+    <form method="post" action="" id="esempioform">
         <input type="text" name="__contatti__[esempio][mail]">
         <input type="submit">
     </form>
@@ -36,18 +36,18 @@
     [...] un modulo del tipo:
 
     \code{.html}
-    <form method="post" action="">
-        <input type="text" name="__contatti__[default][nome]">
-        <input type="text" name="__contatti__[default][mail]">
+    <form method="post" action="" id="esempioform">
+        <input type="text" name="__contatti__[esempio][nome]">
+        <input type="text" name="__contatti__[esempio][mail]">
         <input type="submit">
     </form>
     \endcode
 
-    [...] modificare la configurazione di default del modulo come segue:
+    [...] modificare la configurazione del modulo come segue:
 
     \code{.json}
     "contatti": {
-        "default": {
+        "esempio": {
             "mail": {
                 "interna": {
                     "destinatari":
@@ -118,12 +118,12 @@
     {{ ct.site.name[ ct.localization.language.ietf ] }}
     \endcode
 
-    [...] definizione del template delle mail:
+    [...] definizione completa del template delle mail:
 
     \code{php}
-	$cf['contatti']['default'] = array(
+	$cf['contatti']['esempio'] = array(
 	    'mail' => array(
-            array(
+            'interna' => array(
                 'destinatari' => array( 'webmaster' => 'info@' . $cf['site']['domain'] ),
                 'language' => 'it-IT',
                 'exclude' => array( '__status__' ),
@@ -140,10 +140,12 @@
     );
     \endcode
 
+    [...] specifica di un template standard tramite PHP:
+
     \code{php}
-	$cf['contatti']['default'] = array(
+	$cf['contatti']['esempio'] = array(
 	    'mail' => array(
-            array(
+            'interna' => array(
                 'destinatari' => array( 'webmaster' => 'info@' . $cf['site']['domain'] ),
                 'language' => 'it-IT',
                 'exclude' => array( '__status__' ),
@@ -151,6 +153,37 @@
             )
 	    )
     );
+    \endcode
+
+    [...] oppure tramite JSON:
+
+    \code{.json}
+    "contatti": {
+      "esempio": {
+        "mail": [
+          {
+            "destinatari": { "webmaster": "fabio.mosti@istricesrl.it" },
+            "language": "it-IT",
+            "exclude": [ "__status__" ],
+            "template": "DEFAULT_CONTATTI"
+          }
+        ]
+      }
+    }
+    \endcode
+
+    [...] in questo caso è poi necessario specificare il mittente:
+
+    \code{.json}
+    "mail": {
+      "tpl": {
+        "DEFAULT_CONTATTI": {
+          "it-IT": {
+            "from": { "prova": "noreply@{{ ct.site.fqdn }}" }
+          }
+        }
+      }
+    }
     \endcode
 
     invio di un messaggio su Slack
@@ -177,12 +210,57 @@
     il framework prevede alcuni strumenti per semplificare le operazioni di raccolta e gestione del consenso. In particolare, è disponibile una macro che genera
     le spunte da aggiungere ai moduli di contatto a partire dalla configurazione:
 
+    \code{.json}
+    "privacy": {
+
+      [...]
+
+      "moduli": {
+        "esempio": {
+          "titolo": {
+            "it-IT": "modulo di richiesta informazioni"
+          },
+          "descrizione": {
+            "it-IT": "Questo modulo può essere utilizzato dagli utenti per richiedere informazioni."
+          },
+            "consensi": {
+            "PRIVACY_POLICY": {
+              "informativa": {
+                "it-IT": "risposta all'utente"
+              },
+              "label": {
+                "it-IT": "la privacy e cookie policy del sito"
+              },
+              "action": "letto_e_accetto",
+              "page": "privacy",
+              "required": true
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
     \code{.html}
     {% import '_bin/_privacy.html' as prv %}
-    <form method="post" action="">
+    <form method="post" action="" id="esempioform">
         <input type="text" name="__contatti__[esempio][mail]">
-		{{ prv.checkPrivacy( 'esempio', contatti, pages, tr, localization.language.ietf ) }}
+        {{ prv.checkConsensi( '__contatti__', 'esempio', privacy.moduli.esempio, localization.language.ietf, tr, pages, session ) }}
         <input type="submit">
+    </form>
+    \endcode
+
+    utilizzo di reCAPTCHA
+    =====================
+
+    \code{.html}
+    {% import '_bin/_privacy.html' as prv %}
+    <form action="" id="esempioform" method="post">
+        <div class="row">
+            <div class="col-12 col-md"><input class="form-control" name="__contatti__[esempio][mail]" placeholder="E-MAIL" required="1" type="email"></div>
+        </div>
+        {{ prv.checkConsensi( '__contatti__', 'esempio', privacy.moduli.esempio, localization.language.ietf, tr, pages, session ) }}
+        {{ cms.formButton( 'RICHIEDI INFO', 'button', 'btn-secondary', '', '', '', 'esempioform', google.profile.recaptcha, '__contatti__', 'esempio' ) }}
     </form>
     \endcode
 

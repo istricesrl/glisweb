@@ -1,0 +1,15 @@
+/_src/_lib/_ext*
+/_usr/_docs/_build
+/etc
+/mod
+/src
+/tmp
+/usr
+/var
+/*.html
+/*.php
+/*.lock
+/*.xml
+/*.txt
+.#*
+*.old

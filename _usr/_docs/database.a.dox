@@ -261,7 +261,7 @@
     anagrafica_view.se_mandante                            | flag che identifica se il contatto è un mandante
     anagrafica_view.se_fornitore                           | flag che identifica se il contatto è un fornitore
     anagrafica_view.se_produttore                          | flag che identifica se il contatto è un produttore
-    anagrafica_view.se_agente                              | flag che identifica se il contatto è un agente
+    anagrafica_view.se_commerciale                         | flag che identifica se il contatto è un agente
     anagrafica_view.se_interno                             | flag che identifica se il contatto è un interno
     anagrafica_view.se_esterno                             | flag che identifica se il contatto è un estermp
     anagrafica_view.se_amministrazione                     | flag che identifica se il contatto è un impiegato amministrativo
