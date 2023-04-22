@@ -13,8 +13,7 @@
 	    'macro'		=> array( '_src/_inc/_macro/_dashboard.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'dashboard', 'dashboard.tools' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'dashboard' ),
-		'priority'	=> '010' ) ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'dashboard' ), 'priority'	=> '010' ) ) )
 	);
 
     // tools dashboard
