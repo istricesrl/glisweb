@@ -167,7 +167,7 @@ CREATE TABLE `anagrafica_certificazioni` (
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000000700
 
@@ -293,7 +293,7 @@ CREATE TABLE `articoli` (
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000001600
 
@@ -818,7 +818,7 @@ CREATE TABLE IF NOT EXISTS `causali` (
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000004700
 
@@ -832,7 +832,7 @@ CREATE TABLE IF NOT EXISTS `certificazioni` (
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000004800
 
@@ -889,7 +889,7 @@ CREATE TABLE `colli` (
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000005100
 
@@ -1387,7 +1387,7 @@ CREATE TABLE IF NOT EXISTS `edifici` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000012050
 
@@ -2617,7 +2617,7 @@ CREATE TABLE `progetti_certificazioni` (
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000027800
 
@@ -2739,9 +2739,9 @@ CREATE TABLE IF NOT EXISTS `redirect` (
 --| 010000029460
 
 -- redirect_azioni
-DROP TABLE IF EXISTS `redirect_azioni`;
+
 CREATE TABLE `redirect_azioni` (
-  `id` int NOT NULL AUTO_INCREMENT,
+  `id` int NOT NULL ,
   `id_redirect` int NOT NULL,
   `referral` text DEFAULT NULL,
   `azione` enum('redirect') DEFAULT NULL,
@@ -2749,8 +2749,7 @@ CREATE TABLE `redirect_azioni` (
   `id_account_inserimento` int DEFAULT NULL,
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
-  `timestamp_aggiornamento` int DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  `timestamp_aggiornamento` int DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000029800
@@ -3626,7 +3625,7 @@ CREATE TABLE `tipologie_edifici` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000052900
 
@@ -3722,7 +3721,7 @@ CREATE TABLE `tipologie_mastri` (
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000053800
 
@@ -4128,7 +4127,7 @@ CREATE TABLE `valutazioni_certificazioni` (
   `timestamp_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
   `timestamp_aggiornamento` int DEFAULT NULL
-) ENGINE=InnoDB;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --| 010000063000
 

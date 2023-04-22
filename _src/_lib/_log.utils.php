@@ -74,7 +74,7 @@
 		    $r['lrd']	= date( $r['lrs'] );
 		    $r['cdt']	= date( 'Y-m-d H:i:s' ) . ' ';
 		    $r['lvl']	= logLvl2string( $l );
-		    $r['lvs']	= strtolower( str_replace( 'LOG_', NULL, $r['lvl'] ) );
+		    $r['lvs']	= strtolower( str_replace( 'LOG_', '', $r['lvl'] ) );
 		    $r['btr']	= shortPath( $r['btr'][0]['file'] ) . ':'. $r['btr'][0]['line'];
 		    $r['pid']	= trim( getmypid() );
 		    $r['rad']	= trim( getenv( 'REMOTE_ADDR' ) );

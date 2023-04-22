@@ -79,12 +79,14 @@
 
     /**
      *
+     * questa funzione restituisce un percorso relativo alla document root del sito
+     * 
      * @todo documentare
      *
      */
     function shortPath( &$f ) {
 
-	$f = str_replace( DIR_BASE, NULL, $f );
+	$f = str_replace( DIR_BASE, '', $f );
 
 	return $f;
 

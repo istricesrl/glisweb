@@ -5,13 +5,13 @@
         "vendor-dir": "_src/_lib/_ext"
     },
     "require": {
-        "phpoffice/phpword": ">0.14",
+        "phpoffice/phpword": "0.*",
         "phpoffice/phpspreadsheet": "1.*",
         "phpoffice/phppresentation": "0.9.*",
         "html2text/html2text": "4.1.*",
         "phpmailer/phpmailer": "6.5.*",
         "tecnickcom/tcpdf": "6.4.*",
-        "twig/twig": "<2.14.0",
+        "twig/twig": "2.*",
         "predis/predis": "*",
         "codeception/codeception": "*",
         "codeception/module-phpbrowser": "^1.0.0",

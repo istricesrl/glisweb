@@ -64,15 +64,27 @@
 				    // versione del server
 					$cf['mysql']['servers'][ $server ]['version'] = mysqli_get_server_info( $cn );
 
-				    // selezione database
-					if( mysqli_select_db( $cn, $cf['mysql']['servers'][ $server ]['db'] ) ) {
+					// selezione database
+					try{
+						mysqli_select_db( $cn, $cf['mysql']['servers'][ $server ]['db'] );
+						logWrite( 'database selezionato: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql' );
+						appendToFile( 'connesso database -> ' . $server . PHP_EOL, FILE_LATEST_RUN );
+					}
+					catch(\Exception $e){
+						logWrite( 'impossibile selezionare il database: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql', LOG_ERR );
+						appendToFile( 'fallita selezione database -> ' . $server . PHP_EOL, FILE_LATEST_RUN );
+						die('Impossibile selezionare il database '. $e->getMessage());
+					}
+					
+				    
+					/*	if( mysqli_select_db( $cn, $cf['mysql']['servers'][ $server ]['db'] ) == NULL ) {
 					    logWrite( 'database selezionato: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql' );
 						appendToFile( 'connesso database -> ' . $server . PHP_EOL, FILE_LATEST_RUN );
 					} else {
 					    logWrite( 'impossibile selezionare il database: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql', LOG_ERR );
 						appendToFile( 'fallita selezione database -> ' . $server . PHP_EOL, FILE_LATEST_RUN );
 						die('impossibile selezionare il database, verificare i permessi sul server MySQL');
-					}
+					} */
 
 				    // collation
 					// mysqlQuery( $cn, 'SET character_set_connection = utf8' );
@@ -158,6 +170,16 @@
 
 			if( ! defined( 'CRON_RUNNING' ) && ! defined( 'JOB_RUNNING' ) ) {
 
+				mysqlQuery(
+					$cf['mysql']['connection'],
+					'CREATE TABLE IF NOT EXISTS `__patch__` ('.
+					'	`id` char(12) NOT NULL PRIMARY KEY,'.
+					'	`patch` text COLLATE utf8_unicode_ci,'.
+					'	`timestamp_esecuzione` int(11) DEFAULT NULL,'.
+					'	`note_esecuzione` text'.
+					'  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
+				);
+
 				$patchLevel = mysqlSelectValue(
 					$cf['mysql']['connection'],
 					'SELECT id FROM __patch__ ORDER BY id DESC LIMIT 1'
@@ -165,7 +187,7 @@
 
 				if( empty( $patchLevel ) ) {
 	
-					mysqlQuery(
+					/*mysqlQuery(
 						$cf['mysql']['connection'],
 						'CREATE TABLE IF NOT EXISTS `__patch__` ('.
 						'	`id` char(12) NOT NULL PRIMARY KEY,'.
@@ -173,7 +195,7 @@
 						'	`timestamp_esecuzione` int(11) DEFAULT NULL,'.
 						'	`note_esecuzione` text'.
 						'  ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;'
-					);
+					);*/
 	
 					$patchLevel = '000000000000';
 	
