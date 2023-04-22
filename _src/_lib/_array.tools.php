@@ -62,9 +62,9 @@
      *
      */
     function trimArray( &$ar, $limit = 0 ) {
-
-	$ar = array_map( 'trim', $ar );
-	$ar = array_filter( $ar );
+        $ar = array_map('strval', $ar); #elimina i null
+        $ar = array_map( 'trim', $ar );
+        $ar = array_filter( $ar );
 
 	return $ar;
 

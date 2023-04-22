@@ -223,7 +223,7 @@
     // NOTA solo un contenuto statico alla volta può essere incluso, quindi individuare il criterio con cui sceglierlo
 	$ctName = str_replace( '_', '.', $ct['page']['id'] );
 	$ctFile = DIR_SRC_INC_CONTENTS . '_' . $ctName . '.' . $cf['localization']['language']['ietf'] . '.html';
-	$ctFileLocal = str_replace( '_', NULL, $ctFile );
+	$ctFileLocal = str_replace( '_', '', $ctFile );
 	if( file_exists( $ctFileLocal ) ) {
 	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = readStringFromFile( $ctFileLocal );
 	} elseif( file_exists( $ctFile ) ) {
