@@ -119,25 +119,67 @@
                 {% if page.metadati.ct_p[ localization.language.ietf ] %}
                 <p>{{ page.metadati.ct_p[ localization.language.ietf ] }}</p>
                 {% else %}
-                <!-- metadato ct_p non specificato per la lingua {{ localization.language.ietf }}-->
+                <!-- metadato ct_p non specificato per la lingua {{ localization.language.ietf }} -->
                 {% endif %}
             </div>
         </div>
         {% else %}
-        <!-- metadato ct_h1 non specificato per la lingua {{ localization.language.ietf }}-->
+        <!-- metadato ct_h1 non specificato per la lingua {{ localization.language.ietf }} -->
         {% endif %}
         <div class="row">
             <div class="col-12 col-md">
-                <form action="{{ page.url[ localization.language.ietf ] }}" class="w-100 mt-3" id="testForm2" method="post">
+                <!-- formLanding è l'ID del form, landing è la chiave del modulo -->
+                <form action="{{ pages[ page.metadati.ct_action ].url[ localization.language.ietf ] }}" class="w-100 mt-3" id="formLanding" method="post">
                     <div class="row">
-                        <div class="col-12 col-md"><input class="form-control" name="__contatti__[forminfo][email]" placeholder="E-MAIL" required="1" type="email"></div>
-                        <div class="col-12 col-md"><input class="form-control" name="__contatti__[forminfo][telefono]" placeholder="TELEFONO" type="phone"></div>
+                        <div class="col-12 col-md"><input class="form-control" name="__contatti__[landing][email]" placeholder="E-MAIL" required="1" type="email"></div>
+                        <div class="col-12 col-md"><input class="form-control" name="__contatti__[landing][telefono]" placeholder="TELEFONO" type="phone"></div>
                     </div>
                     <div class="row my-2">
-                        <div class="col-12"><textarea class="form-control" id="testo" name="__contatti__[forminfo][messaggio]" placeholder="MESSAGGIO" rows="3"></textarea></div>
+                        <div class="col-12"><textarea class="form-control" id="testo" name="__contatti__[landing][messaggio]" placeholder="MESSAGGIO" rows="3"></textarea></div>
                     </div>
-                    {{ prv.checkConsensi( '__contatti__', 'forminfo', privacy.moduli.landingdemo, localization.language.ietf, tr, pages, session ) }} {{ cms.formButton( 'RICHIEDI INFO', 'button', 'btn-secondary btn-lg w-100 h-100 bottone-registrazione', '', '', '', 'testForm2', google.profile.recaptcha, '__contatti__', 'forminfo' ) }}
+                    {{ prv.checkConsensi( '__contatti__', 'landing', privacy.moduli.landing, localization.language.ietf, tr, pages, session ) }}
+                    {% if google.profile.recaptcha %}
+                    <!-- formLanding è l'ID del form, landing è la chiave del modulo -->
+                    {{ cms.formButton( 'RICHIEDI INFO', 'button', 'btn-secondary btn-lg w-100 h-100 bottone-registrazione', '', '', '', 'formLanding', google.profile.recaptcha, '__contatti__', 'landing' ) }}
+                    {% else %}
+                    {# TODO METTERE IL BOTTONE SENZA RECAPTCHA QUI #}
+                    {% endif %}
                 </form>
+                {% if not privacy.moduli.landing %}
+                <!--
+                    chiave privacy.moduli.landing non settata! aggiungere ad esempio:
+
+                    "privacy": {
+
+                      [...]
+
+                      "moduli": {
+                        "landing": {
+                          "titolo": {
+                            "it-IT": "modulo di richiesta informazioni"
+                          },
+                          "descrizione": {
+                            "it-IT": "Questo modulo può essere utilizzato dagli utenti per richiedere informazioni."
+                          },
+                          "consensi": {
+                            "PRIVACY_POLICY": {
+                              "informativa": {
+                                "it-IT": "risposta all'utente"
+                              },
+                              "label": {
+                                "it-IT": "la privacy e cookie policy del sito"
+                              },
+                              "action": "letto_e_accetto",
+                              "page": "privacy",
+                              "required": true
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                -->
+                {% endif %}
             </div>
         </div>
     </div>
