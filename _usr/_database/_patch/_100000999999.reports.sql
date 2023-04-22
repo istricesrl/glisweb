@@ -3,6 +3,55 @@
 -- questo file contiene le query per la creazione dei report
 --
 
+
+-- | 100000001860
+-- __report_ore_operatori__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_ore_operatori__`;
+
+-- | 100000001861
+
+CREATE TABLE `__report_ore_operatori__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mese` int(11) NOT NULL,
+  `anno` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) NOT NULL,
+  `ore_contratto` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mese` (`mese`),
+  KEY `anno` (`anno`),
+  KEY `id_anagrafica` (`id_anagrafica`),
+  KEY `id_job` (`id_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+-- | 100000001862
+-- __report_ore_progetti_tipologie_mastri__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_ore_progetti_tipologie_mastri__`;
+
+-- | 100000001863
+
+CREATE TABLE `__report_ore_progetti_tipologie_mastri__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `mese` int(11) NOT NULL,
+  `anno` int(11) NOT NULL,
+  `id_job` int(11) DEFAULT NULL,
+  `id_progetto` char(32) NOT NULL,
+  `id_tipologia_attivita` int(11) DEFAULT NULL,
+  `id_mastro` int(11) DEFAULT NULL,
+  `ore_previste` decimal(5,2) DEFAULT NULL,
+  `ore_fatte` decimal(5,2) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `mese` (`mese`),
+  KEY `anno` (`anno`),
+  KEY `id_progetto` (`id_progetto`),
+  KEY `id_job` (`id_job`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+
 -- | 100000007200
 -- __report_status_contratti__
 -- tipologia: report
