@@ -58,13 +58,9 @@
                     <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-bookmarks" onclick="$('.slide-info').not('#bookmarks').slideUp(400,'swing');$('#bookmarks').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-bookmarks').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="bookmarks"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
                 </div>
 
-                <div id="widget-info" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-info" onclick="$('.slide-info').not('#info').slideUp(400,'swing');$('#info').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-info').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
-                </div>
-
-                {% if common.documentation|length == 1 %}
+                {% if common.docs.custom %}
                 <div id="widget-docs" class="widget col-auto p-0">
-                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.documentation|first.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.docs.custom.html.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
 
@@ -73,6 +69,10 @@
                     <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ slack.profile.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
                 </div>
                 {% endif %}
+
+                <div id="widget-info" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-info" onclick="$('.slide-info').not('#info').slideUp(400,'swing');$('#info').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-info').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                </div>
 
                 {% if session.account.username %}
                 <form class="col-auto p-0" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">

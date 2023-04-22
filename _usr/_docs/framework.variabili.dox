@@ -116,6 +116,9 @@
     common.docs.user                | informazioni sulla documentazione utente
     common.docs.user.html           | informazioni sulla documentazione utente in formato HTML
     common.docs.user.html.url       | URL della documentazione utente in formato HTML
+    common.docs.custom              | informazioni sulla documentazione custom
+    common.docs.custom.html         | informazioni sulla documentazione custom in formato HTML
+    common.docs.custom.html.url     | URL della documentazione custom in formato HTML
     common.http                     | informazioni sul protocollo HTTP
     common.http.codes               | array dei codici di stato HTTP
     common.license                  | informazioni sulla licenza del deploy corrente

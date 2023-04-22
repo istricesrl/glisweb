@@ -25,9 +25,11 @@
         <strong>{% if memcache.stat %}utilizzati {{ memcache.stat.usage }} ({{ memcache.stat.percent }}){% else %}inattivo{% endif %}</strong></p>
     <p>leggi la
         <strong><a href="{# pages.licenza.path[ localization.language.ietf] #}https://github.com/istricesrl/glisweb/blob/master/LICENSE.md" target="_blank">licenza d'uso</a></strong></p>
-    <p>documentazione tecnica
+    <p>pagina del progetto
+        <strong><a href="https://github.com/istricesrl/glisweb">GitHub</a></strong></p>
+    <p>documentazione per gli sviluppatori
         <strong><a href="/_usr/_docs/_build/html/index.html" target="_blank">HTML</a></strong> |
         <strong><a href="/_usr/_docs/_build/latex/refman.pdf" target="_blank">PDF</a></strong></p>
-    <p>manuale d'uso
+    <p>manuale d'uso GlisWeb
         <strong><a href="{{ common.docs.user.html.url }}" target="_blank">{{ common.docs.user.html.name[ localization.language.ietf ] }}</a></strong></p>
 </div>

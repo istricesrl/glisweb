@@ -169,7 +169,24 @@
 	    echo '[ -- ] ultimo aggiornamento dei contenuti: ' . date( 'Y-m-d H:i:s', $cf['contents']['updated'] ) . PHP_EOL;
 	}
 
-    // output
+	// output
+	echo PHP_EOL;
+
+	// documentazione custom
+	if( ! isset( $cf['common']['docs']['custom']['html']['url'] ) ) {
+	    echo '[WARN] documentazione custom del progetto non impostata' . PHP_EOL;
+	} else {
+	    echo '[ -- ] documentazione custom del progetto: ' . $cf['common']['docs']['custom']['html']['url'] . PHP_EOL;
+	}
+
+	// canale Slack
+	if( ! isset( $cf['slack']['profile']['channel']['url'] ) ) {
+	    echo '[WARN] canale Slack di supporto non impostata' . PHP_EOL;
+	} else {
+	    echo '[ -- ] canale Slack di supporto: ' . $cf['slack']['profile']['channel']['url'] . PHP_EOL;
+	}
+
+	// output
 	echo PHP_EOL;
 
     // pagina home
