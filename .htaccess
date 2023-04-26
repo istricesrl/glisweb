@@ -24,6 +24,7 @@ Options -Indexes
     RewriteEngine on
 
     # directory ad accesso vietato
+    RewriteRule ^.git/* - [F,L,NC]
     RewriteRule ^tmp/* - [F,L,NC]
     RewriteRule ^usr/database/* - [F,L,NC]
     RewriteRule ^usr/test/* - [F,L,NC]
