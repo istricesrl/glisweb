@@ -34,6 +34,10 @@
             'pubblicazioni' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
+            ),
+            'recensioni' => array(
+                CONTROL_FULL => array( 'roots' ),
+                CONTROL_FILTERED => array( 'staff' )
             )
 	    )
 	);

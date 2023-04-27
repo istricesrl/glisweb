@@ -2710,6 +2710,7 @@ CREATE TABLE `recensioni` (
   `id_articolo` char(32) DEFAULT NULL,
   `id_risorsa` int DEFAULT NULL,
   `id_pagina` int DEFAULT NULL,
+  `data` date DEFAULT NULL,
   `autore` char(128) DEFAULT NULL,
   `valutazione` int DEFAULT NULL,
   `titolo` char(255) DEFAULT NULL,

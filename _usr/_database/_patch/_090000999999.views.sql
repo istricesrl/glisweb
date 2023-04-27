@@ -6777,6 +6777,30 @@ CREATE OR REPLACE VIEW `ranking_view` AS
     FROM ranking
 ;
 
+-- | 090000028900
+
+-- recensioni_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `recensioni_view`;
+
+-- | 090000028901
+
+CREATE OR REPLACE VIEW `recensioni_view` AS
+    SELECT
+		recensioni.id,
+		recensioni.id_lingua,
+		recensioni.id_prodotto,
+		recensioni.id_articolo,
+		recensioni.id_risorsa,
+		recensioni.id_pagina,
+		recensioni.data,
+		recensioni.autore,
+		recensioni.valutazione,
+		recensioni.titolo,
+		recensioni.se_approvata
+    FROM recensioni
+;
+
 -- | 090000029400
 
 -- redirect_view
