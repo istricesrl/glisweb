@@ -190,5 +190,43 @@
 {% else %}
 <!-- metadato ct_form non specificato (deve corrispondere a una chiave valida per il modulo contatti)-->
 {% endif %}
+{% endblock %}
 
+{% block recensioni %}
+<!-- blocco recensioni -->
+<section class="recensioni">
+    <div class="container">
+        {% if page.metadati.rc_h1[ localization.language.ietf ] %}
+        <div class="row">
+            <div class="col-12 col-md">
+                <h1>{{ page.metadati.rc_h1[ localization.language.ietf ] }}</h1>
+                {% if page.metadati.rc_p[ localization.language.ietf ] %}
+                <p>{{ page.metadati.rc_p[ localization.language.ietf ] }}</p>
+                {% else %}
+                <!-- metadato rc_p non specificato per la lingua {{ localization.language.ietf }} -->
+                {% endif %}
+            </div>
+        </div>
+        {% else %}
+        <!-- metadato rc_h1 non specificato per la lingua {{ localization.language.ietf }} -->
+        {% endif %}
+        <div class="row d-flex flex-row justify-content-around">
+            {% for rc in page.contents.recensioni %}
+            <div class="col-12 col-md-3">
+                <div class="card h-100">
+                    <div class="card-header">
+                        <h5>{{ rc.data }}</h5>
+                        <h4>{{ rc.autore }}</h4>
+                        <h3 class="stars">{% for st in 1..5 %}<i class="fa fa-star{% if st > rc.valutazione %}-o{% endif %}"></i>{% endfor %}</h3>
+                    </div>
+                    <div class="card-body">
+                        {% if rc.titolo %}<h4>{{ rc.titolo }}</h4>{% endif %}
+                        <p>{{ rc.testo }}</p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 {% endblock %}

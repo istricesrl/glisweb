@@ -86,9 +86,18 @@
 
     }
 
-    function aggiungiRecensioni( &$p, $id, $f, $r = null ) {
+    function aggiungiRecensioni( &$p, $id, $f, $l = 1 ) {
 
-        aggiungiDati( $p, $id, $f, 'recensioni', $r );
+        global $cf;
+
+        $p['contents']['recensioni'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT recensioni.* FROM recensioni WHERE ' . $f . ' = ? AND id_lingua = ? AND se_approvata IS NOT NULL',
+            array(
+                array( 's' => $id ),
+                array( 's' => $l )
+            )
+        );
 
     }
 
@@ -109,9 +118,6 @@
                 $tk = 'video';
             break;
             case 'audio':
-                // TODO
-            break;
-            case 'recensioni':
                 // TODO
             break;
             case 'file':
@@ -171,6 +177,8 @@
                         'orientamento'      => $cn['orientamento']
                      #   'anno'              => $cn['anno']
                     ) );
+                break;
+                case 'audio':
                 break;
                 case 'video':
                     $im = array_replace_recursive( $im, array(

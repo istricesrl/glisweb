@@ -134,7 +134,8 @@
         );
 */
 
-         // aggiungo le macro
+        // aggiungo le macro
+        // TODO perché è diverso da quelli dopo?
          aggiungiMacro(
             $ct['page'],
             $cf['contents']['page']['id'],
@@ -171,18 +172,16 @@
         // timer
         timerCheck( $cf['speed'], '-> fine inserimento file' );
 
-/* TODO
-
         // aggiungo le recensioni
         aggiungiRecensioni(
             $cf['contents']['page'],
-            'id_pagina',
-            $cf['contents']['page']['id']
+            $joinValue,
+            $joinField,
+            $cf['localization']['language']['id']
         );
 
         // timer
         timerCheck( $cf['speed'], '-> fine inserimento recensioni' );
-*/
 
         // se la tabella è ricorsiva
         if( $subPages == true ) {

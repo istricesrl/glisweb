@@ -141,6 +141,10 @@ section.offerta {
     margin: 2em 0em;
 }
 
+section.recensioni {
+    margin: 2em 0em;
+}
+
 a, a:visited {
     color: #666666;
 }
