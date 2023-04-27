@@ -125,7 +125,7 @@
 		// define( 'SITE_CURRENT'		, SITE_DEFAULT );
 
 		// TODO questa è una soluzione temporanea e un po' brutale
-		die( 'impossibile chiamare il framework per ' . $_SERVER['HTTP_HOST'] );
+		die( 'impossibile chiamare il framework per ' . $_SERVER['HTTP_HOST'] . ' in ' . DIR_BASE );
 
 	}
 
