@@ -145,6 +145,10 @@ section.recensioni {
     margin: 2em 0em;
 }
 
+section.recensioni div.recensione {
+    margin: 1em 0em;
+}
+
 a, a:visited {
     color: #666666;
 }

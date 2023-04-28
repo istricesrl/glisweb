@@ -212,7 +212,7 @@
         {% endif %}
         <div class="row d-flex flex-row justify-content-around">
             {% for rc in page.contents.recensioni %}
-            <div class="col-12 col-md-3">
+            <div class="recensione col-12 col-md-{% if page.metadati.rc_col %}{{ page.metadati.rc_col }}{% else %}3{% endif %}">
                 <div class="card h-100">
                     <div class="card-header">
                         <h5>{{ rc.data }}</h5>
