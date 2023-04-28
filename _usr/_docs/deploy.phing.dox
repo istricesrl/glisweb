@@ -41,7 +41,7 @@
     distribuire ad ogni step le informazioni per il deploy verso lo step successivo. In generale, è buona prassi dare al file properties
     il nome dello step target quindi nel caso del deploy a tre step creeremo test.properties e stable.properties.
 
-    Come punto di partenza, si può utilizzare l'esempio _usr/_examples/_phing/build.properties, copiandolo in usr/deploy/phing/ e rinominandolo
+    Come punto di partenza, si può utilizzare l'esempio _usr/_config/_phing/build.properties, copiandolo in usr/deploy/phing/ e rinominandolo
     opportunamente (ad esempio test.properties per il deploy su test e stable.properties per il deploy su stable); fatto questo, si può
     procedere a modificarne il contenuto seguendo le indicazioni dei commenti contenuti nel file stesso, che riassumiamo comunque nella
     seguente tabella:
@@ -87,7 +87,7 @@
 
     come attivare il sistema di deploy tramite Phing per un progetto
     ================================================================
-    Attivare il sistema di deploy tramite Phing per un progetto è semplicissimo, basta copiare il file _usr/_examples/_phing/build.properties
+    Attivare il sistema di deploy tramite Phing per un progetto è semplicissimo, basta copiare il file _usr/_config/_phing/build.properties
     in usr/deploy/phing/ rinominandolo in base al target di destinazione che si intende assegnare al file, ad esempio per il file che
     contiene le istruzioni per il deploy su stable si rinominerà il file da build.properties a stable.properties.
 
