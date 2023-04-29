@@ -2168,11 +2168,11 @@ ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-01 09:32 Fabio Mosti
 ALTER TABLE `menu`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`id_lingua`,`id_pagina`,`menu`), 
- 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_lingua`,`id_categoria_prodotti`,`menu`), 
- 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`,`menu`), 
- 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_lingua`,`id_categoria_risorse`,`menu`), 
-	ADD UNIQUE KEY `unica_categoria_progetti` (`id_lingua`,`id_categoria_progetti`,`menu`), 
+	ADD UNIQUE KEY `unica` (`id_lingua`,`id_pagina`,`menu`,`nome`,`ancora`), 
+ 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_lingua`,`id_categoria_prodotti`,`menu`,`nome`,`ancora`), 
+ 	ADD UNIQUE KEY `unica_categoria_notizie` (`id_lingua`,`id_categoria_notizie`,`menu`,`nome`,`ancora`), 
+ 	ADD UNIQUE KEY `unica_categoria_risorse` (`id_lingua`,`id_categoria_risorse`,`menu`,`nome`,`ancora`), 
+	ADD UNIQUE KEY `unica_categoria_progetti` (`id_lingua`,`id_categoria_progetti`,`menu`,`nome`,`ancora`), 
 	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `id_pagina` (`id_pagina`), 
  	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
@@ -2417,11 +2417,11 @@ ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-05-24 12:57 Chiara GDL
 ALTER TABLE `periodi`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`),
 	ADD	KEY `id_tipologia` (`id_tipologia`),
-	ADD KEY `indice` ( `id`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`);
+	ADD KEY `indice` ( `id`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`);
 
 -- | 030000023501
 

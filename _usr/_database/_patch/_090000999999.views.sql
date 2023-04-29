@@ -5094,7 +5094,6 @@ CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
 	modalita_pagamento.provider,
 	concat( modalita_pagamento.codice,' - ', modalita_pagamento.nome) AS __label__
 	FROM modalita_pagamento
-	ORDER BY __label__
 ;
 
 -- | 090000021970
@@ -7346,7 +7345,6 @@ CREATE OR REPLACE VIEW rinnovi_documenti_articoli_view AS
 	rinnovi_documenti_articoli.id_rinnovo,
 	concat( rinnovi_documenti_articoli.id_rinnovo ,' - ', rinnovi_documenti_articoli.id_documenti_articolo) AS __label__
 	FROM rinnovi_documenti_articoli
-	ORDER BY __label__
 ;
 
 -- | 090000032000
