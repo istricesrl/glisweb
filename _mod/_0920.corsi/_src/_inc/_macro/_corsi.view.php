@@ -35,6 +35,8 @@
         'fasce' => 'fasce',
         'discipline' => 'discipline',
         'livelli' => 'livelli',
+        'giorni' => 'giorni',
+        'luoghi' => 'luoghi',
         'stato' => 'stato',
         '__label__' => 'corso',
         NULL => 'azioni'

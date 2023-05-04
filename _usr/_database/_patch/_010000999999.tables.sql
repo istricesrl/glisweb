@@ -3949,6 +3949,8 @@ CREATE TABLE IF NOT EXISTS `tipologie_todo` (
   `font_awesome` char(16) DEFAULT NULL,
   `se_agenda` int(1) DEFAULT NULL,
   `se_ticket` int(1) DEFAULT NULL,
+  `se_ordinaria` int(1) DEFAULT NULL,
+  `se_straordinaria` int(1) DEFAULT NULL,
   `se_commerciale` int(1) DEFAULT NULL,
   `se_produzione` int(1) DEFAULT NULL,
   `se_amministrazione` int(1) DEFAULT NULL,

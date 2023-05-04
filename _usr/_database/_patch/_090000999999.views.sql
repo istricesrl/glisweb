@@ -2381,6 +2381,8 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id ), null ) SEPARATOR ' | ' ) AS fasce,
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
 		group_concat( DISTINCT if( l.id, categorie_progetti_path( l.id ), null ) SEPARATOR ' | ' ) AS livelli,
+		group_concat( DISTINCT dayname( todo.data_programmazione ) SEPARATOR ' | ' ) AS giorni,
+		group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' ) AS luoghi,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2399,6 +2401,8 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		LEFT JOIN categorie_progetti AS f ON f.id = progetti_categorie.id_categoria AND f.se_fascia = 1
 		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
 		LEFT JOIN categorie_progetti AS l ON l.id = progetti_categorie.id_categoria AND l.se_classe = 1
+		LEFT JOIN todo ON ( todo.id_progetto = progetti.id )
+		LEFT JOIN luoghi ON ( luoghi.id = todo.id_luogo )
 	WHERE tipologie_progetti.se_didattica = 1
 	GROUP BY progetti.id
 ;
