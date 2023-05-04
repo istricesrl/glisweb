@@ -11,6 +11,20 @@
      *
      */
 
+	// rimozione rapida TODO da sprint
+	if( isset( $_REQUEST['__unsprint__'] ) ) {
+
+		// rimuovo la TODO dallo sprint
+		mysqlQuery(
+			$cf['mysql']['connection'],
+			'UPDATE todo SET anno_programmazione = NULL, settimana_programmazione = NULL WHERE id = ?',
+			array(
+				array( 's' => $_REQUEST['__unsprint__'] )
+			)
+		);
+
+	}
+
     // tabella della vista
 	$ct['view']['table'] = '__report_planned_todo__';
     $ct['view']['data']['__report_mode__'] = 1;
@@ -30,10 +44,11 @@
 	    'nome' => 'titolo',
 	    'anagrafica' => 'assegnato a',
 		'settimana_programmazione' => 'settimana',
-		'anno_programmazione' => 'anno'
+		'anno_programmazione' => 'anno',
 #	    'progresso' => 'ore',
 #	    'completato' => 'stato',
 #	    'id_priorita' => 'id_priorita'
+		NULL => 'azioni'
 	);
 
     // stili della vista
@@ -49,8 +64,13 @@
 		'progetto' => 'text-left'
 #	    'completato' => 'text-left'
 	);
-    
-    // pagina per la gestione degli oggetti esistenti
+
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
+    );
+
+	// pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'todo.form';
 
     // pagina per l'inserimento di un nuovo oggetto
@@ -58,6 +78,13 @@
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+	// icone
+	foreach( $ct['view']['data'] as &$row ) {
+		if( is_array( $row ) ) {
+			$row[ NULL ] = '<a href="' . $cf['page']['path'][ LINGUA_CORRENTE ] . '?__unsprint__=' . $row['id'] . '"><i class="fa fa-calendar-minus-o"></i></a>';
+		}
+	}
 
 	// preset ordinamento
 	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'] ) ) {
