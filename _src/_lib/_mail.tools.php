@@ -168,6 +168,8 @@
 //print_r( $t );
 //print_r( $d['ct'] );
 
+// TODO verificare che la struttura di $t sia corretta e contenga tutti i campi necessari (ad es. from) per evitare che Twig vada in banana dopo
+
 /*
 $loader = new \Twig\Loader\ArrayLoader([
     'index.html' => 'Hello {{ name }}!',
