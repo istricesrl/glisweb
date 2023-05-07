@@ -169,9 +169,9 @@
 					    if( isset( $cf['auth']['groups'][ $gr ]['privilegi'] ) ) {
 	  						foreach( $cf['auth']['groups'][ $gr ]['privilegi'] as $pr ) {
   								if( ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-									  $_SESSION['account']['privilegi'][] = $pr;
-								  }
-							  }
+									$_SESSION['account']['privilegi'][] = $pr;
+								}
+							}
 					    }
 					}
 /*
@@ -306,7 +306,7 @@
 						    $_SESSION['account'],
 						    mysqlSelectRow(
 								$cf['mysql']['connection'],
-								'SELECT se_collaboratore, se_cliente, se_fornitore, se_commerciale, se_amministrazione FROM anagrafica_view_static WHERE id = ?',
+								'SELECT nome, cognome, denominazione, se_collaboratore, se_cliente, se_fornitore, se_commerciale, se_amministrazione FROM anagrafica_view_static WHERE id = ?',
 								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 						    )
 						);
@@ -363,6 +363,8 @@
 								$cf['auth']['jwt']['secret']
 							);
 						}
+
+						$_SESSION['account']['source'] = 'mysql';
 
 					    // log
 						logWrite( 'login effettuato correttamente via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_DEBUG );

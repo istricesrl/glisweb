@@ -6,16 +6,10 @@
         {% include '_inc/_page.head.html' %}
 
         <style>
-            body {
-                background: url('{{ site.root }}_src/_img/_bkg/_{{ random(['01','02']) }}/_{{ "now"|date("s") }}.jpg');
-                background-position: center;
-                background-size: cover;
-            }
             #form-login {
                 background-color: rgba( 255, 255, 255, .9 );
                 border: 1px solid #aaaaaa;
-                border-radius: 3px;
-                cursor: move;
+                border-radius: 10px;
                 padding: 20px 40px;
             }
             #form-login legend {

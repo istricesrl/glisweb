@@ -80,6 +80,7 @@ header .btn-sqr:visited,
 header .btn-sqr:hover,
 header .btn-sqr:active {
     background-color: #333333;
+    color: #ffffff;
 }
 
 div.subnav a,
@@ -157,4 +158,16 @@ div.subnav p {
 .form-control:focus {
     border-color: #cccccc;
     box-shadow: inset 0 1px 1px rgba(64, 64, 64, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
-    }
+}
+
+main h1,
+main h2,
+main p {
+    margin: 1em 0em;
+}
+
+main .form-login h1,
+main .form-login h2,
+main .form-login p\ {
+    margin: .2em 0em;
+}
