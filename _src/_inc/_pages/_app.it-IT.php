@@ -23,9 +23,9 @@
 	    'cacheable'		=> false,
 	    'title'		=> array( $l		=> 'account' ),
 	    'h1'		=> array( $l		=> 'i tuoi dati' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'account.aggiorna.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'account.html' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_account.aggiorna.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_account.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 

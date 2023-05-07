@@ -138,15 +138,15 @@ div.subnav p {
     color: #777777;
 
     position: absolute;
-    top: -0.75em;
-    left: 1.25em;
+    top: -1.0em;
+    left: 0.35em;
     background-color: white;
     padding: 0em 0.5em;
     z-index: 30;
 
     border: 1px solid rgba(206,212,218,1);
-    border-image: linear-gradient(to bottom, rgba(206,212,218,0) 25%,rgba(206,212,218,1) 25%,rgba(206,212,218,1) 75%,rgba(206,212,218,0) 75%);
-    border-image-slice: 1;
+    border-bottom: 0px;
+    border-top-right-radius: .3em;
 
 
 /*
@@ -170,4 +170,8 @@ main .form-login h1,
 main .form-login h2,
 main .form-login p\ {
     margin: .2em 0em;
+}
+
+.form-control-sm {
+    margin-bottom: 1.5em;
 }
