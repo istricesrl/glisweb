@@ -26,6 +26,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'account.html' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_account.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'			=> array( 'icons'	=> array(	'' => 	array(	'label'		=> array( $l => '<i class="fa fa-user" aria-hidden="true"></i>' ), 'priority'	=> '900', 'visualizza' => SHOW_ALWAYS ) ) )
 	);
 

@@ -14,8 +14,8 @@
 		'metadati'		=> array( 'profilo_registrazione'	=>	'default' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_registrazione.php' )
 	);
-
-    // pagina principale
+/*
+	// pagina principale
 	$p['profilo'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'profilo' ),
@@ -27,3 +27,4 @@
 	    'auth'				=> array( 'groups'	=> array(	'users' ) ),
 		'menu'			=> array( 'icons'	=> array(	'' => 	array(	'label'		=> array( $l => '<i class="fa fa-user" aria-hidden="true"></i>' ), 'priority'	=> '900', 'visualizza' => SHOW_ALWAYS ) ) )
 	);
+*/
