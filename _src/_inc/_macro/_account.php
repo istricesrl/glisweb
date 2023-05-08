@@ -17,7 +17,20 @@
     $cf['fields']['account'] = array(
         'nome'                      => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
         'cognome'                   => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
-        'email'                     => array(   'type' => 'string',     'table' => 'mail',              'default' => NULL,      'field' => 'indirizzo' )
+        'denominazione'             => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
+        'codice_fiscale'            => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
+        'partita_iva'               => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
+        'id_comune_nascita'         => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
+        'giorno_nascita'            => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
+        'mese_nascita'              => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
+        'anno_nascita'              => array(   'type' => 'string',     'table' => 'anagrafica',        'default' => NULL ),
+        'email'                     => array(   'type' => 'string',     'table' => 'mail',              'default' => NULL,      'field' => 'indirizzo' ),
+        'telefono'                  => array(   'type' => 'string',     'table' => 'telefoni',          'default' => NULL,      'field' => 'numero' ),
+        'cellulare'                 => array(   'type' => 'string',     'table' => 'telefoni',          'default' => NULL,      'field' => 'numero' ),
+        'indirizzo'                 => array(   'type' => 'string',     'table' => 'indirizzi',         'default' => NULL ),
+        'civico'                    => array(   'type' => 'string',     'table' => 'indirizzi',         'default' => NULL ),
+        'cap'                       => array(   'type' => 'string',     'table' => 'indirizzi',         'default' => NULL ),
+        'id_comune'                 => array(   'type' => 'string',     'table' => 'indirizzi',         'default' => NULL ),
     );
 
     // se esiste il ramo __account__ gestisco i dati
