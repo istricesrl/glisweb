@@ -98,7 +98,7 @@
         $cf['auth']['jwt']['secret'] .= date( 'Y-m-d' );
     }
 
-	// $cf['session']['jwt']['token'] = NULL;
+	// $cf['session']['jwt']['string'] = NULL;
 
 	// intercetto eventuali richieste di autenticazione HTTP
 	if( ! empty( $_SERVER['PHP_AUTH_USER'] ) && ! empty( $_SERVER['PHP_AUTH_PW'] ) ) {
@@ -115,14 +115,14 @@
 	// intercetto l'header bearer autentication
 	if( array_key_exists( 'Authorization', $httpHeaders ) ) {
 		if( substr( $httpHeaders['Authorization'], 0, 6 ) == 'Bearer' ) {
-			$_REQUEST['jwt'] = substr( $httpHeaders['Authorization'], 7 );
+			$_REQUEST['j'] = substr( $httpHeaders['Authorization'], 7 );
 		}
 	}
 
 	// intercetto eventuali richieste di autenticazione tramite token JWT
-	if( ! empty( $_REQUEST['jwt'] ) ) {
+	if( ! empty( $_REQUEST['j'] ) ) {
 		if( isset( $cf['auth']['jwt']['secret'] ) ) {
-			$jwt = jwt2array( $_REQUEST['jwt'], $cf['auth']['jwt']['secret'] );
+			$jwt = jwt2array( $_REQUEST['j'], $cf['auth']['jwt']['secret'] );
 			$_REQUEST['__login__']['user'] = $jwt['data']['user'];
 			$cf['auth']['jwt']['pass'] = mysqlSelectValue(
 				$cf['mysql']['connection'],
@@ -187,9 +187,9 @@
 					$cf['auth']['status'] = LOGIN_SUCCESS;
 
 					// JWT per il login corrente
-					// NOTA a cosa serve questo? quando viene usato $cf['auth']['jwt']['token']?
+					// NOTA a cosa serve questo? quando viene usato $cf['auth']['jwt']['string']?
 					if( ! empty( $cf['auth']['jwt']['secret'] ) ) {
-						$cf['session']['jwt']['token'] = getJwt(
+						$cf['session']['jwt']['string'] = getJwt(
 							array(
 								'id' => $_SESSION['account']['id'],
 								'user' => $_SESSION['account']['username']
@@ -306,10 +306,20 @@
 						    $_SESSION['account'],
 						    mysqlSelectRow(
 								$cf['mysql']['connection'],
-								'SELECT nome, cognome, denominazione, se_collaboratore, se_cliente, se_fornitore, se_commerciale, se_amministrazione FROM anagrafica_view_static WHERE id = ?',
+								'SELECT nome, cognome, denominazione, '.
+								'se_collaboratore, se_cliente, se_fornitore, se_commerciale, se_amministrazione '.
+								'FROM anagrafica_view_static WHERE id = ?',
 								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 						    )
 						);
+
+						// e-mail
+
+						// telefono fisso
+
+						// cellulare
+
+						// indirizzo
 
 					    // attribuzione dei gruppi e dei privilegi di gruppo
 						if( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) {
@@ -355,7 +365,7 @@
 
 						// JWT per il login corrente
 						if( ! empty( $cf['auth']['jwt']['secret'] ) ) {
-							$cf['session']['jwt']['token'] = getJwt(
+							$cf['session']['jwt']['string'] = getJwt(
 								array(
 									'id' => $_SESSION['account']['id'],
 									'user' => $_SESSION['account']['username']
