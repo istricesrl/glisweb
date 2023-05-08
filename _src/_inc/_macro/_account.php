@@ -34,6 +34,15 @@
             }
         }
 
+        // riallineamenti forzati
+        $_SESSION['account']['anagrafica'] = implode( ' ',
+            array(
+                $_SESSION['account']['cognome'],
+                $_SESSION['account']['nome'],
+                $_SESSION['account']['denominazione']
+            )
+        );
+
         // se l'account proviene dal database, aggiorno il database
         if( $_SESSION['account']['source'] == 'mysql' ) {
 
@@ -48,7 +57,7 @@
             );
 
             // nel caso l'anagrafica sia appena stata inserita
-            mysqlInsertRow(
+            $idAccount = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
                     'id' => $_SESSION['account']['id'],
