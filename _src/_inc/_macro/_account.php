@@ -77,6 +77,24 @@
         }
     }
 
+    // tendina comuni
+	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM comuni_view'
+	);
+
+    // tendina mesi
+	foreach( range( 1, 12 ) as $mese ) {
+	    $ct['etc']['select']['mesi'][] = array('id' => $mese, '__label__' => int2month( $mese ) );
+	}
+
+    // tendina giorni
+	foreach( range( 1, 31 ) as $giorno ) {
+	    $ct['etc']['select']['giorni'][] = array( 'id' => $giorno.'', '__label__' =>  $giorno  );
+	}
+
     // debug
     // print_r( $_REQUEST );
     // print_r( $_SESSION['account'] );
