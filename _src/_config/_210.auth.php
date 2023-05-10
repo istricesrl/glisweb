@@ -314,10 +314,37 @@
 						);
 
 						// e-mail
+						$_SESSION['account'] = array_replace_recursive(
+						    $_SESSION['account'],
+						    mysqlSelectRow(
+								$cf['mysql']['connection'],
+								'SELECT id AS id_mail, indirizzo AS mail '.
+								'FROM mail WHERE id_anagrafica = ?',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+						    )
+						);
 
 						// telefono fisso
+						$_SESSION['account'] = array_replace_recursive(
+						    $_SESSION['account'],
+						    mysqlSelectRow(
+								$cf['mysql']['connection'],
+								'SELECT id AS id_telefono, numero AS telefono '.
+								'FROM telefoni WHERE id_anagrafica = ? AND id_tipologia = 1',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+						    )
+						);
 
 						// cellulare
+						$_SESSION['account'] = array_replace_recursive(
+						    $_SESSION['account'],
+						    mysqlSelectRow(
+								$cf['mysql']['connection'],
+								'SELECT id AS id_cellulare, numero AS cellulare '.
+								'FROM telefoni WHERE id_anagrafica = ? AND id_tipologia = 2',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+						    )
+						);
 
 						// indirizzo
 

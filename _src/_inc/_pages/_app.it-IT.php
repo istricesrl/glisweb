@@ -22,10 +22,10 @@
 	    'sitemap'		=> false,
 	    'cacheable'		=> false,
 	    'title'		=> array( $l		=> 'account' ),
-	    'h1'		=> array( $l		=> 'i tuoi dati' ),
+	    'h1'		=> array( $l		=> 'il tuo account' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'account.html' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-	    'macro'		=> array( $m . '_src/_inc/_macro/_account.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_account.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'			=> array( 'icons'	=> array(	'' => 	array(	'label'		=> array( $l => '<i class="fa fa-user" aria-hidden="true"></i>' ), 'priority'	=> '900', 'visualizza' => SHOW_ALWAYS ) ) )
 	);

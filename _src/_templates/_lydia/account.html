@@ -7,6 +7,7 @@
 {% set table = '__account__' %}
 <form action="" method="post">
     <fieldset>
+        <legend>i tuoi dati</legend>
         <div class="form-row">
             <div class="col-12 col-md">
                 <span class="label-top">nome</span>
@@ -18,8 +19,41 @@
             </div>
         </div>
         <div class="form-row">
+            <div class="col-12 col-md">
+                <span class="label-top">e-mail</span>
+                {{ frm.input( table, '', '', 'mail', '', '', request ) }}
+            </div>
+            <div class="col-12 col-md">
+                <span class="label-top">telefono</span>
+                {{ frm.input( table, '', '', 'telefono', '', '', request ) }}
+            </div>
+            <div class="col-12 col-md">
+                <span class="label-top">cellulare</span>
+                {{ frm.input( table, '', '', 'cellulare', '', '', request ) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <legend>cambio password per l'utente {{ session.username }}</legend>
+        <div class="form-row">
+            <div class="col-12 col-md">
+                <span class="label-top">password corrente</span>
+                {{ frm.input( table, '', '', 'password0', '', '', '', '', 'password' ) }}
+            </div>
+            <div class="col-12 col-md">
+                <span class="label-top">nuova password</span>
+                {{ frm.input( table, '', '', 'password1', '', '', '', '', 'password' ) }}
+            </div>
+            <div class="col-12 col-md">
+                <span class="label-top">nuova password (ripetere)</span>
+                {{ frm.input( table, '', '', 'password2', '', '', '', '', 'password' ) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset>
+        <div class="form-row">
             <div class="col">
-                <button type="submit" class="btn btn-sm">modifica dati</button>
+                <button type="submit" class="btn btn-sm btn-secondary btn-block">modifica dati</button>
             </div>
         </div>
     </fieldset>
