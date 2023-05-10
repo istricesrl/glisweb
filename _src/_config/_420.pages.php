@@ -99,8 +99,8 @@
         }
 
         // forzatura dei contenuti correnti per one-char parameter debug
-        if( isset( $_REQUEST['j'] ) ) {
-            $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['j'], '<p>'.$cf['common']['lorem']['std'].'</p>' ) );
+        if( isset( $_REQUEST['m'] ) ) {
+            $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['m'], '<p>'.$cf['common']['lorem']['std'].'</p>' ) );
         }
 
     }
