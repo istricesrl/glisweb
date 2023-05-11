@@ -129,6 +129,8 @@
                                 // log
                                 logWrite( $contenuto, 'privacy', LOG_CRIT );
 
+                                // TODO salvare i log della privacy in spool in modo che non vengano svuotati con gli altri log
+
                                 // TODO salvare il consenso nella tabella contatti_consensi
 
                             }
