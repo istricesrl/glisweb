@@ -12,7 +12,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'app.html' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'macro'		=> array( '_src/_inc/_macro/_app.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff', 'users' ) ),
 		'menu'				=> array( 'app'	=> array(	'' => 	array(	'label'		=> array( $l => 'home' ),
 																	'priority'	=> '010' ) ) )
 	);
@@ -26,7 +26,7 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_minerva/', 'schema' => 'account.html' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'macro'		=> array( '_src/_inc/_macro/_account.php' ),
-	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff', 'users' ) ),
 		'menu'			=> array( 'icons'	=> array(	'' => 	array(	'label'		=> array( $l => '<i class="fa fa-user" aria-hidden="true"></i>' ), 'priority'	=> '900', 'visualizza' => SHOW_ALWAYS ) ) )
 	);
 
