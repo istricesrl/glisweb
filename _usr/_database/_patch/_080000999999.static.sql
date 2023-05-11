@@ -9,7 +9,7 @@
 
 -- | 080000000400
 
--- tabella anagrafica_view_static
+-- anagrafica_view_static
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 18:47 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
@@ -42,7 +42,11 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
   `categorie` text,
   `telefoni` text,
   `mail` text,
+  `anno_nascita` char(32),
+  `mese_nascita` char(32),
+  `giorno_nascita` char(32),
   `data_nascita` char(32),
+  `id_comune_nascita` int(11) DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -126,6 +130,7 @@ CREATE TABLE `todo_view_static` (
   `indirizzo` char(255) DEFAULT NULL,
   `id_luogo` int DEFAULT NULL,
   `luogo` char(255) DEFAULT NULL,
+  `timestamp_apertura` int DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
   `ora_scadenza` time DEFAULT NULL,
   `data_programmazione` date DEFAULT NULL,
