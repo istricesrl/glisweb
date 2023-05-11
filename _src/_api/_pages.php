@@ -225,10 +225,12 @@
 	$ctFile = DIR_SRC_INC_CONTENTS . '_' . $ctName . '.' . $cf['localization']['language']['ietf'] . '.html';
 	$ctFileLocal = str_replace( '_', '', $ctFile );
 	if( file_exists( $ctFileLocal ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = readStringFromFile( $ctFileLocal );
+	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFileLocal . ' -->' . PHP_EOL . readStringFromFile( $ctFileLocal );
 	} elseif( file_exists( $ctFile ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = readStringFromFile( $ctFile );
+	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFile . ' -->' . PHP_EOL . readStringFromFile( $ctFile );
 	}
+
+	// TODO forse nel commento qui sopra riportare tutto il path è un po' eccessivo, accorciare
 
 	// debug
 	// var_dump( $ctFile );
