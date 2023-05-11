@@ -306,7 +306,8 @@
 						    $_SESSION['account'],
 						    mysqlSelectRow(
 								$cf['mysql']['connection'],
-								'SELECT nome, cognome, denominazione, '.
+								'SELECT nome, cognome, denominazione, codice_fiscale, partita_iva, '.
+								'giorno_nascita, mese_nascita, anno_nascita, id_comune_nascita, '.
 								'se_collaboratore, se_cliente, se_fornitore, se_commerciale, se_amministrazione '.
 								'FROM anagrafica_view_static WHERE id = ?',
 								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
@@ -347,6 +348,30 @@
 						);
 
 						// indirizzo
+						$_SESSION['account'] = array_replace_recursive(
+						    $_SESSION['account'],
+						    mysqlSelectRow(
+								$cf['mysql']['connection'],
+								'SELECT anagrafica_indirizzi.id AS id_associazione_indirizzo, anagrafica_indirizzi.id_indirizzo, '.
+								'indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, indirizzi.id_comune '.
+								'FROM anagrafica_indirizzi '.
+								'LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
+								'WHERE id_anagrafica = ? AND id_ruolo = 1',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+						    )
+						);
+
+
+/**
+ * CAMPI DA AGGIUNGERE ANCHE IN STANDARD
+ * 
+ * indirizzo
+ * civico
+ * cap
+ * id_comune
+ * 
+ */
+
 
 					    // attribuzione dei gruppi e dei privilegi di gruppo
 						if( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) {
