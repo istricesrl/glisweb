@@ -51,6 +51,11 @@
             'type' => 'hard'
         ),
         array(
+            'label' => 'rawurldecode',
+            'regexp' => '(rawurldecode)',
+            'type' => 'hard'
+        ),
+        array(
             'label' => '$_COOKIE',
             'regexp' => '(\$\_COOKIE)',
             'type' => 'hard'
@@ -83,10 +88,7 @@
     // die( 'inizio layer di sicurezza' );
 
     // funzione checkInput()
-    function checkInput( $input, $regole ) {
-
-        // sorgente
-        $_SERVER['REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
+    function checkInput( $input, $regole, $memcache, $response, $attackers ) {
 
         // controllo i valori
         foreach( $input as $chiave => $valore ) {
@@ -94,9 +96,10 @@
             // debug
             // die( 'test di ' . $chiave );
 
+            // ricorsione
             if( is_array( $valore ) ) {
 
-                checkInput( $valore, $regole );
+                checkInput( $valore, $regole, $memcache, $response, $attackers );
 
             } else {
 
@@ -131,25 +134,23 @@
 
                         // debug
                         // die( 'match di ' . $valore . ' per la regola ' . $regola['label'] );
-/*
+
+                        // incremento
+                        $response++;
+
                         // contatore
-                        $mem_var = new Memcached();
-                        $mem_var->addServer('127.0.0.1', 11211);
-                        $response = $mem_var->get( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'] );
-                        if ($response) {
-                            $response++;
-                        } else {
-                            $response=1;
-                        }
-                        $mem_var->set( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'], $response );
-*/
+                        $memcache->set( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'], $response );
+
+                        // riepilogo
+                        $attackers[ $_SERVER['REMOTE_ADDR'] ] = $response;
+                        $memcache->set( 'ATTACKERS', $attackers );
+
                         // log
                         $h = fopen( DIR_VAR_SPOOL_SECURITY . 'attacco.' . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
-                        fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola ' . $regola['label'] . PHP_EOL );
-                        fwrite( $h, 'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL );
-                        fwrite( $h, $detail . PHP_EOL );
-                        fwrite( $h, 'contenuto:' . PHP_EOL . $valore . PHP_EOL );
-                        fwrite( $h, PHP_EOL );
+                        fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola ' . $regola['label'] . PHP_EOL .
+                                    'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
+                                    $detail . PHP_EOL .
+                                    'contenuto:' . PHP_EOL . $valore . PHP_EOL . PHP_EOL );
                         fclose( $h );
 
                         // HTTP status
@@ -168,18 +169,26 @@
 
     }
 
+    // connessione a memcache
+    $memcache = new Memcached();
+    $memcache->addServer( '127.0.0.1', 11211 );
+    $response = $memcache->get( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'] );
+    $attackers = $memcache->get( 'ATTACKERS' );
+
+    // debug
+    // print_r( $attackers );
+
     // controllo totale attacchi
-    $mem_var = new Memcached();
-    $mem_var->addServer( '127.0.0.1', 11211 );
-    $response = $mem_var->get( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'] );
-    if ($response) {
+    if( $response ) {
         if( $response > 4 ) {
             die('enough, guy');
         }
+    } else {
+        $response = 1;
     }
 
     // controlli formali sulla $_REQUEST
-    checkInput( $_REQUEST, $regole );
+    checkInput( $_REQUEST, $regole, $memcache, $response, $attackers );
 
     // controllo URL
     foreach( $urls as $url ) {
@@ -187,24 +196,22 @@
         // controllo
         if( stripos( $_SERVER['QUERY_STRING'], $url ) !== false ) {
 
+            // incremento
+            $response++;
+
             // contatore
-            $mem_var = new Memcached();
-            $mem_var->addServer('127.0.0.1', 11211);
-            $response = $mem_var->get( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'] );
-            if ($response) {
-                $response++;
-            } else {
-                $response=1;
-            }
-            $mem_var->set( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'], $response );
+            $memcache->set( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'], $response );
+
+            // riepilogo
+            $attackers[ $_SERVER['REMOTE_ADDR'] ] = $response;
+            $memcache->set( 'ATTACKERS', $attackers );
 
             // log
             $h = fopen( DIR_VAR_SPOOL_SECURITY . 'attacco.' . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
-            fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola URL ' . $url . PHP_EOL );
-            fwrite( $h, 'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL );
-            fwrite( $h, 'url:' . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . PHP_EOL );
-            fwrite( $h, 'contenuto:' . PHP_EOL . $_SERVER['QUERY_STRING'] . PHP_EOL );
-            fwrite( $h, PHP_EOL );
+            fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola URL ' . $url . PHP_EOL . 
+                        'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
+                        'url:' . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . PHP_EOL .
+                        'contenuto:' . PHP_EOL . $_SERVER['QUERY_STRING'] . PHP_EOL . PHP_EOL );
             fclose( $h );
 
             // HTTP status
