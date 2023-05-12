@@ -28,6 +28,22 @@
         array(
             'label' => 'prova',
             'regexp' => '(provaSicurezza[0-9]+)'
+        ),
+        array(
+            'label' => 'SQL injection',
+            'regexp' => "('(''|[^'])*')|(;)|(\b(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)"
+        ),
+        array(
+            'label' => 'file_put_contents',
+            'regexp' => '(file_put_contents)'
+        ),
+        array(
+            'label' => 'getallheaders',
+            'regexp' => '(getallheaders)'
+        ),
+        array(
+            'label' => '$_COOKIE',
+            'regexp' => '(\$\_COOKIE)'
         )
     );
 
@@ -96,7 +112,9 @@
 
         }
         
-
+        // controllo delle SQL injection
+        $stringa_input= "";
+       
     }
 
     // controlli formali sulla $_REQUEST
