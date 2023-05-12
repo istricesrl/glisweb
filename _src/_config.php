@@ -280,6 +280,29 @@
 	    );
 	}
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function findChars( $str, array $arr ) {
+
+        $matches = 0;
+
+        foreach( $arr as $a ) {
+            if( stripos( $str, $a ) !== false ) {
+                $matches++;
+            }
+        }
+
+        if( $matches == count( $arr ) ) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     // controllo performances
 	define( 'START_TIME'			, microtime( true ) );
 
