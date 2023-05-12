@@ -1,8 +1,7 @@
 
 {# MACRO PER LA RAPPRESENTAZIONE DEI CONTENUTI #}
-{# NOTA: IMPORTARE SEMPRE COME CNT #}
-
-<!-- Twig file included: {{ _self }} -->
+{# NOTA: IMPORTARE SEMPRE COME CMS #}
+{# import '_bin/_default.html' as cms #}
 
 {% macro picture( img, lang, site, set, alt, pictureclass, imgclass ) %}
 {% if img.path %}
@@ -377,6 +376,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% endmacro %}
 
 {% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo ) %}
+<!-- macro {{ _self }}::formButton() -->
 {% if recaptcha.keys.public %}
 <!-- type settato automaticamente a button -->
 {% set type = 'button' %}

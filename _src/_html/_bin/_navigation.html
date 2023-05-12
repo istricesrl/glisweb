@@ -1,8 +1,10 @@
 
 {# MACRO PER GLI ELEMENTI DI NAVIGAZIONE #}
 {# NOTA: IMPORTARE SEMPRE COME NAV #}
+{# import '_bin/_navigation.html' as nav #}
 
 {% macro menu( links, lang, site, query, parent ) %}
+<!-- macro menu() -->
 {% import _self as nav %}
 {% for id,link in links %}{% set id = id|replace({'|': "-", "." : "-"}) %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %} {% if parent %}child-of-{{ parent }}{% endif %}" data-page-id="{{ id }}">
     {% if link.label[ lang ] %}<a {% if link.location[ lang ] %}href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}"{% endif %} class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% endif %}
