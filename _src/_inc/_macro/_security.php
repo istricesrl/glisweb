@@ -8,6 +8,11 @@
      * - questo file è standalone
      * - questo file è richiamato da _src/_config/_config.php quindi se un file del framework non usa _src/_config/_config.php deve includerlo manualmente
      * 
+     * NOTA
+     * testare chiamando il framework con la seguente query string:
+     * 
+     * ?z=provaSicurezza1
+     * 
      * 
      */
 
