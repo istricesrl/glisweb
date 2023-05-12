@@ -399,6 +399,9 @@
     // costanti per l'encoding
 	define( 'ENCODING_UTF8'			, 'utf-8' );
 
+    // filtro di sicurezza
+    require DIR_SRC_INC_MACRO . '_security.php';
+
     // controllo scrittura
     if( ! is_writeable( DIR_BASE ) ) {
         die( 'la cartella di installazione non è scrivibile, lanciare _lamp.permissions.reset.sh' );
