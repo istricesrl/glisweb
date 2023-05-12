@@ -110,11 +110,8 @@
 
             }
 
-        }
-        
-        // controllo delle SQL injection
-        $stringa_input= "";
-       
+        }      
+
     }
 
     // controlli formali sulla $_REQUEST
