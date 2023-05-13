@@ -43,7 +43,7 @@
 		}
 
 	    // setto il cookie
-		setcookie( 'privacy', serialize( $cf['privacy']['cookie'] ), time()+60*60*24*30 );
+		setcookie( 'privacy', serialize( $cf['privacy']['cookie'] ), time()+60*60*24*30, '/; SameSite=strict' );
 
 	}
 

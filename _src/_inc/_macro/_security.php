@@ -77,18 +77,6 @@
         )
     );
 
-    // URL sospetti
-    $urls = array(
-        'phpunit',
-        'cgi-bin',
-        'htaccess',
-        'cmsadmin',
-        'config.inc',
-        'cpanel',
-        'dbadmin',
-        'servlet'
-    );
-
     // debug
     // die( 'inizio layer di sicurezza' );
 
@@ -162,7 +150,7 @@
                         http_response_code( 400 );
 
                         // output
-                        die('nice try');
+                        die('no way');
 
                     }
 
@@ -179,14 +167,44 @@
     $memcache->addServer( '127.0.0.1', 11211 );
     $response = $memcache->get( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'] );
     $attackers = $memcache->get( 'ATTACKERS' );
+    $urls = $memcache->get( 'BANNED_URLS' );
 
     // debug
     // print_r( $attackers );
 
+    // URL sospetti
+    if( empty( $urls ) ) {
+        $urls = array_merge(
+            array(
+                'phpunit',
+                'cgi-bin',
+                'htaccess',
+                'cmsadmin',
+                'config.inc',
+                'cpanel',
+                'dbadmin',
+                'servlet',
+                'wp-config'
+            ),
+            array_map('trim',
+                file(
+                    DIR_BASE . '_etc/_security/_banned.words.conf'
+                )
+            )
+        );
+        $memcache->set( 'BANNED_URLS', $urls );
+    }
+
     // controllo totale attacchi
     if( $response ) {
         if( $response > 4 ) {
+
+            // HTTP status
+            http_response_code( 400 );
+
+            // output
             die('enough, guy');
+
         }
     } else {
         $response = 1;
@@ -199,7 +217,7 @@
     foreach( $urls as $url ) {
 
         // controllo
-        if( stripos( $_SERVER['QUERY_STRING'], $url ) !== false ) {
+        if( stripos( urldecode( $_SERVER['REQUEST_URI'] ), urldecode( $url ) ) !== false ) {
 
             // incremento
             $response++;
@@ -215,7 +233,7 @@
             $h = fopen( DIR_VAR_SPOOL_SECURITY . 'attacco.' . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
             fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola URL ' . $url . PHP_EOL . 
                         'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
-                        'url:' . $_SERVER[HTTP_HOST] . $_SERVER[REQUEST_URI] . PHP_EOL .
+                        'url:' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL .
                         'contenuto:' . PHP_EOL . $_SERVER['QUERY_STRING'] . PHP_EOL . PHP_EOL );
             fclose( $h );
 
@@ -225,6 +243,14 @@
             // output
             die('nice try');
 
+        } else {
+
+            // debug
+            // echo urldecode( $_SERVER['REQUEST_URI'] ) . ' != ' . urldecode( $url ) . PHP_EOL;
+
         }
     
     }
+
+    // debug
+    // die( print_r( $urls, true ) );

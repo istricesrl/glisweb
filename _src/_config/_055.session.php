@@ -30,7 +30,12 @@
     // timer
 	timerCheck( $cf['speed'], '-> inizio avvio sessione' );
 
-    // avvio della sessione php
+	// policy di sicurezza
+	ini_set( 'session.cookie_samesite', 'strict' );
+	ini_set( 'session.cookie_httponly', 1 );
+	ini_set( 'session.cookie_secure', 1 );
+
+	// avvio della sessione php
 	if( session_start() ) {
 
 	    // registro l'id della sessione nell'array $cf
