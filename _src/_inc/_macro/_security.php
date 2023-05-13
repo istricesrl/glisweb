@@ -51,6 +51,11 @@
             'type' => 'hard'
         ),
         array(
+            'label' => 'eval',
+            'regexp' => '(\beval\b)',
+            'type' => 'hard'
+        ),
+        array(
             'label' => 'rawurldecode',
             'regexp' => '(rawurldecode)',
             'type' => 'hard'
