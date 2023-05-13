@@ -3,7 +3,21 @@
     require '../../../_src/_config.php';
 
     if (!isset($_COOKIE['_cid']) || empty($_COOKIE['_cid'])) {
-        setcookie('_cid', vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex(random_bytes(16)), 4, '/; SameSite=strict')));
+		setcookie(
+			'_cid',
+			vsprintf(
+                '%s%s-%s-%s-%s-%s%s%s',
+                str_split( bin2hex( random_bytes( 16 ) ), 4 )
+            ),
+			array(
+				'expires' => time() + 60*60*24*30, 
+				'path' => '/', 
+				'domain' => '.'.$cf['site']['domain'],
+				'secure' => true,
+				'httponly' => true,
+				'samesite' => 'Strict'
+			)
+		);        
     }
     $data = '{"client_id":"'.$_COOKIE['_cid'].'","events":[{"name":"custom_event_02","params":{"page_location":"https://glisweb.istricesrl.it/_usr/_examples/_analytics/"}}]}';
 
