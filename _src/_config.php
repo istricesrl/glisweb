@@ -280,6 +280,29 @@
 	    );
 	}
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function findChars( $str, array $arr ) {
+
+        $matches = 0;
+
+        foreach( $arr as $a ) {
+            if( stripos( $str, $a ) !== false ) {
+                $matches++;
+            }
+        }
+
+        if( $matches == count( $arr ) ) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+
     // controllo performances
 	define( 'START_TIME'			, microtime( true ) );
 
@@ -337,6 +360,7 @@
     define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
     define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'			, DIR_BASE . 'var/spool/print/' );
+    define( 'DIR_VAR_SPOOL_SECURITY'			, DIR_BASE . 'var/spool/security/' );
 
     // file
     define( 'FILE_AUTOLOAD'         ,  DIR_SRC_LIB_EXT . 'autoload.php' );
@@ -398,6 +422,9 @@
 
     // costanti per l'encoding
 	define( 'ENCODING_UTF8'			, 'utf-8' );
+
+    // filtro di sicurezza
+    require DIR_SRC_INC_MACRO . '_security.php';
 
     // controllo scrittura
     if( ! is_writeable( DIR_BASE ) ) {
