@@ -50,7 +50,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
   `data_archiviazione` date DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `__label__` char(255) DEFAULT NULL
+  `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- | 080000001800
@@ -109,7 +109,30 @@ CREATE TABLE `attivita_view_static` (
   `token` char(128) DEFAULT NULL,
   `id_account_inserimento` int DEFAULT NULL,
   `id_account_aggiornamento` int DEFAULT NULL,
-  `__label__` varchar(320) DEFAULT NULL
+  `__label__` text
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- | 080000015900
+
+-- iscrizioni_view_static
+CREATE TABLE `iscrizioni_view_static` (
+  `id` int(11) PRIMARY KEY NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` char(64) DEFAULT NULL,
+  `istituti` mediumtext DEFAULT NULL,
+  `iscritti` mediumtext DEFAULT NULL,
+  `fasce` mediumtext DEFAULT NULL,
+  `discipline` mediumtext DEFAULT NULL,
+  `livelli` mediumtext DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `progetto` char(255) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- | 080000060000
