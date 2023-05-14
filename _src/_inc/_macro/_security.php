@@ -143,7 +143,7 @@
                         fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola ' . $regola['label'] . PHP_EOL .
                                     'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
                                     $detail . PHP_EOL .
-                                    'contenuto:' . PHP_EOL . $valore . PHP_EOL . PHP_EOL );
+                                    'contenuto: ' . PHP_EOL . $valore . PHP_EOL . PHP_EOL );
                         fclose( $h );
 
                         // HTTP status
@@ -233,8 +233,8 @@
             $h = fopen( DIR_VAR_SPOOL_SECURITY . 'attacco.' . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
             fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola URL ' . $url . PHP_EOL . 
                         'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
-                        'url:' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL .
-                        'contenuto:' . PHP_EOL . $_SERVER['QUERY_STRING'] . PHP_EOL . PHP_EOL );
+                        'url: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL .
+                        'contenuto: ' . PHP_EOL . $_SERVER['QUERY_STRING'] . PHP_EOL . PHP_EOL );
             fclose( $h );
 
             // HTTP status
