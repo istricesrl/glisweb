@@ -97,6 +97,9 @@
     // log
 	logWrite( 'avvio API pages', 'pages' );
 
+    // timer
+	timerCheck( $cf['speed'], 'inizio caricamento file INI del template' );
+
     // log
 	appendToFile( 'inizio caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
 
@@ -126,6 +129,9 @@
 	    die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante' );
 	}
 
+    // timer
+	timerCheck( $cf['speed'], 'fine caricamento file INI del template' );
+
     // log
 	appendToFile( 'fine caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
 
@@ -143,6 +149,12 @@
 			}
 		}
 	}
+
+    // timer
+	timerCheck( $cf['speed'], 'fine caricamento tema del template' );
+
+    // log
+	appendToFile( 'fine caricamento tema del template' . PHP_EOL, FILE_LATEST_RUN );
 
     // ...
 	foreach( array( 'external', 'preload' ) as $type ) {
@@ -182,6 +194,12 @@
 		$ct['page']['csp']['default-src']
 	);
 
+    // timer
+	timerCheck( $cf['speed'], 'fine elaborazione dati per CSP' );
+
+    // log
+	appendToFile( 'fine elaborazione dati per CSP' . PHP_EOL, FILE_LATEST_RUN );
+
 	// debug
 	// print_r( array_intersect( $ct['page']['csp']['script-src'], $ct['page']['csp']['style-src'] ) );
     // print_r( $ct['page'] );
@@ -201,6 +219,9 @@
 
 	// debug
 	// print_r( $ct['page']['template'] );
+
+    // timer
+	timerCheck( $cf['speed'], 'fine controllo permessi' );
 
     // log
 	appendToFile( 'fine controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
