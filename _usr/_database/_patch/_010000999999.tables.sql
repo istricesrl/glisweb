@@ -3010,7 +3010,7 @@ CREATE TABLE IF NOT EXISTS `risorse_categorie` (
 -- | 010000034000
 
 -- ruoli_anagrafica
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-09 18:21 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
   `id` int(11) NOT NULL,
@@ -3033,7 +3033,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_anagrafica` (
 -- | 010000034100
 
 -- ruoli_articoli
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2022-04-09 16:21 Chiara GDL
 CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
   `id` int(11) NOT NULL,
@@ -3050,7 +3050,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_articoli` (
 -- | 010000034200
 
 -- ruoli_audio
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-09 18:26 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `id` int(11) NOT NULL,
@@ -3073,7 +3073,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
 -- | 010000034300
 
 -- ruoli_documenti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2022-06-09 16:21 Chiara GDL
 CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
   `id` int(11) NOT NULL,
@@ -3093,7 +3093,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_documenti` (
 -- | 010000034400
 
 -- ruoli_file
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-11 18:13 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `id` int(11) NOT NULL,
@@ -3119,7 +3119,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
 -- | 010000034600
 
 -- ruoli_immagini
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_immagini` (
   `id` int(11) NOT NULL,
@@ -3160,7 +3160,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_indirizzi` (
 -- | 010000034850
 
 -- ruoli_mail
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 CREATE TABLE IF NOT EXISTS `ruoli_mail` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
@@ -3192,7 +3192,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_matricole` (
 -- | 010000035000
 
 -- ruoli_prodotti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 10:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
   `id` int(11) NOT NULL,
@@ -3205,7 +3205,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
 -- | 010000035100
 
 -- ruoli_progetti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2022-04-20 10:45 chiara GDL
 CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `id` int(11) NOT NULL,
@@ -3221,7 +3221,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
 -- | 010000035200
 
 -- ruoli_video
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 10:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `id` int(11) NOT NULL,
@@ -3244,13 +3244,13 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
 -- | 010000037000
 
 -- settori
--- tipologia: tabella gestita
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 10:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `settori` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
-  `soprannome` char(64) NULL,
+  `soprannome` char(64) DEFAULT NULL,
   `ateco` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -3264,9 +3264,9 @@ CREATE TABLE IF NOT EXISTS `sms_out` (
   `id_telefono` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `timestamp_composizione` int(11) DEFAULT NULL,
-  `mittente` char(254) NOT NULL,
-  `destinatari` text NOT NULL,
-  `corpo` text NOT NULL,
+  `mittente` char(254) DEFAULT NULL,
+  `destinatari` text DEFAULT NULL,
+  `corpo` text DEFAULT NULL,
   `server` char(128) DEFAULT NULL,
   `host` char(254) DEFAULT NULL,
   `port` char(6) DEFAULT NULL,
@@ -3291,9 +3291,9 @@ CREATE TABLE IF NOT EXISTS `sms_sent` (
   `id_telefono` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `timestamp_composizione` int(11) DEFAULT NULL,
-  `mittente` char(254) NOT NULL,
-  `destinatari` text NOT NULL,
-  `corpo` text NOT NULL,
+  `mittente` char(254) DEFAULT NULL,
+  `destinatari` text DEFAULT NULL,
+  `corpo` text DEFAULT NULL,
   `server` char(128) DEFAULT NULL,
   `host` char(254) DEFAULT NULL,
   `port` char(6) DEFAULT NULL,
@@ -3329,7 +3329,7 @@ CREATE TABLE IF NOT EXISTS `software` (
 -- | 010000042000
 
 -- stati
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 15:06 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `stati` (
   `id` int(11) NOT NULL,
@@ -3345,7 +3345,7 @@ CREATE TABLE IF NOT EXISTS `stati` (
 -- | 010000042200
 
 -- stati_lingue
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 15:24 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `stati_lingue` (
   `id` int(11) NOT NULL,
@@ -3367,7 +3367,7 @@ CREATE TABLE IF NOT EXISTS `task` (
   `mese` int(11) DEFAULT NULL,
   `giorno_della_settimana` int(11) DEFAULT NULL,
   `settimana` int(11) DEFAULT NULL,
-  `task` char(255) NOT NULL,
+  `task` char(255) DEFAULT NULL,
   `iterazioni` int(11) DEFAULT NULL,
   `delay` int(11) DEFAULT NULL,
   `token` char(254) DEFAULT NULL,
@@ -3387,7 +3387,7 @@ CREATE TABLE `telefoni` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `numero` char(32) NOT NULL,
+  `numero` char(32) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `se_notifiche` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3504,7 +3504,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_banner` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `nome` char(64) COLLATE utf8_general_ci NOT NULL,
+  `nome` char(64) COLLATE utf8_general_ci DEFAULT NULL, -- ???
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3564,16 +3564,16 @@ CREATE TABLE `tipologie_contratti` (
   `id_categoria_progetti` int(11) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
-  `se_tesseramento` INT(1) NULL DEFAULT NULL,
-  `se_abbonamento` INT(1) NULL DEFAULT NULL,
-  `se_iscrizione` INT(1) NULL DEFAULT NULL,
-  `se_immobili` INT(1) NULL DEFAULT NULL,
-  `se_acquisto` INT(1) NULL DEFAULT NULL,
-  `se_locazione` INT(1) NULL DEFAULT NULL,
-  `se_libero` INT(1) NULL DEFAULT NULL,
-	`se_prenotazione` INT(1) NULL DEFAULT NULL, 
-	`se_scalare` INT(1) NULL DEFAULT NULL,
-  `se_affiliazione` INT(1) NULL DEFAULT NULL,
+  `se_tesseramento` int(1) DEFAULT NULL,
+  `se_abbonamento` int(1) DEFAULT NULL,
+  `se_iscrizione` int(1) DEFAULT NULL,
+  `se_immobili` int(1) DEFAULT NULL,
+  `se_acquisto` int(1) DEFAULT NULL,
+  `se_locazione` int(1) DEFAULT NULL,
+  `se_libero` int(1) DEFAULT NULL,
+	`se_prenotazione` int(1) DEFAULT NULL, 
+	`se_scalare` int(1) DEFAULT NULL,
+  `se_affiliazione` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -3653,7 +3653,7 @@ CREATE TABLE `tipologie_immobili` (
 -- | 010000053000
 
 -- tipologie_indirizzi
--- tipologia: tabella di supporto
+-- tipologia: tabella assistita
 -- verifica: 2021-10-15 17:29 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
   `id` int(11) NOT NULL,
@@ -3671,7 +3671,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
 -- | 010000053200
 
 -- tipologie_licenze
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-11-15 11:00 Chiara GDL
 CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
   `id` int(11) NOT NULL,
@@ -3689,7 +3689,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_licenze` (
 -- | 010000053300
 
 -- tipologie_luoghi
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2022-02-21 15:30 Chiara GDL
 CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (
   `id` int(11) NOT NULL,
@@ -3707,7 +3707,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_luoghi` (
 -- | 010000053400
 
 -- tipologie_mastri
--- tipologia: tabella di supporto
+-- tipologia: tabella assistita
 -- verifica: 2021-10-15 17:30 Fabio Mosti
 CREATE TABLE `tipologie_mastri` (
   `id` int(11) NOT NULL,
@@ -3719,7 +3719,7 @@ CREATE TABLE `tipologie_mastri` (
   `se_magazzino` int(11) DEFAULT NULL,
   `se_conto` int(11) DEFAULT NULL,
   `se_registro` int(11) DEFAULT NULL,
-  `se_credito` int(1) NULL,
+  `se_credito` int(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -3729,7 +3729,7 @@ CREATE TABLE `tipologie_mastri` (
 -- | 010000053800
 
 -- tipologie_notizie
--- tipologia: tabella di supporto
+-- tipologia: tabella assistita
 -- verifica: 2021-10-15 17:31 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
   `id` int(11) NOT NULL,
@@ -3747,7 +3747,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_notizie` (
 -- | 010000054000
 
 -- tipologie_pagamenti
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2021-11-15 11:00 Chiara GDL
 CREATE TABLE IF NOT EXISTS `tipologie_pagamenti` (
   `id` int(11) NOT NULL,
@@ -4026,7 +4026,7 @@ CREATE TABLE IF NOT EXISTS `todo` (
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `note_pianificazione` text DEFAULT NULL,
-  `data_archiviazione` DATE DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,
   `note_archiviazione` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -4054,7 +4054,7 @@ CREATE TABLE IF NOT EXISTS `todo_matricole` (
 -- | 010000062000
 
 -- udm
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-19 12:59 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `udm` (
   `id` int(11) NOT NULL,
@@ -4164,7 +4164,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_lingua` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
-  `id_categoria_progetti` INT(11) DEFAULT NULL,
+  `id_categoria_progetti` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
@@ -4193,7 +4193,7 @@ CREATE TABLE IF NOT EXISTS `zone` (
 `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `nome` char(64) NOT NULL,
+  `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -4207,10 +4207,10 @@ CREATE TABLE IF NOT EXISTS `zone` (
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 CREATE TABLE IF NOT EXISTS `zone_cap` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_zona` int(11) DEFAULT NULL,
-  `cap` char(8) NOT NULL,
+  `cap` char(8) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -4223,7 +4223,7 @@ CREATE TABLE IF NOT EXISTS `zone_cap` (
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 CREATE TABLE IF NOT EXISTS `zone_indirizzi` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_zona` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,  
@@ -4255,7 +4255,7 @@ CREATE TABLE IF NOT EXISTS `zone_provincie` (
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 CREATE TABLE IF NOT EXISTS `zone_stati` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_zona` int(11) DEFAULT NULL,
   `id_stato` int(11) DEFAULT NULL,

@@ -2967,12 +2967,12 @@ ALTER TABLE `relazioni_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`),
 	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
 	ADD KEY `id_documenti_articolo_collegato` (`id_documenti_articolo_collegato`),
 	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_documenti_articolo_collegato`,`id_ruolo`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000030411
 
@@ -2987,12 +2987,11 @@ ALTER TABLE `relazioni_documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INC
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_pagamenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_pagamento`,`id_pagamento_collegato`),
 	ADD KEY `id_pagamento` (`id_pagamento`),
 	ADD KEY `id_pagamento_collegato` (`id_pagamento_collegato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_pagamento`,`id_pagamento_collegato`);
-
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);	
 -- | 030000030441
 
 -- relazioni_pagamenti
@@ -3006,12 +3005,12 @@ ALTER TABLE `relazioni_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_progetti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_progetto`,`id_progetto_collegato`,`id_ruolo`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_progetto_collegato` (`id_progetto_collegato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_progetto`,`id_progetto_collegato`,`id_ruolo`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000030491
 
@@ -3026,12 +3025,12 @@ ALTER TABLE `relazioni_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-01-17 16:12 Chiara GDL
 ALTER TABLE `relazioni_software`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_software`,`id_software_collegato`),
 	ADD KEY `id_software` (`id_software`),
 	ADD KEY `id_software_collegato` (`id_software_collegato`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_software`,`id_software_collegato`);
-
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
 -- | 030000030501
 
 -- relazioni_software
@@ -3065,6 +3064,9 @@ ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-02-21 12:59 Chiara GDL
 ALTER TABLE `rinnovi`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica_codice` (`codice`),
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`),
 	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),
@@ -3072,10 +3074,7 @@ ALTER TABLE `rinnovi`
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `indice` ( `id_contratto`, `id_tipologia`, `id_licenza`, `id_progetto`, `id_categoria_progetti`, `data_inizio`, `data_fine`, `codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD UNIQUE KEY `unica_codice` (`codice`),
-	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
-	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`);
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
 
 -- | 030000031501
 
@@ -3091,12 +3090,12 @@ ALTER TABLE `rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-03-08 15:59 Chiara GDL
 ALTER TABLE `rinnovi_documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_rinnovo`),
 	ADD KEY `id_rinnovo` (`id_rinnovo`),
 	ADD KEY `id_documenti_articolo` (`id_documenti_articolo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unico` (`id_documenti_articolo`,`id_rinnovo`);
-
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
 -- | 030000031551
 
 -- rinnovi_documenti_articoli
@@ -3196,7 +3195,7 @@ ALTER TABLE `risorse_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000034000
 
 -- ruoli_anagrafica
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-09 18:11 Fabio Mosti
 ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
@@ -3214,13 +3213,13 @@ ALTER TABLE `ruoli_anagrafica`
 -- | 030000034001
 
 -- ruoli_anagrafica
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034100
 
 -- ruoli_articoli
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-09 18:11 Fabio Mosti
 ALTER TABLE `ruoli_articoli`
 	ADD PRIMARY KEY (`id`),
@@ -3235,13 +3234,13 @@ ALTER TABLE `ruoli_articoli`
 -- | 030000034101
 
 -- ruoli_articoli
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034200
 
 -- ruoli_audio
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-09 18:28 Fabio Mosti
 ALTER TABLE `ruoli_audio`
 	ADD PRIMARY KEY (`id`), 
@@ -3262,13 +3261,13 @@ ALTER TABLE `ruoli_audio`
 -- | 030000034201
 
 -- ruoli_audio
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034300
 
 -- ruoli_documenti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2022-06-09 16:21 Chiara GDL
 ALTER TABLE `ruoli_documenti`
 	ADD PRIMARY KEY (`id`), 
@@ -3285,13 +3284,13 @@ ALTER TABLE `ruoli_documenti`
 -- | 030000034301
 
 -- ruoli_documenti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034400
 
 -- ruoli_file
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-11 18:14 Fabio Mosti
 ALTER TABLE `ruoli_file`
 	ADD PRIMARY KEY (`id`), 
@@ -3315,13 +3314,13 @@ ALTER TABLE `ruoli_file`
 -- | 030000034401
 
 -- ruoli_file
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034600
 
 -- ruoli_immagini
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
 ALTER TABLE `ruoli_immagini`
 	ADD PRIMARY KEY (`id`), 
@@ -3343,7 +3342,7 @@ ALTER TABLE `ruoli_immagini`
 -- | 030000034601
 
 -- ruoli_immagini
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034800
@@ -3401,7 +3400,7 @@ ALTER TABLE `ruoli_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000035000
 
 -- ruoli_prodotti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 10:46 Fabio Mosti
 ALTER TABLE `ruoli_prodotti`
 	ADD PRIMARY KEY (`id`), 
@@ -3412,13 +3411,13 @@ ALTER TABLE `ruoli_prodotti`
 -- | 030000035001
 
 -- ruoli_prodotti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000035100
 
 -- ruoli_progetti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2022-04-20 10:45 chiara GDL
 ALTER TABLE `ruoli_progetti`
 	ADD PRIMARY KEY (`id`),
@@ -3432,13 +3431,13 @@ ALTER TABLE `ruoli_progetti`
 -- | 030000035101
 
 -- ruoli_progetti
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000035200
 
 -- ruoli_video
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
 ALTER TABLE `ruoli_video`
 	ADD PRIMARY KEY (`id`), 
@@ -3459,7 +3458,7 @@ ALTER TABLE `ruoli_video`
 -- | 030000035201
 
 -- ruoli_video
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `ruoli_video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000037000
@@ -3527,7 +3526,7 @@ ALTER TABLE `software`
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `json` (`json`(255) ),
+	ADD KEY `json` (`json`(255) ), -- ????
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json`(255));
@@ -3541,7 +3540,7 @@ ALTER TABLE `software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000042000
 
 -- stati
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 15:08 Fabio Mosti
 ALTER TABLE `stati`
 	ADD PRIMARY KEY (`id`),
@@ -3554,13 +3553,13 @@ ALTER TABLE `stati`
 -- | 030000042001
 
 -- stati
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `stati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000042200
 
 -- stati_lingue
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-12 15:42 Fabio Mosti
 ALTER TABLE `stati_lingue`
 	ADD PRIMARY KEY (`id`),
@@ -3573,7 +3572,7 @@ ALTER TABLE `stati_lingue`
 -- | 030000042201
 
 -- stati_lingue
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 ALTER TABLE `stati_lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000043000
@@ -3949,7 +3948,7 @@ ALTER TABLE `tipologie_licenze` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000053300
 
 -- tipologie_luoghi
--- tipologia: tabella gestita
+-- tipologia: tabella assistita
 -- verifica: 2022-02-21 15:30 Chiara GDL
 ALTER TABLE `tipologie_luoghi`
 	ADD PRIMARY KEY (`id`),
@@ -4330,7 +4329,7 @@ ALTER TABLE `todo_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000062000
 
 -- udm
--- tipologia: tabella di supporto
+-- tipologia: tabella standard
 -- verifica: 2021-10-19 13:02 Fabio Mosti
 ALTER TABLE `udm`
 	ADD PRIMARY KEY (`id`),
@@ -4402,6 +4401,7 @@ ALTER TABLE `valutazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-05-23 Chiara GDL
 ALTER TABLE `valutazioni_certificazioni`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_valutazione`,`id_certificazione`, `codice`),
 	ADD KEY `id_certificazione` (`id_certificazione`), 
 	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `id_emittente` (`id_emittente`), 
@@ -4411,7 +4411,6 @@ ALTER TABLE `valutazioni_certificazioni`
 	ADD KEY `data_scadenza` (`data_scadenza`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD UNIQUE KEY `unica` (`id_valutazione`,`id_certificazione`, `codice`),
 	ADD KEY `indice` (`id`,`id_valutazione`,`id_certificazione`,`codice`, `id_emittente`, `nome`, `data_emissione`, `data_scadenza`);
 
 -- | 030000062951
@@ -4502,11 +4501,11 @@ ALTER TABLE `zone`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `nome` (`nome`),
     ADD KEY `id_tipologia` (`id_tipologia`), 
-	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `id_tipologia`),
-    ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `id_genitore` (`id_genitore`);
-	
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `id_tipologia`);
+    
 -- | 030000100001
 
 -- zone
@@ -4520,8 +4519,8 @@ ALTER TABLE `zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-06-16 13:16 Chiara GDL
 ALTER TABLE `zone_cap`
 	ADD PRIMARY KEY (`id`),
-	ADD KEY `id_zona` (`id_zona`),
 	ADD UNIQUE KEY `unica` (`id_zona`,`cap`), 
+	ADD KEY `id_zona` (`id_zona`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
