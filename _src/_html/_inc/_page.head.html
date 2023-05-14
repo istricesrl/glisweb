@@ -14,6 +14,10 @@
 <meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
 <meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
 
+<!-- TODO finire di implementare
+<meta http-equiv="Content-Security-Policy" content="{% for policy, domains in page.csp %}{% if domains %}{{ policy }}{% for domain in domains %} {{ domain|raw }}{% endfor %}; {% endif %}{% endfor %}">
+-->
+
 {% for icon in page.template.favicons %}<link rel="{{ icon.rel }}" sizes="{{ icon.sizes }}"{% if icon.type %} type="{{ icon.type }}"{% endif %} href="{{ site.url }}/{{ page.template.path }}img/favicons/{{ icon.file }}">{% endfor %}
 
 {% if page.canonical %}<link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">{% endif %}

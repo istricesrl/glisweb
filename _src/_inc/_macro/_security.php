@@ -200,10 +200,10 @@
         if( $response > 4 ) {
 
             // HTTP status
-            http_response_code( 400 );
+#            http_response_code( 400 );
 
             // output
-            die('enough, guy');
+#            die('enough, guy');
 
         }
     } else {

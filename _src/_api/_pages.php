@@ -144,7 +144,52 @@
 		}
 	}
 
-    // log
+    // ...
+	foreach( array( 'external', 'preload' ) as $type ) {
+		if( is_array( $ct['page']['css'][ $type ] ) ) {
+			foreach( $ct['page']['css'][ $type ] as $k => $v ) {
+				$ct['page']['csp']['style-src'][] = domainFromURL( $v );
+			}
+			$ct['page']['csp']['style-src'] = array_unique( $ct['page']['csp']['style-src'] );
+		}
+	}
+
+	// ...
+	foreach( array( 'external' ) as $type ) {
+		if( is_array( $ct['page']['js'][ $type ] ) ) {
+			foreach( $ct['page']['js'][ $type ] as $k => $v ) {
+				$ct['page']['csp']['script-src'][] = domainFromURL( $v );
+			}
+			$ct['page']['csp']['script-src'] = array_unique( $ct['page']['csp']['script-src'] );
+		}
+	}
+
+	$ct['page']['csp']['default-src'] = array_merge(
+		array( "'self'" ),
+		array_intersect(
+			$ct['page']['csp']['script-src'],
+			$ct['page']['csp']['style-src']
+		)
+	);
+
+	$ct['page']['csp']['style-src'] = array_diff(
+		$ct['page']['csp']['style-src'],
+		$ct['page']['csp']['default-src']
+	);
+
+	$ct['page']['csp']['script-src'] = array_diff(
+		$ct['page']['csp']['script-src'],
+		$ct['page']['csp']['default-src']
+	);
+
+	// debug
+	// print_r( array_intersect( $ct['page']['csp']['script-src'], $ct['page']['csp']['style-src'] ) );
+    // print_r( $ct['page'] );
+    // print_r( $ct['page']['css'] );
+    // print_r( $ct['page']['csp'] );
+    // die();
+
+	// log
 	appendToFile( 'inizio controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
 
     // switch dello schema in caso di permessi insufficienti
