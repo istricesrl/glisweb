@@ -119,7 +119,7 @@
             {% for a in etc.articoli %}
                 {# TODO rendere asincrono questo bottone #}
                 <div class="col-12 col-md-{{ colspan }}">
-                    <a href="{{ pages['iscrizioni.view'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}" target="_self">
+                    <a href="{{ pages['ecommerce.carrello'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}" target="_self">
                         <div class="media">
                         <div class="media-left">	
                             <i class="fa fa-cart-plus"></i>
