@@ -26,7 +26,38 @@
     if( isset( $_REQUEST[ $ct['form']['table'] ]['__crea_prodotto__'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['__crea_prodotto__'] ) ) {
 
         // debug
-        die('creazione rapida prodotto');
+        // die('creazione rapida prodotto');
+
+        // ID della todo in oggetto
+        $idProgetto = $_REQUEST[ $ct['form']['table'] ]['id'];
+
+        $progetto = mysqlSelectRow($cf['mysql']['connection'],
+            'SELECT * FROM progetti_view WHERE id = ?',           
+            array(
+                array( 's' => $idProgetto )
+            )
+        );
+
+        $idProdotto = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => $idProgetto,
+                'id_tipologia' => 1,
+                'nome' => $progetto['nome']
+            ),
+            'prodotti'
+        );
+
+        mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id' => $idProgetto,
+                'id_prodotto' => $idProdotto
+            ),
+            'progetti'
+        );
+
+        $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] = $idProdotto;
 
     }
 
