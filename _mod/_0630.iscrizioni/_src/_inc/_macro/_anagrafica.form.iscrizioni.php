@@ -20,8 +20,9 @@
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
+        'id_contratto' => '#',
         'id_anagrafica' => 'anagrafica',
-        'codice' => 'numero tessera',
+        'progetto' => 'corso',
         'tipologia' => 'tipologia',
         'data_inizio' => 'inizio',
         'data_fine' => 'fine'
@@ -30,6 +31,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
+	    'id_contratto' => 'd-none',
         'id_anagrafica' => 'd-none',
         'codice' => 'text-left d-none d-md-table-cell',
         'tipologia' => 'text-left',

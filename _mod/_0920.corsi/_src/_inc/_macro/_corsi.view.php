@@ -35,7 +35,7 @@
         'fasce' => 'fasce',
         'discipline' => 'discipline',
         'livelli' => 'livelli',
-        'giorni' => 'giorni',
+        'orari' => 'giorni_orari',
         'luoghi' => 'luoghi',
         'stato' => 'stato',
         '__label__' => 'corso',

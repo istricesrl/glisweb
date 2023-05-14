@@ -169,7 +169,7 @@
 			// aggiorno la timestamp di invio
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'UPDATE sms_out SET timestamp_invio = ?, tentativi = ? token = NULL WHERE token = ?',
+				'UPDATE sms_out SET timestamp_invio = ?, tentativi = ?, token = NULL WHERE token = ?',
 				array(
 					array( 's' => $tsInvio ),
 					array( 's' => $tnInvio ),

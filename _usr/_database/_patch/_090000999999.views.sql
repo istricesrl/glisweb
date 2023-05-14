@@ -2279,10 +2279,11 @@ DROP TABLE IF EXISTS `contratti_anagrafica_view`;
 -- contratti_anagrafica_view
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 11:50 Chiara GDL
-		CREATE OR REPLACE VIEW  contratti_anagrafica_view AS 
+CREATE OR REPLACE VIEW contratti_anagrafica_view AS 
 	SELECT 
 		contratti_anagrafica.id,
 		contratti_anagrafica.id_contratto,
+		contratti.codice,
 		contratti_anagrafica.id_anagrafica,
 		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
 		contratti_anagrafica.id_ruolo,
@@ -2296,12 +2297,21 @@ DROP TABLE IF EXISTS `contratti_anagrafica_view`;
 		tipologie_contratti.se_immobili,
 		tipologie_contratti.se_acquisto,
 		tipologie_contratti.se_locazione,
+		tipologie_contratti.nome AS tipologia,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		min( rinnovi.data_inizio ) AS data_inizio,
+		max( rinnovi.data_fine ) AS data_fine,
 		concat( 'contratto ', contratti.nome, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
 	FROM contratti_anagrafica
 		LEFT JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto
 		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = contratti_anagrafica.id_ruolo
-		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica;
+		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
+		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+	GROUP BY contratti.id
+;
 
 -- | 090000007500
 
@@ -2386,6 +2396,8 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
 		group_concat( DISTINCT if( l.id, categorie_progetti_path( l.id ), null ) SEPARATOR ' | ' ) AS livelli,
 		group_concat( DISTINCT dayname( todo.data_programmazione ) SEPARATOR ' | ' ) AS giorni,
+		group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ) SEPARATOR ' | ' ) AS giorni_orari,
+		group_concat( DISTINCT concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) SEPARATOR ' | ' ) AS orari,
 		group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' ) AS luoghi,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
@@ -2394,11 +2406,13 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 			progetti.id,
 			progetti.nome,
 			group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ),
-			group_concat( DISTINCT if( l.id, categorie_progetti_path( l.id ), null ) SEPARATOR ' | ' ),
+			group_concat( DISTINCT concat_ws( '/', f.nome, l.nome ) SEPARATOR ' | ' ),
 			' dal ',
 			coalesce( progetti.data_accettazione, '-' ),
 			' al ',
-			coalesce( progetti.data_chiusura, '-' )
+			coalesce( progetti.data_chiusura, '-' ),
+			group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ) SEPARATOR ' | ' ),
+			group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' )
 		) AS __label__
 	FROM progetti
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente

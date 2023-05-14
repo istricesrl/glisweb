@@ -29,7 +29,7 @@
         'tipologia' => 'tipologia',
         'data_inizio' => 'inizio',
         'data_fine' => 'fine',
-        NULL => 'azioni'
+//        NULL => 'azioni'
 	);
 
     // stili della vista
