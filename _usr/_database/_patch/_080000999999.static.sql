@@ -112,6 +112,41 @@ CREATE TABLE `attivita_view_static` (
   `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- | 080000007800
+
+-- corsi_view_static
+CREATE TABLE `corsi_view_static` (
+  `id` char(32) PRIMARY KEY NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` text DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `cliente` varchar(320) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `entrate_previste` decimal(16,2) DEFAULT NULL,
+  `ore_previste` decimal(16,2) DEFAULT NULL,
+  `costi_previsti` decimal(16,2) DEFAULT NULL,
+  `entrate_accettazione` decimal(16,2) DEFAULT NULL,
+  `data_accettazione` date DEFAULT NULL,
+  `data_chiusura` date DEFAULT NULL,
+  `stato` varchar(8) DEFAULT NULL,
+  `entrate_totali` decimal(16,2) DEFAULT NULL,
+  `uscite_totali` decimal(16,2) DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,
+  `categorie` mediumtext DEFAULT NULL,
+  `fasce` mediumtext DEFAULT NULL,
+  `discipline` mediumtext DEFAULT NULL,
+  `livelli` mediumtext DEFAULT NULL,
+  `giorni` mediumtext DEFAULT NULL,
+  `luoghi` mediumtext DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 -- | 080000015900
 
 -- iscrizioni_view_static
