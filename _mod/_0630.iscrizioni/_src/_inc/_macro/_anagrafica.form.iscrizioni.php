@@ -45,6 +45,9 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'iscrizioni.form';
 
+    // campo per il preset di apertura
+	$ct['view']['open']['preset']['field'] = 'id_anagrafica';
+
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         
         // preset filtro custom progetti aperti
