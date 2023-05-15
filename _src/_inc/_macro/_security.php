@@ -69,11 +69,11 @@
             'label' => 'codice PHP generico',
             'chars' => array( '$', ';', '=' ),
             'type' => 'hard'
-        ),
-        array(
-            'label' => 'codice Js generico',
-            'chars' => array( '=', ';', '{' ),
-            'type' => 'hard'
+#        ),
+#        array(
+#            'label' => 'codice Js generico',
+#            'chars' => array( '=', ';', '{' ),
+#            'type' => 'hard'
         )
     );
 
