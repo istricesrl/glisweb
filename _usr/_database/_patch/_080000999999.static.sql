@@ -144,6 +144,7 @@ CREATE TABLE `corsi_view_static` (
   `orari` mediumtext DEFAULT NULL,
   `giorni_orari` mediumtext DEFAULT NULL,
   `luoghi` mediumtext DEFAULT NULL,
+  `posti_disponibili` mediumtext DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `__label__` text
