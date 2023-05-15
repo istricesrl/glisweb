@@ -2399,7 +2399,7 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ) SEPARATOR ' | ' ) AS giorni_orari,
 		group_concat( DISTINCT concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) SEPARATOR ' | ' ) AS orari,
 		group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' ) AS luoghi,
-		concat( coalesce( count( c.id ) ), ' / ', coalesce( m.testo, '∞' ) ) AS posti_disponibili,
+		concat( coalesce( count( DISTINCT c.id ) ), ' / ', coalesce( m.testo, '∞' ) ) AS posti_disponibili,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2413,7 +2413,9 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 			' al ',
 			coalesce( progetti.data_chiusura, '-' ),
 			group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ) SEPARATOR ' | ' ),
-			group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' )
+			group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' ),
+			'posti',
+			concat( coalesce( count( DISTINCT c.id ) ), ' / ', coalesce( m.testo, '∞' ) )
 		) AS __label__
 	FROM progetti
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
