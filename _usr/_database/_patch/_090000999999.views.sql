@@ -2380,6 +2380,7 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		progetti.id_indirizzo,
 		progetti.id_articolo,
 		progetti.id_prodotto,
+		progetti.id_periodo,
 		progetti.nome,
 		progetti.entrate_previste,
 		progetti.ore_previste,

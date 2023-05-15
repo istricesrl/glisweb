@@ -35,7 +35,7 @@
 																'iscrizioni.stampe',
 																'iscrizioni.tools' ) ),
 			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'iscrizioni' ),
-																				'priority'	=> '050' ) ) )
+																				'priority'	=> '020' ) ) )
 		);
 
 		// vista archivio iscrizioni
