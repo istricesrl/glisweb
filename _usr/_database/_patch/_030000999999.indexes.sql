@@ -4277,6 +4277,7 @@ ALTER TABLE `tipologie_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-15 16:17 Fabio Mosti
 ALTER TABLE `todo`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`codice`),
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_cliente` (`id_cliente`), 
