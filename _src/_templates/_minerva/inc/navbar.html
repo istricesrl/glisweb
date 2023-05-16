@@ -11,10 +11,17 @@
             </ul>
         </div>
         {% if session.account.username %}
-        <form class="col-auto d-flex flex-column p-0 mr-auto ml-md-auto mr-md-0 order-1 order-md-12" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">
-            <input type="hidden" name="__logout__" value="1">
-            <button type="submit" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="logout"><i class="fa fa-sign-out"></i></button>
-        </form>
+        <div class="col-auto d-flex flex-row p-0 mr-auto ml-md-auto mr-md-0 order-1 order-md-12">
+            <div class="">
+                <a href="{{ pages['account'].path[ localization.language.ietf] }}" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="logout"><i class="fa fa-user"></i></a>
+            </div>
+            <div class="">
+                    <form class="" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+                    <input type="hidden" name="__logout__" value="1">
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="logout"><i class="fa fa-sign-out"></i></button>
+                </form>    
+            </div>
+        </div>
         {% endif %}
     </nav>
 </div>

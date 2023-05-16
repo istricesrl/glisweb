@@ -31,47 +31,55 @@
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+        <form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
-	    {# CAMPI HIDDEN DI BASE #}
-	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
-	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+            {# CAMPI HIDDEN DI BASE #}
+            <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+            <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+            <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+            <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+            {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+            <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-            {% if not request[ table ].id_prodotto %}
-            <div class="form-row">
-                <!--div class="col-6 col-md-auto justify-content-center align-self-center">
-                    <b>acquistabile online</b>
+            {# CAMPI HIDDEN SPECIALI #}
+            <input type="hidden" id="creaprodotto" name="{{ table }}[__crea_prodotto__]" value="">
+
+            {# MODULO PRINCIPALE #}
+            <fieldset>
+                <legend>prodotto</legend>
+                <div class="form-row">
+                    {% if not request[ table ].id_prodotto %}
+                    <div class="col-3 text-right">
+                        {{ frm.button( 'creazione rapida prodotto', 'button', 'btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#creaprodotto").val( 1 ); $("#form-' ~ table ~ '").submit();','crea prodotto' ) }}
+                    </div>
+                    {% endif %}
+                    <div class="col">
+                        {{ frm.selectBox( table, '', '', 'id_prodotto', '', etc.select.prodotti, request, '', '', 1, '', '', 'prodotti.form', 'prodotti.form', 'prodotti', 'testo', page, pages, ietf, 'prodotti' ) }}
+                    </div>
+    <!--
+                    <div class="col-auto">
+                        {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
+                    </div>
+    -->
                 </div>
-                <div class="col-6 col-md-auto">
-                    <span class="label-top">dal</span>
-                    {{ frm.dateTime( table, '', '', 'timestamp_inizio', '', '', request ) }}
-                </div>
-                <div class="col-6 col-md-auto">
-                    <span class="label-top">al</span>
-                    {{ frm.dateTime( table, '', '', 'timestamp_fine', '', '', request ) }}
-                </div-->
-                <div class="col-12 col-md">
-                    {{ frm.button(  'CREA PRODOTTO' ,'button','btn btn-secondary btn-sm btn-block', 'creaProdotto()','ottieni in modo automatico il progressivo' ) }}
-                </div>
-            </div>
-            {% else %}
-                {# SUBFORM PUBBLICAZIONI #}
-                {{ sub.pubblicazioni( 'prodotti', 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
-        	    <fieldset class="">
-                    {{ def.controls( page, pages, ietf, session, table, request ) }}
-                </fieldset>
+            </fieldset>
+
+            {# ARTICOLI #}
+            {% if request[ table ].id_prodotto %}
+            <fieldset class="d-flex flex-column flex-fill">
                 <legend>articoli</legend>
                 {% include 'inc/view.html' %}
+            </fieldset>
             {% endif %}
-       
-	</form>
+        
+        </form>
     </div>
 </section>
+{% endblock %}
+
+{% block javascript %}
+<!--
 <script>
 	function creaProdotto() {
 			
@@ -110,6 +118,7 @@
 				}
 			);
 
-			}
+		}
 </script>
+-->
 {% endblock %}

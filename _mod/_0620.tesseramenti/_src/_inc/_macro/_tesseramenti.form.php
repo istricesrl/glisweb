@@ -122,7 +122,7 @@
     // azioni
     foreach( $ct['view']['data'] as &$row ) {
         if( is_array( $row ) ) {
-            $pagato = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM documenti_articoli INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento INNER JOIN pagamenti ON pagamenti.id_documento = documenti.id WHERE id_rinnovo = ? AND pagamenti.data_pagamento IS NOT NULL', array( array( 's' => $row['id'] ) ) );
+            $pagato = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM documenti_articoli INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento INNER JOIN pagamenti ON pagamenti.id_documento = documenti.id WHERE id_rinnovo = ? AND pagamenti.timestamp_pagamento IS NOT NULL', array( array( 's' => $row['id'] ) ) );
             if( empty( $pagato ) ) {
                 $articolo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT articoli.id FROM articoli INNER JOIN metadati ON metadati.id_articolo = articoli.id WHERE metadati.nome = "acquisto_rinnovi|id_tipologia" AND metadati.testo = ?', array( array( 's' => $row['id_tipologia'] ) ) );
                 if( isset( $_REQUEST[ $ct['form']['table'] ]['contratti_anagrafica'][0]['id_anagrafica'] ) ) {

@@ -47,8 +47,20 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    // macro di default
+	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    // timer
+    timerCheck( $cf['speed'], 'inizio rielaborazione dati tabella' );
+
+    // rielaborazione dati tabella
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-             if(!empty($row['data_inizio'])){$row['data_inizio'] = date('d/m/Y', strtotime($row['data_inizio']));}
+                if( ! empty( $row['data_inizio'] ) ) {
+                    $row['data_inizio'] = date('d/m/Y', strtotime( $row['data_inizio'] ) );
+                }
           	}
 	}
+
+    // timer
+    timerCheck( $cf['speed'], 'fine rielaborazione dati tabella (' . count( $ct['view']['data'] ) . ' righe)' );

@@ -68,12 +68,12 @@
         }
 
         // inizializzazione totali carrello
-        $_SESSION['carrello']['prezzo_netto_totale']        = 0;
-        $_SESSION['carrello']['prezzo_lordo_totale']        = 0;
-        $_SESSION['carrello']['prezzo_netto_finale']        = 0;
-        $_SESSION['carrello']['prezzo_lordo_finale']        = 0;
-        $_SESSION['carrello']['sconto_percentuale']         = 0;
-        $_SESSION['carrello']['sconto_valore']              = 0;
+        $_SESSION['carrello']['prezzo_netto_totale']        = 0.0;
+        $_SESSION['carrello']['prezzo_lordo_totale']        = 0.0;
+        $_SESSION['carrello']['prezzo_netto_finale']        = 0.0;
+        $_SESSION['carrello']['prezzo_lordo_finale']        = 0.0;
+        $_SESSION['carrello']['sconto_percentuale']         = 0.0;
+        $_SESSION['carrello']['sconto_valore']              = 0.0;
 
         // inizializzazione calcolatore articoli aggiunti
         $deltaArticoli = array();

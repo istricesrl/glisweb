@@ -1,4 +1,7 @@
-<form action="{{ page.path[ localization.language.ietf ] }}" class="" id="form-login" method="post">
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_privacy.html' as prv %}
+
+<form action="{{ page.path[ localization.language.ietf ] }}" class="" id="formLogin" method="post">
 	{% for e,d in request %}{% if d.id %}
 	<input type="hidden" name="{{ e }}[id]" value="{{ d.id }}">
 	<input type="hidden" name="{{ e }}[__method__]" value="get">
@@ -14,7 +17,7 @@
 		<div class="col-12 col-md-8"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
 	    </div>
 	    <div class="form-group form-row">
-		<div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">login</button></div>
+			<div class="col">{{ cms.formButton( 'login', 'button', 'btn-secondary btn-sm btn-block bottone-registrazione', '', '', '', 'formLogin', google.profile.recaptcha, '', 'formLogin' ) }}</div>
 	    </div>
 	    <div class="form-group form-row">
 		<div class="col-12"><a href="{{ pages['password.reinsert'].path[ localization.language.ietf ] }}" class="btn btn-light btn-sm btn-block btn-custom-signup">password dimenticata?</a></div>

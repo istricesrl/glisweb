@@ -51,3 +51,6 @@
 
     // timeout dei socket
     ini_set( 'default_socket_timeout', 900 );
+
+    // non esporre la versione di PHP
+    ini_set( 'expose_php', 'Off' );

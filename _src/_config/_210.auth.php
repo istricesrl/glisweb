@@ -95,10 +95,12 @@
 	$cf['auth']['jwt']['pass'] = NULL;
 
     if( isset( $cf['auth']['jwt']['secret'] ) ) {
-        $cf['auth']['jwt']['secret'] .= date( 'Y-m-d' );
+		if( isset( $cf['auth']['jwt']['salt'] ) && ! empty( $cf['auth']['jwt']['salt'] ) ) {
+			$cf['auth']['jwt']['secret'] .= date( $cf['auth']['jwt']['salt'] );
+		}
     }
 
-	// $cf['session']['jwt']['token'] = NULL;
+	// $cf['session']['jwt']['string'] = NULL;
 
 	// intercetto eventuali richieste di autenticazione HTTP
 	if( ! empty( $_SERVER['PHP_AUTH_USER'] ) && ! empty( $_SERVER['PHP_AUTH_PW'] ) ) {
@@ -115,23 +117,25 @@
 	// intercetto l'header bearer autentication
 	if( array_key_exists( 'Authorization', $httpHeaders ) ) {
 		if( substr( $httpHeaders['Authorization'], 0, 6 ) == 'Bearer' ) {
-			$_REQUEST['jwt'] = substr( $httpHeaders['Authorization'], 7 );
+			$_REQUEST['j'] = substr( $httpHeaders['Authorization'], 7 );
 		}
 	}
 
 	// intercetto eventuali richieste di autenticazione tramite token JWT
-	if( ! empty( $_REQUEST['jwt'] ) ) {
+	if( ! empty( $_REQUEST['j'] ) ) {
 		if( isset( $cf['auth']['jwt']['secret'] ) ) {
-			$jwt = jwt2array( $_REQUEST['jwt'], $cf['auth']['jwt']['secret'] );
-			$_REQUEST['__login__']['user'] = $jwt['data']['user'];
-			$cf['auth']['jwt']['pass'] = mysqlSelectValue(
-				$cf['mysql']['connection'],
-				'SELECT password FROM account WHERE username = ? AND id = ?',
-				array(
-					array( 's' => $jwt['data']['user'] ),
-					array( 's' => $jwt['data']['id'] )
-				)
-			);
+			$jwt = jwt2array( $_REQUEST['j'], $cf['auth']['jwt']['secret'] );
+			if( isset( $jwt['data']['user'] ) ) {
+				$_REQUEST['__login__']['user'] = $jwt['data']['user'];
+				$cf['auth']['jwt']['pass'] = mysqlSelectValue(
+					$cf['mysql']['connection'],
+					'SELECT password FROM account WHERE username = ? AND id = ?',
+					array(
+						array( 's' => $jwt['data']['user'] ),
+						array( 's' => $jwt['data']['id'] )
+					)
+				);
+			}
 		}
 	}
 
@@ -169,9 +173,9 @@
 					    if( isset( $cf['auth']['groups'][ $gr ]['privilegi'] ) ) {
 	  						foreach( $cf['auth']['groups'][ $gr ]['privilegi'] as $pr ) {
   								if( ! in_array( $pr, $_SESSION['account']['privilegi'] ) ) {
-									  $_SESSION['account']['privilegi'][] = $pr;
-								  }
-							  }
+									$_SESSION['account']['privilegi'][] = $pr;
+								}
+							}
 					    }
 					}
 /*
@@ -187,9 +191,9 @@
 					$cf['auth']['status'] = LOGIN_SUCCESS;
 
 					// JWT per il login corrente
-					// NOTA a cosa serve questo? quando viene usato $cf['auth']['jwt']['token']?
+					// NOTA a cosa serve questo? quando viene usato $cf['auth']['jwt']['string']?
 					if( ! empty( $cf['auth']['jwt']['secret'] ) ) {
-						$cf['session']['jwt']['token'] = getJwt(
+						$cf['session']['jwt']['string'] = getJwt(
 							array(
 								'id' => $_SESSION['account']['id'],
 								'user' => $_SESSION['account']['username']
@@ -306,10 +310,72 @@
 						    $_SESSION['account'],
 						    mysqlSelectRow(
 								$cf['mysql']['connection'],
-								'SELECT se_collaboratore, se_cliente, se_fornitore, se_commerciale, se_amministrazione FROM anagrafica_view_static WHERE id = ?',
+								'SELECT nome, cognome, denominazione, codice_fiscale, partita_iva, '.
+								'giorno_nascita, mese_nascita, anno_nascita, id_comune_nascita, '.
+								'se_collaboratore, se_cliente, se_fornitore, se_commerciale, se_amministrazione '.
+								'FROM anagrafica_view_static WHERE id = ?',
 								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 						    )
 						);
+
+						// e-mail
+						$_SESSION['account'] = array_replace_recursive(
+						    $_SESSION['account'],
+						    mysqlSelectRow(
+								$cf['mysql']['connection'],
+								'SELECT id AS id_mail, indirizzo AS mail '.
+								'FROM mail WHERE id_anagrafica = ?',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+						    )
+						);
+
+						// telefono fisso
+						$_SESSION['account'] = array_replace_recursive(
+						    $_SESSION['account'],
+						    mysqlSelectRow(
+								$cf['mysql']['connection'],
+								'SELECT id AS id_telefono, numero AS telefono '.
+								'FROM telefoni WHERE id_anagrafica = ? AND id_tipologia = 1',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+						    )
+						);
+
+						// cellulare
+						$_SESSION['account'] = array_replace_recursive(
+						    $_SESSION['account'],
+						    mysqlSelectRow(
+								$cf['mysql']['connection'],
+								'SELECT id AS id_cellulare, numero AS cellulare '.
+								'FROM telefoni WHERE id_anagrafica = ? AND id_tipologia = 2',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+						    )
+						);
+
+						// indirizzo
+						$_SESSION['account'] = array_replace_recursive(
+						    $_SESSION['account'],
+						    mysqlSelectRow(
+								$cf['mysql']['connection'],
+								'SELECT anagrafica_indirizzi.id AS id_associazione_indirizzo, anagrafica_indirizzi.id_indirizzo, '.
+								'indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, indirizzi.id_comune '.
+								'FROM anagrafica_indirizzi '.
+								'LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
+								'WHERE id_anagrafica = ? AND id_ruolo = 1',
+								array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
+						    )
+						);
+
+
+/**
+ * CAMPI DA AGGIUNGERE ANCHE IN STANDARD
+ * 
+ * indirizzo
+ * civico
+ * cap
+ * id_comune
+ * 
+ */
+
 
 					    // attribuzione dei gruppi e dei privilegi di gruppo
 						if( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) {
@@ -355,7 +421,7 @@
 
 						// JWT per il login corrente
 						if( ! empty( $cf['auth']['jwt']['secret'] ) ) {
-							$cf['session']['jwt']['token'] = getJwt(
+							$cf['session']['jwt']['string'] = getJwt(
 								array(
 									'id' => $_SESSION['account']['id'],
 									'user' => $_SESSION['account']['username']
@@ -363,6 +429,8 @@
 								$cf['auth']['jwt']['secret']
 							);
 						}
+
+						$_SESSION['account']['source'] = 'mysql';
 
 					    // log
 						logWrite( 'login effettuato correttamente via database per ' . $_REQUEST['__login__']['user'], 'auth', LOG_DEBUG );

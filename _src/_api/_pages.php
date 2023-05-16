@@ -97,6 +97,9 @@
     // log
 	logWrite( 'avvio API pages', 'pages' );
 
+    // timer
+	timerCheck( $cf['speed'], 'inizio caricamento file INI del template' );
+
     // log
 	appendToFile( 'inizio caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
 
@@ -126,6 +129,9 @@
 	    die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante' );
 	}
 
+    // timer
+	timerCheck( $cf['speed'], 'fine caricamento file INI del template' );
+
     // log
 	appendToFile( 'fine caricamento file INI del template' . PHP_EOL, FILE_LATEST_RUN );
 
@@ -144,7 +150,72 @@
 		}
 	}
 
+    // timer
+	timerCheck( $cf['speed'], 'fine caricamento tema del template' );
+
     // log
+	appendToFile( 'fine caricamento tema del template' . PHP_EOL, FILE_LATEST_RUN );
+
+    // ...
+	foreach( array( 'external', 'preload' ) as $type ) {
+		if( isset( $ct['page']['css'][ $type ] ) && is_array( $ct['page']['css'][ $type ] ) ) {
+			foreach( $ct['page']['css'][ $type ] as $k => $v ) {
+				$ct['page']['csp']['style-src'][] = domainFromURL( $v );
+			}
+			$ct['page']['csp']['style-src'] = array_unique( $ct['page']['csp']['style-src'] );
+		} else {
+			$ct['page']['csp']['style-src'] = array();
+		}
+	}
+
+	// ...
+	foreach( array( 'external' ) as $type ) {
+		if( isset( $ct['page']['js'][ $type ] ) && is_array( $ct['page']['js'][ $type ] ) ) {
+			foreach( $ct['page']['js'][ $type ] as $k => $v ) {
+				$ct['page']['csp']['script-src'][] = domainFromURL( $v );
+			}
+			$ct['page']['csp']['script-src'] = array_unique( $ct['page']['csp']['script-src'] );
+		} else {
+			$ct['page']['csp']['script-src'] = array();
+		}
+	}
+
+	if( isset( $ct['page']['csp']['default-src'] ) ) {
+
+		$ct['page']['csp']['default-src'] = array_merge(
+			array( "'self'" ),
+			array_intersect(
+				$ct['page']['csp']['script-src'],
+				$ct['page']['csp']['style-src']
+			)
+		);
+	
+		$ct['page']['csp']['style-src'] = array_diff(
+			$ct['page']['csp']['style-src'],
+			$ct['page']['csp']['default-src']
+		);
+	
+		$ct['page']['csp']['script-src'] = array_diff(
+			$ct['page']['csp']['script-src'],
+			$ct['page']['csp']['default-src']
+		);
+	
+	}
+
+	// timer
+	timerCheck( $cf['speed'], 'fine elaborazione dati per CSP' );
+
+    // log
+	appendToFile( 'fine elaborazione dati per CSP' . PHP_EOL, FILE_LATEST_RUN );
+
+	// debug
+	// print_r( array_intersect( $ct['page']['csp']['script-src'], $ct['page']['csp']['style-src'] ) );
+    // print_r( $ct['page'] );
+    // print_r( $ct['page']['css'] );
+    // print_r( $ct['page']['csp'] );
+    // die();
+
+	// log
 	appendToFile( 'inizio controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
 
     // switch dello schema in caso di permessi insufficienti
@@ -156,6 +227,9 @@
 
 	// debug
 	// print_r( $ct['page']['template'] );
+
+    // timer
+	timerCheck( $cf['speed'], 'fine controllo permessi' );
 
     // log
 	appendToFile( 'fine controllo permessi' . PHP_EOL, FILE_LATEST_RUN );
@@ -225,10 +299,12 @@
 	$ctFile = DIR_SRC_INC_CONTENTS . '_' . $ctName . '.' . $cf['localization']['language']['ietf'] . '.html';
 	$ctFileLocal = str_replace( '_', '', $ctFile );
 	if( file_exists( $ctFileLocal ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = readStringFromFile( $ctFileLocal );
+	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFileLocal . ' -->' . PHP_EOL . readStringFromFile( $ctFileLocal );
 	} elseif( file_exists( $ctFile ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = readStringFromFile( $ctFile );
+	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFile . ' -->' . PHP_EOL . readStringFromFile( $ctFile );
 	}
+
+	// TODO forse nel commento qui sopra riportare tutto il path è un po' eccessivo, accorciare
 
 	// debug
 	// var_dump( $ctFile );

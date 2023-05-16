@@ -10,8 +10,7 @@ header, nav, main, footer {
 }
 
 h1, h2, h3, h4, h5 {
-    margin: 0px;
-    margin-bottom: 0.5em;
+    margin: 0em 0.5em;
 }
 
 h1 {

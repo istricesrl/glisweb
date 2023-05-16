@@ -1,5 +1,8 @@
 <?php
 
+/* DEPRECATO
+    usare la macro account.php del modulo base
+
     if( isset( $_REQUEST['__profile__']['email'] ) ) {
 
         // creo il token
@@ -113,3 +116,5 @@
         );
 
     }
+
+*/
