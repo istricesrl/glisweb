@@ -462,13 +462,13 @@ CREATE OR REPLACE VIEW anagrafica_categorie_view AS
 
 -- | 090000000600
 
--- anagrafica_certificazioni
+-- anagrafica_certificazioni_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `anagrafica_certificazioni_view`;
 
 -- | 090000000601
 
--- anagrafica_certificazioni
+-- anagrafica_certificazioni_view
 -- tipologia: tabella gestita
 -- verifica: 2022-02-03 11:12 Chiara GDL
 CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
@@ -1650,12 +1650,12 @@ CREATE OR REPLACE VIEW causali_view AS
 ;
 
 -- | 090000004700
--- certificazioni
+-- certificazioni_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `certificazioni_view`;
 
 -- | 090000004701
--- certificazioni
+-- certificazioni_view
 -- tipologia: tabella assistita
 -- verifica: 2022-02-03 11:12 Chiara GDL
 CREATE OR REPLACE VIEW certificazioni_view AS
@@ -1861,7 +1861,7 @@ CREATE OR REPLACE VIEW condizioni_pagamento_view AS
 
 -- | 090000006400
 
--- consensi
+-- consensi_view
 -- tipologia: tabella standard
 DROP TABLE IF EXISTS `consensi_view`;
 
@@ -4224,13 +4224,13 @@ CREATE OR REPLACE VIEW licenze_view AS
 
 -- | 090000016700
 
--- licenze_software
+-- licenze_software_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `licenze_software_view`;
 
 -- | 090000016701
 
--- licenze_software
+-- licenze_software_view
 -- tipologia: tabella gestita
 -- verifica: 2021-11-16 15:30 Chiara GDL
 CREATE OR REPLACE VIEW licenze_software_view AS
@@ -4721,13 +4721,13 @@ CREATE OR REPLACE VIEW `mail_sent_view` AS
 
 -- | 090000019000
 
--- mailing
+-- mailing_view
 -- tipolgia: tabella gestita
 DROP TABLE IF EXISTS `mailing_view`;
 
 -- | 090000019001
 
--- mailing
+-- mailing_view
 -- tipolgia: tabella gestita
 -- verifica: 2022-02-07 15:47 Chiara GDL
 CREATE OR REPLACE VIEW `mailing_view` AS
@@ -4743,31 +4743,11 @@ CREATE OR REPLACE VIEW `mailing_view` AS
 
 -- | 090000019050
 
--- mailing_liste_view
--- tipolgia: tabella gestita
-DROP TABLE IF EXISTS `mailing_liste_view`;
-
--- | 090000019051
-
--- mailing_liste_view
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
-CREATE OR REPLACE VIEW `mailing_liste_view` AS
-	SELECT
-	mailing_liste.id,
-	mailing_liste.id_lista,
-	mailing_liste.id_mailing,
-	concat( mailing_liste.id_lista, mailing_liste.id_mailing ) AS __label__
-	FROM mailing_liste
-;
-
--- | 090000019100
-
 -- mailing_mail_view
 -- tipolgia: tabella gestita
 DROP TABLE IF EXISTS `mmailing_mail_view`;
 
--- | 090000019101
+-- | 090000019051
 
 -- mailing_mail_view
 -- tipolgia: tabella gestita
@@ -4791,6 +4771,26 @@ CREATE OR REPLACE VIEW `mailing_mail_view` AS
 		INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing
 		INNER JOIN mail ON mail.id = mailing_mail.id_mail
 		INNER JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
+;
+
+-- | 090000019100
+
+-- mailing_liste_view
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `mailing_liste_view`;
+
+-- | 090000019051
+
+-- mailing_liste_view
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE OR REPLACE VIEW `mailing_liste_view` AS
+	SELECT
+	mailing_liste.id,
+	mailing_liste.id_lista,
+	mailing_liste.id_mailing,
+	concat( mailing_liste.id_lista, mailing_liste.id_mailing ) AS __label__
+	FROM mailing_liste
 ;
 
 -- | 090000020200
@@ -8126,14 +8126,14 @@ CREATE OR REPLACE VIEW `tesseramenti_view` AS
 
 -- | 090000044510
 
--- tesseramenti_view
+-- tesseramenti_attivi_view
 -- tipologia: tabella gestita
 -- verifica: 2021-09-10 16:54 Fabio Mosti
 DROP TABLE IF EXISTS `tesseramenti_attivi_view`;
 
 -- | 090000044511
 
--- tesseramenti_view
+-- tesseramenti_attivi_view
 -- tipologia:vista virtuale
 -- verifica: 2021-09-10 16:54 Fabio Mosti
 CREATE OR REPLACE VIEW `tesseramenti_attivi_view` AS
@@ -9845,13 +9845,13 @@ CREATE OR REPLACE VIEW `video_view` AS
 
 -- | 090000100000
 
--- zone
+-- zone_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `zone_view`;
 
 -- | 090000100001
 
--- zone
+-- zone_view
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 CREATE OR REPLACE VIEW zone_view AS
@@ -9870,13 +9870,13 @@ CREATE OR REPLACE VIEW zone_view AS
 
 -- | 090000100100
 
--- zone_cap
+-- zone_cap_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `zone_cap_view`;
 
 -- | 090000100101
 
--- zone_cap
+-- zone_cap_view
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 CREATE OR REPLACE VIEW zone_cap_view AS
@@ -9893,13 +9893,13 @@ CREATE OR REPLACE VIEW zone_cap_view AS
 
 -- | 090000100200
 
--- zone_indirizzi
+-- zone_indirizzi_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `zone_indirizzi_view`;
 
 -- | 090000100201
 
--- zone_indirizzi
+-- zone_indirizzi_view
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 CREATE OR REPLACE VIEW zone_indirizzi_view AS
@@ -9916,13 +9916,13 @@ CREATE OR REPLACE VIEW zone_indirizzi_view AS
 
 -- | 090000100300
 
--- zone_provincie
+-- zone_provincie_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `zone_provincie_view`; 
 
 -- | 090000100301
 
--- zone_provincie
+-- zone_provincie_view
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 CREATE OR REPLACE VIEW zone_provincie_view AS
@@ -9939,13 +9939,13 @@ CREATE OR REPLACE VIEW zone_provincie_view AS
 
 -- | 090000100400
 
--- zone_stati
+-- zone_stati_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `zone_stati_view`; 
 
 -- | 090000100401
 
--- zone_stati
+-- zone_stati_view
 -- tipologia: tabella gestita
 -- verifica: 2022-06-16 13:16 Chiara GDL
 CREATE OR REPLACE VIEW zone_stati_view AS

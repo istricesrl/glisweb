@@ -240,7 +240,7 @@ INSERT IGNORE INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) 
 (3,	'nuda proprietà',	NULL,	1),
 (4,	'occupato',	NULL,	1);
 
--- | 050000010000
+-- | 050000012800
 
 -- embed
 -- tipologia: tabella standard
@@ -383,12 +383,6 @@ INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (22, 'MP22', 'Trattenuta su somme già riscosse' ),
 (23,  'MP08', 'bancomat' ),
 (24, 'MP08', 'paypal' );
-
--- | 050000022000
-
--- tipologie_notizie
-INSERT IGNORE INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000023600
 
@@ -1277,6 +1271,10 @@ INSERT IGNORE INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `h
 -- tipologie_notizie
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
+
+INSERT IGNORE INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 
 -- | 050000054100
 

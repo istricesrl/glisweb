@@ -4134,7 +4134,7 @@ CREATE TABLE `valutazioni_certificazioni` (
 
 -- | 010000063000
 
-Mostiint(1)-- valute
+-- valute
 -- tipologia: tabella di supporto
 -- verifica: 2021-10-19 13:16 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `valute` (
