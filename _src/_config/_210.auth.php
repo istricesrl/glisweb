@@ -123,8 +123,8 @@
 	if( ! empty( $_REQUEST['j'] ) ) {
 		if( isset( $cf['auth']['jwt']['secret'] ) ) {
 			$jwt = jwt2array( $_REQUEST['j'], $cf['auth']['jwt']['secret'] );
-			$_REQUEST['__login__']['user'] = $jwt['data']['user'];
 			if( isset( $jwt['data']['user'] ) ) {
+				$_REQUEST['__login__']['user'] = $jwt['data']['user'];
 				$cf['auth']['jwt']['pass'] = mysqlSelectValue(
 					$cf['mysql']['connection'],
 					'SELECT password FROM account WHERE username = ? AND id = ?',
