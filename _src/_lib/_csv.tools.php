@@ -95,8 +95,10 @@
 
         $h = openFile( $file, $mode );
     
-        $h = openFile( $file );
-        fputcsv( $h, array_keys( $data[0] ), $s, $c, $e );
+        // $h = openFile( $file );
+        if( getFileSize( $file ) == 0 ) {
+            fputcsv( $h, array_keys( $data[0] ), $s, $c, $e );
+        } 
     
         foreach( $data as $row ) {
             fputcsv( $h, $row, $s, $c, $e );
