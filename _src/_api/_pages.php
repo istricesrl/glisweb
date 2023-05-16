@@ -158,43 +158,51 @@
 
     // ...
 	foreach( array( 'external', 'preload' ) as $type ) {
-		if( is_array( $ct['page']['css'][ $type ] ) ) {
+		if( isset( $ct['page']['css'][ $type ] ) && is_array( $ct['page']['css'][ $type ] ) ) {
 			foreach( $ct['page']['css'][ $type ] as $k => $v ) {
 				$ct['page']['csp']['style-src'][] = domainFromURL( $v );
 			}
 			$ct['page']['csp']['style-src'] = array_unique( $ct['page']['csp']['style-src'] );
+		} else {
+			$ct['page']['csp']['style-src'] = array();
 		}
 	}
 
 	// ...
 	foreach( array( 'external' ) as $type ) {
-		if( is_array( $ct['page']['js'][ $type ] ) ) {
+		if( isset( $ct['page']['js'][ $type ] ) && is_array( $ct['page']['js'][ $type ] ) ) {
 			foreach( $ct['page']['js'][ $type ] as $k => $v ) {
 				$ct['page']['csp']['script-src'][] = domainFromURL( $v );
 			}
 			$ct['page']['csp']['script-src'] = array_unique( $ct['page']['csp']['script-src'] );
+		} else {
+			$ct['page']['csp']['script-src'] = array();
 		}
 	}
 
-	$ct['page']['csp']['default-src'] = array_merge(
-		array( "'self'" ),
-		array_intersect(
+	if( isset( $ct['page']['csp']['default-src'] ) ) {
+
+		$ct['page']['csp']['default-src'] = array_merge(
+			array( "'self'" ),
+			array_intersect(
+				$ct['page']['csp']['script-src'],
+				$ct['page']['csp']['style-src']
+			)
+		);
+	
+		$ct['page']['csp']['style-src'] = array_diff(
+			$ct['page']['csp']['style-src'],
+			$ct['page']['csp']['default-src']
+		);
+	
+		$ct['page']['csp']['script-src'] = array_diff(
 			$ct['page']['csp']['script-src'],
-			$ct['page']['csp']['style-src']
-		)
-	);
+			$ct['page']['csp']['default-src']
+		);
+	
+	}
 
-	$ct['page']['csp']['style-src'] = array_diff(
-		$ct['page']['csp']['style-src'],
-		$ct['page']['csp']['default-src']
-	);
-
-	$ct['page']['csp']['script-src'] = array_diff(
-		$ct['page']['csp']['script-src'],
-		$ct['page']['csp']['default-src']
-	);
-
-    // timer
+	// timer
 	timerCheck( $cf['speed'], 'fine elaborazione dati per CSP' );
 
     // log
