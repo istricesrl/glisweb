@@ -161,6 +161,10 @@
 	    $cf['auth']['accounts']['root']['password'] = md5( getenv('ROOT_PW') );
 	}
 */
+
+    // scadenza della chiave JWT
+    $cf['auth']['jwt']['salt'] = 'Y-m-d';
+
     // configurazione extra
 	if( isset( $cx['auth'] ) ) {
 	    $cf['auth'] = array_replace_recursive( $cf['auth'], $cx['auth'] );

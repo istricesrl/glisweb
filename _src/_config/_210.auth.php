@@ -95,7 +95,9 @@
 	$cf['auth']['jwt']['pass'] = NULL;
 
     if( isset( $cf['auth']['jwt']['secret'] ) ) {
-        $cf['auth']['jwt']['secret'] .= date( 'Y-m-d' );
+		if( isset( $cf['auth']['jwt']['salt'] ) && ! empty( $cf['auth']['jwt']['salt'] ) ) {
+			$cf['auth']['jwt']['secret'] .= date( $cf['auth']['jwt']['salt'] );
+		}
     }
 
 	// $cf['session']['jwt']['string'] = NULL;
