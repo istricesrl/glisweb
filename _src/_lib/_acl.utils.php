@@ -410,3 +410,36 @@
 	    return NULL;
 
     }
+
+	/**
+	 * 
+	 * 
+	 * @todo documentare
+	 * 
+	 * 
+	 */
+	function checkFirmaImportazione( $row ) {
+
+		global $cf;
+
+		// print_r( $row );
+		// print_r( array_diff_key( $row, array( '__firma__' => 'test' ) ) );
+
+		$challenge = hash(
+			'sha3-512',
+			serialize( array_diff_key( $row, array( '__firma__' => null ) ) ) . $cf['auth']['import']['secret']
+		);
+
+		// var_dump( $challenge );
+
+		if( $row['__firma__'] == $challenge ) {
+			// die('match');
+			return true;
+		}
+
+		// var_dump( $row['__firma__'] );
+		// var_dump( $challenge );
+		// die('unmatch');
+		return false;
+
+	}

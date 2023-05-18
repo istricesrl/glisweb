@@ -184,7 +184,8 @@
                 'cpanel',
                 'dbadmin',
                 'servlet',
-                'wp-config'
+                'wp-config',
+                '__firma__'
             ),
             array_map('trim',
                 file(

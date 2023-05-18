@@ -24,118 +24,132 @@
      */
     function controller( $c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = NULL ) {
 
-	// log
-	    logWrite( "${t}/${a}", 'controller' );
+		// log
+		logWrite( "${t}/${a}", 'controller' );
 
-	// inizializzazioni
-	    $q					= NULL;										// la query MySQL che verrà eseguita
-	    $s					= array();									// 
-	    $r					= false;									// 
-	    $ks					= array();									// 
-	    $vs					= array();									// 
-	    $vm					= false;									// 
+		// inizializzazioni
+		$q					= NULL;										// la query MySQL che verrà eseguita
+		$s					= array();									// 
+		$r					= false;									// 
+		$ks					= array();									// 
+		$vs					= array();									// 
+		$vm					= false;									// 
 		$rm					= getStaticViewExtension( $mc, $c, $t );	// 
 
-	// inclusione dei controller
-	    $cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
-	    $cm					= DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
+		// inclusione dei controller
+		$cb					= DIR_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
+		$cm					= DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS . '_{default,' . str_replace( '_', '.', $t ) . '}.';
 
-	// inizializzazione array dati
-	    if( empty( $d ) ) { $d		= array(); }
+		// inizializzazione array dati
+		if( empty( $d ) ) { $d		= array(); }
 
-	// debug
+		// debug
 		// var_dump( $d );
 		// print_r( $d );
 
-	// modifico in NULL tutti i valori vuoti
-	    // $d = array_map( 'empty2null', $d );
-	    $d = array_map( 'numeric2null', $d );
+		// modifico in NULL tutti i valori vuoti
+		// $d = array_map( 'empty2null', $d );
+		$d = array_map( 'numeric2null', $d );
 
-	// genero l'array delle chiavi, dei valori e dei sottomoduli
-	    foreach( $d as $k => $v ) {
-		if( is_array( $v ) && substr( $k, 0, 2 ) !== '__' ) {		// nel caso il valore sia un subform, viene
-		    $s[ $k ] = $v;											// passato così com'è per la ricorsione
-// echo 'subform trovato per '.$k.' '.$t.PHP_EOL;
-		} elseif( strtolower( $k )	== '__method__' ) {				//
-		    $a = strtoupper( $v );									// impostazione esplicita del method del form
-		} elseif( strtolower( $k )	== '__table__' ) {				//
-		    $t = $v;												// impostazione esplicita della tabella del form
-		} elseif( strtolower( $k )	== '__reset__' ) {				//
-		    $r = string2boolean( $v );								// richiesta esplicita di svuotare $_REQUEST[ $t ]
-		} elseif( strtolower( $k )	== '__view_mode__' ) {			//
-		    $vm = true;												//
-		} elseif( strtolower( $k )	== '__report_mode__' ) {		//
-		    $rm = NULL;												//
-		} elseif( substr( $k, 0, 2 )	!== '__' ) {				//
+		// genero l'array delle chiavi, dei valori e dei sottomoduli
+		foreach( $d as $k => $v ) {
 
-		    if( strtolower( $v )	== '__null__' )		{ $v = NULL; }
-		    if( strtolower( $v )	== '__parent_id__' )	{ $v = $p; }
-		    if( strtolower( $v )	== '__self_id__' )	{ $v = ( isset( $d['id'] ) ) ? $d['id'] : NULL; }
-		    if( strtolower( $v )	== '__timestamp__' )	{ $v = time(); }
-		    if( strtolower( $v )	== '__date__' )		{ $v = date( 'Y-m-d' ); }
+			// valutazione di $v
+			if( is_array( $v ) && substr( $k, 0, 2 ) !== '__' ) {		// nel caso il valore sia un subform, viene
+				$s[ $k ] = $v;											// passato così com'è per la ricorsione
+			} elseif( strtolower( $k )	== '__firma__' ) {				//
+				$f = $v;												// firma per bypassare il controllo permessi
+			} elseif( strtolower( $k )	== '__method__' ) {				//
+				$a = strtoupper( $v );									// impostazione esplicita del method del form
+			} elseif( strtolower( $k )	== '__table__' ) {				//
+				$t = $v;												// impostazione esplicita della tabella del form
+			} elseif( strtolower( $k )	== '__reset__' ) {				//
+				$r = string2boolean( $v );								// richiesta esplicita di svuotare $_REQUEST[ $t ]
+			} elseif( strtolower( $k )	== '__view_mode__' ) {			//
+				$vm = true;												//
+			} elseif( strtolower( $k )	== '__report_mode__' ) {		//
+				$rm = NULL;												//
+			} elseif( substr( $k, 0, 2 )	!== '__' ) {				//
 
-		    $vs[ $k ]		= array( 's' => $v );					// array dei valori per il bind dei parametri
-		    $ks[]			= $k;									// array delle chiavi per la costruzione della query
+				if( strtolower( $v )	== '__null__' )		{ $v = NULL; }
+				if( strtolower( $v )	== '__parent_id__' )	{ $v = $p; }
+				if( strtolower( $v )	== '__self_id__' )	{ $v = ( isset( $d['id'] ) ) ? $d['id'] : NULL; }
+				if( strtolower( $v )	== '__timestamp__' )	{ $v = time(); }
+				if( strtolower( $v )	== '__date__' )		{ $v = date( 'Y-m-d' ); }
+
+				$vs[ $k ]		= array( 's' => $v );					// array dei valori per il bind dei parametri
+				$ks[]			= $k;									// array delle chiavi per la costruzione della query
+
+			}
 
 		}
-	    }
 
-	// controllo permessi (il gruppo può eseguire l'azione sull'entità?) getAclPermission()
-	if( count( $ks ) == 0 && count( $s ) > 0 ) {
+		// debug
+		// var_dump( checkFirmaImportazione( $d ) );
+		// print_r( $d );
+		// die( 'test' );
 
-#		echo 'vado in modalità gestione oggetti multipli'.PHP_EOL;
-#		print_r( $s );
-
-				foreach( $s as $x => $y ) {
-# echo 'elaboro il subform '.$x.' di '.$k.PHP_EOL;
-					controller( $c, $mc, $y, $t, $a, NULL, $e, $i[$t][$x], $i['__auth__'] );
-				}
-
-				// controllo diritti
-					} elseif( getAclPermission( $t, $a, $i ) ) {
-
-		// se è stata effettuata una GET senza ID, passo alla modalità view
-		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
-/*
-			// verifico se esiste la view statica
-				$stv = mysqlSelectValue(
-					$c,
-					'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
-					array( array('s' => $t . $rm . '_static' ) )
-				);
-
-			// se esiste la vista statica...
-				if( $stv ) {
-					$rm = '_view_static';
-					logWrite( "trovata view static per ${t}, $stv", 'controller' );
-				}
-*/
-			// log
-			    logWrite( "permessi sufficienti per ${t}/${a}", 'controller' );
+		// controllo permessi (il gruppo può eseguire l'azione sull'entità?) getAclPermission()
+		if( count( $ks ) == 0 && count( $s ) > 0 ) {
 
 			// debug
+			// echo 'vado in modalità gestione oggetti multipli'.PHP_EOL;
+			// print_r( $s );
+
+			// elaborazione subform
+			foreach( $s as $x => $y ) {
+				// echo 'elaboro il subform '.$x.' di '.$k.' per '.$t.'/'.$a.PHP_EOL;
+				controller( $c, $mc, $y, $t, $a, NULL, $e, $i[$t][$x], $i['__auth__'] );
+			}
+
+		// controllo diritti
+		} elseif( getAclPermission( $t, $a, $i ) || checkFirmaImportazione( $d ) ) {
+
+			// se è stata effettuata una GET senza ID, passo alla modalità view
+		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
+
+				/*
+				// verifico se esiste la view statica
+					$stv = mysqlSelectValue(
+						$c,
+						'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+						array( array('s' => $t . $rm . '_static' ) )
+					);
+
+				// se esiste la vista statica...
+					if( $stv ) {
+						$rm = '_view_static';
+						logWrite( "trovata view static per ${t}, $stv", 'controller' );
+					}
+
+				*/
+
+				// log
+			    logWrite( "permessi sufficienti per ${t}/${a}", 'controller' );
+
+				// debug
 			    // print_r( $d );
 			    // print_r( $i );
 
-			// vado a cercare il campo e la tabella per le ACL
+				// vado a cercare il campo e la tabella per le ACL
 			    $aclTb = getAclRightsTable( $c, $t );
 			    $aclId = getAclRightsAccountId();
 
-			// campi da selezionare dalla vista
+				// campi da selezionare dalla vista
 			    if( isset( $i['__fields__'] ) ) {
-				$fld = implode( ', ', preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) );
+					$fld = implode( ', ', preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) );
 			    } else {
-				$fld = "${t}$rm.*";
+					$fld = "${t}$rm.*";
 			    }
 
-			/*
-			 * @todo testare __fields__ per eventuale SQL injection
-			 */
+				/**
+				 * @todo testare __fields__ per eventuale SQL injection
+				 */
 
-			// preparo la query
+				// preparo la query
 			    $q = "SELECT SQL_CALC_FOUND_ROWS ${fld} FROM ${t}$rm";
 
-			// inizializzo l'array per ricerca e filtri
+				// inizializzo l'array per ricerca e filtri
 			    $whr = array();
 				
 				// NOTA BENE: questo foreach l'abbiamo spostato il 28-07-2021 prima del successivo IF per risolvere il problema dell'ordinamento parametri
@@ -145,30 +159,29 @@
 					$whr[] = "${fk} = ?";
 				}
 
-			// unisco la tabella di ACL se presente
+				// unisco la tabella di ACL se presente
 			    if( ! empty( $aclTb ) ) {
-				$q .= " LEFT JOIN $aclTb ON ${aclTb}.id_entita = ${t}$rm.id ";
-				$q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) OR ${aclTb}.id_account = ? )";
-				$whr[] = "( account_gruppi.id_account = ? OR ${t}$rm.id_account_inserimento = ? )";
-				$vs[] = array( 's' => $aclId );
-				$vs[] = array( 's' => $aclId );
-				$vs[] = array( 's' => $aclId );
-				$i['__group__'] = array( $t . $rm . '.id' );
+					$q .= " LEFT JOIN $aclTb ON ${aclTb}.id_entita = ${t}$rm.id ";
+					$q .= " LEFT JOIN account_gruppi ON ( account_gruppi.id_gruppo = ${aclTb}.id_gruppo OR gruppi_path_check( ${aclTb}.id_gruppo, account_gruppi.id_gruppo ) OR ${aclTb}.id_account = ? )";
+					$whr[] = "( account_gruppi.id_account = ? OR ${t}$rm.id_account_inserimento = ? )";
+					$vs[] = array( 's' => $aclId );
+					$vs[] = array( 's' => $aclId );
+					$vs[] = array( 's' => $aclId );
+					$i['__group__'] = array( $t . $rm . '.id' );
 			    }
 
-				
-
-			// ricerca nella vista
+				// ricerca nella vista
 			    if( isset( $i['__fields__'] ) && isset( $i['__search__'] ) && ! empty( $i['__search__'] ) ) {
 					foreach( explode( ' ', $i['__search__'] ) as $tks ) {
 						if( ! empty( $tks ) ) {
 							$like = "%${tks}%";
 							$cond = array();
 							foreach( preg_filter( '/^/', "${t}$rm.", $i['__fields__'] ) as $field ) {
-							$cond[] = $field . ' LIKE ?';
-							$vs[] = array( 's' => $like );
+								$cond[] = $field . ' LIKE ?';
+								$vs[] = array( 's' => $like );
 							}
-# PERCHÉ OR?							$whr[] = '(' . implode( ' AND ', $cond ) . ')';
+							// PERCHÉ OR?
+							// $whr[] = '(' . implode( ' AND ', $cond ) . ')';
 							$whr[] = '(' . implode( ' OR ', $cond ) . ')';
 						}
 					}
@@ -180,179 +193,181 @@
 							$cond[] = ' __label__ LIKE ? ';
 						}
 					}
-# PERCHÉ OR?					$whr[] = '(' . implode( ' OR ', $cond ) . ')';
+					// PERCHÉ OR?
+					// $whr[] = '(' . implode( ' OR ', $cond ) . ')';
 					$whr[] = '(' . implode( ' AND ', $cond ) . ')';
-// print_r( $cond );
+					// print_r( $cond );
 				}
 
-			
-
-			// debug
+				// debug
 				// print_r( $i['__filters__'] );
 				// print_r( $whr );
 
-			/*
-			 * @todo IMPORTANTE
-			 * implementare filtri che implichino una JOIN con filtro sulla tabella di JOIN
-			 * ad es. cercare sull'anagrafica quelli che hanno un'associazione con la categoria clienti
-			 * sulla tabella anagrafica_categorie (adesso la cosa è gestita maldestramente con LK)
-			 */
+				/*
+				* @todo IMPORTANTE
+				* implementare filtri che implichino una JOIN con filtro sulla tabella di JOIN
+				* ad es. cercare sull'anagrafica quelli che hanno un'associazione con la categoria clienti
+				* sulla tabella anagrafica_categorie (adesso la cosa è gestita maldestramente con LK)
+				*/
 
-			// gestione locale dei filtri
+				// gestione locale dei filtri
 			    if( isset( $i['__filters__'] ) && ! empty( $i['__filters__'] ) ) {
-				$filters = $i['__filters__'];
+					$filters = $i['__filters__'];
 			    } else {
-				$filters = array();
+					$filters = array();
 			    }
 
-			// restrizioni in atto
+				// restrizioni in atto
 			    if( isset( $i['__restrict__'] ) && ! empty( $i['__restrict__'] ) ) {
-				$filters = array_replace_recursive(
-				    $filters, $i['__restrict__']
-				);
+					$filters = array_replace_recursive(
+						$filters, $i['__restrict__']
+					);
 			    }
 
-			// filtri della vista
-			if( isset( $filters ) && ! empty( $filters ) ) {
-				foreach( $filters as $fc => $sn ) {
-					if( strpos($fc, '|') !== false ){
-						foreach( $sn as $sk => $sv ) {
-							if( (string) $sv != '' ) {
-								switch( $sk ) {
-								case 'EQ':
-									$whri = array();
-									$fcs = explode('|', $fc);
-									foreach($fcs as $fci){
-										$whri[] = "${fci} = ?";
-										$vs[] = array( 's' => $sv );
-									}
-									$whr[] = implode(' OR ', $whri);
+				// filtri della vista
+				if( isset( $filters ) && ! empty( $filters ) ) {
+					foreach( $filters as $fc => $sn ) {
+						if( strpos($fc, '|') !== false ) {
+							foreach( $sn as $sk => $sv ) {
+								if( (string) $sv != '' ) {
+									switch( $sk ) {
+										case 'EQ':
+											$whri = array();
+											$fcs = explode('|', $fc);
+											foreach($fcs as $fci){
+												$whri[] = "${fci} = ?";
+												$vs[] = array( 's' => $sv );
+											}
+											$whr[] = implode(' OR ', $whri);
 
-								break;
+										break;
+									}
+								}
+							}
+						} else {
+							foreach( $sn as $sk => $sv ) {
+								if( (string) $sv != '' ) {
+									switch( $sk ) {
+										case 'NN':
+											$whr[] = "${fc} IS NOT NULL";
+										break;
+										case 'NL':
+											$whr[] = "${fc} IS NULL";
+										break;
+										case 'EQ':
+											$whr[] = "${fc} = ?";
+											$vs[] = array( 's' => $sv );
+										break;
+										case 'GT':
+											$whr[] = "${fc} > ?";
+											$vs[] = array( 's' => $sv );
+										break;
+										case 'GE':
+											$whr[] = "${fc} >= ?";
+											$vs[] = array( 's' => $sv );
+										break;
+										case 'LT':
+											$whr[] = "${fc} < ?";
+											$vs[] = array( 's' => $sv );
+										break;
+										case 'LE':
+											$whr[] = "${fc} <= ?";
+											$vs[] = array( 's' => $sv );
+										break;
+										case 'LK':
+											$whr[] = "${fc} LIKE ?";
+											$vs[] = array( 's' => '%'.$sv.'%' );
+										break;
+										case 'IN':
+											$sva = explode('|', $sv);
+
+											$whr[] = "${fc} IN (".implode(',', array_fill(0,count($sva),'?')).")";
+
+											foreach($sva as $svi){
+												$vs[] = array( 's' => $svi );
+											}
+											
+										break;
+									}
 								}
 							}
 						}
-					} else {
-				    foreach( $sn as $sk => $sv ) {
-					if( (string) $sv != '' ) {
-					    switch( $sk ) {
-						case 'NN':
-						    $whr[] = "${fc} IS NOT NULL";
-						break;
-						case 'NL':
-						    $whr[] = "${fc} IS NULL";
-						break;
-						case 'EQ':
-						    $whr[] = "${fc} = ?";
-						    $vs[] = array( 's' => $sv );
-						break;
-						case 'GT':
-						    $whr[] = "${fc} > ?";
-						    $vs[] = array( 's' => $sv );
-						break;
-						case 'GE':
-						    $whr[] = "${fc} >= ?";
-						    $vs[] = array( 's' => $sv );
-						break;
-						case 'LT':
-						    $whr[] = "${fc} < ?";
-						    $vs[] = array( 's' => $sv );
-						break;
-						case 'LE':
-						    $whr[] = "${fc} <= ?";
-						    $vs[] = array( 's' => $sv );
-						break;
-						case 'LK':
-						    $whr[] = "${fc} LIKE ?";
-						    $vs[] = array( 's' => '%'.$sv.'%' );
-						break;
-						case 'IN':
-							$sva = explode('|', $sv);
-
-							$whr[] = "${fc} IN (".implode(',', array_fill(0,count($sva),'?')).")";
-
-							foreach($sva as $svi){
-								$vs[] = array( 's' => $svi );
-							}
-						    
-						break;
-						}
 					}
-				    }
 				}
-				}
-			    }
 
 			// aggiungo le clausole WHERE alla query
-			    if( ! empty( $whr ) ) {
+			if( ! empty( $whr ) ) {
 				$q .= ' WHERE ' . implode( ' AND ', $whr );
-// print_r( $whr );
-			    }
+				// print_r( $whr );
+			}
 
 			// raggruppamenti della vista
-			    if( isset( $i['__group__'] ) && array_filter( $i['__group__'] ) ) {
+			if( isset( $i['__group__'] ) && array_filter( $i['__group__'] ) ) {
 				$q .= ' GROUP BY ' . implode( ', ', $i['__group__'] );
-			    }
+			}
 
-			/*
+			/**
 			 * @todo testare __group__ per eventuale SQL injection
 			 */
 
 			// ordinamenti della vista
-			    if( isset( $i['__sort__'] ) && array_filter( $i['__sort__'] ) ) {
+			if( isset( $i['__sort__'] ) && array_filter( $i['__sort__'] ) ) {
 				$q .= ' ORDER BY ' . arrayKeyValuesImplode( $i['__sort__'], ' ', ', ' );
-			    }
+			}
 
-			/*
+			/**
 			 * @todo testare __sort__ per eventuale SQL injection
 			 */
 
 			// paginazione della vista
-			    if( isset( $i['__pager__']['page'] ) && isset( $i['__pager__']['rows'] ) ) {
+			if( isset( $i['__pager__']['page'] ) && isset( $i['__pager__']['rows'] ) ) {
 				$q .= ' LIMIT ' . ( $i['__pager__']['page'] * $i['__pager__']['rows'] ) . ',' . $i['__pager__']['rows'];
-			    }
+			}
 
-			/*
+			/**
 			 * @todo testare __pager__ per eventuale SQL injection
 			 */
 
 			// debug
-			    // print_r( $i );
-			    //  echo $q . PHP_EOL;
-				// print_r($vs);
+			// print_r( $i );
+			//  echo $q . PHP_EOL;
+			// print_r($vs);
 
 			// eseguo la query
-			    $d = mysqlQuery( $c, $q, $vs, $e['__codes__'] );
+		    $d = mysqlQuery( $c, $q, $vs, $e['__codes__'] );
 
 			// registro il numero totale di righe
-			    $i['__pager__']['total'] = mysqlSelectValue( $c, 'SELECT found_rows() AS t' );
-			    if( isset( $i['__pager__']['rows'] ) ) {
+			$i['__pager__']['total'] = mysqlSelectValue( $c, 'SELECT found_rows() AS t' );
+				if( isset( $i['__pager__']['rows'] ) ) {
 				$i['__pager__']['pages'] = ceil( $i['__pager__']['total'] / $i['__pager__']['rows'] );
-			    }
+			}
 
 			// debug
-			    // echo $i['__pager__']['total'] . ' / ' . $i['__pager__']['rows'] . ' = ' . $i['__pager__']['pages'];
-			    // echo $q;
+			// echo $i['__pager__']['total'] . ' / ' . $i['__pager__']['rows'] . ' = ' . $i['__pager__']['pages'];
+			// echo $q;
 
 			// log
-			    logWrite( "eseguo (${a}) la query: ${q}", 'controller', LOG_DEBUG );
+		    logWrite( "eseguo (${a}) la query: ${q}", 'controller', LOG_DEBUG );
 
 			// TODO il valore di ritorno dipende da eventuali errori
-			    $i['__status__'] = 200;
-			    return $i['__status__'];
+			$i['__status__'] = 200;
 
-			} elseif( ! isset( $d['id'] ) || getAclRights( $c, $t, $a, $d['id'], $i, $pi ) != false ) {
+			// TODO il valore di ritorno dipende da eventuali errori
+			return $i['__status__'];
 
-			// log
+			// ...
+			} elseif( ! isset( $d['id'] ) || ( getAclRights( $c, $t, $a, $d['id'], $i, $pi ) != false || checkFirmaImportazione( $d ) != false ) ) {
+
+				// log
 			    logWrite( "diritti sufficienti per ${t}/${a}", 'controller', LOG_DEBUG );
 
-			// debug
+				// debug
 			    // echo 'controller ' . $t . '/' . $a . ' OK' . PHP_EOL;
 
-			// variabile per confronto prima/dopo
+				// variabile per confronto prima/dopo
 			    $before = NULL;
 
-			// recupero dati per confronto prima/dopo
+				// recupero dati per confronto prima/dopo
 				if( isset( $d['id'] ) ) {
 			    switch( strtoupper( $a ) ) {
 				case METHOD_PUT:
