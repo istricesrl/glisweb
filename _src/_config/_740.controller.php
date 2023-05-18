@@ -51,6 +51,12 @@
                     NULL						// campo per la ricorsione
                 );
 */
+
+                // ...
+                if( ! isset( $riga['id'] ) ) {
+                    $riga['id'] = NULL;
+                }
+
                 // firma per l'autorizzazione della riga
                 if( isset( $cf['auth']['import']['secret'] ) ) {
 
