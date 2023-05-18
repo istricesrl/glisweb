@@ -74,7 +74,7 @@
             }
 
             // elimino il file importato
-            // deleteFile( $f );
+            deleteFile( $f );
 
         }
 
