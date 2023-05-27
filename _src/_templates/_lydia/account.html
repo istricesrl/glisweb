@@ -38,15 +38,15 @@
         <div class="form-row">
             <div class="col-12 col-md">
                 <span class="label-top">password corrente</span>
-                {{ frm.input( table, '', '', 'password0', '', '', '', '', 'password' ) }}
+                {{ frm.input( table, '', '', 'password0', '', '', '', '', 'password', '', '', '', '', '', 'also-required="__account___password1,__account___password2"' ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">nuova password</span>
-                {{ frm.input( table, '', '', 'password1', '', '', '', '', 'password' ) }}
+                {{ frm.input( table, '', '', 'password1', '', '', '', '', 'password', '', '', 1, '', '', 'required-equals="__account___password1,__account___password2"' ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">nuova password (ripetere)</span>
-                {{ frm.input( table, '', '', 'password2', '', '', '', '', 'password' ) }}
+                {{ frm.input( table, '', '', 'password2', '', '', '', '', 'password', '', '', 1, '', '', 'required-equals="__account___password1,__account___password2"' ) }}
             </div>
         </div>
     </fieldset>

@@ -108,3 +108,93 @@ function checkForm( f ){
     }
     
 }
+
+// operazioni da eseguire al caricamento della pagina
+$( document ).ready( function() {
+
+    // debug
+    console.log( 'form.js' );
+
+    // campi che se valorizzati ne rendono altri required
+    $('input[also-required]').each( function() {
+
+        // console.log( this );
+
+        $( this ).keyup( function() {
+
+            // console.log( 'changed' );
+            // console.log( $( this ).val().length );
+
+            if( $( this ).val().length > 0 ) {
+
+                // console.log( 'required: ' + $( this ).attr( 'also-required' ) );
+
+                var campi = $( this ).attr( 'also-required' ).split( ',' );
+
+                $.each( campi, function( i ) {
+
+                    // console.log( campi[ i ] );
+                    // console.log( '#' + campi[ i ] );
+
+                    $( '#' + $.trim( campi[ i ] ) ).attr( 'disabled', false );
+                    $( '#' + $.trim( campi[ i ] ) ).attr( 'required', true );
+
+                });
+
+            } else {
+
+                var campi = $( this ).attr( 'also-required' ).split( ',' );
+
+                $.each( campi, function( i ) {
+
+                    // console.log( campi[ i ] );
+
+                    $( '#' + $.trim( campi[ i ] ) ).attr( 'disabled', true );
+                    $( '#' + $.trim( campi[ i ] ) ).attr( 'required', false );
+
+                });
+
+            }
+
+        });
+
+    });
+
+    // campi che devono essere uguali
+    $('input[required-equals]').each( function() {
+
+        $( this ).keyup( function() {
+
+            var campi = $( this ).attr( 'required-equals' ).split( ',' );
+
+            $.each( campi, function( i ) {
+
+                var campo = $( '#' + campi[ i ] )[0];
+                var value = $( '#' + campi[ i ] ).val();
+
+                campo.setCustomValidity( '' );
+
+                for( var n = 0; n < campi.length; n++ ) {
+
+                    if( value != $( '#' + campi[ n ] ).val() ) {
+
+                        console.log( 'not match' );
+                        console.log( value + ' != ' + $( '#' + campi[ n ] ).val() );
+                        campo.setCustomValidity( 'i campi non corrispondono' );
+                        
+                    } else {
+
+                        console.log( 'match' );
+                        console.log( value + ' == ' + $( '#' + campi[ n ] ).val() );
+                        
+                    }
+
+                }
+
+            });
+
+        });
+
+    });
+
+});
