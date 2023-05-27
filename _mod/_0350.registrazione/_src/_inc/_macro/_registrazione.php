@@ -34,6 +34,8 @@
 	// stage
 	$_REQUEST['__signup__']['__stage__'] = 'start';
 
+	// TODO gestire il recaptcha in arrivo (vedi ad es. form login)
+
     // ho ricevuto i dati per la registrazione
 	if( isset( $_REQUEST['__signup__']['username'] ) && ! empty( $_REQUEST['__signup__']['username'] ) ) {
 

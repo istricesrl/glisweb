@@ -2,7 +2,7 @@
 
 {% block main %}
 <div class="row no-gutters flex-fill align-items-center justify-content-center">
-    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item col-4" id="form-login"
+    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item col-4 form-login" id="formLogin"
         method="post">
         <fieldset>
             <legend>registrazione</legend>
@@ -96,7 +96,9 @@
             {% endif %}
             {{ std.checkPrivacy( 'default', registrazione, pages, tr, localization.language.ietf, '', '', '__signup__' ) }}
             <div class="form-group form-row">
-                <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">registrati</button>
+                <div class="col-12">
+                    <!-- <button type="submit" class="btn btn-secondary btn-sm btn-block">registrati</button> -->
+                    {{ cms.formButton( 'registrati', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formLogin', google.profile.recaptcha, '__signup__', '' ) }}
                 </div>
             </div>
             {% endif %}

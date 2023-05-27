@@ -1,5 +1,7 @@
 <?php
 
+	// TODO gestire il recaptcha in arrivo (vedi ad es. form login)
+
     // ho ricevuto l'indirizzo e-mail
 	if( isset( $_REQUEST['__pwreset__']['email'] ) ) {
 

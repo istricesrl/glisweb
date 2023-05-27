@@ -5,7 +5,7 @@
 
 {% block main %}
 {% set table = '__account__' %}
-<form action="" method="post">
+<form action="" method="post" id="formAccount">
     <fieldset>
         <legend>i tuoi dati</legend>
         <div class="form-row">
@@ -53,7 +53,8 @@
     <fieldset>
         <div class="form-row">
             <div class="col">
-                <button type="submit" class="btn btn-sm btn-secondary btn-block">modifica dati</button>
+                <!-- <button type="submit" class="btn btn-sm btn-secondary btn-block">modifica dati</button> -->
+                {{ cms.formButton( 'registrati', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formAccount', google.profile.recaptcha, '__account__', '' ) }}
             </div>
         </div>
     </fieldset>

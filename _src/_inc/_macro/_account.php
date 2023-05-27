@@ -33,6 +33,8 @@
         'id_comune'                 => array(   'type' => 'string',     'table' => 'indirizzi',         'default' => NULL ),
     );
 
+	// TODO gestire il recaptcha in arrivo (vedi ad es. form login)
+
     // se esiste il ramo __account__ gestisco i dati
     if( isset( $_REQUEST['__account__'] ) ) {
 
