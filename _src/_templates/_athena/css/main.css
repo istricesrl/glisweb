@@ -602,7 +602,7 @@ header.subform-intestazione {
     
 }
 
-#form-login {
+.form-login {
     min-width: 280px;
 }
 

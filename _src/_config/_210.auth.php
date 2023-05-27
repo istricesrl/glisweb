@@ -90,7 +90,34 @@
      * @todo $cf['auth']['status'] potrebbe contenere anche l'informazione se c'è un utente loggato o se si sta navigando come guest?
      */
 
-    // stato del login
+	// verifico la challenge reCAPTCHA
+	if( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+
+		// registro il valore di bot
+		$bot = reCaptchaVerifyV3( $_REQUEST['__login__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
+
+		// pulisco il modulo
+		unset( $_REQUEST['__login__']['__recaptcha_token__'] );
+
+		// punteggio di spam
+		$spamCheck = ( $bot > 0.1 ) ? true : false;
+
+	} elseif( ! isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+
+		// punteggio di spam
+		$spamCheck = false;
+
+	} else {
+
+		// punteggio di spam
+		$spamCheck = true;
+
+	}
+
+	// debug
+	// var_dump( $spamCheck );
+
+	// stato del login
 	$cf['auth']['status'] = NULL;
 	$cf['auth']['jwt']['pass'] = NULL;
 
@@ -143,7 +170,7 @@
 	// vedi _usr/_examples/_jwt/_jwt.write.01.php
 
     // intercetto eventuali tentativi di login in corso
-	if( isset( $_REQUEST['__login__'] ) && is_array( $_REQUEST['__login__'] ) ) {
+	if( isset( $_REQUEST['__login__'] ) && is_array( $_REQUEST['__login__'] ) && $spamCheck === true ) {
 
 	    // log
 		logWrite( 'tentativo di login in corso per ' . $_REQUEST['__login__']['user'], 'auth', LOG_INFO );
