@@ -105,5 +105,7 @@
                 $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.del?__key__=iscrizioni&__item__='.$row['id'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark"></i></span></a>';
             }
 
+            $row[ NULL ] .=  '<a href="'.$cf['contents']['pages']['iscrizioni.form']['path'][LINGUA_CORRENTE].'?__preset__[contratti][id_progetto]='.$row['id'].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';
+
         }
 	}

@@ -55,6 +55,16 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'iscrizioni.form';
 
+    // tasti aggiuntivi per l'inserimento
+    $ct['view']['insert']['extras'][] = array(
+        'icon' => 'fa-graduation-cap',
+        'page' => 'corsi.view',
+        'options' => array(
+            '__work__[anagrafica][items]['.$_REQUEST[ $ct['form']['table'] ]['id'].'][id]' => $_REQUEST[ $ct['form']['table'] ]['id'],
+            '__work__[anagrafica][items]['.$_REQUEST[ $ct['form']['table'] ]['id'].'][label]' => mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $ct['form']['table'] . getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $ct['form']['table'] ) . ' WHERE id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) )
+        )
+    );
+
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_anagrafica';
 
