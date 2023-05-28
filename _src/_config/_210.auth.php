@@ -392,19 +392,7 @@
 						    )
 						);
 
-
-/**
- * CAMPI DA AGGIUNGERE ANCHE IN STANDARD
- * 
- * indirizzo
- * civico
- * cap
- * id_comune
- * 
- */
-
-
-					    // attribuzione dei gruppi e dei privilegi di gruppo
+						// attribuzione dei gruppi e dei privilegi di gruppo
 						if( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) {
 						    foreach( $_SESSION['groups'] as $gr ) {
 								  if( isset( $gr['nome'] ) ) {

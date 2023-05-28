@@ -34,7 +34,7 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>cambio password per l'utente {{ session.username }}</legend>
+        <legend>cambio password per l'utente {{ session.account.username }}</legend>
         <div class="form-row">
             <div class="col-12 col-md">
                 <span class="label-top">password corrente</span>
@@ -59,4 +59,16 @@
         </div>
     </fieldset>
 </form>
+<!--
+<form method="post" target="/" class="mt-auto">
+    <input type="hidden" name="__logout__" value="1">
+    <fieldset>
+        <div class="form-row">
+            <div class="col">
+                <button type="submit" class="btn btn-sm btn-secondary btn-block">logout</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+-->
 {% endblock %}
