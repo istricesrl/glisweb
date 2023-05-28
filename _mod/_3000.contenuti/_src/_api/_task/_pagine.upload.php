@@ -44,7 +44,19 @@
                 // verifico la connessione target
                 if( ! empty( $cTarget ) ) {
 
+                    // recupero la pagina
+                    $source = mysqlSelectRow(
+                        $cf['mysql']['connection'],
+                        'SELECT * FROM pagine WHERE id = ?',
+                        array( array( 's' => $_REQUEST['id'] ) ) 
+                    );
 
+                    // inserisco la pagina
+                    $idPagina = mysqlInsertRow(
+                        $cTarget,
+                        $source,
+                        'pagine'
+                    );
 
                 } else {
 
