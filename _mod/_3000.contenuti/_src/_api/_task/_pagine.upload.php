@@ -51,12 +51,66 @@
                         array( array( 's' => $_REQUEST['id'] ) ) 
                     );
 
-                    // inserisco la pagina
-                    $idPagina = mysqlInsertRow(
-                        $cTarget,
-                        $source,
-                        'pagine'
-                    );
+                    // controllo se la riga esiste
+                    if( ! empty( $source ) ) {
+
+                        // inserisco la pagina
+                        $idPagina = mysqlInsertRow(
+                            $cTarget,
+                            $source,
+                            'pagine'
+                        );
+
+                        // verifica inserimento pagina
+                        if( ! empty( $idPagina ) ) {
+
+                            // status
+                            $status['info'][] = 'inserita la pagina ' . $idPagina;
+
+                            // oggetti collegati
+                            foreach( array( 'contenuti', 'menu', 'immagini', 'file', 'metadati', 'macro' ) as $entita ) {
+
+                                // recupero le entità da inserire
+                                $ents = mysqlQuery(
+                                    $cf['mysql']['connection'],
+                                    'SELECT * FROM ' . $entita . ' WHERE id_pagina = ?',
+                                    array( array( 's' => $_REQUEST['id'] ) ) 
+                                );
+
+                                // inserisco le entità
+                                foreach( $ents as $ent ) {
+
+                                    // inserimento
+                                    mysqlInsertRow(
+                                        $cTarget,
+                                        $ent,
+                                        $entita
+                                    );
+
+                                    // copia file
+                                    if( in_array( $entita, array( 'immagini', 'file' ) ) ) {
+
+                                        // TODO implementare
+
+                                    }
+
+                                }
+
+                            }
+
+                        } else {
+
+                            // status
+                            $status['err'][] = 'impossibile inserire la pagina ' . $_request['id'];
+
+                        }
+
+                    } else {
+
+                        // status
+                        $status['err'][] = 'dati non trovati per la pagina ' . $_request['id'];
+                        
+                    }
 
                 } else {
 

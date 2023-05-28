@@ -8,7 +8,7 @@
     function duplica( ) {
 		$('#btnduplica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 	
-		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_pagine.upload.php?id={{ request[table].id }}&target=' + $('#__stage__').val();
+		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_pagine.upload.php?id={{ request[table].id }}&target=' + $('#___stage__').val();
 
 		getws( call,'', function() {
 			$('#btnduplica').html('<i class="fa fa-check"></i>');
@@ -29,13 +29,14 @@
 		    <div class="form-row">
 				<div class="col">
 					<span class="label-top">destinazione</span>
-					{{ frm.selectRequired( table, '', '', '__stage__', '', etc.stages, '', '', '','' ) }}
+					{{ frm.selectRequired( '', '', '', '__stage__', '', etc.stages, '', '', '','' ) }}
 				</div>
 			</div>
 				<div class="form-row">
                 <div class="col-12">
-                    questa operazione pubblicherà la pagina corrente e tutte le entità ad essa collegate (immagini, video, voci di menu, ecc.) sullo stage indicato;
-					ATTENZIONE i dati preesistenti verranno sovrascritti
+                    <p>questa operazione pubblicherà la pagina corrente e tutte le entità ad essa collegate (immagini, video, voci di menu, ecc.) sullo stage indicato;</p>
+					<p>ATTENZIONE i dati preesistenti verranno sovrascritti</p>
+					<p>NOTA il caricamento riguarda solo il database, file e immagini vanno caricati manualmente</p>
                 </div>
             </div>
 	    </div>
