@@ -2310,7 +2310,7 @@ CREATE OR REPLACE VIEW contratti_anagrafica_view AS
 		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
 		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
 		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-	GROUP BY contratti.id
+	GROUP BY contratti.id, anagrafica.id
 ;
 
 -- | 090000007500
