@@ -143,6 +143,7 @@
 	// gestione prodotti prezzi
 	$p['prodotti.form.prezzi'] = array(
 	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-eur" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'prezzi' ),
 	    'h1'		=> array( $l		=> 'prezzi' ),
 	    'parent'		=> array( 'id'		=> 'prodotti.view' ),

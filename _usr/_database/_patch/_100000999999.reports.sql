@@ -26,7 +26,6 @@ CREATE TABLE `__report_ore_operatori__` (
   KEY `id_job` (`id_job`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 -- | 100000001862
 -- __report_ore_progetti_tipologie_mastri__
 -- tipologia: report
@@ -50,7 +49,6 @@ CREATE TABLE `__report_ore_progetti_tipologie_mastri__` (
   KEY `id_progetto` (`id_progetto`),
   KEY `id_job` (`id_job`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
-
 
 -- | 100000007200
 -- __report_status_contratti__
@@ -95,6 +93,29 @@ CREATE OR REPLACE VIEW `__report_status_contratti__` AS
     progetti.data_archiviazione IS NULL )
   GROUP BY progetti.id
 ;
+
+-- | 100000007800
+-- __report_corsi__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_corsi__`;
+
+-- | 100000007801
+
+CREATE TABLE `__report_corsi__` (
+  `id` char(255) DEFAULT NULL,
+  `tipologia` char(255) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `fasce` char(255) DEFAULT NULL,
+  `discipline` char(255) DEFAULT NULL,
+  `livelli` char(255) DEFAULT NULL,
+  `giorni_orari_luoghi` char(255) DEFAULT NULL,
+  `posti_disponibili` char(255) DEFAULT NULL,
+  `stato` char(255) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 100000015000
 -- __report_giacenza_crediti__
@@ -815,36 +836,44 @@ FROM
 -- __report_iscritti_corsi__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_iscritti_corsi__` AS
-SELECT
-	anagrafica.id AS id_anagrafica,
-	coalesce(anagrafica.soprannome,anagrafica.denominazione, concat_ws(' ', coalesce(anagrafica.cognome, ''),coalesce(anagrafica.nome, '') ),'') AS anagrafica,
-	contratti.id_progetto,
-	rinnovi.data_inizio,
-	rinnovi.data_fine,
-	rinnovi.id_contratto
-FROM anagrafica
-INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_anagrafica = anagrafica.id	
-INNER JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto 
-LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
-INNER JOIN progetti ON progetti.id = contratti.id_progetto
-WHERE tipologie_contratti.se_iscrizione = 1  
-UNION
-SELECT
-	anagrafica.id AS id_anagrafica,
-	coalesce(anagrafica.soprannome,anagrafica.denominazione, concat_ws(' ', coalesce(anagrafica.cognome, ''),coalesce(anagrafica.nome, '') ),'') AS anagrafica,
-	relazioni_progetti.id_progetto_collegato AS id_progetto,
-	rinnovi.data_inizio,
-	rinnovi.data_fine,
-	rinnovi.id_contratto
-FROM anagrafica
-INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_anagrafica = anagrafica.id	
-INNER JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto 
-LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
-INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
-INNER JOIN relazioni_progetti ON relazioni_progetti.id_progetto = contratti.id_progetto
-INNER JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
-WHERE tipologie_contratti.se_iscrizione = 1 AND ruoli_progetti.se_sottoprogetto = 1;
+  SELECT
+    anagrafica.id AS id_anagrafica,
+    coalesce(anagrafica.soprannome,anagrafica.denominazione, concat_ws(' ', coalesce(anagrafica.cognome, ''),coalesce(anagrafica.nome, '') ),'') AS anagrafica,
+    contratti.id_progetto,
+    rinnovi.data_inizio,
+    rinnovi.data_fine,
+    rinnovi.id_contratto
+  FROM anagrafica
+  INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_anagrafica = anagrafica.id	
+  INNER JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto 
+  INNER JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+  INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+  INNER JOIN progetti ON progetti.id = contratti.id_progetto
+  LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
+  LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
+  WHERE tipologie_contratti.se_iscrizione = 1
+  AND categorie_anagrafica.se_gestita IS NULL
+  UNION
+  SELECT
+    anagrafica.id AS id_anagrafica,
+    coalesce(anagrafica.soprannome,anagrafica.denominazione, concat_ws(' ', coalesce(anagrafica.cognome, ''),coalesce(anagrafica.nome, '') ),'') AS anagrafica,
+    relazioni_progetti.id_progetto_collegato AS id_progetto,
+    rinnovi.data_inizio,
+    rinnovi.data_fine,
+    rinnovi.id_contratto
+  FROM anagrafica
+  INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_anagrafica = anagrafica.id	
+  INNER JOIN contratti ON contratti.id = contratti_anagrafica.id_contratto 
+  INNER JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+  INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+  INNER JOIN relazioni_progetti ON relazioni_progetti.id_progetto = contratti.id_progetto
+  INNER JOIN ruoli_progetti ON ruoli_progetti.id = relazioni_progetti.id_ruolo
+  LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
+  LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
+  WHERE tipologie_contratti.se_iscrizione = 1
+  AND ruoli_progetti.se_sottoprogetto = 1
+  AND categorie_anagrafica.se_gestita IS NULL
+;
 
 -- | 100000020900
 -- __report_movimenti_crediti__

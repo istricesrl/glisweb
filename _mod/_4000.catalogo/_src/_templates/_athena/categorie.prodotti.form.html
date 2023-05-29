@@ -48,10 +48,12 @@
 
 		<div class="form-group form-row">
 			{% if '3000.contenuti' in mods.active.array %}
+			<!--
 			<div class="col-12 col-md-auto">
 				<span class="label-top">sito</span>
 				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
 			</div>
+			-->
 			{% endif %}
 			<div class="col-12 col-md-auto">
 				<span class="label-top">genitore</span>
@@ -72,6 +74,7 @@
 
 		</fieldset>
 
+		<!--
 		{% if '3000.contenuti' in mods.active.array %}
 	    <fieldset>
 			<legend>aspetto</legend>
@@ -97,6 +100,7 @@
         {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_prodotti' ) }}
 
 		{% endif %}
+		-->
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

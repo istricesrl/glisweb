@@ -53,19 +53,22 @@
 
         // preset filtro custom progetti aperti
         $ct['view']['__restrict__']['id_progetto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+
     }
-    
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
 
     // gestione default
     require DIR_SRC_INC_MACRO . '_default.view.php';
-        
+
+/*
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
 
         if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_inizio']['GE'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_fine']['LE'] ) ) {
             $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_inizio']['GE'] = $_REQUEST[ $ct['form']['table'] ]['data_accettazione'];
             $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['data_fine']['LE'] = $_REQUEST[ $ct['form']['table'] ]['data_chiusura'];
         }
+
     }
+*/

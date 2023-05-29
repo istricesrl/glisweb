@@ -1,0 +1,98 @@
+<?php
+
+    /**
+     * 
+     * 
+     * @todo documentare
+     * 
+     */
+    function updateReportCorsi( $idCorso ) {
+
+        global $cf;
+
+        $riga = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT progetti.id, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, 
+            if(
+                progetti.data_accettazione > CURRENT_DATE(), "futuro",
+                if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), "attivo", "concluso" )
+            ) AS stato
+            FROM progetti INNER JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia 
+            WHERE progetti.id = ?',
+            array( array( 's' => $idCorso ) )
+        );
+
+        /*
+        `fasce` char(255) DEFAULT NULL,
+        `discipline` char(255) DEFAULT NULL,
+        `livelli` char(255) DEFAULT NULL,
+        `giorni_orari_luoghi` char(255) DEFAULT NULL,
+        `posti_disponibili` char(255) DEFAULT NULL,
+        `timestamp_aggiornamento` int(11) DEFAULT NULL,        
+        */
+
+        $riga['fasce'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id_categoria ), null ) SEPARATOR " | " ) 
+            FROM progetti_categorie AS f INNER JOIN categorie_progetti AS c ON c.id = f.id_categoria 
+            WHERE f.id_progetto = ? AND c.se_fascia = 1',
+            array( array( 's' => $idCorso ) )
+        );
+
+        $riga['discipline'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id_categoria ), null ) SEPARATOR " | " ) 
+            FROM progetti_categorie AS f INNER JOIN categorie_progetti AS c ON c.id = f.id_categoria 
+            WHERE f.id_progetto = ? AND c.se_disciplina = 1',
+            array( array( 's' => $idCorso ) )
+        );
+
+        $riga['livelli'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id_categoria ), null ) SEPARATOR " | " ) 
+            FROM progetti_categorie AS f INNER JOIN categorie_progetti AS c ON c.id = f.id_categoria 
+            WHERE f.id_progetto = ? AND c.se_classe = 1',
+            array( array( 's' => $idCorso ) )
+        );
+
+        $riga['giorni_orari_luoghi'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT group_concat( DISTINCT
+                concat_ws( " ", dayname( todo.data_programmazione ),
+                concat_ws( " - ", todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ),
+                luoghi_path( todo.id_luogo ) SEPARATOR " | " )
+                FROM todo WHERE todo.id_progetto = ?',
+            array( array( 's' => $idCorso ) )
+        );
+
+        $riga['posti_disponibili'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT concat( coalesce( count( DISTINCT ac.id_anagrafica ), 0 ), " / ", coalesce( m.testo, "∞" ) ) 
+            FROM contratti AS c 
+            INNER JOIN contratti_anagrafica AS ca ON ca.id_contratto = c.id
+            LEFT JOIN anagrafica_categorie AS ac ON ac.id_anagrafica = ca.id_anagrafica 
+            LEFT JOIN categorie_anagrafica AS a ON a.id = ac.id_categoria
+            LEFT JOIN metadati AS m ON m.id_progetto = c.id_progetto
+            WHERE c.id_progetto = ? AND a.se_gestita IS NULL AND m.nome = "iscritti_max"',
+            array( array( 's' => $idCorso ) )
+        );
+
+        mysqlInsertRow(
+            $cf['mysql']['connection'],
+            $riga,
+            '__report_corsi__'
+        );
+
+    }
+
+    /**
+     * 
+     * 
+     * @todo documentare
+     * 
+     */
+    function cleanReportCorsi() {
+
+
+
+    }
