@@ -67,7 +67,7 @@
         ),
         array(
             'label' => 'codice PHP generico',
-            'chars' => array( '$', ';', '=' ),
+            'chars' => array( '$', ';', '=', '<?' ),
             'type' => 'hard'
 #        ),
 #        array(
