@@ -12,7 +12,7 @@
 
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT progetti.id, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura
+            'SELECT progetti.id, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura, 
             if(
                 progetti.data_accettazione > CURRENT_DATE(), "futuro",
                 if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), "attivo", "concluso" )
@@ -35,7 +35,7 @@
             $cf['mysql']['connection'],
             'SELECT group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id_categoria ), null ) SEPARATOR " | " ) 
             FROM progetti_categorie AS f INNER JOIN categorie_progetti AS c ON c.id = f.id_categoria 
-            WHERE f.id_progetto = ? AND c.se_fascia = 1',
+            WHERE f.id_progetto = ? AND c.se_fascia = 1 GROUP BY f.id_progetto',
             array( array( 's' => $idCorso ) )
         );
 
@@ -43,7 +43,7 @@
             $cf['mysql']['connection'],
             'SELECT group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id_categoria ), null ) SEPARATOR " | " ) 
             FROM progetti_categorie AS f INNER JOIN categorie_progetti AS c ON c.id = f.id_categoria 
-            WHERE f.id_progetto = ? AND c.se_disciplina = 1',
+            WHERE f.id_progetto = ? AND c.se_disciplina = 1 GROUP BY f.id_progetto',
             array( array( 's' => $idCorso ) )
         );
 
@@ -51,7 +51,7 @@
             $cf['mysql']['connection'],
             'SELECT group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id_categoria ), null ) SEPARATOR " | " ) 
             FROM progetti_categorie AS f INNER JOIN categorie_progetti AS c ON c.id = f.id_categoria 
-            WHERE f.id_progetto = ? AND c.se_classe = 1',
+            WHERE f.id_progetto = ? AND c.se_classe = 1 GROUP BY f.id_progetto',
             array( array( 's' => $idCorso ) )
         );
 
@@ -61,7 +61,7 @@
                 concat_ws( " ", dayname( todo.data_programmazione ),
                 concat_ws( " - ", todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ),
                 luoghi_path( todo.id_luogo ) SEPARATOR " | " )
-                FROM todo WHERE todo.id_progetto = ?',
+                FROM todo WHERE todo.id_progetto = ? GROUP BY todo.id_progetto',
             array( array( 's' => $idCorso ) )
         );
 
@@ -74,6 +74,35 @@
             LEFT JOIN categorie_anagrafica AS a ON a.id = ac.id_categoria
             LEFT JOIN metadati AS m ON m.id_progetto = c.id_progetto
             WHERE c.id_progetto = ? AND a.se_gestita IS NULL AND m.nome = "iscritti_max"',
+            array( array( 's' => $idCorso ) )
+        );
+
+        $riga['lista_attesa'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT coalesce( count( DISTINCT id_anagrafica ), 0 ) 
+            FROM anagrafica_progetti WHERE anagrafica_progetti.se_attesa IS NOT NULL 
+            AND anagrafica_progetti.id_progetto = ?',
+            array( array( 's' => $idCorso ) )
+        );
+
+        $riga['prezzi'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT group_concat(
+                concat(
+                    a.nome,
+                    " ",
+                    round( coalesce( p2.prezzo, p1.prezzo ), 2 )
+                    )
+                    separator " | "
+                )
+                FROM progetti
+                INNER JOIN prodotti AS p ON p.id = progetti.id_prodotto
+                INNER JOIN articoli AS a ON a.id_prodotto = p.id
+                LEFT JOIN prezzi AS p1 ON p1.id_prodotto = p.id
+                LEFT JOIN prezzi AS p2 ON p2.id_articolo = a.id
+                WHERE progetti.id = ?
+                GROUP BY p.id 
+            ',
             array( array( 's' => $idCorso ) )
         );
 
