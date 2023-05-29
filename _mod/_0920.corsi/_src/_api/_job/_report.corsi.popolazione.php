@@ -26,6 +26,9 @@
         // attività di avvio
         if( empty( $job['corrente'] ) ) {
 
+            // pulizia ragionata report
+            cleanReportCorsi();
+
             // inizializzo l'array
             $arr = mysqlSelectColumn(
                 'id',

@@ -111,7 +111,10 @@ CREATE TABLE `__report_corsi__` (
   `giorni_orari_luoghi` char(255) DEFAULT NULL,
   `posti_disponibili` char(255) DEFAULT NULL,
   `stato` char(255) DEFAULT NULL,
+  `data_accettazione` date DEFAULT NULL,
+  `data_chiusura` date DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` char(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)

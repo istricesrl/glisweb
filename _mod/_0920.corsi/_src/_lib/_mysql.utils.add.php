@@ -12,7 +12,7 @@
 
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT progetti.id, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, 
+            'SELECT progetti.id, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura
             if(
                 progetti.data_accettazione > CURRENT_DATE(), "futuro",
                 if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), "attivo", "concluso" )
@@ -77,6 +77,39 @@
             array( array( 's' => $idCorso ) )
         );
 
+        $riga['__label__'] = implode( ' ', array(
+            $riga['id'],
+            $riga['nome'],
+            $riga['fasce'],
+            $riga['discipline'],
+            $riga['livelli'],
+            'dal',
+            $riga['data_accettazione'],
+            'al',
+            $riga['data_chiusura'],
+            $riga['giorni_orari_luoghi'],
+            'posti',
+            $riga['posti_disponibili']
+        ) );
+
+/*
+		concat_ws(
+			' ',
+			progetti.id,
+			progetti.nome,
+			group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ),
+			group_concat( DISTINCT concat_ws( '/', f.nome, l.nome ) SEPARATOR ' | ' ),
+			' dal ',
+			coalesce( progetti.data_accettazione, '-' ),
+			' al ',
+			coalesce( progetti.data_chiusura, '-' ),
+			group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ), luoghi_path( todo.id_luogo ) SEPARATOR ' | ' ),
+			'posti',
+			coalesce( m.testo, '∞' )
+		) AS __label__
+
+*/
+
         mysqlInsertRow(
             $cf['mysql']['connection'],
             $riga,
@@ -93,6 +126,13 @@
      */
     function cleanReportCorsi() {
 
+        global $cf;
 
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE __report_corsi__ FROM __report_corsi__
+            LEFT JOIN progetti ON progetti.id = __report_corsi__.id
+            WHERE progetti.id IS NULL;'
+        );
 
     }

@@ -31,11 +31,16 @@
             mysqlQuery( $c, 'REPLACE INTO corsi_view_static SELECT * FROM corsi_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
 
+            // scrivo la riga
+            updateReportCorsi( $d['id'] );
+
         break;
         case METHOD_DELETE:
 
             mysqlQuery( $c, 'DELETE FROM corsi_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
+
+            cleanReportCorsi();
 
         break;
 
