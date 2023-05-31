@@ -5,13 +5,13 @@
 {% set ietf = localization.language.ietf %}
 
 <script>
-    function duplica( ) {
-		$('#btnduplica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+    function pubblica( ) {
+		$('#btnpubblica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 	
 		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_pagine.upload.php?id={{ request[table].id }}&target=' + $('#___stage__').val();
 
 		getws( call,'', function() {
-			$('#btnduplica').html('<i class="fa fa-check"></i>');
+			$('#btnpubblica').html('<i class="fa fa-check"></i>');
 		});
 
 	}
@@ -21,7 +21,7 @@
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
 	    <div class="modal-header">
-		<h5 class="modal-title">duplica la pagina corrente</h5>
+		<h5 class="modal-title">pubblica la pagina corrente</h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	    </div>
 	    <div class="modal-body">
@@ -42,7 +42,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" id="btnduplica" class="btn btn-secondary btn-sm" onclick="duplica();">conferma</button>
+		<button type="button" id="btnpubblica" class="btn btn-secondary btn-sm" onclick="duplica();">conferma</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>
