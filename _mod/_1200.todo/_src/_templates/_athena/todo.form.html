@@ -57,7 +57,7 @@
 					{% if request[ table ].__reset__ %}{% set default = session.__latest__[ table ].id_tipologia %}{% else %}{% set default = '' %}{% endif %}
 					{{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request, default ) }}
 				</div>
-				<div class="col-12 col-md-4">
+				<div class="col-12 col-md-2">
 					<span class="label-top">responsabile</span>
 					{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_responsabile' , page, pages, ietf,'anagrafica' ) }}
 				</div>
@@ -70,6 +70,11 @@
 				<div class="col-12 col-md">
 					<span class="label-top">nome</span>
 					{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
+				</div>
+
+				<div class="col-12 col-md-2">
+					<span class="label-top">codice</span>
+					{{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
 				</div>
 
 			</div>

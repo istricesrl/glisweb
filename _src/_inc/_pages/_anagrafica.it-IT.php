@@ -113,9 +113,14 @@
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.abbonamenti' );
 	}
 
-	// RELAZIONI CON IL MODULO AGENDA
+	// RELAZIONI CON IL MODULO ATTIVITA
 	if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.attivita' );
+	}
+
+	// RELAZIONI CON IL MODULO TODO
+	if( in_array( "1200.todo", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.todo' );
 	}
 
     // gestione anagrafica informazioni
