@@ -435,3 +435,16 @@
         $t = preg_replace("/^$bom/", '', $t);
         return $t;
     }
+
+    /**
+     * 
+     * 
+     * @todo documentare
+     * 
+     */
+    function domainFromURL( $url ) {
+
+        $array = parse_url( $url );
+        return $array["host"];
+
+    }

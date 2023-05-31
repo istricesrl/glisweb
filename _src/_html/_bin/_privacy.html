@@ -1,9 +1,10 @@
 {# MACRO PER LA RAPPRESENTAZIONE DEI CONTENUTI #}
 {# NOTA: IMPORTARE SEMPRE COME PRV #}
+{# import '_bin/_privacy.html' as prv #}
 
 {% macro checkConsensi( ref, key, items, ietf, tr, pages ) %}
-<!-- Twig file included: {{ _self }} -->
-<!-- macro checkConsensi() -->
+{# NOTA items può sembrare ridondante rispetto a items[ key ] ma ci sono form (ad es. __carrello__) che non hanno i due livelli come __contatti__[key] #}
+<!-- macro {{ _self }}::checkConsensi() -->
 {% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
 {% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
 {% for codice,check in items.consensi %}

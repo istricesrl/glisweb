@@ -67,11 +67,11 @@
         </div>
 
         <div class="form-group form-row">
-            <div class="col">
+            <div class="col-12 col-md">
                 <span class="label-top">note</span>
 			    {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
             </div>
-            <div class="col">
+            <div class="col-12 col-md">
                 <span class="label-top">note registro</span>
                 {{ frm.textarea( table, '', '', 'note_cliente', '', 3, request ) }}
             </div>
@@ -85,7 +85,7 @@
         <div class="form-group form-row">
             <div class="col-12 col-md">
                 <span class="label-top">corso</span>
-                {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, corso, '', '1', '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
+                {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, corso, '', '1', '', '', 'corsi.form', 'corsi.form', 'progetti', 'id_progetto', page, pages, ietf, 'corsi' ) }}
             </div>
         </div>
         
@@ -119,7 +119,7 @@
             {% for a in etc.articoli %}
                 {# TODO rendere asincrono questo bottone #}
                 <div class="col-12 col-md-{{ colspan }}">
-                    <a href="{{ pages['iscrizioni.view'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}" target="_self">
+                    <a href="{{ pages['ecommerce.carrello'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}" target="_self">
                         <div class="media">
                         <div class="media-left">	
                             <i class="fa fa-cart-plus"></i>

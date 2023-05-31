@@ -24,6 +24,7 @@
     $ct['view']['table'] = 'attivita';
     
     // id della vista
+    // TODO fare una funzione getViewId()
     $ct['view']['id'] = md5(
 		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
 	);

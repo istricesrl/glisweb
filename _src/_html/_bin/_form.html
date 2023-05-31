@@ -1,8 +1,10 @@
 
 {# MACRO PER GLI ELEMENTI DEI FORM #}
 {# NOTA: IMPORTARE SEMPRE COME FRM #}
+{# import '_bin/_form.html' as frm #}
 
 {% macro stars( voto ) %}
+<!-- macro stars() -->
 <ul class="stars">
 {% for i in 0..4 %}
 <li class="star {% if i < voto %}on{% endif %}"><i class="fa fa-star fa-fw"></i></li>

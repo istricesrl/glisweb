@@ -11,6 +11,20 @@
      *
      */
 
+	// rimozione rapida TODO da sprint
+	if( isset( $_REQUEST['__unsprint__'] ) ) {
+
+		// rimuovo la TODO dallo sprint
+		mysqlQuery(
+			$cf['mysql']['connection'],
+			'UPDATE todo SET anno_programmazione = NULL, settimana_programmazione = NULL WHERE id = ?',
+			array(
+				array( 's' => $_REQUEST['__unsprint__'] )
+			)
+		);
+
+	}
+
     // tabella della vista
 	$ct['view']['table'] = '__report_sprint_todo__';
     $ct['view']['data']['__report_mode__'] = 1;
@@ -98,7 +112,8 @@
 				$mastro = '$(\'#attivita_id_mastro_provenienza\').val(\'\');$(\'#attivita_note_mastro_provenienza\').html(\'\');';
 			}
 			$row['id_mastro_provenienza'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM __report_giacenza_ore__ WHERE id_progetto = ?', array( array( 's' => $row['id_progetto'] ) ) );
-			$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id_progetto'].'\');'.$mastro.'$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id_mastro_provenienza'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
+			$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id_progetto'].'\');'.$mastro.'$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id_mastro_provenienza'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
+				'<a href="' . $cf['page']['path'][ LINGUA_CORRENTE ] . '?__unsprint__=' . $row['id'] . '"><i class="fa fa-calendar-minus-o"></i></a>';
 		}
 	}
 

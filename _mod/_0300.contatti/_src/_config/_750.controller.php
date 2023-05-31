@@ -129,6 +129,8 @@
                                 // log
                                 logWrite( $contenuto, 'privacy', LOG_CRIT );
 
+                                // TODO salvare i log della privacy in spool in modo che non vengano svuotati con gli altri log
+
                                 // TODO salvare il consenso nella tabella contatti_consensi
 
                             }
@@ -209,6 +211,12 @@
 
                                 // debug
                                     // print_r( $template );
+
+                                // TODO
+                                    // verificare che il template sia ben formato, tipicamente verificare
+                                    // che abbia il from settato (vedi dev/_mod/_0300.contatti/_src/_config/_500.mail.php)
+                                    // altrimenti la queueMailFromTemplate() potrebbe comportarsi in modo erratico
+                                    // nota questo controllo andrebbe comunque implementato anche nella queueMailFromTemplate()
 
                                 // accodamento
                                     queueMailFromTemplate(

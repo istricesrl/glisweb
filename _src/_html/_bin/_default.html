@@ -1,8 +1,7 @@
 
 {# MACRO PER LA RAPPRESENTAZIONE DEI CONTENUTI #}
-{# NOTA: IMPORTARE SEMPRE COME CNT #}
-
-<!-- Twig file included: {{ _self }} -->
+{# NOTA: IMPORTARE SEMPRE COME CMS #}
+{# import '_bin/_default.html' as cms #}
 
 {% macro picture( img, lang, site, set, alt, pictureclass, imgclass ) %}
 {% if img.path %}
@@ -377,25 +376,34 @@ window.addEventListener( 'DOMContentLoaded', function() {
 {% endmacro %}
 
 {% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo ) %}
+<!-- macro {{ _self }}::formButton() -->
 {% if recaptcha.keys.public %}
+<!-- type settato automaticamente a button -->
+{% set type = 'button' %}
+<!-- onclick settato automaticamente vuoto -->
+{% set onclick = '' %}
+<!-- campo hidden generato automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
 <input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">
+<!-- funzione generata automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
 <script>
 	function onSubmit{{ form }}( token ) {
 		console.log( token );
 		document.getElementById("{{ form }}RecaptchaToken").value = token;
-
 		var contactForm = document.getElementById("{{ form }}");
-        if(contactForm.checkValidity()) {
-//			document.getElementById("{{ form }}").submit();
+		if(contactForm.checkValidity()) {
 			contactForm.submit();
 		} else {
             grecaptcha.reset();
             contactForm.reportValidity();
         } 
-
 		console.log('invocata protezione reCAPTCHA');
 	}
 </script>
+{% elseif onclick %}
+<!-- type settato automaticamente a button -->
+{% set type = 'button' %}
+{% else %}
+<!-- submit button standard -->
 {% endif %}
-<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" {% if recaptcha.keys.public %}data-sitekey="{{ recaptcha.keys.public }}" data-callback="onSubmit{{ form }}" data-action="submit"{% endif %} {% if id %}id="{{id}}"{% endif %} class="btn {% if class %}{{ class }}{% else %}btn-sm btn-secondary{% endif %} {% if recaptcha.keys.public %}g-recaptcha{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} >{{ text|raw }}</button>
+<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" {% if recaptcha.keys.public %}data-sitekey="{{ recaptcha.keys.public }}" data-callback="onSubmit{{ form }}" data-action="submit"{% endif %} {% if id %}id="{{id}}"{% endif %} class="btn {% if class %}{{ class }}{% else %}btn-sm btn-secondary{% endif %} {% if recaptcha.keys.public %}g-recaptcha{% endif %}" onclick="{{ onclick }}"{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}>{{ text|raw }}</button>
 {% endmacro %}

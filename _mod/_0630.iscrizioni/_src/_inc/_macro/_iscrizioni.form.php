@@ -29,7 +29,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM anagrafica_view'
+	    'SELECT id, __label__ FROM anagrafica_view_static'
     );
 
     // tendina ruoli progetti
@@ -53,7 +53,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM corsi_view '
+	    'SELECT id, __label__ FROM corsi_view_static '
     );
 
 	// tendina per le tipologie di contratto

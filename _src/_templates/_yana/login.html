@@ -1,0 +1,23 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+    <div class="col-4">
+        <form action="" class="" id="form-login" method="post">
+            <fieldset>
+            <div class="form-group form-row">
+            <label class="d-none d-md-block col-12 col-form-label">username</label>
+            <div class="col-12"><input type="text" class="form-control form-control-sm" name="__login__[user]" placeholder="username"></div>
+            </div>
+            <div class="form-group form-row">
+            <label class="d-none d-md-block col-12 col-form-label">password</label>
+            <div class="col-12"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
+            </div>
+            <div class="form-group form-row">
+            <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">login</button></div>
+            </div>
+            </fieldset>
+        </form>
+    </div>
+{% endblock %}

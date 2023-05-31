@@ -3949,6 +3949,8 @@ CREATE TABLE IF NOT EXISTS `tipologie_todo` (
   `font_awesome` char(16) DEFAULT NULL,
   `se_agenda` tinyint(1) DEFAULT NULL,
   `se_ticket` tinyint(1) DEFAULT NULL,
+  `se_ordinaria` tinyint(1) DEFAULT NULL,
+  `se_straordinaria` tinyint(1) DEFAULT NULL,
   `se_commerciale` tinyint(1) DEFAULT NULL,
   `se_produzione` tinyint(1) DEFAULT NULL,
   `se_amministrazione` tinyint(1) DEFAULT NULL,
@@ -4002,6 +4004,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_zone` (
 CREATE TABLE IF NOT EXISTS `todo` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,

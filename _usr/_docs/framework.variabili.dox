@@ -62,7 +62,7 @@
 
     Per generare l'hash di una password si può utilizzare lo script _src/_sh/_password.hash.sh.
 
-    Il login tramite JWT avviene inviando una stringa JWT valida tramite $_REQUEST['jwt']; la stringa JWT valida può essere generata tramite la funzione getJwt(); l'invio
+    Il login tramite JWT avviene inviando una stringa JWT valida tramite $_REQUEST['j']; la stringa JWT valida può essere generata tramite la funzione getJwt(); l'invio
     di questa stringa, posto che contenga un ID e un username validi per il sito (vedi _usr/_examples/_jwt/_jwt.write.01.php) innesca automaticamente il login.
 
     L'array $cf['auth'] viene integrato da $cx['auth'], per ulteriori dettagli vedi _src/_config/_200.auth.php.
@@ -979,7 +979,7 @@
     session.account.utente                    | -
     session.groups                            | gruppi collegati alla sessione corrente (appare dopo il login)
     session.id                                | l'ID della sessione corrente
-    session.jwt.token                         | token per il login via JWT
+    session.jwt.string                         | token per il login via JWT
     session.used                              | la timestamp dell'ultimo utilizzo della sessione
 
     \todo approfondire gli aspetti legati a session.__view__

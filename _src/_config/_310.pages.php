@@ -247,10 +247,14 @@
 		foreach( $arrayPagine as $pagina ) {
 		    $ts = filemtime( $pagina );
 		    if( $ts > $cf['contents']['updated'] ) {
-			$cf['contents']['updated'] = $ts;
+			    $cf['contents']['updated'] = $ts;
 		    }
 		    require $pagina;
             if( file_exists( path2custom( $pagina ) ) ) {
+                $ts = filemtime( path2custom( $pagina ) );
+                if( $ts > $cf['contents']['updated'] ) {
+                    $cf['contents']['updated'] = $ts;
+                }
                 require path2custom( $pagina );
             }
 		    $cf['contents']['pages'] = array_replace_recursive( $cf['contents']['pages'], $p );

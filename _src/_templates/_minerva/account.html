@@ -1,0 +1,28 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+{% set table = '__account__' %}
+<h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+<form action="" method="post">
+    <fieldset>
+        <div class="form-row">
+            <div class="col-12 col-md">
+                <span class="label-top">nome</span>
+                {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+            </div>
+            <div class="col-12 col-md">
+                <span class="label-top">cognome</span>
+                {{ frm.input( table, '', '', 'cognome', '', '', request ) }}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="col">
+                <button type="submit" class="btn btn-sm">modifica dati</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+{% endblock %}

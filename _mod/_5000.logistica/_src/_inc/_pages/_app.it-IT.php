@@ -16,8 +16,8 @@
 	    'macro'		=> array( '_src/_inc/_macro/_app.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
-*/
-    // pagina principale
+
+	// pagina principale
 	$p['app.ordini'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'ordini' ),
@@ -55,3 +55,5 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_app.ordini.lista.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
+
+*/

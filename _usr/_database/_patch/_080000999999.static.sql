@@ -9,7 +9,7 @@
 
 -- | 080000000400
 
--- tabella anagrafica_view_static
+-- anagrafica_view_static
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 18:47 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
@@ -42,11 +42,15 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
   `categorie` text,
   `telefoni` text,
   `mail` text,
+  `anno_nascita` char(32),
+  `mese_nascita` char(32),
+  `giorno_nascita` char(32),
   `data_nascita` char(32),
+  `id_comune_nascita` int(11) DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `__label__` char(255) DEFAULT NULL
+  `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- | 080000001800
@@ -105,7 +109,68 @@ CREATE TABLE `attivita_view_static` (
   `token` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `__label__` varchar(320) DEFAULT NULL
+  `__label__` text
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- | 080000007800
+
+-- corsi_view_static
+CREATE TABLE `corsi_view_static` (
+  `id` char(32) PRIMARY KEY NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` text DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `cliente` varchar(320) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `entrate_previste` decimal(16,2) DEFAULT NULL,
+  `ore_previste` decimal(16,2) DEFAULT NULL,
+  `costi_previsti` decimal(16,2) DEFAULT NULL,
+  `entrate_accettazione` decimal(16,2) DEFAULT NULL,
+  `data_accettazione` date DEFAULT NULL,
+  `data_chiusura` date DEFAULT NULL,
+  `stato` varchar(8) DEFAULT NULL,
+  `entrate_totali` decimal(16,2) DEFAULT NULL,
+  `uscite_totali` decimal(16,2) DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,
+  `categorie` mediumtext DEFAULT NULL,
+  `fasce` mediumtext DEFAULT NULL,
+  `discipline` mediumtext DEFAULT NULL,
+  `livelli` mediumtext DEFAULT NULL,
+  `giorni` mediumtext DEFAULT NULL,
+  `orari` mediumtext DEFAULT NULL,
+  `giorni_orari` mediumtext DEFAULT NULL,
+  `luoghi` mediumtext DEFAULT NULL,
+  `posti_disponibili` mediumtext DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
+-- | 080000015900
+
+-- iscrizioni_view_static
+CREATE TABLE `iscrizioni_view_static` (
+  `id` int(11) PRIMARY KEY NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` char(64) DEFAULT NULL,
+  `istituti` mediumtext DEFAULT NULL,
+  `iscritti` mediumtext DEFAULT NULL,
+  `fasce` mediumtext DEFAULT NULL,
+  `discipline` mediumtext DEFAULT NULL,
+  `livelli` mediumtext DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `progetto` char(255) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `data_inizio` date DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- | 080000060000
@@ -117,6 +182,7 @@ CREATE TABLE `todo_view_static` (
   `id` int(11) PRIMARY KEY NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `tipologia` char(64) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `se_agenda` tinyint(1) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `anagrafica` char(255) DEFAULT NULL,
@@ -126,6 +192,7 @@ CREATE TABLE `todo_view_static` (
   `indirizzo` char(255) DEFAULT NULL,
   `id_luogo` int(11) DEFAULT NULL,
   `luogo` char(255) DEFAULT NULL,
+  `timestamp_apertura` int DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
   `ora_scadenza` time DEFAULT NULL,
   `data_programmazione` date DEFAULT NULL,
