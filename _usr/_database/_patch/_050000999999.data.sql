@@ -8,7 +8,7 @@
 -- caratteristiche_immobili
 -- tipologia: tabella gestita
 -- verifica: 2022-05-02 17:22 Chiara GDL
-INSERT INTO `caratteristiche_immobili` (`id`, `nome`, `font_awesome`, `html_entity`, `se_indirizzo`, `se_edificio`, `se_immobile`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `caratteristiche_immobili` (`id`, `nome`, `font_awesome`, `html_entity`, `se_indirizzo`, `se_edificio`, `se_immobile`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	'balcone',	'fa-picture-o',	'&#xf03e;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (2,	'giardino',	'fa-tree',	'&#xf1bb;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (3,	'cantina',	'fa-key',	'&#xf084;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
@@ -41,17 +41,14 @@ INSERT INTO `caratteristiche_immobili` (`id`, `nome`, `font_awesome`, `html_enti
 (30,	'palazzo storico',	'fa-university',	'&#xf19c;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (31,	'stile Liberty',	'fa-building',	'&#xf1ad;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (32,	'pietra vista',	'fa-cubes',	'&#xf1b3;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(33,	'intonaco',	'fa-clone',	'&#xf24d;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL)
-ON DUPLICATE KEY UPDATE
-	nome = VALUES( nome ), font_awesome = VALUES( font_awesome ), html_entity = VALUES( html_entity ), se_edificio = VALUES(se_edificio), se_immobile = VALUES( se_immobile), se_indirizzo = VALUES( se_indirizzo ) 
-;
+(33,	'intonaco',	'fa-clone',	'&#xf24d;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000003100
 
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 -- verifica: 2021-05-28 19:56 Fabio Mosti
-REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `note`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_produzione`, `se_commerciale`, `se_notizie`, `se_corriere`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `note`, `se_lead`, `se_prospect`, `se_cliente`, `se_fornitore`, `se_produttore`, `se_collaboratore`, `se_interno`, `se_esterno`, `se_concorrente`, `se_gestita`, `se_amministrazione`, `se_produzione`, `se_commerciale`, `se_notizie`, `se_corriere`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'contatti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'collaboratori',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	2,	NULL,	'agenti',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -69,7 +66,7 @@ REPLACE INTO `categorie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `not
 -- categorie_progetti
 -- tipologia: tabella gestita
 -- verifica: 2021-06-02 19:40 Fabio Mosti
-INSERT INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ordinario`, `se_straordinario`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ordinario`, `se_straordinario`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'ordinario',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'straordinario',	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
@@ -78,7 +75,7 @@ INSERT INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `se_ord
 -- certificazioni
 -- tipologia: tabella assistita
 -- verifica: 2022-02-03 11:12 Chiara GDL
-INSERT INTO `certificazioni` (`id`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `certificazioni` (`id`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	"carta d\'identità",	NULL,	NULL,	NULL,	NULL),
 (2,	'passaporto',	NULL,	NULL,	NULL,	NULL),
 (3,	'patente di guida',	NULL,	NULL,	NULL,	NULL),
@@ -92,7 +89,7 @@ INSERT INTO `certificazioni` (`id`, `nome`, `id_account_inserimento`, `timestamp
 -- classi_energetiche
 -- tipologia: tabella standard
 -- verifica: 2022-04-28 22:22 Chiara GDL
-INSERT INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`) VALUES
+INSERT IGNORE INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`) VALUES
 (1, 'G', NULL, NULL, 'ff2a1a'),
 (2, 'F', NULL, NULL, 'c0504d'),
 (3, 'E', NULL, NULL, 'e46c1c'),
@@ -102,19 +99,14 @@ INSERT INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`) VALUE
 (7, 'A1', NULL, NULL, '00cc22'),
 (8, 'A2', NULL, NULL, '009917'),
 (9, 'A3', NULL, NULL, '00660c'),
-(10, 'A4', NULL, NULL, '33660d')
-ON DUPLICATE KEY UPDATE
-	nome = VALUES( nome ),
-	ep_min = VALUES( ep_min ),
-	ep_max = VALUES( ep_max ),
-	rgb = VALUES( rgb );
+(10, 'A4', NULL, NULL, '33660d');
 
 -- | 050000005100
 
 -- colori
 -- tipologia: tabella standard
 -- verifica: 2021-06-02 22:27 Fabio Mosti
-REPLACE INTO `colori` (`id`, `nome`, `hex`, `r`, `g`, `b`) VALUES
+INSERT IGNORE INTO `colori` (`id`, `nome`, `hex`, `r`, `g`, `b`) VALUES
 (1,	    'rosso',	'ff0000',	255,	0,	    0),
 (3,	    'bianco',	'ffffff',	255,	255,	255),
 (4,	    'nero',	    '000000',	0,	    0,	    0),
@@ -126,7 +118,7 @@ REPLACE INTO `colori` (`id`, `nome`, `hex`, `r`, `g`, `b`) VALUES
 -- comuni
 -- tipologia: tabella standard
 -- verifica: 2021-06-03 19:58 Fabio Mosti
-REPLACE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_catasto`) VALUES
+INSERT IGNORE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_catasto`) VALUES
 (1,	    1,	'Bologna',	                        '037006',	'A944'),
 (2,	    1,	'Casalecchio di Reno',	            '037011',	'B880'),
 (3,	    1,	'San Giovanni in Persiceto',	    '037053',	'G467'),
@@ -188,7 +180,7 @@ REPLACE INTO `comuni` (`id`, `id_provincia`, `nome`, `codice_istat`, `codice_cat
 -- condizioni
 -- tipologia: tabella standard
 -- verifica: 2022-04-28 16:12 Chiara GDL
-INSERT INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+INSERT IGNORE INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
 (1,	'nuovo',	1,	1),
 (2,	'usato',	1,	NULL),
 (3,	'da ristrutturare',	NULL,	1);
@@ -198,7 +190,7 @@ INSERT INTO `condizioni` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
 -- condizioni_pagamento
 -- tipologia: tabella standard
 -- verifica: 2022-01-17 16:12 Chiara GDL
-REPLACE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
+INSERT IGNORE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
 (1,	    'TP01',	'pagamento a rate'),
 (2,	    'TP02',	'pagamento completo'),
 (3,	    'TP03',	    'anticipo');
@@ -208,7 +200,7 @@ REPLACE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
 -- consensi
 -- tipologia: tabella standard
 -- verifica: 2022-08-23 11:12 Chiara GDL
-REPLACE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 ('PRIVACY_POLICY',	'la privacy e cookie policy del sito',	NULL,	NULL,	NULL,	NULL,	NULL),
 ('EVASIONE_ORDINE',	"evasione dell\'ordine",	NULL,	NULL,	NULL,	NULL,	NULL),
 ('INVIO_COMUNICAZIONI_MARKETING',	'invio di comunicazioni commerciali',	NULL,	NULL,	NULL,	NULL,	NULL);
@@ -218,7 +210,7 @@ REPLACE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timest
 -- consensi_moduli
 -- tipologia: tabella assistita
 -- verifica: 2022-08-23 11:12 Chiara GDL
-REPLACE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ordine`, `azione`, `nome`, `informativa`, `note`, `pagina`, `se_richiesto`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ordine`, `azione`, `nome`, `informativa`, `note`, `pagina`, `se_richiesto`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	1,	'PRIVACY_POLICY',	'ecommerce',	10,	'letto_e_accetto',	'la privacy e cookie policy del sito',	NULL,	NULL,	'privacy',	1,	NULL,	NULL,	NULL,	NULL),
 (2,	1,	'EVASIONE_ORDINE',	'ecommerce',	20,	'autorizzo',	"il trattamento dei miei dati per l\'evasione del mio ordine",	"evasione dell\'ordine",	NULL,	'',	1,	NULL,	NULL,	NULL,	NULL),
 (3,	1,	'INVIO_COMUNICAZIONI_MARKETING',	'ecommerce',	30,	'autorizzo',	"il trattamento dei miei dati per l\'invio di comunicazioni commerciali",	'invio di comunicazioni commerciali',	NULL,	'',	NULL,	NULL,	NULL,	NULL,	NULL);
@@ -228,7 +220,7 @@ REPLACE INTO `consensi_moduli` (`id`, `id_lingua`, `id_consenso`, `modulo`, `ord
 -- continenti
 -- tipologia: tabella standard
 -- verifica: 2021-06-09 11:26 Fabio Mosti
-REPLACE INTO `continenti` (`id`, `codice`, `nome`) VALUES
+INSERT IGNORE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 (1,	'EU',	'Europa'),
 (2,	'AF',	'Africa'),
 (3,	'AS',	'Asia'),
@@ -242,18 +234,18 @@ REPLACE INTO `continenti` (`id`, `codice`, `nome`) VALUES
 -- disponibilita
 -- tipologia: tabella standard
 -- verifica: 2022-04-28 16:12 Chiara GDL
-INSERT INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
+INSERT IGNORE INTO `disponibilita` (`id`, `nome`, `se_catalogo`, `se_immobili`) VALUES
 (1,	'disponibile',	1,	1),
 (2,	'in riassortimento',	1,	NULL),
 (3,	'nuda proprietà',	NULL,	1),
 (4,	'occupato',	NULL,	1);
 
--- | 050000010000
+-- | 050000012800
 
 -- embed
 -- tipologia: tabella standard
 -- verifica: 2021-06-29 16:56 Fabio Mosti
-REPLACE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
+INSERT IGNORE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
 (1, 'HTML5', 1, 1),
 (2, 'Vimeo', 1, NULL),
 (3, 'YouTube', 1, NULL);
@@ -263,7 +255,7 @@ REPLACE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
 -- gruppi
 -- tipologia: tabella gestita
 -- verifica: 2021-09-10 17:58 Fabio Mosti
-REPLACE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'roots',	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'staff',	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'users',	NULL,	NULL,	NULL,	NULL);
@@ -271,7 +263,7 @@ REPLACE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `id_acc
 -- | 050000016000
 
 -- iva
-REPLACE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestamp_archiviazione`) VALUES
+INSERT IGNORE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestamp_archiviazione`) VALUES
 (1,	22.00,	'IVA 22%',	'IVA 22%',	NULL,	NULL),
 (2,	10.00,	'IVA agevolata 10%',	'IVA agevolata 10%',	NULL,	NULL),
 (3,	4.00,	'IVA agevolata 4%',	'IVA agevolata 4%',	NULL,	NULL),
@@ -336,7 +328,7 @@ REPLACE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestam
 -- lingue
 -- tipologia: tabella standard
 -- verifica: 2021-06-09 11:26 Fabio Mosti
-REPLACE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alpha3`, `ietf`) VALUES
+INSERT IGNORE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alpha3`, `ietf`) VALUES
 (1,     'italiano',     'italiano (Italia)',	    'it',	'ita',	'it-IT'),
 (2,     'ceco',         'ceco (Repubblica Ceca)',	'cs',	'ces',	'cs-CZ'),
 (3,     'inglese',	    'inglese (Regno Unito)',	'en',	'eng',	'en-GB'),
@@ -358,7 +350,7 @@ REPLACE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alpha3`, `
 -- listini
 -- tipologia: tabella assistita
 -- verifica: 2021-09-24 17:49 Fabio Mosti
-REPLACE INTO `listini` (`id`, `id_valuta`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `listini` (`id`, `id_valuta`, `nome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,     1,	            'DEFAULT',	                NULL,	NULL,	NULL,	NULL);
 
 -- | 050000021900
@@ -366,7 +358,7 @@ REPLACE INTO `listini` (`id`, `id_valuta`, `nome`, `id_account_inserimento`, `ti
 -- modalita_pagamento
 -- tipologia: tabella standard
 -- verifica: 2022-01-18 12:06 Chiara GDL
-REPLACE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
+INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (1,	    'MP01',	'contanti'),
 (2,	    'MP02',	'assegno'),
 (3,	    'MP03',	    'assegno circolare'),
@@ -392,18 +384,12 @@ REPLACE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (23,  'MP08', 'bancomat' ),
 (24, 'MP08', 'paypal' );
 
--- | 050000022000
-
--- tipologie_notizie
-INSERT INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
-
 -- | 050000023600
 
 -- periodicita
 -- tipologia: tabella standard
 -- verifica: 2021-10-05 17:57 Fabio Mosti
-REPLACE INTO `periodicita` (`id`, `nome`) VALUES
+INSERT IGNORE INTO `periodicita` (`id`, `nome`) VALUES
 (1,	'giornaliera'),
 (2,	'settimanale'),
 (3,	'mensile'),
@@ -414,7 +400,7 @@ REPLACE INTO `periodicita` (`id`, `nome`) VALUES
 -- provincie
 -- tipologia: tabella standard
 -- verifica: 2021-10-08 16:20 Fabio Mosti
-REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) VALUES
+INSERT IGNORE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) VALUES
 (1,	    1,	'Bologna',	                        'BO',	'237'),
 (2,	    1,	'Modena',	                        'MO',	'036'),
 (3,	    1,	'Forlì-Cesena',	                    'FC',	'040'),
@@ -530,7 +516,7 @@ REPLACE INTO `provincie` (`id`, `id_regione`, `nome`, `sigla`, `codice_istat`) V
 -- ranking
 -- tipologia: tabella assistita
 -- verifica: 2021-10-11 17:48 Fabio Mosti
-REPLACE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_fornitore`, `se_progetti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_fornitore`, `se_progetti`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	'PLATINUM',	NULL,	100,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	'GOLD',	NULL,	200,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	'SILVER',	NULL,	300,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -541,7 +527,7 @@ REPLACE INTO `ranking` (`id`, `nome`, `note`, `ordine`, `se_cliente`, `se_fornit
 -- regimi
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 15:02 Fabio Mosti
-REPLACE INTO `regimi` (`id`, `nome`, `codice`) VALUES
+INSERT IGNORE INTO `regimi` (`id`, `nome`, `codice`) VALUES
 (1,     'privato',                      NULL),
 (2,     'ordinario',                    'RF01'),
 (3,     'minimi',                       'RF02'),
@@ -581,7 +567,7 @@ REPLACE INTO `regimi` (`id`, `nome`, `codice`) VALUES
 -- regioni
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 15:22 Fabio Mosti
-REPLACE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
+INSERT IGNORE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 (1,	    1,	'Emilia-Romagna',	                '08'),
 (2,	    1,	'Marche',	                        '11'),
 (4,	    1,	'Lombardia',	                    '03'),
@@ -608,7 +594,7 @@ REPLACE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 -- reparti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:34 Fabio Mosti
-INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_inserimento`, `id_account_inserimento`, `timestamp_aggiornamento`, `id_account_aggiornamento`) VALUES
+INSERT IGNORE INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_inserimento`, `id_account_inserimento`, `timestamp_aggiornamento`, `id_account_aggiornamento`) VALUES
 (1,	1,	NULL,	'VENDITA IVA 22%',	NULL,	NULL,	NULL,	NULL,	NULL),
 (9,	9,	NULL,	'LOCAZIONE IVA 0%',	'fuori campo IVA ex art. 3 d.P.R. 633/1972',	NULL,	NULL,	NULL,	NULL);
 
@@ -617,16 +603,16 @@ INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_
 -- ruoli_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:11 Fabio Mosti
-INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_didattica`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_immobili`, `se_contratti`) VALUES
-(1,		NULL,	'titolare',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(2,		NULL,	'amministratore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,		NULL,	'socio',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,		NULL,	'dipendente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,		NULL,	'direttore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,		NULL,	'presidente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,		NULL,	'tesoriere',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,		NULL,	'coordinatore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
-(9,		NULL,	'vicepresidente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+INSERT IGNORE INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_didattica`, `se_organizzazioni`, `se_relazioni`, `se_risorse`, `se_progetti`, `se_immobili`, `se_contratti`) VALUES
+(1,	NULL,	'titolare',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'amministratore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'socio',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'dipendente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'direttore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'presidente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'tesoriere',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'coordinatore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL),
+(9,	NULL,	'vicepresidente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (10,	NULL,	'vicedirettore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (11,	NULL,	'segretario',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (12,	NULL,	'responsabile amministrativo',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -656,7 +642,7 @@ INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 -- ruoli_audio
 -- tipologia: tabella standard
 -- verifica: 2021-10-09 18:28 Fabio Mosti
-INSERT INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+INSERT IGNORE INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
 (1,	NULL,	'audio',	NULL,	NULL,	1,	1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	1),
 (2,	NULL,	'commento',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
 
@@ -665,7 +651,7 @@ INSERT INTO `ruoli_audio` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awe
 -- ruoli_documenti
 -- tipologia: tabella di supporto
 -- verifica: 2022-06-09 16:21 Chiara GDL
-REPLACE INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_documenti`, `se_documenti_articoli`, `se_conferma`, `se_consuntivo`, `se_evasione`) VALUES
+INSERT IGNORE INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_documenti`, `se_documenti_articoli`, `se_conferma`, `se_consuntivo`, `se_evasione`) VALUES
 (1,	NULL,	'conferma',	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL),
 (2,	NULL,	'consuntivo',	NULL,	NULL,	NULL,	1,	1,	NULL,	1,	NULL),
 (3,	NULL,	'evasione',	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	1);
@@ -675,7 +661,7 @@ REPLACE INTO `ruoli_documenti` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 -- ruoli_file
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:14 Fabio Mosti
-REPLACE INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_mail`, `se_immobili`, `se_documenti`) VALUES
+INSERT IGNORE INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_template`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_mail`, `se_immobili`, `se_documenti`) VALUES
 (1,	NULL,	'allegato',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
 (2,	NULL,	'brochure',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	'documentazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL),
@@ -694,7 +680,7 @@ REPLACE INTO `ruoli_file` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awe
 -- ruoli_immagini
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-INSERT INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+INSERT IGNORE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
 (1,		NULL,	900,	'immagine',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1,		1),
 (2,		NULL,	600,	'gallery',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1,		1),
 (3,		NULL,	200,	'carousel',		NULL,	NULL,	1,		1,		1,		1,		1,		1,		1,		1,		1,		NULL),
@@ -717,7 +703,7 @@ INSERT INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `nome`, 
 -- ruoli_indirizzi
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 10:45 Fabio Mosti
-REPLACE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`) VALUES
+INSERT IGNORE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sede_legale`, `se_sede_operativa`, `se_residenza`, `se_domicilio`) VALUES
 (1,	'sede legale',	    '&#xf1ad;',	    '',     1,	    NULL,	NULL,	NULL),
 (2,	'sede operativa',	'&#xf275;',     '',     NULL,	1,	    NULL,	NULL),
 (3,	'casa',             '&#xf015;',     '',     NULL,	NULL,	1,	    NULL),
@@ -728,7 +714,7 @@ REPLACE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome`, `se
 
 -- ruoli_mail
 -- tipologia: tabella standard
-INSERT INTO `ruoli_mail` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_commerciale`, `se_produzione`, `se_amministrazione`, `se_acquisti`, `se_ordini`, `se_helpdesk`) VALUES
+INSERT IGNORE INTO `ruoli_mail` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_xml`, `se_commerciale`, `se_produzione`, `se_amministrazione`, `se_acquisti`, `se_ordini`, `se_helpdesk`) VALUES
 (1,	NULL,	'generica',	NULL,	NULL,	NULL,	1,	1,	1,	1,	1,	1),
 (2,	NULL,	'commerciale',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	'produzione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
@@ -742,7 +728,7 @@ INSERT INTO `ruoli_mail` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awes
 -- ruoli_matricole
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 10:45 Fabio Mosti
-REPLACE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome`) VALUES
+INSERT IGNORE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome`) VALUES
 (1,	'attrezzatura',	    '',	    ''),
 (2,	'prodotto',	    '',	    '');
 
@@ -751,7 +737,7 @@ REPLACE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome`) VAL
 -- ruoli_prodotti
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 10:46 Fabio Mosti
-REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
+INSERT IGNORE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
 (1,	    NULL,	'prodotto',	    NULL,	NULL),
 (2,	    NULL,	'principale',	NULL,	NULL),
 (3,	    NULL,	'suggerito',	NULL,	NULL);
@@ -761,7 +747,7 @@ REPLACE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font
 -- ruoli_progetti
 -- tipologia: tabella di supporto
 -- verifica: 2022-04-20 10:45 chiara GDL
-INSERT INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`, `se_attesa`) VALUES
+INSERT IGNORE INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_sottoprogetto`, `se_proseguimento`, `se_sostituto`, `se_attesa`) VALUES
 (1,	'proseguimento',	NULL,	NULL,	NULL,	1,	NULL,	NULL),
 (2,	'bundle',	NULL,	NULL,	1,	NULL,	NULL,	NULL),
 (3,	'attesa',	NULL,	NULL,	NULL,	NULL,	NULL,	1);
@@ -772,7 +758,7 @@ INSERT INTO `ruoli_progetti` (`id`, `nome`, `html_entity`, `font_awesome`, `se_s
 -- ruoli_video
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 18:47 Fabio Mosti
-REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
+INSERT IGNORE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_pagine`, `se_prodotti`, `se_articoli`, `se_categorie_prodotti`, `se_notizie`, `se_categorie_notizie`, `se_risorse`, `se_categorie_risorse`, `se_immobili`) VALUES
 (1,	NULL,	'video',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
 (2,	NULL,	'gallery',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1),
 (3,	NULL,	'carousel',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	NULL),
@@ -791,7 +777,7 @@ REPLACE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `font_aw
 -- settori
 -- tipologia: tabella standard
 -- verifica: 2021-10-11 10:53 Fabio Mosti
-REPLACE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`) VALUES
+INSERT IGNORE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`) VALUES
 (1,     NULL,   'A',          'AGRICOLTURA, SILVICOLTURA E PESCA',                                                    'agricoltura, silvicoltura e pesca'),
 (2,     1,      '01',         'COLTIVAZIONI AGRICOLE E PRODUZIONE DI PRODOTTI ANIMALI, CACCIA E SERVIZI CONNESSI',    'coltivazioni, prodotti animali e caccia'),
 (3,     2,      '01.1',       'COLTIVAZIONE DI COLTURE AGRICOLE NON PERMANENTI',                                      'colture non permanenti'),
@@ -803,7 +789,7 @@ REPLACE INTO `settori` (`id`, `id_genitore`, `ateco`, `nome`, `soprannome`) VALU
 -- stati
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 15:06 Fabio Mosti
-REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`, `nome`, `note`, `codice_istat`, `data_archiviazione`) VALUES
+INSERT IGNORE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`, `nome`, `note`, `codice_istat`, `data_archiviazione`) VALUES
 (1,	    1,	'IT',	'ITA',	'Italia',	'Repubblica Italiana',	NULL,	NULL),
 (2,	    1,	'CZ',	'CZE',	'Repubblica Ceca',	NULL,	NULL,	NULL),
 (3,	    1,	'HU',	'HUN',	'Ungheria',	NULL,	NULL,	NULL),
@@ -1046,7 +1032,7 @@ REPLACE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661alpha3`,
 -- stati_lingue
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 15:42 Fabio Mosti
-REPLACE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
+INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 (1,     1,	    1);
 
 -- | 050000043000
@@ -1054,7 +1040,7 @@ REPLACE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 -- task
 -- tipologia: tabella assistita
 -- verifica: 2021-10-12 15:42 Fabio Mosti
-REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1072,7 +1058,7 @@ REPLACE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_d
 -- tipologie_anagrafica
 -- tipologia: tabella standard
 -- verifica: 2021-10-15 16:15 Fabio Mosti
-REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`, `se_persona_giuridica`, `se_pubblica_amministrazione`, `se_ecommerce`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_persona_fisica`, `se_persona_giuridica`, `se_pubblica_amministrazione`, `se_ecommerce`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	10,	'persone fisiche',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	20,	'persone giuridiche',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	7,	10,	'sig.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1087,7 +1073,7 @@ REPLACE INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `htm
 -- tipologie_attivita
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `se_sistema`, `se_cartellini`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `se_sistema`, `se_cartellini`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	1,	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	NULL,	'permessi',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
@@ -1128,7 +1114,7 @@ REPLACE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nom
 -- tipologie_contatti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'di persona',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'telefono',	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'mail',	        NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1140,7 +1126,7 @@ REPLACE INTO `tipologie_contatti` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_contratti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_tesseramento`, `se_abbonamento`, `se_iscrizione`, `se_affiliazione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_tesseramento`, `se_abbonamento`, `se_iscrizione`, `se_affiliazione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	'vendita',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	'locazione',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	'tesseramento',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1154,7 +1140,7 @@ INSERT INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`, `font_
 -- tipologie_documenti
 -- tipologia: tabella di supporto
 -- verifica: 2021-12-07 17:00 Chiara GDL
-REPLACE INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `numerazione`, `nome`, `sigla`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_nota_debito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `se_ecommerce`, `stampa_xml`, `stampa_pdf`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `numerazione`, `nome`, `sigla`, `html_entity`, `font_awesome`, `se_fattura`, `se_nota_credito`, `se_nota_debito`, `se_trasporto`, `se_pro_forma`, `se_offerta`, `se_ordine`, `se_ricevuta`, `se_ecommerce`, `stampa_xml`, `stampa_pdf`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'TD01',	'F',	'fattura',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	1,	NULL,	'TD01',	'F',	'fattura accompagnatoria',	'fatt. acc.',	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'TD04',	'F',	'nota di credito',	'n. di credito',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1189,7 +1175,7 @@ REPLACE INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice`, `nu
 -- tipologie_edifici
 -- tipologia: tabella di supporto
 -- verifica: 2022-04-27 17:00 Chiara GDL
-INSERT INTO `tipologie_edifici` (`id`, `id_genitore`, `nome`) VALUES
+INSERT IGNORE INTO `tipologie_edifici` (`id`, `id_genitore`, `nome`) VALUES
 (1, NULL, 'palazzo'),
 (2, NULL, 'palazzo storico'),
 (3, NULL, 'palazzina'),
@@ -1202,7 +1188,7 @@ INSERT INTO `tipologie_edifici` (`id`, `id_genitore`, `nome`) VALUES
 -- tipologie_immobili
 -- tipologia: tabella di supporto
 -- verifica: 2022-04-27 17:00 Chiara GDL
-INSERT INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_industriale`) VALUES
+INSERT IGNORE INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_industriale`) VALUES
 (1, 'appartamento', 1, NULL),
 (3, 'abitazione', 1, NULL),
 (6, 'garage', 1, NULL),
@@ -1215,7 +1201,7 @@ INSERT INTO `tipologie_immobili` (`id`, `nome`, `se_residenziale`, `se_industria
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'calle',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'campiello',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'campo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1263,7 +1249,7 @@ INSERT INTO `tipologie_indirizzi` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_luoghi
 -- tipologia: tabella gestita
 -- verifica: 2022-02-21 15:30 Chiara GDL
-INSERT INTO `tipologie_luoghi` (`id`, `nome`) VALUES
+INSERT IGNORE INTO `tipologie_luoghi` (`id`, `nome`) VALUES
 (1, 'teatro'),
 (2, 'palestra'),
 (3, 'piscina'),
@@ -1276,7 +1262,7 @@ INSERT INTO `tipologie_luoghi` (`id`, `nome`) VALUES
 -- tipologie_mastri
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_magazzino`, `se_conto`, `se_registro`, `se_credito`,`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_magazzino`, `se_conto`, `se_registro`, `se_credito`,`id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'magazzino',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'conto',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'registro ore',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1288,12 +1274,16 @@ INSERT INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `html_ent
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
 
+INSERT IGNORE INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+
 -- | 050000054100
 
 -- tipologie_periodi
 -- tipologia: tabella gestita
 -- verifica: 2022-05-24 11:00 Chiara GDL
-REPLACE INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	NULL,	'feste',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
@@ -1309,7 +1299,7 @@ REPLACE INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome
 -- tipologie_prodotti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_colori`, `se_taglie`, `se_dimensioni`, `se_volume`, `se_capacita`, `se_massa`, `se_imballo`, `se_spedizione`, `se_trasporto`, `se_prodotto`, `se_servizio`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_colori`, `se_taglie`, `se_dimensioni`, `se_volume`, `se_capacita`, `se_massa`, `se_imballo`, `se_spedizione`, `se_trasporto`, `se_prodotto`, `se_servizio`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'servizio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	NULL,	NULL,	NULL),
 (3,	1,	NULL,	'alimentare (peso)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1323,7 +1313,7 @@ INSERT INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_e
 -- tipologie_progetti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `se_didattica`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_produzione`, `se_contratto`, `se_pacchetto`, `se_progetto`, `se_consuntivo`, `se_forfait`, `se_didattica`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'contratto',	'',	'',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'pacchetto',	'',	'',	1,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'progetto',	'',	'',	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1356,7 +1346,7 @@ INSERT IGNORE INTO `tipologie_rinnovi` (`id`, `id_genitore`, `ordine`, `nome`, `
 -- tipologie_risorse
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT INTO `tipologie_risorse` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_risorse` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'corso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000056200
@@ -1364,7 +1354,7 @@ INSERT INTO `tipologie_risorse` (`id`, `id_genitore`, `ordine`, `nome`, `html_en
 -- tipologie_telefoni
 -- tipologia: tabella standard
 -- verifica: 2021-10-15 17:46 Fabio Mosti
-REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`) VALUES
+INSERT IGNORE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`) VALUES
 (1,	NULL,   10,     'telefono',	    '&#xf095;',     ''),
 (2,	NULL,   20,     'mobile',	    '&#xf10b;',     ''),
 (3,	NULL,   30,     'fax',	        '&#xf02f;',     ''),
@@ -1375,7 +1365,7 @@ REPLACE INTO `tipologie_telefoni` (`id`, `id_genitore`, `ordine`, `nome`, `html_
 -- tipologie_todo
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_agenda`, `se_ticket`, `se_ordinaria`, `se_straordinaria`, `se_commerciale`, `se_produzione`, `se_amministrazione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_agenda`, `se_ticket`, `se_ordinaria`, `se_straordinaria`, `se_commerciale`, `se_produzione`, `se_amministrazione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'produzione',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'commerciale',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
@@ -1402,7 +1392,7 @@ REPLACE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `html_enti
 -- udm
 -- tipologia: tabella standard
 -- verifica: 2021-10-19 13:02 Fabio Mosti
-REPLACE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_massa`, `se_tempo`, `se_quantita`, `se_area`) VALUES
+INSERT IGNORE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_massa`, `se_tempo`, `se_quantita`, `se_area`) VALUES
 (1,	NULL,	NULL,	'pezzi',	'pz.',	'unità di misura usata genericamente per misurare le quantità',	NULL,	NULL,	NULL,	NULL,	1,	NULL),
 (2,	NULL,	1,	'millimetro',	'mm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	2,	10,	'centimetro',	'cm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1447,7 +1437,7 @@ REPLACE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se
 -- valute
 -- tipologia: tabella standard
 -- verifica: 2021-10-19 13:21 Fabio Mosti
-REPLACE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
+INSERT IGNORE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
 (1,	'EUR',	'&#8634;',	'€');
 
 -- | FINE FILE
