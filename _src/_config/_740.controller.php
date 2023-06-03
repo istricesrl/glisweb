@@ -11,7 +11,9 @@
     $csv = glob( DIR_VAR_SPOOL_IMPORT . '*.csv' );
 
     // debug
+    // die( 'ricerca file di importazione' );
     // print_r( $csv );
+    // die();
 
     // elaboro i CSV
     foreach( $csv as $f ) {
@@ -33,11 +35,12 @@
                 // non c'è modo di far confluire questi dati nella controller della request
                 // popolando $_REQUEST[ tabella ][ n ]...
                 $riga['__method__'] = strtoupper( $action );
-    #            $_REQUEST[ $table ]['__method__'] = strtoupper( $action );
+                // $_REQUEST[ $table ]['__method__'] = strtoupper( $action );
+#                $_REQUEST['__info__'][ $k ]
 
                 // debug
                 // print_r( $riga );
-    /*
+/*
                 // attivazione controller
                 controller(
                     $cf['mysql']['connection'],				// connessione al database
@@ -47,9 +50,32 @@
                     strtoupper( $action ),				// metodo da applicare
                     NULL						// campo per la ricorsione
                 );
-    */
+*/
 
-                $_REQUEST[ $table ][] = $riga;
+                // ...
+                if( ! isset( $riga['id'] ) ) {
+                    $riga['id'] = NULL;
+                }
+
+                // firma per l'autorizzazione della riga
+                if( isset( $cf['auth']['import']['secret'] ) ) {
+
+                    // debug
+                    // print_r( $riga );
+
+                    // creazione firma
+                    $riga['__firma__'] = hash( 'sha3-512', serialize( $riga ) . $cf['auth']['import']['secret'] );
+
+                    // debug
+                    // var_dump( $riga['__firma__'] );
+
+                    // ...
+                    $_REQUEST[ $table ][] = $riga;
+
+                }
+
+                // debug
+                // print_r( $riga );
 
             }
 

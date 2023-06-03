@@ -67,7 +67,7 @@
         ),
         array(
             'label' => 'codice PHP generico',
-            'chars' => array( '$', ';', '=' ),
+            'chars' => array( '$', ';', '=', '<?' ),
             'type' => 'hard'
 #        ),
 #        array(
@@ -184,7 +184,8 @@
                 'cpanel',
                 'dbadmin',
                 'servlet',
-                'wp-config'
+                'wp-config',
+                '__firma__'
             ),
             array_map('trim',
                 file(

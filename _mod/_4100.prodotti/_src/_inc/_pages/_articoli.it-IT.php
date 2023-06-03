@@ -119,6 +119,7 @@
 	// gestione articoli prezzi
 	$p['articoli.form.prezzi'] = array(
 	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-eur" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'prezzi' ),
 	    'h1'		=> array( $l		=> 'prezzi' ),
 	    'parent'		=> array( 'id'		=> 'articoli.view' ),

@@ -5,7 +5,7 @@
 
 {% block main %}
 {% set table = '__account__' %}
-<form action="" method="post">
+<form action="" method="post" id="formAccount">
     <fieldset>
         <legend>i tuoi dati</legend>
         <div class="form-row">
@@ -34,28 +34,41 @@
         </div>
     </fieldset>
     <fieldset>
-        <legend>cambio password per l'utente {{ session.username }}</legend>
+        <legend>cambio password per l'utente {{ session.account.username }}</legend>
         <div class="form-row">
             <div class="col-12 col-md">
                 <span class="label-top">password corrente</span>
-                {{ frm.input( table, '', '', 'password0', '', '', '', '', 'password' ) }}
+                {{ frm.input( table, '', '', 'password0', '', '', '', '', 'password', '', '', '', '', '', 'also-required="__account___password1,__account___password2"' ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">nuova password</span>
-                {{ frm.input( table, '', '', 'password1', '', '', '', '', 'password' ) }}
+                {{ frm.input( table, '', '', 'password1', '', '', '', '', 'password', '', '', 1, '', '', 'required-equals="__account___password1,__account___password2"' ) }}
             </div>
             <div class="col-12 col-md">
                 <span class="label-top">nuova password (ripetere)</span>
-                {{ frm.input( table, '', '', 'password2', '', '', '', '', 'password' ) }}
+                {{ frm.input( table, '', '', 'password2', '', '', '', '', 'password', '', '', 1, '', '', 'required-equals="__account___password1,__account___password2"' ) }}
             </div>
         </div>
     </fieldset>
     <fieldset>
         <div class="form-row">
             <div class="col">
-                <button type="submit" class="btn btn-sm btn-secondary btn-block">modifica dati</button>
+                <!-- <button type="submit" class="btn btn-sm btn-secondary btn-block">modifica dati</button> -->
+                {{ cms.formButton( 'registrati', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formAccount', google.profile.recaptcha, '__account__', '' ) }}
             </div>
         </div>
     </fieldset>
 </form>
+<!--
+<form method="post" target="/" class="mt-auto">
+    <input type="hidden" name="__logout__" value="1">
+    <fieldset>
+        <div class="form-row">
+            <div class="col">
+                <button type="submit" class="btn btn-sm btn-secondary btn-block">logout</button>
+            </div>
+        </div>
+    </fieldset>
+</form>
+-->
 {% endblock %}

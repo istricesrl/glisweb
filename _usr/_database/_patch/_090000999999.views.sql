@@ -2310,7 +2310,7 @@ CREATE OR REPLACE VIEW contratti_anagrafica_view AS
 		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
 		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
 		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
-	GROUP BY contratti.id
+	GROUP BY contratti.id, anagrafica.id
 ;
 
 -- | 090000007500
@@ -2400,7 +2400,8 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		group_concat( DISTINCT concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) SEPARATOR ' | ' ) AS orari,
 		group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ) SEPARATOR ' | ' ) AS giorni_orari,
 		group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' ) AS luoghi,
-		concat( coalesce( count( DISTINCT c.id ) ), ' / ', coalesce( m.testo, '∞' ) ) AS posti_disponibili,
+		group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ), luoghi_path( todo.id_luogo ) SEPARATOR ' | ' ) AS giorni_orari_luoghi,
+		coalesce( m.testo, '∞' ) AS posti_disponibili,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
 		concat_ws(
@@ -2413,10 +2414,9 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 			coalesce( progetti.data_accettazione, '-' ),
 			' al ',
 			coalesce( progetti.data_chiusura, '-' ),
-			group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ) SEPARATOR ' | ' ),
-			group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' ),
+			group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ), luoghi_path( todo.id_luogo ) SEPARATOR ' | ' ),
 			'posti',
-			concat( coalesce( count( DISTINCT c.id ) ), ' / ', coalesce( m.testo, '∞' ) )
+			coalesce( m.testo, '∞' )
 		) AS __label__
 	FROM progetti
 		LEFT JOIN anagrafica AS a1 ON a1.id = progetti.id_cliente
@@ -2428,7 +2428,6 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		LEFT JOIN todo ON ( todo.id_progetto = progetti.id )
 		LEFT JOIN luoghi ON ( luoghi.id = todo.id_luogo )
 		LEFT JOIN metadati AS m ON ( m.id_progetto = progetti.id AND m.nome = 'iscritti_max' )
-		LEFT JOIN contratti AS c ON c.id_progetto = progetti.id
 	WHERE tipologie_progetti.se_didattica = 1
 	GROUP BY progetti.id
 ;

@@ -5,7 +5,7 @@
 {% block subnav %}{% endblock %}
 
 {% block main %}
-        <form action="" class="" id="form-login" method="post">
+        <form action="" class="form-login" id="formLogin" method="post">
             <fieldset>
             <legend>login</legend>
             <div class="form-group form-row">
@@ -16,8 +16,13 @@
             <label class="d-none d-md-block col-md-4 col-form-label">password</label>
             <div class="col-12 col-md-8"><input type="password" class="form-control form-control-sm" name="__login__[pasw]" placeholder="password"></div>
             </div>
+            <!--
             <div class="form-group form-row">
             <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">login</button></div>
+            </div>
+            -->
+            <div class="form-group form-row">
+                <div class="col-12">{{ cms.formButton( 'login', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formLogin', google.profile.recaptcha, '__login__', '' ) }}</div>
             </div>
             </fieldset>
         </form>

@@ -1,9 +1,9 @@
 {% extends 'ext/login.html' %}
 
 {% block main %}
+{# TODO adeguare alla nuova strategia con __account__ #}
 <div class="row no-gutters flex-fill align-items-center justify-content-center">
-    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item col-4" id="form-login"
-        method="post">
+    <form action="{{ page.path[ localization.language.ietf ] }}" class="draggable-item col-4 form-login" id="formLogin" method="post">
         <fieldset>
             <legend>gestione dati profilo</legend>
             {% if request.__profile__.__tk_sent__ %}
@@ -52,8 +52,10 @@
             {% endif %}
             {{ std.checkPrivacy( 'default', registrazione, pages, tr, localization.language.ietf, '', '', '__profile__' ) }}
             <div class="form-group form-row">
-                <div class="col-12"><button type="submit" class="btn btn-secondary btn-sm btn-block">aggiorna
-                        dati</button></div>
+                <div class="col-12">
+                    <!-- <button type="submit" class="btn btn-secondary btn-sm btn-block">aggiorna dati</button> -->
+                    {{ cms.formButton( 'aggiorna dati', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formLogin', google.profile.recaptcha, '__profile__', '' ) }}
+                </div>
             </div>
             {% endif %}
             {% if '0600.password' in mods.active.array %}

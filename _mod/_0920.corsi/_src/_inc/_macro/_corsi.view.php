@@ -19,7 +19,9 @@
 
 
     // tabella della vista
-	$ct['view']['table'] = 'corsi';
+	// $ct['view']['table'] = 'corsi';
+    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['table'] = '__report_corsi__';
 
     // tabella per la gestione degli oggetti esistenti
 	$ct['view']['open']['table'] = 'progetti';
@@ -35,8 +37,8 @@
         'fasce' => 'fasce',
         'discipline' => 'discipline',
         'livelli' => 'livelli',
-        'giorni_orari' => 'giorni',
-        'luoghi' => 'luoghi',
+        'giorni_orari_luoghi' => 'luoghi e orari',
+//        'luoghi' => 'luoghi',
         'posti_disponibili' => 'posti',
         'stato' => 'stato',
         '__label__' => 'corso',
@@ -53,8 +55,10 @@
         'categorie' => 'text-left',
         'discipline' => 'text-left',
         'livelli' => 'text-left',
+        'giorni_orari_luoghi' => 'text-left nowrap',
         'stato' => 'text-left',
-        '__label__' => 'd-none'
+        '__label__' => 'd-none',
+        NULL => 'nowrap'
     );
 
     // javascript della vista
@@ -104,6 +108,10 @@
             } else {
                 $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.del?__key__=iscrizioni&__item__='.$row['id'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark"></i></span></a>';
             }
+
+            $row[ NULL ] .=  '<a href="'.$cf['contents']['pages']['iscrizioni.form']['path'][LINGUA_CORRENTE].'?__preset__[contratti][id_progetto]='.$row['id'].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';
+
+            $row['giorni_orari_luoghi'] = str_replace( '|', '<br>', $row['giorni_orari_luoghi'] );
 
         }
 	}

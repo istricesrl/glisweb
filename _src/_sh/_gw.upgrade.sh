@@ -15,7 +15,9 @@ clear
 
 ## prendo il nome del repository
 if [[ -d "./.git" ]]; then
-    GITNAME=$( basename $(git remote get-url origin) )
+    for r in $( git remote ); do
+        GITNAME="$GITNAME "$( basename $(git remote get-url $r) )
+    done
 fi
 
 ## se sto lavorando sul framework

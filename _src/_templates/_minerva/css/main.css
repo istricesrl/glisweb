@@ -126,7 +126,7 @@ div.subnav p {
     margin: 0px;
 }
 
-#form-login {
+.form-login {
     width: 20%;
     min-width: 280px;
     margin: auto;
