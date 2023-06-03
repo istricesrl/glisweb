@@ -11,12 +11,6 @@
     contiene i dati di funzionamento del framework è detto database di supporto, mentre gli altri sono detti
     database di lavoro.
 
-    [...]
-    - tabelle principali (es. anagrafica)
-    - tabelle secondarie (es. telefoni)
-    - tabelle di relazione (es. anagrafica_progetti)
-    - tabelle per i contenuti (es. contenuti)
-
     Le tabelle del database di supporto si dividono in tre categorie secondo la politica di aggiornamento dei dati
     da parte dell'utente:
 
@@ -24,9 +18,35 @@
     - tabelle assistite
     - tabelle gestite
 
-    [...]
+    [...] dal punto di vista della gerarchia dei dati [...] tipologie:
+    - tabelle principali (es. anagrafica)
+    - tabelle secondarie (es. telefoni)
+    - tabelle di specifica (es. tipologie_anagrafica)
+    - tabelle di relazione (es. anagrafica_progetti)
+    - tabelle ricorsive (es. tipologie_anagrafica)
+
+    Le tabelle principali si distiguono per il fatto che contengono dati indipendenti da altre tabelle, ovverosia che hanno senso di per sé (ad esempio una persona descritta da
+    una riga della tabella anagrafica); le tabelle secondarie invece contengono dati dipendenti dalle righe delle tabelle principali (ad esempio i numeri di telefono di una persona)
+    e che quindi non hanno senso di esistere senza di esse.
+
+    In caso di relazione fra tabelle principali si applicherà quindi un vincolo di tipo SET NULL mentre nelle relazioni fra tabelle principali e tabelle secondarie si applicherà
+    un vincolo di tipo CASCADE in modo da evitare che rimangano nel database dati orfani, che sarebbero privi di senso in quanto non collegati a un'entità principale che li
+    qualifichi e li contestualizzi. Nel caso invece in cui la relazione vada verso la tabella principale si applicherà la strategia SET NULL.
+
+    Le tabelle di specifica precisano il significato di una riga di tabella principale o secondaria, che quindi non avrebbe senso o sarebbe decontestualizzata senza la relazione;
+    (ad esempio una riga di anagrafica priva di tipologia non dice se si tratta di una persona fisica o giuridica); pertanto nelle relazioni fra tabelle principali e tabelle di
+    specifica si applicherà la strategia NO ACTION.
+
+    Le tabelle di relazione mettono in relazione fra loro i dati presenti su altre tabelle e quindi le righe che contengono non hanno senso di esistere senza i dati cui fanno
+    riferimento; pertanto nelle relazioni con queste tabelle si applicherà sempre la strategia CASCADE.
+
+    Le tabelle ricorsive possono essere considerate di specifica verso sé stesse ovvero relativamente alla colonna id_genitore si applicherà sempre la strategia di relazione NO ACTION
+    per evitare che possano crearsi inconsistenze nell'albero.
+
+    [...] non rilevanti per la struttura del database ma dal punto di vista dell'applicazione [...] gruppi:
     - tabelle categorie_*
     - tabelle tipologie_*
+    - tabelle relazioni_*
     - tabelle ruoli_*
 
     tipologie di tabelle
@@ -50,23 +70,23 @@
     sempre esattamente a quella degli array del framework, ma si è cercato di tenerle il più simili possibile per
     semplificarne la lettura e la gestione e a tendere si cercherà di farle convergere con gli aggiornamenti.
 
-    tabella                         | codice    | modello       | gruppo        | descrizione
-    --------------------------------|-----------|---------------|---------------|------------------------------
-    colori                          | 005100    | base          | principale    | contiene i colori
-    comuni                          | 005300    | base          | principale    | contiene i comuni
-    condizioni_pagamento            | 006200    | base          | principale    | contiene le condizioni di pagamento
-    continenti                      | 007100    | base          | principale    | contiene i continenti
-    embed                           | 012800    | base          | principale    | contiene le strategie di embed dei contenuti multimediali
-    iva                             | 016000    | base          | principale    | contiene le aliquote IVA
-    lingue                          | 016800    | base          | principale    | contiene le lingue supportate dal framework
-    modalita_pagamento              | 021900    | base          | principale    | contiene le modalità di pagamento codificate secondo lo standar al 2022-01-18
-    periodicita                     | 023600    | base          | principale    | contiene le periodicità
-    provincie                       | 028000    | base          | principale    | contiene le provincie
-    regimi                          | 029800    | base          | principale    | contiene i regimi fiscali
-    regioni                         | 030200    | base          | principale    | contiene le regioni
-    ruoli_anagrafica                | 034000    | ricorsiva     | ruoli         | contiene i ruoli svolti dalle anagrafiche
-    ruoli_articoli                  | 034100    | ricorsiva     | ruoli         | contiene i ruoli svolti dagli articoli
-    ruoli_audio                     | 034200    | ricorsiva     | ruoli         | contiene i ruoli svolti dagli audio
+    tabella                         | codice    | tipologia     |  gruppo      | descrizione
+    --------------------------------|-----------|---------------|--------------|---------------|------------------------------
+    colori                          | 005100    |               |              | contiene i colori
+    comuni                          | 005300    |               |               | contiene i comuni
+    condizioni_pagamento            | 006200    |               |               | contiene le condizioni di pagamento
+    continenti                      | 007100    |               |               | contiene i continenti
+    embed                           | 012800    |               |               | contiene le strategie di embed dei contenuti multimediali
+    iva                             | 016000    |               |               | contiene le aliquote IVA
+    lingue                          | 016800    |               |               | contiene le lingue supportate dal framework
+    modalita_pagamento              | 021900    |               |               | contiene le modalità di pagamento codificate secondo lo standar al 2022-01-18
+    periodicita                     | 023600    |               |               | contiene le periodicità
+    provincie                       | 028000    |               |               | contiene le provincie
+    regimi                          | 029800    |               |               | contiene i regimi fiscali
+    regioni                         | 030200    |               |               | contiene le regioni
+    ruoli_anagrafica                | 034000    |               |               | contiene i ruoli svolti dalle anagrafiche
+    ruoli_articoli                  | 034100    |               |               | contiene i ruoli svolti dagli articoli
+    ruoli_audio                     | 034200    |               |               | contiene i ruoli svolti dagli audio
     ruoli_file                      | 034400    | ricorsiva     | ruoli         | contiene i ruoli svolti dai file
     ruoli_immagini                  | 034600    | ricorsiva     | ruoli         | contiene i ruoli svolti dalle immagini
     ruoli_indirizzi                 | 034800    | ricorsiva     | ruoli         | contiene i ruoli svolti dagli indirizzi
@@ -85,7 +105,7 @@
     del framework. Il loro contenuto non è quindi considerato parte del framework e può essere liberamente modificato dagli
     utenti.
 
-    tabella                         | codice    | modello       | gruppo        | descrizione
+    tabella                         | codice    | tipologia     |  gruppo      | descrizione
     --------------------------------|-----------|---------------|---------------|------------------------------
     categorie_anagrafica            | 003100    | ricorsiva     | categorie     | contiene le categorie dell'anagrafica
     certificazioni                  | 004700    | base          | principale    | contiene le certificazioni
@@ -119,7 +139,7 @@
     Le tabelle gestite contengono i dati che vengono manipolati tramite le interfacce del framework;
     sono sempre vuote nelle nuove installazioni e accolgono i dati che vengono via via inseriti dagli utenti.
 
-    tabella                         | codice    | modello       | gruppo        | descrizione
+    tabella                         | codice    | tipologia     |  gruppo      | descrizione
     --------------------------------|-----------|---------------|---------------|------------------------------
     account                         | 000100    | base          | principale    | contiene gli account che possono fare il login nel framework
     account_gruppi                  | 000200    | relazione     | principale    | mette in relazione account e gruppi
@@ -208,6 +228,12 @@
     progetti_matricole              | 027800    | relazione     | principale    | mette in relazione progetti e matricole
     pubblicazioni                   | 028400    | base          | principale    | contiene le pubblicazioni
     redirect                        | 029400    | base          | principale    | contiene i redirect HTTP
+    relazioni_anagrafica            | 030300    | relazione     | secondario    | mette in relazione anagrafiche e anagrafiche
+    relazioni_documenti             | 030400    | relazione     | secondario    | mette in relazione documenti e documenti
+    relazioni_documenti_articoli    | 030410    | relazione     | secondario    | mette in relazione documenti_articoli e documenti_articoli
+    relazioni_pagamenti             | 030440    | relazione     | secondario    | mette in relazione pagamenti e pagamenti
+    relazioni_progetti              | 030490    | relazione     | secondario    | mette in relazione progetti e progetti
+    relazioni_software              | 030500    | relazione     | secondario    | mette in relazione software e software
     rinnovi                         | 031500    | base          | secondaria    | contiene i rinnovi dei contratti
     rinnovi_documenti_articoli      | 031550    | relazione     | secondaria    | mette in relazione rinnovi e documenti_articoli
     risorse                         | 032000    | base          | principale    | contiene le risorse
@@ -224,19 +250,6 @@
     todo_matricole                  | 060100    | relazione     | principale    | contiene le relazioni tra todo e matricole
     url                             | 062600    | base          | principale    | contiene gli URL
     video                           | 065000    | base          | contenuti     | contiene i video
-
-    le tabelle di relazione
-    ------------------
-    Le tabelle di relazione servono per mettere in relazioni molti a molti oggetti di tabelle principali con altri oggetti della stessa tabella
-
-    tabella                         | codice    | modello       | gruppo        | descrizione
-    --------------------------------|-----------|---------------|---------------|------------------------------
-    relazioni_anagrafica            | 030300    | relazione     | secondario    | mette in relazione anagrafiche e anagrafiche
-    relazioni_documenti             | 030400    | relazione     | secondario    | mette in relazione documenti e documenti
-    relazioni_documenti_articoli    | 030410    | relazione     | secondario    | mette in relazione documenti_articoli e documenti_articoli
-    relazioni_pagamenti             | 030440    | relazione     | secondario    | mette in relazione pagamenti e pagamenti
-    relazioni_progetti              | 030490    | relazione     | secondario    | mette in relazione progetti e progetti
-    relazioni_software              | 030500    | relazione     | secondario    | mette in relazione software e software
 
     tabelle e moduli
     ================
