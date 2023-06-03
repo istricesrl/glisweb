@@ -4772,11 +4772,31 @@ CREATE OR REPLACE VIEW `mailing_view` AS
 
 -- | 090000019050
 
--- mailing_mail_view
+-- mailing_liste_view
 -- tipolgia: tabella gestita
-DROP TABLE IF EXISTS `mmailing_mail_view`;
+DROP TABLE IF EXISTS `mailing_liste_view`;
 
 -- | 090000019051
+
+-- mailing_liste_view
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+CREATE OR REPLACE VIEW `mailing_liste_view` AS
+	SELECT
+	mailing_liste.id,
+	mailing_liste.id_lista,
+	mailing_liste.id_mailing,
+	concat( mailing_liste.id_lista, mailing_liste.id_mailing ) AS __label__
+	FROM mailing_liste
+;
+
+-- | 090000019100
+
+-- mailing_mail_view
+-- tipolgia: tabella gestita
+DROP TABLE IF EXISTS `mailing_mail_view`;
+
+-- | 090000019101
 
 -- mailing_mail_view
 -- tipolgia: tabella gestita
@@ -4800,26 +4820,6 @@ CREATE OR REPLACE VIEW `mailing_mail_view` AS
 		INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing
 		INNER JOIN mail ON mail.id = mailing_mail.id_mail
 		INNER JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
-;
-
--- | 090000019100
-
--- mailing_liste_view
--- tipolgia: tabella gestita
-DROP TABLE IF EXISTS `mailing_liste_view`;
-
--- | 090000019051
-
--- mailing_liste_view
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
-CREATE OR REPLACE VIEW `mailing_liste_view` AS
-	SELECT
-	mailing_liste.id,
-	mailing_liste.id_lista,
-	mailing_liste.id_mailing,
-	concat( mailing_liste.id_lista, mailing_liste.id_mailing ) AS __label__
-	FROM mailing_liste
 ;
 
 -- | 090000020200
