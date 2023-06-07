@@ -772,6 +772,7 @@ INSERT IGNORE INTO `ruoli_video` (`id`, `id_genitore`, `nome`, `html_entity`, `f
 (11,	NULL,	'episodio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL),
 (12,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
 (13,	NULL,	'utenze',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1);
+
 -- | 050000037000
 
 -- settori
@@ -1386,6 +1387,8 @@ INSERT IGNORE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `htm
 -- tipologie_url
 -- tipologia: tabella assistita
 -- verifica: 2021-11-09 12:45 Chiara GDL
+INSERT IGNORE INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'sito web',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000062000
 

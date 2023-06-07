@@ -87,6 +87,14 @@
 	    'SELECT id, __label__ FROM tipologie_telefoni_view'
 	);
 
+    // tendina tipologie URL
+	$ct['etc']['select']['tipologie_url'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_url_view'
+	);
+
 	// tendina ruoli indirizzi
 	$ct['etc']['select']['ruoli_indirizzi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
