@@ -48,7 +48,10 @@
             'prodotti'
         );
 
-        mysqlInsertRow(
+        // var_dump( $idProdotto );
+        // die( $idProgetto );
+
+        $check = mysqlInsertRow(
             $cf['mysql']['connection'],
             array(
                 'id' => $idProgetto,
@@ -57,17 +60,42 @@
             'progetti'
         );
 
+        // var_dump( $check );
+        // var_dump( $idProdotto );
+        // die();
+
         $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] = $idProdotto;
 
+        // var_dump( $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] );
+
+        // echo '<pre>' . print_r( $_REQUEST[ $ct['form']['table'] ], true ) . '</pre>';
+
     }
+
+    // debug
+    // print_r( $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] );
+    // echo '<pre>' . print_r( $_REQUEST[ $ct['form']['table'] ], true ) . '</pre>';
 
     // se è associato un prodotto
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] ) ) {
 
+        // die( print_r( $_REQUEST[ $ct['form']['table'] ] ) );
+        // die( $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] );
+
+/*
 		// tendina prodotto
 		$ct['etc']['select']['prodotti'] = mysqlCachedIndexedQuery(
 			$cf['memcache']['index'],
 			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+			'SELECT id, __label__ FROM prodotti_view WHERE id = ?',
+		    array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] ) )
+		);
+*/
+
+        // NOTA la mysqlCachedIndexedQuery() non funziona perché la cache si invalida automaticamente solo se si passa dalla controller, non viene invalidata da mysqlInsertRow
+        // TODO ovviare a questo problema?
+		$ct['etc']['select']['prodotti'] = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT id, __label__ FROM prodotti_view WHERE id = ?',
 		    array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] ) )
@@ -142,7 +170,7 @@
                 foreach($_REQUEST['prodotti']['pubblicazioni'] as &$p){
                     $p['timestamp_inizio'] = date( 'Y-m-d\TH:i', $p['timestamp_inizio'] );
                     $p['timestamp_fine'] = date( 'Y-m-d\TH:i', $p['timestamp_fine'] );
-                    }
+                }
             }
 
         }
@@ -150,10 +178,19 @@
         // gestione default
         require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    } else {
+
+        // die( 'prodotto mancante' );
+
     }
+
+    // debug
+    // echo '<pre>' . print_r( $_REQUEST[ $ct['form']['table'] ], true ) . '</pre>';
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
     // debug
     // print_r( strtotime("2022-07-01T15:56") );
+    // print_r( $_REQUEST );
+    // die( '<pre>' . print_r( $_REQUEST[ $ct['form']['table'] ], true ) . '</pre>' );
