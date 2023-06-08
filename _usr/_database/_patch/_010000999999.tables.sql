@@ -1136,6 +1136,26 @@ CREATE TABLE IF NOT EXISTS `contratti_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000007400
+
+-- contratti_progetti
+CREATE TABLE IF NOT EXISTS `contratti_progetti` (
+  `id` int(11) NOT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `note_inserimento` text NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `note_aggiornamento` text NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
+  `id_account_archiviazione` int(11) DEFAULT NULL,
+  `note_archiviazione` text NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000007500
 
 -- conversazioni
