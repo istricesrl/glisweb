@@ -52,10 +52,16 @@
                     </div>
                     <div class="col-12 col-md-2">
                         <span class="label-top">badge</span>
+                        {{ frm.selectBox( table, '', '', 'id_badge', '', etc.select.badge, request, '', '', 1, '', '', 'badge.form', 'badge.form', 'badge', 'id', page, pages, ietf, 'badge' ) }}
+                    </div>
+<!--
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">badge</span>
                         {% set subtable = 'badge' %}
                         {{ frm.input( table, subtable, 0, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
                         {{ frm.selectBox( table, subtable, 0, 'id', '', etc.select.badge, request, '', '', 1, '', '', 'badge.form', 'badge.form', 'badge', 'id', page, pages, ietf, 'badge' ) }}
                     </div>
+-->
                     {% set subtable = 'contratti_anagrafica' %}
                     {{ frm.input( table, subtable, 0, 'id', '', '', request, '', 'hidden' ) }}
                     {{ frm.input( table, subtable, 0, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
