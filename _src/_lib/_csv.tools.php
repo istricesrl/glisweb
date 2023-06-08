@@ -22,14 +22,22 @@
         // leggo il contenuto grezzo del file
         $grezzo = readFromFile( $file );
 
+        // auto rilevamento separatore
+        if( $s == NULL ) {
+            $vg = substr_count( $grezzo[0], ',' );            
+            $pv = substr_count( $grezzo[0], ';' );
+            $s = ( ( $vg > $pv ) ? ',' : ';' );
+            // logWrite( 'virgole: ' . $vg . ' punti e virgola: ' . $pv . ' vince: ' . $s, 'csv' );
+        }
+
         // debug
-        logWrite( 'grezzo' . PHP_EOL . print_r( $grezzo, true ), 'csv' );
+        // logWrite( 'grezzo' . PHP_EOL . print_r( $grezzo, true ), 'csv' );
 
         // faccio il parsing CSV di ogni riga
         $lavorato = csv2array( $grezzo, $s, $c, $e );
 
         // debug
-        logWrite( 'lavorato' . PHP_EOL . print_r( $lavorato, true ), 'csv' );
+        // logWrite( 'lavorato' . PHP_EOL . print_r( $lavorato, true ), 'csv' );
 
         // restituisco l'array associativo
         return( $lavorato );
@@ -51,7 +59,7 @@
      */
     function csv2array( $data, $s = ",", $c = "\"", $e = '\\' ) {
 
-        logWrite( 'dati pre ' . print_r( $data, true ), 'csv' );
+        // logWrite( 'dati pre ' . print_r( $data, true ), 'csv' );
 
         $result = array();
 
@@ -65,11 +73,11 @@
             }
         }
 
-        logWrite( 'dati post ' . print_r( $result, true ), 'csv' );
+        // logWrite( 'dati post ' . print_r( $result, true ), 'csv' );
 
         array_shift( $result );
 
-        logWrite( 'dati finally ' . print_r( $result, true ), 'csv' );
+        // logWrite( 'dati finally ' . print_r( $result, true ), 'csv' );
 
         return $result;
 

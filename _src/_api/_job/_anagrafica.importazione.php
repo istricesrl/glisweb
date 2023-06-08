@@ -42,7 +42,7 @@
         if( empty( $job['corrente'] ) ) {
 
             // inizializzo l'array
-            $arr = csvFile2array( $job['workspace']['file'], ';' );
+            $arr = csvFile2array( $job['workspace']['file'], NULL );
 
             // segno il totale delle cose da fare
             $job['totale'] = count( $arr );
@@ -70,7 +70,7 @@
         } else {
 
             // leggo la lista
-            $arr = csvFile2array( $job['workspace']['file'], ';' );
+            $arr = csvFile2array( $job['workspace']['file'], NULL );
 
             // incremento l'indice di lavoro
             $job['corrente']++;
@@ -325,6 +325,31 @@
                                 'numero' => $numero
                             ),
                             'telefoni'
+                        );
+
+                    }
+
+                }
+
+                // se sono presenti dei telefoni...
+                if( isset( $row['url'] ) && ! empty( $row['url'] ) ) {
+
+                    // esplodo le categorie per pipe
+                    $urls = explode( '|', $row['url'] );
+
+                    // per ogni categoria...
+                    foreach( $urls as $url ) {
+
+                        // trovo l'ID della mail
+                        $idUrl = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_tipologia' => 1,
+                                'id_anagrafica' => $idAnagrafica,
+                                'url' => $numero
+                            ),
+                            'url'
                         );
 
                     }
