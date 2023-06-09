@@ -50,8 +50,10 @@
 
 	// RELAZIONI CON IL MODULO CONTENUTI
 	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'discipline.form', $p['discipline.form']['etc']['tabs'], 'discipline.form.menu' );
+		arrayInsertSeq( 'discipline.form', $p['discipline.form']['etc']['tabs'], 'discipline.form.testo' );
 		arrayInsertSeq( 'discipline.form', $p['discipline.form']['etc']['tabs'], 'discipline.form.sem' );
-		arrayInsertSeq( 'discipline.form.sem', $p['discipline.form']['etc']['tabs'], 'discipline.form.testo' );
+		arrayInsertSeq( 'discipline.form', $p['discipline.form']['etc']['tabs'], 'discipline.form.web' );
 	}
 
 	$p['discipline.form.metadati'] = array(
