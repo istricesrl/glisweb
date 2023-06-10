@@ -1134,6 +1134,26 @@ ALTER TABLE `contratti_anagrafica`
 -- tipologia: tabella gestita
 ALTER TABLE `contratti_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000007400
+
+-- contratti_progetti
+ALTER TABLE `contratti_progetti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_contratto`, `id_progetto`, `id_ruolo`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`),
+	ADD KEY `indice` (`id`, `id_contratto`, `id_progetto`, `id_ruolo`, `ordine`);
+
+-- | 030000007401
+
+-- contratti_progetti
+ALTER TABLE `contratti_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000007500
 
 -- conversazioni
