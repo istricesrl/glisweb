@@ -201,8 +201,8 @@
     mail_out                        | 018800    | base          | principale    | contiene le mail in uscita
     mail_sent                       | 018900    | base          | principale    | contiene le mail inviate
     mailing                         | 019000    | base          | principale    | contiene i mailing
-    mailing_mail                    | 019050    | relazione     | secondarie    | mette in relazione mailing e mail
-    mailing_liste                   | 019100    | relazione     | secondarie    | mette in relazione mailing e liste
+    mailing_liste                   | 019050    | relazione     | secondarie    | mette in relazione mailing e liste
+    mailing_mail                    | 019100    | relazione     | secondarie    | mette in relazione mailing e mail
     marchi                          | 020200    | base          | principale    | contiene i marchi
     mastri                          | 020600    | ricorsiva     | principale    | contiene i mastri
     matricole                       | 021000    | base          | principale    | contiene le matricole

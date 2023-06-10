@@ -387,10 +387,10 @@ ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `badge`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `codice` (`codice`), 
+	ADD UNIQUE KEY `unica` (`rfid`), 
+	ADD UNIQUE KEY `codice` (`id_tipologia`, `codice`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_contratto` (`id_contratto`), 
-	ADD KEY `rfid` (`rfid`), 
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -1101,6 +1101,7 @@ ALTER TABLE `contratti`
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_progetto`),
+	ADD KEY `id_badge` (`id_badge`),
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `codice_affiliazione` ( `codice_affiliazione` ),
 	ADD KEY `indice` ( `id_tipologia`, `codice`, `codice_affiliazione`, `nome`, `id_progetto`, `id_immobile`);
@@ -1132,6 +1133,26 @@ ALTER TABLE `contratti_anagrafica`
 -- contratti_anagrafica
 -- tipologia: tabella gestita
 ALTER TABLE `contratti_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000007400
+
+-- contratti_progetti
+ALTER TABLE `contratti_progetti`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_contratto`, `id_progetto`, `id_ruolo`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `id_account_archiviazione` (`id_account_archiviazione`),
+	ADD KEY `indice` (`id`, `id_contratto`, `id_progetto`, `id_ruolo`, `ordine`);
+
+-- | 030000007401
+
+-- contratti_progetti
+ALTER TABLE `contratti_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000007500
 
@@ -2068,6 +2089,25 @@ ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000019050
 
+-- mailing_liste
+-- tipolgia: tabella gestita
+-- verifica: 2022-02-07 15:47 Chiara GDL
+ALTER TABLE `mailing_liste`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_lista`,`id_mailing`),
+	ADD KEY `id_mailing` (`id_mailing`),
+	ADD KEY `id_lista` (`id_lista`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000019051
+
+-- mailing_liste
+-- tipolgia: tabella gestita
+ALTER TABLE `mailing_liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000019100
+
 -- mailing_mail
 -- tipolgia: tabella gestita
 -- verifica: 2022-02-07 15:47 Chiara GDL
@@ -2081,31 +2121,12 @@ ALTER TABLE `mailing_mail`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_mailing`, `id_mail`, `id_mail_out`, `token` );
-
--- | 030000019051
+	
+-- | 030000019101
 
 -- mailing_mail
 -- tipolgia: tabella gestita	
 ALTER TABLE `mailing_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
-
--- | 030000019100
-
--- mailing_liste
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
-ALTER TABLE `mailing_liste`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`id_lista`,`id_mailing`),
-	ADD KEY `id_mailing` (`id_mailing`),
-	ADD KEY `id_lista` (`id_lista`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
-	
--- | 030000019101
-
--- mailing_liste
--- tipolgia: tabella gestita
-ALTER TABLE `mailing_liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000020200
 
