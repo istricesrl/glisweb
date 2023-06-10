@@ -1110,6 +1110,7 @@ CREATE TABLE `contratti` (
   `id_immobile` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` int(11) DEFAULT NULL,
+  `id_badge` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `note_cliente` text DEFAULT NULL,

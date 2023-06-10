@@ -387,10 +387,10 @@ ALTER TABLE `audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- tipologia: tabella gestita
 ALTER TABLE `badge`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `codice` (`codice`), 
+	ADD UNIQUE KEY `unica` (`rfid`), 
+	ADD UNIQUE KEY `codice` (`id_tipologia`, `codice`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_contratto` (`id_contratto`), 
-	ADD KEY `rfid` (`rfid`), 
 	ADD KEY `nome` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -1101,6 +1101,7 @@ ALTER TABLE `contratti`
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_progetto`),
+	ADD KEY `id_badge` (`id_badge`),
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `codice_affiliazione` ( `codice_affiliazione` ),
 	ADD KEY `indice` ( `id_tipologia`, `codice`, `codice_affiliazione`, `nome`, `id_progetto`, `id_immobile`);

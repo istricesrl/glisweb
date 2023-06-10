@@ -2093,6 +2093,8 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		progetti.nome AS progetto,
 		contratti.id_categoria_progetti,
 		categorie_progetti_path( contratti.id_categoria_progetti ) AS categoria_progetti,
+		contratti.id_badge,
+		badge.codice AS badge,
 		contratti.nome,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
@@ -2108,6 +2110,7 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN badge ON badge.id = contratti.id_badge
 		LEFT JOIN immobili ON immobili.id = contratti.id_immobile
 		LEFT JOIN tipologie_immobili ON tipologie_immobili.id = immobili.id_tipologia
 		LEFT JOIN edifici ON edifici.id = immobili.id_edificio
