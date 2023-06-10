@@ -91,7 +91,6 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
-
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita'] ) ) {

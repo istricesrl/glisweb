@@ -41,6 +41,14 @@
 	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_disciplina = 1'
 	);
 
+    // tendina progetti
+	$ct['etc']['select']['corsi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM corsi_view '
+    );
+
     // metadato di default per la durata in mesi dell'abbonamento
     $ct['etc']['sub']['durata_mesi'] = array(
         'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) : 0 ),

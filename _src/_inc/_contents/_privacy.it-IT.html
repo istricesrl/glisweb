@@ -155,62 +155,58 @@ utilizza i seguenti servizi:</p>
 {% if privacy.cookie.terzi.analitici %}
 <h3>cookie analitici di terze parti</h3>
 <p>Questo sito fa uso di cookie di terze parti per analizzare il traffico e migliorare l'esperienza degli utenti; i dati acquisiti in tale
-maniera non vengono utilizzati per finalità diverse da quelle dichiarate.</p>
-{% if privacy.cookie.terzi.analitici.anonimi %}
-<p>I cookie elencati di seguito non contengono informazioni identificative; poiché tali cookie non possono condurre all'identificazione
+maniera non vengono utilizzati per finalità diverse da quelle dichiarate. Secondo la normativa vigente si distinguono i cookie analitici
+anonimi da quelli identificativi.</p>
+<p>I cookie analitici anonimi non raccolgono né contengono informazioni identificative; poiché tali cookie non possono condurre all'identificazione
 dell'utente, in quanto sono state adottate le necessarie misure tecniche di anonimizzazione dei dati, la normativa vigente non richiede
 l'esplicito consenso dell'utente per il loro utilizzo. Poiché questi cookie sono gestiti direttamente dai soggetti terzi, si rimanda alle loro
-rispettive informative riportate nel seguente elenco:</p>
-<ul>
-    {% for cookie, dettagli in privacy.cookie.terzi.analitici.anonimi %}
-    <li>
-	<strong>{{ dettagli.nome }}</strong> utilizzato per <strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>,
-	link all'informativa <a href="{{ dettagli.policy }}" target="_blank">{{ dettagli.policy }}</a>,
-	conservazione dei dati per <strong>{{ dettagli.conservazione[ localization.language.ietf ] }}</strong>
-    </li>
-    {% endfor %}
-</ul>
-{% endif %}
-{% if privacy.cookie.terzi.analitici.identificativi %}
-<p>I cookie elencati di seguito possono contenere informazioni in grado di condurre all'identificazione
-dell'utente, e dunque la normativa vigente richiede l'esplicito consenso dell'utente per il loro utilizzo. Poiché questi cookie sono gestiti
-direttamente dai soggetti terzi, si rimanda alle loro rispettive informative riportate nel seguente elenco:</p>
+rispettive informative per ulteriori dettagli.</p>
+<p>I cookie analitici identificativi possono invece contenere informazioni in grado di condurre all'identificazione
+dell'utente, e dunque la normativa vigente richiede l'esplicito consenso dell'utente per il loro utilizzo. Anche in questo caso, poiché questi cookie
+sono gestiti direttamente dai soggetti terzi, si rimanda alle loro rispettive informative per ulteriori dettagli.</p>
+<p>Questa tabella riporta l'elenco di tutti i cookie analitici di terze parti utilizzati dal sito:</p>
 <table class="table">
-    <tr class="nowrap">
-	<th>provenienza</th>
-	<th>finalità</th>
-	<th>informativa</th>
-	<th>conservazione dati</th>
-	<th>consenso</th>
-    </tr>
-    {% for cookie, dettagli in privacy.cookie.terzi.analitici.identificativi %}
-    <tr>
-	<td class="nowrap"><strong>{{ dettagli.nome }}</strong></td>
-	<td>{{ dettagli.motivazione[ localization.language.ietf ] }}</td>
-	<td><a href="{{ dettagli.policy }}" target="_blank">{{ dettagli.policy }}</a></td>
-	<td>{{ dettagli.conservazione[ localization.language.ietf ] }}</td>
-	{% if privacy.cookie.terzi.analitici.identificativi[ cookie ].consenso == 1 %}
-	<td><form action="" method="post">
-	<input type="hidden" name="__cookie__[owner]" value="terzi">
-	<input type="hidden" name="__cookie__[type]" value="analitici">
-	<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
-	<input type="hidden" name="__cookie__[value]" value="">
-	<input type="submit" class="btn btn-default btn-dark btn-sm" value="prestato, fai click qui per revocarlo">
-	</form></td>
-	{# elseif privacy.cookie.terzi.analitici.identificativi[ cookie ].consenso == 'no' #}
-	{% else %}
-	<td><form action="" method="post">
-	<input type="hidden" name="__cookie__[owner]" value="terzi">
-	<input type="hidden" name="__cookie__[type]" value="analitici">
-	<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
-	<input type="hidden" name="__cookie__[value]" value="1">
-	<input type="submit" class="btn btn-default btn-dark btn-sm" value="negato, fai click qui per prestarlo">
-	</form></td>
-	{% endif %}
-    </tr>
-    {% endfor %}
+	<thead>
+		<tr class="nowrap">
+			<th>provenienza</th>
+			<th>finalità</th>
+			<th>informativa</th>
+			<th>conservazione dati</th>
+			<th>consenso</th>
+		</tr>
+	</thead>
+	<tbody>
+		{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
+		<tr>
+			<td class="nowrap"><strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong></td>
+			<td>{{ dettagli.motivazione[ localization.language.ietf ]|raw }}</td>
+			<td><a href="{{ dettagli.policy }}" target="_blank">{{ dettagli.policy }}</a></td>
+			<td>{{ dettagli.conservazione[ localization.language.ietf ] }}</td>
+			{% if dettagli.anonimo %}
+			<td>cookie non identificativo, consenso non richiesto</td>
+			{% else %}
+			{% if privacy.cookie.terzi.analitici[ cookie ].consenso == 1 %}
+			<td><form action="" method="post">
+			<input type="hidden" name="__cookie__[owner]" value="terzi">
+			<input type="hidden" name="__cookie__[type]" value="analitici">
+			<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
+			<input type="hidden" name="__cookie__[value]" value="">
+			<input type="submit" class="btn btn-default btn-dark btn-sm" value="prestato, fai click qui per revocarlo">
+			</form></td>
+			{% else %}
+			<td><form action="" method="post">
+			<input type="hidden" name="__cookie__[owner]" value="terzi">
+			<input type="hidden" name="__cookie__[type]" value="analitici">
+			<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
+			<input type="hidden" name="__cookie__[value]" value="1">
+			<input type="submit" class="btn btn-default btn-dark btn-sm" value="negato, fai click qui per prestarlo">
+			</form></td>
+			{% endif %}
+			{% endif %}
+		</tr>
+		{% endfor %}
+	</tbody>
 </table>
-{% endif %}
 {% endif %}
 
 <h3>cookie di profilazione e sistemi di tracciamento</h3>

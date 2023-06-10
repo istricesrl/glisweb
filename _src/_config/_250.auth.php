@@ -252,6 +252,9 @@
 #		'turni' => array(
 #			CONTROL_FULL => array( 'roots' )
 #		),
+	    'url' => array(
+			CONTROL_FULL => array( 'roots', 'staff' )
+	    ),
 	    'video' => array(
 			CONTROL_FULL => array( 'roots' ),
 			CONTROL_FILTERED => array( 'staff' )

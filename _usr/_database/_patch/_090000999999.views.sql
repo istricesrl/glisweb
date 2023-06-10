@@ -2316,6 +2316,51 @@ CREATE OR REPLACE VIEW contratti_anagrafica_view AS
 	GROUP BY contratti.id, anagrafica.id
 ;
 
+-- | 090000007400
+
+-- contratti_progetti_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `contratti_progetti_view`;
+
+-- | 090000007401
+
+-- contratti_progetti_view
+-- tipologia: tabella gestita
+-- verifica: 2022-02-21 11:50 Chiara GDL
+CREATE OR REPLACE VIEW contratti_progetti_view AS 
+	SELECT 
+		contratti_progetti.id,
+		contratti_progetti.id_contratto,
+		contratti.codice,
+		contratti_progetti.id_progetto,
+		coalesce( progetti.nome, '' ) AS progetto,
+		contratti_progetti.id_ruolo,
+		ruoli_progetti.nome AS ruolo,
+		contratti_progetti.ordine,
+		contratti_progetti.id_account_inserimento ,
+		contratti_progetti.id_account_aggiornamento ,
+		tipologie_contratti.se_abbonamento,
+		tipologie_contratti.se_iscrizione,
+		tipologie_contratti.se_tesseramento,
+		tipologie_contratti.se_immobili,
+		tipologie_contratti.se_acquisto,
+		tipologie_contratti.se_locazione,
+		tipologie_contratti.nome AS tipologia,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		min( rinnovi.data_inizio ) AS data_inizio,
+		max( rinnovi.data_fine ) AS data_fine,
+		concat( 'contratto ', contratti.nome, ' - ', coalesce( progetti.nome, '' ), ' ruolo ', ruoli_progetti.nome  ) AS __label__
+	FROM contratti_progetti
+		LEFT JOIN contratti ON contratti.id = contratti_progetti.id_contratto
+		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = contratti_progetti.id_ruolo
+		LEFT JOIN progetti ON progetti.id = contratti_progetti.id_progetto
+		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+	GROUP BY contratti.id, progetti.id
+;
+
 -- | 090000007500
 
 -- conversazioni_view

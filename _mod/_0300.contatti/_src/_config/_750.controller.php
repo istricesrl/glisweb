@@ -86,7 +86,13 @@
 
                             // includo le controller
                                 foreach( $cnf['controller'] as $macro ) {
-                                    require DIR_BASE . $macro;
+                                    $macro = DIR_BASE . '_mod/_0300.contatti/_src/_inc/_macro/' . $macro;
+                                    $macroLocal = path2custom( $macro );
+                                    if( file_exists( $macroLocal ) ) {
+                                        require $macroLocal;
+                                    } elseif( file_exists( $macro ) ) {
+                                        require $macro;
+                                    }
                                 }
 
                         }

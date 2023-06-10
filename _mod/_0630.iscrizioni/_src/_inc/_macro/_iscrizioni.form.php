@@ -84,7 +84,7 @@
 
 	// NOTA i default da __work__ qui sono gestiti a livello di template Twig ma può avere senso gestirli qui?
 
-	if( isset( $_SESSION['__work__'] ) ){
+	if( isset( $_SESSION['__work__'] ) ) {
 
 		if( isset( $_SESSION['__work__']['anagrafica']['items'] ) ) {
 			$anagrafica = reset( $_SESSION['__work__']['anagrafica']['items'] );
@@ -138,11 +138,17 @@
 		}
 
 		if( isset( $_REQUEST['contratti']['contratti_anagrafica'][0]['id_anagrafica'] ) ) {
+
+			if( isset( $_SESSION['__work__']['anagrafica']['items'][ $_REQUEST['contratti']['contratti_anagrafica'][0]['id_anagrafica'] ] ) ) {
+				unset( $_SESSION['__work__']['anagrafica']['items'][ $_REQUEST['contratti']['contratti_anagrafica'][0]['id_anagrafica'] ] );
+			}
+
 			$ct['etc']['carrello'] = mysqlSelectValue(
 				$cf['mysql']['connection'],
 				'SELECT id_carrello FROM carrelli_articoli WHERE destinatario_id_anagrafica = ? AND id_articolo IN (\'' . implode( '\',\'', $articoli ) . '\')',
 				array( array( 's' => $_REQUEST['contratti']['contratti_anagrafica'][0]['id_anagrafica'] ) )
 			);
+
 		}
 
 		// var_dump( $_REQUEST['contratti']['contratti_anagrafica'][0]['id_anagrafica'] );

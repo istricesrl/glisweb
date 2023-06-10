@@ -96,6 +96,9 @@
 	    {# SUBFORM NUMERI DI TELEFONO #}
 	    {{ sub.telefoni( table, 'telefoni', 'telefoni', site, page, pages, ietf, etc, request, session ) }}
 
+	    {# SUBFORM URL #}
+	    {{ sub.url( table, 'url', 'URL', site, page, pages, ietf, etc, request, session ) }}
+
 		{% if anagrafica.indirizzi.inserimento.rapido == 1 %}
 		{# SUBFORM INDIRIZZI RAPIDI #}
 	    {{ sub.indirizzi_rapidi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}

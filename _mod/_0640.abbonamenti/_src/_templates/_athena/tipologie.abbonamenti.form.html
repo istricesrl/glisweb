@@ -109,6 +109,9 @@
             {# SUBFORM DISCIPLINE #}
             {{ sub.discipline( table, 'metadati', 'discipline', site, page, pages, ietf, etc, request, session ) }}
 
+            {# SUBFORM CORSI #}
+            {{ sub.corsi( table, 'metadati', 'corsi', site, page, pages, ietf, etc, request, session ) }}
+
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, table, request ) }}

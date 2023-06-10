@@ -99,7 +99,7 @@
 
 	// RELAZIONI CON IL MODULO CONTENUTI
 	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'corsi.form.calendario', $p['corsi.form']['etc']['tabs'], 'corsi.form.web' );
+		arrayInsertSeq( 'corsi.form', $p['corsi.form']['etc']['tabs'], 'corsi.form.web' );
 		arrayInsertSeq( 'corsi.form.web', $p['corsi.form']['etc']['tabs'], 'corsi.form.sem' );
 		arrayInsertSeq( 'corsi.form.sem', $p['corsi.form']['etc']['tabs'], 'corsi.form.testo' );
 	}

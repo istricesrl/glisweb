@@ -73,5 +73,7 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['settimana_programmazione'] = 'ASC';
     }
 */
+
     // macro di default
+	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 	require DIR_SRC_INC_MACRO . '_default.form.php';

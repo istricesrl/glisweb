@@ -42,7 +42,7 @@
         if( empty( $job['corrente'] ) ) {
 
             // inizializzo l'array
-            $arr = csvFile2array( $job['workspace']['file'], ';' );
+            $arr = csvFile2array( $job['workspace']['file'], NULL );
 
             // segno il totale delle cose da fare
             $job['totale'] = count( $arr );
@@ -70,7 +70,7 @@
         } else {
 
             // leggo la lista
-            $arr = csvFile2array( $job['workspace']['file'], ';' );
+            $arr = csvFile2array( $job['workspace']['file'], NULL );
 
             // incremento l'indice di lavoro
             $job['corrente']++;

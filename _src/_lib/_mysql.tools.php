@@ -918,6 +918,8 @@
 			array2mysqlStatementParameters( $r )
 		);
 
+		// var_dump( $t . '/' . $i );
+
 		memcacheCleanFromIndex( $t );
 		memcacheCleanFromIndex( $t . '_static' );
 
@@ -984,13 +986,15 @@
 
 	$r = array();
 
-	foreach( $a as $v ) {
+	// OK foreach( $a as $v ) {
+	foreach( $a as $k => $v ) {
 
 		if( is_numeric( $v ) ) {
 			$v = str_replace( ',', '.', $v );
 		}
 
-	    $r[] = array( 's' => $v );
+	    // OK $r[] = array( 's' => $v );
+	    $r[ $k ] = array( 's' => $v );
 
 	}
 
