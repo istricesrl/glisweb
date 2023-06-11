@@ -17,7 +17,7 @@
 {% endif %}
 
 {# TODO rendere questo modulo un po' più user friendly (no submit a ogni click) #}
-{% if consensi > 0 %}
+{% if consensi > 0 and page.id != 'privacy' %}
 <form action="{{ page.path[ localization.language.ietf ] }}" id="cookieForm" method="post">
 	<div id="cookie">
 		<div class="container-fluid d-flex flex-column">

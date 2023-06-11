@@ -117,3 +117,5 @@
 
     // debug
     // echo 'OUTPUT';
+    // var_dump( setcookie( 'stocazzo', 'prova cookie' ) );
+    setcookie( 'stocazzo', 'prova cookie' );

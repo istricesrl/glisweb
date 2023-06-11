@@ -38,8 +38,14 @@
 	    $cf['privacy'] = array_replace_recursive( $cf['privacy'], $cf['site']['privacy'] );
 	}
 
+    // recupero i consensi dai cookie
+	if( isset( $_COOKIE['privacy'] ) ) {
+	    $cf['privacy']['cookie'] = array_replace_recursive( $cf['privacy']['cookie'], unserialize( $_COOKIE['privacy'] ) );
+	}
+
     // collegamento con l'array $ct
 	$ct['privacy'] = &$cf['privacy'];
 
     // debug
     // echo 'OUTPUT';
+
