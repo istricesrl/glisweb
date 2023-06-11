@@ -114,7 +114,56 @@
     }
     \endcode
 
-    [...] si faccia riferimento alla documentazione delle variabili per sapere quali chiavi sono disponibili per questo ramo
+    [...] si faccia riferimento alla documentazione delle variabili per sapere quali chiavi sono disponibili per questo ramo [...] un esempio di schema
+    vuoto da compilare:
+
+    \code{.json}
+    "cookie": {
+      "propri": {
+        "tecnici": {
+          [...]
+        },
+        "analitici": {
+          [...]
+        }
+      },
+      "terzi": {
+        "tecnici": {
+          [...]
+        },
+        "analitici": {
+          [...]
+        }
+      }
+    }
+    \endcode
+
+    [...] un oggetto cookie tipico [...]
+
+
+    \code{.json}
+    "nome_cookie": {
+      "id": [
+        "identificativo_cookie"
+      ],
+      "nome": {
+        "it-IT": "nome descrittivo del cookie"
+      },
+      "motivazione": {
+        "it-IT": "descrizione delle motivazioni per cui si sta rilasciando il cookie"
+      },
+      "conservazione": {
+        "it-IT": "criterio di conservazione del cookie"
+      },
+      "policy": {
+        "it-IT": "URL della polici specifica del cookie"
+      },
+      "luogo": {
+        "it-IT": "luogo di trattamento dei dati collegati al cookie"
+      },
+      "anonimo": true
+    }
+    \endcode
 
     la pagina delle policy
     ======================

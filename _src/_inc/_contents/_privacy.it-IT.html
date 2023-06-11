@@ -128,50 +128,92 @@ vengono fornite contestualmente alla richiesta del consenso nei moduli del sito 
 <p>I cookie sono piccoli file di testo che vengono salvati dal browser dell'utente su richiesta dei siti che esso visita. Esistono diversi utilizzi
 possibili dei cookie in base ai quali si distinguono altrettante categorie di cookie, identici tecnicamente ma differenti sul piano funzionale.</p>
 
+<p>Dal punto di vista funzionale, si distinguono i cookie tecnici, il cui scopo è garantire il funzionamento del sito e dei servizi da esso offerti, da
+quelli analitici, il cui scopo non è correlato al funzionamento del sito ma all'analisi del suo utilizzo da parte dei visitatori; fra questi si dividono
+ulteriormente i cookie analitici anonimi, ovvero che non raccolgono informazioni identificative dell'utente, da quelli di profilazione che invece consentono
+di risalire all'utente collegato ai dati raccolti.</p>
+
+<p>I cookie analitici anonimi non raccolgono né contengono informazioni identificative; poiché tali cookie non possono condurre all'identificazione
+dell'utente, in quanto sono state adottate le necessarie misure tecniche di anonimizzazione dei dati, la normativa vigente non richiede
+l'esplicito consenso dell'utente per il loro utilizzo. Poiché questi cookie sono gestiti direttamente dai soggetti terzi, si rimanda alle loro
+rispettive informative per ulteriori dettagli.</p>
+
+<p>I cookie analitici identificativi possono invece contenere informazioni in grado di condurre all'identificazione
+dell'utente, e dunque la normativa vigente richiede l'esplicito consenso dell'utente per il loro utilizzo. Anche in questo caso, poiché questi cookie
+sono gestiti direttamente dai soggetti terzi, si rimanda alle loro rispettive informative per ulteriori dettagli.</p>
+	
+<p>Dal punto di vista della provenienza, si distinguono i cookie propri del sito, riferibili direttamente al Titolare del trattamento indicato sopra,
+da quelli inviati da terze parti, riferibili a soggetti esterni e inclusi nel sito per aggiungere ad esso funzionalità e servizi ulteriori.</p>
+
+<p>Dal punto di vista della durata della permanenza del cookie sul computer dell'untente, si distinguono i cookie permanenti, che non hanno una scadenza
+propria ma possono essere cancellati direttamente dal sito o dall'utente, quelli persistenti, che hanno una propria durata predeterminata nel tempo, e quelli
+temporanei che vengono automaticamente distrutti al termine della sessione di lavoro o alla chiusura del browser.</p>
+
+<h3>cookie tecnici propri</h3>
 {% if privacy.cookie.propri.tecnici %}
-<h3>cookie tecnici di sessione</h3>
-<p>Questo sito fa uso di cookie tecnici per gestire le sessioni di navigazione degli utenti e renderle più confortevoli e sicure; questi cookie
-sono temporanei e vengono eliminati alla chiusura del browser. L'uso di questi cookie è limitato alla trasmissione di identificativi di sessione
-generati casualmente e non implica la trasmissione di dati personali dell'utente. In nessun caso i cookie di sessione utilizzati da questo sito
-comportano l'acquisizione di dati personali identificativi dell'utente, né pregiudicano la riservatezza della sua navigazione. L'utilizzo di
-cookie tecnici di sessione non richiede il consenso esplicito dell'utente secondo la normativa vigente.</p>
+<p>Questo sito fa uso di cookie tecnici per gestire le sessioni di navigazione e le preferenze degli utenti, per rendere l'uso del sito più
+confortevole e sicuro. L'uso di questi cookie è limitato alla trasmissione di identificativi di sessione generati casualmente e non implica
+la comunicazione al sito di dati personali dell'utente. In nessun caso i cookie tecnici utilizzati da questo sito comportano l'acquisizione
+di dati personali identificativi dell'utente, né pregiudicano la riservatezza della sua navigazione. L'utilizzo di cookie tecnici non richiede
+il consenso esplicito dell'utente secondo la normativa vigente, ma solo la comunicazione informativa del loro utilizzo. Il sito utilizza i
+seguenti cookie tecnici propri:</p>
+<ul>
+    {% for cookie, dettagli in privacy.cookie.propri.tecnici %}
+    <li>
+		<strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong> ({% for id in dettagli.id %}{{ id }}{% endfor %}) utilizzato per
+		<strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>; il cookie è conservato {{ dettagli.conservazione[ localization.language.ietf ] }}
+		e il trattamento dei dati ad esso collegati è effettuato {{ dettagli.luogo[ localization.language.ietf ] }}{% if dettagli.policy[ localization.language.ietf ] %};
+		per ulteriori dettagli si faccia riferimento all'informativa dettagliata disponibile a questo link:
+		<a href="{{ dettagli.policy[ localization.language.ietf ] }}" target="_blank">{{ dettagli.policy[ localization.language.ietf ] }}</a>{% endif %}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>Questo sito non fa uso di cookie tecnici propri.</p>
 {% endif %}
 
-{% if privacy.cookie.terzi.tecnici %}
+<h3>cookie analitici propri</h3>
+{% if privacy.cookie.propri.analitici %}
+<!-- TODO -->
+{% else %}
+<p>Questo sito non fa uso di cookie analitici propri.</p>
+{% endif %}
+
 <h3>cookie tecnici di terze parti</h3>
+{% if privacy.cookie.terzi.tecnici %}
 <p>Questo sito integra servizi di terze parti che fanno uso di cookie tecnici per i quali non è richiesto un esplicito consenso in quanto non contengono
 informazioni che possono condurre all'identificazione dell'utente né raccolgono dati o altre informazioni personali su di esso; in particolare il sito
 utilizza i seguenti servizi:</p>
 <ul>
     {% for cookie, dettagli in privacy.cookie.terzi.tecnici %}
     <li>
-	<strong>{{ dettagli.nome }}</strong> utilizzato per <strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>,
-	link all'informativa <a href="{{ dettagli.policy }}" target="_blank">{{ dettagli.policy }}</a>
+		<strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong> ({% for id in dettagli.id %}{{ id }}{% endfor %}) utilizzato per
+		<strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>; il cookie è conservato {{ dettagli.conservazione[ localization.language.ietf ] }}
+		e il trattamento dei dati ad esso collegati è effettuato {{ dettagli.luogo[ localization.language.ietf ] }}{% if dettagli.policy[ localization.language.ietf ] %};
+		per ulteriori dettagli si faccia riferimento all'informativa dettagliata disponibile a questo link:
+		<a href="{{ dettagli.policy[ localization.language.ietf ] }}" target="_blank">{{ dettagli.policy[ localization.language.ietf ] }}</a>{% endif %}
     </li>
     {% endfor %}
 </ul>
+{% else %}
+<p>Questo sito non fa uso di cookie tecnici di terze parti.</p>
 {% endif %}
 
-{% if privacy.cookie.terzi.analitici %}
 <h3>cookie analitici di terze parti</h3>
+{% if privacy.cookie.terzi.analitici %}
 <p>Questo sito fa uso di cookie di terze parti per analizzare il traffico e migliorare l'esperienza degli utenti; i dati acquisiti in tale
 maniera non vengono utilizzati per finalità diverse da quelle dichiarate. Secondo la normativa vigente si distinguono i cookie analitici
 anonimi da quelli identificativi.</p>
-<p>I cookie analitici anonimi non raccolgono né contengono informazioni identificative; poiché tali cookie non possono condurre all'identificazione
-dell'utente, in quanto sono state adottate le necessarie misure tecniche di anonimizzazione dei dati, la normativa vigente non richiede
-l'esplicito consenso dell'utente per il loro utilizzo. Poiché questi cookie sono gestiti direttamente dai soggetti terzi, si rimanda alle loro
-rispettive informative per ulteriori dettagli.</p>
-<p>I cookie analitici identificativi possono invece contenere informazioni in grado di condurre all'identificazione
-dell'utente, e dunque la normativa vigente richiede l'esplicito consenso dell'utente per il loro utilizzo. Anche in questo caso, poiché questi cookie
-sono gestiti direttamente dai soggetti terzi, si rimanda alle loro rispettive informative per ulteriori dettagli.</p>
 <p>Questa tabella riporta l'elenco di tutti i cookie analitici di terze parti utilizzati dal sito:</p>
 <table class="table">
 	<thead>
 		<tr class="nowrap">
 			<th>provenienza</th>
+			<th>nome cookie</th>
 			<th>finalità</th>
 			<th>informativa</th>
-			<th>conservazione dati</th>
+			<th>conservazione cookie</th>
+			<th>luogo del trattamento</th>
 			<th>consenso</th>
 		</tr>
 	</thead>
@@ -179,40 +221,46 @@ sono gestiti direttamente dai soggetti terzi, si rimanda alle loro rispettive in
 		{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
 		<tr>
 			<td class="nowrap"><strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong></td>
+			<td>{% for id in dettagli.id %}{{ id }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
 			<td>{{ dettagli.motivazione[ localization.language.ietf ]|raw }}</td>
-			<td><a href="{{ dettagli.policy }}" target="_blank">{{ dettagli.policy }}</a></td>
+			<td><a href="{{ dettagli.policy[ localization.language.ietf ] }}" target="_blank">{{ dettagli.policy[ localization.language.ietf ] }}</a></td>
 			<td>{{ dettagli.conservazione[ localization.language.ietf ] }}</td>
+			<td>{{ dettagli.luogo[ localization.language.ietf ] }}</td>
 			{% if dettagli.anonimo %}
-			<td>cookie non identificativo, consenso non richiesto</td>
-			{% else %}
-			{% if privacy.cookie.terzi.analitici[ cookie ].consenso == 1 %}
-			<td><form action="" method="post">
-			<input type="hidden" name="__cookie__[owner]" value="terzi">
-			<input type="hidden" name="__cookie__[type]" value="analitici">
-			<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
-			<input type="hidden" name="__cookie__[value]" value="">
-			<input type="submit" class="btn btn-default btn-dark btn-sm" value="prestato, fai click qui per revocarlo">
-			</form></td>
+			<td>non richiesto</td>
 			{% else %}
 			<td><form action="" method="post">
-			<input type="hidden" name="__cookie__[owner]" value="terzi">
-			<input type="hidden" name="__cookie__[type]" value="analitici">
-			<input type="hidden" name="__cookie__[name]" value="{{ cookie }}">
-			<input type="hidden" name="__cookie__[value]" value="1">
-			<input type="submit" class="btn btn-default btn-dark btn-sm" value="negato, fai click qui per prestarlo">
-			</form></td>
+				<input type="hidden" name="__cookie__[{{ cookie }}][owner]" value="terzi">
+				<input type="hidden" name="__cookie__[{{ cookie }}][type]" value="analitici">
+				{% if dettagli.consenso == 'ok' %}
+				<input type="hidden" name="__cookie__[{{ cookie }}][value]" value="no">
+				<input type="submit" class="btn btn-default btn-dark btn-sm" value="revoca">
+				{% else %}
+				<input type="hidden" name="__cookie__[{{ cookie }}][value]" value="ok">
+				<input type="submit" class="btn btn-default btn-dark btn-sm" value="consenti">
 			{% endif %}
+			</form></td>
 			{% endif %}
 		</tr>
 		{% endfor %}
 	</tbody>
 </table>
+{% else %}
+<p>Questo sito non fa uso di cookie analitici di terze parti.</p>
 {% endif %}
 
-<h3>cookie di profilazione e sistemi di tracciamento</h3>
+<h3>cookie di profilazione propri</h3>
+{% if privacy.cookie.propri.profilazione %}
+<!-- TODO -->
+{% else %}
+<p>Questo sito non fa uso di cookie propri per la profilazione degli utenti, né impiega altri metodi di tracciamento che possano identificare e profilare personalmente l'utente.</p>
+{% endif %}
 
-{% if not privacy.cookie.propri.profilazione and not privacy.cookie.terzi.profilazione %}
-<p>Questo sito non fa uso di cookie per la profilazione degli utenti, né impiega altri metodi di tracciamento.</p>
+<h3>cookie di profilazione di terze parti</h3>
+{% if privacy.cookie.terzi.profilazione %}
+<!-- TODO -->
+{% else %}
+<p>Questo sito non fa uso di cookie di terze parti per la profilazione degli utenti, né impiega altri metodi di tracciamento che possano identificare e profilare personalmente l'utente.</p>
 {% endif %}
 
 {% else %}

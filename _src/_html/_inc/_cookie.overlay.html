@@ -26,7 +26,7 @@
 			</div>
 		</div>
 		{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
-		{% if not dettagli.consenso %}
+		{% if not dettagli.consenso and not dettagli.anonimo %}
 		<input type="hidden" id="cookie_{{ cookie }}_value" name="__cookie__[{{ cookie }}][value]" value="{{ dettagli.consenso }}">
 		<input type="hidden" name="__cookie__[{{ cookie }}][owner]" value="terzi">
 		<input type="hidden" name="__cookie__[{{ cookie }}][type]" value="analitici">
