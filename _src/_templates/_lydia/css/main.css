@@ -51,6 +51,7 @@ footer p {
 
 h1, h2, h3, h4, h5 {
     margin: 0em;
+    font-weight: bold;
 }
 
 h1 {
@@ -202,6 +203,10 @@ div.row-privacy .form-check-input {
 
 legend {
     font-size: 1.2em;
+}
+
+table {
+    font-size: .85em;
 }
 
 @media (max-width: 576px) {
