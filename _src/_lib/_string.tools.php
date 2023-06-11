@@ -448,3 +448,23 @@
         return $array["host"];
 
     }
+
+    /**
+     * 
+     * 
+     * @todo documentare
+     * 
+     */
+    function inRegexpArray( $t, $a ) {
+
+        $match = false;
+
+        foreach( $a as $r ) {
+            if( preg_match( $r, $t ) ) {
+                $match = true;
+            }
+        }
+
+        return $match;
+
+    }
