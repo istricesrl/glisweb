@@ -140,7 +140,6 @@
 
     [...] un oggetto cookie tipico [...]
 
-
     \code{.json}
     "nome_cookie": {
       "id": [
@@ -150,7 +149,10 @@
         "it-IT": "nome descrittivo del cookie"
       },
       "motivazione": {
-        "it-IT": "descrizione delle motivazioni per cui si sta rilasciando il cookie"
+        "it-IT": "motivazioni sintetiche per cui si sta rilasciando il cookie"
+      },
+      "descrizione": {
+        "it-IT": "descrizione completa delle motivazioni per cui si sta rilasciando il cookie"
       },
       "conservazione": {
         "it-IT": "criterio di conservazione del cookie"
