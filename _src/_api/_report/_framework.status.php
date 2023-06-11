@@ -189,11 +189,20 @@
 	// output
 	echo PHP_EOL;
 
-    // pagina home
+    // titolare privacy
 	if( empty( $cf['privacy']['titolare'] ) ) {
 	    echo '[FAIL] titolare del trattamento dei dati non impostato' . PHP_EOL;
 	} else {
 	    echo '[ OK ] titolare del trattamento dei dati impostato' . PHP_EOL;
+	}
+
+	// controllo cookie
+	foreach( $_COOKIE as $k => $v ) {
+		if( in_array( $k, array_keys( $cf['cookie']['index'] ) ) || inRegexpArray( $k, array_keys( $cf['cookie']['index'] ) ) ) {
+			echo '[ OK ] il cookie ' . $k . ' è correttamente descritto nelle specifiche della privacy' . PHP_EOL;
+		} else {
+			echo '[FAIL] il cookie ' . $k . ' non è descritto nelle specifiche della privacy' . PHP_EOL;
+		}
 	}
 
     // output
