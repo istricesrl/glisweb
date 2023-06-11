@@ -34,6 +34,7 @@
 	// print_r( $ct['contatti'] );
 	// print_r( $cf['auth']['permissions']);
 	// print_r( $p['produzione']['etc']['tabs'] );
+	// print_r( $_COOKIE );
 
     // NOTA a questo punto non hanno ancora girato le macro, quindi le stampe migliori
     // si fanno non da qui ma da /_src/_api/_pages.php
