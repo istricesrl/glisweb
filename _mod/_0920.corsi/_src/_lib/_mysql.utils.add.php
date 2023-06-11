@@ -67,13 +67,15 @@
 
         $riga['posti_disponibili'] = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT concat( coalesce( count( DISTINCT ac.id_anagrafica ), 0 ), " / ", coalesce( m.testo, "∞" ) ) 
-            FROM contratti AS c 
+            'SELECT concat( coalesce( count( DISTINCT ca.id_anagrafica ), 0 ), " / ", coalesce( max( m.testo ), "∞" ) )
+            FROM contratti AS c
             INNER JOIN contratti_anagrafica AS ca ON ca.id_contratto = c.id
+            LEFT JOIN metadati AS m ON m.id_progetto = c.id_progetto AND m.nome = "iscritti_max"
             LEFT JOIN anagrafica_categorie AS ac ON ac.id_anagrafica = ca.id_anagrafica 
             LEFT JOIN categorie_anagrafica AS a ON a.id = ac.id_categoria
-            LEFT JOIN metadati AS m ON m.id_progetto = c.id_progetto
-            WHERE c.id_progetto = ? AND a.se_gestita IS NULL AND m.nome = "iscritti_max"',
+            WHERE c.id_progetto = ?
+            AND a.se_gestita IS NULL
+            GROUP BY c.id',
             array( array( 's' => $idCorso ) )
         );
 
