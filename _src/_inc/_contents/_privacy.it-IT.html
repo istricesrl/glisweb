@@ -160,7 +160,8 @@ seguenti cookie tecnici propri:</p>
 <ul>
     {% for cookie, dettagli in privacy.cookie.propri.tecnici %}
     <li>
-		<strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong> ({% for id in dettagli.id %}{{ id }}{% endfor %}) utilizzato per
+		<strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong>{% if dettagli.titolare[ localization.language.ietf ] %}, titolare {{ dettagli.titolare[ localization.language.ietf ] }}, {% endif %}
+		{% if dettagli.id %}({% for id in dettagli.id %}{{ id }}{% endfor %}){% endif %} utilizzato per
 		<strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>; il cookie è conservato {{ dettagli.conservazione[ localization.language.ietf ] }}
 		e il trattamento dei dati ad esso collegati è effettuato {{ dettagli.luogo[ localization.language.ietf ] }}{% if dettagli.policy[ localization.language.ietf ] %};
 		per ulteriori dettagli si faccia riferimento all'informativa dettagliata disponibile a questo link:
@@ -187,7 +188,8 @@ utilizza i seguenti servizi:</p>
 <ul>
     {% for cookie, dettagli in privacy.cookie.terzi.tecnici %}
     <li>
-		<strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong> ({% for id in dettagli.id %}{{ id }}{% endfor %}) utilizzato per
+		<strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong>{% if dettagli.titolare[ localization.language.ietf ] %}, titolare {{ dettagli.titolare[ localization.language.ietf ] }}, {% endif %}
+		{% if dettagli.id %}({% for id in dettagli.id %}{{ id }}{% endfor %}){% endif %} utilizzato per
 		<strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>; il cookie è conservato {{ dettagli.conservazione[ localization.language.ietf ] }}
 		e il trattamento dei dati ad esso collegati è effettuato {{ dettagli.luogo[ localization.language.ietf ] }}{% if dettagli.policy[ localization.language.ietf ] %};
 		per ulteriori dettagli si faccia riferimento all'informativa dettagliata disponibile a questo link:
@@ -220,7 +222,7 @@ anonimi da quelli identificativi.</p>
 	<tbody>
 		{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
 		<tr>
-			<td class="nowrap"><strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong></td>
+			<td class="nowrap"><strong>{{ dettagli.nome[ localization.language.ietf ] }}<br>{{ dettagli.titolare[ localization.language.ietf ] }}</strong></td>
 			<td>{% for id in dettagli.id %}{{ id }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
 			<td>{{ dettagli.motivazione[ localization.language.ietf ]|raw }}</td>
 			<td><a href="{{ dettagli.policy[ localization.language.ietf ] }}" target="_blank">{{ dettagli.policy[ localization.language.ietf ] }}</a></td>

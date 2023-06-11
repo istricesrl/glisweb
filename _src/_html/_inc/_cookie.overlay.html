@@ -19,30 +19,58 @@
 {# TODO rendere questo modulo un po' più user friendly (no submit a ogni click) #}
 {% if consensi > 0 %}
 <form action="{{ page.path[ localization.language.ietf ] }}" id="cookieForm" method="post">
-	<div class="container-fluid" id="cookie">
-		<div class="row">
-			<div class="col">
-				<h4>consenso all'utilizzo dei cookie</h4>
+	<div id="cookie">
+		<div class="container-fluid d-flex flex-column">
+			<div class="row">
+				<div class="col-12 col-md mb-3">
+					<h4>consenso all'utilizzo dei cookie</h4>
+				</div>
+				<div class="col-12 col-md-auto mb-3">
+					<input type="button" class="btn btn-default btn-block btn-light" onclick="$('.consenso').val('ok');$('#cookieForm').submit();" value="ACCETTA TUTTI">
+				</div>
+				<div class="col-12 col-md-auto mb-3">
+					<input type="button" class="btn btn-default btn-block btn-light" onclick="$('.consenso').val('no');$('#cookieForm').submit();" value="RIFIUTA TUTTI">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col">
+					<p>I cookie sono piccoli file di testo che vengono salvati dal browser dell'utente su richiesta dei siti che esso visita. Esistono diversi utilizzi
+					possibili dei cookie in base ai quali si distinguono altrettante categorie di cookie, identici tecnicamente ma differenti sul piano funzionale; per
+					ulteriori informazioni vedi la <a href="{{ pages.privacy.url[ localization.language.ietf ] }}">privacy policy del sito</a>.</p>
+					{% if privacy.cookie.propri.tecnici %}<p>Questo sito fa uso di cookie tecnici per gestire le sessioni di navigazione e le preferenze degli utenti,
+					per rendere l'uso del sito più confortevole e sicuro. L'uso di questi cookie è limitato alla trasmissione di identificativi di sessione generati
+					casualmente e non implica la comunicazione al sito di dati personali dell'utente. L'utilizzo di cookie tecnici non richiede il consenso esplicito
+					dell'utente secondo la normativa vigente, ma solo la comunicazione informativa del loro utilizzo.</p>{% endif %}
+				</div>
+			</div>
+			{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
+			{% if not dettagli.consenso and not dettagli.anonimo %}
+			<input type="hidden" id="cookie_{{ cookie }}_value" name="__cookie__[{{ cookie }}][value]" value="{{ dettagli.consenso }}" class="consenso">
+			<input type="hidden" name="__cookie__[{{ cookie }}][owner]" value="terzi">
+			<input type="hidden" name="__cookie__[{{ cookie }}][type]" value="analitici">
+			{# TODO terzi e analitici dovrebbero essere presi da altri due cicli #}
+			<div class="row">
+				<div class="col-12 col-md-6">
+					<p><strong>{{ dettagli.nome[ localization.language.ietf ] }}</strong> utilizzato per
+					<strong>{{ dettagli.motivazione[ localization.language.ietf ] }}</strong>; il cookie è conservato {{ dettagli.conservazione[ localization.language.ietf ] }}
+					e il trattamento dei dati ad esso collegati è effettuato {{ dettagli.luogo[ localization.language.ietf ] }}</p>
+				</div>
+				<div class="col-6 col-md-auto">
+					<input type="button" class="btn btn-default btn-light" onclick="$('#cookie_{{ cookie }}_value').val('ok');$('#cookieForm').submit();" value="autorizzo">
+				</div>
+				<div class="col-6 col-md-auto">
+					<input type="button" class="btn btn-default btn-light" onclick="$('#cookie_{{ cookie }}_value').val('no');$('#cookieForm').submit();" value="non autorizzo">
+				</div>
+			</div>
+			{% else %}
+			<!-- consenso espresso per {{ cookie }}: {{ dettagli.consenso }} -->
+			{% endif %}
+			{% endfor %}
+			<div class="row mt-auto">
+				<div class="col text-center">
+				</div>
 			</div>
 		</div>
-		{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
-		{% if not dettagli.consenso and not dettagli.anonimo %}
-		<input type="hidden" id="cookie_{{ cookie }}_value" name="__cookie__[{{ cookie }}][value]" value="{{ dettagli.consenso }}">
-		<input type="hidden" name="__cookie__[{{ cookie }}][owner]" value="terzi">
-		<input type="hidden" name="__cookie__[{{ cookie }}][type]" value="analitici">
-		{# TODO terzi e analitici dovrebbero essere presi da altri due cicli #}
-		<div class="row">
-			<div class="col-12 col-md-6 pb-3">
-				<input type="button" class="btn btn-default btn-light" onclick="$('#cookie_{{ cookie }}_value').val('ok');$('#cookieForm').submit();" value="{{ tr.generic.autorizzo_cookie[ localization.language.ietf ] }} {{ dettagli.nome[ localization.language.ietf ] }}">
-			</div>
-			<div class="col-12 col-md-6 pb-3">
-				<input type="button" class="btn btn-default btn-light" onclick="$('#cookie_{{ cookie }}_value').val('no');$('#cookieForm').submit();" value="{{ tr.generic.non_autorizzo_cookie[ localization.language.ietf ] }} {{ dettagli.nome[ localization.language.ietf ] }}">
-			</div>
-		</div>
-		{% else %}
-		<!-- consenso espresso per {{ cookie }}: {{ dettagli.consenso }} -->
-		{% endif %}
-		{% endfor %}
 	</div>
 </form>
 {% endif %}

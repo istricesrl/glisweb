@@ -59,9 +59,13 @@ nav.navbar-slider-mega ul.navbar-nav {
 
 #cookie {
     bottom: 0px;
-    min-height: 75vh;
+    height: 75vh;
+    width: 100%;
     position: fixed;
     background-color: #000000dd;
+    color: #ffffff;
+    z-index: 7859;
+    overflow: auto;
 }
 
 #cookie .row {
