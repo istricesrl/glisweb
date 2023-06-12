@@ -8,11 +8,15 @@
     // inizializzo l'array del risultato
 	$status = array();
 
-            // scrivo la riga
-            updateReportCorsi( $_REQUEST['id'] );
+	// ...
+	if( isset( $_REQUEST['id'] ) ) {
 
+		// scrivo la riga
+		updateReportCorsi( $_REQUEST['id'] );
 
-    // output
+	}
+
+	// output
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    buildJson( $status );
 	}
