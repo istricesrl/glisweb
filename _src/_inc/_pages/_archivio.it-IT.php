@@ -67,7 +67,7 @@
 	    'h1'		=> array( $l		=> 'azioni mail' ),
 	    'parent'		=> array( 'id'		=> 'mail.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/mail.form.tools.php' ),
+	    'macro'		=> array( '_src/_inc/_macro/_mail.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['mail.form']['etc']['tabs'] )
 	);

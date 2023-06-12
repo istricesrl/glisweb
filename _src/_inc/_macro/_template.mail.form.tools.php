@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'pagine';
+	$ct['form']['table'] = 'template';
 
     // gruppi di controlli
     $ct['page']['contents']['metros'] = array(
@@ -28,23 +28,23 @@
         'label' => NULL
         )
     );
-
+/*
     // duplica pagina
 	$ct['page']['contents']['metro']['azioni'][] = array(
-        'modal' => array('id' => 'duplica', 'include' => 'inc/pagine.form.tools.modal.duplica.html' ),
+        'modal' => array('id' => 'duplica', 'include' => 'inc/template.mail.form.tools.modal.duplica.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-files-o',
 	    'title' => 'duplica pagina',
 	    'text' => 'duplica la pagina corrente'
 	);
-
+*/
     // pubblica pagina
 	$ct['page']['contents']['metro']['azioni'][] = array(
-        'modal' => array('id' => 'pubblica', 'include' => 'inc/pagine.form.tools.modal.pubblica.html' ),
+        'modal' => array('id' => 'pubblica', 'include' => 'inc/template.mail.form.tools.modal.pubblica.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-cloud-upload',
-	    'title' => 'pubblica pagina',
-	    'text' => 'pubblica la pagina corrente'
+	    'title' => 'pubblica template',
+	    'text' => 'pubblica il template corrente'
 	);
 
     // stages

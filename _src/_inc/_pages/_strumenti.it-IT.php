@@ -138,7 +138,8 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'template.mail.form',
 												'template.mail.form.testo',
-												'template.mail.form.file' ) ),
+												'template.mail.form.file',
+												'template.mail.form.tools' ) ),
 	);
 
 	// form template mail testo
@@ -165,6 +166,19 @@
 		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.file.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
+	);
+
+	// gestione mail strumenti
+	$p['template.mail.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni template mail' ),
+	    'h1'		=> array( $l		=> 'azioni template mail' ),
+	    'parent'		=> array( 'id'		=> 'mail.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_template.mail.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
 
 	// vista job

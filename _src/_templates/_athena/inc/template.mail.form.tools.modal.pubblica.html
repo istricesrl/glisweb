@@ -1,0 +1,50 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function pubblica( ) {
+		$('#btnpubblica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+	
+		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_pagine.upload.php?id={{ request[table].id }}&target=' + $('#___stage__').val();
+
+		getws( call,'', function() {
+			$('#btnpubblica').html('<i class="fa fa-check"></i>');
+		});
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="pubblica">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">pubblica la pagina corrente</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+					<span class="label-top">destinazione</span>
+					{{ frm.selectRequired( '', '', '', '__stage__', '', etc.stages, '', '', '','' ) }}
+				</div>
+			</div>
+				<div class="form-row">
+                <div class="col-12">
+                    <p>questa operazione pubblicherà il template corrente e tutte le entità ad esso collegate (immagini, video, voci di menu, ecc.) sullo stage indicato;</p>
+					<p>ATTENZIONE i dati preesistenti verranno sovrascritti</p>
+					<p>NOTA il caricamento riguarda solo il database, file e immagini vanno caricati manualmente</p>
+                </div>
+            </div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" id="btnpubblica" class="btn btn-secondary btn-sm" onclick="duplica();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
