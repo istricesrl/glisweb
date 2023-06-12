@@ -67,13 +67,16 @@
 
         $riga['posti_disponibili'] = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT concat( coalesce( count( DISTINCT ac.id_anagrafica ), 0 ), " / ", coalesce( m.testo, "∞" ) ) 
-            FROM contratti AS c 
-            INNER JOIN contratti_anagrafica AS ca ON ca.id_contratto = c.id
+            'SELECT concat( coalesce( count( DISTINCT ca.id_anagrafica ), 0 ), " / ", coalesce( max( m.testo ), "∞" ) )
+            FROM metadati AS m
+            LEFT JOIN contratti AS c ON c.id_progetto = m.id_progetto
+            LEFT JOIN contratti_anagrafica AS ca ON ca.id_contratto = c.id
             LEFT JOIN anagrafica_categorie AS ac ON ac.id_anagrafica = ca.id_anagrafica 
             LEFT JOIN categorie_anagrafica AS a ON a.id = ac.id_categoria
-            LEFT JOIN metadati AS m ON m.id_progetto = c.id_progetto
-            WHERE c.id_progetto = ? AND a.se_gestita IS NULL AND m.nome = "iscritti_max"',
+            WHERE m.id_progetto = ?
+            AND a.se_gestita IS NULL
+            AND m.nome = "iscritti_max"
+            GROUP BY m.id_progetto',
             array( array( 's' => $idCorso ) )
         );
 
@@ -138,6 +141,8 @@
 		) AS __label__
 
 */
+
+        // print_r( $riga );
 
         mysqlInsertRow(
             $cf['mysql']['connection'],
