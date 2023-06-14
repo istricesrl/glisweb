@@ -27,8 +27,8 @@
             'target' => '_blank',
             'icon' => NULL,
             'fa' => 'fa-file-text-o',
-            'title' => 'report TXT attività progeto',
-            'text' => 'report in formato TXT delle attività in corso per il progetto'
+            'title' => 'report TXT cose da fare',
+            'text' => 'report in formato TXT delle cose da fare aperte'
         );
 
     }

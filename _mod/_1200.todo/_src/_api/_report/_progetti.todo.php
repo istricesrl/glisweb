@@ -55,11 +55,15 @@
             echo PHP_EOL;
 
             if( ! isset( $_REQUEST['idProgetto'] ) ) {
-                if( ! isset( $proj ) || $proj['id'] != $dato['id_progetto'] ) {
+                // if( ! isset( $proj ) || ( isset( $proj['id'] ) && $proj['id'] != $dato['id_progetto'] ) ) {
                     $proj = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM progetti WHERE id = ?', array( array( 's' => $dato['id_progetto'] ) ) );
-                }
+                // }
                 # echo txtSubtitle( $proj['nome'] );
-                echo txtFullText( '###' . ' ' . $proj['nome'] );
+                if( isset( $proj['nome'] ) ) {
+                    echo txtFullText( '###' . ' ' . $proj['nome'] );
+                } else {
+                    echo txtFullText( '### nessun progetto' );
+                }
             }
 
 #            echo txtSubtitle( '#' . $dato['id'] . ' ' . $dato['nome'] );
