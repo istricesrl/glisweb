@@ -81,7 +81,7 @@
                                 foreach( $ents as $ent ) {
 
                                     // inserimento
-                                    mysqlInsertRow(
+                                    $xId = mysqlInsertRow(
                                         $cTarget,
                                         $ent,
                                         $entita
@@ -90,7 +90,45 @@
                                     // copia file
                                     if( in_array( $entita, array( 'immagini', 'file' ) ) ) {
 
-                                        // TODO implementare
+                                        // TODO implementare caricamento file
+
+                                        // ...
+                                        $cont = NULL;
+                                        $meta = NULL;
+                                        $xField = NULL;
+
+                                        // ...
+                                        if( $entita == 'immagini' ) {
+                                            $xField = 'id_immagine';
+                                        } elseif( $entita == 'file' ) {
+                                            $xField = 'id_file';
+                                        }
+
+                                        // ...
+                                        if( ! empty( $xField ) && ! empty( $xId ) ) {
+
+                                            // ...
+                                            foreach( array( 'contenuti', 'metadati' ) as $xTable ) {
+
+                                                // ...
+                                                $cont = mysqlSelectRow(
+                                                    $cf['mysql']['connection'],
+                                                    'SELECT * FROM ' . $xTable . ' WHERE ' . $xField . ' = ?',
+                                                    array( array( 's' => $xId ) ) 
+                                                );
+
+                                                // inserimento
+                                                if( ! empty( $cont ) ) {
+                                                    mysqlInsertRow(
+                                                        $cTarget,
+                                                        $cont,
+                                                        $xTable
+                                                    );
+                                                }
+
+                                            }
+
+                                        }
 
                                     }
 
