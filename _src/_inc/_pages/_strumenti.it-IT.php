@@ -174,7 +174,7 @@
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'azioni template mail' ),
 	    'h1'		=> array( $l		=> 'azioni template mail' ),
-	    'parent'		=> array( 'id'		=> 'mail.view' ),
+		'parent'		=> array( 'id'		=> 'template.mail.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'		=> array( '_src/_inc/_macro/_template.mail.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
