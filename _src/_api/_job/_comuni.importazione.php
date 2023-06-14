@@ -126,6 +126,14 @@
                     'regioni'
                 );
 
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['id_regione'] = $idRegione;
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['nome_regione'] = $row['nome_regione'];
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['codice_istat_regione'] = $row['codice_istat_regione'];
+
+                $job['riga']['id_regione'] = $idRegione;
+                $job['riga']['nome_regione'] = $row['nome_regione'];
+                $job['riga']['codice_istat_regione'] = $row['codice_istat_regione'];
+
                 // trovo la provincia
                 $idProvincia = mysqlInsertRow(
                     $cf['mysql']['connection'],
@@ -138,6 +146,14 @@
                     'provincie'
                 );
 
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['id_provincia'] = $idProvincia;
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['nome_provincia'] = $row['nome_provincia'];
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['codice_istat_provincia'] = $row['codice_istat_provincia'];
+
+                $job['riga']['id_provincia'] = $idProvincia;
+                $job['riga']['nome_provincia'] = $row['nome_provincia'];
+                $job['riga']['codice_istat_provincia'] = $row['codice_istat_provincia'];
+
                 // inserisco il comune
                 $idComune = mysqlInsertRow(
                     $cf['mysql']['connection'],
@@ -149,6 +165,16 @@
                     ),
                     'comuni'
                 );
+
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['id_comune'] = $idComune;
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['nome_comune'] = $row['nome_comune'];
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['codice_istat_comune'] = $row['codice_istat_comune'];
+                // $job['workspace']['status']['righe'][ $row['codice_istat_comune'] ]['codice_catasto_comune'] = $row['codice_catasto_comune'];
+
+                $job['riga']['id_comune'] = $idComune;
+                $job['riga']['nome_comune'] = $row['nome_comune'];
+                $job['riga']['codice_istat_comune'] = $row['codice_istat_comune'];
+                $job['riga']['codice_catasto_comune'] = $row['codice_catasto_comune'];
 
             }
 
