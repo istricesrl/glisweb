@@ -29,13 +29,26 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'pagine.view',
+	    'etc'		=> array( 'tabs'	=> array(	'pagine.view', 'pagine.stats',
 									'pagine.tools' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'pagine' ),
 									'priority'	=> '010' ) ) )	
     );
 
-    // tools pagine
+	// statistiche form pagine
+	$p['pagine.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche pagine' ),
+	    'h1'		=> array( $l		=> 'statistiche pagine' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.view']['etc']['tabs'] )
+    );
+
+	// tools pagine
 	$p['pagine.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -68,6 +81,7 @@
 													'pagine.form.macro',
 													'pagine.form.metadati',
 													'pagine.form.gruppi',
+													'pagine.form.stats',
 													'pagine.form.tools'
 												) )
 	);
@@ -212,7 +226,20 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
-	
+
+	// statistiche form pagine
+	$p['pagine.form.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche pagina' ),
+	    'h1'		=> array( $l		=> 'statistiche pagina' ),
+	    'parent'		=> array( 'id'		=> 'pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_pagine.form.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
+    );
+
 	// form azioni pagine
 	$p['pagine.form.tools'] = array(
 	    'sitemap'		=> false,
