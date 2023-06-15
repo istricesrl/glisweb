@@ -44,7 +44,8 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'redirect.form',
-													'redirect.form.stats') )
+													'redirect.form.stats',
+													'redirect.form.tools' ) )
 	);
 
 	// statistiche form redirect
@@ -53,10 +54,23 @@
 		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
 	    'title'		=> array( $l		=> 'statistiche redirect' ),
 	    'h1'		=> array( $l		=> 'statistiche redirect' ),
-	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'parent'		=> array( 'id'		=> 'redirect.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.stats.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['redirect.form']['etc']['tabs'] )
     );
+
+	// form azioni pagine
+	$p['redirect.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni singolo redirect' ),
+	    'h1'		=> array( $l		=> 'azioni singolo redirect' ),
+	    'parent'		=> array( 'id'		=> 'redirect.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_redirect.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['redirect.form']['etc']['tabs'] )
+	);
 

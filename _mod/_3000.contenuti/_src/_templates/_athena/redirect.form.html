@@ -46,17 +46,23 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
-		    <div class="col-6">
-			<span class="label-top">codice</span>
-			{{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
+			<div class="col-12 col-md-auto">
+				<span class="label-top">sito</span>
+				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
+			</div>
+		    <div class="col-auto">
+				<span class="label-top">codice</span>
+				{{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
 		    </div>
-		    <div class="col-6">
-			<span class="label-top">sorgente</span>
-			{{ frm.inputRequired( table, '', '', 'sorgente', '', '', request ) }}
+		    <div class="col-12 col-md">
+				<span class="label-top">sorgente</span>
+				{{ frm.inputRequired( table, '', '', 'sorgente', '', '', request ) }}
             </div>
-            <div class="col">
-            <span class="label-top">destinazione</span>
-            {{ frm.inputRequired( table, '', '', 'destinazione', '', '', request ) }}
+		</div>
+		<div class="form-group form-row">
+			<div class="col">
+				<span class="label-top">destinazione</span>
+				{{ frm.inputRequired( table, '', '', 'destinazione', '', '', request ) }}
             </div>
 		</div>
 

@@ -38,7 +38,7 @@
 			$r,
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'SELECT id,codice,sorgente,destinazione FROM redirect_view'
+				'SELECT id,id_sito,codice,sorgente,destinazione FROM redirect_view'
 			)
 	    );
 	}

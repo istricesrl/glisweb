@@ -21,11 +21,11 @@
     // indicizzazione dei redirect
 	if( is_array( $r ) ) {
 	    foreach( $r as $redir ) {
-		if( isset( $redir['sorgente'] ) ) {
-		    $cf['redirect'][ $redir['sorgente'] ] = $redir;
-		} else {
-		    logWrite( 'redirect malformato: ' . print_r( $redir, true ), 'redirect', LOG_ERR );
-		}
+            if( isset( $redir['sorgente'] ) ) {
+                $cf['redirect'][ $redir['sorgente'] ] = $redir;
+            } else {
+                logWrite( 'redirect malformato: ' . print_r( $redir, true ), 'redirect', LOG_ERR );
+            }
 	    }
 	}
 
@@ -44,33 +44,40 @@
     // esecuzione
 	if( array_key_exists( $source, $cf['redirect'] ) ) {
 
-	    $r = $cf['redirect'][ $source ];
+        // ...
+        $r = $cf['redirect'][ $source ];
 
-        // print_r( $r );
-        // die();
+        // ...
+        if( $cf['site']['id'] == $r['id_sito'] || empty( $r['id_sito'] ) ) {
 
-	    logWrite( 'reindirizzamento ' . $r['codice'] . ' da ' . $_SERVER['REQUEST_URI'] . ' a ' . $r['target'], 'redirect' );
+            // var_dump( $cf['site']['id'] );
+            // print_r( $r );
+            // die();
 
-        if( isset( $r['id'] ) ) {
-            mysqlInsertRow(
-                $cf['mysql']['connection'],
-                array(
-                    'id_redirect' => $r['id'],
-                    'referral' => $_SERVER['HTTP_REFERER'],
-                    'azione' => 'redirect',
-                    'timestamp_azione' => time()
-                ),
-                'redirect_azioni'
-            );
+            logWrite( 'reindirizzamento ' . $r['codice'] . ' da ' . $_SERVER['REQUEST_URI'] . ' a ' . $r['target'], 'redirect' );
+
+            if( isset( $r['id'] ) ) {
+                mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'id_redirect' => $r['id'],
+                        'referral' => $_SERVER['HTTP_REFERER'],
+                        'azione' => 'redirect',
+                        'timestamp_azione' => time()
+                    ),
+                    'redirect_azioni'
+                );
+            }
+
+            http_response_code( $r['codice'] );
+
+            header( 'Location: ' . $r['destinazione'] ); 
+
+            exit;
+
         }
 
-        http_response_code( $r['codice'] );
-
-	    header( 'Location: ' . $r['destinazione'] ); 
-
-	    exit;
-
-	}
+    }
 
     // debug
 	// var_dump( strtok( $_SERVER['REQUEST_URI'], '?' ) );
