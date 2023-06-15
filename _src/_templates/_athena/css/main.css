@@ -1068,9 +1068,3 @@ div.combobox-container > .spinner-border {
     font-weight: bold;
     font-size: 1.2em;
 }
-
-/* stile del banner cookie */
-#cookie {
-    z-index: 9999;
-    background-color: #000000dd;
-}

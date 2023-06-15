@@ -140,3 +140,9 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
     }
 
 }
+
+#cookie .row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0em 1em;
+}

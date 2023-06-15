@@ -2,7 +2,9 @@
 {# FILE PER LE OPERAZIONI STANDARD DA ESEGUIRE PRIMA DELLA CHIUSURA DEL TAG <body> #}
 {# NOTA: AL NETTO DELL'EVENTUALE JAVASCRIPT DELLE SPECIFICHE PAGINE, INCLUSO NEL BLOCCO %javascript% #}
 
-{% include '_inc/_cookie.overlay.html' %}
+<!-- Twig file included: {{ _self }} -->
+
+{% include [ 'inc/cookie.overlay.html', '_inc/_cookie.overlay.html' ] %}
 
 <script>
     var siteRoot = '{{ site.root }}';

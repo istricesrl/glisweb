@@ -78,6 +78,14 @@ nav.navbar-slider-mega ul.navbar-nav {
     font-size: 1.2em;
 }
 
+#cookie a,
+#cookie a:active,
+#cookie a:hover,
+#cookie a:visited {
+    color: #ffffff;
+    font-weight: bold;
+}
+
 /* stili per il numero verde */
 
 div.numero-verde {
