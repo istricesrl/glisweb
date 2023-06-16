@@ -357,6 +357,7 @@
     define( 'DIR_VAR_SPOOL_DOCS'			, DIR_BASE . 'var/spool/docs/' );
     define( 'DIR_VAR_SPOOL_EXPORT'			, DIR_BASE . 'var/spool/export/' );
     define( 'DIR_VAR_SPOOL_IMPORT'			, DIR_BASE . 'var/spool/import/' );
+    define( 'DIR_VAR_SPOOL_IMPORT_DONE'			, DIR_BASE . 'var/spool/import/done/' );
     define( 'DIR_VAR_SPOOL_MAIL'			, DIR_BASE . 'var/spool/mail/' );
     define( 'DIR_VAR_SPOOL_PAYMENT'			, DIR_BASE . 'var/spool/payment/' );
     define( 'DIR_VAR_SPOOL_PRINT'			, DIR_BASE . 'var/spool/print/' );
