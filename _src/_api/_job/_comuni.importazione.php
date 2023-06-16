@@ -113,6 +113,9 @@
                 // log
                 logWrite( 'nome comune mancante alla riga #' . $widx . ' del job #' . $job['id'], 'job', LOG_ERR );
 
+                // status
+                $job['workspace']['status']['error'][] = 'nome comune non trovato';
+
             } else {
 
                 // trovo la regione
