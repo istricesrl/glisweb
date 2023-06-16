@@ -715,6 +715,10 @@
 	fullPath( $f2 );
 	checkFolder( dirname( $f2 ) );
 
+    if( empty( basename( $f2 ) ) ) {
+        $f2 .= basename( $f1 );
+    }
+
 	return @rename( $f1, $f2 );
 
     }

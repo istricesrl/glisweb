@@ -1,8 +1,8 @@
 <?php
 
-    if( isset( $ct['page']['parser'] ) ){
+    if( isset( $ct['page']['parser'] ) ) {
 
-        foreach( $ct['page']['parser'] as $parser ){
+        foreach( $ct['page']['parser'] as $parser ) {
 
             require $parser;
 

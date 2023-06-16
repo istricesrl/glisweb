@@ -80,7 +80,10 @@
             }
 
             // elimino il file importato
-            deleteFile( $f );
+            // deleteFile( $f );
+
+            // archivio il file importato
+            moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE );
 
         }
 
