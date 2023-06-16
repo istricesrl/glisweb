@@ -2351,8 +2351,6 @@ CREATE OR REPLACE VIEW contratti_progetti_view AS
 		tipologie_contratti.se_scalare,
 		tipologie_contratti.se_affiliazione,
 		tipologie_contratti.nome AS tipologia,
-		contratti.id_progetto,
-		progetti.nome AS progetto,
 		min( rinnovi.data_inizio ) AS data_inizio,
 		max( rinnovi.data_fine ) AS data_fine,
 		concat( 'contratto ', contratti.nome, ' - ', coalesce( progetti.nome, '' ), ' ruolo ', ruoli_progetti.nome  ) AS __label__
@@ -2362,7 +2360,6 @@ CREATE OR REPLACE VIEW contratti_progetti_view AS
 		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = contratti_progetti.id_ruolo
 		LEFT JOIN progetti ON progetti.id = contratti_progetti.id_progetto
 		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
-		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
 	GROUP BY contratti.id, progetti.id
 ;
 
