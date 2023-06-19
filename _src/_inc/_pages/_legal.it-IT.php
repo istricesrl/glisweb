@@ -11,3 +11,12 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_aurora/', 'schema' => 'default.html' ),
 	    'parent'		=> array( 'id'		=> NULL )
 	);
+
+    // pagina principale
+	$p['affiliazioni'] = array(
+	    'sitemap'		=> false,
+	    'title'		    => array( $l		=> 'divulgazione affiliazioni' ),
+	    'h1'		    => array( $l		=> 'divulgazione delle affiliazioni' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_aurora/', 'schema' => 'default.html' ),
+	    'parent'		=> array( 'id'		=> NULL )
+	);

@@ -1,0 +1,16 @@
+{% set affiliazioni = 0 %}
+
+{% if amazon.profile.affiliazione.id %}
+{% set affiliazioni = affiliazioni + 1 %}
+<h2>affiliazione Amazon</h2>
+
+<p>In qualità di Affiliato Amazon, questo sito riceve un guadagno dagli acquisti idonei. In tutto il sito, potrete trovare dei link che riportano la dicitura <b>link affiliato Amazon</b>,
+questo indica che se effettuate un acquisto Amazon tramite quel link contribuirete a sostenere le attività di questo sito e a renderne possibile l'esistenza.</p>
+
+{% else %}
+<!-- Questo sito non è membro del programma di affiliazione Amazon -->
+{% endif %}
+
+{% if affiliazioni == 0 %}
+<p>Questo sito non è membro di alcun programma di affiliazione o sponsorizzazione e non riceve pagamenti per eventuali acquisti effettuati dai suoi utenti tramie i link in esso contenuti.</p>
+{% endif %}
