@@ -18,6 +18,61 @@
 	);
 
     // pagina dell'archivio
+	$p['archivio.contenuti'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'archivio contenuti' ),
+	    'h1'		=> array( $l		=> 'archivio contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'archivio.contenuti.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_archivio.contenuti.php' ),
+	    'parent'		=> array( 'id'		=> 'archivio' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'archivio.contenuti' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contenuti' ),
+		'priority'	=> '810' ) ) )
+	);
+
+	// vista indirizzi
+	$p['template.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'template' ),
+		'h1'		=> array( $l		=> 'template' ),
+		'parent'		=> array( 'id'		=> 'archivio.contenuti' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'template.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'template' ),
+		'priority'	=> '050' ) ) )
+	);
+
+	// gestione indirizzi
+	$p['template.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'template.form',
+												'template.form.tools' ) )
+		
+	);
+
+	// gestione mail strumenti
+	$p['template.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni template' ),
+	    'h1'		=> array( $l		=> 'azioni template' ),
+	    'parent'		=> array( 'id'		=> 'template.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_template.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['template.form']['etc']['tabs'] )
+	);
+
+    // pagina dell'archivio
 	$p['archivio.logistica'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'archivio logistica' ),
