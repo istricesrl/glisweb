@@ -715,7 +715,7 @@
 	fullPath( $f2 );
 	checkFolder( dirname( $f2 ) );
 
-    if( empty( basename( $f2 ) ) ) {
+    if( is_dir( $f2 ) ) {
         $f2 .= basename( $f1 );
     }
 

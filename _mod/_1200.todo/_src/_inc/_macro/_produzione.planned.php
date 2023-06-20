@@ -82,7 +82,7 @@
 	// icone
 	foreach( $ct['view']['data'] as &$row ) {
 		if( is_array( $row ) ) {
-			$row[ NULL ] = '<a href="' . $cf['page']['path'][ LINGUA_CORRENTE ] . '?__unsprint__=' . $row['id'] . '"><i class="fa fa-calendar-minus-o"></i></a>';
+			$row[ NULL ] = '<a href="' . $cf['page']['path'][ LINGUA_CORRENTE ] . '?__unsprint__=' . $row['id'] . '"><i class="fa fa-arrow-left"></i></a>';
 		}
 	}
 
