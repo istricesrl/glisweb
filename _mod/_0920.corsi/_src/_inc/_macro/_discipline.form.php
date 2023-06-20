@@ -91,6 +91,17 @@
         }
 
     }
+
+    // metadato sconto secondo corso
+    $ct['etc']['metadati'] = array(
+        'sconto|%_secondo_mono' => array(),
+        'sconto|%_terzo_mono' => array(),
+        'sconto|%_quarto_mono' => array()
+    );
+
+    // debug
+    // print_r( $ct['etc']['sub'] );
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
     

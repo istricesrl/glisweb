@@ -48,12 +48,14 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
+<!--
 			{% if '3000.contenuti' in mods.active.array %}
 			<div class="col-12 col-md-auto">
 				<span class="label-top">sito</span>
 				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
 			</div>  
 			{% endif %}
+-->
 		    <div class="col-12 col-md">
 			<span class="label-top">genitore</span>
 			{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.categorie_progetti, request, '', '', '', '', '', 'categorie.progetti.form', 'categorie.progetti.form', 'categorie_progetti', 'id_genitore', page, pages, ietf ) }}
@@ -85,7 +87,7 @@
 		</div>
 
 		<div class="form-group form-row">
-			<legend>gestione progetti</legend>
+			<legend>dettagli corso</legend>
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
                     {{ frm.checkbox( table, '', '', 'se_ordinario', 'se ordinario', '', request ) }}
@@ -128,14 +130,24 @@
 				{{ frm.selectBox( table, 'metadati', '0', 'testo', '', etc.select.discipline, request, request[ table ].id ) }}
 			</div>
 -->
+<!--
 			<input type="hidden" id="art" name="{{table}}[metadati][1][id_categoria_progetti]" value="__parent_id__" >
 			<input type="hidden" id="lingua" name="{{table}}[metadati][1][id_lingua]" value="1" >
 			<input type="hidden" id="nome" name="{{table}}[metadati][1][nome]" value="sconto|%_secondo_mono" >
-			<div class="col-2">
+-->
+			<div class="col">
 				<span class="label-top">% secondo corso</span>
-				{{ frm.input( table, 'metadati', '1', 'testo', '', '', request ) }}
-			</div>
+				{% set subtable = 'metadati' %}
+				{% set metadato = 'sconto|%_secondo_mono' %}
 
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id', '', '', '', etc.sub[ metadato ].id, 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'nome', '', '', '', etc.sub[ metadato ].nome, 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'testo', '', '', '', etc.sub[ metadato ].testo ) }}
+
+				{# frm.input( table, 'metadati', '1', 'testo', '', '', request ) #}
+			</div>
+<!--
 			<input type="hidden" id="art" name="{{table}}[metadati][2][id_categoria_progetti]" value="__parent_id__" >
 			<input type="hidden" id="lingua" name="{{table}}[metadati][2][id_lingua]" value="1" >
 			<input type="hidden" id="nome" name="{{table}}[metadati][2][nome]" value="sconto|%_terzo_mono" >
@@ -151,6 +163,34 @@
 				<span class="label-top">% quarto corso</span>
 				{{ frm.input( table, 'metadati', '3', 'testo', '', '', request ) }}
 			</div>
+-->
+
+			<div class="col">
+				<span class="label-top">% terzo corso</span>
+				{% set subtable = 'metadati' %}
+				{% set metadato = 'sconto|%_terzo_mono' %}
+
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id', '', '', '', etc.sub[ metadato ].id, 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'nome', '', '', '', etc.sub[ metadato ].nome, 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'testo', '', '', '', etc.sub[ metadato ].testo ) }}
+
+				{# frm.input( table, 'metadati', '1', 'testo', '', '', request ) #}
+			</div>
+
+			<div class="col">
+				<span class="label-top">% quarto corso</span>
+				{% set subtable = 'metadati' %}
+				{% set metadato = 'sconto|%_quarto_mono' %}
+
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id', '', '', '', etc.sub[ metadato ].id, 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'nome', '', '', '', etc.sub[ metadato ].nome, 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'testo', '', '', '', etc.sub[ metadato ].testo ) }}
+
+				{# frm.input( table, 'metadati', '1', 'testo', '', '', request ) #}
+			</div>
+
 			{% endif %}
 
 		</div>

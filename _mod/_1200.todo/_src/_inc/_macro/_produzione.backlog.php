@@ -107,7 +107,7 @@
 	// icone
 	foreach( $ct['view']['data'] as &$row ) {
 		if( is_array( $row ) ) {
-			$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo_backlog" onclick="$(\'#todo_id\').val(\''.$row['id'].'\');$(\'#todo_ore_programmazione\').val(\''.$row['ore_programmazione'].'\');$(\'#scorciatoia_todo_backlog\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>';
+			$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_todo_backlog" onclick="$(\'#todo_id\').val(\''.$row['id'].'\');$(\'#todo_ore_programmazione\').val(\''.$row['ore_programmazione'].'\');$(\'#scorciatoia_todo_backlog\').modal(\'show\');"><i class="fa fa-arrow-right"></i></a>';
 		}
 	}
 
