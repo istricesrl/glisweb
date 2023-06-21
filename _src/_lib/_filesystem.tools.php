@@ -130,37 +130,39 @@
      */
     function checkFolder( $p ) {
 
-	$f = DIR_BASE;
+        $f = DIR_BASE;
 
-	shortPath( $p );
+        shortPath( $p );
 
-	$p = rtrim( $p , '/' );
+        $p = rtrim( $p , '/' );
 
-	$passi = explode( '/' , $p );
+        $passi = explode( '/' , $p );
 
-	foreach( $passi as $passo ) {
+        foreach( $passi as $passo ) {
 
-	    $f .=  $passo . '/';
+            $f .=  $passo . '/';
 
-	    if( ! is_dir( $f ) ) {
+            if( ! is_dir( $f ) ) {
 
-		if( @mkdir( $f ) ) {
+                if( @mkdir( $f ) ) {
 
-		    chmod( $f , 0775 );
+                    chmod( $f , 0775 );
 
-		} else {
+                } else {
 
-		    $m  = 'impossibile creare ' . $f;
-		    error_log( $m );
-            return false;
+                    die( $f );
 
-		}
+                    $m  = 'impossibile creare ' . $f;
+                    error_log( $m );
+                    return false;
 
-	    }
+                }
 
-	}
+            }
 
-	return true;
+        }
+
+        return true;
 
     }
 
@@ -709,17 +711,27 @@
      */
     function moveFile( $f1, $f2 ) {
 
-	fullPath( $f1 );
-	checkFolder( dirname( $f1 ) );
+        fullPath( $f1 );
+        checkFolder( dirname( $f1 ) );
 
-	fullPath( $f2 );
-	checkFolder( dirname( $f2 ) );
+        if( empty( pathinfo( $f2, PATHINFO_EXTENSION ) ) ) {
 
-    if( is_dir( $f2 ) ) {
-        $f2 .= basename( $f1 );
-    }
+            // die( $f2 . ' è una cartella' );
 
-	return @rename( $f1, $f2 );
+            checkFolder( $f2 );
+
+            $f2 .= basename( $f1 );
+
+        } else {
+
+            // die( $f2 . ' è un file' );
+
+            fullPath( $f2 );
+            checkFolder( dirname( $f2 ) );
+    
+        }
+
+        return @rename( $f1, $f2 );
 
     }
 

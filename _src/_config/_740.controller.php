@@ -25,6 +25,7 @@
 
         // debug
         // print_r( readFromFile( $f ) );
+        // die();
 
         // elaboro i dati
         if( ! isset( $_REQUEST[ $table ] ) ) {
@@ -40,6 +41,7 @@
 
                 // debug
                 // print_r( $riga );
+
 /*
                 // attivazione controller
                 controller(
@@ -75,17 +77,20 @@
                 }
 
                 // debug
-                // print_r( $riga );
+                 print_r( $riga );
 
             }
 
-            // elimino il file importato
-            // deleteFile( $f );
-
-            // archivio il file importato
-            moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE );
-
         }
+
+        // elimino il file importato
+        // deleteFile( $f );
+
+        // archivio il file importato
+        moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE );
+
+        // debug
+        // die( 'sposto' . $f . ' in ' . DIR_VAR_SPOOL_IMPORT_DONE );
 
     }
 
