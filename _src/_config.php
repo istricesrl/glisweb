@@ -637,12 +637,14 @@
 		if( ! in_array( $runLvlString, $cf['lvls']['skip'] ) ) {
 
 		    // inclusione file standard
+			appendToFile( 'avvio runlevel -> ' . $configFile . PHP_EOL, FILE_LATEST_RUN );
 			require $configFile;
 			timerCheck( $cf['speed'], $configFile );
 			appendToFile( 'eseguito runlevel -> ' . $configFile . PHP_EOL, FILE_LATEST_RUN );
 
 		    // inclusione file locale
 			if( file_exists( $configFileLocale ) ) {
+			    appendToFile( 'avvio runlevel -> ' . $configFileLocale . PHP_EOL, FILE_LATEST_RUN );
 			    require $configFileLocale;
 			    timerCheck( $cf['speed'], $configFileLocale );
 			    appendToFile( 'eseguito runlevel -> ' . $configFileLocale . PHP_EOL, FILE_LATEST_RUN );
@@ -659,6 +661,7 @@
 				// echo $configFileModuli . PHP_EOL;
 
 			    // inclusione file di modulo
+				appendToFile( 'avvio runlevel -> ' . $configFileModuli . PHP_EOL, FILE_LATEST_RUN );
 				require $configFileModuli;
 				timerCheck( $cf['speed'], $configFileModuli );
 				appendToFile( 'eseguito runlevel -> ' . $configFileModuli . PHP_EOL, FILE_LATEST_RUN );
@@ -666,6 +669,7 @@
 			    // controparte modulo locale
 				$configFileModuliLocale = path2custom( $configFileModuli );
 				if( file_exists( $configFileModuliLocale ) ) {
+				    appendToFile( 'avvio runlevel -> ' . $configFileModuliLocale . PHP_EOL, FILE_LATEST_RUN );
 				    require $configFileModuliLocale;
 				    timerCheck( $cf['speed'], $configFileModuliLocale );
 				    appendToFile( 'eseguito runlevel -> ' . $configFileModuliLocale . PHP_EOL, FILE_LATEST_RUN );

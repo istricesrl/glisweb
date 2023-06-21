@@ -75,7 +75,7 @@
                 {# TOTALI DEL CARRELLO #}
                 <div class="form-row">
                     <div class="col-4 col-md-10 col-form-label text-right">totale generale</div>
-                    <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_totale) }} {{ session.carrello.valuta_utf8 }}</div>
+                    <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
                     <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="ricalcola" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
                 </div>
             </fieldset>
