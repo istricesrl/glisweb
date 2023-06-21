@@ -129,9 +129,12 @@
             }
 */
 
+// <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('https://glisweb.istricesrl.it/corsi.it-IT.html?__work__[anagrafica][items][1][id]=1&amp;__work__[anagrafica][items][1][label]=Mosti Fabio Zorro La Volpe','_self');"><i class="fa fa-graduation-cap"></i></button>
+
             $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/api/bookmarks?__work__[anagrafica][items]['.$row['id'].'][id]='.$row['id'].'&__work__[anagrafica][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>'.
                 '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_cliente\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
-                '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="$(\'#attivita_id_cliente_promemoria\').val(\''.$row['id'].'\');$(\'#scorciatoia_promemoria\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>';
+                '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="$(\'#attivita_id_cliente_promemoria\').val(\''.$row['id'].'\');$(\'#scorciatoia_promemoria\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>'.
+                ( ( in_array( "0920.corsi", $cf['mods']['active']['array'] ) ) ? '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['corsi.view']['path'][ LINGUA_CORRENTE ].'?__work__[anagrafica][items][1][id]='.$row['id'].'&amp;__work__[anagrafica][items][1][label]='.$row['__label__'].'\',\'_self\');"><i class="fa fa-graduation-cap"></i></a>' : NULL );
 
 
         }
