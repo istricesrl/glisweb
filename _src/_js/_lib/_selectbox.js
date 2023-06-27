@@ -56,6 +56,18 @@
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'placeholder-api' ) ) {
 			$( box ).val( $( select ).attr( 'placeholder-api' ) );
+			// se, cliccando sulla selectbox per scrivere, non scompare il placeholder, decommentare questo codice
+		/*	$( box ).on( "click", function() {
+				if( $( box ).val() == $( select ).attr( 'placeholder-api' ) ){
+					$( box ).val('');
+				}
+			  });
+			$( box ).on( "focusout", function() {
+				if( $( box ).val() == ''){
+					$( box ).val( $( select ).attr( 'placeholder-api' ) );
+				}
+			  });
+		*/
 		} else {
 			box.val( current );
 		}
