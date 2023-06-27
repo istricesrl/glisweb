@@ -47,7 +47,7 @@
             $_SESSION['carrello']['articoli'][ $articolo['id_articolo'].$articolo['destinatario_id_anagrafica'] ] = $articolo;
         }
 
-        print_r( $_SESSION['carrello'] );
+        // print_r( $_SESSION['carrello'] );
 
     }
 

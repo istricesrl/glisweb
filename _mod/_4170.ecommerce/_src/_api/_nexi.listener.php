@@ -76,6 +76,20 @@
 						'carrelli'
 					);
 
+					// controller post checkout
+					$cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_checkout.finally.failure.php' ), GLOB_BRACE );
+
+					// ordinamento delle controller
+					sort( $cnts );
+
+					// log
+					appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ), $fileRicevuta );
+
+					// inclusione delle controller post checkout
+					foreach( $cnts as $cnt ) {
+						require $cnt;
+					}
+
 					// log
 					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['codTrans'], 'paypal', LOG_ERR );
 					appendToFile( 'pagamento non completato' . PHP_EOL, $fileRicevuta );

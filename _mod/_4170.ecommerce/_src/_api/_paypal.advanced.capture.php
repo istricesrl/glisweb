@@ -109,6 +109,20 @@
 
         } else {
 
+            // controller post checkout
+            $cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_checkout.finally.failure.php' ), GLOB_BRACE );
+
+            // ordinamento delle controller
+            sort( $cnts );
+
+            // log
+            appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ), $fileRicevuta );
+
+            // inclusione delle controller post checkout
+            foreach( $cnts as $cnt ) {
+                require $cnt;
+            }
+
             // TODO in caso di fallimento settare come URL di redirect l'URL della pagina di errore
             $result['return'] = 'https://www.libero.it';
 

@@ -178,6 +178,8 @@
 
         }
 
+        // FINE ACQUISTO SINGOLO ARTICOLO
+
         // debug
         // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
 
