@@ -48,7 +48,7 @@
 		
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
+			<legend>dati generali <small>{{ legend }}</small></legend>
 		   
             <div class="form-group form-row">
                 <div class="col-12 col-md-auto">
@@ -130,6 +130,23 @@
 				
 		</fieldset>
 
+		<fieldset>
+			<legend>dettagli corso</legend>
+
+			<div class="form-group form-row">
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{% set subtable = 'metadati' %}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'id', '', '', '', etc.sub.non_applicare_sconti.id, 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'nome', '', '', '', etc.sub.non_applicare_sconti.nome, 'hidden' ) }}
+						{{ frm.checkbox( table, subtable, etc.sub.non_applicare_sconti.idx, 'testo', 'non applicare sconti', '', '', etc.sub.non_applicare_sconti.testo ) }}
+					</div>
+				</div>
+			</div>
+	
+		</fieldset>
+
         {# SUBFORM RUOLI #}
         {{ sub.ruoli( table, 'progetti_anagrafica', 'ruoli', site, page, pages, ietf, etc, request, session ) }}
 
@@ -137,7 +154,6 @@
 
 		{# SUBFORM CERTIFICAZIONI #}
         {{ sub.certificazioni( table, 'progetti_certificazioni', 'certificazioni', site, page, pages, ietf, etc, request, session ) }}
-
 		
 		{% endif %}
 

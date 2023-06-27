@@ -192,7 +192,7 @@
             }
 
         }
-
+/*
     // metadato di default per il numero di lezioni dell'abbonamento
     $ct['etc']['sub']['iscritti_max'] = array(
         'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) : 0 ),
@@ -208,6 +208,13 @@
             }
         }
     }
+*/
+
+    // metadato sconto secondo corso
+    $ct['etc']['metadati'] = array(
+        'iscritti_max' => array(),
+        'non_applicare_sconti' => array()
+    );
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
