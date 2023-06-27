@@ -77,7 +77,7 @@
                 }
 
                 // debug
-                 print_r( $riga );
+                // print_r( $riga );
 
             }
 
