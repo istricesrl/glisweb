@@ -33,7 +33,8 @@
 							</div>
 							<div class="col">
 								<span class="label-top">ore programmate</span>
-								{{ frm.input( table, '', '', 'ore_programmazione', '', '', '', '', 'number', '1', '', '', '1' ) }}
+								<!-- NOTA ho dovuto assegnare una classe perché l'ID dell'elemento collide con un campo omonimo nell'inserimento rapido -->
+								{{ frm.input( table, '', '', 'ore_programmazione', '', '', '', '', 'number', '1', 'oreprogrammazione', '', '1' ) }}
 							</div>
 						</div>
 					</div>
