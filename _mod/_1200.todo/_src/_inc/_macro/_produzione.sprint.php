@@ -112,7 +112,7 @@
 				$mastro = '$(\'#attivita_id_mastro_provenienza\').val(\'\');$(\'#attivita_note_mastro_provenienza\').html(\'\');';
 			}
 			$row['id_mastro_provenienza'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM __report_giacenza_ore__ WHERE id_progetto = ?', array( array( 's' => $row['id_progetto'] ) ) );
-			$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id_progetto'].'\');'.$mastro.'$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id_mastro_provenienza'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
+			$row[ NULL ] = '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_progetto\').val(\''.$row['id_progetto'].'\');$(\'#attivita_id_todo\').val(\''.$row['id'].'\');'.$mastro.'$(\'#attivita_id_mastro_provenienza\').val(\''.$row['id_mastro_provenienza'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
 				'<a href="' . $cf['page']['path'][ LINGUA_CORRENTE ] . '?__unsprint__=' . $row['id'] . '"><i class="fa fa-arrow-left"></i></a>';
 		}
 	}
