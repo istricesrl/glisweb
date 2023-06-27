@@ -79,26 +79,28 @@
 			{% endif %}
 -->
 		</div>
+
 		<div class="form-group form-row">
 			<div class="col-12">
-			<span class="label-top">descrizione</span>
-			{{ frm.textarea( table, '', '', 'note', '', 2, request ) }}
+				<span class="label-top">descrizione</span>
+				{{ frm.textarea( table, '', '', 'note', '', 2, request ) }}
 			</div>
 		</div>
 
 		<div class="form-group form-row">
-			<legend>dettagli corso</legend>
+			<legend>dettagli disciplina</legend>
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_ordinario', 'se ordinario', '', request ) }}
+                    {{ frm.checkbox( table, '', '', 'se_ordinario', 'se ordinaria', '', request ) }}
                 </div>
             </div>
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_straordinario', 'se straordinario', '', request ) }}
+                    {{ frm.checkbox( table, '', '', 'se_straordinario', 'se straordinaria', '', request ) }}
                 </div>
             </div>
 		</div>
+
 		{% if '0920.corsi' in mods.active.array %}
 		<div class="form-group form-row">
 <!--
