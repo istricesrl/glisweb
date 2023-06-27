@@ -55,9 +55,9 @@
 
             $conn->setOption( Memcached::OPT_COMPRESSION, true );
 
-            $r = $conn->set( $key, $data, $ttl );
+            $r = $conn->set( $key, serialize( $data ), $ttl );
 
-            if( $r == false ) {
+            if( $r === false ) {
                 logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
             } else {
                 $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), time(), $ttl );
@@ -100,13 +100,13 @@
 
 		$r = $conn->get( $key );
 
-		if( $r == false ) {
+		if( $r === false ) {
 		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
 		} else {
 		    logWrite( 'lettura effettuata, chiave: ' . $key, 'memcache' );
 		}
 
-		return $r;
+		return unserialize( $r );
 
 	}
 

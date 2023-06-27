@@ -111,6 +111,9 @@
 
             $row[ NULL ] .=  '<a href="'.$cf['contents']['pages']['iscrizioni.form']['path'][LINGUA_CORRENTE].'?__preset__[contratti][id_progetto]='.$row['id'].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';
 
+            // TODO solo se è attivo il modulo attesa
+            $row[ NULL ] .=  '<a href="'.$cf['contents']['pages']['attesa.form']['path'][LINGUA_CORRENTE].'?__preset__[contratti][id_progetto]='.$row['id'].'"><span class="media-left"><i class="fa fa-hourglass-half"></i></span></a>';
+
             $row['giorni_orari_luoghi'] = str_replace( '|', '<br>', $row['giorni_orari_luoghi'] );
 
         }

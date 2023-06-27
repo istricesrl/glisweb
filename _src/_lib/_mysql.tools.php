@@ -82,15 +82,20 @@
 	    $r = memcacheRead( $m, $k );
 
 	// se il valore non è stato trovato
-	    if( empty( $r ) || $t === false ) {
-		$r = mysqlQuery( $c, $q, $p, $e );
-		memcacheWrite( $m, $k, $r, $t );
-		logWrite( 'query ' . $k . ' non presente in cache', 'speed' );
-		foreach( mysqlGetQueryTables( $q ) as $j ) {
-		    $i[ $j ]['query'][ memcacheUniqueKey( $k ) ] = time();
-		}
-	    } else {
-		logWrite( 'query ' . $k . ' letta dalla cache', 'speed' );
+	    if( $r === false || $t === false ) {
+
+			$d = mysqlQuery( $c, $q, $p, $e );
+			memcacheWrite( $m, $k, $d, $t );
+			logWrite( 'query ' . $k . ' non presente in cache', 'speed' );
+
+			foreach( mysqlGetQueryTables( $q ) as $j ) {
+				$i[ $j ]['query'][ memcacheUniqueKey( $k ) ] = time();
+			}
+
+			return $d;
+
+		} else {
+			logWrite( 'query ' . $k . ' letta dalla cache', 'speed' );
 	    }
 
 	// restituisco il risultato

@@ -35,7 +35,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM corsi_view '
+	    'SELECT id, __label__ FROM corsi_view_static '
     );
 
     // macro di default

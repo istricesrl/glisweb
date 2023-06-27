@@ -47,20 +47,27 @@
 
         {# MODULO PRINCIPALE #}
         <fieldset>
-        <legend>dati generali <small>{{ legend }}</small></legend>
-        <div class="form-group form-row">
-        <div class="col-12 col-md">
-            <span class="label-top">corso</span>
-            {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', '', '', '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
+            <legend>dati generali <small>{{ legend }}</small></legend>
+            <div class="form-group form-row">
+            <div class="col-12 col-md">
+                <span class="label-top">corso</span>
+                {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', '', '', '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
+            </div>
         </div>
-    </div>
     
-    <div class="form-group form-row">
-        <div class="col-md">
-            <span class="label-top">iscritto</span>
-			{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+        <div class="form-group form-row">
+            <div class="col-md">
+                <span class="label-top">iscritto</span>
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+            </div>
         </div>
-    </div>
+
+		<div class="form-group form-row">
+		    <div class="col-12">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'note_inserimento', '', 3, request ) }}
+		    </div>
+		</div>
 
     </fieldset>
 
