@@ -125,7 +125,8 @@
                         'codice_fiscale' => ( ! empty( $row['codice_fiscale'] ) ) ? $row['codice_fiscale'] : NULL,
                         'nome' => ( ( isset( $row['nome'] ) ) ? $row['nome'] : NULL ),
                         'cognome' => ( ( isset( $row['cognome'] ) ) ? $row['cognome'] : NULL ),
-                        'denominazione' => ( ( isset( $row['denominazione'] ) ) ? $row['denominazione'] : NULL )
+                        'denominazione' => ( ( isset( $row['denominazione'] ) ) ? $row['denominazione'] : NULL ),
+                        'note_commerciali' => ( ( isset( $row['note_commerciali'] ) ) ? $row['note_commerciali'] : NULL )
                     ),
                     'anagrafica'
                 );
