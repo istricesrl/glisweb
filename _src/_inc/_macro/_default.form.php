@@ -35,24 +35,26 @@
 	timerCheck( $cf['speed'], '-> fine logiche di gestione di default' );
 
     // metadati
-    foreach( $ct['etc']['metadati'] as $metadato => $dettagli ) {
+    if( isset( $ct['etc']['metadati'] ) ) {
+        foreach( $ct['etc']['metadati'] as $metadato => $dettagli ) {
 
-        // metadato di default per sconto secondo corso
-        $ct['etc']['sub'][ $metadato ] = array(
-            'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) : 0 ),
-            'nome' => $metadato 
-        );
-
-        // ricerca metadato per sconto secondo corso
-        if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
-            foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
-                if( $m['nome'] == $metadato ) {
-                    $ct['etc']['sub'][ $metadato ] = $m;
-                    $ct['etc']['sub'][ $metadato ]['idx'] = $k;
+            // metadato di default per sconto secondo corso
+            $ct['etc']['sub'][ $metadato ] = array(
+                'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) : 0 ),
+                'nome' => $metadato 
+            );
+    
+            // ricerca metadato per sconto secondo corso
+            if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
+                foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
+                    if( $m['nome'] == $metadato ) {
+                        $ct['etc']['sub'][ $metadato ] = $m;
+                        $ct['etc']['sub'][ $metadato ]['idx'] = $k;
+                    }
                 }
             }
+    
         }
-
     }
 
     // timer
