@@ -432,7 +432,7 @@
 
 		// var_dump( $challenge );
 
-		if( $row['__firma__'] == $challenge ) {
+		if( isset( $row['__firma__'] ) && $row['__firma__'] == $challenge ) {
 			// die('match');
 			return true;
 		}
