@@ -326,9 +326,15 @@
 	timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
 
     // ricerca favicons
-	$favicons = glob( DIR_BASE . $ct['page']['template']['path'] . 'img/favicons/*.png', GLOB_BRACE );
+	$favicons = glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'img/favicons/*.png', GLOB_BRACE );
+	if( empty( $favicons ) ) {
+		$favicons = glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'img/favicons/'.$cf['site']['id'].'/*.png', GLOB_BRACE );
+	}
+
+	// preparazione favicons
 	$ct['page']['template']['favicons'] = array();
 	foreach( $favicons as $favicon ) {
+		$path = shortPath( dirname( $favicon ) );
 	    $favicon = basename( $favicon );
 	    preg_match_all( '/([a-z\-]*)\-([0-9x]*)\.([a-z]*)/', $favicon, $details );
 	    if( ! empty( $details[0][0] ) ) {
@@ -337,7 +343,8 @@
 					$ct['page']['template']['favicons'][] = array(
 						'rel' => 'apple-touch-icon',
 						'sizes' => $details[2][0],
-						'file' => $details[0][0]
+						'file' => $details[0][0],
+						'path' => $path
 					);
 				break;
 				case 'android-icon':
@@ -346,13 +353,15 @@
 						'rel' => 'icon',
 						'sizes' => $details[2][0],
 						'file' => $details[0][0],
-						'type' => 'image/png'
+						'type' => 'image/png',
+						'path' => $path
 					);
 				break;
 			}
 	    }
 	}
-#	asort( $ct['page']['template']['favicons'] );
+
+	// asort( $ct['page']['template']['favicons'] );
 
     // debug
 	// print_r( $ct['page']['template']['favicons'] );

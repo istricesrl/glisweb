@@ -18,7 +18,7 @@
 <meta http-equiv="Content-Security-Policy" content="{% for policy, domains in page.csp %}{% if domains %}{{ policy }}{% for domain in domains %} {{ domain|raw }}{% endfor %}; {% endif %}{% endfor %}">
 -->
 
-{% for icon in page.template.favicons %}<link rel="{{ icon.rel }}" sizes="{{ icon.sizes }}"{% if icon.type %} type="{{ icon.type }}"{% endif %} href="{{ site.url }}/{{ page.template.path }}img/favicons/{{ icon.file }}">{% endfor %}
+{% for icon in page.template.favicons %}<link rel="{{ icon.rel }}" sizes="{{ icon.sizes }}"{% if icon.type %} type="{{ icon.type }}"{% endif %} href="{{ site.url }}{{ icon.path }}/{{ icon.file }}">{% endfor %}
 
 {% if page.canonical %}<link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">{% endif %}
 
