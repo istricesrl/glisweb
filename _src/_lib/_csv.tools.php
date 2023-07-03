@@ -31,6 +31,9 @@
         }
 
         // debug
+        // print_r( $grezzo, true );
+
+        // log
         // logWrite( 'grezzo' . PHP_EOL . print_r( $grezzo, true ), 'csv' );
 
         // faccio il parsing CSV di ogni riga

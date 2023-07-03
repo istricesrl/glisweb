@@ -98,6 +98,9 @@
             // prelevo la riga da lavorare
             $row = $arr[ $widx ];
 
+            // ...
+            $job['riga'] = $row;
+
             // controlli formali e lavorazione riga
             if( ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && 
                 ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) && 
@@ -132,7 +135,7 @@
                 );
 
                 // status
-                $job['workspace']['status']['info'][] = 'anagrafica inserita con ID ' . $idAnagrafica . ' per la riga ' . $job['corrente'];
+                $job['status']['info'][] = 'anagrafica inserita con ID ' . $idAnagrafica . ' per la riga ' . $job['corrente'];
 
                 // se è presente un indirizzo...
                 if( ( isset( $row['indirizzo'] ) && ! empty( $row['indirizzo'] ) ) &&
