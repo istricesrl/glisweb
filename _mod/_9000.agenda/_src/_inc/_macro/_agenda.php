@@ -164,13 +164,15 @@
 
 	// print_r( $ct['etc']['todo_da_monitorare'] );
 
-	foreach( $ct['etc']['agenda'] as $anno => $settimane ) {
-		foreach( array_keys( $settimane ) as $settimana ) {
-			$dto = new DateTime();
-			$ct['etc']['intervalli'][ $anno ][ $settimana ] = array(
-				'inizio' => $dto->setISODate($anno, $settimana)->format('d-m-Y'),
-				'fine' => $dto->modify('+4 days')->format('d-m-Y')
-			);
+	if( isset( $ct['etc']['agenda'] ) && is_array( $ct['etc']['agenda'] ) ) {
+		foreach( $ct['etc']['agenda'] as $anno => $settimane ) {
+			foreach( array_keys( $settimane ) as $settimana ) {
+				$dto = new DateTime();
+				$ct['etc']['intervalli'][ $anno ][ $settimana ] = array(
+					'inizio' => $dto->setISODate($anno, $settimana)->format('d-m-Y'),
+					'fine' => $dto->modify('+4 days')->format('d-m-Y')
+				);
+			}
 		}
 	}
 
