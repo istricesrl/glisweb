@@ -19,11 +19,15 @@
     - tabelle gestite
 
     [...] dal punto di vista della gerarchia dei dati [...] tipologie:
-    - tabelle principali (es. anagrafica)
-    - tabelle secondarie (es. telefoni)
-    - tabelle di specifica (es. tipologie_anagrafica)
-    - tabelle di relazione (es. anagrafica_progetti)
-    - tabelle ricorsive (es. tipologie_anagrafica)
+    - tabelle principali (es. anagrafica) che descrivono gli oggetti principali e indipendenti
+    - tabelle secondarie (es. telefoni) che descrivono gli oggetti dipendenti dagli oggetti principali
+    - tabelle di relazione (es. anagrafica_progetti) che descrivono le relazioni fra oggetti principali o secondari
+    - tabelle di multirelazione (es. documenti_articoli) che descrivono le relazioni fra più oggetti principali o secondari
+    - tabelle di specifica (es. tipologie_anagrafica, ruoli_anagrafica) che qualificano rispettivamente gli oggetti principali o secondari e le relazioni fra essi
+
+    [...] dal punto di vista della presenza di riferimenti a sé stesse, le tabelle si distiguono in:
+    - tabelle base (es. anagrafica), che non hanno relazioni con sé stesse
+    - tabelle ricorsive (es. tipologie_anagrafica), che hanno relazioni con sé stesse
 
     Le tabelle principali si distiguono per il fatto che contengono dati indipendenti da altre tabelle, ovverosia che hanno senso di per sé (ad esempio una persona descritta da
     una riga della tabella anagrafica); le tabelle secondarie invece contengono dati dipendenti dalle righe delle tabelle principali (ad esempio i numeri di telefono di una persona)
@@ -48,6 +52,8 @@
     - tabelle tipologie_*
     - tabelle relazioni_*
     - tabelle ruoli_*
+
+    [...] per la loro funzione di specifica, le tabelle di ruoli_* stanno alle tabelle di relazione come le tabelle di tipologie_* stanno alle tabelle principali.
 
     tipologie di tabelle
     ====================
