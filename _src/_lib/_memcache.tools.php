@@ -83,10 +83,12 @@
 
     /**
      *
+     * https://www.php.net/manual/en/memcached.getresultcode.php
+     * 
      * @todo documentare
      *
      */
-    function memcacheRead( $conn, $key ) {
+    function memcacheRead( $conn, $key, &$err = Memcached::RES_FAILURE ) {
 
 	memcacheUniqueKey( $key );
 
@@ -99,6 +101,8 @@
 	} else {
 
 		$r = $conn->get( $key );
+
+        $err = $conn->getResultCode();
 
 		if( $r === false ) {
 		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
@@ -117,7 +121,7 @@
      * @todo documentare
      *
      */
-    function memcacheDelete( $conn, $key ) {
+    function memcacheDelete( $conn, $key, &$err = Memcached::RES_FAILURE ) {
 
 	memcacheUniqueKey( $key );
 
@@ -148,20 +152,18 @@
      * @todo documentare
      *
      */
-    function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = Memcached::RES_FAILURE ) {
 
 	// calcolo la chiave della query
 	    $k = md5( $f );
 
 	// cerco il valore in cache
-	    $r = memcacheRead( $m, $k );
+	    $r = memcacheRead( $m, $k, $err );
 
 	// se il valore non è stato trovato
-	    if( empty( $r ) || $r === false ) {
+	    if( $r === false ) {
 		$r = fileExists( $f );
-		memcacheWrite( $m, $k, serialize( $r ), $t );
-	    } else {
-		$r = unserialize( $r );
+		memcacheWrite( $m, $k, $r, $t );
 	    }
 
 	// restituisco il risultato
@@ -174,20 +176,18 @@
      * @todo documentare
      *
      */
-    function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = Memcached::RES_FAILURE ) {
 
 	// calcolo la chiave della query
 	    $k = md5( $f );
 
 	// cerco il valore in cache
-	    $r = memcacheRead( $m, $k );
+	    $r = memcacheRead( $m, $k, $err );
 
 	// se il valore non è stato trovato
 	    if( empty( $r ) || $r === false ) {
 		$r = file_get_contents( $f );
-		memcacheWrite( $m, $k, serialize( $r ), $t );
-	    } else {
-		$r = unserialize( $r );
+		memcacheWrite( $m, $k, $r, $t );
 	    }
 
 	// restituisco il risultato
