@@ -1311,6 +1311,7 @@ CREATE TABLE `disponibilita` (
 CREATE TABLE IF NOT EXISTS `documenti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `numero` char(32) DEFAULT NULL,
   `sezionale` char(32) DEFAULT NULL,
   `data` date DEFAULT NULL,
