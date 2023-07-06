@@ -61,7 +61,7 @@
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ) {
         // preset filtro custom progetti aperti
-#	    $ct['view']['__restrict__']['id_cliente']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+	    $ct['view']['__restrict__']['id_cliente']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 
 	// gestione default

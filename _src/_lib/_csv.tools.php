@@ -34,7 +34,7 @@
         // print_r( $grezzo, true );
 
         // log
-        // logWrite( 'grezzo' . PHP_EOL . print_r( $grezzo, true ), 'csv' );
+        // logWrite( 'grezzo (separatore "'.$s.'")' . PHP_EOL . print_r( $grezzo, true ), 'csv' );
 
         // faccio il parsing CSV di ogni riga
         $lavorato = csv2array( $grezzo, $s, $c, $e );
@@ -68,7 +68,7 @@
 
         foreach( $data as &$row ) {
             $row = str_getcsv( $row, $s, $c, $e );
-            $row = array_map('trim', $row );
+            $row = array_map( 'trim', $row );
             if( count( $data[0] ) == count( $row ) ) {
                 $result[] = array_combine( $data[0], $row );
             } else {
