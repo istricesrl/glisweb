@@ -68,6 +68,9 @@
      */
     function getAclPermission( $t, $a, &$i = NULL ) {
 
+	// ...
+	$t = str_replace( array( '_attivi', '_archiviati' ), NULL, $t );
+
 	// log
 	    logWrite( 'richiesta di accesso per ' . $t . '/' . $a, 'auth' );
 
@@ -140,6 +143,9 @@
      */
 //    function getAclRights( $c, $t, $a, $id, &$i = NULL, $pi = NULL ) {
     function getAclRights( $c, $t, $a, $id, &$i = NULL ) {
+
+	// ...
+	$t = str_replace( array( '_attivi', '_archiviati' ), NULL, $t );
 
 	// log
 	    logWrite( 'richiesta di accesso per ' . $t . '/' . $id . '/' . $a, 'auth' );
@@ -368,6 +374,9 @@
      *
      */
     function getAclRightsTable( $c, $t ) {
+
+	// ...
+	$t = str_replace( array( '_attivi', '_archiviati' ), NULL, $t );
 
 	// verifico se l'utente non è root
 	    if( $_SESSION['account']['username'] == 'root' || in_array( 'roots', $_SESSION['account']['gruppi'] ) ) {

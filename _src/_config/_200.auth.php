@@ -56,17 +56,18 @@
      * permessi
      * --------
      *
+     * [...] sostanzialmente quali azioni un utente o un gruppo possono compiere su un'entità in generale [...]
      *
      *
      * diritti
      * -------
      *
-     *
+     * [...] sostanzialmente quali azioni un utente o un gruppo possono compiere su una istanza (o riga) specifica di un'entità [...]
      *
      * privilegi
      * ---------
      *
-     *
+     * [...] azioni speciali e particolari, come ad esempio [...]
      *
      *
      *

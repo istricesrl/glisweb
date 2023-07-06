@@ -1,0 +1,28 @@
+/*!
+
+    \page auth descrizione dei meccanismi di autenticazione e autorizzazione del framework
+
+    Descrizione  dei meccanismi di autenticazione e autorizzazione del framework.
+
+    introduzione
+    ============
+
+    [...] tre diversi raggruppamenti:
+    - permessi
+    - diritti
+    - privilegi
+
+    [...]
+    =====
+
+    le tabelle di ACL
+    -----------------
+
+    [...] i valori che il campo permesso della tabella __acl_<entità>__ può assumere sono: [...]
+
+    l'attribuzione automatica delle entità ai gruppi
+    ================================================
+
+    [...] la tabella account_gruppi_attribuzione contiene [...]
+
+*/
