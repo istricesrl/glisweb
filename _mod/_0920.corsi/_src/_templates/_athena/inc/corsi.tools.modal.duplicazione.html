@@ -1,0 +1,98 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function duplica() {
+		var periodo_partenza = $('#__duplicazione___id_periodo').val();
+		var disciplina = $('#__duplicazione___id_disciplina').val();
+		var periodo_destinazione = $('#__duplicazione___id_periodo_destinazione').val();
+		var riferimento = $('#__duplicazione___riferimento').val();
+		var fascia_eta = $('#__duplicazione___id_fascia_eta').val();
+		var prezzo = $('#__duplicazione___prezzo').val();
+		var iscritti_max = $('#__duplicazione___iscritti_max').val();
+		
+
+		getws('/task/0920.corsi/corsi.duplicazione.start?periodo_partenza='+periodo_partenza+'&disciplina='+disciplina+'&periodo_destinazione='+periodo_destinazione+'&riferimento='+riferimento+'&fascia_eta='+fascia_eta+'&prezzo='+prezzo+'&iscritti_max='+iscritti_max);
+		$('#duplicazione_corsi').modal('toggle');
+		location.reload();
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="duplicazione_corsi">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+			<h5 class="modal-title">importa CSV anagrafica</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+			<div class="container-fluid">
+				<div class="form-row">
+					<div class="col">
+						<h5 class="modal-title">dati di partenza</h5>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">periodo</span>
+						{{ frm.select( '__duplicazione__', '', '', 'id_periodo', '', etc.select.periodi ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">disciplina</span>
+						<select name="__duplicazione__[id_disciplina]" id="__duplicazione___id_disciplina" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+							<option value="">tutte</option>
+							{% for tipologia in etc.select.discipline %}
+							<option value="{{ tipologia.id }}">{{ tipologia.__label__ }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<h5 class="modal-title">modifiche ai dati di arrivo</h5>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">periodo</span>
+						{{ frm.select( '__duplicazione__', '', '', 'id_periodo_destinazione', '', etc.select.periodi ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">riferimento interno</span>
+						{{ frm.inputRequired( '__duplicazione__', '', '', 'riferimento', '', '', '' ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">fascia d'età</span>
+						<select name="__duplicazione__[id_fascia_eta]" id="__duplicazione___id_fascia_eta" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+							<option value="">tutte</option>
+							{% for tipologia in etc.select.fasce %}
+							<option value="{{ tipologia.id }}">{{ tipologia.__label__ }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">prezzo</span>
+						{{ frm.inputRequired( '__duplicazione__', '', '', 'prezzo', '', '', '' ) }}
+					</div>
+					<div class="col">
+						<span class="label-top">massimo iscritti</span>
+						{{ frm.inputRequired( '__duplicazione__', '', '', 'iscritti_max', '', '', '' ) }}
+					</div>
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+			<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="duplica();">duplica</button>
+			<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
