@@ -31,7 +31,7 @@
 	    'h1'				=> array( $l		=> 'archivio' ),
 	    'parent'			=> array( 'id'		=> 'corsi.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_corsi.archivio.view.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_corsi.archivio.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['corsi.view']['etc']['tabs'] )
 	);
