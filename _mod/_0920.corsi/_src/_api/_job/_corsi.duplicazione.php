@@ -83,6 +83,27 @@
             // prelevo la riga da lavorare
             $job['riga'] = $arr[ $widx ];
 
+            // vecchio corso
+            $job['corso'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT * FROM progetti WHERE id = ?',
+                array( array( 's' => $job['riga'] ) )
+            );
+
+            // modifico l'ID
+            $job['corso']['id'] = date( 'YmdHis' );
+
+            // applico la regola sul periodo
+            $job['corso']['id_periodo'] = $job['workspace']['sostituzioni']['periodo_destinazione'];
+
+            // applico la regola sul riferimento
+
+            // applico la regola sulla fascia di età
+
+            // applico la regola sul prezzo
+
+            // applico la regola sul numero massimo di iscritti
+
             // duplico il corso
             // TODO
 
