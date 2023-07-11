@@ -266,7 +266,8 @@
                 * [...] OMISSIS [...]
                 *
                 * NOTA qui lavoro su $arr[ $widx ] che contiene l'oggetto corrente
-                *
+                * tipicamente si assegna $job['riga'] = $arr[ $widx ] in modo da avere traccia della riga nei log
+                * 
                 */
 
                 // CUSTOM status

@@ -96,25 +96,20 @@
             $widx = $job['corrente'] - 1;
 
             // prelevo la riga da lavorare
-            $row = $arr[ $widx ];
-
-            // ...
-            $job['riga'] = $row;
+            $job['riga'] = $arr[ $widx ];
 
             // controlli formali e lavorazione riga
-            if( ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && 
-                ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) && 
-                ( ! isset( $row['partita_iva'] ) || empty( $row['partita_iva'] ) ) ) {
+            if( ( ! isset( $job['riga']['codice'] ) || empty( $job['riga']['codice'] ) ) && 
+                ( ! isset( $job['riga']['codice_fiscale'] ) || empty( $job['riga']['codice_fiscale'] ) ) && 
+                ( ! isset( $job['riga']['partita_iva'] ) || empty( $job['riga']['partita_iva'] ) ) ) {
 
                 // status
                 $job['workspace']['status']['error'][] = 'codice utente, codice fiscale e partita IVA non settati per la riga ' . $job['corrente'];
-                // $job['workspace']['status']['error'][] = $row;
 
-            } elseif( empty( ( ( isset( $row['nome'] ) ) ? $row['nome'] : NULL ) . ( ( isset( $row['cognome'] ) ) ? $row['cognome'] : NULL ) . ( ( isset( $row['denominazione'] ) ) ? $row['denominazione'] : NULL ) ) ) {
+            } elseif( empty( ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ) . ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ) . ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ) ) ) {
 
                 // status
-                $job['workspace']['status']['error'][] = 'nome, cognome e denominazione non settati per la riga ' . $job['corrente'] . ' ' . ( ( ( isset( $row['nome'] ) ) ? $row['nome'] : NULL ) . ( ( isset( $row['cognome'] ) ) ? $row['cognome'] : NULL ) . ( ( isset( $row['denominazione'] ) ) ? $row['denominazione'] : NULL ) );
-                // $job['workspace']['status']['error'][] = $row;
+                $job['workspace']['status']['error'][] = 'nome, cognome e denominazione non settati per la riga ' . $job['corrente'] . ' ' . ( ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ) . ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ) . ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ) );
 
             } else {
 
@@ -123,13 +118,13 @@
                     $cf['mysql']['connection'],
                     array(
                         'id' => NULL,
-                        'codice' => ( ! empty( $row['codice'] ) ) ? $row['codice'] : NULL,
-                        'partita_iva' => ( ! empty( $row['partita_iva'] ) ) ? $row['partita_iva'] : NULL,
-                        'codice_fiscale' => ( ! empty( $row['codice_fiscale'] ) ) ? $row['codice_fiscale'] : NULL,
-                        'nome' => ( ( isset( $row['nome'] ) ) ? $row['nome'] : NULL ),
-                        'cognome' => ( ( isset( $row['cognome'] ) ) ? $row['cognome'] : NULL ),
-                        'denominazione' => ( ( isset( $row['denominazione'] ) ) ? $row['denominazione'] : NULL ),
-                        'note_commerciali' => ( ( isset( $row['note_commerciali'] ) ) ? $row['note_commerciali'] : NULL )
+                        'codice' => ( ! empty( $job['riga']['codice'] ) ) ? $job['riga']['codice'] : NULL,
+                        'partita_iva' => ( ! empty( $job['riga']['partita_iva'] ) ) ? $job['riga']['partita_iva'] : NULL,
+                        'codice_fiscale' => ( ! empty( $job['riga']['codice_fiscale'] ) ) ? $job['riga']['codice_fiscale'] : NULL,
+                        'nome' => ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ),
+                        'cognome' => ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ),
+                        'denominazione' => ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ),
+                        'note_commerciali' => ( ( isset( $job['riga']['note_commerciali'] ) ) ? $job['riga']['note_commerciali'] : NULL )
                     ),
                     'anagrafica'
                 );
@@ -138,15 +133,15 @@
                 $job['status']['info'][] = 'anagrafica inserita con ID ' . $idAnagrafica . ' per la riga ' . $job['corrente'];
 
                 // se è presente un indirizzo...
-                if( ( isset( $row['indirizzo'] ) && ! empty( $row['indirizzo'] ) ) &&
-                    ( isset( $row['comune'] ) && ! empty( $row['comune'] ) ) ) {
+                if( ( isset( $job['riga']['indirizzo'] ) && ! empty( $job['riga']['indirizzo'] ) ) &&
+                    ( isset( $job['riga']['comune'] ) && ! empty( $job['riga']['comune'] ) ) ) {
 /*
                     // TODO trovo il paese
                     $idPaese = mysqlSelectValue(
                         $cf['mysql']['connection'],
                         'SELECT id FROM stati WHERE nome = ? OR iso31661alpha2 = ? OR iso31661alpha2 = ?',
                         array(
-                            array( 's' => $row['stato'] )
+                            array( 's' => $job['riga']['stato'] )
                         )
                     );
 */
@@ -155,7 +150,7 @@
                         $cf['mysql']['connection'],
                         'SELECT id FROM comuni WHERE nome = ?',
                         array(
-                            array( 's' => $row['comune'] )
+                            array( 's' => $job['riga']['comune'] )
                         )
                     );
 
@@ -167,8 +162,8 @@
                         $idIndirizzo = mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
-                                'indirizzo' => $row['indirizzo'],
-                                'civico' => $row['civico'],
+                                'indirizzo' => $job['riga']['indirizzo'],
+                                'civico' => $job['riga']['civico'],
                                 'id_comune' => $idComune
                             ),
                             'indirizzi',
@@ -197,22 +192,20 @@
 
                             // status
                             if( empty( $idAssociazioneIndirizzo ) ) {
-                                $job['workspace']['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $row['indirizzo'] . $row['civico'] . ' ' . $row['comune'] . ' non associato per la riga ' . $job['corrente'];
+                                $job['workspace']['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'];
                             }
 
                         } else {
 
                             // status
-                            $job['workspace']['status']['error'][] = 'indirizzo ' . $row['indirizzo'] . $row['civico'] . ' ' . $row['comune'] . ' non inserito per la riga ' . $job['corrente'];
-                            // $job['workspace']['status']['error'][] = $row;
+                            $job['workspace']['status']['error'][] = 'indirizzo ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non inserito per la riga ' . $job['corrente'];
 
                         }
 
                     } else {
 
                         // status
-                        $job['workspace']['status']['error'][] = 'comune ' . $row['comune'] . ' non trovato per la riga ' . $job['corrente'];
-                        // $job['workspace']['status']['error'][] = $row;
+                        $job['workspace']['status']['error'][] = 'comune ' . $job['riga']['comune'] . ' non trovato per la riga ' . $job['corrente'];
                 
                     }
 
@@ -220,15 +213,14 @@
 
                     // status
                     $job['workspace']['status']['error'][] = 'indirizzo e comune non settati per la riga ' . $job['corrente'];
-                    // $job['workspace']['status']['error'][] = $row;
 
                 }
 
                 // se sono presenti delle categorie...
-                if( isset( $row['categorie'] ) && ! empty( $row['categorie'] ) ) {
+                if( isset( $job['riga']['categorie'] ) && ! empty( $job['riga']['categorie'] ) ) {
 
                     // esplodo le categorie per pipe
-                    $categorie = explode( '|', $row['categorie'] );
+                    $categorie = explode( '|', $job['riga']['categorie'] );
 
                     // per ogni categoria...
                     foreach( $categorie as $categoria ) {
@@ -261,7 +253,6 @@
 
                             // status
                             $job['workspace']['status']['error'][] = 'categoria ' . $categoria . ' non trovata per la riga ' . $job['corrente'];
-                            // $job['workspace']['status']['error'][] = $row;
 
                         }
 
@@ -271,15 +262,14 @@
 
                     // status
                     $job['workspace']['status']['error'][] = 'categoria non settata per la riga ' . $job['corrente'];
-                    // $job['workspace']['status']['error'][] = $row;
 
                 }
 
                 // se sono presenti delle mail...
-                if( isset( $row['mail'] ) && ! empty( $row['mail'] ) ) {
+                if( isset( $job['riga']['mail'] ) && ! empty( $job['riga']['mail'] ) ) {
 
                     // esplodo le categorie per pipe
-                    $indirizzi = explode( '|', $row['mail'] );
+                    $indirizzi = explode( '|', $job['riga']['mail'] );
 
                     // TODO qui si potrebbe sotto esplodere per § e dare il ruolo alla mail
                     // tipo amministrazione@stocazzo.com§4|commerciale@stocazzo.com§2 eccetera
@@ -306,15 +296,14 @@
 
                     // status
                     $job['workspace']['status']['error'][] = 'mail non settata per la riga ' . $job['corrente'];
-                    // $job['workspace']['status']['error'][] = $row;
 
                 }
 
                 // se sono presenti dei telefoni...
-                if( isset( $row['telefoni'] ) && ! empty( $row['telefoni'] ) ) {
+                if( isset( $job['riga']['telefoni'] ) && ! empty( $job['riga']['telefoni'] ) ) {
 
                     // esplodo le categorie per pipe
-                    $numeri = explode( '|', $row['telefoni'] );
+                    $numeri = explode( '|', $job['riga']['telefoni'] );
 
                     // per ogni categoria...
                     foreach( $numeri as $numero ) {
@@ -336,10 +325,10 @@
                 }
 
                 // se sono presenti dei telefoni...
-                if( isset( $row['url'] ) && ! empty( $row['url'] ) ) {
+                if( isset( $job['riga']['url'] ) && ! empty( $job['riga']['url'] ) ) {
 
                     // esplodo le categorie per pipe
-                    $urls = explode( '|', $row['url'] );
+                    $urls = explode( '|', $job['riga']['url'] );
 
                     // per ogni categoria...
                     foreach( $urls as $url ) {
@@ -361,14 +350,14 @@
                 }
 
                 // se è richiesta la creazione di un account...
-                if( isset( $row['username'] ) && ! empty( $row['username'] ) ) {
+                if( isset( $job['riga']['username'] ) && ! empty( $job['riga']['username'] ) ) {
 
                     // TODO se lo username esiste già aggiungo un numero finché non trovo un username non usato
                     // ...
 
                     // se la password non è settata, ne creo una casuale
-                    if( ! isset( $row['password'] ) || empty( $row['password'] ) ) {
-                        $row['password'] = getPassword();
+                    if( ! isset( $job['riga']['password'] ) || empty( $job['riga']['password'] ) ) {
+                        $job['riga']['password'] = getPassword();
                     }
 
                     // trovo l'ID dell'account
@@ -378,15 +367,15 @@
                             'id' => NULL,
                             'id_anagrafica' => $idAnagrafica,
                             'id_mail' => ( ( isset( $idMail ) && ! empty( $idMail ) ) ? $idMail : NULL ),
-                            'username' => $row['username'],
-                            'password' => md5( $row['password'] ),
+                            'username' => $job['riga']['username'],
+                            'password' => md5( $job['riga']['password'] ),
                             'se_attivo' => 1
                         ),
                         'account'
                     );
 
                     // esplodo i gruppi per pipe
-                    $gruppi = explode( '|', $row['gruppi'] );
+                    $gruppi = explode( '|', $job['riga']['gruppi'] );
 
                     // status
                     $job['workspace']['status']['info'][] = 'gruppi trovati ' . implode( ',', $gruppi ) . ' per la riga ' . $job['corrente'];
@@ -418,21 +407,21 @@
                     }
 
                     // se è richiesta la notifica via mail ed è settata una mail per l'anagrafica, invio la notifica
-                    if( isset( $row['notify'] ) && $row['notify'] == 'mail' ) {
+                    if( isset( $job['riga']['notify'] ) && $job['riga']['notify'] == 'mail' ) {
                         if( is_array( $indirizzi ) && count( $indirizzi ) > 0 ) {
                             $idMailNotifica = queueMailFromTemplate(
                                 $cf['mysql']['connection'],
                                 $cf['mail']['tpl']['NOTIFICA_NUOVO_ACCOUNT'],
-                                array( 'dt' => $row, 'ct' => $ct ),
+                                array( 'dt' => $job['riga'], 'ct' => $ct ),
                                 strtotime( '-1 minute' ),
-                                array( $row['nome'] . ' ' . $row['cognome'] => $indirizzi[0] ),
+                                array( $job['riga']['nome'] . ' ' . $job['riga']['cognome'] => $indirizzi[0] ),
                                 $cf['localization']['language']['ietf']
                             );
                         }
                     }
 
                     // TODO se è richiesta la notifica via SMS ed è settato un telefono per l'anagrafica, invio la notifica
-                    // if( isset( $row['notify'] ) && $row['notify'] == 'sms' ) {
+                    // if( isset( $job['riga']['notify'] ) && $job['riga']['notify'] == 'sms' ) {
                     // 
                     // }
 
