@@ -17,9 +17,9 @@
             'corsi' => array(
                 'label' => 'gestione corsi',
                 'actions' => array(
-                    'iscrizione' => array(
-                        'label' => 'vai all\'iscrizione',
-                        'url' => $cf['contents']['pages']['iscrizioni.form']['url'][ LINGUA_CORRENTE ]
+                    'duplicazione' => array(
+                        'label' => 'vai alla duplicazione',
+                        'url' => $cf['contents']['pages']['corsi.tools']['url'][ LINGUA_CORRENTE ]
                     )
                 )
             )

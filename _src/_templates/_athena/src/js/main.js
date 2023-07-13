@@ -234,17 +234,30 @@
 
 			s1.appendTo('#list-bookmarks');
 
-			var b1 = $( '<div>', { "class" : "row" } );
-			var b11 = $( '<div>', { "class" : "col" } );
-			var b111 = $( '<p>' );
+			var b1 = $( '<span>', { "class" : "pb-3" } );
 
-			if( typeof sezione.action !== 'undefined' && typeof sezione.action.url !== 'undefined' ) {
-				var b1111 = $( '<button>', { "class" : "btn btn-secondary btn-sm btn-block", "onclick" : "window.open('" + sezione.action.url + "','_self');" } ).text( sezione.action.label );
-				b1111.appendTo( b111 );
+			for( azione in sezione.actions ) {
+
+				// console.log( d[ section ].actions[ azione ] );
+
+				var oggetto = sezione.actions[ azione ];
+
+				var o1 = $( '<div>', { "class" : "row" } );
+				var o11 = $( '<div>', { "class" : "col" } );
+				var o111 = $( '<p>' );
+
+				if( typeof oggetto.url !== 'undefined' ) {
+
+					var o1111 = $( '<button>', { "class" : "btn btn-secondary btn-sm btn-block", "onclick" : "window.open('" + oggetto.url + "','_self');" } ).text( oggetto.label );
+					o1111.appendTo( o111 );
+
+				}
+
+				o111.appendTo( o11 );
+				o11.appendTo( o1 );
+				o1.appendTo( b1 );
+
 			}
-
-			b111.appendTo( b11 );
-			b11.appendTo( b1 );
 
 			b1.appendTo('#list-bookmarks');
 

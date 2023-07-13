@@ -11,13 +11,12 @@
                 <div class="col"><p>{{ d.label }}</p></div>
             </div>{% endfor %}
         </span>
-        {% if s.action %}
-        <div class="row">
+        <span class="pb-3">
+            {% for l,a in s.actions %}<div class="row">
             <div class="col">
-                <p><button onclick="window.open('{% if s.action.url %}{{ s.action.url }}{% else %}{{ pages[ s.action.page ].url[ localization.language.ietf ] }}{% endif %}','_self');" class="btn btn-secondary btn-sm btn-block">{{ s.action.label }}</button></p>
+                <p><button onclick="window.open('{% if a.url %}{{ a.url }}{% else %}{{ pages[ a.page ].url[ localization.language.ietf ] }}{% endif %}','_self');" class="btn btn-secondary btn-sm btn-block">{{ a.label }}</button></p>
             </div>
-        </div>
-        {% endif %}
+        </div>{% endfor %}
         {% endfor %}
     </div>
 </div>
