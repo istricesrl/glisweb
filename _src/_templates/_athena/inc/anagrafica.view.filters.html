@@ -1,19 +1,19 @@
 <div class="form-row view-filters d-print-none">
     <div class="col-12 col-md-auto">
-	<select name="__view__[{{ view.id }}][__filters__][categorie][LK]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-	    <option value="" {% if request.__view__[ view.id ].__filters__.categorie.LK == "" %}selected{% endif %}>tutti</option>
-	    {% for categoria in etc.select.categorie_anagrafica %}
-	    <option value="{{ categoria.__label__ }}" {% if request.__view__[ view.id ].__filters__.categorie.LK == categoria.__label__ %}selected{% endif %}>{{ categoria.__label__ }}</option>
-	    {% endfor %}
-	</select>
+		<select name="__view__[{{ view.id }}][__filters__][categorie][LK]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.categorie.LK == "" %}selected{% endif %}>tutti</option>
+			{% for categoria in etc.select.categorie_anagrafica %}
+			<option value="{{ categoria.__label__ }}" {% if request.__view__[ view.id ].__filters__.categorie.LK == categoria.__label__ %}selected{% endif %}>{{ categoria.__label__ }}</option>
+			{% endfor %}
+		</select>
     </div>
     <div class="col">
-	<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>
     <div class="col-auto">
-	<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
-	{% if view.insert.path %}
-	<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
-	{% endif %}
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
     </div>
 </div>

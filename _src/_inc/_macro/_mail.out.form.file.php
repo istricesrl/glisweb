@@ -38,12 +38,12 @@
 
     // memoria di lavoro
     /*
-    if( isset( $_SESSION['__work__']['mailattach']['items'] ) ) {
+    if( isset( $_SESSION['__work__']['documenti']['items'] ) ) {
         if( isset( $_POST[ $ct['form']['table'] ]['file']) ) {
-            unset( $_SESSION['__work__']['mailattach'] );
+            unset( $_SESSION['__work__']['documenti'] );
         } else {
             $counter = 0;
-            foreach( $_SESSION['__work__']['mailattach']['items'] as $item ) {
+            foreach( $_SESSION['__work__']['documenti']['items'] as $item ) {
                 $_REQUEST[ $ct['form']['table'] ]['file'][] = array(
                     'ordine' => $counter += 10,
                     'id_mail_out' => $_REQUEST[ $ct['form']['table'] ]['id'],
@@ -57,7 +57,7 @@
     */
 
     // debug
-    // print_r( $_SESSION['__work__']['mailattach']['items'] );
+    // print_r( $_SESSION['__work__']['documenti']['items'] );
     // print_r( $_REQUEST );
 
     // macro di default

@@ -91,8 +91,8 @@
             $_REQUEST['__preset__'][ $ct['form']['table'] ]['contratti_anagrafica'][0]['id_anagrafica'] = $anagrafica['id'];
 		}
 
-		if( isset( $_SESSION['__work__']['iscrizioni']['items'] ) ) {
-			$corso = reset( $_SESSION['__work__']['iscrizioni']['items'] );
+		if( isset( $_SESSION['__work__']['corsi']['items'] ) ) {
+			$corso = reset( $_SESSION['__work__']['corsi']['items'] );
             $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_progetto'] = $corso['id'];
 		}
 

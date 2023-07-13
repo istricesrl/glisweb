@@ -103,13 +103,13 @@
 	foreach( $ct['view']['data'] as &$row ) {
 		if( is_array( $row ) ) {
 
-            if( ! isset( $cf['session']['__work__']['iscrizioni']['items'] ) || ! array_key_exists( $row['id'], $cf['session']['__work__']['iscrizioni']['items'] ) ) {
-                $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.add?__work__[iscrizioni][items]['.$row['id'].'][id]='.$row['id'].'&__work__[iscrizioni][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark-o"></i></span></a>';
+            if( ! isset( $cf['session']['__work__']['corsi']['items'] ) || ! array_key_exists( $row['id'], $cf['session']['__work__']['corsi']['items'] ) ) {
+                $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.add?__work__[corsi][items]['.$row['id'].'][id]='.$row['id'].'&__work__[corsi][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark-o"></i></span></a>';
             } else {
-                $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.del?__key__=iscrizioni&__item__='.$row['id'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark"></i></span></a>';
+                $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.del?__key__=corsi&__item__='.$row['id'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark"></i></span></a>';
             }
 
-            $row[ NULL ] .=  '<a href="'.$cf['contents']['pages']['iscrizioni.form']['path'][LINGUA_CORRENTE].'?__preset__[contratti][id_progetto]='.$row['id'].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';
+            $row[ NULL ] .=  '<a href="'.$cf['contents']['pages']['corsi.form']['path'][LINGUA_CORRENTE].'?__preset__[contratti][id_progetto]='.$row['id'].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';
 
             // TODO solo se è attivo il modulo attesa
             $row[ NULL ] .=  '<a href="'.$cf['contents']['pages']['attesa.form']['path'][LINGUA_CORRENTE].'?__preset__[contratti][id_progetto]='.$row['id'].'"><span class="media-left"><i class="fa fa-hourglass-half"></i></span></a>';
