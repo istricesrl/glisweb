@@ -20,13 +20,23 @@
 				'riferimento' => $_REQUEST['riferimento'],
 				'fascia_eta' => $_REQUEST['fascia_eta'],
 				'prezzo' => $_REQUEST['prezzo'],
-				'iscritti_max' => $_REQUEST['iscritti_max']
+				'iscritti_max' => $_REQUEST['iscritti_max'],
+				'calendario_dal' => $_REQUEST['calendario_dal'],
+				'calendario_al' => $_REQUEST['calendario_al']
 			),
 			'lista' => array()
 		);
 
 		// debug
 		// print_r( $_REQUEST );
+
+		// codici richiesti esplicitamente
+		if( ! empty( $_REQUEST['codici'] ) ) {
+			$workspace['lista'] = array_replace_recursive(
+				$workspace['lista'],
+				array_map( 'trim', explode( ',', $_REQUEST['codici'] ) )
+			);
+		}
 
 		// condizioni base
 		$whr = array(
@@ -40,13 +50,24 @@
 			$whr[] = array( 's' => $_REQUEST['disciplina'] );
 		}
 
-		// corsi da duplicare
-		$workspace['lista'] = mysqlSelectColumn(
-			'id',
-			$cf['mysql']['connection'],
-			'SELECT * FROM progetti ' . $ljn . ' WHERE id_periodo = ?' . $cnd,
-			$whr
+		// codici ricavati da periodo e categoria
+		$workspace['lista'] = array_replace_recursive(
+			$workspace['lista'],
+			mysqlSelectColumn(
+				'id',
+				$cf['mysql']['connection'],
+				'SELECT * FROM progetti ' . $ljn . ' WHERE id_periodo = ?' . $cnd,
+				$whr
+			)
 		);
+
+		// codici esclusi
+		if( ! empty( $_REQUEST['esclusi'] ) ) {
+			$workspace['lista'] = array_diff(
+				$workspace['lista'],
+				array_map( 'trim', explode( ',', $_REQUEST['esclusi'] ) )
+			);
+		}
 
 		// debug
 		// print_r( $workspace );

@@ -51,6 +51,20 @@
 				</div>
 				<div class="form-row">
 					<div class="col">
+						<span class="label-top">codici inclusi</span>
+						{% set codici = '' %}
+						{% for s,d in session.__work__.corsi.items %}{% set codici = codici ~ s %}{% if not loop.last %}{% set codici = codici ~ ', ' %}{% endif %}{% endfor %}
+						{{ frm.textarea( '__duplicazione__', '', '', 'codici', '', 3, '', codici ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">codici esclusi</span>
+						{{ frm.textarea( '__duplicazione__', '', '', 'esclusi', '', 2 ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
 						<h5 class="modal-title">modifiche ai dati di arrivo</h5>
 					</div>
 				</div>
@@ -85,6 +99,21 @@
 					<div class="col">
 						<span class="label-top">massimo iscritti</span>
 						{{ frm.inputRequired( '__duplicazione__', '', '', 'iscritti_max', '', '', '' ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<h5 class="modal-title">genera automaticamente calendario</h5>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">dal</span>
+						{{ frm.date( '__duplicazione__', '', '', 'calendario_dal', '', '', '' ) }}
+					</div>
+					<div class="col">
+						<span class="label-top">al</span>
+						{{ frm.date( '__duplicazione__', '', '', 'calendario_al', '', '', '' ) }}
 					</div>
 				</div>
 			</div>
