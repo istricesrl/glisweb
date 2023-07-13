@@ -181,6 +181,16 @@
         {% endif %}
     </div>
     <div class="col-md-4 d-flex flex-column">
+        {# TODO SE È ATTIVO IL MODULO ISCRIZIONI... #}
+	    <fieldset>
+            <legend>gestione iscrizioni</legend>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <button onclick="window.open('{{ pages['iscrizioni.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai alle iscrizioni</button>
+                </div>
+            </div>
+        </fieldset>
+        {# ...FINE BLOCCO ISCRIZIONI #}
         <fieldset>
             <legend>gestione articoli</legend>
             {# TODO QUI FARE UN SELETTORE AGGIUNGI/RIMUOVI #}
@@ -192,16 +202,6 @@
                 </div>
             </div>
         </fieldset>
-        {# TODO SE È ATTIVO IL MODULO ISCRIZIONI... #}
-	    <fieldset>
-            <legend>gestione iscrizioni</legend>
-            <div class="form-group form-row">
-                <div class="col-12 col-md">
-                    <button onclick="window.open('{{ pages['iscrizioni.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai alle iscrizioni</button>
-                </div>
-            </div>
-        </fieldset>
-        {# ...FINE BLOCCO ISCRIZIONI #}
 	    <fieldset>
             <legend>articoli frequenti</legend>
             {# TODO QUI BOX ARTICOLI FREQUENTI #}
