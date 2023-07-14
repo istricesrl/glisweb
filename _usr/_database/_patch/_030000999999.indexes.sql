@@ -643,6 +643,7 @@ ALTER TABLE `carrelli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_anagrafica`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_lead` (`se_lead`), 
 	ADD KEY `se_prospect` (`se_prospect`), 
@@ -676,6 +677,7 @@ ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_notizie`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `id_pagina` (`id_pagina`),
@@ -697,6 +699,7 @@ ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_prodotti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_sito` (`id_sito`), 
 	ADD KEY `id_pagina` (`id_pagina`),
@@ -718,6 +721,7 @@ ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_progetti`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
 	ADD KEY `se_cacheable` (`se_cacheable`),
@@ -746,6 +750,7 @@ ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `categorie_risorse`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_pagina` (`id_pagina`),
@@ -1335,6 +1340,7 @@ ALTER TABLE `disponibilita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-03 17:09 Fabio Mosti
 ALTER TABLE `documenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `codice` (`codice`)
 	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`),
 	ADD UNIQUE KEY `unica_codice_sdi` (`codice_sdi`),
 	ADD KEY `id_tipologia` (`id_tipologia`), 
