@@ -2144,6 +2144,7 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_tipologia_todo` int(11) DEFAULT NULL,
   `id_tipologia_contratti` int(11) DEFAULT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `testo` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
