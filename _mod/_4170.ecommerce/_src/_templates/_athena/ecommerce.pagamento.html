@@ -53,21 +53,21 @@
                     {% if r.id_pagamento %}
                     <div class="col-1">
                         <p>{{ '%0.2f'|format( r.importo_lordo_totale ) }}</p>
-                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_netto_totale]" value="{{ r.importo_lordo_totale }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.importo_lordo_totale }}">
                     </div>
                     {% else %}
                     <div class="col-1">
-                        <p>{{ '%0.2f'|format( r.prezzo_netto_finale ) }}</p>
+                        <p>{{ '%0.2f'|format( r.prezzo_lordo_finale ) }}</p>
                     </div>
                     <div class="col-1">
-                        <p>{{ '%0.2f'|format( r.totale_netto_pagato ) }}</p>
+                        <p>{{ '%0.2f'|format( r.totale_lordo_pagato ) }}</p>
                     </div>
                     <div class="col-1">
-                        <p>{{ '%0.2f'|format( r.totale_netto_rateizzato ) }}</p>
+                        <p>{{ '%0.2f'|format( r.totale_lordo_rateizzato ) }}</p>
                     </div>
                     <div class="col">
                         <label class="label-top">da pagare</label>
-                        <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_netto_totale]" value="{{ r.totale_netto_da_pagare }}" required>
+                        <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
                     </div>
                     {% endif %}
                     <!--

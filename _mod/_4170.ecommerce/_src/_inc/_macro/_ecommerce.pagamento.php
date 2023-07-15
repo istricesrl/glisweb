@@ -25,7 +25,7 @@
                 if( ! empty( $pagamento['da_fare'] ) ) {
 
                     // se il totale è maggiore di zero
-                    if( $pagamento['importo_netto_totale'] > 0 ) {
+                    if( $pagamento['importo_lordo_totale'] > 0 ) {
 
                         // se sto creando una rata
                         if( empty( $pagamento['id_pagamento'] ) && ! empty( $_REQUEST['__pagamenti__']['data_rate'] ) ) {
@@ -36,7 +36,7 @@
                                 array(
                                     'id_anagrafica' => $pagamento['destinatario_id_anagrafica'],
                                     'id_carrelli_articoli' => $pagamento['id'],
-                                    'importo_lordo_totale' => $pagamento['importo_netto_totale'],
+                                    'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                     'data_scadenza' => $_REQUEST['__pagamenti__']['data_rate'],
                                     'nome' => 'rata da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
                                 ),
@@ -81,7 +81,7 @@
                                     'id_documento' => $idDocumento,
                                     'id_articolo' => $pagamento['id_articolo'],
                                     'id_carrelli_articoli' => $pagamento['id'],
-                                    'importo_netto_totale' => $pagamento['importo_netto_totale'],
+                                    'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                     'quantita' => 1,
                                     'id_udm' => 1,
                                     'id_reparto' => 1,
@@ -98,7 +98,7 @@
                                     'id' => $pagamento['id_pagamento'],
                                     'id_documento' => $idDocumento,
                                     'timestamp_pagamento' => time(),
-                                    'importo_lordo_totale' => $pagamento['importo_netto_totale'],
+                                    'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                     'nome' => ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'rata pagata' : 'pagamento diretto' ) . ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
                                 ),
                                 'pagamenti'
@@ -203,6 +203,7 @@
         // print_r( $_REQUEST );
         // var_dump( $_REQUEST['__pagamenti__']['id_carrello'] );
         // var_dump( $ct['etc']['righe'] );
+        // print_r($ct['etc']['righe']);
 
         // per ogni riga, cerco eventuali pagamenti già effettuati
         if( isset( $ct['etc']['righe'] ) ) {
@@ -221,14 +222,14 @@
                 );
 
                 // totale già pagato
-                $riga['totale_netto_pagato'] = 0;
+                $riga['totale_lordo_pagato'] = 0;
 
                 // calcolo il totale già pagato
                 // NOTA faccio un ciclo così se in un secondo momento voglio i dettagli ce li ho già sgranati
                 foreach( $righe as $rdoc ) {
 
                     // aggiungo il totale della riga
-                    $riga['totale_netto_pagato'] += $rdoc['importo_netto_totale'];
+                    $riga['totale_lordo_pagato'] += $rdoc['importo_lordo_totale'];
 
                     // documenti da stampare
                     $riga['documenti_da_stampare'][] = array(
@@ -251,15 +252,15 @@
                 foreach( $rate as $rata ) {
 
                     // aggiungo il totale della riga
-                    $riga['totale_netto_rateizzato'] += $rata['importo_lordo_totale'];
+                    $riga['totale_lordo_rateizzato'] += $rata['importo_lordo_totale'];
 
                 }
 
                 // totale da pagare
-                $riga['totale_netto_da_pagare'] = $riga['prezzo_netto_finale'] - $riga['totale_netto_pagato'] - $riga['totale_netto_rateizzato'];
+                $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
 
                 // se la riga è pagata, non la mostro
-                if( empty( $riga['id_pagamento'] ) && $riga['totale_netto_da_pagare'] <= 0 ) {
+                if( empty( $riga['id_pagamento'] ) && $riga['totale_lordo_da_pagare'] <= 0 ) {
                     unset( $ct['etc']['righe'][ $chiave ] );
                 }
 
@@ -282,3 +283,5 @@
 	    array( 'id' => 'SINGOLA', '__label__' => 'documento unico' ),
 	    array( 'id' => 'MULTIPLA', '__label__' => 'documenti separati' ),
 	);
+
+    // print_r($ct['etc']['righe']);

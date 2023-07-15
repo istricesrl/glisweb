@@ -364,7 +364,18 @@
 				// debug
 			    // echo 'controller ' . $t . '/' . $a . ' OK' . PHP_EOL;
 
-				// variabile per confronto prima/dopo
+			// controller pre query (before)
+			// NOTA spostata qui perché le elaborazioni before fanno parte del controllo before after
+			$cn = 'before.php';
+			$ct = array_merge(
+				glob( $cb . $cn, GLOB_BRACE ),
+				glob( $cm . $cn, GLOB_BRACE ),
+				glob( path2custom( $cb . $cn ), GLOB_BRACE ),
+				glob( path2custom( $cm . $cn ), GLOB_BRACE )
+			);
+			foreach( $ct as $f ) { require $f; }
+
+			// variabile per confronto prima/dopo
 			    $before = NULL;
 
 				// recupero dati per confronto prima/dopo
@@ -391,15 +402,7 @@
 			    // print_r($d);
 				// echo $before . PHP_EOL;
 
-			// controller pre query (before)
-			    $cn = 'before.php';
-			    $ct = array_merge(
-					glob( $cb . $cn, GLOB_BRACE ),
-					glob( $cm . $cn, GLOB_BRACE ),
-					glob( path2custom( $cb . $cn ), GLOB_BRACE ),
-					glob( path2custom( $cm . $cn ), GLOB_BRACE )
-			    );
-			    foreach( $ct as $f ) { require $f; }
+			// NOTA prima la controller before era qui...
 
 			// composizione della query in base all'azione richiesta
 			    switch( strtoupper( $a ) ) {
