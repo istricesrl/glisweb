@@ -135,17 +135,17 @@
         </select>
     </div>
     <div class="col-auto p-0 pl-1">
-        <button type="button" class="btn btn-sm btn-secondary btn-sqr" selectbox-field="{{ id }}_inputbox" onclick="$('#'+$(this).attr('selectbox-field')).trigger('all');"><i class="fa fa-chevron-down"></i></button>
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" {% if disabled %}disabled{% endif %} selectbox-field="{{ id }}_inputbox" onclick="$('#'+$(this).attr('selectbox-field')).trigger('all');"><i class="fa fa-chevron-down"></i></button>
     </div>
     {% endif %}
     {% if edit and vl %}<div class="col-auto p-0 pl-1">
-	    <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
+	    <button type="button" class="btn btn-sm btn-secondary btn-sqr" {% if disabled %}disabled{% endif %} onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
     </div>{% endif %}
     {% if add %}<div class="col-auto p-0 pl-1">
-	    <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+	    <button type="button" class="btn btn-sm btn-secondary btn-sqr" {% if disabled %}disabled{% endif %} onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
     </div>{% endif %}
     {% if modal %}<div class="col-auto p-0 pl-1">
-        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="$('#{{ modal }}').setAttribute('disabled');$('#{{ modal }}').toggleAttribute('disabled');$('#{{ modal }}').appendTo('#form-{{ table }}').modal('show');$('.modal-backdrop').appendTo('#form-{{ table }}');" data-toggle="modal" data-target=""><i class="fa fa-plus-circle"></i></button>
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" {% if disabled %}disabled{% endif %} onclick="$('#{{ modal }}').setAttribute('disabled');$('#{{ modal }}').toggleAttribute('disabled');$('#{{ modal }}').appendTo('#form-{{ table }}').modal('show');$('.modal-backdrop').appendTo('#form-{{ table }}');" data-toggle="modal" data-target=""><i class="fa fa-plus-circle"></i></button>
     </div>{% endif %}
 </div>
 {% endmacro %}
@@ -277,8 +277,8 @@
 {{ frm.datetime( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class ) }}
 {% endmacro %}
 
-{% macro button( text, type, class, onclick, placeholder, id ) %}
-<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" {% if id %}id="{{id}}"{% endif %} class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} >{{ text|raw }}</button>
+{% macro button( text, type, class, onclick, placeholder, id, disabled ) %}
+<button type="{% if type %}{{ type }}{% else %}submit{% endif %}" {% if id %}id="{{id}}"{% endif %} class="btn btn-sm {% if class %}{{ class }}{% else %}btn-secondary{% endif %}" onclick="{{ onclick }}"  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} {% if disabled %}disabled{% endif %}>{{ text|raw }}</button>
 {% endmacro %}
 
 {% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback ) %}

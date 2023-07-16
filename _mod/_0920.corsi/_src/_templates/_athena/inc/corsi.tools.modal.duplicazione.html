@@ -2,16 +2,33 @@
 
 <script>
     function duplica() {
+
 		var periodo_partenza = $('#__duplicazione___id_periodo').val();
 		var disciplina = $('#__duplicazione___id_disciplina').val();
+		var codici = $('#__duplicazione___codici').val();
+		var esclusi = $('#__duplicazione___esclusi').val();
 		var periodo_destinazione = $('#__duplicazione___id_periodo_destinazione').val();
 		var riferimento = $('#__duplicazione___riferimento').val();
 		var fascia_eta = $('#__duplicazione___id_fascia_eta').val();
 		var prezzo = $('#__duplicazione___prezzo').val();
 		var iscritti_max = $('#__duplicazione___iscritti_max').val();
-		
+		var calendario_dal= $('#__duplicazione___calendario_dal').val();
+		var calendario_al= $('#__duplicazione___calendario_al').val();
 
-		getws('/task/0920.corsi/corsi.duplicazione.start?periodo_partenza='+periodo_partenza+'&disciplina='+disciplina+'&periodo_destinazione='+periodo_destinazione+'&riferimento='+riferimento+'&fascia_eta='+fascia_eta+'&prezzo='+prezzo+'&iscritti_max='+iscritti_max);
+		getws('/task/0920.corsi/corsi.duplicazione.start?'
+			+'periodo_partenza='+periodo_partenza
+			+'&disciplina='+disciplina
+			+'&codici='+codici
+			+'&esclusi='+esclusi
+			+'&periodo_destinazione='+periodo_destinazione
+			+'&riferimento='+riferimento
+			+'&fascia_eta='+fascia_eta
+			+'&prezzo='+prezzo
+			+'&iscritti_max='+iscritti_max
+			+'&calendario_dal='+calendario_dal
+			+'&calendario_al='+calendario_al
+		);
+
 		$('#duplicazione_corsi').modal('toggle');
 		location.reload();
 

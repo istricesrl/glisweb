@@ -59,8 +59,8 @@
             $cf['mysql']['connection'],
             'SELECT group_concat( DISTINCT
                 concat_ws( " ", dayname( todo.data_programmazione ),
-                concat_ws( " - ", todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ),
-                luoghi_path( todo.id_luogo ) SEPARATOR " | " )
+                concat_ws( " - ", todo.ora_inizio_programmazione, todo.ora_fine_programmazione ),
+                luoghi_path( todo.id_luogo ) ) SEPARATOR " | " )
                 FROM todo WHERE todo.id_progetto = ? GROUP BY todo.id_progetto',
             array( array( 's' => $idCorso ) )
         );

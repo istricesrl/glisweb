@@ -49,7 +49,8 @@
 
 	// RELAZIONI CON IL MODULO CONTENUTI
 	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'livelli.form', $p['livelli.form']['etc']['tabs'], 'livelli.form.sem' );
+		arrayInsertSeq( 'livelli.form', $p['livelli.form']['etc']['tabs'], 'livelli.form.web' );
+		arrayInsertSeq( 'livelli.form.web', $p['livelli.form']['etc']['tabs'], 'livelli.form.sem' );
 		arrayInsertSeq( 'livelli.form.sem', $p['livelli.form']['etc']['tabs'], 'livelli.form.testo' );
 	}
 

@@ -22,10 +22,12 @@
     // tabella gestita
 	$ct['form']['table'] = 'progetti';
 
-    $ct['view']['table'] = 'todo';
+    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['table'] = '__report_lezioni_corsi__';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'todo.form';
+    $ct['view']['open']['table'] = 'todo';
 
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'todo.form';
@@ -44,6 +46,8 @@
         'ora_fine_programmazione' => 'ora fine',
         'luogo' => 'luogo',
         'anagrafica' => 'responsabile',
+        'docenti' => 'docenti',
+        'numero_alunni' => 'iscritti',
         'id_progetto' => 'id_progetto'
     );
 
@@ -56,6 +60,7 @@
         'luogo' => 'text-left',
         'ora_inizio_programmazione' => 'text-left',
         'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
+        'docenti' => 'text-left no-wrap d-none d-sm-table-cell',
         'data_programmazione' => 'text-left',
     #	    'completato' => 'text-left'
     );

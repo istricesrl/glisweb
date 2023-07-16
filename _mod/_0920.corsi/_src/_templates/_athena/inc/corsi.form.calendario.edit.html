@@ -9,11 +9,11 @@
 		</div>
 		<div class="col-6 col-md-auto">
 			<span class="label-top">dal</span>
-			{{ frm.date( table, '', '', '__data_inizio_u__', '', '', '', '', '', '', '', 2 ) }}
+			{{ frm.date( table, '', '', '__data_inizio_u__', '', '', '', request[ table ].data_accettazione, '', '', '', 2 ) }}
 		</div>
 		<div class="col-6 col-md-auto">
 			<span class="label-top">al</span>
-			{{ frm.date( table, '', '', '__data_fine_u__', '', '', '', '', '', '', '', 2 ) }}
+			{{ frm.date( table, '', '', '__data_fine_u__', '', '', '', request[ table ].data_chiusura, '', '', '', 2 ) }}
 		</div>
 		<div class="col-2 col-md-1">
 			<span class="label-top">ora inizio</span>
@@ -50,7 +50,7 @@
 			{{ frm.selectBox( table, '', '', '__id_anagrafica_sostituzione__', '', etc.select.anagrafica, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, lang, '', '2') }}
 		</div>
 		<div class="col-12 col-md-auto">
-			{{ frm.button(  'MODIFICA' ,'button','btn btn-secondary btn-sm btn-block', 'modificaTodo($(\'#progetti___giorno_u__\').val(),$(\'#progetti___data_inizio_u__\').val(),$(\'#progetti___data_fine_u__\').val(),$(\'#progetti___ora_inizio_u__\').val(),$(\'#progetti___ora_fine_u__\').val(),$(\'#progetti___id_luogo_u__\').val(),$(\'#progetti___id_anagrafica_plus__\').val(),$(\'#progetti___id_anagrafica_remove__\').val(),$(\'#progetti___id_anagrafica_remove_sostituzione__\').val(),$(\'#progetti___id_anagrafica_sostituzione__\').val());','modifica massivamente le lezioni', 'btnedit' ) }}
+			{{ frm.button(  'MODIFICA' ,'button','btn btn-secondary btn-sm btn-block', 'modificaTodo($(\'#progetti___giorno_u__\').val(),$(\'#progetti___data_inizio_u__\').val(),$(\'#progetti___data_fine_u__\').val(),$(\'#progetti___ora_inizio_u__\').val(),$(\'#progetti___ora_fine_u__\').val(),$(\'#progetti___id_luogo_u__\').val(),$(\'#progetti___id_anagrafica_plus__\').val(),$(\'#progetti___id_anagrafica_remove__\').val(),$(\'#progetti___id_anagrafica_remove_sostituzione__\').val(),$(\'#progetti___id_anagrafica_sostituzione__\').val());','modifica massivamente le lezioni', 'btnedit', 1 ) }}
 		</div>
 	</div>
 </fieldset>
@@ -60,7 +60,7 @@
 			$('#btnedit').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> MODIFICA IN CORSO');
 
 			var call = '{{ site.url }}_mod/_1200.todo/_src/_api/_task/_todo.update.php';
-			var par = '&__g__=' + giorno + '&__d_i__=' + data_inizio + '&__d_f__=' + data_fine + '&__o_i__=' + ora_inizio + '&__o_f__=' + ora_fine + '&__l__=' + luogo + '&__addi__=' + addi + '&__removei__=' + removei + '&__deletei__=' + deletei + '&__newi__=' + newi ;
+			var par = '&__g__=' + giorno + '&__di__=' + data_inizio + '&__df__=' + data_fine + '&__oi__=' + ora_inizio + '&__of__=' + ora_fine + '&__l__=' + luogo + '&__addi__=' + addi + '&__removei__=' + removei + '&__deletei__=' + deletei + '&__newi__=' + newi ;
 			console.log(par);
 			getws(
 				call + '?progetto={{ request[form.table].id }}'+ par,

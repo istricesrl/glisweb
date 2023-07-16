@@ -32,7 +32,8 @@
 
     // campi della vista
     $ct['view']['cols'] = array(
-        'id_progetto' => 'progetto',
+        // 'id_progetto' => 'progetto',
+        'id_contratto' => 'iscrizione',
         'anagrafica' => 'anagrafica',
         'data_inizio' => 'data inizio',
         'data_fine' => 'data fine'
@@ -43,11 +44,11 @@
         'id' => 'd-none',
         'mastro' => 'text-left'
     );
-    
-  /*  $ct['view']['open']['page'] = 'contratti.form';
-    $ct['view']['open']['table'] = 'contratti';
-    $ct['view']['open']['field'] = 'id_contratto';*/
 
+    // ...
+    $ct['view']['open']['page'] = 'iscrizioni.form';
+    $ct['view']['open']['table'] = 'contratti';
+    $ct['view']['open']['field'] = 'id_contratto';
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
 

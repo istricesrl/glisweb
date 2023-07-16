@@ -49,7 +49,8 @@
 
 	// RELAZIONI CON IL MODULO CONTENUTI
 	if( in_array( "3000.contenuti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'fasce.form', $p['fasce.form']['etc']['tabs'], 'fasce.form.sem' );
+		arrayInsertSeq( 'fasce.form', $p['fasce.form']['etc']['tabs'], 'fasce.form.web' );
+		arrayInsertSeq( 'fasce.form.web', $p['fasce.form']['etc']['tabs'], 'fasce.form.sem' );
 		arrayInsertSeq( 'fasce.form.sem', $p['fasce.form']['etc']['tabs'], 'fasce.form.testo' );
 	}
 

@@ -1903,6 +1903,7 @@ ORDER BY andamento.anno, andamento.settimana
 DROP VIEW IF EXISTS `__report_pianificazione_todo__`;
 
 -- | 100000056623
+
 -- __report_pianificazione_todo__
 -- tipologia: report
 CREATE OR REPLACE VIEW `__report_pianificazione_todo__` AS
@@ -1931,5 +1932,72 @@ ORDER BY todo.id
 --  avg( consuntivo_attivita ) AS consuntivo_attivita,
 --  avg( errore_pianificazione ) AS errore_pianificazione
 -- FROM __report_pianificazione_todo__
+
+-- | 100000060300
+
+-- __report_lezioni_corsi__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_lezioni_corsi__` AS
+	SELECT
+		todo.id,
+		todo.id_tipologia,
+		tipologie_todo.nome AS tipologia,
+		todo.codice,
+		tipologie_todo.se_agenda,
+		todo.id_anagrafica,
+		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		todo.id_cliente,
+		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		todo.id_indirizzo,
+		concat_ws(
+			' ',
+			indirizzo,
+			indirizzi.civico,
+			indirizzi.cap,
+			indirizzi.localita,
+			comuni.nome,
+			provincie.sigla
+		) AS indirizzo,
+		todo.id_luogo,
+		luoghi_path( todo.id_luogo ) AS luogo,
+    group_concat( DISTINCT concat( docenti.nome, ' ', docenti.cognome ) SEPARATOR ', ' ) AS docenti,
+    count( DISTINCT presenze.id_anagrafica_programmazione ) AS numero_alunni,
+		todo.timestamp_apertura,
+		todo.data_scadenza,
+		todo.ora_scadenza,
+		todo.data_programmazione,
+		todo.ora_inizio_programmazione,
+		todo.ora_fine_programmazione,
+		todo.anno_programmazione,
+		todo.settimana_programmazione,
+		todo.ore_programmazione,
+		todo.data_chiusura,
+		todo.nome,
+		todo.id_contatto,
+		todo.id_progetto,
+		todo.id_pianificazione,
+		todo.id_immobile,
+		todo.data_archiviazione,
+		todo.id_account_inserimento,
+		todo.id_account_aggiornamento,
+		concat(
+			todo.nome,
+			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
+			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+		) AS __label__
+	FROM todo
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
+		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+    LEFT JOIN attivita AS docenze ON ( docenze.id_todo = todo.id AND docenze.id_tipologia IN ( 30, 31 ) )
+    LEFT JOIN anagrafica AS docenti ON docenti.id = docenze.id_anagrafica_programmazione
+    LEFT JOIN attivita AS presenze ON ( presenze.id_todo = todo.id AND presenze.id_tipologia = 15 )
+  WHERE todo.id_tipologia IN (14, 15)
+  GROUP BY todo.id
+;
 
 -- | FINE FILE

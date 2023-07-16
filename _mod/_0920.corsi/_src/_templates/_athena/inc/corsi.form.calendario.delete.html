@@ -9,11 +9,11 @@
 		</div>
 		<div class="col-6 col-md-auto">
 			<span class="label-top">dal</span>
-			{{ frm.date( table, '', '', '__data_inizio_d__', '', '', '', '', '', '', '', 2 ) }}
+			{{ frm.date( table, '', '', '__data_inizio_d__', '', '', '', request[ table ].data_accettazione, '', '', '', 2 ) }}
 		</div>
 		<div class="col-6 col-md-auto">
 			<span class="label-top">al</span>
-			{{ frm.date( table, '', '', '__data_fine_d__', '', '', '', '', '', '', '', 2 ) }}
+			{{ frm.date( table, '', '', '__data_fine_d__', '', '', '', request[ table ].data_chiusura, '', '', '', 2 ) }}
 		</div>
 		<div class="col-2 col-md-1">
 			<span class="label-top">ora inizio</span>
@@ -28,7 +28,7 @@
 			{{ frm.selectBox( table, '', '', '__id_luogo_d__', '', etc.select.luoghi, request, '', '', '', '', 'font-awesome', '', '', '', '', '', '', '', '', '2') }}
 		</div>
 		<div class="col-12 col-md-auto">
-			{{ frm.button(  'ELIMINA' ,'button','btn btn-secondary btn-sm btn-block', 'eliminaTodo($(\'#progetti___giorno_d__\').val(),$(\'#progetti___data_inizio_d__\').val(),$(\'#progetti___data_fine_d__\').val(),$(\'#progetti___ora_inizio_d__\').val(),$(\'#progetti___ora_fine_d__\').val(),$(\'#progetti___id_luogo_d__\').val());','elimina lezioni', 'btnelimina' ) }}
+			{{ frm.button(  'ELIMINA' ,'button','btn btn-secondary btn-sm btn-block', 'eliminaTodo($(\'#progetti___giorno_d__\').val(),$(\'#progetti___data_inizio_d__\').val(),$(\'#progetti___data_fine_d__\').val(),$(\'#progetti___ora_inizio_d__\').val(),$(\'#progetti___ora_fine_d__\').val(),$(\'#progetti___id_luogo_d__\').val());','elimina lezioni', 'btnelimina', 1 ) }}
 		</div>
 	</div>
 </fieldset>
@@ -38,7 +38,7 @@
 			$('#btnelimina').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i> ELIMINAZIONE IN CORSO');
 
 			var call = '{{ site.url }}_mod/_1200.todo/_src/_api/_task/_todo.delete.massiva.php';
-			var par = '&__g__=' + giorno + '&__d_i__=' + data_inizio + '&__d_f__=' + data_fine + '&__o_i__=' + ora_inizio + '&__o_f__=' + ora_fine + '&__l__=' + luogo;
+			var par = '&__g__=' + giorno + '&__di__=' + data_inizio + '&__df__=' + data_fine + '&__oi__=' + ora_inizio + '&__of__=' + ora_fine + '&__l__=' + luogo;
 			console.log(par);
 			getws(
 				call + '?progetto={{ request[form.table].id }}'+ par,
