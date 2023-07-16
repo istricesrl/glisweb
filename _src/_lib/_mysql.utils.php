@@ -598,3 +598,125 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
         return $idIndirizzo;
 
     }
+
+    function unisciAnagrafiche( $sorgente, $destinazione ) {
+
+        // dati globali
+        global $cf;
+
+        // variabili di lavoro
+        $tabella = 'anagrafica';
+        $colonna = 'id';
+
+        // chiamata a funzione
+        unisciOggetti( $sorgente, $destinazione, $tabella, $colonna );
+
+        // aggiorno le viste statiche
+        mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+
+    }
+
+    function unisciOggetti( $sorgente, $destinazione, $tabella, $colonna = 'id' ) {
+
+        // dati globali
+        global $cf;
+
+        // trovo tutte le referenze a tabella.id
+        $chiavi = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT TABLE_NAME,COLUMN_NAME,CONSTRAINT_NAME, REFERENCED_TABLE_NAME,REFERENCED_COLUMN_NAME '.
+            'FROM INFORMATION_SCHEMA.KEY_COLUMN_USAGE '.
+            'WHERE '.
+            'REFERENCED_TABLE_SCHEMA = DATABASE() AND '.
+            'REFERENCED_TABLE_NAME = ? AND '.
+            'REFERENCED_COLUMN_NAME = ? ',
+            array(
+                array( 's' => $tabella ),
+                array( 's' => $colonna )
+            )
+        );
+
+        // debug
+        // print_r( $chiavi );
+
+        // per ogni chiave...
+        foreach( $chiavi as $chiave ) {
+
+            // debug
+            // echo 'modifico tutte le referenze di ' . $chiave['TABLE_NAME'] . '.' . $chiave['COLUMN_NAME'] . ' da ' , $sorgente . ' a ' . $destinazione . PHP_EOL;
+
+            // eseguo la migrazione
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE ' . $chiave['TABLE_NAME'] . ' SET ' . $chiave['COLUMN_NAME'] . ' = ? WHERE ' . $chiave['COLUMN_NAME'] . ' = ?',
+                array(
+                    array( 's' => $destinazione ),
+                    array( 's' => $sorgente )
+                )
+            );
+
+            // se ci sono degli errori...
+            if( mysqli_errno( $cf['mysql']['connection'] ) ) {
+
+                // debug
+                // echo mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] ) . PHP_EOL;
+
+            }
+
+            // elimino le referenze eventualmente rimaste indietro
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'DELETE FROM ' . $chiave['TABLE_NAME'] . ' WHERE ' . $chiave['COLUMN_NAME'] . ' = ?',
+                array(
+                    array( 's' => $sorgente )
+                )
+            );
+
+        }
+
+        // recupero i campi della tabella principale
+        $fields = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SHOW COLUMNS FROM ' . $tabella
+        );
+
+        // debug
+        // print_r( $fields );
+
+        // prelevo la riga sorgente
+        $rigaSorgente = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM ' . $tabella . ' WHERE ' . $colonna . ' = ?',
+            array(
+                array( 's' => $sorgente )
+            )
+        );
+
+        // elimino la riga sorgente
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE FROM ' . $tabella . ' WHERE ' . $colonna . ' = ?',
+            array(
+                array( 's' => $sorgente )
+            )
+        );
+
+        // unisco i dati della tabella principale
+        foreach( $fields as $field ) {
+            if( $field['Field'] != $colonna ) {
+                if( ! empty( $rigaSorgente[ $field['Field'] ] ) ) {
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE ' . $tabella . ' SET ' . $field['Field'] . ' = ? WHERE ' . $colonna . ' = ? ',
+                        array(
+                            array( 's' => $rigaSorgente[ $field['Field'] ] ),
+                            array( 's' => $destinazione )
+                        )
+                    );
+            
+                }
+            }
+        }
+
+    }
