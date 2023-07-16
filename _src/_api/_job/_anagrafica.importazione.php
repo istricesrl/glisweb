@@ -104,12 +104,12 @@
                 ( ! isset( $job['riga']['partita_iva'] ) || empty( $job['riga']['partita_iva'] ) ) ) {
 
                 // status
-                $job['workspace']['status']['error'][] = 'codice utente, codice fiscale e partita IVA non settati per la riga ' . $job['corrente'];
+                $job['status']['error'][] = 'codice utente, codice fiscale e partita IVA non settati per la riga ' . $job['corrente'];
 
             } elseif( empty( ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ) . ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ) . ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ) ) ) {
 
                 // status
-                $job['workspace']['status']['error'][] = 'nome, cognome e denominazione non settati per la riga ' . $job['corrente'] . ' ' . ( ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ) . ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ) . ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ) );
+                $job['status']['error'][] = 'nome, cognome e denominazione non settati per la riga ' . $job['corrente'] . ' ' . ( ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ) . ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ) . ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ) );
 
             } else {
 
@@ -218,27 +218,27 @@
 
                             // status
                             if( empty( $idAssociazioneIndirizzo ) ) {
-                                $job['workspace']['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'];
+                                $job['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'];
                             }
 
                         } else {
 
                             // status
-                            $job['workspace']['status']['error'][] = 'indirizzo ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non inserito per la riga ' . $job['corrente'];
+                            $job['status']['error'][] = 'indirizzo ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non inserito per la riga ' . $job['corrente'];
 
                         }
 
                     } else {
 
                         // status
-                        $job['workspace']['status']['error'][] = 'comune ' . $job['riga']['comune'] . ' non trovato per la riga ' . $job['corrente'];
+                        $job['status']['error'][] = 'comune ' . $job['riga']['comune'] . ' non trovato per la riga ' . $job['corrente'];
                 
                     }
 
                 } else {
 
                     // status
-                    $job['workspace']['status']['error'][] = 'indirizzo e comune non settati per la riga ' . $job['corrente'];
+                    $job['status']['error'][] = 'indirizzo e comune non settati per la riga ' . $job['corrente'];
 
                 }
 
@@ -278,7 +278,7 @@
                         } else {
 
                             // status
-                            $job['workspace']['status']['error'][] = 'categoria ' . $categoria . ' non trovata per la riga ' . $job['corrente'];
+                            $job['status']['error'][] = 'categoria ' . $categoria . ' non trovata per la riga ' . $job['corrente'];
 
                         }
 
@@ -287,7 +287,7 @@
                 } else {
 
                     // status
-                    $job['workspace']['status']['error'][] = 'categoria non settata per la riga ' . $job['corrente'];
+                    $job['status']['error'][] = 'categoria non settata per la riga ' . $job['corrente'];
 
                 }
 
@@ -321,7 +321,7 @@
                 } else {
 
                     // status
-                    $job['workspace']['status']['error'][] = 'mail non settata per la riga ' . $job['corrente'];
+                    $job['status']['error'][] = 'mail non settata per la riga ' . $job['corrente'];
 
                 }
 
@@ -355,7 +355,7 @@
                 } else {
 
                     // status
-                    $job['workspace']['status']['error'][] = 'PEC non settata per la riga ' . $job['corrente'];
+                    $job['status']['error'][] = 'PEC non settata per la riga ' . $job['corrente'];
 
                 }
 
@@ -385,7 +385,7 @@
                 } else {
 
                     // status
-                    $job['workspace']['status']['error'][] = 'telefono non settato per la riga ' . $job['corrente'];
+                    $job['status']['error'][] = 'telefono non settato per la riga ' . $job['corrente'];
 
                 }
 
@@ -415,7 +415,7 @@
                 } else {
 
                     // status
-                    $job['workspace']['status']['error'][] = 'telefono mobile non settato per la riga ' . $job['corrente'];
+                    $job['status']['error'][] = 'telefono mobile non settato per la riga ' . $job['corrente'];
 
                 }
 
@@ -473,7 +473,7 @@
                     $gruppi = explode( '|', $job['riga']['gruppi'] );
 
                     // status
-                    $job['workspace']['status']['info'][] = 'gruppi trovati ' . implode( ',', $gruppi ) . ' per la riga ' . $job['corrente'];
+                    $job['status']['info'][] = 'gruppi trovati ' . implode( ',', $gruppi ) . ' per la riga ' . $job['corrente'];
 
                     // per ogni gruppo...
                     foreach( $gruppi as $gruppo ) {
