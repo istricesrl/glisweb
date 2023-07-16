@@ -30,6 +30,7 @@
 			'LEFT JOIN progetti ON progetti.id = attivita.id_progetto LEFT JOIN todo ON todo.id = attivita.id_todo '.
 			'LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo '.
 			'WHERE attivita.data_attivita IS NULL  AND  ( attivita.id_anagrafica_programmazione = ? OR attivita.id_anagrafica_programmazione IS NULL ) '.
+			'GROUP BY attivita.id '.
 			'ORDER BY attivita.data_programmazione, attivita.ora_inizio_programmazione',
 			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 		);
@@ -207,3 +208,6 @@
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+	// debug
+	// print_r( $ct['etc']['attivita'] );

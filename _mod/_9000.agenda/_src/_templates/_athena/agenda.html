@@ -1,7 +1,6 @@
 {% import '_bin/_default.html' as cms %}
 {% import '_bin/_form.html' as frm %}
 
-
 {% extends "ext/main.html" %}
 
 {# DEFINIZIONI #}
@@ -15,10 +14,7 @@
     {% set account = '__null__' %}
 {% endif %}
 
-
-
 {% block main %}
-
 
 {% set
     trans_day_hash = {
@@ -81,41 +77,40 @@
 </fieldset>
 
 {% if etc.agenda_da_fissare.todo|length > 0 or etc.agenda_da_fissare.attivita|length > 0 %}
-<fieldset>
+<fieldset class="mb-3">
     <legend>da fissare / gestire <small>cose da fare non programmate</small></legend>
     {% for e in etc.agenda_da_fissare.attivita %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
-	<div class="col-1 lemma text-right">
-	    <p>&mdash;</p>
-	</div>
-	<div class="col">
-	    <div class="form-row">
-		<div class="col">
-            {% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %}
-            <b>{% if e.id_anagrafica_assegnante %}{% if e.id_anagrafica_assegnante != session.account.id_anagrafica %}da {{ e.anagrafica_assegnante }}: {% endif %}{% endif %}{{ e.nome }}</b>
-		    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
-			<br>{{ e.note_programmazione }}
-		</div>
-	    </div>
+        <div class="col-1 lemma text-right">
+            <p>&mdash;</p>
+        </div>
+	    <div class="col">
+            <div class="form-row">
+                <div class="col">
+                    {% if e.id_todo %}{{ e.progetto_todo }} <i>{{ e.nome_todo }}</i> <i class="fa fa-arrow-right" aria-hidden="true"></i> {% endif %}
+                    <b>{% if e.id_anagrafica_assegnante %}{% if e.id_anagrafica_assegnante != session.account.id_anagrafica %}da {{ e.anagrafica_assegnante }}: {% endif %}{% endif %}{{ e.nome }}</b>
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>{{ e.note_programmazione }}
+                </div>
+            </div>
 	    </div>
 	</div>
     {% endfor %}
-
     {% for e in etc.agenda_da_fissare.todo %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
-	<div class="col-1 lemma text-right">
-	    <p>&mdash;</p>
-	</div>
-	<div class="col">
-	    <div class="form-row">
-		<div class="col">
-            <b>{{ e.nome }}</b> &ndash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
-		    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
-            <br>&ndash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
-			<br>{{ e.testo }}
-		</div>
-	    </div>
-	</div>
+        <div class="col-1 lemma text-right">
+            <p>&mdash;</p>
+        </div>
+        <div class="col">
+            <div class="form-row">
+                <div class="col">
+                    <b>{{ e.nome }}</b> &ndash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>&ndash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
+                    <br>{{ e.testo }}
+                </div>
+            </div>
+        </div>
     </div>
     {% endfor %}
 </fieldset>
@@ -126,72 +121,68 @@
 {% for settimana, attivita in anno %}
 <fieldset>
     <legend>settimana {{ settimana }}/{{ a }} <small>dal {{ etc.intervalli[ a ][ settimana ].inizio }} al {{ etc.intervalli[ a ][ settimana ].fine }}</small></legend>
-
-        {% if etc.todo_da_monitorare[a][settimana] %}
-        {% for e in etc.todo_da_monitorare[a][settimana] %}
-        <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
-            <div class="col-1 lemma text-right">
-                <p>&mdash;</p>
-            </div>
-            <div class="col">
-                <div class="form-row">
+    {% if etc.todo_da_monitorare[a][settimana] %}
+    {% for e in etc.todo_da_monitorare[a][settimana] %}
+    <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
+        <div class="col-1 lemma text-right">
+            <p>&mdash;</p>
+        </div>
+        <div class="col">
+            <div class="form-row">
                 <div class="col">
                     <b>{{ e.nome }}</b> &ndash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
                     {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
                     <br>&ndash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
                     <br>{{ e.testo }}
                 </div>
-                </div>
             </div>
-            </div>
-            {% endfor %}
-        </fieldset>
-        {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+    {% endif %}
+</fieldset>
 
 {% for data,eventi_per_data in attivita %}
 {% if data and eventi_per_data %}
-<fieldset>
+<fieldset class="mb-3">
     <legend style="font-size: 100%; color:#383838;">{{ trans_day_hash[data|date('l', "Europe/Rome")] }} {{ data|date('d') }} {{ trans_month_hash[data|date('m')] }} {{ data|date('Y') }}</legend>
     {% for ora,eventi_per_ora in eventi_per_data %}
     {% for e in eventi_per_ora %}
     {% if e.entita == 'a' %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.form" ].url[ localization.language.ietf ] }}?attivita[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
-	<div class="col-1 lemma text-right">
-	    <p>{% if ora != ora_old %}{{ ora|date(' H:i') }}{% else %}&mdash;{% endif %}</p>
-	</div>
-	<div class="col">
-	    <div class="form-row">
-		<div class="col">
-            <b>{{ e.nome }}</b>{% if e.id_todo %} su {{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
-		    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
-			<br>{{ e.note_programmazione }}
-		</div>
-	    </div>
-	</div>
+        <div class="col-1 lemma text-right">
+            <p>{% if ora != ora_old %}{{ ora|date(' H:i') }}{% else %}&mdash;{% endif %}</p>
+        </div>
+        <div class="col">
+            <div class="form-row">
+                <div class="col">
+                    {% if e.nome %}<b>{{ e.nome }}</b> su {% endif %}{% if e.id_todo %}{{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>{{ e.note_programmazione }}
+                </div>
+            </div>
+        </div>
     </div>
     {% set ora_old = ora %}
-    
     {% endif %}
     {% if e.entita == 't' %}
     <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
         <div class="col-1 lemma text-right">
             <p>&mdash;</p>
         </div>
-        
         <div class="col">
             <div class="form-row">
-            <div class="col">
-                <b>{{ e.nome }}</b> &ndash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
-                {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
-                <br>&ndash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
-                <br>{{ e.testo }}
-            </div>
+                <div class="col">
+                    <b>{{ e.nome }}</b> &ndash; responsabile {% if e.anagrafica %}{{ e.anagrafica }}{% else %}da definire{% endif %}
+                    {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b>{% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
+                    <br>&ndash; {{ e.n_attivita }} attivià aperte, {{ e.n_attivita_chiuse }} chiuse
+                    <br>{{ e.testo }}
+                </div>
             </div>
         </div>
-        </div>
+    </div>
     {% endif %}
     {% endfor %}
-    
     {% endfor %}
 </fieldset>
 {% endif %}
