@@ -3,8 +3,8 @@
 <script>
     function importa_documenti() {
 	var data = $('#__upload_____documenti__').val();
-	getws('/_src/_api/_task/_documenti.importazione.start.php?file='+data);
-	$('#importa_contatti').modal('toggle');
+	getws('/task/0400.documenti/documenti.importazione.start?file='+data);
+	$('#importa_documenti').modal('toggle');
 	location.reload();
     }
 </script>

@@ -2,7 +2,7 @@
 
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../_config.php';
+	    require '../../../../../_src/_config.php';
 	}
 
     // inizializzo l'array del risultato
@@ -16,8 +16,8 @@
         $cf['mysql']['connection'],
         'INSERT INTO job ( nome, job, iterazioni, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ? )',
         array(
-            array( 's' => 'importazione automatica contatti documenti' ),
-            array( 's' => '_src/_api/_job/_documenti.importazione.php' ),
+            array( 's' => 'importazione automatica documenti' ),
+            array( 's' => '_mod/_0400.documenti/_src/_api/_job/_documenti.importazione.php' ),
             array( 's' => 15 ),
             array( 's' => 1 ),
             array( 's' => json_encode(
