@@ -15,8 +15,9 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.view.php' ),
 	    'etc'		=> array( 'tabs'	=> array(	'contratti.view',
-													'rinnovi.contratti.view' ,
-													'contratti.archivio.view') ),
+													'rinnovi.contratti.view',
+													'contratti.archivio.view',
+													'contratti.tools' ) ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'contratti' ),
 									'priority'	=> '200' ) ) )						
@@ -33,6 +34,19 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_contratti.archivio.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] )
+	);
+
+	// gestione contratti tools
+	$p['contratti.tools'] = array(
+	    'sitemap'		=> false,
+		'title'		=> array( $l		=> 'strumenti contratti' ),
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'h1'		=> array( $l		=> 'strumenti' ),
+	    'parent'		=> array( 'id'		=> 'contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array(  $m . '_src/_inc/_macro/_contratti.tools.php' ),
+	    'etc'		=> array( 'tabs'	=>$p['contratti.view']['etc']['tabs'] ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
 /*	// vista scadenze contratti
@@ -170,7 +184,7 @@
 	// gestione contratti tools
 	$p['contratti.form.tools'] = array(
 	    'sitemap'		=> false,
-		'title'		=> array( $l		=> 'strumenti contratti' ),
+		'title'		=> array( $l		=> 'strumenti contratto' ),
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
 	    'h1'		=> array( $l		=> 'strumenti' ),
 	    'parent'		=> array( 'id'		=> 'contratti.view' ),
@@ -212,7 +226,7 @@
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'rinnovi contratti' ),
 		'h1'		=> array( $l		=> 'rinnovi' ),
-		'parent'		=> array( 'id'		=> 'archivio' ),
+		'parent'		=> array( 'id'		=> 'contratti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array(  $m . '_src/_inc/_macro/_rinnovi.contratti.view.php' ),
 		'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] ),
