@@ -3485,7 +3485,7 @@ CREATE
 
 			SELECT
 				tipologie_anagrafica.id_genitore,
-				tipologie_anagrafica.nome
+				tipologie_anagrafica.sigla
 			FROM tipologie_anagrafica
 			WHERE tipologie_anagrafica.id = p1
 			INTO p1, step;

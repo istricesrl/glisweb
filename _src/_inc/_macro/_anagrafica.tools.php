@@ -39,7 +39,7 @@
 
     // importazione contatti anagrafica
 	$ct['page']['contents']['metro']['importazioni'][] = array(
-	    'modal' => array( 'id' => 'importa_contatti', 'include' => 'inc/anagrafica.tools.modal.import.html' ),
+	    'modal' => array( 'id' => 'importa_anagrafiche', 'include' => 'inc/anagrafica.tools.modal.import.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-upload',
 	    'title' => 'importazione anagrafiche',

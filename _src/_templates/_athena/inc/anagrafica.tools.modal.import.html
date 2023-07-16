@@ -1,7 +1,7 @@
 {% import '_bin/_form.html' as frm %}
 
 <script>
-    function importa() {
+    function importa_anagrafiche() {
 	var data = $('#__upload_____anagrafica__').val();
 	getws('/_src/_api/_task/_anagrafica.importazione.start.php?file='+data);
 	$('#importa_contatti').modal('toggle');
@@ -9,7 +9,7 @@
     }
 </script>
 
-<div class="modal" tabindex="-1" role="dialog" id="importa_contatti">
+<div class="modal" tabindex="-1" role="dialog" id="importa_anagrafiche">
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
 	    <div class="modal-header">
@@ -31,7 +31,7 @@
 	    </div>
 	    </div>
 	    <div class="modal-footer">
-		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="importa();">importa</button>
+		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="importa_anagrafiche();">importa</button>
 		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>

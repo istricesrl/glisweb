@@ -113,14 +113,40 @@
 
             } else {
 
+                // tipologia
+                if( ! empty( $job['riga']['codice_ipa'] ) ) {
+                    $idTipologia = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT min( id ) FROM tipologie_anagrafica WHERE se_pubblica_amministrazione IS NOT NULL'
+                    );
+                } elseif( ! empty( $job['riga']['denominazione'] ) ) {
+                    $idTipologia = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT min( id ) FROM tipologie_anagrafica WHERE se_persona_giuridica IS NOT NULL'
+                    );
+                } elseif( ! empty( $job['riga']['cognome'] ) ) {
+                    $idTipologia = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT min( id ) FROM tipologie_anagrafica WHERE se_persona_fisica IS NOT NULL'
+                    );
+                } else {
+                    $idTipologia = NULL;
+                }
+
                 // trovo l'ID dell'anagrafica
                 $idAnagrafica = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
                         'id' => NULL,
+                        'id_tipologia' => $idTipologia,
                         'codice' => ( ! empty( $job['riga']['codice'] ) ) ? $job['riga']['codice'] : NULL,
                         'partita_iva' => ( ! empty( $job['riga']['partita_iva'] ) ) ? $job['riga']['partita_iva'] : NULL,
                         'codice_fiscale' => ( ! empty( $job['riga']['codice_fiscale'] ) ) ? $job['riga']['codice_fiscale'] : NULL,
+                        'codice_sdi' => ( ! empty( $job['riga']['codice_sdi'] ) ) ? $job['riga']['codice_sdi'] : NULL,
+                        'codice_ipa' => ( ! empty( $job['riga']['codice_ipa'] ) ) ? $job['riga']['codice_ipa'] : NULL,
                         'nome' => ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ),
                         'cognome' => ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ),
                         'denominazione' => ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ),
@@ -299,6 +325,40 @@
 
                 }
 
+                // se sono presenti delle mail...
+                if( isset( $job['riga']['pec'] ) && ! empty( $job['riga']['pec'] ) ) {
+
+                    // esplodo le categorie per pipe
+                    $indirizzi = explode( '|', $job['riga']['pec'] );
+
+                    // TODO qui si potrebbe sotto esplodere per § e dare il ruolo alla mail
+                    // tipo amministrazione@stocazzo.com§4|commerciale@stocazzo.com§2 eccetera
+
+                    // per ogni categoria...
+                    foreach( $indirizzi as $indirizzo ) {
+
+                        // trovo l'ID della mail
+                        $idMail = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_ruolo' => 1,
+                                'id_anagrafica' => $idAnagrafica,
+                                'indirizzo' => $indirizzo,
+                                'se_pec' => 1
+                            ),
+                            'mail'
+                        );
+
+                    }
+
+                } else {
+
+                    // status
+                    $job['workspace']['status']['error'][] = 'PEC non settata per la riga ' . $job['corrente'];
+
+                }
+
                 // se sono presenti dei telefoni...
                 if( isset( $job['riga']['telefoni'] ) && ! empty( $job['riga']['telefoni'] ) ) {
 
@@ -322,9 +382,44 @@
 
                     }
 
+                } else {
+
+                    // status
+                    $job['workspace']['status']['error'][] = 'telefono non settato per la riga ' . $job['corrente'];
+
                 }
 
-                // se sono presenti dei telefoni...
+                // se sono presenti dei telefoni mobili...
+                if( isset( $job['riga']['mobile'] ) && ! empty( $job['riga']['mobile'] ) ) {
+
+                    // esplodo le categorie per pipe
+                    $numeri = explode( '|', $job['riga']['mobile'] );
+
+                    // per ogni categoria...
+                    foreach( $numeri as $numero ) {
+
+                        // trovo l'ID della mail
+                        $idTel = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id' => NULL,
+                                'id_tipologia' => 2,
+                                'id_anagrafica' => $idAnagrafica,
+                                'numero' => $numero
+                            ),
+                            'telefoni'
+                        );
+
+                    }
+
+                } else {
+
+                    // status
+                    $job['workspace']['status']['error'][] = 'telefono mobile non settato per la riga ' . $job['corrente'];
+
+                }
+
+                // se sono presenti degli URL...
                 if( isset( $job['riga']['url'] ) && ! empty( $job['riga']['url'] ) ) {
 
                     // esplodo le categorie per pipe
