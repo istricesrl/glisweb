@@ -35,11 +35,13 @@
             'regexp' => '(provaSicurezza[0-9]+)',
             'type' => 'hard'
         ),
+        /*
         array(
             'label' => 'SQL injection',
             'regexp' => "('(''|[^'])*')|(;)|(\b(ALTER|CREATE|DELETE|DROP|EXEC(UTE){0,1}|INSERT( +INTO){0,1}|MERGE|SELECT|UPDATE|UNION( +ALL){0,1})\b)",
             'type' => 'hard'
         ),
+        */
         array(
             'label' => 'file_put_contents',
             'regexp' => '(file_put_contents)',
