@@ -25,13 +25,13 @@
 
     // log
 	logWrite( 'richiesta generazione todo', 'todo' );
-    //var par = '&__g__=' + giorno + '&__d_i__=' + data_inizio + '&__d_f__=' + data_fine + '&__o_i__=' + ora_inizio + '&__o_f__=' + ora_fine + '&__l__=' + luogo + '&__'
+    //var par = '&__g__=' + giorno + '&__di__=' + data_inizio + '&__df__=' + data_fine + '&__oi__=' + ora_inizio + '&__of__=' + ora_fine + '&__l__=' + luogo + '&__'
 
-    if( isset($_REQUEST) && ! empty( $_REQUEST['__d_i__'] ) && ! empty( $_REQUEST['__d_f__'] )  ){
+    if( isset($_REQUEST) && ! empty( $_REQUEST['__di__'] ) && ! empty( $_REQUEST['__df__'] )  ){
         
         if( ! empty( $_REQUEST['__g__'] ) || $_REQUEST['__g__']=='0'  ){
 
-            $restult = creazionePianificazione( $cf['mysql']['connection'], $_REQUEST['__d_i__'], 2, 1, $_REQUEST['__d_f__'], NULL, $_REQUEST['__g__']);
+            $restult = creazionePianificazione( $_REQUEST['__di__'], 2, 1, $_REQUEST['__df__'], NULL, $_REQUEST['__g__']);
                 
             logWrite( implode(', ', $restult), 'todo', LOG_ERR ); 
             
@@ -52,13 +52,13 @@
                         $params[] = array( 's' => $_REQUEST['progetto'] );
 
                         
-                        if(! empty( $_REQUEST['__o_i__'] )){
+                        if(! empty( $_REQUEST['__oi__'] )){
                             $where[] = 'todo.ora_inizio_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_i__'] );
+                            $params[] = array( 's' => $_REQUEST['__oi__'] );
                         }  
-                        if(! empty( $_REQUEST['__o_f__'] )){
+                        if(! empty( $_REQUEST['__of__'] )){
                             $where[] = 'todo.ora_fine_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_f__'] );
+                            $params[] = array( 's' => $_REQUEST['__of__'] );
                         }  
 
                         if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
@@ -94,13 +94,13 @@
                         $params[] = array( 's' => $data );
 
                         
-                        if(! empty( $_REQUEST['__o_i__'] )){
+                        if(! empty( $_REQUEST['__oi__'] )){
                             $where[] = 'ora_inizio_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_i__'] );
+                            $params[] = array( 's' => $_REQUEST['__oi__'] );
                         }  
-                        if(! empty( $_REQUEST['__o_f__'] )){
+                        if(! empty( $_REQUEST['__of__'] )){
                             $where[] = 'ora_fine_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_f__'] );
+                            $params[] = array( 's' => $_REQUEST['__of__'] );
                         }  
 
                         if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
@@ -145,13 +145,13 @@
                         $params[] = array( 's' => $data );
 
                         
-                        if(! empty( $_REQUEST['__o_i__'] )){
+                        if(! empty( $_REQUEST['__oi__'] )){
                             $where[] = 'ora_inizio_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_i__'] );
+                            $params[] = array( 's' => $_REQUEST['__oi__'] );
                         }  
-                        if(! empty( $_REQUEST['__o_f__'] )){
+                        if(! empty( $_REQUEST['__of__'] )){
                             $where[] = 'ora_fine_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_f__'] );
+                            $params[] = array( 's' => $_REQUEST['__of__'] );
                         }  
 
                         if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
@@ -192,13 +192,13 @@
                         $params[] = array( 's' => $data );
 
                         
-                        if(! empty( $_REQUEST['__o_i__'] )){
+                        if(! empty( $_REQUEST['__oi__'] )){
                             $where[] = 'ora_inizio_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_i__'] );
+                            $params[] = array( 's' => $_REQUEST['__oi__'] );
                         }  
-                        if(! empty( $_REQUEST['__o_f__'] )){
+                        if(! empty( $_REQUEST['__of__'] )){
                             $where[] = 'ora_fine_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_f__'] );
+                            $params[] = array( 's' => $_REQUEST['__of__'] );
                         }  
 
                         if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
@@ -257,20 +257,20 @@
                         $params[] = array( 's' => $_REQUEST['progetto'] );
 
                         
-                        if(! empty( $_REQUEST['__o_i__'] )){
+                        if(! empty( $_REQUEST['__oi__'] )){
                             $where[] = 'todo.ora_inizio_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_i__'] );
+                            $params[] = array( 's' => $_REQUEST['__oi__'] );
                         }  
-                        if(! empty( $_REQUEST['__o_f__'] )){
+                        if(! empty( $_REQUEST['__of__'] )){
                             $where[] = 'todo.ora_fine_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_f__'] );
+                            $params[] = array( 's' => $_REQUEST['__of__'] );
                         }  
 
                         if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
                         else{ $where = '';}
 
-                        $params[] = array( 's' => $_REQUEST['__d_i__'] );
-                        $params[] = array( 's' => $_REQUEST['__d_f__'] );
+                        $params[] = array( 's' => $_REQUEST['__di__'] );
+                        $params[] = array( 's' => $_REQUEST['__df__'] );
 
                         mysqlQuery( $cf['mysql']['connection'],
                             'UPDATE attivita, todo SET todo.id_luogo = ?, attivita.id_luogo = ? WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ',
@@ -290,16 +290,16 @@
                         $params = array();
 
                         $params[] = array( 's' => $_REQUEST['progetto'] );
-                        $params[] = array( 's' => $_REQUEST['__d_i__'] );
-                        $params[] = array( 's' => $_REQUEST['__d_f__'] );
+                        $params[] = array( 's' => $_REQUEST['__di__'] );
+                        $params[] = array( 's' => $_REQUEST['__df__'] );
                         
-                        if(! empty( $_REQUEST['__o_i__'] )){
+                        if(! empty( $_REQUEST['__oi__'] )){
                             $where[] = 'ora_inizio_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_i__'] );
+                            $params[] = array( 's' => $_REQUEST['__oi__'] );
                         }  
-                        if(! empty( $_REQUEST['__o_f__'] )){
+                        if(! empty( $_REQUEST['__of__'] )){
                             $where[] = 'ora_fine_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_f__'] );
+                            $params[] = array( 's' => $_REQUEST['__of__'] );
                         }  
 
                         if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
@@ -344,17 +344,17 @@
                         $params = array();
 
                         $params[] = array( 's' => $_REQUEST['progetto'] );
-                        $params[] = array( 's' => $_REQUEST['__d_i__'] );
-                        $params[] = array( 's' => $_REQUEST['__d_f__'] );
+                        $params[] = array( 's' => $_REQUEST['__di__'] );
+                        $params[] = array( 's' => $_REQUEST['__df__'] );
 
                         
-                        if(! empty( $_REQUEST['__o_i__'] )){
+                        if(! empty( $_REQUEST['__oi__'] )){
                             $where[] = 'ora_inizio_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_i__'] );
+                            $params[] = array( 's' => $_REQUEST['__oi__'] );
                         }  
-                        if(! empty( $_REQUEST['__o_f__'] )){
+                        if(! empty( $_REQUEST['__of__'] )){
                             $where[] = 'ora_fine_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_f__'] );
+                            $params[] = array( 's' => $_REQUEST['__of__'] );
                         }  
 
                         if(!empty($where)){$where = ' AND '.implode(' AND ', $where);}
@@ -393,18 +393,18 @@
                         $where = array();
                         $params = array();
 
-                        if(! empty( $_REQUEST['__o_i__'] )){
+                        if(! empty( $_REQUEST['__oi__'] )){
                             $where[] = 'ora_inizio_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_i__'] );
+                            $params[] = array( 's' => $_REQUEST['__oi__'] );
                         }  
-                        if(! empty( $_REQUEST['__o_f__'] )){
+                        if(! empty( $_REQUEST['__of__'] )){
                             $where[] = 'ora_fine_programmazione = ?';
-                            $params[] = array( 's' => $_REQUEST['__o_f__'] );
+                            $params[] = array( 's' => $_REQUEST['__of__'] );
                         }  
 
                         $params[] = array( 's' => $_REQUEST['progetto'] );
-                        $params[] = array( 's' => $_REQUEST['__d_i__'] );
-                        $params[] = array( 's' => $_REQUEST['__d_f__'] );
+                        $params[] = array( 's' => $_REQUEST['__di__'] );
+                        $params[] = array( 's' => $_REQUEST['__df__'] );
 
                         
 

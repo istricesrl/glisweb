@@ -147,86 +147,91 @@
 
 	}
 
-	// vista tesseramenti
-	$p['tipologie.tesseramenti.view']	= array(
-		'sitemap'			=> false,
-		'title'				=> array( $l		=> 'tesseramenti' ),
-		'h1'				=> array( $l		=> 'tesseramenti' ),
-		'parent'			=> array( 'id'		=> NULL ),
-		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.view.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'				=> array( 'tabs'	=> array(	'tipologie.tesseramenti.view',
-															'tipologie.tesseramenti.tools' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tesseramenti' ),
-																			'priority'	=> '255' ) ) )
-	);
+	// RELAZIONI CON IL MODULO CATALOGO
+	if( in_array( "4000.catalogo", $cf['mods']['active']['array'] ) ) {
 
-	// stampe tesseramenti
-	$p['tipologie.tesseramenti.tools'] = array(
-		'sitemap'			=> false,
-		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-		'title'				=> array( $l		=> 'azioni' ),
-		'h1'				=> array( $l		=> 'azioni' ),
-		'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
-		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.tools.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'				=> array( 'tabs'	=> $p['tipologie.tesseramenti.view']['etc']['tabs'] )
-	);
+		// vista tesseramenti
+		$p['tipologie.tesseramenti.view']	= array(
+			'sitemap'			=> false,
+			'title'				=> array( $l		=> 'tesseramenti' ),
+			'h1'				=> array( $l		=> 'tesseramenti' ),
+			'parent'			=> array( 'id'		=> 'catalogo' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.view.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'				=> array( 'tabs'	=> array(	'tipologie.tesseramenti.view',
+																'tipologie.tesseramenti.tools' ) ),
+			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tesseramenti' ),
+																				'priority'	=> '255' ) ) )
+		);
 
-	// gestione progetti
-	$p['tipologie.tesseramenti.form'] = array(
-		'sitemap'			=> false,
-		'title'				=> array( $l		=> 'gestione' ),
-		'h1'				=> array( $l		=> 'gestione' ),
-		'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
-		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.tesseramenti.form.html' ),
-		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'				=> array( 'tabs'	=> array(	'tipologie.tesseramenti.form',
-															'tipologie.tesseramenti.form.acquisto',	// TODO questa è una sinergia con il modulo catalogo, gestirla di conseguenza
-															'tipologie.tesseramenti.form.metadati',
-															'tipologie.tesseramenti.form.tools' 
-														) )
-	);
+		// stampe tesseramenti
+		$p['tipologie.tesseramenti.tools'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'azioni' ),
+			'h1'				=> array( $l		=> 'azioni' ),
+			'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.tools.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'				=> array( 'tabs'	=> $p['tipologie.tesseramenti.view']['etc']['tabs'] )
+		);
 
-	// tools form tesseramenti
-	// TODO questa è una sinergia con il modulo catalogo, gestirla di conseguenza
-	$p['tipologie.tesseramenti.form.acquisto'] = array(
-		'sitemap'			=> false,
-		'icon'				=> '<i class="fa fa-shopping-cart" aria-hidden="true"></i>',
-		'title'				=> array( $l		=> 'acquisto' ),
-		'h1'				=> array( $l		=> 'acquisto' ),
-		'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
-		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.tesseramenti.form.acquisto.html' ),
-		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.acquisto.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'				=> array( 'tabs'	=> $p['tipologie.tesseramenti.form']['etc']['tabs'] )
-	);
+		// gestione progetti
+		$p['tipologie.tesseramenti.form'] = array(
+			'sitemap'			=> false,
+			'title'				=> array( $l		=> 'gestione' ),
+			'h1'				=> array( $l		=> 'gestione' ),
+			'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.tesseramenti.form.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'				=> array( 'tabs'	=> array(	'tipologie.tesseramenti.form',
+																'tipologie.tesseramenti.form.acquisto',	// TODO questa è una sinergia con il modulo catalogo, gestirla di conseguenza
+																'tipologie.tesseramenti.form.metadati',
+																'tipologie.tesseramenti.form.tools' 
+															) )
+		);
 
-	// gestione anagrafica metadati
-	$p['tipologie.tesseramenti.form.metadati'] = array(
-		'sitemap'			=> false,
-		'icon'				=> '<i class="fa fa-code" aria-hidden="true"></i>',
-		'title'				=> array( $l		=> 'metadati' ),
-		'h1'				=> array( $l		=> 'metadati' ),
-		'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
-		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.tesseramenti.form.metadati.html' ),
-		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.metadati.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'				=> array( 'tabs'	=> $p['tipologie.tesseramenti.form']['etc']['tabs'] )
-	);
+		// tools form tesseramenti
+		// TODO questa è una sinergia con il modulo catalogo, gestirla di conseguenza
+		$p['tipologie.tesseramenti.form.acquisto'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-shopping-cart" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'acquisto' ),
+			'h1'				=> array( $l		=> 'acquisto' ),
+			'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.tesseramenti.form.acquisto.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.acquisto.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'				=> array( 'tabs'	=> $p['tipologie.tesseramenti.form']['etc']['tabs'] )
+		);
 
-	// tools form tesseramenti
-	$p['tipologie.tesseramenti.form.tools'] = array(
-		'sitemap'			=> false,
-		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-		'title'				=> array( $l		=> 'azioni abbonamento' ),
-		'h1'				=> array( $l		=> 'azioni' ),
-		'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
-		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-		'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.tools.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'				=> array( 'tabs'	=> $p['tipologie.tesseramenti.form']['etc']['tabs'] )
-	);
+		// gestione anagrafica metadati
+		$p['tipologie.tesseramenti.form.metadati'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-code" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'metadati' ),
+			'h1'				=> array( $l		=> 'metadati' ),
+			'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.tesseramenti.form.metadati.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.metadati.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'				=> array( 'tabs'	=> $p['tipologie.tesseramenti.form']['etc']['tabs'] )
+		);
+
+		// tools form tesseramenti
+		$p['tipologie.tesseramenti.form.tools'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'azioni abbonamento' ),
+			'h1'				=> array( $l		=> 'azioni' ),
+			'parent'			=> array( 'id'		=> 'tipologie.tesseramenti.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_tipologie.tesseramenti.form.tools.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'				=> array( 'tabs'	=> $p['tipologie.tesseramenti.form']['etc']['tabs'] )
+		);
+
+	}

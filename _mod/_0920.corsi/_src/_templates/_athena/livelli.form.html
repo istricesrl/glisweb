@@ -45,13 +45,15 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
+<!--
 			{% if '3000.contenuti' in mods.active.array %}
 			<div class="col-12 col-md-auto">
 				<span class="label-top">sito</span>
 				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
 			</div>  
 			{% endif %}
-		    <div class="col-12 col-md">
+-->
+			<div class="col-12 col-md">
 			<span class="label-top">genitore</span>
 			{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.categorie_progetti, request, '', '', '', '', '', 'categorie.progetti.form', 'categorie.progetti.form', 'categorie_progetti', 'id_genitore', page, pages, ietf ) }}
 			</div>
@@ -59,6 +61,7 @@
 			<span class="label-top">nome della categoria</span>
 			{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 		    </div>
+<!--
 			{% if '3000.contenuti' in mods.active.array %}
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
@@ -71,6 +74,7 @@
                 </div>
             </div>
 			{% endif %}
+-->
 		</div>
 
 		<div class="form-group form-row">
@@ -114,7 +118,7 @@
 		</div>
 		{% endif %}
 	    </fieldset>
-
+<!--
 		{% if '3000.contenuti' in mods.active.array %}
 		<fieldset>
 			<legend>aspetto</legend>
@@ -140,7 +144,7 @@
         {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_progetti' ) }}
 
 		{% endif %}
-
+-->
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
             {{ def.controls( page, pages, ietf, session, table, request ) }}
