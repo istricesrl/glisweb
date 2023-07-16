@@ -126,50 +126,50 @@
                                     // se l'ID della patch che sto lavorando è maggiore del patch level del database
                                     if( $pId > $patchLevel ) {
 
-                                            // log
-                                            appendToFile( 'elaborazione patch -> ' . $patchLevel . PHP_EOL, FILE_LATEST_RUN );
+                                        // log
+                                        appendToFile( 'elaborazione patch -> ' . $patchLevel . PHP_EOL, FILE_LATEST_RUN );
 
-                                            // eseguo la patch corrente
-                                            $pEx = mysqlQuery(
-                                                $cf['mysql']['connection'],
-                                                $pQuery
-                                            );
+                                        // eseguo la patch corrente
+                                        $pEx = mysqlQuery(
+                                            $cf['mysql']['connection'],
+                                            $pQuery
+                                        );
 
-                                            // debug
-                                            // echo 'scrivo la patch ' . $pId . PHP_EOL;
+                                        // debug
+                                        // echo 'scrivo la patch ' . $pId . PHP_EOL;
 
-                                            // risultato dell'esecuzione della patch
-                                            $pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
+                                        // risultato dell'esecuzione della patch
+                                        $pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
 
-                                            // debug
-                                            if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
-                                                echo $pQuery . PHP_EOL;
-                                                echo $pStatus . PHP_EOL;
-                                                die( 'errore nella patch ' . $pQuery );
-                                            }
-
-                                            // registro l'esecuzione della patch nella tabella __patch__
-                                            mysqlInsertRow(
-                                                $cf['mysql']['connection'],
-                                                array(
-                                                    'id' => $pId,
-                                                    'patch' => trim( $pQuery ),
-                                                    'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
-                                                    'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
-                                                ),
-                                                '__patch__',
-                                                false
-                                            );
-
-                                            // aggiorno il patch level al livello (ID) della patch che ho appena inserito
-                                            $patchLevel = $pId;
-        
-                                        } else {
-        
-                                            // debug
-                                            echo 'patch ' . $pId . ' obsoleta rispetto a ' . $patchLevel. PHP_EOL;
-                                            
+                                        // debug
+                                        if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
+                                            echo $pQuery . PHP_EOL;
+                                            echo $pStatus . PHP_EOL;
+                                            die( 'errore nella patch ' . $pQuery );
                                         }
+
+                                        // registro l'esecuzione della patch nella tabella __patch__
+                                        mysqlInsertRow(
+                                            $cf['mysql']['connection'],
+                                            array(
+                                                'id' => $pId,
+                                                'patch' => trim( $pQuery ),
+                                                'timestamp_esecuzione' => ( ( empty( $pEx ) ) ? NULL : time() ),
+                                                'note_esecuzione' => ( ( empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) ? 'OK' : $pStatus )
+                                            ),
+                                            '__patch__',
+                                            false
+                                        );
+
+                                        // aggiorno il patch level al livello (ID) della patch che ho appena inserito
+                                        $patchLevel = $pId;
+    
+                                    } else {
+    
+                                        // debug
+                                        echo 'patch ' . $pId . ' obsoleta rispetto a ' . $patchLevel. PHP_EOL;
+                                        
+                                    }
         
                                 } else {
         
