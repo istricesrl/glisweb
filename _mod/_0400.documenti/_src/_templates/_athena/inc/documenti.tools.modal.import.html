@@ -1,0 +1,39 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function importa_documenti() {
+	var data = $('#__upload_____documenti__').val();
+	getws('/_src/_api/_task/_documenti.importazione.start.php?file='+data);
+	$('#importa_contatti').modal('toggle');
+	location.reload();
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="importa_documenti">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">importa CSV documenti</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+				<div class="col">
+                    {{ frm.uploader( '__upload__', '', '', '__documenti__', '', '', '', 'var/contenuti/upload/', site ) }}
+				</div>
+			</div>
+		    <div class="form-row">
+				<div class="col">
+					<p>scarica il <a href="/_usr/_examples/_csv/documenti.import.csv">modello CSV da compilare</a> per l'importazione</p>
+				</div>
+			</div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="importa_documenti();">importa</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>
