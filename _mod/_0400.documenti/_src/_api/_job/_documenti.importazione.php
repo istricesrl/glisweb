@@ -196,7 +196,7 @@
                         'codice' => ( ! empty( $job['riga']['codice'] ) ) ? $job['riga']['codice'] : NULL,
                         'numero' => ( ! empty( $job['riga']['numero'] ) ) ? $job['riga']['numero'] : NULL,
                         'sezionale' => ( ! empty( $job['riga']['sezionale'] ) ) ? $job['riga']['sezionale'] : NULL,
-                        'data' => ( ! empty( $job['riga']['data'] ) ) ? $job['riga']['data'] : NULL,
+                        'data' => ( ! empty( $job['riga']['data'] ) ) ? date( 'Y-m-d', strtotime( $job['riga']['data'] ) ) : NULL,
                         'id_emittente' => $idEmittente,
                         'id_destinatario' => $idDestinatario,
                         'note' => ( ( isset( $job['riga']['note'] ) ) ? $job['riga']['note'] : NULL ),
