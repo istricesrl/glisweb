@@ -2703,11 +2703,12 @@ ALTER TABLE `progetti`
 	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `data_apertura` (`data_apertura`),
 	ADD KEY `data_accettazione` (`data_accettazione`),
+	ADD KEY `data_apertura` (`data_apertura`),
 	ADD KEY `data_chiusura` (`data_chiusura`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_chiusura`,`data_archiviazione`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_apertura`,`data_chiusura`,`data_archiviazione`);
 
 -- | 030000027200
 

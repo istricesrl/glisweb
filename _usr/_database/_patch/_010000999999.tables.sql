@@ -2564,6 +2564,8 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `entrate_accettazione` decimal(16,2) DEFAULT NULL,
   `data_accettazione` date DEFAULT NULL,
   `note_accettazione` text DEFAULT NULL,
+  `data_apertura` date DEFAULT NULL,
+  `note_apertura` text DEFAULT NULL,
   `data_chiusura` date DEFAULT NULL,
   `note_chiusura` text DEFAULT NULL,
   `entrate_totali` decimal(16,2) DEFAULT NULL,
