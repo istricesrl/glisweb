@@ -435,7 +435,7 @@
 		// print_r( array_diff_key( $row, array( '__firma__' => 'test' ) ) );
 
 		$challenge = hash(
-			'sha3-512',
+			getAvailableHashMethod(),
 			serialize( array_diff_key( $row, array( '__firma__' => null ) ) ) . $cf['auth']['import']['secret']
 		);
 

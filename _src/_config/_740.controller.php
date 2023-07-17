@@ -66,13 +66,19 @@
                     // print_r( $riga );
 
                     // creazione firma
-                    $riga['__firma__'] = hash( 'sha3-512', serialize( $riga ) . $cf['auth']['import']['secret'] );
+                    $riga['__firma__'] = hash( getAvailableHashMethod(), serialize( $riga ) . $cf['auth']['import']['secret'] );
 
                     // debug
                     // var_dump( $riga['__firma__'] );
+                    // print_r(hash_algos());
 
                     // ...
                     $_REQUEST[ $table ][] = $riga;
+
+                } else {
+
+                    // debug
+                    // die( 'secret non impostato' );
 
                 }
 

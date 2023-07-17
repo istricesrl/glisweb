@@ -77,3 +77,19 @@
         return $ds;
 
     }
+
+    function getAvailableCryptographyMethod() {
+
+
+    }
+
+    function getAvailableHashMethod() {
+
+        $available = hash_algos();
+        $preferred = array( 'sha3-512', 'sha512', 'md5' );
+
+        $candidate = array_shift( array_intersect( $preferred, $available ) );
+
+        return $candidate;
+
+    }
