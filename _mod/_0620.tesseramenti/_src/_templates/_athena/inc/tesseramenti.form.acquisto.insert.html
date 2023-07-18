@@ -10,7 +10,10 @@
         <div class="col-12 col-md-2">
             <span class="label-top">articolo</span>
             {{ frm.input( 'articoli', '', '', 'id', '', '', '', '', '', '', '', 2 ) }}
-        </div>  
+        </div>
+        <div class="col-auto">
+            <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="scriviCodiceArticolo('articoli_id');" disabled><i class="fa fa-random"></i></button>
+        </div>
         <div class="col">
             <span class="label-top">descrizione</span>
             {{ frm.input( 'articoli', '', '', 'nome', '', '', '', '', '', '', '', 2 ) }}
@@ -27,7 +30,7 @@
 		<input type="hidden" id="iva" name="articoli[metadati][0][nome]" value="periodo_iscrizione" disabled>
         <div class="col-auto">
             <span class="label-top">periodo</span>
-            {{ frm.select( 'articoli', 'metadati', '0', 'testo', '', etc.select.periodi, '', '', '', '', '', 2 ) }}
+            {{ frm.select( 'articoli', 'metadati', '0', 'testo', '', etc.select.periodi, '', '', '', '', '', '', 2 ) }}
         </div>
         <div class="col-auto">
             <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
@@ -35,3 +38,13 @@
     </div>
 </fieldset>
 
+<script>
+
+    function scriviCodiceArticolo( f ) {
+
+        $('#'+f).val( Math.floor(Date.now() / 1000) );
+
+
+    }
+
+</script>

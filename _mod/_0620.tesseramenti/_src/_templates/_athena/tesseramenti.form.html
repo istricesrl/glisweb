@@ -53,24 +53,27 @@
                     {{ frm.input( table, subtable, 0, 'id_ruolo', '', '', '', '29', 'hidden' ) }}
                 
                     <div class="form-group form-row">
+
+                        <div class="col-3 col-md">
+                            <span class="label-top">tipologia</span>
+                            {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologia, request ) }}
+                        </div>
+    
+                        <div class="col-12 col-md">
+                            <span class="label-top">numero di tessera</span>
+                            {{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
+                        </div>
+
                         <div class="col-md">
                             <span class="label-top">tesserato</span>
                             {{ frm.selectBox( table, subtable, 0, 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
                         </div>
                 
-                    {{ frm.input( table, subtable, 1, 'id', '', '', request, '', 'hidden' ) }}
-                    {{ frm.input( table, subtable, 1, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
-                    {{ frm.input( table, subtable, 1, 'id_ruolo', '', '', '', '30', 'hidden' ) }}
-                    {{ frm.input( table, subtable, 1, 'id_anagrafica', '', '', request, etc.gestita, 'hidden' ) }}
-                    
-                    <div class="col-12 col-md">
-                        <span class="label-top">numero di tessera</span>
-                        {{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
-                    </div>
-                    <div class="col-3 col-md">
-                        <span class="label-top">tipologia</span>
-                        {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologia, request ) }}
-                    </div>
+                        {{ frm.input( table, subtable, 1, 'id', '', '', request, '', 'hidden' ) }}
+                        {{ frm.input( table, subtable, 1, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
+                        {{ frm.input( table, subtable, 1, 'id_ruolo', '', '', '', '30', 'hidden' ) }}
+                        {{ frm.input( table, subtable, 1, 'id_anagrafica', '', '', request, etc.gestita, 'hidden' ) }}
+                        
 <!--
                     <input type="hidden" id="id" name="{{ table }}[rinnovi][0][id]">
                     <input type="hidden" name="{{ table }}[rinnovi][0][id_contratto]" value="__parent_id__">
@@ -92,12 +95,39 @@
             {# BOTTONI E COMANDI DEL MODULO #}
 -->
             {% if request[ table ].id %}
+            <fieldset>
+                <legend>acquisto del tesseramento</legend>
+                <div class="form-row metro">
+                    {% if etc.carrello %}
+                    <div class="col-md"><p>questa iscrizione è già nel carrello #{{ etc.carrello }}</p></div>
+                    {% else %}
+                    {% set colspan = 4 %}
+                    {% for a in etc.articoli %}
+                        {# TODO rendere asincrono questo bottone #}
+                        <div class="col-12 col-md-{{ colspan }}">
+                            <a href="{{ pages['ecommerce.carrello'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}" target="_self">
+                                <div class="media">
+                                    <div class="media-left">	
+                                        <i class="fa fa-cart-plus"></i>
+                                    </div>
+                                    <div class="media-body">
+                                        <h5 class="media-title">iscrizione {{ a.testo }}</h5>
+                                        <p class="media-text">€ {{ a.prezzi|first.prezzo|number_format(2, ',', '.') }}</p>
+                                    </div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                    {% endif %}
+                </div>
+            </fieldset>
+            {% endif %}
+
+            {% if request[ table ].id %}
             <fieldset class="d-flex flex-column flex-fill">
                 <legend>periodi di validità</legend>
-
                 {# VIEW PRINCIPALE #}
                 {% include 'inc/view.html' %}
-
             </fieldset>
             {% else %}
             <fieldset class="form-controls mt-auto">

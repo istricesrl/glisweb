@@ -135,5 +135,38 @@
         }
     }
 
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ) {
+
+        $idProdotto = mysqlSelectValue(
+			$cf['mysql']['connection'],
+            'SELECT id_prodotto FROM tipologie_contratti WHERE id = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) )
+        );
+
+        $ct['etc']['articoli'] = mysqlCachedIndexedQuery(
+			$cf['memcache']['index'],
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+			'SELECT articoli.id, articoli.nome, metadati.nome AS meta, metadati.testo FROM articoli LEFT JOIN metadati ON metadati.id_articolo  = articoli.id AND metadati.nome = "periodo_iscrizione" WHERE articoli.id_prodotto = ?',
+			array( array( 's' => $idProdotto ) )
+		);
+
+		$articoli = array();
+		foreach( $ct['etc']['articoli'] as &$a ) {
+	
+			$a['prezzi'] = mysqlCachedIndexedQuery(
+				$cf['memcache']['index'],
+				$cf['memcache']['connection'],
+				$cf['mysql']['connection'],
+				'SELECT * FROM prezzi WHERE prezzi.id_articolo = ? AND prezzi.id_listino = 1',
+				array( array( 's' => $a['id'] ) )
+			);
+
+			$articoli[] = $a['id'];
+
+		}
+
+    }
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

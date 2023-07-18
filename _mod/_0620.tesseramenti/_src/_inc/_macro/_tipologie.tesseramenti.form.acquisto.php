@@ -22,21 +22,21 @@
         // die('creazione rapida prodotto');
 
         // ID della todo in oggetto
-        $idProgetto = $_REQUEST[ $ct['form']['table'] ]['id'];
+        $idTipologia = $_REQUEST[ $ct['form']['table'] ]['id'];
 
-        $progetto = mysqlSelectRow($cf['mysql']['connection'],
-            'SELECT * FROM progetti_view WHERE id = ?',           
+        $tipologia = mysqlSelectRow($cf['mysql']['connection'],
+            'SELECT * FROM ' . $ct['form']['table'] . '_view WHERE id = ?',           
             array(
-                array( 's' => $idProgetto )
+                array( 's' => $idTipologia )
             )
         );
 
         $idProdotto = mysqlInsertRow(
             $cf['mysql']['connection'],
             array(
-                'id' => $idProgetto,
+                'id' => 'TESS.'.sprintf( '%04d', $idTipologia ),
                 'id_tipologia' => 1,
-                'nome' => $progetto['nome']
+                'nome' => $tipologia['nome']
             ),
             'prodotti'
         );
@@ -44,10 +44,10 @@
         mysqlInsertRow(
             $cf['mysql']['connection'],
             array(
-                'id' => $idProgetto,
+                'id' => $idTipologia,
                 'id_prodotto' => $idProdotto
             ),
-            'progetti'
+            $ct['form']['table']
         );
 
         $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] = $idProdotto;
@@ -82,6 +82,16 @@
             'id' => 'text-left',
             'nome' => 'text-left',
             'id_prodotto' => 'd-none'
+        );
+
+        $ct['etc']['select']['periodi'] = array(
+            array( 'id' => 'totale', '__label__' => 'totale' ),
+            array( 'id' => 'quadrimestrale', '__label__' => 'quadrimestrale' ),
+            array( 'id' => 'trimestrale', '__label__' => 'trimestrale' ),
+            array( 'id' => 'bimestrale', '__label__' => 'bimestrale' ),
+            array( 'id' => 'mensile', '__label__' => 'mensile' ),
+            array( 'id' => 'settimanale', '__label__' => 'settimanale' ),
+            array( 'id' => 'giornata', '__label__' => 'giornata' )
         );
 
         // pagina per la gestione degli oggetti esistenti
