@@ -54,10 +54,16 @@
                 );
 */
 
+/* NOTA aggiungendo ID = NULL a una query UPDATE si riceve un errore di vincolo di chiave su ID (perché la controller cerca
+giustamente di settare ID = NULL sulla riga che innesca l'eventuale constraint, ad esempio sul codice)
+
+PERCHÈ era stato inserito questo if? forse perché senza non funziona la INSERT o la REPLACE? testare su Eurosnodi
+
                 // ...
                 if( ! isset( $riga['id'] ) ) {
                     $riga['id'] = NULL;
                 }
+*/
 
                 // firma per l'autorizzazione della riga
                 if( isset( $cf['auth']['import']['secret'] ) ) {
