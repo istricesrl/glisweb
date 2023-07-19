@@ -14,6 +14,9 @@
 		var iscritti_max = $('#__duplicazione___iscritti_max').val();
 		var calendario_dal= $('#__duplicazione___calendario_dal').val();
 		var calendario_al= $('#__duplicazione___calendario_al').val();
+		{% for t in etc.select.tipologie %}
+		var salta_[[ t.id ]]= $('#__duplicazione___salta_[[ t.id ]]').val();
+		{% endfor %}
 
 		getws('/task/0920.corsi/corsi.duplicazione.start?'
 			+'periodo_partenza='+periodo_partenza
@@ -137,7 +140,7 @@
 					{% for t in etc.select.tipologie %}
 					<div class="col pt-2">
 						<!-- <input type="checkbox" id="tipologie_{{t.id}}" name="tipologie" value="{{ t.id }}" disabled> -->
-						<input type="checkbox" id="tipologie_{{t.id}}" name="tipologie" {% if t.id in [1,2] %}checked{% endif %} value="{{ t.id }}">
+						<input type="checkbox" id="tipologie_{{t.id}}" name="__duplicazione___salta_{{ t.id }}" {% if t.id in [1,2] %}checked{% endif %} value="{{ t.id }}">
 						<label for="horns" style="height: 10px">{{t.__label__}}</label>
 					</div>
 					{% endfor %}
