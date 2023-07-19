@@ -12,7 +12,7 @@
 
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT progetti.id, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura, 
+            'SELECT progetti.id, progetti.id_periodo, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura, 
             if(
                 progetti.data_accettazione > CURRENT_DATE(), "futuro",
                 if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), "attivo", "concluso" )
@@ -111,6 +111,7 @@
 
         $riga['__label__'] = implode( ' ', array(
             $riga['id'],
+            $riga['id_periodo'],
             $riga['nome'],
             $riga['fasce'],
             $riga['discipline'],

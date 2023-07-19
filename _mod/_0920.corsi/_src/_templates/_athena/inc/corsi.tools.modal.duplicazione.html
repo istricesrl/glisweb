@@ -133,6 +133,15 @@
 						{{ frm.date( '__duplicazione__', '', '', 'calendario_al', '', '', '' ) }}
 					</div>
 				</div>
+				<div class="form-row">
+					{% for t in etc.select.tipologie %}
+					<div class="col pt-2">
+						<!-- <input type="checkbox" id="tipologie_{{t.id}}" name="tipologie" value="{{ t.id }}" disabled> -->
+						<input type="checkbox" id="tipologie_{{t.id}}" name="tipologie" {% if t.id in [1,2] %}checked{% endif %} value="{{ t.id }}">
+						<label for="horns" style="height: 10px">{{t.__label__}}</label>
+					</div>
+					{% endfor %}
+				</div>
 			</div>
 	    </div>
 	    <div class="modal-footer">

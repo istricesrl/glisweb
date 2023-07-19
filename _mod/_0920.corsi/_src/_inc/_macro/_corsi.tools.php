@@ -79,5 +79,12 @@
 	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_fascia = 1 ORDER BY __label__'
 	);
 
+    $ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_periodi_view'
+    );
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';
