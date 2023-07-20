@@ -44,10 +44,40 @@
       '__label__' => 'text-left no-wrap'
     );
 
+    $ct['etc']['include']['insert'][] = array(
+      'name' => 'insert',
+      'file' => 'inc/tesseramenti.form.rinnovi.insert.html',
+      'fa' => 'fa-plus-circle'
+    );
+
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
       // preset filtro contratto attuale
       $ct['view']['__restrict__']['id_contratto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
+
+    // tendina tipologia tesseramento
+    $ct['etc']['select']['tipologie_rinnovi'] = mysqlCachedIndexedQuery(
+      $cf['memcache']['index'],
+      $cf['memcache']['connection'],
+      $cf['mysql']['connection'],
+      'SELECT id, __label__ FROM tipologie_rinnovi_view WHERE se_tesseramenti = 1'
+    );
+
+    $ct['etc']['select']['materie'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM categorie_progetti_view WHERE se_disciplina = 1'
+    );
+
+    // inizio e fine
+    $ct['etc']['periodo'] = mysqlSelectRow(
+        $cf['mysql']['connection'],
+        'SELECT periodi.* FROM periodi INNER JOIN tipologie_periodi ON tipologie_periodi.id = periodi.id_tipologia WHERE periodi.data_fine > date( now() ) AND ( tipologie_periodi.se_tesseramenti IS NOT NULL ) ORDER BY periodi.data_fine ASC'
+    );
+
+    // debug
+    // die( print_r( $ct['etc']['periodo'], true ) );
 
     // gestione default
     require DIR_SRC_INC_MACRO . '_default.view.php';

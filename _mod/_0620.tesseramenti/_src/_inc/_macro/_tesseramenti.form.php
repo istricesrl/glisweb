@@ -79,7 +79,7 @@
     );
 
     // preset filtro contratto attuale
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
         $ct['view']['__restrict__']['id_contratto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 
@@ -165,6 +165,17 @@
 			$articoli[] = $a['id'];
 
 		}
+
+        $ct['etc']['rinnovi_da_pagare'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT rinnovi.* FROM rinnovi LEFT JOIN documenti_articoli ON documenti_articoli.id_rinnovo = rinnovi.id LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id WHERE rinnovi.id_contratto = ? AND documenti_articoli.id IS NULL AND carrelli_articoli.id IS NULL',
+            array(
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
+            )
+        );
+
+        // debug
+        // print_r( $ct['etc']['rinnovi_da_pagare'] );
 
     }
 

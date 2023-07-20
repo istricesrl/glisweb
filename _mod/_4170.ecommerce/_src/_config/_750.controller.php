@@ -296,6 +296,7 @@
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['id_iva']                     = $dati['id_iva'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['quantita']                   = $dati['quantita'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['destinatario_id_anagrafica'] = $dati['destinatario_id_anagrafica'];
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['id_rinnovo']                 = $dati['id_rinnovo'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_percentuale']         = $dati['sconto_percentuale'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_valore']              = $dati['sconto_valore'];
 
@@ -360,6 +361,7 @@
                             'id_carrello'                   => $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['id_carrello'],
                             'id_articolo'                   => $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['id_articolo'],
                             'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['destinatario_id_anagrafica'],
+                            'id_rinnovo'                    => $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['id_rinnovo'],
                             'id_iva'                        => $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['id_iva'],
                             'quantita'                      => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['quantita'] ),
                             'prezzo_netto_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_netto_unitario'] ),

@@ -124,6 +124,8 @@
             <div class="form-row metro">
                 {% if etc.carrello %}
                 <div class="col-md"><p>questa iscrizione è già nel carrello #{{ etc.carrello }}</p></div>
+                {% elseif not etc.rinnovi_da_pagare %}
+                <div class="col-md"><p>questa iscrizione non ha rinnovi da pagare</p></div>
                 {% else %}
                 {% set colspan = 4 %}
                 {% for a in etc.articoli %}
@@ -146,6 +148,7 @@
             </div>
         </fieldset>
         {% endif %}
+
 <!--
         {% if request[ table ].id %}
         <fieldset class="d-flex flex-column flex-fill">

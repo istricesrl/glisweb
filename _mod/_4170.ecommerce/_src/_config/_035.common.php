@@ -57,6 +57,8 @@
         'id_articolo'                   => array( 'tipe' => 'string',   'default' => NULL ),
         'id_iva'                        => array( 'tipe' => 'int',      'default' => NULL ),
         'destinatario_id_anagrafica'    => array( 'type' => 'string',   'default' => NULL ),
+        'id_rinnovo'                    => array( 'type' => 'int',      'default' => NULL ),
+        'id_progetto'                   => array( 'type' => 'string',   'default' => NULL ),
         'quantita'                      => array( 'tipe' => 'int',      'default' => NULL ),
         'sconto_percentuale'            => array( 'tipe' => 'int',      'default' => NULL ),
         'sconto_valore'                 => array( 'tipe' => 'int',      'default' => NULL ),

@@ -106,12 +106,14 @@
                 <div class="form-row metro">
                     {% if etc.carrello %}
                     <div class="col-md"><p>questa iscrizione è già nel carrello #{{ etc.carrello }}</p></div>
+                    {% elseif not etc.rinnovi_da_pagare %}
+                    <div class="col-md"><p>questa iscrizione non ha rinnovi da pagare</p></div>
                     {% else %}
                     {% set colspan = 4 %}
                     {% for a in etc.articoli %}
                         {# TODO rendere asincrono questo bottone #}
                         <div class="col-12 col-md-{{ colspan }}">
-                            <a href="{{ pages['ecommerce.carrello'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}" target="_self">
+                            <a href="{{ pages['ecommerce.carrello'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}&__carrello__[__articolo__][id_rinnovo]={{ etc.rinnovi_da_pagare.id }}" target="_self">
                                 <div class="media">
                                     <div class="media-left">	
                                         <i class="fa fa-cart-plus"></i>
