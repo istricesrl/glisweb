@@ -73,7 +73,7 @@
 			'macro'				=> array( $m . '_src/_inc/_macro/_abbonamenti.form.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> array(	'abbonamenti.form',
-//																'abbonamenti.form.rinnovi',
+																'abbonamenti.form.rinnovi',
 																'abbonamenti.form.entrate',
 																'abbonamenti.form.lezioni',
 																'abbonamenti.form.tornelli',

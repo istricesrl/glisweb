@@ -146,25 +146,24 @@
             </div>
         </fieldset>
         {% endif %}
-
+<!--
         {% if request[ table ].id %}
         <fieldset class="d-flex flex-column flex-fill">
             <legend>periodi di validità</legend>
             {# VIEW PRINCIPALE #}
-            {% include 'inc/view.html' %}
+            {# include 'inc/view.html' #}
         </fieldset>
         {% else %}
         <fieldset class="form-controls mt-auto">
             {{ def.controls( page, pages, ietf, session, table, request ) }}
         </fieldset>
         {% endif %}
+-->
 
-<!--
-        {# BOTTONI E COMANDI DEL MODULO #}
+            {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, table, request ) }}
             </fieldset>
--->
 
         </form>
     </div>
