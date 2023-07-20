@@ -64,6 +64,12 @@
                             {{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
                         </div>
 
+                        {% if not request[ table ].codice %}
+                        <div class="col-12 col-md-auto">
+                            {{ frm.button(  'OTTIENI NUMERO' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroTessera();','ottieni in modo automatico il numero di tessera' ) }}
+                        </div>
+                        {% endif %}
+    
                         <div class="col-md">
                             <span class="label-top">tesserato</span>
                             {{ frm.selectBox( table, subtable, 0, 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
@@ -122,18 +128,24 @@
                 </div>
             </fieldset>
             {% endif %}
-
+<!--
             {% if request[ table ].id %}
             <fieldset class="d-flex flex-column flex-fill">
                 <legend>periodi di validità</legend>
                 {# VIEW PRINCIPALE #}
-                {% include 'inc/view.html' %}
+                {# include 'inc/view.html' #}
             </fieldset>
             {% else %}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, table, request ) }}
             </fieldset>
             {% endif %}
+-->
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, table, request ) }}
+            </fieldset>
 
         </form>
     </div>
@@ -142,4 +154,21 @@
 {% endblock %}
 
 {% block javascript %}
+<script>
+
+    function getNumeroDocumento( id ) {
+
+        getws(
+            '/task/0620.tesseramenti/tessere.genera.numero',
+            null,
+            function( data ) {
+                console.log( data );
+                $( '#'+id ).val( data.new );
+                if( data.err ) { alert( data.err ); }
+            }
+        );
+
+    }
+
+</script>
 {% endblock %}
