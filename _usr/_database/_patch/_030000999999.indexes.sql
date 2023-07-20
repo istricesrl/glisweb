@@ -578,12 +578,12 @@ ALTER TABLE `carrelli_articoli`
 	ADD KEY `id_carrello` (`id_carrello`),  
 	ADD KEY `id_articolo` (`id_articolo`),  
 	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
 	ADD KEY `id_iva` (`id_iva`),
 	ADD KEY `id_pagamento` (`id_pagamento`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_carrello`, `id_articolo`, `id_iva`, `prezzo_netto_unitario`, `prezzo_lordo_unitario`,`quantita`, `prezzo_netto_totale`,  `prezzo_lordo_totale`, `sconto_percentuale`, `sconto_valore`, `prezzo_netto_finale`,  `prezzo_lordo_finale`)
-;
+	ADD KEY `indice` (`id`, `id_carrello`, `id_articolo`, `id_iva`, `prezzo_netto_unitario`, `prezzo_lordo_unitario`,`quantita`, `prezzo_netto_totale`,  `prezzo_lordo_totale`, `sconto_percentuale`, `sconto_valore`, `prezzo_netto_finale`,  `prezzo_lordo_finale`);
 
 -- | 030000003051
 
@@ -3094,12 +3094,13 @@ ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rinnovi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica_codice` (`codice`),
-	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `id_tipologia_contratto`, `data_inizio`, `data_fine`),
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`),
 	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_tipologia_contratto` (`id_tipologia_contratto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `indice` ( `id_contratto`, `id_tipologia`, `id_licenza`, `id_progetto`, `id_categoria_progetti`, `data_inizio`, `data_fine`, `codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
