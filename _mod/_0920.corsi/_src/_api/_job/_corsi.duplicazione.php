@@ -349,11 +349,23 @@
             // inizio dalla data della prima lezione
             $dataLezione = $dataPrimaLezione;
 
+            // intervalli
+            $intervalli = array();
+
             // elaboro le lezioni
             foreach( $lezioni as $lezione ) {
 
                 // giorni di differenza fra la data di questa lezione e la data della lezione precedente nel vecchio calendario
                 $deltaGiorni = daysBetweenDates( $vecchiaDataLezione, $lezione['data_programmazione'] );
+
+                // registro l'intervallo
+                if( $vecchiaDataLezione != $lezioni[0]['data_programmazione'] ) {
+                    $intervalli[] = array(
+                        'data' => $vecchiaDataLezione,
+                        'dow' => date( 'l', strtotime( $vecchiaDataLezione ) ), 
+                        'delta' => $deltaGiorni
+                    );
+                }
 
                 // incremento la data della lezione
                 $dataLezione = date( 'Y-m-d', strtotime( '+' . $deltaGiorni . ' days', strtotime( $dataLezione ) ) );
@@ -361,27 +373,76 @@
                 // aggiorno la vecchia data lezione
                 $vecchiaDataLezione = $lezione['data_programmazione'];
 
-                // valuto se la lezione è annullata
-                if( in_array( $dataLezione, $dateSalt ) ) {
-                    $idTipo = 17;
-                } else {
-                    $idTipo = 15;
+                // se sono ancora nel range...
+                if( $dataLezione <= $job['corso']['data_chiusura'] ) {
+
+                    // valuto se la lezione è annullata
+                    if( in_array( $dataLezione, $dateSalt ) ) {
+                        $idTipo = 17;
+                    } else {
+                        $idTipo = 15;
+                    }
+
+                    // inserisco la lezione
+                    mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id_progetto' => $job['corso']['id'],
+                            'id_tipologia' => $idTipo,
+                            'data_programmazione' => $dataLezione,
+                            'id_luogo' => $lezione['id_luogo'],
+                            'ora_inizio_programmazione' => $lezione['ora_inizio_programmazione'],
+                            'ora_fine_programmazione' => $lezione['ora_fine_programmazione'],
+                            'id_anagrafica' => NULL
+                        ),
+                        'todo'
+                    );
+
                 }
 
-                // inserisco la lezione
-                mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id_progetto' => $job['corso']['id'],
-                        'id_tipologia' => $idTipo,
-                        'data_programmazione' => $dataLezione,
-                        'id_luogo' => $lezione['id_luogo'],
-                        'ora_inizio_programmazione' => $lezione['ora_inizio_programmazione'],
-                        'ora_fine_programmazione' => $lezione['ora_fine_programmazione'],
-                        'id_anagrafica' => NULL
-                    ),
-                    'todo'
-                );
+            }
+
+            // se ci sono da aggiungere delle lezioni...
+            while( $dataLezione <= $job['corso']['data_chiusura'] ) {
+
+                // ...
+                // TODO cercare di iniiare dal giorno della settimana corrispondente all'intervallo
+                $dettagli = current( $intervalli );
+
+                // ...
+                if( next( $intervalli ) === false ) {
+                    reset( $intervalli );
+                }
+
+                // incremento la data della lezione
+                $dataLezione = date( 'Y-m-d', strtotime( '+' . $dettagli['delta'] . ' days', strtotime( $dataLezione ) ) );
+
+                // se sono ancora nel range...
+                if( $dataLezione <= $job['corso']['data_chiusura'] ) {
+
+                    // valuto se la lezione è annullata
+                    if( in_array( $dataLezione, $dateSalt ) ) {
+                        $idTipo = 17;
+                    } else {
+                        $idTipo = 15;
+                    }
+
+                    // inserisco la lezione
+                    mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id_progetto' => $job['corso']['id'],
+                            'id_tipologia' => $idTipo,
+                            'data_programmazione' => $dataLezione,
+                            'id_luogo' => $lezione['id_luogo'],
+                            'ora_inizio_programmazione' => $lezione['ora_inizio_programmazione'],
+                            'ora_fine_programmazione' => $lezione['ora_fine_programmazione'],
+                            'id_anagrafica' => NULL
+                        ),
+                        'todo'
+                    );
+
+                }
 
             }
 
