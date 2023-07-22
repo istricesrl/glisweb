@@ -317,17 +317,29 @@
 
             // array delle date di chiusura
             $dateSalt = array();
+            $saltare = array();
 
-            // calcolo le chiusure
-            $chiusure = mysqlQuery(
-                $cf['mysql']['connection'], 
-                'SELECT data_inizio, data_fine FROM periodi WHERE id_tipologia IN (1, 2)'
-            );
+            // ...
+            if( count( $job['workspace']['sostituzioni']['saltare'] ) > 0 ) {
 
-            // calcolo le date di chiusura
-            foreach( $chiusure as $c ){
-                $range = createDateRangeArray($c['data_inizio'], $c['data_fine']);
-                $dateSalt = array_merge( $dateSalt, $range );
+                // ...
+                foreach( $job['workspace']['sostituzioni']['saltare'] as $salta ) {
+                    $saltare[] = array( 's' => $salta );
+                }
+
+                // calcolo le chiusure
+                $chiusure = mysqlQuery(
+                    $cf['mysql']['connection'], 
+                    'SELECT data_inizio, data_fine FROM periodi WHERE id_tipologia IN ( ' . implode( ', ', array_fill( 0, count( $saltare ), '?' ) ) . ' )',
+                    $saltare
+                );
+
+                // calcolo le date di chiusura
+                foreach( $chiusure as $c ){
+                    $range = createDateRangeArray($c['data_inizio'], $c['data_fine']);
+                    $dateSalt = array_merge( $dateSalt, $range );
+                }
+
             }
 
             // duplicazione calendario

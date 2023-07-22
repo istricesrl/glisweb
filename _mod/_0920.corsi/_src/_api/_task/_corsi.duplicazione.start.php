@@ -8,8 +8,32 @@
     // inizializzo l'array del risultato
 	$status = array();
 
+	// debug
+	// die( print_r( $_REQUEST, true ) );
+
 	// ...
 	if( true ) {
+
+		// tipologie
+		$tipologie = mysqlCachedIndexedQuery(
+			$cf['memcache']['index'],
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+			'SELECT id, __label__ FROM tipologie_periodi_view'
+		);
+
+		// debug
+		// print_r( $tipologie );
+
+		// ...
+		$saltare = array();
+
+		// tipologie da utilizzare
+		foreach( $tipologie as $tipologia ) {
+			if( isset( $_REQUEST[ 'salta_' . $tipologia['id'] ] ) && ! empty( $_REQUEST[ 'salta_' . $tipologia['id'] ] ) ) {
+				$saltare[] = $tipologia['id'];
+			}
+		}
 
 		// workspace
 		$workspace = array(
@@ -22,13 +46,16 @@
 				'prezzo' => $_REQUEST['prezzo'],
 				'iscritti_max' => $_REQUEST['iscritti_max'],
 				'calendario_dal' => $_REQUEST['calendario_dal'],
-				'calendario_al' => $_REQUEST['calendario_al']
+				'calendario_al' => $_REQUEST['calendario_al'],
+				'saltare' => $saltare
 			),
 			'lista' => array()
 		);
 
 		// debug
 		// print_r( $_REQUEST );
+		// print_r( $workspace );
+		// die();
 
 		// codici richiesti esplicitamente
 		if( ! empty( $_REQUEST['codici'] ) ) {
