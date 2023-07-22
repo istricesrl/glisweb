@@ -44,6 +44,22 @@
 	    'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
 	);
 
+    // tendina id_tipologia_pubblicazioni
+	$ct['etc']['select']['periodicita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM periodicita_view'
+	);
+
+    // tendina id_tipologia_pubblicazioni
+	$ct['etc']['select']['tipologie_rinnovi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_rinnovi_view'
+	);
+
     // tendina taglie
 	/*$ct['etc']['select']['taglie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

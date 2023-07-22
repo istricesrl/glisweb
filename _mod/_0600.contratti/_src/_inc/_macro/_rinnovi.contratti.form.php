@@ -37,6 +37,17 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM progetti_view '
     );
-    
+
+     // tendina anagrafica
+     $ct['etc']['select']['tipologie'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM tipologie_rinnovi_view'
+    );
+
+    // debug
+    // print_r( $ct['etc']['select']['contratti'] );
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

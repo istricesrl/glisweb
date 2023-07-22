@@ -732,6 +732,10 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		articoli.id_reparto,
 		articoli.id_taglia,
 		articoli.id_colore,
+		articoli.id_periodicita,
+		periodicita.nome AS periodicita,
+		articoli.id_tipologia_rinnovo,
+		tipologie_rinnovi.nome AS tipologia_rinnovo,
 		articoli.larghezza,
 		articoli.lunghezza,
 		articoli.altezza,
@@ -780,6 +784,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 			)
 		) AS nome,
 		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
+		group_concat( DISTINCT concat_ws( ' ', listini.nome, valute.iso4217, format( prezzi.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' ) AS prezzi,
 		concat_ws(
 			' ',
 			articoli.id,
@@ -818,6 +823,11 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 		LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_prodotto
+		LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id
+		LEFT JOIN listini ON listini.id = prezzi.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN periodicita ON periodicita.id = articoli.id_periodicita
+		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = articoli.id_tipologia_rinnovo
 	GROUP BY articoli.id
 ;
 
@@ -2106,7 +2116,7 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		group_concat( licenze.codice SEPARATOR ', ' ) AS licenze,
 		licenze.postazioni,
 		tipologie_licenze.nome AS tipologia_licenza,
-		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+		concat_ws( ' ', tipologie_contratti.nome, contratti.nome, group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), NULL )  SEPARATOR ', ' ) ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto

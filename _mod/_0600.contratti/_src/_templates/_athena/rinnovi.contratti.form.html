@@ -47,6 +47,10 @@
         <legend>dati generali <small>{{ legend }}</small></legend>
     
         <div class="form-group form-row">
+            <div class="col-3 col-md">
+                <span class="label-top">tipologia</span>
+                {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+            </div>
             <div class="col-12 col-md">
                 <span class="label-top">codice</span>
                 {{ frm.input( table, '', '', 'codice', '', '', request ) }}
@@ -71,19 +75,19 @@
         <legend>riferimenti</legend>
         <div class="form-group form-row">
             {% if '0600.contratti' in mods.active.array %}
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md">
                 <span class="label-top">contratto</span>
                 {{ frm.selectBox( table, '', '', 'id_contratto', '', etc.select.contratti, request, '', '', '', '', '', 'contratti.form', 'contratti.form', 'contratti', 'id_contratto', page, pages, ietf, 'contratti' ) }}
             </div>
             {% endif %}
             {% if '0000.licenze' in mods.active.array %}
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md">
                 <span class="label-top">licenza</span>
                 {{ frm.selectBox( table, '', '', 'id_licenza', '', etc.select.licenze, request, '', '', '', '', '', 'licenze.form', 'licenze.form', 'licenze', 'id_licenza', page, pages, ietf, 'licenze' ) }}
             </div>
             {% endif %}
             {% if '0900.progetti' in mods.active.array %}
-            <div class="col-12 col-md-4">
+            <div class="col-12 col-md">
                 <span class="label-top">progetto</span>
                 {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', '', '', '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
             </div>

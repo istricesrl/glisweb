@@ -142,13 +142,15 @@
             'SELECT id_prodotto FROM tipologie_contratti WHERE id = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) )
         );
-
+/*
         $ct['etc']['articoli'] = mysqlCachedIndexedQuery(
 			$cf['memcache']['index'],
 			$cf['memcache']['connection'],
 			$cf['mysql']['connection'],
-			'SELECT articoli.id, articoli.nome, metadati.nome AS meta, metadati.testo FROM articoli LEFT JOIN metadati ON metadati.id_articolo  = articoli.id AND metadati.nome = "periodo_iscrizione" WHERE articoli.id_prodotto = ?',
-			array( array( 's' => $idProdotto ) )
+			'SELECT articoli.id, articoli.nome FROM articoli LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id  = articoli.id_tipologia_rinnovo WHERE articoli.id_prodotto = ?',
+			array( 
+                array( 's' => $idProdotto )
+            )
 		);
 
 		$articoli = array();
@@ -165,11 +167,19 @@
 			$articoli[] = $a['id'];
 
 		}
-
-        $ct['etc']['rinnovi_da_pagare'] = mysqlSelectRow(
+*/
+        $ct['etc']['rinnovi_da_pagare'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT rinnovi.* FROM rinnovi LEFT JOIN documenti_articoli ON documenti_articoli.id_rinnovo = rinnovi.id LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id WHERE rinnovi.id_contratto = ? AND documenti_articoli.id IS NULL AND carrelli_articoli.id IS NULL',
+            'SELECT rinnovi.*, articoli.id AS id_articolo, format( prezzi.prezzo, 2, "it_IT" ) AS prezzo, tipologie_rinnovi.nome AS tipologia, prezzi.id_iva FROM rinnovi 
+            LEFT JOIN documenti_articoli ON documenti_articoli.id_rinnovo = rinnovi.id 
+            LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id 
+            LEFT JOIN articoli ON articoli.id_prodotto = ? AND articoli.id_tipologia_rinnovo = rinnovi.id_tipologia
+            LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id AND prezzi.id_listino = 1
+            LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
+            WHERE rinnovi.id_contratto = ? AND documenti_articoli.id IS NULL AND carrelli_articoli.id IS NULL
+            GROUP BY rinnovi.id',
             array(
+                array( 's' => $idProdotto ),
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
             )
         );

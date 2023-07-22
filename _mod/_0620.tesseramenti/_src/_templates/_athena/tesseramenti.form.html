@@ -50,7 +50,7 @@
                     {% set subtable = 'contratti_anagrafica' %}
                     {{ frm.input( table, subtable, 0, 'id', '', '', request, '', 'hidden' ) }}
                     {{ frm.input( table, subtable, 0, 'id_contratto', '', '', '', '__parent_id__', 'hidden' ) }}
-                    {{ frm.input( table, subtable, 0, 'id_ruolo', '', '', '', '29', 'hidden' ) }}
+                    {{ frm.input( table, subtable, 0, 'id_ruolo', '', '', '', '33', 'hidden' ) }}
                 
                     <div class="form-group form-row">
 
@@ -58,7 +58,7 @@
                             <span class="label-top">tipologia</span>
                             {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologia, request ) }}
                         </div>
-    
+
                         <div class="col-12 col-md">
                             <span class="label-top">numero di tessera</span>
                             {{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
@@ -105,22 +105,23 @@
                 <legend>acquisto del tesseramento</legend>
                 <div class="form-row metro">
                     {% if etc.carrello %}
-                    <div class="col-md"><p>questa iscrizione è già nel carrello #{{ etc.carrello }}</p></div>
+                    <div class="col-md"><p>questo tesseramento è già nel carrello #{{ etc.carrello }}</p></div>
                     {% elseif not etc.rinnovi_da_pagare %}
-                    <div class="col-md"><p>questa iscrizione non ha rinnovi da pagare</p></div>
+                    <div class="col-md"><p>questo tesseramento non ha rinnovi da pagare</p></div>
                     {% else %}
                     {% set colspan = 4 %}
-                    {% for a in etc.articoli %}
+                    {% for a in etc.rinnovi_da_pagare %}
                         {# TODO rendere asincrono questo bottone #}
                         <div class="col-12 col-md-{{ colspan }}">
-                            <a href="{{ pages['ecommerce.carrello'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.prezzi|first.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}&__carrello__[__articolo__][id_rinnovo]={{ etc.rinnovi_da_pagare.id }}" target="_self">
+                            <a href="{{ pages['ecommerce.carrello'].url[ ietf ] }}?__carrello__[__articolo__][quantita]=1&__carrello__[__articolo__][id_iva]={{ a.id_iva }}&__carrello__[__articolo__][id_articolo]={{ a.id_articolo }}&__carrello__[__articolo__][destinatario_id_anagrafica]={{ request.contratti.contratti_anagrafica[0].id_anagrafica }}&__carrello__[__articolo__][id_rinnovo]={{ a.id }}" target="_self">
                                 <div class="media">
                                     <div class="media-left">	
                                         <i class="fa fa-cart-plus"></i>
                                     </div>
                                     <div class="media-body">
-                                        <h5 class="media-title">iscrizione {{ a.testo }}</h5>
-                                        <p class="media-text">€ {{ a.prezzi|first.prezzo|number_format(2, ',', '.') }}</p>
+                                        <h5 class="media-title">tesseramento {{ a.tipologia }}</h5>
+                                        <p class="media-text">dal {{ a.data_inizio }} al {{ a.data_fine }}</p>
+                                        <p class="media-text">€ {{ a.prezzo|number_format(2, ',', '.') }}</p>
                                     </div>
                                 </div>
                             </a>

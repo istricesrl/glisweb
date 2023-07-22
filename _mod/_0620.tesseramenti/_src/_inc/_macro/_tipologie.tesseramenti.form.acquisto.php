@@ -66,15 +66,25 @@
 		    array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_prodotto'] ) )
 		);
 
+        // tendina tipologia tesseramento
+        $ct['etc']['select']['tipologie_rinnovi'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM tipologie_rinnovi_view WHERE se_tesseramenti = 1'
+        );
+
         // tabella della vista
         $ct['view']['table'] = 'articoli';
 
         // campi della vista
         $ct['view']['cols'] = array(
             'id' => '#',
-            'nome' => 'articolo',
+            'ean' => 'ean',
             'id_prodotto' => 'id_prodotto',
-            'ean' => 'ean'
+            'tipologia_rinnovo' => 'rinnovo',
+            'nome' => 'articolo',
+            'prezzi' => 'prezzi'
         );
 
         // stili della vista
@@ -112,7 +122,7 @@
         // inserimento rapido articolo e prezzo
         $ct['etc']['include']['insert'][] = array(
             'name' => 'insert',
-            'file' => 'inc/tesseramenti.form.acquisto.insert.html',
+            'file' => 'inc/tipologie.tesseramenti.form.acquisto.insert.html',
             'fa' => 'fa-plus-circle'
         );
 

@@ -3843,6 +3843,8 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `font_awesome` char(16) DEFAULT NULL,
   `se_colori` tinyint(1) DEFAULT NULL,
   `se_taglie` tinyint(1) DEFAULT NULL,
+  `se_periodicita` tinyint(1) DEFAULT NULL,
+  `se_tipologia_rinnovo` tinyint(1) DEFAULT NULL,
   `se_dimensioni` tinyint(1) DEFAULT NULL,
   `se_volume` tinyint(1) DEFAULT NULL,
   `se_capacita` tinyint(1) DEFAULT NULL,
