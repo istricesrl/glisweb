@@ -335,7 +335,7 @@
                 );
 
                 // calcolo le date di chiusura
-                foreach( $chiusure as $c ){
+                foreach( $chiusure as $c ) {
                     $range = createDateRangeArray($c['data_inizio'], $c['data_fine']);
                     $dateSalt = array_merge( $dateSalt, $range );
                 }
@@ -356,7 +356,11 @@
             $vecchiaDataLezione = $lezioni[0]['data_programmazione'];
 
             // trovo il primo giorno di lezione
-            $dataPrimaLezione = date( 'Y-m-d', strtotime( $job['corso']['data_accettazione'] . ' next ' . $dowPrimaLezione ) );
+            if( date( 'l', strtotime( $job['corso']['data_accettazione'] ) ) == $dowPrimaLezione ) {
+                $dataPrimaLezione = $job['corso']['data_accettazione'];
+            } else {
+                $dataPrimaLezione = date( 'Y-m-d', strtotime( $job['corso']['data_accettazione'] . ' next ' . $dowPrimaLezione ) );
+            }
 
             // inizio dalla data della prima lezione
             $dataLezione = $dataPrimaLezione;
@@ -382,21 +386,39 @@
                 // incremento la data della lezione
                 $dataLezione = date( 'Y-m-d', strtotime( '+' . $deltaGiorni . ' days', strtotime( $dataLezione ) ) );
 
+                // status
+                $job['corso']['lezioni'][ $dataLezione ][] = 'ci sono ' . $deltaGiorni . ' fra il ' . $vecchiaDataLezione . ' e il ' . $lezione['data_programmazione'] . ' quindi la data di questa lezione è il ' . $dataLezione;
+
                 // aggiorno la vecchia data lezione
                 $vecchiaDataLezione = $lezione['data_programmazione'];
 
                 // se sono ancora nel range...
                 if( $dataLezione <= $job['corso']['data_chiusura'] ) {
 
+                    // status
+                    $job['corso']['lezioni'][ $dataLezione ][] = $dataLezione . ' è minore o uguale a ' . $job['corso']['data_chiusura'] . ' quindi la inserisco nel calendario';
+
                     // valuto se la lezione è annullata
                     if( in_array( $dataLezione, $dateSalt ) ) {
+
+                        // status
+                        $job['corso']['lezioni'][ $dataLezione ][] = $dataLezione . ' è nella lista delle date da saltare';
+
+                        // ...
                         $idTipo = 17;
+
                     } else {
+
+                        // status
+                        $job['corso']['lezioni'][ $dataLezione ][] = $dataLezione . ' non è nella lista delle date da saltare';
+
+                        // ...
                         $idTipo = 15;
+
                     }
 
                     // inserisco la lezione
-                    mysqlInsertRow(
+                    $job['corso']['lezioni'][ $dataLezione ][] = mysqlInsertRow(
                         $cf['mysql']['connection'],
                         array(
                             'id_progetto' => $job['corso']['id'],
@@ -414,6 +436,9 @@
 
             }
 
+            // status
+            $job['corso']['lezioni'][ $dataLezione ][] = 'inizio a valutare se il corso è da allungare a partire da ' . $dataLezione;
+
             // se ci sono da aggiungere delle lezioni...
             while( $dataLezione <= $job['corso']['data_chiusura'] ) {
 
@@ -429,18 +454,36 @@
                 // incremento la data della lezione
                 $dataLezione = date( 'Y-m-d', strtotime( '+' . $dettagli['delta'] . ' days', strtotime( $dataLezione ) ) );
 
+                // status
+                $job['corso']['lezioni'][ $dataLezione ][] = 'è una possibile data estesa';
+
                 // se sono ancora nel range...
                 if( $dataLezione <= $job['corso']['data_chiusura'] ) {
 
+                    // status
+                    $job['corso']['lezioni'][ $dataLezione ][] = 'è minore o uguale a ' . $job['corso']['data_chiusura'];
+
                     // valuto se la lezione è annullata
                     if( in_array( $dataLezione, $dateSalt ) ) {
+
+                        // status
+                        $job['corso']['lezioni'][ $dataLezione ][] = $dataLezione . ' è nella lista delle date da saltare';
+
+                        // ...
                         $idTipo = 17;
+
                     } else {
+
+                        // status
+                        $job['corso']['lezioni'][ $dataLezione ][] = $dataLezione . ' non è nella lista delle date da saltare';
+
+                        // ...
                         $idTipo = 15;
+
                     }
 
                     // inserisco la lezione
-                    mysqlInsertRow(
+                    $job['corso']['lezioni'][ $dataLezione ][] = mysqlInsertRow(
                         $cf['mysql']['connection'],
                         array(
                             'id_progetto' => $job['corso']['id'],

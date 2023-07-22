@@ -8850,9 +8850,12 @@ CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
 		tipologie_periodi.id,
 		tipologie_periodi.id_genitore,
 		tipologie_periodi.ordine,
+		tipologie_periodi.codice,
 		tipologie_periodi.nome,
 		tipologie_periodi.html_entity,
 		tipologie_periodi.font_awesome,
+		tipologie_periodi.se_corsi,
+		tipologie_periodi.se_tesseramenti,
 		tipologie_periodi.id_account_inserimento,
 		tipologie_periodi.id_account_aggiornamento,
 		tipologie_periodi_path( tipologie_periodi.id ) AS __label__

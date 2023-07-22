@@ -86,14 +86,17 @@
                 $status['date'] = $restult;
                 $status['n'] = count($restult);
 
-                if( ! empty( $_REQUEST['__oi__'] ) && ! empty( $_REQUEST['__of__'] ) && ! empty( $_REQUEST['__l__'] ) && ! empty( $_REQUEST['__a__'] )  ){
-                
+                // if( ! empty( $_REQUEST['__oi__'] ) && ! empty( $_REQUEST['__of__'] ) && ! empty( $_REQUEST['__l__'] ) && ! empty( $_REQUEST['__a__'] )  ) {
+                if( ! empty( $_REQUEST['__oi__'] ) && ! empty( $_REQUEST['__of__'] ) && ! empty( $_REQUEST['__l__'] ) ) {
+
                     $inserite = 0;
 
                     $resp = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_anagrafica FROM progetti_anagrafica WHERE se_sostituto IS NULL AND id_ruolo = 16 AND id_progetto = ?', array( array( 's' => $_REQUEST['progetto'] ) ) );
 
-                    if( empty( $resp ) ) {
-                        $resp = $_REQUEST['__a__'];
+                    if( ! empty( $_REQUEST['__a__'] )  ) {
+                        if( empty( $resp ) ) {
+                            $resp = $_REQUEST['__a__'];
+                        }
                     }
 
                     // creazione todo [andrebbe fatto un job?]
