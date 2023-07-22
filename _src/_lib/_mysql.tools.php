@@ -933,7 +933,8 @@
 		if( ! empty( $static ) ) {
 
             mysqlQuery( $c, 'REPLACE INTO ' . $static . ' SELECT * FROM ' . $t . '_view WHERE id = ?', array( array( 's' => $i ) ) );
-            logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
+			// logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
+			logWrite( 'aggiornata view statica ' . $t . ' per id #' . $i, 'static' );
 
 		}
 
