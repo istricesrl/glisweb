@@ -3,7 +3,7 @@
 <script>
     function importa_prodotti() {
 	var data = $('#__upload_____prodotti__').val();
-	getws('/_src/_api/_task/_prodotti.importazione.start.php?file='+data);
+	getws('/task/4100.prodotti/prodotti.importazione.start?file='+data);
 	$('#importa_contatti').modal('toggle');
 	location.reload();
     }

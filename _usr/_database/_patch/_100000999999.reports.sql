@@ -123,6 +123,32 @@ CREATE TABLE `__report_corsi__` (
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 100000009870
+-- __report_evasione_ordini__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_evasione_ordini__`;
+
+-- | 100000009871
+
+
+CREATE OR REPLACE VIEW `__report_evasione_ordini__` AS
+
+WITH a AS (
+   SELECT id_documento, id_tipologia,
+          row_number() OVER (PARTITION BY id_documento
+                           ORDER BY data_attivita DESC
+                      ) AS `rank`
+     FROM attivita
+)
+
+SELECT documenti.data, anagrafica.codice, concat_ws( ' ', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS cliente, coalesce( tipologie_attivita.nome, 'ancora da iniziare' ) AS stato FROM documenti
+INNER JOIN anagrafica ON anagrafica.id = documenti.id_destinatario
+LEFT JOIN a ON a.id_documento = documenti.id AND a.rank = 1
+LEFT JOIN tipologie_attivita ON tipologie_attivita.id = a.id_tipologia
+WHERE documenti.id_tipologia = 4
+GROUP BY documenti.id
+;
+
 -- | 100000015000
 -- __report_giacenza_crediti__
 -- tipologia: report

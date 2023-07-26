@@ -196,6 +196,7 @@
                             $cf['mysql']['connection'],
                             array(
                                 'id' => $job['riga']['id_articolo'],
+                                'id_prodotto' => $idProdotto,
                                 'nome' => ( ( isset( $job['riga']['nome_articolo'] ) ) ? $job['riga']['nome_articolo'] : NULL )
                             ),
                             'articoli'

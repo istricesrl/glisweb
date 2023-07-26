@@ -17,7 +17,7 @@
         'INSERT INTO job ( nome, job, iterazioni, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ? )',
         array(
             array( 's' => 'importazione automatica prodotti/articoli' ),
-            array( 's' => '_src/_api/_job/_prodotti.importazione.php' ),
+            array( 's' => '_mod/_4100.prodotti/_src/_api/_job/_prodotti.importazione.php' ),
             array( 's' => 15 ),
             array( 's' => 1 ),
             array( 's' => json_encode(
