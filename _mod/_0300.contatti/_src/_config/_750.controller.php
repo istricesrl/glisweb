@@ -147,9 +147,9 @@
                         if( isset( $cnf['analytics'] ) ) {
 
                         // registrazione della hit
-                            if( isset( $cf['google']['analytics']['profile']['ua'] ) ) {
+                            if( isset( $cf['google']['profile']['analytics']['ua'] ) ) {
                                 analyticsEventHit(
-                                    $cf['google']['analytics']['profile']['ua'],
+                                    $cf['google']['profile']['analytics']['ua'],
                                     $cnf['analytics']['categoria'],
                                     $cnf['analytics']['azione'],
                                     $cnf['analytics']['label']

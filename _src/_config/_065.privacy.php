@@ -71,8 +71,8 @@
 
     /*
     // aggiustamenti automatici ai cookie per Google Tag Manager
-    if( isset( $cf['google']['gtm']['profile'] ) ) {
-        $k = ( ( $cf['google']['gtm']['profile']['anonymous'] == true ) ? 'anonimi' : 'identificativi' );
+    if( isset( $cf['google']['profile']['gtm'] ) ) {
+        $k = ( ( $cf['google']['profile']['gtm']['anonymous'] == true ) ? 'anonimi' : 'identificativi' );
         $cf['privacy']['cookie']['terzi']['analitici'][ $k ] = array(
         'GoogleTagManager' => array(
             'nome' => 'Google Tag Manager',
@@ -84,8 +84,8 @@
     }
 
     // aggiustamenti automatici ai cookie per Google Analytics
-    if( isset( $cf['google']['analytics']['profile'] ) ) {
-        $k = ( ( $cf['google']['analytics']['profile']['anonymous'] == true ) ? 'anonimi' : 'identificativi' );
+    if( isset( $cf['google']['profile']['analytics'] ) ) {
+        $k = ( ( $cf['google']['profile']['analytics']['anonymous'] == true ) ? 'anonimi' : 'identificativi' );
         $cf['privacy']['cookie']['terzi']['analitici'][ $k ] = array(
         'GoogleAnalytics' => array(
             'nome' => 'Google Analytics',
