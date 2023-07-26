@@ -975,7 +975,8 @@
 
 	foreach( array_keys( $a ) as $k ) {
 
-	    $r[] = '`' . $k . '` = ' . ( ( $k == 'id' ) ? 'LAST_INSERT_ID' : 'VALUES' ) . '( `' . $k . '` )';
+//	    $r[] = '`' . $k . '` = ' . ( ( $k == 'id' ) ? 'LAST_INSERT_ID' : 'VALUES' ) . '( `' . $k . '` )';
+		$r[] = '`' . $k . '` = ' . ( ( $k == 'id' && empty( $a[ $k ] ) ) ? 'LAST_INSERT_ID' : 'VALUES' ) . '( `' . $k . '` )';
 
 	}
 
