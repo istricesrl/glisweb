@@ -543,6 +543,7 @@ ALTER TABLE `carrelli`
 	ADD KEY `intestazione_id_tipologia_anagrafica` (`intestazione_id_tipologia_anagrafica`),
 	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
 	ADD KEY `intestazione_id_account` (`intestazione_id_account`), 
+	ADD KEY `intestazione_id_comune` (`intestazione_id_comune`), 
 	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`), 
 	ADD KEY `destinatario_id_provincia` (`destinatario_id_provincia`), 
 	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`), 
