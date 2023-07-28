@@ -374,6 +374,13 @@
                 // giorni di differenza fra la data di questa lezione e la data della lezione precedente nel vecchio calendario
                 $deltaGiorni = daysBetweenDates( $vecchiaDataLezione, $lezione['data_programmazione'] );
 
+                // ...
+                if( ! empty( $job['workspace']['sostituzioni']['intervallo_max'] ) ) {
+                    if( count( $intervalli ) > 1 && $deltaGiorni > $job['workspace']['sostituzioni']['intervallo_max'] ) {
+                        $deltaGiorni = $job['workspace']['sostituzioni']['intervallo_max'];
+                    }
+                }
+
                 // registro l'intervallo
                 if( $vecchiaDataLezione != $lezioni[0]['data_programmazione'] ) {
                     $intervalli[] = array(

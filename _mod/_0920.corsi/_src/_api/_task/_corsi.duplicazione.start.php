@@ -47,6 +47,7 @@
 				'iscritti_max' => $_REQUEST['iscritti_max'],
 				'calendario_dal' => $_REQUEST['calendario_dal'],
 				'calendario_al' => $_REQUEST['calendario_al'],
+				'intervallo_max' => $_REQUEST['intervallo_max'],
 				'saltare' => $saltare
 			),
 			'lista' => array()

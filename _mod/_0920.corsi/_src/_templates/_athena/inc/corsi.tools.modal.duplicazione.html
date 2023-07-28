@@ -14,6 +14,7 @@
 		var iscritti_max = $('#__duplicazione___iscritti_max').val();
 		var calendario_dal = $('#__duplicazione___calendario_dal').val();
 		var calendario_al = $('#__duplicazione___calendario_al').val();
+		var intervallo_max = $('#__duplicazione___intervallo_max').val();
 		{% for t in etc.select.tipologie %}
 		var salta_{{ t.id }} = $('#__duplicazione___salta_{{ t.id }}').val();
 		{% endfor %}
@@ -30,6 +31,7 @@
 			+'&iscritti_max='+iscritti_max
 			+'&calendario_dal='+calendario_dal
 			+'&calendario_al='+calendario_al
+			+'&intervallo_max='+intervallo_max
 			{% for t in etc.select.tipologie %}
 			+'&salta_{{ t.id }}='+salta_{{ t.id }}
 			{% endfor %}
@@ -137,6 +139,12 @@
 					<div class="col">
 						<span class="label-top">al</span>
 						{{ frm.date( '__duplicazione__', '', '', 'calendario_al', '', '', '' ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">intervallo massimo</span>
+						{{ frm.inputRequired( '__duplicazione__', '', '', 'intervallo_max', '', '', '' ) }}
 					</div>
 				</div>
 				<div class="form-row">
