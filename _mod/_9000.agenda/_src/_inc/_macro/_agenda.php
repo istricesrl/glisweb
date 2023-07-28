@@ -5,6 +5,22 @@
 		return $d && $d->format($format) == $date;
 	}
 
+	// ...
+	// print_r( $ct['page'] );
+
+	// ..
+	if( $ct['page']['id'] == 'agenda.programmazione' ) {
+		$limit = 'AND ( attivita.data_programmazione > date( now() ) OR ) ';
+		$limitTodo = 'AND ( attivita.data_programmazione > date( now() ) OR todo.anno_programmazione > year( now() ) OR ( todo.anno_programmazione = year( now() ) AND todo.settimana_programmazione > week( curdate() ) ) ) ';
+	} else {
+		$limit = 'AND ( attivita.data_programmazione <= date( now() ) OR attivita.data_programmazione IS NULL ) ';
+		$limitTodo = 'AND ( '.
+						'( attivita.data_programmazione <= date( now() ) '.
+						'OR ( todo.anno_programmazione <= year( now() ) AND todo.settimana_programmazione <= week( curdate() ) ) ) '.
+						'OR ( todo.anno_programmazione IS NULL AND todo.settimana_programmazione IS NULL ) '.
+						') ';
+	}
+
 	if( isset( $_SESSION['account']['id_anagrafica'] ) ) {
 
 		// attività
@@ -29,7 +45,8 @@
 			'LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria '.
 			'LEFT JOIN progetti ON progetti.id = attivita.id_progetto LEFT JOIN todo ON todo.id = attivita.id_todo '.
 			'LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo '.
-			'WHERE attivita.data_attivita IS NULL  AND  ( attivita.id_anagrafica_programmazione = ? OR attivita.id_anagrafica_programmazione IS NULL ) '.
+			'WHERE ( attivita.data_attivita IS NULL  AND  ( attivita.id_anagrafica_programmazione = ? OR attivita.id_anagrafica_programmazione IS NULL ) ) '.
+			$limit.
 			'GROUP BY attivita.id '.
 			'ORDER BY attivita.data_programmazione, attivita.ora_inizio_programmazione',
 			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
@@ -67,7 +84,9 @@
 			'LEFT JOIN attivita AS attivita_chiuse ON ( attivita_chiuse.id_todo = todo.id AND attivita_chiuse.data_attivita IS NOT NULL ) LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica '.
 			'LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo LEFT JOIN comuni ON comuni.id = indirizzi.id_comune '.
 			'LEFT JOIN provincie ON provincie.id = comuni.id_provincia LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia '.
-			'WHERE ( tipologie_todo.se_agenda IS NOT NULL OR ( todo.anno_programmazione IS NOT NULL AND todo.settimana_programmazione IS NOT NULL ) ) AND ( todo.id_anagrafica = ? ) AND todo.data_archiviazione IS NULL AND todo.data_chiusura IS NULL GROUP BY todo.id',
+			'WHERE ( tipologie_todo.se_agenda IS NOT NULL OR ( todo.anno_programmazione IS NOT NULL AND todo.settimana_programmazione IS NOT NULL ) ) AND ( todo.id_anagrafica = ? ) AND todo.data_archiviazione IS NULL AND todo.data_chiusura IS NULL '.
+			$limitTodo.
+			'GROUP BY todo.id',
 //			'WHERE tipologie_todo.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND ( todo.id_anagrafica = ? AND ( attivita.id_anagrafica_programmazione != ? OR attivita.id_anagrafica_programmazione IS NULL ) ) ',
 //			'WHERE tipologie_todo.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL AND (todo.id_anagrafica = ? AND attivita.id_anagrafica_programmazione <> ?) '.
 //			'AND todo.data_chiusura IS NULL '.( isset($todo) && count($todo)>0 ? ' AND todo.id NOT IN ('.implode(',',$todo).') ' : ' ' ).' GROUP BY todo.id',
