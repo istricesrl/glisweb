@@ -10,12 +10,26 @@
 	$p['agenda'] = array(
 	    'sitemap'	=> false,
 	    'title'		=> array( $l		=> 'agenda' ),
-	    'h1'		=> array( $l		=> 'agenda' ),
+	    'h1'		=> array( $l		=> 'oggi' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'agenda', 'agenda.stampe' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'agenda', 'agenda.programmazione', 'agenda.stampe', 'agenda.tools' ) ),
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'agenda' ),
+									'priority'	=> '040' ) ) )	
+	);
+
+    // dashboard contenuti
+	$p['agenda.programmazione'] = array(
+	    'sitemap'	=> false,
+	    'title'		=> array( $l		=> 'programmazione' ),
+	    'h1'		=> array( $l		=> 'programmazione' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.php' ),
+	    'parent'	=> array( 'id'		=> NULL ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['agenda']['etc']['tabs'] ),
 		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'agenda' ),
 									'priority'	=> '040' ) ) )	
 	);
@@ -32,6 +46,19 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['agenda']['etc']['tabs'] )
 	);
+
+	// tools agenda
+	$p['agenda.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni' ),
+	    'h1'		=> array( $l		=> 'azioni' ),
+	    'parent'		=> array( 'id'		=> 'agenda' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['agenda']['etc']['tabs'] )
+    );
 
 	// gestione agenda
 	$p['agenda.form'] = array(
