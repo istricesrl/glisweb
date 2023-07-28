@@ -100,7 +100,7 @@
 <!--
             {# BOTTONI E COMANDI DEL MODULO #}
 -->
-            {% if request[ table ].id %}
+            {% if request[ table ].id and etc.rinnovi_da_pagare %}
             <fieldset>
                 <legend>acquisto del tesseramento</legend>
                 <div class="form-row metro">
