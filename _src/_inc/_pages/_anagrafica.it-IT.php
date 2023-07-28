@@ -280,7 +280,7 @@
 		'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.file.html' ),
 		'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.file.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
@@ -293,7 +293,7 @@
 		'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.video.html' ),
 		'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.video.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
@@ -306,7 +306,7 @@
 		'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.audio.html' ),
 		'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.audio.php' ),
-		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
@@ -319,7 +319,7 @@
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.immagini.html' ),
 	    'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.immagini.php' ),
-	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
 	);
 
