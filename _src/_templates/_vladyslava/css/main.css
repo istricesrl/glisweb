@@ -103,11 +103,11 @@ ul.navbar-nav {
     list-style-type: none;
 }
 
+/*
 footer > .container > .row > .col {
     min-height: 5em;
 }
 
-/*
 footer > .container > .row > .col:first-of-type {
     background-color: #666666;
     color: #ffffff;
