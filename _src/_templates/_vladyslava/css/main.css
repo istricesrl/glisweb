@@ -1,0 +1,155 @@
+body {
+    font-family: monospace;
+    margin: 0px;
+}
+
+main {
+    padding: 0em;
+}
+
+body > .container-fluid > .row > .col-12:first-child {
+    background-attachment: fixed;
+    background-image: url('/_src/_img/_bkg/_03/_00.jpg');
+    background-repeat: no-repeat;
+    border-right: 2px solid #aaaaaa;
+    max-height: 100vh;
+    position: sticky;
+    top: 0;
+    z-index: 1020;
+}
+
+header .logo img {
+    height: 5em;
+}
+
+footer {
+    margin-top: 0em !important;
+    padding: 1em 0em;
+    padding-top: 3em;
+}
+
+footer p {
+    margin: 0em;
+    font-size: 0.8em;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0.5em 0em;
+}
+
+h1 {
+    font-size: 2em;
+    margin-top: 1em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+h4, h5 {
+    font-size: 1em;
+}
+
+nav.navbar {
+    padding: 0em;
+}
+
+main p {
+    margin: 1em 0em;
+}
+
+
+div.jumbotron {
+    min-height: 16em;
+}
+
+a.nav-link {
+    text-align: right;
+}
+
+a.nav-link, a.nav-link:visited {
+    color: #333333;
+    font-weight: bold;
+}
+
+a.nav-link:active, a.nav-link:hover {
+    color: #333333;
+    text-decoration: underline;
+}
+
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #dddddd;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #dddddd;
+    text-decoration: underline;
+}
+
+ul.navbar-nav {
+    list-style-type: none;
+}
+
+footer > .container > .row > .col {
+    min-height: 5em;
+}
+
+/*
+footer > .container > .row > .col:first-of-type {
+    background-color: #666666;
+    color: #ffffff;
+}
+
+header > .container > .row > .col {
+    min-height: 5em;
+}
+
+header > .container > .row > .col:last-of-type {
+    background: #666666;
+    color: #ffffff;
+}
+
+
+main > .container > .row {
+    margin-top: 0.5em;
+}
+
+*/
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+}
+
+@media (min-width: 1200px) {
+    
+}
+
+.label-top {
+    font-size: .8em;
+    font-weight: bold;
+}
+
+.form-control-sm {
+    margin-bottom: 1em;
+}

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.html' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.html' %}
+
+        <div class="container-fluid d-flex flex-column flex-fill">
+
+            <div class="row flex-fill">
+
+                <div class="col-12 col-md-4 d-flex flex-column">
+
+                    <header class="mb-auto">
+
+                        <div class="row">
+                            {% block header %}{% include 'inc/header.html' %}{% endblock %}
+                        </div>
+
+                    </header>
+
+                    <div class="m0 mt-md-auto mb-md-auto">
+                        <div class="row">
+                            {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
+                        </div>
+                    </div>
+
+                    <footer class="mt-auto d-none d-md-block">
+                        <div class="container">
+                            <div class="row">
+                                {% block footer %}{% include 'inc/footer.html' %}{% endblock %}
+                            </div>
+                        </div>
+                    </footer>
+
+                </div>
+
+                <div class="col-12 col-md-8 d-flex flex-column">
+                    
+                    <main class="mb-md-auto">
+                        <div class="container">
+
+                            <div class="row">
+                                <div class="col">
+                                    <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+                                    {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
+                                </div>
+                            </div>
+
+                            {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
+                            {% block jumbotron %}{% include 'inc/jumbotron.html' %}{% endblock %}
+                
+                            <div class="row">
+                                <div class="col">
+                                    {% block main %}{% endblock %}
+                                </div>
+                            </div>
+
+                            {% block gallery %}{% include 'inc/gallery.html' %}{% endblock %}
+
+                        </div>
+                    </main>
+
+                    <footer class="mt-auto d-md-none">
+                        <div class="container">
+                            <div class="row">
+                                {% block footerMobile %}{% include 'inc/footer.html' %}{% endblock %}
+                            </div>
+                        </div>
+                    </footer>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        {% include '_inc/_page.close.html' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>

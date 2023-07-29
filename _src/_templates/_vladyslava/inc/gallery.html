@@ -1,0 +1,5 @@
+{% import '_bin/_default.html' as cms %}
+
+{% if page.contents.images.gallery|length > 0 %}
+{{ cms.gallery2colorbox( page, localization.language.ietf, site, 'galleryId', ['gallery'] ) }}
+{% endif %}
