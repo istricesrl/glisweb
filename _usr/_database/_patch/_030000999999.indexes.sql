@@ -2705,7 +2705,6 @@ ALTER TABLE `progetti`
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `se_sitemap` (`se_sitemap`),
 	ADD KEY `se_cacheable` (`se_cacheable`),
-	ADD KEY `data_apertura` (`data_apertura`),
 	ADD KEY `data_accettazione` (`data_accettazione`),
 	ADD KEY `data_apertura` (`data_apertura`),
 	ADD KEY `data_chiusura` (`data_chiusura`),
