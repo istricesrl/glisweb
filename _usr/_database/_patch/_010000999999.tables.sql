@@ -2561,7 +2561,6 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `se_cacheable` tinyint(1) DEFAULT NULL,
   `id_sito` int(11) DEFAULT NULL,
   `id_pagina` int(11) DEFAULT NULL,	
-  `data_apertura` date DEFAULT NULL,
   `entrate_previste` decimal(16,2) DEFAULT NULL,
   `ore_previste` decimal(16,2) DEFAULT NULL,
   `costi_previsti` decimal(16,2) DEFAULT NULL,
