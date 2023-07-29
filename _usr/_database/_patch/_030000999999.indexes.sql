@@ -276,6 +276,8 @@ ALTER TABLE `articoli`
 	ADD KEY `id_reparto` (`id_reparto`),
 	ADD KEY `id_taglia` (`id_taglia`), 
     ADD KEY `id_colore` (`id_colore`), 
+	ADD KEY `id_periodicita` (`id_periodicita`), 
+	ADD KEY `id_tipologia_rinnovo` (`id_tipologia_rinnovo`), 
 	ADD KEY `id_udm_dimensioni` (`id_udm_dimensioni`),
 	ADD KEY `id_udm_peso` (`id_udm_peso`),
 	ADD KEY `id_udm_volume` (`id_udm_volume`),
@@ -541,6 +543,7 @@ ALTER TABLE `carrelli`
 	ADD KEY `intestazione_id_tipologia_anagrafica` (`intestazione_id_tipologia_anagrafica`),
 	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
 	ADD KEY `intestazione_id_account` (`intestazione_id_account`), 
+	ADD KEY `intestazione_id_comune` (`intestazione_id_comune`), 
 	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`), 
 	ADD KEY `destinatario_id_provincia` (`destinatario_id_provincia`), 
 	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`), 
@@ -578,12 +581,12 @@ ALTER TABLE `carrelli_articoli`
 	ADD KEY `id_carrello` (`id_carrello`),  
 	ADD KEY `id_articolo` (`id_articolo`),  
 	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
+	ADD KEY `id_rinnovo` (`id_rinnovo`),
 	ADD KEY `id_iva` (`id_iva`),
 	ADD KEY `id_pagamento` (`id_pagamento`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`, `id_carrello`, `id_articolo`, `id_iva`, `prezzo_netto_unitario`, `prezzo_lordo_unitario`,`quantita`, `prezzo_netto_totale`,  `prezzo_lordo_totale`, `sconto_percentuale`, `sconto_valore`, `prezzo_netto_finale`,  `prezzo_lordo_finale`)
-;
+	ADD KEY `indice` (`id`, `id_carrello`, `id_articolo`, `id_iva`, `prezzo_netto_unitario`, `prezzo_lordo_unitario`,`quantita`, `prezzo_netto_totale`,  `prezzo_lordo_totale`, `sconto_percentuale`, `sconto_valore`, `prezzo_netto_finale`,  `prezzo_lordo_finale`);
 
 -- | 030000003051
 
@@ -2276,6 +2279,7 @@ ALTER TABLE `metadati`
 	ADD UNIQUE KEY `unica_pianificazione` (`id_lingua`,`id_pianificazione`,`nome`),
 	ADD UNIQUE KEY `unica_tipologia_todo` (`id_lingua`,`id_tipologia_todo`,`nome`),
  	ADD UNIQUE KEY `unica_tipologia_contratti` (`id_lingua`,`id_tipologia_contratti`,`nome`), 
+	ADD UNIQUE KEY `unica_carrello` (`id_lingua`,`id_carrello`,`nome`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_anagrafica` (`id_anagrafica`), 
  	ADD KEY `id_account` (`id_account`), 
@@ -2703,11 +2707,12 @@ ALTER TABLE `progetti`
 	ADD KEY `se_cacheable` (`se_cacheable`),
 	ADD KEY `data_apertura` (`data_apertura`),
 	ADD KEY `data_accettazione` (`data_accettazione`),
+	ADD KEY `data_apertura` (`data_apertura`),
 	ADD KEY `data_chiusura` (`data_chiusura`),
 	ADD KEY `data_archiviazione` (`data_archiviazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_chiusura`,`data_archiviazione`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`id_pianificazione`,`id_cliente`,`id_indirizzo`,`id_ranking` ,`nome`,`data_accettazione`,`data_apertura`,`data_chiusura`,`data_archiviazione`);
 
 -- | 030000027200
 
@@ -3093,12 +3098,13 @@ ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rinnovi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica_codice` (`codice`),
-	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `data_inizio`, `data_fine`),
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `id_tipologia_contratto`, `data_inizio`, `data_fine`),
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`),
 	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_tipologia_contratto` (`id_tipologia_contratto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `indice` ( `id_contratto`, `id_tipologia`, `id_licenza`, `id_progetto`, `id_categoria_progetti`, `data_inizio`, `data_fine`, `codice`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
