@@ -99,8 +99,8 @@
             $job['riga'] = $arr[ $widx ];
 
             // controlli formali e lavorazione riga
-            if( ( ! isset( $job['riga']['id'] ) || empty( $job['riga']['codice_cliente'] ) ) && 
-                ( ! isset( $job['riga']['nome'] ) || empty( $job['riga']['partita_iva_cliente'] ) ) ) {
+            if( ( ! isset( $job['riga']['codice_cliente'] ) || empty( $job['riga']['codice_cliente'] ) ) && 
+                ( ! isset( $job['riga']['partita_iva_cliente'] ) || empty( $job['riga']['partita_iva_cliente'] ) ) ) {
 
                 // status
                 $job['status']['error'][] = 'codice e partita IVA non settati per la riga ' . $job['corrente'];
@@ -118,13 +118,14 @@
                 // trovo il cliente
                 $idCliente = mysqlSelectRow( $cf['mysql']['connection'], $q, array( $d ) );
 
+/*
                 // se non ho trovato il cliente e ho i dati per inserirlo
                 if( empty( $idCliente ) && ! empty( $job['riga']['denominazione_cliente'] ) ) {
 
 
 
                 }
-
+*/
                 // ...
                 if( ! empty( $idCliente ) ) {
 
@@ -139,12 +140,12 @@
 
                     // ...
                     if( ! empty( $idAnagraficaProgrammazione ) ) {
-
+/*
                         // inserisco l'attività
                         $idAttivita = mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
-                                'id_tipologia' => 16,           // leggere dal tracciato
+                                'id_tipologia' => 16,
                                 'data_programmazione' => $job['riga']['data_programmazione_attivita'],
                                 'nome' => $job['riga']['nome_attivita'],
                                 'id_cliente' => $idCliente,
@@ -153,7 +154,9 @@
                             ),
                             'attivita'
                         );
-
+*/
+                        // status
+                        $job['status']['info'][] = 'attività inserita ('.$idCliente.'/'.$idAnagraficaProgrammazione.') per la riga ' . $job['corrente'];
 
                     } else {
 
