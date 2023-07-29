@@ -23,6 +23,10 @@
              {{ frm.time( view.open.table, '', '', 'ora_fine_programmazione', '', '', request, '', '', '', '', 2) }} 
         </div>
 -->
+        <div class="col-12 col-md-auto">
+            <span class="label-top">ore</span>
+            {{ frm.input( view.open.table, '', '', 'ore_programmazione', '', '', '', '', '', 1, '', 2 ) }}
+        </div>
         <div class="col-12 col-md-2">
             <span class="label-top">tipologia</span>
             {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.id_tipologia, '', '', '', 1, '', '', 2  ) }}
