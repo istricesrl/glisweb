@@ -193,7 +193,7 @@
 		// gestione progetti accettazione
 		$p['progetti.commerciale.form.accettazione'] = array(
 			'sitemap'		=> false,
-			'icon'		=> '<i class="fa fa-handshake-o" aria-hidden="true"></i>',
+			'icon'		=> '<i class="fa fa-thumbs-o-up" aria-hidden="true"></i>',
 			'title'			=> array( $l		=> 'accettazione' ),
 			'h1'			=> array( $l		=> 'accettazione' ),
 			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
