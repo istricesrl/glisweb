@@ -123,6 +123,21 @@
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.todo' );
 	}
 
+	// RELAZIONI CON IL MODULO PROGETTI
+	if( in_array( "0900.progetti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.progetti' );
+	}
+
+	// RELAZIONI CON IL MODULO DOCUMENTI
+	if( in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.documenti' );
+	}
+
+	// RELAZIONI CON IL MODULO CONTRATTI
+	if( in_array( "0600.contratti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.contratti' );
+	}
+
     // gestione anagrafica informazioni
 	$p['anagrafica.form.informazioni'] = array(
 	    'sitemap'			=> false,
