@@ -36,7 +36,8 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
-	    'data' => 'text-left no-wrap'
+        'data' => 'no-wrap',
+	    'nome' => 'text-left no-wrap'
     );
 
     /*
