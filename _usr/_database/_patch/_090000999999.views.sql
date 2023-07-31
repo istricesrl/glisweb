@@ -2116,6 +2116,7 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		group_concat( licenze.codice SEPARATOR ', ' ) AS licenze,
 		licenze.postazioni,
 		tipologie_licenze.nome AS tipologia_licenza,
+		group_concat( concat_ws( ' ', licenze.codice, tipologie_licenze.nome, licenze.nome ) SEPARATOR ' | ' ) AS dettagli_licenze,
 		concat_ws( ' ', tipologie_contratti.nome, contratti.nome, group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), NULL )  SEPARATOR ', ' ) ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
@@ -4301,7 +4302,10 @@ CREATE OR REPLACE VIEW licenze_view AS
 		licenze.note,                        
 		licenze.testo,                       
 		licenze.giorni_validita,             
-		licenze.giorni_rinnovo,              
+		licenze.giorni_rinnovo,
+		min( rinnovi.data_inizio ) AS data_inizio,
+		max( rinnovi.data_fine ) AS data_fine,
+		max( rinnovi.id_contratto ) AS id_contratto,
 		licenze.timestamp_distribuzione,     
 		licenze.timestamp_inizio,            
 		licenze.timestamp_fine,              
@@ -4312,6 +4316,8 @@ CREATE OR REPLACE VIEW licenze_view AS
 		LEFT JOIN tipologie_licenze ON tipologie_licenze.id = licenze.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = licenze.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
+		LEFT JOIN rinnovi ON rinnovi.id_licenza = licenze.id
+	GROUP BY licenze.id
 ;
 
 -- | 090000016700
@@ -7400,6 +7406,7 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		contratti.nome AS contratto,
 		rinnovi.id_licenza,
 		licenze.nome AS licenza,
+		licenze.codice AS codice_licenza,
 		rinnovi.id_progetto,
 		progetti.nome AS progetto,
 		rinnovi.id_categoria_progetti,
@@ -7416,6 +7423,7 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto 
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
 		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
+	GROUP BY rinnovi.id
 	;
 
 
