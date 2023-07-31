@@ -13,16 +13,16 @@
      */
 
    // tabella della vista
-   $ct['view']['table'] = 'rinnovi';
+   $ct['view']['table'] = 'licenze';
 
    $ct['form']['table'] = 'contratti';
 
-   $ct['view']['open']['page'] = 'rinnovi.contratti.form';
-   $ct['view']['open']['table'] = 'rinnovi';
+   $ct['view']['open']['page'] = 'licenze.form';
+   $ct['view']['open']['table'] = 'licenze';
    $ct['view']['open']['field'] = 'id';
 
    // pagina per l'inserimento di un nuovo oggetto
-   $ct['view']['insert']['page'] = 'rinnovi.contratti.form';
+   $ct['view']['insert']['page'] = 'licenze.form';
    $ct['view']['insert']['field'] = 'id_contratto';
 
    // campo per il preset di apertura
@@ -33,7 +33,7 @@
 	   'id' => '#',
 	   'data_inizio' => 'data inizio',
 	   'data_fine' => 'data fine',
-       'id_contratto' => 'id_contratto',
+       'codice' => 'codice',
       '__label__' => 'contratto'
      );
 
@@ -47,7 +47,7 @@
     // preset filtro contratto attuale
     $ct['view']['__restrict__']['id_contratto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
-
+/*
     $ct['etc']['include']['insert'][] = array(
       'name' => 'rinnovi',
       'file' => 'inc/contratti.form.rinnovi.insert.html',
@@ -61,12 +61,13 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_rinnovi_view'
     );
-
+*/
+/*
   // ...
 	if( in_array( "V900.software", $cf['mods']['active']['array'] ) ) {
 		arrayInsertAssoc( '__label__', $ct['view']['cols'], array('codice_licenza' => 'licenza') );
 	}
-
+*/
   // debug
   // print_r( $ct['etc']['select']['tipologie_rinnovi'] );
 

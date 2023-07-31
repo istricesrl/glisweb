@@ -80,6 +80,11 @@
 													'contratti.form.tools' ) )
 	);
 
+	// RELAZIONI CON IL MODULO SOFTWARE
+	if( in_array( "V900.software", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'contratti.form.immagini', $p['contratti.form']['etc']['tabs'], 'contratti.form.licenze' );
+	}
+
 	// form contratti pianificazioni
 	// TODO spostare nel modulo pianificazioni
 	$p['contratti.form.pianificazioni'] = array(
