@@ -36,7 +36,7 @@
         'url' => $cf['contents']['pages']['iscrizioni.form']['url'][ LINGUA_CORRENTE ].'?idAttesa='.$_REQUEST[ $ct['form']['table'] ]['id'],
         'target' => '_self',
         'icon' => NULL,
-        'fa' => 'fa-handshake-o',
+        'fa' => 'fa-graduation-cap',
         'title' => 'trasforma in iscrizione',
         'text' => 'crea una nuova iscrizione e archivia questa richiesta'
     );

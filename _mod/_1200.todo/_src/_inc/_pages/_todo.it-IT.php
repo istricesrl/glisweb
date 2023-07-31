@@ -139,10 +139,11 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 		);
-
+/*
 		// gestione todo - feedback
 		$p['todo.form.feedback'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-star-half-o" aria-hidden="true"></i>',
 			'title'			=> array( $l		=> 'feedback' ),
 			'h1'			=> array( $l		=> 'feedback' ),
 			'parent'		=> array( 'id'		=> 'todo.view' ),
@@ -151,7 +152,7 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['todo.form']['etc']['tabs'] )
 		);
-
+*/
 		// vista archivio anagrafica
 		$p['todo.archivio.view'] = array(
 			'sitemap'		=> false,
@@ -352,10 +353,11 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.form']['etc']['tabs'] )
 		);
-
+/*
 		// gestione todo - feedback
 		$p['todo.amministrazione.form.feedback'] = array(
 			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-star-half-o" aria-hidden="true"></i>',
 			'title'			=> array( $l		=> 'feedback' ),
 			'h1'			=> array( $l		=> 'feedback' ),
 			'parent'		=> array( 'id'		=> 'todo.amministrazione.view' ),
@@ -364,7 +366,7 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.form']['etc']['tabs'] )
 		);
-
+*/
 		// vista archivio anagrafica
 		$p['todo.archivio.view'] = array(
 			'sitemap'		=> false,
