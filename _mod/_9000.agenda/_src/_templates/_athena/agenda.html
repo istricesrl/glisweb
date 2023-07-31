@@ -72,6 +72,18 @@
             {% endfor %}
             </div>
         </div>
+        <div class="col">
+            <legend>nuovo evento</legend>
+            <div class="form-row">
+            {% for b in etc.id_tipologia_attivita %}
+            <div class="col-4 text-right">
+                {% if b.procedure.attivita.corrente.tipo == 'attivita' %}{% set seg = '&__preset__[attivita][data_attivita]=' ~ now|date('Y-m-d') %}{% else %}{% set seg = '' %}{% endif %}
+                {% if b.procedure.attivita.corrente.label %}{% set lbl = '&__preset__[attivita][nome]=' ~ b.procedure.attivita.corrente.label %}{% else %}{% set lbl = '' %}{% endif %}
+                <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.open('{{ pages["agenda.form"].url[ localization.language.ietf ] }}?__preset__[attivita][id_tipologia]={{ b.id }}{{ seg }}{{ lbl }}&__preset__[attivita][data_attivita]={{ now|date('Y-m-d') }}', '_self')">{{ b.__label__ }}</button>
+            </div>
+            {% endfor %}
+            </div>
+        </div>
         {% endif %}
     </div>
 </fieldset>

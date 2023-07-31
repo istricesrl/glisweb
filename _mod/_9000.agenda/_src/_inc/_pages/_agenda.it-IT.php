@@ -29,9 +29,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_agenda.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> $p['agenda']['etc']['tabs'] ),
-		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'agenda' ),
-									'priority'	=> '040' ) ) )	
+	    'etc'		=> array( 'tabs'	=> $p['agenda']['etc']['tabs'] )
 	);
 
     // stampe agenda
@@ -73,7 +71,7 @@
 														'agenda.form.feedback',
 														'agenda.form.file' ) )
 	);
-
+/*
 	// gestione agenda - feedback
 	$p['agenda.form.feedback'] = array(
 	    'sitemap'		=> false,
@@ -85,7 +83,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['agenda.form']['etc']['tabs'] )
 	);
-
+*/
 	// form gestione agenda file
 	$p['agenda.form.file'] = array(
 		'sitemap'		=> false,

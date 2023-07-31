@@ -292,7 +292,8 @@
 			{# SUBFORM CATEGORIE #}
 	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
 
-			{% if request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}
+			{# if request.__preset__.attivita.data_attivita or request.attivita.data_attivita #}
+			{% if request.__preset__.attivita.data_attivita or request.attivita.data_programmazione %}
 
 			{% if etc.procedure %}
 			<fieldset>
