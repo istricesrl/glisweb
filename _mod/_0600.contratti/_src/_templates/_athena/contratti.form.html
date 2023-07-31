@@ -44,57 +44,90 @@
 
         {# MODULO PRINCIPALE #}
         <fieldset>
-        <legend>dati generali <small>{{ legend }}</small></legend>
+            <legend>dati generali <small>{{ legend }}</small></legend>
+        
+            <div class="form-group form-row">
+                <div class="col-12 col-md-2">
+                    <span class="label-top">tipologia</span>
+                    {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">nome</span>
+                    {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+                </div>
+
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col">
+                <span class="label-top">descrizione e note</span>
+                {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+                </div>
+            </div>
+        
+        </fieldset>
+
+        {% if not request[ table ].id %}
+        <fieldset>
+            <legend>periodo di validità iniziale</legend>
+
+            <div class="form-group form-row">
+
+                {% set rinnovo = 'now'|date('U') %}
+                <input type="hidden" id="id" name="{{ table }}[rinnovi][{{ rinnovo }}][id]">
+                <input type="hidden" name="{{ table }}[rinnovi][{{ rinnovo }}][id_contratto]" value="__parent_id__">
+                <input type="hidden" id="timestamp" name="{{ table }}[rinnovi][{{ rinnovo }}][timestamp_inserimento]" value="{{ 'now'|date('U') }}" >
+                <input type="hidden" id="account" name="{{ table }}[rinnovi][{{ rinnovo }}][id_account_inserimento]" value="{{ account }}" >
+
+                <div class="col-3 col-md-auto">
+                    <span class="label-top">tipologia</span>
+                    {{ frm.select( table, 'rinnovi', rinnovo, 'id_tipologia', '', etc.select.tipologie_rinnovi, request, etc.default_tipologia_rinnovo ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">codice</span>
+                    {{ frm.input( table, 'rinnovi', rinnovo, 'codice', '', '', request ) }}
+                </div>
+                <div class="col-auto">
+                    <span class="label-top">dal</span>
+                    {{ frm.date( table, 'rinnovi', rinnovo, 'data_inizio', '', '', request, now|date('Y-m-d') ) }}
+                </div>
+                <div class="col-auto">
+                    <span class="label-top">al</span>
+                    {{ frm.date( table, 'rinnovi', rinnovo, 'data_fine', '', '', request, etc.periodo.data_fine ) }}
+                </div>
+
+            </div>
+
+        </fieldset>
+        {% endif %}
+
+        <fieldset>
+            <legend>riferimenti</legend>
+            <div class="form-group form-row">
+                {% if '0900.progetti' in mods.active.array %}
+                <div class="col-12 col-md">
+                    <span class="label-top">progetto</span>
+                    {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', '', '', '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
+                </div>
+                {% endif %}
+                {% if 'V300.immobiliari' in mods.active.array %}
+                <div class="col-12 col-md">
+                    <span class="label-top">immobile</span>
+                    {{ frm.selectBox( table, '', '', 'id_immobile', '', etc.select.immobili, request, '', '', '', '', '', 'immobili.form', 'immobili.form', 'immobili', 'id_immobile', page, pages, ietf, 'immobili' ) }}
+                </div>
+                {% endif %}
+            </div>
+        </fieldset>
+
+        {# SUBFORM ANAGRAFICA #}
+        {{ sub.anagrafica( table, 'contratti_anagrafica', 'parti contrattuali', site, page, pages, ietf, etc, request, session ) }}
     
-        <div class="form-group form-row">
-            <div class="col-12 col-md-2">
-                <span class="label-top">tipologia</span>
-                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
-            </div>
-            <div class="col-12 col-md">
-                <span class="label-top">nome</span>
-                {{ frm.input( table, '', '', 'nome', '', '', request ) }}
-            </div>
-
-        </div>
-
-
+        {# BOTTONI E COMANDI DEL MODULO #}
+        <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
+        </fieldset>
         
-
-        
-        <div class="form-group form-row">
-            <div class="col">
-            <span class="label-top">descrizione e note</span>
-			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
-            </div>
-        </div>
-       
-    </fieldset>
-
-    <legend>riferimenti</legend>
-    <div class="form-group form-row">
-        {% if '0900.progetti' in mods.active.array %}
-        <div class="col-12 col-md">
-            <span class="label-top">progetto</span>
-            {{ frm.selectBox( table, '', '', 'id_progetto', '', etc.select.progetti, request, '', '', '', '', '', 'progetti.produzione.form', 'progetti.produzione.form', 'progetti', 'id_progetto', page, pages, ietf, 'progetti' ) }}
-        </div>
-        {% endif %}
-        {% if 'V300.immobiliari' in mods.active.array %}
-        <div class="col-12 col-md">
-            <span class="label-top">immobile</span>
-            {{ frm.selectBox( table, '', '', 'id_immobile', '', etc.select.immobili, request, '', '', '', '', '', 'immobili.form', 'immobili.form', 'immobili', 'id_immobile', page, pages, ietf, 'immobili' ) }}
-        </div>
-        {% endif %}
-    </div>
-    {# SUBFORM ANAGRAFICA #}
-    {{ sub.anagrafica( table, 'contratti_anagrafica', 'parti contrattuali', site, page, pages, ietf, etc, request, session ) }}
-  
-    {# BOTTONI E COMANDI DEL MODULO #}
-    <fieldset class="form-controls mt-auto">
-        {{ def.controls( page, pages, ietf, session, table, request ) }}
-	</fieldset>
-	
-	</form>
+        </form>
     </div>
 </section>
 
