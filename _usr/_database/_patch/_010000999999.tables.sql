@@ -1370,6 +1370,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `data` date DEFAULT NULL,

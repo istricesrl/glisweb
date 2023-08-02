@@ -4306,6 +4306,7 @@ CREATE OR REPLACE VIEW licenze_view AS
 		min( rinnovi.data_inizio ) AS data_inizio,
 		max( rinnovi.data_fine ) AS data_fine,
 		max( rinnovi.id_contratto ) AS id_contratto,
+		group_concat( software.nome SEPARATOR ' | ' ) AS software,
 		licenze.timestamp_distribuzione,     
 		licenze.timestamp_inizio,            
 		licenze.timestamp_fine,              
@@ -4317,6 +4318,8 @@ CREATE OR REPLACE VIEW licenze_view AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = licenze.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 		LEFT JOIN rinnovi ON rinnovi.id_licenza = licenze.id
+		LEFT JOIN licenze_software ON licenze_software.id_licenza = licenze.id
+		LEFT JOIN software ON software.id = licenze_software.id_software
 	GROUP BY licenze.id
 ;
 
