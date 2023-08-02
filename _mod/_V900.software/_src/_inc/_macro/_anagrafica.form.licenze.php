@@ -31,6 +31,8 @@
    // campi della vista
    $ct['view']['cols'] = array(
 	   'id' => '#',
+	   'id_contratto' => 'ID contratto',
+	   'id_anagrafica' => 'ID anagrafica',
 	   'data_inizio' => 'data inizio',
 	   'data_fine' => 'data fine',
        'codice' => 'codice',
@@ -41,13 +43,14 @@
    // stili della vista
    $ct['view']['class'] = array(
     'id_contratto' => 'd-none',
+    'id_anagrafica' => 'd-none',
     'software' => 'text-left',
 	   '__label__' => 'd-none text-left no-wrap'
    );
 
    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
     // preset filtro contratto attuale
-    $ct['view']['__restrict__']['id_contratto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+    $ct['view']['__restrict__']['id_anagrafica']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
 /*
     $ct['etc']['include']['insert'][] = array(
