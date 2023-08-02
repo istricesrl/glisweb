@@ -15,7 +15,7 @@
    // tabella della vista
    $ct['view']['table'] = 'licenze';
 
-   $ct['form']['table'] = 'contratti';
+   $ct['form']['table'] = 'anagrafica';
 
    $ct['view']['open']['page'] = 'licenze.form';
    $ct['view']['open']['table'] = 'licenze';
@@ -78,6 +78,9 @@
 
    // gestione default
    require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    // macro di default
+    require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
