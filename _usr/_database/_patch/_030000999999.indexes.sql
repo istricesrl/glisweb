@@ -1378,6 +1378,7 @@ ALTER TABLE `documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-10 11:57 Fabio Mosti
 ALTER TABLE `documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_documento` (`id_documento`), 
@@ -1400,6 +1401,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `data` (`data`), 
 	ADD KEY `quantita` (`quantita`), 
+	ADD KEY `costo_netto_totale` (`costo_netto_totale`),
 	ADD KEY `importo_netto_totale` (`importo_netto_totale`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`),
 	ADD KEY `indice_progetto_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
