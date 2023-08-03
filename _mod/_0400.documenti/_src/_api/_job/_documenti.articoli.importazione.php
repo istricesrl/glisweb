@@ -199,6 +199,7 @@
                         'data' => ( ! empty( $job['riga']['data'] ) ) ? date( 'Y-m-d', strtotime( $job['riga']['data'] ) ) : NULL,
                         'id_emittente' => $idEmittente,
                         'id_destinatario' => $idDestinatario,
+                        'nome' => ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ),
                         'note' => ( ( isset( $job['riga']['note'] ) ) ? $job['riga']['note'] : NULL ),
                         'note_invio' => ( ( isset( $job['riga']['note_invio'] ) ) ? $job['riga']['note_invio'] : NULL )
                     ),
