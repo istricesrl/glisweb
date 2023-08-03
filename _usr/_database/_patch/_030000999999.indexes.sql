@@ -3559,18 +3559,13 @@ ALTER TABLE `sms_sent`
 ALTER TABLE `software`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `json` (`json`(255) ), -- ????
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json`(255));
-
--- | 030000041401
-
--- software
--- tipologia: tabella di gestita
-ALTER TABLE `software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000042000
 

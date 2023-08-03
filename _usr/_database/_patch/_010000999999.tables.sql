@@ -3354,6 +3354,7 @@ CREATE TABLE IF NOT EXISTS `software` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `json` text DEFAULT NULL, 
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL,
