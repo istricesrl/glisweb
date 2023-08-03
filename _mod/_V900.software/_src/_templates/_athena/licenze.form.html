@@ -73,6 +73,9 @@
             </div>
         </div>
 
+        {# SUBFORM SOFTWARE #}
+        {{ sub.gruppi( table, 'licenze_software', 'software', site, page, pages, ietf, etc, request, session ) }}
+
         {# BOTTONI E COMANDI DEL MODULO #}
         <fieldset class="form-controls mt-auto">
             {{ def.controls( page, pages, ietf, session, table, request ) }}

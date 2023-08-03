@@ -30,5 +30,13 @@
 	    'SELECT id, __label__ FROM tipologie_licenze_view'
     );
 
+    // tendina ruoli anagrafica
+	$ct['etc']['select']['software'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM software_view'
+    );
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

@@ -4308,7 +4308,7 @@ CREATE OR REPLACE VIEW licenze_view AS
 		max( rinnovi.data_fine ) AS data_fine,
 		max( rinnovi.id_contratto ) AS id_contratto,
 		tipologie_contratti.nome AS tipologia_contratto,
-		group_concat( software.nome SEPARATOR ' | ' ) AS software,
+		group_concat( DISTINCT software.nome SEPARATOR ' | ' ) AS software,
 		licenze.timestamp_distribuzione,     
 		licenze.timestamp_inizio,            
 		licenze.timestamp_fine,              

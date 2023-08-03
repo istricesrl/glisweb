@@ -42,6 +42,8 @@
     'id_contratto' => 'd-none',
     'id_anagrafica' => 'd-none',
     'anagrafica' => 'text-left',
+    'data_inizio' => 'no-wrap',
+    'data_fine' => 'no-wrap',
     'software' => 'text-left',
 	   '__label__' => 'd-none text-left no-wrap'
    );
