@@ -30,15 +30,17 @@
 
    // campi della vista
    $ct['view']['cols'] = array(
-	   'id' => '#',
-	   'id_contratto' => 'ID contratto',
-	   'id_anagrafica' => 'ID anagrafica',
-	   'data_inizio' => 'data inizio',
-	   'data_fine' => 'data fine',
-       'codice' => 'codice',
-       'software' => 'software',
-      '__label__' => 'contratto'
-     );
+    'id' => '#',
+    'id_contratto' => 'ID contratto',
+    'id_anagrafica' => 'ID anagrafica',
+    'tipologia_contratto' => 'contratto',
+    'data_inizio' => 'data inizio',
+    'data_fine' => 'data fine',
+    'tipologia' => 'tipologia',
+      'codice' => 'codice',
+      'software' => 'software',
+     '__label__' => 'contratto'
+    );
 
    // stili della vista
    $ct['view']['class'] = array(

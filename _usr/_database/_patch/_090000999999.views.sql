@@ -4287,6 +4287,7 @@ DROP TABLE IF EXISTS `licenze_view`;
 -- licenze_view
 -- tipologia: tabella gestita
 -- verifica: 2021-11-15 12:44 Chiara GDL
+-- TODO i dati sul contratto vanno recuperati in maniera più precisa
 CREATE OR REPLACE VIEW licenze_view AS
 	SELECT
 		licenze.id,                         
@@ -4306,6 +4307,7 @@ CREATE OR REPLACE VIEW licenze_view AS
 		min( rinnovi.data_inizio ) AS data_inizio,
 		max( rinnovi.data_fine ) AS data_fine,
 		max( rinnovi.id_contratto ) AS id_contratto,
+		tipologie_contratti.nome AS tipologia_contratto,
 		group_concat( software.nome SEPARATOR ' | ' ) AS software,
 		licenze.timestamp_distribuzione,     
 		licenze.timestamp_inizio,            
@@ -4320,6 +4322,8 @@ CREATE OR REPLACE VIEW licenze_view AS
 		LEFT JOIN rinnovi ON rinnovi.id_licenza = licenze.id
 		LEFT JOIN licenze_software ON licenze_software.id_licenza = licenze.id
 		LEFT JOIN software ON software.id = licenze_software.id_software
+		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto
+		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 	GROUP BY licenze.id
 ;
 

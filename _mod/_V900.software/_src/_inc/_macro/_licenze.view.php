@@ -15,24 +15,19 @@
    // tabella della vista
    $ct['view']['table'] = 'licenze';
 
-   $ct['form']['table'] = 'contratti';
-
    $ct['view']['open']['page'] = 'licenze.form';
    $ct['view']['open']['table'] = 'licenze';
    $ct['view']['open']['field'] = 'id';
 
    // pagina per l'inserimento di un nuovo oggetto
    $ct['view']['insert']['page'] = 'licenze.form';
-   $ct['view']['insert']['field'] = 'id_contratto';
-
-   // campo per il preset di apertura
-   $ct['view']['open']['preset']['field'] = 'id_contratto';
 
    // campi della vista
    $ct['view']['cols'] = array(
     'id' => '#',
     'id_contratto' => 'ID contratto',
     'id_anagrafica' => 'ID anagrafica',
+    'anagrafica' => 'cliente',
     'tipologia_contratto' => 'contratto',
     'data_inizio' => 'data inizio',
     'data_fine' => 'data fine',
@@ -42,19 +37,21 @@
      '__label__' => 'contratto'
     );
 
-  // stili della vista
-  $ct['view']['class'] = array(
-   'id_contratto' => 'd-none',
-   'id_anagrafica' => 'd-none',
-   'software' => 'text-left',
-    '__label__' => 'd-none text-left no-wrap'
-  );
+   // stili della vista
+   $ct['view']['class'] = array(
+    'id_contratto' => 'd-none',
+    'id_anagrafica' => 'd-none',
+    'anagrafica' => 'text-left',
+    'software' => 'text-left',
+	   '__label__' => 'd-none text-left no-wrap'
+   );
 
+/*
    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
     // preset filtro contratto attuale
-    $ct['view']['__restrict__']['id_contratto']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
+    $ct['view']['__restrict__']['id_anagrafica']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
-/*
+
     $ct['etc']['include']['insert'][] = array(
       'name' => 'rinnovi',
       'file' => 'inc/contratti.form.rinnovi.insert.html',
@@ -80,6 +77,3 @@
 
    // gestione default
    require DIR_SRC_INC_MACRO . '_default.view.php';
-
-    // macro di default
-    require DIR_SRC_INC_MACRO . '_default.form.php';
