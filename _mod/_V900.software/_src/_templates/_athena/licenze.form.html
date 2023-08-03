@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/software.form.sub.html' as sub %}
+{% import 'bin/licenze.form.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -31,56 +31,57 @@
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+        <form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
-	    {# CAMPI HIDDEN DI BASE #}
-	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
-	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+            {# CAMPI HIDDEN DI BASE #}
+            <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+            <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+            <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+            <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+            {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+            <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-        {# MODULO PRINCIPALE #}
-        <fieldset>
-        <legend>dati generali <small>{{ legend }}</small></legend>
-    
-        <div class="form-group form-row">
-            <div class="col-12 col-md-auto">
-                <span class="label-top">tipologia</span>
-                {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
-            </div>              
-            <div class="col-2 col-md-2">
-                <span class="label-top">codice</span>
-                {{ frm.input( table, '', '', 'codice', '', '', request ) }}
-            </div>
-            <div class="col-12 col-md">
-                <span class="label-top">cliente</span>
-                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
-            </div>
-        </div>
-        <div class="form-group form-row">
-            <div class="col-12 col-md">
-                <span class="label-top">nome</span>
-                {{ frm.input( table, '', '', 'nome', '', '', request ) }}
-            </div>
-        </div>
-        <div class="form-group form-row">
-            <div class="col">
-                <span class="label-top">note</span>
-                {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
-            </div>
-        </div>
+            {# MODULO PRINCIPALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+            
+                <div class="form-group form-row">
+                    <div class="col-12 col-md-auto">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
+                    </div>              
+                    <div class="col-2 col-md-2">
+                        <span class="label-top">codice</span>
+                        {{ frm.input( table, '', '', 'codice', '', '', request ) }}
+                    </div>
+                    <div class="col-12 col-md">
+                        <span class="label-top">cliente</span>
+                        {{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-12 col-md">
+                        <span class="label-top">nome</span>
+                        {{ frm.input( table, '', '', 'nome', '', '', request ) }}
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+                    </div>
+                </div>
+            </fieldset>
 
-        {# SUBFORM SOFTWARE #}
-        {{ sub.software( table, 'licenze_software', 'software', site, page, pages, ietf, etc, request, session ) }}
+            {# SUBFORM SOFTWARE #}
+            {{ sub.software( table, 'licenze_software', 'software', site, page, pages, ietf, etc, request, session ) }}
 
-        {# BOTTONI E COMANDI DEL MODULO #}
-        <fieldset class="form-controls mt-auto">
-            {{ def.controls( page, pages, ietf, session, table, request ) }}
-        </fieldset>
-        
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, table, request ) }}
+            </fieldset>
+            
         </form>
     </div>
 </section>

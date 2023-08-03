@@ -38,5 +38,8 @@
 	    'SELECT id, __label__ FROM software_view'
     );
 
+    // debug
+    // print_r( $ct['etc']['software'] );
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

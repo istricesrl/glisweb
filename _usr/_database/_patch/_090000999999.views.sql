@@ -7995,13 +7995,13 @@ CREATE OR REPLACE VIEW `sms_sent_view` AS
 
 -- | 090000041400
 
--- software
+-- software_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `software_view`;
 
 -- | 090000041401
 
--- software
+-- software_view
 -- tipologia: tabella gestita
 -- verifica: 2021-11-16 10:39 Chiara GDL 
 CREATE OR REPLACE VIEW software_view AS
