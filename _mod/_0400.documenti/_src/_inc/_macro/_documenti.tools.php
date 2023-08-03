@@ -42,7 +42,7 @@
 	    'icon' => NULL,
 	    'fa' => 'fa-upload',
 	    'title' => 'importazione righe documenti',
-	    'text' => 'importa le righe dei documenti in formato CSV'
+	    'text' => 'importa le testate e le righe dei documenti in formato CSV'
 	);
 
 	// gestione default
