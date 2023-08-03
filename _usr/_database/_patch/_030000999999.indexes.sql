@@ -3097,8 +3097,8 @@ ALTER TABLE `reparti`MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `rinnovi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica_codice` (`codice`),
-	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `id_tipologia_contratto`, `data_inizio`, `data_fine`),
-	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `data_inizio`, `data_fine`),
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `id_tipologia_contratto`, `codice`, `data_inizio`, `data_fine`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `codice`, `data_inizio`, `data_fine`),
 	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),

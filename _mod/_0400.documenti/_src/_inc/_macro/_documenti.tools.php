@@ -36,5 +36,14 @@
 	    'text' => 'importa le testate dei documenti in formato CSV'
 	);
 
+    // importazione contatti anagrafica
+	$ct['page']['contents']['metro']['importazioni'][] = array(
+	    'modal' => array( 'id' => 'importa_righe_documenti', 'include' => 'inc/documenti.articoli.tools.modal.import.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-upload',
+	    'title' => 'importazione righe documenti',
+	    'text' => 'importa le righe dei documenti in formato CSV'
+	);
+
 	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';
