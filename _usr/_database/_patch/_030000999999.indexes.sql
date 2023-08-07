@@ -2311,7 +2311,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
 	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`), 
 	ADD KEY `id_carrello` (`id_carrello`),
-	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255));
+	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`);
 
 -- | 030000021801
 
@@ -3564,10 +3564,10 @@ ALTER TABLE `software`
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `json` (`json`(255) ), -- ????
+	ADD KEY `json` (`json`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json`(255));
+	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json`);
 
 -- | 030000042000
 
