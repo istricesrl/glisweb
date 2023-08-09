@@ -119,7 +119,8 @@
 {% if not vl %}{% set vl = default %}{% endif %}
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
 {% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
-{% if vl %}{% set pl = null %}{% for option in etc %}{% if option.id == vl %}{% set pl = option.__label__ %}{% endif %}{% endfor %}{% if not pl %}{% set pl = '!!! ETICHETTA NON TROVATA, CONTROLLARE LA CACHE !!!' %}{% endif %}{% endif %}
+{# NOTA SE PL NON È VALORIZZATO DI SOLITO È PERCHÉ LA LABEL NON VIENE GENERATA DALLA VIEW OPPURE PERCHÉ VA RIPOPOLATA LA VIEW STATIC O SVUOTATA LA CACHE #}
+{% if vl %}{% set pl = null %}{% for option in etc %}{% if option.id == vl %}{% set pl = option.__label__ %}{% endif %}{% endfor %}{% if not pl %}{% set pl = '--- %}{% endif %}{% endif %}
 <div class="row m-0">
     {% if api %}
     <div class="col combobox-container p-0">
