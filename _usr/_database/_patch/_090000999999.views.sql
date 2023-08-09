@@ -4288,12 +4288,13 @@ DROP TABLE IF EXISTS `licenze_view`;
 -- tipologia: tabella gestita
 -- verifica: 2021-11-15 12:44 Chiara GDL
 -- TODO i dati sul contratto vanno recuperati in maniera più precisa
+-- NOTA il campo id_anagrafica nelle licenze è lì perché la licenza potrebbe avere un intestatario diverso dal contratto
 CREATE OR REPLACE VIEW licenze_view AS
 	SELECT
 		licenze.id,                         
     	licenze.id_tipologia,                
 		tipologie_licenze.nome AS tipologia,               
-		licenze.id_anagrafica,               
+		licenze.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,               
 		licenze.id_rivenditore,              
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS rivenditore,                 
@@ -4308,7 +4309,7 @@ CREATE OR REPLACE VIEW licenze_view AS
 		max( rinnovi.data_fine ) AS data_fine,
 		max( rinnovi.id_contratto ) AS id_contratto,
 		tipologie_contratti.nome AS tipologia_contratto,
-		group_concat( DISTINCT software.nome SEPARATOR ' | ' ) AS software,
+		group_concat( DISTINCT concat_ws( ' ', software.codice, software.nome ) SEPARATOR ' | ' ) AS software,
 		licenze.timestamp_distribuzione,     
 		licenze.timestamp_inizio,            
 		licenze.timestamp_fine,              
@@ -4317,13 +4318,14 @@ CREATE OR REPLACE VIEW licenze_view AS
 		licenze.nome AS __label__
 	FROM licenze
 		LEFT JOIN tipologie_licenze ON tipologie_licenze.id = licenze.id_tipologia
-		LEFT JOIN anagrafica AS a1 ON a1.id = licenze.id_anagrafica
-		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 		LEFT JOIN rinnovi ON rinnovi.id_licenza = licenze.id
 		LEFT JOIN licenze_software ON licenze_software.id_licenza = licenze.id
 		LEFT JOIN software ON software.id = licenze_software.id_software
 		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto
 		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+		LEFT JOIN contratti_anagrafica ON ( contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo IN ( 32 ) )
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( licenze.id_anagrafica, contratti_anagrafica.id_anagrafica )
+		LEFT JOIN anagrafica AS a2 ON a2.id = licenze.id_rivenditore
 	GROUP BY licenze.id
 ;
 
@@ -5738,9 +5740,9 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		m1.nome AS mastro_provenienza,
 		pagamenti.id_mastro_destinazione,
 		m2.nome AS mastro_destinazione,
-		documenti.id_emittente,
+		coalesce( documenti.id_emittente, pagamenti.id_creditore ) AS id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		documenti.id_destinatario,
+		coalesce( documenti.id_destinatario, pagamenti.id_debitore ) AS id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		pagamenti.id_iban,
 		iban.iban AS iban,
@@ -5762,17 +5764,17 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
 		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
 		LEFT JOIN iban ON iban.id = pagamenti.id_iban
-	WHERE
-		tipologie_documenti.se_fattura = 1
-		OR
-		tipologie_documenti.se_nota_credito = 1
-		OR
-		tipologie_documenti.se_ricevuta = 1
-		OR
-		tipologie_documenti.se_pro_forma = 1
+--	WHERE
+--		tipologie_documenti.se_fattura = 1
+--		OR
+--		tipologie_documenti.se_nota_credito = 1
+--		OR
+--		tipologie_documenti.se_ricevuta = 1
+--		OR
+--		tipologie_documenti.se_pro_forma = 1
 ;
 
 -- | 090000023200
@@ -7212,9 +7214,9 @@ CREATE OR REPLACE VIEW `righe_fatture_attive_view` AS
 	FROM
 		documenti_articoli
         LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, documenti_articoli.id_emittente )
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, documenti_articoli.id_destinatario )
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = coalesce( documenti.id_tipologia, documenti_articoli.id_tipologia )
 		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
@@ -7297,9 +7299,9 @@ CREATE OR REPLACE VIEW `righe_fatture_passive_view` AS
 	FROM
 		documenti_articoli
         LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, documenti_articoli.id_emittente )
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, documenti_articoli.id_destinatario )
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = coalesce( documenti.id_tipologia, documenti_articoli.id_tipologia )
 		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza
@@ -7382,9 +7384,9 @@ CREATE OR REPLACE VIEW `righe_proforma_view` AS
 	FROM
 		documenti_articoli
         LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, documenti_articoli.id_emittente )
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, documenti_articoli.id_destinatario )
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = coalesce( documenti.id_tipologia, documenti_articoli.id_tipologia )
 		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza

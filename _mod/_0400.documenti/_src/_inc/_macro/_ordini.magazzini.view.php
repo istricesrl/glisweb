@@ -30,18 +30,21 @@
     $ct['view']['cols'] = array(
         'id' => '#',
         'numero' => 'num.',
-        'timestamp_chiusura' => 'data',
-        'emittente' => 'emittente',
-#        'destinatario' => 'destinatario',
-        '__label__' => 'nome'
+        'sezionale' => 'sez.',
+        'data' => 'data',
+#        'emittente' => 'emittente',
+        'destinatario' => 'destinatario',
+        'nome' => 'nome',
+#        '__label__' => 'nome'
     );
 
     // stili della vista
     $ct['view']['class'] = array(
         'nome' => 'text-left',
-        'numero' => 'text-left',
+#        'numero' => 'text-left',
         'data' => 'no-wrap', 
         '__label__' => 'text-left',
+        'nome' => 'text-left',
         'destinatario' => 'text-left',
         'emittente' => 'text-left',
         'tipologia' => 'text-left',

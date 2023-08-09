@@ -27,7 +27,7 @@
 		// vista righe proforma
 		$p['righe.ricevute.amministrazione.view'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe attive' ),
+			'title'			=> array( $l		=> 'righe ricevute attive' ),
 			'h1'			=> array( $l		=> 'righe attive' ),
 			'parent'		=> array( 'id'		=> 'ricevute.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
@@ -76,7 +76,7 @@
 		// gestione righe ricevute
 		$p['ricevute.amministrazione.form.righe'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe ricevute' ),
+			'title'			=> array( $l		=> 'righe ricevuta' ),
 			'h1'			=> array( $l		=> 'righe' ),
 			'parent'		=> array( 'id'		=> 'ricevute.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ricevute.amministrazione.form.righe.html' ),
@@ -98,19 +98,19 @@
 		);
 
 		// gestione ricevute_righe
-		$p['ricevute.amministrazione.righe.form'] = array(
+		$p['righe.ricevute.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'righe.ricevute.amministrazione.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ricevute.amministrazione.righe.form.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_ricevute.amministrazione.righe.form.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ricevute.amministrazione.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ricevute.amministrazione.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'ricevute.amministrazione.righe.form', 'ricevute.amministrazione.righe.form.aggregate' ) )
+			'etc'			=> array( 'tabs'	=> array(	'righe.ricevute.amministrazione.form', 'righe.ricevute.amministrazione.form.aggregate' ) )
 		);
 
 		// gestione tools documenti_articoli - attivita
-		$p['ricevute.amministrazione.righe.form.aggregate'] = array(
+		$p['righe.ricevute.amministrazione.form.aggregate'] = array(
 				'sitemap'		=> false,
 				'title'			=> array( $l		=> 'righe aggregate' ),
 				'h1'			=> array( $l		=> 'righe aggregate' ),
@@ -118,7 +118,7 @@
 				'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
 				'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
 				'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-				'etc'			=> array( 'tabs'	=> $p['ricevute.amministrazione.righe.form']['etc']['tabs'] )
+				'etc'			=> array( 'tabs'	=> $p['righe.ricevute.amministrazione.form']['etc']['tabs'] )
 		);
 
 		// gestione chiusura ricevute
@@ -173,6 +173,18 @@
 			'etc'		=> array( 'tabs'	=> $p['ricevute.amministrazione.form']['etc']['tabs'] )
 		);
 
+		// gestione ricevute_righe
+		$p['righe.ricevute.amministrazione.form'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'gestione righe' ),
+			'h1'			=> array( $l		=> 'gestione' ),
+			'parent'		=> array( 'id'		=> 'righe.ricevute.amministrazione.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ricevute.amministrazione.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ricevute.amministrazione.form.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'righe.ricevute.amministrazione.form', 'righe.ricevute.amministrazione.form.aggregate' ) )
+		);
+
 	// vista ricevute passive
 	$p['ricevute.passive.amministrazione.view'] = array(
 		'sitemap'		=> false,
@@ -220,7 +232,7 @@
 		// gestione righe ricevute passive
 		$p['ricevute.passive.amministrazione.form.righe'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe_ricevute' ),
+			'title'			=> array( $l		=> 'righe_ricevuta' ),
 			'h1'			=> array( $l		=> 'righe' ),
 			'parent'		=> array( 'id'		=> 'ricevute.passive.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ricevute.passive.amministrazione.form.righe.html' ),

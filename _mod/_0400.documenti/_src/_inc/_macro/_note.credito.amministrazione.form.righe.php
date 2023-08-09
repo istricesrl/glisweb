@@ -30,12 +30,12 @@
    # $ct['view']['id'] = md5( $ct['view']['table'] );
 
         // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'note.credito.amministrazione.righe.form';
+	$ct['view']['open']['page'] = 'righe.note.credito.amministrazione.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
     $ct['view']['open']['field'] = 'id';
 
 	// pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'note.credito.amministrazione.righe.form';
+	$ct['view']['insert']['page'] = 'righe.note.credito.amministrazione.form';
 
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_documento';

@@ -117,7 +117,7 @@ CREATE TABLE `__report_corsi__` (
   `data_chiusura` date DEFAULT NULL,
   `prezzi` char(255) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
-  `__label__` char(255) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
@@ -148,6 +148,88 @@ LEFT JOIN tipologie_attivita ON tipologie_attivita.id = a.id_tipologia
 WHERE documenti.id_tipologia = 4
 GROUP BY documenti.id
 ;
+
+-- | 100000009872
+-- __report_dettaglio_evasione_ordini__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_dettaglio_evasione_ordini__`;
+
+-- | 100000009873
+
+
+CREATE OR REPLACE VIEW `__report_dettaglio_evasione_ordini__` AS
+SELECT
+  ordine.id_documento,
+  ordine.id_ordine,
+  ordine.codice_prodotto,
+  ordine.prodotto,
+  sum( ( ordine.quantita_ordinata / udm.conversione ) ) AS quantita_ordinata,
+  sum( ( ordine.quantita_evasa / udm.conversione ) ) AS quantita_evasa,
+  (
+    sum( ( ordine.quantita_ordinata / udm.conversione ) )
+    -
+    sum( ( ordine.quantita_evasa / udm.conversione ) )
+  ) AS quantita_da_evadere,
+  udm.sigla AS udm
+FROM (
+  SELECT
+    relazioni_documenti.id_documento,
+    documenti.id AS id_ordine,
+    coalesce(
+      documenti_articoli.id_prodotto,
+      articoli.id_prodotto
+    ) AS codice_prodotto,
+    prodotti.nome AS prodotto,
+    documenti_articoli.id_articolo AS codice_articolo,
+    coalesce( ( documenti_articoli.quantita * udm.conversione ), 0 ) AS quantita_ordinata,
+    0 AS quantita_evasa,
+    udm_base.sigla AS udm_base,
+    udm.id AS id_udm
+  FROM documenti
+  LEFT JOIN relazioni_documenti ON relazioni_documenti.id_documento_collegato = documenti.id
+  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+  LEFT JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id
+  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = coalesce( documenti_articoli.id_prodotto, articoli.id_prodotto )
+  LEFT JOIN udm ON udm.id = documenti_articoli.id_udm
+  LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
+  WHERE tipologie_documenti.se_ordine IS NOT NULL
+  HAVING codice_prodotto IS NOT NULL
+  UNION
+  SELECT
+    relazioni_documenti.id_documento,
+    relazioni_documenti.id_documento_collegato AS id_ordine,
+    coalesce(
+      documenti_articoli.id_prodotto,
+      articoli.id_prodotto
+    ) AS codice_prodotto,
+    prodotti.nome AS prodotto,
+    documenti_articoli.id_articolo AS codice_articolo,
+    0 AS quantita_ordinata,
+    coalesce( ( articoli.peso * udm.conversione * documenti_articoli.quantita ), 0 ) AS quantita_evasa,
+    udm_base.sigla AS udm_base,
+    udm.id AS id_udm
+  FROM documenti
+  INNER JOIN relazioni_documenti ON id_documento = documenti.id
+  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+  LEFT JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id
+  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = coalesce( documenti_articoli.id_prodotto, articoli.id_prodotto )
+  LEFT JOIN udm ON udm.id = articoli.id_udm_peso
+  LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
+  WHERE tipologie_documenti.se_trasporto IS NOT NULL
+  HAVING codice_prodotto IS NOT NULL
+) AS ordine
+LEFT JOIN udm ON udm.id = (
+  SELECT coalesce( max( documenti_articoli.id_udm ), max( articoli.id_udm_peso ) )
+  FROM documenti_articoli LEFT JOIN articoli ON articoli.id = ordine.codice_articolo
+  WHERE documenti_articoli.id_documento IN ( ordine.id_documento, ordine.id_ordine )
+  AND ( documenti_articoli.id_prodotto = ordine.codice_prodotto OR articoli.id = ordine.codice_articolo )
+)
+GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, conversione, udm;
+
+
+
 
 -- | 100000015000
 -- __report_giacenza_crediti__
@@ -451,7 +533,6 @@ LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = articoli.id_pro
 ) AS movimenti
 LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = movimenti.id_prodotto
 GROUP BY movimenti.id, movimenti.id_mastro, movimenti.nome, movimenti.id_articolo, movimenti.articolo, movimenti.id_prodotto, movimenti.prodotto, movimenti.codice_produttore, movimenti.id_matricola, movimenti.matricola, movimenti.data_scadenza, movimenti.sigla_udm_peso;
-
 
 -- | 100000020002
 DROP TABLE IF EXISTS `__report_giacenza_magazzini_foglie__`;

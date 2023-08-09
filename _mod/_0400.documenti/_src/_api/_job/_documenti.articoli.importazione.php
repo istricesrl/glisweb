@@ -101,130 +101,141 @@
             // controlli formali e lavorazione riga
             if( ( ! isset( $job['riga']['codice_emittente'] ) || empty( $job['riga']['codice_emittente'] ) ) && 
                 ( ! isset( $job['riga']['codice_fiscale_emittente'] ) || empty( $job['riga']['codice_fiscale_emittente'] ) ) && 
-                ( ! isset( $job['riga']['partita_iva_emittente'] ) || empty( $job['riga']['partita_iva_emittente'] ) ) ) {
+                ( ! isset( $job['riga']['partita_iva_emittente'] ) || empty( $job['riga']['partita_iva_emittente'] ) ) &&
+                ( ! isset( $job['riga']['id_documento'] ) || empty( $job['riga']['id_documento'] ) ) ) {
 
                 // status
                 $job['workspace']['status']['error'][] = 'codice emittente, codice fiscale emittente e partita IVA emittente non settati per la riga ' . $job['corrente'];
 
             } elseif( ( ! isset( $job['riga']['codice_destinatario'] ) || empty( $job['riga']['codice_destinatario'] ) ) && 
                 ( ! isset( $job['riga']['codice_fiscale_destinatario'] ) || empty( $job['riga']['codice_fiscale_destinatario'] ) ) && 
-                ( ! isset( $job['riga']['partita_iva_destinatario'] ) || empty( $job['riga']['partita_iva_destinatario'] ) ) ) {
+                ( ! isset( $job['riga']['partita_iva_destinatario'] ) || empty( $job['riga']['partita_iva_destinatario'] ) ) &&
+                ( ! isset( $job['riga']['id_documento'] ) || empty( $job['riga']['id_documento'] ) ) ) {
 
                 // status
                 $job['workspace']['status']['error'][] = 'codice destinatario, codice fiscale destinatario e partita IVA destinatario non settati per la riga ' . $job['corrente'];
 
-            } elseif( (
-                (   ! isset( $job['riga']['numero'] ) || 
-                    empty( $job['riga']['numero'] ) || 
-                    ! isset( $job['riga']['sezionale'] ) || 
-                    empty( $job['riga']['sezionale'] ) ) )
-                &&
-                ( ! isset( $job['riga']['codice'] ) || empty( $job['riga']['codice'] ) ) ) {
+            } elseif( ( ( ! isset( $job['riga']['numero'] ) || empty( $job['riga']['numero'] ) || ! isset( $job['riga']['sezionale'] ) || empty( $job['riga']['sezionale'] ) ) ) &&
+                ( ! isset( $job['riga']['codice_documento'] ) || empty( $job['riga']['codice_documento'] ) ) &&
+                ( ! isset( $job['riga']['id_documento'] ) || empty( $job['riga']['id_documento'] ) ) ) {
 
                 // status
                 $job['workspace']['status']['error'][] = 'numero e sezionale oppure codice non settati per la riga ' . $job['corrente'];
 
-            } elseif( empty( $job['riga']['tipologia_documento'] ) ) {
+            } elseif( ! isset( $job['riga']['tipologia_documento'] ) || empty( $job['riga']['tipologia_documento'] ) &&
+                ( ! isset( $job['riga']['id_documento'] ) || empty( $job['riga']['id_documento'] ) ) ) {
 
                 // status
                 $job['workspace']['status']['error'][] = 'tipologia documento non settata per la riga ' . $job['corrente'];
 
             } else {
 
-                // tipologia
-                $idTipologia = mysqlSelectCachedValue(
-                    $cf['memcache']['connection'],
-                    $cf['mysql']['connection'],
-                    'SELECT id FROM tipologie_documenti WHERE nome = ?',
-                    array( array( 's' => $job['riga']['tipologia_documento'] ) )
-                );
+                // ...
+                if( isset( $job['riga']['id_documento'] ) && ! empty( $job['riga']['id_documento'] ) ) {
 
-                // emittente
-                if( ! empty( $job['riga']['codice_emittente'] ) ) {
-                    $idEmittente = mysqlSelectCachedValue(
+                    // ...
+                    $idDocumento = $job['riga']['id_documento'];
+
+                } else {
+
+                    // tipologia
+                    $idTipologia = mysqlSelectCachedValue(
                         $cf['memcache']['connection'],
                         $cf['mysql']['connection'],
-                        'SELECT id FROM anagrafica WHERE codice = ?',
-                        array( array( 's' => $job['riga']['codice_emittente'] ) )
+                        'SELECT id FROM tipologie_documenti WHERE nome = ?',
+                        array( array( 's' => $job['riga']['tipologia_documento'] ) )
                     );
-                } elseif( ! empty( $job['riga']['codice_fiscale_emittente'] ) ) {
-                    $idEmittente = mysqlSelectCachedValue(
-                        $cf['memcache']['connection'],
+
+                    // emittente
+                    if( ! empty( $job['riga']['codice_emittente'] ) ) {
+                        $idEmittente = mysqlSelectCachedValue(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM anagrafica WHERE codice = ?',
+                            array( array( 's' => $job['riga']['codice_emittente'] ) )
+                        );
+                    } elseif( ! empty( $job['riga']['codice_fiscale_emittente'] ) ) {
+                        $idEmittente = mysqlSelectCachedValue(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM anagrafica WHERE codice_fiscale = ?',
+                            array( array( 's' => $job['riga']['codice_fiscale_emittente'] ) )
+                        );
+                    } elseif( ! empty( $job['riga']['partita_iva_emittente'] ) ) {
+                        $idEmittente = mysqlSelectCachedValue(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM anagrafica WHERE partita_iva = ?',
+                            array( array( 's' => $job['riga']['partita_iva_emittente'] ) )
+                        );
+                    }
+
+                    // destinatario
+                    if( ! empty( $job['riga']['codice_destinatario'] ) ) {
+                        $idDestinatario = mysqlSelectCachedValue(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM anagrafica WHERE codice = ?',
+                            array( array( 's' => $job['riga']['codice_destinatario'] ) )
+                        );
+                    } elseif( ! empty( $job['riga']['codice_fiscale_destinatario'] ) ) {
+                        $idDestinatario = mysqlSelectCachedValue(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM anagrafica WHERE codice_fiscale = ?',
+                            array( array( 's' => $job['riga']['codice_fiscale_destinatario'] ) )
+                        );
+                    } elseif( ! empty( $job['riga']['partita_iva_destinatario'] ) ) {
+                        $idDestinatario = mysqlSelectCachedValue(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM anagrafica WHERE partita_iva = ?',
+                            array( array( 's' => $job['riga']['partita_iva_destinatario'] ) )
+                        );
+                    }
+
+                    // trovo l'ID dell'anagrafica
+                    $idDocumento = mysqlInsertRow(
                         $cf['mysql']['connection'],
-                        'SELECT id FROM anagrafica WHERE codice_fiscale = ?',
-                        array( array( 's' => $job['riga']['codice_fiscale_emittente'] ) )
+                        array(
+                            'id' => NULL,
+                            'id_tipologia' => $idTipologia,
+                            'codice' => ( ! empty( $job['riga']['codice'] ) ) ? $job['riga']['codice'] : NULL,
+                            'numero' => ( ! empty( $job['riga']['numero'] ) ) ? $job['riga']['numero'] : NULL,
+                            'sezionale' => ( ! empty( $job['riga']['sezionale'] ) ) ? $job['riga']['sezionale'] : NULL,
+                            'data' => ( ! empty( $job['riga']['data'] ) ) ? date( 'Y-m-d', strtotime( $job['riga']['data'] ) ) : NULL,
+                            'id_emittente' => $idEmittente,
+                            'id_destinatario' => $idDestinatario,
+                            'nome' => ( ( isset( $job['riga']['nome_documento'] ) ) ? $job['riga']['nome_documento'] : NULL ),
+                            'note' => ( ( isset( $job['riga']['note_documento'] ) ) ? $job['riga']['note_documento'] : NULL ),
+                            'note_invio' => ( ( isset( $job['riga']['note_invio'] ) ) ? $job['riga']['note_invio'] : NULL )
+                        ),
+                        'documenti',
+                        true,
+                        false,
+                        array(
+                            'numero',
+                            'sezionale',
+                            'codice'
+                        )
                     );
-                } elseif( ! empty( $job['riga']['partita_iva_emittente'] ) ) {
-                    $idEmittente = mysqlSelectCachedValue(
-                        $cf['memcache']['connection'],
-                        $cf['mysql']['connection'],
-                        'SELECT id FROM anagrafica WHERE partita_iva = ?',
-                        array( array( 's' => $job['riga']['partita_iva_emittente'] ) )
-                    );
+
+                    // status
+                    $job['status']['info'][] = 'documento inserita con ID ' . $idDocumento . ' per la riga ' . $job['corrente'];
+
                 }
-
-                // destinatario
-                if( ! empty( $job['riga']['codice_destinatario'] ) ) {
-                    $idDestinatario = mysqlSelectCachedValue(
-                        $cf['memcache']['connection'],
-                        $cf['mysql']['connection'],
-                        'SELECT id FROM anagrafica WHERE codice = ?',
-                        array( array( 's' => $job['riga']['codice_destinatario'] ) )
-                    );
-                } elseif( ! empty( $job['riga']['codice_fiscale_destinatario'] ) ) {
-                    $idDestinatario = mysqlSelectCachedValue(
-                        $cf['memcache']['connection'],
-                        $cf['mysql']['connection'],
-                        'SELECT id FROM anagrafica WHERE codice_fiscale = ?',
-                        array( array( 's' => $job['riga']['codice_fiscale_destinatario'] ) )
-                    );
-                } elseif( ! empty( $job['riga']['partita_iva_destinatario'] ) ) {
-                    $idDestinatario = mysqlSelectCachedValue(
-                        $cf['memcache']['connection'],
-                        $cf['mysql']['connection'],
-                        'SELECT id FROM anagrafica WHERE partita_iva = ?',
-                        array( array( 's' => $job['riga']['partita_iva_destinatario'] ) )
-                    );
-                }
-
-                // trovo l'ID dell'anagrafica
-                $idDocumento = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id' => NULL,
-                        'id_tipologia' => $idTipologia,
-                        'codice' => ( ! empty( $job['riga']['codice'] ) ) ? $job['riga']['codice'] : NULL,
-                        'numero' => ( ! empty( $job['riga']['numero'] ) ) ? $job['riga']['numero'] : NULL,
-                        'sezionale' => ( ! empty( $job['riga']['sezionale'] ) ) ? $job['riga']['sezionale'] : NULL,
-                        'data' => ( ! empty( $job['riga']['data'] ) ) ? date( 'Y-m-d', strtotime( $job['riga']['data'] ) ) : NULL,
-                        'id_emittente' => $idEmittente,
-                        'id_destinatario' => $idDestinatario,
-                        'nome' => ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ),
-                        'note' => ( ( isset( $job['riga']['note'] ) ) ? $job['riga']['note'] : NULL ),
-                        'note_invio' => ( ( isset( $job['riga']['note_invio'] ) ) ? $job['riga']['note_invio'] : NULL )
-                    ),
-                    'documenti',
-                    true,
-                    false,
-                    array(
-                        'numero',
-                        'sezionale',
-                        'codice'
-                    )
-                );
-
-                // status
-                $job['status']['info'][] = 'documento inserita con ID ' . $idDocumento . ' per la riga ' . $job['corrente'];
 
                 // se è presente un ID documento, inserisco la riga
                 if( ! empty( $idDocumento ) ) {
 
                     // se posso identificare univocamente la riga
                     // TODO fare meglio, ci sono condizioni di unicità più complicate?
-                    if( empty( $job['riga']['id_articolo'] ) && empty( $job['riga']['codice'] ) ) {
+                    if( empty( $job['riga']['id_articolo'] ) &&
+                        empty( $job['riga']['codice'] ) &&
+                        empty( $job['riga']['nome'] ) ) {
 
                         // status
-                        $job['workspace']['status']['error'][] = 'articolo e codice non settati per la riga ' . $job['corrente'];
+                        $job['workspace']['status']['error'][] = 'nome, articolo e codice non settati per la riga ' . $job['corrente'];
 
                     } else {
         

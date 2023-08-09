@@ -86,3 +86,30 @@
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
+
+  // bottoni
+	foreach( $ct['view']['data'] as &$row ) {
+		if( is_array( $row ) ) {
+      if( isset( $row['software'] ) ) {
+
+          // ...
+          $sws = array();
+          
+          // ...
+          $software = explode( ' | ', $row['software'] );
+
+          // ...
+          foreach( $software as $sw ) {
+            $dts = explode( ' ', $sw );
+            $sws[ $dts[0] ] = $dts[1];
+          }
+
+          // ...
+          sort( $dts );
+
+          // ...
+          $row['software'] = implode( ', ', $dts );
+
+      }
+    }
+  }

@@ -205,7 +205,7 @@
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_genitore'] ) && !empty($_REQUEST[ $ct['form']['table'] ]['id_genitore']) ){
 		$ct['page']['etc']['tabs'] = array_diff(
 			$ct['page']['etc']['tabs'],
-			['fatture.amministrazione.righe.form.aggregate']
+			['righe.fatture.amministrazione.form.aggregate']
 		);
 	}
 

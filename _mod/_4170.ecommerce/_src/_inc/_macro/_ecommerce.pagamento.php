@@ -34,7 +34,7 @@
                             mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
-                                    'id_anagrafica' => $pagamento['destinatario_id_anagrafica'],
+                                    'id_debitore' => $pagamento['destinatario_id_anagrafica'],
                                     'id_carrelli_articoli' => $pagamento['id'],
                                     'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                     'data_scadenza' => $_REQUEST['__pagamenti__']['data_rate'],
@@ -186,7 +186,7 @@
                     'INNER JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica '.
                     'INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo '.
                     'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
-                    'WHERE pagamenti.id_anagrafica = ? AND pagamenti.id_documento IS NULL',
+                    'WHERE pagamenti.id_debitore = ? AND pagamenti.id_documento IS NULL',
                     array( array( 's' => $_REQUEST['__pagamenti__']['id_socio'] ) )
                 )
             );

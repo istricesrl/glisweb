@@ -26,8 +26,8 @@
 		// vista righe proforma
 		$p['righe.proforma.amministrazione.view'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe' ),
-			'h1'			=> array( $l		=> 'righe' ),
+			'title'			=> array( $l		=> 'righe note proforma attive' ),
+			'h1'			=> array( $l		=> 'righe attive' ),
 			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_righe.proforma.amministrazione.view.php' ),
@@ -69,7 +69,7 @@
 		// gestione righe proforma
 		$p['proforma.amministrazione.form.righe'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe proforma' ),
+			'title'			=> array( $l		=> 'righe nota proforma attiva' ),
 			'h1'			=> array( $l		=> 'righe' ),
 			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.righe.html' ),

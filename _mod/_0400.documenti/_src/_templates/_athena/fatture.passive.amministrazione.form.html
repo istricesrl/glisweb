@@ -100,6 +100,7 @@
                 <div class="form-group form-row">
                     <div class="col-12 col-md">
                         <span class="label-top">destinatario</span>
+                        {# TODO LE FATTURE DI CICLO PASSIVO DEVONO AVERE COME DEFAULT L'AZIENDA GESTITA #}
                         {{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
                     </div>
                     {% if request[ table ].id %}

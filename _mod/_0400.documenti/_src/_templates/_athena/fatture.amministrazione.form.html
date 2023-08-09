@@ -97,6 +97,7 @@
                 <div class="form-group form-row">
                     <div class="col-12 col-md">
                         <span class="label-top">emittente</span>
+                        {# TODO LE FATTURE DI CICLO ATTIVO DEVONO AVERE COME DEFAULT L'AZIENDA GESTITA #}
                         {{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_emittente' , page, pages, ietf,'anagrafica' ) }}
                     </div>
                     {% if request[ table ].id %}
