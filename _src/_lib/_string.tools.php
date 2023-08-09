@@ -97,10 +97,14 @@
 
     /**
      *
+     * @todo la sostituzione della virgola così è un po' grezza, migliorare (può esserci anche il punto per le migliaia, eccetera)
      * @todo documentare
      *
      */
     function numeric2null( $s ) {
+        if( strpos( $s, ',' ) !== false ) {
+            $s = str_replace( ',', '.', $s );
+        }
         return empty2null( $s, true );
     }
 
