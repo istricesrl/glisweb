@@ -35,9 +35,9 @@
         'intestazione_telefono'                 => array( 'type' => 'string',   'default' => NULL ),
         'intestazione_mail'                     => array( 'type' => 'string',   'default' => NULL ),
         'provider_pagamento'                    => array( 'type' => 'string',   'default' => NULL ),
-        'fatturazione_id_tipologia_documento'   => array( 'type' => 'string',   'default' => NULL ),
+        'fatturazione_id_tipologia_documento'   => array( 'type' => 'string',   'default' => $cf['ecommerce']['defaults']['cassa']['id_tipologia_documento'] ),
         'fatturazione_sezionale'                => array( 'type' => 'string',   'default' => 'E' ),
-        'fatturazione_strategia'                => array( 'type' => 'string',   'default' => NULL,  'values' => array( 'SINGOLA', 'MULTIPLA', NULL ) ),
+        'fatturazione_strategia'                => array( 'type' => 'string',   'default' => $cf['ecommerce']['defaults']['cassa']['strategia_fatturazione'], 'values' => array( 'SINGOLA', 'MULTIPLA', NULL ) ),
         'codice_coupon'                         => array( 'type' => 'string',   'default' => NULL ),
         'timestamp_checkout'                    => array( 'tipe' => 'int',      'default' => NULL ),
     );

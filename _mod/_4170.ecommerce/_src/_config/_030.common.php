@@ -24,6 +24,10 @@
     $cf['ecommerce']['pages']['successo']			= 'carrello.successo';		                    // pagina di atterraggio per il pagamento avvenuto con successo presso provider esterni di pagamento
     $cf['ecommerce']['pages']['errore']			    = 'carrello.fallimento';		                // pagina di atterraggio per gli errori dei provider esterni di pagamento
 
+    // configurazioni di default
+    $cf['ecommerce']['defaults']['cassa']['id_tipologia_documento']     = 8;                        // tipologia di documento da generare di default in cassa
+    $cf['ecommerce']['defaults']['cassa']['strategia_fatturazione']     = 'SINGOLA';                // strategia di generazione dei documenti da usare di default in cassa
+
     // profilo di funzionamento per DEV
 	$cf['ecommerce']['profiles'][ DEVELOPEMENT ]	= array(
         'fatturazione' => array(
