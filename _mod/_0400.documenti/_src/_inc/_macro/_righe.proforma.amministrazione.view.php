@@ -22,7 +22,7 @@
     
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'proforma.amministrazione.righe.form';
+	$ct['view']['open']['page'] = 'righe.proforma.amministrazione.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
 
     // campi della vista

@@ -213,7 +213,7 @@
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_genitore'] ) && !empty($_REQUEST[ $ct['form']['table'] ]['id_genitore']) ){
 		$ct['page']['etc']['tabs'] = array_diff(
 			$ct['page']['etc']['tabs'],
-			['proforma.amministrazione.righe.form.aggregate']
+			['righe.proforma.amministrazione.form.aggregate']
 		);
 	}
 	// macro di default
