@@ -615,6 +615,12 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
         mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
         mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
 
+        mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_archiviati_view_static SELECT * FROM anagrafica_archiviati_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_archiviati_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+
+        mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_attivi_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_attivi_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+
     }
 
     function unisciOggetti( $sorgente, $destinazione, $tabella, $colonna = 'id' ) {
