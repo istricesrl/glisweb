@@ -6,13 +6,83 @@
 
     introduzione
     ============
-    Per la creazione di PDF il framework si appoggia alla libreria [...]. La logica fondamentale da capire è che in GlisWeb la preparazione dei file PDF è divisa in due fasi,
-    una di raccolta dei dati da rappresentare e una di creazione del PDF vero e proprio. Tenendo le due fasi separate in file distinti è possibile customizzare l'aspetto di un
-    PDF senza dover ripetere l'eleaborazione dei dati. Ad esempio il file che genera il PDF delle fatture, _mod/_0400.documenti/_src/_api/_print/_fattura.pdf.php, richiama
-    il file _mod/_0400.documenti/_src/_api/_print/_fattura.default.php nel quale viene preparato l'array dei dati da rappresentare. In questo modo se si desidera modificare
-    l'aspetto della fattura nel deplpoy custom sarà possibile creare un file mod/0400.documenti/src/api/print/fattura.pdf.php che includa comunque il file standard
-    _mod/_0400.documenti/_src/_api/_print/_fattura.pdf.php senza doverne ripetere le logiche. Si noti che, come si deduce dal percorso dei file, le stampe PDF sono considerate
-    API di stampa.
+    Per la creazione di PDF il framework si appoggia alla libreria [...]. A livello di organizzazione del codice, i file PDF vengono generati in due
+    passaggi:
+
+    - un'API specifica che genera l'oggetto PDF vero e proprio
+    - un'API (o una funzione) di default che recupera i dati necessari a generare una certa classe di PDF (ad esempio i documenti)
+    - una funzione che, ricevendo in input l'oggetto PDF e i dati recuperati li unisce producendo il PDF finito
+
+    Questo doppio passaggio, che può sembrare macchinoso, consente però notevole flessibilità e in particolare permette di realizzare facilmente
+    alcuni risultati non banali, come ad esempio:
+
+    - la possibilità di accodare più documenti nello stesso PDF
+    - estrema facilità di customizzazione dell'aspetto dei documenti senza dover riscrivere le logiche
+
+    Si prenda ad esempio la stampa della fattura, per generarla viene chiamata l'API print specifica (_mod/_0400.documenti/_src/_api/_print/_fattura.pdf.php)
+    che si occupa di:
+    
+    - chiamare l'API di default dei documenti (_mod/_0400.documenti/_src/_api/_print/_documento.default.php)
+    - generare l'oggetto PDF
+    - chiamare la funzione per il rendering del PDF (generaFatturaPdf())
+    - dare in output il documento generato
+
+    Riguardo alla macro di default, tipicamente ne viene creata una unica per ogni entità che dev'essere stampata (ad esempio _documento.default.php, _anagrafica.default.php, _contratto.default.php eccetera)
+    e similmente avremo una funzione specifica per il recupero dei dati dell'oggetto in questione (ad esempio generaContenutiDocumento(), generaContenutiAnagrafica() e così via);
+    in questo modo potremo creare diverse API di stampa specifiche per tipo di stampa e formato (ad esempio _scheda.cliente.pdf.php, _scheda.fornitore.pdf.php, _badge.collaboratore.png.php eccetera)
+    che faranno riferimento sempre alla stessa macro (_default.anagrafica.php) e alla stessa funzione di generazione dei contenuti.
+
+    Per creare nuove stampe PDF è sufficiente creare un'API di base, ad esempio:
+
+    \code{.php}
+
+    <?php
+
+        /**
+        *
+        *
+        *
+        * @todo documentare
+        *
+        * @file
+        *
+        */
+
+        // inclusione del framework
+        require '../../../../../_src/_config.php';
+
+        // configurazioni specifiche
+        $cnf['estensione'] = 'pdf';
+        $cnf['cartella'] = 'fatture';
+
+        // inclusione dei dati base
+        require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
+
+        // creazione del PDF
+        $pdf = new TCPDF( 'P', 'mm', 'A4' );
+
+        // ...
+        generaFatturaPdf( $pdf, $dati );
+
+        // oggetto del documento
+        $dobj = str_replace( ' ', '_' , $r['doc']['oggetto'] );
+
+        // output
+        if( isset( $_REQUEST['d'] ) ) {
+            // invia l'output al browser per il download diretto
+            $pdf->Output($dobj.'.pdf' , 'D' );
+        } elseif( isset( $_REQUEST['f'] ) ) {
+            // salva il file localmente
+            $pdf->Output( $dobj.'.pdf', 'I' );
+        } elseif( isset( $_REQUEST['fi'] ) ) {
+            // salva il file localmente e invia l'output al browser
+            $pdf->Output( $dobj.'.pdf', 'FI' );
+        } else {
+            // invia l'output al browser
+            $pdf->Output($dobj.'.pdf');
+        }
+
+    \endcode
 
     impostazione del file
     ---------------------

@@ -93,6 +93,22 @@
                     </div>
                 </div>
 
+                <legend>riferimenti per la pubblica amministrazione</legend>
+                <div class="form-group form-row">
+                    <div class="col-4 col-md-2">
+                        <span class="label-top">CIG</span>
+                        {{ frm.input( table, '', '', 'cig', '', '', request ) }}
+                    </div>
+                    <div class="col-4 col-md-2">
+                        <span class="label-top">CUP</span>
+                        {{ frm.input( table, '', '', 'cup', '', '', request ) }}
+                    </div>
+                    <div class="col col-md">
+                        <span class="label-top">documento di riferimento</span>
+                        {{ frm.input( table, '', '', 'riferimento', '', '', request ) }}
+                    </div>
+                </div>
+    
                 <legend>dati emittente</legend>
                 <div class="form-group form-row">
                     <div class="col-12 col-md">
@@ -109,7 +125,6 @@
                     {% endif %}
                 </div>
 
-
                 <legend>dati destinatario</legend>
                 <div class="form-group form-row">
                     <div class="col-12 col-md">
@@ -123,7 +138,6 @@
                     </div>
                     {% endif %}
                 </div>
-
 
                 {% if '4180.coupon' in mods.active.array %}
                 <legend>variazioni</legend>

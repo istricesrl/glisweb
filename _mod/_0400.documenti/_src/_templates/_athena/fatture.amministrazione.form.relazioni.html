@@ -42,26 +42,6 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-
-		<fieldset>
-			<legend>riferimenti per la pubblica amministrazione</legend>
-			<div class="form-group form-row">
-				<div class="col-4 col-md-2">
-					<span class="label-top">CIG</span>
-					{{ frm.input( table, '', '', 'cig', '', '', request ) }}
-				</div>
-				<div class="col-4 col-md-2">
-					<span class="label-top">CUP</span>
-					{{ frm.input( table, '', '', 'cup', '', '', request ) }}
-				</div>
-				<div class="col col-md">
-					<span class="label-top">documento di riferimento</span>
-					{{ frm.input( table, '', '', 'riferimento', '', '', request ) }}
-				</div>
-			</div>
-		</fieldset>
-
 		{# SUBFORM RELAZIONI #}
 		{{ sub.relazioni( table, 'relazioni_documenti', 'relazioni', site, page, pages, localization.language.ietf, etc, request, session ) }}
 

@@ -113,6 +113,29 @@
      * @todo documentare
      *
      */
+    function string2num( $s ) {
+        if( is_numeric( str_replace( array( ',', '.' ), NULL, $s ) ) ) {
+            if( strpos( $s, ',' ) !== false && strpos( $s, '.' ) === false ) {
+                // es. 1000,50 -> 1000.50
+                $s = str_replace( ',', '.', $s );
+            } elseif( strpos( $s, ',' ) !== false && strpos( $s, '.' ) !== false ) {
+                if( strpos( $s, ',' ) < strpos( $s, '.' ) ) {
+                    // es. 1,000.50 -> 1000.50
+                    $s = str_replace( ',', NULL, $s );
+                } else {
+                    // es. 1.000,50 -> 1000.50
+                    $s = str_replace( ',', '.', str_replace( '.', NULL, $s ) );
+                }
+            }
+        }
+        return $s;
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function empty2null( $s, $numeric = false ) {
 
 	if( $numeric === true && is_numeric( $s ) ) {
@@ -425,6 +448,17 @@
     function m2km( $m ) {
 
         return $m / 1000;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function km2m( $km ) {
+
+        return $km * 1000;
 
     }
 

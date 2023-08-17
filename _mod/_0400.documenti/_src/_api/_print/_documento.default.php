@@ -10,9 +10,11 @@
      *
      */
 
+    // TODO sbattere tutto 'sto codice in una funzione generaContenutiDocumento() che restituisca un array strutturato con tutta la roba
+
     // verifico la presenza di un ID documento
     if( ! isset( $_REQUEST['__documento__'] ) || empty( $_REQUEST['__documento__'] ) ) { dieText('ID documento mancante'); }
-
+/*
     // recupero i dati del documento
     $doc = mysqlSelectRow(
         $cf['mysql']['connection'],
@@ -27,12 +29,46 @@
 	    'WHERE documenti.id = ?',
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
+*/
+
+    // ...
+    $dati = generaContenutiDocumento( $_REQUEST['__documento__'] );
 
     // verifico l'identità dell'utente
-    if( ! in_array( 'roots', array_keys( $_SESSION['groups'] ) ) && ( $doc['id_destinatario'] != $_SESSION['account']['id_anagrafica'] ) && ( ! isset( $_REQUEST['t'] ) || $_REQUEST['t'] != $doc['token'] ) ) {
+    if( ! in_array( 'roots', array_keys( $_SESSION['groups'] ) )
+        && ( $dati['doc']['id_destinatario'] != $_SESSION['account']['id_anagrafica'] )
+        && ( ! isset( $_REQUEST['t'] ) || $_REQUEST['t'] != $dati['doc']['token'] ) ) {
+
+        // ...
         dieText('autorizzazioni insufficienti a visualizzare il documento');
+
     }
 
+    // ...
+    if( ! isset( $cnf['estensione'] ) || empty( $cnf['estensione'] ) ) {
+        dieText('estensione di stampa non settata');
+    }
+
+    // ...
+    if( ! isset( $cnf['cartella'] ) || empty( $cnf['cartella'] ) ) {
+        dieText('sottocartella per lo spool di stampa non settata');
+    }
+
+    // annoto l'attività di stampa
+    mysqlInsertRow(
+        $cf['mysql']['connection'],
+        array(
+            'id_tipologia' => 23,
+            'id_documento' => $_REQUEST['__documento__'],
+            'data_attivita' => date('Y-m-d'),
+            'nome' => 'stampa documento',
+            'ora_inizio' => date( 'H:i:s' ),
+            'ora_fine' => date( 'H:i:s' )
+        ),
+        'attivita'
+    );
+
+/*
     // TODO svuoto il token
     // ...
 
@@ -57,30 +93,11 @@
         // $doc['codice_esigibilita'] = 'I';
         die('codice esigibilità IVA non impostato');
     }
-    
-    /**
-     * NOTA Esigibilità Dell’IVA: Immediata, Differita, Scissione
-     * Codici IVA fattura elettronica: cosa significa esegibilità dell’IVA? Sono vari i casi in cui è obbligatorio pagare l’IVA per una transazione commerciale,
-     * di qualsiasi genere. Questa imposta può però essere saldata in modi e maniere del tutto differenti tra loro. Il comportamento che si desidera tenere
-     * nei confronti dell’imposta è da indicare all’interno della fattura elettronica. Bisogna segnalare sia l’esigibilità sia la modalità del versamento.
-     * L’IVA infatti può essere esigibile immediatamente nel momento in cui si esegue la transazione. In questi casi si indica il codice “I”, ossia esigibilità immediata.
-     * Volendo è invece possibile effettuare il pagamento dell’IVA solo nel momento in cui si riceve il pagamento per la fattura che si sta emettendo. In questi
-     * casi si utilizza il codice “D”, ossia IVA Differita. Esiste una terza opzione, da indicare con il codice IVA in fattura elettronica “S”, che indica la
-     * scissione dei pagamenti (meglio nota come split payment).
-     */
 
     // TODO
     $doc['condizioni_pagamento'] = $doc['codice_pagamento'];
 
-    /**
-
-     * NOTA condizioni di pagamento
-     * TP01 Pagamento a rate: viene impostato un pagamento a rate dove è possibile impostare una sola rata, nel caso infatti in cui il cliente non abbia saldato la fattura al momento dell’emissione o sia necessario indicare dei dati Bancari, attraverso questo tipo di pagamento sarà possibile impostare tali dati.
-     * TP02 Pagamento completo: va impostato nel caso in cui il pagamento sia stato già completato;
-     * TP03 Anticipo: nel caso in cui un cliente depositi un anticipo si potrà utilizzare questa modalità di pagamento indicando i dati specifici.
-     */
-
-     // TODO
+    // TODO
     $doc['causale'] = 'vendita';
 
     // inizializzo il totale
@@ -173,34 +190,8 @@
         array( array( 's' => $doc['id'] ) )
     );
 
-    // debug
-    /*
-    $doc['pagamenti'] = array(
-        array(
-            'codice_pagamento' => 'MP01',
-            'data_standard' => '2022-01-31',
-            'importo_lordo_totale' => '122.00'
-        )
-    );
-    */
-
     // elaboro i pagamenti
     // TODO
-
-    // inizializzo il progressivo di invio
-    /*
-    if( empty( $doc['progressivo_invio'] ) ) {
-        $doc['progressivo_invio'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT coalesce( ( max( progressivo_invio ) + 1 ), 1 ) AS t FROM documenti'
-        );
-    }
-    */
-
-    /**
-     * NOTA il progressivo di invio dovrebbe essere assegnato al momento dell'invio? come facciamo per quelli che si
-     * scaricano l'XML e lo inviano a mano? bisogna rileggersi la documentazione della fatturazione elettronica
-     */
 
     // recupero i dati dell'emittente
 	$src = mysqlSelectRow(
@@ -349,13 +340,14 @@
     // TODO DDT collegati
     // cercare i DDT
     // compilare la sezione <DatiDDT>
+*/
 
     // nome del file
 	$outFileName =
-	    $sri['sigla_stato'].                    // va espresso secondo lo standard ISO 3166-1 alpha-2
-	    $src['codice_fiscale'].                 // il codice fiscale dell'azienda emittente
+	    $dati['sri']['sigla_stato'].            // va espresso secondo lo standard ISO 3166-1 alpha-2
+	    $dati['src']['codice_fiscale'].         // il codice fiscale dell'azienda emittente
 	    '_'.                                    // separatore
-	    $doc['progressivo_invio'].              // progressivo univoco del documento
+	    $dati['doc']['progressivo_invio'].      // progressivo univoco del documento
 	    '.'.$cnf['estensione'];                 // estensione
 
     /**
@@ -363,55 +355,10 @@
      */
 
     // percorso del file di output
-	$outFilePath = DIR_VAR_SPOOL_DOCS . 'fatture/' . $cnf['estensione'] . '/';
+	$outFilePath = DIR_VAR_SPOOL_DOCS . $cnf['cartella'] . '/' . $cnf['estensione'] . '/';
 
     // verifico il path del file di output
     checkFolder( $outFilePath );
 
     // file di output
 	$outFile = $outFilePath . $outFileName;
-
-    /**
-     * Fattura elettronica a privato senza p iva: obbligo di legge
-     * Emettere Fattura elettronica a privato senza p iva è obbligatorio. È la legge a stabilirlo. Ed è obbligatorio sin dal primo gennaio 2019 per effetto della Legge di Bilancio. Una regola che riguarda tutte le operazioni B2C che hanno per oggetto la cessione di beni mobili e immobili effettuate da un soggetto IVA verso un cliente o un consumatore finale. Nonostante questa specifica esistono come 4 eccezioni alla regola principale. In altre parole alcuni soggetti sono esonerati dall’obbligo di emettere fattura elettronica a privato senza p iva. È questo il caso, ad esempio, dei contribuenti che agiscono nel regime forfettario. È comunque sempre possibile adottarla come scelta libera.
-     * 
-     * Fattura elettronica a privato senza p iva, senza codice destinatario e senza PEC
-     * I privati senza partita Iva non hanno alcun obbligo di dotarsi di PEC, oppure di codice destinatario, anche se devono ricevere una fattura elettronica. Resta il fatto che, in alcuni casi, un’azienda o un professionista debba emettere fattura elettronica a privato senza p iva. In questo caso, in fase di compilazione della e-fattura, deve:
-     * 
-     * inserire il codice convenzionale: “0000000” (7 zeri) nel campo “CodiceDestinatario”
-     * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
-     * Lasciare vuoto il campo “PECDestinatario”.
-     * Inoltre il Provvedimento 89757 del Direttore dell’Agenzia delle entrate ha stabilito che:
-     * 
-     * Il Sistema di Interscambio recapita la fattura elettronica al destinatario direttamente nell’area riservata del sito di AdE
-     * È obbligatorio consegnare al cliente una copia cartacea o digitale ed informarlo che l’originale si trova sul sito dell’Agenzia delle Entrate
-     * Inoltre è importante sapere che alcuni software/piattaforme sono in grado di convertire il formato XML in uno leggibile in altri formati desiderati.
-     * 
-     * Fattura elettronica a privato senza p iva, senza codice univoco, ma con PEC
-     * Può capitare che qualche privato abbia la PEC, ma non per questo il codice univoco. In questi casi allora bisogna:
-     * 
-     * inserire il codice convenzionale: “0000000” (7 zeri) nel campo “CodiceDestinatario”
-     * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
-     * compilare il campo “PECDestinatario”.
-     * Il sistema di Interscambio, questa volta, recapiterà alla PEC del destinatario la fattura elettronica. SDI mette comunque a disposizione del destinatario una copia della fattura all’interno dell’area privata sul sito di agenzia delle Entrate.
-     * 
-     * Fattura elettronica a privato senza p iva
-     * 
-     * Privato senza p iva, con codice univoco
-     * Anche se si tratta di un caso davvero molto raro, è pur sempre probabile. In questo caso, in fase di compilazione della fattura elettronica bisogna:
-     * 
-     * inserire nel campo “CodiceDestinatario” il codice comunicato
-     * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
-     * Compilare o meno il campo “PECDestinatario”.
-     * Per quanto riguarda l’invio invece SDI recapita la fattura elettronica all’indirizzo corrispondente al codice destinatario.
-     * 
-     * Privato senza p iva e cliente estero
-     * Si tratta di un caso piuttosto frequente, che deve essere gestito come segue:
-     * 
-     * inserire il codice convenzionale: “XXXXXXX” (7 volte X) nel campo “CodiceDestinatario”
-     * indicare nel campo “CodiceFiscale” il codice fiscale del destinatario
-     * Lasciare vuoto senza compilazione il campo “IdFiscaleIVA” e specificare solo l’eventuale Codice Fiscale del destinatario
-     * In questo specifico caso però il Sistema di Interscambio non è in grado di recapitare la fattura elettronica al destinatario. Questo perché non la può recapitare all’estero, visto che il sistema di fatturazione elettronica esiste (al momento) solo in Italia. Questo significa che la fattura deve essere consegnata a mano al cliente. Il formato può essere cartaceo, oppure digitale nella forma che lui desidera.
-     * 
-     */
-

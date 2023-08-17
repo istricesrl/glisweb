@@ -7686,13 +7686,13 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 
 -- | 090000034300
 
--- ruoli_documenti
+-- ruoli_documenti_view
 -- tipologia: tabella di supporto
 DROP TABLE IF EXISTS `ruoli_documenti_view`;
 
 -- | 090000034301
 
--- ruoli_documenti
+-- ruoli_documenti_view
 -- tipologia: tabella di supporto
 -- verifica: 2022-06-09 16:21 Chiara GDL
 CREATE OR REPLACE VIEW ruoli_documenti_view AS
