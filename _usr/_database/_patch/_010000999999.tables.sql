@@ -3511,6 +3511,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `se_anagrafica` tinyint(1) DEFAULT NULL,
   `se_agenda` tinyint(1) DEFAULT NULL,
   `se_sistema` tinyint(1) DEFAULT NULL,
+  `se_stampa` tinyint(1) DEFAULT NULL,
   `se_cartellini` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,

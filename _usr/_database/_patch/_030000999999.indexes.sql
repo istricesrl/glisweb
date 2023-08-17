@@ -3733,6 +3733,7 @@ ALTER TABLE `tipologie_attivita`
 	ADD KEY `se_anagrafica` (`se_anagrafica`),
 	ADD KEY `se_agenda` (`se_agenda`),
 	ADD KEY `se_sistema` (`se_sistema`),
+	ADD KEY `se_stampa` (`se_stampa`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`);
