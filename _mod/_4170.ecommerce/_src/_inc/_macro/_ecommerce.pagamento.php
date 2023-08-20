@@ -70,9 +70,11 @@
                             $nome = 'documento creato automaticamente per il ' . ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'pagamento #' . $pagamento['id_pagamento'] . ' ' : NULL ) . 'carrello #' . $pagamento['id_carrello'] . ' anagrafica #'. $pagamento['destinatario_id_anagrafica'] .' (' . $pagamento['destinatario'] . ')';
                             $sezionale = 'C/' . date('Y');
                             $emittente = trovaIdAziendaGestita();
+                            $idSedeEmittente = anagraficaGetIdSedeLegale( $emittente );
+                            $idSedeDestinatario = anagraficaGetIdSedeLegale( $pagamento['destinatario_id_anagrafica'] );
                             $numero = generaProssimoNumeroDocumento( $_REQUEST['__pagamenti__']['fatturazione_id_tipologia_documento'], $sezionale, $emittente );
                             $data = date('Y-m-d');
-        
+
                             // creo il documento
                             $idDocumento = mysqlInsertRow(
                                 $cf['mysql']['connection'],
@@ -84,13 +86,16 @@
                                     'esigibilita' => 'I',
                                     'id_condizione_pagamento' => 2,
                                     'id_emittente' => $emittente,
+                                    'id_sede_emittente' => $idSedeEmittente,
                                     'id_destinatario' => $pagamento['destinatario_id_anagrafica'],
+                                    'id_sede_destinatario' => $idSedeDestinatario,
                                     'data' => $data
                                 ),
                                 'documenti'
                             );
 
                             // aggiungo la riga
+                            // TODO ricavare il reparto da $pagamento['id_iva']?
                             $idRiga = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
