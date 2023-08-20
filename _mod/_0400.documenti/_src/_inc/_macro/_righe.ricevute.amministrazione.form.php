@@ -93,14 +93,29 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM progetti_view '
 	);
-
+/*
 	// tendina todo
 	$ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM todo_view '
+	    'SELECT id, __label__ FROM todo_view_static '
 	);
+
+	die( print_r( $ct['etc'], true ) );
+*/
+
+	// tendina todo
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ){
+		$ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
+			$cf['memcache']['index'],
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+			'SELECT id, __label__ FROM todo_view_static WHERE id = ?',
+			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) )
+		);
+	}
+
 
 	// tendina matricole
 	$ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
@@ -110,14 +125,16 @@
 	    'SELECT id, __label__ FROM matricole_view '
 	);
 
-        // tendina tipologie anagrafica
+//	die( print_r( $ct['etc'], true ) );
+
+    // tendina tipologie anagrafica
 	$ct['etc']['select']['tipologie_documenti_articoli'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
-
+/*
     // tendina mittenti
 	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -133,6 +150,49 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static '
 	);
+*/
+// die( print_r( $ct['etc'], true ) );
+/*
+$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
+	$cf['memcache']['index'],
+	$cf['memcache']['connection'],
+	$cf['mysql']['connection'],
+	'SELECT id, __label__ FROM anagrafica_view_static' 
+);
+
+// tendina destinatari
+$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
+	$cf['memcache']['index'],
+	$cf['memcache']['connection'],
+	$cf['mysql']['connection'],
+	'SELECT id, __label__ FROM anagrafica_view_static'
+);
+*/
+
+    // tendina emittenti
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){
+		$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
+			$cf['memcache']['index'],
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+			'SELECT id, __label__ FROM anagrafica_view_static WHERE id = ?',
+			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ))
+		);
+	}
+
+	// tendina indirizzi destinatari
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) ){
+		$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
+			$cf['memcache']['index'],
+			$cf['memcache']['connection'],
+			$cf['mysql']['connection'],
+			'SELECT id, __label__ FROM anagrafica_view_static WHERE id = ?',
+			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ))
+		);
+	} 
+
+// var_dump( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] );
+// die( print_r( $ct['etc']['select']['id_destinatari'], true ) );
 
 	$ct['etc']['select']['id_documenti'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
@@ -140,7 +200,9 @@
         $cf['mysql']['connection'],
         'SELECT id, __label__ FROM documenti_view '
     );
-    
+
+// die( print_r( $ct['etc'], true ) );
+
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_documento'] )  && !empty( $_REQUEST[ $ct['form']['table'] ]['id_documento'] ) ){
 		$documento = $_REQUEST[ $ct['form']['table'] ]['id_documento'];
 	} elseif( isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'] ) ) {
