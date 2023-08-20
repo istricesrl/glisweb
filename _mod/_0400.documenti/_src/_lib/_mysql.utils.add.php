@@ -121,8 +121,7 @@
         // TODO
         if( ! empty( $r['doc']['esigibilita'] ) ) {
             $r['doc']['codice_esigibilita'] = $r['doc']['esigibilita'];
-        } else {
-            // $r['doc']['codice_esigibilita'] = 'I';
+        } elseif( in_array( $r['doc']['id_tipologia'], array( 1, 2, 3, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28 ) ) ) {
             die('codice esigibilità IVA non impostato');
         }
         
@@ -172,7 +171,7 @@
 
         // controllo contenuto
         if( empty( $r['doc']['righe'] ) ) {
-            dieText('inserire almeno una riga');
+            dieText('inserire almeno una riga, oppure verificare reparti, aliquote IVA e unità di misura');
         }
 
         // elaboro i totali
@@ -291,11 +290,11 @@
             'stati.iso31661alpha2 AS sigla_stato '.
             'FROM anagrafica_indirizzi '.
             'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-            'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
             'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
             'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
             'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
             'INNER JOIN stati ON stati.id = regioni.id_stato '.
+            'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
             'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
             array(
                 array( 's' => $r['src']['id'] ),
@@ -377,11 +376,11 @@
             'stati.iso31661alpha2 AS sigla_stato '.
             'FROM anagrafica_indirizzi '.
             'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-            'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
             'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
             'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
             'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
             'INNER JOIN stati ON stati.id = regioni.id_stato '.
+            'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
             'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
             array(
                 array( 's' => $r['dst']['id'] ),
