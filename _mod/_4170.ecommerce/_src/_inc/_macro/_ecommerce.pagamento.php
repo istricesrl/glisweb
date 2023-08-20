@@ -94,18 +94,29 @@
                                 'documenti'
                             );
 
+                            // trovo il reparto
+                            $reparto = mysqlSelectRow(
+                                $cf['mysql']['connection'],
+                                'SELECT reparti.id, iva.aliquota FROM articoli INNER JOIN reparti ON reparti.id = articoli.id_reparto 
+                                    INNER JOIN iva ON iva.id = reparti.id_iva WHERE articoli.id = ?',
+                                    array( array( 's' => $pagamento['id_articolo'] ) )
+                            );
+
+                            // calcolo il netto
+                            $pagamento['importo_netto_totale'] = $pagamento['importo_lordo_totale'] / ( 100 + $reparto['aliquota'] ) * 100;
+
                             // aggiungo la riga
-                            // TODO ricavare il reparto da $pagamento['id_iva']?
                             $idRiga = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
                                     'id_documento' => $idDocumento,
                                     'id_articolo' => $pagamento['id_articolo'],
                                     'id_carrelli_articoli' => $pagamento['id'],
+                                    'importo_netto_totale' => $pagamento['importo_netto_totale'],
                                     'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                     'quantita' => 1,
                                     'id_udm' => 1,
-                                    'id_reparto' => 1,
+                                    'id_reparto' => $reparto['id'],
                                     'id_listino' => 1,
                                     'nome' => 'riga automatica da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
                                 ),
