@@ -66,7 +66,7 @@
 
 		// debug
 			// die( 'id -> ' . $id );
-
+/*
 		// prelevo la riga
 			$r = mysqlSelectRow(
 				$cf['mysql']['connection'],
@@ -80,7 +80,43 @@
 					array( 's' => $id )
 				)
 			);
+*/
 
+		// prelevo la riga
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT * FROM anagrafica_indirizzi '.
+			'LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
+			'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
+			'ORDER BY ruoli_indirizzi.se_sede_legale DESC '.
+			'LIMIT 1',
+			array(
+				array( 's' => $id )
+			)
+		);
+/*
+		die(print_r($r,true));
+
+		// prelevo la riga
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT * FROM indirizzi_view '.
+			'INNER JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id '.
+			'INNER JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
+			'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
+			'ORDER BY ruoli_indirizzi.se_sede_legale DESC'.
+			'LIMIT 1',
+			array(
+				array( 's' => $id )
+			)
+		);
+*/
+		// ...
+		$r = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT * FROM indirizzi_view WHERE id = ?',
+			array( array( 's' => $r['id_indirizzo'] ) )
+		);
 
 		// riassemblaggio dell'indirizzo per linee (ad es. per le buste)
 			if( empty($r['indirizzo']) || empty($r['civico']) || empty($r['cap']) || empty($r['comune']) || empty($r['sigla']) ){
