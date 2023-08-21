@@ -29,13 +29,24 @@
             // pulizia ragionata report
             cleanReportCorsi();
 
+            // condizioni aggiuntive
+            $whr = NULL;
+            $cnd = array();
+
+            // lezioni di uno specifico corso
+            if( isset( $job['workspace']['id_corso'] ) && ! empty( $job['workspace']['id_corso'] ) ) {
+                $whr = 'AND c.id_progetto = ?';
+                $cnd[] = array( 's' => $job['workspace']['id_corso'] );
+            }
+
             // inizializzo l'array
             $arr = mysqlSelectColumn(
                 'id',
                 $cf['mysql']['connection'],
                 'SELECT c.id FROM todo AS c LEFT JOIN __report_lezioni_corsi__ AS r ON r.id = c.id
                 WHERE ( r.timestamp_aggiornamento < c.timestamp_aggiornamento OR r.id IS NULL )
-                AND c.id_tipologia IN (14, 15)'
+                AND c.id_tipologia IN (14, 15) ' . $whr,
+                $cnd
             );
 
             // segno il totale delle cose da fare

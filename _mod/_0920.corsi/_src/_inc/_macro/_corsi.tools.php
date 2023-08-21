@@ -44,6 +44,15 @@
         'text' => 'forza l\'aggiornamento del report corsi'
     );
 
+    // aggiornamento cache
+    $ct['page']['contents']['metro']['cache'][] = array(
+        'ws' => $base . 'report.lezioni.corsi.popolazione.start',
+        'icon' => NULL,
+        'fa' => 'fa-clock-o',
+        'title' => 'aggiornamento report lezioni corsi',
+        'text' => 'forza l\'aggiornamento del report lezioni corsi'
+    );
+
     // tendina anni
     foreach( range( date( 'Y' ) - 1,  date( 'Y' ) + 1 ) as $y ) {
         $ct['etc']['select']['anni'][ $y ] = array( 'id' => $y, '__label__' => $y ) ;
