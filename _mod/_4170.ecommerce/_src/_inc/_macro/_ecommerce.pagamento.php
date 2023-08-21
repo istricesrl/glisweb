@@ -247,14 +247,14 @@
                     array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
                 )
             );
-
+/*
             // seleziono i documenti da stampare
             $ct['etc']['stampe'] = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT documenti_view.* FROM documenti_view LEFT JOIN attivita ON ( attivita.id_documento = documenti_view.id AND attivita.id_tipologia IN ( 22, 23, 24 ) ) WHERE id_destinatario = ? AND attivita.id IS NULL',
                 array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
             );
-
+*/
         }
 
         // print_r( $_REQUEST );
@@ -291,11 +291,28 @@
                     // aggiungo il totale della riga
                     $riga['totale_lordo_pagato'] += $rdoc['importo_lordo_totale'];
 
-                    // documenti da stampare
-                    $riga['documenti_da_stampare'][] = array(
-                        'id' => $rdoc['id_documento'],
-                        'documento' => $rdoc['documento']
-                    );
+                    // ...
+                    if( isset( $rdoc['id_documento'] ) && ! empty( $rdoc['id_documento'] ) ) {
+
+                        // stampe del documento
+                        $stampe = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT count( attivita.id ) FROM attivita INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia WHERE attivita.id_documento = ? AND tipologie_attivita.se_stampa IS NOT NULL',
+                            array( array( 's' => $rdoc['id_documento'] ) )
+                        );
+
+                        // ...
+                        if( empty( $stampe ) ) {
+
+                            // documenti da stampare
+                            $riga['documenti_da_stampare'][] = array(
+                                'id' => $rdoc['id_documento'],
+                                'documento' => $rdoc['documento']
+                            );
+
+                        }
+
+                    }
 
                 }
 
