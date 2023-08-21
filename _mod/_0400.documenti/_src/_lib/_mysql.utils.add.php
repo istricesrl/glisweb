@@ -207,6 +207,35 @@
             $riga['importo_netto_totale']                       = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_netto_totale'] ) );
             $riga['importo_iva_totale']                         = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_iva_totale'] ) );
             $riga['importo_lordo_totale']                       = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_lordo_totale'] ) );
+
+            if( ! empty( $riga['id_articolo'] ) ) {
+
+                $riga['dettagli']['corso'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT __report_corsi__.* FROM __report_corsi__ INNER JOIN progetti ON progetti.id = __report_corsi__.id INNER JOIN prodotti ON prodotti.id = progetti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ? ',
+                    array( array( 's' => $riga['id_articolo'] ) )
+                );
+
+                if( ! empty( $riga['dettagli']['corso'] ) ) {
+                    $riga['dettagli']['corso']['certificato']['richiesto'] = mysqlSelectRow(
+                        $cf['mysql']['connection'],
+                        'SELECT certificazioni.id, certificazioni.nome FROM certificazioni INNER JOIN progetti_certificazioni ON progetti_certificazioni.id_certificazione = certificazioni.id WHERE progetti_certificazioni.id_progetto = ?',
+                        array( array( 's' => $riga['dettagli']['corso']['id'] ) )
+                    );
+                }
+
+                $riga['dettagli']['tesseramento'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT tipologie_contratti.* FROM tipologie_contratti INNER JOIN prodotti ON prodotti.id = tipologie_contratti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ? AND tipologie_contratti.se_tesseramento IS NOT NULL',
+                    array( array( 's' => $riga['id_articolo'] ) )
+                );
+
+            }
+
+            // NOTA anche per determinare se la ricevuta è un'iscrizione potevo fare riferimento alle tipologie contratti? ma comunque mi servono i dettagli del corso
+            // bisogna mappare le relazioni fra progetti, tipologie_progetti, contratti, tipologie_contratti, rinnovi, tipologie_rinnovi, prodotti e articoli
+
+die( print_r( $riga['dettagli']['corso'], true ) );
             $r['doc']['iva'][ $riga['id_iva'] ]['imponibile_tot']    = str_replace( ',', '.', sprintf( '%0.2f', round( $r['doc']['iva'][ $riga['id_iva'] ]['imponibile_tot'], 2 ) ) );
             $r['doc']['iva'][ $riga['id_iva'] ]['tot']               = str_replace( ',', '.', sprintf( '%0.2f', round( $r['doc']['iva'][ $riga['id_iva'] ]['tot'], 2 ) ) );
 
