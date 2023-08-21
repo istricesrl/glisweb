@@ -58,7 +58,7 @@
     mysqlInsertRow(
         $cf['mysql']['connection'],
         array(
-            'id_tipologia' => 23,
+            'id_tipologia' => ( ( $cnf['estensione'] == 'pdf' ) ? 23 : ( ( $cnf['estensione'] == 'xml' ) ? 24 : 22 ) ),
             'id_documento' => $_REQUEST['__documento__'],
             'data_attivita' => date('Y-m-d'),
             'nome' => 'stampa documento',

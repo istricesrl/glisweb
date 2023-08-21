@@ -217,11 +217,24 @@
                 );
 
                 if( ! empty( $riga['dettagli']['corso'] ) ) {
+
                     $riga['dettagli']['corso']['certificato']['richiesto'] = mysqlSelectRow(
                         $cf['mysql']['connection'],
                         'SELECT certificazioni.id, certificazioni.nome FROM certificazioni INNER JOIN progetti_certificazioni ON progetti_certificazioni.id_certificazione = certificazioni.id WHERE progetti_certificazioni.id_progetto = ?',
                         array( array( 's' => $riga['dettagli']['corso']['id'] ) )
                     );
+
+                    if( ! empty( $riga['dettagli']['corso']['certificato']['richiesto'] ) ) {
+                        $riga['dettagli']['corso']['certificato']['richiesto']['scadenza'] = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT max( data_scadenza ) FROM anagrafica_certificazioni WHERE id_anagrafica = ? AND id_certificazione = ? ',
+                            array(
+                                array( 's' => $r['doc']['id_destinatario'] ),
+                                array( 's' => $riga['dettagli']['corso']['certificato']['richiesto']['id'] ),
+                            )
+                        );
+                    }
+
                 }
 
                 $riga['dettagli']['tesseramento'] = mysqlSelectRow(
@@ -235,7 +248,6 @@
             // NOTA anche per determinare se la ricevuta è un'iscrizione potevo fare riferimento alle tipologie contratti? ma comunque mi servono i dettagli del corso
             // bisogna mappare le relazioni fra progetti, tipologie_progetti, contratti, tipologie_contratti, rinnovi, tipologie_rinnovi, prodotti e articoli
 
-die( print_r( $riga['dettagli']['corso'], true ) );
             $r['doc']['iva'][ $riga['id_iva'] ]['imponibile_tot']    = str_replace( ',', '.', sprintf( '%0.2f', round( $r['doc']['iva'][ $riga['id_iva'] ]['imponibile_tot'], 2 ) ) );
             $r['doc']['iva'][ $riga['id_iva'] ]['tot']               = str_replace( ',', '.', sprintf( '%0.2f', round( $r['doc']['iva'][ $riga['id_iva'] ]['tot'], 2 ) ) );
 
@@ -354,6 +366,19 @@ die( print_r( $riga['dettagli']['corso'], true ) );
         $r['dst'] = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT anagrafica.*, tipologie_anagrafica.se_pubblica_amministrazione FROM anagrafica LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia  WHERE anagrafica.id = ?',
+            array( array( 's' => $r['doc']['id_destinatario'] ) )
+        );
+
+        // tesseramento
+        $r['dst']['numero_tessera'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max( contratti.codice ) AS tessera
+                FROM contratti 
+                    INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
+                    INNER JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia 
+                    INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+                WHERE contratti_anagrafica.id_anagrafica = ? 
+                    AND tipologie_contratti.se_tesseramento IS NOT NULL ',
             array( array( 's' => $r['doc']['id_destinatario'] ) )
         );
 
