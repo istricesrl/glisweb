@@ -201,8 +201,10 @@
                     coalesce( concat( " su ", todo.id_progetto, " ", progetti.nome ), "" )
                 ) AS __label__
             FROM todo
+                LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
                 LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
                 LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+                LEFT JOIN progetti ON progetti.id = todo.id_progetto
             WHERE todo.id = ? AND todo.id_tipologia IN (14, 15) 
             GROUP BY todo.id ',
             array( array( 's' => $idLezione ) )
@@ -214,12 +216,12 @@
                 FROM attivita AS docenze
                     LEFT JOIN anagrafica AS docenti ON docenti.id = docenze.id_anagrafica_programmazione
                 WHERE docenze.id_todo = ? 
-                AND docenze.id_tipologia IN ( 30, 31 ) )
+                AND docenze.id_tipologia IN ( 30, 31 )
                 GROUP BY docenze.id_todo ',
             array( array( 's' => $riga['id'] ) )
         );
 
-        $riga['idnirizzo'] = mysqlSelectValue(
+        $riga['indirizzo'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT concat_ws(
                     " ",
@@ -247,7 +249,7 @@
             $cf['mysql']['connection'],
             'SELECT count( DISTINCT presenze.id_anagrafica_programmazione ) AS numero_alunni 
                 FROM attivita AS presenze 
-                WHERE presenze.id_todo = ? AND presenze.id_tipologia = 15 )',
+                WHERE presenze.id_todo = ? AND presenze.id_tipologia = 15',
             array( array( 's' => $riga['id'] ) )
         );
 

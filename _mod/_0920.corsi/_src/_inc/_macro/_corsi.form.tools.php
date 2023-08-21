@@ -41,6 +41,7 @@
     // aggiornamento cache
     $ct['page']['contents']['metro']['cache'][] = array(
         'ws' => $base . 'report.corsi.popolazione?id=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+        'callback' => 'location.reload()',
         'icon' => NULL,
         'fa' => 'fa-clock-o',
         'title' => 'aggiornamento report corsi',
@@ -50,6 +51,7 @@
     // aggiornamento cache
     $ct['page']['contents']['metro']['cache'][] = array(
         'ws' => $base . 'report.lezioni.corsi.popolazione.start?idCorso=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+        'callback' => 'location.reload()',
         'icon' => NULL,
         'fa' => 'fa-clock-o',
         'title' => 'aggiornamento report lezioni corsi',

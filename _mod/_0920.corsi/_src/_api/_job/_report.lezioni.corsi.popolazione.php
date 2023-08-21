@@ -88,6 +88,11 @@
         // operazioni di chiusura
         if( empty( $job['totale'] ) || $job['corrente'] > $job['totale'] ) {
 
+            // scrivo la riga
+            if( isset( $job['workspace']['id_corso'] ) && ! empty( $job['workspace']['id_corso'] ) ) {
+                updateReportCorsi( $job['workspace']['id_corso'] );
+            }
+
             // scrivo la timestamp di completamento
             $jobs = mysqlQuery(
                 $cf['mysql']['connection'],
@@ -107,7 +112,7 @@
             $row = $arr[ $widx ];
 
             // scrivo la riga
-            updateReportCorsi( $row );
+            updateReportLezioniCorsi( $row );
 
             // status
             $job['workspace']['status']['elaborati'][ $row ] = array( 'esito' => 'OK' );

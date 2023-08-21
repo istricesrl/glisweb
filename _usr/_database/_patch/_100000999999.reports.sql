@@ -2074,7 +2074,7 @@ CREATE TABLE `__report_lezioni_corsi__` (
   `data_chiusura` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_contatto` int(11) DEFAULT NULL,
-  `id_progetto` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `data_archiviazione` char(255) DEFAULT NULL,
