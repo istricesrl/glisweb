@@ -2468,11 +2468,11 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id ), null ) SEPARATOR ' | ' ) AS fasce,
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
 		group_concat( DISTINCT if( l.id, categorie_progetti_path( l.id ), null ) SEPARATOR ' | ' ) AS livelli,
-		group_concat( DISTINCT dayname( todo.data_programmazione ) SEPARATOR ' | ' ) AS giorni,
-		group_concat( DISTINCT concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) SEPARATOR ' | ' ) AS orari,
-		group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ) SEPARATOR ' | ' ) AS giorni_orari,
-		group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' ) AS luoghi,
-		group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ), luoghi_path( todo.id_luogo ) ) SEPARATOR ' | ' ) AS giorni_orari_luoghi,
+		-- group_concat( DISTINCT dayname( todo.data_programmazione ) SEPARATOR ' | ' ) AS giorni,
+		-- group_concat( DISTINCT concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) SEPARATOR ' | ' ) AS orari,
+		-- group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) ) SEPARATOR ' | ' ) AS giorni_orari,
+		-- group_concat( DISTINCT luoghi_path( luoghi.id ) SEPARATOR ' | ' ) AS luoghi,
+		-- group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ), luoghi_path( todo.id_luogo ) ) SEPARATOR ' | ' ) AS giorni_orari_luoghi,
 		coalesce( m.testo, '∞' ) AS posti_disponibili,
 		progetti.id_account_inserimento,
 		progetti.id_account_aggiornamento,
@@ -2486,7 +2486,7 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 			coalesce( progetti.data_accettazione, '-' ),
 			' al ',
 			coalesce( progetti.data_chiusura, '-' ),
-			group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ), luoghi_path( todo.id_luogo ) ) SEPARATOR ' | ' ),
+			-- group_concat( DISTINCT concat_ws( ' ', dayname( todo.data_programmazione ), concat_ws( ' - ', todo.ora_inizio_programmazione, todo.ora_fine_programmazione ), luoghi_path( todo.id_luogo ) ) SEPARATOR ' | ' ),
 			'posti',
 			coalesce( m.testo, '∞' )
 		) AS __label__
@@ -2497,8 +2497,8 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 		LEFT JOIN categorie_progetti AS f ON f.id = progetti_categorie.id_categoria AND f.se_fascia = 1
 		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
 		LEFT JOIN categorie_progetti AS l ON l.id = progetti_categorie.id_categoria AND l.se_classe = 1
-		LEFT JOIN todo ON ( todo.id_progetto = progetti.id )
-		LEFT JOIN luoghi ON ( luoghi.id = todo.id_luogo )
+		-- LEFT JOIN todo ON ( todo.id_progetto = progetti.id )
+		-- LEFT JOIN luoghi ON ( luoghi.id = todo.id_luogo )
 		LEFT JOIN metadati AS m ON ( m.id_progetto = progetti.id AND m.nome = 'iscritti_max' )
 	WHERE tipologie_progetti.se_didattica = 1
 	GROUP BY progetti.id

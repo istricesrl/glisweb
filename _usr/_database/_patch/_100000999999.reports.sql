@@ -2045,67 +2045,47 @@ ORDER BY todo.id
 
 -- __report_lezioni_corsi__
 -- tipologia: report
-CREATE OR REPLACE VIEW `__report_lezioni_corsi__` AS
-	SELECT
-		todo.id,
-		todo.id_tipologia,
-		tipologie_todo.nome AS tipologia,
-		todo.codice,
-		tipologie_todo.se_agenda,
-		todo.id_anagrafica,
-		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		todo.id_cliente,
-		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
-		todo.id_indirizzo,
-		concat_ws(
-			' ',
-			indirizzo,
-			indirizzi.civico,
-			indirizzi.cap,
-			indirizzi.localita,
-			comuni.nome,
-			provincie.sigla
-		) AS indirizzo,
-		todo.id_luogo,
-		luoghi_path( todo.id_luogo ) AS luogo,
-    group_concat( DISTINCT concat( docenti.nome, ' ', docenti.cognome ) SEPARATOR ', ' ) AS docenti,
-    count( DISTINCT presenze.id_anagrafica_programmazione ) AS numero_alunni,
-		todo.timestamp_apertura,
-		todo.data_scadenza,
-		todo.ora_scadenza,
-		todo.data_programmazione,
-		todo.ora_inizio_programmazione,
-		todo.ora_fine_programmazione,
-		todo.anno_programmazione,
-		todo.settimana_programmazione,
-		todo.ore_programmazione,
-		todo.data_chiusura,
-		todo.nome,
-		todo.id_contatto,
-		todo.id_progetto,
-		todo.id_pianificazione,
-		todo.id_immobile,
-		todo.data_archiviazione,
-		todo.id_account_inserimento,
-		todo.id_account_aggiornamento,
-		concat(
-			todo.nome,
-			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
-			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
-		) AS __label__
-	FROM todo
-		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
-		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
-		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
-		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
-		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
-		LEFT JOIN progetti ON progetti.id = todo.id_progetto
-    LEFT JOIN attivita AS docenze ON ( docenze.id_todo = todo.id AND docenze.id_tipologia IN ( 30, 31 ) )
-    LEFT JOIN anagrafica AS docenti ON docenti.id = docenze.id_anagrafica_programmazione
-    LEFT JOIN attivita AS presenze ON ( presenze.id_todo = todo.id AND presenze.id_tipologia = 15 )
-  WHERE todo.id_tipologia IN (14, 15)
-  GROUP BY todo.id
-;
+
+CREATE TABLE `__report_lezioni_corsi__` (
+  `id` char(255) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` char(255) DEFAULT NULL,
+  `codice` char(255) DEFAULT NULL,
+  `se_agenda` int(1) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `anagrafica` char(255) DEFAULT NULL,
+  `id_cliente` int(11) DEFAULT NULL,
+  `cliente` char(255) DEFAULT NULL,
+  `id_indirizzo` int(11) DEFAULT NULL,
+  `indirizzo` char(255) DEFAULT NULL,
+  `id_luogo` int(11) DEFAULT NULL,
+  `luogo` char(255) DEFAULT NULL,
+  `docenti` char(255) DEFAULT NULL,
+  `numero_alunni` int(11) DEFAULT NULL,
+  `timestamp_apertura` int(11) DEFAULT NULL,
+  `data_scadenza` char(255) DEFAULT NULL,
+  `ora_scadenza` char(255) DEFAULT NULL,
+  `data_programmazione` char(255) DEFAULT NULL,
+  `ora_inizio_programmazione` char(255) DEFAULT NULL,
+  `ora_fine_programmazione` char(255) DEFAULT NULL,
+  `anno_programmazione` char(255) DEFAULT NULL,
+  `settimana_programmazione` char(255) DEFAULT NULL,
+  `ore_programmazione` char(255) DEFAULT NULL,
+  `data_chiusura` char(255) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `id_contatto` int(11) DEFAULT NULL,
+  `id_progetto` int(11) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `id_immobile` int(11) DEFAULT NULL,
+  `data_archiviazione` char(255) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | FINE FILE
