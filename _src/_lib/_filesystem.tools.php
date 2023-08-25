@@ -60,7 +60,7 @@
 	define( 'FILE_READ_AS_ARRAY'		, 'READ_ARRAY' );
 	define( 'FILE_READ_AS_STRING'		, 'READ_STRING' );
 	define( 'FILE_WRITE_OVERWRITE'		, 'w+' );
-	define( 'FILE_WRITE_APPEND'		, 'a+' );
+	define( 'FILE_WRITE_APPEND'		    , 'a+' );
 
     /**
      *
@@ -377,12 +377,16 @@
      */
     function getDirIterator( $d ) {
 
-	fullPath( $d );
+        fullPath( $d );
 
-	return new RecursiveIteratorIterator(
-	    new RecursiveDirectoryIterator( $d, FilesystemIterator::SKIP_DOTS ),
-	    RecursiveIteratorIterator::CHILD_FIRST
-	);
+        if( is_dir( $d ) ) {
+            return new RecursiveIteratorIterator(
+                new RecursiveDirectoryIterator( $d, FilesystemIterator::SKIP_DOTS ),
+                RecursiveIteratorIterator::CHILD_FIRST
+            );
+        }
+
+        return false;
 
     }
 
@@ -538,23 +542,23 @@
      */
     function getFilteredFileList( $d , $f = '*', $s = false ) {
 
-	fullPath( $d );
+        fullPath( $d );
 
-	$a = glob( $d . $f , GLOB_BRACE );
+        $a = glob( $d . $f , GLOB_BRACE );
 
-	$r = array();
+        $r = array();
 
-	foreach( $a as $t ) {
-	    if( is_file( $t ) ) {
-		shortPath( $t );
-        if( $s !== false ) {
-            $t = basename( $t );
+        foreach( $a as $t ) {
+            if( is_file( $t ) ) {
+            shortPath( $t );
+            if( $s !== false ) {
+                $t = basename( $t );
+            }
+            $r[] = $t;
+            }
         }
-        $r[] = $t;
-	    }
-	}
 
-	return $r;
+        return $r;
 
     }
 
@@ -565,15 +569,15 @@
      */
     function getFileList( $d, $full = false ) {
 
-	$t = array();
+        $t = array();
 
-	foreach( getDirIterator( $d ) as $f ) {
-	    if( $f->isFile() ) {
-		$t[] = ( $full === true ) ? $f->getRealPath() : $f->getFileName();
-	    }
-	}
+        foreach( getDirIterator( $d ) as $f ) {
+            if( $f->isFile() ) {
+                $t[] = ( $full === true ) ? $f->getRealPath() : $f->getFileName();
+            }
+        }
 
-	return $t;
+        return $t;
 
     }
 
@@ -611,15 +615,15 @@
      */
     function getDirList( $d, $full = false ) {
 
-	$t = array();
+        $t = array();
 
-	foreach( getDirIterator( $d ) as $f ) {
-	    if( $f->isDir() ) {
-		$t[] = ( $full === true ) ? $f->getRealPath() : $f->getFileName();
-	    }
-	}
+        foreach( getDirIterator( $d ) as $f ) {
+            if( $f->isDir() ) {
+            $t[] = ( $full === true ) ? $f->getRealPath() : $f->getFileName();
+            }
+        }
 
-	return $t;
+        return $t;
 
     }
 
@@ -633,18 +637,18 @@
      */
     function getDirSize( $d ) {
 
-	$t = 0;
+        $t = 0;
 
-	if( is_dir( $d ) ) {
-#	    foreach( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $d ) ) as $f ) {
-	    foreach( getDirIterator( $d ) as $f ) {
-		$t += $f->getSize();
-	    }
-	} else {
-	    $t = getSize( $d );
-	}
+        if( is_dir( $d ) ) {
+    #	    foreach( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $d ) ) as $f ) {
+            foreach( getDirIterator( $d ) as $f ) {
+            $t += $f->getSize();
+            }
+        } else {
+            $t = getSize( $d );
+        }
 
-	return $t;
+        return $t;
 
     }
 
@@ -655,17 +659,40 @@
      */
     function getRecursiveDirList( $d ) {
 
-	$r = array();
+        $r = array();
 
-#	foreach( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $d ) ) as $f ) {
-	foreach( getDirIterator( $d ) as $f ) {
+    #	foreach( new RecursiveIteratorIterator( new RecursiveDirectoryIterator( $d ) ) as $f ) {
+        foreach( getDirIterator( $d ) as $f ) {
 
-	    if( $f->isDir() )
-		$r[] = $f->getRealPath();
+            if( $f->isDir() )
+            $r[] = $f->getRealPath();
 
-	}
+        }
 
-	return $r;
+        return $r;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function getRecursiveFileList( $d ) {
+
+        $r = array();
+
+        $i = getDirIterator( $d );
+
+        if( ! empty( $i ) ) {
+            foreach( $i as $f ) {
+                if( $f->isFile() ) {
+                    $r[] = $f->getRealPath();
+                }
+            }
+        }
+
+        return $r;
 
     }
 
@@ -997,4 +1024,20 @@
         $a = array_slice( $a, $n );
         array2file( $f, $a );
     
+    }
+
+    function absolutePath( $path ) {
+        return array_reduce( explode('/', $path ), function( $a, $b) {
+            if($a === 0)
+                $a = "/";
+
+            if($b === "" || $b === ".")
+                return $a;
+
+            if($b === "..")
+                return dirname($a);
+
+            return preg_replace("/\/+/", "/", "$a/$b");
+
+        }, 0);
     }

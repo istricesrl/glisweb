@@ -69,6 +69,8 @@
 				$vm = true;												//
 			} elseif( strtolower( $k )	== '__report_mode__' ) {		//
 				$rm = NULL;												//
+			} elseif( strtolower( $k )	== '__filesystem_mode__' ) {	//
+				$rm = NULL;												//
 			} elseif( substr( $k, 0, 2 )	!== '__' ) {				//
 
 				if( strtolower( $v )	== '__null__' )		{ $v = NULL; }

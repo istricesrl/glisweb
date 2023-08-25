@@ -93,6 +93,9 @@
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
+    // NOTA come cazzo possono funzionare questi due preset? se li metti prima dell'inclusione della default view non hanno l'id della vista, se li metti dopo
+    // non possono ordinare la vista visto che è già stata fatta...?
+
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita'] ) ) {
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'DESC';
     } 

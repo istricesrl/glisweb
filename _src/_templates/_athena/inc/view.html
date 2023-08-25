@@ -5,31 +5,31 @@
 	{% include etc.include.filters %}
 	{% else %}
     <div class="form-row view-filters d-print-none">
-	<div class="col">
-	    <input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
-	</div>
-	<div class="col-auto">
-	    <button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
-	    {% if view.insert.path %}
-	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}{% for f,v in view.open.preset.fields %}&__preset__[{{ view.open.table }}][{{ f }}]={{ v }}{% endfor %}','_self');"><i class="fa fa-plus"></i></button>
-	    {% endif %}
-<!--
-		{% if view.insert.options and view.insert.option.page %}
-		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ pages[ view.insert.option.page ].url[localization.language.ietf] }}?{% for o in view.insert.options %}{{ o.name }}={{ o.value }}{% if loop.index < (view.insert.options|length) %}&{% endif %}{% endfor %}','_self');"><i class="fa {{ view.insert.option.fa }}"></i></button>
-		{% endif %}
--->
-		{% for extra in view.insert.extras %}
-		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ pages[ extra.page ].url[localization.language.ietf] }}?{% for k,o in extra.options %}{{ k }}={{ o }}{% if loop.index < (extra.options|length) %}&{% endif %}{% endfor %}','_self');"><i class="fa {{ extra.icon }}"></i></button>
-		{% endfor %}
-		{% if page.parents.path|length() > 1 and view.dashboard.sezione %}
-	    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
-	    {% endif %}
-		{% if etc.include.insert %}
-			{% for insert in etc.include.insert %}
-			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('.view-insert:not(#{{ view.id }}-{{ insert.name }})').slideUp(400,'swing');$('.view-insert:not(#{{ view.id }}-{{ insert.name }})').setAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').toggleAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').slideToggle(400,'swing');"><i class="fa {{ insert.fa }}"></i></button>
+		<div class="col">
+			<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ session.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+		</div>
+		<div class="col-auto">
+			<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+			{% if view.insert.path %}
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}{% for f,v in view.open.preset.fields %}&__preset__[{{ view.open.table }}][{{ f }}]={{ v }}{% endfor %}','_self');"><i class="fa fa-plus"></i></button>
+			{% endif %}
+	<!--
+			{% if view.insert.options and view.insert.option.page %}
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ pages[ view.insert.option.page ].url[localization.language.ietf] }}?{% for o in view.insert.options %}{{ o.name }}={{ o.value }}{% if loop.index < (view.insert.options|length) %}&{% endif %}{% endfor %}','_self');"><i class="fa {{ view.insert.option.fa }}"></i></button>
+			{% endif %}
+	-->
+			{% for extra in view.insert.extras %}
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ pages[ extra.page ].url[localization.language.ietf] }}?{% for k,o in extra.options %}{{ k }}={{ o }}{% if loop.index < (extra.options|length) %}&{% endif %}{% endfor %}','_self');"><i class="fa {{ extra.icon }}"></i></button>
 			{% endfor %}
-		{% endif %}
-	</div>
+			{% if page.parents.path|length() > 1 and view.dashboard.sezione %}
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('#reset').val(1);$('#form-{{ view.table }}').attr('action', '{{ page.parents.path[1][ localization.language.ietf ] }}');$('#form-{{ view.table }}').submit();" ><i class="fa fa-area-chart"></i></button>
+			{% endif %}
+			{% if etc.include.insert %}
+				{% for insert in etc.include.insert %}
+				<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="$('.view-insert:not(#{{ view.id }}-{{ insert.name }})').slideUp(400,'swing');$('.view-insert:not(#{{ view.id }}-{{ insert.name }})').setAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').toggleAttribute('disabled');$('#{{ view.id }}-{{ insert.name }}').slideToggle(400,'swing');"><i class="fa {{ insert.fa }}"></i></button>
+				{% endfor %}
+			{% endif %}
+		</div>
     </div>
     {% endif %}
     {% if etc.include.insert %}
@@ -39,54 +39,56 @@
 	{% endif %}
     {% if view.data %}
     <div class="form-row">
-	<div class="col-md-12 text-center table-responsive">
+		<div class="col-md-12 text-center table-responsive">
 
-	    <table class="view-table{% if view.open.path %} clickable{% endif %}">
+			<table class="view-table{% if view.open.path %} clickable{% endif %}">
 
-		<thead>
-		    <tr>
-			{# for key,col in view.cols #}
-			{% for key in view.fields %}
-			<th class="{{ view.class[key] }}">
-			    {% if view.cols[ key ] %}
-			    <input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
-			    <select class="fa-select form-control form-control-sm hidden-print {{ view.class[key] }}" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
-				<option value="">{{ view.cols[ key ] }}</option>
-				<option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
-				<option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
-			    </select>
-			    <span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
-			    {% endif %}
-			</th>
-			{% endfor %}
-		    </tr>
-		</thead>
-
-		<tbody>
-		    {% for row in view.data %}
-		    <tr{% if view.open.path %} onClick="window.open('{{ view.open.path }}?{% if row[ view.open.field ] %}{{ view.open.table }}[id]={{ row[ view.open.field ] }}{% endif %}{% if view.master.table %}&{{ view.master.table }}[id]={{ row[ view.master.field ] }}{% endif %}{% for tbl,flds in view.open.extra %}{% for fld in flds %}&{{tbl}}[{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% for tbl,flds in view.open.preset %}{% for fld in flds %}&__preset__[{{tbl}}][{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"{% endif %}>
-			{# for key,col in view.cols #}
-			{% for key in view.fields %}
-			<td class="{{ view.class[key] }}"{% if view.onclick[key] %} onclick="{{ view.onclick[key] }}"{% endif %}>{{ row[key]|raw }}</td>
-			{% endfor %}
-		    </tr>
-		    {% endfor %}
-		</tbody>
-
-		{% if view.footer.cols %}
-		<tfoot>
-			<tr>
-				{% for col in view.footer.cols %}
-				<td colspan="{{ col.colspan }}" class="text-right">{{ col.label }}</td>
-				<td>{{ col.value }}</td>
+			<thead>
+				<tr>
+				{# for key,col in view.cols #}
+				{% for key in view.fields %}
+				<th class="{{ view.class[key] }}">
+					{% if view.cols[ key ] %}
+					<input type="hidden" name="__view__[{{ view.id }}][__sort__][{{ key }}]" id="ordinamenti_{{ key }}" value="{{ session.__view__[ view.id ].__sort__[ key ] }}">
+					<select class="fa-select form-control form-control-sm hidden-print {{ view.class[key] }}" onchange="$('#ordinamenti_{{ key }}').val( this.options[this.selectedIndex].value ); submit();">
+					<option value="">{{ view.cols[ key ] }}</option>
+					<option value="ASC"{% if session.__view__[ view.id ].__sort__[ key ] == 'ASC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d8;</span></option>
+					<option value="DESC"{% if session.__view__[ view.id ].__sort__[ key ] == 'DESC' %} selected{% endif %}>{{ view.cols[ key ] }} &#xf0d7;</option>
+					</select>
+					<span class="d-none d-print-inline">{{ view.cols[ key ] }}</span>
+					{% endif %}
+				</th>
 				{% endfor %}
-			</tr>
-		</tfoot>
-		{% endif %}
+				</tr>
+			</thead>
 
-	    </table>
+			<tbody>
+				{% for row in view.data %}
+				{% if row is iterable %}
+				<tr{% if view.open.path %} onClick="window.open('{{ view.open.path }}?{% if row[ view.open.field ] %}{{ view.open.table }}[id]={{ row[ view.open.field ] }}{% endif %}{% if view.master.table %}&{{ view.master.table }}[id]={{ row[ view.master.field ] }}{% endif %}{% for tbl,flds in view.open.extra %}{% for fld in flds %}&{{tbl}}[{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% for tbl,flds in view.open.preset %}{% for fld in flds %}&__preset__[{{tbl}}][{{fld}}]={{ row[fld] }}{% endfor %}{% endfor %}{% if page.backurl %}&__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"{% endif %}>
+				{# for key,col in view.cols #}
+				{% for key in view.fields %}
+				<td class="{{ view.class[key] }}"{% if view.onclick[key] %} onclick="{{ view.onclick[key] }}"{% endif %}>{{ row[key]|raw }}</td>
+				{% endfor %}
+				</tr>
+				{% endif %}
+				{% endfor %}
+			</tbody>
 
-	</div>
+			{% if view.footer.cols %}
+			<tfoot>
+				<tr>
+					{% for col in view.footer.cols %}
+					<td colspan="{{ col.colspan }}" class="text-right">{{ col.label }}</td>
+					<td>{{ col.value }}</td>
+					{% endfor %}
+				</tr>
+			</tfoot>
+			{% endif %}
+
+			</table>
+
+		</div>
     </div>
     {% endif %}
     <div class="row view-controls mt-auto no-gutters d-print-none">
@@ -97,72 +99,85 @@
 		</div>
 		{% endif %}
 		
+		{% if not session.__view__[ view.id ].__filesystem_mode__ %}
 	    <div class="col-auto text-left">
-		{% if view.data %}
-		<div class="input-group">
-		<input type="hidden" name="__view__[{{ view.id }}][__pager__][page]" value="{{ session.__view__[ view.id ].__pager__.page }}" id="pager">
-		<button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() > 0 ){ $('#pager').get(0).value--; submit(); }"><i class="fa fa-chevron-left"></i></button>
-		<select class="form-control form-control-sm" onchange="$('#pager').val( $(this).val() ); submit();">
-		    {% for pag in range( 0, session.__view__[ view.id ].__pager__.pages - 1 ) %}
-		    <option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
-		    {% endfor %}
-		</select>
-		<button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() < {{ session.__view__[ view.id ].__pager__.pages - 1 }} ){ $('#pager').get(0).value++; submit(); }"><i class="fa fa-chevron-right"></i></button>
-		</div>
-		{% endif %}
+			{% if view.data %}
+			<div class="input-group">
+				<input type="hidden" name="__view__[{{ view.id }}][__pager__][page]" value="{{ session.__view__[ view.id ].__pager__.page }}" id="pager">
+				<button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() > 0 ){ $('#pager').get(0).value--; submit(); }"><i class="fa fa-chevron-left"></i></button>
+				<select class="form-control form-control-sm" onchange="$('#pager').val( $(this).val() ); submit();">
+					{% for pag in range( 0, session.__view__[ view.id ].__pager__.pages - 1 ) %}
+					<option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
+					{% endfor %}
+				</select>
+				<button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() < {{ session.__view__[ view.id ].__pager__.pages - 1 }} ){ $('#pager').get(0).value++; submit(); }"><i class="fa fa-chevron-right"></i></button>
+			</div>
+			{% endif %}
 	    </div>
 
 	    {% if session.__view__[ view.id ].__pager__.total > 0 %}
 	    <div class="col col-form-label text-center">
-		{{ ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + 1 ) }}
-		-
-		{% if session.__view__[ view.id ].__pager__.total < ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + session.__view__[ view.id ].__pager__.rows ) %}
-		{{ session.__view__[ view.id ].__pager__.total }}
-		{% else %}
-		{{ ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + session.__view__[ view.id ].__pager__.rows ) }}
-		{% endif %}
-		di
-		{{ session.__view__[ view.id ].__pager__.total }}
-	    </div>
-	    <div class="col-2 text-right">
+			{{ ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + 1 ) }}
+			-
+			{% if session.__view__[ view.id ].__pager__.total < ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + session.__view__[ view.id ].__pager__.rows ) %}
+			{{ session.__view__[ view.id ].__pager__.total }}
+			{% else %}
+			{{ ( ( session.__view__[ view.id ].__pager__.page * session.__view__[ view.id ].__pager__.rows ) + session.__view__[ view.id ].__pager__.rows ) }}
+			{% endif %}
+			di
+			{{ session.__view__[ view.id ].__pager__.total }}
+		</div>
+		<div class="col-2 text-right">
 			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('/print/default.csv?t={{ view.table }}&v={{ session.__view__[ view.id ]|json_encode() }}','_blank');"><i class="fa fa-file-excel-o"></i></button>
 			{% if view.insert.path %}
-		    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
+			<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}','_self');"><i class="fa fa-plus"></i></button>
 			{% endif %}
 		</div>
-	    {% else %}
-	    <div class="col col-form-label text-center">
-		nessun dato trovato
+		{% else %}
+		<div class="col col-form-label text-center">
+			nessun dato trovato
 	    </div>
 	    {% endif %}
+		{% endif %}
 
-		{% if request[ table ].id %}
 	    <div class="col text-center">
+			{% if request[ table ].id and not session.__view__[ view.id ].__filesystem_mode__ %}
 			{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ contents.pages.delete.path[ localization.language.ietf ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) #}
 			{{ frm.trashButton( table, '', page, pages, '', localization.language.ietf, request, back ) }}
+			{% endif %}
 		</div>
-		{% endif %}
 	
 		{% if form.table %}
 		<div class="col-auto ml-1">
-			{% if request.__backurl__ %}
+			{% if session.__view__[ view.id ].__filesystem_mode__ %}
+
+			{{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
+
+			{% elseif request.__backurl__ %}
+
 			{% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
 			{{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");','salva e torna alla pagina precedente' ) }}
 			{% endif %}
+
 			{{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e inserisci altri dati' ) }}
 			{{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ localization.language.ietf ] ~ '?__backurl__=' ~ request.__backurl__ ~ '");','salva e inserisci altri dati' ) }}
+
 			{% else %}
+
 			{{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ localization.language.ietf ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
 			{{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
-	{# gdl - se short è valorizzato viene mostrato solo il pulsante di salvataggio #}
-	{% if short is null %}
+
+			{# gdl - se short è valorizzato viene mostrato solo il pulsante di salvataggio #}
+			{% if short is null %}
 			{{ frm.button( '<span><i class="fa fa-floppy-o"></i><i class="fa fa-caret-right" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ localization.language.ietf ] ~ '");','salva e crea un nuovo oggetto' ) }}
 	
 			{# if page.parents.path|length() > 1 #}{# frm.button( '<i class="fa fa-area-chart" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.parents.path[1][ localization.language.ietf ] ~ '");','salva e vai alle statistiche' ) #}{# endif #}
 			{# frm.button( '<i class="fa fa-object-group" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ pages.dashboard.path[ localization.language.ietf ] ~ '");','salva e torna alla dashboard' ) #}
 			{% endif %}
-	{# gdl #}
+
+			{# gdl #}
 			{% if download %}{{ frm.button( '<i class="fa fa-download"></i>', 'button', 'btn-secondary', 'window.open("' ~ download ~ '","_self")','scarica' ) }}{% endif %}
+
 			{% endif %}
 
 		</div>
