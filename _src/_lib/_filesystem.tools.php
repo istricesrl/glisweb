@@ -1041,3 +1041,13 @@
 
         }, 0);
     }
+
+    function isBinaryString( $data ) {        
+        return ! mb_check_encoding( $data, 'UTF-8' );
+    }
+
+    function isBinaryFile( $f ) {
+
+        return isBinaryString( readFromFile( $f, FILE_READ_AS_STRING ) );
+
+    }
