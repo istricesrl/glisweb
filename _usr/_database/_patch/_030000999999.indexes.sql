@@ -2409,6 +2409,8 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_creditore` (`id_creditore`), 
+	ADD KEY `id_debitore` (`id_debitore`), 
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
 	ADD KEY `id_mastro_destinazione` (`id_mastro_destinazione`), 
 	ADD KEY `id_iban` (`id_iban`), 
