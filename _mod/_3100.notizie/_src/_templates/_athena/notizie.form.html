@@ -56,6 +56,7 @@
 				<span class="label-top">nome</span>
 				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 		    </div>
+<!--
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
                     {{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
@@ -66,6 +67,7 @@
                     {{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
                 </div>
             </div>
+-->
 		</div>
 		<div class="form-group form-row">
 		    <div class="col">
@@ -75,7 +77,7 @@
 		</div>
 
 	    </fieldset>
-
+<!--
 		<fieldset>
 			<legend>aspetto</legend>
 	
@@ -95,13 +97,13 @@
 			</div>  
 	
 		</fieldset>
-
+-->
 		{# SUBFORM CATEGORIE #}
 		{{ sub_notizie.categorie( table, 'notizie_categorie', 'categorie',site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}
-
+<!--
 		{# SUBFORM PUBBLICAZIONI #}
         {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}
-
+-->
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}

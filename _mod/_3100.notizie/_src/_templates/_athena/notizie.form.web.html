@@ -1,7 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
 {% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
-{% import 'bin/notizie.form.sub.html' as sub_notizie %}
 
 {% extends "ext/main.html" %}
 
@@ -43,52 +42,14 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-	    <fieldset>
-		<legend>dati generali <small>{{ legend }}</small></legend>
-
-		<div class="form-group form-row">
-<!--
-			<div class="col-12 col-md-auto">
-				<span class="label-top">sito</span>
-				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
-			</div>  
--->
-			<div class="col-12 col-md-auto">
-				<span class="label-top">genitore</span>
-				{{ frm.select( table, '', '', 'id_genitore', '', etc.select.categorie_notizie, request ) }}
-			</div>  
-		    <div class="col">
-				<span class="label-top">etichetta</span>
-				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-		    </div>
-<!--
-			<div class="col-4 col-md-auto col-form-label">
-                <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
-                </div>
-            </div>
-			<div class="col-4 col-md-auto col-form-label">
-                <div class="form-check">
-                    {{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
-                </div>
-            </div>
--->
-		</div>
-
-		<div class="form-group form-row">
-		    <div class="col">
-				<span class="label-top">note</span>
-			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
-		    </div>
-		</div>
-
-	    </fieldset>
-<!--
+        {# MODULO PRINCIPALE #}
 		<fieldset>
-			<legend>aspetto</legend>
-	
+			<legend>contenuti e aspetto</legend>
 			<div class="form-group form-row">
+				<div class="col-12 col-md-auto">
+					<span class="label-top">sito</span>
+					{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
+				</div>
 				<div class="col-12 col-md">
 					<span class="label-top">template</span>
 					{{ frm.selectAuto( table, '', '', 'template', '', etc.select.templates, request ) }}
@@ -101,16 +62,23 @@
 					<span class="label-top">tema</span>
 					{{ frm.select( table, '', '', 'tema_css', '', etc.select.temi, request ) }}
 				</div>  
-			</div>  
-	
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
+					</div>
+				</div>
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
+					</div>
+				</div>
+			</div>
+
 		</fieldset>
--->
-		{# SUBFORM CATEGORIE #}
-		{# sub_notizie.categorie( table, 'notizie_categorie', 'categorie',site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_notizie' ) #}
-<!--
+
 		{# SUBFORM PUBBLICAZIONI #}
-        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_notizie' ) }}
--->
+        {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_prodotto' ) }}
+
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
