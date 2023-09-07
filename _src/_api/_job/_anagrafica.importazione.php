@@ -90,6 +90,11 @@
                 )
             );
 
+            // ...
+            mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view' );
+            mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_archiviati_view_static SELECT * FROM anagrafica_archiviati_view' );
+            mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_attivi_view' );
+
         } else {
 
             // aggiusto l'indice di lavoro (gli array partono da zero)
@@ -539,3 +544,19 @@
     }
 
     /* FINE CODICE PRINCIPALE DEL JOB */
+
+    /**
+     * NOTA
+     * è possibile produrre un CSV compatibile con questo job di importazione utilizzando la seguente query:
+     * 
+     * SELECT
+     *   trim( replace( replace( replace( anagrafica.nome,              '\r', ''), '\n', ''), '\t', '' ) ) AS nome,
+     *   trim( replace( replace( replace( anagrafica.cognome,           '\r', ''), '\n', ''), '\t', '' ) ) AS cognome,
+     *   trim( replace( replace( replace( anagrafica.denominazione,     '\r', ''), '\n', ''), '\t', '' ) ) AS denominazione,
+     *   trim( replace( replace( replace( anagrafica.codice,            '\r', ''), '\n', ''), '\t', '' ) ) AS codice,
+     *   trim( replace( replace( replace( anagrafica.partita_iva,       '\r', ''), '\n', ''), '\t', '' ) ) AS partita_iva,
+     *   trim( replace( replace( replace( anagrafica.codice_fiscale,    '\r', ''), '\n', ''), '\t', '' ) ) AS codice_fiscale
+     * FROM
+     *   anagrafica
+     * 
+     */
