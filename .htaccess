@@ -80,12 +80,20 @@ Options -Indexes
     # gestione del browser delle variabili
     RewriteRule ^cf$ _usr/_examples/_framework/_variabili.php [L,QSA]
 
-    # gestione delle API speciali
+    # gestione delle API speciali custom
+    RewriteCond %{DOCUMENT_ROOT}/src/api/$1.php -f
+    RewriteRule ^api/([a-zA-Z0-9_\-\.]+)$ src/api/$1.php [L,QSA]
+
+    # gestione delle API speciali standard
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
     # NOTA perché era stata modificata così? RewriteRule ^api/([a-zA-Z0-9_\-]+)/([a-zA-Z0-9\.]+)*$ _src/_api/_$1.php [L,QSA]
-    RewriteRule ^api/([a-zA-Z0-9_\-]+)$ _src/_api/_$1.php [L,QSA]
+    RewriteRule ^api/([a-zA-Z0-9_\-\.]+)$ _src/_api/_$1.php [L,QSA]
 
-    # gestione delle API speciali dei moduli
+    # gestione delle API speciali custom dei moduli
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/$2.php -f
+    RewriteRule ^api/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9\.]+)*$ mod/$1/src/api/$2.php [L,QSA]
+
+    # gestione delle API speciali standard dei moduli
     RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_$2.php -f
     RewriteRule ^api/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9\.]+)*$ _mod/_$1/_src/_api/_$2.php [L,QSA]
 
