@@ -11,16 +11,19 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'esportazioni' => array(
+	    '01.esportazioni' => array(
 			'label' => 'esportazioni'
 		),
-	    'importazioni' => array(
+	    '02.importazioni' => array(
 			'label' => 'importazioni'
+		),
+	    '03.elaborazioni' => array(
+			'label' => 'elaborazioni'
 		)
 	);
 
     // esportazione contatti anagrafica
-	$ct['page']['contents']['metro']['esportazioni'][] = array(
+	$ct['page']['contents']['metro']['01.esportazioni'][] = array(
 	    'modal' => array( 'id' => 'esporta_per_mail', 'include' => 'inc/anagrafica.tools.modal.mailchimp.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-file-excel-o',
@@ -29,7 +32,7 @@
 	);
 
     // esportazione indirizzi anagrafica
-	$ct['page']['contents']['metro']['esportazioni'][] = array(
+	$ct['page']['contents']['metro']['01.esportazioni'][] = array(
 	    'modal' => array( 'id' => 'esporta_indirizzi', 'include' => 'inc/anagrafica.tools.modal.indirizzi.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-file-excel-o',
@@ -38,7 +41,7 @@
 	);
 
     // importazione contatti anagrafica
-	$ct['page']['contents']['metro']['importazioni'][] = array(
+	$ct['page']['contents']['metro']['02.importazioni'][] = array(
 	    'modal' => array( 'id' => 'importa_anagrafiche', 'include' => 'inc/anagrafica.tools.modal.import.html' ),
 	    'icon' => NULL,
 	    'fa' => 'fa-upload',
@@ -46,11 +49,27 @@
 	    'text' => 'importa contatti anagrafici in formato CSV'
 	);
 
+    // importazione contatti anagrafica
+	$ct['page']['contents']['metro']['03.elaborazioni'][] = array(
+	    'modal' => array( 'id' => 'deduplica_anagrafiche', 'include' => 'inc/anagrafica.tools.modal.deduplica.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-compress',
+	    'title' => 'unione anagrafiche',
+	    'text' => 'unisce due anagrafiche e tutti gli oggetti collegati'
+	);
+
     // categorie anagrafica
 	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
+	);
+
+    // categorie anagrafica
+	$ct['etc']['select']['anagrafica'] = mysqlCachedQuery(
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
 
 	// gestione default
