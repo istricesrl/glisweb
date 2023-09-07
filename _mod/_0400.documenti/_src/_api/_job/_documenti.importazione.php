@@ -187,7 +187,10 @@
                     );
                 }
 
-                // trovo l'ID dell'anagrafica
+                // normalizzazione data
+                $job['riga']['data'] = str_replace( '/', '-', $job['riga']['data'] );
+
+                // trovo l'ID del documento
                 $idDocumento = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
