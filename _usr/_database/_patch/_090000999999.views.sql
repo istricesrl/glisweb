@@ -2118,12 +2118,12 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		contratti.id_account_aggiornamento,
         coalesce( min(rinnovi.data_inizio), '-' ) AS data_inizio,
         coalesce( max(rinnovi.data_fine), '-' ) AS data_fine,
-		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ), '' )  SEPARATOR ', ' ) AS proponenti,
+		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ) )  SEPARATOR ', ' ) AS proponenti,
 		group_concat( DISTINCT contraente.codice  SEPARATOR ', ' ) AS codici_contraenti,
-		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), '' )  SEPARATOR ', ' ) AS contraenti,
+		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ) )  SEPARATOR ', ' ) AS contraenti,
 		group_concat( licenze.codice SEPARATOR ', ' ) AS licenze,
-		licenze.postazioni,
-		tipologie_licenze.nome AS tipologia_licenza,
+		max( licenze.postazioni ) AS postazioni,
+		group_concat( DISTINCT tipologie_licenze.nome SEPARATOR ', ' ) AS tipologia_licenza,
 		group_concat( concat_ws( ' ', licenze.codice, tipologie_licenze.nome, licenze.nome ) SEPARATOR ' | ' ) AS dettagli_licenze,
 		concat_ws( ' ', tipologie_contratti.nome, contratti.nome, group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), NULL )  SEPARATOR ', ' ) ) AS __label__
 	FROM contratti
