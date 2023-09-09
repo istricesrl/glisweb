@@ -36,6 +36,7 @@ CREATE TABLE IF NOT EXISTS `account` (
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_mail` int(11) DEFAULT NULL,
   `id_affiliazione` int(11) DEFAULT NULL,
+  `id_url` int(11) DEFAULT NULL,
   `username` char(64) DEFAULT NULL,
   `password` char(128) DEFAULT NULL,
   `se_attivo` tinyint(1) DEFAULT NULL,

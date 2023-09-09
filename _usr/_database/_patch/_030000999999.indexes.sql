@@ -27,6 +27,7 @@ ALTER TABLE `account`
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_affiliazione` (`id_affiliazione`),
+	ADD KEY `id_url` (`id_url`),
 	ADD KEY `se_attivo` (`se_attivo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
