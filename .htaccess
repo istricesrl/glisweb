@@ -80,12 +80,20 @@ Options -Indexes
     # gestione del browser delle variabili
     RewriteRule ^cf$ _usr/_examples/_framework/_variabili.php [L,QSA]
 
-    # gestione delle API speciali
+    # gestione delle API speciali custom
+    RewriteCond %{DOCUMENT_ROOT}/src/api/$1.php -f
+    RewriteRule ^api/([a-zA-Z0-9_\-\.]+)$ src/api/$1.php [L,QSA]
+
+    # gestione delle API speciali standard
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
     # NOTA perché era stata modificata così? RewriteRule ^api/([a-zA-Z0-9_\-]+)/([a-zA-Z0-9\.]+)*$ _src/_api/_$1.php [L,QSA]
-    RewriteRule ^api/([a-zA-Z0-9_\-]+)$ _src/_api/_$1.php [L,QSA]
+    RewriteRule ^api/([a-zA-Z0-9_\-\.]+)$ _src/_api/_$1.php [L,QSA]
 
-    # gestione delle API speciali dei moduli
+    # gestione delle API speciali custom dei moduli
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/$2.php -f
+    RewriteRule ^api/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9\.]+)*$ mod/$1/src/api/$2.php [L,QSA]
+
+    # gestione delle API speciali standard dei moduli
     RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_$2.php -f
     RewriteRule ^api/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9\.]+)*$ _mod/_$1/_src/_api/_$2.php [L,QSA]
 
@@ -134,26 +142,26 @@ Options -Indexes
     # gestione dei job standalone
     RewriteRule ^job/([0-9]+)*$ _src/_api/_job.php?__id__=$1 [L,QSA]
 
-    # gestione dei report speciali
-    RewriteRule ^speed$ _src/_api/_report/_framework.speed.php [L]
-    RewriteRule ^status$ _src/_api/_report/_framework.status.php [L]
-    RewriteRule ^test$ _src/_api/_report/_framework.test.php [L]
+    # gestione degli status speciali
+    RewriteRule ^speed$ _src/_api/_status/_framework.speed.php [L]
+    RewriteRule ^status$ _src/_api/_status/_framework.status.php [L]
+    RewriteRule ^test$ _src/_api/_status/_framework.test.php [L]
 
-    # gestione dei report custom base
+    # gestione degli status custom base
     RewriteCond %{DOCUMENT_ROOT}/src/api/report/$1.php -f
     RewriteRule ^report/([a-zA-Z0-9_\-\.]+)$ src/api/report/$1.php [L,QSA]
 
-    # gestione dei report standard base
-    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_report/_$1.php -f
-    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)$ _src/_api/_report/_$1.php [L,QSA]
+    # gestione degli status standard base
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_status/_$1.php -f
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)$ _src/_api/_status/_$1.php [L,QSA]
 
-    # gestione dei report custom moduli
+    # gestione degli status custom moduli
     RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/report/$2.php -f
     RewriteRule ^report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/report/$2.php [L,QSA]
 
-    # gestione dei report standard moduli
-    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_report/_$2.php -f
-    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_report/_$2.php [L,QSA]
+    # gestione degli status standard moduli
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_status/_$2.php -f
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_status/_$2.php [L,QSA]
 
     # proxy OSM
     RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]

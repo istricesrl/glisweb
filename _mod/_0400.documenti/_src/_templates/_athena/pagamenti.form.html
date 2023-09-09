@@ -89,6 +89,19 @@
 				</div>
 			</div>
 
+			{# TODO SE C'È UN PRESET ID_DOCUMENTO NON MOSTRARE QUESTA SEZIONE #}
+			<legend>debito senza documento</legend>
+			<div class="form-group form-row">
+				<div class="col-md-6 col">
+					<span class="label-top remove-after-duplicate">creditore</span>
+					{{ frm.selectBox( table, '', '', 'id_creditore', '', etc.select.anagrafica, request, default_mp, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_creditore', page, pages, ietf ) }}
+				</div>
+				<div class="col-md-6 col">
+					<span class="label-top remove-after-duplicate">debitore</span>
+					{{ frm.selectBox( table, '', '', 'id_debitore', '', etc.select.anagrafica, request, default_mp, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_debitore', page, pages, ietf ) }}
+				</div>
+			</div>	
+
 			{% if '0500.mastri' in mods.active.array %}
 			<legend>conti</legend>
 			{% if  session.__latest__[ table ].id_mastro_provenienza %}

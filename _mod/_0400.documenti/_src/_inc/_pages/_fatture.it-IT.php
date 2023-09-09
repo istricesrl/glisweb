@@ -27,7 +27,7 @@
 		// vista righe proforma
 		$p['righe.fatture.amministrazione.view'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe attive' ),
+			'title'			=> array( $l		=> 'righe fatture attive' ),
 			'h1'			=> array( $l		=> 'righe attive' ),
 			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
@@ -77,7 +77,7 @@
 		$p['fatture.amministrazione.form.righe'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'righe fatture' ),
-			'h1'			=> array( $l		=> 'righe' ),
+			'h1'			=> array( $l		=> 'righe fatture' ),
 			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.form.righe.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.righe.php' ),
@@ -98,19 +98,19 @@
 		);
 
 		// gestione fatture_righe
-		$p['fatture.amministrazione.righe.form'] = array(
+		$p['righe.fatture.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'righe.fatture.amministrazione.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.amministrazione.righe.form.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.righe.form.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.fatture.amministrazione.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.fatture.amministrazione.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'fatture.amministrazione.righe.form', 'fatture.amministrazione.righe.form.aggregate' ) )
+			'etc'			=> array( 'tabs'	=> array(	'righe.fatture.amministrazione.form', 'righe.fatture.amministrazione.form.aggregate' ) )
 		);
 
 		// gestione tools documenti_articoli - attivita
-		$p['fatture.amministrazione.righe.form.aggregate'] = array(
+		$p['righe.fatture.amministrazione.form.aggregate'] = array(
 				'sitemap'		=> false,
 				'title'			=> array( $l		=> 'righe aggregate' ),
 				'h1'			=> array( $l		=> 'righe aggregate' ),
@@ -118,7 +118,7 @@
 				'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
 				'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
 				'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-				'etc'			=> array( 'tabs'	=> $p['fatture.amministrazione.righe.form']['etc']['tabs'] )
+				'etc'			=> array( 'tabs'	=> $p['righe.fatture.amministrazione.form']['etc']['tabs'] )
 		);
 
 		// gestione chiusura fatture
@@ -151,8 +151,8 @@
 		$p['fatture.amministrazione.form.tools'] = array(
 			'sitemap'		=> false,
 			'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-			'title'			=> array( $l		=> 'azioni documenti' ),
-			'h1'			=> array( $l		=> 'azioni documenti' ),
+			'title'			=> array( $l		=> 'azioni fattura' ),
+			'h1'			=> array( $l		=> 'azioni fattura' ),
 			'parent'		=> array( 'id'		=> 'fatture.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.amministrazione.form.tools.php' ),
@@ -242,19 +242,19 @@
 		);
 
 		// gestione righe fatture passive
-		$p['fatture.passive.amministrazione.righe.form'] = array(
+		$p['righe.fatture.passive.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'righe.fatture.passive.amministrazione.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'fatture.passive.amministrazione.righe.form.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_fatture.passive.amministrazione.righe.form.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.fatture.passive.amministrazione.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.fatture.passive.amministrazione.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'fatture.passive.amministrazione.righe.form', 'fatture.passive.amministrazione.righe.form.aggregate' ) )
+			'etc'			=> array( 'tabs'	=> array(	'righe.fatture.passive.amministrazione.form', 'righe.fatture.passive.amministrazione.form.aggregate' ) )
 		);
 
 		// gestione 
-		$p['fatture.passive.amministrazione.righe.form.aggregate'] = array(
+		$p['righe.fatture.passive.amministrazione.form.aggregate'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'righe aggregate' ),
 			'h1'			=> array( $l		=> 'righe aggregate' ),
@@ -262,7 +262,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> $p['fatture.passive.amministrazione.righe.form']['etc']['tabs'] )
+			'etc'			=> array( 'tabs'	=> $p['righe.fatture.passive.amministrazione.form']['etc']['tabs'] )
 		);
 
 		// gestione chiusura fatture passive

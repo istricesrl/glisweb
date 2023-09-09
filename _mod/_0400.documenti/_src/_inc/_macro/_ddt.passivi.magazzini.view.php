@@ -33,14 +33,15 @@
         'sezionale' => 'sez.',
         'data' => 'data',
         'emittente' => 'emittente',
+        'nome' => 'nome'
 #        'destinatario' => 'destinatario',
-        '__label__' => 'nome'
+#        '__label__' => 'nome'
     );
 
     // stili della vista
     $ct['view']['class'] = array(
         'nome' => 'text-left',
-        'numero' => 'text-left',
+//        'numero' => 'text-left',
         'data' => 'no-wrap', 
         '__label__' => 'text-left',
         'destinatario' => 'text-left',

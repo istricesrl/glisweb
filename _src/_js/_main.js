@@ -198,11 +198,12 @@
 		});
 
 	    // collego il campo hidden per le checkbox
+		// NOTA prima per la checkbox vuota settavamo zero, ma incasina i filtri delle viste
 		$('input[type=checkbox]').click( function() {
 		    if( this.checked ) {
 			$(this).prev().val('1');
 		    } else {
-			$(this).prev().val('0');
+			$(this).prev().val('');
 		    }
 		});
 

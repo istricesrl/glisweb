@@ -46,7 +46,7 @@
 	}
 
     // id della vista
-	if( ! isset( $ct['view']['id'] ) ) {
+	if( ! isset( $ct['view']['id'] ) || empty( isset( $ct['view']['id'] ) ) ) {
 	    $ct['view']['id'] = md5(
 			$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__'] .
 			( ( isset( $ct['form']['table'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id'] : NULL )
@@ -68,6 +68,11 @@
 	// report mode
 	if( isset( $ct['view']['data']['__report_mode__'] ) ) {
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__report_mode__'] = $ct['view']['data']['__report_mode__'];
+	}
+
+	// filesystem mode
+	if( isset( $ct['view']['data']['__filesystem_mode__'] ) ) {
+		$_REQUEST['__view__'][ $ct['view']['id'] ]['__filesystem_mode__'] = $ct['view']['data']['__filesystem_mode__'];
 	}
 
 	// filtri presettati

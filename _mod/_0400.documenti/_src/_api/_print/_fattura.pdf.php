@@ -15,23 +15,10 @@
 
     // configurazioni specifiche
     $cnf['estensione'] = 'pdf';
+    $cnf['cartella'] = 'fatture';
 
     // inclusione dei dati base
 	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
-
-    // annoto l'attività di stampa
-    mysqlInsertRow(
-        $cf['mysql']['connection'],
-        array(
-            'id_tipologia' => 23,
-            'id_documento' => $doc['id'],
-            'data_attivita' => date('Y-m-d'),
-            'nome' => 'stampa documento',
-            'ora_inizio' => date( 'H:i:s' ),
-            'ora_fine' => date( 'H:i:s' )
-        ),
-        'attivita'
-    );
 
     // debug
 	// header( 'Content-type: text/plain;' );
@@ -39,6 +26,13 @@
 	// die( print_r( $src, true ) );
 	// die( print_r( $dst, true ) );
 
+    // creazione del PDF
+	$pdf = new TCPDF( 'P', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
+
+    // ...
+    generaFatturaPdf( $pdf, $dati );
+
+/*
     // intestazione documento
     $sdef['linee'][] = $src['denominazione_fiscale'];
     $sdef['linee'][] = $sri['indirizzo_fiscale'];
@@ -50,7 +44,7 @@
 	} elseif( ! empty( anagraficaGetPEC( $doc['id_emittente'] ) ) ) {
 	    $sdef['linee'][] = 'PEC ' . anagraficaGetPEC( $doc['id_emittente'] );
 	}
-
+*/
 /* DEPRECATO
     // recupero i dati del destinatario
 	$dst = mysqlSelectRow(
@@ -82,7 +76,7 @@
     // indirizzo fiscale
     $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
 */
-
+/*
     $sdec['linee'][] = $dst['denominazione_fiscale'];
     $sdec['linee'][] = $dsi['indirizzo_fiscale'];
     $sdec['linee'][] = $dsi['comune_indirizzo_fiscale'];
@@ -97,7 +91,9 @@
 
     // oggetto del documento
 	$dobj = $doc['tipologia'] . ' n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
-  
+*/
+
+/* OBSOLETI
     // recupero i dati dell'azienda emittente
 	$emittente = mysqlSelectRow( $cf['mysql']['connection'],
 	    'SELECT * FROM anagrafica_view WHERE id = ?',
@@ -109,9 +105,9 @@
 	    'SELECT * FROM anagrafica_view WHERE id = ?',
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
-  
-    // creazione del PDF
-	$pdf = new TCPDF( 'P', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
+*/
+/*
+    // titolo del documento
     $pdf->SetTitle( $dobj.' di .pdf');
 
     // tipografia
@@ -250,39 +246,6 @@
 
         $trh = $pdf->GetStringHeight( $col * 4, $row['nome'], false, true, '', 'B' );				// calcolo l'altezza della riga
 	    $pdf->SetFont( $fnt, '', $fnts );
-/*
-        // controllo se la riga di dettaglio entra nella parte rimanente del foglio
-	    if( ( $pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() - 15)  ) {
-
-            // aggiungo una pagina
-            $pdf->AddPage(); 
-
-            // intestazione tabella nel nuovo foglio
-		    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-		    $pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 1, 0, 'udm', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 1, 0, 'p. unitario', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 2, 0, 'tot. netto', $brdh, 0, 'C' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 1, 0, 'IVA', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 2, 0, 'tot. lordo', $brdh, 1, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
-
-            // reimposto il font
-		    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
-
-		}
-
-        if( ! empty( $row['aggregate'] ) ) {
-            $pdf->SetFont( $fnt, 'B', $fnts );
-            $countAggregate += $row['aggregate'];
-        }
-
-        if( substr($row['nome'],0,1) === '*' ) {
-            $pdf->SetFillColor(230, 230, 230);
-        } else {
-            $pdf->SetFillColor(255, 255, 255);
-        }
-*/
         $pdf->MultiCell( $col * 4, $lh, $row['nome'], $brdc, 'L', 0, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 
 //	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
@@ -472,8 +435,11 @@
         }
 
     }
+*/
 
-    
+    // oggetto del documento
+    $dobj = str_replace( ' ', '_' , $r['doc']['oggetto'] );
+
     // output
 	if( isset( $_REQUEST['d'] ) ) {
 	    $pdf->Output($dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto

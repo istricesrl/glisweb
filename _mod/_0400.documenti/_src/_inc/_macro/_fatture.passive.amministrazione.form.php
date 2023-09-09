@@ -55,6 +55,7 @@
 	);
 
     // tendina destinatari
+	// TODO le fatture di ciclo passivo devono poter essere indirizzate solo alle aziende gestite
 	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],

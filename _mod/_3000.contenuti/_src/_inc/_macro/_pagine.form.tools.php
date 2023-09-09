@@ -56,6 +56,38 @@
         }
     }
 
-	// macro di default
+    // ...
+    $ct['etc']['upload'] = array_merge(
+        mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM immagini WHERE id_pagina = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) )
+        ,
+        mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM file WHERE id_pagina = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) )
+    );
+
+    // ...
+    $template = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT template FROM pagine WHERE id = ?',
+        array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
+    );
+
+    // ...
+    $ct['etc']['upload'] = array_merge(
+        $ct['etc']['upload'],
+        getRecursiveFileList( path2custom( DIR_BASE . '/' . $template ) )
+    );
+
+    // dati della vista per i moduli
+    foreach( $cf['mods']['active']['array'] as $mod ) {
+        $ct['etc']['upload'] = array_merge(
+            $ct['etc']['upload'],
+            getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ) )
+        );
+    }
+
+    // debug
+    // die( $template );
+    // die( print_r( $ct['etc']['upload'], true ) );
+
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
     require DIR_SRC_INC_MACRO . '_default.tools.php';

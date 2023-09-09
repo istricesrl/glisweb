@@ -136,17 +136,79 @@
 
                             }
 
+                            // se è andato a buon fine il caricamento del database, procedo con i file
+                            if( isset( $cf['ftp']['servers'][ $cf['mysql']['profiles'][ $_REQUEST['target'] ]['servers'][0] ] ) ) {
+
+                                // ...
+                                $ftpSrv = $cf['ftp']['servers'][ $cf['mysql']['profiles'][ $_REQUEST['target'] ]['servers'][0] ];
+
+                                // ...
+                                $toFtp = array_merge(
+                                    mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM immagini WHERE id_pagina = ?', array( array( 's' => $_REQUEST['id'] ) ) )
+                                    ,
+                                    mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM file WHERE id_pagina = ?', array( array( 's' => $_REQUEST['id'] ) ) )
+                                );
+
+                                // ...
+                                $template = mysqlSelectValue(
+                                    $cf['mysql']['connection'],
+                                    'SELECT template FROM pagine WHERE id = ?',
+                                    array( array( 's' => $_REQUEST['id'] ) )
+                                );
+
+                                // ...
+                                $toFtp = array_merge(
+                                    $toFtp,
+                                    getRecursiveFileList( path2custom( DIR_BASE . '/' . $template ) )
+                                );
+
+                                // dati della vista per i moduli
+                                foreach( $cf['mods']['active']['array'] as $mod ) {
+                                    $toFtp = array_merge(
+                                        $toFtp,
+                                        getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ) )
+                                    );
+                                }
+
+                                // debug
+                                // die( $template );
+                                // die( print_r( $toFtp, true ) );
+
+                                // connessione al server FTP
+                                $ftpConn = ftp_connect( $ftpSrv['address'] );
+                                $ftpLogin = ftp_login( $ftpConn, $ftpSrv['username'], $ftpSrv['password'] );
+
+                                // ...
+                                foreach( $toFtp as $to ) {
+
+                                    // normalizzazione percorsi
+                                    $to = shortPath( $to );
+
+                                    // tipo di upload per tipo di file
+
+                                    // upload del file
+                                    $ftpPut = ftp_put( $ftpConn, $to, DIR_BASE . $to, ftpGetTransferTypeByFile( $to ) );
+
+                                }
+
+                            } else {
+
+                                // status
+                                $status['err'][] = 'server FTP non settato per lo stage ' . $_REQUEST['target'];
+
+                            }
+
                         } else {
 
                             // status
-                            $status['err'][] = 'impossibile inserire la pagina ' . $_request['id'];
+                            $status['err'][] = 'impossibile inserire la pagina ' . $_REQUEST['id'];
 
                         }
 
                     } else {
 
                         // status
-                        $status['err'][] = 'dati non trovati per la pagina ' . $_request['id'];
+                        $status['err'][] = 'dati non trovati per la pagina ' . $_REQUEST['id'];
                         
                     }
 

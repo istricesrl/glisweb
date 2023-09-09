@@ -91,11 +91,37 @@
 	    'SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__'
 	);
 
+    // tendina aziende
+	$ct['etc']['select']['aziende'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1 ORDER BY __label__'
+	);
+
+/*
     if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_tipologia_documento']['EQ'] )  ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_tipologia_documento']['EQ'] = 1;
     }
+*/
+
+    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_pagamento']['NL'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_pagamento']['NL'] = 1;
+    }
+
+/*
+    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente']['EQ'] )  ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente']['EQ'] = trovaIdAziendaGestita();
+    }
+*/
+
+    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente|id_destinatario']['EQ'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente|id_destinatario']['EQ'] = trovaIdAziendaGestita();
+    }
+
+    // debug
+    // print_r( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
-   

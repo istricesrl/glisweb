@@ -113,6 +113,11 @@
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.abbonamenti' );
 	}
 
+	// RELAZIONI CON IL MODULO SOFTWARE
+	if( in_array( "V900.software", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.licenze' );
+	}
+
 	// RELAZIONI CON IL MODULO ATTIVITA
 	if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.attivita' );

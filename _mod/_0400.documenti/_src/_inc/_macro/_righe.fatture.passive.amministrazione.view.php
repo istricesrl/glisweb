@@ -20,7 +20,7 @@
     // tabella della vista
     $ct['view']['table'] = 'righe_fatture_passive';
 
-    $ct['view']['open']['page'] = 'fatture.amministrazione.righe.form';
+    $ct['view']['open']['page'] = 'righe.fatture.passive.amministrazione.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
 
     // campi della vista

@@ -38,6 +38,12 @@
             'recensioni' => array(
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
+            ),
+            '__templates__' => array(
+                CONTROL_FULL => array( 'roots', 'staff' )
+            ),
+            '__template_files__' => array(
+                CONTROL_FULL => array( 'roots', 'staff' )
             )
 	    )
 	);

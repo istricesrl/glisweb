@@ -46,6 +46,7 @@
 	); 
 	
     // tendina mittenti
+	// TODO le fatture di ciclo attivo devono poter essere emesse solo dalle aziende gestite
 	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -101,7 +102,7 @@
 	} 
 
 
-
+	// TODO ma non dovrebbe essere trovaIdAziendaGestita()?
 	if( !isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] ) && !isset( $_REQUEST['__latest__'][ $ct['form']['table'] ]['id_emittente'] ) && !empty( $ct['etc']['select']['id_emittenti'] ) ){
 		$_REQUEST['__preset__'][ $ct['form']['table'] ]['id_emittente'] = $ct['etc']['select']['id_emittenti'][0]['id'];
 	}

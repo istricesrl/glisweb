@@ -38,10 +38,21 @@
     // aggiornamento cache
     $ct['page']['contents']['metro']['cache'][] = array(
         'ws' => $base . 'report.corsi.popolazione.start',
+        'callback' => 'location.reload()',
         'icon' => NULL,
         'fa' => 'fa-clock-o',
         'title' => 'aggiornamento report corsi',
         'text' => 'forza l\'aggiornamento del report corsi'
+    );
+
+    // aggiornamento cache
+    $ct['page']['contents']['metro']['cache'][] = array(
+        'ws' => $base . 'report.lezioni.corsi.popolazione.start',
+        'callback' => 'location.reload()',
+        'icon' => NULL,
+        'fa' => 'fa-clock-o',
+        'title' => 'aggiornamento report lezioni corsi',
+        'text' => 'forza l\'aggiornamento del report lezioni corsi'
     );
 
     // tendina anni

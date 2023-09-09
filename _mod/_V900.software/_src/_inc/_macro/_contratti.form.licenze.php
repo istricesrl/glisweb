@@ -30,18 +30,25 @@
 
    // campi della vista
    $ct['view']['cols'] = array(
-	   'id' => '#',
-	   'data_inizio' => 'data inizio',
-	   'data_fine' => 'data fine',
-       'codice' => 'codice',
-      '__label__' => 'contratto'
-     );
+    'id' => '#',
+    'id_contratto' => 'ID contratto',
+    'id_anagrafica' => 'ID anagrafica',
+    'tipologia_contratto' => 'contratto',
+    'data_inizio' => 'data inizio',
+    'data_fine' => 'data fine',
+    'tipologia' => 'tipologia',
+      'codice' => 'codice',
+      'software' => 'software',
+     '__label__' => 'contratto'
+    );
 
-   // stili della vista
-   $ct['view']['class'] = array(
-    'id_contratto' => 'd-none',
-	   '__label__' => 'd-none text-left no-wrap'
-   );
+  // stili della vista
+  $ct['view']['class'] = array(
+   'id_contratto' => 'd-none',
+   'id_anagrafica' => 'd-none',
+   'software' => 'text-left',
+    '__label__' => 'd-none text-left no-wrap'
+  );
 
    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
     // preset filtro contratto attuale
@@ -76,3 +83,30 @@
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
+
+  // bottoni
+	foreach( $ct['view']['data'] as &$row ) {
+		if( is_array( $row ) ) {
+      if( isset( $row['software'] ) ) {
+
+          // ...
+          $sws = array();
+          
+          // ...
+          $software = explode( ' | ', $row['software'] );
+
+          // ...
+          foreach( $software as $sw ) {
+            $dts = explode( ' ', $sw );
+            $sws[ $dts[0] ] = $dts[1];
+          }
+
+          // ...
+          sort( $dts );
+
+          // ...
+          $row['software'] = implode( ', ', $dts );
+
+      }
+    }
+  }

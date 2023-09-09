@@ -48,10 +48,12 @@
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
 		<div class="form-group form-row">
+<!--
 			<div class="col-12 col-md-auto">
 				<span class="label-top">sito</span>
 				{{ frm.select( table, '', '', 'id_sito', '', etc.select.siti, request ) }}
 			</div>  
+-->
 			<div class="col-12 col-md-auto">
 				<span class="label-top">genitore</span>
 				{{ frm.select( table, '', '', 'id_genitore', '', etc.select.categorie_notizie, request ) }}
@@ -60,16 +62,18 @@
 				<span class="label-top">etichetta</span>
 				{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 		    </div>
+<!--
 			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
                     {{ frm.checkbox( table, '', '', 'se_sitemap', 'se sitemap', '', request ) }}
                 </div>
             </div>
-            <div class="col-4 col-md-auto col-form-label">
+			<div class="col-4 col-md-auto col-form-label">
                 <div class="form-check">
                     {{ frm.checkbox( table, '', '', 'se_cacheable', 'se cacheable', '', request ) }}
                 </div>
             </div>
+-->
 		</div>
 
 		<div class="form-group form-row">
@@ -80,7 +84,7 @@
 		</div>
 
 	    </fieldset>
-
+<!--
 		<fieldset>
 			<legend>aspetto</legend>
 	
@@ -100,13 +104,13 @@
 			</div>  
 	
 		</fieldset>
-
+-->
 		{# SUBFORM CATEGORIE #}
 		{# sub_notizie.categorie( table, 'notizie_categorie', 'categorie',site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_notizie' ) #}
-
+<!--
 		{# SUBFORM PUBBLICAZIONI #}
         {{ sub.pubblicazioni( table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_categoria_notizie' ) }}
-
+-->
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}

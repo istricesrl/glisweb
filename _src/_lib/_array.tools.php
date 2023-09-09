@@ -145,18 +145,26 @@
      * @todo documentare
      *
      */
-    function arraySortBy( $field, &$array, $direction = ARRAY_SORT_ASC ) {
+    function arraySortBy( $fields, &$array, $direction = ARRAY_SORT_ASC ) {
 
-	usort( $array,
-	    function( $a, $b ) use ( $field, $direction ) {
-            $direction = ( $direction == ARRAY_SORT_ASC ) ? -1 : 1;
-            $a = $a[ $field ];
-            $b = $b[ $field ];
-            if ( $a == $b ) return 0;
-            if ( $a > $b ) return -1 * $direction;
-            if ( $a < $b ) return 1 * $direction;
+        if( ! is_array( $fields ) ) {
+            $fields = array( $fields );
         }
-    );
+
+        usort( $array,
+            function( $a, $b ) use ( $fields, $direction ) {
+                $direction = ( $direction == ARRAY_SORT_ASC ) ? -1 : 1;
+                foreach( $fields as $field ) {
+                    $a = strtolower( $a[ $field ] );
+                    $b = strtolower( $b[ $field ] );
+                    if ( empty( $a ) && ! empty( $b ) ) return -1 * $direction;
+                    if ( ! empty( $a ) && empty(  $b ) ) return 1 * $direction;
+                    if ( $a > $b ) return -1 * $direction;
+                    if ( $a < $b ) return 1 * $direction;
+                }
+                if ( $a == $b ) return 0;
+            }
+        );
 
 	return true;
 
@@ -196,9 +204,40 @@
      * @todo documentare
      *
      */
-    function arrayFilterBy( $field, $match, $array ) {
+    function arrayFilterBy( $fields, $match, &$array ) {
 
-	return false;
+        $filtered = array();
+
+        if( empty( $fields ) ) {
+            $fields = array_keys( $array[0] );
+        } elseif( ! is_array( $fields ) ) {
+            $fields = explode( ',', $array );
+            array_map( 'trim', $fields );
+        }
+
+        $tokens = explode( ' ', $match );
+
+        foreach( $array as $row ) {
+
+            $matches = 0;
+
+            foreach( $row as $field ) {
+
+                foreach( $tokens as $token ) {
+                    if( preg_match( '/' . $token . '/i', $field ) ) {
+                        $matches++;
+                    }
+                }
+
+            }
+
+            if( $matches > 0 ) {
+                $filtered[] = $row;
+            }
+
+        }
+
+        $array = $filtered;
 
     }
 
@@ -209,15 +248,15 @@
      */
     function arrayKeyValuesImplode( $array, $tk1, $tk2, $empty = false ) {
 
-	$t = array();
+        $t = array();
 
-	foreach( $array as $k => $v ) {
-	    if( ! empty( $v ) || $empty === true ) {
-		$t[] = $k . $tk1 . $v;
-	    }
-	}
+        foreach( $array as $k => $v ) {
+            if( ! empty( $v ) || $empty === true ) {
+            $t[] = $k . $tk1 . $v;
+            }
+        }
 
-	return implode( $tk2, $t );
+        return implode( $tk2, $t );
 
     }
 
@@ -228,21 +267,21 @@
      */
     function arrayInsertAssoc( $ref, &$target, $add ) {
 
-	$r = array();
+        $r = array();
 
-	foreach( $target as $k => $v ) {
+        foreach( $target as $k => $v ) {
 
-	    $r[ $k ] = $v;
+            $r[ $k ] = $v;
 
-	    if( $k == $ref ) {
-		foreach( $add as $y => $j ) {
-		    $r[ $y ] = $j;
-		}
-	    }
+            if( $k == $ref ) {
+            foreach( $add as $y => $j ) {
+                $r[ $y ] = $j;
+            }
+            }
 
-	}
+        }
 
-    $target = $r;
+        $target = $r;
 
     }
 

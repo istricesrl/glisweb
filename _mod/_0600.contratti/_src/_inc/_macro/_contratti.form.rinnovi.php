@@ -30,12 +30,13 @@
 
    // campi della vista
    $ct['view']['cols'] = array(
-	   'id' => '#',
-	   'data_inizio' => 'data inizio',
-	   'data_fine' => 'data fine',
-       'id_contratto' => 'id_contratto',
-      '__label__' => 'contratto'
-     );
+    'id' => '#',
+    'data_inizio' => 'data inizio',
+    'data_fine' => 'data fine',
+    'tipologia' => 'tipologia',
+      'id_contratto' => 'id_contratto',
+     '__label__' => 'contratto'
+    );
 
    // stili della vista
    $ct['view']['class'] = array(

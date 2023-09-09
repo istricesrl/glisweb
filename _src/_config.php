@@ -327,6 +327,7 @@
 	define( 'DIR_SRC_INC_MACRO'		, DIR_BASE . '_src/_inc/_macro/' );
 	define( 'DIR_SRC_LIB'			, DIR_BASE . '_src/_lib/' );
 	define( 'DIR_SRC_LIB_EXT'		, DIR_BASE . '_src/_lib/_ext/' );
+	define( 'DIR_SRC_TEMPLATES'		, DIR_BASE . '_src/_templates/' );
 	define( 'DIR_USR'			, DIR_BASE . '_usr/' );
     define( 'DIR_USR_DATABASE'      , DIR_USR . '_database/');
     define( 'DIR_USR_DATABASE_PATCH'      , DIR_USR_DATABASE . '_patch/');
@@ -521,11 +522,11 @@
 	define( 'DIR_MOD_ATTIVI_ETC_LOC'		        , DIR_MOD_ATTIVI . '_etc/_loc/' );
 
     // collego $ct
-	$ct['mods']				= &$cf['mods'];
+	$ct['mods']				    = &$cf['mods'];
 
     // ricerca dei files di libreria
 	$arrayLibrerieBase			= glob( DIR_SRC_LIB . '_*.*.php' );
-	$arrayLibrerieModuli			= glob( DIR_MOD_ATTIVI_SRC_LIB . '_*.*.php', GLOB_BRACE );
+	$arrayLibrerieModuli		= glob( DIR_MOD_ATTIVI_SRC_LIB . '_*.*.php', GLOB_BRACE );
 	$arrayLibrerie				= array_unique( array_merge( $arrayLibrerieBase , $arrayLibrerieModuli ) );
 
     /**

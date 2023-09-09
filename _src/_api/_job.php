@@ -109,10 +109,10 @@
         } else {
 
             // status
-            $status['info'][] = 'nessun job trovato per il token' . $status['token'];
+            $status['info'][] = 'nessun job trovato per il token ' . $status['token'];
 
             // log
-            logWrite( 'nessun job trovato per il token' . $status['token'], 'job' );
+            logWrite( 'nessun job trovato per il token ' . $status['token'], 'job' );
 
         }
 

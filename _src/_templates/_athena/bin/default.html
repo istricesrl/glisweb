@@ -8,7 +8,8 @@
 	{{ frm.button( '<i class="fa fa-undo"></i>', 'button', 'btn-secondary', 'window.open("' ~ back ~ '","_self")','torna indietro senza salvare le modifiche' ) }}
     </div>
     <div class="col col-md-2 text-center">
-	{% if request[ table ].id %}
+	{% if request[ table ].id and short != 2 %}
+	{# TODO 'sta cosa è provvisoria, dovremo farglieli cancellare in qualche modo i file #}
 	{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ pages.cancellazione.path[ lang ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) #}
 	{{ frm.trashButton( table, '', page, pages, '', lang, request, back ) }}
 	{% endif %}
@@ -16,7 +17,9 @@
     <div class="col-auto col-md-5 text-right">
 	<div class="row">
 	<div class="col">
-		{% if request.__backurl__ %}
+		{% if short == 2 %}
+	    {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
+		{% elseif request.__backurl__ %}
 	    {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
 	    {{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");','salva e torna alla pagina precedente' ) }}
 	    {% endif %}
@@ -25,14 +28,13 @@
 		{% else %}
 	    {{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ lang ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
 	    {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}
-{# gdl - se short è valorizzato viene mostrato solo il pulsante di salvataggio #}
-{% if short is null %}
+		{# gdl - se short è valorizzato viene mostrato solo il pulsante di salvataggio #}
+		{% if short is null %}
 	    {{ frm.button( '<span><i class="fa fa-floppy-o"></i><i class="fa fa-caret-right" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '");','salva e crea un nuovo oggetto' ) }}
-
 		{# if page.parents.path|length() > 1 #}{# frm.button( '<i class="fa fa-area-chart" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1);$("#form-' ~ table ~ '").attr("action", "' ~ page.parents.path[1][ lang ] ~ '");','salva e vai alle statistiche' ) #}{# endif #}
 	    {# frm.button( '<i class="fa fa-object-group" style="padding-left:3px;"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ pages.dashboard.path[ lang ] ~ '");','salva e torna alla dashboard' ) #}
 		{% endif %}
-{# gdl #}
+		{# gdl #}
 	    {% if download %}{{ frm.button( '<i class="fa fa-download"></i>', 'button', 'btn-secondary', 'window.open("' ~ download ~ '","_self")','scarica' ) }}{% endif %}
 	    {% endif %}
 	</div>

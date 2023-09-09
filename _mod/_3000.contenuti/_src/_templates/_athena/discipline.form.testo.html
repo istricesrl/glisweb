@@ -30,104 +30,105 @@
 {# FORM DI GESTIONE #}
 <section class="row flex-fill">
     <div class="col-md-12 d-flex flex-column">
-	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+        <form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
-	    {# CAMPI HIDDEN DI BASE #}
-	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
-	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
-	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
-        <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
-        
-        {# SELETTORE LINGUA #}
-	    <fieldset>
-		<legend>lingua</legend>
+            {# CAMPI HIDDEN DI BASE #}
+            <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+            <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+            <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+            <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+            <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+            {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+            <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+            
+            {# SELETTORE LINGUA #}
+            <fieldset>
+                <legend>lingua</legend>
 
-		<div class="form-group form-row">
-		    <div class="col-12">
-				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
-		    </div>
-		</div>
-
-	    </fieldset>
-
-		{# DEFINIZIONI SPECIALI #}
-		{% set subtable = form.subtable %}
-
-		{# CICLO SULLE LINGUE #}
-		{% set i = 0 %}
-		{% for l in localization.languages %}
-
-		{% set r = request[ table ][ subtable ][ i ] %}
-
-		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'id_pagina', '', '', request, '__parent_id__', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
-
-	    {% if r.id_lingua == session.__view__.__lang__ %}
-
-        {# MODULO PRINCIPALE #}
-        <fieldset>
-		<legend>contenuti della pagina</legend>
-
-		<div class="form-group form-row">
-		    <div class="col-12 col-md-4">
-			<span class="label-top">valore del tag h1</span>
-                {{ frm.input( table, subtable, i, 'h1', 'contenuto del tag h1 (se applicabile)', '', request ) }}
+                <div class="form-group form-row">
+                    <div class="col-12">
+                        {{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+                    </div>
                 </div>
-            <div class="col-12 col-md-4">
-            <span class="label-top">valore del tag h2</span>
-                {{ frm.input( table, subtable, i, 'h2', 'contenuto del tag h2 (se applicabile)', '', request ) }}
+
+            </fieldset>
+
+            {# DEFINIZIONI SPECIALI #}
+            {% set subtable = form.subtable %}
+
+            {# CICLO SULLE LINGUE #}
+            {% set i = 0 %}
+            {% for l in localization.languages %}
+
+            {% set r = request[ table ][ subtable ][ i ] %}
+
+            {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+            {{ frm.input( table, subtable, i, 'id_pagina', '', '', request, '__parent_id__', 'hidden' ) }}
+            {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
+
+            {% if r.id_lingua == session.__view__.__lang__ %}
+
+            {# MODULO PRINCIPALE #}
+            <fieldset>
+                <legend>contenuti della pagina</legend>
+
+                <div class="form-group form-row">
+                    <div class="col-12 col-md-4">
+                    <span class="label-top">valore del tag h1</span>
+                        {{ frm.input( table, subtable, i, 'h1', 'contenuto del tag h1 (se applicabile)', '', request ) }}
+                        </div>
+                    <div class="col-12 col-md-4">
+                    <span class="label-top">valore del tag h2</span>
+                        {{ frm.input( table, subtable, i, 'h2', 'contenuto del tag h2 (se applicabile)', '', request ) }}
+                    </div>
+                    <div class="col-12 col-md-4">
+                    <span class="label-top">valore del tag h3</span>
+                        {{ frm.input( table, subtable, i, 'h3', 'contenuto del tag h3 (se applicabile)', '', request ) }}
+                    </div>
+                </div>
+
+                <div class="form-group form-row">
+                    <div class="col-12">
+                    <span class="label-top">cappello</span>
+                        {{ frm.textArea( table, subtable, i, 'cappello', 'cappello della pagina (se applicabile)', 3 , request ) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <div class="form-group form-row">
+                <div class="col-12">
+                <ul class="nav nav-tabs nav-tabs-secondary">
+                    <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-testo','cke-switch',this);">testo</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-abstract','cke-switch',this);">abstract</a></li>
+                    <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-specifiche','cke-switch',this);">specifiche</a></li>
+                </ul>
+                </div>
             </div>
-            <div class="col-12 col-md-4">
-            <span class="label-top">valore del tag h3</span>
-                {{ frm.input( table, subtable, i, 'h3', 'contenuto del tag h3 (se applicabile)', '', request ) }}
+
+            <div class="form-group form-row flex-fill">
+                <div class="col cke-switch" id="cke-testo">
+                {{ frm.textArea( table, subtable, i, 'testo', 'contenuto della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
+                </div>
+                <div class="col cke-switch" id="cke-abstract" style="display: none;">
+                {{ frm.textArea( table, subtable, i, 'abstract', 'abstract della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
+                </div>
+                <div class="col cke-switch" id="cke-specifiche" style="display: none;">
+                {{ frm.textArea( table, subtable, i, 'specifiche', 'specifiche della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
+                </div>
             </div>
-        </div>
 
-        <div class="form-group form-row">
-		    <div class="col-12">
-			<span class="label-top">cappello</span>
-                {{ frm.textArea( table, subtable, i, 'cappello', 'cappello della pagina (se applicabile)', 3 , request ) }}
-            </div>
-        </div>
-    </fieldset>
+            {% endif %}
 
-    <div class="form-group form-row">
-        <div class="col-12">
-        <ul class="nav nav-tabs nav-tabs-secondary">
-            <li class="nav-item"><a class="nav-link active" onclick="crossShow('cke-testo','cke-switch',this);">testo</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-abstract','cke-switch',this);">abstract</a></li>
-            <li class="nav-item"><a class="nav-link" onclick="crossShow('cke-specifiche','cke-switch',this);">specifiche</a></li>
-        </ul>
-        </div>
-    </div>
+            {% set i = i + 1 %}
+            {% endfor %}
 
-    <div class="form-group form-row flex-fill">
-        <div class="col cke-switch" id="cke-testo">
-        {{ frm.textArea( table, subtable, i, 'testo', 'contenuto della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
-        </div>
-        <div class="col cke-switch" id="cke-abstract" style="display: none;">
-        {{ frm.textArea( table, subtable, i, 'abstract', 'abstract della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
-        </div>
-        <div class="col cke-switch" id="cke-specifiche" style="display: none;">
-        {{ frm.textArea( table, subtable, i, 'specifiche', 'specifiche della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
-        </div>
-    </div>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, table, request ) }}
+            </fieldset>
 
-        {% endif %}
-
-	    {% set i = i + 1 %}
-	    {% endfor %}
-
-        {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-            {{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
-
-	</form>
+        </form>
     </div>
 </section>
 

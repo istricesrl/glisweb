@@ -68,6 +68,18 @@
 
 			}
 
+            // converto il codice destinatario in id destinatario
+            if( array_key_exists( 'codice_documenti_articoli', $vs ) ) {
+
+				// TODO implementare
+                // $vs['id_destinatario']['s'] = mysqlSelectValue( $c, 'SELECT id FROM anagrafica WHERE codice = ?', array( array( 's' => $vs['codice_destinatario']['s'] ) ) );
+                // $ks[] = 'id_destinatario';
+
+                unset( $vs['codice_documenti_articoli'] );
+                removeFromArray( $ks, 'codice_documenti_articoli' );
+
+            }
+
 			// die( __FILE__ );
 
 		break;

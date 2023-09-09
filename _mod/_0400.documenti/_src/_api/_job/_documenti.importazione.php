@@ -187,7 +187,10 @@
                     );
                 }
 
-                // trovo l'ID dell'anagrafica
+                // normalizzazione data
+                $job['riga']['data'] = str_replace( '/', '-', $job['riga']['data'] );
+
+                // trovo l'ID del documento
                 $idDocumento = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
@@ -199,6 +202,7 @@
                         'data' => ( ! empty( $job['riga']['data'] ) ) ? date( 'Y-m-d', strtotime( $job['riga']['data'] ) ) : NULL,
                         'id_emittente' => $idEmittente,
                         'id_destinatario' => $idDestinatario,
+                        'nome' => ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ),
                         'note' => ( ( isset( $job['riga']['note'] ) ) ? $job['riga']['note'] : NULL ),
                         'note_invio' => ( ( isset( $job['riga']['note_invio'] ) ) ? $job['riga']['note_invio'] : NULL )
                     ),

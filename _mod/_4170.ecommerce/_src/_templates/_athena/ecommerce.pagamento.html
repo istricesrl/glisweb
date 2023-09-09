@@ -6,56 +6,58 @@
 {% block main %}
 <section class="row flex-fill">
     <div class="col-md-8 d-flex flex-column">
-        {% if not session.carrello.id %}
+        {% if etc.righe %}
         <form id="pagamento" class="carrello d-flex flex-column flex-fill" action="{{ page.url[ localization.language.ietf ] }}" method="post">
             <input type="hidden" name="__pagamenti__[id_carrello]" value="{{ request.__pagamenti__.id_carrello }}">
-            <input type="hidden" name="__pagamenti__[id_socio]" value="{{ request.__pagamenti__.id_socio }}">
-            {% if etc.stampe %}
-            <fieldset class="fieldset-table">
-                <legend>documenti da stampare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_socio %}il socio #{{ request.__pagamenti__.id_socio }}{% endif %}</legend>
-                {% for s in etc.stampe %}
+            <input type="hidden" name="__pagamenti__[id_cliente]" value="{{ request.__pagamenti__.id_cliente }}">
+            <fieldset>
+                <legend>documenti da generare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_cliente %}il cliente #{{ request.__pagamenti__.id_cliente }}{% endif %}</legend>
                 <div class="form-row">
-                    <div class="col-auto">
-                        <a href="/print/0400.documenti/ricevuta.pdf?__documento__={{ s.id }}" class="mx-2" target="_blank"><i class="fa fa-print"></i></a>
-                        <a href="{{ pages['documenti.form'].url[ localization.language.ietf ] }}?documenti[id]={{ s.id }}" class="mx-2" target="_blank"><i class="fa fa-pencil"></i></a>
+                    <div class="col-1">
+                        <p></p>
+                    </div>
+                    <div class="col-2">
+                        <p>cliente</p>
+                    </div>
+                    <div class="col-4">
+                        <p>descrizione</p>
+                    </div>
+                    <div class="col-1">
+                        <p>importo</p>
+                    </div>
+                    <div class="col-1">
+                        <p>pagato</p>
+                    </div>
+                    <div class="col-1">
+                        <p>rateizzato</p>
+                    </div>
+                    <div class="col-1">
+                        <p>da pagare</p>
                     </div>
                     <div class="col">
-                        {{ s.__label__ }}
+                        <p>documenti</p>
                     </div>
                 </div>
-                {% endfor %}
-            </fieldset>
-            {% endif %}
-            {% if etc.righe %}
-            <fieldset>
-                <legend>documenti da generare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_socio %}il socio #{{ request.__pagamenti__.id_socio }}{% endif %}</legend>
                 {% for r in etc.righe %}
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id]" value="{{ r.id }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_carrello]" value="{{ r.id_carrello }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario_id_anagrafica]" value="{{ r.destinatario_id_anagrafica }}">
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_pagamento]" value="{{ r.id_pagamento }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario]" value="{{ r.destinatario }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_articolo]" value="{{ r.id_articolo }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][fatturazione_id_tipologia_documento]" value="{{ r.fatturazione_id_tipologia_documento }}">
                 <div class="form-row">
-                    <div class="col-auto">
+                    <div class="col-1">
                         <div class="form-check">
-                            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][da_fare]" id="" class="" value="0">
+                            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][da_fare]" class="" value="">
                             <input type="checkbox" class="form-check-input">
                         </div>
                     </div>
                     <div class="col-2">
                         <p>{{ r.destinatario }}</p>
                     </div>
-                    <div class="col-5">
+                    <div class="col-4">
                         <p>{{ r.descrizione }}</p>
                     </div>
-                    {% if r.id_pagamento %}
-                    <div class="col-1">
-                        <p>{{ '%0.2f'|format( r.importo_lordo_totale ) }}</p>
-                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.importo_lordo_totale }}">
-                    </div>
-                    {% else %}
                     <div class="col-1">
                         <p>{{ '%0.2f'|format( r.prezzo_lordo_finale ) }}</p>
                     </div>
@@ -65,18 +67,15 @@
                     <div class="col-1">
                         <p>{{ '%0.2f'|format( r.totale_lordo_rateizzato ) }}</p>
                     </div>
-                    <div class="col">
-                        <label class="label-top">da pagare</label>
+                    <div class="col-1">
+                        <label class="label-top">importo</label>
                         <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
                     </div>
-                    {% endif %}
-                    <!--
                     <div class="col d-flex flex-row align-items-stretch">
                         {% for doc in r.documenti_da_stampare %}
                         <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
                         {% endfor %}
                     </div>
-                    -->
                 </div>
                 {% endfor %}
             </fieldset>
@@ -84,34 +83,27 @@
                 <legend>generazione rate</legend>
                 <div class="form-row">
                     <div class="col-4 col-md-auto">
-                        <input type="date" class="form-control form-control-sm " name="__pagamenti__[data_rate]" id="data-rate">
+                        <input class="form-control form-control-sm" type="date" name="__pagamenti__[data_rate]" value="">
                     </div>
                     <div class="col">
                         <button onclick="$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">genera rate</button>
                     </div>
                 </div>
             </fieldset>
-            <fieldset class="">
+            <fieldset>
                 <legend>generazione documenti</legend>
                 <div class="form-row">
                     <div class="col-4 col-md-auto">
                         <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__pagamenti__[fatturazione_id_tipologia_documento]">
                             {% for tdoc in etc.id_tipologia_documenti %}
-                            <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == session.carrello.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
+                            <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == etc.default.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="col-4 col-md-auto">
                         <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__pagamenti__[fatturazione_strategia]">
                             {% for strf in etc.strategie_fatturazione %}
-                            <option value="{{ strf.id }}" {% if strf.id == session.carrello.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-4 col-md-auto">
-                        <select class="form-control form-control-sm hint-toggle" id="costo-pagamento" hint-toggle="modalita_pagamento" name="__pagamenti__[provider_pagamento]">
-                            {% for cons in ecommerce.profile.provider %}
-                            <option value="{{ cons.id }}" min="{{ cons.importo_min }}" max="{{ cons.importo_max }}" prezzo="{{ cons.prezzo }}" relativo="{{ cons.prezzo_relativo }}" {% if cons.id == session.carrello.provider_pagamento %}selected{% endif %}>{{ cons.__label__ }}</option>
+                            <option value="{{ strf.id }}" {% if strf.id == etc.default.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
                             {% endfor %}
                         </select>
                     </div>
@@ -120,17 +112,16 @@
                     </div>
                 </div>
             </fieldset>
-            {% else %}
-            <fieldset>
-                <legend>nessun documento da generare</legend>
-                <p>effettuare una ricerca per generare una lista di documenti da generare</p>
-            </fieldset>
-            {% endif %}
         </form>
-        {% else %}
+        {% elseif session.carrello.id %}
         <fieldset>
             <legend>acquisti in corso</legend>
             <p>chiudere il carrello #{{ session.carrello.id }} prima di procedere a registrare il pagamento</p>
+        </fieldset>
+        {% else %}
+        <fieldset>
+            <legend>nessun documento da generare</legend>
+            <p>effettuare una ricerca per generare una lista di documenti da generare</p>
         </fieldset>
         {% endif %}
     </div>
@@ -149,13 +140,13 @@
                 </div>
             </fieldset>
         </form>
-        <form id="pagamento_socio" class="d-flex flex-column" action="{{ page.url[ localization.language.ietf ] }}" method="post">
+        <form id="pagamento_cliente" class="d-flex flex-column" action="{{ page.url[ localization.language.ietf ] }}" method="post">
             <fieldset>
-                <legend>pagamenti per socio</legend>
+                <legend>pagamenti per cliente</legend>
                 <div class="form-row">
                     <div class="col">
                         <span class="label-top">anagrafica</span>
-                        {{ frm.selectBox( '__pagamenti__', '', '', 'id_socio', '', etc.select.anagrafica, request, '', '', 1, '', '', '', '', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                        {{ frm.selectBox( '__pagamenti__', '', '', 'id_cliente', '', etc.select.anagrafica, request, '', '', 1, '', '', '', '', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
                     </div>
                     <div class="col-auto">
                         <select class="form-control form-control-sm hint-toggle" id="" hint-toggle="" name="__pagamenti__[se_famiglia]">
