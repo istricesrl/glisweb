@@ -161,7 +161,7 @@
 	// vista documenti_articoli (righe)
 	$p['documenti.articoli.view'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'righe' ),
+	    'title'			=> array( $l		=> 'righe documenti' ),
 	    'h1'			=> array( $l		=> 'righe' ),
 	    'parent'		=> array( 'id'		=> 'documenti.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),

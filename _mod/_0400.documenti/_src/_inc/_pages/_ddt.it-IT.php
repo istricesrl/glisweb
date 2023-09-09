@@ -88,15 +88,15 @@
 		);
 		
 		// gestione righe ddt
-		$p['ddt.magazzini.righe.form'] = array(
+		$p['righe.ddt.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe DDT' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.righe.form.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.magazzini.righe.form.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ddt.magazzini.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ddt.magazzini.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'ddt.magazzini.righe.form' ) )
+			'etc'			=> array( 'tabs'	=> array(	'righe.ddt.magazzini.form' ) )
 		);
 
 		// vista ddt
@@ -131,7 +131,7 @@
 		// gestione righe ddt
 		$p['ddt.passivi.magazzini.form.righe'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe DDT passivi' ),
+			'title'			=> array( $l		=> 'righe DDT passivo' ),
 			'h1'			=> array( $l		=> 'righe' ),
 			'parent'		=> array( 'id'		=> 'ddt.passivi.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.passivi.magazzini.form.righe.html' ),
@@ -141,15 +141,15 @@
 		);
 
 		// gestione ddt_righe
-		$p['ddt.passivi.magazzini.righe.form'] = array(
+		$p['righe.ddt.passivi.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe DDT passivi' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'ddt.passivi.magazzini.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.passivi.magazzini.righe.form.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.passivi.magazzini.righe.form.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ddt.passivi.magazzini.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ddt.passivi.magazzini.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'ddt.passivi.magazzini.righe.form' ) )
+			'etc'			=> array( 'tabs'	=> array(	'righe.ddt.passivi.magazzini.form' ) )
 		);
 
 		$p['ddt.passivi.magazzini.form.stampe'] = array(

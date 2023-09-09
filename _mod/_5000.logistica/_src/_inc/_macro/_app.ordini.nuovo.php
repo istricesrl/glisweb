@@ -66,8 +66,11 @@
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['nome'] = 'ASC';
     $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__']['rows'] = 20000;
 
+    // visualizzo solo i prodotti con giacenza
     $ct['view']['__restrict__']['totale']['GE'] = 1;
-    $ct['view']['__restrict__']['id']['EQ'] = 2;
+
+    // TODO il mastro da cui leggere le disponibilità per gli ordini va specificato nel config
+    $ct['view']['__restrict__']['id_mastro']['EQ'] = 2;
 
     // tipologia ordine
     $ct['etc']['default_tipologia'] = mysqlSelectCachedValue(

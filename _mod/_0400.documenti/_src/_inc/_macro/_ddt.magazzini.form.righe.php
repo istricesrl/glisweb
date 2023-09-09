@@ -30,12 +30,12 @@
    	// $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'ddt.magazzini.righe.form';
+	$ct['view']['open']['page'] = 'righe.ddt.magazzini.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
     $ct['view']['open']['field'] = 'id';
 
 	// pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'ddt.magazzini.righe.form';
+	$ct['view']['insert']['page'] = 'righe.ddt.magazzini.form';
 	$ct['view']['insert']['field'] = 'id_documento';
 
     // campo per il preset di apertura

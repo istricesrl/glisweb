@@ -35,6 +35,7 @@
         'data' => 'data',
         'emittente' => 'emittente',
         'destinatario' => 'destinatario',
+        'nome' => 'nome',
         '__label__' => 'nome'
 	);
 
@@ -42,7 +43,8 @@
 	$ct['view']['class'] = array(
         'nome' => 'text-left',
         'numero' => 'text-left',
-        '__label__' => 'text-left',
+        '__label__' => 'd-none',
+        'nome' => 'text-left',
         'data' => 'no-wrap', 
         'destinatario' => 'text-left',
         'emittente' => 'text-left',

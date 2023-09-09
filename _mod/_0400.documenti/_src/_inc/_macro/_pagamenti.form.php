@@ -98,5 +98,12 @@
 		'SELECT id, __label__ FROM documenti_view '
 	);
 
+	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
+		$cf['memcache']['index'],
+		$cf['memcache']['connection'],
+		$cf['mysql']['connection'],
+		'SELECT id, __label__ FROM anagrafica_view_static '
+	);
+
 		// macro di default
 		require DIR_SRC_INC_MACRO . '_default.form.php';

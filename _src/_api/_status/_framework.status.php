@@ -405,7 +405,7 @@
 		echo '[ -- ] modulo ' . $mod . ' attivo' . PHP_EOL;
 
 		// report del modulo
-		$reportMod = DIR_MOD . '_' . $mod . '/_src/_api/_report/_framework.status.php';
+		$reportMod = DIR_MOD . '_' . $mod . '/_src/_api/_status/_framework.status.php';
 
 		// report del modulo
 		if( file_exists( $reportMod ) ) {

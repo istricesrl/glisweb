@@ -171,3 +171,92 @@
         );
 
     }
+
+    /**
+     * 
+     * 
+     * @todo documentare
+     * 
+     */
+    function updateReportLezioniCorsi( $idLezione ) {
+
+        global $cf;
+
+        $riga = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT todo.id, todo.id_tipologia, tipologie_todo.nome AS tipologia, todo.codice, 
+                tipologie_todo.se_agenda, todo.id_anagrafica, 
+                coalesce( a1.denominazione, concat( a1.cognome, " ", a1.nome ), "" ) AS anagrafica,
+		        todo.id_cliente, coalesce( a2.denominazione, concat( a2.cognome, " ", a2.nome ), "" ) AS cliente,
+		        todo.id_indirizzo, todo.id_luogo, 
+                todo.timestamp_apertura,
+                todo.data_scadenza, todo.ora_scadenza, todo.data_programmazione, todo.ora_inizio_programmazione,
+                todo.ora_fine_programmazione, todo.anno_programmazione, todo.settimana_programmazione, todo.ore_programmazione,
+                todo.data_chiusura, todo.nome, todo.id_contatto, todo.id_progetto, todo.id_pianificazione, todo.id_immobile,
+                todo.data_archiviazione, todo.id_account_inserimento, todo.timestamp_inserimento, 
+                todo.id_account_aggiornamento, todo.timestamp_aggiornamento,
+                concat(
+                    todo.nome,
+                    coalesce( concat( " per ", a2.denominazione, concat( a2.cognome, " ", a2.nome ) ), "" ),
+                    coalesce( concat( " su ", todo.id_progetto, " ", progetti.nome ), "" )
+                ) AS __label__
+            FROM todo
+                LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+                LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+                LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+                LEFT JOIN progetti ON progetti.id = todo.id_progetto
+            WHERE todo.id = ? AND todo.id_tipologia IN (14, 15) 
+            GROUP BY todo.id ',
+            array( array( 's' => $idLezione ) )
+        );
+
+        $riga['docenti'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT group_concat( DISTINCT concat( docenti.nome, " ", docenti.cognome ) SEPARATOR ", " ) AS docenti 
+                FROM attivita AS docenze
+                    LEFT JOIN anagrafica AS docenti ON docenti.id = docenze.id_anagrafica_programmazione
+                WHERE docenze.id_todo = ? 
+                AND docenze.id_tipologia IN ( 30, 31 )
+                GROUP BY docenze.id_todo ',
+            array( array( 's' => $riga['id'] ) )
+        );
+
+        $riga['indirizzo'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT concat_ws(
+                    " ",
+                    indirizzo,
+                    indirizzi.civico,
+                    indirizzi.cap,
+                    indirizzi.localita,
+                    comuni.nome,
+                    provincie.sigla
+                ) AS indirizzo
+            FROM indirizzi
+                LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+                LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+            WHERE indirizzi.id = ?',
+            array( array( 's' => $riga['id_indirizzo'] ) )
+        );
+
+        $riga['luogo'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT luoghi_path( ? ) AS luogo',
+            array( array( 's' => $riga['id_luogo'] ) )
+        );
+
+        $riga['numero_alunni'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT count( DISTINCT presenze.id_anagrafica_programmazione ) AS numero_alunni 
+                FROM attivita AS presenze 
+                WHERE presenze.id_todo = ? AND presenze.id_tipologia = 15',
+            array( array( 's' => $riga['id'] ) )
+        );
+
+        mysqlInsertRow(
+            $cf['mysql']['connection'],
+            $riga,
+            '__report_lezioni_corsi__'
+        );
+
+    }

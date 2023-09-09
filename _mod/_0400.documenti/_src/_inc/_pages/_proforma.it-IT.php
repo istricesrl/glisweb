@@ -26,8 +26,8 @@
 		// vista righe proforma
 		$p['righe.proforma.amministrazione.view'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe' ),
-			'h1'			=> array( $l		=> 'righe' ),
+			'title'			=> array( $l		=> 'righe note proforma attive' ),
+			'h1'			=> array( $l		=> 'righe attive' ),
 			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_righe.proforma.amministrazione.view.php' ),
@@ -69,7 +69,7 @@
 		// gestione righe proforma
 		$p['proforma.amministrazione.form.righe'] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'righe proforma' ),
+			'title'			=> array( $l		=> 'righe nota proforma attiva' ),
 			'h1'			=> array( $l		=> 'righe' ),
 			'parent'		=> array( 'id'		=> 'proforma.amministrazione.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.form.righe.html' ),
@@ -91,19 +91,19 @@
 		);
 
 		// gestione proforma_righe
-		$p['proforma.amministrazione.righe.form'] = array(
+		$p['righe.proforma.amministrazione.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'righe.proforma.amministrazione.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'proforma.amministrazione.righe.form.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_proforma.amministrazione.righe.form.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.proforma.amministrazione.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.proforma.amministrazione.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'proforma.amministrazione.righe.form', 'proforma.amministrazione.righe.form.aggregate' ) )
+			'etc'			=> array( 'tabs'	=> array(	'righe.proforma.amministrazione.form', 'righe.proforma.amministrazione.form.aggregate' ) )
 		);
 
 		// gestione 
-		$p['proforma.amministrazione.righe.form.aggregate'] = array(
+		$p['righe.proforma.amministrazione.form.aggregate'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'righe aggregate' ),
 			'h1'			=> array( $l		=> 'righe aggregate' ),
@@ -111,7 +111,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'documenti.articoli.form.aggregate.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_documenti.articoli.form.aggregate.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> $p['proforma.amministrazione.righe.form']['etc']['tabs'] )
+			'etc'			=> array( 'tabs'	=> $p['righe.proforma.amministrazione.form']['etc']['tabs'] )
 		);
 
 		// gestione tools proforma

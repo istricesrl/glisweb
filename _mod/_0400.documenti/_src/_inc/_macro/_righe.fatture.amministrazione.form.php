@@ -182,7 +182,6 @@
 
 	}
 
-	
 	if( $documento != 'ALL'){
 	$ct['etc']['id_emittente'] = mysqlSelectValue(
         $cf['mysql']['connection'],
@@ -206,8 +205,9 @@
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_genitore'] ) && !empty($_REQUEST[ $ct['form']['table'] ]['id_genitore']) ){
 		$ct['page']['etc']['tabs'] = array_diff(
 			$ct['page']['etc']['tabs'],
-			['proforma.amministrazione.righe.form.aggregate']
+			['righe.fatture.amministrazione.form.aggregate']
 		);
 	}
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

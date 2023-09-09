@@ -18,30 +18,46 @@
         // creo i documenti
         if( isset( $_REQUEST['__pagamenti__']['righe'] ) ) {
 
+            // debug
+            // die( print_r( $_REQUEST['__pagamenti__'], true ) );
+
             // per ogni documento richiesto
             foreach( $_REQUEST['__pagamenti__']['righe'] as $pagamento ) {
+
+                // debug
+                // die( print_r( $pagamento, true ) );
 
                 // se la checkbox è flaggata
                 if( ! empty( $pagamento['da_fare'] ) ) {
 
+                    // debug
+                    // die( print_r( $pagamento, true ) );
+
                     // se il totale è maggiore di zero
                     if( $pagamento['importo_lordo_totale'] > 0 ) {
+
+                        // debug
+                        // die( print_r( $pagamento, true ) );
 
                         // se sto creando una rata
                         if( empty( $pagamento['id_pagamento'] ) && ! empty( $_REQUEST['__pagamenti__']['data_rate'] ) ) {
 
                             // aggiungo il pagamento
-                            mysqlInsertRow(
+                            $idPagamento = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
-                                    'id_anagrafica' => $pagamento['destinatario_id_anagrafica'],
+                                    'id_debitore' => $pagamento['destinatario_id_anagrafica'],
                                     'id_carrelli_articoli' => $pagamento['id'],
                                     'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                     'data_scadenza' => $_REQUEST['__pagamenti__']['data_rate'],
                                     'nome' => 'rata da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
                                 ),
                                 'pagamenti'
-                            );                            
+                            );
+
+                            // debug
+                            // echo 'creazione rata (pagamento #' . $idPagamento . ')' . PHP_EOL;
+                            // die( print_r( $pagamento, true ) );
 
                         } else {
 
@@ -54,9 +70,11 @@
                             $nome = 'documento creato automaticamente per il ' . ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'pagamento #' . $pagamento['id_pagamento'] . ' ' : NULL ) . 'carrello #' . $pagamento['id_carrello'] . ' anagrafica #'. $pagamento['destinatario_id_anagrafica'] .' (' . $pagamento['destinatario'] . ')';
                             $sezionale = 'C/' . date('Y');
                             $emittente = trovaIdAziendaGestita();
+                            $idSedeEmittente = anagraficaGetIdSedeLegale( $emittente );
+                            $idSedeDestinatario = anagraficaGetIdSedeLegale( $pagamento['destinatario_id_anagrafica'] );
                             $numero = generaProssimoNumeroDocumento( $_REQUEST['__pagamenti__']['fatturazione_id_tipologia_documento'], $sezionale, $emittente );
                             $data = date('Y-m-d');
-        
+
                             // creo il documento
                             $idDocumento = mysqlInsertRow(
                                 $cf['mysql']['connection'],
@@ -68,23 +86,37 @@
                                     'esigibilita' => 'I',
                                     'id_condizione_pagamento' => 2,
                                     'id_emittente' => $emittente,
+                                    'id_sede_emittente' => $idSedeEmittente,
                                     'id_destinatario' => $pagamento['destinatario_id_anagrafica'],
+                                    'id_sede_destinatario' => $idSedeDestinatario,
                                     'data' => $data
                                 ),
                                 'documenti'
                             );
 
+                            // trovo il reparto
+                            $reparto = mysqlSelectRow(
+                                $cf['mysql']['connection'],
+                                'SELECT reparti.id, iva.aliquota FROM articoli INNER JOIN reparti ON reparti.id = articoli.id_reparto 
+                                    INNER JOIN iva ON iva.id = reparti.id_iva WHERE articoli.id = ?',
+                                    array( array( 's' => $pagamento['id_articolo'] ) )
+                            );
+
+                            // calcolo il netto
+                            $pagamento['importo_netto_totale'] = $pagamento['importo_lordo_totale'] / ( 100 + $reparto['aliquota'] ) * 100;
+
                             // aggiungo la riga
-                            mysqlInsertRow(
+                            $idRiga = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
                                     'id_documento' => $idDocumento,
                                     'id_articolo' => $pagamento['id_articolo'],
                                     'id_carrelli_articoli' => $pagamento['id'],
+                                    'importo_netto_totale' => $pagamento['importo_netto_totale'],
                                     'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                     'quantita' => 1,
                                     'id_udm' => 1,
-                                    'id_reparto' => 1,
+                                    'id_reparto' => $reparto['id'],
                                     'id_listino' => 1,
                                     'nome' => 'riga automatica da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
                                 ),
@@ -92,7 +124,7 @@
                             );
 
                             // associo il pagamento
-                            mysqlInsertRow(
+                            $idPagamento = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
                                     'id' => $pagamento['id_pagamento'],
@@ -103,6 +135,10 @@
                                 ),
                                 'pagamenti'
                             );
+
+                            // debug
+                            // echo 'creazione ricevuta (documento #' . $idDocumento . ', riga #' . $idRiga . ', pagamento #' . $idPagamento . ')' . PHP_EOL;
+                            // die( print_r( $pagamento, true ) );
 
                         }
 
@@ -133,8 +169,17 @@
 
         }
 
-        // tipo di ricerca (carrello o socio)
+        // tipo di ricerca (carrello o cliente)
         if( isset( $_REQUEST['__pagamenti__']['id_carrello'] ) && ! empty( $_REQUEST['__pagamenti__']['id_carrello'] ) ) {
+
+            // seleziono i dettagli del carrello
+            $ct['etc']['carrello'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT * '.
+                'FROM carrelli '.
+                'WHERE id = ?',
+                array( array( 's' => $_REQUEST['__pagamenti__']['id_carrello'] ) )
+            );
 
             // seleziono le righe del carrello
             $ct['etc']['righe'] = mysqlQuery(
@@ -152,7 +197,19 @@
                 array( array( 's' => $_REQUEST['__pagamenti__']['id_carrello'] ) )
             );
 
-        } elseif( isset( $_REQUEST['__pagamenti__']['id_socio'] ) && ! empty( $_REQUEST['__pagamenti__']['id_socio'] ) ) {
+/*
+            // seleziono i documenti da stampare
+            $ct['etc']['stampe'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT documenti_view.* FROM documenti_view LEFT JOIN attivita ON ( attivita.id_documento = documenti_view.id AND attivita.id_tipologia IN ( 22, 23, 24 ) ) WHERE id_destinatario = ? AND attivita.id IS NULL',
+                array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
+            );
+*/
+
+            // debug
+            // die( print_r( $ct['etc'], true ) );
+
+        } elseif( isset( $_REQUEST['__pagamenti__']['id_cliente'] ) && ! empty( $_REQUEST['__pagamenti__']['id_cliente'] ) ) {
 
             // seleziono le righe del carrello
             $ct['etc']['righe'] = mysqlQuery(
@@ -167,7 +224,7 @@
                 'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
                 'INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello '.
                 'WHERE carrelli_articoli.destinatario_id_anagrafica = ?',
-                array( array( 's' => $_REQUEST['__pagamenti__']['id_socio'] ) )
+                array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
             );
 
             // seleziono le rate
@@ -186,18 +243,18 @@
                     'INNER JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica '.
                     'INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo '.
                     'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
-                    'WHERE pagamenti.id_anagrafica = ? AND pagamenti.id_documento IS NULL',
-                    array( array( 's' => $_REQUEST['__pagamenti__']['id_socio'] ) )
+                    'WHERE pagamenti.id_debitore = ? AND pagamenti.id_documento IS NULL',
+                    array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
                 )
             );
-
+/*
             // seleziono i documenti da stampare
             $ct['etc']['stampe'] = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT documenti_view.* FROM documenti_view LEFT JOIN attivita ON ( attivita.id_documento = documenti_view.id AND attivita.id_tipologia IN ( 22, 23, 24 ) ) WHERE id_destinatario = ? AND attivita.id IS NULL',
-                array( array( 's' => $_REQUEST['__pagamenti__']['id_socio'] ) )
+                array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
             );
-        
+*/
         }
 
         // print_r( $_REQUEST );
@@ -207,6 +264,8 @@
 
         // per ogni riga, cerco eventuali pagamenti già effettuati
         if( isset( $ct['etc']['righe'] ) ) {
+
+            // ...
             foreach( $ct['etc']['righe'] as $chiave => &$riga ) {
 
                 // cerco righe di documenti che fanno riferimento a questa riga di carrello
@@ -223,6 +282,7 @@
 
                 // totale già pagato
                 $riga['totale_lordo_pagato'] = 0;
+                $riga['documenti_da_stampare'] = array();
 
                 // calcolo il totale già pagato
                 // NOTA faccio un ciclo così se in un secondo momento voglio i dettagli ce li ho già sgranati
@@ -231,11 +291,28 @@
                     // aggiungo il totale della riga
                     $riga['totale_lordo_pagato'] += $rdoc['importo_lordo_totale'];
 
-                    // documenti da stampare
-                    $riga['documenti_da_stampare'][] = array(
-                        'id' => $rdoc['id_documento'],
-                        'documento' => $rdoc['documento']
-                    );
+                    // ...
+                    if( isset( $rdoc['id_documento'] ) && ! empty( $rdoc['id_documento'] ) ) {
+
+                        // stampe del documento
+                        $stampe = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT count( attivita.id ) FROM attivita INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia WHERE attivita.id_documento = ? AND tipologie_attivita.se_stampa IS NOT NULL',
+                            array( array( 's' => $rdoc['id_documento'] ) )
+                        );
+
+                        // ...
+                        if( empty( $stampe ) ) {
+
+                            // documenti da stampare
+                            $riga['documenti_da_stampare'][] = array(
+                                'id' => $rdoc['id_documento'],
+                                'documento' => $rdoc['documento']
+                            );
+
+                        }
+
+                    }
 
                 }
 
@@ -259,8 +336,8 @@
                 // totale da pagare
                 $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
 
-                // se la riga è pagata, non la mostro
-                if( empty( $riga['id_pagamento'] ) && $riga['totale_lordo_da_pagare'] <= 0 ) {
+                // se la riga è pagata e non ha documenti da stampare, non la mostro
+                if( empty( $riga['id_pagamento'] ) && $riga['totale_lordo_da_pagare'] <= 0 && count( $riga['documenti_da_stampare'] ) == 0 ) {
                     unset( $ct['etc']['righe'][ $chiave ] );
                 }
 
@@ -284,4 +361,34 @@
 	    array( 'id' => 'MULTIPLA', '__label__' => 'documenti separati' ),
 	);
 
+    $ct['etc']['default']['fatturazione_id_tipologia_documento'] = (
+        ( isset( $_SESSION['carrello']['fatturazione_id_tipologia_documento'] ) && ! empty( $_SESSION['carrello']['fatturazione_id_tipologia_documento'] ) )
+        ?
+        $_SESSION['carrello']['fatturazione_id_tipologia_documento']
+        :
+        (
+            ( isset( $ct['etc']['carrello']['fatturazione_id_tipologia_documento'] ) && ! empty( $ct['etc']['carrello']['fatturazione_id_tipologia_documento'] ) )
+            ?
+            $ct['etc']['carrello']['fatturazione_id_tipologia_documento']
+            :
+            $cf['ecommerce']['fields']['carrello']['fatturazione_id_tipologia_documento']['default']
+        )
+    );
+
+    $ct['etc']['default']['fatturazione_strategia'] = (
+        ( isset( $_SESSION['carrello']['fatturazione_strategia'] ) && ! empty( $_SESSION['carrello']['fatturazione_strategia'] ) )
+        ?
+        $_SESSION['carrello']['fatturazione_strategia']
+        :
+        (
+            ( isset( $ct['etc']['carrello']['fatturazione_strategia'] ) && ! empty( $ct['etc']['carrello']['fatturazione_strategia'] ) )
+            ?
+            $ct['etc']['carrello']['fatturazione_strategia']
+            :
+            $cf['ecommerce']['fields']['carrello']['fatturazione_strategia']['default']
+        )
+    );
+
+    // debug
     // print_r($ct['etc']['righe']);
+    // die();

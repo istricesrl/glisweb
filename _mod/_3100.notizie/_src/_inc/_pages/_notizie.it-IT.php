@@ -31,6 +31,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'notizie.form',
+													'notizie.form.web',
 													'notizie.form.sem',
 													'notizie.form.testo',
 													'notizie.form.immagini',
@@ -40,6 +41,19 @@
 													'notizie.form.metadati',
 													'notizie.form.tools'
 												) )
+	);
+
+	// gestione notizie SEM/SMM
+	$p['notizie.form.web'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'web' ),
+	    'h1'		=> array( $l		=> 'web' ),
+	    'parent'		=> array( 'id'		=> 'notizie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'notizie.form.web.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_notizie.form.web.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 
 	// form notizie SEM/SMM
@@ -157,7 +171,7 @@
 	    'etc'		=> array( 'tabs'	=> $p['notizie.form']['etc']['tabs'] )
 	);
 
-	 // vista categorie prodotti
+	 // vista categorie notizie
 	 $p['categorie.notizie.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'categorie' ),
@@ -181,6 +195,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'categorie.notizie.form',
+													'categorie.notizie.form.web',
 													'categorie.notizie.form.sem',
 													'categorie.notizie.form.testo',
 													'categorie.notizie.form.menu',
@@ -192,6 +207,18 @@
 												) )
 	);
 
+	// gestione categorie SEM/SMM
+	$p['categorie.notizie.form.web'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-chrome" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'web' ),
+	    'h1'		=> array( $l		=> 'web' ),
+	    'parent'		=> array( 'id'		=> 'categorie.notizie.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'categorie.notizie.form.web.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.notizie.form.web.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.notizie.form']['etc']['tabs'] )
+	);
 
 	// form notizie SEM/SMM
 	$p['categorie.notizie.form.sem'] = array(

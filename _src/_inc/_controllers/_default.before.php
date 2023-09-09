@@ -38,7 +38,6 @@
                     }
 
                 // nei numeri sostituisco la , con il .
-    #			    if( $vKey == 'importo_netto_totale' && ( ! empty( $vVal['s'] )  ) ) {
                     if(( ! empty( $vVal['s'] ) && is_numeric( $vVal['s'] ) ) ) {
                         $vs[ $vKey ]['s'] = str_replace(',','.',$vs[ $vKey ]['s']);
                     }

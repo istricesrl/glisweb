@@ -42,8 +42,6 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
-
 		{# SUBFORM RELAZIONI #}
 		{{ sub.relazioni( table, 'relazioni_documenti', 'relazioni', site, page, pages, localization.language.ietf, etc, request, session ) }}
 

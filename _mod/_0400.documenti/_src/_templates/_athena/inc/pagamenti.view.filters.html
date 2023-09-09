@@ -37,6 +37,14 @@
 		</select>
 	</div>
 -->
+	<div class="col-12 col-md-auto">
+		<span class="label-top">azienda</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_emittente|id_destinatario][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			{% for azienda in etc.select.aziende %}
+			<option value="{{ azienda.id }}" {% if request.__view__[ view.id ].__filters__['id_emittente|id_destinatario'].EQ == azienda.id %}selected{% endif %}>{{ azienda.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
 <!--
 	<div class="col-12 col-md-2">
 		<span class="label-top">articolo</span>
@@ -57,6 +65,13 @@
 		</select>
 	</div>
 -->
+	<div class="col-12 col-md-auto">
+		<span class="label-top">pagamento</span>
+		<select name="__view__[{{ view.id }}][__filters__][timestamp_pagamento][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non pagate</option>
+			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "" %}selected{% endif %}>tutte</option>
+		</select>
+	</div>
     <div class="col">
 		<span class="label-top">cerca</span>
 	<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>

@@ -30,6 +30,13 @@
 	    'SELECT id, __label__ FROM articoli_view'
 	);
 
+    $ct['etc']['select']['id_prodotti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM prodotti_view'
+	);
+
     // tendina tipologie anagrafica
 	$ct['etc']['select']['tipologie_documenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -182,6 +189,7 @@
 
 	}
 
+	
 	if( $documento != 'ALL'){
 	$ct['etc']['id_emittente'] = mysqlSelectValue(
         $cf['mysql']['connection'],
@@ -205,9 +213,8 @@
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_genitore'] ) && !empty($_REQUEST[ $ct['form']['table'] ]['id_genitore']) ){
 		$ct['page']['etc']['tabs'] = array_diff(
 			$ct['page']['etc']['tabs'],
-			['fatture.amministrazione.righe.form.aggregate']
+			['righe.proforma.amministrazione.form.aggregate']
 		);
 	}
-
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

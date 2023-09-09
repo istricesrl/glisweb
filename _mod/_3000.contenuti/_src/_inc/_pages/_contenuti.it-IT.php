@@ -252,3 +252,58 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);
+
+    // vista pagine
+	$p['template.pagine.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'template pagine' ),
+	    'h1'		=> array( $l		=> 'template pagine' ),
+	    'parent'		=> array( 'id'		=> 'contenuti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'template.pagine.view',
+									'template.pagine.tools' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'template' ),
+									'priority'	=> '710' ) ) )	
+    );
+
+    // form pagine
+	$p['template.pagine.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'template.pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.pagine.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'template.pagine.form',
+													'template.pagine.form.editor',
+													'template.pagine.form.tools'
+												) )
+	);
+
+	// form azioni pagine
+	$p['template.pagine.form.editor'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'editor template pagina' ),
+	    'h1'		=> array( $l		=> 'editor' ),
+	    'parent'		=> array( 'id'		=> 'template.pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.pagine.form.editor.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.form.editor.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['template.pagine.form']['etc']['tabs'] )
+	);
+
+	// form azioni pagine
+	$p['template.pagine.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni template pagina' ),
+	    'h1'		=> array( $l		=> 'azioni template pagina' ),
+	    'parent'		=> array( 'id'		=> 'template.pagine.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.pagine.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['template.pagine.form']['etc']['tabs'] )
+	);

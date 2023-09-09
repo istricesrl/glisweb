@@ -349,8 +349,14 @@
                 array( array( 's' => $job['riga'] ) )
             );
 
+            // debug
+            // die( print_r( $lezioni, true ) );
+
             // trovo il giorno della settimana della prima lezione
             $dowPrimaLezione = date( 'l', strtotime( $lezioni[0]['data_programmazione'] ) );
+
+            // ...
+            $job['corso']['giorno_settimana_prima_lezione'] = $dowPrimaLezione;
 
             // salvo il valore della data della lezione nel vecchio corso
             $vecchiaDataLezione = $lezioni[0]['data_programmazione'];
@@ -359,14 +365,23 @@
             if( date( 'l', strtotime( $job['corso']['data_accettazione'] ) ) == $dowPrimaLezione ) {
                 $dataPrimaLezione = $job['corso']['data_accettazione'];
             } else {
-                $dataPrimaLezione = date( 'Y-m-d', strtotime( $job['corso']['data_accettazione'] . ' next ' . $dowPrimaLezione ) );
+                // TODO first o next?
+                $dataPrimaLezione = date( 'Y-m-d', strtotime( $job['corso']['data_accettazione'] . ' first ' . $dowPrimaLezione ) );
             }
 
             // inizio dalla data della prima lezione
             $dataLezione = $dataPrimaLezione;
 
+            // ...
+            $job['corso']['giorno_prima_lezione'] = $dataPrimaLezione;
+
             // intervalli
             $intervalli = array();
+
+            // intervalli predefiniti
+            if( ! empty( $job['workspace']['sostituzioni']['intervallo_max'] ) ) {
+                $intervalliMax = explode( ',', $job['workspace']['sostituzioni']['intervallo_max'] );
+            }
 
             // elaboro le lezioni
             foreach( $lezioni as $lezione ) {
@@ -375,10 +390,23 @@
                 $deltaGiorni = daysBetweenDates( $vecchiaDataLezione, $lezione['data_programmazione'] );
 
                 // ...
-                if( ! empty( $job['workspace']['sostituzioni']['intervallo_max'] ) ) {
-                    if( count( $intervalli ) > 1 && $deltaGiorni > $job['workspace']['sostituzioni']['intervallo_max'] ) {
-                        $deltaGiorni = $job['workspace']['sostituzioni']['intervallo_max'];
+                // if( ! empty( $job['workspace']['sostituzioni']['intervallo_max'] ) ) {
+                if( isset( $intervalliMax ) && ! empty( $intervalliMax ) ) {
+
+                    // ...
+                    $intervalloMax = current( $intervalliMax );
+
+                    // ...
+                    if( next( $intervalliMax ) === false ) {
+                        reset( $intervalliMax );
                     }
+    
+                    // if( count( $intervalli ) > 1 && $deltaGiorni > $job['workspace']['sostituzioni']['intervallo_max'] ) {
+                    if( count( $intervalli ) > 1 && $deltaGiorni > $intervalloMax ) {
+                        // $deltaGiorni = $job['workspace']['sostituzioni']['intervallo_max'];
+                        $deltaGiorni = $intervalloMax;
+                    }
+
                 }
 
                 // registro l'intervallo
@@ -443,6 +471,10 @@
 
             }
 
+            // debug
+            // die( 'fine elaborazione lezioni passate' );
+            // $y = 0;
+
             // status
             $job['corso']['lezioni'][ $dataLezione ][] = 'inizio a valutare se il corso è da allungare a partire da ' . $dataLezione;
 
@@ -506,7 +538,14 @@
 
                 }
 
+                // debug
+                // if( $y++ > 100 ) { break; }
+
             }
+
+            // debug
+            // print_r( $job );
+            // die( 'fine aggiunta lezioni in coda al corso' );
 
             // scrivo la riga
             updateReportCorsi( $job['corso']['id'] );

@@ -25,10 +25,10 @@
 		// dashboard amministrazione
 		$p['amministrazione.gestiti'] = array(
 			'sitemap'		=> false,
-			'title'		=> array( $l		=> 'gestita' ),
-			'h1'		=> array( $l		=> 'gestita' ),
+			'title'		=> array( $l		=> 'gestiti' ),
+			'h1'		=> array( $l		=> 'gestiti' ),
 			'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'amministrazione.html' ),
-			'macro'		=> array( $m . '_src/_inc/_macro/_amministrazione.gestita.php' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_amministrazione.gestiti.php' ),
 			'parent'	=> array( 'id'		=> 'amministrazione' ),
 			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'		=> array( 'tabs'	=> $p['amministrazione']['etc']['tabs'] )

@@ -915,6 +915,7 @@
 		}
 
 		$r = array_map( 'empty2null', $r );
+		$r = array_map( 'string2num', $r );
 
 		$i = mysqlQuery( $c,
 			'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '

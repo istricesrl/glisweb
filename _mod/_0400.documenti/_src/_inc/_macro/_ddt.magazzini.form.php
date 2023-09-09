@@ -63,7 +63,7 @@
 	);
 
     // tendina indirizzi mittenti
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){
 	    $ct['etc']['select']['id_sedi_emittente'] = mysqlCachedIndexedQuery(
 	        $cf['memcache']['index'],
 	        $cf['memcache']['connection'],
@@ -71,10 +71,12 @@
 	        'SELECT indirizzi_view.id, __label__ FROM indirizzi_view LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id WHERE anagrafica_indirizzi.id_anagrafica = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) )
 	    );
-    } 
+    } else {
+		$_REQUEST[ $ct['form']['table'] ]['id_emittente'] = trovaIdAziendaGestita();
+	}
 
 	// tendina indirizzi destinatari
-    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) ){
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) ){
 	    $ct['etc']['select']['id_sedi_destinatario'] = mysqlCachedIndexedQuery(
 	        $cf['memcache']['index'],
 	        $cf['memcache']['connection'],
@@ -82,7 +84,7 @@
 	        'SELECT indirizzi_view.id, __label__ FROM indirizzi_view LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id  WHERE anagrafica_indirizzi.id_anagrafica = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) )
 	    );
-	   } 
+	}
 
 	if( isset( $_REQUEST['__ordine_da_evadere__'] ) ){
 
