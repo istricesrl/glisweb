@@ -2312,7 +2312,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
 	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`), 
 	ADD KEY `id_carrello` (`id_carrello`),
-	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`);
+	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo` (255));
 
 -- | 030000021801
 
@@ -3568,7 +3568,13 @@ ALTER TABLE `software`
 	ADD KEY `json` (`json`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json`);
+	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json` (255));
+
+-- | 030000041401
+
+-- software
+-- tipologia: tabella di gestita
+ALTER TABLE `software` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000042000
 
