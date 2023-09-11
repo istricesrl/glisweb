@@ -140,12 +140,12 @@
 	    {% endif %}
 		{% endif %}
 
+		{% if request[ table ].id and not session.__view__[ view.id ].__filesystem_mode__ %}
 	    <div class="col text-center">
-			{% if request[ table ].id and not session.__view__[ view.id ].__filesystem_mode__ %}
 			{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary', 'submitFormOkay = true; window.open("' ~ contents.pages.delete.path[ localization.language.ietf ] ~ '?__delete__[table]=' ~ table ~'&__delete__[id]=' ~ request[ table ].id ~ '&__delete__[target]=' ~ back ~ '","_self")','elimina' ) #}
 			{{ frm.trashButton( table, '', page, pages, '', localization.language.ietf, request, back ) }}
-			{% endif %}
 		</div>
+		{% endif %}
 	
 		{% if form.table %}
 		<div class="col-auto ml-1">

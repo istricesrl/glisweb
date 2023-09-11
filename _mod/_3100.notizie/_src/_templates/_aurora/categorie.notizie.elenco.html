@@ -14,8 +14,8 @@
 
 <ul>
 {% for p in page.children.id %}
-{% set p = pages[ p ] %}
 {% if p.metadati.id_categoria_notizie %}
+{% set p = pages[ p ] %}
 <li><a href="{{ p.url[ localization.language.ietf ] }}">{{ p.h1[ localization.language.ietf ] }}</a></li>
 {% endif %}
 {% endfor %}
@@ -25,8 +25,8 @@
 
 <ul>
 {% for p in page.children.id %}
-{% set p = pages[ p ] %}
 {% if p.metadati.id_notizia %}
+{% set p = pages[ p ] %}
 <li><a href="{{ p.url[ localization.language.ietf ] }}">{{ p.h1[ localization.language.ietf ] }}</a></li>
 {% endif %}
 {% endfor %}

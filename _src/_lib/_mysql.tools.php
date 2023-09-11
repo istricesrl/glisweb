@@ -371,7 +371,8 @@
 				    logWrite( md5( $q ) . ' -> OK', 'mysql' );
 
 				// valore di ritorno a seconda del tipo di query
-				    switch( current( explode( ' ', $q ) ) ) {
+				    // switch( current( explode( ' ', $q ) ) ) {
+					switch( current( explode( ' ', str_replace( "\n", ' ', trim( $q ) ) ) ) ) {
 
 					case 'SELECT':
 					    return mysqlFetchPreparedResult( $pq );

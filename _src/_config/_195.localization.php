@@ -50,11 +50,15 @@
 
     /*
      * @todo ha senso questa cosa, visto che poi più avanti $_SESSION viene azzerato?
-     * @todo dov'è che viene usata $_SESSION['__view__']['__language__'] e perché?
+     * @todo dov'è che viene usata $_SESSION['__view__']['__lang__'] e perché?
+     * 
+     * dov'è che viene azzerata la $_SESSION? la variabile $_SESSION['__view__']['__lang__']
+     * arriva fino allo schema di gestione dei testi
+     * 
      */
 
     // linguaggio gestito di default
-	if( empty( $_SESSION['__view__']['__language__'] ) && ! empty( $cf['localization']['language']['id'] ) ) {
+	if( empty( $_SESSION['__view__']['__lang__'] ) && ! empty( $cf['localization']['language']['id'] ) ) {
 	    $_SESSION['__view__']['__lang__'] = $cf['localization']['language']['id'];
 	    $_SESSION['__view__']['__ietf__'] = $cf['localization']['language']['ietf'];
 	}
