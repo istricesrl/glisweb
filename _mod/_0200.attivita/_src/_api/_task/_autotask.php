@@ -31,13 +31,33 @@
 
 		// status
 		$status['info'][] = 'strategia standard di evasione delle attività';
-
+/*
 		// token della riga
         $status['trovate'] = mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE attivita LEFT JOIN metadati ON metadati.id_tipologia_attivita = attivita.id_tipologia '.
             'SET token = ? '.
             'WHERE metadati.nome = "autotask|attivo" '.
+            'AND ( attivita.data_programmazione >= date_format( now(), "%Y-%m-%d" ) OR attivita.data_programmazione IS NULL ) '.
+            'AND ( attivita.ora_inizio_programmazione >= date_format( now(), "%H:%i:%s" ) OR attivita.ora_inizio_programmazione IS NULL ) '.
+            'AND attivita.data_attivita IS NULL AND attivita.token IS NULL '.
+            'LIMIT 1',
+            array(
+                array( 's' => $status['token'] )
+            )
+        );
+*/
+
+		// token della riga
+        $status['trovate'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE attivita '.
+            'SET token = ? '.
+            'WHERE attivita.id_tipologia IN ( '.
+            'SELECT metadati.id_tipologia_attivita '.
+            'FROM metadati '.
+            'WHERE metadati.nome = "autotask|attivo" '.
+            ' )'.
             'AND ( attivita.data_programmazione >= date_format( now(), "%Y-%m-%d" ) OR attivita.data_programmazione IS NULL ) '.
             'AND ( attivita.ora_inizio_programmazione >= date_format( now(), "%H:%i:%s" ) OR attivita.ora_inizio_programmazione IS NULL ) '.
             'AND attivita.data_attivita IS NULL AND attivita.token IS NULL '.
