@@ -13,7 +13,7 @@ Options -Indexes
 # è una blanda misura di sicurezza contro i curiosi
 
 # impedisco l'accesso ai file che possono contenere informazioni sensibili
-<FilesMatch "(?i)\.(log|trace|conf|info|htaccess|htpasswd|sql|dox|json|twig|lock|properties|version|bak|backup|asp|swp|mdb|save|templ|notes|cfm|csp|sqlite|config|cfg|bas|map|jsp|ini|exe|py|cgi|sh|shtml|htl|blt|pl|md)$">
+<FilesMatch "(?i)\.(log|trace|conf|info|htaccess|htpasswd|sql|dox|json|twig|lock|properties|bak|backup|asp|swp|mdb|save|templ|notes|cfm|csp|sqlite|config|cfg|bas|map|jsp|ini|exe|py|cgi|sh|shtml|htl|blt|pl|md)$">
     Deny from all
 </FilesMatch>
 
@@ -22,6 +22,10 @@ Options -Indexes
 
     # attivazione motore di rewriting
     RewriteEngine on
+
+    # release e versione corrente
+    RewriteRule ^current.release _etc/_current.release [L]
+    RewriteRule ^current.version _etc/_current.version [L]
 
     # directory ad accesso vietato
     RewriteRule ^.git/* - [F,L,NC]
