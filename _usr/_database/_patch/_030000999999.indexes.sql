@@ -1378,6 +1378,7 @@ ALTER TABLE `documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-10 11:57 Fabio Mosti
 ALTER TABLE `documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_documento` (`id_documento`), 
@@ -1400,7 +1401,9 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `data` (`data`), 
 	ADD KEY `quantita` (`quantita`), 
+	ADD KEY `costo_netto_totale` (`costo_netto_totale`),
 	ADD KEY `importo_netto_totale` (`importo_netto_totale`),
+	ADD KEY `importo_lordo_totale` (`importo_lordo_totale`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`),
 	ADD KEY `indice_progetto_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
 	ADD KEY `indice_progetto_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
@@ -2309,7 +2312,7 @@ ALTER TABLE `metadati`
 	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
 	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`), 
 	ADD KEY `id_carrello` (`id_carrello`),
-	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo`(255));
+	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo` (255));
 
 -- | 030000021801
 
@@ -3559,12 +3562,13 @@ ALTER TABLE `sms_sent`
 ALTER TABLE `software`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_articolo` (`id_articolo`),
-	ADD KEY `json` (`json`(255) ), -- ????
+	ADD KEY `json` (`json` (255)), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json`(255));
+	ADD KEY `indice` (`id`,`id_genitore`,`id_articolo`,`nome`,`json` (255));
 
 -- | 030000041401
 
@@ -3735,6 +3739,7 @@ ALTER TABLE `tipologie_attivita`
 	ADD KEY `se_anagrafica` (`se_anagrafica`),
 	ADD KEY `se_agenda` (`se_agenda`),
 	ADD KEY `se_sistema` (`se_sistema`),
+	ADD KEY `se_stampa` (`se_stampa`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`);

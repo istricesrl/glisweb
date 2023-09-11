@@ -1393,6 +1393,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_listino` int(11) DEFAULT NULL,
   `costo_netto_totale` decimal(16,2) DEFAULT NULL,
   `importo_netto_totale` decimal(16,2) DEFAULT NULL,
+  `importo_lordo_totale` decimal(16,2) DEFAULT NULL,
   `sconto_percentuale` decimal(9,2) DEFAULT NULL,
   `sconto_valore` decimal(9,2) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,

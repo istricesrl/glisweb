@@ -1172,8 +1172,8 @@ ALTER TABLE `organizzazioni`
 ALTER TABLE `pagamenti`
     ADD CONSTRAINT `pagamenti_ibfk_01_nofollow`    FOREIGN KEY (`id_tipologia`) REFERENCES `tipologie_pagamenti` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
     ADD CONSTRAINT `pagamenti_ibfk_02`             FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `pagamenti_ibfk_03`             FOREIGN KEY (`id_creditore`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
-    ADD CONSTRAINT `pagamenti_ibfk_04`             FOREIGN KEY (`id_debitore`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `pagamenti_ibfk_03_nofollow`    FOREIGN KEY (`id_creditore`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `pagamenti_ibfk_04_nofollow`    FOREIGN KEY (`id_debitore`) REFERENCES `anagrafica` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `pagamenti_ibfk_05_nofollow`    FOREIGN KEY (`id_mastro_provenienza`) REFERENCES `mastri` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `pagamenti_ibfk_06_nofollow`    FOREIGN KEY (`id_mastro_destinazione`) REFERENCES `mastri` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `pagamenti_ibfk_07_nofollow`    FOREIGN KEY (`id_iban`) REFERENCES `iban` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
