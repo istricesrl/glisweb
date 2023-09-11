@@ -389,6 +389,35 @@
     la nomenclatura dei file Twig che contengono il codice dei modal è <pagina>.modal.<ruolo>.html ed essi vengono collocati nella sotto cartella
     inc/ del template.
 
+    Inoltre è opportuno notare che, nel codice Javascript con cui si richiama il webservice di attivazione dei task, l'utilizzo della notazione
+    sintetica per l'URL anziché di quella esplicita consente di sfruttare la capacità del file .htaccess di attivare il task custom se esiste al
+    posto di quello standard; se invece si utilizzasse l'URL esplicito, verrebbe sempre chiamato quello senza possibilità di scelta; per
+    comprendere appieno la differenza si confronti il seguente codice:
+
+    \code{.js}
+    function importa_anagrafiche() {
+      var data = $('#__upload_____anagrafica__').val();
+      getws('/_src/_api/_task/_anagrafica.importazione.start.php?file='+data);
+      $('#importa_contatti').modal('toggle');
+      location.reload();
+    }
+    \endcode
+
+    con questo:
+
+    \code{.js}
+    function importa_anagrafiche() {
+      var data = $('#__upload_____anagrafica__').val();
+      getws('/task/anagrafica.importazione.start?file='+data);
+      $('#importa_contatti').modal('toggle');
+      location.reload();
+    }
+    \endcode
+
+    Nel primo caso verrà sempre e solo utilizzato il task standard (/_src/_api/_task/_anagrafica.importazione.start.php) mentre nel secondo caso verrà
+    utilizzato il custom se esiste (/src/api/task/anagrafica.importazione.start.php) e solo in caso questo non esista verrà utilizzato il task standard;
+    per ulteriori approfondimenti su questo meccanismo si veda il file .htaccess.
+
     meccaniche del template
     =======================
 
