@@ -95,7 +95,7 @@
     // controllo aggiornamento release
 	if( ! file_exists( FILE_LATEST_RELEASE ) || filesize( FILE_LATEST_RELEASE ) == 0 || filemtime( FILE_LATEST_RELEASE ) < strtotime( '-1 week' ) ) {
 	    $latestRelease = restCall(
-            'https://glisweb.videoarts.it/current.release',
+            'https://glisweb.istricesrl.it/current.release',
             METHOD_GET,
             array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'] ),
             MIME_APPLICATION_JSON,
@@ -107,7 +107,7 @@
     // controllo aggiornamento versione
     if( ! file_exists( FILE_LATEST_VERSION ) || filesize( FILE_LATEST_VERSION ) == 0 || filemtime( FILE_LATEST_VERSION ) < strtotime( '-1 week' ) ) {
         $latestVersion = restCall(
-            'https://glisweb.videoarts.it/current.version',
+            'https://glisweb.istricesrl.it/current.version',
             METHOD_GET,
             array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'], 'release' => $latestRelease ),
             MIME_APPLICATION_JSON,
