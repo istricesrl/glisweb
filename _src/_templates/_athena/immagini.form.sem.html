@@ -83,13 +83,9 @@
 
 		{% else %}
 
-		{{ frm.input( table, subtable, i, 'rewrite_custom', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'title', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'keywords', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'description', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'og_title', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'og_type', '', '', request, '', 'hidden' ) }}
-	    {{ frm.input( table, subtable, i, 'og_image', '', '', request, '', 'hidden' ) }}
+		{% for field in ['id','id_pagina','id_lingua','path_custom','url_custom','rewrite_custom','title','keyword','description','og_type','og_determiner','og_title','og_image','og_audio','og_video','og_description'] %}
+	    {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
+		{% endfor %}
 
 		{% endif %}
 

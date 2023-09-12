@@ -17,7 +17,7 @@
 <!--
                 {% if localization.languages|length > 1 %}
                 <form class="col p-0" id="form-language" action="" method="post" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="lingua corrente">
-                    {{ frm.select( '__view__', '', '', '__language__', '', localization.languages, request, localization.language.id, 1, 0, 1 ) }}
+                    {{ frm.select( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id, 1, 0, 1 ) }}
                 </form>
                 {% endif %}
 

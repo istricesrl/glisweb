@@ -66,7 +66,9 @@
 	    {{ frm.input( table, subtable, i, 'id_popup', '', '', request, '__parent_id__', 'hidden' ) }}
 	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
 
-        {# MODULO PRINCIPALE #}
+	    {% if r.id_lingua == request.__view__.__lang__ %}
+
+		{# MODULO PRINCIPALE #}
 	    <fieldset>
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
@@ -87,6 +89,14 @@
             </div>
         
         </fieldset>
+
+		{% else %}
+
+		{% for field in ['id','id_pagina','id_lingua','h1','h2','h3','cappello','testo','abstract','specifiche'] %}
+	    {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
+		{% endfor %}
+
+        {% endif %}
 
 	    {% set i = i + 1 %}
         {% endfor %}

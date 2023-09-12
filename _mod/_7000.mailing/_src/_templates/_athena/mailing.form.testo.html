@@ -99,6 +99,12 @@
        
         </fieldset>
 
+		{% else %}
+
+		{% for field in ['id','id_pagina','id_lingua','mittente_nome','mittente_mail','cappello','testo'] %}
+	    {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
+		{% endfor %}
+
         {% endif %}
 
 	    {% set i = i + 1 %}

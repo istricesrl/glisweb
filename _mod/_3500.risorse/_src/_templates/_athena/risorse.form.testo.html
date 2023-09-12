@@ -122,6 +122,12 @@
                 </div>
             </div>
 
+            {% else %}
+
+            {% for field in ['id','id_pagina','id_lingua','h1','h2','h3','cappello','testo','abstract','specifiche'] %}
+            {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
+            {% endfor %}
+    
             {% endif %}
 
             {% set i = i + 1 %}
