@@ -125,6 +125,7 @@ if( $cf['contents']['cached'] === false ) {
                     'id_prodotto'
                 );
 */
+
                 // canonical
                 $canon = $pid;
 

@@ -7494,7 +7494,7 @@ CREATE OR REPLACE VIEW `righe_ricevute_attive_view` AS
 -- tipologia: vista virtuale
 DROP TABLE IF EXISTS `righe_ricevute_passive_view`;
 
--- | 090000031408
+-- | 090000031401
 
 -- righe_ricevute_passive_view
 -- tipologia: vista virtuale

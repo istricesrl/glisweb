@@ -366,8 +366,8 @@
 
     // file
     define( 'FILE_AUTOLOAD'         ,  DIR_SRC_LIB_EXT . 'autoload.php' );
-	define( 'FILE_CURRENT_RELEASE'		, DIR_ETC . '_current.release.conf' );
-	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.version.conf' );
+	define( 'FILE_CURRENT_RELEASE'		, DIR_ETC . '_current.release' );
+	define( 'FILE_CURRENT_VERSION'		, DIR_ETC . '_current.version' );
 	define( 'FILE_LATEST_RUN'		, DIR_VAR_LOG_LATEST . 'run.latest.log');
 	define( 'FILE_LATEST_CRON'		, DIR_VAR_LOG_LATEST . 'cron.latest.log');
 	define( 'FILE_LATEST_MYSQL'		, DIR_VAR_LOG_LATEST . 'mysql.latest.log');
