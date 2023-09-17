@@ -29,11 +29,14 @@
                         {% block categorie %}{% include 'inc/categorie.html' %}{% endblock %}
                         {% block search %}{% include 'inc/search.html' %}{% endblock %}
                     </div>
+                    {% if page.template.menu.mega %}
                     <div class="row megamenu">
                         {% block megamenu %}{% include 'inc/megamenu.html' %}{% endblock %}
                     </div>
+                    {% endif %}
                 </div>
             </div>
+            {% if not page.contents.images.carousel and not page.contents.images.jumbotron %}
             <div class="breadcrumbs">
                 <div class="container">
                     <div class="row">
@@ -43,6 +46,7 @@
                     </div>
                 </div>
             </div>
+            {% endif %}
         </div>
 
         {% block carousel %}{% include 'inc/carousel.html' %}{% endblock %}
