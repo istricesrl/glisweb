@@ -18,6 +18,9 @@
     // log
 	logWrite( "controller default/before per ${t}/${a}", 'controller' );
 
+    // debug
+    // print_r( $vs );
+
     // elaborazioni di default dei dati
 	switch( strtoupper( $a ) ) {
 
@@ -46,3 +49,6 @@
 	    break;
 
 	}
+
+    // debug
+    // print_r( $vs );

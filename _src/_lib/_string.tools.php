@@ -102,7 +102,7 @@
      *
      */
     function numeric2null( $s ) {
-        if( strpos( $s, ',' ) !== false ) {
+        if( is_numeric( $s ) && strpos( $s, ',' ) !== false ) {
             $s = str_replace( ',', '.', $s );
         }
         return empty2null( $s, true );
@@ -165,6 +165,17 @@
 
     }
 
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function boolean2string( $s ) {
+
+        return ( $s === true ) ? 'true' : 'false';
+
+    }
+        
     /**
      *
      * @todo documentare
