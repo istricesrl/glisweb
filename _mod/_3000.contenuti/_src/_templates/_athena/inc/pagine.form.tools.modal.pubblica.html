@@ -10,8 +10,26 @@
 	
 		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_pagine.upload.php?id={{ request[table].id }}&target=' + $('#___stage__').val();
 
+		var progress = '{{ site.url }}var/progress/ftp.{{ request[table].id }}.progress';
+
+		$('#progress-row').fadeIn();
+
+		setInterval(() => {
+
+			console.log('controllo avanzamento');
+
+			getws( progress, '', function( data ) {
+				console.log( data );
+				$('#ftp-progress').attr('aria-valuemax',data.total);
+				$('#ftp-progress').attr('aria-valuenow',data.current);
+				$('#ftp-progress').css('width',(data.current/data.total*100)+'%');
+			});
+
+		}, 1000);
+
 		getws( call,'', function() {
 			$('#btnpubblica').html('<i class="fa fa-check"></i>');
+			location.reload();
 		});
 
 	}
@@ -32,11 +50,20 @@
 					{{ frm.selectRequired( '', '', '', '__stage__', '', etc.stages, '', '', '','' ) }}
 				</div>
 			</div>
-				<div class="form-row">
+			<div class="form-row">
                 <div class="col-12">
                     <p class="mb-3">questa operazione pubblicherà la pagina corrente e tutte le entità ad essa collegate (immagini, video, voci di menu, ecc.) sullo stage indicato</p>
 					<p><b>ATTENZIONE</b> verranno caricati via FTP anche <b>{{ etc.upload|length }}</b> files, non chiudere la finestra finché il trasferimento è in corso</p>
                 </div>
+            </div>
+			<div class="form-row" id="progress-row" style="display: none;">
+                <div class="col-12">
+					<div class="">
+						<div class="progress">
+							<div id="ftp-progress" class="progress-bar progress-bar-striped progress-bar-animated bg-secondary" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="0" style="width: 0%"></div>
+						</div>
+					</div>
+				</div>
             </div>
 	    </div>
 	    </div>
