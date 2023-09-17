@@ -30,17 +30,25 @@
         // status
         $status['info'][] = 'richiesta lavorazione del job #' . $_REQUEST['__id__'];
 
+        // timer
+        timerCheck( $cf['speed'], 'inizio lavorazione job' );
+
         // metto il lock sui job richiesto
         mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE job SET token = ? WHERE id = ? AND '.
-            '( timestamp_apertura <= ? OR timestamp_apertura IS NULL ) AND timestamp_completamento IS NULL AND token IS NULL ',
+            'UPDATE job SET token = ? WHERE id = ? '.
+            'AND ( timestamp_apertura <= ? OR timestamp_apertura IS NULL ) '.
+            'AND timestamp_completamento IS NULL '.
+            'AND token IS NULL ',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['__id__'] ),
                 array( 's' => time() )
             )
         );
+
+        // timer
+        timerCheck( $cf['speed'], 'fine piazzamento lock job' );
 
         // seleziono il job a cui ho applicato il lock
         $job = mysqlSelectRow(
@@ -50,6 +58,9 @@
                 array( 's' => $status['token'] )
             )
         );
+
+        // timer
+        timerCheck( $cf['speed'], 'fine selezione job pinnato' );
 
         // se il job è stato correttamente recuperato dal database
         if( isset( $job['workspace'] ) ) {
@@ -70,7 +81,10 @@
                 require DIR_BASE . $job['job'];
 
                 // delay
-                sleep( ( isset( $job['delay'] ) && ! empty( $job['delay'] ) ) ? $job['delay'] : mt_rand( 1, 2 ) );
+                if( $job['iterazioni'] > 1 ) {
+                    sleep( ( isset( $job['delay'] ) && ! empty( $job['delay'] ) ) ? $job['delay'] : mt_rand( 1, 2 ) );
+                    timerCheck( $cf['speed'], 'fine delay job' );
+                }
 
             } else {
 
@@ -89,46 +103,42 @@
                 )
             );
 
-        } elseif( isset( $job['id'] ) ) {
+            // timer
+            timerCheck( $cf['speed'], 'fine aggiornamento avanzamento job' );
 
-            // status
-            $status['info'][] = 'workspace vuoto per il job #' . $job['id'];
+            // ...
+            writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+            writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . microtime( true ) . '.log' );
 
-            // log
-            logWrite( 'workspace vuoto per il job #' . $job['id'], 'job' );
-
-            // recupero dati informativi sul job
-            $job = mysqlSelectRow(
-                $cf['mysql']['connection'],
-                'SELECT id, totale, corrente, nome FROM job WHERE id = ? ',
-                array(
-                    array( 's' => $_REQUEST['__id__'] )
-                )
-            );
+            // timer
+            timerCheck( $cf['speed'], 'fine scrittura log job' );
 
         } else {
 
             // status
-            $status['info'][] = 'nessun job trovato per il token ' . $status['token'];
+            $status = array_replace_recursive(
+                $status,
+                mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT id, totale, corrente, nome, timestamp_apertura, timestamp_esecuzione, timestamp_completamento FROM job WHERE id = ? ',
+                    array(
+                        array( 's' => $_REQUEST['__id__'] )
+                    )
+                )
+            );
+
+            // status
+            $status['info'][] = 'informazioni avanzamento lavori per il token ' . $status['token'];
 
             // log
-            logWrite( 'nessun job trovato per il token ' . $status['token'], 'job' );
+            logWrite( 'informazioni avanzamento lavori per il token ' . $status['token'], 'job' );
 
-        }
-
-        // log
-        if( isset( $job['id'] ) ) {
-            appendToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
         }
 
         // output
         buildJson( array_replace_recursive( $job, $status ) );
 
-    } elseif( isset( $_REQUEST['__job__'] ) ) {
-
-        // TODO creare il job e restituire l'ID
-        // __job__ campo job
-        // __wksp__ campo workspace
-        // __nome__ campo nome
-
     }
+
+    // debug
+    // echo '<pre>' . print_r( $cf['speed'], true ) . '</pre>';
