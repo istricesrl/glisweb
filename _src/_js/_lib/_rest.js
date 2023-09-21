@@ -39,7 +39,39 @@
 
 	}
 
-    // tool per chiamare un webservice da un bottone dell'interfaccia metro
+	function postws( url, params, callback ) {
+
+		//	    console.log( params );
+		
+				$.ajax({
+				async: true,
+				url: url,
+				method: 'POST',
+				data: params,
+				processData: false,
+		//		contentType: 'application/json',
+		//		dataType: 'application/json'
+				headers: {
+					accept: 'application/json'
+		//		    contentType: 'application/json'
+				}
+				}).done( function( data ) {
+		//		console.log( data );
+				if( typeof callback === "function" ) {
+					callback( data );
+				} else {
+					return data;
+				}
+				}).fail( function( jqxhr, status, thrown ) {
+		//		console.log( "error: " + status );
+		//		console.log( "exception: " + thrown );
+		//		console.log( "message: " + jqxhr.responseText );
+				return false;
+				});
+		
+	}
+
+	// tool per chiamare un webservice da un bottone dell'interfaccia metro
 	$.fn.metroWs = function( ws, callback ) {
 
 	    var el = $( this ).get( 0 );
