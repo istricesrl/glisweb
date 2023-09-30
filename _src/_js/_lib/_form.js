@@ -1,7 +1,7 @@
 /*
-     * libreria di funzioni per il check dei form, utili anche se attivo Google reCaptcha
-     *
-     */
+ * libreria di funzioni per il check dei form, utili anche se attivo Google reCaptcha
+ *
+ */
 
 /**
  * funzione che controlla la validità di un indirizzo mail e inserisce un messaggio di errore se errato

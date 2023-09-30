@@ -7,11 +7,11 @@
      */
 
     // interrogo un webservice
-	function getws( url, params, callback ) {
+	function getws( url, params, callback, fail ) {
 
 //	    console.log( params );
 
-	    $.ajax({
+		$.ajax({
 		async: true,
 		url: url,
 		method: 'GET',
@@ -20,22 +20,26 @@
 //		contentType: 'application/json',
 //		dataType: 'application/json'
 		headers: {
-		    accept: 'application/json'
+			accept: 'application/json'
 //		    contentType: 'application/json'
 		}
-	    }).done( function( data ) {
+		}).done( function( data ) {
 //		console.log( data );
 		if( typeof callback === "function" ) {
-		    callback( data );
+			callback( data );
 		} else {
-		    return data;
+			return data;
 		}
-	    }).fail( function( jqxhr, status, thrown ) {
+		}).fail( function( data, jqxhr, status, thrown ) {
 //		console.log( "error: " + status );
 //		console.log( "exception: " + thrown );
 //		console.log( "message: " + jqxhr.responseText );
-		return false;
-	    });
+		if( typeof fail === "function" ) {
+			fail( data, jqxhr, status, thrown );
+		} else {
+			return false;
+		}
+		});
 
 	}
 
