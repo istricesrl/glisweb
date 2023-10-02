@@ -110,7 +110,7 @@
 				</div>  
 -->
 
-				<div class="col-12 col-md-2">
+				<div class="col-12 col-md-1">
 					<span class="label-top">massimo iscritti</span>
 					{% set subtable = 'metadati' %}
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id', '', '', '', etc.sub.iscritti_max.id, 'hidden' ) }}
@@ -118,6 +118,16 @@
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'nome', '', '', '', etc.sub.iscritti_max.nome, 'hidden' ) }}
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'testo', '', '', '', etc.sub.iscritti_max.testo ) }}
 				</div>  
+
+				<div class="col-4 col-md-1">
+					<span class="label-top">massimo recuperi</span>
+					{% set subtable = 'metadati' %}
+					{% set metadato = 'recuperi_max' %}
+					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id', '', '', '', etc.sub[ metadato ].id, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'nome', '', '', '', etc.sub[ metadato ].nome, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'testo', '', '', '', etc.sub[ metadato ].testo ) }}
+				</div>
 
 			</div>
 
@@ -143,8 +153,18 @@
 						{{ frm.checkbox( table, subtable, etc.sub.non_applicare_sconti.idx, 'testo', 'non applicare sconti', '', '', etc.sub.non_applicare_sconti.testo ) }}
 					</div>
 				</div>
+
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{% set subtable = 'metadati' %}
+						{{ frm.input( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'id', '', '', '', etc.sub.non_disponibile_per_recuperi.id, 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'nome', '', '', '', etc.sub.non_disponibile_per_recuperi.nome, 'hidden' ) }}
+						{{ frm.checkbox( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'testo', 'non disponibile per recuperi', '', '', etc.sub.non_disponibile_per_recuperi.testo ) }}
+					</div>
+				</div>
 			</div>
-	
+
 		</fieldset>
 
         {# SUBFORM RUOLI #}

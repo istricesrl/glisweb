@@ -94,6 +94,7 @@
 
     // metadato sconto secondo corso
     $ct['etc']['metadati'] = array(
+        'recuperi_max' => array(),
         'sconto|%_secondo_mono' => array(),
         'sconto|%_terzo_mono' => array(),
         'sconto|%_quarto_mono' => array()

@@ -213,7 +213,9 @@
     // metadato sconto secondo corso
     $ct['etc']['metadati'] = array(
         'iscritti_max' => array(),
-        'non_applicare_sconti' => array()
+        'recuperi_max' => array(),
+        'non_applicare_sconti' => array(),
+        'non_disponibile_per_recuperi' => array()
     );
 
 	// macro di default

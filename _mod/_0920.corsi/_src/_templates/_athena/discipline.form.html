@@ -99,6 +99,15 @@
                     {{ frm.checkbox( table, '', '', 'se_straordinario', 'se straordinaria', '', request ) }}
                 </div>
             </div>
+			<div class="col-4 col-md-1">
+				<span class="label-top">massimo recuperi</span>
+				{% set subtable = 'metadati' %}
+				{% set metadato = 'recuperi_max' %}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id', '', '', '', etc.sub[ metadato ].id, 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'nome', '', '', '', etc.sub[ metadato ].nome, 'hidden' ) }}
+				{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'testo', '', '', '', etc.sub[ metadato ].testo ) }}
+			</div>
 		</div>
 
 		{% if '0920.corsi' in mods.active.array %}
