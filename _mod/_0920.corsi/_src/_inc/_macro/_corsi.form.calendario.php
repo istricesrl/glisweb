@@ -26,17 +26,14 @@
     $ct['view']['table'] = '__report_lezioni_corsi__';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'todo.form';
+	$ct['view']['open']['page'] = 'lezioni.form';
     $ct['view']['open']['table'] = 'todo';
 
     // pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'todo.form';
+	$ct['view']['insert']['page'] = 'lezioni.form';
 
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_progetto';
-
-   // pagina per la gestione degli oggetti esistenti
-    $ct['view']['open']['page'] = 'todo.form';
 
     // campi della vista
     $ct['view']['cols'] = array(

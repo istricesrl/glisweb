@@ -135,6 +135,34 @@
             {% endif %}
         </div>
     </fieldset>
+
+    {# TODO fare un if perché il ritiro dev'essere possibile solo per le iscrizioni confermate #}
+
+    <fieldset>
+        <legend>ritiro</legend>
+        <div class="form-row metro">
+            {% set colspan = 4 %}
+            {# TODO questo pulsante deve rimandare al form corrente (NOTA il coupon va stampato da qui?) #}
+            <div class="col-12 col-md-{{ colspan }}">
+                <a href="" target="_self">
+                    <div class="media">
+                        <div class="media-left">	
+                            <i class="fa fa-cart-arrow-down"></i>
+                        </div>
+                        <div class="media-body">
+                            <h5 class="media-title">ritiro</h5>
+                            <p class="media-text">verrà generato un buono sconto</p>
+                            <!-- TODO indicare l'importo del buono per controllo (costo lezione x num. lezioni non godute - 20% ) -->
+                            <!-- se il corso è già iniziato da più di quattro lezioni specificare che il coupon non è rimborsabile in denaro -->
+                        </div>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </fieldset>
+
+    {# endif #}
+
     {% endif %}
 
     {# BOTTONI E COMANDI DEL MODULO #}

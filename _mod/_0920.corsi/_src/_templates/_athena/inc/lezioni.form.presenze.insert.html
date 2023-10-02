@@ -1,0 +1,22 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+<fieldset id="{{ view.id }}-insert" class=" view-insert hidden">
+    <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
+    <input type="hidden" id="timestamp" name="{{ view.open.table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+    <input type="hidden" id="account" name="{{ view.open.table }}[id_account_inserimento]" value="{{ account }}" disabled>
+    {{ frm.input( view.open.table, '', '', 'id_todo', '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
+    <div class="form-row d-print-none">
+        <div class="col-12 col-md">
+            <span class="label-top">iscritto</span>
+            {{ frm.selectBox( view.open.table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica, '', '', '','','','','anagrafica.form','','anagrafica', 'id_account_', page, pages, ietf, 'anagrafica', 2 ) }}
+        </div>
+        <div class="col-12 col-md-auto">
+            <span class="label-top">tipologia</span>
+            {{ frm.select( view.open.table, '', '', 'id_tipologia', '', etc.select.id_tipologia, 15, '', '', 1, '', '', 2  ) }}
+        </div>
+        <div class="col-auto">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>
