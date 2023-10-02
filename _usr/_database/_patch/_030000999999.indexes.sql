@@ -3741,6 +3741,7 @@ ALTER TABLE `tipologie_attivita`
 	ADD KEY `se_agenda` (`se_agenda`),
 	ADD KEY `se_sistema` (`se_sistema`),
 	ADD KEY `se_stampa` (`se_stampa`),
+	ADD KEY `se_corsi` (`se_corsi`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`);
@@ -4265,6 +4266,7 @@ ALTER TABLE `tipologie_todo`
 	ADD KEY `se_commerciale` (`se_commerciale`),
 	ADD KEY `se_produzione` (`se_produzione`),
 	ADD KEY `se_amministrazione` (`se_amministrazione`),
+	ADD KEY `se_corsi` (`se_corsi`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_agenda`,`se_ticket`,`se_commerciale`,`se_produzione`,`se_amministrazione`);
