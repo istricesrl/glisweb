@@ -129,7 +129,11 @@
 	    }
 	}
 
+	// output
+	echo PHP_EOL;
+
     // dominio del framework
+	echo '[ -- ] IP del framework: ' . $_SERVER['SERVER_ADDR'] . PHP_EOL;
 	if( isset( $cf['site']['fqdn'] ) && ! empty( $cf['site']['fqdn'] ) ) {
 	    echo '[ -- ] FQDN del framework: ' . $cf['site']['fqdn'] . PHP_EOL;
 	    if( checkdnsrr( $cf['site']['fqdn'], 'A' ) ) {
