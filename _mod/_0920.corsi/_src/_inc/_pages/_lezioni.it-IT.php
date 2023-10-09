@@ -55,14 +55,15 @@
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'lezioni' ),
 			'h1'			=> array( $l		=> 'lezioni' ),
-			'parent'		=> array( 'id'		=> 'corsi.view' ),
+			'parent'		=> array( 'id'		=> 'catalogo' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_lezioni.view.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'lezioni.view',
-															'lezioni.tools' ) ),
+/*			'etc'			=> array( 'tabs'	=> array(	'lezioni.view',
+															'lezioni.tools' ) ), 
 			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'lezioni' ),
-																			'priority'	=> '220' ) ) )														
+																			'priority'	=> '220' ) ) ) */
+			'etc'				=> array( 'tabs'	=> $p['corsi.view']['etc']['tabs'] )
 		);
 
 		// tools lezioni
@@ -115,6 +116,34 @@
 			'macro'				=> array( $m . '_src/_inc/_macro/_lezioni.form.tools.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'				=> array( 'tabs'	=> $p['lezioni.form']['etc']['tabs'] )
+		);
+
+		// dashboard prove
+		$p['recuperi.view'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'recuperi' ),
+			'h1'			=> array( $l		=> 'recuperi' ),
+			'parent'		=> array( 'id'		=> 'corsi.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_recuperi.view.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'recuperi.view',
+															'recuperi.tools' ) ),
+			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'recuperi' ),
+																			'priority'	=> '115' ) ) )														
+		);
+
+		// tools prove
+		$p['recuperi.tools'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'azioni' ),
+			'h1'				=> array( $l		=> 'azioni' ),
+			'parent'			=> array( 'id'		=> 'recuperi.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_recuperi.tools.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'				=> array( 'tabs'	=> $p['recuperi.view']['etc']['tabs'] )
 		);
 
 	}

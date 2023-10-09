@@ -33,8 +33,13 @@
 
     } else {
 
+        // ...
+        $rm = getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $_REQUEST['__delete__']['table'] );
+
         // recupero la __label__ dell'oggetto da cancellare
-	    $ct['__delete__']['__label__'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $_REQUEST['__delete__']['table'] . '_view WHERE id = ? LIMIT 1', array(
+        // TODO ma questo non ci espone a SQL injection?
+        // NOTA ma non è che anche nella controller c'è questo problema? $t viene mai filtrato?
+	    $ct['__delete__']['__label__'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $_REQUEST['__delete__']['table'] . $rm . ' WHERE id = ? LIMIT 1', array(
 		    array( 's' => $_REQUEST['__delete__']['id'] )
 	    ) );
 

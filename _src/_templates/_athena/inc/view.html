@@ -106,9 +106,22 @@
 				<input type="hidden" name="__view__[{{ view.id }}][__pager__][page]" value="{{ session.__view__[ view.id ].__pager__.page }}" id="pager">
 				<button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() > 0 ){ $('#pager').get(0).value--; submit(); }"><i class="fa fa-chevron-left"></i></button>
 				<select class="form-control form-control-sm" onchange="$('#pager').val( $(this).val() ); submit();">
-					{% for pag in range( 0, session.__view__[ view.id ].__pager__.pages - 1 ) %}
+					{% set spage = session.__view__[ view.id ].__pager__.page - 25 %}
+					{% set lpage = session.__view__[ view.id ].__pager__.page + 25 %}
+					{% if lpage > session.__view__[ view.id ].__pager__.pages %}{% set lpage = session.__view__[ view.id ].__pager__.pages %}{% endif %}
+					{% if spage < 0 %}
+					{% set spage = 0 %}
+					{% else %}
+					{% set pag = 0 %}
+					<option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
+					{% endif %}
+					{% for pag in range( spage, lpage - 1 ) %}
 					<option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
 					{% endfor %}
+					{% if session.__view__[ view.id ].__pager__.pages > lpage %}
+					{% set pag = session.__view__[ view.id ].__pager__.pages - 1 %}
+					<option value="{{ pag }}"{% if pag == session.__view__[ view.id ].__pager__.page %} selected{% endif %}>{{ pag + 1 }}</option>
+					{% endif %}
 				</select>
 				<button type="button" class="btn btn-secondary btn-sm" onclick="if( $('#pager').val() < {{ session.__view__[ view.id ].__pager__.pages - 1 }} ){ $('#pager').get(0).value++; submit(); }"><i class="fa fa-chevron-right"></i></button>
 			</div>

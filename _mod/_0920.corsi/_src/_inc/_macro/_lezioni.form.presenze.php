@@ -29,6 +29,7 @@
         'id' => '#',
 //        'id_todo' => 'iscrizione',
         'anagrafica' => 'iscritto',
+        'tipologia' => 'tipologia',
 //        'data_inizio' => 'data inizio',
 //        'data_fine' => 'data fine',
         NULL => 'azioni'
@@ -82,7 +83,7 @@
     }
 
     // preset filtro custom progetti aperti
-    $ct['view']['__restrict__']['id_tipologia']['EQ'] = 15;
+    $ct['view']['__restrict__']['id_tipologia']['IN'] = '15|19|32|33';
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
@@ -99,4 +100,14 @@
         }
 
     }
+
+if( !empty( $ct['view']['data'] ) ){
+    foreach ( $ct['view']['data'] as &$row ){
+         if(!empty($row['data_programmazione'])){
+//                $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+            $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5);
+        }
+    }
+}
+
 */

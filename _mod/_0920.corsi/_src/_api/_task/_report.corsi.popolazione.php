@@ -14,6 +14,14 @@
 		// scrivo la riga
 		updateReportCorsi( $_REQUEST['id'] );
 
+	} else {
+
+		// TODO trovo un corso da aggiornare
+		// $idCorso = ...
+
+		// TODO aggiorno il corso
+		// updateReportCorsi( $idCorso );
+
 	}
 
 	// output

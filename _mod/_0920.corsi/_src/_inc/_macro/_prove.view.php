@@ -65,11 +65,14 @@
      // campi della vista
      $ct['view']['cols'] = array(
 	    'id' => '#',
+        'data_programmazione' => 'data',
+	    'anagrafica' => 'iscritto',
         'tipologia' => 'tipologia',
-        'cliente' => 'cliente',
-        'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
         'ora_fine_programmazione' => 'ora fine',
+/*
+        'cliente' => 'cliente',
+        'data_programmazione' => 'programmata',
         'anagrafica_programmazione' => 'assegnata a',
         'data_attivita' => 'eseguita',
 	    'anagrafica' => 'svolta da',
@@ -77,6 +80,11 @@
 	    'ore' => 'ore',
         'ora_inizio' => 'oi',
         'ora_fine' => 'of'
+*/
+        'discipline' => 'discipline',
+        'progetto' => 'corso',
+        'luogo' => 'luogo',
+        NULL => 'azioni'
       );
 
     // stili della vista
@@ -92,7 +100,13 @@
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left',
         'ora_inizio' => 'd-none',
-        'ora_fine' => 'd-none'
+        'ora_fine' => 'd-none',
+        NULL => 'nowrap'
+    );
+
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
     );
 
     // inclusione filtri speciali
@@ -158,8 +172,9 @@
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-             if(!empty($row['data_attivita'])){
-                $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+             if(! empty($row['data_programmazione'])){
+//                $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
             }
         }
 	}

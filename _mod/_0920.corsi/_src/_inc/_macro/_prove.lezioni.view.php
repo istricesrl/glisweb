@@ -21,17 +21,16 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-    $ct['view']['table'] = 'attivita';
-    
-    // id della vista
-    // TODO fare una funzione getViewId()
-    $ct['view']['id'] = md5(
-		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
-	);
-        
+    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['table'] = '__report_lezioni_corsi__';
+    $ct['view']['etc']['__force_backurl__'] = 1;
+
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'lezioni.form';
-	$ct['view']['open']['table'] = 'attivita';
+	$ct['view']['open']['page'] = 'lezioni.form.presenze';
+    $ct['view']['open']['table'] = 'todo';
+
+    // pagina per l'inserimento di un nuovo oggetto
+	$ct['view']['insert']['page'] = 'lezioni.form';
 
 /*
     // campi della vista
@@ -62,37 +61,34 @@
         'testo' => 'text-left no-wrap'
     );
 */
-     // campi della vista
-     $ct['view']['cols'] = array(
-	    'id' => '#',
+
+    // campi della vista
+    $ct['view']['cols'] = array(
+        'id' => '#',
         'tipologia' => 'tipologia',
-        'cliente' => 'cliente',
-        'data_programmazione' => 'programmata',
-        'ora_inizio_programmazione' => 'ora',
+        'data_programmazione' => 'data',
+        'ora_inizio_programmazione' => 'ora inizio',
         'ora_fine_programmazione' => 'ora fine',
-        'anagrafica_programmazione' => 'assegnata a',
-        'data_attivita' => 'eseguita',
-	    'anagrafica' => 'svolta da',
-        'nome' => 'attività',
-	    'ore' => 'ore',
-        'ora_inizio' => 'oi',
-        'ora_fine' => 'of'
-      );
+        'luogo' => 'luogo',
+        'anagrafica' => 'responsabile',
+        'docenti' => 'docenti',
+        'numero_alunni' => 'iscritti',
+        'posti_prova' => 'posti prova',
+        'id_progetto' => 'id_progetto'
+    );
 
     // stili della vista
-	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
-	    '__label__' => 'text-left',
-        'cliente' => 'text-left d-none d-md-table-cell',
-        'anagrafica_programmazione' => 'text-left',
-	    'data_programmazione' => 'no-wrap',
-        'ora_inizio_programmazione' => 'd-none',
-        'ora_fine_programmazione' => 'd-none',
-        'data_attivita' => 'no-wrap',
-	    'anagrafica' => 'text-left no-wrap',
-        'nome' => 'text-left',
-        'ora_inizio' => 'd-none',
-        'ora_fine' => 'd-none'
+    $ct['view']['class'] = array(
+        'id' => 'd-none',
+        'id_progetto' => 'd-none',
+    #		'completato' => 'd-none',
+        'ora_fine_programmazione' => 'text-left d-none d-md-table-cell',
+        'luogo' => 'text-left',
+        'ora_inizio_programmazione' => 'text-left',
+        'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
+        'docenti' => 'text-left no-wrap d-none d-sm-table-cell',
+        'data_programmazione' => 'text-left',
+    #	    'completato' => 'text-left'
     );
 
     // inclusione filtri speciali
@@ -151,7 +147,7 @@
     } 
 
     // preset filtro custom progetti aperti
-    $ct['view']['__restrict__']['id_tipologia']['EQ'] = 33;
+    $ct['view']['__restrict__']['se_prova']['EQ'] = 1;
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
@@ -159,7 +155,8 @@
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
              if(!empty($row['data_attivita'])){
-                $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+                // $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5);
             }
         }
 	}

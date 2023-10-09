@@ -61,7 +61,7 @@
                 concat_ws( " ", dayname( todo.data_programmazione ),
                 concat_ws( " - ", todo.ora_inizio_programmazione, todo.ora_fine_programmazione ),
                 luoghi_path( todo.id_luogo ) ) SEPARATOR " | " )
-                FROM todo WHERE todo.id_progetto = ? GROUP BY todo.id_progetto',
+                FROM todo WHERE todo.id_progetto = ? AND todo.id_tipologia IN (14, 15) GROUP BY todo.id_progetto',
             array( array( 's' => $idCorso ) )
         );
 
@@ -205,58 +205,107 @@
                 LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
                 LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
                 LEFT JOIN progetti ON progetti.id = todo.id_progetto
-            WHERE todo.id = ? AND todo.id_tipologia IN (14, 15) 
+            WHERE todo.id = ? AND todo.id_tipologia IN (14, 15, 18) 
             GROUP BY todo.id ',
             array( array( 's' => $idLezione ) )
         );
 
-        $riga['docenti'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT group_concat( DISTINCT concat( docenti.nome, " ", docenti.cognome ) SEPARATOR ", " ) AS docenti 
-                FROM attivita AS docenze
-                    LEFT JOIN anagrafica AS docenti ON docenti.id = docenze.id_anagrafica_programmazione
-                WHERE docenze.id_todo = ? 
-                AND docenze.id_tipologia IN ( 30, 31 )
-                GROUP BY docenze.id_todo ',
-            array( array( 's' => $riga['id'] ) )
-        );
+        if( isset( $riga['id'] ) && ! empty( $riga['id'] ) ) {
 
-        $riga['indirizzo'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT concat_ws(
-                    " ",
-                    indirizzo,
-                    indirizzi.civico,
-                    indirizzi.cap,
-                    indirizzi.localita,
-                    comuni.nome,
-                    provincie.sigla
-                ) AS indirizzo
-            FROM indirizzi
-                LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
-                LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-            WHERE indirizzi.id = ?',
-            array( array( 's' => $riga['id_indirizzo'] ) )
-        );
+            if( empty( $riga['timestamp_aggiornamento'] ) ) {
+                $riga['timestamp_aggiornamento'] = time();
+            }
 
-        $riga['luogo'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT luoghi_path( ? ) AS luogo',
-            array( array( 's' => $riga['id_luogo'] ) )
-        );
+            $riga['posti_prova'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT metadati.testo 
+                    FROM metadati
+                    WHERE metadati.id_todo = ? 
+                    AND metadati.nome = "posti_prova"',
+                array( array( 's' => $riga['id'] ) )
+            );
 
-        $riga['numero_alunni'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT count( DISTINCT presenze.id_anagrafica_programmazione ) AS numero_alunni 
-                FROM attivita AS presenze 
-                WHERE presenze.id_todo = ? AND presenze.id_tipologia = 15',
-            array( array( 's' => $riga['id'] ) )
-        );
+            if( ! empty( $riga['posti_prova'] ) || $riga['id_tipologia'] == 18 ) {
+                $riga['se_prova'] = 1;                
+            }
 
-        mysqlInsertRow(
+            $riga['docenti'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT group_concat( DISTINCT concat( docenti.nome, " ", docenti.cognome ) SEPARATOR ", " ) AS docenti 
+                    FROM attivita AS docenze
+                        LEFT JOIN anagrafica AS docenti ON docenti.id = docenze.id_anagrafica_programmazione
+                    WHERE docenze.id_todo = ? 
+                    AND docenze.id_tipologia IN ( 30, 31 )
+                    GROUP BY docenze.id_todo ',
+                array( array( 's' => $riga['id'] ) )
+            );
+
+            $riga['indirizzo'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT concat_ws(
+                        " ",
+                        indirizzo,
+                        indirizzi.civico,
+                        indirizzi.cap,
+                        indirizzi.localita,
+                        comuni.nome,
+                        provincie.sigla
+                    ) AS indirizzo
+                FROM indirizzi
+                    LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+                    LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+                WHERE indirizzi.id = ?',
+                array( array( 's' => $riga['id_indirizzo'] ) )
+            );
+
+            $riga['luogo'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT luoghi_path( ? ) AS luogo',
+                array( array( 's' => $riga['id_luogo'] ) )
+            );
+
+            $riga['numero_alunni'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT count( DISTINCT presenze.id_anagrafica_programmazione ) AS numero_alunni 
+                    FROM attivita AS presenze 
+                    WHERE presenze.id_todo = ? AND presenze.id_tipologia = 15',
+                array( array( 's' => $riga['id'] ) )
+            );
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $riga,
+                '__report_lezioni_corsi__'
+            );
+
+        } else {
+
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'DELETE FROM __report_lezioni_corsi__ WHERE id = ?',
+                array( array( 's' => $idLezione ) )
+            );
+
+        }
+
+    }
+
+    /**
+     * 
+     * 
+     * @todo documentare
+     * 
+     */
+    function cleanReportLezioniCorsi() {
+
+        global $cf;
+
+        mysqlQuery(
             $cf['mysql']['connection'],
-            $riga,
-            '__report_lezioni_corsi__'
+            'DELETE __report_lezioni_corsi__ FROM __report_lezioni_corsi__
+            LEFT JOIN todo ON todo.id = __report_lezioni_corsi__.id
+            WHERE todo.id IS NULL;'
         );
 
     }
+

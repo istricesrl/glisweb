@@ -94,6 +94,14 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM indirizzi_view' );
 
+    // tendina luoghi
+	$ct['etc']['select']['luoghi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM luoghi_view'
+    );
+
     // settaggio di cliente, indirizzo, mastro attivita letti dal progetto
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ){
         $ct['etc']['id_cliente'] = mysqlSelectValue(

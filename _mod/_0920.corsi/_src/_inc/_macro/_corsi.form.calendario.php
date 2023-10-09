@@ -38,6 +38,7 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
+        'tipologia' => 'tipologia',
         'data_programmazione' => 'data',
         'ora_inizio_programmazione' => 'ora inizio',
         'ora_fine_programmazione' => 'ora fine',
@@ -50,7 +51,7 @@
 
     // stili della vista
     $ct['view']['class'] = array(
-        'id' => 'd-none d-md-table-cell',
+        'id' => 'd-none',
         'id_progetto' => 'd-none',
     #		'completato' => 'd-none',
         'ora_fine_programmazione' => 'text-left d-none d-md-table-cell',

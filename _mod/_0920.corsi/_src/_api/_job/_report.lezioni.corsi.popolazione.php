@@ -29,6 +29,9 @@
             // pulizia ragionata report
             cleanReportCorsi();
 
+            // pulisco il report
+            cleanReportLezioniCorsi();
+
             // condizioni aggiuntive
             $whr = NULL;
             $cnd = array();
@@ -44,8 +47,8 @@
                 'id',
                 $cf['mysql']['connection'],
                 'SELECT c.id FROM todo AS c LEFT JOIN __report_lezioni_corsi__ AS r ON r.id = c.id
-                WHERE ( r.timestamp_aggiornamento < c.timestamp_aggiornamento OR r.id IS NULL )
-                AND c.id_tipologia IN (14, 15) ' . $whr,
+                WHERE ( r.timestamp_aggiornamento < c.timestamp_aggiornamento OR r.timestamp_aggiornamento IS NULL OR r.id IS NULL )
+                AND c.id_tipologia IN (14, 15, 18) ' . $whr,
                 $cnd
             );
 

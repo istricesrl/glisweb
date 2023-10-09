@@ -47,6 +47,22 @@
                 }
             }
 
+            // ...
+            if( ! empty( $vs['id_todo']['s'] ) ) {
+                if( empty( $vs['data_programmazione']['s'] ) ) {
+                    $vs['data_programmazione']['s'] = mysqlSelectValue( $c, 'SELECT data_programmazione FROM todo WHERE id = ?', array( array( 's' => $vs['id_todo']['s'] ) ) );
+                    if( ! in_array( 'data_programmazione', $ks ) ) { $ks[] = 'data_programmazione'; }
+                }
+                if( empty( $vs['ora_inizio_programmazione']['s'] ) ) {
+                    $vs['ora_inizio_programmazione']['s'] = mysqlSelectValue( $c, 'SELECT ora_inizio_programmazione FROM todo WHERE id = ?', array( array( 's' => $vs['id_todo']['s'] ) ) );
+                    if( ! in_array( 'ora_inizio_programmazione', $ks ) ) { $ks[] = 'ora_inizio_programmazione'; }
+                }
+                if( empty( $vs['ora_fine_programmazione']['s'] ) ) {
+                    $vs['ora_fine_programmazione']['s'] = mysqlSelectValue( $c, 'SELECT ora_fine_programmazione FROM todo WHERE id = ?', array( array( 's' => $vs['id_todo']['s'] ) ) );
+                    if( ! in_array( 'ora_fine_programmazione', $ks ) ) { $ks[] = 'ora_fine_programmazione'; }
+                }
+            }
+
         break;
 
 	}

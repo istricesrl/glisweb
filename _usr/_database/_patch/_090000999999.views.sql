@@ -892,7 +892,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id_indirizzo,
 		indirizzi.indirizzo AS indirizzo,
 		attivita.id_luogo,
-		luoghi_path( attivita.id_luogo ) AS luogo,
+		luoghi_path( coalesce( attivita.id_luogo, todo.id_luogo ) ) AS luogo,
 		attivita.data_scadenza,
 		attivita.ora_scadenza,
 		attivita.data_programmazione,
@@ -927,6 +927,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		) AS documento,
 		attivita.id_progetto,
 		progetti.nome AS progetto,
+		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
 		attivita.id_matricola,
         attivita.id_immobile,
 		attivita.id_pianificazione,
@@ -954,14 +955,16 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN anagrafica AS a3 ON a3.id = attivita.id_anagrafica_programmazione
 		LEFT JOIN contatti AS c1 ON c1.id = attivita.id_contatto
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
-		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
 		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
+		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
+		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
 		LEFT JOIN todo ON todo.id = attivita.id_todo
 		LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo
 		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
 		LEFT JOIN documenti ON documenti.id = attivita.id_documento
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+	GROUP BY attivita.id
 ;
 
 -- | 090000001802
@@ -9398,6 +9401,8 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		todo.nome,
 		todo.id_contatto,
 		todo.id_progetto,
+		progetti.nome AS progetto,
+		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
@@ -9416,6 +9421,9 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
+	GROUP BY todo.id
 ;
 
 -- | 090000060020

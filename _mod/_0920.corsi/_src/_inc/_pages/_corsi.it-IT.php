@@ -19,6 +19,7 @@
 			'macro'			=> array( $m . '_src/_inc/_macro/_corsi.view.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'corsi.view',
+															'lezioni.view',
 															'corsi.archivio.view',
 															'corsi.stampe',
 															'corsi.tools' ) ),

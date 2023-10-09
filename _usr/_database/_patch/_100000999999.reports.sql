@@ -2073,6 +2073,8 @@ CREATE TABLE `__report_lezioni_corsi__` (
   `ore_programmazione` char(255) DEFAULT NULL,
   `data_chiusura` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
+  `se_prova` int(1) DEFAULT NULL,
+  `posti_prova` int(11) DEFAULT NULL,
   `id_contatto` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
