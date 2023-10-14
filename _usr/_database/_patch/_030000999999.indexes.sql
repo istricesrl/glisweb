@@ -876,6 +876,7 @@ ALTER TABLE `colori`
 	ADD UNIQUE KEY `unica_ral` (`nome`,`ral`),
 	ADD UNIQUE KEY `unica_pantone` (`nome`,`pantone`),
 	ADD UNIQUE KEY `unica_cmyk` (`nome`,`c`,`m`,`y`,`k`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`, `nome`,`id_genitore`,`hex`,`r`,`g`,`b`),
 	ADD KEY `indice_ral` (`id`, `nome`,`id_genitore`,`ral`),
@@ -1559,7 +1560,7 @@ ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-10 18:21 Fabio Mosti
 ALTER TABLE `gruppi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD UNIQUE KEY `nome` (`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_organizzazione` (`id_organizzazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -2441,6 +2442,7 @@ ALTER TABLE `pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-04 11:31 Fabio Mosti
 ALTER TABLE `pagine`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `nome` (`nome`),
@@ -3260,7 +3262,7 @@ ALTER TABLE `risorse_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 18:11 Fabio Mosti
 ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_didattica` (`se_didattica`),
 	ADD KEY `se_produzione` (`se_produzione`),
@@ -3284,7 +3286,7 @@ ALTER TABLE `ruoli_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 18:11 Fabio Mosti
 ALTER TABLE `ruoli_articoli`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_progetti` (`se_progetti`),
 	ADD KEY `se_risorse` (`se_risorse`),
@@ -3305,7 +3307,7 @@ ALTER TABLE `ruoli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 18:28 Fabio Mosti
 ALTER TABLE `ruoli_audio`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
 	ADD KEY `se_pagine` (`se_pagine`), 
@@ -3332,7 +3334,7 @@ ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 18:28 Fabio Mosti
 ALTER TABLE `ruoli_categorie_progetti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_recuperi` (`se_recuperi`), 
 	ADD KEY `indice` (`id`,`nome`,`html_entity`,`font_awesome`,`se_recuperi`);
@@ -3350,7 +3352,7 @@ ALTER TABLE `ruoli_categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 -- verifica: 2022-06-09 16:21 Chiara GDL
 ALTER TABLE `ruoli_documenti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_xml` (`se_xml`), 
 	ADD KEY `se_documenti` (`se_documenti`), 
@@ -3373,7 +3375,7 @@ ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-11 18:14 Fabio Mosti
 ALTER TABLE `ruoli_file`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
 	ADD KEY `se_pagine` (`se_pagine`), 
@@ -3403,7 +3405,7 @@ ALTER TABLE `ruoli_file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-11 18:47 Fabio Mosti
 ALTER TABLE `ruoli_immagini`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `ordine_scalamento` (`ordine_scalamento`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
@@ -3431,7 +3433,7 @@ ALTER TABLE `ruoli_immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-12 10:46 Fabio Mosti
 ALTER TABLE `ruoli_indirizzi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_sede_legale` (`se_sede_legale`), 
 	ADD KEY `se_sede_operativa` (`se_sede_operativa`), 
@@ -3450,7 +3452,7 @@ ALTER TABLE `ruoli_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- ruoli_mail
 ALTER TABLE `ruoli_mail`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 
@@ -3466,7 +3468,7 @@ ALTER TABLE `ruoli_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-12 10:46 Fabio Mosti
 ALTER TABLE `ruoli_matricole`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`);
 
@@ -3483,7 +3485,7 @@ ALTER TABLE `ruoli_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-12 10:46 Fabio Mosti
 ALTER TABLE `ruoli_prodotti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 
@@ -3500,7 +3502,7 @@ ALTER TABLE `ruoli_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-04-20 10:45 chiara GDL
 ALTER TABLE `ruoli_progetti`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `se_sottoprogetto` (`se_sottoprogetto`),
 	ADD KEY `se_proseguimento` (`se_proseguimento`),
 	ADD KEY `se_sostituto` (`se_sostituto`), 
@@ -3520,7 +3522,7 @@ ALTER TABLE `ruoli_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-11 18:47 Fabio Mosti
 ALTER TABLE `ruoli_video`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
 	ADD KEY `se_pagine` (`se_pagine`), 
@@ -4583,7 +4585,7 @@ ALTER TABLE `video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-06-16 13:16 Chiara GDL
 ALTER TABLE `zone`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
     ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
