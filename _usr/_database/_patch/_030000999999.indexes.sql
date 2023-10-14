@@ -27,6 +27,7 @@ ALTER TABLE `account`
 	ADD KEY `id_anagrafica` (`id_anagrafica`),
 	ADD KEY `id_mail` (`id_mail`),
 	ADD KEY `id_affiliazione` (`id_affiliazione`),
+	ADD KEY `id_url` (`id_url`),
 	ADD KEY `se_attivo` (`se_attivo`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
@@ -875,6 +876,7 @@ ALTER TABLE `colori`
 	ADD UNIQUE KEY `unica_ral` (`nome`,`ral`),
 	ADD UNIQUE KEY `unica_pantone` (`nome`,`pantone`),
 	ADD UNIQUE KEY `unica_cmyk` (`nome`,`c`,`m`,`y`,`k`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`, `nome`,`id_genitore`,`hex`,`r`,`g`,`b`),
 	ADD KEY `indice_ral` (`id`, `nome`,`id_genitore`,`ral`),
@@ -1558,7 +1560,7 @@ ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-10 18:21 Fabio Mosti
 ALTER TABLE `gruppi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `nome` (`nome`), 
+	ADD UNIQUE KEY `nome` (`nome`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_organizzazione` (`id_organizzazione`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -2306,9 +2308,11 @@ ALTER TABLE `metadati`
 	ADD KEY `id_contratto` (`id_contratto`), 
 	ADD KEY `id_valutazione` (`id_valutazione`), 
 	ADD KEY `id_rinnovo` (`id_rinnovo`), 
+	ADD KEY `id_attivita` (`id_attivita`), 
 	ADD KEY `id_tipologia_attivita` (`id_tipologia_attivita`), 
 	ADD KEY `id_banner` (`id_banner`), 
 	ADD KEY `id_pianificazione` (`id_pianificazione`), 
+	ADD KEY `id_todo` (`id_todo`), 
 	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
 	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`), 
 	ADD KEY `id_carrello` (`id_carrello`),
@@ -2438,6 +2442,7 @@ ALTER TABLE `pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-04 11:31 Fabio Mosti
 ALTER TABLE `pagine`
 	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `nome` (`nome`),
@@ -2977,6 +2982,26 @@ ALTER TABLE `relazioni_anagrafica`
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000030350
+
+-- relazioni_categorie_progetti
+-- tipologia: tabella relazione
+-- verifica: 2022-02-03 11:12 Chiara GDL
+ALTER TABLE `relazioni_categorie_progetti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_categoria`,`id_ruolo`, `id_categoria_collegata`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `id_categoria_collegata` (`id_categoria_collegata`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000030351
+
+-- relazioni_anagrafica
+-- tipologia: tabella relazione
+ALTER TABLE `relazioni_categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000030400
 
 -- relazioni_documenti
@@ -3237,7 +3262,7 @@ ALTER TABLE `risorse_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 18:11 Fabio Mosti
 ALTER TABLE `ruoli_anagrafica`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_didattica` (`se_didattica`),
 	ADD KEY `se_produzione` (`se_produzione`),
@@ -3261,7 +3286,7 @@ ALTER TABLE `ruoli_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 18:11 Fabio Mosti
 ALTER TABLE `ruoli_articoli`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_progetti` (`se_progetti`),
 	ADD KEY `se_risorse` (`se_risorse`),
@@ -3282,7 +3307,7 @@ ALTER TABLE `ruoli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-09 18:28 Fabio Mosti
 ALTER TABLE `ruoli_audio`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
 	ADD KEY `se_pagine` (`se_pagine`), 
@@ -3302,6 +3327,24 @@ ALTER TABLE `ruoli_audio`
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000034250
+
+-- ruoli_categorie_progetti
+-- tipologia: tabella standard
+-- verifica: 2021-10-09 18:28 Fabio Mosti
+ALTER TABLE `ruoli_categorie_progetti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_recuperi` (`se_recuperi`), 
+	ADD KEY `indice` (`id`,`nome`,`html_entity`,`font_awesome`,`se_recuperi`);
+
+-- | 030000034251
+
+-- ruoli_categorie_progetti
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000034300
 
 -- ruoli_documenti
@@ -3309,7 +3352,7 @@ ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-06-09 16:21 Chiara GDL
 ALTER TABLE `ruoli_documenti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_xml` (`se_xml`), 
 	ADD KEY `se_documenti` (`se_documenti`), 
@@ -3332,7 +3375,7 @@ ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-11 18:14 Fabio Mosti
 ALTER TABLE `ruoli_file`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
 	ADD KEY `se_pagine` (`se_pagine`), 
@@ -3362,7 +3405,7 @@ ALTER TABLE `ruoli_file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-11 18:47 Fabio Mosti
 ALTER TABLE `ruoli_immagini`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `ordine_scalamento` (`ordine_scalamento`), 
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
@@ -3390,7 +3433,7 @@ ALTER TABLE `ruoli_immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-12 10:46 Fabio Mosti
 ALTER TABLE `ruoli_indirizzi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `se_sede_legale` (`se_sede_legale`), 
 	ADD KEY `se_sede_operativa` (`se_sede_operativa`), 
@@ -3409,7 +3452,7 @@ ALTER TABLE `ruoli_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- ruoli_mail
 ALTER TABLE `ruoli_mail`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 
@@ -3425,7 +3468,7 @@ ALTER TABLE `ruoli_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-12 10:46 Fabio Mosti
 ALTER TABLE `ruoli_matricole`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`, `html_entity`, `font_awesome`);
 
@@ -3442,7 +3485,7 @@ ALTER TABLE `ruoli_matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-12 10:46 Fabio Mosti
 ALTER TABLE `ruoli_prodotti`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
 
@@ -3459,7 +3502,7 @@ ALTER TABLE `ruoli_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-04-20 10:45 chiara GDL
 ALTER TABLE `ruoli_progetti`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `se_sottoprogetto` (`se_sottoprogetto`),
 	ADD KEY `se_proseguimento` (`se_proseguimento`),
 	ADD KEY `se_sostituto` (`se_sostituto`), 
@@ -3479,7 +3522,7 @@ ALTER TABLE `ruoli_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-11 18:47 Fabio Mosti
 ALTER TABLE `ruoli_video`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `se_anagrafica` (`se_anagrafica`), 
 	ADD KEY `se_pagine` (`se_pagine`), 
@@ -3740,6 +3783,7 @@ ALTER TABLE `tipologie_attivita`
 	ADD KEY `se_agenda` (`se_agenda`),
 	ADD KEY `se_sistema` (`se_sistema`),
 	ADD KEY `se_stampa` (`se_stampa`),
+	ADD KEY `se_corsi` (`se_corsi`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`);
@@ -4264,6 +4308,7 @@ ALTER TABLE `tipologie_todo`
 	ADD KEY `se_commerciale` (`se_commerciale`),
 	ADD KEY `se_produzione` (`se_produzione`),
 	ADD KEY `se_amministrazione` (`se_amministrazione`),
+	ADD KEY `se_corsi` (`se_corsi`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`se_agenda`,`se_ticket`,`se_commerciale`,`se_produzione`,`se_amministrazione`);
@@ -4540,7 +4585,7 @@ ALTER TABLE `video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-06-16 13:16 Chiara GDL
 ALTER TABLE `zone`
 	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `nome` (`nome`),
+	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
     ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
