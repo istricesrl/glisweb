@@ -2980,6 +2980,26 @@ ALTER TABLE `relazioni_anagrafica`
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000030350
+
+-- relazioni_categorie_progetti
+-- tipologia: tabella relazione
+-- verifica: 2022-02-03 11:12 Chiara GDL
+ALTER TABLE `relazioni_categorie_progetti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_categoria`,`id_ruolo`, `id_categoria_collegata`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `id_categoria_collegata` (`id_categoria_collegata`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+	
+-- | 030000030351
+
+-- relazioni_anagrafica
+-- tipologia: tabella relazione
+ALTER TABLE `relazioni_categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000030400
 
 -- relazioni_documenti
@@ -3304,6 +3324,24 @@ ALTER TABLE `ruoli_audio`
 -- ruoli_audio
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_audio` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000034250
+
+-- ruoli_categorie_progetti
+-- tipologia: tabella standard
+-- verifica: 2021-10-09 18:28 Fabio Mosti
+ALTER TABLE `ruoli_categorie_progetti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `se_recuperi` (`se_recuperi`), 
+	ADD KEY `indice` (`id`,`nome`,`html_entity`,`font_awesome`,`se_recuperi`);
+
+-- | 030000034251
+
+-- ruoli_categorie_progetti
+-- tipologia: tabella standard
+ALTER TABLE `ruoli_categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034300
 

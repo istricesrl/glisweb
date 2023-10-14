@@ -7014,6 +7014,27 @@ CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
 	FROM relazioni_anagrafica
 ;
 
+-- | 090000030350
+
+-- relazioni_anagrafica_view
+-- tipologia: tabella relazione
+DROP TABLE IF EXISTS `relazioni_categorie_progetti`;
+
+-- | 090000030351
+
+-- relazioni_anagrafica_view
+-- tipologia: tabella relazione
+-- verifica: 2022-01-17 16:12 Chiara GDL
+CREATE OR REPLACE VIEW relazioni_categorie_progetti AS
+	SELECT
+	relazioni_categorie_progetti.id,
+	relazioni_categorie_progetti.id_ruolo,
+	relazioni_categorie_progetti.id_categoria,
+	relazioni_categorie_progetti.id_categoria_collegata,
+	concat( relazioni_categorie_progetti.id_categoria,' - ', relazioni_categorie_progetti.id_categoria_collegata,) AS __label__
+	FROM relazioni_categorie_progetti
+;
+
 -- | 090000030400
 
 -- relazioni_documenti_view
@@ -7852,6 +7873,29 @@ CREATE OR REPLACE VIEW ruoli_audio_view AS
 		ruoli_audio.se_immobili,
 	 	ruoli_audio_path( ruoli_audio.id ) AS __label__
 	FROM ruoli_audio
+;
+
+-- | 090000034250
+
+-- ruoli_categorie_progetti_view
+-- tipologia: tabella di supporto
+DROP TABLE IF EXISTS `ruoli_categorie_progetti_view`;
+
+-- | 090000034251
+
+-- ruoli_categorie_progetti_view
+-- tipologia: tabella di supporto
+-- verifica: 2021-10-09 18:41 Fabio Mosti
+CREATE OR REPLACE VIEW ruoli_categorie_progetti_view AS
+	SELECT
+		ruoli_categorie_progetti.id,
+		ruoli_categorie_progetti.id_genitore,
+		ruoli_categorie_progetti.nome,
+		ruoli_categorie_progetti.html_entity,
+		ruoli_categorie_progetti.font_awesome,
+		ruoli_categorie_progetti.se_recuperi,
+	 	ruoli_categorie_progetti_path( ruoli_categorie_progetti.id ) AS __label__
+	FROM ruoli_categorie_progetti
 ;
 
 -- | 090000034300

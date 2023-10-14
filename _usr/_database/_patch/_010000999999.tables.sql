@@ -2835,6 +2835,21 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000030350
+
+-- relazioni_categorie_progetti
+-- tipologia: tabella relazione
+CREATE TABLE `relazioni_categorie_progetti` (
+  `id` int(11) NOT NULL,
+  `id_categoria` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_categoria_collegata` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000030400
 
 -- relazioni_documenti
@@ -3111,6 +3126,20 @@ CREATE TABLE IF NOT EXISTS `ruoli_audio` (
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034250
+
+-- ruoli_categorie_progetti
+-- tipologia: tabella standard
+-- verifica: 2021-10-09 18:26 Fabio Mosti
+CREATE TABLE `ruoli_categorie_progetti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_recuperi` int(1) DEFAULT NULL
+) 
 
 -- | 010000034300
 
