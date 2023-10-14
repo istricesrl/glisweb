@@ -237,7 +237,10 @@
 
                         // status
                         $job['status']['error'][] = 'comune ' . $job['riga']['comune'] . ' non trovato per la riga ' . $job['corrente'];
-                
+
+                        // log
+                        logWrite( 'per anagrafica #' . $idAnagrafica . ' non trovato: ' . $row['comune'] . ' (' . $row['stato'] . ')', 'geografia/comuni', LOG_ERR );
+
                     }
 
                 } else {
