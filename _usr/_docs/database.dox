@@ -516,6 +516,13 @@
 
     [...] in linea teorica alcune view storicamente affollate (oppure tutte a un certo punto) potrebbero essere staticizzate implicitamente cioè rendendo la *_view statica [...]
 
+    [...] NOTA visto che i task e i job di questo tipo possono diventare molti, sarebbe opportuno radunarli in sottocartelle:
+    
+    - _src/_api/_task/_static/
+    - _src/_api/_job/_static/
+    - _src/_api/_task/_report/
+    - _src/_api/_job/_report/
+
     tabelle di report
     -----------------
 

@@ -75,11 +75,11 @@
     costante                           | significato
     -----------------------------------|----------------------------------------------------------------------------------------------------
     CONTENTS_PAGES_CACHED              |
-	CONTENTS_PAGES_UPDATED             |
-	CONTENTS_PAGES_KEY                 |
-	CONTENTS_TREE_KEY                  |
-	CONTENTS_INDEX_KEY                 |
-	CONTENTS_SHORTCUTS_KEY             |
+    CONTENTS_PAGES_UPDATED             |
+    CONTENTS_PAGES_KEY                 |
+    CONTENTS_TREE_KEY                  |
+    CONTENTS_INDEX_KEY                 |
+    CONTENTS_SHORTCUTS_KEY             |
 
     Se anche solo una di esse è vuota, oppure se CONTENTS_PAGES_CACHED è minore di CONTENTS_PAGES_UPDATED, viene valorizzata a false la chiave $cf['contents']['cached'] nel
     file _src/_config/_300.pages.php, il che innesca l'elaborazione completa (con alcune eccezioni come vedremo) dell'albero dei contenuti nei successivi file _src/_config/_310.pages.php

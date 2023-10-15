@@ -119,6 +119,14 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_$1.php -f
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_$1.php [L,QSA]
 
+    # gestione dei task/report standard base
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_report/_$1.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_report/_$1.php [L,QSA]
+
+    # gestione dei task/view standard base
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_view/_$1.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_view/_$1.php [L,QSA]
+
     # gestione dei task custom moduli
     RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/task/$2.php -f
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/task/$2.php [L,QSA]
@@ -126,6 +134,14 @@ Options -Indexes
     # gestione dei task standard moduli
     RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_$2.php -f
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_$2.php [L,QSA]
+
+    # gestione dei task/report standard moduli
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_report/_$2.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_report/_$2.php [L,QSA]
+
+    # gestione dei task/view standard moduli
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_view/_$2.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_view/_$2.php [L,QSA]
 
     # gestione delle stampe custom base
     RewriteCond %{DOCUMENT_ROOT}/src/api/print/$1.php -f
