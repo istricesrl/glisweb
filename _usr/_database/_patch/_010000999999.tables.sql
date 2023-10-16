@@ -324,6 +324,7 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
 -- verifica: 2021-05-25 17:14 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `attivita` (
   `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
   `id_contatto` int(11) DEFAULT NULL,

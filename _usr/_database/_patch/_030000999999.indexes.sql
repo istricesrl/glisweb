@@ -314,6 +314,7 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 ALTER TABLE `attivita`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`), 
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_cliente` (`id_cliente`),
 	ADD KEY `id_contatto` (`id_contatto`),
