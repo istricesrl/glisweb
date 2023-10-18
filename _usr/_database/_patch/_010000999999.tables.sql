@@ -4132,6 +4132,8 @@ CREATE TABLE IF NOT EXISTS `url` (
   `id_anagrafica` int(11) DEFAULT NULL,
   `url` char(255) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
+  `username` char(128) DEFAULT NULL,
+  `password` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

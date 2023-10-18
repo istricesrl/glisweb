@@ -9911,6 +9911,8 @@ CREATE OR REPLACE VIEW url_view AS
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		url.url,
 		url.nome,
+		url.username,
+		url.password,
 		url.id_account_inserimento,
 		url.id_account_aggiornamento,
 		concat_ws(
