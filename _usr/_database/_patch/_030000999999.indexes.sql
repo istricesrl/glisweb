@@ -1380,6 +1380,7 @@ ALTER TABLE `documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `codice` (`codice`),
+	ADD UNIQUE KEY `unico_codice` (`codice`,`id_tipologia`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_documento` (`id_documento`), 
