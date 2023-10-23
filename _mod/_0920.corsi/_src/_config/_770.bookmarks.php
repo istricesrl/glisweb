@@ -22,6 +22,15 @@
                         'url' => $cf['contents']['pages']['corsi.tools']['url'][ LINGUA_CORRENTE ]
                     )
                 )
+            ),
+            'recuperi' => array(
+                'label' => 'recuperi lezioni',
+                'actions' => array(
+                    'recupero' => array(
+                        'label' => 'vai alle lezioni',
+                        'url' => $cf['contents']['pages']['lezioni.view']['url'][ LINGUA_CORRENTE ]
+                    )
+                )
             )
         )
     );

@@ -91,6 +91,36 @@
     // gestione default
     require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    // ...
+    // if( isset( $_REQUEST['__recupero__'] ) ) {
+    if( isset( $_SESSION['__work__']['recuperi']['items'] ) ) {
+
+        // ...
+        $recupero = reset( $_SESSION['__work__']['recuperi']['items'] );
+        $idRecupero = $recupero['id'];
+
+        $recupero = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM attivita WHERE id = ?',
+            array(
+                array( 's' => $idRecupero )
+            )
+        );
+
+        // die( print_r( $recupero, true ) );
+
+        $ct['etc']['defaults']['id_genitore'] = $idRecupero;
+        $ct['etc']['defaults']['id_anagrafica'] = $recupero['id_anagrafica'];
+        $ct['etc']['defaults']['id_tipologia'] = 32;
+
+        unset( $_SESSION['__work__']['recuperi'] );
+
+    } else {
+
+        $ct['etc']['defaults']['id_tipologia'] = 15;
+
+    }
+
 /*
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
 

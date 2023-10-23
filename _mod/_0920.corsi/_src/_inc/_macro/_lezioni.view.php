@@ -70,6 +70,7 @@
         'data_programmazione' => 'data',
         'ora_inizio_programmazione' => 'ora',
 //        'ora_fine_programmazione' => 'ora fine',
+        'id_progetto' => 'ID corso',
         'progetto' => 'corso',
         'discipline' => 'disciplina',
 //        'anagrafica_programmazione' => 'assegnata a',
@@ -87,6 +88,7 @@
 	    '__label__' => 'text-left',
         'cliente' => 'text-left d-none d-md-table-cell',
         'anagrafica_programmazione' => 'text-left',
+        'id_progetto' => 'd-none',
         'progetto' => 'text-left',
         'discipline' => 'text-left',
 	    'data_programmazione' => 'no-wrap',
@@ -157,13 +159,140 @@
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['id_tipologia']['EQ'] = 15;
 
+    // ...
+    // if( isset( $_REQUEST['idRecupero'] ) ) {
+    if( isset( $_SESSION['__work__']['recuperi']['items'] ) ) {
+
+        // ...
+        $recupero = reset( $_SESSION['__work__']['recuperi']['items'] );
+        $idRecupero = $recupero['id'];
+
+        // ...
+        // die( 'recupero lezione #' . $_REQUEST['idRecupero'] );
+
+        // seleziono la disciplina
+        $disciplina = mysqlSelectCachedRow(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT categorie_progetti.id, categorie_progetti.id_genitore, todo.id_progetto '.
+            'FROM attivita '.
+            'INNER JOIN todo ON todo.id = attivita.id_todo '.
+            'INNER JOIN progetti_categorie ON progetti_categorie.id_progetto = todo.id_progetto '.
+            'INNER JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria '.
+            'WHERE categorie_progetti.se_disciplina IS NOT NULL '.
+            'AND attivita.id = ? ',
+            array(
+                array( 's' => $idRecupero )
+            )
+        );
+
+        // ...
+        $idDisciplina = $disciplina['id'];
+        $idDisciplinaGenitore = $disciplina['id_genitore'];
+        $idCorso = $disciplina['id_progetto'];
+
+        // seleziono le discipline collegate
+        $disciplineCollegate = mysqlSelectCachedColumn(
+            $cf['memcache']['connection'],
+            'id',
+            $cf['mysql']['connection'],
+            'SELECT categorie_progetti.id '.
+            'FROM categorie_progetti '.
+            'LEFT JOIN metadati AS mn ON mn.id_categoria_progetti = categorie_progetti.id AND mn.nome = "non_disponibile_per_recuperi" AND metadati.testo = "1" '.
+            'LEFT JOIN relazioni_categorie_progetti AS r1 ON r1.id_categoria = categorie_progetti.id '.
+            'LEFT JOIN relazioni_categorie_progetti AS r2 ON r2.id_categoria_collegata = categorie_progetti.id '.
+//            'WHERE categorie_progetti_path_check( categorie_progetti.id, ? ) = 1 AND metadati.id IS NULL ',
+//2            'WHERE categorie_progetti.id_genitore = ? AND metadati.id IS NULL AND ( relazioni_categorie_progetti.id IS NULL OR relazioni_categorie_progetti.id_categoria_collegata = ? )',
+            'WHERE r1.id_categoria_collegata = ? OR r2.id_categoria = ? '.
+            'GROUP BY categorie_progetti.id ',
+            array(
+//2                array( 's' => $idDisciplinaGenitore ),
+                array( 's' => $idDisciplina ),
+                array( 's' => $idDisciplina )
+            )
+        );
+
+        // aggiungo la disciplina corrente alle discipline da considerare
+        $disciplineCollegate[] = $idDisciplina;
+
+        // seleziono i corsi per le discipline collegate
+        $idCorsi = mysqlSelectCachedColumn(
+            $cf['memcache']['connection'],
+            'id_progetto',
+            $cf['mysql']['connection'],
+            'SELECT progetti_categorie.id_progetto '.
+            'FROM progetti_categorie '.
+            'WHERE progetti_categorie.id_categoria IN (' . implode( ',', $disciplineCollegate ) . ')'
+        );
+
+        // ...
+        // die( 'recupero per la disciplina #' . $idDisciplina );
+        // die( 'genitore della disciplina #' . $idDisciplinaGenitore );
+/*
+        // ...
+        $disciplineSorelle = mysqlSelectCachedColumn(
+            $cf['memcache']['connection'],
+            'id',
+            $cf['mysql']['connection'],
+            'SELECT categorie_progetti.id '.
+            'FROM categorie_progetti '.
+            'LEFT JOIN metadati ON metadati.id_categoria_progetti = categorie_progetti.id AND metadati.nome = "non_disponibile_per_recuperi" AND metadati.testo = "1" '.
+            'LEFT JOIN relazioni_categorie_progetti ON relazioni_categorie_progetti.id_categoria = categorie_progetti.id '.
+//            'WHERE categorie_progetti_path_check( categorie_progetti.id, ? ) = 1 AND metadati.id IS NULL ',
+//2            'WHERE categorie_progetti.id_genitore = ? AND metadati.id IS NULL AND ( relazioni_categorie_progetti.id IS NULL OR relazioni_categorie_progetti.id_categoria_collegata = ? )',
+            'WHERE categorie_progetti.id = ? AND metadati.id IS NULL AND ( relazioni_categorie_progetti.id IS NULL OR relazioni_categorie_progetti.id_categoria_collegata = ? )',
+            array(
+//2                array( 's' => $idDisciplinaGenitore ),
+                array( 's' => $idDisciplina ),
+                array( 's' => $idDisciplina )
+            )
+        );
+
+        // ...
+         die( print_r( $disciplineSorelle, true ) );
+
+        if( count( $disciplineSorelle ) > 0 ) {
+        $idCorsi = mysqlSelectCachedColumn(
+            $cf['memcache']['connection'],
+            'id_progetto',
+            $cf['mysql']['connection'],
+            'SELECT progetti_categorie.id_progetto '.
+            'FROM progetti_categorie '.
+            'WHERE progetti_categorie.id_categoria IN (' . implode( ',', $disciplineSorelle ) . ')'
+        );
+        }
+*/
+        // ...
+        // die( print_r( $idCorsi, true ) );
+
+        // preset filtro custom progetti aperti
+        if( count( $idCorsi ) > 0 ) {
+            $ct['view']['__restrict__']['id_progetto']['IN'] = implode( '|', $idCorsi );
+        } else {
+            $ct['view']['__restrict__']['id_progetto']['NL'] = true;
+        }
+
+        // preset filtro custom progetti aperti
+        // $ct['view']['__restrict__']['data_programmazione']['GE'] = '2023-06-01';
+         $ct['view']['__restrict__']['data_programmazione']['GE'] = date( 'Y-m-d' );
+
+        // campo preset per la data attività
+        $ct['view']['open']['context'] = array(
+            '__recupero__' => $_REQUEST['idRecupero']
+        );
+    
+        // ...
+        $ct['view']['open']['page'] = 'lezioni.form.presenze';
+
+    }
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
              if(!empty($row['data_programmazione'])){
-                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.$row['ora_inizio_programmazione'];
+                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5);
             }
         }
 	}

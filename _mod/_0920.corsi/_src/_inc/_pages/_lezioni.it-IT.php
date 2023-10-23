@@ -10,6 +10,22 @@
 	if( in_array( "4000.catalogo", $cf['mods']['active']['array'] ) ) {
 
 		// dashboard prove
+		$p['prove.lezioni.view'] = array(
+			'sitemap'			=> false,
+			'title'				=> array( $l		=> 'lezioni di prova' ),
+			'h1'				=> array( $l		=> 'lezioni di prova' ),
+			'parent'			=> array( 'id'		=> 'corsi.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_prove.lezioni.view.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'prove.lezioni.view',
+															'prove.view',
+															'prove.tools' ) ),
+			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'prove' ),
+																			'priority'	=> '110' ) ) )														
+		);
+
+		// tools prove
 		$p['prove.view'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'prove' ),
@@ -18,23 +34,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_prove.view.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'prove.view',
-															'prove.lezioni.view',
-															'prove.tools' ) ),
-			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'prove' ),
-																			'priority'	=> '110' ) ) )														
-		);
-
-		// tools prove
-		$p['prove.lezioni.view'] = array(
-			'sitemap'			=> false,
-			'title'				=> array( $l		=> 'lezioni di prova' ),
-			'h1'				=> array( $l		=> 'lezioni di prova' ),
-			'parent'			=> array( 'id'		=> 'prove.view' ),
-			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-			'macro'				=> array( $m . '_src/_inc/_macro/_prove.lezioni.view.php' ),
-			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'				=> array( 'tabs'	=> $p['prove.view']['etc']['tabs'] )
+			'etc'				=> array( 'tabs'	=> $p['prove.lezioni.view']['etc']['tabs'] )
 		);
 
 		// tools prove
@@ -43,7 +43,7 @@
 			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
 			'title'				=> array( $l		=> 'azioni' ),
 			'h1'				=> array( $l		=> 'azioni' ),
-			'parent'			=> array( 'id'		=> 'prove.view' ),
+			'parent'			=> array( 'id'		=> 'corsi.view' ),
 			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 			'macro'				=> array( $m . '_src/_inc/_macro/_prove.tools.php' ),
 			'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
