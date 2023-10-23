@@ -36,11 +36,12 @@
 
     // metadati
     if( isset( $ct['etc']['metadati'] ) ) {
+        $sidx = time();
         foreach( $ct['etc']['metadati'] as $metadato => $dettagli ) {
 
             // metadato di default per sconto secondo corso
             $ct['etc']['sub'][ $metadato ] = array(
-                'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) : 0 ),
+                'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) : $sidx++ ),
                 'nome' => $metadato 
             );
     
