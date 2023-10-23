@@ -33,9 +33,11 @@ if( $cf['contents']['cached'] === false ) {
             'LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id ' .
             'LEFT JOIN categorie_prodotti ON categorie_prodotti.id = prodotti_categorie.id_categoria ' .
             'INNER JOIN pubblicazioni ON pubblicazioni.id_prodotto = prodotti.id ' .
+            'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia '.
             'WHERE categorie_prodotti.id_sito = ? ' .
             'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
-            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) '.
+            'AND tipologie_pubblicazioni.se_pubblicato = 1 ',
         array(
             array('s' => SITE_CURRENT),
             array('s' => time()),
