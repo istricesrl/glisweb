@@ -66,11 +66,13 @@
 
         $result = array();
 
+        $head = array_map( 'trim', $data[0] );
+
         foreach( $data as &$row ) {
             $row = str_getcsv( $row, $s, $c, $e );
             $row = array_map( 'trim', $row );
             if( count( $data[0] ) == count( $row ) ) {
-                $result[] = array_combine( $data[0], $row );
+                $result[] = array_combine( $head, $row );
             } else {
                 logWrite( 'errore nel numero delle colonne (' . count( $data[0] ) . '/' . count( $row ) . ') ' . print_r( $data[0], true ) . print_r( $row, true ), 'csv', LOG_ERR );
             }
