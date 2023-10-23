@@ -217,6 +217,7 @@
 
 			// log
 			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $p, true ), 'mysql/details', LOG_ERR );
 
 			// gestione specifici errori
 			    switch( mysqli_errno( $c ) ) {
@@ -348,6 +349,7 @@
 
 				// log
 				    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
 
 				// gestione specifici errori
 				    switch( mysqli_errno( $c ) ) {
@@ -399,6 +401,7 @@
 
 				// log
 					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
 
 				// debug
 					// var_dump( mysqli_errno( $c ) );
@@ -408,6 +411,7 @@
 
 					// log
 						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
 
 					// gestione specifici errori
 						switch( mysqli_errno( $c ) ) {
@@ -894,6 +898,8 @@
      */
     function mysqlInsertRow( $c, $r, $t, $d = true, $n = false, $u = array() ) {
 
+	    logWrite( $t . PHP_EOL . print_r( $r, true ), 'mysql/insertrow.'.$t );
+
 		if( ! empty( $u ) ) {
 
 			$uQuery = 'SELECT id FROM ' . $t . ' WHERE ';
@@ -916,14 +922,24 @@
 		}
 
 		$r = array_map( 'empty2null', $r );
+
+	    logWrite( $t . '( dopo array_map )' . PHP_EOL . print_r( $r, true ), 'mysql/insertrow.'.$t );
+
 		$r = array_map( 'string2num', $r );
 
-		$i = mysqlQuery( $c,
-			'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
+	    logWrite( $t . '( dopo string2num )' . PHP_EOL . print_r( $r, true ), 'mysql/insertrow.'.$t );
+
+		$q = 'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
 			.'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
-			.( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL ),
-			array2mysqlStatementParameters( $r )
-		);
+			.( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL );
+
+	    logWrite( $t . PHP_EOL . $q, 'mysql/insertrow.'.$t, LOG_ERR );
+
+		$a = array2mysqlStatementParameters( $r );
+
+	    logWrite( $t . PHP_EOL . print_r( $a, true ), 'mysql/insertrow.'.$t );
+
+		$i = mysqlQuery( $c, $q, $a );
 
 		// var_dump( $t . '/' . $i );
 
