@@ -44,6 +44,8 @@
 	    'telefoni' => 'telefoni',
 	    'mail' => 'mail',
 	    'categorie' => 'categorie',
+        'id_stato' => 'ID stato',
+        'id_provincia' => 'ID provincia',
         NULL => 'azioni'
 	);
 
@@ -53,6 +55,8 @@
 	    '__label__' => 'text-left no-wrap',
 	    'telefoni' => 'text-left d-none d-md-table-cell',
 	    'mail' => 'text-left d-none d-md-table-cell',
+        'id_stato' => 'd-none',
+        'id_provincia' => 'd-none',
 	    'categorie' => 'text-left'
 	);
 
@@ -97,6 +101,14 @@
         'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL'
     );
 
+    // tendina stati
+    $ct['etc']['select']['stati'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM stati_view ORDER BY __label__'
+    );
+
     // tendina collaboratori
     $ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
@@ -117,6 +129,25 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    /*
+	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] ) ){
+	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] = 1;
+	}
+    */
+
+    // tendina provincie
+	if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] ) ){
+        $ct['etc']['select']['provincie'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM provincie_view WHERE id_stato = ? ORDER BY __label__',
+            array(
+                array( 's' => $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_stato']['EQ'] )
+            )
+        );
+    }
 
     // bottoni
 	foreach( $ct['view']['data'] as &$row ) {

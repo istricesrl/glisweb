@@ -1,5 +1,26 @@
 <div class="form-row view-filters d-print-none">
+    <div class="col-6 col-md-auto">
+		<span class="label-top">stato</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_stato][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_stato.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for stato in etc.select.stati %}
+			<option value="{{ stato.id }}"   {% if request.__view__[ view.id ].__filters__.id_stato.EQ == stato.id %}selected{% endif %}>{{ stato.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	{% if request.__view__[ view.id ].__filters__.id_stato.EQ %}
+    <div class="col-6 col-md-auto">
+		<span class="label-top">provincia</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_provincia][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_provincia.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for provincia in etc.select.provincie %}
+			<option value="{{ provincia.id }}"   {% if request.__view__[ view.id ].__filters__.id_provincia.EQ == provincia.id %}selected{% endif %}>{{ provincia.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+	{% endif %}
     <div class="col-12 col-md-auto">
+		<span class="label-top">categoria</span>
 		<select name="__view__[{{ view.id }}][__filters__][categorie][LK]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.categorie.LK == "" %}selected{% endif %}>tutti</option>
 			{% for categoria in etc.select.categorie_anagrafica %}
@@ -7,7 +28,7 @@
 			{% endfor %}
 		</select>
     </div>
-    <div class="col">
+	<div class="col">
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>
     <div class="col-auto">
