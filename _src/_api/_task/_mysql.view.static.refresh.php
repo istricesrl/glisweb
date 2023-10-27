@@ -37,7 +37,7 @@
         logWrite( 'richiesta di ripopolamento di tutte le view static', 'cache' );
 
         // svuoto e ripopolo tutte le view statiche
-        $status['toRefresh'] = mysqlSelectColumn( 'TABLE_NAME', $cf['mysql']['connection'], 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME like "%_static"' );	
+        $status['toRefresh'] = mysqlSelectColumn( 'TABLE_NAME', $cf['mysql']['connection'], 'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME like "%_static" ORDER BY TABLE_NAME' );	
  
     }
 
