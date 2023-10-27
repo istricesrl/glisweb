@@ -514,7 +514,12 @@
     - un task per l'avvio del job di popolazione (ad es. _src/_api/_task/_anagrafica.view.static.popolazione.start.php o _src/_api/_task/_report.corsi.popolazione.start.php)
     - un task per la popolazione di una riga alla volta, specifica o meno (ad es. _src/_api/_task/_anagrafica.view.static.popolazione.php o _src/_api/_task/_report.corsi.popolazione.php)
 
-    [...] in linea teorica alcune view storicamente affollate (oppure tutte a un certo punto) potrebbero essere staticizzate implicitamente cioè rendendo la *_view statica [...]
+    [...] NOTA IMPORTANTE in linea teorica alcune view storicamente affollate (oppure tutte a un certo punto) potrebbero essere staticizzate implicitamente cioè rendendo la *_view statica,
+    questo renderebbe superflua la presenza della coppia *_view / *_view_static semplificando di molto la struttura del database e in questo caso anche le funzioni avrebbero un nome più semplice,
+    ad es. updateAnagraficaViewStatic() sarebbe semplicemente updateAnagraficaView() e così via [...]
+
+    [...] NOTA come conseguenza della semplificazione vista sopra, cesserebbe anche di avere senso la moltiplicazione di viste tipo anagrafica_attivi_view, anagrafica_archiviati_view, eccetera, in quanto
+    rendendo le viste statiche si può usare direttamente un __restrict__ sulla vista unica anagrafica_view statica grazie alla sua maggiore velocità.
 
     [...] NOTA visto che i task e i job di questo tipo possono diventare molti, sarebbe opportuno radunarli in sottocartelle:
     
@@ -525,6 +530,10 @@
 
     tabelle di report
     -----------------
+
+
+
+    [...] NOTA IMPORTANTE come si relazionano i report alle ACL?
 
 
 
