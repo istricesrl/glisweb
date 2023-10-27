@@ -186,7 +186,7 @@
                     );
 
                     // se ho il comune
-                    if( ! empty( $idComune  ) ) {
+                    if( ! empty( $idComune ) ) {
 
                         // TODO trovo l'indirizzo
                         // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato
@@ -195,7 +195,8 @@
                             array(
                                 'indirizzo' => $job['riga']['indirizzo'],
                                 'civico' => $job['riga']['civico'],
-                                'id_comune' => $idComune
+                                'id_comune' => $idComune,
+                                'localita' => ( ( isset( $job['riga']['localita'] ) ) ? $job['riga']['localita'] : NULL )
                             ),
                             'indirizzi',
                             true,
@@ -203,43 +204,65 @@
                             array(
                                 'indirizzo',
                                 'civico',
-                                'id_comune'
+                                'id_comune',
+                                'localita'
                             )
                         );
 
-                        // TODO associo l'indirizzo all'anagrafica
-                        if( ! empty( $idIndirizzo ) ) {
-
-                            // associazione
-                            $idAssociazioneIndirizzo = mysqlInsertRow(
-                                $cf['mysql']['connection'],
-                                array(
-                                    'id_ruolo' => 1,
-                                    'id_anagrafica' => $idAnagrafica,
-                                    'id_indirizzo' => $idIndirizzo
-                                ),
-                                'anagrafica_indirizzi'
-                            );
-
-                            // status
-                            if( empty( $idAssociazioneIndirizzo ) ) {
-                                $job['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'];
-                            }
-
-                        } else {
-
-                            // status
-                            $job['status']['error'][] = 'indirizzo ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non inserito per la riga ' . $job['corrente'];
-
-                        }
-
                     } else {
+
+                        // TODO trovo l'indirizzo
+                        // NOTA nel CSV ci sono le colonne indirizzo, civico, cap, comune, stato
+                        $idIndirizzo = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'indirizzo' => $job['riga']['indirizzo'],
+                                'civico' => $job['riga']['civico'],
+                                'id_comune' => NULL,
+                                'localita' => $job['riga']['comune']
+                            ),
+                            'indirizzi',
+                            true,
+                            false,
+                            array(
+                                'indirizzo',
+                                'civico',
+                                'id_comune',
+                                'localita'
+                            )
+                        );
 
                         // status
                         $job['status']['error'][] = 'comune ' . $job['riga']['comune'] . ' non trovato per la riga ' . $job['corrente'];
 
                         // log
                         logWrite( 'per anagrafica #' . $idAnagrafica . ' non trovato: ' . $row['comune'] . ' (' . $row['stato'] . ')', 'geografia/comuni', LOG_ERR );
+
+                    }
+
+                    // TODO associo l'indirizzo all'anagrafica
+                    if( ! empty( $idIndirizzo ) ) {
+
+                        // associazione
+                        $idAssociazioneIndirizzo = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id_ruolo' => 1,
+                                'id_anagrafica' => $idAnagrafica,
+                                'id_indirizzo' => $idIndirizzo
+                            ),
+                            'anagrafica_indirizzi'
+                        );
+
+                        // status
+                        if( empty( $idAssociazioneIndirizzo ) ) {
+                            $job['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'] . ' anagrafica ' . $idAnagrafica;
+                        }
+
+                    } else {
+
+                        // status
+                        $job['status']['error'][] = 'indirizzo ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non inserito per la riga ' . $job['corrente'];
 
                     }
 
