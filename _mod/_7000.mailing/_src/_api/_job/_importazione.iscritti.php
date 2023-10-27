@@ -99,7 +99,7 @@
             $row = $arr[ $widx ];
 
             // controlli formali
-            if( ! isset( $row['lista'] ) || empty( $row['lista'] ) ) {
+            if( ! isset( $row['liste'] ) || empty( $row['liste'] ) ) {
 
                 // status
                 $job['workspace']['status']['error'][] = 'nome lista non settato per la riga ' . $job['corrente'];
