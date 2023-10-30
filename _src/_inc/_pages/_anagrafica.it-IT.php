@@ -89,6 +89,7 @@
 															'anagrafica.form.file',
 															'anagrafica.form.metadati',
 															'anagrafica.form.archiviazione',
+															'anagrafica.form.stats',
 															'anagrafica.form.stampe',
 															'anagrafica.form.tools' ) )
 	);
@@ -266,10 +267,23 @@
 	);
 
 	// gestione anagrafica stampe
+	$p['anagrafica.form.stats'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'statistiche anagrafica' ),
+	    'h1'				=> array( $l		=> 'statistiche' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.stats.html' ),
+	    'macro'				=> array( '_src/_inc/_macro/_anagrafica.form.stats.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['anagrafica.form']['etc']['tabs'] )
+	);
+
+	// gestione anagrafica stampe
 	$p['anagrafica.form.stampe'] = array(
 	    'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
-	    'title'				=> array( $l		=> 'stampe_anagrafica' ),
+	    'title'				=> array( $l		=> 'stampe anagrafica' ),
 	    'h1'				=> array( $l		=> 'stampe' ),
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),

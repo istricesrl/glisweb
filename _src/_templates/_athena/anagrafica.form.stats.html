@@ -1,0 +1,124 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/anagrafica.form.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+		<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+			{# CAMPI HIDDEN DI BASE #}
+			<input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+			<input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+			<input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+			<input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+			<input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+			{% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+			<input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+			{# MODULO PRINCIPALE #}
+			<fieldset>
+				<legend>impostazioni</legend>
+
+				<div class="form-group form-row">
+					<div class="col-auto">
+						<span class="label-top">sorgente dati</span>
+						{{ frm.select( '__stats__', '', '', '__sorgente__', '', etc.select.sorgenti, request ) }}
+					</div>
+					<div class="col-12 col-md-auto">
+						<span class="label-top">data inizio periodo</span>
+						{{ frm.date( '__stats__', '', '', '__inizio__','','',request ) }}
+					</div>
+					<div class="col-12 col-md-auto">
+						<span class="label-top">data inizio periodo</span>
+						{{ frm.date( '__stats__', '', '', '__fine__','','',request ) }}
+					</div>
+					<div class="col-auto">
+						<span class="label-top">precisione</span>
+						{{ frm.select( '__stats__', '', '', '__precisione__', '', etc.select.precisioni, request ) }}
+					</div>
+					<div class="col-auto">
+						<span class="label-top">confronta_con</span>
+						{{ frm.select( '__stats__', '', '', '__confronto__', '', etc.select.confronti, request ) }}
+					</div>
+					<div class="col text-right">
+						<button type="submit" onclick="submitFormOkay = true;" class="btn btn-secondary btn-sm btn-sqr"><i class="fa fa-bar-chart"></i></button>
+					</div>
+				</div>
+
+			</fieldset>
+
+			{% if request.__stats__.__sorgente__ %}
+
+			{# GRAFICO #}
+			<fieldset class="">
+				<legend>grafico</legend>
+
+				<div class="form-group form-row">
+					<div class="col-9">
+						<canvas id="grafico"></canvas>
+					</div>
+				</div>
+
+			</fieldset>
+
+			{# DATI #}
+			<fieldset>
+				<legend>dati</legend>
+
+				<div class="form-group form-row">
+					<div class="col-auto">
+						<table class="view-table">
+							<tr>
+								<th class="table-header-static"></th>
+								{% for m in data.labels %}
+								<th class="table-header-static">{{ m }}</th>
+								{% endfor %}
+							</tr>
+							{% for l, d in data.grafico %}
+							<tr>
+								<td>{{ l }}</td>
+								{% for k,m in data.labels %}
+								<td>{{ d[ k ].value }}</td>
+								{% endfor %}
+							</tr>
+							{% endfor %}
+						</table>
+					</div>
+				</div>
+
+			</fieldset>
+
+			{% endif %}
+
+		</form>
+    </div>
+</section>
+
+{% endblock %}
