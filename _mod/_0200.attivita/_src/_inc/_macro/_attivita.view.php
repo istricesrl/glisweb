@@ -72,6 +72,7 @@
         'data_attivita' => 'eseguita',
 	    'anagrafica' => 'svolta da',
         'nome' => 'attività',
+        'id_step' => 'ID step',
 	    'ore' => 'ore',
         'ora_inizio' => 'oi',
         'ora_fine' => 'of'
@@ -88,7 +89,8 @@
         'ora_fine_programmazione' => 'd-none',
         'data_attivita' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
-        'nome' => 'text-left',
+        'nome' => 'text-left no-wrap',
+        'id_step' => 'd-none',
         'ora_inizio' => 'd-none',
         'ora_fine' => 'd-none'
     );
@@ -143,6 +145,14 @@
 /*	if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
 	} */
+
+    // tendina step
+	$ct['etc']['select']['step'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM step_view'
+    );
 
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']) ){
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'ASC';

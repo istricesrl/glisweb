@@ -28,15 +28,33 @@
 	</select>
     </div>
     <div class="col-6 col-md-auto">
-    <span class="label-top">operatore</span>
-	<select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-	    <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>tutti</option>
+		<span class="label-top">step</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_step][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_step.EQ == "" %}selected{% endif %}>tutti</option>
+		{% for step in etc.select.step %}
+			<option value="{{ step.id }}"   {% if request.__view__[ view.id ].__filters__.id_step.EQ == step.id %}selected{% endif %}>{{ step.__label__ }}</option>
+		{% endfor %}
+		</select>
+		</div>
+	<div class="col-6 col-md-auto">
+    <span class="label-top">incaricato</span>
+	<select name="__view__[{{ view.id }}][__filters__][id_anagrafica_programmazione][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+	    <option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica_programmazione.EQ == "" %}selected{% endif %}>tutti</option>
 	{% for operatore  in etc.select.operatori %}
-	    <option value="{{ operatore.id }}"   {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
+	    <option value="{{ operatore.id }}"   {% if request.__view__[ view.id ].__filters__.id_anagrafica_programmazione.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
 	{% endfor %}
 	</select>
     </div>
-    <div class="col-2">
+    <div class="col-6 col-md-auto">
+		<span class="label-top">esecutore</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_anagrafica][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == "" %}selected{% endif %}>tutti</option>
+		{% for operatore  in etc.select.operatori %}
+			<option value="{{ operatore.id }}"   {% if request.__view__[ view.id ].__filters__.id_anagrafica.EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
+		{% endfor %}
+		</select>
+		</div>
+	<div class="col-2">
     <span class="label-top">cliente</span>
 	<select name="__view__[{{ view.id }}][__filters__][id_cliente][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm selectpicker" data-live-search="true" >
 	    <option value="" {% if request.__view__[ view.id ].__filters__.id_cliente == "" %}selected{% endif %}>tutti</option>

@@ -270,9 +270,13 @@
 					</div>
 					<div class="col-12 col-md">
 						<span class="label-top">esecutore</span>
-						{% if request.attivita.id_anagrafica_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}{% set id_esecutore = session.account.id_anagrafica %}{% endif %}
+						{# if request.attivita.id_anagrafica_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}{% set id_esecutore = session.account.id_anagrafica #}{# endif #}
 						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, id_esecutore, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 						{# frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, session.account.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) #}
+					</div>
+					<div class="col-12 col-md-auto">
+						<span class="label-top">esito</span>
+						{{ frm.select( table, '', '', 'id_step', '', etc.select.id_step, request ) }}
 					</div>
 					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
@@ -380,4 +384,18 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+	window.addEventListener( 'DOMContentLoaded', function() {
+
+		$('#attivita_data_attivita').change( function() {
+			$("#attivita_ore").attr('required','true');
+			$("#attivita_id_anagrafica").attr('required','true');
+			$("#attivita_id_step").attr('required','true');
+		});
+
+	});	
+</script>
 {% endblock %}

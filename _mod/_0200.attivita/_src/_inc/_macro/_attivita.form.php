@@ -30,8 +30,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM immobili_view'
 	);
-    
-    
+
     // tendina anagrafica
 	$ct['etc']['select']['id_anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -54,7 +53,6 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view ORDER BY __label__' );
 
-
     // tendina clienti
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -62,8 +60,7 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static' );
 
-
-    // tendina progetti
+        // tendina progetti
 	    $ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
@@ -138,7 +135,14 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM documenti_articoli_view'
     );
-    
+
+    // tendina step
+	$ct['etc']['select']['id_step'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM step_view'
+    );
 
 	if( isset( $_REQUEST['__preset__']['attivita']['id_todo']  ) ){
 	    $todo = mysqlSelectRow( $cf['mysql']['connection'], 'SELECT * FROM todo_view WHERE id = ?', 

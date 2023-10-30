@@ -44,6 +44,7 @@
 	    'parser'		=> array( $m . '_src/_inc/_parser/_attivita.form.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'attivita.form',
+														'attivita.form.feedback',
 														'attivita.form.file' ) )
 	);
 
@@ -60,7 +61,6 @@
 		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
 
-/*
 	// gestione attivita - feedback
 	$p['attivita.form.feedback'] = array(
 	    'sitemap'		=> false,
@@ -73,7 +73,7 @@
 		'etc'			=> array( 'tabs'	=> $p['attivita.form']['etc']['tabs'] )
 	);
 
-
+/*
 	// vista turni
 	$p['turni.view'] = array(
 	    'sitemap'		=> false,
@@ -87,7 +87,6 @@
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'turni' ),
 																		'priority'	=> '110' ) ) )	
 	);
-*/
 
 	// turni tools
 	/*$p['turni.tools'] = array(
@@ -101,9 +100,7 @@
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> $p['turni.view']['etc']['tabs'] )
 	);
-	*/
 
-/*
 	// pagina schema
 	$p['turni.schema'] = array(
 		'sitemap'		=> false,

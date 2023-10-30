@@ -202,7 +202,8 @@
 				<div class="form-group form-row">
 					<div class="col-6 col-md-auto">
 						<span class="label-top">data</span>
-						{{ frm.date( table, '', '', 'data_attivita', '', '', request ) }}
+						{# if request.attivita.id_anagrafica_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}{% set data_esecuzione = now|date("Y-m-d") #}{# endif #}
+						{{ frm.date( table, '', '', 'data_attivita', '', '', request, data_esecuzione ) }}
 					</div>
 					<div class="col-2 col-md-1">
 						<span class="label-top">ora inizio</span>
@@ -221,7 +222,10 @@
 						{% if request.attivita.id_anagrafica_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}{% set id_esecutore = session.account.id_anagrafica %}{% endif %}
 						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, id_esecutore, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
-
+					<div class="col-12 col-md-auto">
+						<span class="label-top">esito</span>
+						{{ frm.select( table, '', '', 'id_step', '', etc.select.id_step, request ) }}
+					</div>
 					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
 					</div-->
@@ -292,8 +296,7 @@
 			{# SUBFORM CATEGORIE #}
 	    	{# sub.categorie( table, 'attivita_categorie', 'categorie', site, page, pages, ietf, etc, request, session ) #}
 
-			{# if request.__preset__.attivita.data_attivita or request.attivita.data_attivita #}
-			{% if request.__preset__.attivita.data_attivita or request.attivita.data_programmazione %}
+			{% if request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}
 
 			{% if etc.procedure %}
 			<fieldset>
@@ -333,6 +336,18 @@
     </div>
 </section>
 
+{% endblock %}
 
+{% block javascript %}
+<script type="text/javascript">
+	window.addEventListener( 'DOMContentLoaded', function() {
 
+		$('#attivita_data_attivita').change( function() {
+			$("#attivita_ore").attr('required','true');
+			$("#attivita_id_anagrafica").attr('required','true');
+			$("#attivita_id_step").attr('required','true');
+		});
+
+	});	
+</script>
 {% endblock %}
