@@ -936,6 +936,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
 		attivita.id_matricola,
         attivita.id_immobile,
+        attivita.id_step,
 		attivita.id_pianificazione,
 		attivita.id_todo,
 		todo.nome AS todo,
