@@ -1711,6 +1711,12 @@ ALTER TABLE `stati_lingue`
     ADD CONSTRAINT `stati_lingue_ibfk_01_nofollow`  FOREIGN KEY (`id_stato`) REFERENCES `stati` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
     ADD CONSTRAINT `stati_lingue_ibfk_02_nofollow`  FOREIGN KEY (`id_lingua`) REFERENCES `lingue` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
+-- | 060000042500
+
+-- step
+ALTER TABLE `step`
+    CONSTRAINT `step_ibfk_01` FOREIGN KEY (`id_funnel`) REFERENCES `funnel` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+
 -- | 060000043000
 
 -- task

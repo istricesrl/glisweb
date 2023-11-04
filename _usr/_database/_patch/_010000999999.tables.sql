@@ -359,6 +359,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
+  `id_step` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL, 
   `codice_archivium` char(32) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
@@ -1501,6 +1502,16 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000015100
+
+-- funnel
+CREATE TABLE `funnel` (
+  `id` int(11) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- | 010000015200
 
@@ -3394,6 +3405,17 @@ CREATE TABLE IF NOT EXISTS `stati_lingue` (
   `id_lingua` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000042500
+
+-- step
+CREATE TABLE `step` (
+  `id` int(11) NOT NULL,
+  `id_funnel` int(11) DEFAULT NULL,
+  `ordine` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 010000043000
 

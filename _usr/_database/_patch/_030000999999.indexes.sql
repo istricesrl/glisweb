@@ -1553,6 +1553,21 @@ ALTER TABLE `file`
 -- tipologia: tabella gestita
 ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000015100
+
+-- funnel
+ALTER TABLE `funnel`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `indice` (`id`,`nome`);
+
+-- | 030000015101
+
+-- funnel
+-- tipologia: tabella gestita
+ALTER TABLE `funnel` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000015200
 
 -- gruppi
@@ -2950,6 +2965,7 @@ ALTER TABLE `regimi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `regioni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`codice_istat`),
+	ADD UNIQUE KEY `unica_nome` (`id_stato`,`nome`),
 	ADD KEY `id_stato` (`id_stato`),
 	ADD KEY `indice` (`id`,`id_stato`,`nome`,`codice_istat`);
 
@@ -3615,6 +3631,22 @@ ALTER TABLE `stati_lingue`
 -- stati_lingue
 -- tipologia: tabella standard
 ALTER TABLE `stati_lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000042500
+
+-- step
+ALTER TABLE `step`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_funnel`,`nome`),
+	KEY `id_funnel` (`id_funnel`),
+	KEY `nome` (`nome`),
+	KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`);
+
+-- | 030000042201
+
+-- step
+-- tipologia: tabella standard
+ALTER TABLE `step` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000043000
 

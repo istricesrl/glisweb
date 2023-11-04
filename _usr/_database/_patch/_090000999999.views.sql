@@ -3753,6 +3753,22 @@ CREATE OR REPLACE VIEW `file_view` AS
 		LEFT JOIN lingue ON lingue.id = file.id_lingua
 ;
 
+-- | 090000015100
+
+-- funnel_view
+DROP TABLE IF EXISTS `funnel_view`;
+
+-- | 090000015101
+
+-- funnel_view
+CREATE OR REPLACE VIEW `funnel_view` AS 
+	SELECT
+		funnel.id,
+		funnel.nome, 
+		funnel.nome AS __label__
+	FROM funnel
+;
+
 -- | 090000015200
 
 -- gruppi_view
@@ -8259,6 +8275,31 @@ CREATE OR REPLACE VIEW stati_lingue_view AS
     FROM stati_lingue
     	LEFT JOIN stati ON stati.id = stati_lingue.id_stato
     	LEFT JOIN lingue ON lingue.id = stati_lingue.id_lingua
+;
+
+-- | 090000042500
+
+-- step_view
+DROP TABLE IF EXISTS `step_view`;
+
+-- | 090000042501
+
+-- step_view
+CREATE OR REPLACE VIEW step_view AS
+	SELECT
+		step.id,
+		step.id_funnel,
+		funnel.nome AS funnel,
+		step.ordine,
+		step.nome,
+		concat(
+			funnel.nome,
+			' / ',
+			step.nome
+		) AS __label__
+	FROM step
+		LEFT JOIN funnel ON funnel.id = step.id_funnel
+	ORDER BY step.id_funnel, step.ordine
 ;
 
 -- | 090000043000
