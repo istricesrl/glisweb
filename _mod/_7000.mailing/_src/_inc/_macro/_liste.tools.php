@@ -39,6 +39,15 @@
 	    'text' => 'importa iscritti in formato CSV'
 	);
 
+    // importazione contatti anagrafica
+	$ct['page']['contents']['metro']['importazioni'][] = array(
+	    'modal' => array( 'id' => 'importa_iscritti_mailchimp', 'include' => 'inc/iscritti.tools.modal.import.mailchimp.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-upload',
+	    'title' => 'importazione iscritti da MailChimp',
+	    'text' => 'importa iscritti in formato CSV da MailChimp'
+	);
+
     // esportazione contatti anagrafica
 	$ct['page']['contents']['metro']['esportazioni'][] = array(
 	    'modal' => array( 'id' => 'esporta_per_lista', 'include' => 'inc/iscritti.tools.modal.export.html' ),

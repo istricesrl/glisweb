@@ -1,0 +1,54 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function applica_template() {
+	var data = $('#_template').val();
+	// window.open( '/task/7000.mailing/mailing.template.applica?__template__='+data, '_self');
+
+
+	$('#applica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+	
+	var call = '{{ site.url }}task/7000.mailing/mailing.template.applica?__template__='+data+'&__mailing__=';
+
+	getws( call,'', function() {
+		$('#applica').html('<i class="fa fa-check"></i>');
+	});
+
+	location.reload();
+
+
+	}
+
+
+
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="applica_template">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">applica un template al mailing</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+			<div class="container-fluid">
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">template</span>
+						{{ frm.selectRequired( table, '', '', 'template', '', etc.select.template, '', '', '','' ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<p><strong>ATTENZIONE!</strong> applicare un template sovrascriverà eventuali contenuti già inseriti!</p>
+					</div>
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+			<button type="button" class="btn btn-secondary btn-sm" id="applica" onclick="applica_template();">applica</button>
+			<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

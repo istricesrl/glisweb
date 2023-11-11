@@ -1,0 +1,157 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+    {% set composizione = request[ table ].timestamp_composizione %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+    {% set composizione = 'now'|date('U') %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+ 
+        {# SELETTORE LINGUA #}
+	    <fieldset>
+		<legend>lingua</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12">
+				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+		    </div>
+		</div>
+
+	    </fieldset>
+
+		{# DEFINIZIONI SPECIALI #}
+		{% set subtable = form.subtable %}
+
+		{# CICLO SULLE LINGUE #}
+		{% set i = 0 %}
+		{% for l in localization.languages %}
+
+		{% set r = request[ table ][ subtable ][ i ] %}
+
+		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_template', '', '', request, '__parent_id__', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
+
+	    {% if r.id_lingua == session.__view__.__lang__ %}
+
+        {# MODULO PRINCIPALE #}
+        <fieldset>
+        <legend>intestazione <small>{{ legend }}</small></legend>
+    
+        <div class="form-group form-row">
+            <div class="col-12 col-md-4">
+                <span class="label-top ">nome mittente</span>
+                    {{ frm.input( table, subtable, i, 'mittente_nome', '', '', request ) }}
+            </div>
+            <div class="col-12 col-md-4">
+                <span class="label-top ">mail mittente</span>
+                    {{ frm.input( table, subtable, i, 'mittente_mail', '', '', request ) }}
+            </div>
+            <div class="col-12 col-md-4">
+            <span class="label-top ">oggetto</span>
+                {{ frm.input( table, subtable, i, 'cappello', '', '', request ) }}
+            </div>
+        </div>
+
+        <div class="form-group form-row">
+            <div class="col">
+            <span class="label-top">testo</span>
+            {{ frm.textarea( table, subtable, i, 'testo', '', 3, request, '', '', 'ckEditor', 200 ) }}
+            </div>
+        </div>
+       
+        </fieldset>
+
+        <fieldset>
+            <legend>destinatari</legend>
+            
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top ">nome destinatario</span>
+                        {{ frm.input( table, subtable, i, 'destinatario_nome', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top ">nome destinatari CC</span>
+                    {{ frm.input( table, subtable, i, 'destinatario_cc_nome', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top ">nome destinatari CCN</span>
+                    {{ frm.input( table, subtable, i, 'destinatario_ccn_nome', '', '', request ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top ">mail destinatario</span>
+                        {{ frm.input( table, subtable, i, 'destinatario_mail', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top ">mail destinatari CC</span>
+                    {{ frm.input( table, subtable, i, 'destinatario_cc_mail', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top ">mail destinatari CCN</span>
+                    {{ frm.input( table, subtable, i, 'destinatario_ccn_mail', '', '', request ) }}
+                </div>
+            </div>
+
+        </fieldset>
+
+		{% else %}
+
+		{% for field in ['id','id_pagina','id_lingua','h1','h2','h3','cappello','testo','abstract','specifiche'] %}
+	    {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
+		{% endfor %}
+
+        {% endif %}
+
+	    {% set i = i + 1 %}
+	    {% endfor %}
+    
+        {# BOTTONI E COMANDI DEL MODULO #}
+        <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
+        </fieldset>
+	
+	</form>
+    </div>
+</section>
+
+{% endblock %}

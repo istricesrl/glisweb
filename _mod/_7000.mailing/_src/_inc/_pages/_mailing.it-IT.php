@@ -30,6 +30,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mailing.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'mailing.view',
+									'template.mailing.view',
 									'mailing.tools' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'invii' ),
 									'priority'	=> '010' ) ) )	
@@ -225,3 +226,71 @@
 	    'etc'		=> array( 'tabs'	=> array(	'liste.mail.form'
 												) )
 	);
+
+    // vista template mailing
+	$p['template.mailing.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'template mailing' ),
+		'h1'		=> array( $l		=> 'template' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mailing.view.php' ),
+		'parent'	=> array( 'id'		=> 'mailing' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mailing.view']['etc']['tabs'] )
+	);
+
+	// gestione template mailing
+	$p['template.mailing.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mailing.form.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.mailing.form.php' ),
+		'parent'		=> array( 'id'		=> 'template.mailing.view' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'template.mailing.form',
+												'template.mailing.form.testo',
+												'template.mailing.form.file',
+												'template.mailing.form.tools' ) ),
+	);
+
+	// form template mailing testo
+	$p['template.mailing.form.testo'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'template.mailing.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mailing.form.testo.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.mailing.form.testo.php' ),
+		'etc'		=> array( 'tabs'	=> $p['template.mailing.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione template file
+	$p['template.mailing.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'template.mailing.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mailing.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.mailing.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['template.mailing.form']['etc']['tabs'] )
+	);
+
+	// gestione mailing strumenti
+	$p['template.mailing.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni template mailing' ),
+	    'h1'		=> array( $l		=> 'azioni template mailing' ),
+		'parent'		=> array( 'id'		=> 'template.mailing.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mailing.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['template.mailing.form']['etc']['tabs'] )
+	);
+
+

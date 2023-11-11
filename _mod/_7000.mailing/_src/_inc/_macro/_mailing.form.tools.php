@@ -25,6 +25,9 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
+	    'strumenti' => array(
+		'label' => 'strumenti'
+        ),
 	    'invio' => array(
 		'label' => 'gestione invio'
 	    )
@@ -55,6 +58,22 @@
         'fa' => 'fa-share-square',
 	    'title' => 'invio di test',
 	    'text' => 'invia una mail di test'
+	);
+
+    // duplica pagina
+	$ct['page']['contents']['metro']['strumenti'][] = array(
+        'modal' => array('id' => 'applica_template', 'include' => 'inc/mailing.form.tools.template.applica.html' ),
+	    'icon' => NULL,
+        'fa' => 'fa-clipboard',
+	    'title' => 'applica template',
+	    'text' => 'applica un template mail a questo mailing'
+	);
+
+    // categorie anagrafica
+	$ct['etc']['select']['template'] = mysqlCachedQuery(
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM template_view '
 	);
 
 	// macro di default
