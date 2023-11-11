@@ -93,7 +93,7 @@
 		'parent'		=> array( 'id'		=> 'agenda.form' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.form.file.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_agenda.form.file.php' ),
-		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> $p['agenda.form']['etc']['tabs'] )
 	);
 /*
