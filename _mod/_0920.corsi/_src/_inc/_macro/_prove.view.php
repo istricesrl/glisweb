@@ -99,6 +99,9 @@
         'data_attivita' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left',
+        'corso' => 'text-left',
+        'discipline' => 'text-left',
+        'luogo' => 'd-none',
         'ora_inizio' => 'd-none',
         'ora_fine' => 'd-none',
         NULL => 'nowrap'
@@ -174,7 +177,13 @@
 		foreach ( $ct['view']['data'] as &$row ){
              if(! empty($row['data_programmazione'])){
 //                $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
-                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
+//                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
+
+                $discipline = explode( ' > ', $row['discipline'] );
+                if( is_array( $discipline ) ) {
+                    $row['discipline'] = end( $discipline );
+                }
+
             }
         }
 	}

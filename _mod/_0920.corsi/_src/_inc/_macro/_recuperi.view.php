@@ -85,13 +85,20 @@
         'progetto' => 'corso',
         'luogo' => 'luogo',
         'data_programmazione_recupero' => 'data recupero',
+        'discipline_recupero' => 'discipline recupero',
+        'corso_recupero' => 'corso recupero',
         NULL => 'azioni'
       );
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
+        'tipologia' => 'd-none',
 	    '__label__' => 'text-left',
+        'discipline' => 'text-left',
+        'discipline_recupero' => 'text-left',
+        'progetto' => 'text-left',
+        'corso_recupero' => 'text-left',
         'cliente' => 'text-left d-none d-md-table-cell',
         'anagrafica_programmazione' => 'text-left',
 	    'data_programmazione' => 'no-wrap',
@@ -100,6 +107,7 @@
         'ora_fine_programmazione' => 'd-none',
         'data_attivita' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
+        'luogo' => 'd-none',
         'nome' => 'text-left',
         'ora_inizio' => 'd-none',
         'ora_fine' => 'd-none',
@@ -176,12 +184,23 @@
 		foreach ( $ct['view']['data'] as &$row ){
              if(! empty($row['data_programmazione'])){
 //                $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
-                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
+#                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
 
                 if( empty( $row['data_programmazione_recupero'] ) ) {
                     $row[ NULL ] =  '<a href="'.$cf['contents']['pages']['lezioni.view']['url'][ LINGUA_CORRENTE ].'?__work__[recuperi][items][1][id]='.$row['id'].'&__work__[recuperi][items][1][label]=recupero lezione per '.$row['anagrafica'].'"><span class="media-left"><i class="fa fa-calendar"></i></span></a>';
                 }
 
             }
+
+            $discipline = explode( ' > ', $row['discipline'] );
+            if( is_array( $discipline ) ) {
+                $row['discipline'] = end( $discipline );
+            }
+
+            $discipliner = explode( ' > ', $row['discipline_recupero'] );
+            if( is_array( $discipliner ) ) {
+                $row['discipline_recupero'] = end( $discipliner );
+            }
+
         }
 	}

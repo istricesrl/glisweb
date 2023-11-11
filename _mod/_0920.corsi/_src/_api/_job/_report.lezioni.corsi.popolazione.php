@@ -40,6 +40,8 @@
             if( isset( $job['workspace']['id_corso'] ) && ! empty( $job['workspace']['id_corso'] ) ) {
                 $whr = 'AND c.id_progetto = ?';
                 $cnd[] = array( 's' => $job['workspace']['id_corso'] );
+            } else {
+                $whr = 'LIMIT 1000';
             }
 
             // inizializzo l'array

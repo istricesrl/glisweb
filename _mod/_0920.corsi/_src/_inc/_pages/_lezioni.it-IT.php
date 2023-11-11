@@ -128,6 +128,7 @@
 			'macro'			=> array( $m . '_src/_inc/_macro/_recuperi.view.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'recuperi.view',
+															'recuperi.archivio.view',
 															'recuperi.tools' ) ),
 			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'recuperi' ),
 																			'priority'	=> '115' ) ) )														

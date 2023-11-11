@@ -66,6 +66,8 @@
     $ct['view']['cols'] = array(
         'id' => '#',
         'tipologia' => 'tipologia',
+        'discipline' => 'discipline',
+        'progetto' => 'progetto',
         'data_programmazione' => 'data',
         'ora_inizio_programmazione' => 'ora inizio',
         'ora_fine_programmazione' => 'ora fine',
@@ -85,8 +87,8 @@
         'ora_fine_programmazione' => 'text-left d-none d-md-table-cell',
         'luogo' => 'text-left',
         'ora_inizio_programmazione' => 'text-left',
-        'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',
-        'docenti' => 'text-left no-wrap d-none d-sm-table-cell',
+        'anagrafica' => 'd-none',
+        'docenti' => 'd-none',
         'data_programmazione' => 'text-left',
     #	    'completato' => 'text-left'
     );
