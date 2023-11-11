@@ -209,6 +209,9 @@
                             )
                         );
 
+                        // status
+                        $job['status']['error'][] = 'comune ' . $job['riga']['comune'] . ' trovato (' . $idComune . ') per la riga ' . $job['corrente'];
+
                     } else {
 
                         // TODO trovo l'indirizzo
