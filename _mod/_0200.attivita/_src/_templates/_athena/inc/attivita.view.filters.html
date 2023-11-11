@@ -27,7 +27,7 @@
 	{% endfor %}
 	</select>
     </div>
-    <div class="col-6 col-md-auto">
+    <div class="col-6 col-md-2">
 		<span class="label-top">step</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_step][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_step.EQ == "" %}selected{% endif %}>tutti</option>
@@ -63,7 +63,7 @@
 	    {% endfor %}
 	</select>
 	</div>
-	<div class="col-6 col-md-auto">
+	<div class="col-6 col-md-2">
 		<span class="label-top">tipologia</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_tipologia][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.id_tipologia.EQ == "" %}selected{% endif %}>tutte</option>
