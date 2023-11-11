@@ -125,7 +125,8 @@
 		// restituisco false
 		    return false;
 
-	    } elseif( $p !== false ) {
+#	    } elseif( $p !== false ) {
+		} elseif( ! empty( $p ) ) {
 
 		// passo alla funzione con prepared statement
 		    return mysqlPreparedQuery( $c, $q, $p, $e );

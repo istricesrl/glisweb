@@ -19,6 +19,7 @@
     foreach( $csv as $f ) {
 
         // ...
+        // NOTA no timeout ma lavorare un file per volta
         if( filemtime( $f ) < strtotime( '-3 minutes' ) ) {
 
             // ricavo l'azione e l'entità

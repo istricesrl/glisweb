@@ -1120,6 +1120,8 @@ CREATE OR REPLACE VIEW `recuperi_view` AS
 		recupero.data_programmazione AS data_programmazione_recupero,
 		recupero.ora_inizio_programmazione AS ora_inizio_programmazione_recupero,
 		recupero.ora_fine_programmazione AS ora_fine_programmazione_recupero,
+		corso_recupero.nome AS corso_recupero,
+		group_concat( DISTINCT if( dr.id, categorie_progetti_path( dr.id ), null ) SEPARATOR ' | ' ) AS discipline_recupero,
 		attivita.nome,
 		attivita.id_documento,
 		concat(
@@ -1171,6 +1173,9 @@ CREATE OR REPLACE VIEW `recuperi_view` AS
 		LEFT JOIN documenti ON documenti.id = attivita.id_documento
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN attivita AS recupero ON recupero.id_genitore = attivita.id AND recupero.id_tipologia = 32
+		LEFT JOIN progetti AS corso_recupero ON corso_recupero.id = recupero.id_progetto
+		LEFT JOIN progetti_categorie AS progetti_categorie_recupero ON progetti_categorie_recupero.id_progetto = recupero.id_progetto
+		LEFT JOIN categorie_progetti AS dr ON dr.id = progetti_categorie_recupero.id_categoria AND dr.se_disciplina = 1		
 	WHERE attivita.id_tipologia = 19
 	GROUP BY attivita.id
 ;
@@ -4545,7 +4550,7 @@ CREATE OR REPLACE VIEW `liste_mail_view` AS
 	FROM liste_mail
 	INNER JOIN liste ON liste.id = liste_mail.id_lista
 	INNER JOIN mail ON mail.id = liste_mail.id_mail
-	INNER JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
+	LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
 ;
 
 -- | 090000017200
