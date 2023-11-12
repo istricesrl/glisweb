@@ -332,11 +332,14 @@
 
 			// debug
 			// print_r( $i );
-			//  echo $q . PHP_EOL;
+			// echo $q . PHP_EOL;
 			// print_r($vs);
 
 			// eseguo la query
 		    $d = mysqlQuery( $c, $q, $vs, $e['__codes__'] );
+
+			// debug
+			// print_r( $d );
 
 			// registro il numero totale di righe
 			$i['__pager__']['total'] = mysqlSelectValue( $c, 'SELECT found_rows() AS t' );
