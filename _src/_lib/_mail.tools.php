@@ -226,6 +226,9 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
 
 	    }
 
+		// ...
+		$corpo = path2url( $corpo );
+
 	// accodo la mail
 	    $id = queueMail(
 			$c,

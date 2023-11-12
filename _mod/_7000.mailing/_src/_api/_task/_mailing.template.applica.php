@@ -40,6 +40,18 @@
         $cnt['id_template'] = NULL;
         $cnt['id_mailing'] = $_REQUEST['__mailing__'];
 
+        $idCnt = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            $cnt,
+            'contenuti',
+            true,
+            false,
+            array(
+                'id_mailing',
+                'id_lingua'
+            )
+        );
+
     }
 
     // output

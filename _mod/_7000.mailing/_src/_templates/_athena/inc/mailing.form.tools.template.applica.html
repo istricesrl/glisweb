@@ -8,7 +8,7 @@
 
 	$('#applica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 	
-	var call = '{{ site.url }}task/7000.mailing/mailing.template.applica?__template__='+data+'&__mailing__=';
+	var call = '{{ site.url }}task/7000.mailing/mailing.template.applica?__template__='+data+'&__mailing__={{ request[ form.table ].id }}';
 
 	getws( call,'', function() {
 		$('#applica').html('<i class="fa fa-check"></i>');

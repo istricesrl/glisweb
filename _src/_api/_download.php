@@ -20,6 +20,15 @@
     // variabile generale per il comportamento
     $authorized = false;
 
+    // ...
+    if( isset( $_REQUEST['__mailing__'] ) ) {
+        if( isset( $_REQUEST['__mailing_dst__'] ) ) {
+            logWrite( 'rilevata lettura mailing #' . $_REQUEST['__mailing__'] . ' per mail #' . $_REQUEST['__mailing_dst__'], 'mailing' );
+        } else {
+            logWrite( 'rilevata lettura mailing #' . $_REQUEST['__mailing__'], 'mailing' );
+        }
+    }
+
     // determino il mime type
     $finfo = finfo_open( FILEINFO_MIME );
     $mimetype = finfo_file( $finfo, DIR_BASE . $_REQUEST['__download__'] );

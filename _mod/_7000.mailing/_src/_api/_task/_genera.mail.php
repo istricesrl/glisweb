@@ -78,7 +78,8 @@
 			array(
 				'indirizzo' => $_REQUEST['mt'],
 				'destinatario' => 'DESTINATARIO DI TEST',
-				'timestamp_invio' => time()
+				'timestamp_invio' => time(),
+				'id_mail' => NULL
 			)
 		);
 
@@ -87,7 +88,7 @@
 		// prelevo una riga dalla coda
 		$row = mysqlSelectRow(
 			$cf['mysql']['connection'],
-			'SELECT mailing.*, '.
+			'SELECT mailing.*, mailing_mail.id_mail, '.
 			'mail.indirizzo, concat_ws( \' \', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS destinatario '.
 			'FROM mailing_mail '.
 			'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
@@ -125,6 +126,7 @@
 
 		// ciclo sui contenuti
 		foreach( $cnts as $cnt ) {
+			$cnt['testo'] = path2url( $cnt['testo'], 1, $row['id'], $row['id_mail'] );
 			$tpl[ $cnt['ietf'] ] = array(
 			'from' => array( $cnt['mittente_nome'] => $cnt['mittente_mail'] ),
 # dopo		'to' => array( $row['destinatario'] => $row['indirizzo'] ),
