@@ -168,11 +168,14 @@
         $idRecupero = $recupero['id'];
 
         // ...
+        // die( print_r( $recupero, true ) );
+        // die( 'ID recupero: ' . $idRecupero );
         // die( 'recupero lezione #' . $_REQUEST['idRecupero'] );
 
         // seleziono la disciplina
-        $disciplina = mysqlSelectCachedRow(
-            $cf['memcache']['connection'],
+#        $disciplina = mysqlSelectCachedRow(
+#            $cf['memcache']['connection'],
+        $disciplina = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT categorie_progetti.id, categorie_progetti.id_genitore, todo.id_progetto '.
             'FROM attivita '.
@@ -180,7 +183,7 @@
             'INNER JOIN progetti_categorie ON progetti_categorie.id_progetto = todo.id_progetto '.
             'INNER JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria '.
             'WHERE categorie_progetti.se_disciplina IS NOT NULL '.
-            'AND attivita.id = ? ',
+            'AND attivita.id = ?',
             array(
                 array( 's' => $idRecupero )
             )
@@ -191,20 +194,30 @@
         $idDisciplinaGenitore = $disciplina['id_genitore'];
         $idCorso = $disciplina['id_progetto'];
 
+        // debug
+        // die( print_r( $disciplina, true ) );
+        // die( 'disciplina: ' . $idDisciplina );
+
+        // ...
+        // echo 'dall\'assenza #' . $idRecupero . ' ricavo il corso #' . $idCorso . ' e la disciplina #' . $idDisciplina . PHP_EOL;
+
+
         // seleziono le discipline collegate
-        $disciplineCollegate = mysqlSelectCachedColumn(
-            $cf['memcache']['connection'],
+#        $disciplineCollegate = mysqlSelectCachedColumn(
+#            $cf['memcache']['connection'],
+        $disciplineCollegate = mysqlSelectColumn(
             'id',
             $cf['mysql']['connection'],
             'SELECT categorie_progetti.id '.
             'FROM categorie_progetti '.
-            'LEFT JOIN metadati AS mn ON mn.id_categoria_progetti = categorie_progetti.id AND mn.nome = "non_disponibile_per_recuperi" AND metadati.testo = "1" '.
+            'LEFT JOIN metadati AS mn ON mn.id_categoria_progetti = categorie_progetti.id AND mn.nome = "non_disponibile_per_recuperi" AND mn.testo = "1" '.
+            'LEFT JOIN metadati AS my ON my.id_categoria_progetti = categorie_progetti.id AND my.nome = "recuperi_da_qualsiasi_disciplina" AND my.testo = "1" '.
             'LEFT JOIN relazioni_categorie_progetti AS r1 ON r1.id_categoria = categorie_progetti.id '.
             'LEFT JOIN relazioni_categorie_progetti AS r2 ON r2.id_categoria_collegata = categorie_progetti.id '.
 //            'WHERE categorie_progetti_path_check( categorie_progetti.id, ? ) = 1 AND metadati.id IS NULL ',
 //2            'WHERE categorie_progetti.id_genitore = ? AND metadati.id IS NULL AND ( relazioni_categorie_progetti.id IS NULL OR relazioni_categorie_progetti.id_categoria_collegata = ? )',
-            'WHERE r1.id_categoria_collegata = ? OR r2.id_categoria = ? '.
-            'GROUP BY categorie_progetti.id ',
+            'WHERE r1.id_categoria_collegata = ? OR r2.id_categoria = ? OR my.id IS NOT NULL AND mn.id IS NULL '.
+            'GROUP BY categorie_progetti.id',
             array(
 //2                array( 's' => $idDisciplinaGenitore ),
                 array( 's' => $idDisciplina ),
@@ -215,19 +228,40 @@
         // aggiungo la disciplina corrente alle discipline da considerare
         $disciplineCollegate[] = $idDisciplina;
 
+        // ...
+        // die( print_r( $disciplineCollegate, true ) );
+        // echo 'le discipline collegate per la #' . $idDisciplina . ' sono: ' . implode( ', ', $disciplineCollegate ) . PHP_EOL;
+
+        // ...
+        // $disciplineCollegate = array_unique( $disciplineCollegate );
+
+        // ...
+        if( count( $disciplineCollegate ) ) {
+
         // seleziono i corsi per le discipline collegate
-        $idCorsi = mysqlSelectCachedColumn(
-            $cf['memcache']['connection'],
+#        $idCorsi = mysqlSelectCachedColumn(
+#            $cf['memcache']['connection'],
+        $idCorsi = mysqlSelectColumn(
             'id_progetto',
             $cf['mysql']['connection'],
             'SELECT progetti_categorie.id_progetto '.
             'FROM progetti_categorie '.
-            'WHERE progetti_categorie.id_categoria IN (' . implode( ',', $disciplineCollegate ) . ')'
+            'WHERE progetti_categorie.id_progetto != ? '.
+            'AND progetti_categorie.id_categoria IN (' . trim( implode( ',', $disciplineCollegate ), ',' ) . ') '.
+            'GROUP BY progetti_categorie.id_progetto ',
+            array(
+                array( 's' => $idCorso )
+            )
         );
 
         // ...
         // die( 'recupero per la disciplina #' . $idDisciplina );
         // die( 'genitore della disciplina #' . $idDisciplinaGenitore );
+        // die( print_r( $idCorsi, true ) );
+
+    }
+
+
 /*
         // ...
         $disciplineSorelle = mysqlSelectCachedColumn(
@@ -264,17 +298,21 @@
 */
         // ...
         // die( print_r( $idCorsi, true ) );
+        if( in_array( $idCorso, $idCorsi ) ) {
+            die('WTF?');
+        }
 
         // preset filtro custom progetti aperti
         if( count( $idCorsi ) > 0 ) {
             $ct['view']['__restrict__']['id_progetto']['IN'] = implode( '|', $idCorsi );
+//            die( print_r( implode( ',', $idCorsi ), true ) );
         } else {
             $ct['view']['__restrict__']['id_progetto']['NL'] = true;
         }
 
         // preset filtro custom progetti aperti
         // $ct['view']['__restrict__']['data_programmazione']['GE'] = '2023-06-01';
-         $ct['view']['__restrict__']['data_programmazione']['GE'] = date( 'Y-m-d' );
+#        $ct['view']['__restrict__']['data_programmazione']['GE'] = date( 'Y-m-d' );
 
         // campo preset per la data attività
         $ct['view']['open']['context'] = array(
@@ -283,6 +321,9 @@
     
         // ...
         $ct['view']['open']['page'] = 'lezioni.form.presenze';
+
+        // ...
+        // unset( $_SESSION['__work__']['recuperi']['items'] );
 
     }
 
