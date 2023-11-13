@@ -97,8 +97,11 @@
 	    $latestRelease = restCall(
             'https://glisweb.istricesrl.it/current.release',
             METHOD_GET,
-            array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'] ),
-            MIME_APPLICATION_JSON,
+#            array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'] ),
+#            MIME_APPLICATION_JSON,
+#            MIME_TEXT_PLAIN
+            NULL,
+            MIME_TEXT_PLAIN,
             MIME_TEXT_PLAIN
 	    );
         writeToFile( $latestRelease, FILE_LATEST_RELEASE );
@@ -109,8 +112,11 @@
         $latestVersion = restCall(
             'https://glisweb.istricesrl.it/current.version',
             METHOD_GET,
-            array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'], 'release' => $latestRelease ),
-            MIME_APPLICATION_JSON,
+#            array( 'license' => $cf['common']['license']['id'], 'site' => $cf['site']['url'], 'release' => $latestRelease ),
+#            MIME_APPLICATION_JSON,
+#            MIME_TEXT_PLAIN
+            NULL,
+            MIME_TEXT_PLAIN,
             MIME_TEXT_PLAIN
         );
         writeToFile( $latestVersion, FILE_LATEST_VERSION );
