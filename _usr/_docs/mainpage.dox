@@ -68,7 +68,7 @@
     rm -rf .github
     rm -f .gitignore
     rm -f develop.zip
-    _src/_sh/_lamp.permissions.reset.sh
+    _src/_sh/_lamp.permissions.secure.sh
     _src/_sh/_mysql.install.sh
     _src/_sh/_gw.config.sh base
     composer update

@@ -166,7 +166,7 @@ if [ -f "$FILE" ]; then
 #		./_src/_sh/_mysql.install.sh $MYSQLIP $MYSQLPORT $MYSQLDB $MYSQLUSER $MYSQLPW
 #	fi
 
-    ./_src/_sh/_lamp.permissions.reset.sh
+    ./_src/_sh/_lamp.permissions.secure.sh
 
 elif [ -n "$1" ]; then
 
