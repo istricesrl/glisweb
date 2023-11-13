@@ -22,7 +22,7 @@
 
     // sitemap file
     // TODO testare come si comporta con www e non www
-	$sitemapFile = DIR_ETC_SITEMAP . 'sitemap.' . $cf['site']['fqdn'] . '.xml';
+	$sitemapFile = DIR_VAR_SITEMAP . 'sitemap.' . $cf['site']['fqdn'] . '.xml';
 
     // debug
 	// echo $sitemapFile;
@@ -212,7 +212,7 @@
 		sort( $url );
 
 	    // apro la mappa CSV
-		$csv = fopen( DIR_ETC_SITEMAP . 'sitemap.' . $cf['site']['fqdn'] . '.csv', 'w+' );
+		$csv = fopen( DIR_VAR_SITEMAP . 'sitemap.' . $cf['site']['fqdn'] . '.csv', 'w+' );
 
 	    // scrivo la sitemap CSV
 		foreach( $url as $u ) {

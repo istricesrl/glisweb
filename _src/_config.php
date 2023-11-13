@@ -337,7 +337,6 @@
 	define( 'DIR_USR_DOCS_BUILD_LATEX'	, DIR_BASE . '_usr/_docs/build/latex/' );
 
     // directory solo custom
-	define( 'DIR_ETC_SITEMAP'		, DIR_BASE . 'etc/sitemap/' );
 	define( 'DIR_TMP'			, DIR_BASE . 'tmp/' );
 	define( 'DIR_VAR'			, DIR_BASE . 'var/' );
 	define( 'DIR_VAR_CACHE'			, DIR_BASE . 'var/cache/' );
@@ -353,6 +352,7 @@
     define( 'DIR_VAR_LOG_PIANIFICAZIONI'   , DIR_VAR_LOG . 'pianificazioni/' );
 	define( 'DIR_VAR_LOG_LATEST'		, DIR_BASE . 'var/log/latest/' );
 	define( 'DIR_VAR_LOG_SLOW'		, DIR_BASE . 'var/log/slow/' );
+	define( 'DIR_VAR_SITEMAP'		, DIR_BASE . 'var/sitemap/' );
     define( 'DIR_VAR_SPOOL'			, DIR_BASE . 'var/spool/' );
     define( 'DIR_VAR_SPOOL_CART'			, DIR_BASE . 'var/spool/cart/' );
     define( 'DIR_VAR_SPOOL_DOCS'			, DIR_BASE . 'var/spool/docs/' );
@@ -429,8 +429,18 @@
     require DIR_SRC_INC_MACRO . '_security.php';
 
     // controllo scrittura
-    if( ! is_writeable( DIR_BASE ) ) {
-        die( 'la cartella di installazione non è scrivibile, lanciare _lamp.permissions.reset.sh' );
+    if( is_writeable( DIR_BASE ) ) {
+        die( 'la cartella di installazione è scrivibile, lanciare _lamp.permissions.secure.sh' );
+    }
+
+    // controllo scrittura
+    if( ! is_writeable( DIR_VAR ) ) {
+        die( 'la cartella var non è scrivibile, lanciare _lamp.permissions.secure.sh' );
+    }
+
+    // controllo scrittura
+    if( ! is_writeable( DIR_TMP ) ) {
+        die( 'la cartella tmp non è scrivibile, lanciare _lamp.permissions.secure.sh' );
     }
 
     // inizializzazione motore numeri casuali

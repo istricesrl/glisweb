@@ -24,7 +24,7 @@
      */
 
     // directory da controllare
-	$cf['debug']['fs']['folders'] = array_fill_keys( array( DIR_ETC_SITEMAP, DIR_VAR, DIR_VAR_LOG, DIR_TMP ), false );
+	$cf['debug']['fs']['folders'] = array_fill_keys( array( DIR_VAR_SITEMAP, DIR_VAR, DIR_VAR_LOG, DIR_TMP ), false );
     $cf['debug']['fs']['files'] = array_fill_keys( array( path2custom( FILE_MYSQL_PATCH ) ), false );
 
     // verifico le cartelle

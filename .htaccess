@@ -52,8 +52,8 @@ Options -Indexes
     RewriteRule ^favicon.ico _src/_img/_favicon.ico [L]
 
     # sitemap
-    RewriteRule ^sitemap.xml etc/sitemap/sitemap.%{HTTP_HOST}.xml [L]
-    RewriteRule ^sitemap.csv etc/sitemap/sitemap.%{HTTP_HOST}.xml [L]
+    RewriteRule ^sitemap.xml var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
+    RewriteRule ^sitemap.csv var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
 
     # redirect a HTTPS
     RewriteCond %{HTTPS} off

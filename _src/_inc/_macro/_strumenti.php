@@ -135,7 +135,7 @@
 	    timerCheck( $cf['speed'], '-> controllo file temporanei' );
 	}
 
-	if( count( glob( DIR_ETC_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE ) ) > 0 ) {
+	if( count( glob( DIR_VAR_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE ) ) > 0 ) {
 	    $ct['page']['contents']['metro']['cache'][] = array(
 			'ws' => $base . 'sitemap.clean',
 			'icon' => NULL,

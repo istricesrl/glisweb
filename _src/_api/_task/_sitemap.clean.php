@@ -20,7 +20,7 @@
 	$status = array();
 
     // elimino i log
-	$maps = glob( DIR_ETC_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE );
+	$maps = glob( DIR_VAR_SITEMAP . 'sitemap.*.{xml,csv}', GLOB_BRACE );
 	foreach( $maps as $map ) {
         $status['files'][] = $map;
 	    deleteFile( $map );
