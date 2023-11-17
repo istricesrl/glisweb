@@ -1,0 +1,33 @@
+{% import '_bin/_navigation.html' as nav %}
+
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.html' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.html' %}
+
+        <header class="fixed-top">
+
+            {% block header %}{% endblock %}
+
+        </header>
+
+        <main class="d-flex flex-column container-fluid w-100 vh-100">
+            
+            {% block main %}{% endblock %}
+
+        </main>
+
+        {% include '_inc/_page.close.html' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>
