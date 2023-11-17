@@ -29,7 +29,7 @@
             }
         }
         
-        $output = $dom->saveXML( $doc );
+        $output = $dom->saveXML( $doc->documentElement );
         
         return $output;
 
