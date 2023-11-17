@@ -64,6 +64,7 @@
      $ct['view']['cols'] = array(
 	    'id' => '#',
         'tipologia' => 'tipologia',
+        'codice_cliente' => 'codice',
         'cliente' => 'cliente',
         'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
