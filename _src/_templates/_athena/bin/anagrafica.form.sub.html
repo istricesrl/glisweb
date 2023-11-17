@@ -29,7 +29,7 @@
 	    </div>
 		{% if r.id %}
 		<div class="col-auto p-0 pl-1">
-			<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['mail.form'].url[ lang ] }}?mail[id]={{ r.id }}','_self')"><i class="fa fa-pencil"></i></button>
+			<button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['mail.form'].url[ lang ] }}?mail[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
 		</div>
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
