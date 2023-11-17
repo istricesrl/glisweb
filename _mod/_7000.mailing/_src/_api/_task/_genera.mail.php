@@ -108,6 +108,9 @@
     // se c'è almeno una mail da inviare
     if( ! empty( $row ) ) {
 
+		// calcolo il token di cancellazione
+		$row['mtk'] = md5( $row['id_mail'].$row['indirizzo'] );
+
 		// inizializzo il template
 		$tpl = array(
 			'type' => 'twig',
@@ -138,6 +141,10 @@
 			'oggetto' => $cnt['cappello'], // è giusto cappello?
 			'testo' => $cnt['testo']
 			);
+# TODO appendere automaticamente:
+# <p>ricevi questa mail perché sei iscritto alla nostra newsletter, per cancellarti <a href="https://crm.eurosnodi.it/disiscrizione?mtk={{ row.mtk }}&amp;isc={{ row.id_mail }}">clicca qui</a></p>
+# se nel testo non è presente la stringa:
+# mtk={{ row.mtk }}&amp;isc={{ row.id_mail }}
 		}
 
 		// prelevo gli allegati
@@ -161,7 +168,7 @@
 			$tpl,
 # TODO prelevare i dati dai metadati del mailing e inserirli come dt
 # TODO prelevare i dati del destinatario e inserirli come ds
-			array(),
+			array( 'row' => $row ),
 			$row['timestamp_invio'],
 			array( $row['destinatario'] => $row['indirizzo'] ),
 			$cf['localization']['language']['ietf']

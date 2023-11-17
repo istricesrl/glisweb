@@ -114,6 +114,11 @@
 		
 	);
 
+	// RELAZIONI CON IL MODULO CERTIFICAZIONI
+	if( in_array( "7000.mailing", $cf['mods']['active']['array'] ) ) {
+		arrayInsertSeq( 'mail.form', $p['mail.form']['etc']['tabs'], 'mail.form.iscrizioni' );
+	}
+
 	// gestione mail strumenti
 	$p['mail.form.tools'] = array(
 	    'sitemap'		=> false,

@@ -293,4 +293,13 @@
 	    'etc'		=> array( 'tabs'	=> $p['template.mailing.form']['etc']['tabs'] )
 	);
 
-
+    // dashboard mailing
+	$p['disiscrizione'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'disiscrizione' ),
+	    'h1'		=> array( $l		=> 'disiscrizione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_aurora/', 'schema' => 'disiscrizione.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_disiscrizione.php' ),
+	    'parent'		=> array( 'id'		=> NULL ),
+		'auth'		=> array( 'groups'	=> array(	'guests' ) )
+	);

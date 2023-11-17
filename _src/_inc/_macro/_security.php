@@ -180,22 +180,24 @@
     // print_r( $attackers );
 
     // controllo attackers
-    if( in_array( $_SERVER['REMOTE_ADDR'], array_keys( $attackers ) ) ) {
+    if( is_array( $attackers ) ) {
+        if( in_array( $_SERVER['REMOTE_ADDR'], array_keys( $attackers ) ) ) {
 
-        // log
-        $h = fopen( DIR_VAR_SPOOL_SECURITY . 'attacco.' . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
-        fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola IP ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL . 
-                    'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
-                    'url: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL .
-                    'contenuto: ' . PHP_EOL . $_SERVER['QUERY_STRING'] . PHP_EOL . PHP_EOL );
-        fclose( $h );
-
-        // HTTP status
-        http_response_code( 400 );
-
-        // output
-        die('nice try');
-
+            // log
+            $h = fopen( DIR_VAR_SPOOL_SECURITY . 'attacco.' . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
+            fwrite( $h, date( 'Y-m-d H:i:s' ) . ' match per la regola IP ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL . 
+                        'sorgente: ' . $_SERVER['REMOTE_ADDR'] . PHP_EOL .
+                        'url: ' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . PHP_EOL .
+                        'contenuto: ' . PHP_EOL . $_SERVER['QUERY_STRING'] . PHP_EOL . PHP_EOL );
+            fclose( $h );
+    
+            // HTTP status
+            http_response_code( 400 );
+    
+            // output
+            die('nice try');
+    
+        }
     }
 
     // URL sospetti
