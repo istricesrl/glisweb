@@ -11,6 +11,7 @@
 
     // tendina sesso
 	$ct['etc']['select']['confronti'] = array( 
+	    array( 'id' => 'NESSUNO', '__label__' => 'nessun confronto' ),
 	    array( 'id' => 'PERIODO', '__label__' => 'periodo precedente' ),
 	    array( 'id' => 'ANNO', '__label__' => 'anno precedente' ),
 	);
@@ -65,11 +66,16 @@
 	// var_dump( $f );
 
 	$ts = strtotime( $_REQUEST['__stats__']['__inizio__'] );
+	$fine = false;
 
 	do {
 		$dataCorrente = date( 'Y-m-d', $ts );
 		// $ct['data']['labels'][ date( $d, $ts ) ] = strftime( $f, $ts );
-		$ct['data']['labels'][ date( $d, $ts ) ] = date( $d, $ts );
-		$ct['data']['grafico']['base'][ date( $d, $ts ) ] = $ds['base'][ strftime( $f, $ts ) ] = array( 'value' => 0 );
-		$ts = strtotime( '+1 ' . $u, $ts );
-	} while( $dataCorrente < $_REQUEST['__stats__']['__fine__'] );
+		if( $dataCorrente < $_REQUEST['__stats__']['__fine__'] ) {
+			$ct['data']['labels'][ date( $d, $ts ) ] = date( $d, $ts );
+			$ct['data']['grafico']['corrente'][ date( $d, $ts ) ] = $ds['corrente'][ strftime( $f, $ts ) ] = array( 'value' => 0 );
+			$ts = strtotime( '+1 ' . $u, $ts );
+		} else {
+			$fine = true;
+		}
+	} while( $fine === false );

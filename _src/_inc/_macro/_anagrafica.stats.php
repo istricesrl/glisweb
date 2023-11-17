@@ -8,9 +8,6 @@
      * @file
      *
      */
-    
-    // tabella gestita
-    $ct['form']['table'] = 'anagrafica';
 
     // tendina sesso
 	$ct['etc']['select']['sorgenti'] = array( 
@@ -38,7 +35,6 @@
             $whr = NULL;
             $ijn = NULL;
             $cnd = array(
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                 array( 's' => $_REQUEST['__stats__']['__inizio__'] ),
                 array( 's' => $_REQUEST['__stats__']['__fine__'] )
             );
@@ -47,7 +43,6 @@
                 $ijn = 'INNER JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id AND categorie_prodotti_path_check( prodotti_categorie.id_categoria, ? ) ';
                 $cnd = array(
                     array( 's' => $_REQUEST['__stats__']['__categoria__'] ),
-                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                     array( 's' => $_REQUEST['__stats__']['__inizio__'] ),
                     array( 's' => $_REQUEST['__stats__']['__fine__'] )
                 );
@@ -63,7 +58,6 @@
                 'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
                 $ijn.
                 'WHERE documenti.id_tipologia = 7 '.
-                'AND documenti.id_emittente = ? '.
                 'AND documenti.data >= ? AND documenti.data <= ? '.
                 $whr.
                 'GROUP BY date_format( documenti.data, "' . $m . '" )',
@@ -72,6 +66,7 @@
 
             // var_dump( $m );
             // print_r( $dati );
+            // print_r( $_REQUEST );
 
             foreach( $dati as $row ) {
                 $ct['data']['grafico']['corrente'][ $row['label'] ] = $ds['corrente'][ $row['label'] ] = array( 'value' => $row['importo'] );
@@ -98,7 +93,6 @@
                 $whr = NULL;
                 $ijn = NULL;
                 $cnd = array(
-                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                     array( 's' => date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__inizio__'] . ' -1 year' ) ) ),
                     array( 's' => date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__fine__'] . ' -1 year' ) ) )
                 );
@@ -107,7 +101,6 @@
                     $ijn = 'INNER JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id AND categorie_prodotti_path_check( prodotti_categorie.id_categoria, ? ) ';
                     $cnd = array(
                         array( 's' => $_REQUEST['__stats__']['__categoria__'] ),
-                        array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                         array( 's' => date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__inizio__'] . ' -1 year' ) ) ),
                         array( 's' => date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__fine__'] . ' -1 year' ) ) )
                         );
@@ -123,7 +116,6 @@
                     'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
                     $ijn.
                     'WHERE documenti.id_tipologia = 7 '.
-                    'AND documenti.id_emittente = ? '.
                     'AND documenti.data >= ? AND documenti.data <= ? '.
                     $whr.
                     'GROUP BY date_format( documenti.data, "' . $m . '" )',
