@@ -892,6 +892,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id_tipologia,
 		tipologie_attivita.nome AS tipologia,
 		attivita.id_cliente,
+		a2.codice AS codice_cliente,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
 		attivita.id_contatto,
 		c1.nome AS contatto,

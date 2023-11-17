@@ -161,6 +161,7 @@ CREATE TABLE `attivita_view_static` (
   `id_tipologia` int(11) DEFAULT NULL,
   `tipologia` char(64) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
+  `codice_cliente` char(64) DEFAULT NULL,
   `cliente` char(255) DEFAULT NULL,
   `id_contatto`	int(11) DEFAULT NULL,
   `contatto`	char(255) DEFAULT NULL,	
