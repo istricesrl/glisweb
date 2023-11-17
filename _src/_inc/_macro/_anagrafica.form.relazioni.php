@@ -23,11 +23,12 @@
 	$ct['form']['table'] = 'anagrafica';
 
     // tendina  agente
+    // TODO mettere le relazioni per le persone fisiche e i ruoli organizzazione per le persone giuridiche?
 	$ct['etc']['select']['ruoli'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_anagrafica_view WHERE se_relazioni IS NOT NULL'
+	    'SELECT id, __label__ FROM ruoli_anagrafica_view WHERE se_relazioni IS NOT NULL OR se_organizzazioni IS NOT NULL'
     );
 
     // tendina  anagrafica
