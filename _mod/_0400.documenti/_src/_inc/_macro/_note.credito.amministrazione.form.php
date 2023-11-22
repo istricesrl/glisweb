@@ -30,6 +30,13 @@
 	    'SELECT id, __label__ FROM tipologie_documenti_view WHERE se_nota_credito = 1'
 	);
 
+	// esigibilità iva
+	$ct['etc']['select']['esigibilita'] = array(
+		array( 'id' => 'I', '__label__'=> 'I - immediata' ),
+		array( 'id' =>'D', '__label__'=> 'D - differita' ),
+		array( 'id' =>'S', '__label__'=> 'S - scissione dei pagamenti')
+	); 
+	
 	// tendina condizioni_pagamento
 	$ct['etc']['select']['condizioni_pagamento'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

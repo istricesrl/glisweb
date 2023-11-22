@@ -73,6 +73,10 @@
                         <span class="label-top">nome</span>
                         {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
                     </div>
+					<div class="col-md col">
+						<span class="label-top">esigibilità</span>
+						{{ frm.selectRequired( table, '', '', 'esigibilita', '', etc.select.esigibilita, request ) }}
+					</div>
                 </div>
 
                 <div class="form-group form-row">
