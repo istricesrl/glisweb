@@ -52,16 +52,19 @@
 	    // assegno l'id del sito corrente alla chiave 'id'
 		$site['id'] = $id;
 
-	    // ciclo sugli stati del sito
+		// debug
+		// print_r( $sito );
+		// die();
+
+		// ciclo sugli stati del sito
 		foreach( $site['domains'] as $status => $domain ) {
+
+			// debug
+			// echo $status . '->' . $domain . PHP_EOL;
+			// echo $domain .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
 
 		    // se c'è un dominio per questo status
 			if( ! empty( $domain ) ) {
-
-			    // debug
-				// echo $id . '->';
-				// echo $status . '->' . $domain . PHP_EOL;
-				// echo $domain .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
 
 			    // inizializzazioni
 				$hosts = $domains = array();
@@ -125,7 +128,7 @@
 		// define( 'SITE_CURRENT'		, SITE_DEFAULT );
 
 		// TODO questa è una soluzione temporanea e un po' brutale
-		die( 'impossibile chiamare il framework per ' . $_SERVER['HTTP_HOST'] . ' in ' . DIR_BASE );
+		die( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare che il file config.json sia nella posizione giusta oppure i dati in 010.site.php' );
 
 	}
 

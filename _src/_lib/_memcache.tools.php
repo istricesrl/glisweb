@@ -123,13 +123,17 @@
      */
     function memcacheDelete( $conn, $key, &$err = Memcached::RES_FAILURE ) {
 
-	memcacheUniqueKey( $key );
+        memcacheUniqueKey( $key );
 
-    if( ! empty( $conn ) ) {
-        return $conn->delete( $key );
-    } else {
-        return false;
-    }
+        if( empty( $conn ) ) {
+
+            return false;
+
+        } else {
+
+            return $conn->delete( $key );
+
+        }
 
     }
 
@@ -143,7 +147,15 @@
      */
     function memcacheFlush( $conn ) {
 
-	return $conn->flush();
+        if( empty( $conn ) ) {
+
+            return false;
+
+        } else {
+
+	        return $conn->flush();
+
+        }
 
     }
 

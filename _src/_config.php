@@ -428,21 +428,6 @@
     // filtro di sicurezza
     require DIR_SRC_INC_MACRO . '_security.php';
 
-    // controllo scrittura
-    if( is_writeable( DIR_BASE ) ) {
-        die( 'la cartella di installazione è scrivibile, lanciare _lamp.permissions.secure.sh' );
-    }
-
-    // controllo scrittura
-    if( ! is_writeable( DIR_VAR ) ) {
-        die( 'la cartella var non è scrivibile, lanciare _lamp.permissions.secure.sh' );
-    }
-
-    // controllo scrittura
-    if( ! is_writeable( DIR_TMP ) ) {
-        die( 'la cartella tmp non è scrivibile, lanciare _lamp.permissions.secure.sh' );
-    }
-
     // inizializzazione motore numeri casuali
 	mt_srand( ( double ) microtime() * 1000000 );
 

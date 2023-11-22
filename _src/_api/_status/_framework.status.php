@@ -45,7 +45,7 @@
 	} else {
 	    echo '[ -- ] directory base: ' . DIR_BASE . PHP_EOL;
 	}
-
+/*
     // permessi di scrittura
 	foreach( array_keys( $cf['debug']['fs']['folders'] ) as $dir ) {
 	    if( is_dir( $dir ) && is_writeable( $dir ) ) {
@@ -63,7 +63,7 @@
 		die( '[FAIL] non posso scrivere su ' . shortPath( $file ) . PHP_EOL );
 	    }
 	}
-
+*/
 	// file di configurazione JSON
 	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
 	    echo '[ -- ] file src/config/external/config.json non trovato' . PHP_EOL;

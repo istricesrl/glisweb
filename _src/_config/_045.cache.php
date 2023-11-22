@@ -21,56 +21,74 @@
 	$cf['memcache']['profile']			= &$cf['memcache']['profiles'][ $cf['site']['status'] ];
 
     // ciclo sui server disponibili
-	if( isset( $cf['memcache']['profile']['servers'] ) && is_array( $cf['memcache']['profile']['servers'] ) ) {
+    if( class_exists( 'Memcached' ) ) {
 
-	    // ciclo sui server del profilo corrente
-		foreach( $cf['memcache']['profile']['servers'] as $server ) {
+		// ...
+		if( isset( $cf['memcache']['profile']['servers'] ) && is_array( $cf['memcache']['profile']['servers'] ) ) {
 
-		    // inizializzazione
-			$cn = new Memcached();
+			// ciclo sui server del profilo corrente
+			foreach( $cf['memcache']['profile']['servers'] as $server ) {
 
-		    // connessione
-			$cn->addServer(
-			    $cf['memcache']['servers'][ $server ]['address'],
-			    $cf['memcache']['servers'][ $server ]['port']
-			);
+				// inizializzazione
+				$cn = new Memcached();
 
-		    // registro la connessione
-			if( ! empty( $cn ) ) {
-			    $stats = $cn->getStats();
-			    $cf['memcache']['connections'][ $server ] = $cn;
-			    $cf['memcache']['stats'][ $server ] = array_shift( $stats );
-			    logWrite( 'connessione effettuata al server ' . $server, 'memcache' );
-			} else {
-			    logWrite( 'impossibile (' . $cn->getResultCode() . ') connettersi a ' . $server, 'memcache', LOG_ERR );
+				// connessione
+				$cn->addServer(
+					$cf['memcache']['servers'][ $server ]['address'],
+					$cf['memcache']['servers'][ $server ]['port']
+				);
+
+				// registro la connessione
+				if( ! empty( $cn ) ) {
+					$stats = $cn->getStats();
+					$cf['memcache']['connections'][ $server ] = $cn;
+					$cf['memcache']['stats'][ $server ] = array_shift( $stats );
+					logWrite( 'connessione effettuata al server ' . $server, 'memcache' );
+				} else {
+					logWrite( 'impossibile (' . $cn->getResultCode() . ') connettersi a ' . $server, 'memcache', LOG_ERR );
+				}
+
 			}
+
+			// connessione di default
+			if( count( $cf['memcache']['connections'] ) ) {
+				$keys = array_keys( $cf['memcache']['connections'] );
+				$key = array_shift( $keys );
+				$cf['memcache']['connection'] = &$cf['memcache']['connections'][ $key ];
+				$cf['memcache']['server'] = &$cf['memcache']['servers'][ $key ];
+				$cf['memcache']['stat'] = &$cf['memcache']['stats'][ $key ];
+				$cf['memcache']['stat']['usage'] = writeByte( $cf['memcache']['stat']['bytes'] ) . ' su ' . writeByte( $cf['memcache']['stat']['limit_maxbytes'] );
+				$cf['memcache']['stat']['percent'] = sprintf( '%01.2f', $cf['memcache']['stat']['bytes'] * 100 / $cf['memcache']['stat']['limit_maxbytes'] ) . '%';
+				$cf['memcache']['stat']['hits'] = 'trovati ' . $cf['memcache']['stat']['get_hits'] . ' oggetti contro ' . $cf['memcache']['stat']['get_misses'] . ' non trovati';
+				if( isset( $cf['memcache']['stat']['get_hits'] ) && ! empty( $cf['memcache']['stat']['get_hits'] ) && isset( $cf['memcache']['stat']['get_misses'] ) ) {
+				$cf['memcache']['stat']['hitrate'] = sprintf( '%01.2f', $cf['memcache']['stat']['get_hits'] * 100 / ( $cf['memcache']['stat']['get_hits'] + $cf['memcache']['stat']['get_misses'] ) ) . '%';
+				}
+			}
+
+		} else {
+
+			// log
+			logWrite( 'nessun profilo memcache impostato per il livello di funzionamento corrente', 'memcache' );
 
 		}
 
-	    // connessione di default
-		if( count( $cf['memcache']['connections'] ) ) {
-		    $keys = array_keys( $cf['memcache']['connections'] );
-		    $key = array_shift( $keys );
-		    $cf['memcache']['connection'] = &$cf['memcache']['connections'][ $key ];
-		    $cf['memcache']['server'] = &$cf['memcache']['servers'][ $key ];
-		    $cf['memcache']['stat'] = &$cf['memcache']['stats'][ $key ];
-		    $cf['memcache']['stat']['usage'] = writeByte( $cf['memcache']['stat']['bytes'] ) . ' su ' . writeByte( $cf['memcache']['stat']['limit_maxbytes'] );
-		    $cf['memcache']['stat']['percent'] = sprintf( '%01.2f', $cf['memcache']['stat']['bytes'] * 100 / $cf['memcache']['stat']['limit_maxbytes'] ) . '%';
-		    $cf['memcache']['stat']['hits'] = 'trovati ' . $cf['memcache']['stat']['get_hits'] . ' oggetti contro ' . $cf['memcache']['stat']['get_misses'] . ' non trovati';
-		    if( isset( $cf['memcache']['stat']['get_hits'] ) && ! empty( $cf['memcache']['stat']['get_hits'] ) && isset( $cf['memcache']['stat']['get_misses'] ) ) {
-			$cf['memcache']['stat']['hitrate'] = sprintf( '%01.2f', $cf['memcache']['stat']['get_hits'] * 100 / ( $cf['memcache']['stat']['get_hits'] + $cf['memcache']['stat']['get_misses'] ) ) . '%';
-		    }
+		// costante per il default TTL
+		define( 'MEMCACHE_DEFAULT_TTL'		, ( ( isset( $cf['memcache']['server']['ttl'] ) ) ? $cf['memcache']['server']['ttl'] : 0 ) );
+
+		// lettura indici della cache
+		$cf['memcache']['index'] = memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' );
+
+		// inizializzazione indice della cache
+		if( empty( $cf['memcache']['index'] ) ){
+			$cf['memcache']['index'] = array();
 		}
 
 	} else {
 
-	    // log
-		logWrite( 'nessun profilo memcache impostato per il livello di funzionamento corrente', 'memcache' );
+		// log
+		logWrite( 'classe Memcached non trovata', 'memcache' );
 
 	}
-
-    // costante per il default TTL
-	define( 'MEMCACHE_DEFAULT_TTL'		, ( ( isset( $cf['memcache']['server']['ttl'] ) ) ? $cf['memcache']['server']['ttl'] : 0 ) );
 
     // link alla connessione corrente
 	$cf['redis']['connection']			= NULL;
@@ -118,14 +136,6 @@
 
     // costante per il default TTL
 	define( 'REDIS_DEFAULT_TTL'			, ( ( isset( $cf['redis']['server']['ttl'] ) ) ? $cf['redis']['server']['ttl'] : 0 ) );
-
-    // lettura indici della cache
-	$cf['memcache']['index'] = memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' );
-
-    // inizializzazione indice della cache
-	if( empty( $cf['memcache']['index'] ) ){
-	    $cf['memcache']['index'] = array();
-	}
 
 /*
     // inizializzazione regustro della cache

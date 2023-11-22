@@ -139,11 +139,15 @@
                         $response++;
 
                         // contatore
-                        $memcache->set( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'], $response );
+                        if( is_object( $memcache ) ) {
+                            $memcache->set( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'], $response );
+                        }
 
                         // riepilogo
                         $attackers[ $_SERVER['REMOTE_ADDR'] ] = $response;
-                        $memcache->set( 'ATTACKERS', $attackers );
+                        if( is_object( $memcache ) ) {
+                            $memcache->set( 'ATTACKERS', $attackers );
+                        }
 
                         // log
                         $h = fopen( DIR_VAR_SPOOL_SECURITY . 'attacco.' . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );
@@ -170,17 +174,24 @@
     }
 
     // connessione a memcache
-    $memcache = new Memcached();
-    $memcache->addServer( '127.0.0.1', 11211 );
-    $response = $memcache->get( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'] );
-    $attackers = $memcache->get( 'ATTACKERS' );
-    $urls = $memcache->get( 'BANNED_URLS' );
+    if( class_exists( 'Memcached' ) ) {
+        $memcache = new Memcached();
+        $memcache->addServer( '127.0.0.1', 11211 );
+        $response = $memcache->get( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'] );
+        $attackers = $memcache->get( 'ATTACKERS' );
+        $urls = $memcache->get( 'BANNED_URLS' );
+    } else {
+        $memcache = NULL;
+        $response = NULL;
+        $attackers = NULL;
+        $urls = NULL;
+    }
 
     // debug
     // print_r( $attackers );
 
     // controllo attackers
-    if( is_array( $attackers ) ) {
+    if( isset( $attackers ) && is_array( $attackers ) ) {
         if( in_array( $_SERVER['REMOTE_ADDR'], array_keys( $attackers ) ) ) {
 
             // log
@@ -221,11 +232,13 @@
                 )
             )
         );
-        $memcache->set( 'BANNED_URLS', $urls );
+        if( isset( $memcache ) && is_object( $memcache ) ) {
+            $memcache->set( 'BANNED_URLS', $urls );
+        }
     }
 
     // controllo totale attacchi
-    if( $response ) {
+    if( isset( $response ) ) {
         if( $response > 4 ) {
 
             // HTTP status
@@ -252,11 +265,15 @@
             $response++;
 
             // contatore
-            $memcache->set( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'], $response );
+            if( is_object( $memcache ) ) {
+                $memcache->set( 'ATTACKER_' . $_SERVER['REMOTE_ADDR'], $response );
+            }
 
             // riepilogo
             $attackers[ $_SERVER['REMOTE_ADDR'] ] = $response;
-            $memcache->set( 'ATTACKERS', $attackers );
+            if( is_object( $memcache ) ) {
+                $memcache->set( 'ATTACKERS', $attackers );
+            }
 
             // log
             $h = fopen( DIR_VAR_SPOOL_SECURITY . 'attacco.' . $_SERVER['REMOTE_ADDR'] . '.log', 'a+' );

@@ -77,6 +77,9 @@
 	    unset( $_REQUEST['__rw__'] );
 	}
 
+    // debug
+	// var_dump( $_REQUEST );
+
     // inclusione del framework
 	require '../_config.php';
 

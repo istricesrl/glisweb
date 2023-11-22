@@ -128,7 +128,7 @@
      * @todo				documentare &$e
      *
      */
-    function checkFolder( $p ) {
+    function checkFolder( $p, $r = 0755, $h = false ) {
 
         $f = DIR_BASE;
 
@@ -146,14 +146,16 @@
 
                 if( @mkdir( $f ) ) {
 
-                    chmod( $f , 0775 );
+                    chmod( $f , $r );
+
+                } elseif( $h === true ) {
+
+                    die( 'impossibile creare ' . $f );
 
                 } else {
 
-                    die( $f );
+                    error_log( 'impossibile creare ' . $f );
 
-                    $m  = 'impossibile creare ' . $f;
-                    error_log( $m );
                     return false;
 
                 }
