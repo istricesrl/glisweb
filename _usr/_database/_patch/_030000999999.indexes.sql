@@ -322,6 +322,8 @@ ALTER TABLE `attivita`
 	ADD KEY `id_luogo` (`id_luogo`), 
 	ADD KEY `id_anagrafica_programmazione` (`id_anagrafica_programmazione`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_mailing` (`id_mailing`), 
+	ADD KEY `id_mail` (`id_mail`), 
 	ADD KEY `id_documento` (`id_documento`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_matricola` (`id_matricola`),
