@@ -155,7 +155,7 @@
      * librerie esterne
      * ----------------
      * Il framework gestisce le librerie esterne tramite composer; le librerie vengono installate
-     * nella sottocartella _src/_lib/_external/ che sostituisce la classica cartella vendor/ di
+     * nella sottocartella _src/_lib/_ext/ che sostituisce la classica cartella vendor/ di
      * composer in modo da semplificarne la distribuzione tramite FTP.
      *
      * inclusione dei files di configurazione
@@ -312,7 +312,7 @@
     // directory standard
 	define( 'DIR_ETC'			, DIR_BASE . '_etc/' );
 	define( 'DIR_ETC_LOC'			, DIR_BASE . '_etc/_loc/' );
-	define( 'DIR_MOD'			, DIR_BASE . '_mod/' );
+    define( 'DIR_MOD'			, DIR_BASE . '_mod/' );
 	define( 'DIR_SRC'			, DIR_BASE . '_src/' );
 	define( 'DIR_SRC_API'			, DIR_BASE . '_src/_api/' );
     define( 'DIR_SRC_API_JOB'		, DIR_BASE . '_src/_api/_job/' );

@@ -14,12 +14,12 @@ echo "lavoro su: $(pwd)"
 apt-get install yui-compressor
 
 ## ottimizzo i CSS
-find . -iname "*.css" -a -not -name "*.min.*" -a -not -wholename "*/_external/*" -a -not -wholename "*/_docs/*" | while read i; do
+find . -iname "*.css" -a -not -name "*.min.*" -a -not -wholename "*/_ext/*" -a -not -wholename "*/_docs/*" | while read i; do
     yui-compressor -o "${i%.css}.min.css" "$i"
 done
 
 ## ottimizzo i Javascript
-find . -iname "*.js" -a -not -name "*.min.*" -a -not -wholename "*/_external/*" -a -not -wholename "*/_docs/*" | while read i; do
+find . -iname "*.js" -a -not -name "*.min.*" -a -not -wholename "*/_ext/*" -a -not -wholename "*/_docs/*" | while read i; do
     yui-compressor -o "${i%.js}.min.js" "$i"
 done
 
