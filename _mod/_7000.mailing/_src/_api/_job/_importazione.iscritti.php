@@ -109,6 +109,11 @@
                 // status
                 $job['workspace']['status']['error'][] = 'codice utente e codice fiscale non settati per la riga ' . $job['corrente'];
 
+            } elseif( ! isset( $row['mail'] ) || empty( $row['mail'] ) ) {
+
+                // status
+                $job['workspace']['status']['error'][] = 'mail non settato per la riga ' . $job['corrente'];
+
             } else {
 
                 // trovo l'ID dell'anagrafica

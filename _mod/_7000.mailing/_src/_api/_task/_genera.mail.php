@@ -89,7 +89,9 @@
 		$row = mysqlSelectRow(
 			$cf['mysql']['connection'],
 			'SELECT mailing.*, mailing_mail.id_mail, '.
-			'mail.indirizzo, concat_ws( \' \', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS destinatario '.
+			'mail.indirizzo, anagrafica.codice AS codice_destinatario, '.
+			'anagrafica.nome AS nome_destinatario, anagrafica.cognome AS cognome_destinatario, anagrafica.denominazione AS denominazione_destinatario, '.
+			'concat_ws( \' \', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS destinatario '.
 			'FROM mailing_mail '.
 			'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
 			'INNER JOIN mail ON mail.id = mailing_mail.id_mail '.
