@@ -1,0 +1,42 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function duplica( ) {
+		$('#btnduplica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+	
+		var call = '{{ site.url }}_mod/_4000.catalogo/_src/_api/_task/_catalogo.duplicate.php?id={{ request[table].id }}';
+
+		getws( call,'', function() {
+			$('#btnduplica').html('<i class="fa fa-check"></i>');
+		});
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="duplica">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">duplica la categoria corrente</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+		<div class="container-fluid">
+		    <div class="form-row">
+                <div class="col-12">
+                    questa operazione duplicherà la categoria corrente e tutte le entità ad essa collegate (immagini, video, voci di menu, ecc.)
+                </div>
+            </div>
+	    </div>
+	    </div>
+	    <div class="modal-footer">
+		<button type="button" id="btnduplica" class="btn btn-secondary btn-sm" onclick="duplica();">conferma</button>
+		<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

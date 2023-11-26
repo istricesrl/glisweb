@@ -67,7 +67,9 @@
 													'prodotti.form.audio',
 													'prodotti.form.file',
 													'prodotti.form.stampe',
-													'prodotti.form.metadati'
+													'prodotti.form.metadati',
+													'prodotti.form.stats',
+													'prodotti.form.tools'
 												) )
 	);
 
@@ -244,8 +246,34 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
-	
-	 // vista caratteristiche prodotti
+
+	// statistiche form pagine
+	$p['prodotti.form.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche prodotto' ),
+	    'h1'		=> array( $l		=> 'statistiche prodotto' ),
+	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
+    );
+
+	// form azioni pagine
+	$p['prodotti.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni prodotto' ),
+	    'h1'		=> array( $l		=> 'azioni prodotto' ),
+	    'parent'		=> array( 'id'		=> 'prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
+	);
+
+	// vista caratteristiche prodotti
 	 $p['caratteristiche.prodotti.view'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'caratteristiche' ),

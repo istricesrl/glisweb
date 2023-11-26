@@ -17,9 +17,21 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
+        'azioni' => array(
+			'label' => 'azioni'
+		),
 		'ecommerce' => array(
 			'label' => 'e-commerce'
 		)
+	);
+
+    // duplica pagina
+	$ct['page']['contents']['metro']['azioni'][] = array(
+        'modal' => array('id' => 'duplica', 'include' => 'inc/articoli.form.tools.modal.duplica.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-files-o',
+	    'title' => 'duplica articolo',
+	    'text' => 'duplica l\'articolo corrente'
 	);
 
     // aggiunta al carrello
@@ -35,6 +47,13 @@
 	    );
 
 	}
+
+    // tendina prodotti
+	$ct['etc']['select']['prodotti'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM prodotti_view' );
 
 	// macro di default
     require DIR_SRC_INC_MACRO . '_default.tools.php';

@@ -645,6 +645,7 @@
 	#	print_r($x);
 	#	echo "tabella principale: " . $t . " - stampo x[" . $t . "]" . PHP_EOL;
 	#	print_r( $x['t'][ $t ] );
+	#	var_dump( $n );
 
 		// defaults
 		if( ! isset( $x['t'][ $t ]['f'] ) ) { $x['t'][ $t ]['f'] = array(); }
@@ -781,16 +782,16 @@
 	    $q = 'INSERT IGNORE INTO ' . $t . ' (' . implode( ',', $fieldsInsert ) . ') SELECT ' . str_repeat( '?,', count( $fieldsChanged ) ) . implode( ',', $fieldsCopied ) . ' FROM ' . $t . ' WHERE id = ?';
 
 	// esecuzione della query
-		$n = mysqlQuery( $c, $q, $values );
+		$id = mysqlQuery( $c, $q, $values );
 
-		if( empty( $n ) ){
-			$n = $id;
+		if( empty( $id ) ){
+			$id = $n;
 		}
 
 	// popolo l'oggetto
 		$y = mysqlSelectRow(
 			$c, 'SELECT * FROM ' . $t . ' WHERE id = ?',
-			array( array( 's' => $n ) )
+			array( array( 's' => $id ) )
 		);
 
 	// debug
@@ -800,7 +801,7 @@
 	    // print_r( $fields );
 
 	// ritorno l'id nel nuovo record inserito
-	    return $n;
+	    return $id;
 
     }
 

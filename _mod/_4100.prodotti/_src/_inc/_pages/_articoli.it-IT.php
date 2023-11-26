@@ -55,6 +55,7 @@
 													'articoli.form.file',
 													'articoli.form.stampe',
 													'articoli.form.metadati',
+													'articoli.form.stats',
 													'articoli.form.tools'
 												) )
 	);
@@ -208,6 +209,19 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
+
+	// statistiche form pagine
+	$p['articoli.form.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche articolo' ),
+	    'h1'		=> array( $l		=> 'statistiche articolo' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+    );
 
 	// form azioni articoli
 	$p['articoli.form.tools'] = array(

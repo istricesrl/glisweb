@@ -67,7 +67,9 @@
 													'categorie.prodotti.form.video',
 													'categorie.prodotti.form.audio',
 													'categorie.prodotti.form.file',
-													'categorie.prodotti.form.metadati'
+													'categorie.prodotti.form.metadati',
+													'categorie.prodotti.form.stats',
+													'categorie.prodotti.form.tools'
 #													'categorie.prodotti.form.gruppi'
 												) )
 	);
@@ -239,7 +241,7 @@
 		'auth'		=> array( 'groups'	=> array('roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
-	
+
 	// gestione categorie gruppi
 	$p['categorie.prodotti.form.gruppi'] = array(
 		'sitemap'		=> false,
@@ -253,5 +255,32 @@
 		'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
 	);
 
-    // debug
+	// statistiche form pagine
+	$p['categorie.prodotti.form.stats'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'statistiche categoria prodotti' ),
+	    'h1'		=> array( $l		=> 'statistiche categoria prodotti' ),
+	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.stats.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.stats.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
+    );
+
+
+	// form azioni pagine
+	$p['categorie.prodotti.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni categoria prodotti' ),
+	    'h1'		=> array( $l		=> 'azioni categoria prodotti' ),
+	    'parent'		=> array( 'id'		=> 'categorie.prodotti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_categorie.prodotti.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['categorie.prodotti.form']['etc']['tabs'] )
+	);
+
+	// debug
 	// die( print_r( $p ) );
