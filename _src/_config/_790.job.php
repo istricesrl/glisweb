@@ -14,7 +14,7 @@
     // seleziono i job a cui ho applicato il lock
     $cf['jobs']['foreground'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT * FROM job WHERE se_foreground IS NOT NULL '.
+        'SELECT * FROM job WHERE se_foreground = 1 '.
         'AND ( id_account_inserimento = ? OR id_account_inserimento IS NULL ) '.
         'AND timestamp_completamento IS NULL',
         array(
