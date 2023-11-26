@@ -1113,7 +1113,9 @@ INSERT IGNORE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`
 (30,	18,	NULL,	NULL,	'docenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (31,	18,	NULL,	NULL,	'co-docenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (32,	18,	NULL,	NULL,	'recupero frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(33,	18,	NULL,	NULL,	'frequenza di prova',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(33,	18,	NULL,	NULL,	'frequenza di prova',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(34,	NULL,	NULL,	NULL,	'mailing',	        NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(35,	34,	NULL,	NULL,	'apertura mail',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000050450
 

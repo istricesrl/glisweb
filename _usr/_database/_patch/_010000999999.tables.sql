@@ -353,6 +353,8 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `note_cliente` text DEFAULT NULL,
+  `id_mailing` int(11) DEFAULT NULL,
+  `id_mail` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
