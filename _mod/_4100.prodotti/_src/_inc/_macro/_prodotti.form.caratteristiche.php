@@ -22,6 +22,9 @@
     // tabella gestita
 	$ct['form']['table'] = 'prodotti';
 
+    // tendina lingue
+    $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
+
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id']  ) ){
         // dettagli tipologia
         $ct['etc']['value']['tipologia'] = mysqlSelectRow(

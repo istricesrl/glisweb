@@ -253,6 +253,35 @@
         }
     }
 
+    function aggiungiCaratteristiche( &$p, $id, $t, $f, $l = 1 ) {
+
+        global $cf;
+        
+        $caratteristiche = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT ' . $t . '.ordine, coalesce( contenuti.testo, caratteristiche_prodotti.nome ) AS caratteristica, ' . $t . '.valore FROM ' . $t . ' '.
+            'LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = ' . $t . '.id_caratteristica '.
+            'LEFT JOIN contenuti ON contenuti.id_caratteristica_prodotti = caratteristiche_prodotti.id AND contenuti.id_lingua = ? '.
+            'WHERE ' . $t . '.' . $f . ' = ? AND ' . $t . '.id_lingua = ? ',
+            array(
+                array( 's' => $l ),
+                array( 's' => $id ),
+                array( 's' => $l )
+            )
+        );
+
+        // print_r( $caratteristiche );
+
+        foreach( $caratteristiche as $caratteristica ) {
+
+            $p['contents']['caratteristiche'][ $caratteristica['ordine'] ] = array(
+                $caratteristica['caratteristica'] => $caratteristica['valore']
+            );
+
+        }
+
+    }
+
     function aggiungiMetadati( &$p, $id, $f ) {
 
         global $cf;

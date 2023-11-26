@@ -132,6 +132,14 @@ if( $cf['contents']['cached'] === false ) {
                     $pg['id'],
                     'id_prodotto'
                 );
+
+                aggiungiCaratteristiche(
+                    $cf['contents']['pages'][$pid],
+                    $pg['id'],
+                    'prodotti_caratteristiche',
+                    'id_prodotto'
+                );
+
 /*
                 aggiungiMenu(
                     $cf['contents']['pages'][$pid],

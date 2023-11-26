@@ -22,6 +22,17 @@
                 <span class="label-top">caratteristica</span>
                 {{ frm.selectRequired( table, subtable, i, 'id_caratteristica', '', etc.select.caratteristiche, request, '', '', '', disabled ) }}
             </div>
+
+            <div class="col-auto">
+                <span class="label-top">lingua</span>
+                {{ frm.select( table, subtable, i, 'id_lingua', '', etc.select.lingue, request, '', '', '', '', '', disabled ) }}
+            </div>  
+
+            <div class="col">
+                <span class="label-top">valore</span>
+                {{ frm.input( table, subtable, i, 'valore', '', '', request, '', '', '', '', disabled ) }}
+            </div>
+
             <div class="col-10 col-md">
                 <span class="label-top">note</span>
                 {{ frm.input( table, subtable, i, 'note', '', '', request, '', '', '', '', disabled  ) }}
