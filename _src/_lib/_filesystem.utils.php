@@ -13,10 +13,13 @@
             }
         }
 
-        $dom = new DOMDocument;  
-        libxml_use_internal_errors(true);
+        $encoding = mb_detect_encoding( $t );
+        $t = $encoding ? @iconv( $encoding, 'UTF-8', $t ) : $t;
+
+        $dom = new DOMDocument( '1.0', 'utf-8' );
+        libxml_use_internal_errors( true );
         
-        $dom->loadHTML( $t ); 
+        $dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . $t );
         $xpath = new DOMXPath( $dom );
         libxml_clear_errors();
         
