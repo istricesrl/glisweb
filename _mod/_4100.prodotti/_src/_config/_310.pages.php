@@ -91,7 +91,14 @@ if( $cf['contents']['cached'] === false ) {
                     'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                     'parent'        => array('id'        => $cid),
                     'canonical'        => $canon,
-                    'template'        => array('path'    => $cf['prodotti']['pages']['scheda']['template'], 'schema' => $cf['prodotti']['pages']['scheda']['schema'], 'theme' => $cf['prodotti']['pages']['scheda']['css']),
+                    'template'        => array(
+#                        'path'    => $cf['prodotti']['pages']['scheda']['template'],
+#                        'schema' => $cf['prodotti']['pages']['scheda']['schema'],
+#                        'theme' => $cf['prodotti']['pages']['scheda']['css']
+                        'path'      =>  $pg['template'],
+                        'schema'    =>  $pg['schema_html'],
+                        'theme'     =>  $pg['tema_css']
+                    ),
                     'metadati'      => array('id_prodotto' => $pg['id']),
                     'macro'            => $cf['prodotti']['pages']['scheda']['macro']
                 );

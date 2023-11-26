@@ -50,6 +50,9 @@ if ($cf['contents']['cached'] === false) {
     // se ci sono pagine trovate le inserisco nell'array principale
     if (is_array($pgs)) {
 
+        // canonical
+        $canon = NULL;
+
         // ciclo principale
         foreach ($pgs as $pg) {
 
@@ -70,6 +73,11 @@ if ($cf['contents']['cached'] === false) {
             $age = memcacheGetKeyAge($cf['memcache']['connection'], $pid);
             $pgc = memcacheRead($cf['memcache']['connection'], $pid);
 
+            // default
+            $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['catalogo']['pages']['scheda']['template'] : $pg['template'];
+            $pg['schema_html'] = ( empty( $pg['template'] ) ) ? $cf['catalogo']['pages']['scheda']['schema'] : $pg['schema_html'];
+            $pg['tema_css'] = ( empty( $pg['template'] ) ) ? $cf['catalogo']['pages']['scheda']['css'] : $pg['tema_css'];
+
             // valuto se i dati in cache sono ancora validi
             if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {
 
@@ -78,6 +86,7 @@ if ($cf['contents']['cached'] === false) {
                     'sitemap'        => (($pg['se_sitemap'] == 1) ? true : false),
                     'cacheable'        => (($pg['se_cacheable'] == 1) ? true : false),
                     'parent'        => array('id'        => $pip),
+                    'canonical'        => $canon,
                     'template'        => array(
                         'path'      =>  $pg['template'],
                         'schema'    =>  $pg['schema_html'],
