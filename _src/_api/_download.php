@@ -24,9 +24,16 @@
     if( isset( $_REQUEST['__mailing__'] ) ) {
         if( isset( $_REQUEST['__mailing_dst__'] ) ) {
             logWrite( 'rilevata lettura mailing #' . $_REQUEST['__mailing__'] . ' per mail #' . $_REQUEST['__mailing_dst__'], 'mailing' );
+            $read = array( 'id_tipologia' => 35, 'id_mailing' => $_REQUEST['__mailing__'], 'data_attivita' => date( 'Y-m-d' ), 'ora_fine' => date( 'H:i' ), 'id_mail' => $_REQUEST['__mailing_dst__'] );
+            $idCliente = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_anagrafica FROM mail WHERE id = ?', array( array( 's' => $_REQUEST['__mailing_dst__'] ) ) );
+            if( ! empty( $idCliente ) ) {
+                $read['id_cliente'] = $idCliente;
+            }
         } else {
             logWrite( 'rilevata lettura mailing #' . $_REQUEST['__mailing__'], 'mailing' );
+            $read = array( 'id_tipologia' => 35, 'id_mailing' => $_REQUEST['__mailing__'], 'data_attivita' => date( 'Y-m-d' ), 'ora_fine' => date( 'H:i' ) );
         }
+        mysqlInsertRow( $cf['mysql']['connection'], $read, 'attivita' );
     }
 
     // determino il mime type
