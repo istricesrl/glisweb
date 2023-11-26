@@ -21,8 +21,10 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-    $ct['view']['table'] = 'todo';
-    
+#    $ct['view']['table'] = 'todo';
+    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['table'] = '__report_lezioni_corsi__';
+
     // id della vista
     // TODO fare una funzione getViewId()
     $ct['view']['id'] = md5(
@@ -71,8 +73,9 @@
         'ora_inizio_programmazione' => 'ora',
 //        'ora_fine_programmazione' => 'ora fine',
         'id_progetto' => 'ID corso',
-        'progetto' => 'corso',
+        'corso' => 'corso',
         'discipline' => 'disciplina',
+        'posti_disponibili' => 'posti',
 //        'anagrafica_programmazione' => 'assegnata a',
 //        'data_programmazione' => 'data',
 //	    'anagrafica' => 'svolta da',
@@ -89,7 +92,7 @@
         'cliente' => 'text-left d-none d-md-table-cell',
         'anagrafica_programmazione' => 'text-left',
         'id_progetto' => 'd-none',
-        'progetto' => 'text-left',
+        'corso' => 'text-left',
         'discipline' => 'text-left',
 	    'data_programmazione' => 'no-wrap',
         'ora_inizio_programmazione' => 'd-none',

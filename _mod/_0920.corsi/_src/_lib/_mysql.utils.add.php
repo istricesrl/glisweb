@@ -219,6 +219,27 @@
                 $riga['timestamp_aggiornamento'] = time();
             }
 
+            $posti = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT coalesce( max( m.testo ), "∞" )
+                FROM metadati AS m
+                WHERE m.id_progetto = ?
+                AND m.nome = "iscritti_max"
+                GROUP BY m.id_progetto',
+                array( array( 's' => $riga['id_progetto'] ) )
+            );
+
+            $riga['numero_alunni'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT count( distinct( id_anagrafica ) )
+                FROM attivita
+                WHERE attivita.id_todo = ?
+                AND attivita.id_tipologia IN ( 15, 32 )',
+                array( array( 's' => $riga['id'] ) )
+            );
+
+            $riga['posti_disponibili'] = $riga['numero_alunni'] . ' / ' . $posti;
+
             $riga['posti_prova'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT metadati.testo 
@@ -266,7 +287,7 @@
                 'SELECT luoghi_path( ? ) AS luogo',
                 array( array( 's' => $riga['id_luogo'] ) )
             );
-
+/*
             $riga['numero_alunni'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT count( DISTINCT presenze.id_anagrafica_programmazione ) AS numero_alunni 
@@ -274,7 +295,7 @@
                     WHERE presenze.id_todo = ? AND presenze.id_tipologia = 15',
                 array( array( 's' => $riga['id'] ) )
             );
-
+*/
             mysqlInsertRow(
                 $cf['mysql']['connection'],
                 $riga,
