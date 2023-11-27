@@ -1,0 +1,149 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function modifica_corsi() {
+
+		var periodo_partenza = $('#__modifica___id_periodo').val();
+		var disciplina = $('#__modifica___id_disciplina').val();
+		var codici = $('#__modifica___codici').val();
+		var esclusi = $('#__modifica___esclusi').val();
+		var periodo_destinazione = $('#__modifica___id_periodo_destinazione').val();
+		var riferimento = $('#__modifica___riferimento').val();
+		var fascia_eta = $('#__modifica___id_fascia_eta').val();
+		var prezzo = $('#__modifica___prezzo').val();
+		var iscritti_max = $('#__modifica___iscritti_max').val();
+		var periodo_prezzi = $('#__modifica___periodo_prezzi').val();
+		var id_istruttore = $('#__modifica___id_istruttore').val();
+
+		getws('/task/0920.corsi/corsi.modifica.start?'
+			+'periodo_partenza='+periodo_partenza
+			+'&disciplina='+disciplina
+			+'&codici='+codici
+			+'&esclusi='+esclusi
+			+'&periodo_destinazione='+periodo_destinazione
+			+'&riferimento='+riferimento
+			+'&fascia_eta='+fascia_eta
+			+'&prezzo='+prezzo
+			+'&iscritti_max='+iscritti_max
+			+'&periodo_prezzi='+periodo_prezzi
+			+'&id_istruttore='+id_istruttore
+		);
+
+		$('#modifica_corsi').modal('toggle');
+		location.reload();
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="modifica_corsi">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+			<h5 class="modal-title">modifica corsi</h5>
+			<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+			<div class="container-fluid">
+				<div class="form-row">
+					<div class="col">
+						<h5 class="modal-title">dati di partenza</h5>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">periodo</span>
+						{{ frm.select( '__modifica__', '', '', 'id_periodo', '', etc.select.periodi ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">disciplina</span>
+						<select name="__modifica__[id_disciplina]" id="__modifica___id_disciplina" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+							<option value="">tutte</option>
+							{% for tipologia in etc.select.discipline %}
+							<option value="{{ tipologia.id }}">{{ tipologia.__label__ }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">codici inclusi</span>
+						{% set codici = '' %}
+						{% for s,d in session.__work__.corsi.items %}{% set codici = codici ~ s %}{% if not loop.last %}{% set codici = codici ~ ', ' %}{% endif %}{% endfor %}
+						{{ frm.textarea( '__modifica__', '', '', 'codici', '', 3, '', codici ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">codici esclusi</span>
+						{{ frm.textarea( '__modifica__', '', '', 'esclusi', '', 2 ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<h5 class="modal-title">modifiche ai dati di arrivo</h5>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">periodo</span>
+						{{ frm.select( '__modifica__', '', '', 'id_periodo_destinazione', '', etc.select.periodi ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">riferimento interno</span>
+						{{ frm.inputRequired( '__modifica__', '', '', 'riferimento', '', '', '' ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col-auto">
+						<span class="label-top">fascia d'età</span>
+						<select name="__modifica__[id_fascia_eta]" id="__modifica___id_fascia_eta" class="form-control form-control-sm">
+							<option value=""></option>
+							{% for tipologia in etc.select.fasce %}
+							<option value="{{ tipologia.id }}">{{ tipologia.__label__ }}</option>
+							{% endfor %}
+						</select>
+					</div>
+					<div class="col">
+						<span class="label-top">massimo iscritti</span>
+						{{ frm.inputRequired( '__modifica__', '', '', 'iscritti_max', '', '', '' ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">prezzo</span>
+						{{ frm.inputRequired( '__modifica__', '', '', 'prezzo', '', '', '' ) }}
+					</div>
+					<div class="col-auto">
+						<span class="label-top">periodo</span>
+						<select name="__modifica__[periodo_prezzi]" id="__modifica___periodo_prezzi" class="form-control form-control-sm">
+							<option value=""></option>
+							{% for tipologia in etc.select.periodi_prezzi %}
+							<option value="{{ tipologia.id }}">{{ tipologia.__label__ }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">istruttore</span>
+						<select name="__modifica__[id_istruttore]" id="__modifica___id_istruttore" class="form-control form-control-sm">
+							<option value=""></option>
+							{% for tipologia in etc.select.istruttori %}
+							<option value="{{ tipologia.id }}">{{ tipologia.__label__ }}</option>
+							{% endfor %}
+						</select>
+					</div>
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+			<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="modifica_corsi();">modifica</button>
+			<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

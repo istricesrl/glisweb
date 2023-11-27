@@ -36,6 +36,15 @@
     );
 
     // aggiornamento cache
+    $ct['page']['contents']['metro']['gestione'][] = array(
+	    'modal' => array( 'id' => 'modifica_corsi', 'include' => 'inc/corsi.tools.modal.modifica.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-pencil',
+	    'title' => 'modifica massiva corsi',
+	    'text' => 'modifica un intervallo di corsi secondo i parametri indicati'
+    );
+
+    // aggiornamento cache
     $ct['page']['contents']['metro']['cache'][] = array(
         'ws' => $base . 'report.corsi.popolazione.start',
         'callback' => 'location.reload()',
@@ -67,6 +76,22 @@
         $cf['mysql']['connection'], 
         'SELECT periodi_view.id, periodi_view.__label__ FROM periodi_view LEFT JOIN tipologie_periodi ON tipologie_periodi.id = periodi_view.id_tipologia WHERE tipologie_periodi.se_corsi'
     );
+
+    $ct['etc']['select']['periodi_prezzi'] = array(
+        array( 'id' => 'totale', '__label__' => 'totale' ),
+        array( 'id' => 'quadrimestrale', '__label__' => 'quadrimestrale' ),
+        array( 'id' => 'trimestrale', '__label__' => 'trimestrale' ),
+        array( 'id' => 'bimestrale', '__label__' => 'bimestrale' ),
+        array( 'id' => 'mensile', '__label__' => 'mensile' ),
+        array( 'id' => 'settimanale', '__label__' => 'settimanale' ),
+        array( 'id' => 'giornata', '__label__' => 'giornata' )
+    );
+
+    $ct['etc']['select']['istruttori'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_collaboratore = 1' );
 
     // tendina categorie progetti
 	$ct['etc']['select']['discipline'] = mysqlCachedIndexedQuery(
