@@ -75,8 +75,8 @@ if ($cf['contents']['cached'] === false) {
 
             // default
             $pg['template'] = ( empty( $pg['template'] ) ) ? $cf['catalogo']['pages']['scheda']['template'] : $pg['template'];
-            $pg['schema_html'] = ( empty( $pg['template'] ) ) ? $cf['catalogo']['pages']['scheda']['schema'] : $pg['schema_html'];
-            $pg['tema_css'] = ( empty( $pg['template'] ) ) ? $cf['catalogo']['pages']['scheda']['css'] : $pg['tema_css'];
+            $pg['schema_html'] = ( empty( $pg['schema_html'] ) ) ? $cf['catalogo']['pages']['scheda']['schema'] : $pg['schema_html'];
+            $pg['tema_css'] = ( empty( $pg['tema_css'] ) ) ? $cf['catalogo']['pages']['scheda']['css'] : $pg['tema_css'];
 
             // valuto se i dati in cache sono ancora validi
             if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {

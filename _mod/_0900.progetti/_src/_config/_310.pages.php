@@ -79,7 +79,7 @@ if( $cf['contents']['cached'] === false ) {
                     'template'        => array(
                         'path'      =>  ( !empty($pg['template']) ? $pg['template'] : $ct['progetti']['pages']['elenco']['template']) ,
                         'schema'    => ( !empty($pg['schema_html'])  ? $pg['schema_html'] : $ct['progetti']['pages']['elenco']['schema']) ,
-                        'theme'     => ( !empty( $pg['tema_css'] ) ? $pg['tema_css'] : 'main.css') 
+                        'theme'     => ( !empty( $pg['tema_css'] ) ? $pg['tema_css'] : $ct['progetti']['pages']['elenco']['css']) 
                     ),
                     'metadati'      => array('id_categoria_progetti' => $pg['id']),
                     'macro'            => $cf['catalogo']['pages']['elenco']['macro']
