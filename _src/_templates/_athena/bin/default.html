@@ -1,6 +1,6 @@
 {# MACRO DI DEFAULT PER IL TEMPLATE STANDARD #}
 
-{% macro controls( page, pages, lang, session, table, request, localization, download, short ) %}
+{% macro controls( page, pages, lang, session, table, request, localization, download, short, etc ) %}
 {% import '_bin/_form.html' as frm %}
 {% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ lang ] %}{% endif %}
 <div class="row no-gutters d-print-none">
@@ -23,8 +23,9 @@
 	    {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
 	    {{ frm.button( '<i class="fa fa-arrow-circle-left"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");','salva e torna alla pagina precedente' ) }}
 	    {% endif %}
+		{% set presets = '' %}{% for fld,val in etc.preset.fields %}{% set presets = presets ~ '&__preset__[' ~ table ~ '][' ~ fld ~ ']=' ~ val %}{% endfor %}
 	    {{ frm.button( '<i class="fa fa-arrow-circle-down"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true;','salva e inserisci altri dati' ) }}
-		{{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '?__backurl__=' ~ request.__backurl__ ~ '");','salva e inserisci altri dati' ) }}
+		{{ frm.button( '<i class="fa fa-arrow-circle-right"></i>', 'submit', 'btn-secondary', 'submitFormOkay = true; $("#reset").val(1); $("#continue").val("1"); $("#form-' ~ table ~ '").attr("action", "' ~ page.path[ lang ] ~ '?__backurl__=' ~ request.__backurl__ ~ presets ~ '");','salva e inserisci altri dati' ) }}
 		{% else %}
 	    {{ frm.button( '<span><i class="fa fa-caret-left"></i><i class="fa fa-floppy-o" style="padding-left:3px;"></i></span>', 'submit', 'btn-secondary', '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ lang ] ~ '"); submitFormOkay = true;','salva e torna indietro' ) }}
 	    {{ frm.button( '<i class="fa fa-floppy-o" style="padding-left:3px;"></i>','','','submitFormOkay = true;','salva e rimani nella pagina attuale' ) }}

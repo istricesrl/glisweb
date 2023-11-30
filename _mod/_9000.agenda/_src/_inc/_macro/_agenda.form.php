@@ -21,7 +21,14 @@
 
     // tabella gestita
 	$ct['form']['table'] = 'attivita';
-    
+
+    // ...
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
+        $ct['etc']['preset']['fields'] = array(
+            'id_genitore' => $_REQUEST[ $ct['form']['table'] ]['id']
+        );
+    }
+
     // tendina anagrafica
 	$ct['etc']['select']['id_anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

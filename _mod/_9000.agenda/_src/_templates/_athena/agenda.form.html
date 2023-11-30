@@ -46,7 +46,10 @@
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-	    {# MODULO PRINCIPALE #}
+		{# CAMPI HIDDEN SPECIALI #}
+	    <input type="hidden" id="id_genitore" name="{{ table }}[id_genitore]" value="{% if request.__preset__[ table ].id_genitore %}{{ request.__preset__[ table ].id_genitore }}{% else %}{{ request[ table ].id_genitore }}{% endif %}">
+
+		{# MODULO PRINCIPALE #}
 	    <fieldset>
 		<legend>dati generali <small>{{ legend }}</small></legend>
 
@@ -222,10 +225,12 @@
 						{% if request.attivita.id_anagrafica_programmazione or request.__preset__.attivita.data_attivita or request.attivita.data_attivita %}{% set id_esecutore = session.account.id_anagrafica %}{% endif %}
 						{{ frm.selectBox( table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica_collaboratori, request, id_esecutore, '','','','','anagrafica.form','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
 					</div>
+					{% if etc.select.id_step %}
 					<div class="col-12 col-md-auto">
 						<span class="label-top">esito</span>
 						{{ frm.select( table, '', '', 'id_step', '', etc.select.id_step, request ) }}
 					</div>
+					{% endif %}
 					<!--div class="col-auto">
 						<button type="button" style="height: 31px" class="form-control form-control-sm btn btn-sm btn-secondary" onclick="$('#sostituisci-operatore').modal('toggle');">SOSTITUISCI ESECUTORE</button>
 					</div-->
@@ -330,7 +335,7 @@
 
 			{# BOTTONI E COMANDI DEL MODULO #}
 			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, table, request ) }}
+				{{ def.controls( page, pages, ietf, session, table, request, '', '', '', etc ) }}
 			</fieldset>
 		</form>
     </div>
