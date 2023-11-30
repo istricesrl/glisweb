@@ -15,17 +15,27 @@
     // print_r( $csv );
     // die();
 
+    // ordinamento
+    sort( $csv );
+
     // elaboro i CSV
     foreach( $csv as $f ) {
 
         // ...
-        // NOTA no timeout ma lavorare un file per volta
-        if( filemtime( $f ) < strtotime( '-3 minutes' ) ) {
+        // if( filemtime( $f ) < strtotime( '-1 minutes' ) ) {
+        if( true ) {
 
             // ricavo l'azione e l'entità
             $req = explode( '.', basename( $f ) );
-            $action = $req[0];
-            $table = $req[1];
+
+            // gestione del formato [NN.]azione.entita.[varie.]csv
+            if( is_numeric( $req[0] ) ) {
+                $action = $req[1];
+                $table = $req[2];
+            } else {
+                $action = $req[0];
+                $table = $req[1];
+            }
 
             // debug
             // print_r( readFromFile( $f ) );
