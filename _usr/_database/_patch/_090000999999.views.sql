@@ -7138,20 +7138,20 @@ CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
 
 -- relazioni_anagrafica_view
 -- tipologia: tabella relazione
-DROP TABLE IF EXISTS `relazioni_categorie_progetti`;
+DROP TABLE IF EXISTS `relazioni_categorie_progetti_view`;
 
 -- | 090000030351
 
 -- relazioni_anagrafica_view
 -- tipologia: tabella relazione
 -- verifica: 2022-01-17 16:12 Chiara GDL
-CREATE OR REPLACE VIEW relazioni_categorie_progetti AS
+CREATE OR REPLACE VIEW relazioni_categorie_progetti_view AS
 	SELECT
 	relazioni_categorie_progetti.id,
 	relazioni_categorie_progetti.id_ruolo,
 	relazioni_categorie_progetti.id_categoria,
 	relazioni_categorie_progetti.id_categoria_collegata,
-	concat( relazioni_categorie_progetti.id_categoria,' - ', relazioni_categorie_progetti.id_categoria_collegata,) AS __label__
+	concat( relazioni_categorie_progetti.id_categoria,' - ', relazioni_categorie_progetti.id_categoria_collegata ) AS __label__
 	FROM relazioni_categorie_progetti
 ;
 

@@ -88,19 +88,23 @@
      * @todo documentare
      *
      */
-    function memcacheRead( $conn, $key, &$err = Memcached::RES_FAILURE ) {
+    function memcacheRead( $conn, $key, &$err = NULL ) {
 
 	memcacheUniqueKey( $key );
 
 	if( empty( $conn ) ) {
 
-		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
+        logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
 
 		return false;
 
 	} else {
 
-		$r = $conn->get( $key );
+        if( empty( $err ) ) {
+            $err = Memcached::RES_FAILURE;
+        }
+
+        $r = $conn->get( $key );
 
         $err = $conn->getResultCode();
 
@@ -164,7 +168,14 @@
      * @todo documentare
      *
      */
-    function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = Memcached::RES_FAILURE ) {
+    function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = NULL ) {
+
+        if( ! empty( $m ) ) {
+
+            if( empty( $err ) ) {
+                $err = Memcached::RES_FAILURE;
+            }
+
 
 	// calcolo la chiave della query
 	    $k = md5( $f );
@@ -178,6 +189,12 @@
 		memcacheWrite( $m, $k, $r, $t );
 	    }
 
+    } else {
+
+		$r = fileExists( $f );
+
+    }
+
 	// restituisco il risultato
 	    return $r;
 
@@ -188,9 +205,16 @@
      * @todo documentare
      *
      */
-    function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = Memcached::RES_FAILURE ) {
+    function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = NULL ) {
 
-	// calcolo la chiave della query
+        if( ! empty( $m ) ) {
+
+            if( empty( $err ) ) {
+                $err = Memcached::RES_FAILURE;
+            }
+
+
+        // calcolo la chiave della query
 	    $k = md5( $f );
 
 	// cerco il valore in cache
@@ -201,6 +225,12 @@
 		$r = file_get_contents( $f );
 		memcacheWrite( $m, $k, $r, $t );
 	    }
+
+    } else {
+
+		$r = file_get_contents( $f );
+
+    }
 
 	// restituisco il risultato
 	    return $r;

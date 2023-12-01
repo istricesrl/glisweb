@@ -359,6 +359,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_progetto` char(32) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
+  `id_step` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
@@ -2850,7 +2851,7 @@ CREATE TABLE `relazioni_categorie_progetti` (
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000030400
@@ -3283,6 +3284,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
 -- verifica: 2022-04-20 10:45 chiara GDL
 CREATE TABLE IF NOT EXISTS `ruoli_progetti` (
   `id` int(11) NOT NULL,
+  `id_genitore` int(11) NOT NULL,
   `nome` char(128) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,

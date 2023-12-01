@@ -86,7 +86,7 @@
 		$cf['ws']['input']			= file_get_contents('php://input');
 
 	    // charset dell'input
-		$cf['ws']['charset']		= mb_detect_encoding( $cf['ws']['input'] );
+		$cf['ws']['charset']		= ( function_exists( 'mb_detect_encoding' ) ) ? mb_detect_encoding( $cf['ws']['input'] ) : 'UTF-8';
 
 	    // ip chiamante
 		$cf['ws']['from']			= $_SERVER['REMOTE_ADDR'];

@@ -534,3 +534,13 @@
         return $s;
 
     }
+
+    if( ! function_exists( 'mb_detect_encoding' ) ) {
+
+        function mb_detect_encoding( $string ) {
+
+            return ( utf8_encode( utf8_decode( $string ) ) == $string ) ? 'UTF-8' : 'ASCII';
+
+        }
+
+    }

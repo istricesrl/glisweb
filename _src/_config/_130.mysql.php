@@ -16,6 +16,12 @@
             // eseguo le patch solo se esplicitamente richiesto
             if( isset( $_REQUEST['m'] ) ) {
 
+                // TODO la creazione del database e l'esecuzione delle patch non dovrebbero essere un
+                // task a parte? con anche tutti i runlevel successivi al 125 esclusi?
+
+                // ...
+                header( 'Content-type: text/plain' );
+
                 // creo la tabella di patch se non esiste
                 mysqlQuery(
                     $cf['mysql']['connection'],
@@ -103,7 +109,10 @@
         
                         // leggo il file in un array (una riga per elemento)
                         $rows = readFromFile( $pFile );
-        
+
+                        // debug
+                        // echo 'righe trovate nel file ' . $pFile . ' -> ' . count( $rows ) . PHP_EOL;
+
                         // id della patch
                         $pId = NULL;
 
@@ -146,10 +155,12 @@
                                             echo $pQuery . PHP_EOL;
                                             echo $pStatus . PHP_EOL;
                                             die( 'errore nella patch ' . $pQuery );
+                                        } else {
+                                            echo 'patch ' . $patchLevel . ' applicata correttamente' . PHP_EOL;
                                         }
 
                                         // registro l'esecuzione della patch nella tabella __patch__
-                                        mysqlInsertRow(
+                                        $rEx = mysqlInsertRow(
                                             $cf['mysql']['connection'],
                                             array(
                                                 'id' => $pId,
@@ -160,6 +171,16 @@
                                             '__patch__',
                                             false
                                         );
+
+                                        // risultato dell'esecuzione della patch
+                                        $pStatus = mysqli_errno( $cf['mysql']['connection'] ) . ' ' . mysqli_error( $cf['mysql']['connection'] );
+
+                                        // debug
+                                        if( ! empty( mysqli_errno( $cf['mysql']['connection'] ) ) ) {
+                                            die( 'errore nella scrittura sulla tabella delle patch' );
+                                        } else {
+                                            echo 'esecuzione della patch ' . $patchLevel . ' registrata correttamente' . PHP_EOL;
+                                        }
 
                                         // aggiorno il patch level al livello (ID) della patch che ho appena inserito
                                         $patchLevel = $pId;
@@ -219,6 +240,9 @@
 
                 }
     
+                // ...
+                die( 'fine applicazione patch database' );
+
             }
     
         }
