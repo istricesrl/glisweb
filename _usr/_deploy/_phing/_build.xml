@@ -25,10 +25,13 @@
     <property name="cmd.cds" value="cd ${src.dir}" />
     <property name="cmd.cdd" value="cd ${dst.dir}" />
     <property name="cmd.cps" value="composer update --quiet" />
-    <property name="cmd.ch1" value="find . -type d		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 775 {} \;" />
+    <property name="cmd.ch1" value="find . -type d		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 755 {} \;" />
     <property name="cmd.ch2" value="find . -type f		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 664 {} \;" />
     <property name="cmd.ch3" value="find . -name '*.sh'	-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 775 {} \;" />
-    <property name="cmd.ch4" value="chown -R www-data:www-data *" />
+    <property name="cmd.ch4" value="chown -R root:www-data *" />
+    <property name="cmd.ch5" value="chown -R www-data:www-data tmp" />
+    <property name="cmd.ch6" value="chown -R www-data:www-data var" />
+    <property name="cmd.ch7" value="chown -R www-data:www-data src/templates" />
     <property name="cmd.503" value="mkdir -p ./tmp ${cmd.amp} touch ./tmp/.upgrade" />
     <property name="cmd.200" value="rm -f ./tmp/.upgrade" />
     <property name="cmd.F53" value="echo upgrade | ncftpput -u ${ftp.usr} -p ${ftp.psw} -m -c ${ftp.hst} ${ftp.dir}tmp/.upgrade" />
@@ -383,6 +386,9 @@
         <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch2}" />
         <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch3}" />
         <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch4}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch5}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch6}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch7}" />
 
         <!-- disabilito la pagina 503 -->
         <echo msg="disabilito la pagina di cortesia..." />
@@ -421,6 +427,9 @@
         <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch2}" />
         <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch3}" />
         <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch4}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch5}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch6}" />
+        <ssh username="${key.usr}" privkeyfile="${key.prv}" pubkeyfile="${key.pub}" host="${dst.hst}" command="${cmd.cdd} ${cmd.amp} ${cmd.ch7}" />
 
         <!-- disabilito la pagina 503 -->
         <echo msg="disabilito la pagina di cortesia..." />
@@ -450,6 +459,9 @@
         <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch2}" />
         <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch3}" />
         <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch4}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch5}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch6}" />
+        <exec command="${cmd.cdd} ${cmd.amp} ${cmd.ch7}" />
 
         <!-- disabilito la pagina 503 -->
         <echo msg="disabilito la pagina di cortesia..." />
