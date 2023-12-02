@@ -29,6 +29,7 @@ find . -name '*.sh'	-not \( -path ".git" -prune \) -exec chmod 775 {} \;
 sudo chown -R root:www-data *
 # sudo chown -R www-data:www-data tmp
 # sudo chown -R www-data:www-data var
+find . -name 'templates' -exec chown -R www-data:www-data {} \;
 find . -name 'tmp' -exec chown -R www-data:www-data {} \;
 find . -name 'var' -exec chown -R www-data:www-data {} \;
 

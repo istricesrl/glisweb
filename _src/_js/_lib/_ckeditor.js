@@ -45,7 +45,7 @@
         // CKEDITOR.config.autoParagraph = false;
 		CKEDITOR.dtd.$removeEmpty["i"] = false;
 		CKEDITOR.dtd.$removeEmpty["span"] = false;
-		CKEDITOR.plugins.basePath = siteRoot + '_src/_js/_lib/_external/ckeditor/plugins/';
+		CKEDITOR.plugins.basePath = siteRoot + '_src/_js/_lib/_ext/ckeditor/plugins/';
 		CKEDITOR.on( 'instanceReady', function( event ) {
 			event.editor.dataProcessor.writer.selfClosingEnd = '>';
 		});
