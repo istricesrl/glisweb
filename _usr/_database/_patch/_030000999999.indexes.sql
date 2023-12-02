@@ -3667,9 +3667,9 @@ ALTER TABLE `stati_lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `step`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_funnel`,`nome`),
-	KEY `id_funnel` (`id_funnel`),
-	KEY `nome` (`nome`),
-	KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`);
+	ADD KEY `id_funnel` (`id_funnel`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`);
 
 -- | 030000042201
 
