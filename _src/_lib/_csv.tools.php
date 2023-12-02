@@ -27,20 +27,20 @@
             $vg = substr_count( $grezzo[0], ',' );            
             $pv = substr_count( $grezzo[0], ';' );
             $s = ( ( $vg > $pv ) ? ',' : ';' );
-            logWrite( 'virgole: ' . $vg . ' punti e virgola: ' . $pv . ' vince: ' . $s, 'details/csv/' . basename( $file ) );
+            logWrite( 'virgole: ' . $vg . ' punti e virgola: ' . $pv . ' vince: ' . $s, 'csv/separator' . basename( $file ) );
         }
 
         // debug
         // print_r( $grezzo, true );
 
         // log
-        logWrite( 'grezzo (separatore "'.$s.'")' . PHP_EOL . print_r( $grezzo, true ), 'details/csv/' . basename( $file ) );
+        logWrite( 'grezzo (separatore "'.$s.'")' . PHP_EOL . print_r( $grezzo, true ), 'csv/separator' . basename( $file ) );
 
         // faccio il parsing CSV di ogni riga
         $lavorato = csv2array( $grezzo, $s, $c, $e );
 
         // debug
-        logWrite( 'lavorato (separatore "'.$s.'")' . PHP_EOL . print_r( $lavorato, true ), 'details/csv/' . basename( $file ) );
+        logWrite( 'lavorato (separatore "'.$s.'")' . PHP_EOL . print_r( $lavorato, true ), 'csv/separator' . basename( $file ) );
 
         // restituisco l'array associativo
         return( $lavorato );
@@ -62,7 +62,7 @@
      */
     function csv2array( $data, $s = ",", $c = "\"", $e = '\\' ) {
 
-        logWrite( 'dati pre ' . print_r( $data, true ), 'details/csv/csv2array' );
+        logWrite( 'dati pre ' . print_r( $data, true ), 'csv/csv2array' );
 
         $result = array();
 
@@ -71,24 +71,24 @@
         $head = array_map( 'trim', $head );
 
         foreach( $data as &$row ) {
-            logWrite( 'riga: ' . $row, 'details/csv/csv2array' );
+            logWrite( 'riga: ' . $row, 'csv/csv2array' );
             $row = clean_string( $row );
-            logWrite( 'riga dopo clean_string: ' . $row, 'details/csv/csv2array' );
+            logWrite( 'riga dopo clean_string: ' . $row, 'csv/csv2array' );
             $row = str_getcsv( $row, $s, $c, $e );
-            logWrite( 'riga dopo str_getcsv: ' . print_r( $row, true ), 'details/csv/csv2array' );
+            logWrite( 'riga dopo str_getcsv: ' . print_r( $row, true ), 'csv/csv2array' );
             $row = array_map( 'trim', $row );
-            logWrite( 'riga dopo map di trim: ' . print_r( $row, true ), 'details/csv/csv2array' );
+            logWrite( 'riga dopo map di trim: ' . print_r( $row, true ), 'csv/csv2array' );
             if( count( $head ) == count( $row ) ) {
                 $rowCombined = array_combine( $head, $row );
                 $result[] = $rowCombined;
-                logWrite( 'riga con intestazioni: ' . print_r( $rowCombined, true ), 'details/csv/csv2array' );
+                logWrite( 'riga con intestazioni: ' . print_r( $rowCombined, true ), 'csv/csv2array' );
             } else {
                 logWrite( 'errore nel numero delle colonne (' . count( $head ) . '/' . count( $row ) . ') ' . print_r( $head, true ) . print_r( $row, true ), 'csv', LOG_ERR );
-                logWrite( 'errore nel numero delle colonne (' . count( $head ) . '/' . count( $row ) . ') ' . print_r( $head, true ) . print_r( $row, true ), 'details/csv/csv2array' );
+                logWrite( 'errore nel numero delle colonne (' . count( $head ) . '/' . count( $row ) . ') ' . print_r( $head, true ) . print_r( $row, true ), 'csv/csv2array' );
             }
         }
 
-        logWrite( 'dati post ' . print_r( $result, true ), 'details/csv/csv2array' );
+        logWrite( 'dati post ' . print_r( $result, true ), 'csv/csv2array' );
 
         array_shift( $result );
 
