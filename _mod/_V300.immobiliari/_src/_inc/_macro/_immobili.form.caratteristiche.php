@@ -27,7 +27,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM caratteristiche_immobili_view WHERE se_immobile = 1'
+	    'SELECT id, __label__ FROM caratteristiche_view WHERE se_immobile = 1'
 	);
    
     $ct['etc']['select']['sn'] = array(

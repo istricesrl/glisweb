@@ -158,15 +158,15 @@
     anagrafica_indirizzi            | 000900    | relazione     | principale    | mette in relazione anagrafica e indirizzi
     anagrafica_settori              | 001200    | relazione     | principale    | mette in relazione anagrafica e settori
     articoli                        | 001300    | base          | principale    | contiene gli articoli
-    articoli_caratteristiche        | 001600    | relazione     | principale    | mette in relazione articoli e caratteristiche_prodotti
+    articoli_caratteristiche        | 001600    | relazione     | principale    | mette in relazione articoli e caratteristiche
     attivita                        | 001800    | base          | principale    | contiene le attività
     audio                           | 002100    | base          | contenuti     | contiene gli audio
     banner                          | 002300    | base          | principale    | contiene i banner
     banner_azioni                   | 002400    | relazione     | secondaria    | mette in relazione banner e azioni
     banner_pagine                   | 002500    | relazione     | secondaria    | mette in relazione banner e pagine
     banner_zone                     | 002600    | relazione     | secondaria    | mette in relazione banner e zone
-    caratteristiche_immobili        | 002800    | base          | secondaria    | contiene le caratteristica di indirizzi, edifici e immobili
-    caratteristiche_prodotti        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
+    caratteristiche        | 002800    | base          | secondaria    | contiene le caratteristica di indirizzi, edifici e immobili
+    caratteristiche        | 002900    | base          | principale    | contiene le caratteristiche dei prodotti
     carrelli                        | 003000    | base          | principale    | contiene i carrelli necessari per l'ecommerce
     carrelli_articoli               | 003050    | relazione     | secondaria    | mette in relazioni articoli e carrelli
     carrelli_consensi               | 003060    | relazione     | secondaria    | mette in relazione carrelli e consensi
@@ -224,7 +224,7 @@
     popup_pagine                    | 024200    | relazione     | principale    | mette in relazione popup e pagine
     prezzi                          | 025000    | base          | principale    | contiene i prezzi
     prodotti                        | 026000    | base          | principale    | contiene i prodotti
-    prodotti_caratteristiche        | 026200    | relazione     | principale    | mette in relazione prodotti e caratteristiche_prodotti
+    prodotti_caratteristiche        | 026200    | relazione     | principale    | mette in relazione prodotti e caratteristiche
     prodotti_categorie              | 026400    | relazione     | principale    | mette in relazione prodotti e categorie_prodotti
     progetti                        | 027000    | base          | principale    | contiene i progetti
     progetti_anagrafica             | 027200    | relazione     | principale    | mette in relazione progetti e anagrafica
@@ -275,11 +275,11 @@
     NOTIZIE     |           | audio, contenuti, file, categorie_notizie, immagini, menu, metadati, notizie notizie_categorie, pubblicazioni, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, tipologie_notizie, tipologie_pubblicazioni, video
     RISORSE     |           | audio, contenuti, file, categorie_risorse, immagini, menu, metadati, pubblicazioni, risorse, risorse_account, risorse_anagrafica, risorse_categorie, ruoli_anagrafica, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_video, testate, tipologie_pubblicazioni, tipologie_risorse, video
     COUPON      |           | coupon, coupon_categorie_prodotti, coupon_listini, coupon_marchi, coupon_prodotti, listini, listini_clienti, marchi, prezzi, prodotti, prodotti_categorie, tipologie_prodotti
-    PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche_prodotti, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, matricole, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_articoli, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
+    PRODOTTI    | 4100      | articoli, articoli_caratteristiche, audio, caratteristiche, categorie_prodotti, contenuti, file, immagini, listini, listini_clienti, marchi, matricole, menu, metadati, prezzi, prodotti, prodotti_caratteristiche, prodotti_categorie, pubblicazioni, ruoli_articoli, ruoli_audio, ruoli_file, ruoli_immagini, ruoli_prodotti, ruoli_video, tipologie_prodotti, tipologie_pubblicazioni, video
     DOCUMENTI   |           | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     CASSE       | 6500      | articoli, condizioni_pagamento, documenti, documenti_articoli, listini, listini_clienti, mastri, matricole, modalita_pagamento, pagamenti, prezzi, prodotti, relazioni_documenti, relazioni_documenti_articoli, relazioni_pagamenti, reparti, tipologie_documenti, tipologie_mastri, tipologie_pagamenti, tipologie_prodotti
     SOFTWARE    |           | chiavi, licenze, licenze_software, relazioni_software, software, tipologie_chiavi, tipologie_licenze
-    IMMOBILIARE | V300      | caratteristiche_immobili, edifici, immobili
+    IMMOBILIARE | V300      | caratteristiche, edifici, immobili
     ECOMMERCE   |           | carrelli, carrelli_articoli, carrelli_documenti, carrelli_consensi
 
     Per sapere quali moduli sono collegati a quali tabelle è possibile fare riferimento alla seguente tabella:
@@ -304,8 +304,8 @@
     banner_azioni                   | BANNER
     banner_pagine                   | BANNER
     banner_zone                     | BANNER
-    caratteristiche_immobili        | IMMOBILIARE
-    caratteristiche_prodotti        | PRODOTTI
+    caratteristiche        | IMMOBILIARE
+    caratteristiche        | PRODOTTI
     carrelli                        | ECOMMERCE
     carrelli_articoli               | ECOMMERCE
     carrelli_consensi               | ECOMMERCE

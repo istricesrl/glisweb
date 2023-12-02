@@ -18,7 +18,7 @@
      */
     
     // tabella della vista
-	$ct['view']['table'] = 'caratteristiche_prodotti';
+	$ct['view']['table'] = 'caratteristiche';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'caratteristiche.prodotti.form';

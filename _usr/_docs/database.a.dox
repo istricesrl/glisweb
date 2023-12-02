@@ -603,7 +603,7 @@
     chiave                                      | campo                         | tabella e campo collegati     | comportamento
     --------------------------------------------|-------------------------------|-------------------------------|----------------------
     articoli_caratteristiche_ibfk_01            | id_articolo                   | articoli.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    articoli_caratteristiche_ibfk_02_nofollow   | id_caratteristica             | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
+    articoli_caratteristiche_ibfk_02_nofollow   | id_caratteristica             | caratteristiche.id   | ON DELETE CASCADE ON UPDATE CASCADE
     articoli_caratteristiche_ibfk_98_nofollow   | id_account_inserimento        | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     articoli_caratteristiche_ibfk_99_nofollow   | id_account_aggiornamento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 

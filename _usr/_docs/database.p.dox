@@ -505,7 +505,7 @@
     prodotti_caratteristiche
     ------------------------
     Questa tabella *gestita* mette in relazione molti a molti l'entità principale *prodotti* con l'entità subordinata
-    *caratteristiche_prodotti*; si noti che questa relazione è altresì referenziata dalla tabella *contenuti* per
+    *caratteristiche*; si noti che questa relazione è altresì referenziata dalla tabella *contenuti* per
     la pubblicazione delle caratteristiche dei prodotti sui siti.
 
     colonna                                           | descrizione
@@ -525,7 +525,7 @@
     chiave                                      | campo                       | tabella e campo collegati     | comportamento
     --------------------------------------------|-----------------------------|-------------------------------|----------------------
     prodotti_caratteristiche_ibfk_01            | id_prodotto                 | prodotti.id                   | ON DELETE CASCADE ON UPDATE CASCADE
-    prodotti_caratteristiche_ibfk_02_nofollow   | id_caratteristica           | caratteristiche_prodotti.id   | ON DELETE CASCADE ON UPDATE CASCADE
+    prodotti_caratteristiche_ibfk_02_nofollow   | id_caratteristica           | caratteristiche.id   | ON DELETE CASCADE ON UPDATE CASCADE
     prodotti_caratteristiche_ibfk_98_nofollow   | id_account_inserimento      | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
     prodotti_caratteristiche_ibfk_99_nofollow   | id_account_aggiornamento    | account.id                    | ON DELETE SET NULL ON UPDATE SET NULL
 
