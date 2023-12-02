@@ -1023,7 +1023,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
-  `id_caratteristica_prodotti` int(11) DEFAULT NULL,
+  `id_caratteristica` int(11) DEFAULT NULL,
   `id_marchio` int(11) DEFAULT NULL,
   `id_file` int(11) DEFAULT NULL,
   `id_immagine` int(11) DEFAULT NULL,

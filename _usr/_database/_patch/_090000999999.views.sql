@@ -1969,7 +1969,7 @@ CREATE OR REPLACE VIEW contenuti_view AS
 		contenuti.id_prodotto,
 		contenuti.id_articolo,
 		contenuti.id_categoria_prodotti,
-		contenuti.id_caratteristica_prodotti,
+		contenuti.id_caratteristica,
 		contenuti.id_marchio,
 		contenuti.id_file,
 		contenuti.id_immagine,
