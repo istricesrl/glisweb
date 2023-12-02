@@ -31,7 +31,7 @@
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
 		),
-		'caratteristiche_prodotti' => array(
+		'caratteristiche' => array(
 		    CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
 #		),

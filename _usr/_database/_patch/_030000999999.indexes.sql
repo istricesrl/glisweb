@@ -315,6 +315,7 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 ALTER TABLE `attivita`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`), 
+	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_cliente` (`id_cliente`),
 	ADD KEY `id_contatto` (`id_contatto`),
@@ -322,6 +323,8 @@ ALTER TABLE `attivita`
 	ADD KEY `id_luogo` (`id_luogo`), 
 	ADD KEY `id_anagrafica_programmazione` (`id_anagrafica_programmazione`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_mailing` (`id_mailing`), 
+	ADD KEY `id_mail` (`id_mail`), 
 	ADD KEY `id_documento` (`id_documento`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_matricola` (`id_matricola`),
@@ -494,41 +497,24 @@ ALTER TABLE `banner_zone`
 -- tipologia: tabella gestita
 ALTER TABLE `banner_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--- | 030000002800
-
--- caratteristiche_immobili
--- tipologia: tabella gestita
--- verifica: 2022-05-02 17:22 Chiara GDL
-ALTER TABLE `caratteristiche_immobili`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`,`se_indirizzo`,`se_edificio`,`se_immobile`);
-
--- | 030000002801
-
--- caratteristiche_immobili
--- tipologia: tabella gestita
-ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000002900
 
--- caratteristiche_prodotti
+-- caratteristiche
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 18:27 Fabio Mosti
-ALTER TABLE `caratteristiche_prodotti`
+ALTER TABLE `caratteristiche`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
+	ADD KEY `indice` (`id`,`nome`,`se_categorie_prodotti`,`se_prodotto`,`se_articolo`);
 
 -- | 030000002901
 
--- caratteristiche_prodotti
+-- caratteristiche
 -- tipologia: tabella gestita
-ALTER TABLE `caratteristiche_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000003000
 
@@ -1021,7 +1007,7 @@ ALTER TABLE `contenuti`
 	ADD UNIQUE KEY `unica_prodotto` (`id_lingua`,`id_prodotto`), 
 	ADD UNIQUE KEY `unica_articolo` (`id_lingua`,`id_articolo`), 
 	ADD UNIQUE KEY `unica_categoria_prodotti` (`id_lingua`,`id_categoria_prodotti`), 
-	ADD UNIQUE KEY `unica_caratteristica_prodotti` (`id_lingua`,`id_caratteristica_prodotti`), 
+	ADD UNIQUE KEY `unica_caratteristica` (`id_lingua`,`id_caratteristica`), 
 	ADD UNIQUE KEY `unica_marchio` (`id_lingua`,`id_marchio`), 
 	ADD UNIQUE KEY `unica_file` (`id_lingua`,`id_file`), 
 	ADD UNIQUE KEY `unica_immagine` (`id_lingua`,`id_immagine`), 
@@ -1042,7 +1028,7 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_articolo` (`id_articolo`), 
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
-	ADD KEY `id_caratteristica_prodotti` (`id_caratteristica_prodotti`), 
+	ADD KEY `id_caratteristica` (`id_caratteristica`), 
 	ADD KEY `id_marchio` (`id_marchio`), 
 	ADD KEY `id_file` (`id_file`), 
 	ADD KEY `id_immagine` (`id_immagine`), 
@@ -1381,6 +1367,7 @@ ALTER TABLE `documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `documenti_articoli`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `codice` (`codice`),
+	ADD UNIQUE KEY `unico_codice` (`codice`,`id_tipologia`),
 	ADD KEY `id_genitore` (`id_genitore`), 
 	ADD KEY `id_tipologia` (`id_tipologia`), 
 	ADD KEY `id_documento` (`id_documento`), 
@@ -1552,6 +1539,21 @@ ALTER TABLE `file`
 -- file
 -- tipologia: tabella gestita
 ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000015100
+
+-- funnel
+ALTER TABLE `funnel`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`nome`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `indice` (`id`,`nome`);
+
+-- | 030000015101
+
+-- funnel
+-- tipologia: tabella gestita
+ALTER TABLE `funnel` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015200
 
@@ -2663,10 +2665,11 @@ ALTER TABLE `prodotti_caratteristiche`
 	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_caratteristica`), 
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`);
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`id_lingua`,`ordine`);
 
 -- | 030000026201
 
@@ -2953,6 +2956,7 @@ ALTER TABLE `regimi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `regioni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`codice_istat`),
+	ADD UNIQUE KEY `unica_nome` (`id_stato`,`nome`),
 	ADD KEY `id_stato` (`id_stato`),
 	ADD KEY `indice` (`id`,`id_stato`,`nome`,`codice_istat`);
 
@@ -3656,6 +3660,22 @@ ALTER TABLE `stati_lingue`
 -- stati_lingue
 -- tipologia: tabella standard
 ALTER TABLE `stati_lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000042500
+
+-- step
+ALTER TABLE `step`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_funnel`,`nome`),
+	KEY `id_funnel` (`id_funnel`),
+	KEY `nome` (`nome`),
+	KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`);
+
+-- | 030000042201
+
+-- step
+-- tipologia: tabella standard
+ALTER TABLE `step` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000043000
 

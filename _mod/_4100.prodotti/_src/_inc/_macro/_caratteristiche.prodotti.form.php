@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'caratteristiche_prodotti';
+    $ct['form']['table'] = 'caratteristiche';
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

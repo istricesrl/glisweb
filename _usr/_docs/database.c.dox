@@ -7,7 +7,7 @@
     le tabelle del database di supporto CA - CZ
     ===========================================
 
-    caratteristiche_prodotti
+    caratteristiche
     ------------------------
     Questa tabella *gestita* descrive le caratteristiche relative ai prodotti, agli articoli e alle categorie di prodotti; è messa in relazione molti a molti
     con l'entità principale *articoli* dalla tabella di associazione *articoli_caratteristiche*, all'entità principale *prodotti* tramite la tabella di
@@ -15,39 +15,39 @@
 
     colonna                                             | descrizione
     ----------------------------------------------------|---------------------------------------------------------------------------------------
-    caratteristiche_prodotti.id                         | l'ID delle caratteristiche prodotti
-    caratteristiche_prodotti.nome                       | il nome della caratteristica
-    caratteristiche_prodotti.html_entity                | -
-    caratteristiche_prodotti.font_awesome               | -
-    caratteristiche_prodotti.se_categoria               | flag che indica se la caratteristica si applica alle categorie di prodotti
-    caratteristiche_prodotti.se_prodotto                | flag che indica se la caratteristica si applica ai prodotti
-    caratteristiche_prodotti.se_articolo                | flag che indica se la caratteristica si applica agli articoli
-    caratteristiche_prodotti.id_account_inserimento     | l'ID dell'account che ha inserito la riga
-    caratteristiche_prodotti.timestamp_inserimento      | la timestamp dell'inserimento della riga
-    caratteristiche_prodotti.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
-    caratteristiche_prodotti.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
+    caratteristiche.id                         | l'ID delle caratteristiche prodotti
+    caratteristiche.nome                       | il nome della caratteristica
+    caratteristiche.html_entity                | -
+    caratteristiche.font_awesome               | -
+    caratteristiche.se_categoria               | flag che indica se la caratteristica si applica alle categorie di prodotti
+    caratteristiche.se_prodotto                | flag che indica se la caratteristica si applica ai prodotti
+    caratteristiche.se_articolo                | flag che indica se la caratteristica si applica agli articoli
+    caratteristiche.id_account_inserimento     | l'ID dell'account che ha inserito la riga
+    caratteristiche.timestamp_inserimento      | la timestamp dell'inserimento della riga
+    caratteristiche.id_account_aggiornamento   | l'ID dell'ultimo account che ha modificato la riga
+    caratteristiche.timestamp_aggiornamento    | la timestamp dell'ultimo aggiornamento della riga
 
     I flag *se_categoria*, *se_prodotto* e *se_articolo* definiscono il contesto a cui la caratteristica è applicabile.  La tabella ha le seguenti chiavi esterne:
 
     chiave                                          | campo                         | tabella e campo collegati                 | comportamento
     ------------------------------------------------|-------------------------------|-------------------------------------------|----------
-    caratteristiche_prodotti_ibfk_98_nofollow       | id_account_inserimento        | account.id                                | ON DELETE SET NULL ON UPDATE SET NULL
-    caratteristiche_prodotti_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                                | ON DELETE SET NULL ON UPDATE SET NULL
+    caratteristiche_ibfk_98_nofollow       | id_account_inserimento        | account.id                                | ON DELETE SET NULL ON UPDATE SET NULL
+    caratteristiche_ibfk_99_nofollow       | id_account_aggiornamento      | account.id                                | ON DELETE SET NULL ON UPDATE SET NULL
 
-    La vista *caratteristiche_prodotti_view* relativa alla tabella *caratteristiche_prodotti* presenta le seguenti colonne:
+    La vista *caratteristiche_view* relativa alla tabella *caratteristiche* presenta le seguenti colonne:
 
     colonna                                                 | descrizione
     --------------------------------------------------------|---------------------------------------------------------------------------------------
-    caratteristiche_prodotti_view.id                        | -
-    caratteristiche_prodotti_view.nome                      | -
-    caratteristiche_prodotti_view.html_entity               | -
-    caratteristiche_prodotti_view.font_awesome              | -
-    caratteristiche_prodotti_view.se_categoria              | -
-    caratteristiche_prodotti_view.se_prodotto               | -
-    caratteristiche_prodotti_view.se_articolo               | -
-    caratteristiche_prodotti_view.id_account_inserimento    | -
-    caratteristiche_prodotti_view.id_account_aggiornamento  | -
-    caratteristiche_prodotti_view.__label__                 | l'etichetta descrittiva della caratteristica
+    caratteristiche_view.id                        | -
+    caratteristiche_view.nome                      | -
+    caratteristiche_view.html_entity               | -
+    caratteristiche_view.font_awesome              | -
+    caratteristiche_view.se_categoria              | -
+    caratteristiche_view.se_prodotto               | -
+    caratteristiche_view.se_articolo               | -
+    caratteristiche_view.id_account_inserimento    | -
+    caratteristiche_view.id_account_aggiornamento  | -
+    caratteristiche_view.__label__                 | l'etichetta descrittiva della caratteristica
    
     categorie_anagrafica
     --------------------
@@ -741,7 +741,7 @@
     contenuti_ibfk_03                           | id_prodotto                   | prodotti.id                       | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_04                           | id_articolo                   | articoli.id                       | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_05                           | id_categoria_prodotti         | categorie_prodotti.id             | ON DELETE SET NULL ON UPDATE SET NULL
-    contenuti_ibfk_06                           | id_caratteristica_prodotti    | caratteristiche_prodotti.id       | ON DELETE SET NULL ON UPDATE SET NULL
+    contenuti_ibfk_06                           | id_caratteristica_prodotti    | caratteristiche.id       | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_07                           | id_marchio                    | marchi.id                         | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_08                           | id_file                       | file.id                           | ON DELETE SET NULL ON UPDATE SET NULL
     contenuti_ibfk_09                           | id_immagine                   | immagini.id                       | ON DELETE SET NULL ON UPDATE SET NULL
