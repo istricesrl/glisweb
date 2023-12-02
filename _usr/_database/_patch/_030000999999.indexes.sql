@@ -496,41 +496,24 @@ ALTER TABLE `banner_zone`
 -- tipologia: tabella gestita
 ALTER TABLE `banner_zone` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--- | 030000002800
-
--- caratteristiche_immobili
--- tipologia: tabella gestita
--- verifica: 2022-05-02 17:22 Chiara GDL
-ALTER TABLE `caratteristiche_immobili`
-	ADD PRIMARY KEY (`id`),
-	ADD UNIQUE KEY `unica` (`nome`),
-	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
-	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`,`se_indirizzo`,`se_edificio`,`se_immobile`);
-
--- | 030000002801
-
--- caratteristiche_immobili
--- tipologia: tabella gestita
-ALTER TABLE `caratteristiche_immobili` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000002900
 
--- caratteristiche_prodotti
+-- caratteristiche
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 18:27 Fabio Mosti
-ALTER TABLE `caratteristiche_prodotti`
+ALTER TABLE `caratteristiche`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`nome`,`se_categoria`,`se_prodotto`,`se_articolo`);
+	ADD KEY `indice` (`id`,`nome`,`se_categorie_prodotti`,`se_prodotto`,`se_articolo`);
 
 -- | 030000002901
 
--- caratteristiche_prodotti
+-- caratteristiche
 -- tipologia: tabella gestita
-ALTER TABLE `caratteristiche_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000003000
 
@@ -2677,10 +2660,11 @@ ALTER TABLE `prodotti_caratteristiche`
 	ADD UNIQUE KEY `unica` (`id_prodotto`,`id_caratteristica`), 
 	ADD KEY `id_prodotto` (`id_prodotto`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
+	ADD KEY `id_lingua` (`id_lingua`),
 	ADD KEY `ordine` (`ordine`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
-	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`ordine`);
+	ADD KEY `indice` (`id`,`id_prodotto`,`id_caratteristica`,`id_lingua`,`ordine`);
 
 -- | 030000026201
 

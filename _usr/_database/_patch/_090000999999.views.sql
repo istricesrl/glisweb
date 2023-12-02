@@ -861,12 +861,12 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 		concat(
 			articoli_caratteristiche.id_articolo,
 			': ',
-			caratteristiche_prodotti.nome,
+			caratteristiche.nome,
 			' ',
 			articoli_caratteristiche.valore
 		) AS __label__
 	FROM articoli_caratteristiche
-		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = articoli_caratteristiche.id_caratteristica
+		LEFT JOIN caratteristiche ON caratteristiche.id = articoli_caratteristiche.id_caratteristica
 ;
 
 -- | 090000001800
@@ -1250,56 +1250,31 @@ CREATE OR REPLACE VIEW `banner_zone_view` AS
 		LEFT JOIN banner ON banner.id = banner_zone.id_banner
 ;
 
--- | 090000002800
-
--- caratteristiche_immobili_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `caratteristiche_immobili_view`;
-
--- | 090000002801
-
--- caratteristiche_immobili_view
--- tipologia: tabella gestita
--- verifica: 2022-05-02 17:22 Chiara GDL
-CREATE OR REPLACE VIEW caratteristiche_immobili_view AS
-	SELECT
-		caratteristiche_immobili.id,
-		caratteristiche_immobili.nome,
-		caratteristiche_immobili.html_entity,
-		caratteristiche_immobili.font_awesome,
-		caratteristiche_immobili.se_indirizzo,
-		caratteristiche_immobili.se_edificio,
-		caratteristiche_immobili.se_immobile,
-		caratteristiche_immobili.id_account_inserimento,
-		caratteristiche_immobili.id_account_aggiornamento,
-		caratteristiche_immobili.nome AS __label__
-	FROM caratteristiche_immobili
-;
-
 -- | 090000002900
 
--- caratteristiche_prodotti_view
+-- caratteristiche_view
 -- tipologia: tabella gestita
-DROP TABLE IF EXISTS `caratteristiche_prodotti_view`;
+DROP TABLE IF EXISTS `caratteristiche_view`;
 
 -- | 090000002901
 
--- caratteristiche_prodotti_view
+-- caratteristiche_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 18:51 Fabio Mosti
-CREATE OR REPLACE VIEW caratteristiche_prodotti_view AS
+CREATE OR REPLACE VIEW caratteristiche_view AS
 	SELECT
-		caratteristiche_prodotti.id,
-		caratteristiche_prodotti.nome,
-		caratteristiche_prodotti.html_entity,
-		caratteristiche_prodotti.font_awesome,
-		caratteristiche_prodotti.se_categoria,
-		caratteristiche_prodotti.se_prodotto,
-		caratteristiche_prodotti.se_articolo,
-		caratteristiche_prodotti.id_account_inserimento,
-		caratteristiche_prodotti.id_account_aggiornamento,
-		caratteristiche_prodotti.nome AS __label__
-	FROM caratteristiche_prodotti
+		caratteristiche.id,
+		caratteristiche.nome,
+		caratteristiche.html_entity,
+		caratteristiche.font_awesome,
+		caratteristiche.se_immobili,
+		caratteristiche.se_categorie_prodotti,
+		caratteristiche.se_prodotto,
+		caratteristiche.se_articolo,
+		caratteristiche.id_account_inserimento,
+		caratteristiche.id_account_aggiornamento,
+		caratteristiche.nome AS __label__
+	FROM caratteristiche
 ;
 
 -- | 090000003000
@@ -3252,7 +3227,7 @@ CREATE OR REPLACE VIEW `edifici_caratteristiche_view` AS
 		edifici_caratteristiche.id,
 		edifici_caratteristiche.id_edificio,
 		edifici_caratteristiche.id_caratteristica,
-		caratteristiche_immobili.nome AS caratteristica,
+		caratteristiche.nome AS caratteristica,
 		edifici_caratteristiche.ordine,
 		edifici_caratteristiche.se_presente,
 		edifici_caratteristiche.id_account_inserimento,
@@ -3260,10 +3235,10 @@ CREATE OR REPLACE VIEW `edifici_caratteristiche_view` AS
 		concat(
 			edifici_caratteristiche.id_edificio,
 			' / ',
-			caratteristiche_immobili.nome
+			caratteristiche.nome
 		) AS __label__
 	FROM edifici_caratteristiche
-		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = edifici_caratteristiche.id_caratteristica
+		LEFT JOIN caratteristiche ON caratteristiche.id = edifici_caratteristiche.id_caratteristica
 ;
 
 -- | 090000012800
@@ -4027,7 +4002,7 @@ CREATE OR REPLACE VIEW `immobili_caratteristiche_view` AS
 		immobili_caratteristiche.id,
 		immobili_caratteristiche.id_immobile,
 		immobili_caratteristiche.id_caratteristica,
-		caratteristiche_immobili.nome AS caratteristica,
+		caratteristiche.nome AS caratteristica,
 		immobili_caratteristiche.ordine,
 		immobili_caratteristiche.se_presente,
 		immobili_caratteristiche.id_account_inserimento,
@@ -4035,10 +4010,10 @@ CREATE OR REPLACE VIEW `immobili_caratteristiche_view` AS
 		concat(
 			immobili_caratteristiche.id_immobile,
 			' / ',
-			caratteristiche_immobili.nome
+			caratteristiche.nome
 		) AS __label__
 	FROM immobili_caratteristiche
-		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = immobili_caratteristiche.id_caratteristica
+		LEFT JOIN caratteristiche ON caratteristiche.id = immobili_caratteristiche.id_caratteristica
 ;
 
 -- | 090000015800
@@ -4109,7 +4084,7 @@ CREATE OR REPLACE VIEW `indirizzi_caratteristiche_view` AS
 		indirizzi_caratteristiche.id,
 		indirizzi_caratteristiche.id_indirizzo,
 		indirizzi_caratteristiche.id_caratteristica,
-		caratteristiche_immobili.nome AS caratteristica,
+		caratteristiche.nome AS caratteristica,
 		indirizzi_caratteristiche.ordine,
 		indirizzi_caratteristiche.se_presente,
 		indirizzi_caratteristiche.id_account_inserimento,
@@ -4117,10 +4092,10 @@ CREATE OR REPLACE VIEW `indirizzi_caratteristiche_view` AS
 		concat(
 			indirizzi_caratteristiche.id_indirizzo,
 			' / ',
-			caratteristiche_immobili.nome
+			caratteristiche.nome
 		) AS __label__
 	FROM indirizzi_caratteristiche
-		LEFT JOIN caratteristiche_immobili ON caratteristiche_immobili.id = indirizzi_caratteristiche.id_caratteristica
+		LEFT JOIN caratteristiche ON caratteristiche.id = indirizzi_caratteristiche.id_caratteristica
 ;
 
 -- | 090000015900
@@ -6154,17 +6129,18 @@ CREATE OR REPLACE VIEW `prodotti_caratteristiche_view` AS
 		prodotti_caratteristiche.id,
 		prodotti_caratteristiche.id_prodotto,
 		prodotti_caratteristiche.id_caratteristica,
-		caratteristiche_prodotti.nome AS caratteristica,
+		prodotti_caratteristiche.id_lingua,
+		caratteristiche.nome AS caratteristica,
 		prodotti_caratteristiche.ordine,
 		prodotti_caratteristiche.id_account_inserimento,
 		prodotti_caratteristiche.id_account_aggiornamento,
 		concat(
 			prodotti_caratteristiche.id_prodotto,
 			' / ',
-			caratteristiche_prodotti.nome
+			caratteristiche.nome
 		) AS __label__
 	FROM prodotti_caratteristiche
-		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = prodotti_caratteristiche.id_caratteristica
+		LEFT JOIN caratteristiche ON caratteristiche.id = prodotti_caratteristiche.id_caratteristica
 ;
 
 -- | 090000026400

@@ -3,45 +3,45 @@
 -- questo file contiene le query per l'inserimento dei dati standard nelle tabelle
 --
 
--- | 050000002800
+-- | 050000002900
 
--- caratteristiche_immobili
+-- caratteristiche
 -- tipologia: tabella gestita
 -- verifica: 2022-05-02 17:22 Chiara GDL
-INSERT IGNORE INTO `caratteristiche_immobili` (`id`, `nome`, `font_awesome`, `html_entity`, `se_indirizzo`, `se_edificio`, `se_immobile`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	'balcone',	'fa-picture-o',	'&#xf03e;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(2,	'giardino',	'fa-tree',	'&#xf1bb;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(3,	'cantina',	'fa-key',	'&#xf084;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(4,	'tavernetta',	'fa-key',	'&#xf084;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(5,	'ascensore',	'fa-sort',	'&#xf0dc;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(6,	'giardino privato',	'fa-tree',	'&#xf1bb;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(7,	'posto auto',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(8,	'garage',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(9,	'riscaldamento autonomo',	'fa-thermometer-full',	'&#xf2c7;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(10,	'riscaldamento centralizzato',	'fa-thermometer-half',	'&#xf2c9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(11,	'arredato',	'fa-check',	'&#xf00c;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(12,	'non arredato',	'fa-times',	'&#xf00d;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(13,	'parzialmente arredato',	'fa-minus',	'&#xf068;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(14,	'terrazza abitabile',	'fa-picture-o',	'&#xf03e;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(15,	'senza riscaldamento',	'fa-thermometer-empty',	'&#xf2cb;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(16,	'volendo arredato',	'fa-truck',	'&#xf0d1;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(17,	'arredato solo cucina',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(18,	'garage doppio',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(19,	'posto auto coperto',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(20,	'nessun posto auto',	'fa-road',	'&#xf018;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(21,	'posto auto condominiale',	'fa-car',	'&#xf1b9;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(22,	'cucina abitabile',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(23,	'mansarda',	'fa-angle-up',	'&#xf106;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(24,	'camino',	'fa-fire',	'&#xf06d;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(25,	'angolo cottura',	'fa-coffee',	'&#xf0f4;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(26,	'giardino condominiale',	'fa-tree',	'&#xf1bb;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(27,	'aria condizionata',	'fa-snowflake-o',	'&#xf2dc;',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(28,	'portineria',	'fa-user',	'&#xf007;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(29,	'mezzi pubblici',	'fa-bus',	'&#xf207;',	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(30,	'palazzo storico',	'fa-university',	'&#xf19c;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(31,	'stile Liberty',	'fa-building',	'&#xf1ad;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(32,	'pietra vista',	'fa-cubes',	'&#xf1b3;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(33,	'intonaco',	'fa-clone',	'&#xf24d;',	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT IGNORE INTO `caratteristiche` (`id`, `nome`, `font_awesome`, `html_entity`, `se_indirizzo`, `se_edificio`, `se_immobile`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'balcone',	'fa-picture-o',	'&#xf03e;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	'giardino',	'fa-tree',	'&#xf1bb;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(3,	'cantina',	'fa-key',	'&#xf084;', 1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	'tavernetta',	'fa-key',	'&#xf084;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(5,	'ascensore',	'fa-sort',	'&#xf0dc;', 1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(6,	'giardino privato',	'fa-tree',	'&#xf1bb;', 1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(7,	'posto auto',	'fa-car',	'&#xf1b9;',	1,	1, 1,	1,	NULL,	NULL,	NULL,	NULL),
+(8,	'garage',	'fa-car',	'&#xf1b9;',	1,	1,	1, 1,	NULL,	NULL,	NULL,	NULL),
+(9,	'riscaldamento autonomo',	'fa-thermometer-full',	'&#xf2c7;', 1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(10,	'riscaldamento centralizzato',	'fa-thermometer-half',	'&#xf2c9;', 1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(11,	'arredato',	'fa-check',	'&#xf00c;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(12,	'non arredato',	'fa-times',	'&#xf00d;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(13,	'parzialmente arredato',	'fa-minus',	'&#xf068;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(14,	'terrazza abitabile',	'fa-picture-o',	'&#xf03e;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(15,	'senza riscaldamento',	'fa-thermometer-empty',	'&#xf2cb;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(16,	'volendo arredato',	'fa-truck',	'&#xf0d1;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(17,	'arredato solo cucina',	'fa-coffee',	'&#xf0f4;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(18,	'garage doppio',	'fa-car',	'&#xf1b9;',	1,	1, 1,	1,	NULL,	NULL,	NULL,	NULL),
+(19,	'posto auto coperto',	'fa-car',	'&#xf1b9;',	1,	1, 1,	1,	NULL,	NULL,	NULL,	NULL),
+(20,	'nessun posto auto',	'fa-road',	'&#xf018;',	1,	1,	1, 1,	NULL,	NULL,	NULL,	NULL),
+(21,	'posto auto condominiale',	'fa-car',	'&#xf1b9;',	1,	1,	1, 1,	NULL,	NULL,	NULL,	NULL),
+(22,	'cucina abitabile',	'fa-coffee',	'&#xf0f4;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(23,	'mansarda',	'fa-angle-up',	'&#xf106;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(24,	'camino',	'fa-fire',	'&#xf06d;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(25,	'angolo cottura',	'fa-coffee',	'&#xf0f4;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(26,	'giardino condominiale',	'fa-tree',	'&#xf1bb;', 1,	1,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(27,	'aria condizionata',	'fa-snowflake-o',	'&#xf2dc;', 1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(28,	'portineria',	'fa-user',	'&#xf007;',	1,	1, 1,	1,	NULL,	NULL,	NULL,	NULL),
+(29,	'mezzi pubblici',	'fa-bus',	'&#xf207;',	1,	1, 1,	1,	NULL,	NULL,	NULL,	NULL),
+(30,	'palazzo storico',	'fa-university',	'&#xf19c;',	1, 1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(31,	'stile Liberty',	'fa-building',	'&#xf1ad;',	1,	1, 1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(32,	'pietra vista',	'fa-cubes',	'&#xf1b3;',	1,	1, 1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(33,	'intonaco',	'fa-clone',	'&#xf24d;',	1,	1, 1,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000003100
 
