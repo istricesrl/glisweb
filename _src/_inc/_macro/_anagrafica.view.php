@@ -59,7 +59,8 @@
 	    'mail' => 'text-left d-none d-md-table-cell',
         'id_stato' => 'd-none',
         'id_provincia' => 'd-none',
-	    'categorie' => 'text-left'
+	    'categorie' => 'text-left',
+	    NULL => 'no-wrap'
 	);
 
     // javascript della vista
