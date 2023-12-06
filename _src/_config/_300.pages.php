@@ -40,6 +40,7 @@
 	$cf['contents']['pages']		    = memcacheRead( $cf['memcache']['connection'], CONTENTS_PAGES_KEY );
 	$cf['contents']['tree']		    	= memcacheRead( $cf['memcache']['connection'], CONTENTS_TREE_KEY );
 	$cf['contents']['index']		    = memcacheRead( $cf['memcache']['connection'], CONTENTS_INDEX_KEY );
+	$cf['contents']['reverse']		    = memcacheRead( $cf['memcache']['connection'], CONTENTS_REVERSE_KEY );
 	$cf['contents']['shortcuts']	    = memcacheRead( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY );
 
     // timer

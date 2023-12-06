@@ -81,6 +81,9 @@ if ($cf['contents']['cached'] === false) {
             // valuto se i dati in cache sono ancora validi
             if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {
 
+                // ...
+                $cf['contents']['reverse']['categorie_prodotti'][ $pg['id'] ] = $pid;
+
                 // blocco dati principale
                 $cf['contents']['pages'][$pid] = array(
                     'sitemap'        => (($pg['se_sitemap'] == 1) ? true : false),

@@ -29,8 +29,7 @@
         http_response_code( 400 );
         die('SQL injection failed');
         }
-    
-    */
+
 
     // ...
     if( stripos( $_SERVER['QUERY_STRING'], 'phpunit' ) !== false ) {
@@ -43,6 +42,8 @@
         http_response_code( 400 );
         die('SQL injection failed');
     }
+
+        */
 
     // debug
     // echo 'OUTPUT';

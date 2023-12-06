@@ -32,6 +32,7 @@
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_KEY, $cf['contents']['pages'] );
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_TREE_KEY, $cf['contents']['tree'] );
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_INDEX_KEY, $cf['contents']['index'] );
+			memcacheWrite( $cf['memcache']['connection'], CONTENTS_REVERSE_KEY, $cf['contents']['reverse'] );
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_SHORTCUTS_KEY, $cf['contents']['shortcuts'] );
 			memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_CACHED, time() );
 
