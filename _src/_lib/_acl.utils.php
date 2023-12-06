@@ -436,7 +436,8 @@
 
 		$challenge = hash(
 			getAvailableHashMethod(),
-			serialize( array_diff_key( $row, array( '__firma__' => null ) ) ) . $cf['auth']['import']['secret']
+			// serialize( array_diff_key( $row, array( '__firma__' => null ) ) ) . $cf['auth']['import']['secret']
+			$t . $cf['auth']['import']['secret']
 		);
 
 		// var_dump( $challenge );
@@ -445,6 +446,8 @@
 			// die('match');
 			return true;
 		}
+
+		logWrite( 'firma non corrispondente: ' . $row['__firma__'] . ' (prevista: ' . $challenge . ') per: ' . print_r( $row ), 'firme', LOG_ERR );
 
 		// var_dump( $row['__firma__'] );
 		// var_dump( $challenge );

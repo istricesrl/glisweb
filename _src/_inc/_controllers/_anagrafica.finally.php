@@ -28,18 +28,22 @@
             // view statica naturale
             // mysqlQuery( $c, 'CALL anagrafica_view_static( ? )', array( array( 's' => $d['id'] ) ) );
             // print_r( mysqlQuery( $c, 'SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $d['id'] ) ) ) );
-            mysqlQuery( $c, 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
-            mysqlQuery( $c, 'REPLACE INTO anagrafica_archiviati_view_static SELECT * FROM anagrafica_archiviati_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
-            mysqlQuery( $c, 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_attivi_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
-            logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
+            #! mysqlQuery( $c, 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            #! mysqlQuery( $c, 'REPLACE INTO anagrafica_archiviati_view_static SELECT * FROM anagrafica_archiviati_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            #! mysqlQuery( $c, 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_attivi_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            #! logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
 
-        break;
+        #! break;
         case METHOD_DELETE:
 
-            mysqlQuery( $c, 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
-            mysqlQuery( $c, 'DELETE FROM anagrafica_archiviati_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
-            mysqlQuery( $c, 'DELETE FROM anagrafica_attivi_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
-            logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
+            #! mysqlQuery( $c, 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            #! mysqlQuery( $c, 'DELETE FROM anagrafica_archiviati_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            #! mysqlQuery( $c, 'DELETE FROM anagrafica_attivi_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            #! logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
+
+            $_SESSION['static']['anagrafica_view'][ $d['id'] ] = array( 'field' => 'id' );
+            $_SESSION['static']['anagrafica_attivi_view'][ $d['id'] ] = array( 'field' => 'id' );
+            $_SESSION['static']['anagrafica_archiviati_view'][ $d['id'] ] = array( 'field' => 'id' );
 
         break;
 

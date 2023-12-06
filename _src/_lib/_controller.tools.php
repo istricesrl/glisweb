@@ -105,7 +105,7 @@
 			}
 
 		// controllo diritti
-		} elseif( getAclPermission( $t, $a, $i ) || checkFirmaImportazione( $d ) ) {
+		} elseif( getAclPermission( $t, $a, $i ) || checkFirmaImportazione( $d, $t ) ) {
 
 			// se è stata effettuata una GET senza ID, passo alla modalità view
 		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
@@ -361,7 +361,7 @@
 			return $i['__status__'];
 
 			// ...
-			} elseif( ! isset( $d['id'] ) || ( getAclRights( $c, $t, $a, $d['id'], $i, $pi ) != false || checkFirmaImportazione( $d ) != false ) ) {
+			} elseif( ! isset( $d['id'] ) || ( getAclRights( $c, $t, $a, $d['id'], $i, $pi ) != false || checkFirmaImportazione( $d, $t ) != false ) ) {
 
 				// log
 			    logWrite( "diritti sufficienti per ${t}/${a}", 'controller', LOG_DEBUG );

@@ -52,7 +52,8 @@ CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (
   `data_archiviazione` date DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `__label__` text
+  `__label__` text,
+  UNIQUE KEY `codice` (`codice`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- | 080000000411
@@ -100,7 +101,8 @@ CREATE TABLE IF NOT EXISTS `anagrafica_archiviati_view_static` (
   `data_archiviazione` date DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `__label__` text
+  `__label__` text,
+  UNIQUE KEY `codice` (`codice`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- | 080000000412
@@ -148,7 +150,8 @@ CREATE TABLE IF NOT EXISTS `anagrafica_attivi_view_static` (
   `data_archiviazione` date DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
-  `__label__` text
+  `__label__` text,
+  UNIQUE KEY `codice` (`codice`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 -- | 080000001800

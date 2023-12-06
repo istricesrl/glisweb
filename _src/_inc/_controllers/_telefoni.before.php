@@ -1,24 +1,36 @@
 <?php
 
     /**
-     * controller pre query per la tabella account
      *
      *
+     *
+     *
+     *
+     *
+     *
+     * @todo come agire nei controller before
+     * @todo documentare
      *
      * @file
      *
      */
 
     // log
-	logWrite( "controller before per ${t}/${a}", 'controller' );
+	logWrite( "controller default/before per ${t}/${a}", 'controller' );
 
-    // controllo azione corrente
+    // debug
+    // print_r( $vs );
+
+    // elaborazioni di default dei dati
 	switch( strtoupper( $a ) ) {
 
 	    case METHOD_POST:
 	    case METHOD_PUT:
 	    case METHOD_REPLACE:
 	    case METHOD_UPDATE:
+
+            // debug
+            // print_r( $vs );
 
             // converto il codice anagrafica in id anagrafica
             if( isset( $vs['codice_anagrafica']['s'] ) ) {
@@ -31,13 +43,9 @@
 
             }
 
-			// NOTA se sto scrivendo la password, faccio l'hash; se sto leggendo i dati, elimino la password dai dati letti
-
-			if( empty( $vs['password']['s'] ) ) {
-				unset( $vs['password'] );
-				removeFromArray( $ks, 'password' );
-			}
-
 	    break;
 
 	}
+
+    // debug
+    // die( print_r( $p, true ) );

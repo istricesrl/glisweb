@@ -18,12 +18,22 @@
     // ordinamento
     sort( $csv );
 
-    // elaboro i CSV
-    foreach( $csv as $f ) {
+    // ...
+    if( defined( 'CRON_RUNNING' ) ) {
 
-        // ...
-        // if( filemtime( $f ) < strtotime( '-1 minutes' ) ) {
-        if( true ) {
+        // elaboro i CSV
+        foreach( $csv as $f ) {
+            // $f = array_shift( $csv );
+
+            // ...
+            // if( file_exists( $f ) ) {
+        
+            // ...
+            logWrite( 'importo: ' . $f, 'import', LOG_ERR );
+
+            // ...
+            // if( filemtime( $f ) < strtotime( '-1 minutes' ) ) {
+            // if( true ) {
 
             // ricavo l'azione e l'entità
             $req = explode( '.', basename( $f ) );
@@ -57,12 +67,12 @@
                     // popolando $_REQUEST[ tabella ][ n ]...
                     $riga['__method__'] = strtoupper( $action );
                     // $_REQUEST[ $table ]['__method__'] = strtoupper( $action );
-    #                $_REQUEST['__info__'][ $k ]
+                    // $_REQUEST['__info__'][ $k ]
 
                     // debug
                     // print_r( $riga );
 
-    /*
+                    /*
                     // attivazione controller
                     controller(
                         $cf['mysql']['connection'],				// connessione al database
@@ -72,7 +82,7 @@
                         strtoupper( $action ),				// metodo da applicare
                         NULL						// campo per la ricorsione
                     );
-    */
+                    */
 
                     // ...
                     if( ! isset( $riga['id'] ) ) {
@@ -86,7 +96,11 @@
                         // print_r( $riga );
 
                         // creazione firma
-                        $riga['__firma__'] = hash( 'sha3-512', serialize( $riga ) . $cf['auth']['import']['secret'] );
+                        $riga['__firma__'] = hash(
+                            getAvailableHashMethod(),
+                            // serialize( $row ) . $cf['auth']['import']['secret']
+                            $table . $cf['auth']['import']['secret']
+                        );
 
                         // debug
                         // var_dump( $riga['__firma__'] );
@@ -100,6 +114,10 @@
                     // print_r( $riga );
 
                 }
+
+            } else {
+
+                logWrite( 'collisione di tabelle: ' . $table, 'import', LOG_ERR );
 
             }
 

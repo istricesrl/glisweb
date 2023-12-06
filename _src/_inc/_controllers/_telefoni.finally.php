@@ -41,7 +41,7 @@
             #!    mysqlQuery( $c, 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $befores['id_anagrafica'] ) ) );
             #!    mysqlQuery( $c, 'REPLACE INTO anagrafica_archiviati_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $befores['id_anagrafica'] ) ) );
             #!    logWrite( 'aggiornata view statica ' . $t . '/anagrafica per id #' . $d['id'] . '/' . $befores['id_anagrafica'], 'static' );
-            #!}
+            #! }
 
             if( isset( $befores['id_anagrafica'] ) ) {
                 $_SESSION['static']['anagrafica_view'][ $befores['id_anagrafica'] ] = array( 'field' => 'id' );
