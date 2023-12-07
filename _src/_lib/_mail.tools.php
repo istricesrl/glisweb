@@ -178,6 +178,11 @@ $twig = new \Twig\Environment($loader);
 
 echo $twig->render('index.html', ['name' => 'Fabien']);
 */
+
+if( empty( $t[ $l ]['from'] ) ) {
+	die( 'mittente non settato, impossibile accodare la mail' );
+}
+
 		    // avvio di Twig
 			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $t[ $l ] ) );
 			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );

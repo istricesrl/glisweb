@@ -180,6 +180,9 @@
                         // verifico se la configurazione prevede l'invio di una mail
                         if( isset( $cnf['mail'] ) ) {
 
+                            // log
+                            logWrite( 'invio ' . count( $cnf['mail'] ) . 'mail per il blocco ' . $k, 'contatti' );
+
                             // ciclo per ogni email da mandare
                             foreach( $cnf['mail'] as $conf ) {
 
@@ -187,7 +190,7 @@
                                     // print_r( $conf );
 
                                 // log
-                                    logWrite( 'template mail trovato per il blocco ' . $k, 'contatti' );
+                                    logWrite( 'template mail ' . $conf['template'] . ' trovato per il blocco ' . $k, 'contatti' );
 
                                 // inizializzazioni
                                     $key = $dst = NULL;
