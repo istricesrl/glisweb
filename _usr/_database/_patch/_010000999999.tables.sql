@@ -2746,7 +2746,8 @@ CREATE TABLE IF NOT EXISTS `ranking` (
 -- recensioni
 CREATE TABLE `recensioni` (
   `id` int(11) NOT NULL,
-  `id_lingua` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` char(32) DEFAULT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,

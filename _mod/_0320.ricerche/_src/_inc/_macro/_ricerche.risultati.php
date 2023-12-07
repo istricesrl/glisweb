@@ -104,6 +104,8 @@
                     $ct['ricerche']['risultati']['prodotti'][] = $dato;
                 }
 
+                // TODO aggiungere notizie, categorie_notizie, risorse, categorie_risorse, progetti, categorie_progetti
+
             }
 
             // ...

@@ -259,9 +259,9 @@
         
         $caratteristiche = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT ' . $t . '.ordine, coalesce( contenuti.testo, caratteristiche_prodotti.nome ) AS caratteristica, ' . $t . '.valore FROM ' . $t . ' '.
-            'LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = ' . $t . '.id_caratteristica '.
-            'LEFT JOIN contenuti ON contenuti.id_caratteristica_prodotti = caratteristiche_prodotti.id AND contenuti.id_lingua = ? '.
+            'SELECT ' . $t . '.ordine, coalesce( contenuti.testo, caratteristiche.nome ) AS caratteristica, ' . $t . '.valore FROM ' . $t . ' '.
+            'LEFT JOIN caratteristiche ON caratteristiche.id = ' . $t . '.id_caratteristica '.
+            'LEFT JOIN contenuti ON contenuti.id_caratteristica = caratteristiche.id AND contenuti.id_lingua = ? '.
             'WHERE ' . $t . '.' . $f . ' = ? AND ' . $t . '.id_lingua = ? ',
             array(
                 array( 's' => $l ),
