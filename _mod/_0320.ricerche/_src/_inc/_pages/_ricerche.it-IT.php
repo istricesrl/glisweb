@@ -13,8 +13,7 @@
         'h1'		        => array( $l		=> 'ricerca avanzata' ),
         'template'		    => array( 'path'	=> '_src/_templates/_aurora/', 'schema' => 'ricerche.avanzate.html' ),
         'macro'		        => array( $m . '_src/_inc/_macro/_ricerche.avanzate.php' ),
-        'parent'		    => array( 'id'		=> NULL ),
-        'auth'		        => array( 'groups'	=> array( 'roots', 'guests' ) )
+        'parent'		    => array( 'id'		=> NULL )
     );
 
     // pagina per i risultati della ricerca
@@ -24,6 +23,5 @@
         'h1'		        => array( $l		=> 'risultati ricerca' ),
         'template'		    => array( 'path'	=> '_src/_templates/_aurora/', 'schema' => 'ricerche.risultati.html' ),
         'macro'		        => array( $m . '_src/_inc/_macro/_ricerche.risultati.php' ),
-        'parent'		    => array( 'id'		=> NULL ),
-        'auth'		        => array( 'groups'	=> array( 'roots', 'guests' ) )
+        'parent'		    => array( 'id'		=> NULL )
     );

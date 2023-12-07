@@ -1,0 +1,24 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+{% if ricerche.query %}
+<h1>hai cercato "{{ ricerche.query }}"</h1>
+{% for sezione,risultati in ricerche.risultati %}
+<div class="mt-3">
+<h2>risultati trovati in {{ sezione }}</h2>
+{% for risultato in risultati %}
+<div class="mt-1">
+<h3><a href="{{ risultato.url }}">{{ risultato.h1 }}</a></h3>
+</div>
+{% endfor %}
+</div>
+{% else %}
+<h3>nessun risultato trovato</h3>
+{% endfor %}
+{% else %}
+<h1>nessuna ricerca effettuata</h1>
+<h3>prova a digitare una parola nel campo di ricerca</h3>
+{% endif %}
+{% endblock %}
