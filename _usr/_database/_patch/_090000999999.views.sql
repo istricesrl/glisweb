@@ -6278,6 +6278,7 @@ CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 	SELECT
 		prodotti_categorie.id,
 		prodotti_categorie.id_prodotto,
+		prodotti.nome AS prodotto,
 		prodotti_categorie.id_categoria,
 		categorie_prodotti_path( prodotti_categorie.id_categoria ) AS categoria,
 		prodotti_categorie.id_ruolo,
@@ -6293,6 +6294,7 @@ CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
 		) AS __label__
 	FROM prodotti_categorie
 		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = prodotti_categorie.id_ruolo
+		LEFT JOIN prodotti ON prodotti.id = prodotti_categorie.id_prodotto
 ;
 
 -- | 090000026600

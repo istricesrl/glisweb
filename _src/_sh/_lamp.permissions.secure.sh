@@ -40,6 +40,7 @@ find . -name 'tmp'          -exec chown -R www-data:www-data {} \;
 find . -name 'var'          -exec chown -R $FTPUSER:www-data {} \;
 
 # permessi aggiuntivi
+# TODO fare un po' meglio e distinguere fra cartelle 775 e file 664
 find . -name 'templates'	-exec chmod -R 775 {} \;
 find . -name 'var'	        -exec chmod -R 775 {} \;
 
