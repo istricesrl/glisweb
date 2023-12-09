@@ -39,7 +39,7 @@
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
-	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÃŒ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
         {# MODULO PRINCIPALE #}
@@ -53,11 +53,11 @@
 		    </div>
 		    <div class="col-12 col-md-4">
 			<span class="label-top">id html</span>
-			{{ frm.input( table, '', '', 'id_html', '', '', request ) }}
+			{{ frm.input( table, '', '', 'html_id', '', '', request ) }}
             </div>
             <div class="col-12 col-md-4">
             <span class="label-top">classi html</span>
-            {{ frm.input( table, '', '', 'classi_html', '', '', request ) }}
+            {{ frm.input( table, '', '', 'html_class', '', '', request ) }}
 			</div>
 		</div>
 		</fieldset>
@@ -74,7 +74,7 @@
 		<fieldset>
 			<legend>attivazione</legend>
 			<div class="form-group form-row">
-				<div class="col-12 col-md-3">
+				<div class="col-12 col-md-">
 				<span class="label-top">tipologia</span>
 				{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_popup, request) }}
 				</div>
@@ -88,8 +88,12 @@
 				</div>
 				<div class="col-12 col-md-3">
 					<span class="label-top">classe attivazione</span>
-					{{ frm.input( table, '', '', 'classe_attivazione', '', '', request ) }}
-					</div>
+					{{ frm.input( table, '', '', 'html_class_attivazione', '', '', request ) }}
+				</div>
+				<div class="col-12 col-md-auto">
+					<span class="label-top">sito</span>
+					{{ frm.selectRequired( table, '', '', 'id_sito', '', etc.select.siti, request) }}
+				</div>  
 				<div class="col-auto col-form-label">
 					<span class="label-top">&nbsp;</span>
 					<div class="form-check">

@@ -175,7 +175,19 @@
 		    });
 		});
 
-	    // ???
+		// gestione popup che devono apparire su tutte le pagine
+		$('.popup-modal').on('hidden.bs.modal', function () {
+			var id = $(this).attr('id');
+			$.ajax({
+				type: "POST",
+				url: '/mod/3400.popup/src/api/task/popup.dismiss.php',
+				data: {idPopup:id},
+				success: function(data) {
+				}
+			  });
+		});
+
+		// ???
 		$('.in').modal('show');
 
 	    // aggiungo la capacità di fare slideToggle() agli oggetti con classe toggler
