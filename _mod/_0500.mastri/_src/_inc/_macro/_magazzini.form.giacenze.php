@@ -26,16 +26,17 @@
     // campi della vista
     $ct['view']['cols'] = array(
         'id' => '#',
+        'id_articolo' => 'codice articolo',
         'id_prodotto' => 'codice prodotto',
         'prodotto' => 'prodotto',
         'codice_produttore' => 'cod. produttore',
-        'id_articolo' => 'codice articolo',
         'articolo' => 'descrizione',
         'categorie' => 'categoria',
         'carico' => 'carico',
         'scarico' => 'scarico',
+        'totale_figli' => 'totale figli',
         'totale' => 'totale',
-        'peso' => 'peso',
+        'peso' => 'totale peso',
         'sigla_udm_peso' => 'udm peso'
     );
 
@@ -54,11 +55,11 @@
 
     // stili della vista
     $ct['view']['class'] = array(
-        'id' => 'd-none d-md-table-cell',
+        'id' => 'd-none',
         'id_prodotto' => 'd-none',
         'prodotto' => 'd-none',
         'codice_produttore' => 'd-none',
-        'id_articolo' => 'd-none',
+        // 'id_articolo' => 'd-none',
         'articolo' => 'text-left',
         'totale' => 'text-right',
         'peso' => 'text-right',
@@ -69,9 +70,12 @@
     );
 
     // preset filtro custom mastro corrente
-	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
         $ct['view']['__restrict__']['id_mastro']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
+
+    // ...
+    $ct['view']['__restrict__']['totale']['GT'] = 0;
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

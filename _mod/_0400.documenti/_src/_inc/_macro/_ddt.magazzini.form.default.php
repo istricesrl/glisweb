@@ -35,7 +35,8 @@
 			// trovo la quantità massima
 			$cap = str_replace( ',', '.', mysqlSelectValue(
 				$cf['mysql']['connection'],
-				'SELECT totale FROM __report_giacenza_magazzini_foglie_attive__ WHERE id = ?',
+//				'SELECT totale FROM __report_giacenza_magazzini_foglie_attive__ WHERE id = ?',
+				'SELECT totale FROM __report_giacenza_magazzini__ WHERE id = ? AND se_foglia = 1 AND totale > 0',
 				array( array( 's' => $_REQUEST['__evasione__']['id_giacenza'] ) )
 			) );
 	
@@ -55,10 +56,16 @@
 						'id_matricola' => isset( $evasione[2] ) ? $evasione[2] : NULL,
 						'id_udm' => 1,
 						'quantita' => $_REQUEST['__evasione__']['quantita'],
-						'id_mastro_provenienza' => $evasione[0]
+						'id_mastro_provenienza' => $evasione[0],
+						'timestamp_inserimento' => time()
 					),
 					'documenti_articoli'
 				);
+
+				// TODO per fare meglio anziché chiamare a mano la funzione di aggiornamento
+				// bisognerebbe passare la riga alla controller e lasciare che siano le controller
+				// a fare il lavoro
+				updateReportGiacenzaMagazzini( $evasione[0], $evasione[1], ( ( isset( $evasione[2] ) ) ? $evasione[2] : NULL ) );
 
 			}
 

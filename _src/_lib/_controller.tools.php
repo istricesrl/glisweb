@@ -587,7 +587,8 @@
 				case METHOD_PUT:
 				case METHOD_REPLACE:
 				case METHOD_UPDATE:
-				    $after = md5( serialize( mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) ) ) );
+					$afters = mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+				    $after = md5( serialize( $afters ) );
 				break;
 			    }
 

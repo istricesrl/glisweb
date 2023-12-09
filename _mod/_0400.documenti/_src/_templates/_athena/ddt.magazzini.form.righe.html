@@ -50,3 +50,39 @@
 </section>
 
 {% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+	window.addEventListener( 'DOMContentLoaded', function() {
+
+		$('#__evasione___quantita').keyup( function() {
+
+			var giacenza = $('#__evasione___id_giacenza').val();
+
+			if( giacenza == '' ) {
+
+				$('#__evasione___quantita').val('');
+				alert('selezionare prima un articolo');
+
+			} else {
+
+				console.log( giacenza );
+
+				var call = '{{ site.url }}api/0500.mastri/magazzini.giacenza.attivi?__id__='+giacenza;
+				getws( call,'', function( data ) {
+					console.log( giacenza );
+					console.log( data );
+					console.log( data[0].totale );
+					if( parseInt( data[0].totale ) < parseInt( $('#__evasione___quantita').val() ) ) {
+						$('#__evasione___quantita').val('');
+						alert('errore, la quantità '+$('#__evasione___quantita').val()+' è maggiore della disponibilità '+data[0].totale);
+					}
+				});
+
+			}
+
+		});
+
+	});	
+</script>
+{% endblock %}

@@ -59,7 +59,8 @@
 				{% if '0500.mastri' in mods.active.array %}
 				<div class="col">
 					<span class="label-top remove-after-duplicate">scarico</span>
-					{{ frm.selectBox( '__evasione__', '', '-1', 'id_giacenza', '', '', '', '', '', 1, '', 'font-awesome', '', '', '', '', page, pages, ietf, '__report_giacenza_magazzini_foglie__' ) }}
+					{# frm.selectBox( '__evasione__', '', '-1', 'id_giacenza', '', '', '', '', '', 1, '', 'font-awesome', '', '', '', '', page, pages, ietf, '__report_giacenza_magazzini_foglie__' ) #}
+					{{ frm.selectBox( '__evasione__', '', '-1', 'id_giacenza', '', '', '', '', '', 1, '', 'font-awesome', '', '', '', '', page, pages, ietf, '0500.mastri/magazzini.giacenza.attivi' ) }}
 				</div>
 				{% endif %}
 				<div class="col-1">
