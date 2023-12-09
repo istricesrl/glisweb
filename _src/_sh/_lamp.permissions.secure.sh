@@ -15,6 +15,14 @@ cd $RL
 ## informazioni
 echo "lavoro su: $(pwd)"
 
+## utente FTP
+if [ -f "ftpuser.conf" ]; then
+    FTPUSER=$( cat ftpuser.conf | tr -d '[:space:]' )
+    echo "utente FTP rilevato: $FTPUSER"
+else
+    FTPUSER="www-data"
+fi
+
 ## cambio permessi (verboso)
 # find . -type d		-not \( -path ".git" -prune \)		-exec echo {} \; -exec chmod 775 {} \;
 # find . -type f		-not \( -path ".git" -prune \)		-exec echo {} \; -exec chmod 664 {} \;
@@ -27,11 +35,13 @@ find . -name '*.sh'	-not \( -path ".git" -prune \) -exec chmod 775 {} \;
 
 ## cambio proprietario
 sudo chown -R root:www-data *
-# sudo chown -R www-data:www-data tmp
-# sudo chown -R www-data:www-data var
-find . -name 'templates' -exec chown -R www-data:www-data {} \;
-find . -name 'tmp' -exec chown -R www-data:www-data {} \;
-find . -name 'var' -exec chown -R www-data:www-data {} \;
+find . -name 'templates'    -exec chown -R $FTPUSER:www-data {} \;
+find . -name 'tmp'          -exec chown -R www-data:www-data {} \;
+find . -name 'var'          -exec chown -R $FTPUSER:www-data {} \;
+
+# permessi aggiuntivi
+find . -name 'templates'	-exec chmod -R 775 {} \;
+find . -name 'var'	        -exec chmod -R 775 {} \;
 
 ## cartella .git
 if [ -d ".git" ]; then
