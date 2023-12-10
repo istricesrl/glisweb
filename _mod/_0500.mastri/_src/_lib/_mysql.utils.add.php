@@ -65,7 +65,7 @@
                 'SELECT
                     matricole.id AS id_matricola,
                     matricole.matricola,
-                    matricole.data_scadenza
+                    matricole.data_scadenza 
                 FROM matricole
                 WHERE id = ? ',
                 array(
@@ -73,7 +73,7 @@
                 )
             );
 
-            array_merge(
+            $riga = array_merge(
                 $riga,
                 $matricola
             );
@@ -153,6 +153,10 @@
     
         foreach( $mastri as $mastro ) {
 
+            $riga['note_aggiornamento'] = 'aggiornamento automatico giacenza del ' . date('Y-m-d H:i:s') . PHP_EOL;
+            $riga['note_aggiornamento'] .= 'mastro ' . $mastro . ' articolo ' . $riga['id_articolo'] . ' matricola ' . $idMatricola . PHP_EOL;
+            $riga['note_aggiornamento'] .= 'mastri da aggiornare in quanto genitori ' . implode( ', ', $mastri ) . PHP_EOL;
+
             $riga['id'] = trim( implode( '|', array( $mastro, $idArticolo, $idMatricola ) ), '|' );
 
             $riga['id_mastro'] = $mastro;
@@ -166,23 +170,33 @@
                 )
             );
 
+            // TODO fare meglio poi con placeholders
             $riga['carico'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT coalesce( sum( documenti_articoli.quantita ), 0 ) FROM documenti_articoli WHERE id_articolo = ? AND id_mastro_destinazione = ? GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola',
+                'SELECT coalesce( sum( documenti_articoli.quantita ), 0 ) FROM documenti_articoli WHERE id_articolo = ? AND id_mastro_destinazione = ? '.((!empty($idMatricola))?'AND id_matricola = '.$idMatricola:NULL).' GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola',
                 array(
                     array( 's' => $idArticolo ),
                     array( 's' => $mastro )
                 )
             );
 
+            if( empty( $riga['carico'] ) ) {
+                $riga['carico'] = 0.0;
+            }
+
+            // TODO fare meglio poi con placeholders
             $riga['scarico'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT coalesce( sum( documenti_articoli.quantita ), 0 ) FROM documenti_articoli WHERE id_articolo = ? AND id_mastro_provenienza = ? GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola',
+                'SELECT coalesce( sum( documenti_articoli.quantita ), 0 ) FROM documenti_articoli WHERE id_articolo = ? AND id_mastro_provenienza = ? '.((!empty($idMatricola))?'AND id_matricola = '.$idMatricola:NULL).' GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola',
                 array(
                     array( 's' => $idArticolo ),
                     array( 's' => $mastro )
                 )
             );
+
+            if( empty( $riga['scarico'] ) ) {
+                $riga['scarico'] = 0.0;
+            }
 
             $magazziniFigli = mysqlSelectCachedColumn(
                 $cf['memcache']['connection'],
@@ -194,32 +208,46 @@
                 )
             );
 
-            $riga['se_foglia'] = ( empty( $magazziniFigli ) ) ? 1 : 0;
-
             // TODO fare meglio 'sta cosa con tutti i parametri posizionali
-            $riga['totale_figli'] = mysqlSelectValue(
-                $cf['mysql']['connection'],
-                'SELECT sum( totale ) 
+            if( ! empty( $magazziniFigli ) ) {
+                $riga['se_foglia'] = 0;
+                $riga['totale_figli'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT sum( coalesce( totale, 0.0 ) ) AS t 
+                    FROM __report_giacenza_magazzini__ 
+                    WHERE id_mastro IN (' . implode( ',', $magazziniFigli ) . ')
+                    AND id_articolo = ? '.( ( ! empty( $idMatricola ) ) ? ' AND id_matricola = ' . $idMatricola : NULL ),
+                    array(
+                        array( 's' => $idArticolo )
+                    )
+                );
+                $riga['note_aggiornamento'] .= 'il magazzino ' . $mastro . ' ha come figli ' . implode( ', ', $magazziniFigli ) . PHP_EOL;
+                $riga['note_aggiornamento'] .= 'totale figli ' . $riga['totale_figli'] . ' per articolo ' . $idArticolo . PHP_EOL;
+
+                $riga['note_aggiornamento'] .= 'SELECT sum( coalesce( totale, 0.0 ) ) AS t 
                 FROM __report_giacenza_magazzini__ 
                 WHERE id_mastro IN (' . implode( ',', $magazziniFigli ) . ')
-                AND id_articolo = ? '.( ( ! empty( $idMatricola ) ) ? ' AND id_matricola = ' . $idMatricola : NULL ),
-                array(
-                    array( 's' => $idArticolo )
-                )
-            );
+                AND id_articolo = ? '.( ( ! empty( $idMatricola ) ) ? ' AND id_matricola = ' . $idMatricola : NULL );
+
+
+            } else {
+                $riga['se_foglia'] = 1;
+                $riga['totale_figli'] = 0.0;
+                $riga['note_aggiornamento'] .= 'il magazzino ' . $mastro . ' non ha figli' . PHP_EOL;
+            }
 
             $riga['totale'] = $riga['carico'] - $riga['scarico'] + $riga['totale_figli'];
 
             $riga['peso'] = $riga['totale'] * $articolo['peso'];
 
-            $riga['__label__'] = 
+            $riga['__label__'] = trim(
                 $riga['categorie'] . ' ' .
                 $riga['articolo'] . ' ' .
                 ( ( ! empty( $riga['matricola'] ) ) ? 'matr. ' . $riga['matricola'] . ' ' : NULL ) .
                 ( ( ! empty( $riga['data_scadenza'] ) ) ? 'scad. ' . $riga['data_scadenza'] . ' ' : NULL ) .
                 'da ' . $riga['nome'] . ' ' .
                 'giac. ' . $riga['totale'] . ' pz.'
-            ;
+            );
 
             $riga['timestamp_aggiornamento'] = time();
 

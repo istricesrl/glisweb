@@ -61,6 +61,7 @@
         'codice_produttore' => 'd-none',
         // 'id_articolo' => 'd-none',
         'articolo' => 'text-left',
+        'totale_figli' => 'text-right',
         'totale' => 'text-right',
         'peso' => 'text-right',
         'carico' => 'text-right',

@@ -373,6 +373,7 @@ CREATE TABLE `__report_giacenza_magazzini__` (
   `peso` decimal(21,2) DEFAULT NULL,
   `sigla_udm_peso` char(8) DEFAULT NULL,
   `se_foglia` int(1) DEFAULT NULL,
+  `note_aggiornamento` text NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `__label__` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
