@@ -180,7 +180,8 @@
 			var id = $(this).attr('id');
 			$.ajax({
 				type: "POST",
-				url: '/mod/3400.popup/src/api/task/popup.dismiss.php',
+//				url: '/mod/3400.popup/src/api/task/popup.dismiss.php',
+				url: '/task/3400.popup/popup.dismiss',
 				data: {idPopup:id},
 				success: function(data) {
 				}
