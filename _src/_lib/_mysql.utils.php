@@ -755,3 +755,274 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
         }
 
     }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    function updateAnagraficaViewStatic( $id ) {
+
+        global $cf;
+
+        $riga = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT
+                anagrafica.id,
+                tipologie_anagrafica.nome AS tipologia,
+                anagrafica.codice,
+                anagrafica.riferimento,
+                anagrafica.nome,
+                anagrafica.cognome,
+                anagrafica.denominazione,
+                anagrafica.soprannome,
+                anagrafica.sesso,
+                anagrafica.codice_fiscale,
+                anagrafica.partita_iva,
+                ranking.nome AS ranking,
+                anagrafica.recapiti,
+                anagrafica.anno_nascita,
+                anagrafica.mese_nascita,
+                anagrafica.giorno_nascita,
+                concat_ws( \'-\', anagrafica.anno_nascita, lpad( anagrafica.mese_nascita, 2, \'0\' ), lpad( anagrafica.giorno_nascita, 2, \'0\' ) ) AS data_nascita,
+                anagrafica.id_comune_nascita,
+                anagrafica.data_archiviazione,
+                anagrafica.id_account_inserimento,
+                anagrafica.timestamp_inserimento,
+                anagrafica.id_account_aggiornamento,
+                anagrafica.timestamp_aggiornamento
+            FROM anagrafica
+                LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
+                LEFT JOIN ranking ON ranking.id = anagrafica.id_ranking
+            WHERE anagrafica.id = ? ',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        // print_r( $riga );
+
+        if( ! empty( $riga['id'] ) ) {
+
+            $riga['timestamp_aggiornamento'] = time();
+
+            updateAnagraficaViewStaticCategorie( $id, $riga );
+
+            updateAnagraficaViewStaticTelefoni( $id, $riga );
+
+            updateAnagraficaViewStaticMail( $id, $riga );
+
+            updateAnagraficaViewStaticIndirizzi( $id, $riga );
+
+            $riga['__label__'] = ( ! empty( $riga['soprannome'] ) ) ? $riga['soprannome'] : ( ( ! empty( $riga['denominazione'] ) ) ? $riga['denominazione'] : ( trim( implode( ' ', array( $riga['nome'], $riga['cognome'] ) ) ) ) );
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $riga,
+                'anagrafica_view_static'
+            );
+
+        } else {
+
+            mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $id ) ) );
+
+        }
+
+    }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    function updateAnagraficaViewStaticCategorie( $id, &$riga = NULL ) {
+
+        global $cf;
+
+        $categorie = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT
+                max( categorie_anagrafica.se_prospect ) AS se_prospect,
+                max( categorie_anagrafica.se_lead ) AS se_lead,
+                max( categorie_anagrafica.se_cliente ) AS se_cliente,
+                max( categorie_anagrafica.se_fornitore ) AS se_fornitore,
+                max( categorie_anagrafica.se_produttore ) AS se_produttore,
+                max( categorie_anagrafica.se_collaboratore ) AS se_collaboratore,
+                max( categorie_anagrafica.se_interno ) AS se_interno,
+                max( categorie_anagrafica.se_esterno ) AS se_esterno,
+                max( categorie_anagrafica.se_commerciale ) AS se_commerciale,
+                max( categorie_anagrafica.se_concorrente ) AS se_concorrente,
+                max( categorie_anagrafica.se_gestita ) AS se_gestita,
+                max( categorie_anagrafica.se_amministrazione ) AS se_amministrazione,
+                max( categorie_anagrafica.se_notizie ) AS se_notizie,
+                group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR \' | \' ) AS categorie
+            FROM anagrafica_categorie
+                LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
+            WHERE anagrafica_categorie.id_anagrafica = ? ',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        if( ! empty( $riga ) ) {
+
+            $riga = array_merge(
+                $riga,
+                $categorie
+            );
+
+        } else {
+
+            $riga['id'] = $id;
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $riga,
+                'anagrafica_view_static'
+            );
+
+        }
+
+    }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    function updateAnagraficaViewStaticIndirizzi( $id, &$riga = NULL ) {
+
+        global $cf;
+
+        $indirizzi = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT regioni.id_stato, comuni.id_provincia
+            FROM anagrafica_indirizzi
+                LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
+                LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+                LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+                LEFT JOIN regioni ON regioni.id = provincie.id_regione
+                LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
+            WHERE anagrafica_indirizzi.id_anagrafica = ? AND ruoli_indirizzi.se_sede_legale IS NOT NULL
+            LIMIT 1 ',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        if( ! empty( $riga ) ) {
+
+            $riga = array_merge(
+                $riga,
+                $indirizzi
+            );
+
+        } else {
+
+            $riga['id'] = $id;
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $riga,
+                'anagrafica_view_static'
+            );
+
+        }
+
+    }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    function updateAnagraficaViewStaticTelefoni( $id, &$riga = NULL ) {
+
+        global $cf;
+
+        $telefoni = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT
+                group_concat( DISTINCT telefoni.numero SEPARATOR \' | \' ) AS telefoni
+            FROM telefoni
+            WHERE id_anagrafica = ? ',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        if( ! empty( $riga ) ) {
+
+            $riga = array_merge(
+                $riga,
+                $telefoni
+            );
+    
+        } else {
+
+            $riga['id'] = $id;
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $riga,
+                'anagrafica_view_static'
+            );
+
+        }
+
+    }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    function updateAnagraficaViewStaticMail( $id, &$riga = NULL ) {
+
+        global $cf;
+
+        $mail = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT
+                group_concat( DISTINCT mail.indirizzo SEPARATOR \' | \' ) AS mail
+            FROM mail
+            WHERE id_anagrafica = ? ',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        if( ! empty( $riga ) ) {
+
+            $riga = array_merge(
+                $riga,
+                $mail
+            );
+
+        } else {
+
+            $riga['id'] = $id;
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $riga,
+                'anagrafica_view_static'
+            );
+
+        }
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function cleanAnagraficaViewStatic() {
+
+    }

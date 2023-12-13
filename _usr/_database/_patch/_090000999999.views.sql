@@ -293,7 +293,9 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		anagrafica.id_comune_nascita,
 		anagrafica.data_archiviazione,
 		anagrafica.id_account_inserimento,
+		anagrafica.timestamp_inserimento,
 		anagrafica.id_account_aggiornamento,
+		anagrafica.timestamp_aggiornamento,
 		coalesce(
 			anagrafica.soprannome,
 			anagrafica.denominazione,

@@ -31,7 +31,7 @@
 	// print_r( $_SESSION );
 
     // tabella della vista
-	$ct['view']['table'] = 'anagrafica_attivi';
+	$ct['view']['table'] = 'anagrafica';
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'anagrafica.form';
@@ -80,6 +80,9 @@
 
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/anagrafica.view.filters.html';
+
+    // ...
+    $ct['view']['__restrict__']['data_archiviazione']['NL'] = true;
 
     $ct['page']['contents']['modals']['metro'][] = array(
         'schema' => 'inc/anagrafica.view.modal.attivita.html'

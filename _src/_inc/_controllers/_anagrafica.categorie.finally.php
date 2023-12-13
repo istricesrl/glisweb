@@ -44,9 +44,10 @@
             #!}
 
             if( isset( $befores['id_anagrafica'] ) ) {
-                $_SESSION['static']['anagrafica_view'][ $befores['id_anagrafica'] ] = array( 'field' => 'id' );
-                $_SESSION['static']['anagrafica_attivi_view'][ $befores['id_anagrafica'] ] = array( 'field' => 'id' );
-                $_SESSION['static']['anagrafica_archiviati_view'][ $befores['id_anagrafica'] ] = array( 'field' => 'id' );
+                // $_SESSION['static']['anagrafica_view'][ $befores['id_anagrafica'] ] = array( 'field' => 'id' );
+                // $_SESSION['static']['anagrafica_attivi_view'][ $befores['id_anagrafica'] ] = array( 'field' => 'id' );
+                // $_SESSION['static']['anagrafica_archiviati_view'][ $befores['id_anagrafica'] ] = array( 'field' => 'id' );
+                updateAnagraficaViewStaticCategorie( $befores['id_anagrafica'] );
             }
 
         break;

@@ -8,12 +8,15 @@
 	
         var view = $('#view').val();
 	    $('#refresh-btn').html('<i class="fa fa-circle-o-notch fa-spin  fa-fw"></i>');
-	  
+
+		/*
 		getws("/_src/_api/_task/_mysql.view.static.refresh.php","__view_static__="+view, 
 		function( data ) { 
 			console.log(data);
 			if( data.__status__ == 'NO' ){ $('#refresh-btn').html('<i class="fa fa-exclamation-triangle fa-inverse" aria-hidden="true"></i>'); } 
 			else { $('#refresh-btn').html('<i class="fa fa-check" aria-hidden="true"></i>'); location.reload(); } }	);
+		*/
+
 	}
 
 </script>

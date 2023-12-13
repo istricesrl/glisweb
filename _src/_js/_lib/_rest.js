@@ -121,3 +121,27 @@
 	    });
 
 	}
+
+	$.fn.metroLoopWs = function( ws, callback = null, icon = null, el = null, count = 0 ) {
+		if( el == null ) {
+			el = this;
+			var icon = el.find('.media-left').first().html();
+			el.find('.media-left').first().html('<i class="fa fa-circle-o-notch fa-spin">');
+		}
+		var request = new XMLHttpRequest();
+		request.open( 'GET', ws, true );
+		request.onload = function () {
+		  var data = JSON.parse( this.response );
+		  console.log( data );
+		  if( data.aggiornare.id ) {
+			$.fn.metroLoopWs( ws, callback, icon, el, count+1 );
+		  } else {
+			el.find('.media-left').first().html( icon );
+			if( callback != null ) {
+				callback();
+			}
+		  }
+		}
+		request.send();
+	}
+	

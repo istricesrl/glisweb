@@ -8,6 +8,7 @@
      * 
      */
 
+/*
     // ...
     if( isset( $_SESSION['static'] ) && is_array( $_SESSION['static'] ) ) {
         foreach( $_SESSION['static'] as $table => $data ) {
@@ -36,3 +37,4 @@
             }
         }
     }
+*/
