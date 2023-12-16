@@ -213,7 +213,7 @@ CREATE TABLE `anagrafica_consensi` (
 -- anagrafica_indirizzi
 -- tipologia: tabella gestita
 -- verifica: 2021-05-21 16:30 Fabio Mosti
-CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
+CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` ( 
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
@@ -221,6 +221,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `interno` char(8) DEFAULT NULL,
   `indirizzo` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `timestamp_elaborazione` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -528,6 +529,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
 -- verifica: 2022-07-12 14:45 Chiara GDL
 CREATE TABLE `carrelli` (
   `id` int(11) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
   `session` char(32) DEFAULT NULL,
   `destinatario_nome` char(255) DEFAULT NULL,
   `destinatario_cognome` char(255) DEFAULT NULL,
@@ -943,7 +945,7 @@ CREATE TABLE `condizioni` (
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
   `id` int(11) NOT NULL,
-  `codice` char(5) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1092,7 +1094,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
 -- verifica: 2021-06-09 11:26 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `continenti` (
   `id` int(11) NOT NULL,
-  `codice` char(2) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1695,7 +1697,7 @@ CREATE TABLE IF NOT EXISTS `iva` (
   `aliquota` decimal(5,2) NOT NULL,
   `nome` char(64) DEFAULT NULL,
   `descrizione` text DEFAULT NULL,
-  `codice` char(8) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `timestamp_archiviazione` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -1734,7 +1736,7 @@ CREATE TABLE IF NOT EXISTS `licenze` (
   `id_tipologia` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_rivenditore` int(11) DEFAULT NULL,
-  `codice` char(254) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `postazioni` int(11) DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `note` char(254) DEFAULT NULL,
@@ -2177,7 +2179,7 @@ CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
 `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `provider` char(64) DEFAULT NULL,
-  `codice` char(8) NOT NULL
+  `codice` char(32) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000022000
@@ -2772,7 +2774,7 @@ CREATE TABLE `recensioni` (
 CREATE TABLE IF NOT EXISTS `redirect` (
   `id` int(11) NOT NULL,
   `id_sito` int(11) DEFAULT NULL,
-  `codice` int(11) DEFAULT NULL,
+  `codice_stato_http` int(11) DEFAULT NULL,
   `sorgente` char(255) DEFAULT NULL,
   `destinazione` char(255) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2805,7 +2807,7 @@ CREATE TABLE `redirect_azioni` (
 CREATE TABLE IF NOT EXISTS `regimi` (
   `id` int(11) NOT NULL,
   `nome` char(32) DEFAULT NULL,
-  `codice` char(8) DEFAULT NULL
+  `codice` char(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000030200
@@ -2962,7 +2964,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id_pianificazione` int(11) DEFAULT NULL, 
   `data_inizio` date DEFAULT NULL,
   `data_fine` date DEFAULT NULL,
-  `codice` char(64) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `se_automatico` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2994,7 +2996,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi_documenti_articoli` (
 CREATE TABLE IF NOT EXISTS `risorse` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
-  `codice` char(16) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `template` char(255) DEFAULT NULL,
@@ -3549,7 +3551,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_attivita` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `codice` char(8) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
@@ -3677,7 +3679,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_documenti` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `codice` char(8) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `numerazione` char(1) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `sigla` char(16) DEFAULT NULL,
@@ -3859,7 +3861,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_periodi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `codice` char(8) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,

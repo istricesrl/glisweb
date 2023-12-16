@@ -212,6 +212,7 @@ ALTER TABLE `anagrafica_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `anagrafica_indirizzi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_indirizzo`), 
+	ADD UNIQUE `id_anagrafica_indirizzo` (`id_anagrafica`, `indirizzo`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
@@ -523,6 +524,7 @@ ALTER TABLE `caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-07-12 14:45 Chiara GDL
 ALTER TABLE `carrelli`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`codice`),
 	ADD UNIQUE KEY `session` (`session`), 
 	ADD KEY `id_listino` (`id_listino`), 
 	ADD KEY `fatturazione_id_tipologia_documento` (`fatturazione_id_tipologia_documento`),
