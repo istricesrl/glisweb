@@ -82,6 +82,8 @@
         // status
         $status['indirizzo'] = $geocode;
 
+        // TODO analizzo il campo località per stringhe tipo "- NOMESTATO"
+
         // geolocalizzazione
         $gc = mapquestGetCachedCoords(
             $cf['memcache']['connection'],

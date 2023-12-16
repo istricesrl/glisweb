@@ -18,13 +18,17 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
-	    '__label__' => 'indirizzo',
+	    'stato' => 'stato',
+	    'comune' => 'comune',
+	    '__label__' => 'indirizzo'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
-	    '__label__' => 'text-left',
+	    'stato' => 'text-left',
+	    'comune' => 'text-left',
+	    '__label__' => 'text-left'
 	);
 
     // gestione default

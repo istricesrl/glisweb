@@ -906,7 +906,9 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
                 LEFT JOIN provincie ON provincie.id = comuni.id_provincia
                 LEFT JOIN regioni ON regioni.id = provincie.id_regione
                 LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
-            WHERE anagrafica_indirizzi.id_anagrafica = ? AND ruoli_indirizzi.se_sede_legale IS NOT NULL
+            WHERE anagrafica_indirizzi.id_anagrafica = ? 
+            AND ruoli_indirizzi.se_sede_legale IS NOT NULL 
+            AND anagrafica_indirizzi.indirizzo IS NULL
             LIMIT 1 ',
             array(
                 array( 's' => $id )

@@ -119,10 +119,17 @@
 			<span class="label-top">ruolo</span>
 			{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_indirizzi, request, '', '', '', 1, '', disabled ) }}
 		</div>
+		{% if request[ table ][ subtable ][ i ].indirizzo %}
 	    <div class="col">
+			<span class="label-top">indirizzo</span>
+			{{ frm.input( table, subtable, i, 'indirizzo', '', '', request, '', '', '', '', disabled ) }}
+		</div>
+		{% else %}
+		<div class="col">
 			<span class="label-top">indirizzo</span>
 			{{ frm.selectBox( table, subtable, i, 'id_indirizzo', '', etc.select.indirizzi, request, '', '', '', '', '', 'indirizzi.form', '', 'indirizzi', 'id_indirizzo', page, pages, lang, 'indirizzi', disabled, '', 'modal-inserimento-indirizzi' ) }}
 		</div>
+		{% endif %}
 		<div class="w-100 d-block d-md-none m-0"></div>
 	    <div class="col-2 col-md-1">
 			<span class="label-top">interno</span>

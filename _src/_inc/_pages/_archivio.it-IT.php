@@ -140,10 +140,23 @@
 		'parent'		=> array( 'id'		=> 'archivio.logistica' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.view.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'indirizzi.view' ) ),
+		'etc'		=> array( 'tabs'	=> array( 'indirizzi.view', 'indirizzi.tools' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'indirizzi' ),
 		'priority'	=> '050' ) ) )
+	);
+
+	// gestione indirizzi strumenti
+	$p['indirizzi.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni indirizzi' ),
+	    'h1'		=> array( $l		=> 'azioni indirizzi' ),
+	    'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_indirizzi.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['indirizzi.view']['etc']['tabs'] )
 	);
 
 	// gestione indirizzi
