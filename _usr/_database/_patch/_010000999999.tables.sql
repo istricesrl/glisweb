@@ -528,6 +528,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
 -- verifica: 2022-07-12 14:45 Chiara GDL
 CREATE TABLE `carrelli` (
   `id` int(11) NOT NULL,
+  `codice` char(32) NULL,
   `session` char(32) DEFAULT NULL,
   `destinatario_nome` char(255) DEFAULT NULL,
   `destinatario_cognome` char(255) DEFAULT NULL,
