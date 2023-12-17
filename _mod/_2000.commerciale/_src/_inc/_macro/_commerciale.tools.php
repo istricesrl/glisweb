@@ -53,5 +53,15 @@
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
 */
+
+    // importazione contatti anagrafica
+	$ct['page']['contents']['metro']['importazioni'][] = array(
+	    'modal' => array( 'id' => 'importa_azioni_commerciali', 'include' => 'inc/commerciale.tools.modal.import.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-upload',
+	    'title' => 'importazione azioni commerciali',
+	    'text' => 'importa un elenco di azioni commerciali in formato CSV'
+	);
+
 	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';
