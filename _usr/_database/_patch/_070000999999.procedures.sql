@@ -3625,6 +3625,57 @@ CREATE
 
 			SELECT
 				tipologie_anagrafica.id_genitore,
+				tipologie_anagrafica.nome
+			FROM tipologie_anagrafica
+			WHERE tipologie_anagrafica.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000050002
+
+-- tipologie_anagrafica_path_sigla
+DROP FUNCTION IF EXISTS `tipologie_anagrafica_path_sigla`;
+
+-- | 070000050003
+
+-- tipologie_anagrafica_path_sigla
+-- verifica: 2021-10-04 11:49 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_anagrafica_path_sigla`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_anagrafica_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_anagrafica.id_genitore,
 				tipologie_anagrafica.sigla
 			FROM tipologie_anagrafica
 			WHERE tipologie_anagrafica.id = p1

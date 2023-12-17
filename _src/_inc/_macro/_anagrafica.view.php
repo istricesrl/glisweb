@@ -52,8 +52,8 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
-        'codice' => 'd-none',
+	    'id' => 'd-none',
+        // 'codice' => 'd-none',
 	    '__label__' => 'text-left no-wrap',
 	    'telefoni' => 'text-left d-none d-md-table-cell',
 	    'mail' => 'text-left d-none d-md-table-cell',
