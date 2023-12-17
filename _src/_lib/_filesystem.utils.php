@@ -18,21 +18,35 @@
 
         $dom = new DOMDocument( '1.0', 'utf-8' );
         libxml_use_internal_errors( true );
-        
-        $dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . $t );
+
+        if( strpos( $t, '<html' ) === false ) {
+            $hp = '<html>';
+            $ha = '</html>';
+        } else {
+            $hp = $ha = '';
+        }
+
+        if( strpos( $t, '<body' ) === false ) {
+            $bp = '<body>';
+            $ba = '</body>';
+        } else {
+            $bp = $ba = '';
+        }
+
+        $dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . $hp . $bp . $t . $ba . $ha );
         $xpath = new DOMXPath( $dom );
         libxml_clear_errors();
-        
+
         $doc = $dom->getElementsByTagName("html")->item(0);
         $src = $xpath->query(".//@src");
-        
+
         foreach ( $src as $sr ) {
             if( substr( $sr->nodeValue, 0, 1 ) == '/' ) {
                 $sr->nodeValue = $base . $sr->nodeValue;
             }
         }
-        
-        $output = $dom->saveXML( $doc->documentElement );
+
+        $output = @$dom->saveXML( $doc->documentElement );
         
         return $output;
 
