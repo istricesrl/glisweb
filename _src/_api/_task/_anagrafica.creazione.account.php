@@ -47,7 +47,7 @@
         );
 
         // associo ai gruppi
-        foreach( $cf['registrazione']['profili'][$_REQUEST['__p__']]['gruppi'] as $gruppo ) {
+        foreach( $cf['auth']['profili'][ $_REQUEST['__p__'] ]['gruppi'] as $gruppo ) {
 
             // recupero l'id del gruppo
             $idGruppo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM gruppi WHERE nome = ?', array( array( 's' => $gruppo ) ) );
@@ -60,7 +60,7 @@
         }
 
         // associo alle categorie
-        /*foreach( $cf['registrazione']['profili'][$_REQUEST['__p__']]['categorie'] as $categoria ) {
+        /*foreach( $cf['auth']['profili'][$_REQUEST['__p__']]['categorie'] as $categoria ) {
 
             // recupero l'id della categoria
             $idCategoria = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id FROM categorie_anagrafica WHERE nome = ?', array( array( 's' => $categoria ) ) );
@@ -87,8 +87,8 @@
             'password' => $_REQUEST['__psw__']
         );
 
-        if( isset( $cf['registrazione']['profili'][$_REQUEST['__p__']]['mail'] ) ) {
-            $template = $cf['registrazione']['profili'][$_REQUEST['__p__']]['mail'];
+        if( isset( $cf['auth']['profili'][$_REQUEST['__p__']]['mail'] ) ) {
+            $template = $cf['auth']['profili'][$_REQUEST['__p__']]['mail'];
         } else {
             $template = $cf['mail']['tpl']['NOTIFICA_NUOVO_ACCOUNT'];
         }

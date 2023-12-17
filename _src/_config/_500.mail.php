@@ -39,6 +39,16 @@
 	    )
 	);
 
+    // array dei template mail
+	$cf['mail']['tpl']['DEFAULT_NUOVO_ACCOUNT_ATTIVO'] = array(
+	    'type' => 'twig',
+	    'it-IT' => array(
+            'from' => array( '{{ ct.site.name[ ct.localization.language.ietf ] }}' => 'noreply@{{ ct.site.fqdn }}' ),
+            'oggetto' => 'creazione nuovo account per {{ dt.nome }}',
+            'testo' => '<p>Gentile {{ dt.nome }}, il suo account è stato creato e attivato, utilizzi i seguenti dati per effettuare l\'accesso:</p><ul><li><strong>username:</strong> {{ dt.username }}</li><li><strong>password:</strong> {{ dt.password }}</li></ul><p>Buona giornata!</p>'
+	    )
+	);
+
     // array del template mail per notifica attivazione account
 	$cf['mail']['tpl']['DEFAULT_ATTIVAZIONE_ACCOUNT'] = array(
 	    'type' => 'twig',

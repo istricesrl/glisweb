@@ -163,13 +163,20 @@
 	}
 */
 
+    // comportamento di default
+	$cf['auth']['profili']['admin'] = array(
+        'nome' => 'utente amministratore',
+	    'gruppi' => array( 'roots', 'staff', 'users' ),
+	    'categorie' => array( 'collaboratori' ),
+        'username' => true,
+        'sms' => false,
+        'mail' => 'DEFAULT_NUOVO_ACCOUNT_ATTIVO',
+        'landing' => 'dashboard',
+	    'attivo' => true
+	);
+
     // scadenza della chiave JWT
     $cf['auth']['jwt']['salt'] = 'Y-m-d';
-
-    // configurazione extra
-	if( isset( $cx['auth'] ) ) {
-	    $cf['auth'] = array_replace_recursive( $cf['auth'], $cx['auth'] );
-	}
 
     // debug
 	// print_r( $cf['auth'] );
