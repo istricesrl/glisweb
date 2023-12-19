@@ -215,6 +215,9 @@
                                         'id_tipologia' => $idTipologiaProgetto,
                                         'nome' => $job['riga']['nome_progetto'],
                                         'note' => $job['riga']['note_progetto'],
+                                        'entrate_previste' => ( ( isset( $job['riga']['entrate_previste'] ) ) ? $job['riga']['entrate_previste'] : NULL ),
+                                        'costi_previsti' => ( ( isset( $job['riga']['costi_previsti'] ) ) ? $job['riga']['costi_previsti'] : NULL ),
+                                        'ore_previste' => ( ( isset( $job['riga']['ore_previste'] ) ) ? $job['riga']['ore_previste'] : NULL ),
                                         'id_cliente' => $idAnagrafica
                                     ),
                                     'progetti'

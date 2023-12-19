@@ -20,7 +20,7 @@
 	$status = array();
     $status['toRefresh'] = array();
     $status['__status__'] = 'OK';
-
+/*
     // svuoto e ripopolo la tabella
     if( isset( $_REQUEST['__view_static__'] ) && ! empty( $_REQUEST['__view_static__'] ) ) {
 
@@ -55,7 +55,7 @@
         }
 
     }
-
+*/
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    buildJson( $status );
