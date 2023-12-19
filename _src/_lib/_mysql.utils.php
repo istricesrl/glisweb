@@ -1027,4 +1027,13 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
      */
     function cleanAnagraficaViewStatic() {
 
+        global $cf;
+
+        return mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE anagrafica_view_static FROM anagrafica_view_static
+            LEFT JOIN anagrafica ON anagrafica.id = anagrafica_view_static.id
+            WHERE anagrafica.id IS NULL;'
+        );
+
     }

@@ -513,6 +513,7 @@
     - un job per la popolazione (ad es. _src/_api/_job/_anagrafica.view.static.popolazione.php o _src/_api/_job/_report.corsi.popolazione.php)
     - un task per l'avvio del job di popolazione (ad es. _src/_api/_task/_anagrafica.view.static.popolazione.start.php o _src/_api/_task/_report.corsi.popolazione.start.php)
     - un task per la popolazione di una riga alla volta, specifica o meno (ad es. _src/_api/_task/_anagrafica.view.static.popolazione.php o _src/_api/_task/_report.corsi.popolazione.php)
+    - un task per la pulizia della vista statica (ad es. _src/_api/_task/_anagrafica.view.static.pulizia.php o _src/_api/_task/_report.corsi.pulizia.php)
 
     [...] NOTA IMPORTANTE in linea teorica alcune view storicamente affollate (oppure tutte a un certo punto) potrebbero essere staticizzate implicitamente cioè rendendo la *_view statica,
     questo renderebbe superflua la presenza della coppia *_view / *_view_static semplificando di molto la struttura del database e in questo caso anche le funzioni avrebbero un nome più semplice,

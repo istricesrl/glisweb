@@ -158,7 +158,6 @@
 		$cf['memcache']['connection'], 
 		$cf['mysql']['connection'], 
 		'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME LIKE "%_static" AND table_schema = database()');	
-*/
 
 	$ct['page']['contents']['metro']['static'][] = array(
 		'lws' => $base . 'anagrafica.view.static.popolazione',
@@ -167,6 +166,9 @@
 		'title' => 'ripopola anagrafica view static',
 		'text' => 'ripopola la view static dell\'anagrafica'
 	);
+
+
+*/
 
 
     // debug
