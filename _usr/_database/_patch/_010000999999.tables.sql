@@ -215,6 +215,7 @@ CREATE TABLE `anagrafica_consensi` (
 -- verifica: 2021-05-21 16:30 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `id` int(11) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
