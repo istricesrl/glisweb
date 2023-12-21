@@ -87,8 +87,9 @@
 
         $available = hash_algos();
         $preferred = array( 'sha3-512', 'sha512', 'md5' );
+        $algorithms = array_intersect( $preferred, $available );
 
-        $candidate = array_shift( array_intersect( $preferred, $available ) );
+        $candidate = array_shift( $algorithms );
 
         return $candidate;
 
