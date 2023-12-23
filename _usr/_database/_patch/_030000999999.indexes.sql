@@ -211,8 +211,9 @@ ALTER TABLE `anagrafica_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-05-21 16:34 Fabio Mosti
 ALTER TABLE `anagrafica_indirizzi`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_indirizzo`), 
-	ADD UNIQUE `id_anagrafica_indirizzo` (`id_anagrafica`, `indirizzo`),
+	ADD UNIQUE KEY `id_anagrafica_indirizzo` (`id_anagrafica`, `indirizzo`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
