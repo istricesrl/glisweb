@@ -3909,9 +3909,10 @@ CREATE OR REPLACE VIEW `iban_view` AS
 		iban.iban,
 		iban.id_account_inserimento,
 		iban.id_account_aggiornamento,
-		concat(
-			iban.iban,
+		concat_ws(
 			' ',
+			iban.iban,
+			iban.intestazione,
 			coalesce(
 				a1.denominazione,
 				concat(

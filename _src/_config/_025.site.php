@@ -90,6 +90,7 @@
 	}
 
     // configurazione extra
+    // TODO ma questa cosa viene usata?
 	if( isset( $cx['site'] ) ) {
 	    $cf['site'] = array_replace_recursive( $cf['site'], $cx['site'] );
 	}

@@ -156,6 +156,7 @@
 
     }
 
+	// TODO ma questa funzione non viene usata da nessuna parte?
 	function logMsg( $m, &$o = NULL, &$a = array(), &$t = NULL ) {
 
 		$o .= $m;

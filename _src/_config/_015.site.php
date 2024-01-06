@@ -133,7 +133,7 @@
 	}
 
     // link al sito corrente
-	$cf['site']				= &$cf['sites'][ SITE_CURRENT ];
+	$cf['site'] = &$cf['sites'][ SITE_CURRENT ];
 
     // status del sito
 	if( isset( $cStatus ) ) {
