@@ -327,6 +327,7 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
 CREATE TABLE IF NOT EXISTS `attivita` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_cliente` int(11) DEFAULT NULL,
   `id_contatto` int(11) DEFAULT NULL,
@@ -357,6 +358,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_mailing` int(11) DEFAULT NULL,
   `id_mail` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
+  `id_pagamento` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
