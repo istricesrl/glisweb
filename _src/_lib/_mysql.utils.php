@@ -1042,3 +1042,19 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
         );
 
     }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function emptyAnagraficaViewStatic() {
+
+        global $cf;
+
+        return mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE FROM anagrafica_view_static'
+        );
+
+    }

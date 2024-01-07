@@ -77,6 +77,14 @@
 		'text' => 'pulisce la view static dell\'anagrafica'
 	);
 
+	$ct['page']['contents']['metro']['05.static'][] = array(
+		'ws' => '/task/anagrafica.view.static.svuotamento',
+		'icon' => NULL,
+		'fa' => 'fa-trash',
+		'title' => 'svuotamento anagrafica view static',
+		'text' => 'svuota la view static dell\'anagrafica'
+	);
+
     // categorie anagrafica
 	$ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
 	    $cf['memcache']['connection'],
