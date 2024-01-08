@@ -50,6 +50,14 @@
 	    'SELECT id, __label__ FROM corsi_view '
     );
 
+    // tendina progetti
+	$ct['etc']['select']['corsi'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM corsi_view '
+    );
+
     // tendina categorie progetti
 	$ct['etc']['select']['materie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

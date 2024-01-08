@@ -2418,6 +2418,7 @@ CREATE OR REPLACE VIEW contratti_anagrafica_view AS
 		tipologie_contratti.se_locazione,
 		ruoli_anagrafica.se_proponente,
 		ruoli_anagrafica.se_contraente,
+		tipologie_contratti.id AS id_tipologia,
 		tipologie_contratti.nome AS tipologia,
 		contratti.nome,
 		contratti.id_progetto,
