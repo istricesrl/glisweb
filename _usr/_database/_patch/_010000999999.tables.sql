@@ -3666,6 +3666,7 @@ CREATE TABLE `tipologie_contratti` (
 	`se_prenotazione` tinyint(1) DEFAULT NULL, 
 	`se_scalare` tinyint(1) DEFAULT NULL,
   `se_affiliazione` tinyint(1) DEFAULT NULL,
+  `se_online` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

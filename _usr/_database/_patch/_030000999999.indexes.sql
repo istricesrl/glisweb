@@ -1331,6 +1331,7 @@ ALTER TABLE `disponibilita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-09-03 17:09 Fabio Mosti
 ALTER TABLE `documenti`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`numero`,`sezionale`),
 	ADD UNIQUE KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`),
 	ADD UNIQUE KEY `unica_codice_sdi` (`codice_sdi`),

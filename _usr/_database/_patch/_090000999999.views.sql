@@ -296,12 +296,16 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		anagrafica.timestamp_inserimento,
 		anagrafica.id_account_aggiornamento,
 		anagrafica.timestamp_aggiornamento,
-		coalesce(
-			anagrafica.soprannome,
-			anagrafica.denominazione,
-			concat_ws(' ', coalesce(anagrafica.cognome, ''),
-			coalesce(anagrafica.nome, '') ),
-			''
+		concat_ws(
+			' ',
+			anagrafica.codice,
+			coalesce(
+				anagrafica.soprannome,
+				anagrafica.denominazione,
+				concat_ws(' ', coalesce( anagrafica.cognome, ''),
+				coalesce( anagrafica.nome, '') ),
+				''
+			)
 		) AS __label__
 	FROM anagrafica
 		LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
@@ -1247,8 +1251,35 @@ CREATE OR REPLACE VIEW badge_view AS
 		badge.nome,
 		badge.codice,
 		badge.rfid,
-		concat_ws( ' | ', lpad( badge.id, 8, 0), coalesce( badge.codice, badge.rfid, badge.nome ) ) AS __label__
+		concat_ws(
+			' ',
+			anagrafica.codice,
+			coalesce(
+				anagrafica.soprannome,
+				anagrafica.denominazione,
+				concat_ws(' ', coalesce( anagrafica.cognome, ''),
+				coalesce( anagrafica.nome, '') ),
+				''
+			)
+		) AS anagrafica,
+		concat_ws( 
+			' | ', 
+			lpad( badge.id, 8, 0),
+			coalesce( badge.codice, badge.rfid, badge.nome ),
+			concat_ws(
+				' ',
+				anagrafica.codice,
+				coalesce(
+					anagrafica.soprannome,
+					anagrafica.denominazione,
+					concat_ws(' ', coalesce( anagrafica.cognome, ''),
+					coalesce( anagrafica.nome, '') ),
+					'NON ASSEGNATO'
+				)
+			)
+		) AS __label__
 	FROM badge
+	LEFT JOIN anagrafica ON anagrafica.id_badge = badge.id
 ;
 
 -- | 090000002300
@@ -5963,10 +5994,11 @@ DROP TABLE IF EXISTS `periodicita_view`;
 -- periodicita_view
 -- tipologia: tabella standard
 -- verifica: 2021-10-05 18:00 Fabio Mosti
-CREATE OR REPLACE VIEW `popup_view` AS
+CREATE OR REPLACE VIEW `periodicita_view` AS
 	SELECT
 		periodicita.id,
 		periodicita.nome,
+		periodicita.giorni,
 		periodicita.nome AS __label__
 	FROM periodicita
 ;
@@ -8982,6 +9014,7 @@ CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 		tipologie_contratti.se_prenotazione,
 		tipologie_contratti.se_scalare,
 		tipologie_contratti.se_affiliazione,
+		tipologie_contratti.se_online,
 		tipologie_contratti.id_account_inserimento,
 		tipologie_contratti.id_account_aggiornamento,
 		tipologie_contratti_path( tipologie_contratti.id ) AS __label__
