@@ -91,6 +91,7 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (
 CREATE TABLE IF NOT EXISTS `anagrafica` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_badge` int(11) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
   `riferimento` char(255) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
@@ -1504,6 +1505,13 @@ CREATE TABLE `funnel` (
   `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000015150
+
+-- giorni
+CREATE TABLE `giorni` (
+  `id` int(11) NOT NULL,
+  `nome` char(12) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000015200
 
@@ -2194,7 +2202,7 @@ CREATE TABLE IF NOT EXISTS `notizie` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
+  `note` text DEFAULT N300333ULL,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
@@ -2222,6 +2230,25 @@ CREATE TABLE IF NOT EXISTS `notizie_categorie` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000022300
+
+-- orari
+CREATE TABLE `orari` (
+  `id` int(11) NOT NULL,
+  `nome` char(128) NULL,
+  `id_tipologia_contratti` int(11) NULL,
+  `id_periodicita` int(11) NULL,
+  `id_giorno` int(11) NULL,
+  `ora_inizio` time NULL,
+  `ora_fine` time NULL,
+  `note` text NULL,
+  `id_account_inserimento` int(11) NULL,
+  `timestamp_inserimento` int(11) NULL,
+  `id_account_aggiornamento` int(11) NULL,
+  `timestamp_aggiornamento` int(11) NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 -- | 010000022800
 
@@ -2257,6 +2284,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `note` text DEFAULT NULL,
   `note_pagamento` text DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
+  `id_carrelli_articoli` int(11) DEFAULT NULL,
   `id_creditore` int(11) DEFAULT NULL,
   `id_debitore` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
@@ -2320,6 +2348,7 @@ CREATE TABLE IF NOT EXISTS `periodi` (
 -- verifica: 2021-10-05 17:57 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `periodicita` (
   `id` int(11) NOT NULL,
+  `giorni` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -2959,6 +2988,7 @@ CREATE TABLE IF NOT EXISTS `reparti` (
 CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_periodicita` int(11) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL,
   `id_licenza` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
@@ -3667,6 +3697,7 @@ CREATE TABLE `tipologie_contratti` (
 	`se_prenotazione` tinyint(1) DEFAULT NULL, 
 	`se_scalare` tinyint(1) DEFAULT NULL,
   `se_affiliazione` tinyint(1) DEFAULT NULL,
+  `se_online` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
