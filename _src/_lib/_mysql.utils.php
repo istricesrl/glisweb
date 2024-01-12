@@ -820,7 +820,24 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
 
             updateAnagraficaViewStaticIndirizzi( $id, $riga );
 
-            $riga['__label__'] = ( ! empty( $riga['soprannome'] ) ) ? $riga['soprannome'] : ( ( ! empty( $riga['denominazione'] ) ) ? $riga['denominazione'] : ( trim( implode( ' ', array( $riga['nome'], $riga['cognome'] ) ) ) ) );
+            // $riga['__label__'] = ( ! empty( $riga['soprannome'] ) ) ? $riga['soprannome'] : ( ( ! empty( $riga['denominazione'] ) ) ? $riga['denominazione'] : ( trim( implode( ' ', array( $riga['nome'], $riga['cognome'] ) ) ) ) );
+            $riga['__label__'] = (
+                (
+                    ( ! empty( $riga['codice'] ) )
+                        ? $riga['codice'] . ' '
+                        : NULL 
+                )
+                . 
+                (
+                    ( ! empty( $riga['soprannome'] ) )
+                        ? $riga['soprannome']
+                        : ( 
+                            ( ! empty( $riga['denominazione'] ) )
+                                ? $riga['denominazione'] 
+                                : ( trim( implode( ' ', array( $riga['nome'], $riga['cognome'] ) ) ) )
+                        )
+                )
+            );
 
             mysqlInsertRow(
                 $cf['mysql']['connection'],
