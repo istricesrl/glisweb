@@ -41,7 +41,10 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    'codice' => 'codice',
-	    '__label__' => 'contatto',
+	    // '__label__' => 'contatto',
+	    'nome' => 'nome',
+	    'cognome' => 'cognome',
+	    'denominazione' => 'denominazione',
 	    'telefoni' => 'telefoni',
 	    'mail' => 'mail',
 	    'categorie' => 'categorie',
@@ -54,7 +57,10 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none',
         // 'codice' => 'd-none',
-	    '__label__' => 'text-left no-wrap',
+        'nome' => 'd-none',
+        'cognome' => 'd-none',
+	    // '__label__' => 'text-left no-wrap',
+	    'denominazione' => 'text-left no-wrap',
 	    'telefoni' => 'text-left d-none d-md-table-cell',
 	    'mail' => 'text-left d-none d-md-table-cell',
         'id_stato' => 'd-none',
@@ -158,6 +164,9 @@
     // bottoni
 	foreach( $ct['view']['data'] as &$row ) {
 		if( is_array( $row ) ) {
+
+            $row['denominazione'] = implode( ' ', array(  $row['denominazione'], $row['nome'], $row['cognome'] ) );
+
 /*
             if( ! isset( $cf['session']['__work__']['anagrafica']['items'] ) || ! array_key_exists( $row['id'], $cf['session']['__work__']['anagrafica']['items'] ) ) {
                 $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.add?__work__[anagrafica][items]['.$row['id'].'][id]='.$row['id'].'&__work__[anagrafica][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark-o"></i></span></a>';
