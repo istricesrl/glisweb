@@ -1,9 +1,9 @@
 {% macro disponibilita( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable, legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
