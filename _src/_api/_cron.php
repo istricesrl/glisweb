@@ -52,7 +52,8 @@
 			array( 's' => date( 'G', $time ) ),						// 
 			array( 's' => date( 'j', $time ) ),						// 
 			array( 's' => date( 'n', $time ) ),						// 
-			array( 's' => date( 'w', $time ) ),						// 0 - 6, 0 -> domenica
+			// array( 's' => date( 'w', $time ) ),						// 0 - 6, 0 -> domenica
+			array( 's' => date( 'N', $time ) ),						// 1 - 7, 1 -> lunedì
 			array( 's' => date( 'W', $time ) ),						// 1 - 52/53
 			array( 's' => date( 'YmdHi', $time ) ),					//
 			array( 's' => strtotime( '-10 minutes' ) )				//
@@ -74,7 +75,8 @@
 	    . date( 'G', $time ) . ' '
 	    . date( 'j', $time ) . ' '
 	    . date( 'n', $time ) . ' '
-	    . date( 'w', $time ) . ' '
+//	    . date( 'w', $time ) . ' '
+	    . date( 'N', $time ) . ' '
 	    . date( 'W', $time ),
 	    'task'
 	);
