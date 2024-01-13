@@ -92,6 +92,7 @@ ALTER TABLE `anagrafica`
 	ADD UNIQUE KEY `unica_professionisti` (`nome`,`cognome`,`partita_iva`,`codice_fiscale`),
 	ADD UNIQUE KEY `unica_aziende` (`denominazione`,`partita_iva`,`codice_fiscale`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_badge` (`id_badge`),
 	ADD KEY `id_pec_sdi` (`id_pec_sdi`),
 	ADD KEY `codice_archivium` (`codice_archivium`),
 	ADD KEY `partita_iva` (`partita_iva`),
@@ -211,7 +212,9 @@ ALTER TABLE `anagrafica_consensi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-05-21 16:34 Fabio Mosti
 ALTER TABLE `anagrafica_indirizzi`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_indirizzo`), 
+	ADD UNIQUE KEY `id_anagrafica_indirizzo` (`id_anagrafica`, `indirizzo`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_ruolo` (`id_ruolo`),
@@ -315,6 +318,7 @@ ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREME
 ALTER TABLE `attivita`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica_codice_archivium` (`codice_archivium`), 
+	ADD UNIQUE KEY `codice` (`codice`),
 	ADD KEY `id_genitore` (`id_genitore`),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_cliente` (`id_cliente`),
@@ -326,6 +330,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_mailing` (`id_mailing`), 
 	ADD KEY `id_mail` (`id_mail`), 
 	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_pagamento` (`id_pagamento`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_matricola` (`id_matricola`),
 	ADD KEY `id_todo` (`id_todo`),
@@ -523,6 +528,7 @@ ALTER TABLE `caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-07-12 14:45 Chiara GDL
 ALTER TABLE `carrelli`
 	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`codice`),
 	ADD UNIQUE KEY `session` (`session`), 
 	ADD KEY `id_listino` (`id_listino`), 
 	ADD KEY `fatturazione_id_tipologia_documento` (`fatturazione_id_tipologia_documento`),
@@ -1556,6 +1562,20 @@ ALTER TABLE `funnel`
 -- tipologia: tabella gestita
 ALTER TABLE `funnel` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 0300000151510
+
+-- giorni
+ALTER TABLE `giorni` 
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`nome`), 
+	ADD KEY `nome` (`nome`), 
+	ADD KEY `indice` (`id`,`nome`);
+
+-- | 030000015151
+
+-- giorni
+ALTER TABLE `giorni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000015200
 
 -- gruppi
@@ -2385,6 +2405,25 @@ ALTER TABLE `notizie_categorie`
 -- tipologia: tabella gestita
 ALTER TABLE `notizie_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000022300
+
+-- orari
+ALTER TABLE `orari`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`), 
+	ADD KEY `id_periodicita` (`id_periodicita`), 
+	ADD KEY `id_giorno` (`id_giorno`), 
+	ADD KEY `ora_inizio` (`ora_inizio`),
+	ADD KEY `ora_fine` (`ora_fine`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_tipologia_contratti`,`id_periodicita`,`id_giorno`,`ora_inizio`,`ora_fine`);
+
+-- | 030000022300
+
+-- orari
+ALTER TABLE `orari` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000022800
 
 -- organizzazioni
@@ -2419,6 +2458,7 @@ ALTER TABLE `pagamenti`
 	ADD KEY `id_modalita_pagamento` (`id_modalita_pagamento`),
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_carrelli_articoli` (`id_carrelli_articoli`), 
 	ADD KEY `id_creditore` (`id_creditore`), 
 	ADD KEY `id_debitore` (`id_debitore`), 
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
@@ -2489,6 +2529,7 @@ ALTER TABLE `periodi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `periodicita`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`), 
+	ADD KEY `giorni` (`giorni`), 
 	ADD KEY `nome` (`nome`), 
 	ADD KEY `indice` (`id`,`nome`);
 
@@ -3135,6 +3176,7 @@ ALTER TABLE `rinnovi`
 	ADD UNIQUE KEY `unica_contratto` (`id_contratto`, `id_tipologia_contratto`, `codice`, `data_inizio`, `data_fine`),
 	ADD UNIQUE KEY `unica_progetto` (`id_progetto`, `codice`, `data_inizio`, `data_fine`),
 	ADD	KEY `id_tipologia` (`id_tipologia`),
+	ADD	KEY `id_periodicita` (`id_periodicita`),
 	ADD	KEY `id_contratto` (`id_contratto`),
 	ADD KEY `id_licenza` (`id_licenza`),
 	ADD KEY `id_progetto` (`id_progetto`),
@@ -3922,6 +3964,7 @@ ALTER TABLE `tipologie_contratti`
   	ADD KEY `se_prenotazione`(`se_prenotazione`),
   	ADD KEY `se_scalare`(`se_scalare`),
 	ADD KEY `se_affiliazione`(`se_affiliazione`),
+	ADD KEY `se_online`(`se_online`),
   	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
   	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_iscrizione`, `se_tesseramento`, `se_abbonamento`, `se_immobili`, `se_acquisto`, `se_locazione`, `se_affiliazione`);

@@ -216,6 +216,17 @@ INSERT IGNORE INTO `embed` (`id`, `nome`, `se_video`, `se_audio`) VALUES
 (2, 'Vimeo', 1, NULL),
 (3, 'YouTube', 1, NULL);
 
+-- | 050000015150
+
+INSERT IGNORE INTO `giorni` (`id`, `nome`) VALUES
+(1,	'lunedì'),
+(2,	'martedì'),
+(3,	'mercoledì'),
+(4,	'giovedì'),
+(5,	'venerdì'),
+(6,	'sabato'),
+(7,	'domenica');
+
 -- | 050000015200
 
 -- gruppi
@@ -355,11 +366,15 @@ INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 -- periodicita
 -- tipologia: tabella standard
 -- verifica: 2021-10-05 17:57 Fabio Mosti
-INSERT IGNORE INTO `periodicita` (`id`, `nome`) VALUES
-(1,	'giornaliera'),
-(2,	'settimanale'),
-(3,	'mensile'),
-(4,	'annuale');
+INSERT IGNORE INTO `periodicita` (`id`, `nome`, `giorni`) VALUES
+(1,	'giornaliera',	1),
+(2,	'settimanale',	7),
+(3,	'mensile',	30),
+(4,	'bimestrale',	60),
+(5,	'trimestrale',	90),
+(6,	'quadrimestrale',	120),
+(7,	'semestrale',	180),
+(8,	'annuale',	365);
 
 -- | 050000028000
 
