@@ -895,7 +895,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_trattative__` AS
     progetti.entrate_previste,
     progetti.costi_previsti,
     progetti.ore_previste,
-    ( progetti.entrate_previste - progetti.costi_previsti ) AS margine_previsto,
+    ( coalesce( progetti.entrate_previste, 0 ) - coalesce( progetti.costi_previsti, 0 ) ) AS margine_previsto,
     coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
     coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita
   FROM progetti
@@ -927,7 +927,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_trattative_attive__` AS
     progetti.entrate_previste,
     progetti.costi_previsti,
     progetti.ore_previste,
-    ( progetti.entrate_previste - progetti.costi_previsti ) AS margine_previsto,
+    ( coalesce( progetti.entrate_previste, 0 ) - coalesce( progetti.costi_previsti, 0 ) ) AS margine_previsto,
     coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
     coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita
   FROM progetti
@@ -960,7 +960,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_trattative_gestite__` AS
     progetti.entrate_previste,
     progetti.costi_previsti,
     progetti.ore_previste,
-    ( progetti.entrate_previste - progetti.costi_previsti ) AS margine_previsto,
+    ( coalesce( progetti.entrate_previste, 0 ) - coalesce( progetti.costi_previsti, 0 ) ) AS margine_previsto,
     coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
     coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita
   FROM progetti
@@ -993,7 +993,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione__` AS
     progetti.entrate_previste,
     progetti.costi_previsti,
     progetti.ore_previste,
-    ( progetti.entrate_previste - progetti.costi_previsti ) AS margine_previsto,
+    ( coalesce( progetti.entrate_previste, 0 ) - coalesce( progetti.costi_previsti, 0 ) ) AS margine_previsto,
     coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
     coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita
   FROM progetti
@@ -1025,7 +1025,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione_attiva__` AS
     progetti.entrate_previste,
     progetti.costi_previsti,
     progetti.ore_previste,
-    ( progetti.entrate_previste - progetti.costi_previsti ) AS margine_previsto,
+    ( coalesce( progetti.entrate_previste, 0 ) - coalesce( progetti.costi_previsti, 0 ) ) AS margine_previsto,
     coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
     coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita
   FROM progetti
@@ -1058,7 +1058,7 @@ CREATE OR REPLACE VIEW `__report_avanzamento_amministrazione_gestita__` AS
     progetti.entrate_previste,
     progetti.costi_previsti,
     progetti.ore_previste,
-    ( progetti.entrate_previste - progetti.costi_previsti ) AS margine_previsto,
+    ( coalesce( progetti.entrate_previste, 0 ) - coalesce( progetti.costi_previsti, 0 ) ) AS margine_previsto,
     coalesce( max( at1.data_attivita ), '-' ) AS data_ultima_attivita,
     coalesce( min( at2.data_programmazione ), '-' ) AS data_prossima_attivita
   FROM progetti

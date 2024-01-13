@@ -21,7 +21,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM tipologie_contratti_view  WHERE id <> ? AND se_abbonamento IS NOT NULL',
+            'SELECT id, __label__ FROM tipologie_contratti_view  WHERE id <> ? AND se_tesseramento IS NOT NULL',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
         );
     } else {
@@ -29,7 +29,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM tipologie_contratti_view WHERE se_abbonamento IS NOT NULL'
+            'SELECT id, __label__ FROM tipologie_contratti_view WHERE se_tesseramento IS NOT NULL'
         );
     }
 

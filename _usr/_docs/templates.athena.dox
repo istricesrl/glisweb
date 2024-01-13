@@ -319,8 +319,8 @@
     {% macro mail( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
     {% import '_bin/_form.html' as frm %}
     {% set counter = 0 %}
-    <fieldset id="{{ subtable }}">
-        {{ frm.subformLegend( subtable, legend ) }}
+    <fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+        {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
         {% if request[ table ][ subtable ]|length %}
             {% set t = request[ table ][ subtable ]|length - 1 %}
         {% else %}

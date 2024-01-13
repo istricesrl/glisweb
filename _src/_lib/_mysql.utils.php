@@ -641,14 +641,17 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
         unisciOggetti( $sorgente, $destinazione, $tabella, $colonna );
 
         // aggiorno le viste statiche
-        mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
-        mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+        updateAnagraficaViewStatic( $destinazione );
+        cleanAnagraficaViewStatic();
+        
+        // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
 
-        mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_archiviati_view_static SELECT * FROM anagrafica_archiviati_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
-        mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_archiviati_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+        // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_archiviati_view_static SELECT * FROM anagrafica_archiviati_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_archiviati_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
 
-        mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_attivi_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
-        mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_attivi_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
+        // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_attivi_view_static SELECT * FROM anagrafica_attivi_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
+        // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_attivi_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
 
     }
 
@@ -766,6 +769,8 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
 
         global $cf;
 
+        // var_dump( $id );
+
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT
@@ -815,7 +820,24 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
 
             updateAnagraficaViewStaticIndirizzi( $id, $riga );
 
-            $riga['__label__'] = ( ! empty( $riga['soprannome'] ) ) ? $riga['soprannome'] : ( ( ! empty( $riga['denominazione'] ) ) ? $riga['denominazione'] : ( trim( implode( ' ', array( $riga['nome'], $riga['cognome'] ) ) ) ) );
+            // $riga['__label__'] = ( ! empty( $riga['soprannome'] ) ) ? $riga['soprannome'] : ( ( ! empty( $riga['denominazione'] ) ) ? $riga['denominazione'] : ( trim( implode( ' ', array( $riga['nome'], $riga['cognome'] ) ) ) ) );
+            $riga['__label__'] = (
+                (
+                    ( ! empty( $riga['codice'] ) )
+                        ? $riga['codice'] . ' '
+                        : NULL 
+                )
+                . 
+                (
+                    ( ! empty( $riga['soprannome'] ) )
+                        ? $riga['soprannome']
+                        : ( 
+                            ( ! empty( $riga['denominazione'] ) )
+                                ? $riga['denominazione'] 
+                                : ( trim( implode( ' ', array( $riga['nome'], $riga['cognome'] ) ) ) )
+                        )
+                )
+            );
 
             mysqlInsertRow(
                 $cf['mysql']['connection'],
@@ -1026,5 +1048,30 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
      * 
      */
     function cleanAnagraficaViewStatic() {
+
+        global $cf;
+
+        return mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE anagrafica_view_static FROM anagrafica_view_static
+            LEFT JOIN anagrafica ON anagrafica.id = anagrafica_view_static.id
+            WHERE anagrafica.id IS NULL;'
+        );
+
+    }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function emptyAnagraficaViewStatic() {
+
+        global $cf;
+
+        return mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE FROM anagrafica_view_static'
+        );
 
     }

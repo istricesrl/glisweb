@@ -19,6 +19,9 @@
 		),
 	    '03.elaborazioni' => array(
 			'label' => 'elaborazioni'
+		),
+	    '05.static' => array(
+			'label' => 'viste statiche'
 		)
 	);
 
@@ -56,6 +59,30 @@
 	    'fa' => 'fa-compress',
 	    'title' => 'unione anagrafiche',
 	    'text' => 'unisce due anagrafiche e tutti gli oggetti collegati'
+	);
+
+	$ct['page']['contents']['metro']['05.static'][] = array(
+		'lws' => '/task/anagrafica.view.static.popolazione',
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'ripopola anagrafica view static',
+		'text' => 'ripopola la view static dell\'anagrafica'
+	);
+
+	$ct['page']['contents']['metro']['05.static'][] = array(
+		'ws' => '/task/anagrafica.view.static.pulizia',
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'pulizia anagrafica view static',
+		'text' => 'pulisce la view static dell\'anagrafica'
+	);
+
+	$ct['page']['contents']['metro']['05.static'][] = array(
+		'ws' => '/task/anagrafica.view.static.svuotamento',
+		'icon' => NULL,
+		'fa' => 'fa-trash',
+		'title' => 'svuotamento anagrafica view static',
+		'text' => 'svuota la view static dell\'anagrafica'
 	);
 
     // categorie anagrafica

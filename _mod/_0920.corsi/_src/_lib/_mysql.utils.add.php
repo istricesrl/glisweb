@@ -163,7 +163,7 @@
 
         global $cf;
 
-        mysqlQuery(
+        return mysqlQuery(
             $cf['mysql']['connection'],
             'DELETE __report_corsi__ FROM __report_corsi__
             LEFT JOIN progetti ON progetti.id = __report_corsi__.id

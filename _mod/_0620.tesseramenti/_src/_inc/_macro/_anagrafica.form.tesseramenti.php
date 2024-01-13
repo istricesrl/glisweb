@@ -87,8 +87,10 @@
                 $ordinato = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT carrelli.id FROM carrelli_articoli INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello WHERE id_articolo = ? AND carrelli_articoli.destinatario_id_anagrafica = ? AND carrelli.session = ?', array( array( 's' => $articolo ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ), array( 's' => $cf['session']['id'] ) ) );
 # die($ordinato);
                 if( empty( $ordinato ) ) {
+                    if( isset( $cf['contents']['pages']['ecommerce.carrello']['url'][ LINGUA_CORRENTE ] ) ) {
 #                    $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/4170.ecommerce/aggiungi.al.carrello?__carrello__[__articolo__][id_articolo]='.$articolo.'&__carrello__[__articolo__][destinatario_id_anagrafica]='.$_REQUEST[ $ct['form']['table'] ]['id'].'\', aggiornaCarrello );"><span class="media-left"><i class="fa fa-cart-plus"></i></span></a>';
-                    $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.carrello']['url'][ LINGUA_CORRENTE ] . '?__carrello__[__articolo__][id_articolo]=' . $articolo . '&__carrello__[__articolo__][destinatario_id_anagrafica]='.$_REQUEST[ $ct['form']['table'] ]['id'].'"><span class="media-left"><i class="fa fa-cart-plus"></i></span></a>';
+                        $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.carrello']['url'][ LINGUA_CORRENTE ] . '?__carrello__[__articolo__][id_articolo]=' . $articolo . '&__carrello__[__articolo__][destinatario_id_anagrafica]='.$_REQUEST[ $ct['form']['table'] ]['id'].'"><span class="media-left"><i class="fa fa-cart-plus"></i></span></a>';
+                    }
                 }
             }
         }

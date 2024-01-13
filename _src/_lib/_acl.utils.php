@@ -427,31 +427,45 @@
 	 * 
 	 * 
 	 */
-	function checkFirmaImportazione( $row ) {
+	function checkFirmaImportazione( $row, $table ) {
 
 		global $cf;
 
-		// print_r( $row );
-		// print_r( array_diff_key( $row, array( '__firma__' => 'test' ) ) );
+		if( isset( $cf['auth']['import']['secret'] ) ) {
 
-		$challenge = hash(
-			getAvailableHashMethod(),
-			// serialize( array_diff_key( $row, array( '__firma__' => null ) ) ) . $cf['auth']['import']['secret']
-			$t . $cf['auth']['import']['secret']
-		);
+			// print_r( $row );
+			// print_r( array_diff_key( $row, array( '__firma__' => 'test' ) ) );
 
-		// var_dump( $challenge );
+			$challenge = hash(
+				getAvailableHashMethod(),
+				// serialize( array_diff_key( $row, array( '__firma__' => null ) ) ) . $cf['auth']['import']['secret']
+				// $t . $cf['auth']['import']['secret']
+				$table . $cf['auth']['import']['secret']
+			);
 
-		if( isset( $row['__firma__'] ) && $row['__firma__'] == $challenge ) {
-			// die('match');
-			return true;
+			// var_dump( $challenge );
+
+			if( isset( $row['__firma__'] ) && $row['__firma__'] == $challenge ) {
+
+				// die('match');
+				return true;
+			
+			} elseif( isset( $row['__firma__'] ) && $row['__firma__'] != $challenge ) {
+
+				logWrite( 'firma non corrispondente: ' . $row['__firma__'] . ' (prevista: ' . $challenge . ') per: ' . print_r( $row ), 'firme', LOG_ERR );
+
+			} else {
+
+				logWrite( 'firma non trovata per: ' . print_r( $row ), 'firme', LOG_ERR );
+
+			}
+
+			// var_dump( $row['__firma__'] );
+			// var_dump( $challenge );
+			// die('unmatch');
+
 		}
 
-		logWrite( 'firma non corrispondente: ' . $row['__firma__'] . ' (prevista: ' . $challenge . ') per: ' . print_r( $row ), 'firme', LOG_ERR );
-
-		// var_dump( $row['__firma__'] );
-		// var_dump( $challenge );
-		// die('unmatch');
 		return false;
 
 	}

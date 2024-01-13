@@ -7,9 +7,9 @@
 
 	// recupero il profilo di registrazione
 	if( isset( $cf['contents']['page']['metadati']['profilo_registrazione'] ) ) {
-		$ct['etc']['profilo'] = $cf['registrazione']['profili'][ $cf['contents']['page']['metadati']['profilo_registrazione'] ];
+		$ct['etc']['profilo'] = $cf['auth']['profili'][ $cf['contents']['page']['metadati']['profilo_registrazione'] ];
 	} else {
-		$ct['etc']['profilo'] = $cf['registrazione']['profili']['default'];
+		$ct['etc']['profilo'] = $cf['auth']['profili']['default'];
 	}
 
 	// die( print_r( $ct['etc']['profilo'], true ) );

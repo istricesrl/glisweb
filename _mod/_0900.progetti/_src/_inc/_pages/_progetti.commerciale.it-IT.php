@@ -17,10 +17,23 @@
 			'parent'		=> array( 'id'		=> 'commerciale' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_progetti.commerciale.view.php' ),
-			'etc'			=> array( 'tabs'	=> array( 'progetti.commerciale.view' ) ),
+			'etc'			=> array( 'tabs'	=> array( 'progetti.commerciale.view', 'progetti.commerciale.tools' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'progetti' ),
 															'priority'	=> '080' ) ) )	
+		);
+
+		// gestione progetti tools
+		$p['progetti.commerciale.tools'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'azioni progetti' ),
+			'h1'			=> array( $l		=> 'azioni progetti' ),
+			'parent'		=> array( 'id'		=> 'commerciale' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_progetti.commerciale.tools.php' ),
+			'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.view']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 		);
 
 		// gestione progetti
@@ -214,6 +227,19 @@
 			'macro'			=> array( $m.'_src/_inc/_macro/_progetti.commerciale.form.archiviazione.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] )
+		);
+
+		// gestione progetti tools
+		$p['progetti.commerciale.form.tools'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'azioni progetto' ),
+			'h1'			=> array( $l		=> 'azioni progetto' ),
+			'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_progetti.commerciale.form.tools.php' ),
+			'etc'			=> array( 'tabs'	=> $p['progetti.commerciale.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 		);
 
 	}

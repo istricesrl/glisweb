@@ -12,6 +12,11 @@
     // inclusione del framework
     require '../_config.php';
 
+    // debug
+    // ini_set('display_errors', 1);
+    // ini_set('display_startup_errors', 1);
+    // error_reporting(E_ALL);
+
     // inizializzo l'array del risultato
     $status = array();
 
@@ -78,7 +83,11 @@
             if( ! empty( $job['iterazioni'] ) ) {
 
                 /* CODICE PRINCIPALE DEL JOB */
-                require DIR_BASE . $job['job'];
+                if( file_exists( DIR_BASE . $job['job'] ) ) {
+                    require DIR_BASE . $job['job'];
+                } else {
+                    die( 'file non trovato ' . DIR_BASE . $job['job'] );
+                }
 
                 // delay
                 if( $job['iterazioni'] > 1 ) {

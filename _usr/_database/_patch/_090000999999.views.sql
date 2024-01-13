@@ -296,12 +296,16 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		anagrafica.timestamp_inserimento,
 		anagrafica.id_account_aggiornamento,
 		anagrafica.timestamp_aggiornamento,
-		coalesce(
-			anagrafica.soprannome,
-			anagrafica.denominazione,
-			concat_ws(' ', coalesce(anagrafica.cognome, ''),
-			coalesce(anagrafica.nome, '') ),
-			''
+		concat_ws(
+			' ',
+			anagrafica.codice,
+			coalesce(
+				anagrafica.soprannome,
+				anagrafica.denominazione,
+				concat_ws(' ', coalesce( anagrafica.cognome, ''),
+				coalesce( anagrafica.nome, '') ),
+				''
+			)
 		) AS __label__
 	FROM anagrafica
 		LEFT JOIN tipologie_anagrafica ON tipologie_anagrafica.id = anagrafica.id_tipologia
@@ -1247,8 +1251,35 @@ CREATE OR REPLACE VIEW badge_view AS
 		badge.nome,
 		badge.codice,
 		badge.rfid,
-		concat_ws( ' | ', lpad( badge.id, 8, 0), coalesce( badge.codice, badge.rfid, badge.nome ) ) AS __label__
+		concat_ws(
+			' ',
+			anagrafica.codice,
+			coalesce(
+				anagrafica.soprannome,
+				anagrafica.denominazione,
+				concat_ws(' ', coalesce( anagrafica.cognome, ''),
+				coalesce( anagrafica.nome, '') ),
+				''
+			)
+		) AS anagrafica,
+		concat_ws( 
+			' | ', 
+			lpad( badge.id, 8, 0),
+			coalesce( badge.codice, badge.rfid, badge.nome ),
+			concat_ws(
+				' ',
+				anagrafica.codice,
+				coalesce(
+					anagrafica.soprannome,
+					anagrafica.denominazione,
+					concat_ws(' ', coalesce( anagrafica.cognome, ''),
+					coalesce( anagrafica.nome, '') ),
+					'NON ASSEGNATO'
+				)
+			)
+		) AS __label__
 	FROM badge
+	LEFT JOIN anagrafica ON anagrafica.id_badge = badge.id
 ;
 
 -- | 090000002300
@@ -2418,6 +2449,7 @@ CREATE OR REPLACE VIEW contratti_anagrafica_view AS
 		tipologie_contratti.se_locazione,
 		ruoli_anagrafica.se_proponente,
 		ruoli_anagrafica.se_contraente,
+		tipologie_contratti.id AS id_tipologia,
 		tipologie_contratti.nome AS tipologia,
 		contratti.nome,
 		contratti.id_progetto,
@@ -3920,9 +3952,10 @@ CREATE OR REPLACE VIEW `iban_view` AS
 		iban.iban,
 		iban.id_account_inserimento,
 		iban.id_account_aggiornamento,
-		concat(
-			iban.iban,
+		concat_ws(
 			' ',
+			iban.iban,
+			iban.intestazione,
 			coalesce(
 				a1.denominazione,
 				concat(
@@ -5994,10 +6027,11 @@ DROP TABLE IF EXISTS `periodicita_view`;
 -- periodicita_view
 -- tipologia: tabella standard
 -- verifica: 2021-10-05 18:00 Fabio Mosti
-CREATE OR REPLACE VIEW `popup_view` AS
+CREATE OR REPLACE VIEW `periodicita_view` AS
 	SELECT
 		periodicita.id,
 		periodicita.nome,
+		periodicita.giorni,
 		periodicita.nome AS __label__
 	FROM periodicita
 ;

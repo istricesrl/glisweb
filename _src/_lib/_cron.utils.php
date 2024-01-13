@@ -326,10 +326,26 @@
                     } while ( $data < $data_fine );
                 }   
                 break;
+
+                // attività con ripetizione bimestrale
+                case 4:
+                break;
+
+                // attività con ripetizione trimestrale
+                case 5:
+                break;
+    
+                // attività con ripetizione quadrimestrale
+                case 6:
+                break;
+    
+                // attività con ripetizione semestrale
+                case 7:
+                break;
     
                 // attività con ripetizione annuale
                 // TODO gestione seconda tipologia di duplicazione data
-                case 4:
+                case 8:
                     if ( empty($data_fine) || $data_fine === NULL ){ $data_fine = date('Y-m-d', strtotime($data. ' + '.$cadenza * ($numero_ripetizioni - 1).' years')); }
                     if( $ripetizione_anno == 1 ){
                       do {

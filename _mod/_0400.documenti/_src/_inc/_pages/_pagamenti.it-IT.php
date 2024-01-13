@@ -56,7 +56,7 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pagamenti.amministrazione.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_pagamenti.amministrazione.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'pagamenti.form' ) )
+			'etc'			=> array( 'tabs'	=> array(   'pagamenti.amministrazione.form' ) )
 		);
 
 		// tools produzione
