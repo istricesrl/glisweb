@@ -5,7 +5,9 @@
      *
      *
      *
-     * @todo commentare
+     * @todo documentare
+     * @todo spiegare bene la logica con cui vengono uniti i dati, quali prevalgono, eccetera
+     * @todo fornire queste informazioni anche nell'interfaccia grafica quando l'utente deve cliccare
      *
      * @file
      *
