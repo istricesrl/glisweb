@@ -3898,6 +3898,17 @@ CREATE OR REPLACE VIEW `funnel_view` AS
 	FROM funnel
 ;
 
+-- | 090000015150
+
+-- giorni
+CREATE OR REPLACE VIEW `giorni_view` AS
+	SELECT
+		giorni.id,
+		giorni.nome,
+		giorni.nome AS __label__
+	FROM giorni
+;
+
 -- | 090000015200
 
 -- gruppi_view
@@ -5606,6 +5617,27 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 		LEFT JOIN notizie ON notizie.id = notizie_categorie.id_notizia
 ;
 
+-- | 090000022300
+
+-- orari_view
+DROP TABLE IF EXISTS `orari_view`;
+
+-- | 090000022300
+
+-- orari_view
+CREATE OR REPLACE VIEW `orari_view` AS
+	SELECT
+		orari.id,
+		orari.nome,
+		orari.id_tipologia_contratti,
+		orari.id_periodicita,
+		orari.id_giorno,
+		orari.ora_inizio,
+		orari.ora_fine,
+		orari.nome AS __label__
+	FROM orari
+;
+
 -- | 090000022700
 
 -- ordini_view
@@ -5880,6 +5912,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.note,
 		pagamenti.note_pagamento,
 		pagamenti.id_documento,
+		pagamenti.id_carrelli_articoli,
         concat(
 			tipologie_documenti.sigla,
 			' ',
