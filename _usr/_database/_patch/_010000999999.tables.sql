@@ -533,7 +533,7 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
 -- verifica: 2022-07-12 14:45 Chiara GDL
 CREATE TABLE `carrelli` (
   `id` int(11) NOT NULL,
-  `codice` char(64) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `session` char(32) DEFAULT NULL,
   `destinatario_nome` char(255) DEFAULT NULL,
   `destinatario_cognome` char(255) DEFAULT NULL,
@@ -2202,7 +2202,7 @@ CREATE TABLE IF NOT EXISTS `notizie` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
-  `note` text DEFAULT N300333ULL,
+  `note` text DEFAULT NULL,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
   `tema_css` char(128) DEFAULT NULL,
