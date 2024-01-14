@@ -41,7 +41,7 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    'codice' => 'codice',
-	    // '__label__' => 'contatto',
+	    '__label__' => 'contatto',
 	    'nome' => 'nome',
 	    'cognome' => 'cognome',
 	    'denominazione' => 'denominazione',
@@ -60,6 +60,7 @@
         'nome' => 'd-none',
         'cognome' => 'd-none',
 	    // '__label__' => 'text-left no-wrap',
+	    '__label__' => 'd-none',
 	    'denominazione' => 'text-left no-wrap',
 	    'telefoni' => 'text-left d-none d-md-table-cell',
 	    'mail' => 'text-left d-none d-md-table-cell',
