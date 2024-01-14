@@ -2966,7 +2966,7 @@ ALTER TABLE `redirect`
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`codice`,`sorgente`,`destinazione`); 
+	ADD KEY `indice` (`id`,`codice_stato_http`,`sorgente`,`destinazione`); 
 
 -- | 030000029401
 

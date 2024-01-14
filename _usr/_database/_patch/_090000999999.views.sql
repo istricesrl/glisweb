@@ -7112,7 +7112,7 @@ CREATE OR REPLACE VIEW redirect_view AS
 	SELECT
 		redirect.id,
 		redirect.id_sito,
-		redirect.codice,
+		redirect.codice_stato_http,
 		redirect.sorgente,
 		redirect.destinazione,
 		redirect.id_account_inserimento,
@@ -7120,7 +7120,7 @@ CREATE OR REPLACE VIEW redirect_view AS
 		concat_ws(
 			' ',
 			redirect.sorgente,
-			redirect.codice,
+			redirect.codice_stato_http,
 			redirect.destinazione
 		) AS __label__
 	FROM redirect
