@@ -41,7 +41,16 @@ else
 
         # faccio il backup della cartella corrente
         # rm -rf ../backup.tar.gz
-        tar -cvzf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz --exclude='var/log/*' --exclude='var/cache/*' .
+        tar -czf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz --exclude='var/log/*' --exclude='var/cache/*' .
+
+        # salvo i disallineamenti rispetto alla versione correntemente installata
+        for f in $( find ./_* -newer ./var/latest.upgrade.conf ); do
+            if [ -f $f ]; then
+                echo "$f è disallineato"
+                mkdir -p ../disallineamenti.$( date '+%Y%m%d%H%M%S' )/
+                cp --parents $f ../disallineamenti.$( date '+%Y%m%d%H%M%S' )/
+            fi
+        done
 
         # branch da scaricare
         BRANCH=$1
@@ -79,6 +88,9 @@ else
 
         ## permessi
         ./_src/_sh/_lamp.permissions.secure.sh
+
+        ## salvo la data di aggiornamento
+        echo $(date '+%Y-%m-%d %H:%M:%S' ) > ./var/latest.upgrade.conf
 
         ## pulizia
         clear
