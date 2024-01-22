@@ -67,7 +67,8 @@
                 <input type="hidden" id="nome" name="articoli[metadati][0][nome]" value="periodo_iscrizione" >
                 <div class="col-auto">
                     <span class="label-top">periodo</span>
-                    {{ frm.select( 'articoli', 'metadati', '0', 'testo', '', etc.select.periodi, request ) }}
+                    <!-- {{ frm.select( 'articoli', 'metadati', '0', 'testo', '', etc.select.periodi, request ) }} -->
+                    {{ frm.select( table, '', '', 'id_periodicita', '', etc.select.periodicita, request ) }}
                 </div>
                 {% endif %}
             </div>

@@ -436,6 +436,7 @@
 			// print_r( $row );
 			// print_r( array_diff_key( $row, array( '__firma__' => 'test' ) ) );
 
+			// TODO calcolata così la challenge non è debole? andrebbe migliorata in modo da comprendere altri campi
 			$challenge = hash(
 				getAvailableHashMethod(),
 				// serialize( array_diff_key( $row, array( '__firma__' => null ) ) ) . $cf['auth']['import']['secret']

@@ -528,7 +528,7 @@
         $s = preg_replace('/\s+/', ' ', $s); // reduce all multiple whitespace to a single space
       
         if( $s != $string ) {
-            logWrite( $string . ' pulito a ' . $s, 'csv/cleanstring', LOG_ERR );
+            logWrite( $string . ' pulito a ' . $s, 'details/csv/cleanstring', LOG_ERR );
         }
 
         return $s;

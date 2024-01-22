@@ -40,6 +40,14 @@
 	    'SELECT id, __label__ FROM stati_view'
 	);
 
+	// tendina stati
+	$ct['etc']['select']['badge'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM badge_view'
+	);
+
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 

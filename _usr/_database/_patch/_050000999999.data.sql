@@ -240,7 +240,7 @@ INSERT IGNORE INTO `gruppi` (`id`, `id_genitore`, `id_organizzazione`, `nome`, `
 -- | 050000016000
 
 -- iva
-INSERT INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestamp_archiviazione`) VALUES
+INSERT IGNORE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `timestamp_archiviazione`) VALUES
 (1,	22.00,	'IVA 22%',	'IVA 22%',	NULL,	NULL),
 (2,	10.00,	'IVA agevolata 10%',	'IVA agevolata 10%',	NULL,	NULL),
 (3,	4.00,	'IVA agevolata 4%',	'IVA agevolata 4%',	NULL,	NULL),

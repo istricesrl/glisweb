@@ -110,8 +110,13 @@
     // se c'è almeno una mail da inviare
     if( ! empty( $row ) ) {
 
+		// var_dump( $row );
+
 		// calcolo il token di cancellazione
 		$row['mtk'] = md5( $row['id_mail'].$row['indirizzo'] );
+
+		// ...
+		logWrite( print_r( $row, true ), 'details/mailing/' . $row['id'], LOG_ERR );
 
 		// inizializzo il template
 		$tpl = array(
@@ -128,6 +133,8 @@
 			'WHERE contenuti.id_mailing = ?',
 			array( array( 's' => $row['id'] ) )
 		);
+
+#		 var_dump( $cnts );
 
 		// ciclo sui contenuti
 		foreach( $cnts as $cnt ) {
@@ -147,8 +154,10 @@
 # <p>ricevi questa mail perché sei iscritto alla nostra newsletter, per cancellarti <a href="https://crm.eurosnodi.it/disiscrizione?mtk={{ row.mtk }}&amp;isc={{ row.id_mail }}">clicca qui</a></p>
 # se nel testo non è presente la stringa:
 # mtk={{ row.mtk }}&amp;isc={{ row.id_mail }}
+
 		}
 
+		# var_dump($tpl );
 		// prelevo gli allegati
 		$files = mysqlCachedQuery(
 			$cf['memcache']['connection'],
@@ -176,6 +185,9 @@
 			$cf['localization']['language']['ietf']
 		);
 
+#		echo 'invio';
+#		var_dump( $invio );
+
 		// aggiorno la coda
 		if( $invio ) {
 
@@ -196,7 +208,9 @@
 						array( 's' => $status['token'] )
 					)
 				);
-				
+
+				// echo 'mailing_mail aggiornata ' . $status['id'] . '<br>';
+
 			}
 
 			// status

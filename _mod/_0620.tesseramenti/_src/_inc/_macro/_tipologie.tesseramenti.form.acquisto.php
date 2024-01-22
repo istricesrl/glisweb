@@ -74,6 +74,22 @@
             'SELECT id, __label__ FROM tipologie_rinnovi_view WHERE se_tesseramenti = 1'
         );
 
+        // tendina tipologia abbonamento
+        $ct['etc']['select']['periodicita'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM periodicita_view ORDER BY giorni ASC'
+        );
+
+        // tendina tipologia abbonamento
+        $ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM reparti_view'
+        );
+
         // tabella della vista
         $ct['view']['table'] = 'articoli';
 

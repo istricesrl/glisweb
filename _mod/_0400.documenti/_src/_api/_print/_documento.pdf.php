@@ -13,18 +13,57 @@
     // inclusione del framework
 	require '../../../../../_src/_config.php';
 
+/*
     // configurazioni specifiche
     $cnf['estensione'] = 'pdf';
+    $cnf['cartella'] = 'documenti';
+*/
 
-    // inclusione dei dati base
-	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
+    // leggo la tipologia del documento
+    $idTipologia = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT id_tipologia FROM documenti WHERE id = ?',
+        array( array( 's' => $_REQUEST['__documento__'] ) )
+    );
+
+    // includo il file appropriato in base alla tipologia del documento
+    switch( $idTipologia ) {
+        case 1:
+        case 2:
+            $pdfFile = DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_fattura.pdf.php';
+        break;
+        case 3:
+            $pdfFile = DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_nota.credito.pdf.php';
+        break;
+        case 4:
+            $pdfFile = DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_ddt.pdf.php';
+        break;
+        case 5:
+            $pdfFile = DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_proforma.pdf.php';
+        break;
+        case 8:
+            $pdfFile = DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_ricevuta.pdf.php';
+        break;
+    }
+
+    // file custom
+    $customPdfFile = path2custom( $pdfFile );
+
+    // se esiste il file custom lo includo, altrimenti includo il file standard
+    if( file_exists( $customPdfFile ) ) {
+        require $customPdfFile;
+    } else {
+        require $pdfFile;
+    }
+
+/*
 
     // annoto l'attività di stampa
     mysqlInsertRow(
         $cf['mysql']['connection'],
         array(
             'id_tipologia' => 23,
-            'id_documento' => $doc['id'],
+            'id_documento' => $dati['doc']['id'],
             'data_attivita' => date('Y-m-d'),
             'ora_inizio' => date( 'H:i:s' ),
             'ora_fine' => date( 'H:i:s' )
@@ -32,12 +71,14 @@
         'attivita'
     );
 
+*/
+
     // debug
 	// header( 'Content-type: text/plain;' );
 	// die( print_r( $doc, true ) );
 	// die( print_r( $src, true ) );
 	// die( print_r( $dst, true ) );
-
+/*
     // intestazione documento
     $sdef['linee'][] = $src['denominazione_fiscale'];
     $sdef['linee'][] = $sri['indirizzo_fiscale'];
@@ -49,7 +90,7 @@
 	} elseif( ! empty( anagraficaGetPEC( $doc['id_emittente'] ) ) ) {
 	    $sdef['linee'][] = 'PEC ' . anagraficaGetPEC( $doc['id_emittente'] );
 	}
-
+*/
 /* DEPRECATO
     // recupero i dati del destinatario
 	$dst = mysqlSelectRow(
@@ -81,7 +122,7 @@
     // indirizzo fiscale
     $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
 */
-
+/*
     $sdec['linee'][] = $dst['denominazione_fiscale'];
     $sdec['linee'][] = $dsi['indirizzo_fiscale'];
     $sdec['linee'][] = $dsi['comune_indirizzo_fiscale'];
@@ -249,39 +290,39 @@
 
         $trh = $pdf->GetStringHeight( $col * 4, $row['nome'], false, true, '', 'B' );				// calcolo l'altezza della riga
 	    $pdf->SetFont( $fnt, '', $fnts );
-/*
-        // controllo se la riga di dettaglio entra nella parte rimanente del foglio
-	    if( ( $pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() - 15)  ) {
 
-            // aggiungo una pagina
-            $pdf->AddPage(); 
+#        // controllo se la riga di dettaglio entra nella parte rimanente del foglio
+#	    if( ( $pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() - 15)  ) {
+#
+#            // aggiungo una pagina
+#            $pdf->AddPage(); 
+#
+#            // intestazione tabella nel nuovo foglio
+#		    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+#		    $pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+#		    $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+#		    $pdf->Cell( $col * 1, 0, 'udm', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+#		    $pdf->Cell( $col * 1, 0, 'p. unitario', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+#		    $pdf->Cell( $col * 2, 0, 'tot. netto', $brdh, 0, 'C' );			// larghezza, altezza, testo, bordo, newline, allineamento
+#		    $pdf->Cell( $col * 1, 0, 'IVA', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+#		    $pdf->Cell( $col * 2, 0, 'tot. lordo', $brdh, 1, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+#
+#            // reimposto il font
+#		    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+#
+#		}
+#
+#        if( ! empty( $row['aggregate'] ) ) {
+#            $pdf->SetFont( $fnt, 'B', $fnts );
+#            $countAggregate += $row['aggregate'];
+#        }
+#
+#        if( substr($row['nome'],0,1) === '*' ) {
+#            $pdf->SetFillColor(230, 230, 230);
+#        } else {
+#            $pdf->SetFillColor(255, 255, 255);
+#        }
 
-            // intestazione tabella nel nuovo foglio
-		    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-		    $pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 1, 0, 'udm', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 1, 0, 'p. unitario', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 2, 0, 'tot. netto', $brdh, 0, 'C' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 1, 0, 'IVA', $brdh, 0, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
-		    $pdf->Cell( $col * 2, 0, 'tot. lordo', $brdh, 1, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
-
-            // reimposto il font
-		    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
-
-		}
-
-        if( ! empty( $row['aggregate'] ) ) {
-            $pdf->SetFont( $fnt, 'B', $fnts );
-            $countAggregate += $row['aggregate'];
-        }
-
-        if( substr($row['nome'],0,1) === '*' ) {
-            $pdf->SetFillColor(230, 230, 230);
-        } else {
-            $pdf->SetFillColor(255, 255, 255);
-        }
-*/
         $pdf->MultiCell( $col * 4, $lh, $row['nome'], $brdc, 'L', 0, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 
 //	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
@@ -487,3 +528,5 @@
 	} else {
 	    $pdf->Output( $dobj.'.pdf', 'I');								// invia l'output al browser
 	}
+
+*/

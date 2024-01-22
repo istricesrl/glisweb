@@ -70,6 +70,15 @@
                             $nome = 'documento creato automaticamente per il ' . ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'pagamento #' . $pagamento['id_pagamento'] . ' ' : NULL ) . 'carrello #' . $pagamento['id_carrello'] . ' anagrafica #'. $pagamento['destinatario_id_anagrafica'] .' (' . $pagamento['destinatario'] . ')';
                             $sezionale = 'C/' . date('Y');
                             $emittente = trovaIdAziendaGestita();
+
+                            // debug
+                            // var_dump( $emittente );
+
+                            // debug
+                            if( empty( $emittente ) ) {
+                                die( 'impossibile trovare l\'azienda gestita' );
+                            }
+
                             $idSedeEmittente = anagraficaGetIdSedeLegale( $emittente );
                             $idSedeDestinatario = anagraficaGetIdSedeLegale( $pagamento['destinatario_id_anagrafica'] );
                             $numero = generaProssimoNumeroDocumento( $_REQUEST['__pagamenti__']['fatturazione_id_tipologia_documento'], $sezionale, $emittente );
@@ -127,7 +136,7 @@
                             $idPagamento = mysqlInsertRow(
                                 $cf['mysql']['connection'],
                                 array(
-                                    'id' => $pagamento['id_pagamento'],
+                                    'id' => ( ( ! empty( $pagamento['id_pagamento'] ) ) ? $pagamento['id_pagamento'] : null ),
                                     'id_documento' => $idDocumento,
                                     'timestamp_pagamento' => time(),
                                     'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
@@ -236,7 +245,7 @@
                     'concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, '.
                     'concat_ws( " ", prodotti.nome, articoli.nome, " rata del ", pagamenti.data_scadenza ) AS descrizione, '.
                     'carrelli.id AS id_carrello, carrelli.fatturazione_id_tipologia_documento, '.
-                    'carrelli_articoli.id, carrelli_articoli.id_articolo, carrelli_articoli.destinatario_id_anagrafica '.
+                    'carrelli_articoli.id, carrelli_articoli.id_articolo, carrelli_articoli.destinatario_id_anagrafica, carrelli_articoli.prezzo_lordo_finale '.
                     'FROM pagamenti '.
                     'INNER JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli '.
                     'INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello '.
@@ -282,6 +291,7 @@
 
                 // totale già pagato
                 $riga['totale_lordo_pagato'] = 0;
+                $riga['totale_lordo_rateizzato'] = 0;
                 $riga['documenti_da_stampare'] = array();
 
                 // calcolo il totale già pagato
@@ -326,11 +336,13 @@
                 );
 
                 // calcolo il totale già pagato
-                foreach( $rate as $rata ) {
+                if( is_array( $rate ) ) {
+                    foreach( $rate as $rata ) {
 
-                    // aggiungo il totale della riga
-                    $riga['totale_lordo_rateizzato'] += $rata['importo_lordo_totale'];
-
+                        // aggiungo il totale della riga
+                        $riga['totale_lordo_rateizzato'] += $rata['importo_lordo_totale'];
+    
+                    }
                 }
 
                 // totale da pagare

@@ -34,6 +34,22 @@
     }
 
     // tendina categorie progetti
+	$ct['etc']['select']['periodicita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM periodicita_view ORDER BY id'
+	);
+
+    // tendina categorie progetti
+	$ct['etc']['select']['giorni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM giorni_view ORDER BY id'
+	);
+
+    // tendina categorie progetti
 	$ct['etc']['select']['materie'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -61,6 +77,22 @@
             if( $m['nome'] == 'durata_mesi' ) {
                 $ct['etc']['sub']['durata_mesi'] = $m;
                 $ct['etc']['sub']['durata_mesi']['idx'] = $k;
+            }
+        }
+    }
+
+    // metadato di default per il numero di accessi dell'abbonamento
+    $ct['etc']['sub']['minimo_iscritti'] = array(
+        'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) : 1 ),
+        'nome' => 'minimo_iscritti'
+    );
+
+    // ricerca metadato per il numero di accessi dell'abbonamento
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
+        foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
+            if( $m['nome'] == 'minimo_iscritti' ) {
+                $ct['etc']['sub']['minimo_iscritti'] = $m;
+                $ct['etc']['sub']['minimo_iscritti']['idx'] = $k;
             }
         }
     }

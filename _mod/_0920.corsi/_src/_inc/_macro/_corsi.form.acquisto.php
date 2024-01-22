@@ -141,6 +141,22 @@
             'fa' => 'fa-plus-circle'
         );
 
+        // tendina tipologia abbonamento
+        $ct['etc']['select']['periodicita'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM periodicita_view ORDER BY giorni ASC'
+        );
+
+        // tendina tipologia abbonamento
+        $ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM reparti_view'
+        );
+
         // tendina id_tipologia_pubblicazioni
         $ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
@@ -148,7 +164,7 @@
             $cf['mysql']['connection'],
             'SELECT id, __label__ FROM tipologie_pubblicazioni_view'
         );
-
+/*
         $ct['etc']['select']['periodi'] = array(
             array( 'id' => 'totale', '__label__' => 'totale' ),
             array( 'id' => 'quadrimestrale', '__label__' => 'quadrimestrale' ),
@@ -158,7 +174,7 @@
             array( 'id' => 'settimanale', '__label__' => 'settimanale' ),
             array( 'id' => 'giornata', '__label__' => 'giornata' )
         );
-
+*/
         if( isset($_REQUEST[ $ct['form']['table'] ]['id_prodotto']) ){
             $_REQUEST['prodotti']['pubblicazioni'] = mysqlQuery(
                 $cf['mysql']['connection'],

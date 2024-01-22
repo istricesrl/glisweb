@@ -781,17 +781,27 @@
 	// composizione della query
 	    $q = 'INSERT IGNORE INTO ' . $t . ' (' . implode( ',', $fieldsInsert ) . ') SELECT ' . str_repeat( '?,', count( $fieldsChanged ) ) . implode( ',', $fieldsCopied ) . ' FROM ' . $t . ' WHERE id = ?';
 
-	// esecuzione della query
-		$id = mysqlQuery( $c, $q, $values );
+	// NOTA perché sono stati scambiati $id e $n? è corretto o andava bene prima?
 
+	// esecuzione della query
+		// $id = mysqlQuery( $c, $q, $values );
+		$n = mysqlQuery( $c, $q, $values );
+
+/*
 		if( empty( $id ) ){
 			$id = $n;
+		}
+*/
+
+		if( empty( $n ) ){
+			$n = $id;
 		}
 
 	// popolo l'oggetto
 		$y = mysqlSelectRow(
 			$c, 'SELECT * FROM ' . $t . ' WHERE id = ?',
-			array( array( 's' => $id ) )
+//			array( array( 's' => $id ) )
+			array( array( 's' => $n ) )
 		);
 
 	// debug
@@ -801,7 +811,8 @@
 	    // print_r( $fields );
 
 	// ritorno l'id nel nuovo record inserito
-	    return $id;
+//	    return $id;
+	    return $n;
 
     }
 

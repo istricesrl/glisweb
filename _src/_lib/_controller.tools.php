@@ -708,6 +708,7 @@ foreach( $x as $ref ) {
 				glob( path2custom( $cb . $cn ), GLOB_BRACE ),
 				glob( path2custom( $cm . $cn ), GLOB_BRACE )
 			    );
+				logWrite( print_r( $ct, true ), 'controllers/' . $t, LOG_ERR );
 			    foreach( $ct as $f ) { require $f; }
 
 			// svuotamento o integrazione del blocco dati

@@ -176,6 +176,9 @@
 		'periodi' => array(
 			CONTROL_FULL => array( 'roots', 'staff' )
 		),
+		'orari' => array(
+			CONTROL_FULL => array( 'roots', 'staff' )
+		),
 #		'progetti_anagrafica' => array(
 #			CONTROL_FULL => array( 'roots' ),
 #			CONTROL_FILTERED => array( 'staff' )

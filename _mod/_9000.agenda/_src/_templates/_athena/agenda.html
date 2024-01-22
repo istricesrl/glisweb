@@ -108,6 +108,7 @@
 	    </div>
 	</div>
     {% endfor %}
+
     {% for e in etc.agenda_da_fissare.todo %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
         <div class="col-1 lemma text-right">
@@ -176,12 +177,14 @@
         </div>
     </div>
     {% set ora_old = ora %}
+    
     {% endif %}
     {% if e.entita == 't' %}
     <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
         <div class="col-1 lemma text-right">
             <p>&mdash;</p>
         </div>
+        
         <div class="col">
             <div class="form-row">
                 <div class="col">
@@ -195,6 +198,7 @@
     </div>
     {% endif %}
     {% endfor %}
+    
     {% endfor %}
 </fieldset>
 {% endif %}

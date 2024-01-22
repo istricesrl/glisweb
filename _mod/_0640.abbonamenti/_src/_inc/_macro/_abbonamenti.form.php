@@ -131,7 +131,7 @@
 
     $ct['etc']['include']['insert'][] = array(
         'name' => 'insert',
-        'file' => 'inc/tesseramenti.form.rinnovi.insert.html',
+        'file' => 'inc/abbonamenti.form.rinnovi.insert.html',
         'fa' => 'fa-plus-circle'
     );
 
@@ -140,7 +140,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM tipologie_rinnovi_view WHERE se_tesseramenti = 1'
+        'SELECT id, __label__ FROM tipologie_rinnovi_view WHERE se_abbonamenti = 1'
     );
 
 	$ct['etc']['select']['materie'] = mysqlCachedIndexedQuery(
@@ -156,6 +156,51 @@
 
     // gestione default
     require DIR_SRC_INC_MACRO . '_default.view.php';
+
+    // azioni
+    foreach( $ct['view']['data'] as &$row ) {
+        if( is_array( $row ) ) {
+            $pagato = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT documenti_articoli.id FROM documenti_articoli INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento INNER JOIN pagamenti ON pagamenti.id_documento = documenti.id WHERE id_rinnovo = ? AND pagamenti.timestamp_pagamento IS NOT NULL', array( array( 's' => $row['id'] ) ) );
+            if( empty( $pagato ) ) {
+                $articolo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT articoli.id FROM articoli INNER JOIN metadati ON metadati.id_articolo = articoli.id WHERE metadati.nome = "acquisto_rinnovi|id_tipologia" AND metadati.testo = ?', array( array( 's' => $row['id_tipologia'] ) ) );
+                if( isset( $_REQUEST[ $ct['form']['table'] ]['contratti_anagrafica'][0]['id_anagrafica'] ) ) {
+                    $ordinato = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT carrelli.id FROM carrelli_articoli INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello WHERE id_articolo = ? AND carrelli_articoli.destinatario_id_anagrafica = ? AND carrelli.session = ?', array( array( 's' => $articolo ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['contratti_anagrafica'][0]['id_anagrafica'] ), array( 's' => $cf['session']['id'] ) ) );
+                    if( empty( $ordinato ) ) {
+                        $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/4170.ecommerce/aggiungi.al.carrello?__carrello__[__articolo__][id_articolo]='.$articolo.'&__carrello__[__articolo__][destinatario_id_anagrafica]='.$_REQUEST[ $ct['form']['table'] ]['contratti_anagrafica'][0]['id_anagrafica'].'\', aggiornaCarrello );"><span class="media-left"><i class="fa fa-cart-plus"></i></span></a>';
+                    }
+                }
+            }
+        }
+    }
+
+	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ) {
+
+        $idProdotto = mysqlSelectValue(
+			$cf['mysql']['connection'],
+            'SELECT id_prodotto FROM tipologie_contratti WHERE id = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) )
+        );
+
+        $ct['etc']['rinnovi_da_pagare'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT rinnovi.*, articoli.id AS id_articolo, format( prezzi.prezzo, 2, "it_IT" ) AS prezzo, tipologie_rinnovi.nome AS tipologia, prezzi.id_iva FROM rinnovi 
+            LEFT JOIN documenti_articoli ON documenti_articoli.id_rinnovo = rinnovi.id 
+            LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id 
+            LEFT JOIN articoli ON articoli.id_prodotto = ? AND articoli.id_tipologia_rinnovo = rinnovi.id_tipologia
+            LEFT JOIN prezzi ON prezzi.id_articolo = articoli.id AND prezzi.id_listino = 1
+            LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
+            WHERE rinnovi.id_contratto = ? AND documenti_articoli.id IS NULL AND carrelli_articoli.id IS NULL
+            GROUP BY rinnovi.id',
+            array(
+                array( 's' => $idProdotto ),
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
+            )
+        );
+
+        // debug
+        // print_r( $ct['etc']['rinnovi_da_pagare'] );
+
+    }
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

@@ -81,6 +81,15 @@ ul.combobox-dropdown li:hover {
     background-color: #dddddd;
 }
 
+div.combobox-container > .spinner-border {
+    position: absolute;
+    right: 0.5em;
+    height: 1.1em;
+    width: 1.1em;
+    top: 0.5em;
+    display: none;
+}
+
 div.combobox-container > input.selectbox-input {
     margin: 0px;
 }

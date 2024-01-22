@@ -134,8 +134,9 @@
 
                     // ...
                     if( ! empty( $idDestinatario ) ) {
-
+/*
                         // aggiornamento
+			// TODO verificare che il codice non sia vuoto prima di fare l'aggiornamento
                         mysqlQuery(
                             $cf['mysql']['connection'],
                             'UPDATE anagrafica SET codice = ? WHERE id = ?',
@@ -144,7 +145,7 @@
                                 array( 's' => $idDestinatario )
                             )
                         );
-
+*/
                         // status
                         $job['workspace']['status']['info'][] = 'assegno il codice ' . $job['riga']['codice'] . ' al cliente ' . $idDestinatario . ' per la riga ' . $job['corrente'];
 

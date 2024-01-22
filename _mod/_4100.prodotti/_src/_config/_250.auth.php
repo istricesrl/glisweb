@@ -21,11 +21,13 @@
 	    array(
              'prodotti' => array(
                 CONTROL_FULL => array( 'roots' ),              
-                CONTROL_FILTERED => array( 'staff' )
+                CONTROL_FILTERED => array( 'staff' ),
+                METHOD_GET => array( 'users' )
             ),
             'articoli' => array(
                 CONTROL_FULL => array( 'roots' ),              
-                CONTROL_FILTERED => array( 'staff' )
+                CONTROL_FILTERED => array( 'staff' ),
+                METHOD_GET => array( 'users' )
             ),
 #            'coupon' => array(
 #                CONTROL_FULL => array( 'roots' ),

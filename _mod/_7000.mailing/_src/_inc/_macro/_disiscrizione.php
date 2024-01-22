@@ -39,7 +39,7 @@
             $ct['page']['h1']['it-IT'] = 'disiscrizione dalla newsletter fallita';
 
             // ...
-            $ct['page']['content']['it-IT'] = 'impossibile effettuare la disiscrizione dalla newsletter con i dati forniti, contattare il supporto tecnico per risolvere il problema';
+            $ct['page']['content']['it-IT'] = 'impossibile effettuare la disiscrizione dalla newsletter con i dati forniti ('.$row['indirizzo'].'), contattare il supporto tecnico per risolvere il problema';
 
         }
 

@@ -46,6 +46,14 @@
 	    'SELECT id, __label__ FROM tipologie_rinnovi_view'
     );
 
+     // tendina anagrafica
+     $ct['etc']['select']['periodicita'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM periodicita_view'
+    );
+
     // debug
     // print_r( $ct['etc']['select']['contratti'] );
 

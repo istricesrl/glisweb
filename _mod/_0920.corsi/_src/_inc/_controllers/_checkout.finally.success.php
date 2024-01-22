@@ -32,6 +32,26 @@
         // print_r( $carrello );
         // print_r( $articoli );
 
+        /**
+         * NOTA IMPORTANTE!!!
+         * 
+         * La Melania ha detto che la logica per cui il rinnovo viene creato dopo il checkout non va più bene O MEGLIO va bene per l'acquisto online mentre per l'acquisto in segreteria
+         * il rinnovo va creato al momento e poi pagato dopo QUINDI bisogna gestire i due casi:
+         * 
+         * 1) il carrello contiene il pagamento di un contratto senza rinnovo e quindi bisogna creare il rinnovo e poi associarlo al documento
+         * 
+         * 2) il carrello contiene il pagamento di un rinnovo, quindi si passa direttamente ad associare quel rinnovo al documento
+         * 
+         * ATTENZIONE questo ragionamento vale anche per i tesseramenti e gli abbonamenti!
+         * 
+         * NOTA il collegamento fra documenti e rinnovi è dato dal campo id_rinnovo della tabella documenti_articoli.
+         * 
+         * NOTA il collegamento fra carrelli e rinnovi è dato dal campo id_rinnovo della tabella carrelli_articoli.
+         * 
+         * 
+         */
+
+
         // cerco gli articoli che aggiungono crediti
         foreach( $articoli as $articolo ) {
 
@@ -54,11 +74,21 @@
                 // dati del corso associato
                 $corso = $info['id'];
                 $inizio = $info['data_accettazione'];
-
+/*
                 // recupero il periodo di iscrizione
                 $periodo = mysqlSelectValue(
                     $cf['mysql']['connection'],
                     'SELECT testo FROM metadati WHERE id_articolo = ? AND nome = "periodo_iscrizione"',
+                    array(
+                        array( 's' => $articolo['id_articolo'] )
+                    )
+                );
+*/
+
+                // ...
+                $giorni = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT periodicita.giorni FROM periodicita INNER JOIN articoli ON periodicita.id = articoli.id_periodicita WHERE articoli.id = ?',
                     array(
                         array( 's' => $articolo['id_articolo'] )
                     )
@@ -78,7 +108,7 @@
                     ),
                     'contratti'
                 );
-
+/*
                 // determino la durata dell'iscrizione
                 switch( $periodo ) {
                     case 'quadrimestrale':
@@ -103,6 +133,10 @@
                         $incremento = NULL;
                         break;
                 }
+*/
+
+                // ...
+                $incremento = '+' . $giorni . ' days';
 
                 // creo il rinnovo per il periodo di iscrizione
                 $rinnovo = mysqlInsertRow(
@@ -119,7 +153,7 @@
                 );
 
                 // se il carrello è pagato...
-                if( ! empty( $carrello['timestamp_pagamento']) ) {
+                if( ! empty( $carrello['timestamp_pagamento'] ) ) {
 
                     // iscrivo la persona alle lezioni
                     mysqlQuery(

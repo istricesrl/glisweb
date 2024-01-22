@@ -208,6 +208,12 @@ main p {
     margin: 1em 0em;
 }
 
+.annunci h1,
+.annunci h2,
+.annunci p {
+    margin: 0em;
+}
+
 main .form-login h1,
 main .form-login h2,
 main .form-login p\ {
@@ -216,4 +222,15 @@ main .form-login p\ {
 
 .form-control-sm {
     margin-bottom: 1.5em;
+}
+
+fieldset legend {
+    font-size: 1.5em;
+    font-weight: bold;
+    border-bottom: 2px solid #333333;
+    margin-bottom: 1em;
+}
+
+.divSelected {
+    background-color: #dddddd;
 }

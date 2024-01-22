@@ -344,14 +344,15 @@
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_lordo_totale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_lordo_unitario'] * $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['quantita'];
 
                     // TODO calcolo e applico lo sconto per riga
-                    if( ! empty( $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_percentuale'] ) ) {
+                    if( ! empty( $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_percentuale'] ) && is_numeric( $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_percentuale'] ) ) {
                         $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_valore'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_lordo_totale'] / 100 * $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_percentuale'];
                     } else {
                         $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_valore'] = 0;
                     }
 
                     // TODO trovo i prezzi finali
-                    // TODO considerare lo sconto sul netto
+                    // TODO calcolare correttamente lo sconto sul netto
+                    $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_netto_totale'] - $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_valore'];
                     $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['prezzo_lordo_totale'] - $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['sconto_valore'];
 
                     // aggiorno la riga
@@ -391,6 +392,7 @@
 
                     // debug
                     // echo $_SESSION['carrello']['prezzo_lordo_finale'] . PHP_EOL;
+                    // die( print_r( $_SESSION['carrello'] ) );
 
                     // log
                     logWrite( 'aggiornato articolo ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['id_articolo'] . ' nel carrello ' . $_SESSION['carrello']['articoli'][ $dati['id_articolo'].$dati['destinatario_id_anagrafica'] ]['id_carrello'], 'cart' );

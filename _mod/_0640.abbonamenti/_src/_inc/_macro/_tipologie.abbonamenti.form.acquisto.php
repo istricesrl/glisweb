@@ -83,7 +83,7 @@
             'nome' => 'text-left',
             'id_prodotto' => 'd-none'
         );
-
+/*
         $ct['etc']['select']['periodi'] = array(
             array( 'id' => 'totale', '__label__' => 'totale' ),
             array( 'id' => 'quadrimestrale', '__label__' => 'quadrimestrale' ),
@@ -92,6 +92,23 @@
             array( 'id' => 'mensile', '__label__' => 'mensile' ),
             array( 'id' => 'settimanale', '__label__' => 'settimanale' ),
             array( 'id' => 'giornata', '__label__' => 'giornata' )
+        );
+*/
+
+        // tendina tipologia abbonamento
+        $ct['etc']['select']['periodicita'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM periodicita_view ORDER BY giorni ASC'
+        );
+
+        // tendina tipologia abbonamento
+        $ct['etc']['select']['reparti'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM reparti_view'
         );
 
         // pagina per la gestione degli oggetti esistenti

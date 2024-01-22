@@ -29,11 +29,16 @@
     // scompongo l'indirizzo manuale
     $status['elementi'] = array_map( 'trim', explode( '|', $status['row']['indirizzo'] ) );
 
+    // se lo stato è vuoto, metto default a IT
+    if( empty( $status['elementi'][5] ) ) {
+        $status['elementi'][5] = 'IT';
+    }
+
     // cerco lo stato
     $status['trovati']['id_stato'] = mysqlSelectValue(
         $cf['mysql']['connection'],
-        'SELECT id FROM stati WHERE iso31661alpha2 = ?',
-        array( array( 's' => $status['elementi'][5] ) )
+        'SELECT id FROM stati WHERE iso31661alpha2 = ? OR nome = ?',
+        array( array( 's' => $status['elementi'][5] ), array( 's' => $status['elementi'][5] ) )
     );
 
 	// cerco i possibili comuni

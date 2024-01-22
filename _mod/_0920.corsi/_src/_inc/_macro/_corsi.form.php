@@ -19,7 +19,7 @@
      *
      */
 
-     // tabella gestita
+    // tabella gestita
 	$ct['form']['table'] = 'progetti';
 
     // tendina periodi
@@ -212,8 +212,10 @@
 
     // metadato sconto secondo corso
     $ct['etc']['metadati'] = array(
+        'iscritti_min' => array(),
         'iscritti_max' => array(),
         'recuperi_max' => array(),
+        'prenotabile_online' => array(),
         'non_applicare_sconti' => array(),
         'non_disponibile_per_recuperi' => array()
     );

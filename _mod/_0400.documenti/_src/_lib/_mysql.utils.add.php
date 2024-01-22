@@ -237,6 +237,12 @@
 
                 }
 
+                $riga['dettagli']['abbonamento'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT tipologie_contratti.* FROM tipologie_contratti INNER JOIN prodotti ON prodotti.id = tipologie_contratti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ? AND tipologie_contratti.se_abbonamento IS NOT NULL',
+                    array( array( 's' => $riga['id_articolo'] ) )
+                );
+
                 $riga['dettagli']['tesseramento'] = mysqlSelectRow(
                     $cf['mysql']['connection'],
                     'SELECT tipologie_contratti.* FROM tipologie_contratti INNER JOIN prodotti ON prodotti.id = tipologie_contratti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ? AND tipologie_contratti.se_tesseramento IS NOT NULL',
