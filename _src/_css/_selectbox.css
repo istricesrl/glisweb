@@ -54,7 +54,7 @@ div.combobox-container {
 }
 
 ul.combobox-dropdown {
-    background-color: #eeeeee;
+    background-color: #cccccc;
     border: 1px solid #dddddd;
     border-bottom-right-radius: 0.2rem;
     border-bottom-left-radius: 0.2rem;
@@ -81,3 +81,6 @@ ul.combobox-dropdown li:hover {
     background-color: #dddddd;
 }
 
+div.combobox-container > input.selectbox-input {
+    margin: 0px;
+}

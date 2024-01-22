@@ -67,62 +67,84 @@
         // timer
         timerCheck( $cf['speed'], 'fine selezione job pinnato' );
 
-        // se il job è stato correttamente recuperato dal database
-        if( isset( $job['workspace'] ) ) {
+        // ...
+        if( is_array( $job ) ) {
 
-            // status
-            $status['info'][] = 'lavoro il job #' . $job['id'];
+            // se il job è stato correttamente recuperato dal database
+            if( isset( $job['workspace'] ) && ! empty( $job['workspace'] ) ) {
 
-            // log
-            logWrite( 'workspace per il job #' . $job['id'] . print_r( $job['workspace'], true ), 'job' );
+                // status
+                $status['info'][] = 'lavoro il job #' . $job['id'];
 
-            // decodifica del workspace
-            $job['workspace'] = json_decode( $job['workspace'], true );
+                // log
+                logWrite( 'workspace per il job #' . $job['id'] . print_r( $job['workspace'], true ), 'job' );
 
-            /* ITERAZIONI */
-            if( ! empty( $job['iterazioni'] ) ) {
+                // decodifica del workspace
+                $job['workspace'] = json_decode( $job['workspace'], true );
 
-                /* CODICE PRINCIPALE DEL JOB */
-                if( file_exists( DIR_BASE . $job['job'] ) ) {
-                    require DIR_BASE . $job['job'];
+                /* ITERAZIONI */
+                if( ! empty( $job['iterazioni'] ) ) {
+
+                    /* CODICE PRINCIPALE DEL JOB */
+                    if( file_exists( DIR_BASE . $job['job'] ) ) {
+                        require DIR_BASE . $job['job'];
+                    } else {
+                        die( 'file non trovato ' . DIR_BASE . $job['job'] );
+                    }
+
+                    // delay
+                    if( $job['iterazioni'] > 1 ) {
+                        sleep( ( isset( $job['delay'] ) && ! empty( $job['delay'] ) ) ? $job['delay'] : mt_rand( 1, 2 ) );
+                        timerCheck( $cf['speed'], 'fine delay job' );
+                    }
+
                 } else {
-                    die( 'file non trovato ' . DIR_BASE . $job['job'] );
+
+                    $status['err'][] = 'numero di iterazioni vuoto';
+
                 }
 
-                // delay
-                if( $job['iterazioni'] > 1 ) {
-                    sleep( ( isset( $job['delay'] ) && ! empty( $job['delay'] ) ) ? $job['delay'] : mt_rand( 1, 2 ) );
-                    timerCheck( $cf['speed'], 'fine delay job' );
-                }
+                // aggiorno la tabella di avanzamento lavori
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
+                    array(
+                        array( 's' => time() ),
+                        array( 's' => json_encode( $job['workspace'] ) ),
+                        array( 's' => $job['id'] )
+                    )
+                );
+
+                // timer
+                timerCheck( $cf['speed'], 'fine aggiornamento avanzamento job' );
+
+                // ...
+                writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+                writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . microtime( true ) . '.log' );
+
+                // timer
+                timerCheck( $cf['speed'], 'fine scrittura log job' );
 
             } else {
 
-                $status['err'][] = 'numero di iterazioni vuoto';
+                // status
+                $status['info'][] = 'workspace vuoto per il job #' . $job['id'];
+
+                // log
+                logWrite( 'workspace vuoto per il job #' . $job['id'], 'job' );
 
             }
 
-            // aggiorno la tabella di avanzamento lavori
-            mysqlQuery(
-                $cf['mysql']['connection'],
-                'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
-                array(
-                    array( 's' => time() ),
-                    array( 's' => json_encode( $job['workspace'] ) ),
-                    array( 's' => $job['id'] )
-                )
-            );
+            // log
+            appendToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $_REQUEST['__id__'] . '.log' );
 
-            // timer
-            timerCheck( $cf['speed'], 'fine aggiornamento avanzamento job' );
-
-            // ...
-            writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
-            writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . microtime( true ) . '.log' );
-
-            // timer
-            timerCheck( $cf['speed'], 'fine scrittura log job' );
+            // output
+            buildJson( array_replace_recursive( $job, $status ) );
 
         } else {
+
+            // status
+            $status['info'][] = 'impossibile ottenere il lock per il job #' . $_REQUEST['__id__'] . ', vado in modalità informazioni sullo stato';
 
             // status
             $status = array_replace_recursive(
@@ -139,13 +161,18 @@
             // status
             $status['info'][] = 'informazioni avanzamento lavori per il token ' . $status['token'];
 
-            // log
-            logWrite( 'informazioni avanzamento lavori per il token ' . $status['token'], 'job' );
+            // output
+            buildJson( $status );
 
         }
 
+    } else {
+
+        // status
+        $status['err'][] = 'ID job non specificato';
+
         // output
-        buildJson( array_replace_recursive( $job, $status ) );
+        buildJson( $status );
 
     }
 

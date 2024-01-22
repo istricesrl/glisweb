@@ -40,8 +40,8 @@ else
     if [[ -n "$1" ]]; then
 
         # faccio il backup della cartella corrente
-        rm -rf ../backup.tar.gz
-        tar -cvzf ../backup.tar.gz --exclude='var/log/*' --exclude='var/cache/*' .
+        # rm -rf ../backup.tar.gz
+        tar -cvzf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz --exclude='var/log/*' --exclude='var/cache/*' .
 
         # branch da scaricare
         BRANCH=$1

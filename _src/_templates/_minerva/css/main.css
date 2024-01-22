@@ -48,13 +48,16 @@ header a:active {
 
 header nav.navbar-light li.nav-item > a.nav-link,
 header nav.navbar-light li.nav-item > a.nav-link:visited {
+    border: 0px solid #333333;
     color: #333333;
+    height: 2em;
     font-weight: bold;
     transition: background-color 100ms linear;
     padding: 0.15em 0.75em;
 }
 
 header nav.navbar-light li.nav-item.current > a.nav-link {
+    border: 0px solid #333333;
     background-color: #333333;
     color: #ffffff;
     text-decoration: none;
@@ -63,8 +66,40 @@ header nav.navbar-light li.nav-item.current > a.nav-link {
 header nav.navbar-light li.nav-item.active > a.nav-link,
 header nav.navbar-light li.nav-item > a.nav-link:hover,
 header nav.navbar-light li.nav-item > a.nav-link:active {
+    border: 0px solid #333333;
     background-color: #333333;
     color: #ffffff;
+    text-decoration: none;
+    transition: background-color 100ms linear;
+}
+
+header nav.navbar-light ul.icons li.nav-item > a.nav-link,
+header nav.navbar-light ul.icons li.nav-item > a.nav-link:visited {
+    border: 0px solid #333333;
+    background-color: #333333;
+    color: #ffffff;
+    border-radius: 0px;
+    font-size: 1em;
+    width: 2em;
+    height: 2em;
+    font-weight: bold;
+    transition: background-color 100ms linear;
+    padding: 0.15em 0.75em;
+}
+
+header nav.navbar-light ul.icons li.nav-item.current > a.nav-link {
+    border: 0px solid #ffffff;
+    background-color: #ffffff;
+    color: #333333;
+    text-decoration: none;
+}
+
+header nav.navbar-light ul.icons li.nav-item.active > a.nav-link,
+header nav.navbar-light ul.icons li.nav-item > a.nav-link:hover,
+header nav.navbar-light ul.icons li.nav-item > a.nav-link:active {
+    border: 0px solid #ffffff;
+    background-color: #ffffff;
+    color: #333333;
     text-decoration: none;
     transition: background-color 100ms linear;
 }
@@ -73,14 +108,21 @@ header .btn-sqr {
     border-radius: 0px;
     font-size: 1em;
     width: 2em;
+    height: 2em;
 }
 
 header .btn-sqr,
-header .btn-sqr:visited,
-header .btn-sqr:hover,
-header .btn-sqr:active {
+header .btn-sqr:visited {
+    border: 0px solid #333333;
     background-color: #333333;
     color: #ffffff;
+}
+
+header .btn-sqr:hover,
+header .btn-sqr:active {
+    border: 0px solid #ffffff;
+    background-color: #ffffff;
+    color: #333333;
 }
 
 div.subnav a,
