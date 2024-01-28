@@ -43,6 +43,7 @@ find . -name 'var'          -exec chown -R $FTPUSER:www-data {} \;
 # TODO fare un po' meglio e distinguere fra cartelle 775 e file 664
 find . -name 'templates'	-exec chmod -R 775 {} \;
 find . -name 'var'	        -exec chmod -R 775 {} \;
+find . -name 'hooks'		-exec chmod -R ug+x {} \;
 
 ## cartella .git
 if [ -d ".git" ]; then
