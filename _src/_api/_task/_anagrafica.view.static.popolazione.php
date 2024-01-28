@@ -21,6 +21,33 @@
 			LIMIT 1'
 		);
 
+		// verifico le tabelle collegate
+		if( empty( $status['aggiornare'] ) ) {
+
+			// ...
+			$aggiornare = array();
+
+			// tabelle collegate
+			foreach( array( 'anagrafica_categorie' ) as $table ) {
+
+				// trovo una riga da aggiornare
+				$aggiornare[] = mysqlSelectValue(
+					$cf['mysql']['connection'],
+					'SELECT ' . $table . '.id_anagrafica 
+					FROM ' . $table . ' 
+					LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = ' . $table . '.id_anagrafica
+					WHERE coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento ) > anagrafica_view_static.timestamp_aggiornamento 
+					OR anagrafica_view_static.timestamp_aggiornamento IS NULL
+					LIMIT 1'
+				);
+
+			}
+
+			// ...
+			$status['aggiornare']['id'] = max( $aggiornare );
+
+		}
+
 		// ...
 		if( ! empty( $status['aggiornare']['id'] ) ) {
 			updateAnagraficaViewStatic(

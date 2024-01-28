@@ -60,6 +60,7 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static'
     );
+
 /*
     // tendina categorie attivita
 	$ct['etc']['select']['categorie_attivita'] = mysqlCachedIndexedQuery(

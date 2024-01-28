@@ -39,6 +39,7 @@
 	define( 'FILE_CACHE_PAGE_LIMIT', ( strtotime( '-' . ( 18 + rand( 0, 6 ) ) . ' hours' ) ) );
 	define( 'FILE_CACHE_PAGE_TIME', ( file_exists( $cachefile ) ) ? filemtime( $cachefile ) : NULL );
 
+    // se il file di cache esiste e non è scaduto
 	if( FILE_CACHE_PAGE_TIME > FILE_CACHE_PAGE_LIMIT ) {
 	    $cacheinfo = PHP_EOL .
 		'<!-- cached: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_TIME ) . ' -->'		. PHP_EOL .
