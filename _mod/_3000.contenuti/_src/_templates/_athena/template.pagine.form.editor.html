@@ -51,12 +51,20 @@
             <fieldset class="d-flex flex-column flex-fill">
                 <legend>dati generali <small>{{ legend }}</small></legend>
 
+                {% if request.__template_files__ %}
                 <div class="form-group form-row d-flex flex-fill">
                     <div class="col-12 d-flex flex-fill">
                         <span class="label-top">contenuto del file</span>
                         {{ frm.textarea( '__template_files__', '', '', 'contenuto', '', 3, request ) }}
                     </div>
                 </div>
+                {% else %}
+                <div class="form-group form-row d-flex flex-fill">
+                    <div class="col-12 d-flex flex-fill">
+                        <p>selezionare un file da modificare</p>
+                    </div>
+                </div>
+                {% endif %}
 
             </fieldset>
 
