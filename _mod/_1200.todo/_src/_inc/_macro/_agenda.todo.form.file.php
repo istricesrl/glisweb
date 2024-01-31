@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'attivita';
+	$ct['form']['table'] = 'todo';
 
     // sotto tabella gestita
 	$ct['form']['subtable'] = 'file';
@@ -35,32 +35,6 @@
 
     // tendina lingue
     $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
-
-    // integro gli allegati
-    if( ! empty( $_REQUEST[ $ct['form']['table'] ]['id_todo'] ) ) {
-
-        // ...
-        $allegatiTodo = mysqlQuery(
-            $cf['mysql']['connection'],
-            'SELECT * FROM file WHERE id_todo = ?',
-            array(
-                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_todo'] )
-            )
-        );
-
-        // ...
-        $_REQUEST[ $ct['form']['table'] ]['file'] = ( isset( $_REQUEST[ $ct['form']['table'] ]['file'] ) )
-            ?
-            array_merge(
-                $_REQUEST[ $ct['form']['table'] ]['file']
-                ,
-                $allegatiTodo
-            )
-            :
-            $allegatiTodo
-        ;
-
-    }
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

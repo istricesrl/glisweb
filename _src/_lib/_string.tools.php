@@ -544,3 +544,15 @@
         }
 
     }
+
+    /**
+     * questa funzione rimuove da una stringa tutti i caratteri diversi da numeri, vigola e punto
+     * 
+     * @todo documentare
+     * 
+     */
+    function extractNumber( $string ) {
+
+        return preg_replace( '/[^0-9\.\,]/', '', $string );
+
+    }
