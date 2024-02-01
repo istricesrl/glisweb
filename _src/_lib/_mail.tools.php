@@ -31,7 +31,7 @@
      * @todo finire di documentare
      *
      */
-    function sendMail( $host, $from, $to, $oggetto, $corpo, $cc = array(), $bcc = array(), $attach = array(), $headers = array(), $user = NULL, $pasw = NULL, $port = 25 ) {
+    function sendMail( $host, $from, $to, $oggetto, $corpo, $cc = array(), $bcc = array(), $attach = array(), $headers = array(), $user = NULL, $pasw = NULL, $port = 25, $dkim_domain = NULL, $dkim_pasw = NULL ) {
 
 	// log
 	    logWrite(
@@ -87,6 +87,7 @@
 	// configurazione dell'oggetto mail
 	    $mail->IsHTML			= true;
 	    $mail->CharSet			= 'UTF-8';
+		$mail->Encoding			= 'base64';
 
 	// mittente
 	    $mail->SetFrom( current( $from ), current( array_keys( $from ) ) );
@@ -130,6 +131,18 @@
 				}
 			}
 		}
+
+	// DKIM
+	if( ! empty( $dkim_domain ) ) {
+		$mail->DKIM_domain = $dkim_domain;
+		$mail->DKIM_private = DIR_BASE . 'etc/secret/' . $dkim_domain . '/dkim.private.pem';
+		$mail->DKIM_selector = 'glisweb';
+		$mail->DKIM_passphrase = $dkim_pasw;
+		$mail->DKIM_identity = $mail->From;
+		logWrite( 'DKIM: ' . $dkim_domain . ' ' . $dkim_pasw, 'dkim', LOG_DEBUG );
+		logWrite( 'DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG );
+		logWrite( 'DKIM: ' . readFromFile( $mail->DKIM_private ), 'dkim', LOG_DEBUG );
+	}
 
 	// invio
 	    $status = $mail->Send();
