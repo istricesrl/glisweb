@@ -316,8 +316,10 @@
                 }
 
                 // status
+                $job['workspace']['status']['info'][] = 'file: ' . $job['workspace']['file'];
                 $job['workspace']['status']['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
                 $job['workspace']['status']['info'][] = 'righe trovate: ' . $job['totale'];
+                $job['workspace']['status']['info'][] = 'colonne trovate: ' . implode( ', ', array_keys( $arr[0] ) );
 
             } else {
 
