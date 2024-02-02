@@ -74,6 +74,7 @@
 	    'anagrafica' => 'svolta da',
         'nome' => 'attività',
         'id_step' => 'ID step',
+	    'id_documento' => 'ID documento',
 	    'ore' => 'ore',
         'ora_inizio' => 'oi',
         'ora_fine' => 'of'
@@ -92,6 +93,7 @@
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left no-wrap',
         'id_step' => 'd-none',
+        'id_documento' => 'd-none',
         'ora_inizio' => 'd-none',
         'ora_fine' => 'd-none'
     );
