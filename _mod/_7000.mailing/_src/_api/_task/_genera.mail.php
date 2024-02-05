@@ -11,6 +11,11 @@
      *
      */
 
+    // debug
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    require '../../../../../_src/_config.php';
@@ -83,6 +88,11 @@
 			)
 		);
 
+		// debug
+		// print_r( $status );
+		// print_r( $_REQUEST );
+		// print_r( $row );
+
 	} else {
 
 		// prelevo una riga dalla coda
@@ -134,7 +144,8 @@
 			array( array( 's' => $row['id'] ) )
 		);
 
-#		 var_dump( $cnts );
+// var_dump( $cnts );
+// die();
 
 		// ciclo sui contenuti
 		foreach( $cnts as $cnt ) {
@@ -157,7 +168,7 @@
 
 		}
 
-		# var_dump($tpl );
+		// var_dump($tpl );
 		// prelevo gli allegati
 		$files = mysqlCachedQuery(
 			$cf['memcache']['connection'],
@@ -173,6 +184,9 @@
 			$tpl[ $file['ietf'] ]['attach'][ basename( $file['path'] ) ] = $file['path'];
 		}
 
+		// var_dump( $tpl );
+		// die();
+
 		// invio la mail
 		$invio = queueMailFromTemplate(
 			$cf['mysql']['connection'],
@@ -185,8 +199,9 @@
 			$cf['localization']['language']['ietf']
 		);
 
-#		echo 'invio';
-#		var_dump( $invio );
+		// echo 'invio';
+		// var_dump( $invio );
+		// die();
 
 		// aggiorno la coda
 		if( $invio ) {

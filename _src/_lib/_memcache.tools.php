@@ -51,6 +51,12 @@
 
             return false;
 
+        } elseif( ! is_object( $conn ) ) {
+
+            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
+
+            return false;
+
         } else {
 
             $conn->setOption( Memcached::OPT_COMPRESSION, true );
@@ -88,23 +94,26 @@
      * @todo documentare
      *
      */
-    function memcacheRead( $conn, $key, &$err = NULL ) {
+    // function memcacheRead( $conn, $key, &$err = Memcached::RES_FAILURE ) {
+    function memcacheRead( $conn, $key, &$err = array() ) {
 
 	memcacheUniqueKey( $key );
 
 	if( empty( $conn ) ) {
 
-        logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
+		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
 
 		return false;
 
+        } elseif( ! is_object( $conn ) ) {
+
+            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
+
+            return false;
+
 	} else {
 
-        if( empty( $err ) ) {
-            $err = Memcached::RES_FAILURE;
-        }
-
-        $r = $conn->get( $key );
+		$r = $conn->get( $key );
 
         $err = $conn->getResultCode();
 
@@ -125,19 +134,28 @@
      * @todo documentare
      *
      */
-    function memcacheDelete( $conn, $key, &$err = Memcached::RES_FAILURE ) {
+    // function memcacheDelete( $conn, $key, &$err = Memcached::RES_FAILURE ) {
+    function memcacheDelete( $conn, $key, &$err = array() ) {
 
-        memcacheUniqueKey( $key );
+	memcacheUniqueKey( $key );
 
-        if( empty( $conn ) ) {
+	if( empty( $conn ) ) {
+
+		logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
+
+		return false;
+
+        } elseif( ! is_object( $conn ) ) {
+
+            logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
 
             return false;
 
-        } else {
+	} else {
 
-            return $conn->delete( $key );
+	    return $conn->delete( $key );
 
-        }
+	}
 
     }
 
@@ -151,15 +169,24 @@
      */
     function memcacheFlush( $conn ) {
 
-        if( empty( $conn ) ) {
+	if( empty( $conn ) ) {
+
+		logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
+
+		return false;
+
+        } elseif( ! is_object( $conn ) ) {
+
+            logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
 
             return false;
 
-        } else {
+	} else {
 
-	        return $conn->flush();
+	    return $conn->flush();
 
-        }
+	}
+
 
     }
 
@@ -168,14 +195,8 @@
      * @todo documentare
      *
      */
-    function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = NULL ) {
-
-        if( ! empty( $m ) ) {
-
-            if( empty( $err ) ) {
-                $err = Memcached::RES_FAILURE;
-            }
-
+    // function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = Memcached::RES_FAILURE ) {
+    function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = array() ) {
 
 	// calcolo la chiave della query
 	    $k = md5( $f );
@@ -189,12 +210,6 @@
 		memcacheWrite( $m, $k, $r, $t );
 	    }
 
-    } else {
-
-		$r = fileExists( $f );
-
-    }
-
 	// restituisco il risultato
 	    return $r;
 
@@ -205,16 +220,10 @@
      * @todo documentare
      *
      */
-    function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = NULL ) {
+    // function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = Memcached::RES_FAILURE ) {
+    function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = array() ) {
 
-        if( ! empty( $m ) ) {
-
-            if( empty( $err ) ) {
-                $err = Memcached::RES_FAILURE;
-            }
-
-
-        // calcolo la chiave della query
+	// calcolo la chiave della query
 	    $k = md5( $f );
 
 	// cerco il valore in cache
@@ -225,12 +234,6 @@
 		$r = file_get_contents( $f );
 		memcacheWrite( $m, $k, $r, $t );
 	    }
-
-    } else {
-
-		$r = file_get_contents( $f );
-
-    }
 
 	// restituisco il risultato
 	    return $r;

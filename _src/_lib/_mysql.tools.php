@@ -75,11 +75,19 @@
      */
     function mysqlCachedQuery( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array(), &$i = array() ) {
 
+	// debug
+	    // var_dump( $q );
+	    // die();
+
 	// calcolo la chiave della query
 	    $k = md5( $q . serialize( $p ) );
 
 	// cerco il valore in cache
 	    $r = memcacheRead( $m, $k );
+
+	// debug
+	    // var_dump( $r );
+	    // die();
 
 	// se il valore non è stato trovato
 	    if( $r === false || $t === false ) {
