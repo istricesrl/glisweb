@@ -219,7 +219,7 @@
                 $riga['timestamp_aggiornamento'] = time();
             }
 
-            $posti = mysqlSelectValue(
+            $riga['numero_posti'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT coalesce( max( m.testo ), "∞" )
                 FROM metadati AS m
@@ -231,14 +231,14 @@
 
             $riga['numero_alunni'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT count( distinct( id_anagrafica ) )
+                'SELECT coalesce( count( distinct( id_anagrafica ) ), 0 )
                 FROM attivita
                 WHERE attivita.id_todo = ?
                 AND attivita.id_tipologia IN ( 15, 32 )',
                 array( array( 's' => $riga['id'] ) )
             );
 
-            $riga['posti_disponibili'] = $riga['numero_alunni'] . ' / ' . $posti;
+            $riga['posti_disponibili'] = $riga['numero_alunni'] . ' / ' . $riga['numero_posti'];
 
             $riga['posti_prova'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
