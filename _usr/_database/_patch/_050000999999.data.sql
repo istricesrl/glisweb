@@ -1394,8 +1394,22 @@ INSERT IGNORE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `htm
 -- tipologie_url
 -- tipologia: tabella assistita
 -- verifica: 2021-11-09 12:45 Chiara GDL
-INSERT IGNORE INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'sito web',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'web',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'social',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'servizi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	1,	NULL,	'sito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	1,	NULL,	'portale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	1,	NULL,	'e-commerce',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	1,	NULL,	'blog',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	1,	NULL,	'landing page',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	2,	NULL,	'LinkedIn',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	2,	NULL,	'Facebook',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	2,	NULL,	'Twitter / X',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	2,	NULL,	'Instagram',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	2,	NULL,	'YouTube',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	2,	NULL,	'TikTok',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	3,	NULL,	'FTP',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000062000
 
