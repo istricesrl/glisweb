@@ -170,12 +170,16 @@
                         $row['label'] = str_replace( date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ) - 1, date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ), $row['label'] );
                         $ct['data']['grafico']['precedente'][ $row['label'] ] = $ds['precedente'][ $row['label'] ] = array( 'value' => $row['importo'] );
                     }
-        
-                    $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['data'] = $ds['precedente'];
 
-                    $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['options'] = array(
-                        'bgColor' => 'rgb( 187, 187, 187 )', 'bdColor' => 'rgb( 187, 187, 187 )'
-                    );
+                    if( isset( $ds['precedente'] ) ) {
+
+                        $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['data'] = $ds['precedente'];
+
+                        $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['options'] = array(
+                            'bgColor' => 'rgb( 187, 187, 187 )', 'bdColor' => 'rgb( 187, 187, 187 )'
+                        );
+    
+                    }
 
                 }
 
@@ -283,11 +287,15 @@
                         $ct['data']['grafico']['precedente'][ $row['label'] ] = $ds['precedente'][ $row['label'] ] = array( 'value' => $row['quantita'] );
                     }
         
-                    $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['data'] = $ds['precedente'];
+                    if( isset( $ds['precedente'] ) ) {
 
-                    $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['options'] = array(
-                        'bgColor' => 'rgb( 187, 187, 187 )', 'bdColor' => 'rgb( 187, 187, 187 )'
-                    );
+                        $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['data'] = $ds['precedente'];
+
+                        $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['options'] = array(
+                            'bgColor' => 'rgb( 187, 187, 187 )', 'bdColor' => 'rgb( 187, 187, 187 )'
+                        );
+
+                    }
 
                 }
 
