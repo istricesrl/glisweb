@@ -744,6 +744,7 @@
 		header( 'X-GlisWeb-No-Cache: true' );
 	    echo PHP_EOL . '<!-- pagina senza autorizzazione al caching -->' . PHP_EOL;
 	}
+	echo PHP_EOL . '<!-- sessione: ' . session_id() . ' -->' . PHP_EOL;
 	echo PHP_EOL;
 
 	// NOTA per Nginx si veda https://www.ryadel.com/nginx-reverse-proxy-cache-wordpress-apache-iis-windows/
