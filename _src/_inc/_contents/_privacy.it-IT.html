@@ -75,7 +75,17 @@ essere prestato separatamente:</p>
 {% endif %}
 {% endfor %}
 
-{% for form in registrazione %}
+{% for form, dettagli in registrazione.moduli %}
+{% set dati = privacy.moduli[ form ] %}
+{% if dati.consensi %}
+<h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
+<p>{{ dati.descrizione[ localization.language.ietf ]|raw }} Nel caso di utilizzo del form, i dati trasmessi vengono trattati per le seguenti finalità, per ognuna delle quali il consenso può
+essere prestato separatamente:</p>
+<ul>{% for finalita in dati.consensi %}<li>{{ finalita.informativa[ localization.language.ietf ] }} ({% if finalita.required %}obbligatorio{% else %}facoltativo{% endif %})</li>{% endfor %}</ul>
+{% endif %}
+{% endfor %}
+
+{% for form, dettagli in ecommerce.moduli %}
 {% set dati = privacy.moduli[ form ] %}
 {% if dati.consensi %}
 <h4>{{ dati.titolo[ localization.language.ietf ] }}</h4>
