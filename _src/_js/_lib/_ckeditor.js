@@ -11,6 +11,7 @@
 		    height: hg,
 		    allowedContent: true,
 		    entities: false,
+//			fullPage: true,
 		    toolbarGroups: [
 			{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
 			{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },

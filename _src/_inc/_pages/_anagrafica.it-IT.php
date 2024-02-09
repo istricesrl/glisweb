@@ -409,7 +409,8 @@
 	    'macro'				=> array( '_src/_inc/_macro/_account.form.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'account.form',
-															'account.form.attribuzione' ) )
+															'account.form.attribuzione',
+															'account.form.tools' ) )
 	);
 
 	// gestione account attribuzione
@@ -417,11 +418,24 @@
 	    'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'attribuzione' ),
 	    'h1'				=> array( $l		=> 'attribuzione' ),
-	    'parent'			=> array( 'id'		=> 'gruppi.view' ),
+	    'parent'			=> array( 'id'		=> 'account.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'account.form.attribuzione.html' ),
 		'macro'				=> array( '_src/_inc/_macro/_account.form.attribuzione.php' ),
 		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'				=> array( 'tabs'	=> $p['account.form']['etc']['tabs'] )
+	);
+
+    // gestione tools account
+	$p['account.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni form account' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'account.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( '_src/_inc/_macro/_account.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['account.form']['etc']['tabs'] )
 	);
 
 	// vista gruppi
