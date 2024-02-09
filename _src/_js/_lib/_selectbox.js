@@ -219,6 +219,7 @@
 				var valore = $( li ).attr( 'value' );
 				$( li ).bind( 'click', function() {
 					$( select ).val( valore );
+					$( select ).change();
 					$( box ).val( $.parseHTML( opzione )[0].nodeValue );
 					$( box ).addClass( 'combobox-base-background' );
 					$( box ).removeClass( 'combobox-active-background' );
