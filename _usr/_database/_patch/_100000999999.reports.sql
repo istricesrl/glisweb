@@ -574,195 +574,43 @@ FROM mastri
 -- | 100000021000
 -- __report_movimenti_magazzini__
 -- tipologia: report
-DROP VIEW IF EXISTS `__report_movimenti_magazzini__`;
+DROP TABLE IF EXISTS `__report_movimenti_magazzini__`;
 
 -- | 100000021001
 -- __report_movimenti_magazzini__
 -- tipologia: report
-CREATE OR REPLACE VIEW `__report_movimenti_magazzini__` AS
-SELECT
-  id,
-  nome,
-  group_concat( DISTINCT categorie_prodotti_path( id_categoria ) SEPARATOR ' | ' ) AS categorie,
-  id_prodotto,
-  prodotto,
-  codice_produttore,
-  id_articolo,
-  articolo,
-  matricola,
-  data_scadenza,
-  data,
-  id_tipologia,
-  tipologia,
-  documento,
-  numero,
-  emittente,
-  destinatario,
-  id_riga,
-  carico,
-  mastro_carico,
-  qta_carico,
-  scarico,
-  mastro_scarico,
-  qta_scarico,
-  udm_qta
-FROM (
-SELECT
-  mastri.id,
-  mastri_path( mastri.id ) AS nome,
-  prodotti_categorie.id_categoria,
-  prodotti.id AS id_prodotto,
-  prodotti.nome AS prodotto,
-  prodotti.codice_produttore,
-  articoli.id AS id_articolo,
-  concat_ws(
-			' ',
-			prodotti.nome,
-			articoli.nome,
-			coalesce(
-				concat(
-					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
-          ' ',
-					udm_dimensioni.sigla
-				),
-				concat(
-					articoli.peso,
-          ' ',
-					udm_peso.sigla
-				),
-				concat(
-					articoli.volume,
-          ' ',
-					udm_volume.sigla
-				),
-				concat(
-					articoli.capacita,
-          ' ',
-					udm_capacita.sigla
-				),
-				concat(
-					articoli.durata,
-          ' ',
-					udm_durata.sigla
-				),
-				''
-			)
-		) AS articolo,
-  matricole.matricola,
-  matricole.data_scadenza,
-  documenti.data,
-  documenti.id_tipologia,
-  tipologie_documenti.sigla AS tipologia,
-  documenti.nome AS documento,
-  concat( documenti.numero, '/', documenti.sezionale ) AS numero,
-  concat_ws( ' ', a1.nome, a1.cognome, a1.denominazione ) AS emittente,
-  concat_ws( ' ', a2.nome, a2.cognome, a2.denominazione ) AS destinatario,
-  documenti_articoli.id AS id_riga,
-  coalesce( documenti_articoli.quantita, 0 ) AS carico,
-  0 AS scarico,
-  ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 1 ) ) AS qta_carico,
-  0 AS qta_scarico,
-  coalesce( udm_peso.sigla, udm_volume.sigla, udm_capacita.sigla, udm_durata.sigla ) AS udm_qta,
-  mastri_path( documenti_articoli.id_mastro_destinazione ) AS mastro_carico,
-  NULL AS mastro_scarico
-FROM mastri
-  LEFT JOIN documenti_articoli
-    ON documenti_articoli.id_mastro_destinazione = mastri.id
-      OR mastri_path_check( documenti_articoli.id_mastro_destinazione, mastri.id ) = 1
-  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
-  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-  LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
-  LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-  LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
-  LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
-  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-  LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-  LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
-	LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
-	LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
-	LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
-	LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
-  WHERE documenti_articoli.quantita IS NOT NULL
-UNION
-SELECT
-  mastri.id,
-  mastri_path( mastri.id ) AS nome,
-  prodotti_categorie.id_categoria,
-  prodotti.id AS id_prodotto,
-  prodotti.nome AS prodotto,
-  prodotti.codice_produttore,
-  articoli.id AS id_articolo,
-  concat_ws(
-			' ',
-			prodotti.nome,
-			articoli.nome,
-			coalesce(
-				concat(
-					articoli.larghezza, 'x', articoli.lunghezza, 'x', articoli.altezza,
-          ' ',
-					udm_dimensioni.sigla
-				),
-				concat(
-					articoli.peso,
-          ' ',
-					udm_peso.sigla
-				),
-				concat(
-					articoli.volume,
-          ' ',
-					udm_volume.sigla
-				),
-				concat(
-					articoli.capacita,
-          ' ',
-					udm_capacita.sigla
-				),
-				concat(
-					articoli.durata,
-          ' ',
-					udm_durata.sigla
-				),
-				''
-			)
-		) AS articolo,
-  matricole.matricola,
-  matricole.data_scadenza,
-  documenti.data,
-  documenti.id_tipologia,
-  tipologie_documenti.sigla AS tipologia,
-  documenti.nome AS documento,
-  concat( documenti.numero, '/', documenti.sezionale ) AS numero,
-  concat_ws( ' ', a1.nome, a1.cognome, a1.denominazione ) AS emittente,
-  concat_ws( ' ', a2.nome, a2.cognome, a2.denominazione ) AS destinatario,
-  documenti_articoli.id AS id_riga,
-  0 AS carico,
-  coalesce( documenti_articoli.quantita, 0 ) AS scarico,
-  0 AS qta_carico,
-  ( coalesce( articoli.peso, articoli.volume, articoli.capacita, articoli.durata, 0 ) * coalesce( documenti_articoli.quantita, 1 ) ) AS qta_scarico,
-  coalesce( udm_peso.sigla, udm_volume.sigla, udm_capacita.sigla, udm_durata.sigla ) AS udm_qta,
-  NULL AS mastro_carico,
-  mastri_path( documenti_articoli.id_mastro_provenienza ) AS mastro_scarico
-FROM mastri
-  LEFT JOIN documenti_articoli
-    ON documenti_articoli.id_mastro_provenienza = mastri.id
-      OR mastri_path_check( documenti_articoli.id_mastro_provenienza, mastri.id ) = 1
-  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
-  LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-  LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
-  LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-  LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
-  LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
-  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-  LEFT JOIN matricole ON matricole.id = documenti_articoli.id_matricola
-  LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
-		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
-		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
-		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
-		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
-  WHERE documenti_articoli.quantita IS NOT NULL
-) AS movimenti
--- GROUP BY id, nome, id_prodotto, prodotto, codice_produttore, id_articolo, articolo, matricola, data_scadenza, data, id_tipologia, tipologia, documento, numero, emittente, destinatario, id_riga, carico, mastro_carico, qta_carico, scarico, mastro_scarico, qta_scarico, udm_qta;
-GROUP BY id_riga;
+CREATE TABLE `__report_movimenti_magazzini__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `nome` mediumint(9) DEFAULT NULL,
+  `categorie` mediumtext DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `prodotto` char(255) DEFAULT NULL,
+  `codice_produttore` char(128) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `articolo` char(255) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
+  `matricola` char(128) DEFAULT NULL,
+  `data` date DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` char(128) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `documento` char(255) DEFAULT NULL,
+  `numero` char(32) DEFAULT NULL,
+  `sezionale` char(32) DEFAULT NULL,
+  `emittente` char(255) DEFAULT NULL,
+  `destinatario` char(255) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `mastro_provenienza` char(255) DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `mastro_destinazione` char(255) DEFAULT NULL,
+  `quantita` decimal(9,2) DEFAULT NULL,
+  `quantita_movimento` decimal(16,2) DEFAULT NULL,
+  `udm_movimento` char(32) DEFAULT NULL,
+  `note_aggiornamento` text DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- | 100000022700
 -- __report_evasione_ordini__
