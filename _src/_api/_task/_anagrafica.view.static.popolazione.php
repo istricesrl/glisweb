@@ -16,8 +16,15 @@
 			$cf['mysql']['connection'],
 			'SELECT anagrafica.id FROM anagrafica 
             LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = anagrafica.id
-            WHERE coalesce( anagrafica.timestamp_aggiornamento, anagrafica.timestamp_inserimento ) > anagrafica_view_static.timestamp_aggiornamento 
-            OR anagrafica_view_static.timestamp_aggiornamento IS NULL
+            WHERE (
+				(
+					coalesce( anagrafica.timestamp_aggiornamento, anagrafica.timestamp_inserimento ) > anagrafica_view_static.timestamp_aggiornamento 
+					OR
+					coalesce( anagrafica.timestamp_aggiornamento, anagrafica.timestamp_inserimento ) IS NULL
+				)
+            )
+			OR anagrafica_view_static.timestamp_aggiornamento IS NULL
+			ORDER BY anagrafica.id DESC
 			LIMIT 1'
 		);
 
@@ -48,12 +55,6 @@
 
 		}
 
-		// ...
-		if( ! empty( $status['aggiornare']['id'] ) ) {
-			updateAnagraficaViewStatic(
-				$status['aggiornare']['id']
-			);
-		}
 /*
 		// ...
 		if( ! empty( $status['aggiornare']['id_mastro_destinazione'] ) ) {
@@ -68,11 +69,18 @@
     } elseif( isset( $_REQUEST['idAnagrafica'] ) ) {
 
         // scrivo la riga
-        updateAnagraficaViewStatic( $status['aggiornare']['id'] );
+        $status['aggiornare']['id'] = $_REQUEST['idAnagrafica'];
 
 	}
 
-    // debug
+	// ...
+	if( ! empty( $status['aggiornare']['id'] ) ) {
+		updateAnagraficaViewStatic(
+			$status['aggiornare']['id']
+		);
+	}
+
+	// debug
     // print_r( $_REQUEST );
 
 	// output
