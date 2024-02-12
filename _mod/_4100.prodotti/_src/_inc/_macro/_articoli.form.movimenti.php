@@ -12,7 +12,7 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'mastri';
+    $ct['form']['table'] = 'articoli';
     $ct['view']['data']['__report_mode__'] = 1;
     
     // tabella della vista
@@ -103,7 +103,7 @@
 #        'emittente' => 'text-left'
 'mastro_provenienza' => 'text-left',
 'mastro_destinazione' => 'text-left',
-'articolo' => 'text-left',
+'articolo' => 'd-none',
 'udm_movimento' => 'd-none'
 );
 
@@ -115,7 +115,7 @@
 //    $ct['view']['__restrict__']['mastri_path_check( id_mastro_destinazione, '.$_REQUEST[ $ct['form']['table'] ]['id'].' )']['EQ'] = 1;
 //    $ct['view']['__restrict__']['( mastri_path_check( id_mastro_provenienza, '.$_REQUEST[ $ct['form']['table'] ]['id'].' )  mastri_path_check( id_mastro_destinazione, '.$_REQUEST[ $ct['form']['table'] ]['id'].' ) )']['EQ'] = 1;
 
-    $ct['view']['__restrict__']['( mastri_path_check( id_mastro_provenienza, '.$_REQUEST[ $ct['form']['table'] ]['id'].' ) + mastri_path_check( id_mastro_destinazione, '.$_REQUEST[ $ct['form']['table'] ]['id'].' ) )']['GE'] = 1;
+$ct['view']['__restrict__']['id_articolo']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

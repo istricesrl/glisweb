@@ -21,7 +21,12 @@
      * 
      * 
      * 
+     * NOTA IMPORTANTE
+     * documentare bene questa funzione, aggiungendo tutti i ragionamenti passo passo, perché dovrebbe poi fare da
+     * base per la scrittura di altre funzioni simili
      * 
+     * NOTA DI FABIO
+     * l'ho scritta un mese fa e già non mi ricordo che cazzo fa :-P
      * 
      * 
      * 
@@ -305,7 +310,275 @@
      * @todo documentare
      * 
      */
-    function updateReportMovimentiMagazzini() {}
+    function updateReportMovimentiMagazzini( $idRiga ) {
+
+        global $cf;
+
+        // var_dump( $idRiga );
+
+        $riga = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT id,
+                id_documento,
+                id_articolo,
+                id_matricola,
+                quantita,
+                id_mastro_provenienza,
+                id_mastro_destinazione,
+                timestamp_aggiornamento
+            FROM documenti_articoli
+            WHERE id = ?',
+            array(
+                array( 's' => $idRiga )
+            )
+        );
+
+        if( empty( $riga['timestamp_aggiornamento'] ) ) {
+
+            $riga['timestamp_aggiornamento'] = time();
+
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE documenti_articoli SET timestamp_aggiornamento = ? WHERE id = ?',
+                array(
+                    array( 's' => $riga['timestamp_aggiornamento'] ),
+                    array( 's' => $riga['id'] )
+                )
+            );
+
+        }
+
+        if( ! empty( $riga['id_articolo'] ) ) {
+
+            $articolo = mysqlSelectCachedRow(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT articoli.id,
+                    concat_ws(
+                        " ",
+                        articoli.id,
+                        "/",
+                        prodotti.nome,
+                        articoli.nome,
+                        coalesce(
+                            concat(
+                                articoli.larghezza, "x", articoli.lunghezza, "x", articoli.altezza,
+                                " ",
+                                udm_dimensioni.sigla
+                            ),
+                            concat(
+                                articoli.peso,
+                                " ",
+                                udm_peso.sigla
+                            ),
+                            concat(
+                                articoli.volume,
+                                " ",
+                                udm_volume.sigla
+                            ),
+                            concat(
+                                articoli.capacita,
+                                " ",
+                                udm_capacita.sigla
+                            ),
+                            concat(
+                                articoli.durata,
+                                " ",
+                                udm_durata.sigla
+                            ),
+                            ""
+                        )
+                    ) AS articolo,
+                    articoli.id_prodotto AS id_prodotto,
+                    prodotti.nome AS prodotto,
+                    prodotti.codice_produttore,
+                    group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR " | " ) AS categorie,
+                    articoli.peso,
+                    udm_peso.sigla AS sigla_udm_peso 
+                FROM articoli
+                    LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+                    LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
+                    LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
+                    LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
+                    LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
+                    LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
+                    LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
+                WHERE articoli.id = ?
+                GROUP BY articoli.id
+                ',
+                array(
+                    array( 's' => $riga['id_articolo'] )
+                )
+            );
+
+            if( ! empty( $articolo ) ) {
+                $riga['id_articolo'] = $articolo['id'];
+                $riga['articolo'] = $articolo['articolo'];
+                $riga['id_prodotto'] = $articolo['id_prodotto'];
+                $riga['prodotto'] = $articolo['prodotto'];
+                $riga['quantita_movimento'] = $riga['quantita'] * $articolo['peso'];
+                $riga['udm_movimento'] = $articolo['sigla_udm_peso'];
+            }
+
+        }
+
+        if( ! empty( $riga['id_matricola'] ) ) {
+
+            $matricola = mysqlSelectCachedRow(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT
+                    matricole.id,
+                    matricole.matricola,
+                    matricole.data_scadenza 
+                FROM matricole
+                WHERE id = ? ',
+                array(
+                    array( 's' => $riga['id_matricola'] )
+                )
+            );
+
+            if( ! empty( $matricola ) ) {
+                $riga['matricola'] = $matricola['matricola'];
+                $riga['data_scadenza'] = $matricola['data_scadenza'];
+            }
+
+        }
+
+        if( ! empty( $riga['id_mastro_provenienza'] ) ) {
+
+            $mastro = mysqlSelectCachedRow(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT mastri.id,
+                    mastri_path( mastri.id ) AS nome
+                FROM mastri
+                WHERE id = ? ',
+                array(
+                    array( 's' => $riga['id_mastro_provenienza'] )
+                )
+            );
+
+            if( ! empty( $mastro ) ) {
+                $riga['mastro_provenienza'] = $mastro['nome'];
+            }
+
+        }
+
+        if( ! empty( $riga['id_mastro_destinazione'] ) ) {
+
+            $mastro = mysqlSelectCachedRow(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT mastri.id,
+                    mastri_path( mastri.id ) AS nome
+                FROM mastri
+                WHERE id = ? ',
+                array(
+                    array( 's' => $riga['id_mastro_destinazione'] )
+                )
+            );
+
+            if( ! empty( $mastro ) ) {
+                $riga['mastro_destinazione'] = $mastro['nome'];
+            }
+
+        }
+
+        if( ! empty( $riga['id_documento'] ) ) {
+
+            $documento = mysqlSelectCachedRow(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT
+                    documenti.numero,
+                    documenti.sezionale,
+                    documenti.data,
+                    documenti.id_tipologia,
+                    tipologie_documenti.sigla AS sigla_tipologia,
+                    tipologie_documenti.nome AS tipologia,
+                    documenti.nome,
+                    documenti.id_emittente,
+                    documenti.id_destinatario
+                FROM documenti
+                LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+                WHERE documenti.id = ? ',
+                array(
+                    array( 's' => $riga['id_documento'] )
+                )
+            );
+
+            if( ! empty( $documento ) ) {
+
+                $riga['data'] = $documento['data'];
+                $riga['id_tipologia'] = $documento['id_tipologia'];
+                $riga['tipologia'] = $documento['sigla_tipologia'];
+                $riga['numero'] = $documento['numero'];
+                $riga['sezionale'] = $documento['sezionale'];
+                $riga['documento'] = implode(
+                    ' ',
+                    array(
+                        $documento['sigla_tipologia'],
+                        $documento['nome'],
+                        'n.', $documento['numero'] . '/' . $documento['sezionale'],
+                        // 'del', $documento['data']
+                    )
+                );
+
+                if( ! empty( $documento['id_emittente'] ) ) {
+                        
+                    $emittente = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT
+                            coalesce( anagrafica.denominazione, concat_ws( " ", anagrafica.cognome, anagrafica.nome ) ) AS emittente
+                        FROM anagrafica
+                        WHERE anagrafica.id = ? ',
+                        array(
+                            array( 's' => $documento['id_emittente'] )
+                        )
+                    );
+
+                    if( ! empty( $emittente ) ) {
+                        $riga['emittente'] = $emittente;
+                    }
+                    
+                }
+
+                if( ! empty( $documento['id_destinatario'] ) ) {
+                        
+                    $destinatario = mysqlSelectCachedValue(
+                        $cf['memcache']['connection'],
+                        $cf['mysql']['connection'],
+                        'SELECT
+                            coalesce( anagrafica.denominazione, concat_ws( " ", anagrafica.cognome, anagrafica.nome ) ) AS destinatario
+                        FROM anagrafica
+                        WHERE anagrafica.id = ? ',
+                        array(
+                            array( 's' => $documento['id_destinatario'] )
+                        )
+                    );
+
+                    if( ! empty( $destinatario ) ) {
+                        $riga['destinatario'] = $destinatario;
+                    }
+                    
+                }
+
+            }
+
+        }
+
+        // debug
+        // die( print_r( $riga, true ) );
+
+        mysqlInsertRow(
+            $cf['mysql']['connection'],
+            $riga,
+            '__report_movimenti_magazzini__'
+        );
+
+    }
 
     /**
      * 
