@@ -97,6 +97,10 @@
                 // seleziono l'iscritto, destinatario_id_anagrafica se presente altrimenti intestazione_id_anagrafica
                 $iscritto = ( ! empty( $carrello['destinatario_id_anagrafica'] ) ) ? $carrello['destinatario_id_anagrafica'] : $carrello['intestazione_id_anagrafica'];
 
+                // TODO IMPORTANTE
+                // se la riga di carrello si riferisce ad un rinnovo, allora devo associare il pagamento al rinnovo e non creare un nuovo contratto e un nuovo rinnovo
+                // NOTA probabilmente in quel caso ho id_rinnovo vedi sopra
+
                 // creo il contratto di iscrizione
                 $contratto = mysqlInsertRow(
                     $cf['mysql']['connection'],
