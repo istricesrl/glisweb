@@ -45,8 +45,8 @@
 		{# MODULO PRINCIPALE #}
 	
 	    <fieldset>
-            <legend>dati generali</legend>
-    
+            <legend>pianificazione task</legend>
+
             <div class="form-group form-row">
                 <div class="col">
                     <span class="label-top">minuto</span>
@@ -74,14 +74,6 @@
                     <span class="label-top">settimana</span>
                     {{ frm.input( table, '', '', 'settimana', '', '', request ) }}
                 </div>
-                <div class="col">
-                    <span class="label-top">iterazioni</span>
-                    {{ frm.input( table, '', '', 'iterazioni', '', '', request ) }}
-                </div>
-                <div class="col">
-                    <span class="label-top">delay</span>
-                    {{ frm.input( table, '', '', 'delay', '', '', request ) }}
-                </div>
                 <!--
                 <div class="col-12 col-md-3">
                     <span class="label-top">token</span>
@@ -90,21 +82,42 @@
                 -->
             </div>
 
+        </fieldset>
+
+        <fieldset>
+            <legend>esecuzione task</legend>
+
             <div class="form-group form-row">
                 <div class="col-12 col-md-8">
                     <span class="label-top">script da eseguire</span>
                     {# frm.input( table, '', '', 'task', '', '', request ) #}
                     {{ frm.selectRequired( table, '', '', 'task', '', etc.select.task, request ) }}
                 </div>
-                <div class="col-12 col-md-4">
-                <span class="label-top">data e ora esecuzione task</span>
-                {{ frm.datetime( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
+                <div class="col">
+                    <span class="label-top">iterazioni</span>
+                    {{ frm.input( table, '', '', 'iterazioni', '', '', request ) }}
+                </div>
+                <div class="col">
+                    <span class="label-top">delay</span>
+                    {{ frm.input( table, '', '', 'delay', '', '', request ) }}
                 </div>
             </div>
 
-            </fieldset>
-    
-	    {# BOTTONI E COMANDI DEL MODULO #}
+        </fieldset>
+
+        <fieldset>
+            <legend>stato del task</legend>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">data e ora esecuzione task</span>
+                    {{ frm.datetime( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
+                </div>
+            </div>
+
+        </fieldset>
+
+        {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>

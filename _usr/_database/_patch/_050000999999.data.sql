@@ -1036,6 +1036,8 @@ INSERT IGNORE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `gi
 (2,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- TODO fare una guida di qualche tipo che spieghi cosa fanno i vari task e quali servono per far funzionare i vari moduli
+
 -- | 050000050000
 
 -- tipologie_anagrafica
