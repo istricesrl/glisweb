@@ -3206,10 +3206,10 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			' del ',
 			documenti.data
 		) AS documento,
-		documenti_articoli.data,
-		documenti_articoli.id_emittente,
+		coalesce( documenti_articoli.data, documenti.data ) AS data,
+		coalesce( documenti_articoli.id_emittente, documenti.id_emittente ) AS id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		documenti_articoli.id_destinatario,
+		coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario ) AS id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		documenti_articoli.id_reparto,
 		documenti_articoli.id_progetto,
@@ -3293,8 +3293,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 	FROM
 		documenti_articoli
         LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti_articoli.id_emittente, documenti.id_emittente )
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario )
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
 		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
