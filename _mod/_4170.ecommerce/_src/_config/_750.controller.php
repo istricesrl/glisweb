@@ -461,6 +461,7 @@
             array_diff_key(
                 $_SESSION['carrello'], array(
                     'articoli' => array(),
+                    'metadati' => array(),
                     'valuta_utf8' => NULL,
                     'se_login' => NULL,
                     'timestamp_inserimento' => NULL
