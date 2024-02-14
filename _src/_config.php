@@ -373,6 +373,7 @@
 	define( 'FILE_LATEST_MYSQL'		, DIR_VAR_LOG_LATEST . 'mysql.latest.log');
 	define( 'FILE_LATEST_SITEMAP'		, DIR_VAR_LOG_LATEST . 'sitemap.latest.log');
 	define( 'FILE_LATEST_RELEASE'		, path2custom( DIR_VAR ) . 'latest.release.conf' );
+	define( 'FILE_LATEST_UPGRADE'		, path2custom( DIR_VAR ) . 'latest.upgrade.conf' );
 	define( 'FILE_LATEST_VERSION'		, path2custom( DIR_VAR ) . 'latest.version.conf' );
 	define( 'FILE_LICENSE'			, path2custom( DIR_ETC ) . 'license.conf' );
 	define( 'FILE_LOREM'			, DIR_ETC . '_lorem.conf' );

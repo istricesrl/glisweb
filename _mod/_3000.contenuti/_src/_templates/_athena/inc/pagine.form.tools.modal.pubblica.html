@@ -53,7 +53,15 @@
 			<div class="form-row">
                 <div class="col-12">
                     <p class="mb-3">questa operazione pubblicherà la pagina corrente e tutte le entità ad essa collegate (immagini, video, voci di menu, ecc.) sullo stage indicato</p>
-					<p><b>ATTENZIONE</b> verranno caricati via FTP anche <b>{{ etc.upload|length }}</b> files, non chiudere la finestra finché il trasferimento è in corso</p>
+					<p><b>ATTENZIONE</b> non chiudere la finestra finché il trasferimento è in corso</p>
+					{% for stage in etc.stages %}
+					{% set stage = stage.id|lower %}
+					{% if etc.upload[ stage ]|length > 0 %}
+					<p>in <b>{{ stage|upper }}</b> verranno caricati via FTP <b>{{ etc.upload[ stage ]|length }}</b> files</p>
+					{% endif %}
+					{% else  %}
+					<p>verranno caricati via FTP <b>{{ etc.upload.all|length }}</b> files</p>
+					{% endfor %}
                 </div>
             </div>
 			<div class="form-row" id="progress-row" style="display: none;">
