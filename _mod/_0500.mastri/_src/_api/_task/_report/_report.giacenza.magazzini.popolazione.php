@@ -11,6 +11,8 @@
 	// ...
 	if( ! isset( $_REQUEST['idArticolo'] ) && ! isset( $_REQUEST['matricola'] ) ) {
 
+		/*
+
 		// trovo una riga da aggiornare
 		$status['aggiornare'] = mysqlSelectRow(
 			$cf['mysql']['connection'],
@@ -58,6 +60,55 @@
 				
 			LIMIT 1'
 		);
+
+		*/
+
+		$status['aggiornare'] = mysqlSelectRow(
+			$cf['mysql']['connection'],
+			'SELECT
+				da.id_articolo,
+				da.id_matricola,
+				da.id_mastro_provenienza AS id_mastro,
+				max( coalesce( da.timestamp_aggiornamento, da.timestamp_inserimento ) ) AS timestamp_ultimo_movimento,
+				rp.id AS id_report,
+				max( rp.timestamp_aggiornamento ) AS timestamp_aggiornamento_report
+			FROM documenti_articoli AS da
+			LEFT JOIN __report_giacenza_magazzini__ AS rp
+				ON rp.id_articolo = da.id_articolo
+				AND rp.id_mastro = da.id_mastro_provenienza
+				AND coalesce( da.id_matricola, "" ) = coalesce( rp.id_matricola, "" )
+			GROUP BY da.id_articolo, da.id_matricola, da.id_mastro_provenienza
+			HAVING timestamp_ultimo_movimento > timestamp_aggiornamento_report OR timestamp_aggiornamento_report IS NULL
+				AND da.id_mastro_provenienza IS NOT NULL
+			ORDER BY timestamp_aggiornamento_report ASC
+			LIMIT 1'
+		);
+
+		// ...
+		if( empty( $status['aggiornare']['id_mastro'] ) ) {
+
+			$status['aggiornare'] = mysqlSelectRow(
+				$cf['mysql']['connection'],
+				'SELECT
+					da.id_articolo,
+					da.id_matricola,
+					da.id_mastro_destinazione AS id_mastro,
+					max( coalesce( da.timestamp_aggiornamento, da.timestamp_inserimento ) ) AS timestamp_ultimo_movimento,
+					rp.id AS id_report,
+					max( rp.timestamp_aggiornamento ) AS timestamp_aggiornamento_report
+				FROM documenti_articoli AS da
+				LEFT JOIN __report_giacenza_magazzini__ AS rp
+					ON rp.id_articolo = da.id_articolo
+					AND rp.id_mastro = da.id_mastro_destinazione
+					AND coalesce( da.id_matricola, "" ) = coalesce( rp.id_matricola, "" )
+				GROUP BY da.id_articolo, da.id_matricola, da.id_mastro_destinazione
+				HAVING timestamp_ultimo_movimento > timestamp_aggiornamento_report OR timestamp_aggiornamento_report IS NULL
+					AND da.id_mastro_destinazione IS NOT NULL
+				ORDER BY timestamp_aggiornamento_report ASC
+				LIMIT 1'
+			);
+	
+		}
 
 		// ...
 		if( ! empty( $status['aggiornare']['id_mastro'] ) ) {
