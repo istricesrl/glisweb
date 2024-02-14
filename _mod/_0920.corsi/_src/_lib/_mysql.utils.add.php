@@ -182,6 +182,8 @@
 
         global $cf;
 
+        // var_dump( $idLezione );
+
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT todo.id, todo.id_tipologia, tipologie_todo.nome AS tipologia, todo.codice, 
@@ -208,7 +210,7 @@
                 LEFT JOIN progetti ON progetti.id = todo.id_progetto
                 LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
                 LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
-            WHERE todo.id = ? AND todo.id_tipologia IN (14, 15, 18) 
+            WHERE todo.id = ? -- AND todo.id_tipologia IN (14, 15, 18) 
             GROUP BY todo.id ',
             array( array( 's' => $idLezione ) )
         );
@@ -217,6 +219,14 @@
 
             if( empty( $riga['timestamp_aggiornamento'] ) ) {
                 $riga['timestamp_aggiornamento'] = time();
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE todo SET timestamp_aggiornamento = ? WHERE id = ?',
+                    array(
+                        array( 's' => $riga['timestamp_aggiornamento'] ),
+                        array( 's' => $riga['id'] )
+                    )
+                );
             }
 
             $riga['numero_posti'] = mysqlSelectValue(
@@ -296,10 +306,24 @@
                 array( array( 's' => $riga['id'] ) )
             );
 */
-            mysqlInsertRow(
+            // inserisco la riga
+            $idLezione = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 $riga,
                 '__report_lezioni_corsi__'
+            );
+
+            // ...
+            // var_dump( $idLezione );
+
+            // aggiorno le tabelle collegate che possono innescare l'aggiornamento
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE attivita SET timestamp_aggiornamento = ? WHERE id_todo = ? AND timestamp_aggiornamento IS NULL',
+                array(
+                    array( 's' => time() ),
+                    array( 's' => $idLezione )
+                )
             );
 
         } else {

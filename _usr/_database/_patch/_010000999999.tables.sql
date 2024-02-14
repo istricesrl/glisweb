@@ -2348,8 +2348,8 @@ CREATE TABLE IF NOT EXISTS `periodi` (
 -- verifica: 2021-10-05 17:57 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `periodicita` (
   `id` int(11) NOT NULL,
-  `giorni` int(11) DEFAULT NULL,
-  `nome` char(255) DEFAULT NULL
+  `nome` char(255) DEFAULT NULL,
+  `giorni` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000023800

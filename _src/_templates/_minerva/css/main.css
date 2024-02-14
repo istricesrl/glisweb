@@ -38,12 +38,16 @@ main > div.row {
 header a,
 header a:visited {
     color: #333333;
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
 }
 
 header a:hover,
 header a:active {
     color: #666666;
     text-decoration: underline;
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
 }
 
 header nav.navbar-light li.nav-item > a.nav-link,
@@ -54,6 +58,8 @@ header nav.navbar-light li.nav-item > a.nav-link:visited {
     font-weight: bold;
     transition: background-color 100ms linear;
     padding: 0.15em 0.75em;
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
 }
 
 header nav.navbar-light li.nav-item.current > a.nav-link {
@@ -61,6 +67,8 @@ header nav.navbar-light li.nav-item.current > a.nav-link {
     background-color: #333333;
     color: #ffffff;
     text-decoration: none;
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
 }
 
 header nav.navbar-light li.nav-item.active > a.nav-link,
@@ -71,6 +79,8 @@ header nav.navbar-light li.nav-item > a.nav-link:active {
     color: #ffffff;
     text-decoration: none;
     transition: background-color 100ms linear;
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
 }
 
 header nav.navbar-light ul.icons li.nav-item > a.nav-link,
@@ -85,6 +95,8 @@ header nav.navbar-light ul.icons li.nav-item > a.nav-link:visited {
     font-weight: bold;
     transition: background-color 100ms linear;
     padding: 0.15em 0.75em;
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
 }
 
 header nav.navbar-light ul.icons li.nav-item.current > a.nav-link {
@@ -92,6 +104,8 @@ header nav.navbar-light ul.icons li.nav-item.current > a.nav-link {
     background-color: #ffffff;
     color: #333333;
     text-decoration: none;
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
 }
 
 header nav.navbar-light ul.icons li.nav-item.active > a.nav-link,
@@ -101,7 +115,8 @@ header nav.navbar-light ul.icons li.nav-item > a.nav-link:active {
     background-color: #ffffff;
     color: #333333;
     text-decoration: none;
-    transition: background-color 100ms linear;
+    transition: all .4s ease;
+    -webkit-transition: all .4s ease;
 }
 
 header .btn-sqr {
