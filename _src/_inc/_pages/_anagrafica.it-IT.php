@@ -151,6 +151,7 @@
 	// RELAZIONI CON IL MODULO DOCUMENTI
 	if( in_array( "0400.documenti", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.documenti' );
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.documenti.righe' );
 	}
 
 	// RELAZIONI CON IL MODULO CONTRATTI
