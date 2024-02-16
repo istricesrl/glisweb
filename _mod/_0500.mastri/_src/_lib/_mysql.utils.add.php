@@ -234,13 +234,18 @@
                 WHERE id_mastro IN (' . implode( ',', $magazziniFigli ) . ')
                 AND id_articolo = ? '.( ( ! empty( $idMatricola ) ) ? ' AND id_matricola = ' . $idMatricola : NULL );
 
+                if( ! empty( $riga['totale_figli'] ) ) {
+                    $giacenzaFigli = ' (nei figli ' . $riga['totale_figli'] . ')';
+                }
 
             } else {
                 $riga['se_foglia'] = 1;
-                $riga['totale_figli'] = 0.0;
+                $riga['totale_figli'] = NULL;
                 $riga['note_aggiornamento'] .= 'il magazzino ' . $mastro . ' non ha figli' . PHP_EOL;
+                $giacenzaFigli = NULL;
             }
 
+            $riga['totale_proprio'] = $riga['carico'] - $riga['scarico'];
             $riga['totale'] = $riga['carico'] - $riga['scarico'] + $riga['totale_figli'];
 
             $riga['peso'] = $riga['totale'] * $articolo['peso'];
@@ -251,7 +256,7 @@
                 ( ( ! empty( $riga['matricola'] ) ) ? 'matr. ' . $riga['matricola'] . ' ' : NULL ) .
                 ( ( ! empty( $riga['data_scadenza'] ) ) ? 'scad. ' . $riga['data_scadenza'] . ' ' : NULL ) .
                 'da ' . $riga['nome'] . ' ' .
-                'giac. ' . $riga['totale'] . ' pz.'
+                'giac. ' . $riga['totale_proprio'] . ' pz.' . $giacenzaFigli
             );
 
             $riga['timestamp_aggiornamento'] = time();

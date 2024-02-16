@@ -787,6 +787,8 @@
             $ch = curl_init();
             curl_setopt( $ch, CURLOPT_URL, $f1 );
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, 1 );
+            curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 1 ); 
+            curl_setopt( $ch, CURLOPT_TIMEOUT, 2 );
             $data = curl_exec( $ch );
             $error = curl_error( $ch );
             curl_close( $ch );
@@ -911,6 +913,8 @@
 	if( filter_var( $f, FILTER_VALIDATE_URL ) ) {
 	    $ch = curl_init( $f);
 	    curl_setopt( $ch, CURLOPT_NOBODY, true );
+        curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 1 ); 
+        curl_setopt( $ch, CURLOPT_TIMEOUT, 2 );
 	    curl_exec( $ch );
 	    $code = curl_getinfo( $ch, CURLINFO_HTTP_CODE );
 	    $status = ( $code == 200 ) ? true : false;
@@ -931,13 +935,14 @@
     function fileModifiedTime( $f ) {
 
 	if( filter_var( $f, FILTER_VALIDATE_URL ) ) {
-	    $curl = curl_init();
-	    curl_setopt( $curl , CURLOPT_URL , $f );
-	    curl_setopt( $curl , CURLOPT_HEADER , 1 );
-	    curl_setopt( $curl , CURLOPT_NOBODY , 1 );
-	    curl_setopt( $curl , CURLOPT_RETURNTRANSFER , 1 );
-	    curl_setopt( $curl , CURLOPT_TIMEOUT , 5 );
-	    $curl_result = curl_exec( $curl );
+	    $ch = curl_init();
+	    curl_setopt( $ch , CURLOPT_URL , $f );
+	    curl_setopt( $ch , CURLOPT_HEADER , 1 );
+	    curl_setopt( $ch , CURLOPT_NOBODY , 1 );
+	    curl_setopt( $ch , CURLOPT_RETURNTRANSFER , 1 );
+        curl_setopt( $ch, CURLOPT_CONNECTTIMEOUT, 1 ); 
+        curl_setopt( $ch, CURLOPT_TIMEOUT, 2 );
+	    $curl_result = curl_exec( $ch );
 
 	    if ( $curl_result !== false && strpos( $curl_result, '200 OK' ) !== false ) {
 		$headers = explode( "\n" , $curl_result );

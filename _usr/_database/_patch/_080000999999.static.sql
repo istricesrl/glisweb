@@ -204,6 +204,7 @@ CREATE TABLE `attivita_view_static` (
   `id_matricola` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `id_step` int(11) DEFAULT NULL,
+  `step` char(255) DEFAULT NULL,
   `id_pianificazione`	int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `todo` char(255) DEFAULT NULL,

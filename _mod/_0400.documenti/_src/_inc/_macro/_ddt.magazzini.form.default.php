@@ -36,12 +36,13 @@
 			$cap = str_replace( ',', '.', mysqlSelectValue(
 				$cf['mysql']['connection'],
 //				'SELECT totale FROM __report_giacenza_magazzini_foglie_attive__ WHERE id = ?',
-				'SELECT totale FROM __report_giacenza_magazzini__ WHERE id = ? AND se_foglia = 1 AND totale > 0',
+//				'SELECT totale FROM __report_giacenza_magazzini__ WHERE id = ? AND se_foglia = 1 AND totale > 0',
+				'SELECT totale FROM __report_giacenza_magazzini__ WHERE id = ? AND totale_proprio > 0',
 				array( array( 's' => $_REQUEST['__evasione__']['id_giacenza'] ) )
 			) );
 	
 			// debug
-			// echo $_REQUEST['__evasione__']['quantita'].' vs. '.$cap.PHP_EOL;
+			 echo $_REQUEST['__evasione__']['quantita'].' vs. '.$cap.PHP_EOL;
 
 			// cap della quantità
 			if( $_REQUEST['__evasione__']['quantita'] <= $cap ) {

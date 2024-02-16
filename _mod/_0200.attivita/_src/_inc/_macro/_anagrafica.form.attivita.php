@@ -33,6 +33,7 @@
         'data_attivita' => 'eseguita',
 	    'anagrafica' => 'svolta da',
         'nome' => 'attività',
+        'step' => 'esito',
 	    'ore' => 'ore',
         'ora_inizio' => 'oi',
         'ora_fine' => 'of'

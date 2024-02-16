@@ -10,7 +10,8 @@
     if( isset( $_REQUEST['__info__']['0500.mastri/magazzini.giacenza.attivi']['__search__'] ) ) {
         $result = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM __report_giacenza_magazzini__ WHERE __label__ LIKE ? AND se_foglia = 1 AND totale > 0',
+#            'SELECT id, __label__ FROM __report_giacenza_magazzini__ WHERE __label__ LIKE ? AND se_foglia = 1 AND totale > 0',
+            'SELECT id, __label__ FROM __report_giacenza_magazzini__ WHERE __label__ LIKE ? AND totale_proprio > 0',
             array(
                 array( 's' => '%' . $_REQUEST['__info__']['0500.mastri/magazzini.giacenza.attivi']['__search__'] . '%' )
             )

@@ -222,7 +222,7 @@ FROM (
 ) AS ordine
 LEFT JOIN udm ON udm.id = (
   SELECT coalesce( max( documenti_articoli.id_udm ), max( articoli.id_udm_peso ) )
-  FROM documenti_articoli LEFT JOIN articoli ON articoli.id = ordine.codice_articolo
+  FROM documenti_articoli LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
   WHERE documenti_articoli.id_documento IN ( ordine.id_documento, ordine.id_ordine )
   AND ( documenti_articoli.id_prodotto = ordine.codice_prodotto OR articoli.id = ordine.codice_articolo )
 )
@@ -368,6 +368,7 @@ CREATE TABLE `__report_giacenza_magazzini__` (
   `data_scadenza` date DEFAULT NULL,
   `carico` decimal(21,2) DEFAULT NULL,
   `scarico` decimal(21,2) DEFAULT NULL,
+  `totale_proprio` decimal(21,2) DEFAULT NULL,
   `totale_figli` decimal(21,2) DEFAULT NULL,
   `totale` decimal(21,2) DEFAULT NULL,
   `peso` decimal(21,2) DEFAULT NULL,
