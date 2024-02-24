@@ -120,7 +120,25 @@
 	
 	}
 
-	// ...
+    // riceve un oggetto form e una funzione da eseguire dopo aver validato il form
+    function checkAndDo( form, action ) {
+
+        console.log( form );
+        console.log( action );
+
+        if( form.checkValidity() ) {
+            if( typeof action === 'function' ) {
+                action();
+            } else {
+                form.submit();
+            }
+        } else {
+            form.reportValidity();
+        }
+
+    }
+
+    // ...
 	function formatDate( date ) {
 
 		var d = new Date( date ),

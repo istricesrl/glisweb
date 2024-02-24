@@ -274,6 +274,11 @@
 <input type="time" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %}  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
 {% endmacro %}
 
+{% macro dateRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}
+{% import _self as frm %}
+{{ frm.date( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class ) }}
+{% endmacro %}
+
 {% macro datetimeRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}
 {% import _self as frm %}
 {{ frm.datetime( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class ) }}
