@@ -132,7 +132,8 @@
             'SELECT contenuti.title, contenuti.h1, contenuti.h2, contenuti.h3, '.
             'contenuti.testo, contenuti.cappello, lingue.ietf, main_lingue.ietf AS main_ietf, '.
             'metadati.nome AS meta_nome, metadati.testo AS meta_testo, meta_lingue.ietf AS meta_ietf, '.
-            'ruoli_'.$t.'.nome AS ruolo, '.$t.'.id, '.$t.'.ordine, '.$t.'.nome, '.$t.'.path, '.$tc.
+            'ruoli_'.$t.'.nome AS ruolo, '.$t.'.id, '.
+            $t.'.ordine, '.$t.'.nome, '.$t.'.path, '.$tc.
             'LEFT JOIN ruoli_'.$t.' ON ruoli_'.$t.'.id = '.$t.'.id_ruolo '.
             'LEFT JOIN contenuti ON contenuti.'.$tf.' = '.$t.'.id '.
             'LEFT JOIN lingue ON lingue.id = contenuti.id_lingua '.

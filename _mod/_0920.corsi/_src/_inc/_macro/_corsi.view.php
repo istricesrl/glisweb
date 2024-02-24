@@ -104,9 +104,12 @@
 		if( is_array( $row ) ) {
 
             if( ! isset( $cf['session']['__work__']['corsi']['items'] ) || ! array_key_exists( $row['id'], $cf['session']['__work__']['corsi']['items'] ) ) {
-                $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.add?__work__[corsi][items]['.$row['id'].'][id]='.$row['id'].'&__work__[corsi][items]['.$row['id'].'][label]='.$row['__label__'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark-o"></i></span></a>';
+                $var1 = "__work__[corsi][items][" . $row['id'] . "][id]=" . $row['id'];
+                $onclick = "$(this).metroWs('/task/bookmark.add?" . $var1 . "&__work__[corsi][items][" . $row['id'] . "][label]=" . $row['__label__'] . "', aggiornaBookmarks );";
+                $row[ NULL ] =  '<a href="#" onclick="'.$onclick.'"><span class="media-left"><i class="fa fa-bookmark-o"></i></span></a>';
             } else {
-                $row[ NULL ] =  '<a href="#" onclick="$(this).metroWs(\'/task/bookmark.del?__key__=corsi&__item__='.$row['id'].'\', aggiornaBookmarks );"><span class="media-left"><i class="fa fa-bookmark"></i></span></a>';
+                $onclick = "$(this).metroWs('/task/bookmark.del?__key__=corsi&__item__=".$row['id']."', aggiornaBookmarks );";
+                $row[ NULL ] =  '<a href="#" onclick="'.$onclick.'"><span class="media-left"><i class="fa fa-bookmark"></i></span></a>';
             }
 
             $row[ NULL ] .=  '<a href="'.$cf['contents']['pages']['corsi.form']['path'][LINGUA_CORRENTE].'?__preset__[contratti][id_progetto]='.$row['id'].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';

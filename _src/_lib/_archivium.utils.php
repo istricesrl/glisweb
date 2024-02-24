@@ -455,7 +455,8 @@
         $a      = $cf['archivium']['profile']['id'] . '/' . $cf['archivium']['profile']['apikey'];
 
         // endpoint per la chiamata
-        $e      = 'ISC/' . $a . '/FEPassive/' . $idAzienda . '/Download/' . $idFattura . '/' . $index . '/' . $type;
+        $e      = 'ISC/' . $a . '/FEPassive/' . $idAzienda . 
+                    '/Download/' . $idFattura . '/' . $index . '/' . $type;
 
         // URL per la chiamata
         $u      = $cf['archivium']['profile']['url'] . $e;

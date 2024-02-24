@@ -45,7 +45,7 @@
 				);
 			}
 
-			$fp = fopen('php://output', 'wb');
+			$fp = fopen( DIR_TMP . microtime( true ) . '.csv', 'wb');
 			foreach ($csv as $line) {fputcsv($fp, $line, ';');}
 			fclose($fp);
 

@@ -261,7 +261,10 @@
 
                         // status
                         if( empty( $idAssociazioneIndirizzo ) ) {
-                            $job['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'] . ' anagrafica ' . $idAnagrafica;
+                            $job['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . 
+                                $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . 
+                                $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'] . 
+                                ' anagrafica ' . $idAnagrafica;
                         }
 
                     } else {

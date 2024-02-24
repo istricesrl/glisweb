@@ -154,7 +154,9 @@
                     } else {
 
                         // status
-                        $job['workspace']['status']['error'][] = 'destinatario non trovato per la riga ' . $job['corrente'] . ' (tipologia: ' . $idTipologia . ' numero: ' . $job['riga']['numero'] . ' sezionale: ' . $job['riga']['sezionale'] . ')';
+                        $job['workspace']['status']['error'][] = 'destinatario non trovato per la riga ' . $job['corrente'] . 
+                            ' (tipologia: ' . $idTipologia . 
+                            ' numero: ' . $job['riga']['numero'] . ' sezionale: ' . $job['riga']['sezionale'] . ')';
     
                     }
 

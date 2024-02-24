@@ -67,7 +67,10 @@
                             // die( print_r( $pagamento, true ) );
         
                             // imposto il documento
-                            $nome = 'documento creato automaticamente per il ' . ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'pagamento #' . $pagamento['id_pagamento'] . ' ' : NULL ) . 'carrello #' . $pagamento['id_carrello'] . ' anagrafica #'. $pagamento['destinatario_id_anagrafica'] .' (' . $pagamento['destinatario'] . ')';
+                            $nome = 'documento creato automaticamente per il ' . 
+                                ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'pagamento #' . $pagamento['id_pagamento'] . ' ' : NULL ) . 
+                                'carrello #' . $pagamento['id_carrello'] .  ' ' . 
+                                'anagrafica #'. $pagamento['destinatario_id_anagrafica'] .' (' . $pagamento['destinatario'] . ')';
                             $sezionale = 'C/' . date('Y');
                             $emittente = trovaIdAziendaGestita();
 
@@ -140,7 +143,8 @@
                                     'id_documento' => $idDocumento,
                                     'timestamp_pagamento' => time(),
                                     'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
-                                    'nome' => ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'rata pagata' : 'pagamento diretto' ) . ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
+                                    'nome' => ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'rata pagata' : 'pagamento diretto' ) . 
+                                        ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
                                 ),
                                 'pagamenti'
                             );
@@ -307,7 +311,9 @@
                         // stampe del documento
                         $stampe = mysqlSelectValue(
                             $cf['mysql']['connection'],
-                            'SELECT count( attivita.id ) FROM attivita INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia WHERE attivita.id_documento = ? AND tipologie_attivita.se_stampa IS NOT NULL',
+                            'SELECT count( attivita.id ) FROM attivita 
+                            INNER JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia 
+                            WHERE attivita.id_documento = ? AND tipologie_attivita.se_stampa IS NOT NULL',
                             array( array( 's' => $rdoc['id_documento'] ) )
                         );
 

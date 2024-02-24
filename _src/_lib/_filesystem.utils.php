@@ -33,7 +33,8 @@
             $bp = $ba = '';
         }
 
-        $dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . $hp . $bp . $t . $ba . $ha );
+        $etc = $hp . $bp . $t . $ba . $ha;
+        $dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . $etc );
         $xpath = new DOMXPath( $dom );
         libxml_clear_errors();
 
