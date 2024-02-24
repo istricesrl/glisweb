@@ -49,6 +49,10 @@
         );
 
         // ...
+        // print_r( $_REQUEST[ $ct['form']['table'] ]['file'] );
+        // print_r( $allegatiTodo );
+/*
+        // ...
         $_REQUEST[ $ct['form']['table'] ]['file'] = ( isset( $_REQUEST[ $ct['form']['table'] ]['file'] ) )
             ?
             array_merge(
@@ -59,6 +63,22 @@
             :
             $allegatiTodo
         ;
+*/
+
+        // ...
+        if( ! isset( $_REQUEST[ $ct['form']['table'] ]['file'] ) ) {
+            $_REQUEST[ $ct['form']['table'] ]['file'] = array();
+        }
+
+        // ...
+        $idAllegati = array_column( $_REQUEST[ $ct['form']['table'] ]['file'], 'id' );
+
+        // ...
+        foreach( $allegatiTodo as $k => $v ) {
+            if( ! in_array( $v['id'], $idAllegati ) ) {
+                $_REQUEST[ $ct['form']['table'] ]['file'][] = $v;
+            }
+        }
 
     }
 

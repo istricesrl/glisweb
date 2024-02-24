@@ -22,7 +22,7 @@
 	// subview attività dell'anagrafica 
     $p['anagrafica.form.documenti.righe'] = array(
     	'sitemap'		=> false,
-        'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
+        'icon'			=> '<i class="fa fa-list" aria-hidden="true"></i>',
         'title'			=> array( $l		=> 'righe documenti anagrafica' ),
         'h1'			=> array( $l		=> 'righe documenti anagrafica' ),
         'parent'		=> array( 'id'		=> 'anagrafica.view' ),

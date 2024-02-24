@@ -47,7 +47,7 @@
 
 <fieldset>
     <div class="form-row">
-        {% if '1200.todo' in mods.active.array %}
+        {% if '1200.todo' in mods.active.array and etc.id_tipologia_todo %}
         <div class="col">
             <legend>nuova todo</legend>
             <div class="form-row">
@@ -59,7 +59,7 @@
             </div>
         </div>
         {% endif %}
-        {% if '0200.attivita' in mods.active.array %}
+        {% if '0200.attivita' in mods.active.array and etc.id_tipologia_attivita %}
         <div class="col">
             <legend>nuovo promemoria</legend>
             <div class="form-row">
