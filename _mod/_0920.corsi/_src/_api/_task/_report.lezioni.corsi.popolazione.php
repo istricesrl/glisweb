@@ -12,7 +12,7 @@
 	if( isset( $_REQUEST['id'] ) ) {
 
 		// ...
-        $status['aggiornare']['id'] = $_REQUEST['idAnagrafica'];
+        $status['aggiornare']['id'] = $_REQUEST['id'];
 
 	} else {
 
