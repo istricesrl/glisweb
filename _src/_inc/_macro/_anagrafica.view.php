@@ -168,15 +168,11 @@
 
             $row['denominazione'] = implode( ' ', array(  $row['denominazione'], $row['nome'], $row['cognome'] ) );
 
-// <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('https://glisweb.istricesrl.it/corsi.it-IT.html?__work__[anagrafica][items][1][id]=1&amp;__work__[anagrafica][items][1][label]=Mosti Fabio Zorro La Volpe','_self');"><i class="fa fa-graduation-cap"></i></button>
-
             $onclickBookmark = "$(this).metroWs('/api/bookmarks?".
                 "__work__[anagrafica][items][".$row['id']."][id]=".$row['id'].
                 "&__work__[anagrafica][items][".$row['id']."][label]=".$row['__label__']."', aggiornaBookmarks );";
 
             $buttons = '<a href="#" onclick="'.$onclickBookmark.'"><span class="media-left"><i class="fa fa-bookmark'.( ( isset( $cf['session']['__work__']['anagrafica']['items'][ $row['id'] ] ) ) ? NULL : '-o' ).'"></i></span></a>';
-//                '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_cliente\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>'.
-//                '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="$(\'#attivita_id_cliente_promemoria\').val(\''.$row['id'].'\');$(\'#scorciatoia_promemoria\').modal(\'show\');"><i class="fa fa-calendar-plus-o"></i></a>'.
 
             if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
                 $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_attivita" onclick="$(\'#attivita_id_cliente\').val(\''.$row['id'].'\');$(\'#scorciatoia_attivita\').modal(\'show\');"><i class="fa fa-pencil-square-o"></i></a>';
