@@ -508,6 +508,7 @@ CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 		anagrafica_certificazioni.codice,
 		anagrafica_certificazioni.data_emissione,
 		anagrafica_certificazioni.data_scadenza,
+		from_unixtime( anagrafica_certificazioni.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
@@ -518,7 +519,7 @@ CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 	FROM anagrafica_certificazioni
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_certificazioni.id_anagrafica
 		LEFT JOIN anagrafica AS emittente ON emittente.id = anagrafica_certificazioni.id_emittente
-		INNER JOIN certificazioni ON certificazioni.id = anagrafica_certificazioni.id_certificazione		
+		LEFT JOIN certificazioni ON certificazioni.id = anagrafica_certificazioni.id_certificazione		
 ;
 
 -- | 090000000700
