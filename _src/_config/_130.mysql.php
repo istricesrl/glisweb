@@ -4,6 +4,8 @@
      * 
      * 
      * 
+     * TODO questa cosa è fuori posto qui, va in un task a parte
+     * 
      */
 
 

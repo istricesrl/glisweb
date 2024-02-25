@@ -6,7 +6,7 @@
      *
      *
      *
-     *
+     * TODO spostare a _130.redirect.php per risparmiare risorse
      *
      * @todo $cf['redirect'] dovrebbe stare in cache, visto che elaborarlo può essere oneroso se i redirect sono tanti
      * @todo finire di documentare
