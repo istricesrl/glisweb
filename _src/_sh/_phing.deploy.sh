@@ -18,7 +18,7 @@ echo "lavoro su: $(pwd)"
 
 ## avvio deploy
 if [ -n "$1" ]; then
-    phing -f ./_usr/_deploy/_phing/_build.xml -propertyfile ./usr/deploy/phing/$1
+    phing -f ./_usr/_deploy/_phing/_build.xml -propertyfile ./usr/deploy/phing/$1.properties
 else
-    echo "$0 nomefile.properties"
+    echo "$0 stage"
 fi
