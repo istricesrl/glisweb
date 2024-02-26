@@ -22,7 +22,7 @@
    udm.note                         | note aggiuntive sull'unità di misura
    udm.se_lunghezza                 | flag che indica se l'unità di misura riguarda la lunghezza
    udm.se_volume                    | flag che indica se l'unità di misura riguarda il volume
-   udm.se_massa                     | flag che indica se l'unità di misura riguarda la massa
+   udm.se_peso                     | flag che indica se l'unità di misura riguarda la massa
    udm.se_tempo                     | flag che indica se l'unità di misura riguarda il tempo
    udm.se_quantita                  | flag che indica se l'unità di misura riguarda la quantità
    udm.se_area                      | flag che indica se l'unità di misura riguarda l'area 
@@ -44,7 +44,7 @@
    udm_view.sigla                      | -
    udm_view.se_lunghezza               | -
    udm_view.se_volume                  | -
-   udm_view.se_massa                   | -
+   udm_view.se_peso                   | -
    udm_view.se_tempo                   | -
    udm_view.se_quantita                | -
    udm_view.se_area                    | -

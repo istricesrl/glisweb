@@ -78,7 +78,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'], 
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM udm_view WHERE se_massa' );
+            'SELECT id, __label__ FROM udm_view WHERE se_peso' );
 
             $ct['etc']['select']['udm_volume'] = mysqlCachedIndexedQuery(
                 $cf['memcache']['index'],

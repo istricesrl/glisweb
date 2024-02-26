@@ -93,7 +93,7 @@
                     {{ frm.select( table, '', '', 'id_tipologia_rinnovo', '', etc.select.tipologie_rinnovi, request ) }}
                 </div>
                 {% endif %}
-                {% if etc.flags.se_massa %}
+                {% if etc.flags.se_peso %}
                 <div class="col-8 col-md">
                     <span class="label-top">quantità per pezzo</span>
                     {{ frm.input( table, '', '', 'peso', '', '', request ) }}

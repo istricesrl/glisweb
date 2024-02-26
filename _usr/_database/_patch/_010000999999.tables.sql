@@ -3944,7 +3944,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_prodotti` (
   `se_dimensioni` tinyint(1) DEFAULT NULL,
   `se_volume` tinyint(1) DEFAULT NULL,
   `se_capacita` tinyint(1) DEFAULT NULL,
-  `se_massa` tinyint(1) DEFAULT NULL,
+  `se_peso` tinyint(1) DEFAULT NULL,
   `se_imballo` tinyint(1) DEFAULT NULL,
   `se_spedizione` tinyint(1) DEFAULT NULL,
   `se_trasporto` tinyint(1) DEFAULT NULL,
@@ -4197,7 +4197,7 @@ CREATE TABLE IF NOT EXISTS `udm` (
   `note` text DEFAULT NULL,
   `se_lunghezza` tinyint(1) DEFAULT NULL,
   `se_volume` tinyint(1) DEFAULT NULL,
-  `se_massa` tinyint(1) DEFAULT NULL,
+  `se_peso` tinyint(1) DEFAULT NULL,
   `se_tempo` tinyint(1) DEFAULT NULL,
   `se_quantita` tinyint(1) DEFAULT NULL,
   `se_area` tinyint(1) DEFAULT NULL

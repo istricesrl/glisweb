@@ -4486,7 +4486,7 @@ ALTER TABLE `udm`
 	ADD UNIQUE KEY `unica` (`id_base`,`sigla`),
 	ADD KEY `id_base` (`id_base`),
 	ADD KEY `se_volume`(`se_volume`),
-	ADD KEY `se_massa`(`se_massa`),
+	ADD KEY `se_peso`(`se_peso`),
 	ADD KEY `se_tempo`(`se_tempo`),
 	ADD KEY `se_lunghezza`(`se_lunghezza`),
 	ADD KEY `se_quantita`(`se_quantita`),

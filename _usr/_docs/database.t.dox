@@ -780,7 +780,7 @@
     tipologie_prodotti.se_servizio                 | -
     tipologie_prodotti.se_volume                   | -
 	tipologie_prodotti.se_capacita                 | -
-	tipologie_prodotti.se_massa                     | -  
+	tipologie_prodotti.se_peso                     | -  
     tipologie_prodotti.id_account_inserimento      | l'ID dell'account che ha inserito la riga
     tipologie_prodotti.timestamp_inserimento       | la timestamp dell'inserimento della riga
     tipologie_prodotti.id_account_aggiornamento    | l'ID dell'ultimo account che ha modificato la riga
@@ -814,7 +814,7 @@
     tipologie_prodotti_view.se_servizio                     | -
     tipologie_prodotti_view.se_volume                       | -
 	tipologie_prodotti_view.se_capacita                     | -
-	tipologie_prodotti_view.se_massa                        | -  
+	tipologie_prodotti_view.se_peso                        | -  
     tipologie_prodotti_view.id_account_inserimento          | -
     tipologie_prodotti_view.id_account_aggiornamento        | -
     tipologie_prodotti_view.__label__                       | etichetta descrittiva della tipologia

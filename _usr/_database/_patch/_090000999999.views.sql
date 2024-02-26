@@ -9383,7 +9383,7 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.se_volume,
 		tipologie_prodotti.se_capacita,
-		tipologie_prodotti.se_massa,
+		tipologie_prodotti.se_peso,
 		tipologie_prodotti.id_account_inserimento,
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
@@ -10145,7 +10145,7 @@ CREATE OR REPLACE VIEW udm_view AS
 		udm.sigla,
 		udm.se_lunghezza,
 		udm.se_volume,
-		udm.se_massa,
+		udm.se_peso,
 		udm.se_tempo,
 		udm.se_quantita,
 		udm.se_area,
