@@ -28,37 +28,37 @@
 	if( isset( $_REQUEST['__stats__']['__precisione__'] ) ) {
 		switch( $_REQUEST['__stats__']['__precisione__'] ) {
 
-			case 'GIORNO';
-				$u = 'day';
-				$d = 'd-m-Y';
-				$f = '%d';
-				$m = '%d-%m-%Y';
-				$j = '%d';
-			break;
-	
-			case 'SETTIMANA':
-				$u = 'week';
-				$d = 'W-Y';
-				$f = '%V';
-				$m = '%u-%Y';
-				$j = '%u';
-			break;
-	
-			case 'MESE':
-				$u = 'month';
-				$d = 'm-Y';
-				$f = '%B';
-				$m = '%m-%Y';
-				$j = '%B';
-			break;
-	
-			case 'ANNO':
-				$u = 'year';
-				$d = 'Y';
-				$f = '%Y';
-				$m = '%Y';
-				$j = '%Y';
-			break;
+            case 'GIORNO';
+                $u = 'day';
+                $d = 'Y-m-d';
+                $f = '%d';
+                $m = '%Y-%m-%d';
+                $j = '%d';
+            break;
+
+            case 'SETTIMANA':
+                $u = 'week';
+                $d = 'Y-W';
+                $f = '%V';
+                $m = '%Y-%u';
+                $j = '%u';
+            break;
+
+            case 'MESE':
+                $u = 'month';
+                $d = 'Y-m';
+                $f = '%B';
+                $m = '%Y-%m';
+                $j = '%B';
+            break;
+
+            case 'ANNO':
+                $u = 'year';
+                $d = 'Y';
+                $f = '%Y';
+                $m = '%Y';
+                $j = '%Y';
+            break;
 	
 		}
 	}

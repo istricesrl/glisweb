@@ -140,10 +140,14 @@
                         // print_r( $dati );
         
                         foreach( $dati as $row ) {
-                            $row['label'] = str_replace( date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ) - 1, date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ), $row['label'] );
+                            // $row['label'] = str_replace( date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ) - 1, date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ), $row['label'] );
+                            // var_dump( $row['label'] );
+                            $row['label'] = date( $d, strtotime( $row['label'] . ' +1 year' ) );
+                            // if( array_key_exists( $row['label'] ) ) { $row['label'] = 'N' . $row['label']; }
+                            // var_dump( $row['label'] );
                             $ct['data']['grafico']['precedente'][ $row['label'] ] = $ds['precedente'][ $row['label'] ] = array( 'value' => $row['importo'] );
                         }
-
+    
                         if( isset( $ds['precedente'] ) ) {
 
                             $ct['page']['contents']['chartjs']['grafico']['data']['datasets']['precedente']['data'] = $ds['precedente'];
