@@ -40,11 +40,50 @@
     le pagine di prodotto
     ---------------------
 
+    [...] lo step 01 del processo di acquisto.
+
     la pagina di inserimento dati del carrello
     ------------------------------------------
 
+    [...] lo step 02 del processo di acquisto.
+
+    [...] fra le altre cose, deve inviare allo step 03 la modalità da utilizzare per il pagamento tramite il campo __carrello__[provider_pagamento]. Il valore
+    di questo campo dev'essere una delle chiavi dell'array $cf['ecommerce']['profiles'][<STATUS>]['provider']. La selezione del provider di acquisto può essere
+    fatta ad esempio con una tendina:
+
+    \code{.html}
+    <select id="carrelloProviderPagamento" name="__carrello__[provider_pagamento]">
+      {% for provider,details in ecommerce.profile.provider %}
+        <option value="{{ provider }}">{{ details.__label__ }}</option>
+      {% endfor %}
+    \endcode
+
+    Oppure con dei pulsanti:
+
+    \code{.html}
+    <input type="hidden" id="carrelloProviderPagamento" name="__carrello__[provider_pagamento]" value="">
+    <script>
+      function setProviderCheckAndSubmit( provider ) {
+        var carrelloForm = document.getElementById('{{ form }}');
+        document.getElementById('carrelloProviderPagamento').value = provider;
+		if( carrelloForm.checkValidity() ) {
+			carrelloForm.submit();
+		} else {
+            carrelloForm.reportValidity();
+        } 
+      }
+    </script>
+    {% for provider,details in ecommerce.profile.provider %}
+    <button type="button" onclick="setProviderCheckAndSubmit('{{ provider }}');">{{ details.__label__ }}</button>
+    {% endfor %}
+    \endcode
+
     la pagina di riepilogo del carrello
     -----------------------------------
+
+    [...] _mod/_4170.ecommerce/_src/_inc/_macro/_carrello.riepilogo.php
+
+    [...] lo step 03 del processo di acquisto.
 
     [...] volendo saltare la pagina di riepilogo è possibile inserire un submit() del form all'onload della pagina direttamente nello schema Twig.
 
@@ -119,8 +158,8 @@
     pagamento tramite bonifico bancario
     -----------------------------------
 
-    pagamento tramite PayPal
-    ------------------------
+    pagamento tramite PayPal Payments Standard
+    ------------------------------------------
     Il pagamento tramite PayPal (tecnicamente PayPal Payments Standard tramite HTML form) avviene inviando un pacchetto dati POST all'endpoint PayPal
     predisposto alla gestione dei pagamenti, che si occuperà di interagire con l'utente per finalizzare la transazione. Una volta concluso con successo
     il pagamento, PayPal rimanderà l'utente sulla pagina del sito specificata fra i parametri del form, e in background effettuerà una chiamata all'API
@@ -130,8 +169,123 @@
     Il lavoro del framework relativamente a questa forma di pagamento si riassume quindi nella compilazione del form con i dati corretti (compito svolto
     dalla pagina di riepilogo del carrello), al suo invio a PayPal, e alla gestione delle informazioni di ritorno tramite l'API vista sopra.
 
-    pagamento tramite PayPal Advanced checkout
+    pagamento tramite PayPal Advanced Checkout
     ------------------------------------------
+    Il pagamento tramite PayPal Advanced Checkout avviene tramite alcuni passaggi, più complessi rispetto a quanto visto per PayPal Payments Standard;
+    vengono effettuati diversi scambi dati fra il sito e PayPal durante il flusso di pagamento, ed è importante comprenderli per poter gestire correttamente
+    l'integrazione. Innanzitutto ci si sinceri di aver correttamente inserito i dati per la connessione a PayPal nel file src/config.json:
+
+    \code{.json}
+    "ecommerce": {
+      "profiles": {
+        "DEV": {
+          "provider": {
+          "paypal-advanced": {
+            "advanced": true,
+            "business": "BUSINESS_ID",
+            "client_id": "CLIENT_ID",
+            "client_secret": "CLIENT_SECRET"
+            }
+          }
+        }
+      }
+    }
+    \endcode
+
+    Per procurarsi i dati necessari occorre creare un account sviluppatore su PayPal (vedi https://developer.paypal.com/dashboard/). Per abilitare i pagamenti
+    avanzati, sempre dalla dashboard sviluppatore selezionare il nome dell'app che si intende usare per il sito, andare su "Features > Accept payments"
+    dopodiché spuntare "Advanced Credit and Debit Card Payments" e salvare le modifiche.
+
+    L'integrazione con PayPal Advanced Checkout avviene da un punto di vista pratico tutta a livello di step 03 (riepilogo), in quanto la macro di questa pagina
+    in combinazione con il codice HTML e JavaScript del front-end svolgono tutte le attività necessarie.
+
+    [...] il form seguente in base alla presenza del token di connessione a PayPal o meno:
+
+    \code{.html}
+    {% if etc.client_token %}
+    <!-- PAGAMENTO TRAMITE PAYPAL STANDARD O ADVANCED CHECKOUT -->
+
+    <!-- variabile per l'URL di ritorno -->
+    {% if ecommerce.profile.provider['paypal-advanced'].return_url %}
+    <script> var return_url = "{{ ecommerce.profile.provider['paypal-advanced'].return_url }}";</script>
+    {% endif %}
+
+    <!-- inclusione dello script di PayPal -->
+    <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id={{ ecommerce.profile.provider['paypal-advanced'].client_id }}" data-client-token="{{ etc.client_token }}"></script>
+
+    <!-- div per la creazione del bottone PayPal Standard Checkout e Advanced Checkout --> 
+    <div id="paypal-button-container" class="paypal-button-container"></div>
+
+    <!-- form per il pagamento tramite PayPal Advanced Checkout -->
+    {% if ecommerce.profile.provider['paypal-advanced'].advanced %}
+    <style>
+      div.card_field {
+        height: 1em;
+        margin-bottom: .5em;
+      }
+    </style>
+    <div class="card_container">
+        <form id="card-form">
+            <label for="card-number">Card Number</label>
+            <div id="card-number" class="card_field"></div>
+        <div>
+            <label for="expiration-date">Expiration Date</label>
+            <div id="expiration-date" class="card_field"></div>
+        </div>
+        <div>
+            <label for="cvv">CVV</label>
+            <div id="cvv" class="card_field"></div>
+        </div>
+        <div>
+            <label for="card-holder-name">Name on Card</label>
+            <input type="text" id="card-holder-name" name="card-holder-name" autocomplete="off" placeholder="card holder name"/>
+        </div>
+        <div>
+            <label for="card-billing-address-street">Billing Address</label>
+            <input type="text" id="card-billing-address-street" name="card-billing-address-street" autocomplete="off" placeholder="street address"/>
+        </div>
+        <div>
+            <label for="card-billing-address-unit">&nbsp;</label>
+            <input type="text" id="card-billing-address-unit" name="card-billing-address-unit" autocomplete="off" placeholder="unit"/>
+        </div>
+        <div>
+            <label for="card-billing-address-city">&nbsp;</label>
+            <input type="text" id="card-billing-address-city" name="card-billing-address-city" autocomplete="off" placeholder="city"/>
+        </div>
+        <div>
+            <label for="card-billing-address-state">&nbsp;</label>
+            <input type="text" id="card-billing-address-state" name="card-billing-address-state" autocomplete="off" placeholder="state"/>
+        </div>
+        <div>
+            <label for="card-billing-address-zip">&nbsp;</label>
+            <input type="text" id="card-billing-address-zip" name="card-billing-address-zip" autocomplete="off" placeholder="zip / postal code"/>
+        </div>
+        <div>
+            <label for="card-billing-address-country">&nbsp;</label>
+            <input type="text" id="card-billing-address-country" name="card-billing-address-country" autocomplete="off" placeholder="country code" />
+        </div>
+        <button value="submit" id="submit" class="btn">Pay</button>
+        </form>
+    </div>
+    {% endif %}
+
+    {% elseif etc.meta.action and etc.meta.method %}
+    <!-- PAGAMENTO TRAMITE PAYPAL PAYMENTS STANDARD, NEXI, E SIMILI -->
+
+    <!-- form per il pagamento -->
+    <form action="{{ etc.meta.action }}" method="{{ etc.meta.method }}">
+      {% for field, value in etc.fields %}
+      <input type="hidden" name="{{ field }}" value="{{ value }}" />
+      {% endfor %}
+      <button type="submit">PAGA</button>
+    </form>
+
+    {% endif %}
+    \endcode
+
+    [...] le attività del back-end della pagina di riepilogo sono:
+
+    - la creazione del token di connessione a PayPal [...]
 
     pagamento tramite Nexi
     ----------------------
