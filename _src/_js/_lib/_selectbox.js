@@ -52,7 +52,13 @@
 	    var current = $( select ).find( 'option:selected' ).text().trim();
 		var currvalue = $( select ).val();
 
-	    // imposto il valore corrente
+        if( current == '' ) {
+            current = currvalue;
+        }
+
+        // console.log( 'valore corrente: ' + current + '/' + currvalue );
+
+        // imposto il valore corrente
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'placeholder-api' ) ) {
 			$( box ).val( $( select ).attr( 'placeholder-api' ) );
@@ -92,7 +98,7 @@
 	    box.keyup( function( e, d ) {
 
 		// debug
-		console.log( d );
+		// console.log( d );
 
 		// filtro
 		if( typeof d !== 'undefined' && typeof d.val !== 'undefined' ) {
