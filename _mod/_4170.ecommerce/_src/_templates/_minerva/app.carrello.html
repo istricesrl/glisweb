@@ -3,4 +3,72 @@
 {% extends 'ext/main.html' %}
 
 {% block main %}
+{% if etc.client_token %}
+{% if ecommerce.profile.provider['paypal-advanced'].return_url %}
+<script> var return_url = "{{ ecommerce.profile.provider['paypal-advanced'].return_url }}";</script>
+{% endif %}
+<script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id={{ ecommerce.profile.provider['paypal-advanced'].client_id }}" data-client-token="{{ etc.client_token }}"></script>
+{% endif %}
+<form id="formCarrello" method="post" action="{{ pages['app.carrello.riepilogo'].url['it-IT'] }}">
+    <input type="hidden" id="carrelloProviderPagamento" name="__carrello__[provider_pagamento]" value="">
+    <div class="row annunci">
+        <div class="col-12">
+            <fieldset>
+                <legend>contenuto del carrello</legend>
+
+                <div class="form-group form-row row richieste">
+                    {% for articolo, dati in session.carrello.articoli  %}
+                    <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_articolo]" value="{{ dati.id_articolo }}">
+                    <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][destinatario_id_anagrafica]" value="{{ dati.destinatario_id_anagrafica }}">
+                    <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}">
+                    <div class="col-12 col-md-4">
+                        <h2>{{ dati.descrizione }}</h2>
+                        <h3>{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} €</h3>
+                        <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}').val('');$('#formCarrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#formCarrello').submit();"></div>
+                    </div>
+                    {% else %}
+                    <div class="col-12 col-md">
+                        <h2>nessun articolo nel carrello</h2>
+                    </div>
+                {% endfor %}
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+    <div class="row annunci">
+        <div class="col-12">
+            <fieldset>
+                <legend>modalità di pagamento</legend>
+
+                <div class="form-group form-row row richieste">
+                    {% for provider,details in ecommerce.profile.provider %}
+                    <div class="col-12 col-md-4" onclick="setProviderCheckAndSubmit('{{ provider }}')">
+                        <h2>{{ details.__label__ }}</h2>
+                    </div>
+                    {% else %}
+                    <div class="col-12 col-md">
+                        <h2>nessuna modalità di pagamento disponibile al momento</h2>
+                    </div>
+                    {% endfor %}
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+</form>
+{% endblock %}
+
+{% block javascript %}
+<script>
+  function setProviderCheckAndSubmit( provider ) {
+    var carrelloForm = document.getElementById('formCarrello');
+    document.getElementById('carrelloProviderPagamento').value = provider;
+    if( carrelloForm.checkValidity() ) {
+        carrelloForm.submit();
+    } else {
+        carrelloForm.reportValidity();
+    } 
+  }
+</script>
 {% endblock %}

@@ -10,6 +10,8 @@
     // debug
     // print_r( $_REQUEST );
 
+    /* NOTA l'app carrello deve fare tutto con la controller standard
+
     // se sto acquistando un abbonamento
     if( isset( $_REQUEST['__acquista_abbonamento__']['id_articolo'] ) ) {
 
@@ -47,3 +49,5 @@
         $_REQUEST['__acquista_abbonamento__']['id_anagrafica_collegata'] = $cf['session']['id_anagrafica'];
 
     }
+
+    */

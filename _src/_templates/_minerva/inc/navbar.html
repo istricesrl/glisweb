@@ -15,6 +15,11 @@
             <ul class="navbar-nav ml-auto text-right icons">
                 {{ nav.menu( page.template.menu['appicons'], localization.language.ietf ) }}
             </ul>
+            {% if session.carrello.articoli %}
+            <div class="">
+                <button type="button" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="carrello" onclick="window.open('{{ pages['app.carrello'].url['it-IT']}}','_self');"><i class="fa fa-shopping-cart"></i></button>
+            </div>
+            {% endif %}
             <div class="">
                     <form class="" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">
                     <input type="hidden" name="__logout__" value="1">
