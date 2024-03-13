@@ -25,7 +25,7 @@
 
     // cartella
     if( ! is_dir( DIR_VAR_SPOOL_SECURITY ) ) {
-        mkdir( DIR_VAR_SPOOL_SECURITY, 0755, true );
+        mkdir( DIR_VAR_SPOOL_SECURITY, 0775, true );
     }
 
     // IP

@@ -20,12 +20,13 @@
     <property name="rsc.xcl" value="${rsc.xcd},${rsc.xcf}" />
 
     <!-- comandi -->
+    <!-- TODO per tutti i chown e chmod usare semplicemente lo script lamp permission secure? -->
     <property name="cmd.amp" value="&amp;&amp;" />
     <property name="cmd.bak" value="tar -cvzf ${dst.fld}/backup.deploy.${bak.ext}.tar.gz ${dst.dir}" />
     <property name="cmd.cds" value="cd ${src.dir}" />
     <property name="cmd.cdd" value="cd ${dst.dir}" />
     <property name="cmd.cps" value="composer update --quiet" />
-    <property name="cmd.ch1" value="find . -type d		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 755 {} \;" />
+    <property name="cmd.ch1" value="find . -type d		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 775 {} \;" />
     <property name="cmd.ch2" value="find . -type f		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 664 {} \;" />
     <property name="cmd.ch3" value="find . -name '*.sh'	-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 775 {} \;" />
     <property name="cmd.ch4" value="chown -R root:www-data *" />

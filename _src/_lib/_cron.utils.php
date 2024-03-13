@@ -1,5 +1,18 @@
 <?php
 
+    /**
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * TODO non dovrebbe essere _cron.tools.php?
+     * 
+     * 
+     */
+
+
     /* funzione che ritrona il numero della settimana del mese di una data  */ 
     function numOfDayInWeek($todt, $wd){
         $monthName = date("F", mktime(0, 0, 0, date('m', strtotime($todt))));
@@ -422,5 +435,20 @@
             $months = $interval->format('%r%m');
     
             return $years + $months;
+    
+        }
+
+        function yearsBetweenDates( $a, $b = NULL ) {
+
+            if( empty( $a ) ) return 0;
+            if( empty( $b ) ) $b = date( 'Y-m-d' );
+    
+            $origin = new DateTimeImmutable( $a );
+            $target = new DateTimeImmutable( $b );
+            $interval = $origin->diff( $target );
+    
+            $years = $interval->format('%r%y');
+    
+            return $years;
     
         }
