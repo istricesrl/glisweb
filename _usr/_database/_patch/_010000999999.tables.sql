@@ -1241,17 +1241,17 @@ CREATE TABLE IF NOT EXISTS `contratti_progetti` (
 -- tipologia: tabella gestita
 -- verifica: 2022-08-31 11:50 Chiara GDL
 CREATE TABLE `conversazioni` (
-  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-  `id_annuncio` int NULL,
-  `nome` char(32) NULL,
-  `id_articolo` char(32) NULL,
-  `quantita` int NULL,
-  `note` text NULL,
-  `timestamp_chiusura` int NULL,
-  `id_account_inserimento` int NULL,
-  `timestamp_inserimento` int NULL,
-  `id_account_aggiornamento` int NULL,
-  `timestamp_aggiornamento` int NULL
+  `id` int(11) NOT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `quantita` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `timestamp_chiusura` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 );
 
 -- | 010000007600
@@ -2256,6 +2256,8 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_video` int(11) DEFAULT NULL,
   `id_audio` int(11) DEFAULT NULL,
   `id_file` int(11) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_documenti_articoli` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,

@@ -2408,6 +2408,8 @@ ALTER TABLE `metadati`
  	ADD KEY `id_video` (`id_video`), 
  	ADD KEY `id_audio` (`id_audio`), 
  	ADD KEY `id_file` (`id_file`), 
+	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_documenti_articoli` (`id_documenti_articoli`), 
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 

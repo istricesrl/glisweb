@@ -1173,6 +1173,8 @@ ALTER TABLE `metadati`
     ADD CONSTRAINT `metadati_ibfk_15`           FOREIGN KEY (`id_video`) REFERENCES `video` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `metadati_ibfk_16`           FOREIGN KEY (`id_audio`) REFERENCES `audio` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `metadati_ibfk_17`           FOREIGN KEY (`id_file`) REFERENCES `file` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `metadati_ibfk_17`           FOREIGN KEY (`id_documento`) REFERENCES `documenti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `metadati_ibfk_17`           FOREIGN KEY (`id_documenti_articoli`) REFERENCES `documenti_articoli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `metadati_ibfk_18`           FOREIGN KEY (`id_progetto`) REFERENCES `progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `metadati_ibfk_19`           FOREIGN KEY (`id_categoria_progetti`) REFERENCES `categorie_progetti` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `metadati_ibfk_20`           FOREIGN KEY (`id_indirizzo`) REFERENCES `indirizzi` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,

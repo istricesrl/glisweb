@@ -5429,6 +5429,8 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_video,
 		metadati.id_audio,
 		metadati.id_file,
+		metadati.id_documento,
+		metadati.id_documenti_articoli,
 		metadati.id_progetto,
 		metadati.id_categoria_progetti,
 		metadati.id_indirizzo,
