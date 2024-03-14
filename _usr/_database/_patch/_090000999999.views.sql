@@ -731,6 +731,63 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 
 -- NOTA per il nome del settore usare settori_path?
 
+-- | 090000001250
+
+-- annunci
+DROP TABLE IF EXISTS `annunci_view`;
+
+-- | 090000022001
+
+-- annunci_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:49 Fabio Mosti
+CREATE OR REPLACE VIEW `annunci_view` AS
+	SELECT
+		annunci.id,
+		annunci.id_tipologia,
+		-- tipologie_annunci.nome AS tipologia, ...
+		annunci.nome,
+		group_concat( categorie_annunci.nome SEPARATOR '|' ) AS categorie,
+		annunci.id_account_inserimento,
+		annunci.id_account_aggiornamento,
+		annunci.nome AS __label__
+	FROM annunci
+		-- LEFT JOIN tipologie_annunci ON tipologie_annunci.id = annunci.id_tipologia
+		LEFT JOIN annunci_categorie ON annunci_categorie.id_notizia = annunci.id
+		LEFT JOIN categorie_annunci ON categorie_annunci.id = annunci_categorie.id_categoria
+	GROUP BY annunci.id
+;
+
+-- | 090000022200
+
+-- annunci_categorie_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `annunci_categorie_view`;
+
+-- | 090000022201
+
+-- annunci_categorie_view
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 12:39 Fabio Mosti
+CREATE OR REPLACE VIEW `annunci_categorie_view` AS
+	SELECT
+		annunci_categorie.id,
+		annunci_categorie.id_notizia,
+		annunci.nome AS notizia,
+		annunci_categorie.id_categoria,
+		categorie_annunci_path( annunci_categorie.id_categoria ) AS categoria,
+		annunci_categorie.ordine,
+		annunci_categorie.id_account_inserimento,
+		annunci_categorie.id_account_aggiornamento,
+		concat(
+			annunci.nome,
+			' / ',
+			categorie_annunci_path( annunci_categorie.id_categoria )
+		) AS __label__
+	FROM annunci_categorie
+		LEFT JOIN annunci ON annunci.id = annunci_categorie.id_notizia
+;
+
 -- | 090000001300
 
 -- articoli_view
@@ -1220,7 +1277,9 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		audio.id_prodotto,
 		audio.id_categoria_prodotti,
 		audio.id_notizia,
+		audio.id_annuncio,
 		audio.id_categoria_notizie,
+		audio.id_categorie_annunci,
 		audio.id_indirizzo,
 		audio.id_edificio,
 		audio.id_immobile,
@@ -1632,9 +1691,42 @@ CREATE OR REPLACE VIEW categorie_anagrafica_view AS
 	GROUP BY categorie_anagrafica.id
 ;
 
+-- | 090000003300
+
+-- categorie_annunci_view
+DROP TABLE IF EXISTS `categorie_annunci_view`;
+
+-- | 090000003301
+
+-- categorie_annunci
+CREATE OR REPLACE VIEW categorie_annunci_view AS
+	SELECT
+		categorie_annunci.id,
+		categorie_annunci.id_genitore,
+		categorie_annunci.ordine,
+		categorie_annunci.nome,
+		categorie_annunci.template,
+		categorie_annunci.schema_html,
+		categorie_annunci.tema_css,
+		categorie_annunci.se_sitemap,
+		categorie_annunci.se_cacheable,
+		categorie_annunci.id_sito,
+		categorie_annunci.id_pagina,
+		count( c1.id ) AS figli,
+		count( annunci_categorie.id ) AS membri,
+		categorie_annunci.id_account_inserimento,
+		categorie_annunci.id_account_aggiornamento,
+		categorie_annunci_path( categorie_annunci.id ) AS __label__
+	FROM categorie_annunci
+		LEFT JOIN categorie_annunci AS c1 ON c1.id_genitore = categorie_annunci.id
+		LEFT JOIN annunci_categorie ON annunci_categorie.id_categoria = categorie_annunci.id
+	GROUP BY categorie_annunci.id
+;
+
+
 -- | 090000003700
 
--- categorie_notizie_view
+-- categoria_notizie_view
 -- tipologia: tabella assistita
 DROP TABLE IF EXISTS `categorie_notizie_view`;
 
@@ -2136,7 +2228,9 @@ CREATE OR REPLACE VIEW contenuti_view AS
 		contenuti.id_edificio,
 		contenuti.id_immobile,
 		contenuti.id_notizia,
+		contenuti.id_annuncio,
 		contenuti.id_categoria_notizie,
+		contenuti.id_categorie_annunci,
 		contenuti.id_template,
 		contenuti.id_colore,
 		contenuti.id_progetto,
@@ -2528,7 +2622,9 @@ DROP TABLE IF EXISTS `conversazioni_view`;
 CREATE OR REPLACE VIEW conversazioni_view AS
 	SELECT
 		conversazioni.id,
+		conversazioni.id_annuncio,
 		conversazioni.nome,
+		conversazioni.id_articolo
 		conversazioni.timestamp_apertura,
 		conversazioni.timestamp_chiusura,
 		conversazioni.nome AS __label__
@@ -2552,6 +2648,7 @@ CREATE OR REPLACE VIEW conversazioni_account_view AS
 		conversazioni_account.id,
 		conversazioni_account.id_conversazione,
 		conversazioni_account.id_account,
+		conversazioni_account.timestamp_lettura,
 		conversazioni_account.timestamp_entrata,
 		conversazioni_account.timestamp_uscita,
 		concat( conversazioni_account.id_conversazione, ' - ', conversazioni_account.id_account) AS __label__
@@ -3840,7 +3937,9 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_pagina,
 		file.id_template,
 		file.id_notizia,
+		file.id_annuncio,
 		file.id_categoria_notizie,
+		file.id_categorie_annunci,
 		file.id_risorsa,
 		file.id_categoria_risorse,
 		file.id_mail_out,                    
@@ -3992,7 +4091,9 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_risorsa,
 		immagini.id_categoria_risorse,
 		immagini.id_notizia,
+		immagini.id_annuncio,
 		immagini.id_categoria_notizie,
+		immagini.id_categorie_annunci,
 		immagini.id_progetto,
 		immagini.id_categoria_progetti,
 		immagini.id_indirizzo,
@@ -4760,7 +4861,9 @@ CREATE OR REPLACE VIEW `macro_view` AS
 		macro.id_articolo,
 		macro.id_categoria_prodotti,
 		macro.id_notizia,
+		macro.id_annuncio,
 		macro.id_categoria_notizie,
+		macro.id_categorie_annunci,
 		macro.id_risorsa,
 		macro.id_categoria_risorse,
 		macro.id_progetto,
@@ -5249,6 +5352,7 @@ CREATE OR REPLACE VIEW `menu_view` AS
 		menu.id_pagina,
 		menu.id_categoria_prodotti,
 		menu.id_categoria_notizie,
+		menu.id_categorie_annunci,
 		menu.id_categoria_risorse,
 		menu.id_categoria_progetti,
 		menu.ordine,
@@ -5316,7 +5420,9 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_articolo,
 		metadati.id_categoria_prodotti,
 		metadati.id_notizia,
+		metadati.id_annuncio,
 		metadati.id_categoria_notizie,
+		metadati.id_categorie_annunci,
 		metadati.id_risorsa,
 		metadati.id_categoria_risorse,
 		metadati.id_immagine,
@@ -7029,6 +7135,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 		pubblicazioni.id_categoria_prodotti,
 		pubblicazioni.id_notizia,
 		pubblicazioni.id_categoria_notizie,
+		pubblicazioni.id_categorie_annunci,
 		pubblicazioni.id_pagina,
 		pubblicazioni.id_popup,
 		pubblicazioni.id_risorsa,
@@ -10359,7 +10466,9 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_risorsa,
 		video.id_categoria_risorse,
 		video.id_notizia,
+		video.id_annuncio,
 		video.id_categoria_notizie,
+		video.id_categorie_annunci,
 		video.id_lingua,
 		lingue.nome AS lingua,
 		video.id_ruolo,
