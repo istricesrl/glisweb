@@ -77,8 +77,8 @@
                 $_SESSION['carrello']['timestamp_inserimento']      = time();               // timestemp del momento di creazione del carrello
 
                 // aggiungo al carrello l'esito del controllo anti spam
-                // $_SESSION['carrello']['spam_score'] = $spamCheck;
-                // $_SESSION['carrello']['spam_check'] = $spamCheck;
+                $_SESSION['carrello']['spam_score'] = $spamCheck;
+                $_SESSION['carrello']['spam_check'] = $spamCheck;
 
                 // inserimento del carrello a database e recupero dell'ID
                 $_SESSION['carrello']['id'] = mysqlInsertRow(
