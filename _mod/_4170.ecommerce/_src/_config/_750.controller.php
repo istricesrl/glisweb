@@ -11,55 +11,41 @@
     // verifico se è presente una richiesta per il modulo ecommerce
     if( isset( $_REQUEST['__carrello__'] ) && is_array( $_REQUEST['__carrello__'] ) ) {
 
-        /**
-         * 
-         * TODO qui c'è un po' di lavoro da fare, innanzitutto il calcolo della spammosità è ok, però bisogna salvare il risultato in
-         * una variabile che possa essere valutata poi dal codice che crea il carrello
-         * 
+        // verifico la challenge reCAPTCHA
+        if( isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
-            if( isset( $_REQUEST['__carrello__'] ) && is_array( $_REQUEST['__carrello__'] ) ) {
+            // registro il valore di bot
+            $spamScore = reCaptchaVerifyV3( $_REQUEST['__carrello__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
 
-                // verifico la challenge reCAPTCHA
-                if( isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+            // pulisco il modulo
+            unset( $_REQUEST['__carrello__']['__recaptcha_token__'] );
 
-                    // registro il valore di bot
-                    $bot = reCaptchaVerifyV3( $_REQUEST['__carrello__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
+            // punteggio di spam
+            $spamCheck = ( $spamScore > 0.3 ) ? true : false;
 
-                    // integrazione dei dati
-                    $_REQUEST['__carrello__']['spam'] = $bot;
+        } elseif( ! isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
-                    // pulisco il modulo
-                    unset( $_REQUEST['__carrello__']['__recaptcha_token__'] );
+            // registro il valore di bot
+            $spamScore = 0;
 
-                    // punteggio di spam
-                    $spamCheck = ( $bot > 0.1 ) ? true : false;
+            // punteggio di spam
+            $spamCheck = false;
 
-                } elseif( ! isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+        } else {
 
-                    // integrazione dei dati
-                    $_REQUEST['__carrello__']['spam'] = 'token non ricevuto';
+            // registro il valore di bot
+            $spamScore = 1;
 
-                    // punteggio di spam
-                    $spamCheck = false;
+            // punteggio di spam
+            $spamCheck = true;
 
-                } else {
-
-                    // integrazione dei dati
-                    $_REQUEST['__carrello__']['spam'] = 'n/a';
-
-                    // punteggio di spam
-                    $spamCheck = true;
-
-                }
-            }
-    
-        */
+        }
 
         // log
         logWrite( 'attivata la controller del carrello', 'cart' );
 
         // TODO qui fare il controllo anti spam
-        if( true ) {
+        if( $spamCheck === true ) {
 
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
@@ -77,7 +63,7 @@
                 $_SESSION['carrello']['timestamp_inserimento']      = time();               // timestemp del momento di creazione del carrello
 
                 // aggiungo al carrello l'esito del controllo anti spam
-                $_SESSION['carrello']['spam_score'] = $spamCheck;
+                $_SESSION['carrello']['spam_score'] = $spamScore;
                 $_SESSION['carrello']['spam_check'] = $spamCheck;
 
                 // inserimento del carrello a database e recupero dell'ID

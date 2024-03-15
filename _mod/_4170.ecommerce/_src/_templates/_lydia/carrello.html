@@ -6,7 +6,7 @@
 {% block main %}
 
 {% if session.carrello.articoli %}
-<form id="carrello" class="carrello" action="{{ pages['carrello.riepilogo'].url[ localization.language.ietf ] }}" method="post">
+<form id="formCarrello" class="carrello" action="{{ pages['carrello.riepilogo'].url[ localization.language.ietf ] }}" method="post">
 
     {# BLOCCO ARTICOLI NEL CARRELLO #}
     <fieldset class="articoli">
@@ -61,7 +61,7 @@
 
         <div class="form-row">
             <div class="col">
-                <input class="btn btn-secondary btn-sm btn-block" type="button" value="RICALCOLA CARRELLO" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">        
+                {{ cms.formButton( 'RICALCOLA CARRELLO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Ricalcolo' ) }}
             </div>
         </div>
     </fieldset>
@@ -212,7 +212,7 @@
     <fieldset class="conferma">
         <div class="form-row">
             <div class="col">
-                <button type="submit" class="btn btn-secondary btn-sm btn-block" >CONFERMA ORDINE</button>
+                {{ cms.formButton( 'CONFERMA ORDINE', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '' ) }}
             </div>
         </div>
     </fieldset>
