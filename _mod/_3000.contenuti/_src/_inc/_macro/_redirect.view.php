@@ -19,7 +19,7 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    'id_sito' => 'sito',
-        'codice' => 'HTTP',
+        'codice_stato_http' => 'HTTP',
         'sorgente' => 'sorgente',
         'destinazione' => 'destinazione'
 	);
@@ -27,7 +27,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
         'id_sito' => 'text-left no-wrap',
-        'codice' => 'text-left no-wrap',
+        'codice_stato_http' => 'text-left no-wrap',
         'sorgente' => 'text-left no-wrap',
         'destinazione' => 'text-left'
 	);
