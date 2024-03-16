@@ -587,6 +587,8 @@ ALTER TABLE `carrelli`
 	ADD KEY `utm_campaign` ( `utm_campaign` ),
 	ADD KEY `utm_term` ( `utm_term` ),
 	ADD KEY `utm_content` ( `utm_content` ),
+	ADD KEY `spam_score` ( `spam_score` ),
+	ADD KEY `spam_check` ( `spam_check` ),
 	ADD KEY `id_reseller` ( `id_reseller` ),
 	ADD KEY `id_affiliato` ( `id_affiliato` ),
 	ADD KEY `id_affiliazione` ( `id_affiliazione` ),

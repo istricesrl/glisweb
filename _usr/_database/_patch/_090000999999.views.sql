@@ -1560,6 +1560,8 @@ CREATE OR REPLACE VIEW carrelli_view AS
     carrelli.utm_campaign,
     carrelli.utm_term,
     carrelli.utm_content,
+	carrelli.spam_score,
+	carrelli.spam_check,
     carrelli.id_reseller,
     carrelli.id_affiliato,
 	carrelli.id_affiliazione,
