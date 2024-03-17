@@ -26,9 +26,6 @@ echo "=====================================" >> ../TODO.md
 echo "Questa è una registrazione automatica di deploy ($1) effettuata dallo script $0" >> ../TODO.md
 echo >> ../TODO.md
 
-## debug
-exit 0
-
 ## avvio deploy
 if [ -n "$1" ]; then
     phing -f ./_usr/_deploy/_phing/_build.xml -propertyfile ./usr/deploy/phing/$1.properties
