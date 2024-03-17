@@ -21,7 +21,7 @@
     $status = array();
 
     // status
-    $status['info'][] = 'inizio operazioni API job';
+    $status['info'][] = 'inizio operazioni in foreground API job';
 
     // chiave di lock
     $status['token'] = getToken( __FILE__ );
@@ -33,10 +33,10 @@
         // echo "id del job " . $_REQUEST['__id__'];
 
         // status
-        $status['info'][] = 'richiesta lavorazione del job #' . $_REQUEST['__id__'];
+        $status['info'][] = 'richiesta lavorazione in foreground del job #' . $_REQUEST['__id__'];
 
         // timer
-        timerCheck( $cf['speed'], 'inizio lavorazione job' );
+        timerCheck( $cf['speed'], 'inizio lavorazione in foreground del job #' . $_REQUEST['__id__'] );
 
         // metto il lock sui job richiesto
         mysqlQuery(
@@ -74,56 +74,70 @@
             if( isset( $job['workspace'] ) && ! empty( $job['workspace'] ) ) {
 
                 // status
-                $status['info'][] = 'lavoro il job #' . $job['id'];
+                $status['info'][] = 'lavoro in foreground il job #' . $job['id'];
 
                 // log
-                logWrite( 'workspace per il job #' . $job['id'] . print_r( $job['workspace'], true ), 'job' );
+                // logWrite( 'workspace per il job #' . $job['id'] . print_r( $job['workspace'], true ), 'job' );
 
                 // decodifica del workspace
                 $job['workspace'] = json_decode( $job['workspace'], true );
 
-                /* ITERAZIONI */
-                if( ! empty( $job['iterazioni'] ) ) {
+                // ...
+                if( file_exists( DIR_BASE . $job['job'] ) ) {
 
-                    /* CODICE PRINCIPALE DEL JOB */
-                    if( file_exists( DIR_BASE . $job['job'] ) ) {
+                    /* ITERAZIONI */
+                    if( ! empty( $job['iterazioni'] ) ) {
+
+                        // ...
+                        $job['timer']['foreground']['start'] = microtime( true );
+
+                        /* CODICE PRINCIPALE DEL JOB */
                         require DIR_BASE . $job['job'];
-                    } else {
-                        die( 'file non trovato ' . DIR_BASE . $job['job'] );
-                    }
 
-                    // delay
-                    if( $job['iterazioni'] > 1 ) {
-                        sleep( ( isset( $job['delay'] ) && ! empty( $job['delay'] ) ) ? $job['delay'] : mt_rand( 1, 2 ) );
-                        timerCheck( $cf['speed'], 'fine delay job' );
+                        // ...
+                        $job['timer']['foreground']['end'] = microtime( true );
+
+                        // ...
+                        $job['timer']['foreground']['elapsed'] = $job['timer']['foreground']['end'] - $job['timer']['foreground']['start'];
+
+                        /*
+                            // delay
+                            if( $job['iterazioni'] > 1 ) {
+                                sleep( ( isset( $job['delay'] ) && ! empty( $job['delay'] ) ) ? $job['delay'] : mt_rand( 1, 2 ) );
+                                timerCheck( $cf['speed'], 'fine delay job' );
+                            }
+                        */
+
+                        // ...
+                        writeToFile( print_r( $job, true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . $job['corrente'] . '.' . microtime( true ) . '.log' );
+
+                        // aggiorno la tabella di avanzamento lavori
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
+                            array(
+                                array( 's' => time() ),
+                                array( 's' => json_encode( $job['workspace'] ) ),
+                                array( 's' => $job['id'] )
+                            )
+                        );
+
+                        // ...
+                        // writeToFile( print_r( $job, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+
+                    } else {
+
+                        // status
+                        $status['err'][] = 'numero di iterazioni vuoto';
+
                     }
 
                 } else {
 
-                    $status['err'][] = 'numero di iterazioni vuoto';
+                    // ...
+                    die( 'file non trovato ' . DIR_BASE . $job['job'] );
 
                 }
-
-                // aggiorno la tabella di avanzamento lavori
-                mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
-                    array(
-                        array( 's' => time() ),
-                        array( 's' => json_encode( $job['workspace'] ) ),
-                        array( 's' => $job['id'] )
-                    )
-                );
-
-                // timer
-                timerCheck( $cf['speed'], 'fine aggiornamento avanzamento job' );
-
-                // ...
-                writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
-                writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . microtime( true ) . '.log' );
-
-                // timer
-                timerCheck( $cf['speed'], 'fine scrittura log job' );
 
             } else {
 
@@ -136,7 +150,7 @@
             }
 
             // log
-            appendToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $_REQUEST['__id__'] . '.log' );
+            writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
 
             // output
             buildJson( array_replace_recursive( $job, $status ) );
