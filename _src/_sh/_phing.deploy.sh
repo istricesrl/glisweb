@@ -17,7 +17,7 @@ apt-get install -y phing rsync
 echo "lavoro su: $(pwd)"
 
 ## aggiungo una newline al file se non c'è già
-sed -i.bak '$a\' ../TODO.md
+sed -i '$a\' ../TODO.md
 
 ## registro dei deploy
 echo >> ../TODO.md
