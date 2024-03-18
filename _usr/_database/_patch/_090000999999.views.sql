@@ -268,6 +268,7 @@ CREATE OR REPLACE VIEW anagrafica_view AS
 		anagrafica.partita_iva,
 		ranking.nome AS ranking,
 		anagrafica.recapiti,
+		anagrafica.token,
 		NULL AS id_stato,
 		NULL AS id_provincia,
 		max( categorie_anagrafica.se_prospect ) AS se_prospect,

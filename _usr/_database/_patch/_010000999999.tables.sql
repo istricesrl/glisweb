@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `data_archiviazione` date DEFAULT NULL,
   `note_archiviazione` text DEFAULT NULL,
   `recapiti` text DEFAULT NULL,
+  `token` char(255) DEFAULT NULL,
   `se_importata` tinyint(1) DEFAULT NULL,
   `se_stampa_privacy` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
