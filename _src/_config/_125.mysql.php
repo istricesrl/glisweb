@@ -91,7 +91,7 @@
 					mysqlQuery( $cn, 'SET collation_connection = utf8_general_ci' );
 
 				    // timezone
-					// mysqlQuery( $cn, 'SET time_zone = ?', array( array( 's' => $cf['localization']['timezone']['name'] ) ) );
+					mysqlQuery( $cn, 'SET time_zone = ?', array( array( 's' => $cf['localization']['timezone']['name'] ) ) );
 
 				    // localizzazione
 					mysqlQuery( $cn, 'SET lc_time_names = ?', array( array( 's' => str_replace( '-', '_', $cf['localization']['language']['ietf'] ) ) ) );
