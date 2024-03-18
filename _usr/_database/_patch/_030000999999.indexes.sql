@@ -269,6 +269,42 @@ ALTER TABLE `anagrafica_settori`
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000001250
+
+-- annunci
+ALTER TABLE `annunci`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_udm` (`id_udm`),
+	ADD KEY `id_sito` (`id_sito`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000001251
+
+-- annunci
+ALTER TABLE `annunci` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000001270
+
+-- annunci
+ALTER TABLE `annunci_categorie`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_annuncio` (`id_annuncio`),
+	ADD KEY `id_categoria` (`id_categoria`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000001271
+
+-- annunci
+ALTER TABLE `annunci_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000001300
 
 -- articoli
@@ -374,6 +410,7 @@ ALTER TABLE `audio`
 	ADD KEY `id_articolo` (`id_articolo`), 
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
@@ -550,6 +587,8 @@ ALTER TABLE `carrelli`
 	ADD KEY `utm_campaign` ( `utm_campaign` ),
 	ADD KEY `utm_term` ( `utm_term` ),
 	ADD KEY `utm_content` ( `utm_content` ),
+	ADD KEY `spam_score` ( `spam_score` ),
+	ADD KEY `spam_check` ( `spam_check` ),
 	ADD KEY `id_reseller` ( `id_reseller` ),
 	ADD KEY `id_affiliato` ( `id_affiliato` ),
 	ADD KEY `id_affiliazione` ( `id_affiliazione` ),
@@ -664,6 +703,26 @@ ALTER TABLE `categorie_anagrafica`
 -- categorie_anagrafica
 -- tipologia: tabella assistita
 ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000003300
+
+-- categorie_annunci
+ALTER TABLE `categorie_annunci`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_genitore` (`id_genitore`), 
+	ADD KEY `id_sito` (`id_sito`), 
+	ADD KEY `id_pagina` (`id_pagina`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
+	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`id_sito`,`id_pagina`);
+
+-- | 030000003301
+
+-- categorie_annunci
+ALTER TABLE `categorie_annunci` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 
 -- | 030000003700
 
@@ -1048,6 +1107,7 @@ ALTER TABLE `contenuti`
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`), 	
 	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
 	ADD KEY `id_template` (`id_template`), 
 	ADD KEY `id_mailing` (`id_mailing`),
@@ -1163,7 +1223,9 @@ ALTER TABLE `contratti_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-08-31 11:50 Chiara GDL
 ALTER TABLE `conversazioni`
 	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `nome` (`nome`),
+	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `timestamp_apertura` (`timestamp_apertura`),
 	ADD KEY `timestamp_chiusura` (`timestamp_chiusura`),
 	ADD KEY `indice` (`id`,`nome`,`timestamp_chiusura`,`timestamp_apertura`);
@@ -1184,9 +1246,10 @@ ALTER TABLE `conversazioni_account`
 	ADD UNIQUE KEY `unica` (`id_conversazione`,`id_account`),
 	ADD KEY `id_conversazione` (`id_conversazione`),
 	ADD KEY `id_account` (`id_account`),
- 	ADD KEY `timestamp_entrata` (`timestamp_entrata`), 
+ 	ADD KEY `timestamp_lettura` (`timestamp_lettura`), 
+	ADD KEY `timestamp_entrata` (`timestamp_entrata`), 
  	ADD KEY `timestamp_uscita` (`timestamp_uscita`), 
-	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_entrata`, `timestamp_uscita`);
+	ADD KEY `indice` (`id`,`id_conversazione`,`id_account`,`timestamp_lettura`,`timestamp_entrata`, `timestamp_uscita`);
 	
 -- | 030000007601
 
@@ -1515,8 +1578,10 @@ ALTER TABLE `file`
 	ADD KEY `id_pagina` (`id_pagina`), 
 	ADD KEY `id_template` (`id_template`), 
 	ADD KEY `id_mailing` (`id_mailing`),
-	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_categorie_annunci` (`id_categorie_annunci`), 
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
 	ADD KEY `id_lingua` (`id_lingua`), 
@@ -1642,7 +1707,9 @@ ALTER TABLE `immagini`
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
 	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_categorie_annunci` (`id_categorie_annunci`), 
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_edificio` (`id_edificio`), 
 	ADD KEY `id_immobile` (`id_immobile`),
@@ -2242,6 +2309,7 @@ ALTER TABLE `menu`
 	ADD KEY `id_pagina` (`id_pagina`), 
  	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
  	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_categorie_annunci` (`id_categorie_annunci`), 
  	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `indice` (`id`,`id_lingua`,`id_pagina`,`ordine`,`menu`,`nome`,`target`,`sottopagine`),
@@ -2272,6 +2340,23 @@ ALTER TABLE `messaggi`
 -- messaggi
 -- tipologia: tabella gestita
 ALTER TABLE `messaggi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000021750
+
+-- messaggi_account
+ALTER TABLE `messaggi_account`
+	ADD PRIMARY KEY (`id`), 
+	ADD KEY `id_messaggio` (`id_messaggio`), 
+	ADD KEY `id_account` (`id_account`), 
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_conversazione`,`timestamp_invio`,`timestamp_lettura`);
+
+-- | 030000021751
+
+-- messaggi_account
+-- tipologia: tabella gestita
+ALTER TABLE `messaggi_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021800
 
@@ -2316,13 +2401,17 @@ ALTER TABLE `metadati`
  	ADD KEY `id_articolo` (`id_articolo`), 
  	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
  	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_annuncio` (`id_annuncio`),
  	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_categorie_annunci` (`id_categorie_annunci`), 
  	ADD KEY `id_risorsa` (`id_risorsa`),
  	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
  	ADD KEY `id_immagine` (`id_immagine`), 
  	ADD KEY `id_video` (`id_video`), 
  	ADD KEY `id_audio` (`id_audio`), 
  	ADD KEY `id_file` (`id_file`), 
+	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_documenti_articoli` (`id_documenti_articoli`), 
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
@@ -2393,6 +2482,7 @@ ALTER TABLE `notizie_categorie`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_notizia`,`id_categoria`),
 	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_annuncio` (`id_annuncio`),
 	ADD KEY `id_categoria` (`id_categoria`), 
 	ADD KEY `ordine` (`ordine`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -2914,6 +3004,7 @@ ALTER TABLE `pubblicazioni`
 	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`), 
 	ADD KEY `id_notizia` (`id_notizia`),
 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_categorie_annunci` (`id_categorie_annunci`), 
 	ADD KEY `id_risorsa` (`id_risorsa`),
 	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
 	ADD KEY `id_progetto` (`id_progetto`),
@@ -4611,7 +4702,9 @@ ALTER TABLE `video`
  	ADD KEY `id_risorsa` (`id_risorsa`), 
  	ADD KEY `id_categoria_risorse` (`id_categoria_risorse`), 
  	ADD KEY `id_notizia` (`id_notizia`), 
- 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`), 
+	ADD KEY `id_annuncio` (`id_annuncio`),
+ 	ADD KEY `id_categoria_notizie` (`id_categoria_notizie`),
+	ADD KEY `id_categorie_annunci` (`id_categorie_annunci`), 
  	ADD KEY `id_lingua` (`id_lingua`), 
  	ADD KEY `id_ruolo` (`id_ruolo`), 
 	ADD KEY `id_progetto` (`id_progetto`),

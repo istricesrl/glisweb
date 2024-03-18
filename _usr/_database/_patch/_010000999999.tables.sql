@@ -127,6 +127,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica` (
   `data_archiviazione` date DEFAULT NULL,
   `note_archiviazione` text DEFAULT NULL,
   `recapiti` text DEFAULT NULL,
+  `token` char(255) DEFAULT NULL,
   `se_importata` tinyint(1) DEFAULT NULL,
   `se_stampa_privacy` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -260,6 +261,52 @@ CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_settore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 001000001250
+
+-- annunci
+CREATE TABLE IF NOT EXISTS `annunci` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `testo` text DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `quantita` decimal(9,2) DEFAULT NULL,
+  `id_udm` char(32) DEFAULT NULL,
+  `data_inizio_validita` date DEFAULT NULL,
+  `ora_inizio_validita` time DEFAULT NULL,
+  `note_inizio_validita` text DEFAULT NULL,
+  `data_fine_validita` date DEFAULT NULL,
+  `ora_fine_validita` time DEFAULT NULL,
+  `note_fine_validita` text DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` tinyint(1) DEFAULT NULL,
+  `se_cacheable` tinyint(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000001270
+
+-- annunci_categorie
+CREATE TABLE IF NOT EXISTS `annunci_categorie` (
+  `id` int(11) NOT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
+  `id_categoria` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -402,7 +449,9 @@ CREATE TABLE IF NOT EXISTS `audio` (
   `id_articolo` char(32) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` INT(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
@@ -597,7 +646,9 @@ CREATE TABLE `carrelli` (
   `utm_medium` char(128) DEFAULT NULL,
   `utm_campaign` char(128) DEFAULT NULL,
   `utm_term` char(128) DEFAULT NULL,
-  `utm_content` char(128) DEFAULT NULL,
+  `utm_content` char(128) DEFAULT NULL, 
+  `spam_score` decimal(2,1) DEFAULT NULL,
+  `spam_check` int(1) DEFAULT NULL,
   `id_reseller` int(11) DEFAULT NULL,
   `id_affiliato` int(11) DEFAULT NULL,
   `id_affiliazione` int(11) DEFAULT NULL,
@@ -698,6 +749,29 @@ CREATE TABLE IF NOT EXISTS `categorie_anagrafica` (
   `se_commerciale` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_corriere` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000003300
+
+-- cateogorie_annunci
+CREATE TABLE IF NOT EXISTS `categorie_annunci` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `template` char(255) DEFAULT NULL,
+  `schema_html` char(128) DEFAULT NULL,
+  `tema_css` char(128) DEFAULT NULL,
+  `se_sitemap` tinyint(1) DEFAULT NULL,
+  `se_cacheable` tinyint(1) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
+  `id_pagina` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1045,7 +1119,9 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_template` int(11) DEFAULT NULL,
   `id_mailing` int(11) DEFAULT NULL,
   `id_colore` int(11) DEFAULT NULL,
@@ -1167,13 +1243,19 @@ CREATE TABLE IF NOT EXISTS `contratti_progetti` (
 -- conversazioni
 -- tipologia: tabella gestita
 -- verifica: 2022-08-31 11:50 Chiara GDL
-CREATE TABLE IF NOT EXISTS `conversazioni` (
+CREATE TABLE `conversazioni` (
   `id` int(11) NOT NULL,
-  `nome` char(64) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `quantita` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
-  `timestamp_apertura` int(11) DEFAULT NULL,
-  `timestamp_chiusura` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+  `timestamp_chiusura` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+);
 
 -- | 010000007600
 
@@ -1184,6 +1266,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni_account` (
   `id` int(11) NOT NULL,
   `id_conversazione` int(11) DEFAULT NULL,
   `id_account` int(11) DEFAULT NULL,
+  `timestamp_lettura` int(11) DEFAULT NULL,
   `timestamp_entrata` int(11) DEFAULT NULL,
   `timestamp_uscita` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -1468,7 +1551,9 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_template` int(11) DEFAULT NULL,
   `id_mailing` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
@@ -1564,7 +1649,9 @@ CREATE TABLE IF NOT EXISTS `immagini` (
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_edificio` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
@@ -1887,7 +1974,9 @@ CREATE TABLE IF NOT EXISTS `macro` (
   `id_articolo` char(32) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
@@ -2104,6 +2193,7 @@ CREATE TABLE IF NOT EXISTS `menu` (
   `id_pagina` int(11) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_categoria_progetti` int(11) DEFAULT NULL, 
   `ordine` int(11) DEFAULT NULL,
@@ -2135,6 +2225,16 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000021750
+
+-- messaggi_account
+CREATE TABLE `messaggi_account` (
+  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `id_messaggio` int NULL,
+  `id_account` int NULL,
+  `timestamp_lettura` int NULL
+);
+
 -- | 010000021800
 
 -- metadati
@@ -2150,13 +2250,17 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_articolo` char(32) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_immagine` int(11) DEFAULT NULL,
   `id_video` int(11) DEFAULT NULL,
   `id_audio` int(11) DEFAULT NULL,
   `id_file` int(11) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_documenti_articoli` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_categoria_progetti` int(11) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
@@ -2223,6 +2327,7 @@ CREATE TABLE IF NOT EXISTS `notizie` (
 CREATE TABLE IF NOT EXISTS `notizie_categorie` (
   `id` int(11) NOT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2741,7 +2846,9 @@ CREATE TABLE IF NOT EXISTS `pubblicazioni` (
   `id_articolo` char(32) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL, 
@@ -4294,7 +4401,9 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
