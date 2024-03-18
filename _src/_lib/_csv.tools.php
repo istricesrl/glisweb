@@ -70,7 +70,7 @@
         $head = str_getcsv( $head, $s, $c, $e );
         $head = array_map( 'trim', $head );
 
-        foreach( $data as &$row ) {
+        foreach( $data as $row ) {
             logWrite( 'riga: ' . $row, 'details/csv/csv2array' );
             $row = clean_string( $row );
             logWrite( 'riga dopo clean_string: ' . $row, 'details/csv/csv2array' );

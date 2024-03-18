@@ -125,7 +125,7 @@
                         for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
 
                             // ...
-                            $task['timer'][ $iter ]['start'] = microtime( true );
+                            // $task['timer'][ $iter ]['start'] = microtime( true );
 
                             // ...
                             logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
@@ -136,10 +136,10 @@
                             // $status['task'][ $task['id'] ][ $iter ] = array_replace_recursive( $task['status'], array( 'esecuzione' => time() ) );
 
                             // ...
-                            $task['timer'][ $iter ]['end'] = microtime( true );
+                            // $task['timer'][ $iter ]['end'] = microtime( true );
 
                             // ...
-                            $task['timer'][ $iter ]['elapsed'] = $task['timer'][ $iter ]['end'] - $task['timer'][ $iter ]['start'];
+                            // $task['timer'][ $iter ]['elapsed'] = $task['timer'][ $iter ]['end'] - $task['timer'][ $iter ]['start'];
 
                             // ...
                             writeToFile( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . microtime( true ) . '.log' );
@@ -276,7 +276,7 @@
                         for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
 
                             // ...
-                            $job['timer'][ $iter ]['start'] = microtime( true );
+                            // $job['timer'][ $iter ]['start'] = microtime( true );
 
                             // ...
                             logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
@@ -287,10 +287,10 @@
                             // $status['job'][ $job['job'] ][ $iter ] = array_replace_recursive( $job['status'], array( 'esecuzione' => time() ) );
 
                             // ...
-                            $job['timer'][ $iter ]['end'] = microtime( true );
+                            // $job['timer'][ $iter ]['end'] = microtime( true );
 
                             // ...
-                            $job['timer'][ $iter ]['elapsed'] = $job['timer'][ $iter ]['end'] - $job['timer'][ $iter ]['start'];
+                            // $job['timer'][ $iter ]['elapsed'] = $job['timer'][ $iter ]['end'] - $job['timer'][ $iter ]['start'];
 
                             // ...
                             writeToFile( print_r( $job, true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . $job['corrente'] . '.' . microtime( true ) . '.log' );

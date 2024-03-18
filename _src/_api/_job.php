@@ -142,15 +142,15 @@
             } else {
 
                 // status
-                $status['info'][] = 'workspace vuoto per il job #' . $job['id'];
+                $status['info'][] = 'workspace vuoto per il job #' . $_REQUEST['__id__'];
 
                 // log
-                logWrite( 'workspace vuoto per il job #' . $job['id'], 'job' );
+                logWrite( 'workspace vuoto per il job #' . $_REQUEST['__id__'], 'job' );
 
             }
 
             // log
-            writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+            writeToFile( print_r( array_replace_recursive( $job, $status ), true ), DIR_VAR_LOG_JOB . $_REQUEST['__id__'] . '.log' );
 
             // output
             buildJson( array_replace_recursive( $job, $status ) );
