@@ -291,7 +291,9 @@
                     // print_r( $dati );
 
                     foreach( $dati as $row ) {
-                        $row['label'] = str_replace( date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ) - 1, date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ), $row['label'] );
+                        // $row['label'] = str_replace( date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ) - 1, date( 'Y', strtotime( $_REQUEST['__stats__']['__inizio__'] ) ), $row['label'] );
+                        // $ct['data']['grafico']['precedente'][ $row['label'] ] = $ds['precedente'][ $row['label'] ] = array( 'value' => $row['quantita'] );
+                        $row['label'] = date( $d, strtotime( $row['label'] . ' +1 year' ) );
                         $ct['data']['grafico']['precedente'][ $row['label'] ] = $ds['precedente'][ $row['label'] ] = array( 'value' => $row['quantita'] );
                     }
         
