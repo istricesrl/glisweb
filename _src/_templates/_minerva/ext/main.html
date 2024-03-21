@@ -32,6 +32,14 @@
 
         </main>
 
+        <footer class="mt-auto">
+            <div class="container">
+                <div class="row">
+                    {% block footerdx %}{% include 'inc/footer.html' %}{% endblock %}
+                </div>
+            </div>
+        </footer>
+
         {% include '_inc/_page.close.html' %}
 
         {% block javascript %}{% endblock %}
