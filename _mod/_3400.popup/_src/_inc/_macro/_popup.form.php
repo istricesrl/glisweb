@@ -31,7 +31,7 @@
     );
 
     // tendina siti
-     $ct['etc']['select']['siti'] = $cf['sites'];
+    $ct['etc']['select']['siti'] = $cf['sites'];
     
      // tendina templates
 	$tpl = glob( DIR_BASE . '{_,}src/{_,}templates/*', GLOB_BRACE );

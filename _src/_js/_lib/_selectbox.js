@@ -63,7 +63,8 @@
 	    if( $( select ).attr( 'placeholder-api' ) ) {
 			$( box ).val( $( select ).attr( 'placeholder-api' ) );
 			// se, cliccando sulla selectbox per scrivere, non scompare il placeholder, decommentare questo codice
-		/*	$( box ).on( "click", function() {
+		/* da qui... */
+			$( box ).on( "click", function() {
 				if( $( box ).val() == $( select ).attr( 'placeholder-api' ) ){
 					$( box ).val('');
 				}
@@ -73,7 +74,7 @@
 					$( box ).val( $( select ).attr( 'placeholder-api' ) );
 				}
 			  });
-		*/
+		/* ...fin qui era commentato, perché? */
 		} else {
 			box.val( current );
 		}

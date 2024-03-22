@@ -39,10 +39,18 @@
 	$source					= strtok( $_SERVER['REQUEST_URI'], '?' );
 
     // debug
+    // var_dump( $cf['site']['id'] );
     // var_dump( $source );
+    // print_r( $cf['redirect'] );
+    // die();
 
     // esecuzione
 	if( array_key_exists( $source, $cf['redirect'] ) ) {
+
+        // debug
+        // var_dump( $cf['site']['id'] );
+        // var_dump( $source );
+        // die();
 
         // ...
         $r = $cf['redirect'][ $source ];
@@ -50,8 +58,9 @@
         // ...
         if( $cf['site']['id'] == $r['id_sito'] || empty( $r['id_sito'] ) ) {
 
+            // debug
             // var_dump( $cf['site']['id'] );
-            // print_r( $r );
+            // var_dump( $source );
             // die();
 
             logWrite( 'reindirizzamento ' . $r['codice'] . ' da ' . $_SERVER['REQUEST_URI'] . ' a ' . $r['target'], 'redirect' );

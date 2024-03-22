@@ -43,6 +43,9 @@
 	    );
 	}
 
+    // var_dump( $r );
+    // die();
+
     // configurazione extra
 	if( isset( $cx['redirect'] ) ) {
 	    $r = array_replace_recursive(
