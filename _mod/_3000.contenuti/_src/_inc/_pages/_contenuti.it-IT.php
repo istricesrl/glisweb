@@ -98,7 +98,10 @@
 	    'etc'		=> array( 'tabs'	=> $p['pagine.form']['etc']['tabs'] )
 	);*/
 
-
+	// RELAZIONI CON IL MODULO PROGETTI
+	if( in_array( "0900.progetti", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'pagine.form.immagini', $p['pagine.form']['etc']['tabs'], 'pagine.form.progetti' );
+	}
 
 	// form pagine menu
 	$p['pagine.form.menu'] = array(
