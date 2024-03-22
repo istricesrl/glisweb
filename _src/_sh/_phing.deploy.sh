@@ -17,14 +17,13 @@ apt-get install -y phing rsync
 echo "lavoro su: $(pwd)"
 
 ## aggiungo una newline al file se non c'è già
-sed -i '$a\' ../TODO.md
+sed -i '$a\' ../WORK.md
 
 ## registro dei deploy
-echo >> ../TODO.md
-echo "$( date "+%Y-%m-%d %H:%M" ) DEPLOY TRAMITE PHING" >> ../TODO.md
-echo "=====================================" >> ../TODO.md
-echo "Questa è una registrazione automatica di deploy ($1) effettuata dallo script $0" >> ../TODO.md
-echo >> ../TODO.md
+echo "$( date "+%Y-%m-%d %H:%M" ) DEPLOY TRAMITE PHING" >> ../WORK.md
+echo "=====================================" >> ../WORK.md
+echo "Questa è una registrazione automatica di deploy ($1) effettuata dallo script $0" >> ../WORK.md
+echo >> ../WORK.md
 
 ## avvio deploy
 if [ -n "$1" ]; then
