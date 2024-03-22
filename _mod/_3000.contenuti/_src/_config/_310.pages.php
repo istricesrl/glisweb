@@ -29,7 +29,7 @@
 	    // recupero le pagine dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT pagine.* FROM pagine '.
+            'SELECT pagine.*, pubblicazioni.ordine FROM pagine '.
             'INNER JOIN pubblicazioni ON pubblicazioni.id_pagina = pagine.id '.
             'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia '.
             'WHERE pagine.id_sito = ? '.
@@ -70,6 +70,7 @@
                         'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
                         'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
                         'parent'		=> array( 'id'		=> $pg['id_genitore'] ),
+                        'ordine'		=> $pg['ordine'],
                         'template'		=> array( 'path'	=> $pg['template'], 'schema' => $pg['schema_html'], 'theme' => $pg['tema_css'] )
                     );
 

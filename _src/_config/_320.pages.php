@@ -109,6 +109,9 @@
 			    // aggancio al genitore
 				if( isset( $v['parent']['id'] ) ) {
 				    $cf['contents']['pages'][ $v['parent']['id'] ]['children']['id'][] = $k;
+                    if( isset( $v['ordine'] ) && ! empty( $v['ordine'] ) ) {
+                        $cf['contents']['pages'][ $v['parent']['id'] ]['children']['ordered'][ $v['ordine'] ] = $k;
+                    }
 				}
 
 			    // registro la scorciatoia o l'alias
