@@ -17,7 +17,7 @@
                 progetti.data_accettazione > CURRENT_DATE(), "futuro",
                 if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), "attivo", "concluso" )
             ) AS stato
-            FROM progetti INNER JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia 
+            FROM progetti LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia 
             WHERE progetti.id = ?',
             array( array( 's' => $idCorso ) )
         );
@@ -30,6 +30,20 @@
         `posti_disponibili` char(255) DEFAULT NULL,
         `timestamp_aggiornamento` int(11) DEFAULT NULL,        
         */
+
+        // print_r( $riga );
+
+        if( empty( $riga['timestamp_inserimento'] ) ) {
+            $riga['timestamp_inserimento'] = time();
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE progetti SET timestamp_inserimento = ? WHERE id = ?',
+                array(
+                    array( 's' => $riga['timestamp_inserimento'] ),
+                    array( 's' => $riga['id'] )
+                )
+            );
+        }
 
         if( empty( $riga['timestamp_aggiornamento'] ) ) {
             $riga['timestamp_aggiornamento'] = time();

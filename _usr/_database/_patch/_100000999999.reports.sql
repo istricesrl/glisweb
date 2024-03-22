@@ -116,10 +116,12 @@ CREATE TABLE `__report_corsi__` (
   `data_accettazione` date DEFAULT NULL,
   `data_chiusura` date DEFAULT NULL,
   `prezzi` char(255) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `__label__` text DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`),
+  KEY `timestamp_inserimento` (`timestamp_inserimento`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
