@@ -12,7 +12,7 @@
 
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT progetti.id, progetti.id_periodo, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura, 
+            'SELECT progetti.id, progetti.id_periodo, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_inserimento, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura, 
             if(
                 progetti.data_accettazione > CURRENT_DATE(), "futuro",
                 if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), "attivo", "concluso" )
@@ -30,6 +30,18 @@
         `posti_disponibili` char(255) DEFAULT NULL,
         `timestamp_aggiornamento` int(11) DEFAULT NULL,        
         */
+
+        if( empty( $riga['timestamp_aggiornamento'] ) ) {
+            $riga['timestamp_aggiornamento'] = time();
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE progetti SET timestamp_aggiornamento = ? WHERE id = ?',
+                array(
+                    array( 's' => $riga['timestamp_aggiornamento'] ),
+                    array( 's' => $riga['id'] )
+                )
+            );
+        }
 
         $riga['fasce'] = mysqlSelectValue(
             $cf['mysql']['connection'],
