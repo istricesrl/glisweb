@@ -180,12 +180,26 @@
                         'denominazione' => ( ( isset( $job['riga']['denominazione_cliente'] ) ) ? $job['riga']['denominazione_cliente'] : NULL ),
                     ),
                     'anagrafica',
-                    true,
+                    false,  // così va in modalità INSERT IGNORE e non svuota la denominazione se il cliente esiste già
                     false,
                     array(
                         'codice'
                     )
                 );
+
+                // giro la data
+                if( isset( $job['riga']['data_programmazione_attivita_seguente'] ) ) {
+                    if( empty( $job['riga']['data_programmazione_attivita_seguente'] ) ) {
+                        $job['riga']['data_programmazione_attivita_seguente'] = date( 'Y-m-d' );
+                        $job['status']['info'][] = 'per la data ' . $job['riga']['data_programmazione_attivita_seguente'] . ' la settimana è ' . date( 'W', strtotime( $job['riga']['data_programmazione_attivita_seguente'] ) ) . ' per la riga ' . $job['corrente'];
+                    } elseif( preg_match( '/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/i', $job['riga']['data_programmazione_attivita_seguente'] ) ) {
+                        $tks = explode( '/', $job['riga']['data_programmazione_attivita_seguente'] );
+                        $job['riga']['data_programmazione_attivita_seguente'] = date( 'Y-m-d', strtotime( $tks[2] . '-' . $tks[1] . '-' . $tks[0] ) );
+                        $job['status']['info'][] = 'corretta data ' . $job['riga']['data_programmazione_attivita_seguente'] . ' (settimana ' . date( 'W', strtotime( $job['riga']['data_programmazione_attivita_seguente'] ) ) . ') per la riga ' . $job['corrente'];
+                    } else {
+                        $job['status']['info'][] = 'per la data ' . $job['riga']['data_programmazione_attivita_seguente'] . ' la settimana è ' . date( 'W', strtotime( $job['riga']['data_programmazione_attivita_seguente'] ) ) . ' per la riga ' . $job['corrente'];
+                    }
+                }
 
                 // se è presente un ID cliente
                 if( ! empty( $idAnagrafica ) ) {
@@ -353,6 +367,14 @@
                         // todo
                         if( isset( $job['riga']['nome_todo'] ) && ! empty( $job['riga']['nome_todo'] ) ) {
 
+                            // ...
+                            if( ! isset( $job['riga']['tipologia_todo'] ) || empty( $job['riga']['tipologia_todo'] ) ) {
+                                if( isset( $job['riga']['tipologia_attivita'] ) && ! empty( $job['riga']['tipologia_attivita'] ) ) {
+                                    $job['riga']['tipologia_todo'] = $job['riga']['tipologia_attivita'];
+                                    $job['status']['info'][] = 'tipologia todo copiata da tipologia attività (' . $job['riga']['tipologia_attivita'] . ') per la riga ' . $job['corrente'];
+                                }
+                            }
+
                             // cerco la tipologia di todo
                             $idTipologiaTodo = mysqlSelectCachedValue(
                                 $cf['memcache']['connection'],
@@ -380,11 +402,20 @@
                                     'codice' => $job['riga']['codice_todo'],
                                     'id_tipologia' => $idTipologiaTodo,
                                     'nome' => $job['riga']['nome_todo'],
-                                    'id_responsabile' => $idResponsabileTodo,
+                                    'id_anagrafica' => $idResponsabileTodo,
+                                    'settimana_programmazione' => date( 'W', strtotime( $job['riga']['data_programmazione_attivita_seguente'] ) ),
+                                    'anno_programmazione' => date( 'Y', strtotime( $job['riga']['data_programmazione_attivita_seguente'] ) ),
                                     'id_cliente' => $idAnagrafica
                                 ),
                                 'todo'
                             );
+
+                            // status
+                            if( ! empty( $idTodo ) ) {
+                                $job['status']['info'][] = 'todo inserita con ID ' . $idTodo . ' per la riga ' . $job['corrente'];
+                            } else {
+                                $job['status']['error'][] = 'todo non inserita per la riga ' . $job['corrente'];
+                            }
 
                         } else {
 
@@ -452,7 +483,9 @@
 
                             // status
                             if( ! empty( $idAttivita ) ) {
+                                mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?', array( array( 's' => $idAttivita ) ) );
                                 $job['status']['info'][] = 'attività inserita con ID ' . $idAttivita . ' per la riga ' . $job['corrente'];
+                                $job['status']['info'][] = 'aggiornata view statica per ID ' . $idAttivita . ' per la riga ' . $job['corrente'];
                             } else {
                                 $job['status']['error'][] = 'attività non inserita per la riga ' . $job['corrente'];
                             }
