@@ -1059,7 +1059,7 @@ INSERT INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `sigl
 -- tipologie_attivita
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT IGNORE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `se_sistema`, `se_stampa`, `se_cartellini`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `se_sistema`, `se_stampa`, `se_cartellini`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	NULL,	'permessi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
@@ -1093,9 +1093,9 @@ INSERT IGNORE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`
 (31,	18,	NULL,	NULL,	'co-docenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (32,	18,	NULL,	NULL,	'recupero frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (33,	18,	NULL,	NULL,	'frequenza di prova',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(34,	NULL,	NULL,	NULL,	'mailing',	        NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(34,	NULL,	NULL,	NULL,	'mailing',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (35,	34,	NULL,	NULL,	'apertura mail',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(36,	28,	NULL,	NULL,	'invio report',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(36,	28,	NULL,	NULL,	'invio report',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000050450
 
