@@ -120,6 +120,7 @@
 			{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_indirizzi, request, '', '', '', 1, '', disabled ) }}
 		</div>
 		{% if request[ table ][ subtable ][ i ].indirizzo %}
+        {# TODO ma a cosa serve questa cosa? #}
 	    <div class="col">
 			<span class="label-top">indirizzo</span>
 			{{ frm.input( table, subtable, i, 'indirizzo', '', '', request, '', '', '', '', disabled ) }}
