@@ -811,16 +811,20 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
 
         if( ! empty( $riga['id'] ) ) {
 
-            if( empty( $riga['timestamp_aggiornamento'] ) ) {
-                $riga['timestamp_aggiornamento'] = time();
-                mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'UPDATE anagrafica SET timestamp_aggiornamento = ? WHERE id = ?',
-                    array(
-                        array( 's' => $riga['timestamp_aggiornamento'] ),
-                        array( 's' => $riga['id'] )
-                    )
-                );
+            $tRef = time();
+
+            foreach( array( 'timestamp_inserimento', 'timestamp_aggiornamento' ) as $fRef ) {
+                if( empty( $riga[ $fRef ] ) ) {
+                    $riga[ $fRef ] = $tRef;
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE anagrafica SET ' . $fRef . ' = ? WHERE id = ?',
+                        array(
+                            array( 's' => $riga[ $fRef ] ),
+                            array( 's' => $riga['id'] )
+                        )
+                    );
+                }
             }
 
             updateAnagraficaViewStaticCategorie( $id, $riga );

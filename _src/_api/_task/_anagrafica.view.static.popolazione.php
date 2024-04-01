@@ -16,19 +16,15 @@
 			$cf['mysql']['connection'],
 			'SELECT anagrafica.id FROM anagrafica 
             LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = anagrafica.id
-            WHERE (
-				(
-					coalesce( anagrafica.timestamp_aggiornamento, anagrafica.timestamp_inserimento ) > anagrafica_view_static.timestamp_aggiornamento 
-					OR
-					coalesce( anagrafica.timestamp_aggiornamento, anagrafica.timestamp_inserimento ) IS NULL
-				)
-            )
-			OR anagrafica_view_static.timestamp_aggiornamento IS NULL
+            WHERE
+                ( anagrafica_view_static.timestamp_inserimento IS NULL OR anagrafica.timestamp_inserimento > anagrafica_view_static.timestamp_inserimento )
+                OR
+                ( anagrafica_view_static.timestamp_aggiornamento IS NULL OR anagrafica.timestamp_aggiornamento > anagrafica_view_static.timestamp_aggiornamento )
 			ORDER BY anagrafica.id DESC
 			LIMIT 1'
 		);
 
-		// verifico le tabelle collegate
+        // verifico le tabelle collegate
 		if( empty( $status['aggiornare'] ) ) {
 
 			// ...
@@ -50,10 +46,16 @@
 
 			}
 
-			// ...
+            // status
 			$status['aggiornare']['id'] = max( $aggiornare );
+            $status['modalita'] = 'categorie';
 
-		}
+		} else {
+
+            // status
+            $status['modalita'] = 'standard';
+
+        }
 
 /*
 		// ...
@@ -70,6 +72,7 @@
 
         // scrivo la riga
         $status['aggiornare']['id'] = $_REQUEST['idAnagrafica'];
+        $status['modalita'] = 'forzata';
 
 	}
 
