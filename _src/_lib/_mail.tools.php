@@ -143,6 +143,10 @@
             'List-Unsubscribe',
             "<mailto:unsubscribe@cineferte.fr?subject=Unsubscribe%20:%20{$row['email']}>,<https://cineferte.fr/abo.php?unsub=" . $row['email'] . ">"
         );
+        $mail->addCustomHeader(
+            'List-Unsubscribe-Post',
+            'List-Unsubscribe=One-Click'
+        );
     */
 
     // DKIM
