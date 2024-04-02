@@ -2599,11 +2599,12 @@ ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-05-24 12:57 Chiara GDL
 ALTER TABLE `periodi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`),
+	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`, `id_genitore`),
+	ADD	KEY `id_genitore` (`id_genitore`),
 	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` ( `id`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`);
+	ADD KEY `indice` ( `id`, `id_genitore`, `data_inizio`, `data_fine`, `nome`,`id_tipologia`);
 
 -- | 030000023501
 

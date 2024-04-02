@@ -6118,6 +6118,7 @@ DROP TABLE IF EXISTS `periodi_view`;
 CREATE OR REPLACE VIEW `periodi_view` AS
 	SELECT
 		periodi.id,
+		periodi.id_genitore,
 		periodi.id_tipologia,
 		tipologie_periodi_path( periodi.id_tipologia ) AS tipologia,
 		periodi.data_inizio,

@@ -2435,6 +2435,7 @@ CREATE TABLE IF NOT EXISTS `pagine` (
 -- verifica: 2022-05-24 12:57 Chiara GDL
 CREATE TABLE IF NOT EXISTS `periodi` (
   `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `data_inizio` date DEFAULT NULL,
   `data_fine` date DEFAULT NULL,
