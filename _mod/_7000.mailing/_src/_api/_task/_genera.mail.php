@@ -196,10 +196,21 @@
 			array( 'row' => $row ),
 			$row['timestamp_invio'],
 			array( $row['destinatario'] => $row['indirizzo'] ),
-			$cf['localization']['language']['ietf']
+			$cf['localization']['language']['ietf'],
+            array(),
+            array().
+            array(),
+            array( 'List-unsubscribe' => '<' . $cf['site']['url'] . '/disiscrizione?mtk=' . md5( $row['id_mail'] . $row['indirizzo'] ) . '&isc=' . $row['id_mail'] . '>' )
 		);
 
-		// echo 'invio';
+        /**
+         * TODO list-unsubscribe
+         * bisogna aggiungere a ogni invio di newsletter gli header per il list-unsubscribe
+         * https://crm.eurosnodi.it/disiscrizione?mtk={{ row.mtk }}
+         * 
+         */
+
+        // echo 'invio';
 		// var_dump( $invio );
 		// die();
 

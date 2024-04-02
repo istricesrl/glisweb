@@ -170,6 +170,9 @@
         logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR );
     }
 
+    // headers
+        // TODO
+
 	// invio
 	    $status = $mail->Send();
 
