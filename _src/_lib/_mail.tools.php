@@ -89,9 +89,15 @@
 	    $mail->CharSet			= 'UTF-8';
 		$mail->Encoding			= 'base64';
 
-	// mittente
-	    $mail->SetFrom( current( $from ), current( array_keys( $from ) ) );
-	    $mail->AddReplyTo( current( $from ), current( array_keys( $from ) ) );
+    // mittente della mail
+        $fromName               = current( array_keys( $from ) );
+        $fromMail               = current( $from );
+        $fromDomain             = end( explode( '@', $fromMail ) );
+
+    // mittente
+	    $mail->SetFrom( $fromName, $fromMail );
+	    $mail->AddReplyTo( $fromName, $fromMail );
+        $mail->Sender = $fromMail;
 
 	// oggetto
 	    $mail->Subject			= $oggetto;
@@ -122,7 +128,7 @@
 
 	// allegati
 		if( is_array( $attach ) ) {
-			foreach( $attach as $kAtch => $vAtch ) {
+			foreach( $attach as $vAtch ) {
 				fullPath( $vAtch );
 				if( file_exists( $vAtch ) && is_readable( $vAtch ) ) {
 					$mail->AddAttachment( $vAtch , basename( $vAtch ) );
@@ -132,17 +138,33 @@
 			}
 		}
 
-	// DKIM
-	if( ! empty( $dkim_domain ) ) {
-		$mail->DKIM_domain = $dkim_domain;
-		$mail->DKIM_private = DIR_BASE . 'etc/secret/' . $dkim_domain . '/dkim.private.pem';
-		$mail->DKIM_selector = 'glisweb';
-		$mail->DKIM_passphrase = $dkim_pasw;
-		$mail->DKIM_identity = $mail->From;
-		logWrite( 'DKIM: ' . $dkim_domain . ' ' . $dkim_pasw, 'dkim', LOG_DEBUG );
-		logWrite( 'DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG );
-		logWrite( 'DKIM: ' . readFromFile( $mail->DKIM_private ), 'dkim', LOG_DEBUG );
-	}
+    /* TODO list unsubscribe in caso di newsletter (capire come fare a identificarlo)
+        $mail->addCustomHeader(
+            'List-Unsubscribe',
+            "<mailto:unsubscribe@cineferte.fr?subject=Unsubscribe%20:%20{$row['email']}>,<https://cineferte.fr/abo.php?unsub=" . $row['email'] . ">"
+        );
+    */
+
+    // DKIM
+    if( ! empty( $fromDomain ) ) {
+        if( file_exists( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem' ) ) {
+            $dkimPassw = ( file_exists( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key' ) ) ? readFromFile( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key' ) : $dkim_pasw; 
+            $mail->DKIM_domain = $fromDomain;
+            $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
+            $mail->DKIM_selector = 'glisweb';
+            $mail->DKIM_passphrase = $dkimPassw;
+            $mail->DKIM_identity = $mail->From;
+            logWrite( 'DKIM: ' . $fromDomain . ' : ' . $dkimPassw, 'dkim', LOG_DEBUG );
+            logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG );
+            logWrite( 'DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG );
+            logWrite( 'DKIM: ' . readFromFile( $mail->DKIM_private ), 'dkim', LOG_DEBUG );
+        } else {
+            logWrite( 'DKIM: ' . print_r( $from, true ) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE );
+            logWrite( 'DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE );
+        }
+    } else {
+        logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR );
+    }
 
 	// invio
 	    $status = $mail->Send();
