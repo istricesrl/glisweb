@@ -598,6 +598,8 @@ CREATE TABLE `carrelli` (
   `utm_campaign` char(128) DEFAULT NULL,
   `utm_term` char(128) DEFAULT NULL,
   `utm_content` char(128) DEFAULT NULL,
+  `spam_score` decimal(8,2) DEFAULT NULL,
+  `spam_check` int(1) DEFAULT NULL,
   `id_reseller` int(11) DEFAULT NULL,
   `id_affiliato` int(11) DEFAULT NULL,
   `id_affiliazione` int(11) DEFAULT NULL,

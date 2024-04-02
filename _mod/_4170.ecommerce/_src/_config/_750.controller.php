@@ -204,6 +204,7 @@
                             $_REQUEST['__carrello__']['__articolo__']['id_articolo'] => array(
                                 'quantita' => $_REQUEST['__carrello__']['__articolo__']['quantita'],
                                 'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'],
+                                'id_rinnovo' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] : NULL,
                                 'destinatario_id_anagrafica' => ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL,
                                 'id_iva' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_iva'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_iva'] : 1,
                                 // 'sconto_percentuale' => 0,

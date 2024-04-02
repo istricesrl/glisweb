@@ -123,6 +123,7 @@
                                 array(
                                     'id_documento' => $idDocumento,
                                     'id_articolo' => $pagamento['id_articolo'],
+                                    'id_rinnovo' => ( ( isset( $pagamento['id_rinnovo'] ) ) ? $pagamento['id_rinnovo'] : NULL ),
                                     'id_carrelli_articoli' => $pagamento['id'],
                                     'importo_netto_totale' => $pagamento['importo_netto_totale'],
                                     'importo_lordo_totale' => $pagamento['importo_lordo_totale'],

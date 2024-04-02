@@ -86,6 +86,16 @@
         // ...
         global $cf;
 
+        // dati dell'anno sportivo o scolastico
+        $r['etc']['periodo']['corrente'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM periodi 
+            INNER JOIN tipologie_periodi ON tipologie_periodi.id = periodi.id_tipologia 
+            WHERE tipologie_periodi.se_corsi = 1 
+            AND periodi.data_inizio < now() AND periodi.data_fine > now()
+            AND periodi.id_genitore IS NULL'
+        );
+
         // recupero i dati del documento
         $r['doc'] = mysqlSelectRow(
             $cf['mysql']['connection'],
@@ -208,6 +218,19 @@
             $riga['importo_iva_totale']                         = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_iva_totale'] ) );
             $riga['importo_lordo_totale']                       = str_replace( ',', '.', sprintf( '%0.2f', $riga['importo_lordo_totale'] ) );
 
+            if( ! empty( $riga['id_rinnovo'] ) ) {
+
+                $riga['dettagli']['rinnovo'] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT rinnovi.*, tipologie_rinnovi.nome AS tipologia 
+                    FROM rinnovi 
+                    INNER JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia 
+                    WHERE rinnovi.id = ?',
+                    array( array( 's' => $riga['id_rinnovo'] ) )
+                );
+
+            }
+
             if( ! empty( $riga['id_articolo'] ) ) {
 
                 $riga['dettagli']['corso'] = mysqlSelectRow(
@@ -242,6 +265,31 @@
                     'SELECT tipologie_contratti.* FROM tipologie_contratti INNER JOIN prodotti ON prodotti.id = tipologie_contratti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ? AND tipologie_contratti.se_abbonamento IS NOT NULL',
                     array( array( 's' => $riga['id_articolo'] ) )
                 );
+
+                /* TODO trovare un modo sensato di collegare i certificati richiesti agli abbonamenti anche in base ai corsi collegati
+
+                if( ! empty( $riga['dettagli']['abbonamento'] ) ) {
+
+                    $riga['dettagli']['abbonamento']['certificato']['richiesto'] = mysqlSelectRow(
+                        $cf['mysql']['connection'],
+                        'SELECT certificazioni.id, certificazioni.nome FROM certificazioni INNER JOIN progetti_certificazioni ON progetti_certificazioni.id_certificazione = certificazioni.id WHERE progetti_certificazioni.id_progetto = ?',
+                        array( array( 's' => $riga['dettagli']['abbonamento']['id'] ) )
+                    );
+
+                    if( ! empty( $riga['dettagli']['abbonamento']['certificato']['richiesto'] ) ) {
+                        $riga['dettagli']['abbonamento']['certificato']['richiesto']['scadenza'] = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT max( data_scadenza ) FROM anagrafica_certificazioni WHERE id_anagrafica = ? AND id_certificazione = ? ',
+                            array(
+                                array( 's' => $r['doc']['id_destinatario'] ),
+                                array( 's' => $riga['dettagli']['abbonamento']['certificato']['richiesto']['id'] ),
+                            )
+                        );
+                    }
+
+                }
+
+                */
 
                 $riga['dettagli']['tesseramento'] = mysqlSelectRow(
                     $cf['mysql']['connection'],
