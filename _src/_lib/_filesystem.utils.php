@@ -17,7 +17,7 @@
 
         $encoding = mb_detect_encoding( $t, 'auto' );
 
-        var_dump( $encoding );
+        // var_dump( $encoding );
 
         if( $encoding != false ) {
 
@@ -39,9 +39,7 @@
             logWrite( 'encoding non trovato per ' . $t, 'details/localization', LOG_ERR );
         }
 
-#        $t = ( $encoding === false ) ? $t : ( $encoding != 'UTF-8' ) ? iconv( $encoding, 'UTF-8', $t ) : $t;
-
-        var_dump( $t );
+        // var_dump( $t );
 
         $dom = new DOMDocument( '1.0', 'utf-8' );
         libxml_use_internal_errors( true );

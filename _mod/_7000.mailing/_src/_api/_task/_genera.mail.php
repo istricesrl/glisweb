@@ -207,7 +207,7 @@
 			array( $row['destinatario'] => $row['indirizzo'] ),
 			$cf['localization']['language']['ietf'],
             array(),
-            array().
+            array(),
             array(),
             array( 'List-unsubscribe' => '<' . $cf['site']['url'] . '/disiscrizione?mtk=' . md5( $row['id_mail'] . $row['indirizzo'] ) . '&isc=' . $row['id_mail'] . '>' )
 		);

@@ -138,16 +138,10 @@
 			}
 		}
 
-    /* TODO list unsubscribe in caso di newsletter (capire come fare a identificarlo)
-        $mail->addCustomHeader(
-            'List-Unsubscribe',
-            "<mailto:unsubscribe@cineferte.fr?subject=Unsubscribe%20:%20{$row['email']}>,<https://cineferte.fr/abo.php?unsub=" . $row['email'] . ">"
-        );
-        $mail->addCustomHeader(
-            'List-Unsubscribe-Post',
-            'List-Unsubscribe=One-Click'
-        );
-    */
+    // headers
+    foreach( $headers as $hKey => $hVal ) {
+        $mail->addCustomHeader( $hKey, $hVal );    
+    }
 
     // DKIM
     if( ! empty( $fromDomain ) ) {
@@ -363,7 +357,7 @@ if( empty( $t[ $l ]['from'] ) ) {
 		    );
 
 		// unlock delle tabelle
-		    mysqlQuery( $c, 'UNLOCK TABLES' );
+		    // mysqlQuery( $c, 'UNLOCK TABLES' );
 
 		// valore di ritorno
 		    return $id;
