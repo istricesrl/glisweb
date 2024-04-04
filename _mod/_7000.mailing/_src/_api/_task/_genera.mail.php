@@ -134,7 +134,10 @@
 			'nome' => $row['nome']
 		);
 
-		// prelevo i contenuti
+		// ...
+		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+
+        // prelevo i contenuti
 		$cnts = mysqlCachedQuery(
 			$cf['memcache']['connection'],
 			$cf['mysql']['connection'],
@@ -143,6 +146,9 @@
 			'WHERE contenuti.id_mailing = ?',
 			array( array( 's' => $row['id'] ) )
 		);
+
+		// ...
+		logWrite( print_r( $cnts, true ), 'details/mailing/' . $row['id'], LOG_ERR );
 
 // var_dump( $cnts );
 // die();
@@ -186,6 +192,9 @@
 
 		// var_dump( $tpl );
 		// die();
+
+		// ...
+		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
 
 		// invio la mail
 		$invio = queueMailFromTemplate(

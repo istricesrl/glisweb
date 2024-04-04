@@ -13,8 +13,35 @@
             }
         }
 
-        $encoding = mb_detect_encoding( $t );
-        $t = $encoding ? @iconv( $encoding, 'UTF-8', $t ) : $t;
+        // var_dump( $t );
+
+        $encoding = mb_detect_encoding( $t, 'auto' );
+
+        var_dump( $encoding );
+
+        if( $encoding != false ) {
+
+            if( $encoding != 'UTF-8' ) {
+
+                logWrite( 'encoding non UTF-8 per ' . $t, 'details/localization', LOG_ERR );
+
+                $utf8t = iconv( $encoding, 'UTF-8', $t );
+
+                if( ! empty( $utf8t ) ) {
+                    $t = $utf8t;
+                } else {
+                    logWrite( 'errore di iconv() da ' . $encoding . ' a UTF-8 per ' . $t, 'details/localization', LOG_ERR );
+                }
+
+            }
+
+        } else {
+            logWrite( 'encoding non trovato per ' . $t, 'details/localization', LOG_ERR );
+        }
+
+#        $t = ( $encoding === false ) ? $t : ( $encoding != 'UTF-8' ) ? iconv( $encoding, 'UTF-8', $t ) : $t;
+
+        var_dump( $t );
 
         $dom = new DOMDocument( '1.0', 'utf-8' );
         libxml_use_internal_errors( true );
@@ -47,8 +74,10 @@
             }
         }
 
-        $output = @$dom->saveXML( $doc->documentElement );
-        
+        $output = $dom->saveXML( $doc->documentElement );
+
+        // var_dump( $output );
+
         return $output;
 
     }
