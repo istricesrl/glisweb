@@ -209,8 +209,13 @@
             array(),
             array(),
             array(),
-            array( 'List-unsubscribe' => '<' . $cf['site']['url'] . '/disiscrizione?mtk=' . md5( $row['id_mail'] . $row['indirizzo'] ) . '&isc=' . $row['id_mail'] . '>' )
-		);
+            array(
+                'List-unsubscribe' => 
+                    '<mailto:'.$cnt['mittente_mail'].'?subject=Unsubscribe%20:%20{'.$row['indirizzo'].'}>,'.
+                    '<' . $cf['site']['url'] . 'disiscrizione?mtk=' . md5( $row['id_mail'] . $row['indirizzo'] ) . '&isc=' . $row['id_mail'] . '>',
+                'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click'
+                )
+            );
 
         /**
          * TODO list-unsubscribe
