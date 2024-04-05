@@ -9325,6 +9325,7 @@ CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
 		tipologie_periodi.font_awesome,
 		tipologie_periodi.se_corsi,
 		tipologie_periodi.se_tesseramenti,
+		tipologie_periodi.se_abbonamenti,
 		tipologie_periodi.id_account_inserimento,
 		tipologie_periodi.id_account_aggiornamento,
 		tipologie_periodi_path( tipologie_periodi.id ) AS __label__
