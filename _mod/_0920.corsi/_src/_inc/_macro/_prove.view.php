@@ -30,14 +30,14 @@
 	);
         
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'presenze.form';
+	// $ct['view']['open']['page'] = 'presenze.form';
 	$ct['view']['open']['table'] = 'attivita';
 
 /*
     // campi della vista
 	$ct['view']['cols'] = array(
         'id' => '#',
-        'data_attivita' => 'data',
+        'data_programmazione' => 'data',
         'anagrafica' => 'operatore',
         'id_anagrafica' => 'id_anagrafica',
         'cliente' => 'cliente',
@@ -54,7 +54,7 @@
         'id_anagrafica' => 'd-none',
         'anagrafica' => 'no-wrap',
         'cliente' => 'text-left d-none d-md-table-cell',
-        'data_attivita' => 'no-wrap',
+        'data_programmazione' => 'no-wrap',
         'ore' => 'text-right no-wrap',
         'nome' => 'text-left',
         'tipologia' => 'text-left',
@@ -74,7 +74,7 @@
         'cliente' => 'cliente',
         'data_programmazione' => 'programmata',
         'anagrafica_programmazione' => 'assegnata a',
-        'data_attivita' => 'eseguita',
+        'data_programmazione' => 'eseguita',
 	    'anagrafica' => 'svolta da',
         'nome' => 'attività',
 	    'ore' => 'ore',
@@ -96,10 +96,10 @@
 	    'data_programmazione' => 'no-wrap',
         'ora_inizio_programmazione' => 'd-none',
         'ora_fine_programmazione' => 'd-none',
-        'data_attivita' => 'no-wrap',
+        'data_programmazione' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left',
-        'corso' => 'text-left',
+        'progetto' => 'text-left',
         'discipline' => 'text-left',
         'luogo' => 'd-none',
         'ora_inizio' => 'd-none',
@@ -163,20 +163,20 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
 	} */
 
-    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']) ){
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'ASC';
-    } 
-
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['id_tipologia']['EQ'] = 33;
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']) ){
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'ASC';
+    } 
+
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
              if(! empty($row['data_programmazione'])){
-//                $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+//                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));
 //                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
 
                 $discipline = explode( ' > ', $row['discipline'] );

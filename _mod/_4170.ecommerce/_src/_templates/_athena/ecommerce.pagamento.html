@@ -40,6 +40,7 @@
                 </div>
                 {% for r in etc.righe %}
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id]" value="{{ r.id }}">
+                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_pagamento]" value="{{ r.id_pagamento }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_carrello]" value="{{ r.id_carrello }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario_id_anagrafica]" value="{{ r.destinatario_id_anagrafica }}">
                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_rinnovo]" value="{{ r.id_rinnovo }}">
@@ -69,8 +70,13 @@
                         <p>{{ '%0.2f'|format( r.totale_lordo_rateizzato ) }}</p>
                     </div>
                     <div class="col-1">
+                        {% if not r.id_pagamento %}
                         <label class="label-top">importo</label>
                         <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
+                        {% else %}
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}">
+                        <p>{{ r.totale_lordo_da_pagare }} €</p>
+                        {% endif %}
                     </div>
                     <div class="col d-flex flex-row align-items-stretch">
                         {% for doc in r.documenti_da_stampare %}

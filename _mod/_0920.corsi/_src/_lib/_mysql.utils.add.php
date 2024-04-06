@@ -219,6 +219,7 @@
 		        todo.id_indirizzo, todo.id_luogo, 
                 todo.timestamp_apertura,
                 todo.data_scadenza, todo.ora_scadenza, todo.data_programmazione, todo.ora_inizio_programmazione,
+                dayname( todo.data_programmazione ) AS note_programmazione,
                 todo.ora_fine_programmazione, todo.anno_programmazione, todo.settimana_programmazione, todo.ore_programmazione,
                 todo.data_chiusura, todo.nome, todo.id_contatto, todo.id_progetto, todo.id_pianificazione, todo.id_immobile,
                 todo.data_archiviazione, todo.id_account_inserimento, todo.timestamp_inserimento, 

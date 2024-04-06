@@ -61,7 +61,7 @@
 			}
 
 			// ...
-			print_r( $aggiornare );
+			// print_r( $aggiornare );
 
 			// ...
 			$status['aggiornare']['id'] = max( $aggiornare );

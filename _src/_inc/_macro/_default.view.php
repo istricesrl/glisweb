@@ -160,13 +160,21 @@
     // percorso della pagina di gestione
 	if( isset( $ct['view']['open']['page'] ) && ! empty( $ct['view']['open']['page'] ) && ( getAclPermission( $ct['view']['table'], METHOD_PUT ) || getAclPermission( $ct['view']['table'], METHOD_GET ) ) ) {
 //	if( isset( $ct['view']['open']['page'] ) && ! empty( $ct['view']['open']['page'] ) ) {
-	    $ct['view']['open']['path'] = $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+        if( isset( $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ] ) ) {
+            $ct['view']['open']['path'] = $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+        } else {
+            die( 'La pagina di gestione ' . $ct['view']['open']['page'] . ' non è stata definita o non è valida' );
+        }
 	}
 
     // percorso della pagina di inserimento
 	if( isset( $ct['view']['insert']['page'] ) && ! empty( $ct['view']['insert']['page'] ) && getAclPermission( $ct['view']['table'], METHOD_POST ) ) {
 //	if( isset( $ct['view']['insert']['page'] ) && ! empty( $ct['view']['insert']['page'] ) ) {
-	    $ct['view']['insert']['path'] = $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+        if( isset( $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ] ) ) {
+            $ct['view']['insert']['path'] = $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+        } else {
+            die( 'La pagina di inserimento ' . $ct['view']['insert']['page'] . ' non è stata definita o non è valida' );
+        }
 	}
 
 	if( isset( $ct['view']['footer']['cols'] ) ) {

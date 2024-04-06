@@ -73,6 +73,15 @@
 		'text' => 'ripopola il report dei corsi'
 	);
 
+    // ...
+	$ct['page']['contents']['metro']['cache'][] = array(
+		'lws' => $base . 'report.lezioni.corsi.popolazione',
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'ripopola report lezioni corsi',
+		'text' => 'ripopola il report delle lezioni dei corsi'
+	);
+
     // tendina anni
     foreach( range( date( 'Y' ) - 1,  date( 'Y' ) + 1 ) as $y ) {
         $ct['etc']['select']['anni'][ $y ] = array( 'id' => $y, '__label__' => $y ) ;
