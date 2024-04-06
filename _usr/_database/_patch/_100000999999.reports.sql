@@ -1404,6 +1404,7 @@ CREATE TABLE `__report_lezioni_corsi__` (
   `anno_programmazione` char(255) DEFAULT NULL,
   `settimana_programmazione` char(255) DEFAULT NULL,
   `ore_programmazione` char(255) DEFAULT NULL,
+  `note_programmazione` text DEFAULT NULL,
   `data_chiusura` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `posti_disponibili` char(32) DEFAULT NULL,
