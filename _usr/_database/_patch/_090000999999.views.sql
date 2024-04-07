@@ -960,6 +960,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.timestamp_inserimento,
 		attivita.id_account_aggiornamento,
 		attivita.timestamp_aggiornamento,
+		attivita.timestamp_archiviazione,
 		concat(
 			attivita.nome,
 			' / ',

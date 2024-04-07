@@ -33,14 +33,39 @@
                     array( 's' => $_REQUEST['__chiudi___id_attivita'] )
                 )
             );
+        } elseif( isset( $_REQUEST['__chiudi___esito'] ) && $_REQUEST['__chiudi___esito'] == 0 ) {
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
+                'UPDATE attivita SET data_attivita = NULL, timestamp_archiviazione = unix_timestamp(), timestamp_aggiornamento = unix_timestamp() 
+                WHERE id = ?',
                 array(
                     array( 's' => $_REQUEST['__chiudi___id_attivita'] )
                 )
             );
         }
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
+            array(
+                array( 's' => $_REQUEST['__chiudi___id_attivita'] )
+            )
+        );
+    } elseif( isset( $_REQUEST['__archivia___id_attivita'] ) ) {
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE attivita SET timestamp_archiviazione = unix_timestamp(), timestamp_aggiornamento = unix_timestamp() 
+            WHERE id = ?',
+            array(
+                array( 's' => $_REQUEST['__archivia___id_attivita'] )
+            )
+        );
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
+            array(
+                array( 's' => $_REQUEST['__archivia___id_attivita'] )
+            )
+        );
     }
 
     // tabella della vista
@@ -105,6 +130,7 @@
         'ora_inizio' => 'oi',
         'ora_fine' => 'of'
 */
+        'timestamp_archiviazione' => 'archiviazione',
         'discipline' => 'discipline',
         'id_progetto' => 'ID corso',
         'progetto' => 'corso',
@@ -128,6 +154,7 @@
         'nome' => 'text-left',
         'id_progetto' => 'd-none',
         'progetto' => 'text-left',
+        'timestamp_archiviazione' => 'd-none',
         'discipline' => 'text-left',
         'luogo' => 'd-none',
         'ora_inizio' => 'd-none',
@@ -141,7 +168,7 @@
     );
 
     // inclusione filtri speciali
-	// $ct['etc']['include']['filters'] = 'inc/attivita.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/prove.view.filters.html';
 
     $ct['page']['contents']['modals']['metro'][] = array(
         'schema' => 'inc/prove.modal.attivita.html'
@@ -198,6 +225,14 @@
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['id_tipologia']['EQ'] = 33;
 
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NL'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NL'] = 1;
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NN'] = NULL;
+    } elseif( empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NL'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NL'] = NULL;
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_archiviazione']['NN'] = 1;
+    }
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
@@ -205,39 +240,51 @@
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'ASC';
     } 
 
-    if( !empty( $ct['view']['data'] ) ){
-		foreach ( $ct['view']['data'] as &$row ){
+    if( !empty( $ct['view']['data'] ) ) {
+		foreach ( $ct['view']['data'] as &$row ) {
 
             $buttons = '';
 
-            if(! empty($row['data_attivita'])){
-//                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));
-//                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
+            if( $row['data_programmazione'] < date('Y-m-d') ) {
+            
+                if( ! empty( $row['data_attivita'] ) ) {
+    //                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));
+    //                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
 
-                $row['data_attivita'] = 'sì';
+                    $row['data_attivita'] = 'sì';
 
-                $discipline = explode( ' > ', $row['discipline'] );
-                if( is_array( $discipline ) ) {
-                    $row['discipline'] = end( $discipline );
-                }
+                    $discipline = explode( ' > ', $row['discipline'] );
+                    if( is_array( $discipline ) ) {
+                        $row['discipline'] = end( $discipline );
+                    }
 
-                if( in_array( "0920.corsi", $cf['mods']['active']['array'] ) ) {
-                    // TODO mandare all'elenco corsi con l'anagrafica bookmarkata e il filtro per la disciplina cui appartiene il corso
-                    // $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['corsi.view']['path'][ LINGUA_CORRENTE ].'?__work__[progetti][items][1][id]='.$row['id'].'&amp;__work__[progetti][items][1][label]='.$row['progetto'].'&amp;__work__[anagrafica][items][1][id]='.$row['id'].'&amp;__work__[anagrafica][items][1][label]='.$row['progetto'].'\',\'_self\');"><i class="fa fa-graduation-cap"></i></a>';
-                }
+                    if( in_array( "0920.corsi", $cf['mods']['active']['array'] ) ) {
+                        // TODO mandare all'elenco corsi con l'anagrafica bookmarkata e il filtro per la disciplina cui appartiene il corso
+                        // $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['corsi.view']['path'][ LINGUA_CORRENTE ].'?__work__[progetti][items][1][id]='.$row['id'].'&amp;__work__[progetti][items][1][label]='.$row['progetto'].'&amp;__work__[anagrafica][items][1][id]='.$row['id'].'&amp;__work__[anagrafica][items][1][label]='.$row['progetto'].'\',\'_self\');"><i class="fa fa-graduation-cap"></i></a>';
+                    }
 
-                if( in_array( "0640.abbonamenti", $cf['mods']['active']['array'] ) ) {
-                    $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['abbonamenti.form']['path'][ LINGUA_CORRENTE ].'?__preset__[contratti][id_anagrafica]='.$row['id_anagrafica'].'\',\'_self\');"><i class="fa fa-calendar"></i></a>';
-                }
+                    if( in_array( "0640.abbonamenti", $cf['mods']['active']['array'] ) ) {
+                        $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['abbonamenti.form']['path'][ LINGUA_CORRENTE ].'?__preset__[contratti][id_anagrafica]='.$row['id_anagrafica'].'\',\'_self\');"><i class="fa fa-calendar"></i></a>';
+                    }
 
-            } elseif( $row['data_programmazione'] < date('Y-m-d') ) {
+                    if( empty( $row['timestamp_archiviazione'] ) ) {
+                        $onclick = "$('#__archivia___id_attivita').val('".$row['id']."'); $('#archivia_attivita').modal('show');";
+                        $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-archive"></i></a>';
+                    }
 
-                if( empty($row['data_attivita']) ) {
+                    $row['data_attivita'] = 'sì';
 
-                    $onclick = "$('#__chiudi___id_attivita').val('".$row['id']."'); $('#chiudi_attivita').modal('show');";
-                    $buttons .= '<a href="#" data-toggle="modal" data-target="#chiudi_attivita" onclick="'.$onclick.'"><i class="fa fa-check-square-o"></i></a>';
-                    $row['data_attivita'] = 'no';
-    
+                } elseif( $row['data_programmazione'] < date('Y-m-d') ) {
+
+                    if( empty($row['data_attivita']) ) {
+
+                        $onclick = "$('#__chiudi___id_attivita').val('".$row['id']."'); $('#chiudi_attivita').modal('show');";
+                        $buttons .= '<a href="#" data-toggle="modal" data-target="#chiudi_attivita" onclick="'.$onclick.'"><i class="fa fa-check-square-o"></i></a>';
+
+                        $row['data_attivita'] = 'no';
+        
+                    }
+
                 }
 
             }

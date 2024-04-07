@@ -218,6 +218,7 @@ CREATE TABLE `attivita_view_static` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
   `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
