@@ -11,13 +11,22 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'esportazioni' => array(
-		'label' => 'popolazione report statici'
-	    )
+	    '01.esportazioni' => array(
+			'label' => 'esportazioni'
+		),
+	    '02.importazioni' => array(
+			'label' => 'importazioni'
+		),
+	    '03.elaborazioni' => array(
+			'label' => 'elaborazioni'
+		),
+	    '05.static' => array(
+			'label' => 'viste statiche'
+		)
 	);
 
     // esportazione ore operatori
-    $ct['page']['contents']['metro']['esportazioni'][] = array(
+    $ct['page']['contents']['metro']['01.esportazioni'][] = array(
         'modal' => array('id' => 'operatori', 'include' => 'inc/attivita.tools.modal.export.operatori.html' ),
         'icon' => NULL,
         'fa' => 'fa-file-excel-o',
@@ -26,7 +35,7 @@
     );
 
     // esportazione ore progetti
-    $ct['page']['contents']['metro']['esportazioni'][] = array(
+    $ct['page']['contents']['metro']['01.esportazioni'][] = array(
         'modal' => array('id' => 'progetti', 'include' => 'inc/attivita.tools.modal.export.progetti.html' ),
         'icon' => NULL,
         'fa' => 'fa-file-excel-o',
@@ -35,7 +44,7 @@
     );
 
     // esportazione ore progetti per tipologia e conto ore
-    $ct['page']['contents']['metro']['esportazioni'][] = array(
+    $ct['page']['contents']['metro']['01.esportazioni'][] = array(
         'modal' => array('id' => 'progetti-tipologie-mastri', 'include' => 'inc/attivita.tools.modal.export.progetti.tipologie.mastri.html' ),
         'icon' => NULL,
         'fa' => 'fa-file-excel-o',
@@ -44,13 +53,21 @@
     );
 
     // esportazione ore operatore per progetto
-    $ct['page']['contents']['metro']['esportazioni'][] = array(
+    $ct['page']['contents']['metro']['01.esportazioni'][] = array(
         'modal' => array('id' => 'operatori-per-progetto', 'include' => 'inc/attivita.tools.modal.export.operatori.per.progetto.html' ),
         'icon' => NULL,
         'fa' => 'fa-file-excel-o',
         'title' => 'esportazione ore operatori per progetto',
         'text' => 'esporta le ore fatte per operatore e per progetto in un determinato mese e anno'
     );
+
+	$ct['page']['contents']['metro']['05.static'][] = array(
+		'lws' => '/task/0200.attivita/attivita.view.static.popolazione',
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'ripopola attivita view static',
+		'text' => 'ripopola la view static delle attività'
+	);
 
     // tendina mesi
     foreach( range( 1, 12 ) as $mese ) {

@@ -957,7 +957,9 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.codice_archivium,
 		attivita.token,
 		attivita.id_account_inserimento,
+		attivita.timestamp_inserimento,
 		attivita.id_account_aggiornamento,
+		attivita.timestamp_aggiornamento,
 		concat(
 			attivita.nome,
 			' / ',

@@ -29,6 +29,7 @@
         'tipologia' => 'tipologia',
         'data_inizio' => 'inizio',
         'data_fine' => 'fine',
+        'pagamento' => 'pagamento',
         NULL => 'azioni'
 	);
 
@@ -49,6 +50,9 @@
     $ct['view']['onclick'] = array(
         NULL => 'event.stopPropagation();'
     );
+
+    // colonne da non prelevare dal database
+    $ct['view']['extra']['cols'] = array( 'pagamento' );
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'tesseramenti.form';
@@ -81,12 +85,13 @@
     // azioni
     foreach( $ct['view']['data'] as &$row ) {
         if( is_array( $row ) ) {
+
+            /*
             $pagato = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT documenti_articoli.id FROM documenti_articoli INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento INNER JOIN pagamenti ON pagamenti.id_documento = documenti.id INNER JOIN rinnovi ON rinnovi.id = documenti_articoli.id_rinnovo WHERE rinnovi.id_contratto = ? AND pagamenti.timestamp_pagamento IS NOT NULL', array( array( 's' => $row['id'] ) ) );
             if( empty( $pagato ) ) {
                 $articolo = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT articoli.id FROM articoli INNER JOIN metadati ON metadati.id_articolo = articoli.id WHERE metadati.nome = "acquisto_rinnovi|id_tipologia" AND metadati.testo = ?', array( array( 's' => $row['id_tipologia'] ) ) );
                 $ordinato = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT carrelli.id FROM carrelli_articoli INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello WHERE id_articolo = ? AND carrelli_articoli.destinatario_id_anagrafica = ? AND carrelli.session = ?', array( array( 's' => $articolo ), array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ), array( 's' => $cf['session']['id'] ) ) );
 
-                /*
                 // die($ordinato);
                 if( empty( $ordinato ) ) {
                     if( isset( $cf['contents']['pages']['ecommerce.carrello']['url'][ LINGUA_CORRENTE ] ) ) {
@@ -94,8 +99,37 @@
                         $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.carrello']['url'][ LINGUA_CORRENTE ] . '?__carrello__[__articolo__][id_articolo]=' . $articolo . '&__carrello__[__articolo__][destinatario_id_anagrafica]='.$_REQUEST[ $ct['form']['table'] ]['id'].'"><span class="media-left"><i class="fa fa-cart-plus"></i></span></a>';
                     }
                 }
-                */
             }
+            */
+
+            // TODO considerare solo i rinnovi di tipo ordinario ecc. escludere i rinnovi di ripresa dopo una sospensione
+            // OPPURE utilizzare i periodi per le sospensioni vedere cosa è meno un casino
+            $rinnovi = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT rinnovi.*, 
+                sum( documenti_articoli.importo_lordo_totale ) AS pagato, sum( carrelli_articoli.prezzo_lordo_finale ) AS ordinato
+                FROM rinnovi
+                LEFT JOIN documenti_articoli ON documenti_articoli.id_rinnovo = rinnovi.id
+                LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id
+                WHERE rinnovi.id_contratto = ?
+                GROUP BY rinnovi.id
+                ORDER BY rinnovi.data_fine DESC',
+                array( array( 's' => $row['id_contratto'] ) )
+            );
+
+            if( empty( $rinnovi ) ) {
+                $row['pagamento'] = 'nessun rinnovo trovato';
+            } elseif( $rinnovi['ordinato'] == 0 ) {
+                $row['pagamento'] = 'da aggiungere al carrello';
+            } elseif( $rinnovi['pagato'] == 0 ) {
+                $row['pagamento'] = 'da pagare';
+            } elseif( $rinnovi['pagato'] < $rinnovi['ordinato'] ) {
+                $row['pagamento'] = 'da pagare € ' . number_format( $rinnovi['ordinato'] - $rinnovi['pagato'], 2, ',', '.');
+                $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.pagamento']['url'][ LINGUA_CORRENTE ] . '?__pagamenti__[id_cliente]='.$row['id_anagrafica'].'"><span class="media-left"><i class="fa fa-shopping-cart"></i></span></a>';
+            } elseif( $rinnovi['pagato'] == $rinnovi['ordinato'] ) {
+                $row['pagamento'] = 'pagato';
+            }
+
         }
     }
 

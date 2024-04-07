@@ -19,6 +19,29 @@
 
     // debug
 	// print_r( $_SESSION );
+    // print_r( $_REQUEST );
+
+    // ...
+    if( isset( $_REQUEST['__chiudi___id_attivita'] ) ) {
+        if( isset( $_REQUEST['__chiudi___esito'] ) && $_REQUEST['__chiudi___esito'] == 1 ) {
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE attivita SET data_attivita = ?, timestamp_aggiornamento = unix_timestamp() 
+                WHERE id = ?',
+                array(
+                    array( 's' => date('Y-m-d') ),
+                    array( 's' => $_REQUEST['__chiudi___id_attivita'] )
+                )
+            );
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
+                array(
+                    array( 's' => $_REQUEST['__chiudi___id_attivita'] )
+                )
+            );
+        }
+    }
 
     // tabella della vista
     $ct['view']['table'] = 'attivita';
@@ -86,6 +109,7 @@
         'id_progetto' => 'ID corso',
         'progetto' => 'corso',
         'luogo' => 'luogo',
+        'data_attivita' => 'frequentata',
         NULL => 'azioni'
       );
 
@@ -118,6 +142,10 @@
 
     // inclusione filtri speciali
 	// $ct['etc']['include']['filters'] = 'inc/attivita.view.filters.html';
+
+    $ct['page']['contents']['modals']['metro'][] = array(
+        'schema' => 'inc/prove.modal.attivita.html'
+    );
 
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
@@ -179,11 +207,14 @@
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-             if(! empty($row['data_programmazione'])){
+
+            $buttons = '';
+
+            if(! empty($row['data_attivita'])){
 //                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));
 //                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
 
-                $buttons = '';
+                $row['data_attivita'] = 'sì';
 
                 $discipline = explode( ' > ', $row['discipline'] );
                 if( is_array( $discipline ) ) {
@@ -199,8 +230,19 @@
                     $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['abbonamenti.form']['path'][ LINGUA_CORRENTE ].'?__preset__[contratti][id_anagrafica]='.$row['id_anagrafica'].'\',\'_self\');"><i class="fa fa-calendar"></i></a>';
                 }
 
-                $row[ NULL ] = $buttons;
+            } elseif( $row['data_programmazione'] < date('Y-m-d') ) {
+
+                if( empty($row['data_attivita']) ) {
+
+                    $onclick = "$('#__chiudi___id_attivita').val('".$row['id']."'); $('#chiudi_attivita').modal('show');";
+                    $buttons .= '<a href="#" data-toggle="modal" data-target="#chiudi_attivita" onclick="'.$onclick.'"><i class="fa fa-check-square-o"></i></a>';
+                    $row['data_attivita'] = 'no';
+    
+                }
 
             }
+
+            $row[ NULL ] = $buttons;
+
         }
 	}
