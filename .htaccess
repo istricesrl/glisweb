@@ -1,31 +1,61 @@
-# configurazione pagine di errore
-ErrorDocument 403 /_usr/_pages/_403.php
-ErrorDocument 404 /_usr/_pages/_404.php
-ErrorDocument 503 /_usr/_pages/_503.php
+## FILE DI ROUTING PRINCIPALE DEL FRAMEWORK
+#
+# Questo file svolge il compito fondamentale di reindirizzare le richieste inviate al framework verso i file
+# demandati a gestirle. Oltre a questo, setta alcune opzioni generali, si occupa di bloccare diversi tipi di
+# richieste malevole, e imposta alcune configurazioni per le performance, come la cache lato browser.
+#
 
-# NOTA le pagine di errore sono fatte in modo da includere la controparte custom in modo che sia possibile
-# personalizzare i messaggi di errore mostrati agli utenti
+## OPZIONI GENERALI
+#
+# In questa sezione vengono impostate le opzioni generali, valide per tutto il framework salvo indicazioni
+# diverse derivanti da file .htaccess inclusi nelle sottocartelle.
+#
 
 # rimuovo la navigazione automatica
 Options -Indexes
 
-# NOTA la rimozione della generazione di pagine automatiche per la navigazione attraverso il filesystem
-# è una blanda misura di sicurezza contro i curiosi
+## BLOCCHI DI SICUREZZA
+#
+# Questa sezione ha lo scopo di bloccare richieste potenzialmente dannose sulla base del tipo di file richiesto;
+# viene in questo modo impedito l'accesso a file sorgenti, file di configurazione, chiavi, e altri file che
+# potrebbero contenere informazioni sensibili o codice potenzialmente malevolo.
+#
 
-# impedisco l'accesso ai file che possono contenere informazioni sensibili
-<FilesMatch "(?i)\.(log|trace|conf|info|htaccess|htpasswd|sql|dox|json|twig|lock|properties|bak|backup|asp|swp|mdb|save|templ|notes|cfm|csp|sqlite|config|cfg|bas|map|jsp|ini|exe|py|cgi|sh|shtml|htl|blt|pl|md)$">
+# impedisco l'accesso ai file relativi a linguaggi non supportati
+<FilesMatch "(?i)\.(asp|bas|cfm|csp|jsp|shtml)$">
     Deny from all
 </FilesMatch>
 
-# configurazione rewriting
+# impedisco l'accesso ai file che possono contenere informazioni sensibili
+<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|dox|htaccess|htpasswd|ini|info|json|key|lock|log|md|notes|pem|properties|save|sql|sqlite|swp|templ|trace|twig)$">
+    Deny from all
+</FilesMatch>
+
+# impedisco l'accesso ai file potenzialmente dannosi
+<FilesMatch "(?i)\.(cgi|exe|htl|map|mdb|pl|py|sh)$">
+    Deny from all
+</FilesMatch>
+
+## URL REWRITING
+#
+# Questa sezione si occupa di fare il routing vero e proprio verso gli endpoint del framework progettati per gestire i vari
+# tipi di richieste degli utenti. Le regole contenute in questa sezione si occupano quindi di instradare le richieste degli utenti verso gli endpoint
+# appropriati. Per ulteriori informazioni sul funzionamento dell'URL rewriting si veda https://httpd.apache.org/docs/2.4/mod/mod_rewrite.html
+#
+
+# controllo modulo rewrite
 <IfModule mod_rewrite.c>
 
     # attivazione motore di rewriting
     RewriteEngine on
 
-    # release e versione corrente
-    RewriteRule ^current.release _etc/_current.release [L]
-    RewriteRule ^current.version _etc/_current.version [L]
+    ## REDIRECT DI SICUREZZA
+    # 
+    # Per ovvi motivi viene impedito l'accesso alla cartella .git/; vengono inoltre bloccate la cartella tmp/, che può contenere file di importazione o di
+    # elaborazione o comunque file contenenti dati riservati. L'accesso alla cartella usr/ è limitato perché può contenere codice involontariamente pericoloso
+    # o materiale riservato. Lo stesso discorso a maggior ragione vale per la cartella var/ e soprattutto per alcune sue sottocartelle come la var/log/,
+    # la delicatissima var/spool/, la var/session/ nel caso si gestiscano lì le sessioni, e la var/work/.
+    #
 
     # directory ad accesso vietato
     RewriteRule ^.git/* - [F,L,NC]
@@ -37,23 +67,15 @@ Options -Indexes
     RewriteRule ^var/spool/* - [F,L,NC]
     RewriteRule ^var/work/* - [F,L,NC]
 
-    # directory ad accesso diretto
-    RewriteRule ^usr/pages/* - [L,NC]
-    RewriteRule ^_usr/_pages/* - [L,NC]
+    # REDIRECT APPLICATIVI
+    #
+    # Questi redirect hanno a che fare con specifici aspetti del funzionamento dell'applicazione e impostano alcuni comportamenti di default, come il rinvio
+    # alla versione con HTTPS e alla versione con www.
+    #
 
-    # robots.txt di default
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} robots.txt
-    RewriteRule ^robots.txt _etc/_robots.txt [L]
-
-    # favicon di default
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} favicon.ico
-    RewriteRule ^favicon.ico _src/_img/_favicon.ico [L]
-
-    # sitemap
-    RewriteRule ^sitemap.xml var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
-    RewriteRule ^sitemap.csv var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
+    # release e versione corrente
+    RewriteRule ^current.release _etc/_current.release [L]
+    RewriteRule ^current.version _etc/_current.version [L]
 
     # redirect a HTTPS
     RewriteCond %{HTTPS} off
@@ -78,26 +100,58 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/src/img/hotlink.png -f
     RewriteRule .*\.(gif|jpg|jpeg|png|pdf|webp)$ src/img/hotlink.png [NC]
 
+    ## SCORCIATOIE
+    #
+    # Queste regole hanno il solo scopo di accorciare il percorso verso determinati URL, per semplificare il lavoro degli utenti.
+    #
+
     # gestione della documentazione
     RewriteRule ^docs/([a-zA-Z0-9_\-\/\.]*)$ _usr/_docs/_build/html/$1 [L,QSA]
 
     # gestione del browser delle variabili
     RewriteRule ^cf$ _usr/_examples/_framework/_variabili.php [L,QSA]
 
-    # gestione delle API speciali custom
+    # report sulla velocità
+    # TODO ma questa viene usata?
+    RewriteRule ^speed$ _src/_api/_status/_framework.speed.php [L]
+
+    # report sullo stato di funzionamento
+    RewriteRule ^status$ _src/_api/_status/_framework.status.php [L]
+
+    # report sui test
+    # TODO ma questa viene usata?
+    RewriteRule ^test$ _src/_api/_status/_framework.test.php [L]
+
+    ## API GENERICHE
+    #
+    # Le API sono interfacce che possono essere chiamate direttamente per svolgere determinati compiti o per gestire alcuni tipi di I/O come
+    # ad esempio le API REST. Le API rispondono normalmente a URL del tipo api/<nomeApi> oppure api/<nomeModulo>/<nomeApi>. Ci sono alcune
+    # API speciali che gestiscono alcune richieste particolari:
+    # 
+    # - l'API di login (api/login) e l'API di logout (api/logout) usate per il login via API e gestite da _src/_api/_user.php
+    # - l'API di download che risponde alle richieste di tipo var/<risorsa> gestendole con _src/_api/_download.php
+    # - l'API di download per il mailer, che traccia le richieste tipo mailing/<invio>/var/<risorsa> e mailing/<invio>/<destinatario>/var/<risorsa> via _src/_api/_download.php
+    # - l'API per la cache delle tele di Open Street Map
+    # - l'API generica per la gestione delle richieste REST su api/<entità> tramite _src/_api/_rest.php
+    #
+
+    # gestione delle API custom base
+    # questa regola intercetta URL del tipo api/<nomeApi> e li reindirizza a src/api/<nomeApi>.php se esiste
     RewriteCond %{DOCUMENT_ROOT}/src/api/$1.php -f
     RewriteRule ^api/([a-zA-Z0-9_\-\.]+)$ src/api/$1.php [L,QSA]
 
-    # gestione delle API speciali standard
+    # gestione delle API standard base
+    # questa regola intercetta URL del tipo api/<nomeApi> e li reindirizza a _src/_api/_<nomeApi>.php se esiste
     RewriteCond %{DOCUMENT_ROOT}/_src/_api/_$1.php -f
-    # NOTA perché era stata modificata così? RewriteRule ^api/([a-zA-Z0-9_\-]+)/([a-zA-Z0-9\.]+)*$ _src/_api/_$1.php [L,QSA]
     RewriteRule ^api/([a-zA-Z0-9_\-\.]+)$ _src/_api/_$1.php [L,QSA]
 
-    # gestione delle API speciali custom dei moduli
+    # gestione delle API custom moduli
+    # questa regola intercetta URL del tipo api/<modulo>/<nomeApi> e li reindirizza a mod/<modulo>/src/api/<nomeApi>.php se esiste
     RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/$2.php -f
     RewriteRule ^api/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9\.]+)*$ mod/$1/src/api/$2.php [L,QSA]
 
-    # gestione delle API speciali standard dei moduli
+    # gestione delle API standard moduli
+    # questa regola intercetta URL del tipo api/<modulo>/<nomeApi> e li reindirizza a _mod/_<modulo>/_src/_api/_<nomeApi>.php se esiste
     RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_$2.php -f
     RewriteRule ^api/([a-zA-Z0-9_\-\.]+)[\/]*([a-zA-Z0-9\.]+)*$ _mod/_$1/_src/_api/_$2.php [L,QSA]
 
@@ -105,106 +159,189 @@ Options -Indexes
     RewriteRule ^api/login$ _src/_api/_user.php [L,QSA]
     RewriteRule ^api/logout$ _src/_api/_user.php?__logout__=1 [L,QSA]
 
-    # gestione dell'API di download
+    # gestione dell'API di download generica
+    # questa regola reindirizza qualunque richiesta diretta al contenuto di var/ all'api _src/_api/_download.php (vedi la documentazione dell'API per i dettagli)
     RewriteRule ^var/(.+)$ _src/_api/_download.php?__download__=var/$1 [B,L,QSA]
 
     # gestione dell'API di download per il mailing
+    # questa regola reindirizza qualunque richiesta del tipo mailing/<idMailing>/var/<risorsa>
     RewriteRule ^mailing/([0-9]+)/var/(.+)$ _src/_api/_download.php?__download__=var/$2&__mailing__=$1 [B,L,QSA]
     RewriteRule ^mailing/([0-9]+)/([0-9]+)/var/(.+)$ _src/_api/_download.php?__download__=var/$3&__mailing__=$1&__mailing_dst__=$2 [B,L,QSA]
 
-    # gestione delle API generiche
+    # proxy OSM
+    # questa regola reindirizza le richieste di tipo tiles/<z>/<x>/<y>.png all'API _src/_api/_osm.php (vedi la documentazione relativa per i dettagli)
+    RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
+
+    # gestione delle API REST generiche
+    # questa regola reindirizza le richieste di tipo api/<entità>[/<id>] a _src/_api/_rest.php (vedi la documentazione del file per i dettagli)
     RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9]+)*$ _src/_api/_rest.php?__ws__=$1&__id__=$2 [L,QSA]
 
-    # gestione dei task custom base
-    RewriteCond %{DOCUMENT_ROOT}/src/api/task/$1.php -f
-    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ src/api/task/$1.php [L,QSA]
-
-    # gestione dei task standard base
-    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_$1.php -f
-    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_$1.php [L,QSA]
-
-    # gestione dei task/report standard base
-    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_report/_$1.php -f
-    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_report/_$1.php [L,QSA]
-
-    # gestione dei task/view standard base
-    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_view/_$1.php -f
-    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_view/_$1.php [L,QSA]
-
-    # gestione dei task custom moduli
-    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/task/$2.php -f
-    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/task/$2.php [L,QSA]
-
-    # gestione dei task standard moduli
-    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_$2.php -f
-    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_$2.php [L,QSA]
-
-    # gestione dei task/report standard moduli
-    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_report/_$2.php -f
-    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_report/_$2.php [L,QSA]
-
-    # gestione dei task/view standard moduli
-    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_view/_$2.php -f
-    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_view/_$2.php [L,QSA]
-
-    # gestione delle stampe custom base
-    RewriteCond %{DOCUMENT_ROOT}/src/api/print/$1.php -f
-    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)$ src/api/print/$1.php [L,QSA]
-
-    # gestione delle stampe standard base
-    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_print/_$1.php -f
-    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)$ _src/_api/_print/_$1.php [L,QSA]
-
-    # gestione delle stampe custom moduli
-    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/print/$2.php -f
-    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/print/$2.php [L,QSA]
-
-    # gestione delle stampe standard moduli
-    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_print/_$2.php -f
-    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_print/_$2.php [L,QSA]
+    ## JOB
+    #
+    # queste regole riguardano l'esecuzione dei job; per maggiori informazioni sui job si veda la relativa documentazione, oltre alla documentazione dei file
+    # _src/_api/_cron.php e _src/_api/_job.php
+    #
+    # TODO questa API può causare problemi con siti in inglese che hanno una pagina che si chiama job; sarebbe probabilmente meglio che l'API job fosse
+    # raggiungibile soltanto con il prefisso api/ come l'API cron (api/cron)
+    #
 
     # gestione dei job standalone
     RewriteRule ^job/([0-9]+)*$ _src/_api/_job.php?__id__=$1 [L,QSA]
 
-    # gestione degli status speciali
-    RewriteRule ^speed$ _src/_api/_status/_framework.speed.php [L]
-    RewriteRule ^status$ _src/_api/_status/_framework.status.php [L]
-    RewriteRule ^test$ _src/_api/_status/_framework.test.php [L]
+    ## TASK
+    #
+    # queste regole riguardano l'esecuzione dei task; per maggiori informazioni sui task si veda la relativa documentazione oltre ai commenti presenti nei singoli
+    # file di task e in _src/_api/_cron.php
+    #
 
-    # gestione degli status custom base
+    # gestione dei task custom base
+    # questa regola intercetta chiamate del tipo task/<nomeTask> e le reindirizza a src/api/task/<nomeTask>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/src/api/task/$1.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ src/api/task/$1.php [L,QSA]
+
+    # gestione dei task standard base
+    # questa regola intercetta chiamate del tipo task/<nomeTask> e le reindirizza a _src/_api/_task/_<nomeTask>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_$1.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_$1.php [L,QSA]
+
+    # gestione dei task custom moduli
+    # questa regola intercetta chiamate del tipo task/<modulo>/<nomeTask> e le reindirizza a mod/<modulo>/src/api/task/<nomeTask>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/task/$2.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/task/$2.php [L,QSA]
+
+    # gestione dei task standard moduli
+    # questa regola intercetta chiamate del tipo task/<modulo>/<nomeTask> e le reindirizza a _mod/_<modulo>/_src/_api/_task/_<nomeTask>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_$2.php -f
+    RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_$2.php [L,QSA]
+
+    ## REPORT
+    #
+    # queste regole riguardano la produzione di report, i report sono contenuti nella sottocartella report della cartella delle API, sia nel modulo
+    # base che nei moduli aggiuntivi; per ulteriori informazioni si veda la documentazione relativa ai report nonché i commenti all'interno di ogni
+    # singolo file.
+    #
+
+    # gestione dei report custom base
+    # questa regola intercetta richieste di tipo report/<nomeReport> e li rimanda a src/api/report/<nomeReport>.php
     RewriteCond %{DOCUMENT_ROOT}/src/api/report/$1.php -f
     RewriteRule ^report/([a-zA-Z0-9_\-\.]+)$ src/api/report/$1.php [L,QSA]
 
-    # gestione degli status standard base
-    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_status/_$1.php -f
-    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)$ _src/_api/_status/_$1.php [L,QSA]
+    # gestione dei report standard base
+    # questa regola intercetta richieste di tipo report/<nomeReport> e li rimanda a _src/_api/_report/_<nomeReport>.php
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_report/_$1.php -f
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)$ _src/_api/_report/_$1.php [L,QSA]
 
-    # gestione degli status custom moduli
+    # gestione dei report custom moduli
+    # questa regola intercetta richieste di tipo report/<modulo>/<nomeReport> e li rimanda a mod/<modulo>/src/api/report/<nomeReport>.php
     RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/report/$2.php -f
     RewriteRule ^report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/report/$2.php [L,QSA]
 
+    # gestione dei report standard moduli
+    # questa regola intercetta richieste di tipo report/<modulo>/<nomeReport> e li rimanda a _mod/_<modulo>/_src/_api/_report/_<nomeReport>.php
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_report/_$2.php -f
+    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_report/_$2.php [L,QSA]
+
+    ## STATUS
+    #
+    # gli status sono pagine solitamente molto semplici che consentono di monitorare lo status di vari aspetti del framework (funzionamento generale,
+    # connessione al database, eccetera); per maggiori informazioni si veda la relativa documentazione e i commenti al codice dei singoli file.
+    #
+
+    # gestione degli status custom base
+    # questa regola intercetta richieste di tipo status/<nomeStatus> e li rimanda a src/api/status/<nomeStatus>.php
+    RewriteCond %{DOCUMENT_ROOT}/src/api/status/$1.php -f
+    RewriteRule ^status/([a-zA-Z0-9_\-\.]+)$ src/api/status/$1.php [L,QSA]
+
+    # gestione degli status standard base
+    # questa regola intercetta richieste di tipo status/<nomeStatus> e li rimanda a _src/_api/_status/_<nomeStatus>.php
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_status/_$1.php -f
+    RewriteRule ^status/([a-zA-Z0-9_\-\.]+)$ _src/_api/_status/_$1.php [L,QSA]
+
+    # gestione degli status custom moduli
+    # questa regola intercetta richieste di tipo status/<modulo>/<nomeStatus> e li rimanda a mod/<modulo>/src/api/status/<nomeStatus>.php
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/status/$2.php -f
+    RewriteRule ^status/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/status/$2.php [L,QSA]
+
     # gestione degli status standard moduli
+    # questa regola intercetta richieste di tipo status/<modulo>/<nomeStatus> e li rimanda a _mod/_<modulo>/_src/_api/_status/_<nomeStatus>.php
     RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_status/_$2.php -f
-    RewriteRule ^report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_status/_$2.php [L,QSA]
+    RewriteRule ^status/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_status/_$2.php [L,QSA]
 
-    # proxy OSM
-    RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
+    ## STAMPE
+    #
+    # queste regole smistano le richieste alle API di stampa, tipicamente contenute nelle sottocartelle print della cartella delle API sia nel
+    # modulo base che nei moduli aggiuntivi.
+    #
 
-    # gestione home page
-    RewriteCond %{DOCUMENT_ROOT}/index.html !-f
-    RewriteCond %{DOCUMENT_ROOT}/index.php !-f
-    RewriteRule ^$ _src/_api/_pages.php [L,QSA]
+    # gestione delle stampe custom base
+    # questa regola reindirizza le richieste di tipo print/<nomeStampa> a src/api/print/<nomeStampa>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/src/api/print/$1.php -f
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)$ src/api/print/$1.php [L,QSA]
+
+    # gestione delle stampe standard base
+    # questa regola reindirizza le richieste di tipo print/<nomeStampa> a _src/_api/_print/_<nomeStampa>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_print/_$1.php -f
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)$ _src/_api/_print/_$1.php [L,QSA]
+
+    # gestione delle stampe custom moduli
+    # questa regola reindirizza le richieste di tipo print/<modulo>/<nomeStampa> a mod/<modulo>/src/api/print/<nomeStampa>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/print/$2.php -f
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/print/$2.php [L,QSA]
+
+    # gestione delle stampe standard moduli
+    # questa regola reindirizza le richieste di tipo print/<modulo>/<nomeStampa> a _mod/_<modulo>/_src/_api/_print/_<nomeStampa>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_print/_$2.php -f
+    RewriteRule ^print/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_print/_$2.php [L,QSA]
+
+    ## CONTENUTI
+    #
+    # le regole di questa sezione si occupano di reindirizzare le richieste di specifiche risorse di contenuto all'API incaricata di
+    # gestirle; la tipologia più frequente di richiesta è quella di pagine HTML che viene gestita solitamente dall'API pages, Per maggiori
+    # informazioni si raccomanda caldamente la lettura, oltre alla documentazione relativa, del codice e dei commenti dal file
+    # _src/_api/_pages.php che è di fatto uno dei più importanti dell'intero framework dal momento che il suo compito è erogare
+    # agli utenti le pagine che chiedono.
+
+    # favicon di default
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} favicon.ico
+    RewriteRule ^favicon.ico _src/_img/_favicon.ico [L]
+
+    # robots.txt di default
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} robots.txt
+    RewriteRule ^robots.txt _etc/_robots.txt [L]
+
+    # sitemap XML e CSV
+    RewriteRule ^sitemap.xml var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
+    RewriteRule ^sitemap.csv var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
+
+    # directory ad accesso diretto custom
+    # i file collocati in queste cartelle vengono erogati direttamente senza ulteriori elaborazioni; questo consente di creare
+    # semplici siti statici nella sottocartella usr/pages.
+    RewriteCond %{DOCUMENT_ROOT}/usr/pages/$1 -f
+    RewriteRule ^(.*)$ usr/pages/$1 [L,NC]
+
+    # directory ad accesso diretto standard
+    # per questa regola vale quanto detto sopra
+    RewriteCond %{DOCUMENT_ROOT}/_usr/_pages/$1 -f
+    RewriteRule ^(.*)$ _usr/_pages/$1 [L,NC]
 
     # gestione delle pagine
-    RewriteCond %{REQUEST_FILENAME} !-d
+    # questa regola si occupa di erogare le pagine richieste dagli utenti tramite il file _src/_api/_pages.php
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^([a-zA-Z0-9_\-\/]+)[\.]*([a-zA-Z0-9_\-]+)* _src/_api/_pages.php?__rw__=$1&__lg__=$2 [L,QSA]
+    RewriteRule ^([a-zA-Z0-9_\-\/]+)*[\.]*([a-zA-Z0-9_\-\/]+)* _src/_api/_pages.php?__rw__=$1&__lg__=$2 [L,QSA]
 
 </IfModule>
 
-# configurazione compressione dell'output
+## COMPRESSIONE DELL'OUTPUT
+#
+# per un approfondimento sulla compressione dell'output si veda https://httpd.apache.org/docs/2.4/mod/mod_deflate.html
+#
+
+# controllo modulo deflate
 <ifmodule mod_deflate.c>
 
+    # impostazione compressione per tipo di file
     AddOutputFilterByType DEFLATE text/plain
     AddOutputFilterByType DEFLATE text/html
     AddOutputFilterByType DEFLATE text/xml
@@ -215,11 +352,17 @@ Options -Indexes
     AddOutputFilterByType DEFLATE application/javascript
     AddOutputFilterByType DEFLATE application/x-javascript
 
+    # regole specifiche per browser
     BrowserMatch ^Mozilla/4 gzip-only-text/html
     BrowserMatch ^Mozilla/4\.0[678] no-gzip
     BrowserMatch \bMSIE !no-gzip !gzip-only-text/html
 
 </ifmodule>
+
+## CACHE LATO BROWSER
+#
+# Per un ulteriore approfondimento sul caching in Apache si veda https://httpd.apache.org/docs/2.4/caching.html
+#
 
 # cache per i file HTML
 <FilesMatch ".(htm|html)$">
@@ -235,3 +378,7 @@ Options -Indexes
 <FilesMatch ".(css|js)$">
     Header set Cache-Control "max-age=2628000, public"
 </FilesMatch>
+
+## NOTE
+# tutto il traffico diretto al framework passa da questo file, che è quindi fondamentale per il funzionamento del sistema.
+#
