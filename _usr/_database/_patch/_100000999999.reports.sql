@@ -936,9 +936,9 @@ DROP VIEW IF EXISTS `__report_tesseramenti_anagrafica__`;
 CREATE OR REPLACE VIEW `__report_tesseramenti_anagrafica__` AS
 	SELECT
 		contratti.id,
-		rinnovi.id_tipologia,
-    contratti_anagrafica.id_anagrafica,
-		coalesce( tipologie_rinnovi.nome, tipologie_contratti.nome ) AS tipologia,
+		contratti.id_tipologia,
+        contratti_anagrafica.id_anagrafica,
+		tipologie_contratti.nome AS tipologia,
 		tipologie_contratti.se_abbonamento,
 		tipologie_contratti.se_iscrizione,
 		tipologie_contratti.se_tesseramento,
@@ -946,6 +946,8 @@ CREATE OR REPLACE VIEW `__report_tesseramenti_anagrafica__` AS
 		tipologie_contratti.se_acquisto,
 		tipologie_contratti.se_locazione,
 		rinnovi.id AS id_rinnovo,
+		rinnovi.id_tipologia AS id_tipologia_rinnovo,
+		tipologie_rinnovi.nome AS tipologia_rinnovo,
 		contratti.id AS id_contratto,
 		contratti.nome AS contratto,
 		contratti.codice AS tessera,

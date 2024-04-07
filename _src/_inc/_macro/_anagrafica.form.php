@@ -112,7 +112,7 @@
 	    'SELECT id, __label__ FROM comuni_view'
 	);
 */
-
+/*
     // tendina indirizzi
 	$ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -120,7 +120,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM indirizzi_view'
 	);
-
+*/
 /*
 
 

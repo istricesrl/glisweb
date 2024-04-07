@@ -66,6 +66,7 @@
      $ct['view']['cols'] = array(
 	    'id' => '#',
         'data_programmazione' => 'data',
+	    'id_anagrafica' => 'ID iscritto',
 	    'anagrafica' => 'iscritto',
         'tipologia' => 'tipologia',
         'ora_inizio_programmazione' => 'ora',
@@ -82,6 +83,7 @@
         'ora_fine' => 'of'
 */
         'discipline' => 'discipline',
+        'id_progetto' => 'ID corso',
         'progetto' => 'corso',
         'luogo' => 'luogo',
         NULL => 'azioni'
@@ -92,6 +94,7 @@
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
         'cliente' => 'text-left d-none d-md-table-cell',
+        'id_anagrafica' => 'd-none',
         'anagrafica_programmazione' => 'text-left',
 	    'data_programmazione' => 'no-wrap',
         'ora_inizio_programmazione' => 'd-none',
@@ -99,6 +102,7 @@
         'data_programmazione' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left',
+        'id_progetto' => 'd-none',
         'progetto' => 'text-left',
         'discipline' => 'text-left',
         'luogo' => 'd-none',
@@ -179,10 +183,23 @@
 //                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));
 //                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
 
+                $buttons = '';
+
                 $discipline = explode( ' > ', $row['discipline'] );
                 if( is_array( $discipline ) ) {
                     $row['discipline'] = end( $discipline );
                 }
+
+                if( in_array( "0920.corsi", $cf['mods']['active']['array'] ) ) {
+                    // TODO mandare all'elenco corsi con l'anagrafica bookmarkata e il filtro per la disciplina cui appartiene il corso
+                    // $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['corsi.view']['path'][ LINGUA_CORRENTE ].'?__work__[progetti][items][1][id]='.$row['id'].'&amp;__work__[progetti][items][1][label]='.$row['progetto'].'&amp;__work__[anagrafica][items][1][id]='.$row['id'].'&amp;__work__[anagrafica][items][1][label]='.$row['progetto'].'\',\'_self\');"><i class="fa fa-graduation-cap"></i></a>';
+                }
+
+                if( in_array( "0640.abbonamenti", $cf['mods']['active']['array'] ) ) {
+                    $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['abbonamenti.form']['path'][ LINGUA_CORRENTE ].'?__preset__[contratti][id_anagrafica]='.$row['id_anagrafica'].'\',\'_self\');"><i class="fa fa-calendar"></i></a>';
+                }
+
+                $row[ NULL ] = $buttons;
 
             }
         }

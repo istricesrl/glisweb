@@ -43,7 +43,7 @@
       'data_inizio' => 'data inizio',
       'data_fine' => 'data fine',
         'id_contratto' => 'id_contratto',
-        '__label__' => 'contratto'
+        '__label__' => 'descrizione'
     );
 
     // stili della vista

@@ -17,7 +17,7 @@
 	$ct['form']['table'] = 'contratti';
 
     $ct['form']['subtable'] = 'contratti_anagrafica';
-
+/*
     // tendina tesserato
 	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -25,7 +25,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view'
 	);
-
+*/
 	// tendina per le tipologie di contratto
     $ct['etc']['select']['tipologie_contratti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
