@@ -24,9 +24,9 @@
 
 	    // lunghezza minima del filtro
 	    if( $.isNumeric( select.attr( 'min-filter' ) ) ) {
-		var min = select.attr( 'min-filter' );
+		    var min = select.attr( 'min-filter' );
 	    } else {
-		var min = 0;
+		    var min = 0;
 	    }
 
 		// se la select è disabilitata
@@ -44,7 +44,7 @@
 
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'data-required' ) == 'true' ) {
-		$( box ).prop( 'required', true );
+		    $( box ).prop( 'required', true );
 	    }
 
 	    // prelevo il valore corrente
@@ -57,6 +57,7 @@
         }
 
         // console.log( 'valore corrente: ' + current + '/' + currvalue );
+        // alert( 'valore corrente: ' + current + '/' + currvalue );
 
         // imposto il valore corrente
 	    // aggiungo l'attributo required
@@ -79,7 +80,20 @@
 			box.val( current );
 		}
 
-	    // TODO creo la <ul> con le opzioni
+        if( current != '' ) {
+            // alert( 'prelevo #' + current + ' da ' + $( select ).attr( 'populate-api' ) );
+            getws(
+                '/api/' + $( select ).attr( 'populate-api' ) + '/' + current,
+                null,
+                function( data ) {
+                    // alert( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
+                    box.val( data.__label__ );
+                    $( select ).val( current );
+                }
+            );
+        }
+
+        // TODO creo la <ul> con le opzioni
 	    var lista = $('<ul class="combobox-dropdown remove-on-duplicate" id="' + base_id + '_list"> </ul>');
 
 		// evento custom per mostrare l'intera lista
