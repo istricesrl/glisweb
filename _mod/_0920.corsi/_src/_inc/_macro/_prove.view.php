@@ -260,11 +260,16 @@
 
                     if( in_array( "0920.corsi", $cf['mods']['active']['array'] ) ) {
                         // TODO mandare all'elenco corsi con l'anagrafica bookmarkata e il filtro per la disciplina cui appartiene il corso
-                        // $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['corsi.view']['path'][ LINGUA_CORRENTE ].'?__work__[progetti][items][1][id]='.$row['id'].'&amp;__work__[progetti][items][1][label]='.$row['progetto'].'&amp;__work__[anagrafica][items][1][id]='.$row['id'].'&amp;__work__[anagrafica][items][1][label]='.$row['progetto'].'\',\'_self\');"><i class="fa fa-graduation-cap"></i></a>';
+                        // $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''
+                        // .$cf['contents']['pages']['corsi.view']['path'][ LINGUA_CORRENTE ].'?__work__[progetti][items][1][id]='.$row['id']
+                        // .'&amp;__work__[progetti][items][1][label]='.$row['progetto'].'&amp;__work__[anagrafica][items][1][id]='.$row['id']
+                        // .'&amp;__work__[anagrafica][items][1][label]='.$row['progetto'].'\',\'_self\');"><i class="fa fa-graduation-cap"></i></a>';
                     }
 
                     if( in_array( "0640.abbonamenti", $cf['mods']['active']['array'] ) ) {
-                        $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''.$cf['contents']['pages']['abbonamenti.form']['path'][ LINGUA_CORRENTE ].'?__preset__[contratti][id_anagrafica]='.$row['id_anagrafica'].'\',\'_self\');"><i class="fa fa-calendar"></i></a>';
+                        $buttons .= '<a href="#" data-toggle="modal" data-target="#scorciatoia_promemoria" onclick="window.open(\''
+                            .$cf['contents']['pages']['abbonamenti.form']['path'][ LINGUA_CORRENTE ]
+                            .'?__preset__[contratti][id_anagrafica]='.$row['id_anagrafica'].'\',\'_self\');"><i class="fa fa-calendar"></i></a>';
                     }
 
                     if( empty( $row['timestamp_archiviazione'] ) ) {
