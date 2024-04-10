@@ -82,7 +82,10 @@
 				$vs[ $k ]		= array( 's' => $v );					// array dei valori per il bind dei parametri
 				$ks[]			= $k;									// array delle chiavi per la costruzione della query
 
-			}
+                // TODO provare e vedere se funziona
+                // $befores[ $k ] = $v;
+
+            }
 
 		}
 
@@ -380,7 +383,9 @@
 			);
 			foreach( $ct as $f ) { require $f; }
 
-			// variabile per confronto prima/dopo
+            // TODO NOTA se attiviamo la valorizzazione di $befores in cima, qui si arriva con la $befores già valorizzata
+
+            // variabile per confronto prima/dopo
 			    $before = NULL;
 
 				// recupero dati per confronto prima/dopo
@@ -393,6 +398,7 @@
 					$before = md5( serialize( 
 						mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) )
 					) );
+                    // TODO documentare a cosa serve $before (per il confronto con $after?)
 					$befores = mysqlSelectRow( $c, 'SELECT * FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) );
 					// var_dump( $d['id'] );
 					// print_r( $befores );

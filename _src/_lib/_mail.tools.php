@@ -55,7 +55,7 @@
 	    $mail->Host					= $host;
 	    $mail->Port					= $port;
 	    $mail->SMTPDebug			= PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
-	    $mail->Debugoutput			= function( $str, $level ) { logWrite( '('.$level.') '.$str, 'phpmailer' ); };
+	    $mail->Debugoutput			= function( $str, $level ) { logWrite( '('.$level.') '.$str, 'details/phpmailer/send', $level ); };
 
 	// log
 	    logWrite(

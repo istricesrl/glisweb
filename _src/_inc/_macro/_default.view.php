@@ -36,7 +36,11 @@
 	    $ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
 	}
 
-	// contatore per i campi della vista
+    if( ! isset( $ct['view']['extra']['cols'] ) ) {
+        $ct['view']['extra']['cols'] = array();
+    }
+
+    // contatore per i campi della vista
 	$i = 10;
 
     // campi della vista
@@ -83,7 +87,7 @@
     // aggiungo le colonne da prelevare
 	// $_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = array_keys( $ct['view']['cols'] );
 	// $ct['view']['data']['__fields__'] = array_keys( $ct['view']['cols'] );
-	$_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = arrayTrim( array_keys( $ct['view']['cols'] ) );
+	$_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = arrayTrim( array_diff( array_keys( $ct['view']['cols'] ), $ct['view']['extra']['cols'] ) );
 
 #    // aggiungo i campi di filtro
 #	if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] ) ) {

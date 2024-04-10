@@ -41,6 +41,13 @@
                 unset( $vs['codice_anagrafica'] );
                 removeFromArray( $ks, 'codice_anagrafica' );
 
+                $befores['id_anagrafica'] = $vs['id_anagrafica']['s'];
+                $befores['id_categoria'] = $vs['id_categoria']['s'];
+
+                // TODO questa cosa del befores funziona a metà, perché legge dal database ma se sto inserendo una riga che nel database non c'è
+                // $befores ovviamente risulta vuoto, bisogna ragionare meglio su cosa mettere a disposizione delle controllers e documentare
+                // bene tutto
+
             }
 
 	    break;
