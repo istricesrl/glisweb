@@ -118,7 +118,9 @@
 
     // TODO la forzatura del nome del sito nel <title> dev'essere opzionale
     if( ! empty( TITLE_SEPARATOR ) ) {
-        $ct['page']['title'][ LINGUA_CORRENTE ] = $cf['site']['name'][ LINGUA_CORRENTE ] . TITLE_SEPARATOR . $ct['page']['title'][ LINGUA_CORRENTE ];
+        if( ! isset( $cf['site']['metadati']['noSiteNameInTitle'] ) ) {
+            $ct['page']['title'][ LINGUA_CORRENTE ] = $cf['site']['name'][ LINGUA_CORRENTE ] . TITLE_SEPARATOR . $ct['page']['title'][ LINGUA_CORRENTE ];
+        }
     }
 
     /*

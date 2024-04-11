@@ -68,7 +68,7 @@
                             $status['info'][] = 'inserita la pagina ' . $idPagina;
 
                             // oggetti collegati
-                            foreach( array( 'contenuti', 'menu', 'immagini', 'file', 'metadati', 'macro', 'pubblicazioni' ) as $entita ) {
+                            foreach( array( 'contenuti', 'menu', 'immagini', 'file', 'metadati', 'macro', 'pubblicazioni', 'video' ) as $entita ) {
 
                                 // recupero le entità da inserire
                                 $ents = mysqlQuery(
