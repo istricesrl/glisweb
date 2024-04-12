@@ -24,7 +24,9 @@
 	$status = array();
 
     // chiave di lock
-	$status['token'] = getToken( __FILE__ );
+    if( ! isset( $status['token'] ) ) {
+        $status['token'] = getToken( __FILE__ );
+    }
 
     // debug
 	// $status['token'] = 'TEST';

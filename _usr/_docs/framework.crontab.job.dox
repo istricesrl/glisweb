@@ -337,6 +337,8 @@
 
     \endcode
 
+    TODO verificare che questo esempio sia allineato ai job più recenti
+
     job che non possono essere eseguiti in modalità standalone
     ----------------------------------------------------------
     Può darsi il caso di job la cui peculiare natura non consente o non rende vantaggiosa l'esecuzione in modalità standalone; in questo caso, è comunque

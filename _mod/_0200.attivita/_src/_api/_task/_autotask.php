@@ -9,7 +9,9 @@
 	$status = array();
 
     // chiave di lock
-	$status['token'] = getToken( __FILE__ );
+    if( ! isset( $status['token'] ) ) {
+        $status['token'] = getToken( __FILE__ );
+    }
 
 	// modalità di evasione (specifica mail, evasione forzata, evasione totale, evasione naturale)
 	if( isset( $_REQUEST['id'] ) ) {

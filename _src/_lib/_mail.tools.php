@@ -33,7 +33,12 @@
      */
     function sendMail( $host, $from, $to, $oggetto, $corpo, $cc = array(), $bcc = array(), $attach = array(), $headers = array(), $user = NULL, $pasw = NULL, $port = 25, $dkim_domain = NULL, $dkim_pasw = NULL ) {
 
-	// log
+        // debug
+        // ini_set('display_errors', 1);
+        // ini_set('display_startup_errors', 1);
+        // error_reporting(E_ALL);
+
+        // log
 	    logWrite(
 			'sending: '	. $oggetto			. ' ' .
 			'to: '		. print_r( $to , true )		. ' ' .
@@ -44,20 +49,20 @@
 			LOG_DEBUG
 	    );
 
-	// esito dell'operazione
+	    // esito dell'operazione
 	    $status				= true;
 
-	// creazione dell'oggetto mail
-	    $mail				= new PHPMailer\PHPMailer\PHPMailer();
+	    // creazione dell'oggetto mail
+	    $mail				= new PHPMailer\PHPMailer\PHPMailer( true );
 
-	// configurazione dell'oggetto mail
+        // configurazione dell'oggetto mail
 	    $mail->IsSMTP();
 	    $mail->Host					= $host;
 	    $mail->Port					= $port;
 	    $mail->SMTPDebug			= PHPMailer\PHPMailer\SMTP::DEBUG_SERVER;
 	    $mail->Debugoutput			= function( $str, $level ) { logWrite( '('.$level.') '.$str, 'details/phpmailer/send', $level ); };
 
-	// log
+	    // log
 	    logWrite(
 			'server: '	. $host		. ' ' .
 			'port: '	. $port		. ' ' .
@@ -67,7 +72,7 @@
 			LOG_DEBUG
 	    );
 
-	// autenticazione
+	    // autenticazione
 	    if( ! empty( $user ) ) {
 			$mail->SMTPAuth			= true;
 			$mail->Username			= $user;
@@ -76,57 +81,59 @@
 			$mail->SMTPAuth			= false;
 	    }
 
-	// TLS
+	    // TLS
 		if( $port == '587' ) {
 			$mail->SMTPSecure		= 'tls';
 		}
-		if( $port == '465' ) {
+
+        // SSL
+        if( $port == '465' ) {
 			$mail->SMTPSecure		= 'ssl';
 		}
 
-	// configurazione dell'oggetto mail
+	    // configurazione dell'oggetto mail
 	    $mail->IsHTML			= true;
 	    $mail->CharSet			= 'UTF-8';
 		$mail->Encoding			= 'base64';
 
-    // mittente della mail
+        // mittente della mail
         $fromName               = current( array_keys( $from ) );
         $fromMail               = current( $from );
         $fromDomain             = end( explode( '@', $fromMail ) );
 
-    // mittente
+        // mittente
 	    $mail->SetFrom( $fromMail, $fromName );
 	    $mail->AddReplyTo( $fromMail, $fromName );
         $mail->Sender = $fromMail;
 
-	// oggetto
+	    // oggetto
 	    $mail->Subject			= $oggetto;
 
-	// creo il testo in plain text
+	    // creo il testo in plain text
 	    $text = new \Html2Text\Html2Text( $corpo );
 
-	// corpo alternativo
+	    // corpo alternativo
 	    $mail->AltBody			= wordwrap( $text->getText() );
 
-	// corpo del messaggio
+	    // corpo del messaggio
 	    $mail->MsgHTML( $corpo );
 
-	// destinatari
+	    // destinatari
 	    foreach( $to as $destName => $destAddress ) {
 			$mail->AddAddress( trim( $destAddress ), trim( $destName ) );
 	    }
 
-	// destinatari CC
+	    // destinatari CC
 	    foreach( $cc as $destName => $destAddress ) {
 			$mail->AddCC( trim( $destAddress ), trim( $destName ) );
 	    }
 
-	// destinatari BCC
+	    // destinatari BCC
 	    foreach( $bcc as $destName => $destAddress ) {
 			$mail->AddBCC( trim( $destAddress ), trim( $destName ) );
 	    }
 
-	// allegati
+	    // allegati
 		if( is_array( $attach ) ) {
 			foreach( $attach as $vAtch ) {
 				fullPath( $vAtch );
@@ -138,46 +145,43 @@
 			}
 		}
 
-    // headers
-    foreach( $headers as $hKey => $hVal ) {
-        $mail->addCustomHeader( $hKey, $hVal );    
-    }
-
-    // DKIM
-    if( ! empty( $fromDomain ) ) {
-        if( file_exists( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem' ) ) {
-            $dkimPassw = ( file_exists( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key' ) ) ? readFromFile( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key' ) : $dkim_pasw; 
-            $mail->DKIM_domain = $fromDomain;
-            $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
-            $mail->DKIM_selector = 'glisweb';
-            $mail->DKIM_passphrase = $dkimPassw;
-            $mail->DKIM_identity = $mail->From;
-            logWrite( 'DKIM: ' . $fromDomain . ' : ' . $dkimPassw, 'dkim', LOG_DEBUG );
-            logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG );
-            logWrite( 'DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG );
-            logWrite( 'DKIM: ' . readFromFile( $mail->DKIM_private ), 'dkim', LOG_DEBUG );
-        } else {
-            logWrite( 'DKIM: ' . print_r( $from, true ) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE );
-            logWrite( 'DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE );
+        // headers
+        foreach( $headers as $hKey => $hVal ) {
+            $mail->addCustomHeader( $hKey, $hVal );    
         }
-    } else {
-        logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR );
-    }
 
-    // headers
-        // TODO
+        // DKIM
+        if( ! empty( $fromDomain ) ) {
+            if( file_exists( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem' ) ) {
+                $dkimPassw = ( file_exists( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key' ) ) ? readFromFile( DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key' ) : $dkim_pasw; 
+                $mail->DKIM_domain = $fromDomain;
+                $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
+                $mail->DKIM_selector = 'glisweb';
+                $mail->DKIM_passphrase = $dkimPassw;
+                $mail->DKIM_identity = $mail->From;
+                logWrite( 'DKIM: ' . $fromDomain . ' : ' . $dkimPassw, 'dkim', LOG_DEBUG );
+                logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG );
+                logWrite( 'DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG );
+                logWrite( 'DKIM: ' . readFromFile( $mail->DKIM_private ), 'dkim', LOG_DEBUG );
+            } else {
+                logWrite( 'DKIM: ' . print_r( $from, true ) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE );
+                logWrite( 'DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE );
+            }
+        } else {
+            logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR );
+        }
 
-	// invio
+	    // invio
 	    $status = $mail->Send();
 
-	// log
+	    // log
 	    if( $status == false ) {
 			logWrite( 'errore phpmailer, status: ' . $status . ' ' . $mail->ErrorInfo . ' sending: '.$oggetto.' via: ' . $host . ':' . $port . ' to: '.serialize( $to ), 'mail', LOG_CRIT );
 	    } else {
-			logWrite( 'messaggio inviato con successo, phpmailer status: ' . $status . ' sending: '.$oggetto.' to: '.serialize( $to ), 'mail', LOG_NOTICE );
+			logWrite( 'messaggio inviato con successo, phpmailer status: ' . $status . ' ' . $mail->ErrorInfo . ' sending: '.$oggetto.' from: ' . $fromName . ' ' . $fromMail . ' via: ' . $host . ':' . $port . ' to: '.serialize( $to ), 'mail' );
 	    }
 
-	// restituzione risultato
+	    // restituzione risultato
 	    return $status;
 
     }
@@ -215,6 +219,8 @@ $twig = new \Twig\Environment($loader);
 echo $twig->render('index.html', ['name' => 'Fabien']);
 */
 
+// die( print_r( $t, true ) );
+
 if( empty( $t[ $l ]['from'] ) ) {
 	die( 'mittente non settato, impossibile accodare la mail' );
 }
@@ -224,12 +230,17 @@ if( empty( $t[ $l ]['from'] ) ) {
 			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );
 #			$to = new Twig_Environment( new Twig_Loader_Array( array( 'nome' => array_key_first( $t[ $l ]['to'] ), 'mail' => reset( $t[ $l ]['to'] ) ) ) );
 
+// die( print_r( $t, true ) );
+
 		    // variabili da passare a queueMail()
 			$mittente	= array( $from->render( 'nome', $d ) => $from->render( 'mail', $d ) );
+// die( print_r( $t, true ) );
 			$oggetto	= $twig->render( 'oggetto', $d );
 			$corpo		= $twig->render( 'testo', $d );
 			$allegati	= ( ( isset( $t[ $l ]['attach'] ) ) ? $t[ $l ]['attach'] : array() );
 			$allegati	= array_merge( $allegati, ( ( isset( $attach[ $l ] ) ) ? $attach[ $l ] : array() ) );
+
+
 #print_r($corpo );
 		    // se è definito nel template imposto il destinatario
 			if( array_key_exists( 'to', $t[ $l ] ) && is_array( $t[ $l ]['to'] ) && ! empty( $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ] ) ) {
@@ -238,6 +249,8 @@ if( empty( $t[ $l ]['from'] ) ) {
 #print_r( $to );
 			    $destinatari[ array_key_first( $t[ $l ]['to'] ) ] = $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ];
 			}
+
+// die( print_r( $t, true ) );
 
 		    // elaboro i placeholder nei destinatari
 			if( isset( $to ) ) {
@@ -266,6 +279,8 @@ if( empty( $t[ $l ]['from'] ) ) {
 		break;
 
 	    }
+
+// die( $corpo );
 
 		// ...
 		$corpo = path2url( $corpo );
@@ -418,3 +433,4 @@ if( empty( $t[ $l ]['from'] ) ) {
 		return implode( ', ', $ar );
 
 	}
+

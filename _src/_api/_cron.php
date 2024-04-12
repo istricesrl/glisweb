@@ -10,8 +10,15 @@
      *
      */
 
+    /**
+     * CONFIGURAZIONI GENERALI
+     * =======================
+     * 
+     * 
+     */
+
     // costanti che descrivono lo stato di funzionamento del framework
-	define( 'CRON_RUNNING'			, 'CRONRUN' );
+	define( 'CRON_RUNNING', 'CRONRUN' );
 
     // inclusione del framework
 	require '../_config.php';
@@ -34,6 +41,13 @@
     // chiave di lock
 	$status['token'] = getToken( __FILE__ );
 
+    /**
+     * SEZIONE TASK
+     * ============
+     * 
+     * 
+     */
+
     // provo a recuperare i task fermi
     mysqlQuery(
         $cf['mysql']['connection'],
@@ -46,25 +60,25 @@
     // metto il lock sui task con profili di schedulazione compatibili con l'orario corrente
 	$tasks = mysqlQuery(
 	    $cf['mysql']['connection'],
-	    'UPDATE task SET token = ? WHERE '.
-	    '( minuto = ?												OR minuto IS NULL ) AND '.
-	    '( ora = ?													OR ora IS NULL ) AND '.
-	    '( giorno_del_mese = ?										OR giorno_del_mese IS NULL ) AND '.
-	    '( mese = ?													OR mese IS NULL ) AND '.
-	    '( giorno_della_settimana = ?								OR giorno_della_settimana IS NULL ) AND '.
-	    '( settimana = ?											OR settimana IS NULL ) AND '.
-		'( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?	OR timestamp_esecuzione IS NULL ) AND '.
-		'( token IS NULL OR ( timestamp_esecuzione < ? ) )',
+	    'UPDATE task SET token = ? WHERE
+            ( minuto = ?                                                OR minuto IS NULL ) AND 
+            ( ora = ?                                                   OR ora IS NULL ) AND 
+            ( giorno_del_mese = ?                                       OR giorno_del_mese IS NULL ) AND 
+            ( mese = ?                                                  OR mese IS NULL ) AND 
+            ( giorno_della_settimana = ?                                OR giorno_della_settimana IS NULL ) AND 
+            ( settimana = ?                                             OR settimana IS NULL ) AND 
+            ( from_unixtime( timestamp_esecuzione, "%Y%m%d%H%i") < ?    OR timestamp_esecuzione IS NULL ) AND 
+            ( token IS NULL OR ( timestamp_esecuzione < ? ) )',
 	    array(
-			array( 's' => $status['token'] ),		                //
-			array( 's' => intval( date( 'i', $time ) ) ),			// 
-			array( 's' => date( 'G', $time ) ),						// 
-			array( 's' => date( 'j', $time ) ),						// 
-			array( 's' => date( 'n', $time ) ),						// 
-			array( 's' => date( 'N', $time ) ),						// 1 - 7, 1 -> lunedì
-			array( 's' => date( 'W', $time ) ),						// 1 - 52/53
-			array( 's' => date( 'YmdHi', $time ) ),					//
-			array( 's' => strtotime( '-10 minutes' ) )				//
+			array( 's' => $status['token'] ),                           //
+			array( 's' => intval( date( 'i', $time ) ) ),               // 
+			array( 's' => date( 'G', $time ) ),                         // 
+			array( 's' => date( 'j', $time ) ),                         // 
+			array( 's' => date( 'n', $time ) ),                         // 
+			array( 's' => date( 'N', $time ) ),                         // 1 - 7, 1 -> lunedì
+			array( 's' => date( 'W', $time ) ),                         // 1 - 52/53
+			array( 's' => date( 'YmdHi', $time ) ),                     //
+			array( 's' => strtotime( '-10 minutes' ) )                  //
 	    )
 	);
 
@@ -113,61 +127,66 @@
                 */
 
 				// resetto lo status
-					// $status = array();
+				// $status = array();
 
 				// log
-					logWrite( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
+				logWrite( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
 				// eseguo il task
-					if( ! empty( $task['iterazioni'] ) ) {
+                if( ! empty( $task['iterazioni'] ) ) {
 
-                        // iterazioni del task
-                        for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
+                    // iterazioni del task
+                    for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
 
-                            // ...
-                            // $task['timer'][ $iter ]['start'] = microtime( true );
+                        // ...
+                        // $task['timer'][ $iter ]['start'] = microtime( true );
 
-                            // ...
-                            logWrite( 'iterazione #' . $iter . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
+                        // ...
+                        logWrite( 'iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
-                            // ...
-                            require DIR_BASE . $task['task'];
+                        // ...
+                        require DIR_BASE . $task['task'];
 
-                            // $status['task'][ $task['id'] ][ $iter ] = array_replace_recursive( $task['status'], array( 'esecuzione' => time() ) );
+                        // ...
+                        logWrite( 'fine iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
-                            // ...
-                            // $task['timer'][ $iter ]['end'] = microtime( true );
+                        // ...
+                        // $status['task'][ $task['id'] ][ $iter ] = array_replace_recursive( $task['status'], array( 'esecuzione' => time() ) );
 
-                            // ...
-                            // $task['timer'][ $iter ]['elapsed'] = $task['timer'][ $iter ]['end'] - $task['timer'][ $iter ]['start'];
+                        // ...
+                        // $task['timer'][ $iter ]['end'] = microtime( true );
 
-                            // ...
-                            writeToFile( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . microtime( true ) . '.log' );
+                        // ...
+                        // $task['timer'][ $iter ]['elapsed'] = $task['timer'][ $iter ]['end'] - $task['timer'][ $iter ]['start'];
 
-                            // if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = mt_rand( 1, 2 ); }
-							// sleep( $task['delay'] );
+                        // ...
+                        writeToFile( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '/' . microtime( true ) . '.log' );
 
-                        }
-
-                        // aggiorno la tabella di pianificazione
-                        mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
-                            array(
-                                array( 's' => $time ),
-                                array( 's' => $task['id'] )
-                            )
-                        );
-
-                    } else {
-
-                        // status
-                        $status['task'][ $task['id'] ]['errors'][] = 'il task ' . $task['id'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
-
-                        // log
-                        logWrite( 'il task ' . $task['id'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
+                        // ...
+                        // if( ! isset( $task['delay'] ) || empty( $task['delay'] ) ) { $task['delay'] = mt_rand( 1, 2 ); }
+                        // sleep( $task['delay'] );
 
                     }
+
+                    // aggiorno la tabella di pianificazione
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE task SET timestamp_esecuzione = ?, token = NULL WHERE id = ?',
+                        array(
+                            array( 's' => $time ),
+                            array( 's' => $task['id'] )
+                        )
+                    );
+
+                } else {
+
+                    // status
+                    $status['task'][ $task['id'] ]['errors'][] = 'il task ' . $task['id'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+
+                    // log
+                    logWrite( 'il task ' . $task['id'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
+
+                }
 		
 			} else {
 
@@ -206,6 +225,13 @@
 		logWrite( 'nessun task trovato', 'cron' );
 
 	}
+
+    /**
+     * SEZIONE JOB
+     * ===========
+     * 
+     * 
+     */
 
     // provo a recuperare i job fermi
     mysqlQuery(
@@ -262,64 +288,67 @@
             if( file_exists( DIR_BASE . $job['job'] ) ) {
 
 				// log
-					logWrite( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
+				logWrite( 'eseguo il job ' . $job['id'] . ' -> ' . $job['job'], 'cron', LOG_DEBUG );
 
 				// resetto lo status
-					// $status = array();
+				// $status = array();
 
 				// decodifica del workspace
-					$job['workspace'] = json_decode( $job['workspace'], true );
+				$job['workspace'] = json_decode( $job['workspace'], true );
 
 				// eseguo il job
-					if( ! empty( $job['iterazioni'] ) ) {
+                if( ! empty( $job['iterazioni'] ) ) {
 
-                        for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
+                    for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
 
-                            // ...
-                            // $job['timer'][ $iter ]['start'] = microtime( true );
+                        // ...
+                        // $job['timer'][ $iter ]['start'] = microtime( true );
 
-                            // ...
-                            logWrite( 'iterazione #' . $iter . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
+                        // ...
+                        logWrite( 'iterazione #' . $iter . ' di ' . $job['iterazioni'] . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
 
-                            // ...
-                            require DIR_BASE . $job['job'];
+                        // ...
+                        require DIR_BASE . $job['job'];
 
-                            // $status['job'][ $job['job'] ][ $iter ] = array_replace_recursive( $job['status'], array( 'esecuzione' => time() ) );
+                        // ...
+                        logWrite( 'fine iterazione #' . $iter . ' di ' . $job['iterazioni'] . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
 
-                            // ...
-                            // $job['timer'][ $iter ]['end'] = microtime( true );
+                        // $status['job'][ $job['job'] ][ $iter ] = array_replace_recursive( $job['status'], array( 'esecuzione' => time() ) );
 
-                            // ...
-                            // $job['timer'][ $iter ]['elapsed'] = $job['timer'][ $iter ]['end'] - $job['timer'][ $iter ]['start'];
+                        // ...
+                        // $job['timer'][ $iter ]['end'] = microtime( true );
 
-                            // ...
-                            writeToFile( print_r( $job, true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . $job['corrente'] . '.' . microtime( true ) . '.log' );
+                        // ...
+                        // $job['timer'][ $iter ]['elapsed'] = $job['timer'][ $iter ]['end'] - $job['timer'][ $iter ]['start'];
 
-                            // if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = mt_rand( 1, 2 ); }
-							// sleep( $job['delay'] );
+                        // ...
+                        writeToFile( print_r( $job, true ), DIR_VAR_LOG_JOB . $job['id'] . '/' . $job['corrente'] . '.' . microtime( true ) . '.log' );
 
-                        }
+                        // if( ! isset( $job['delay'] ) || empty( $job['delay'] ) ) { $job['delay'] = mt_rand( 1, 2 ); }
+                        // sleep( $job['delay'] );
 
-                        // aggiorno la tabella di avanzamento lavori
-                        mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
-                            array(
-                                array( 's' => $time ),
-                                array( 's' => json_encode( $job['workspace'] ) ),
-                                array( 's' => $job['id'] )
-                            )
-                        );
+                    }
+
+                    // aggiorno la tabella di avanzamento lavori
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE job SET timestamp_esecuzione = ?, workspace = ?, token = NULL WHERE id = ?',
+                        array(
+                            array( 's' => $time ),
+                            array( 's' => json_encode( $job['workspace'] ) ),
+                            array( 's' => $job['id'] )
+                        )
+                    );
 
                 } else {
 
-                        // status
-                        $status['job'][ $job['id'] ]['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
+                    // status
+                    $status['job'][ $job['id'] ]['errors'][] = 'il job ' . $job['job'] . ' ha specificato un numero di iterazioni nullo, è voluto?';
 
-                        // log
-                        logWrite( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
+                    // log
+                    logWrite( 'il job ' . $job['job'] . ' ha iterazioni nulle', 'cron', LOG_ERR );
 
-                    }
+                }
 
 			} else {
 

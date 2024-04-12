@@ -7,7 +7,7 @@
      */
 
     // costanti che descrivono lo stato di funzionamento del framework
-	define( 'JOB_RUNNING'			, 'JOBRUN' );
+	define( 'JOB_RUNNING', 'JOBRUN' );
 
     // inclusione del framework
     require '../_config.php';
