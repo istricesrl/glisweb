@@ -679,6 +679,8 @@ CREATE OR REPLACE VIEW attesa_view AS
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		anagrafica_progetti.id_progetto,
 		progetti.nome AS progetto,
+		todo.data_programmazione AS data_lezione,
+		todo.ora_inizio_programmazione AS ora_lezione,
 		anagrafica_progetti.id_ruolo,
 		ruoli_progetti.nome as ruolo,
 		anagrafica_progetti.ordine,
@@ -696,7 +698,8 @@ CREATE OR REPLACE VIEW attesa_view AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_progetti.id_anagrafica
 		LEFT JOIN progetti ON progetti.id = anagrafica_progetti.id_progetto
 		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = anagrafica_progetti.id_ruolo
-WHERE anagrafica_progetti.se_attesa IS NOT NULL
+        LEFT JOIN todo ON todo.id = anagrafica_progetti.id_todo
+    WHERE anagrafica_progetti.se_attesa IS NOT NULL
 ;
 
 -- | 090000001200
@@ -5071,7 +5074,7 @@ CREATE OR REPLACE VIEW `mailing_mail_view` AS
 	FROM mailing_mail
 		INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing
 		INNER JOIN mail ON mail.id = mailing_mail.id_mail
-		INNER JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
+		LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
 ;
 
 -- | 090000020200

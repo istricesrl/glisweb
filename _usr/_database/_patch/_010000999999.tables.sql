@@ -237,6 +237,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_progetti` (
   `id` int(11) NOT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
   `id_ruolo` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `se_attesa` tinyint(1) DEFAULT NULL,

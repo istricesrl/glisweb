@@ -1411,6 +1411,7 @@ CREATE TABLE `__report_lezioni_corsi__` (
   `nome` char(255) DEFAULT NULL,
   `posti_disponibili` char(32) DEFAULT NULL,
   `se_prova` int(1) DEFAULT NULL,
+  `se_prenotabile_online` int(1) DEFAULT NULL,
   `posti_prova` int(11) DEFAULT NULL,
   `id_contatto` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
