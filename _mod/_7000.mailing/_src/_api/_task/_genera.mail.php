@@ -105,7 +105,7 @@
 			'FROM mailing_mail '.
 			'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
 			'INNER JOIN mail ON mail.id = mailing_mail.id_mail '.
-			'INNER JOIN anagrafica ON anagrafica.id = mail.id_anagrafica '.
+			'LEFT JOIN anagrafica ON anagrafica.id = mail.id_anagrafica '.
 			'WHERE token = ? ',
 			array(
 				array( 's' => $status['token'] )

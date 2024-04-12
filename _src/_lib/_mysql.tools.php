@@ -62,22 +62,30 @@
      * @todo documentare
      *
      */
-    function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = 0, &$e = array() ) {
 
-		return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
+        if( defined( 'MEMCACHE_DEFAULT_TTL' ) && $t == 0 ) {
+            $t = MEMCACHE_DEFAULT_TTL;
+        }
 
-	}
+        return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
+
+    }
 
     /**
      *
      * @todo documentare
      *
      */
-    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array(), &$i = array() ) {
+    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = 0, &$e = array(), &$i = array() ) {
 
 	// debug
 	    // var_dump( $q );
 	    // die();
+
+        if( defined( 'MEMCACHE_DEFAULT_TTL' ) && $t == 0 ) {
+            $t = MEMCACHE_DEFAULT_TTL;
+        }
 
 	// calcolo la chiave della query
 	    $k = md5( $q . serialize( $p ) );

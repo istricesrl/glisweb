@@ -95,8 +95,8 @@
         $fromDomain             = end( explode( '@', $fromMail ) );
 
     // mittente
-	    $mail->SetFrom( $fromName, $fromMail );
-	    $mail->AddReplyTo( $fromName, $fromMail );
+	    $mail->SetFrom( $fromMail, $fromName );
+	    $mail->AddReplyTo( $fromMail, $fromName );
         $mail->Sender = $fromMail;
 
 	// oggetto
