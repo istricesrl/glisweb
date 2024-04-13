@@ -176,9 +176,15 @@
 
 	    // log
 	    if( $status == false ) {
-			logWrite( 'errore phpmailer, status: ' . $status . ' ' . $mail->ErrorInfo . ' sending: '.$oggetto.' via: ' . $host . ':' . $port . ' to: '.serialize( $to ), 'mail', LOG_CRIT );
+			logWrite( 'errore phpmailer, status: ' . $status . ' ' . 
+                $mail->ErrorInfo . ' sending: '. $oggetto .' via: ' . $host . ':' . $port . 
+                ' to: ' . serialize( $to ),
+                 'mail', LOG_CRIT );
 	    } else {
-			logWrite( 'messaggio inviato con successo, phpmailer status: ' . $status . ' ' . $mail->ErrorInfo . ' sending: '.$oggetto.' from: ' . $fromName . ' ' . $fromMail . ' via: ' . $host . ':' . $port . ' to: '.serialize( $to ), 'mail' );
+			logWrite( 'messaggio inviato con successo, phpmailer status: ' . $status . ' ' . 
+                $mail->ErrorInfo . ' sending: '.$oggetto.' from: ' . $fromName . ' ' . $fromMail . 
+                ' via: ' . $host . ':' . $port . ' to: '.serialize( $to ),
+                'mail' );
 	    }
 
 	    // restituzione risultato
