@@ -224,7 +224,7 @@
                 todo.data_chiusura, todo.nome, todo.id_contatto, todo.id_progetto, todo.id_pianificazione, todo.id_immobile,
                 todo.data_archiviazione, todo.id_account_inserimento, todo.timestamp_inserimento, 
                 todo.id_account_aggiornamento, todo.timestamp_aggiornamento,
-                progetti.nome AS corso, group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR " | " ) AS discipline,
+                progetti.nome AS corso, m1.testo AS se_prenotabile_online, group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR " | " ) AS discipline,
                 concat(
                     todo.nome,
                     coalesce( concat( " per ", a2.denominazione, concat( a2.cognome, " ", a2.nome ) ), "" ),
@@ -236,7 +236,8 @@
                 LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
                 LEFT JOIN progetti ON progetti.id = todo.id_progetto
                 LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
-                LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
+                LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1
+                LEFT JOIN metadati AS m1 ON m1.id_progetto = progetti.id AND m1.nome = "prenotabile_online"
             WHERE todo.id = ? -- AND todo.id_tipologia IN (14, 15, 18) 
             GROUP BY todo.id ',
             array( array( 's' => $idLezione ) )
