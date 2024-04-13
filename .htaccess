@@ -100,6 +100,31 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/src/img/hotlink.png -f
     RewriteRule .*\.(gif|jpg|jpeg|png|pdf|webp)$ src/img/hotlink.png [NC]
 
+    # gestione delle immagini webp
+    RewriteCond %{HTTP:Accept} image/webp
+    RewriteCond %{REQUEST_FILENAME}.webp -f
+    RewriteRule ^(.*)$ $1.webp [L]
+
+    ## CARTELLE AD ACCESSO DIRETTO
+    #
+    # Queste regole gestiscono l'accesso diretto alle cartelle dei contenuti statici
+    #
+
+    # directory ad accesso diretto custom
+    # i file collocati in queste cartelle vengono erogati direttamente senza ulteriori elaborazioni; questo consente di creare
+    # semplici siti statici nella sottocartella usr/pages.
+    RewriteCond %{DOCUMENT_ROOT}/usr/pages/$1 -f
+    RewriteRule ^(.*)$ usr/pages/$1 [L,NC]
+
+    # directory ad accesso diretto standard
+    # per questa regola vale quanto detto sopra
+    RewriteCond %{DOCUMENT_ROOT}/_usr/_pages/$1 -f
+    RewriteRule ^(.*)$ _usr/_pages/$1 [L,NC]
+
+    # cache delle risorse CSS esterne
+    # questa regola gestisce l'accesso diretto alle risorse CSS esterne in cache
+    RewriteRule ^(var/cache/css/)($) - [L]
+
     ## SCORCIATOIE
     #
     # Queste regole hanno il solo scopo di accorciare il percorso verso determinati URL, per semplificare il lavoro degli utenti.
@@ -313,18 +338,7 @@ Options -Indexes
 
     # sitemap XML e CSV
     RewriteRule ^sitemap.xml var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
-    RewriteRule ^sitemap.csv var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
-
-    # directory ad accesso diretto custom
-    # i file collocati in queste cartelle vengono erogati direttamente senza ulteriori elaborazioni; questo consente di creare
-    # semplici siti statici nella sottocartella usr/pages.
-    RewriteCond %{DOCUMENT_ROOT}/usr/pages/$1 -f
-    RewriteRule ^(.*)$ usr/pages/$1 [L,NC]
-
-    # directory ad accesso diretto standard
-    # per questa regola vale quanto detto sopra
-    RewriteCond %{DOCUMENT_ROOT}/_usr/_pages/$1 -f
-    RewriteRule ^(.*)$ _usr/_pages/$1 [L,NC]
+    RewriteRule ^sitemap.csv var/sitemap/sitemap.%{HTTP_HOST}.csv [L]
 
     # gestione delle pagine
     # questa regola si occupa di erogare le pagine richieste dagli utenti tramite il file _src/_api/_pages.php
