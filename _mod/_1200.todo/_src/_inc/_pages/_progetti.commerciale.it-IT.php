@@ -16,7 +16,7 @@
 			$p['progetti.commerciale.form.todo'] = array(
 				'sitemap'		=> false,
 				'icon'			=> '<i class="fa fa-tasks" aria-hidden="true"></i>',
-				'title'			=> array( $l		=> 'todo' ),
+				'title'			=> array( $l		=> 'todo progetto commerciale' ),
 				'h1'			=> array( $l		=> 'to-do' ),
 				'parent'		=> array( 'id'		=> 'progetti.commerciale.view' ),
 				'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'progetti.commerciale.form.todo.html' ),

@@ -1026,6 +1026,15 @@ INSERT IGNORE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661al
 INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 (1,     1,	    1);
 
+-- | 050000042500
+
+-- step
+INSERT INTO `step` (`id`, `id_funnel`, `ordine`, `nome`, `note`) VALUES
+(1,	NULL,	NULL,	'apertura',	NULL),
+(2,	NULL,	NULL,	'in corso',	NULL),
+(3,	NULL,	NULL,	'esito positivo',	NULL),
+(4,	NULL,	NULL,	'esito negativo',	NULL);
+
 -- | 050000043000
 
 -- task

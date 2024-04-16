@@ -16,17 +16,20 @@
      * @todo documentare
      *
      */
+    /*
     function timerNow() {
 
 	return microtime( true );
 
     }
+    */
 
     /**
      *
      * @todo documentare
      *
      */
+    /*
     function timerDiff( $start = START_TIME, $now = NULL ) {
 
 	if( $now === NULL ) { $now = microtime( true ); }
@@ -34,12 +37,14 @@
 	return $now - $start;
 
     }
+    */
 
     /**
      *
      * @todo documentare
      *
      */
+    /*
     function timerCheck( &$a, $c ) {
 
 	$curTime = timerDiff();
@@ -64,3 +69,4 @@
 	    str_pad( $curMemory, 15, ' ', STR_PAD_LEFT ) . ' → ' . str_replace( '->', '→', $c );
 
     }
+    */

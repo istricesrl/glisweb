@@ -8515,9 +8515,9 @@ CREATE OR REPLACE VIEW step_view AS
 		funnel.nome AS funnel,
 		step.ordine,
 		step.nome,
-		concat(
-			funnel.nome,
+		concat_ws(
 			' / ',
+			funnel.nome,
 			step.nome
 		) AS __label__
 	FROM step

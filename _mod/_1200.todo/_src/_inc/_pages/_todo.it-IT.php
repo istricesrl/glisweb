@@ -367,6 +367,7 @@
 			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.form']['etc']['tabs'] )
 		);
 */
+
 		// vista archivio anagrafica
 		$p['todo.archivio.view'] = array(
 			'sitemap'		=> false,
@@ -393,4 +394,154 @@
 			'etc'			=> array( 'tabs'	=> $p['todo.amministrazione.view']['etc']['tabs'] )
 		);
 
-	}
+    }
+
+	// RELAZIONI CON IL MODULO COMMERCIALE
+	if( in_array( "2000.commerciale", $cf['mods']['active']['array'] ) ) {
+
+		// vista todo
+		$p['todo.commerciale.view'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'todo' ),
+			'h1'			=> array( $l		=> 'to-do' ),
+			'parent'		=> array( 'id'		=> 'commerciale' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.commerciale.view.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'todo.commerciale.view', 'todo.archivio.view', 'todo.stampe' ) ),
+#			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'to-do' ),
+#															'priority'	=> '090' ) ) )	
+		);
+
+		// gestione todo
+		$p['todo.commerciale.form'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'gestione' ),
+			'h1'			=> array( $l		=> 'gestione' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'todo.form', 
+	#														'todo.form.attivita',
+	#														'todo.form.documenti',
+	# NOTA questa scheda dovrebbe essere collegata al modulo pianificazioni
+	#														'todo.form.pianificazioni',
+	# NOTA questa scheda dovrebbe essere collegata al modulo qualita
+	#														'todo.form.feedback',
+															'todo.form.chiusura',
+															'todo.form.archiviazione',
+															'todo.form.stampe',
+															'todo.form.tools' ) )
+		);
+
+		// RELAZIONI CON IL MODULO ATTIVITA
+		if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'todo.form', $p['todo.commerciale.form']['etc']['tabs'], 'todo.form.attivita' );
+		}
+
+/* spostato nel modulo attività
+		$p['todo.commerciale.form.attivita'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-pencil-square-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'attivita' ),
+			'h1'			=> array( $l		=> 'attivita' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.attivita.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.attivita.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.commerciale.form']['etc']['tabs'] )
+		);
+*/
+		$p['todo.commerciale.form.documenti'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'documenti' ),
+			'h1'			=> array( $l		=> 'documenti' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.documenti.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.documenti.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.commerciale.form']['etc']['tabs'] )
+		);
+
+		// gestione todo pianificazioni
+		$p['todo.commerciale.form.pianificazioni'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'pianificazione' ),
+			'icon'			=> '<i class="fa fa-clock-o" aria-hidden="true"></i>',
+			'h1'			=> array( $l		=> 'pianificazione' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.pianificazioni.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.pianificazioni.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.commerciale.form']['etc']['tabs'] )
+		);
+
+
+		// gestione todo tools
+		$p['todo.commerciale.form.tools'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'azioni' ),
+			'h1'			=> array( $l		=> 'azioni' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.form.tools.php' ),
+			'etc'			=> array( 'tabs'	=> $p['todo.commerciale.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+		);
+
+		// gestione anagrafica stampe
+		$p['todo.commerciale.form.stampe'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-print" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'stampe_todo' ),
+			'h1'			=> array( $l		=> 'stampe_todo' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.form.stampe.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.commerciale.form']['etc']['tabs'] )
+		);
+
+		// gestione progetti chiusura
+		$p['todo.commerciale.form.chiusura'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'chiusura' ),
+			'h1'			=> array( $l		=> 'chiusura' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.chiusura.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.chiusura.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.commerciale.form']['etc']['tabs'] )
+		);
+
+		// gestione anagrafica stampe
+		$p['todo.commerciale.form.archiviazione'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-archive" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'archiviazione' ),
+			'h1'			=> array( $l		=> 'archiviazione' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.archiviazione.html' ),
+			'macro'			=> array( $m . '_src/_inc/_macro/_todo.form.archiviazione.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.commerciale.form']['etc']['tabs'] )
+		);
+/*
+		// gestione todo - feedback
+		$p['todo.commerciale.form.feedback'] = array(
+			'sitemap'		=> false,
+			'icon'			=> '<i class="fa fa-star-half-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'feedback' ),
+			'h1'			=> array( $l		=> 'feedback' ),
+			'parent'		=> array( 'id'		=> 'todo.commerciale.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'todo.form.feedback.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_todo.form.feedback.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['todo.commerciale.form']['etc']['tabs'] )
+		);
+*/
+
+    }
