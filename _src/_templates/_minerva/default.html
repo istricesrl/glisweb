@@ -3,6 +3,5 @@
 {% extends 'ext/main.html' %}
 
 {% block main %}
-<h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
-<div>{{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}</div>
+{{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
 {% endblock %}

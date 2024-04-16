@@ -26,9 +26,17 @@
 
         <main class="d-flex flex-column container-fluid">
 
+            {% block title %}
+            <div class="row">
+                <div class="col">
+                    <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+                </div>
+            </div>
+            {% endblock %}
+
             {% block subnav %}{% include 'inc/subnav.html' %}{% endblock %}
 
-            {% block main %}{{ contents.pages.ordini.title[ localization.language.ietf ] }}{% endblock %}
+            {% block main %}{% endblock %}
 
         </main>
 

@@ -17,7 +17,7 @@
                     </div>
                     <div class="media-body flex-grow-1 ms-3">
                         <h5 class="media-title">{{ obj.h1[ localization.language.ietf ] }}</h5>
-                        <p class="media-text">{{ obj.abstract[ localization.language.ietf ] }}</p>
+                        <p class="media-text">{{ include( template_from_string( obj.abstract[ localization.language.ietf ] ) | raw ) }}</p>
                     </div>
                 </div>
             </a>

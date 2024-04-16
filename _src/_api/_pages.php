@@ -577,12 +577,23 @@
 			// print_r( $ct['page']['template']['path'] );
 			// print_r( $ct['page']['template']['paths'] );
 
-		    // @todo considerare anche 'src/html/' e '_mod/.../_src/_html/' e 'mod/.../src/html/'
-		    // aggiungo il percorso con le macro standard e custom
-			$loader->addPath( DIR_SRC_HTML );
-			if( file_exists( path2custom( DIR_SRC_HTML ) ) ) {
-			    $loader->addPath( path2custom( DIR_SRC_HTML ) );
-			}
+                // aggiungo il percorso con le macro standard e custom
+                // TODO considerare anche 'src/html/' e '_mod/.../_src/_html/' e 'mod/.../src/html/'
+                if( file_exists( DIR_SRC_HTML ) ) {
+                    $loader->addPath( DIR_SRC_HTML );
+                    if( file_exists( path2custom( DIR_SRC_HTML ) ) ) {
+                        $loader->addPath( path2custom( DIR_SRC_HTML ) );
+                    }
+                }
+
+                // aggiungo il percorso con le macro standard e custom
+                // TODO considerare anche 'src/twig/' e '_mod/.../_src/_twig/' e 'mod/.../src/twig/'
+                if( file_exists( DIR_SRC_TWIG ) ) {
+                    $loader->addPath( DIR_SRC_TWIG );
+                    if( file_exists( path2custom( DIR_SRC_TWIG ) ) ) {
+                        $loader->addPath( path2custom( DIR_SRC_TWIG ) );
+                    }
+                }
 
 			// log
 			appendToFile( 'fine inserimento dei path custom aggiuntivi in Twig' . PHP_EOL, FILE_LATEST_RUN );

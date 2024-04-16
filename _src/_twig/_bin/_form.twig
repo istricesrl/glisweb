@@ -1,0 +1,334 @@
+{# MACRO GENERICHE PER LA CREAZIONE DI FORM COMPATIBILI CON LA CONTROLLER DEL FRAMEWORK
+    Questa libreria contiene tutte le principali funzioni necessarie per la creazione di form nel framework. Per coerenza
+    e continuità stilistica fra una pagina e l'altra, si raccomanda di includere sempre questa libreria con il prefisso frm. #}
+
+{# openForm() - apre un form standard
+    Il corretto funzionamento di questa macro dipende interamente dalla correttezza e dalla completezza dei dati forniti, tipicamente
+    impostati nella macro di pagina. Per ulteriori informazioni e dettagli su questo punto si veda il file READ.md del template 
+    TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
+{% macro openForm( options ) %}
+
+    {# valori di default #}
+    {% set options = {
+        'form': [],
+        'session': [],
+        'request': [],
+        'page': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array form #}
+    {% set form = {
+      'method': 'post',
+      'activity': 'inserimento',
+      'enctype': 'multipart/form-data',
+      'class': 'form-main warning-if-changed d-flex flex-column flex-fill'
+    }|merge( options.form ) %}
+
+    {# valori di default per l'array session #}
+    {% set session = {
+        'account': {
+            'id': '__null__',
+        }
+    }|merge( options.session ) %}
+
+    {# valori di default per l'array request #}
+    {% set request = {
+    }|merge( options.request ) %}
+
+    {# valori di default per l'array page #}
+    {% set page = {
+    }|merge( options.page ) %}
+
+    {# apertura del form #}
+    <form action="{{ form.action }}" id="form-{{ form.table }}" method="{{ form.method }}" enctype="{{ form.enctype }}" class="{{ form.class }}">
+
+        {# campi hidden di default #}
+	    <input type="hidden" id="id" name="{{ form.table }}[id]" value="{{ request[ form.table ].id }}">
+	    <input type="hidden" id="method" name="{{ form.table }}[__method__]" value="{{ form.method }}">
+	    <input type="hidden" id="reset" name="{{ form.table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ form.table }}[timestamp_{{ form.activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ form.table }}[id_account_{{ form.activity }}]" value="{{ session.account.id }}">
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+{% endmacro openForm %}
+
+{# closeForm() - chiude un form standard
+    Questa macro non fa nulla di particolare (per ora) ed è stata creata soprattutto per simmetria con la openForm() #}
+{% macro closeForm() %}
+
+    {# chiusura del form #}
+    </form>
+
+{% endmacro closeForm %}
+
+{# input() - crea un campo HTML input
+    Questa macro generica crea un campo HTML input; fa anche da base ad altre funzioni più specifiche e complesse
+    TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
+{% macro input( options ) %}
+
+    {# valori di default #}
+    {% set options = {
+        'form': [],
+        'field': [],
+        'tooltip': [],
+        'request': [],
+        'page': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array form #}
+    {% set form = {
+        'subtable': '',
+        'counter': '',
+        'step': ''
+    }|merge( options.form ) %}
+
+    {# valori di default per l'array options #}
+    {% set field = {
+        'type': 'text',
+        'default': '',
+        'disabled': '',
+        'class': 'form-control form-control-sm',
+        'placeholder': '',
+        'pattern': '',
+        'required': ''
+    }|merge( options.field ) %}
+
+    {# valori di default per l'array tooltip #}
+    {% set tooltip = {
+        'delay': '1000',
+        'placement': 'bottom'
+    }|merge( options.tooltip ) %}
+
+    {# valori di default per l'array request #}
+    {% set request = {
+    }|merge( options.request ) %}
+
+    {# valori di default per l'array page #}
+    {% set page = {
+    }|merge( options.page ) %}
+
+    {# calcolo valori di base #}
+    {% if form.subtable %}
+        {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
+        {% set ks = request[ form.table ][ form.subtable ]|keys %}
+        {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
+    {% else %}
+        {% set nm = form.table ~ '[' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ field.name ] %}
+    {% endif %}
+
+    {# valore di default o preset #}
+    {% if not vl and pr %}
+        {% set vl = pr %}
+    {% elseif not vl and field.default %}
+        {% set vl = field.default %}
+    {% endif %}
+
+    {# se il campo è disabilitato creo un campo hidden per mantenere il valore #}
+    {% if field.disabled == 1 %}
+        {% if request[ '__disabled_' ~ id ~ '__' ] %}
+            {% set vl = request[ '__disabled_' ~ id ~ '__' ] %}
+        {% endif %}
+        <input type="hidden" name="__disabled_{{ id }}__" value="{{ vl }}">
+    {% endif %}
+
+    {# creazione del campo input #}
+    <input type="{{ field.type }}" name="{{ nm }}" id="{{ id }}" class="{{ field.class }}" value="{{ vl }}"
+        {% if field.default %}default="{{ field.default }}"{% endif %} 
+        {% if form.step %}step="{{ form.step }}"{% endif %}
+        {% if field.disabled %}disabled{% endif %} 
+        {% if field.placeholder %}placeholder="{{ field.placeholder|raw }}"{% endif %}
+        {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
+        {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %} 
+        {% if field.required %}required{% endif %} 
+        {% if field.type == 'password' %}autocomplete="new-password"{% endif %} 
+        {% if options.extras %}{{ options.extras|raw }}{% endif %}>
+
+{% endmacro input %}
+
+{# button() - crea un pulsante HTML
+    Questa macro generica crea un pulsante HTML; fa anche da base ad altre funzioni più specifiche e complesse
+    TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
+{% macro button( options ) %}
+
+    {# valori di default #}
+    {% set options = {
+        'field': [],
+        'tooltip': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array field #}
+    {% set field = {
+      'type': 'submit',
+      'id': '',
+      'disabled': '',
+      'class': 'btn btn-secondary btn-sm',
+      'onclick': ''
+    }|merge( options.field ) %}
+
+    {# valori di default per l'array tooltip #}
+    {% set tooltip = {
+      'delay': '1000',
+      'placement': 'bottom'
+    }|merge( options.tooltip ) %}
+
+    {# creazione del button #}
+    <button type="{{ field.type }}" class="{{ field.class }}"
+        {% if field.id %}id="{{ field.id }}"{% endif %}
+        {% if field.onclick %}onclick="{{ field.onclick }}"{% endif%}
+        {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
+        {% if disabled %}disabled{% endif %}>{{ options.text|raw }}</button>
+
+{% endmacro button %}
+
+{# select() - crea un campo HTML select
+    Questa macro crea una selectbox
+    TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
+{% macro select( options ) %}
+
+    {# valori di default #}
+    {% set options = {
+        'form': [],
+        'field': [],
+        'source': [],
+        'tooltip': [],
+        'request': [],
+        'page': [],
+        'pages': [],
+        'controls': [],
+        'localization': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array form #}
+    {% set form = {
+        'table': '',
+        'subtable': '',
+        'counter': '',
+        'step': ''
+    }|merge( options.form ) %}
+
+    {# valori di default per l'array options #}
+    {% set field = {
+        'default': '',
+        'disabled': '',
+        'class': 'form-select form-select-sm',
+        'onchange': '',
+        'default': '',
+        'placeholder': '',
+        'autosubmit': '',
+        'required': ''
+    }|merge( options.field ) %}
+
+    {# valori di default per l'array source #}
+    {% set source = {
+        'values': [],
+        'api': ''
+    }|merge( options.source ) %}
+
+    {# valori di default per l'array tooltip #}
+    {% set tooltip = {
+        'delay': '1000',
+        'placement': 'bottom'
+    }|merge( options.tooltip ) %}
+
+    {# valori di default per l'array request #}
+    {% set request = {
+    }|merge( options.request ) %}
+
+    {# valori di default per l'array page #}
+    {% set page = {
+    }|merge( options.page ) %}
+
+    {# valori di default per l'array pages #}
+    {% set pages = {
+    }|merge( options.pages ) %}
+
+    {# valori di default per l'array request #}
+    {% set controls = {
+    }|merge( options.controls ) %}
+
+    {# valori di default per l'array localization #}
+    {% set localization = {
+        'language': {
+            'ietf': 'it-IT'
+        }
+    }|merge( options.localization ) %}
+
+    {# calcolo valori di base #}
+    {% if form.subtable %}
+        {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
+        {% set ks = request[ form.table ][ form.subtable ]|keys %}
+        {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
+    {% else %}
+        {% set nm = form.table ~ '[' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ field.name ] %}
+    {% endif %}
+
+    {# valore di default o preset #}
+    {% if not vl and pr %}
+        {% set vl = pr %}
+    {% elseif not vl and field.default %}
+        {% set vl = field.default %}
+    {% endif %}
+
+    {# autosubmit #}
+    {% if field.autosubmit %}
+        {% if autosubmit == 1 %}
+            {% set onchange = 'submitFormOkay=true; submit();' %}
+        {% else %}
+            {% set onchange = autosubmit %}
+        {% endif %}
+    {% endif %}
+
+    {# popolazione da API REST #}
+    {% if source.api %}
+        {% set class = class ~ '' %}
+    {% endif %}
+
+    {# creazione della selectbox #}
+    <select name="{{ nm }}" id="{{ id }}" class="{{ field.class }}" vl="{{ vl }}"
+        {% if field.default %}default="{{ field.default }}"{% endif %} 
+        {% if field.disabled %}disabled{% endif %} 
+        {% if field.placeholder %}placeholder="{{ field.placeholder|raw }}"{% endif %}
+        {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
+        {% if field.required %}required{% endif %} 
+        {% if field.onchange %}onchange="{{ field.onchange }}"{% endif %}
+        {% if not noempty %}empty{% endif %}>
+
+        {# opzione vuota #}
+        {% if not noempty %}<option value=""></option>{% endif %}
+
+        {# opzioni della select #}
+        {% for option in source.values %}
+        <option value="{{ option.id }}"
+            {% if vl != '' and option.id == vl %}selected{% endif %}
+            >{{ option.__label__|raw }}</option>
+        {% endfor %}
+
+    </select>
+
+    {# bottone per la modifica #}
+    {% if controls.edit and vl %}
+    {% set editor = pages[ controls.edit ].path[ localization.language.ietf ] ~ '?' ~ field.name ~ '[id]=' ~ vl ~ '&__backurl__=' ~ page.backurl[ localization.language.ietf ] %}
+    <div class="col-auto p-0 pl-1">
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ editor }}','_self')"><i class="fa fa-pencil"></i></button>
+    </div>
+    {% endif %}
+
+    {# bottone per l'aggiunta #}
+    {% if add %}
+    {% set adder = pages[ add ].path[ localization.language.ietf ] ~ '?__backurl__=' ~ page.backurl[ localization.language.ietf ] %}
+    <div class="col-auto p-0 pl-1">
+        <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ adder }}','_self')"><i class="fa fa-plus"></i></button>
+    </div>
+    {% endif %}
+
+{% endmacro select %}

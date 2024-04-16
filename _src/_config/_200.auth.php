@@ -79,6 +79,7 @@
 
     // costanti che descrivono lo stato del login
     // TODO hanno senso tutte queste costanti?
+    if( ! defined( 'LOGIN_ERR_NO_DATA' ) ) {
 	define( 'LOGIN_ERR_NO_DATA'		, 'NODATA' );
 	define( 'LOGIN_ERR_NO_CONNECTION'	, 'NOCONNECTION' );
 	define( 'LOGIN_ERR_NO_USER'		, 'NOUSER' );
@@ -87,6 +88,7 @@
 	define( 'LOGIN_SUCCESS'			, 'SUCCESS' );
 	define( 'LOGIN_LOGGED'			, 'LOGGED' );
 	define( 'LOGIN_LOGOUT'			, 'LOGOUT' );
+    }
 
     // chiave segreta per JWT
     // TODO abbiamo abbandonato per ora il progetto di implementare JWT

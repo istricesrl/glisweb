@@ -43,7 +43,7 @@
             #!    logWrite( 'aggiornata view statica ' . $t . '/anagrafica per id #' . $d['id'] . '/' . $befores['id_anagrafica'], 'static' );
             #!}
 
-            logWrite( "controller finally per ${t}/${a}: " . print_r( $befores, true ), 'controller', LOG_ERR );
+            // logWrite( "controller finally per ${t}/${a}: " . print_r( $befores, true ), 'controller', LOG_ERR );
 
             if( isset( $befores['id_anagrafica'] ) ) {
                 // $_SESSION['static']['anagrafica_view'][ $befores['id_anagrafica'] ] = array( 'field' => 'id' );
