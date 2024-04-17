@@ -661,7 +661,8 @@
      */
 
     // versione di PHP richiesta
-    $cf['php']['required']['version'] = '7.4.0';        // rilasciata il 28 novembre 2019, fine supporto il 28 novembre 2022
+    // $cf['php']['required']['version'] = '7.4.0';        // rilasciata il 28 novembre 2019, fine supporto il 28 novembre 2022
+    $cf['php']['required']['version'] = '7.3.10';       // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
 
     // versione di PHP suggerita
     $cf['php']['preferred']['version'] = '8.2.0';       // rilasciata l'8 dicembre 2022

@@ -1562,7 +1562,7 @@ ALTER TABLE `funnel`
 -- tipologia: tabella gestita
 ALTER TABLE `funnel` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--- | 0300000151510
+-- | 030000015150
 
 -- giorni
 ALTER TABLE `giorni` 
@@ -2419,7 +2419,7 @@ ALTER TABLE `orari`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_tipologia_contratti`,`id_periodicita`,`id_giorno`,`ora_inizio`,`ora_fine`);
 
--- | 030000022300
+-- | 030000022301
 
 -- orari
 ALTER TABLE `orari` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -3714,7 +3714,7 @@ ALTER TABLE `step`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`);
 
--- | 030000042201
+-- | 030000042501
 
 -- step
 -- tipologia: tabella standard
