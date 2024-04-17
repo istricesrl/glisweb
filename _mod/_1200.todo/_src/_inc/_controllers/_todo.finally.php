@@ -29,6 +29,7 @@
             // mysqlQuery( $c, 'CALL todo_view_static( ? )', array( array( 's' => $d['id'] ) ) );
             // mysqlQuery( $c, 'REPLACE INTO todo_view_static SELECT * FROM todo_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
             // TODO chiamare la funzione apposita updateTodoViewStatic()
+            updateTodoViewStatic( $d['id'] );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
 
         break;
