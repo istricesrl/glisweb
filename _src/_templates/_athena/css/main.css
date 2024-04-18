@@ -525,6 +525,14 @@ header.subform-intestazione {
     margin-bottom: 10px;
 }
 
+header ol.breadcrumbs {
+    display: block;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    font-size: 1.5em;
+}
+
 #info, #jobs, #cart, #alert, #bookmarks {
     background-color: #555555;
     color: #ffffff;
