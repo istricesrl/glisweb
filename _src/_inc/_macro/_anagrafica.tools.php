@@ -61,6 +61,14 @@
 	    'text' => 'unisce due anagrafiche e tutti gli oggetti collegati'
 	);
 
+	$ct['page']['contents']['metro']['03.elaborazioni'][] = array(
+		'lws' => '/task/anagrafica.deduplica',
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'unione anagrafiche',
+		'text' => 'pulisce tutte le anagrafiche unendo i doppioni e gli oggetti collegati'
+	);
+
 	$ct['page']['contents']['metro']['05.static'][] = array(
 		'lws' => '/task/anagrafica.view.static.popolazione',
 		'icon' => NULL,
