@@ -656,7 +656,15 @@
      * 
      * inizializzazione dell'array dei requisiti dell'ambiente
      * -------------------------------------------------------
-     * Questo array contiene i moduli di PHP necessari all'esecuzione del framework.
+     * Questo array contiene i moduli di PHP necessari all'esecuzione del framework. Si tenga presente che GlisWeb dipende fortemente
+     * da Composer, quindi oltre a sincerarsi di avere l'ambiente correttamente configurato è anche importante assicurarsi che
+     * le librerie esterne siano installate e aggiornate. Sostanzialmente è sufficiente eseguire nella document root del deploy
+     * i seguenti comandi:
+     * 
+     * ```
+     * composer update
+     * composer suggests | xargs -i composer require {}
+     * ```
      * 
      */
 
@@ -695,17 +703,19 @@
 
     // controllo che la versione di PHP installata sia uguale o superiore a quella richiesta
     if( version_compare( PHP_VERSION, $cf['php']['required']['version'], '<' ) ) {
-        die( 'la versione di PHP installata è inferiore a quella richiesta' );
+        die( 'la versione di PHP installata ('.PHP_VERSION.') è inferiore a quella richiesta ('.$cf['php']['required']['version'].')' );
     }
 
     // controllo che tutti i moduli di PHP necessari siano installati
-    if( count( array_diff( $cf['php']['required']['extensions'], get_loaded_extensions() ) ) > 0 ) {
-        die( 'alcuni moduli di PHP necessari non sono installati, lanciare _lamp.setup.sh' );
+    $cf['php']['required']['differences'] = array_diff( $cf['php']['required']['extensions'], get_loaded_extensions() );
+    if( count( $cf['php']['required']['differences'] ) > 0 ) {
+        die( 'alcuni moduli di PHP necessari non sono installati ('.implode( ', ', $cf['php']['required']['differences'] ).'), lanciare _lamp.setup.sh' );
     }
 
     // controllo che tutti i moduli di Apache necessari siano installati e attivi
-    if( count( array_diff( $cf['apache']['required']['modules'], apache_get_modules() ) ) > 0 ) {
-        die( 'alcuni moduli di PHP necessari non sono installati, lanciare _lamp.setup.sh' );
+    $cf['apache']['required']['differences'] = array_diff( $cf['apache']['required']['modules'], apache_get_modules() );
+    if( count( $cf['apache']['required']['differences'] ) > 0 ) {
+        die( 'alcuni moduli di PHP necessari non sono installati ('.implode( ', ', $cf['apache']['required']['differences'] ).'), lanciare _lamp.setup.sh' );
     }
 
     // controllo che le cartelle necessarie al funzionamento del framework esistano

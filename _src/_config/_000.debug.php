@@ -8,7 +8,7 @@
      * Il framework GlisWeb mette a disposizione degli sviluppatori e degli utenti un completo e potente ventaglio di
      * strumenti per il debug, il monitoraggio del funzionamento, la risoluzione dei problemi. Fra tutti, il sistema di
      * log è sicuramente il più importante, ed è fondamentale comprenderne il funzionamento per poter utilizzare
-     * il framework al massimo del suo potenziale. La colonna portante del sistema di log è la funzione logWrite()
+     * il framework al massimo del suo potenziale. La colonna portante del sistema di log è la funzione     logger()
      * della libreria _log.utils.php, e il suo funzionamento si basa sui dati impostati un questo file e nella sua
      * controparte custom.
      *
@@ -54,68 +54,46 @@
      * E_USER_DEPRECATED     |   16384  | errore di obsolescenza generato tramite la funzione trigger_error()
      * E_ALL                 |   32767  | tutti i messaggi di errore
      *
+     * TODO scrivere un paragrafo per tutti gli stati di funzionamento del framework
+     * TODO scrivere un paragrafo per spiegare il senso delle chiavi di $cf['debug']['lvl']
+     * TODO suddividere le configurazioni di log e debug fra test e produzione
+     * TODO finire di implementare le varie destinazioni di log
      *
      *
-     * @todo scrivere un paragrafo per tutti gli stati di funzionamento del framework
-     * @todo scrivere un paragrafo per spiegare il senso delle chiavi di $cf['debug']['lvl']
-     * @todo suddividere le configurazioni di log e debug fra test e produzione
-     *
-     * @file
      *
      */
 
     // costanti che descrivono lo stato di funzionamento del framework
-	define( 'DEVELOPEMENT'					, 'DEV' );
-	define( 'TESTING'				    	, 'TEST' );
-	define( 'PRODUCTION'					, 'PROD' );
+    define( 'DEVELOPEMENT'                                      , 'DEV' );
+    define( 'TESTING'                                           , 'TEST' );
+    define( 'PRODUCTION'                                        , 'PROD' );
 
     // costanti che definiscono le destinazioni possibili di log
-	define( 'LOG_TO_FILE'					, 'LOG2FILE' );
-	define( 'LOG_TO_SYSLOG'					, 'LOG2SYS' );
-	define( 'LOG_TO_GOOGLE'					, 'LOG2GCE' );
-	define( 'LOG_TO_MAIL'					, 'LOG2MAIL' );
-	define( 'LOG_TO_SMS'					, 'LOG2SMS' );
-	define( 'LOG_TO_MYSQL'					, 'LOG2MYSQL' );
-
-    /*
-     * @todo alcuni di questi metodi di log sono ancora da implementare e credo sia importante farlo
-     * per migliorare la reattività nella risposta a determinati eventi problematici o addirittura critici
-     */
+    define( 'LOG_TO_FILE'                                       , 'LOG2FILE' );
+    define( 'LOG_TO_SYSLOG'                                     , 'LOG2SYS' );
+    define( 'LOG_TO_GOOGLE'                                     , 'LOG2GCE' );
+    define( 'LOG_TO_MAIL'                                       , 'LOG2MAIL' );
+    define( 'LOG_TO_SMS'                                        , 'LOG2SMS' );
+    define( 'LOG_TO_MYSQL'                                      , 'LOG2MYSQL' );
 
     // livello di errori dei log
-	$cf['debug'][ DEVELOPEMENT ]['*']['log']['lvl']		        = LOG_DEBUG;
-
-    // frequenza di rotazione dei log
-	$cf['debug'][ DEVELOPEMENT ]['*']['log']['rotation']		= 'Ym';
-
-    // livello di PHP error_reporting()
-	$cf['debug'][ DEVELOPEMENT ]['*']['report']['lvl']		    = E_USER_WARNING;
-
-    // destinazione dei log
-	$cf['debug'][ DEVELOPEMENT ]['*']['target']['*']		    = array( LOG_TO_FILE => true );
+    $cf['debug'][ DEVELOPEMENT ]['log']['lvl']                  = LOG_DEBUG;
+    $cf['debug'][ DEVELOPEMENT ]['log']['rotation']             = 'Ym';
+    $cf['debug'][ DEVELOPEMENT ]['report']['lvl']               = E_USER_WARNING;
 
     // impostazioni aggiuntive per TESTING
-	$cf['debug'][ TESTING ]				                        = $cf['debug'][ DEVELOPEMENT ];
-	$cf['debug'][ TESTING ]['*']['log']['lvl']		            = LOG_NOTICE;
-	$cf['debug'][ TESTING ]['*']['report']['lvl']		        = E_USER_WARNING;
+    $cf['debug'][ TESTING ]                                     = $cf['debug'][ DEVELOPEMENT ];
+    $cf['debug'][ TESTING ]['log']['lvl']                       = LOG_NOTICE;
 
     // impostazioni aggiuntive per PRODUCTION
-	$cf['debug'][ PRODUCTION ]				                    = $cf['debug'][ DEVELOPEMENT ];
-	$cf['debug'][ PRODUCTION ]['*']['log']['lvl']		        = LOG_ERR;
-	$cf['debug'][ PRODUCTION ]['*']['report']['lvl']	        = E_USER_WARNING;
+    $cf['debug'][ PRODUCTION ]                                  = $cf['debug'][ DEVELOPEMENT ];
+    $cf['debug'][ PRODUCTION ]['log']['lvl']                    = LOG_ERR;
 
     // debug utilizzo memoria
-	$cf['debug']['mem']					                        = array();
+    $cf['debug']['mem']                                         = array();
 
-    // configurazione extra
-	if( isset( $cx['debug'] ) ) {
-	    $cf['debug'] = array_replace_recursive( $cf['debug'], $cx['debug'] );
-	}
+    // tempo massimo di esecuzione
+    $cf['debug']['run']['timeout']                              = 900;
 
-    // collegamento a $ct
-	$ct['debug']						                        = &$cf['debug'];
-
-    // debug
-    // echo 'OUTPUT';
-    // var_dump( setcookie( 'stocazzo', 'prova cookie' ) );
-    setcookie( 'stocazzo', 'prova cookie' );
+    // tempo massimo di connessione ai socket
+    $cf['debug']['socket']['timeout']                           = 900;
