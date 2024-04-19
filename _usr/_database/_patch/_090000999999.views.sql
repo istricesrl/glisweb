@@ -945,6 +945,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		) AS documento,
 		attivita.id_progetto,
 		progetti.nome AS progetto,
+		attivita.id_contratto,
+		concat_ws( ' ', tipologie_contratti.nome, contratti.nome ) AS contratto,
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
 		attivita.id_matricola,
         attivita.id_immobile,
@@ -988,6 +990,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
 		LEFT JOIN documenti ON documenti.id = attivita.id_documento
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN contratti ON contratti.id = attivita.id_contratto
+		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 	GROUP BY attivita.id
 ;
 
@@ -8828,6 +8832,8 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 		tipologie_attivita.se_sistema,
 		tipologie_attivita.se_stampa,
 		tipologie_attivita.se_cartellini,
+		tipologie_attivita.se_corsi,
+		tipologie_attivita.se_accesso,
 		tipologie_attivita.id_account_inserimento,
 		tipologie_attivita.id_account_aggiornamento,
 		tipologie_attivita_path( tipologie_attivita.id ) AS __label__

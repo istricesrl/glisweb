@@ -200,6 +200,8 @@ CREATE TABLE `attivita_view_static` (
   `documento` char(255) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `progetto` char(255) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `contratto` char(255) DEFAULT NULL,
   `discipline` char(255) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,

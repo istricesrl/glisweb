@@ -132,5 +132,10 @@
     // debug
     // print_r( $ct['etc']['sub'] );
 
+    // ordinamento subform
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['orari'] ) ) {
+        arraySortBy( array( 'id_giorno', 'ora_inizio' ), $_REQUEST[ $ct['form']['table'] ]['orari'] );
+    }
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
