@@ -1028,7 +1028,7 @@
      */
 
     // se è attiva la cache delle pagine
-    if( $cf['cache']['profile']['pages'] === true ) {
+    if( isset( $cf['cache']['profile']['pages'] ) && $cf['cache']['profile']['pages'] === true ) {
 
         // cache del buffer
         if( isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
