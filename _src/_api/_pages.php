@@ -621,12 +621,14 @@
                 break;
             }
             foreach( $media as &$sheets ) {
-                foreach( $sheets as &$css ) {
-                    if( strpos( $css, '.min.css' ) === false ) {
-                        $new = str_replace( '.css', '.min.css', $css );
-                        if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
-                            logger( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
-                            $css = $new;
+                if( is_array( $sheets ) ) {
+                    foreach( $sheets as &$css ) {
+                        if( strpos( $css, '.min.css' ) === false ) {
+                            $new = str_replace( '.css', '.min.css', $css );
+                            if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
+                                logger( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
+                                $css = $new;
+                            }
                         }
                     }
                 }
@@ -682,13 +684,17 @@
      */
 
     // caching locale dei CSS esterni
-    foreach( $ct['page']['css']['external'] as $media => &$sheets ) {
-        foreach( $sheets as &$css ) {
-            $content = file_get_contents( $css );
-            $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
-            writeToFile( $content, $cachefile );
-            $ct['page']['css']['internal']['media'][] = shortPath( $cachefile );
-            unset( $css );
+    if( isset( $ct['page']['css']['external'] ) && is_array( $ct['page']['css']['external'] ) ) {
+        foreach( $ct['page']['css']['external'] as $media => &$sheets ) {
+            if( is_array( $sheets ) ) {
+                foreach( $sheets as &$css ) {
+                    $content = file_get_contents( $css );
+                    $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
+                    writeToFile( $content, $cachefile );
+                    $ct['page']['css']['internal']['media'][] = shortPath( $cachefile );
+                    unset( $css );
+                }
+            }
         }
     }
 

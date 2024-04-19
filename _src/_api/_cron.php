@@ -258,7 +258,7 @@
 		'( timestamp_apertura <= ? OR timestamp_apertura IS NULL ) '.
 		'AND timestamp_completamento IS NULL '.
 		'AND ( token IS NULL ) '.
-		'AND se_foreground IS NULL ',
+		'AND se_foreground !=  1 ',
 		array(
 			array( 's' => $status['token'] ),
 			array( 's' => $time ),
