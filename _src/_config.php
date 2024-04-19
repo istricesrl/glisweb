@@ -287,7 +287,8 @@
     function logger( $m, $f = 'core', $l = LOG_DEBUG ) {
         if( ! defined( 'LOG_CURRENT_LEVEL' ) || $l <= LOG_CURRENT_LEVEL ) {
             checkPath( dirname( DIR_VAR_LOG . $f ) );
-            $h = fopen( DIR_VAR_LOG . $f . '.' . date( 'Ym' ) . '.log', 'a+' );
+            $lvl = array( 0 => 'emerg', 1 => 'alert', 2 => 'crit', 3 => 'err', 4 => 'warning', 5 => 'notice', 6 => 'info', 7 => 'debug' );
+            $h = fopen( DIR_VAR_LOG . $f . '.' . $lvl[ $l ] . '.' . date( 'Ym' ) . '.log', 'a+' );
             fwrite( $h, date( 'Y-m-d H:i:s' ) . ' (' . $l . ') ' . str_replace( '§', PHP_EOL . "\t\t\t\t\t--> ", $m ) . PHP_EOL );
             fclose( $h );
         }
