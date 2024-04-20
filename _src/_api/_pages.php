@@ -605,10 +605,11 @@
 	// $run = end( $tms );
 	// echo 'corsa: ' . $run;
 	// die( 'float: ' . floatval( str_replace( ',', '.', $run ) ) );
+    // die( print_r( $ct['page']['css'], true ) );
 
     // ricerca delle risorse CSS minificate
 	if( isset( $ct['page']['css'] ) && is_array( $ct['page']['css'] ) ) {
-	    foreach( $ct['page']['css'] as $tier => &$media ) {
+	    foreach( $ct['page']['css'] as $tier => $media ) {
             switch( $tier ) {
                 case 'internal':
                     $pre = DIR_BASE;
@@ -620,21 +621,29 @@
                     $pre = NULL;
                 break;
             }
-            foreach( $media as &$sheets ) {
-                if( is_array( $sheets ) ) {
-                    foreach( $sheets as &$css ) {
-                        if( strpos( $css, '.min.css' ) === false ) {
-                            $new = str_replace( '.css', '.min.css', $css );
-                            if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
-                                logger( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
-                                $css = $new;
+            if( is_array( $media ) ) {
+                foreach( $media as $sheets ) {
+                    if( is_array( $sheets ) ) {
+                        print_r( $sheets );
+                        foreach( $sheets as $css ) {
+                            if( strpos( $css, '.min.css' ) === false ) {
+                                $new = str_replace( '.css', '.min.css', $css );
+                                if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
+                                    logger( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
+                                    $css = $new;
+                                }
                             }
                         }
+                    } else {
+                        // echo $sheets . PHP_EOL;
                     }
                 }
-			}
+            }
 	    }
 	}
+
+    // debug
+    // die( print_r( $ct['page']['css'], true ) );
 
     // timer
 	timerCheck( $cf['speed'], 'fine ricerca CSS minificati' );
@@ -674,6 +683,9 @@
 	// log
 	loggerLatest( 'fine ricerca JS minificati' );
 
+    // debug
+    // die( print_r( $ct['page']['css'], true ) );
+
     /**
      * caching locale delle risorse esterne
      * ====================================
@@ -685,9 +697,9 @@
 
     // caching locale dei CSS esterni
     if( isset( $ct['page']['css']['external'] ) && is_array( $ct['page']['css']['external'] ) ) {
-        foreach( $ct['page']['css']['external'] as $media => &$sheets ) {
+        foreach( $ct['page']['css']['external'] as $media => $sheets ) {
             if( is_array( $sheets ) ) {
-                foreach( $sheets as &$css ) {
+                foreach( $sheets as $css ) {
                     $content = file_get_contents( $css );
                     $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
                     writeToFile( $content, $cachefile );
@@ -710,6 +722,7 @@
 	// print_r( $ct['contatti'] );
 	// print_r( $ct['view']['open'] );
 	// print_r( $cf['contents'] );
+    // die( print_r( $ct['page']['css'], true ) );
 
     // censuro l'array $ct per evitare fughe accidentali di informazioni sensibili
 	array2censored( $ct );
@@ -927,6 +940,7 @@
 	// echo '<pre>' . print_r( $_REQUEST, true ) . '</pre>';
 	// print_r( $ct['page']['headers'] );
 	// print_r( $ct['contatti'] );
+    // die( print_r( $ct['page']['css'], true ) );
 
     /**
      * invio del codice di stato HTTP
@@ -1075,6 +1089,9 @@
 
 	// log
 	loggerLatest( 'fine esecuzione framework' );
+
+    // debug
+    // print_r( $ct['page']['css'] );
 
     /**
      * chiusura del monitoraggio tempi
