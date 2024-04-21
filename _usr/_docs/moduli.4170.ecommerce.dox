@@ -37,6 +37,20 @@
     - _usr/_examples/_ecommerce/_esito.ck.php che simula la pagina di chiusura diretta del carrello
     - _usr/_examples/_ecommerce/_esito.php che simula la pagina di esito generico del pagamento
 
+    Il processo standard si può quindi sintetizzare in uno schema:
+
+                                                                                                +---------------------+
+                                                                     +------------------------> |   pagina checkout   |
+                                                                     |                          +---------------------+
+                                                                     |
+    +---------------------+    +---------------------+    +----------------------+    +------------------------+    +------------------+
+    |   pagina prodotto   | -> |   pagina carrello   | -> |   pagina riepilogo   | -> |   provider pagamento   | -> |   pagina esito   |
+    +---------------------+    +---------------------+    +----------------------+    +------------------------+    +------------------+
+                                                                                                    |
+                                                                                                    |      +-------------------------+
+                                                                                                    +----> |   API esito pagamento   |
+                                                                                                           +-------------------------+
+
     le pagine di prodotto
     ---------------------
 
@@ -86,6 +100,9 @@
     [...] lo step 03 del processo di acquisto.
 
     [...] volendo saltare la pagina di riepilogo è possibile inserire un submit() del form all'onload della pagina direttamente nello schema Twig.
+
+    [...] si noti che per PayPal Advanced Checkout non è possibile saltare la pagina di riepilogo, in quanto è necessario che l'utente inserisca i dati
+    della carta di credito se lo desidera.
 
     la pagina di esito generico di pagamento
     ----------------------------------------
@@ -286,6 +303,18 @@
     [...] le attività del back-end della pagina di riepilogo sono:
 
     - la creazione del token di connessione a PayPal [...]
+
+    Il processo standard si può quindi sintetizzare in uno schema:
+
+
+    +---------------------+    +---------------------+    +----------------------+    +------------------------+    +------------------+
+    |   pagina prodotto   | -> |   pagina carrello   | -> |   pagina riepilogo   | -> |   provider pagamento   | -> |   pagina esito   |
+    +---------------------+    +---------------------+    +----------------------+    +------------------------+    +------------------+
+                                                                                                    |
+                                                                                                    |      +-------------------------+
+                                                                                                    +----> |   API esito pagamento   |
+                                                                                                           +-------------------------+
+
 
     pagamento tramite Nexi
     ----------------------
