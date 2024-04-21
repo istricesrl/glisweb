@@ -2031,7 +2031,7 @@ DROP TABLE IF EXISTS `consensi_view`;
 
 -- | 090000006401
 
--- consensi
+-- consensi_view
 -- tipologia: tabella standard
 -- verifica: 2022-08-23 11:12 Chiara GDL
 CREATE OR REPLACE VIEW `consensi_view` AS

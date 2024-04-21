@@ -363,6 +363,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_documento` int(11) DEFAULT NULL,
   `id_pagamento` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
+  `id_contratto` char(32) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
