@@ -136,7 +136,7 @@
 	    if( empty( $c ) ) {
 
 		// log
-		    logWrite( 'chiamata a mysqlQuery() con connessione assente', 'mysql', LOG_ERR );
+		    logWrite( 'chiamata a mysqlQuery() con connessione assente per eseguire -> ' . $q, 'mysql', LOG_ERR );
 
 		// restituisco false
 		    return false;

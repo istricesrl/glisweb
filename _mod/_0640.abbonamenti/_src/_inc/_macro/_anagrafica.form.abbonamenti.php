@@ -135,10 +135,10 @@
             } elseif( $rinnovi['pagato'] == 0 ) {
                 $row['pagamento'] = 'da pagare';
             } elseif( $rinnovi['pagato'] < $rinnovi['ordinato'] ) {
-                $row['pagamento'] = 'da pagare € ' . number_format( $rinnovi['ordinato'] - $rinnovi['pagato'], 2, ',', '.');
+                $row['pagamento'] = 'da pagare € ' . number_format( $rinnovi['ordinato'] - $rinnovi['pagato'], 2, ',', '.') . ' su € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
                 $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.pagamento']['url'][ LINGUA_CORRENTE ] . '?__pagamenti__[id_cliente]='.$row['id_anagrafica'].'"><span class="media-left"><i class="fa fa-shopping-cart"></i></span></a>';
             } elseif( $rinnovi['pagato'] == $rinnovi['ordinato'] ) {
-                $row['pagamento'] = 'pagato';
+                $row['pagamento'] = 'pagato € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
             }
 
         }

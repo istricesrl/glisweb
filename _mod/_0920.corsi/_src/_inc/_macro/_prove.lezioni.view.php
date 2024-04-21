@@ -94,7 +94,7 @@
     );
 
     // inclusione filtri speciali
-	// $ct['etc']['include']['filters'] = 'inc/attivita.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/prove.lezioni.view.filters.html';
 
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
