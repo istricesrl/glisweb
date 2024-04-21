@@ -27,7 +27,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY nome ASC'
+	    'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY __label__ ASC'
 	);
 
 	// tendina tipologie indirizzi

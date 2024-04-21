@@ -624,7 +624,6 @@
             if( is_array( $media ) ) {
                 foreach( $media as $sheets ) {
                     if( is_array( $sheets ) ) {
-                        print_r( $sheets );
                         foreach( $sheets as $css ) {
                             if( strpos( $css, '.min.css' ) === false ) {
                                 $new = str_replace( '.css', '.min.css', $css );
