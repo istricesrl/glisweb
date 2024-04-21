@@ -84,6 +84,15 @@
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];
 	}
 
+	// ordinamenti presettati
+	if( isset( $ct['view']['__sort__'] ) ) {
+        if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'] ) ) {
+            foreach( $ct['view']['__sort__'] as $field => $direction ) {
+                $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'][ $field ] = $direction;
+            }
+        }
+	}
+
     // aggiungo le colonne da prelevare
 	// $_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = array_keys( $ct['view']['cols'] );
 	// $ct['view']['data']['__fields__'] = array_keys( $ct['view']['cols'] );

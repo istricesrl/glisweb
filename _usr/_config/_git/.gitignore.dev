@@ -1,5 +1,6 @@
 .github/
 _*/
+.github/
 tmp/
 var/
 .htaccess

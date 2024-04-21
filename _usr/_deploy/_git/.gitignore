@@ -1,4 +1,5 @@
 _*/
+.github/
 etc/latest.conf
 etc/latest.release.conf
 etc/latest.version.conf

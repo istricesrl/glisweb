@@ -1696,6 +1696,7 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 	SELECT
 		categorie_prodotti.id,
 		categorie_prodotti.id_genitore,
+		categorie_prodotti.codice,
 		categorie_prodotti.ordine,
 		categorie_prodotti.nome,
 		categorie_prodotti.template,
