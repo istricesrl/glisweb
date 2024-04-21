@@ -14,10 +14,12 @@
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
 	{{ frm.input( table, subtable, i, 'id_progetto', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
+        <!--
         <div class="col-auto">
             <span class="label-top">funzione</span>
             {{ frm.select( table, subtable, i, 'se_sostituto', '', etc.select.funzioni, request, '', '', '', '', '', disabled  ) }}
         </div>
+        -->
         <div class="col-12 col-md-3">
 		<span class="label-top">tipologia</span>
 		{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_anagrafica, request, '', '', '', '', '', disabled ) }}

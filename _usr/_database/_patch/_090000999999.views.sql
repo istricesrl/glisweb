@@ -6070,6 +6070,7 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.id_todo,
 		pianificazioni.id_attivita,
 		pianificazioni.id_contratto,
+		pianificazioni.id_anagrafica,
 		pianificazioni.nome,
 		pianificazioni.id_periodicita,
 		periodicita.nome AS periodicita,

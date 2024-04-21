@@ -2375,6 +2375,7 @@ CREATE TABLE IF NOT EXISTS `pianificazioni` (
   `id_todo` int(11) DEFAULT NULL,
   `id_attivita` int(11) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `id_periodicita` int(11) DEFAULT NULL,
