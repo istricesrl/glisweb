@@ -36,6 +36,16 @@
         mysqlInsertRow( $cf['mysql']['connection'], $read, 'attivita' );
     }
 
+    // ipotesi
+    if( ! file_exists( DIR_BASE . $_REQUEST['__download__'] ) && strpos( $_REQUEST['__download__'], '+' ) !== false ) {
+        $_REQUEST['__download__'] = str_replace( '+', ' ', $_REQUEST['__download__'] );
+    }
+
+    // controllo
+    if( ! file_exists( DIR_BASE . $_REQUEST['__download__'] ) ) {
+        die( DIR_BASE . $_REQUEST['__download__'] . ' non esiste' );
+    }
+
     // determino il mime type
     $finfo = finfo_open( FILEINFO_MIME );
     $mimetype = finfo_file( $finfo, DIR_BASE . $_REQUEST['__download__'] );

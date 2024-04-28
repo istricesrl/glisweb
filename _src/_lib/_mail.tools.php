@@ -231,6 +231,8 @@ if( empty( $t[ $l ]['from'] ) ) {
 	die( 'mittente non settato, impossibile accodare la mail' );
 }
 
+try {
+
 		    // avvio di Twig
 			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $t[ $l ] ) );
 			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );
@@ -262,7 +264,7 @@ if( empty( $t[ $l ]['from'] ) ) {
 			if( isset( $to ) ) {
 			    foreach( $to as $k => $v ) {
 					$tm = array( 'nome' => $k, 'mail' => $v );
-					$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ) );
+					$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ), array( 'cache' => false ) );
 					$destinatari[ $tw->render( 'nome', $d ) ] = $tw->render( 'mail', $d );
 			    }
 			}
@@ -275,7 +277,12 @@ if( empty( $t[ $l ]['from'] ) ) {
 		    // variabili (ad es. una ricevuta generata ad hoc che abbia l'ID della transazione nel nome)
 			// TODO
 
-		break;
+    } catch( \Exception $e ) {
+        die( $e->getMessage() );
+    }
+
+
+        break;
 
 		default:
 

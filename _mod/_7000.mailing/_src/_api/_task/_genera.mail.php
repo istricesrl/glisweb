@@ -160,8 +160,7 @@
 		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
 
         // prelevo i contenuti
-		$cnts = mysqlCachedQuery(
-			$cf['memcache']['connection'],
+		$cnts = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT contenuti.*,lingue.ietf FROM contenuti '.
 			'INNER JOIN lingue ON lingue.id = contenuti.id_lingua '.
@@ -201,8 +200,7 @@
 		// var_dump($tpl );
 
         // prelevo gli allegati
-		$files = mysqlCachedQuery(
-			$cf['memcache']['connection'],
+		$files = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT file.*,lingue.ietf FROM file '.
 			'INNER JOIN lingue ON lingue.id = file.id_lingua '.

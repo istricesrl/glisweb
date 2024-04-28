@@ -58,11 +58,12 @@
             $bp = $ba = '';
         }
 
+        libxml_clear_errors();
+
         $etc = mb_convert_encoding( $hp . $bp . $t . $ba . $ha, 'UTF-8', 'auto');
 
         $dom->loadHTML( '<?xml version="1.0" encoding="UTF-8"?>' . $etc );
         $xpath = new DOMXPath( $dom );
-        libxml_clear_errors();
 
         $doc = $dom->getElementsByTagName("html")->item(0);
         $src = $xpath->query(".//@src");
@@ -71,6 +72,14 @@
             if( substr( $sr->nodeValue, 0, 1 ) == '/' ) {
                 $sr->nodeValue = $base . $sr->nodeValue;
             }
+        }
+
+        // recupero gli errori
+        $errors = libxml_get_errors();
+
+        // log
+        foreach ($errors as $error) {
+            logWrite( $error->code, 'details/xml', LOG_ERR );
         }
 
         // if( property_exists( $doc, 'documentElement') ) {
@@ -87,6 +96,14 @@
 
         // }
 
+        // debug
+        // var_dump( $output );
+
+        if( empty( $output ) ) {
+            $output = str_replace( 'src="/var/contenuti/', 'src="' . $base . '/var/contenuti/', $t );
+        }
+
+        // debug
         // var_dump( $output );
 
         return $output;
