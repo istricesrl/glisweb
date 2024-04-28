@@ -304,7 +304,7 @@
 
     - la creazione del token di connessione a PayPal [...]
 
-    Il processo standard si può quindi sintetizzare in uno schema:
+    Il processo per il pagamento con PayPal Advanced Checkout si può quindi sintetizzare in uno schema:
 
 
     +---------------------+    +---------------------+    +----------------------+    +------------------------+    +------------------+

@@ -47,6 +47,8 @@
     // contenuto del carrello
     if( isset( $_SESSION['carrello'] ) ) {
         $t .= '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+    } else {
+        $t .= '<pre>CARRELLO VUOTO</pre>';
     }
 
     // output

@@ -11,6 +11,9 @@
     // verifico se è presente una richiesta per il modulo ecommerce
     if( isset( $_REQUEST['__carrello__'] ) && is_array( $_REQUEST['__carrello__'] ) ) {
 
+        // log
+        logWrite( 'attivata la controller del carrello', 'cart' );
+
         // verifico la challenge reCAPTCHA
         if( isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
@@ -42,7 +45,7 @@
         }
 
         // log
-        logWrite( 'attivata la controller del carrello', 'cart' );
+        logWrite( 'esito del controllo antispam: ' . $spamScore . '/' . ( ( $spamCheck == true ) ? 'OK' : 'NO' ), 'cart' );
 
         // TODO qui fare il controllo anti spam
         if( $spamCheck === true ) {
