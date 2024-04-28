@@ -198,6 +198,9 @@
 
             }
 
+            // log
+            writeToFile( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.log' );
+
         }
 
         /*	$cf['cron']['cache']['view']['static']['refresh'] = array_unique( $cf['cron']['cache']['view']['static']['refresh'] );
@@ -216,10 +219,10 @@
             }
         */
 
-        // log
-        writeToFile( print_r( $task, true ), DIR_VAR_LOG_TASK . $task['id'] . '.log' );
-
 	} else {
+
+        // status
+        $status['info'][] = 'nessun task trovato';
 
 		// log
 		logWrite( 'nessun task trovato', 'cron' );
@@ -254,11 +257,11 @@
 	// metto il lock sui job aperti
 	$jobs = mysqlQuery(
 		$cf['mysql']['connection'],
-		'UPDATE job SET token = ?, timestamp_esecuzione = ? WHERE '.
-		'( timestamp_apertura <= ? OR timestamp_apertura IS NULL ) '.
-		'AND timestamp_completamento IS NULL '.
-		'AND ( token IS NULL ) '.
-		'AND se_foreground !=  1 ',
+		'UPDATE job SET token = ?, timestamp_esecuzione = ? WHERE 
+        ( timestamp_apertura <= ? OR timestamp_apertura IS NULL )
+        AND timestamp_completamento IS NULL 
+        AND ( token IS NULL ) 
+        AND ( se_foreground IS NULL OR se_foreground = 0 )',
 		array(
 			array( 's' => $status['token'] ),
 			array( 's' => $time ),
@@ -379,7 +382,10 @@
 
 	} else {
 
-		// log
+        // status
+        $status['info'][] = 'nessun job trovato';
+
+        // log
 		logWrite( 'nessun job trovato', 'cron' );
 
 	}
