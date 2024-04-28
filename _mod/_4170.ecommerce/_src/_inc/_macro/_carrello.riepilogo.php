@@ -1,5 +1,36 @@
 <?php
 
+    /**
+     * pagina di riepilogo prima del pagamento vero e proprio
+     * 
+     * lo scopo di questa pagina, parlando in termini generici, è quello di creare le condizioni necessarie al pagamento vero e proprio; cosa questo
+     * significhi di volta in volta dipende dal metodo di pagamento in uso
+     * 
+     * introduzione
+     * ============
+     * Il processo di pagamento si articola su diversi step; nel caso dell'e-commerce l'oggetto retrostante al pagamento è il carrello, e il pagamento viene
+     * registrato sul carrello stesso dopodiché il documento viene creato a posteriori o contestualmente, mentre per il pagamento di righe della tabella
+     * pagamenti l'oggetto retrostante è il documento che può essere già esistente, creato contestualmente al pagamento, o anche creato successivamente
+     * a questo.
+     * 
+     * Da un punto di vista concettuale, questa macro è corrispondente alla macro _mod/_F030.pagamenti/_src/_inc/_macro/_pagamento.riepilogo.php del
+     * modulo pagamenti.
+     * 
+     * pagamenti con checkout implicito e pagamenti tramite provider esterno
+     * ---------------------------------------------------------------------
+     * Dall'oggetto retrostante (carrello o pagamento) il percorso di pagamento segue due strade diverse per i pagamenti con checkout implicito e per quelli
+     * che si appoggiano a un provider esterno per il pagamento. Nel primo gruppo troviamo il pagamento in contanti alla consegna, il pagamento con bonifico
+     * bancario, e così via. Nel secondo gruppo troviamo invece PayPal, Nexi, Satispay, e simili.
+     * 
+     * Nel primo caso, il percorso di chiusura dell'ordine non passa dalla pagina di riepilogo, ma va alla pagina di checkout, dove viene registrato semplicemente
+     * il fatto che l'utente ha concluso l'ordine e che il pagamento verrà perfezionato offline.
+     * 
+     * Nel secondo caso il percorso di chiusura dell'ordine passa per il riepilogo, per l'interazione con il provider di pagamento, e termina sulla pagina di
+     * esito ma coinvolge anche l'API di pagamento specifica per il provider scelto, il cui compito è registrare materialmente l'avvenuto pagamento; la pagina
+     * di esito infatti è solo informativa per il cliente ma non salva alcun dato.
+     * 
+     */
+
     // se è impostato un provider di pagamento
     if( isset( $_SESSION['carrello']['provider_pagamento'] ) && ! empty( $_SESSION['carrello']['provider_pagamento'] ) ) {
 

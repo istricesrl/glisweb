@@ -10,8 +10,6 @@
      *
      * @todo documentare
      *
-     * @file
-     *
      */
 
     // configurazione extra
