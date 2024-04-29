@@ -331,10 +331,16 @@ Options -Indexes
     RewriteCond %{REQUEST_FILENAME} favicon.ico
     RewriteRule ^favicon.ico _src/_img/_favicon.ico [L]
 
-    # robots.txt di default
+    # robots.txt custom di default
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} robots.txt
-    RewriteRule ^robots.txt _etc/_robots.txt [L]
+    RewriteCond %{DOCUMENT_ROOT}/etc/robots/robots.txt -f
+    RewriteRule ^robots.txt etc/robots/robots.txt [L]
+
+    # robots.txt standard di default
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} robots.txt
+    RewriteRule ^robots.txt _etc/_robots/_robots.txt [L]
 
     # sitemap XML e CSV
     RewriteRule ^sitemap.xml var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
