@@ -24,7 +24,7 @@
 		$p['progetti.archivio.view'] = array(
 			'sitemap'		=> false,
 			'icon'			=> '<i class="fa fa-archive" aria-hidden="true"></i>',
-			'title'			=> array( $l		=> 'archivio' ),
+			'title'			=> array( $l		=> 'archivio progetti' ),
 			'h1'			=> array( $l		=> 'archivio' ),
 			'parent'		=> array( 'id'		=> 'archivio.produzione' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),

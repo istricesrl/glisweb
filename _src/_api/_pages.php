@@ -396,9 +396,10 @@
 			if( file_exists( fullPath( $macroAlternative ) ) ) {
 
                 // includo la macro alternativa
+				loggerLatest( 'avvio inclusione macro -> ' . $macroAlternative );
 				require fullPath( $macroAlternative );
 				timerCheck( $cf['speed'], $macroAlternative );
-				loggerLatest( 'inclusione macro -> ' . $macroAlternative );
+				loggerLatest( 'fine inclusione macro -> ' . $macroAlternative );
 				$includes[] = $macroAlternative;
 
 			} else {
@@ -410,17 +411,19 @@
 				if( file_exists( fullPath( $macroLocal ) ) && $macro !== $macroLocal ) {
 
                     // includo la macro custom
+					loggerLatest( 'avvio inclusione macro -> ' . $macroLocal );
 					require fullPath( $macroLocal );
 					timerCheck( $cf['speed'], $macroLocal );
-					loggerLatest( 'inclusione macro -> ' . $macroLocal );
+					loggerLatest( 'fine inclusione macro -> ' . $macroLocal );
 					$includes[] = $macroLocal;
 
 				} elseif( file_exists( fullPath( $macro ) ) ) {
 
                     // includo la macro standard
+					loggerLatest( 'avvio inclusione macro -> ' . $macro . PHP_EOL );
 					require fullPath( $macro );
 					timerCheck( $cf['speed'], fullPath( $macro ) );
-					loggerLatest( 'inclusione macro -> ' . $macro . PHP_EOL, FILE_LATEST_RUN );
+					loggerLatest( 'fine inclusione macro -> ' . $macro . PHP_EOL );
 					$includes[] = $macro;
 
 				} else {

@@ -591,6 +591,9 @@
     // costanti per l'encoding
 	define( 'ENCODING_UTF8'			                    , 'utf-8' );
 
+    // costanti per l'I/O
+    define( 'PHP_INPUT'                                 , 'php://input' );
+
     /**
      * inizializzazione dei log latest
      * ===============================

@@ -35,7 +35,7 @@
 	require '../../../../_src/_config.php';
 
     // decodifica dati in ingresso
-    $dati = json_decode( file_get_contents('php://input'), true );
+    $dati = json_decode( file_get_contents( PHP_INPUT ), true );
 
     // log
     logger( 'dati in ingresso: ' . print_r( $dati, true ), 'details/paypal-advanced/order-api' );
