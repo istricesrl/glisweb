@@ -306,10 +306,10 @@
      * @return      void
      * 
      */
-    function loggerLatest( $m ) {
-        checkPath( dirname( FILE_LATEST_RUN ) );
-        $h = fopen( FILE_LATEST_RUN, 'a+' );
-        fwrite( $h, sprintf( '%01.4f', microtime( true ) ) . ' ' . $m . PHP_EOL );
+    function loggerLatest( $m, $l = FILE_LATEST_RUN, $w = 'a+' ) {
+        checkPath( dirname( $l ) );
+        $h = fopen( $l, $w );
+        fwrite( $h, ( ( $w == 'a+' ) ? sprintf( '%01.4f', microtime( true ) ) . ' ' : '' ) . $m . PHP_EOL );
         fclose( $h );
     }
 
@@ -614,16 +614,16 @@
     $latestLogHeader = date( 'Y-m-d H:i:s' ) . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $_SERVER['REDIRECT_URL'] . ' -> ' .$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL;
 
     // inizializzazione del file cron.latest.log
-    fwrite( fopen( FILE_LATEST_CRON, 'w+' ), $latestLogHeader );
+    loggerLatest( $latestLogHeader, FILE_LATEST_CRON, 'w+' );
 
     // inizializzazione del file run.latest.log
-    fwrite( fopen( FILE_LATEST_RUN, 'w+' ), $latestLogHeader );
+    loggerLatest( $latestLogHeader, FILE_LATEST_RUN, 'w+' );
 
     // inizializzazione del file mysql.latest.log
-    fwrite( fopen( FILE_LATEST_MYSQL, 'w+' ), $latestLogHeader );
+    loggerLatest( $latestLogHeader, FILE_LATEST_MYSQL, 'w+' );
 
     // inizializzazione del file sitemap.latest.log
-    fwrite( fopen( FILE_LATEST_SITEMAP, 'w+' ), $latestLogHeader );
+    loggerLatest( $latestLogHeader, FILE_LATEST_SITEMAP, 'w+' );
 
     /**
      * inizializzazione dell'array di configurazione principale
