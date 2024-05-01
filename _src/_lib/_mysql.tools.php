@@ -234,7 +234,7 @@
 
 			// log
 			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $p, true ), 'mysql/details', LOG_ERR );
+			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $p, true ), 'details/mysql/query', LOG_ERR );
 
 			// gestione specifici errori
 			    switch( mysqli_errno( $c ) ) {
@@ -366,7 +366,7 @@
 
 				// log
 				    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
+					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'details/mysql/query', LOG_ERR );
 
 				// gestione specifici errori
 				    switch( mysqli_errno( $c ) ) {
@@ -418,7 +418,7 @@
 
 				// log
 					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
+					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'details/mysql/query', LOG_ERR );
 
 				// debug
 					// var_dump( mysqli_errno( $c ) );
@@ -428,7 +428,7 @@
 
 					// log
 						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
+						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'details/mysql/query', LOG_ERR );
 
 					// gestione specifici errori
 						switch( mysqli_errno( $c ) ) {
