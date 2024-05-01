@@ -1,9 +1,9 @@
 {% macro mail( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
@@ -51,9 +51,9 @@
 {% macro telefoni( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
@@ -98,13 +98,13 @@
 {% macro indirizzi( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% if request.__preset__.anagrafica_indirizzi %}
 	{% set require = 0 %}
 	{% else %}
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
 	{% endif %}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
@@ -160,9 +160,9 @@
 {% macro indirizzi_rapidi( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
@@ -206,9 +206,9 @@
 {% macro categorie( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% set require = 0 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
@@ -250,9 +250,9 @@
 {% macro url( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
