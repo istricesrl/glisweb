@@ -88,7 +88,7 @@
                                     );
 
                                     // copia file
-                                    if( in_array( $entita, array( 'immagini', 'file' ) ) ) {
+                                    if( in_array( $entita, array( 'immagini', 'file', 'video' ) ) ) {
 
                                         // TODO implementare caricamento file
 
@@ -102,6 +102,8 @@
                                             $xField = 'id_immagine';
                                         } elseif( $entita == 'file' ) {
                                             $xField = 'id_file';
+                                        } elseif( $entita == 'video' ) {
+                                            $xField = 'id_video';
                                         }
 
                                         // ...

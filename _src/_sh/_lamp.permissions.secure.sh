@@ -34,25 +34,25 @@ fi
 
 ## cambio proprietario
 chown -R root:www-data ./$SUB/
-find ./$SUB/src/templates	-exec chown -R $FTPUSER:www-data {} \;
-find ./$SUB/tmp			-exec chown -R www-data:www-data {} \;
-find ./$SUB/var			-exec chown -R $FTPUSER:www-data {} \;
-find ./$SUB/var/cache   -exec chown -R www-data:www-data {} \;
+find ./$SUB/src/templates	    -exec chown -R $FTPUSER:www-data {} \;
+find ./$SUB/tmp			        -exec chown -R www-data:www-data {} \;
+find ./$SUB/var			        -exec chown -R $FTPUSER:www-data {} \;
+find ./$SUB/var/cache           -exec chown -R www-data:www-data {} \;
 
 ## cambio permessi (silenzioso)
-find ./$SUB/ -type d		-not \( -path ".git" -prune \) -exec chmod 550 {} \;
-find ./$SUB/ -type f		-not \( -path ".git" -prune \) -exec chmod 640 {} \;
-find ./$SUB/ -name '*.sh'	-not \( -path ".git" -prune \) -exec chmod 550 {} \;
+find ./$SUB/        -type d                     -not \( -path ".git" -prune \)      -exec chmod 550 {} \;
+find ./$SUB/        -type f                     -not \( -path ".git" -prune \)      -exec chmod 640 {} \;
+find ./$SUB/                    -name '*.sh'    -not \( -path ".git" -prune \)      -exec chmod 550 {} \;
 
 # permessi aggiuntivi per le cartelle
-find ./$SUB/.git/hooks -type d		-exec chmod ug+x {} \;
-find ./$SUB/src/templates -type d	-exec chmod 770 {} \;
-find ./$SUB/tmp -type d			-exec chmod 770 {} \;
-find ./$SUB/var -type d			-exec chmod 770 {} \;
+find ./$SUB/.git/hooks      -type d     -exec chmod ug+x {} \;
+find ./$SUB/src/templates   -type d     -exec chmod 770 {} \;
+find ./$SUB/tmp             -type d     -exec chmod 770 {} \;
+find ./$SUB/var             -type d     -exec chmod 770 {} \;
 
-find ./$SUB/src/templates -type f	-exec chmod 660 {} \;
-find ./$SUB/tmp -type f			-exec chmod 660 {} \;
-find ./$SUB/var -type f			-exec chmod 660 {} \;
+find ./$SUB/src/templates   -type f     -exec chmod 660 {} \;
+find ./$SUB/tmp             -type f     -exec chmod 660 {} \;
+find ./$SUB/var             -type f     -exec chmod 660 {} \;
 
 ## cartella .git
 if [ -d ".git" ]; then
