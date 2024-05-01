@@ -983,13 +983,20 @@
 
 		// rivelazione dei dati
 		if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
+            $blocks = $_REQUEST['u'];
+        } elseif( isset( $_REQUEST['u'] ) ) {
+            $blocks = explode( '/', $_REQUEST['u'] );
+        }
+
+        // ...
+        if( isset( $blocks ) && is_array( $blocks ) ) {
             $tpu = $ct;
-			foreach( $_REQUEST['u'] as $tu ) {
+			foreach( $blocks as $tu ) {
 				if( isset( $tpu[ $tu ] ) ) {
 					$tpu = $tpu[ $tu ];
 				}
 			}
-			echo '<pre style="background-color: white;">' . print_r( $tpu, true ) . '</pre>';
+			echo '<!-- DUMP CT: ' . implode( ' / ', $blocks ) . PHP_EOL . print_r( $tpu, true ) . ' -->';
 		}
 
 		// debug

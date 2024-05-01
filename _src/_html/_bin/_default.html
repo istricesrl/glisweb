@@ -49,18 +49,25 @@
 {% endmacro %}
 
 {% macro video( page, lang, site, role, num, autoplay, loop ) %}
-{% if page.contents.video[ role ][ num ].id_tipologia_embed == 3 %}
+{# nota sull'autoplay vedi https://developer.chrome.com/blog/autoplay?hl=it #}
+{% if page.contents.video[ role ][ num ].id_embed == 3 %}
 {% if not page.contents.video[ role ][ num ].ratio %}{% set rt = '16by9' %}{% else %}{% set rt = page.contents.video[ role ][ num ].ratio %}{% endif %}
 <div class="embed-responsive embed-responsive-{{ rt }}">
-    <iframe class="embed-responsive-item lazyload" data-src="https://www.youtube.com/embed/{{ page.contents.video[ role ][ num ].codice_embed }}?rel=0{% if autoplay %}&autoplay=1{% endif %}{% if loop %}&loop=1{% endif %}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
+    <iframe class="embed-responsive-item lazyload" data-src="https://www.youtube.com/embed/{{ page.contents.video[ role ][ num ].codice_embed }}?rel=0{% if autoplay %}&autoplay=1&mute=1{% endif %}{% if loop %}&loop=1{% endif %}" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""></iframe>
 </div>
-{% elseif page.contents.video[ role ][ num ].id_tipologia_embed == 2 %}
+{% elseif page.contents.video[ role ][ num ].id_embed == 2 %}
 VIMEO
 {% else %}
 <video controls width="100%" {% if autoplay %}autoplay muted{% endif %} {% if loop %}loop{% endif %}  >
     <source src="{{ site.root }}{{ page.contents.video[ role ][ num ].path }}" type="video/mp4">
 </video>
 {% endif %}
+{% endmacro %}
+
+{% macro audio( site, page, ruolo, ordine ) %}
+<audio controls>
+    <source src="{{ site.root }}{{ page.contents.audio[ ruolo ][ ordine ].path }}" type="audio/mpeg">
+</audio>
 {% endmacro %}
 
 {% macro audio( site, page, ruolo, ordine ) %}
