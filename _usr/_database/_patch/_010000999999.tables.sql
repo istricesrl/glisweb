@@ -1755,6 +1755,7 @@ CREATE TABLE IF NOT EXISTS `job` (
 CREATE TABLE IF NOT EXISTS `licenze` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_tipologia_chiave` int(11) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
   `id_rivenditore` int(11) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
@@ -3021,6 +3022,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `codice` char(32) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `se_automatico` tinyint(1) DEFAULT NULL,
+  `se_sospeso` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

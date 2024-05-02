@@ -1,43 +1,58 @@
 <?php
 
-    /* tool per l'analisi del funzionamento del framework */
+    /**
+     * visualizzatore dello stato di funzionamento del framework
+     * 
+     * 
+     * TODO implementare
+     * TODO documentare
+     * 
+     */
 
     // inclusione del framework
-	require '../../_config.php';
+    require '../../_config.php';
 
     // header
 	header( 'Content-type: text/plain' );
 
     // output
-	echo 'STATUS DEL FRAMEWORK' . PHP_EOL . PHP_EOL;
+	echo 'STATUS DEL FRAMEWORK ' . date( 'Y-m-d H:i:s' ) . PHP_EOL;
+	echo '========================================' . PHP_EOL;
+
+	// output
+	echo PHP_EOL;
+
+    // output
+	echo 'versioni' . PHP_EOL;
+	echo '--------' . PHP_EOL;
 
     // versione di PHP
-	if( ( version_compare( PHP_VERSION, '7.0.0' ) >= 0 ) ) {
-	    echo '[ OK ] versione di PHP (' . PHP_VERSION . ') supportata: ' . PHP_VERSION . PHP_EOL;
-	} else {
-	    die( '[FAIL] versione di PHP (' . PHP_VERSION . ') non supportata: ' . PHP_VERSION . PHP_EOL );
-	}
+	echo '[INFO] versione di PHP trovata: ' . PHP_VERSION . PHP_EOL;
 
     // release del framework
 	if( version_compare( RELEASE_CURRENT, RELEASE_LATEST ) == 0 ) {
-	    echo '[ OK ] framework aggiornato alla release stable (' . RELEASE_CURRENT . ')' . PHP_EOL;
+	    echo '[ OK ] GlisWeb aggiornato alla release stable (' . RELEASE_CURRENT . ')' . PHP_EOL;
 	} elseif( version_compare( RELEASE_CURRENT, RELEASE_LATEST ) == -1 ) {
-	    echo '[WARN] stai usando una release obsoleta (' . RELEASE_CURRENT . ') rispetto alla stable ' . RELEASE_LATEST . PHP_EOL;
+	    echo '[WARN] stai usando una release obsoleta di GlisWeb (' . RELEASE_CURRENT . ') rispetto alla stable ' . RELEASE_LATEST . PHP_EOL;
 	} else {
-	    echo '[INFO] stai usando una release di sviluppo (' . RELEASE_CURRENT . ') superiore alla stable ' . RELEASE_LATEST . PHP_EOL;
+	    echo '[INFO] stai usando una release di sviluppo di GlisWeb (' . RELEASE_CURRENT . ') superiore alla stable ' . RELEASE_LATEST . PHP_EOL;
 	}
 
     // versione del framework
 	if( VERSION_CURRENT == VERSION_LATEST ) {
-	    echo '[ OK ] framework aggiornato (' . VERSION_CURRENT . ')' . PHP_EOL;
+	    echo '[ OK ] GlisWeb aggiornato (' . VERSION_CURRENT . ')' . PHP_EOL;
 	} elseif( VERSION_CURRENT < VERSION_LATEST ) {
-	    echo '[WARN] stai usando una versione obsoleta (' . VERSION_CURRENT . ') rispetto a ' . VERSION_LATEST . PHP_EOL;
+	    echo '[WARN] stai usando una versione obsoleta di GlisWeb (' . VERSION_CURRENT . ') rispetto a ' . VERSION_LATEST . PHP_EOL;
 	} else {
-	    echo '[INFO] stai usando una versione di sviluppo (' . VERSION_CURRENT . ') superiore a ' . VERSION_LATEST . PHP_EOL;
+	    echo '[INFO] stai usando una versione di sviluppo di GlisWeb (' . VERSION_CURRENT . ') superiore a ' . VERSION_LATEST . PHP_EOL;
 	}
 
 	// output
 	echo PHP_EOL;
+
+    // output
+	echo 'informazioni generali' . PHP_EOL;
+	echo '---------------------' . PHP_EOL;
 
     // directory base
 	if( ! defined( 'DIR_BASE' ) ) {
@@ -45,73 +60,36 @@
 	} else {
 	    echo '[ -- ] directory base: ' . DIR_BASE . PHP_EOL;
 	}
-/*
-    // permessi di scrittura
-	foreach( array_keys( $cf['debug']['fs']['folders'] ) as $dir ) {
-	    if( is_dir( $dir ) && is_writeable( $dir ) ) {
-		echo '[ OK ] posso scrivere su ' . shortPath( $dir ) . PHP_EOL;
-	    } else {
-		die( '[FAIL] non posso scrivere su ' . shortPath( $dir ) . PHP_EOL );
-	    }
-	}
 
-    // permessi di scrittura
-	foreach( array_keys( $cf['debug']['fs']['files'] ) as $file ) {
-	    if( is_writeable( $file ) ) {
-		echo '[ OK ] posso scrivere su ' . shortPath( $file ) . PHP_EOL;
-	    } else {
-		die( '[FAIL] non posso scrivere su ' . shortPath( $file ) . PHP_EOL );
-	    }
-	}
-*/
-	// file di configurazione JSON
-	if( ! file_exists( DIR_BASE . 'src/config/external/config.json' ) ) {
-	    echo '[ -- ] file src/config/external/config.json non trovato' . PHP_EOL;
-	    if( ! file_exists( DIR_BASE . 'src/config.json' ) ) {
-		echo '[ -- ] file src/config.json non trovato' . PHP_EOL;
-	    } else {
-		echo '[ -- ] file src/config.json trovato' . PHP_EOL;
-		if( jsonCheck( readFromFile( 'src/config.json', FILE_READ_AS_STRING ) ) ) {
-		    echo '[ OK ] file src/config.json sintatticamente corretto' . PHP_EOL;
-		} else {
-		    die( '[FAIL] file src/config.json corrotto o malformato' . PHP_EOL );
-		}
-	    }
-	} else {
-	    echo '[ -- ] file src/config.json ignorato' . PHP_EOL;
-	    echo '[ -- ] file src/config/external/config.json trovato' . PHP_EOL;
-	    if( jsonCheck( readFromFile( 'src/config/external/config.json', FILE_READ_AS_STRING ) ) ) {
-		echo '[ OK ] file src/config/external/config.json sintatticamente corretto' . PHP_EOL;
-	    } else {
-		die( '[FAIL] file src/config/external/config.json corrotto o malformato' . PHP_EOL );
-	    }
-	}
+    // file di configurazione
+    foreach( $cf['config']['files'] as $type => $files ) {
+        foreach( $files as $file ) {
+            echo '[ -- ] file di configurazione ' . $type . ' trovato: ' . shortPath( $file ) . PHP_EOL;
+        }
+    }
 
     // output
 	echo PHP_EOL;
 
+    // output
+	echo 'sicurezza' . PHP_EOL;
+	echo '---------' . PHP_EOL;
+
     // password di root
 	if( ! isset( $cf['auth']['accounts']['root']['password'] ) ) {
 	    echo '[ -- ] utente root non attivo' . PHP_EOL;
-	} elseif( $cf['auth']['accounts']['root']['password'] == md5( 'test' ) || $cf['auth']['accounts']['root']['password'] == md5( 'root' ) ) {
+	} elseif( bruteForceHash( $cf['auth']['accounts']['root']['password'] ) ) {
 	    die( '[FAIL] password di root troppo debole' . PHP_EOL );
 	} else {
 	    echo '[ OK ] utente root attivo con password non banale' . PHP_EOL;
 	}
 
-    // status del framework
-	if( isset( $cf['site']['status'] ) ) {
-	    echo '[ -- ] status del framework: ' . $cf['site']['status'] . PHP_EOL;
-	} else {
-	    die( '[FAIL] status del framework non impostato' . PHP_EOL );
-	}
+    // output
+	echo PHP_EOL;
 
-	// controllo status
-	if( in_array( $cf['site']['status'], array_keys( $cf['debug'] ) ) ) {
-	    echo '[ -- ] status ' . $cf['site']['status'] . ' presente nei profili di debug' . PHP_EOL;
-	} else {
-	    die( '[FAIL] status ' . $cf['site']['status'] . ' non presente nei profili di debug' . PHP_EOL );
-	}
+    // output
+	echo 'log e debug' . PHP_EOL;
+	echo '-----------' . PHP_EOL;
 
     // controllo del livello di report
 	echo '[ -- ] livello di report: ' . reportLvl2string( REPORT_CURRENT_LEVEL ) . ' (' . REPORT_CURRENT_LEVEL . ')' . PHP_EOL;
@@ -131,6 +109,24 @@
 
 	// output
 	echo PHP_EOL;
+
+    // output
+	echo 'sito corrente' . PHP_EOL;
+	echo '-------------' . PHP_EOL;
+
+    // status del framework
+	if( isset( $cf['site']['status'] ) ) {
+	    echo '[ -- ] status del framework: ' . $cf['site']['status'] . PHP_EOL;
+	} else {
+	    die( '[FAIL] status del framework non impostato' . PHP_EOL );
+	}
+
+	// controllo status
+	if( in_array( $cf['site']['status'], array_keys( $cf['debug'] ) ) ) {
+	    echo '[ -- ] status ' . $cf['site']['status'] . ' presente nei profili di debug' . PHP_EOL;
+	} else {
+	    die( '[FAIL] status ' . $cf['site']['status'] . ' non presente nei profili di debug' . PHP_EOL );
+	}
 
     // dominio del framework
 	echo '[ -- ] IP del framework: ' . $_SERVER['SERVER_ADDR'] . PHP_EOL;
@@ -173,25 +169,33 @@
 	    echo '[ -- ] ultimo aggiornamento dei contenuti: ' . date( 'Y-m-d H:i:s', $cf['contents']['updated'] ) . PHP_EOL;
 	}
 
+    // controllo Twig
+	if( isset( $cf['twig']['profile']['cache'] ) ) {
+	    echo '[ -- ] cache Twig attiva' . PHP_EOL;
+	} else {
+	    echo '[ -- ] cache Twig non attiva' . PHP_EOL;
+	}
+
 	// output
 	echo PHP_EOL;
 
-	// documentazione custom
-	if( ! isset( $cf['common']['docs']['custom']['html']['url'] ) ) {
-	    echo '[WARN] documentazione custom del progetto non impostata' . PHP_EOL;
-	} else {
-	    echo '[ -- ] documentazione custom del progetto: ' . $cf['common']['docs']['custom']['html']['url'] . PHP_EOL;
-	}
+    // output
+	echo 'documentazione e supporto' . PHP_EOL;
+	echo '-------------------------' . PHP_EOL;
 
 	// canale Slack
 	if( ! isset( $cf['slack']['profile']['channel']['url'] ) ) {
-	    echo '[WARN] canale Slack di supporto non impostata' . PHP_EOL;
+	    echo '[INFO] canale Slack di supporto non impostata' . PHP_EOL;
 	} else {
 	    echo '[ -- ] canale Slack di supporto: ' . $cf['slack']['profile']['channel']['url'] . PHP_EOL;
 	}
 
 	// output
 	echo PHP_EOL;
+
+    // output
+	echo 'privacy e normative' . PHP_EOL;
+	echo '-------------------' . PHP_EOL;
 
     // titolare privacy
 	if( empty( $cf['privacy']['titolare'] ) ) {
@@ -211,6 +215,10 @@
 
     // output
 	echo PHP_EOL;
+
+    // output
+	echo 'connessione SMTP' . PHP_EOL;
+	echo '----------------' . PHP_EOL;
 
     // controllo SMTP
     // NOTA vedi https://github.com/PHPMailer/PHPMailer/blob/master/examples/smtp_check.phps
@@ -268,6 +276,10 @@
     // output
 	echo PHP_EOL;
 
+    // output
+	echo 'connessione MySQL' . PHP_EOL;
+	echo '-----------------' . PHP_EOL;
+
     // controllo MySQL
 	if( ! empty( $cf['mysql']['profiles'][ $cf['site']['status'] ]['servers'] ) ) {
 	    echo '[ -- ] backend MySQL attivato' . PHP_EOL;
@@ -276,7 +288,7 @@
 			echo '[ OK ] connessione MySQL su ' . $cf['mysql']['server']['address'] . ':' . $cf['mysql']['server']['port'] . ' presente' . PHP_EOL;
 			echo '[ -- ] versione del server MySQL: ' . $cf['mysql']['server']['version'] . PHP_EOL;
 			echo '[ -- ] database selezionato: ' . $cf['mysql']['server']['db'] . PHP_EOL;
-/*
+/* TODO ripristinare
 			echo '[ -- ] livello di patch: ' . $cf['mysql']['profile']['patch']['current'] . PHP_EOL;
 			if( $cf['mysql']['profile']['patch']['current'] == $cf['mysql']['profile']['patch']['latest'] ) {
 				echo '[ OK ] database aggiornato alla patch: ' . $cf['mysql']['profile']['patch']['latest'] . PHP_EOL;
@@ -308,26 +320,9 @@
     // output
 	echo PHP_EOL;
 
-	// cerco l'ultima esecuzione del cron
-	$rCronTime = strtotime( '-3 minutes' );
-	$lCronTime = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT coalesce( max( timestamp_esecuzione ), 0 ) FROM task' );
-	if( $lCronTime == 0 ) {
-		echo '[FAIL] cron del framework mai eseguito' . PHP_EOL;
-	} else {
-	    echo '[ -- ] ultima esecuzione del cron del framework: ' . date( 'Y-m-d H:i:s', $lCronTime ) . PHP_EOL;
-		if( $lCronTime < $rCronTime ) {
-	    	echo '[FAIL] cron del framework non funzionante' . PHP_EOL;
-		} else {
-	    	echo '[ OK ] cron del framework funzionante' . PHP_EOL;
-		}
-	}
-	$pCronTasks = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM task WHERE token IS NOT NULL AND timestamp_esecuzione < ?', array( array( 's' => $rCronTime ) ) );
-	foreach( $pCronTasks as $pCronTask ) {
-		echo '[WARN] task '. $pCronTask['task'] .' bloccato alle ' . date( 'Y-m-d H:i:s', $pCronTask['timestamp_esecuzione'] ) . ' con token ' . $pCronTask['token'] . PHP_EOL;
-	}
-
     // output
-	echo PHP_EOL;
+	echo 'connessione memcache' . PHP_EOL;
+	echo '--------------------' . PHP_EOL;
 
     // controllo memcache
 	if( ! empty( $cf['memcache']['profiles'][ $cf['site']['status'] ]['servers'] ) ) {
@@ -350,6 +345,10 @@
     // output
 	echo PHP_EOL;
 
+    // output
+	echo 'connessione redis' . PHP_EOL;
+	echo '-----------------' . PHP_EOL;
+
     // controllo redis
 	if( ! empty( $cf['redis']['profiles'][ $cf['site']['status'] ]['servers'] ) ) {
 	    echo '[ -- ] backend redis attivato' . PHP_EOL;
@@ -365,23 +364,42 @@
     // output
 	echo PHP_EOL;
 
-    // controllo Twig
-	if( isset( $cf['twig']['profile']['cache'] ) ) {
-	    echo '[ -- ] cache Twig attiva' . PHP_EOL;
+    // output
+	echo 'sistema di schedulazione' . PHP_EOL;
+	echo '------------------------' . PHP_EOL;
+
+	// cerco l'ultima esecuzione del cron
+	$rCronTime = strtotime( '-3 minutes' );
+	$lCronTime = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT coalesce( max( timestamp_esecuzione ), 0 ) FROM task' );
+	if( $lCronTime == 0 ) {
+		echo '[FAIL] cron del framework mai eseguito' . PHP_EOL;
 	} else {
-	    echo '[ -- ] cache Twig non attiva' . PHP_EOL;
+	    echo '[ -- ] ultima esecuzione del cron del framework: ' . date( 'Y-m-d H:i:s', $lCronTime ) . PHP_EOL;
+		if( $lCronTime < $rCronTime ) {
+	    	echo '[FAIL] cron del framework non funzionante' . PHP_EOL;
+		} else {
+	    	echo '[ OK ] cron del framework funzionante' . PHP_EOL;
+		}
+	}
+	$pCronTasks = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM task WHERE token IS NOT NULL AND timestamp_esecuzione < ?', array( array( 's' => $rCronTime ) ) );
+	foreach( $pCronTasks as $pCronTask ) {
+		echo '[WARN] task '. $pCronTask['task'] .' bloccato alle ' . date( 'Y-m-d H:i:s', $pCronTask['timestamp_esecuzione'] ) . ' con token ' . $pCronTask['token'] . PHP_EOL;
 	}
 
     // output
 	echo PHP_EOL;
 
+    // output
+	echo 'servizi esterni' . PHP_EOL;
+	echo '---------------' . PHP_EOL;
+
     // configurazione Google
     if( empty( $cf['google']['profile'] ) ) {
-	    echo '[WARN] servizi Google non configurati' . PHP_EOL;
+	    echo '[INFO] servizi Google non configurati' . PHP_EOL;
     } else {
         echo '[ -- ] profilo Google esistente per lo status ' . $cf['site']['status'] . PHP_EOL;
         if( empty( $cf['google']['profile']['analytics']['ua'] ) ) {
-            echo '[WARN] servizi Google non configurati' . PHP_EOL;
+            echo '[INFO] Google Analytics non configurato' . PHP_EOL;
         } else {
             echo '[ -- ] profilo Google Analytics: ' . $cf['google']['profile']['analytics']['ua'] . PHP_EOL;
         }
@@ -389,27 +407,31 @@
 
     // configurazione Facebook
     if( empty( $cf['facebook']['profile'] ) ) {
-	    echo '[WARN] servizi Facebook non configurati' . PHP_EOL;
+	    echo '[INFO] servizi Facebook non configurati' . PHP_EOL;
     } else {
         echo '[ -- ] profilo Facebook esistente per lo status ' . $cf['site']['status'] . PHP_EOL;
         if( empty( $cf['facebook']['profile']['pixel']['id'] ) ) {
-            echo '[WARN] servizi Facebook non configurati' . PHP_EOL;
+            echo '[INFO] pixel di Facebook non configurato' . PHP_EOL;
         } else {
             echo '[ -- ] pixel di Facebook attivo: ' . $cf['facebook']['profile']['pixel']['id'] . PHP_EOL;
         }
     }
 
-    // output
-	echo PHP_EOL;
-
 	// controllo moduli
 	foreach( $cf['mods']['active']['array'] as $mod ) {
 
-	    // output
+        // output
+        echo PHP_EOL;
+
+        // output
+	    echo $mod . PHP_EOL;
+	    echo str_pad( '', strlen( $mod ), '-' ) . PHP_EOL;
+
+        // output
 		echo '[ -- ] modulo ' . $mod . ' attivo' . PHP_EOL;
 
 		// report del modulo
-		$reportMod = DIR_MOD . '_' . $mod . '/_src/_api/_status/_framework.status.php';
+		$reportMod = DIR_MOD . '_' . $mod . '/_src/_api/_status/_framework.php';
 
 		// report del modulo
 		if( file_exists( $reportMod ) ) {
@@ -418,10 +440,11 @@
 			echo '[INFO] report per il modulo ' . $mod . ' non trovato' . PHP_EOL;
 		}
 
-	    // output
-		echo PHP_EOL;
-
 	}
 
     // output
-	echo 'FINE REPORT' . PHP_EOL . PHP_EOL;
+    echo PHP_EOL;
+
+    // output
+    echo '===============================' . PHP_EOL;
+	echo 'FINE REPORT ' . date( 'Y-m-d H:i:s' ) . PHP_EOL . PHP_EOL;

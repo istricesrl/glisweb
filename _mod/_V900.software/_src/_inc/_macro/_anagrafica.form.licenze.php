@@ -26,7 +26,7 @@
    $ct['view']['insert']['field'] = 'id_contratto';
 
    // campo per il preset di apertura
-   $ct['view']['open']['preset']['field'] = 'id_contratto';
+   $ct['view']['open']['preset']['field'] = 'id_anagrafica';
 
    // campi della vista
    $ct['view']['cols'] = array(
