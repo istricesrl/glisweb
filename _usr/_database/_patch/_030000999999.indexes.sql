@@ -1275,7 +1275,7 @@ ALTER TABLE `conversazioni_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000007800
 
--- | corrispondenza
+-- corrispondenza
 ALTER TABLE `corrispondenza`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_peso`,`id_formato`,`id_mittente`,`id_organizzazione_mittente`,`id_commesso`),
@@ -1291,7 +1291,7 @@ ALTER TABLE `corrispondenza`
 
 -- | 030000007801
 
--- | corrispondenza
+-- corrispondenza
 ALTER TABLE `corrispondenza` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000008000

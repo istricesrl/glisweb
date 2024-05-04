@@ -1293,6 +1293,26 @@ INSERT IGNORE INTO `tipologie_contratti` (`id`, `ordine`, `nome`, `html_entity`,
 (6,	NULL,	'affiliazione',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
 (7,	NULL,	'servizi',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
+-- | 050000051000
+
+-- tipologie_corrispondenza
+INSERT IGNORE INTO `tipologie_corrispondenza` (`id`, `id_genitore`, `nome`, `se_massivo`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL, 'Posta Prioritaria PRO',	1, NULL, NULL, NULL, NULL),
+(2,	NULL, 'Raccomandate PRO',	0, NULL, NULL, NULL, NULL),
+(3,	NULL, 'Atti giudiziari',	1, NULL, NULL, NULL, NULL),
+(4,	NULL, 'Assicurate retail',	1, NULL, NULL, NULL, NULL),
+(5,	NULL, 'Pieghi di libri MAAF',	1, NULL, NULL, NULL, NULL),
+(6,	NULL, 'Pieghi di libri',	1, NULL, NULL, NULL, NULL),
+(7,	NULL, 'Raccomandate A/R',	0, NULL, NULL, NULL, NULL),
+(8,	NULL, 'Corrispondenza estera',	1, NULL, NULL, NULL, NULL),
+(9,	NULL, 'Assicurate estere',	1, NULL, NULL, NULL, NULL),
+(10, NULL, 'Raccomandate estere',	0, NULL, NULL, NULL, NULL),
+(11, NULL, 'Posta 1 PRO',	1, NULL, NULL, NULL, NULL),
+(12, NULL, 'Posta 4 PRO',	1, NULL, NULL, NULL, NULL),
+(13, NULL, 'Posta Priority Internazionale',	1, NULL, NULL, NULL, NULL),
+(14, NULL, 'Posta Mail Internazionale',	1, NULL, NULL, NULL, NULL),
+(15, NULL, 'Posta Raccomandata internazionale',	0, NULL, NULL, NULL, NULL);
+
 -- | 050000052600
 
 -- tipologie_documenti

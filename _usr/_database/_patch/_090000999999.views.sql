@@ -9277,6 +9277,7 @@ CREATE OR REPLACE VIEW `tipologie_corrispondenza_view` AS
 		tipologie_corrispondenza.id,
 		tipologie_corrispondenza.id_genitore,
 		tipologie_corrispondenza.nome,
+		tipologie_corrispondenza.se_massivo,
 		tipologie_corrispondenza.id_account_inserimento,
 		tipologie_corrispondenza.id_account_aggiornamento,
 		tipologie_corrispondenza_path( tipologie_corrispondenza.id ) AS __label__

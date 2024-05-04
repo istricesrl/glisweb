@@ -1287,7 +1287,7 @@ CREATE TABLE IF NOT EXISTS `conversazioni_account` (
 -- | 010000007800
 
 -- corrispondenza
-CREATE TABLE `corrispondenza` (
+CREATE TABLE IF NOT EXISTS `corrispondenza` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) NULL,
   `id_peso` int(11) NULL,
@@ -1306,6 +1306,7 @@ CREATE TABLE `corrispondenza` (
   `destinatario_civico` char(16) NULL,
   `destinatario_cap` char(16) NULL,
   `destinatario_citta` char(255) NULL,
+  `destinatario_id_comune` int(11) NULL,
   `destinatario_id_provincia` int(11) NULL,
   `destinatario_id_stato` int(11) NULL,
   `timestamp_elaborazione` int(11) NULL,
