@@ -629,6 +629,28 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 ;
 
+-- | 090000000920
+
+-- anagrafica_organizzazioni_view
+DROP TABLE IF EXISTS `anagrafica_organizzazioni_view`;
+
+-- | 090000000921
+
+-- anagrafica_organizzazioni_view
+CREATE OR REPLACE VIEW anagrafica_organizzazioni_view AS
+	SELECT
+		anagrafica_organizzazioni.id,
+		anagrafica_organizzazioni.id_anagrafica,
+		anagrafica_organizzazioni.id_organizzazione,
+		organizzazioni.denominazione AS organizzazione,
+		anagrafica_organizzazioni.id_ruolo,
+		ruoli_organizzazioni.nome AS ruolo,
+	FROM anagrafica_organizzazioni
+		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_organizzazioni.id_anagrafica
+		LEFT JOIN organizzazioni ON organizzazioni.id = anagrafica_organizzazioni.id_organizzazione
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = anagrafica_organizzazioni.id_ruolo	
+;
+
 -- | 090000000940
 
 -- anagrafica_progetti_view
@@ -999,6 +1021,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id_progetto,
 		progetti.nome AS progetto,
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
+		attivita.id_contratto,
 		attivita.id_matricola,
         attivita.id_immobile,
         attivita.id_step,
@@ -1134,115 +1157,6 @@ CREATE OR REPLACE VIEW `cartellini_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 	WHERE
 		tipologie_attivita.se_cartellini IS NOT NULL
-;
-
--- | 090000001804
-
--- recuperi_view
--- tipologia: tabella gestita
-DROP TABLE IF EXISTS `recuperi_view`;
-
--- | 090000001805
-
--- recuperi_view
--- tipologia: tabella gestita
--- verifica: 2021-05-28 13:12 Fabio Mosti
-CREATE OR REPLACE VIEW `recuperi_view` AS
-	SELECT	
-		attivita.id,
-		attivita.id_tipologia,
-		tipologie_attivita.nome AS tipologia,
-		attivita.id_cliente,
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
-		attivita.id_contatto,
-		c1.nome AS contatto,
-		attivita.id_indirizzo,
-		indirizzi.indirizzo AS indirizzo,
-		attivita.id_luogo,
-		luoghi_path( coalesce( attivita.id_luogo, todo.id_luogo ) ) AS luogo,
-		attivita.data_scadenza,
-		attivita.ora_scadenza,
-		attivita.data_programmazione,
-		attivita.ora_inizio_programmazione,
-		attivita.ora_fine_programmazione,
-		attivita.id_anagrafica_programmazione,
-		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS anagrafica_programmazione,
-		attivita.ore_programmazione,
-		attivita.data_attivita,
-		day( attivita.data_attivita ) as giorno_attivita,
-		month( attivita.data_attivita ) as mese_attivita,
-		year( attivita.data_attivita ) as anno_attivita,
-		attivita.ora_inizio,
-		attivita.latitudine_ora_inizio,
-		attivita.longitudine_ora_inizio,
-		attivita.ora_fine,
-		attivita.latitudine_ora_fine,
-		attivita.longitudine_ora_fine,
-		attivita.id_anagrafica,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		attivita.ore,
-		recupero.id AS id_recupero,
-		recupero.data_programmazione AS data_programmazione_recupero,
-		recupero.ora_inizio_programmazione AS ora_inizio_programmazione_recupero,
-		recupero.ora_fine_programmazione AS ora_fine_programmazione_recupero,
-		corso_recupero.nome AS corso_recupero,
-		group_concat( DISTINCT if( dr.id, categorie_progetti_path( dr.id ), null ) SEPARATOR ' | ' ) AS discipline_recupero,
-		attivita.nome,
-		attivita.id_documento,
-		concat(
-			tipologie_documenti.sigla,
-			' ',
-			documenti.numero,
-			'/',
-			documenti.sezionale,
-			' del ',
-			documenti.data
-		) AS documento,
-		attivita.id_progetto,
-		progetti.nome AS progetto,
-		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
-		attivita.id_matricola,
-        attivita.id_immobile,
-		attivita.id_pianificazione,
-		attivita.id_todo,
-		todo.nome AS todo,
-		attivita.id_mastro_provenienza,
-		m1.nome AS mastro_provenienza,
-		attivita.id_mastro_destinazione,
-		m2.nome AS mastro_destinazione,
-		attivita.codice_archivium,
-		attivita.token,
-		attivita.id_account_inserimento,
-		attivita.id_account_aggiornamento,
-		concat(
-			attivita.nome,
-			' / ',
-			attivita.ore,
-			' / ',
-			coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' )
-		) AS __label__
-	FROM attivita
-		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia
-		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
-		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
-		LEFT JOIN anagrafica AS a3 ON a3.id = attivita.id_anagrafica_programmazione
-		LEFT JOIN contatti AS c1 ON c1.id = attivita.id_contatto
-		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
-		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
-		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
-		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
-		LEFT JOIN todo ON todo.id = attivita.id_todo
-		LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo
-		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
-		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
-		LEFT JOIN documenti ON documenti.id = attivita.id_documento
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
-		LEFT JOIN attivita AS recupero ON recupero.id_genitore = attivita.id AND recupero.id_tipologia = 32
-		LEFT JOIN progetti AS corso_recupero ON corso_recupero.id = recupero.id_progetto
-		LEFT JOIN progetti_categorie AS progetti_categorie_recupero ON progetti_categorie_recupero.id_progetto = recupero.id_progetto
-		LEFT JOIN categorie_progetti AS dr ON dr.id = progetti_categorie_recupero.id_categoria AND dr.se_disciplina = 1		
-	WHERE attivita.id_tipologia = 19
-	GROUP BY attivita.id
 ;
 
 -- | 090000002100
@@ -2733,6 +2647,38 @@ CREATE OR REPLACE VIEW `corsi_view` AS
 	GROUP BY progetti.id
 ;
 
+-- | 090000007800
+
+-- | corrispondeza_view
+DROP TABLE IF EXISTS `corrispondeza_view`;
+
+-- | 090000007801
+
+-- | corrispondeza_view
+CREATE OR REPLACE VIEW `corrispondeza_view` AS
+	SELECT
+		corrispondenza.id,
+		corrispondenza.id_tipologia,
+		corrispondenza.id_peso,
+		corrispondenza.id_formato,
+		corrispondenza.quantita,
+		corrispondenza.id_mittente,
+		corrispondenza.id_organizzazione_mittente,
+		corrispondenza.id_commesso,
+		corrispondenza.nome,
+		corrispondenza.destinatario_nome,
+		corrispondenza.destinatario_cognome,
+		corrispondenza.destinatario_denominazione,
+		corrispondenza.destinatario_id_tipologia_anagrafica,
+		corrispondenza.destinatario_indirizzo,
+		corrispondenza.destinatario_civico,
+		corrispondenza.destinatario_cap,
+		corrispondenza.destinatario_citta,
+		corrispondenza.destinatario_id_provincia,
+		corrispondenza.destinatario_id_stato
+	FROM corrispondenza
+;
+
 -- | 090000008000
 
 -- coupon_view
@@ -3982,6 +3928,28 @@ CREATE OR REPLACE VIEW `file_view` AS
 	FROM file
 		LEFT JOIN ruoli_file ON ruoli_file.id = file.id_ruolo
 		LEFT JOIN lingue ON lingue.id = file.id_lingua
+;
+
+-- | 090000015050
+
+-- formati_tipologie_corrispondenza_view
+DROP TABLE IF EXISTS `formati_tipologie_corrispondenza_view`;
+
+-- | 090000015051
+
+-- formati_tipologie_corrispondenza_view
+CREATE OR REPLACE VIEW `formati_tipologie_corrispondenza_view` AS
+	SELECT
+		formati_tipologie_corrispondenza.id,
+		formati_tipologie_corrispondenza.id_tipologia,
+		formati_tipologie_corrispondenza.nome,
+		formati_tipologie_corrispondenza.altezza_min,
+		formati_tipologie_corrispondenza.larghezza_min,
+		formati_tipologie_corrispondenza.spessore_min,
+		formati_tipologie_corrispondenza.altezza_max,
+		formati_tipologie_corrispondenza.larghezza_max,
+		formati_tipologie_corrispondenza.spessore_max
+	FROM formati_tipologie_corrispondenza
 ;
 
 -- | 090000015100
@@ -6148,6 +6116,24 @@ CREATE OR REPLACE VIEW `periodicita_view` AS
 	FROM periodicita
 ;
 
+-- | 090000023700
+
+-- pesi_tipologie_corrispondenza_view
+DROP TABLE IF EXISTS `pesi_tipologie_corrispondenza_view`;
+
+-- | 090000023701
+
+-- pesi_tipologie_corrispondenza_view
+CREATE OR REPLACE VIEW `pesi_tipologie_corrispondenza_view` AS
+	SELECT
+		pesi_tipologie_corrispondenza.id,
+		pesi_tipologie_corrispondenza.id_tipologia,
+		pesi_tipologie_corrispondenza.nome,
+		pesi_tipologie_corrispondenza.grammi_min,
+		pesi_tipologie_corrispondenza.grammi_max
+	FROM pesi_tipologie_corrispondenza
+;
+
 -- | 090000023800
 
 -- pianificazioni_view
@@ -7208,6 +7194,115 @@ CREATE OR REPLACE VIEW `recensioni_view` AS
 		recensioni.titolo,
 		recensioni.se_approvata
     FROM recensioni
+;
+
+-- | 090000029000
+
+-- recuperi_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `recuperi_view`;
+
+-- | 090000029001
+
+-- recuperi_view
+-- tipologia: tabella gestita
+-- verifica: 2021-05-28 13:12 Fabio Mosti
+CREATE OR REPLACE VIEW `recuperi_view` AS
+	SELECT	
+		attivita.id,
+		attivita.id_tipologia,
+		tipologie_attivita.nome AS tipologia,
+		attivita.id_cliente,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
+		attivita.id_contatto,
+		c1.nome AS contatto,
+		attivita.id_indirizzo,
+		indirizzi.indirizzo AS indirizzo,
+		attivita.id_luogo,
+		luoghi_path( coalesce( attivita.id_luogo, todo.id_luogo ) ) AS luogo,
+		attivita.data_scadenza,
+		attivita.ora_scadenza,
+		attivita.data_programmazione,
+		attivita.ora_inizio_programmazione,
+		attivita.ora_fine_programmazione,
+		attivita.id_anagrafica_programmazione,
+		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS anagrafica_programmazione,
+		attivita.ore_programmazione,
+		attivita.data_attivita,
+		day( attivita.data_attivita ) as giorno_attivita,
+		month( attivita.data_attivita ) as mese_attivita,
+		year( attivita.data_attivita ) as anno_attivita,
+		attivita.ora_inizio,
+		attivita.latitudine_ora_inizio,
+		attivita.longitudine_ora_inizio,
+		attivita.ora_fine,
+		attivita.latitudine_ora_fine,
+		attivita.longitudine_ora_fine,
+		attivita.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		attivita.ore,
+		recupero.id AS id_recupero,
+		recupero.data_programmazione AS data_programmazione_recupero,
+		recupero.ora_inizio_programmazione AS ora_inizio_programmazione_recupero,
+		recupero.ora_fine_programmazione AS ora_fine_programmazione_recupero,
+		corso_recupero.nome AS corso_recupero,
+		group_concat( DISTINCT if( dr.id, categorie_progetti_path( dr.id ), null ) SEPARATOR ' | ' ) AS discipline_recupero,
+		attivita.nome,
+		attivita.id_documento,
+		concat(
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			documenti.sezionale,
+			' del ',
+			documenti.data
+		) AS documento,
+		attivita.id_progetto,
+		progetti.nome AS progetto,
+		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
+		attivita.id_matricola,
+        attivita.id_immobile,
+		attivita.id_pianificazione,
+		attivita.id_todo,
+		todo.nome AS todo,
+		attivita.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		attivita.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		attivita.codice_archivium,
+		attivita.token,
+		attivita.id_account_inserimento,
+		attivita.id_account_aggiornamento,
+		concat(
+			attivita.nome,
+			' / ',
+			attivita.ore,
+			' / ',
+			coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' )
+		) AS __label__
+	FROM attivita
+		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = attivita.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
+		LEFT JOIN anagrafica AS a3 ON a3.id = attivita.id_anagrafica_programmazione
+		LEFT JOIN contatti AS c1 ON c1.id = attivita.id_contatto
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
+		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
+		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
+		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
+		LEFT JOIN todo ON todo.id = attivita.id_todo
+		LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo
+		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
+		LEFT JOIN documenti ON documenti.id = attivita.id_documento
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN attivita AS recupero ON recupero.id_genitore = attivita.id AND recupero.id_tipologia = 32
+		LEFT JOIN progetti AS corso_recupero ON corso_recupero.id = recupero.id_progetto
+		LEFT JOIN progetti_categorie AS progetti_categorie_recupero ON progetti_categorie_recupero.id_progetto = recupero.id_progetto
+		LEFT JOIN categorie_progetti AS dr ON dr.id = progetti_categorie_recupero.id_categoria AND dr.se_disciplina = 1		
+	WHERE attivita.id_tipologia = 19
+	GROUP BY attivita.id
 ;
 
 -- | 090000029400
@@ -8929,6 +9024,8 @@ CREATE OR REPLACE VIEW `tipologie_attivita_view` AS
 		tipologie_attivita.se_sistema,
 		tipologie_attivita.se_stampa,
 		tipologie_attivita.se_cartellini,
+		tipologie_attivita.se_corsi,
+		tipologie_attivita.se_accesso,
 		tipologie_attivita.id_account_inserimento,
 		tipologie_attivita.id_account_aggiornamento,
 		tipologie_attivita_path( tipologie_attivita.id ) AS __label__
@@ -9165,6 +9262,25 @@ CREATE OR REPLACE VIEW `tipologie_contratti_view` AS
 		tipologie_contratti.id_account_aggiornamento,
 		tipologie_contratti_path( tipologie_contratti.id ) AS __label__
 	FROM tipologie_contratti
+;
+
+-- | 090000051000
+
+-- tipologie_corrispondenza_view
+DROP TABLE IF EXISTS `tipologie_corrispondenza_view`;
+
+-- | 090000051001
+
+-- tipologie_corrispondenza_view
+CREATE OR REPLACE VIEW `tipologie_corrispondenza_view` AS
+	SELECT
+		tipologie_corrispondenza.id,
+		tipologie_corrispondenza.id_genitore,
+		tipologie_corrispondenza.nome,
+		tipologie_corrispondenza.id_account_inserimento,
+		tipologie_corrispondenza.id_account_aggiornamento,
+		tipologie_corrispondenza_path( tipologie_corrispondenza.id ) AS __label__
+	FROM tipologie_corrispondenza
 ;
 
 -- | 090000052600

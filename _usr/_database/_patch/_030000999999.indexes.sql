@@ -228,6 +228,21 @@ ALTER TABLE `anagrafica_indirizzi`
 -- tipologia: tabella gestita
 ALTER TABLE `anagrafica_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000000920
+
+-- anagrafica_organizzazioni
+ALTER TABLE `anagrafica_organizzazioni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_anagrafica`,`id_organizzazione`,`id_ruolo`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_organizzazione` (`id_organizzazione`),
+	ADD KEY `id_ruolo` (`id_ruolo`);
+
+-- | 030000000921
+
+-- anagrafica_organizzazioni
+ALTER TABLE `anagrafica_organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000000940
 
 -- anagrafica_progetti
@@ -368,6 +383,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_documento` (`id_documento`), 
 	ADD KEY `id_pagamento` (`id_pagamento`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_contratto` (`id_contratto`), 
 	ADD KEY `id_matricola` (`id_matricola`),
 	ADD KEY `id_todo` (`id_todo`),
 	ADD KEY `id_mastro_provenienza` (`id_mastro_provenienza`), 
@@ -1257,6 +1273,27 @@ ALTER TABLE `conversazioni_account`
 -- tipologia: tabella gestita
 ALTER TABLE `conversazioni_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000007800
+
+-- | corrispondenza
+ALTER TABLE `corrispondenza`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_peso`,`id_formato`,`id_mittente`,`id_organizzazione_mittente`,`id_commesso`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_peso` (`id_peso`),
+	ADD KEY `id_formato` (`id_formato`),
+	ADD KEY `id_mittente` (`id_mittente`),
+	ADD KEY `id_organizzazione_mittente` (`id_organizzazione_mittente`),
+	ADD KEY `id_commesso` (`id_commesso`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000007801
+
+-- | corrispondenza
+ALTER TABLE `corrispondenza` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000008000
 
 -- coupon
@@ -1267,9 +1304,9 @@ ALTER TABLE `coupon`
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`timestamp_inizio`,`timestamp_fine`,`sconto_percentuale`,`sconto_fisso`,`se_multiuso`,`se_globale`);
- 
+
 -- | 030000008200
- 
+
 -- coupon_categorie_prodotti
 -- tipologia: tabella gestita
 -- verifica: 2021-06-29 16:06 Fabio Mosti
@@ -1611,6 +1648,19 @@ ALTER TABLE `file`
 -- file
 -- tipologia: tabella gestita
 ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000015050
+
+-- formati_tipologie_corrispondenza
+ALTER TABLE `formati_tipologie_corrispondenza`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+  	ADD KEY `id_tipologia_2` (`id_tipologia`);
+
+-- | 030000015051
+
+-- formati_tipologie_corrispondenza
+ALTER TABLE `formati_tipologie_corrispondenza` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015100
 
@@ -2629,6 +2679,18 @@ ALTER TABLE `periodicita`
 -- periodicita
 -- tipologia: tabella gestita
 ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000023700
+
+-- pesi_tipologie_corrispondenza
+ALTER TABLE `pesi_tipologie_corrispondenza`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`);
+
+-- | 030000023701
+
+-- pesi_tipologie_corrispondenza
+ALTER TABLE `pesi_tipologie_corrispondenza` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000023800
 
@@ -3939,6 +4001,7 @@ ALTER TABLE `tipologie_attivita`
 	ADD KEY `se_sistema` (`se_sistema`),
 	ADD KEY `se_stampa` (`se_stampa`),
 	ADD KEY `se_corsi` (`se_corsi`),
+	ADD KEY `se_accesso` (`se_accesso`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
   	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`,`se_anagrafica`,`se_agenda`,`se_sistema`);
@@ -4066,6 +4129,23 @@ ALTER TABLE `tipologie_contratti`
 -- tipologie_contratti
 -- tipologia: tabella gestita
 ALTER TABLE `tipologie_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000051000
+
+-- tipologie_corrispondenza
+ALTER TABLE `tipologie_corrispondenza`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+
+-- | 030000051001
+
+-- tipologie_corrispondenza
+ALTER TABLE `tipologie_corrispondenza` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000052600
 
