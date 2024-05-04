@@ -632,7 +632,7 @@
      */
 
     // stringa di inizializzazione
-    $latestLogHeader = date( 'Y-m-d H:i:s' ) . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $_SERVER['REDIRECT_URL'] . ' -> ' .$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL;
+    $latestLogHeader = date( 'Y-m-d H:i:s' ) . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $_SERVER['REDIRECT_URL'] . ' -> ' .$_SERVER['REQUEST_URI'] . PHP_EOL;
 
     // inizializzazione del file cron.latest.log
     loggerLatest( $latestLogHeader, FILE_LATEST_CRON, 'w+' );
