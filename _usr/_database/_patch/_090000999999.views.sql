@@ -2264,10 +2264,10 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ) )  SEPARATOR ', ' ) AS proponenti,
 		group_concat( DISTINCT contraente.codice  SEPARATOR ', ' ) AS codici_contraenti,
 		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ) )  SEPARATOR ', ' ) AS contraenti,
-		group_concat( licenze.codice SEPARATOR ', ' ) AS licenze,
+		group_concat( DISTINCT licenze.codice SEPARATOR ', ' ) AS licenze,
 		max( licenze.postazioni ) AS postazioni,
 		group_concat( DISTINCT tipologie_licenze.nome SEPARATOR ', ' ) AS tipologia_licenza,
-		group_concat( concat_ws( ' ', licenze.codice, tipologie_licenze.nome, licenze.nome ) SEPARATOR ' | ' ) AS dettagli_licenze,
+		group_concat( DISTINCT concat_ws( ' ', licenze.codice, tipologie_licenze.nome, licenze.nome ) SEPARATOR ' | ' ) AS dettagli_licenze,
 		concat_ws( ' ', tipologie_contratti.nome, contratti.nome, group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), NULL )  SEPARATOR ', ' ) ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia

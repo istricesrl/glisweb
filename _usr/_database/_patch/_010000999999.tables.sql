@@ -2305,6 +2305,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `importo_lordo_totale` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL, 
+  `provider_pagamento` char(128) DEFAULT NULL,
   `timestamp_pagamento` int(11) DEFAULT NULL,
   `token_pagamento` char(128) DEFAULT NULL,
   `ordine_pagamento` char(128) DEFAULT NULL,
