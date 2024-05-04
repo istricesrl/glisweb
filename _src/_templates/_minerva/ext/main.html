@@ -30,6 +30,7 @@
             <div class="row">
                 <div class="col">
                     <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+                    {% if page.subtitle[ localization.language.ietf ] %}{{ page.subtitle[ localization.language.ietf ] | raw }}{% endif %}
                 </div>
             </div>
             {% endblock %}

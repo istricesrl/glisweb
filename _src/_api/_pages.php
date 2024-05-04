@@ -167,14 +167,14 @@
 		}
 
         // unisco le direttive di configurazione del file a quelle già esistenti
-	    $ct['page'] = array_merge_recursive(
+	    $ct['page'] = array_replace_recursive(
 			$ct['page'],
 			parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
 	    );
 
         // includo i file di configurazione aggiuntivi del template
 		foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
-			$ct['page'] = array_merge_recursive(
+			$ct['page'] = array_replace_recursive(
 				$ct['page'],
 				parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
 			);
@@ -197,14 +197,14 @@
         }
 
         // unisco le direttive di configurazione del file a quelle già esistenti
-        $ct['page'] = array_merge_recursive(
+        $ct['page'] = array_replace_recursive(
             $ct['page'],
             yaml_parse( file_get_contents( $ct['page']['template']['yaml'] ) )
         );
 
         // includo i file di configurazione aggiuntivi del template
         foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.yaml', GLOB_BRACE ) as $addCnf ) {
-            $ct['page'] = array_merge_recursive(
+            $ct['page'] = array_replace_recursive(
                 $ct['page'],
                 yaml_parse( file_get_contents( $addCnf ) )
             );

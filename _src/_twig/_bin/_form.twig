@@ -290,30 +290,50 @@
 
     {# popolazione da API REST #}
     {% if source.api %}
-        {% set class = class ~ '' %}
+        {% set mode = 'input' %}
+    {% else %}
+        {% set mode = 'select' %}
     {% endif %}
 
-    {# creazione della selectbox #}
-    <select name="{{ nm }}" id="{{ id }}" class="{{ field.class }}" vl="{{ vl }}"
-        {% if field.default %}default="{{ field.default }}"{% endif %} 
-        {% if field.disabled %}disabled{% endif %} 
-        {% if field.placeholder %}placeholder="{{ field.placeholder|raw }}"{% endif %}
-        {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
-        {% if field.required %}required{% endif %} 
-        {% if field.onchange %}onchange="{{ field.onchange }}"{% endif %}
-        {% if not noempty %}empty{% endif %}>
+    {# cambio la modalità in base al tipo di campo da creare (inputbox o selectbox) #}
+    {% if mode == 'select' %}
 
-        {# opzione vuota #}
-        {% if not noempty %}<option value=""></option>{% endif %}
+        {# creazione della selectbox #}
+        <select name="{{ nm }}" id="{{ id }}" class="{{ field.class }}" vl="{{ vl }}"
+            {% if field.default %}default="{{ field.default }}"{% endif %} 
+            {% if field.disabled %}disabled{% endif %} 
+            {% if field.placeholder %}placeholder="{{ field.placeholder|raw }}"{% endif %}
+            {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
+            {% if field.required %}required{% endif %} 
+            {% if field.onchange %}onchange="{{ field.onchange }}"{% endif %}
+            {% if not noempty %}empty{% endif %}>
 
-        {# opzioni della select #}
-        {% for option in source.values %}
-        <option value="{{ option.id }}"
-            {% if vl != '' and option.id == vl %}selected{% endif %}
-            >{{ option.__label__|raw }}</option>
-        {% endfor %}
+            {# opzione vuota #}
+            {% if not noempty %}<option value=""></option>{% endif %}
 
-    </select>
+            {# opzioni della select #}
+            {% for option in source.values %}
+            <option value="{{ option.id }}"
+                {% if vl != '' and option.id == vl %}selected{% endif %}
+                >{{ option.__label__|raw }}</option>
+            {% endfor %}
+
+        </select>
+
+    {% else %}
+    
+        {# creazione della inputbox #}
+        <div class="col combobox-container p-0">
+            <input type="hidden" name="{{ nm }}" id="{{ id }}" value="{{ vl }}" class="selectbox"
+                populate-api="{{ source.api }}" min-filter="3" data-live-search="true"
+                {% if disabled %}disabled{% endif %}
+                {% if required %}data-required="true"{% endif %}
+                {% if change %}onchange="{{ change }}"{% endif %}
+                {% if default %}default="{{ default }}"{% endif %}
+                {% if not noempty %}empty{% endif %}>
+        </div>
+
+    {% endif %}
 
     {# bottone per la modifica #}
     {% if controls.edit and vl %}

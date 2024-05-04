@@ -119,6 +119,10 @@
 		CONTROL_FULL => array( 'roots' ),
 		METHOD_GET => array( 'staff', 'users', 'guests' )
 		),
+	    'stati' => array(
+		CONTROL_FULL => array( 'roots' ),
+		METHOD_GET => array( 'staff', 'users', 'guests' )
+		),
 	    'contenuti' => array(
 			CONTROL_FULL => array( 'roots' ,'staff'),
 		),

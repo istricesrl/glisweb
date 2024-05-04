@@ -1399,6 +1399,7 @@ CREATE
 					anagrafica.soprannome,
 					anagrafica.denominazione,
 					concat( anagrafica.cognome, ' ', anagrafica.nome ),
+                    organizzazioni.nome,
 					'' )
 			FROM organizzazioni
 			LEFT JOIN anagrafica ON anagrafica.id = organizzazioni.id_anagrafica
