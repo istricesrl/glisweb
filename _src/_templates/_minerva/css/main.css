@@ -171,6 +171,11 @@ main .form-login p\ {
     margin: .2em 0em;
 }
 
+main .form-login legend,
+main .form-login .form-group {
+    margin-bottom: .5em;
+}
+
 /* stili del footer */
 
 footer {

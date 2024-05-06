@@ -40,7 +40,7 @@
     }|merge( options.page ) %}
 
     {# apertura del form #}
-    <form action="{{ form.action }}" id="form-{{ form.table }}" method="{{ form.method }}" enctype="{{ form.enctype }}" class="{{ form.class }}">
+    <form action="{{ form.action }}" id="form-{{ form.table }}" method="post" enctype="{{ form.enctype }}" class="{{ form.class }}">
 
         {# campi hidden di default #}
 	    <input type="hidden" id="id" name="{{ form.table }}[id]" value="{{ request[ form.table ].id }}">
@@ -265,6 +265,11 @@
         {% set ks = request[ form.table ][ form.subtable ]|keys %}
         {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
         {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
+    {% elseif form.counter %}
+        {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.counter ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ form.counter ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ field.name ] %}
     {% else %}
         {% set nm = form.table ~ '[' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ field.name %}

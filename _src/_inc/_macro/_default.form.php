@@ -14,10 +14,10 @@
     $ct['form']['action'] = ( isset( $ct['form']['action'] ) ) ? $ct['form']['action'] : $ct['page']['url'][ LINGUA_CORRENTE ];
 
     // metodo da utilizzare
-    $ct['form']['method'] = ( isset( $ct['form']['method'] ) ) ? $ct['form']['method'] : ( ( ! empty( $_REQUEST[ $ct['form']['table'] ] ) ) ? 'post' : 'update' );
+    $ct['form']['method'] = ( isset( $ct['form']['method'] ) ) ? $ct['form']['method'] : ( ( empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? 'post' : 'update' );
 
     // attività svolta
-    $ct['form']['activity'] = ( isset( $ct['form']['activity'] ) ) ? $ct['form']['activity'] : ( ( ! empty( $_REQUEST[ $ct['form']['table'] ] ) ) ? 'inserimento' : 'aggiornamento' );
+    $ct['form']['activity'] = ( isset( $ct['form']['activity'] ) ) ? $ct['form']['activity'] : ( ( empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? 'inserimento' : 'aggiornamento' );
 
     // se è presente un id, sostituisco il titolo della pagina corrente con la __label__ dell'oggetto
 	if( isset( $ct['form']['table'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
