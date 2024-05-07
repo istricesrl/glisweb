@@ -12,6 +12,12 @@ RP="../"
 ## directory corrente
 cd $(dirname "$0")
 
+## funzioni
+. ./_lib/_functions.sh
+
+## verifica utente root
+check-root
+
 ## passo alla cartella del deploy
 cd $RL
 
