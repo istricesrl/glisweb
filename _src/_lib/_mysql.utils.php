@@ -62,6 +62,22 @@
         
     }
 
+    function trovaIdSedeLegale( $idAnagrafica ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id_indirizzo 
+            FROM anagrafica_indirizzi 
+            WHERE id_anagrafica = ? 
+            AND anagrafica_indirizzi.id_ruolo IN ( 1, 4 ) 
+            LIMIT 1',
+            array( array( 's' => $idAnagrafica ) )
+        );
+
+    }
+
     function aggiungiImmagini( &$p, $id, $f, $r = null ) {
 
         aggiungiDati( $p, $id, $f, 'immagini', $r );

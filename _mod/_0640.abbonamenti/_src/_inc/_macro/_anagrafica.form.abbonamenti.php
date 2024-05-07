@@ -115,12 +115,36 @@
 
             // TODO considerare solo i rinnovi di tipo ordinario ecc. escludere i rinnovi di ripresa dopo una sospensione
             // OPPURE utilizzare i periodi per le sospensioni vedere cosa è meno un casino
-            $rinnovi = mysqlSelectRow(
+            $documenti = mysqlSelectRow(
                 $cf['mysql']['connection'],
                 'SELECT rinnovi.*, 
-                sum( documenti_articoli.importo_lordo_totale ) AS pagato, sum( carrelli_articoli.prezzo_lordo_finale ) AS ordinato
+                sum( documenti_articoli.importo_lordo_totale ) AS pagato
                 FROM rinnovi
                 LEFT JOIN documenti_articoli ON documenti_articoli.id_rinnovo = rinnovi.id
+                WHERE rinnovi.id_contratto = ?
+                GROUP BY rinnovi.id
+                ORDER BY rinnovi.data_fine DESC',
+                array( array( 's' => $row['id_contratto'] ) )
+            );
+
+            $carrelliPagati = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT rinnovi.*, 
+                sum( carrelli_articoli.prezzo_lordo_finale ) AS pagato_carrelli
+                FROM rinnovi
+                LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id
+                LEFT JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello
+                WHERE rinnovi.id_contratto = ? AND carrelli.timestamp_pagamento IS NOT NULL
+                GROUP BY rinnovi.id
+                ORDER BY rinnovi.data_fine DESC',
+                array( array( 's' => $row['id_contratto'] ) )
+            );
+
+            $carrelli = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT rinnovi.*, 
+                sum( carrelli_articoli.prezzo_lordo_finale ) AS ordinato
+                FROM rinnovi
                 LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id
                 WHERE rinnovi.id_contratto = ?
                 GROUP BY rinnovi.id
@@ -128,17 +152,22 @@
                 array( array( 's' => $row['id_contratto'] ) )
             );
 
+            $rinnovi = array_merge( $documenti, $carrelli, $carrelliPagati );
+
+            // die( print_r( $carrelliPagati, true ) );
+            // die( print_r( $rinnovi, true ) );
+
             if( empty( $rinnovi ) ) {
                 $row['pagamento'] = 'nessun rinnovo trovato';
             } elseif( $rinnovi['ordinato'] == 0 ) {
                 $row['pagamento'] = 'da aggiungere al carrello';
-            } elseif( $rinnovi['pagato'] == 0 ) {
-                $row['pagamento'] = 'da pagare';
-            } elseif( $rinnovi['pagato'] < $rinnovi['ordinato'] ) {
+            } elseif( $rinnovi['pagato'] == 0 && $rinnovi['pagato_carrelli'] == 0 ) {
+                $row['pagamento'] = 'interamente da pagare € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
+            } elseif( ( $rinnovi['pagato'] < $rinnovi['ordinato'] ) && ( $rinnovi['pagato_carrelli'] < $rinnovi['ordinato'] ) ) {
                 $row['pagamento'] = 'da pagare € ' . number_format( $rinnovi['ordinato'] - $rinnovi['pagato'], 2, ',', '.') . ' su € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
-                $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.pagamento']['url'][ LINGUA_CORRENTE ] . '?__pagamenti__[id_cliente]='.$row['id_anagrafica'].'"><span class="media-left"><i class="fa fa-shopping-cart"></i></span></a>';
-            } elseif( $rinnovi['pagato'] == $rinnovi['ordinato'] ) {
-                $row['pagamento'] = 'pagato € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
+                // $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.pagamento']['url'][ LINGUA_CORRENTE ] . '?__pagamenti__[id_cliente]='.$row['id_anagrafica'].'"><span class="media-left"><i class="fa fa-shopping-cart"></i></span></a>';
+            } elseif( ( $rinnovi['pagato'] == $rinnovi['ordinato'] ) || ( $rinnovi['pagato_carrelli'] == $rinnovi['ordinato'] ) ) {
+                $row['pagamento'] = 'totalmente pagato € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
             }
 
         }
