@@ -170,6 +170,7 @@
                         'nome' => ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ),
                         'cognome' => ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ),
                         'denominazione' => ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ),
+                        'note' => ( ( isset( $job['riga']['note'] ) ) ? $job['riga']['note'] : NULL ),
                         'note_commerciali' => ( ( isset( $job['riga']['note_commerciali'] ) ) ? $job['riga']['note_commerciali'] : NULL )
                     ),
                     'anagrafica'
@@ -384,7 +385,7 @@
                     $indirizzi = explode( '|', $job['riga']['pec'] );
 
                     // TODO qui si potrebbe sotto esplodere per § e dare il ruolo alla mail
-                    // tipo amministrazione@stocazzo.com§4|commerciale@stocazzo.com§2 eccetera
+                    // tipo note#amministrazione@stocazzo.com§4|altre note#commerciale@stocazzo.com§2 eccetera
 
                     // per ogni categoria...
                     foreach( $indirizzi as $indirizzo ) {
