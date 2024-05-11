@@ -292,3 +292,21 @@ fieldset legend {
 .divSelected {
     background-color: #dddddd;
 }
+
+/* stili delle tabelle */
+
+table thead tr {
+    border-top: none;
+    border-bottom: #aaaaaa 2px solid;
+    font-weight: bold;
+}
+
+table tfoot tr {
+    border-top: #aaaaaa 2px solid;
+    border-bottom: none;
+    font-weight: bold;
+}
+
+table tfoot tr td {
+    border-bottom: none;
+}
