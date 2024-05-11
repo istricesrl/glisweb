@@ -2575,12 +2575,12 @@ CREATE OR REPLACE VIEW conversazioni_account_view AS
 
 -- | 090000007800
 
--- | corrispondeza_view
+-- corrispondeza_view
 DROP TABLE IF EXISTS `corrispondeza_view`;
 
 -- | 090000007801
 
--- | corrispondeza_view
+-- corrispondeza_view
 CREATE OR REPLACE VIEW corrispondenza_view AS 
 	SELECT 
 		corrispondenza.id,
@@ -9296,6 +9296,8 @@ CREATE OR REPLACE VIEW `tipologie_corrispondenza_view` AS
 		tipologie_corrispondenza.id_genitore,
 		tipologie_corrispondenza.nome,
 		tipologie_corrispondenza.se_massivo,
+		tipologie_corrispondenza.se_corrispondenza,
+		tipologie_corrispondenza.se_atto,
 		tipologie_corrispondenza.id_account_inserimento,
 		tipologie_corrispondenza.id_account_aggiornamento,
 		tipologie_corrispondenza_path( tipologie_corrispondenza.id ) AS __label__
