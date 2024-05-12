@@ -101,17 +101,22 @@ else
         # TODO verificare davvero che sia andato tutto bene
         echo "aggiornamento del framework effettuato con successo"
 
-        # elimino i disallineamenti già risolti
-        for disallineamento in $( find $cartellaDisallineamenti -type f ); do
+        # se esistono disallineamenti da controllare
+        if [ -d "$cartellaDisallineamenti" ]; then
 
-            # debug
-            echo "faccio il diff di $disallineamento"
-            echo "file originale: $( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" )"
+            # elimino i disallineamenti già risolti
+            for disallineamento in $( find $cartellaDisallineamenti -type f ); do
 
-            # faccio il diff del file disallineato rispetto al file standard
-            diff -u $( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" ) $disallineamento > $disallineamento.diff
+                # debug
+                echo "faccio il diff di $disallineamento"
+                echo "file originale: $( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" )"
 
-        done
+                # faccio il diff del file disallineato rispetto al file standard
+                diff -u $( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" ) $disallineamento > $disallineamento.diff
+
+            done
+
+        fi
 
     else
 
