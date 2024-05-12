@@ -249,6 +249,142 @@ CREATE
 
 END;
 
+-- | 070000003300
+
+-- categorie_annunci_path
+DROP FUNCTION IF EXISTS `categorie_annunci_path`;
+
+-- | 070000003301
+
+-- categorie_annunci_path
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_annunci_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_annunci_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				categorie_annunci.id_genitore,
+				categorie_annunci.nome
+			FROM categorie_annunci
+			WHERE categorie_annunci.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000003310
+
+-- categorie_annunci_path_check
+DROP FUNCTION IF EXISTS `categorie_annunci_path_check`;
+
+-- | 070000003311
+
+-- categorie_annunci_path_check
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_annunci_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_annunci_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				categorie_annunci.id_genitore
+			FROM categorie_annunci
+			WHERE categorie_annunci.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000003320
+
+-- categorie_annunci_path_find_ancestor
+DROP FUNCTION IF EXISTS `categorie_annunci_path_find_ancestor`;
+
+-- | 070000003321
+
+-- categorie_annunci_path_find_ancestor
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `categorie_annunci_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT categorie_annunci_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				categorie_annunci.id_genitore,
+				categorie_annunci.id
+			FROM categorie_annunci
+			WHERE categorie_annunci.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | 070000003700
 
 -- categorie_notizie_path
@@ -4469,6 +4605,145 @@ CREATE
 				tipologie_contratti.id
 			FROM tipologie_contratti
 			WHERE tipologie_contratti.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+-- | 070000051000
+
+-- tipologie_corrispondenza_path
+DROP FUNCTION IF EXISTS `tipologie_corrispondenza_path`;
+
+-- | 070000051001
+
+-- tipologie_corrispondenza_path
+-- verifica: 2021-10-04 11:49 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_corrispondenza_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_corrispondenza_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_corrispondenza.id_genitore,
+				tipologie_corrispondenza.nome
+			FROM tipologie_corrispondenza
+			WHERE tipologie_corrispondenza.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000051010
+
+-- tipologie_corrispondenza_path_check
+DROP FUNCTION IF EXISTS `tipologie_corrispondenza_path_check`;
+
+-- | 070000051011
+
+-- tipologie_corrispondenza_path_check
+-- verifica: 2021-10-04 11:49 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_corrispondenza_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_corrispondenza_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_corrispondenza.id_genitore
+			FROM tipologie_corrispondenza
+			WHERE tipologie_corrispondenza.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000051020
+
+-- tipologie_corrispondenza_path_find_ancestor
+DROP FUNCTION IF EXISTS `tipologie_corrispondenza_path_find_ancestor`;
+
+-- | 070000051021
+
+-- tipologie_corrispondenza_path_find_ancestor
+-- verifica: 2021-10-04 11:49 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_corrispondenza_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_corrispondenza_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_corrispondenza.id_genitore,
+				tipologie_corrispondenza.id
+			FROM tipologie_corrispondenza
+			WHERE tipologie_corrispondenza.id = p1
 			INTO p1, p2;
 
 		END WHILE;
