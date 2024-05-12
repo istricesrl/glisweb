@@ -150,6 +150,96 @@
 
 {% endmacro input %}
 
+{# textarea() - crea un campo HTML textarea
+    Questa macro generica crea un campo HTML textarea; fa anche da base ad altre funzioni più specifiche e complesse
+    TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
+{% macro textarea( options ) %}
+
+    {# valori di default #}
+    {% set options = {
+        'form': [],
+        'field': [],
+        'tooltip': [],
+        'request': [],
+        'page': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array form #}
+    {% set form = {
+        'subtable': '',
+        'counter': '',
+        'step': ''
+    }|merge( options.form ) %}
+
+    {# valori di default per l'array options #}
+    {% set field = {
+        'default': '',
+        'rows': 3,
+        'disabled': '',
+        'class': 'form-control form-control-sm',
+        'placeholder': '',
+        'pattern': '',
+        'required': ''
+    }|merge( options.field ) %}
+
+    {# valori di default per l'array tooltip #}
+    {% set tooltip = {
+        'delay': '1000',
+        'placement': 'bottom'
+    }|merge( options.tooltip ) %}
+
+    {# valori di default per l'array request #}
+    {% set request = {
+    }|merge( options.request ) %}
+
+    {# valori di default per l'array page #}
+    {% set page = {
+    }|merge( options.page ) %}
+
+    {# calcolo valori di base #}
+    {% if form.subtable %}
+        {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
+        {% set ks = request[ form.table ][ form.subtable ]|keys %}
+        {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
+    {% else %}
+        {% set nm = form.table ~ '[' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ field.name ] %}
+    {% endif %}
+
+    {# valore di default o preset #}
+    {% if not vl and pr %}
+        {% set vl = pr %}
+    {% elseif not vl and field.default %}
+        {% set vl = field.default %}
+    {% endif %}
+
+    {# se il campo è disabilitato creo un campo hidden per mantenere il valore #}
+    {% if field.disabled == 1 %}
+        {% if request[ '__disabled_' ~ id ~ '__' ] %}
+            {% set vl = request[ '__disabled_' ~ id ~ '__' ] %}
+        {% endif %}
+        <input type="hidden" name="__disabled_{{ id }}__" value="{{ vl }}">
+    {% endif %}
+
+    {# creazione del campo input #}
+    <textarea name="{{ nm }}" id="{{ id }}" class="{{ field.class }}"
+        style="min-height: {{ rows * 30 }}px;"
+        {% if field.default %}default="{{ field.default }}"{% endif %} 
+        {% if form.step %}step="{{ form.step }}"{% endif %}
+        {% if field.disabled %}disabled{% endif %} 
+        {% if field.placeholder %}placeholder="{{ field.placeholder|raw }}"{% endif %}
+        {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
+        {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %} 
+        {% if field.required %}required{% endif %} 
+        {% if field.type == 'password' %}autocomplete="new-password"{% endif %} 
+        {% if options.extras %}{{ options.extras|raw }}{% endif %}>{{ vl }}</textarea>
+
+{% endmacro textarea %}
+
 {# button() - crea un pulsante HTML
     Questa macro generica crea un pulsante HTML; fa anche da base ad altre funzioni più specifiche e complesse
     TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
