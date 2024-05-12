@@ -2640,6 +2640,58 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 	GROUP BY corrispondenza.id
 ;
 
+-- | 090000007802
+
+-- atti_view
+DROP TABLE IF EXISTS `atti_view`;
+
+-- | 090000007803
+
+-- atti_view
+CREATE OR REPLACE VIEW atti_view AS 
+	SELECT 
+		corrispondenza.id,
+		corrispondenza.id_distinta,
+		corrispondenza.id_tipologia,
+		tipologie_corrispondenza_path( corrispondenza.id_tipologia ) AS tipologia,
+		corrispondenza.id_peso,
+		pesi_tipologie_corrispondenza.nome AS peso,
+		corrispondenza.id_formato,
+		formati_tipologie_corrispondenza.nome AS formato,
+		corrispondenza.quantita,
+		corrispondenza.id_mittente,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS mittente,
+		corrispondenza.id_organizzazione_mittente,
+		organizzazioni_path( corrispondenza.id_organizzazione_mittente ) AS organizzazione_mittente,
+		corrispondenza.id_commesso,
+		coalesce( commessi.denominazione , concat( commessi.cognome, ' ', commessi.nome ), '' ) AS commesso,
+		corrispondenza.nome,
+		coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ) AS destinatario,
+		coalesce(
+			concat( corrispondenza.destinatario_indirizzo, ' ', corrispondenza.destinatario_civico, ', ', corrispondenza.destinatario_cap, ' ', coalesce( corrispondenza.destinatario_citta, '' ), comuni.nome, ' ', provincie.sigla ),
+			concat( comuni.nome, ' ', provincie.sigla ),
+			stati.nome,
+			''
+		) AS destinazione,
+		corrispondenza.timestamp_elaborazione,
+		corrispondenza.id_account_inserimento,
+		corrispondenza.timestamp_inserimento,
+		corrispondenza.id_account_aggiornamento,
+		corrispondenza.timestamp_aggiornamento,
+		concat_ws( ' ', corrispondenza.id ) AS __label__
+	FROM corrispondenza
+        INNER JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
+		LEFT JOIN pesi_tipologie_corrispondenza ON pesi_tipologie_corrispondenza.id = corrispondenza.id_peso
+		LEFT JOIN formati_tipologie_corrispondenza ON formati_tipologie_corrispondenza.id = corrispondenza.id_formato
+		LEFT JOIN anagrafica ON anagrafica.id = corrispondenza.id_mittente
+		LEFT JOIN anagrafica AS commessi ON anagrafica.id = corrispondenza.id_commesso
+		LEFT JOIN comuni ON comuni.id = corrispondenza.destinatario_id_comune
+		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+		LEFT JOIN stati ON stati.id = corrispondenza.destinatario_id_stato
+    WHERE tipologie_corrispondenza.se_atto = 1
+	GROUP BY corrispondenza.id
+;
+
 -- | 090000007900
 
 -- corsi_view
