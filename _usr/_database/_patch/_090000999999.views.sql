@@ -2590,12 +2590,12 @@ CREATE OR REPLACE VIEW conversazioni_account_view AS
 
 -- | 090000007800
 
--- corrispondeza_view
-DROP TABLE IF EXISTS `corrispondeza_view`;
+-- corrispondenza_view
+DROP TABLE IF EXISTS `corrispondenza_view`;
 
 -- | 090000007801
 
--- corrispondeza_view
+-- corrispondenza_view
 CREATE OR REPLACE VIEW corrispondenza_view AS 
 	SELECT 
 		corrispondenza.id,
@@ -2628,6 +2628,7 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 		corrispondenza.timestamp_aggiornamento,
 		concat_ws( ' ', corrispondenza.id ) AS __label__
 	FROM corrispondenza
+        INNER JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
 		LEFT JOIN pesi_tipologie_corrispondenza ON pesi_tipologie_corrispondenza.id = corrispondenza.id_peso
 		LEFT JOIN formati_tipologie_corrispondenza ON formati_tipologie_corrispondenza.id = corrispondenza.id_formato
 		LEFT JOIN anagrafica ON anagrafica.id = corrispondenza.id_mittente
@@ -2635,6 +2636,7 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 		LEFT JOIN comuni ON comuni.id = corrispondenza.destinatario_id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
 		LEFT JOIN stati ON stati.id = corrispondenza.destinatario_id_stato
+    WHERE tipologie_corrispondenza.se_corrispondenza = 1
 	GROUP BY corrispondenza.id
 ;
 
