@@ -46,60 +46,52 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
-     * @file
+     *
      *
      */
 
     // l'etichetta del sito
-	$cf['sites'][ 1 ]['__label__']						= 'default';
+    $cf['sites']['1']['__label__']                              = 'default';
 
     // il titolo del sito
-	$cf['sites'][ 1 ]['name']['it-IT']					= NULL;
+    $cf['sites']['1']['name']['it-IT']                          = NULL;
 
     // i protocolli del sito
-	$cf['sites'][ 1 ]['protocols'][ DEVELOPEMENT ]				=
-	$cf['sites'][ 1 ]['protocols'][ TESTING ]				=
-	$cf['sites'][ 1 ]['protocols'][ PRODUCTION ]				= 'http';
+    $cf['sites']['1']['protocols'][ DEVELOPEMENT ]              =
+    $cf['sites']['1']['protocols'][ TESTING ]                   =
+    $cf['sites']['1']['protocols'][ PRODUCTION ]                = 'http';
 
     // gli host del sito
-	$cf['sites'][ 1 ]['hosts'][ DEVELOPEMENT ]				=
-	$cf['sites'][ 1 ]['hosts'][ TESTING ]					=
-	$cf['sites'][ 1 ]['hosts'][ PRODUCTION ]				= $_SERVER['HTTP_HOST'];
+    $cf['sites']['1']['hosts'][ DEVELOPEMENT ]                  =
+    $cf['sites']['1']['hosts'][ TESTING ]                       =
+    $cf['sites']['1']['hosts'][ PRODUCTION ]                    = $_SERVER['HTTP_HOST'];
 
     // i domini del sito
-	$cf['sites'][ 1 ]['domains'][ DEVELOPEMENT ]				=
-	$cf['sites'][ 1 ]['domains'][ TESTING ]					=
-	$cf['sites'][ 1 ]['domains'][ PRODUCTION ]				= NULL;
+    $cf['sites']['1']['domains'][ DEVELOPEMENT ]                =
+    $cf['sites']['1']['domains'][ TESTING ]                     =
+    $cf['sites']['1']['domains'][ PRODUCTION ]                  = NULL;
 
     // gli alias degli host del sito
-	$cf['sites'][ 1 ]['alias']['hosts'][ DEVELOPEMENT ]			=
-	$cf['sites'][ 1 ]['alias']['hosts'][ TESTING ]				=
-	$cf['sites'][ 1 ]['alias']['hosts'][ PRODUCTION ]			=
+    $cf['sites']['1']['alias']['hosts'][ DEVELOPEMENT ]         =
+    $cf['sites']['1']['alias']['hosts'][ TESTING ]              =
+    $cf['sites']['1']['alias']['hosts'][ PRODUCTION ]           = array();
 
     // gli alias dei domini del sito
-	$cf['sites'][ 1 ]['alias']['domains'][ DEVELOPEMENT ]			=
-	$cf['sites'][ 1 ]['alias']['domains'][ TESTING ]			=
-	$cf['sites'][ 1 ]['alias']['domains'][ PRODUCTION ]			= array();
+    $cf['sites']['1']['alias']['domains'][ DEVELOPEMENT ]       =
+    $cf['sites']['1']['alias']['domains'][ TESTING ]            =
+    $cf['sites']['1']['alias']['domains'][ PRODUCTION ]         = array();
 
     // le cartelle base del sito
-	$cf['sites'][ 1 ]['folders'][ DEVELOPEMENT ]				=
-	$cf['sites'][ 1 ]['folders'][ TESTING ]					=
-	$cf['sites'][ 1 ]['folders'][ PRODUCTION ]				= NULL;
+    $cf['sites']['1']['folders'][ DEVELOPEMENT ]                =
+    $cf['sites']['1']['folders'][ TESTING ]                     =
+    $cf['sites']['1']['folders'][ PRODUCTION ]                  = NULL;
 
     // id pagina home
-	$cf['sites'][ 1 ]['homes'][ DEVELOPEMENT ]				=
-	$cf['sites'][ 1 ]['homes'][ TESTING ]					=
-	$cf['sites'][ 1 ]['homes'][ PRODUCTION ]				= NULL;
-
-    // configurazione extra
-	if( isset( $cx['sites'] ) ) {
-	    $cf['sites'] = array_replace_recursive( $cf['sites'], $cx['sites'] );
-	}
-
-    // link al multisito
-	$ct['sites'] = &$cf['sites'];
+    $cf['sites']['1']['homes'][ DEVELOPEMENT ]                  =
+    $cf['sites']['1']['homes'][ TESTING ]                       =
+    $cf['sites']['1']['homes'][ PRODUCTION ]                    = NULL;
 
     // debug
     // echo 'OUTPUT';
