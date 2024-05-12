@@ -2667,6 +2667,7 @@ CREATE OR REPLACE VIEW atti_view AS
 		coalesce( commessi.denominazione , concat( commessi.cognome, ' ', commessi.nome ), '' ) AS commesso,
 		corrispondenza.nome,
 		coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ) AS destinatario,
+        concat_ws( '|', coalesce( concat( 'C.F. ', destinatario_codice_fiscale ), ''), coalesce( concat( 'P.IVA ', destinatario_partita_iva ) ) ) AS riferimenti_destinatario,
 		coalesce(
 			concat( corrispondenza.destinatario_indirizzo, ' ', corrispondenza.destinatario_civico, ', ', corrispondenza.destinatario_cap, ' ', coalesce( corrispondenza.destinatario_citta, '' ), comuni.nome, ' ', provincie.sigla ),
 			concat( comuni.nome, ' ', provincie.sigla ),
