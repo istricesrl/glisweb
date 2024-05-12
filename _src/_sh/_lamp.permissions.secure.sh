@@ -6,11 +6,26 @@ clear
 ## livelli per la root del sito
 # NOTA questo script deve girare nella cartella SUPERIORE a quella
 # di installazione!
-RL="../../../"
+RL="../../"
+RP="../"
 
 ## directory corrente
 cd $(dirname "$0")
+
+## funzioni
+. ./_lib/_functions.sh
+
+## verifica utente root
+check-root
+
+## passo alla cartella del deploy
 cd $RL
+
+## ricaavo il nome del deploy
+SUB=$( basename $( pwd ) )
+
+## passo alla cartella principale
+cd $RP
 
 ## informazioni
 echo "lavoro su: $(pwd)"
@@ -23,35 +38,36 @@ else
     FTPUSER="www-data"
 fi
 
-## cambio permessi (verboso)
-# find . -type d		-not \( -path ".git" -prune \)		-exec echo {} \; -exec chmod 775 {} \;
-# find . -type f		-not \( -path ".git" -prune \)		-exec echo {} \; -exec chmod 664 {} \;
-# find . -name '*.sh'	-not \( -path ".git" -prune \)		-exec echo {} \; -exec chmod 775 {} \;
+## cambio proprietario
+chown -R root:www-data ./$SUB/
+find ./$SUB/src/templates	    -exec chown -R $FTPUSER:www-data {} \;
+find ./$SUB/tmp			        -exec chown -R www-data:www-data {} \;
+find ./$SUB/var			        -exec chown -R $FTPUSER:www-data {} \;
+find ./$SUB/var/cache           -exec chown -R www-data:www-data {} \;
 
 ## cambio permessi (silenzioso)
-find . -type d		-not \( -path ".git" -prune \) -exec chmod 755 {} \;
-find . -type f		-not \( -path ".git" -prune \) -exec chmod 664 {} \;
-find . -name '*.sh'	-not \( -path ".git" -prune \) -exec chmod 775 {} \;
+find ./$SUB/        -type d                     -not \( -path ".git" -prune \)      -exec chmod 550 {} \;
+find ./$SUB/        -type f                     -not \( -path ".git" -prune \)      -exec chmod 640 {} \;
+find ./$SUB/                    -name '*.sh'    -not \( -path ".git" -prune \)      -exec chmod 550 {} \;
 
-## cambio proprietario
-sudo chown -R root:www-data *
-find . -name 'templates'    -exec chown -R $FTPUSER:www-data {} \;
-find . -name 'tmp'          -exec chown -R www-data:www-data {} \;
-find . -name 'var'          -exec chown -R $FTPUSER:www-data {} \;
+# permessi aggiuntivi per le cartelle
+find ./$SUB/.git/hooks      -type d     -exec chmod ug+x {} \;
+find ./$SUB/src/templates   -type d     -exec chmod 770 {} \;
+find ./$SUB/tmp             -type d     -exec chmod 770 {} \;
+find ./$SUB/var             -type d     -exec chmod 770 {} \;
 
-# permessi aggiuntivi
-# TODO fare un po' meglio e distinguere fra cartelle 775 e file 664
-find . -name 'templates'	-exec chmod -R 775 {} \;
-find . -name 'var'	        -exec chmod -R 775 {} \;
+find ./$SUB/src/templates   -type f     -exec chmod 660 {} \;
+find ./$SUB/tmp             -type f     -exec chmod 660 {} \;
+find ./$SUB/var             -type f     -exec chmod 660 {} \;
 
 ## cartella .git
 if [ -d ".git" ]; then
-    sudo chown -R root:root .git
+    chown -R root:root ./$SUB/.git
 fi
 
 ## cartella .github
 if [ -d ".github" ]; then
-    sudo chown -R root:root .github
+    chown -R root:root ./$SUB/.github
 fi
 
 ## TODO
@@ -60,3 +76,19 @@ fi
 # - le cartelle .git .github e il file .gitignore sono di proprietà di root
 # - valutare altre restrizioni
 #
+# NOTE
+#
+# file su cui il framework può scrivere
+# 640 -> rw-r-----
+#
+# cartelle su cui il framework può scrivere
+# 750 -> rwxr-x---
+#
+# file su cui il framework non può scrivere
+# 440 -> r--r-----
+#
+# cartelle su cui il framework non può scrivere
+# script che il framework può eseguire ma non scrivere
+# 550 -> r-xr-x---
+#
+

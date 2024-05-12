@@ -11,10 +11,10 @@
 {# BLOCCO ARTICOLI ACQUISTABILI #}
 
 {% for a in page.contents.articoli %}
-<form action="{{ pages.carrello.url[ localization.language.ietf ] }}" method="POST">
+<form action="{{ pages.carrello.url[ localization.language.ietf ] }}" method="POST" id="formAggiungiAlCarrello">
     <input type="hidden" name="__carrello__[__articolo__][quantita]" value="1" />
     <input type="hidden" name="__carrello__[__articolo__][id_articolo]" value="{{ a.id }}" />
-    <button type="submit">ACQUISTA 1x {{ a.id }}</button>
+    {{ cms.formButton( 'ACQUISTA 1x ' ~ a.id, 'button', '', '', '', '', 'formAggiungiAlCarrello', google.profile.recaptcha, '__carrello__', '' ) }}
 </form>
 {% endfor %}
 

@@ -20,12 +20,13 @@
     <property name="rsc.xcl" value="${rsc.xcd},${rsc.xcf}" />
 
     <!-- comandi -->
+    <!-- TODO per tutti i chown e chmod usare semplicemente lo script lamp permission secure? -->
     <property name="cmd.amp" value="&amp;&amp;" />
     <property name="cmd.bak" value="tar -cvzf ${dst.fld}/backup.deploy.${bak.ext}.tar.gz ${dst.dir}" />
     <property name="cmd.cds" value="cd ${src.dir}" />
     <property name="cmd.cdd" value="cd ${dst.dir}" />
     <property name="cmd.cps" value="composer update --quiet" />
-    <property name="cmd.ch1" value="find . -type d		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 755 {} \;" />
+    <property name="cmd.ch1" value="find . -type d		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 775 {} \;" />
     <property name="cmd.ch2" value="find . -type f		-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 664 {} \;" />
     <property name="cmd.ch3" value="find . -name '*.sh'	-not \( -path '.git' -prune \)		-exec echo {} \; -exec chmod 775 {} \;" />
     <property name="cmd.ch4" value="chown -R root:www-data *" />
@@ -121,16 +122,10 @@
 
                         <!-- se il repository non è quello di sviluppo principale -->
                         <if>
-                            <equals arg1="${prj.git}" arg2="" />
+                            <isset property="prj.git" />
                             <then>
 
-                                <!-- messaggi -->
-                                <echo msg="effettuare manualmente il push sul repository standard" />
-
-                            </then>
-                            <else>
-
-                                <!-- passo al ramo master -->
+                                <!-- passo al ramo di cui fare il deploy -->
                                 <echo msg="git checkout..." />
                                 <exec command="cd ${src.dir}/ &amp;&amp; git checkout ${prj.git}" />
 
@@ -146,6 +141,12 @@
                                 <!-- faccio il push pubblicando il tag -->
                                 <echo msg="git push..." />
                                 <exec command="cd ${src.dir}/ &amp;&amp; git push --follow-tags" />
+
+                            </then>
+                            <else>
+
+                                <!-- messaggi -->
+                                <echo msg="effettuare manualmente il push sul repository standard" />
 
                             </else>
                         </if>
@@ -226,7 +227,7 @@
 
                 <!-- messaggio per il codice di licenza -->
                 <if>
-                    <equals arg1="${prj.key}" arg2="" />
+                    <isset property="prj.key" />
                     <then>
                         <property name="key.msg" value="ATTENZIONE! questo deploy non è coperto da licenza." />
                     </then>
@@ -400,9 +401,11 @@
     <target name="dist.gcscp">
 
         <!-- copia remota -->
-        <echo msg="gcloud scp ${src.dir}/* -> ${key.usr}@${dst.hst}:${dst.dir} in ${dst.gzn}/${dst.gpj}" />
-        <exec command="gcloud compute scp --recurse ${src.dir}/* ${dst.hst}:${dst.dir} --project '${dst.gpj}' --zone '${dst.gzn}'" />
-        <exec command="gcloud compute scp ${src.dir}/.htaccess ${dst.hst}:${dst.dir} --project '${dst.gpj}' --zone '${dst.gzn}'" />
+        <echo msg="gcloud scp ricorsivo ${src.dir}/* -> ${dst.hst}:${dst.dir} in ${dst.gzn}/${dst.gpj}" />
+        <exec command="gcloud compute scp ${src.dir}/* ${dst.hst}:${dst.dir}/ --recurse --project '${dst.gpj}' --zone '${dst.gzn}'" />
+        <exec command="gcloud compute scp ${src.dir}/.htaccess ${dst.hst}:${dst.dir}/ --project '${dst.gpj}' --zone '${dst.gzn}'" />
+
+        <!-- NOTA se il comando di copia sembra fallire senza motivo, verificare di aver scritto giusto il percorso di destinazione -->
 
     </target>
 

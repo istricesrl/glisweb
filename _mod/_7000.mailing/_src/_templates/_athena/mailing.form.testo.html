@@ -78,15 +78,15 @@
         <div class="form-group form-row">
             <div class="col-12 col-md-4">
                 <span class="label-top ">nome mittente</span>
-                    {{ frm.input( table, subtable, i, 'mittente_nome', '', '', request ) }}
+                    {{ frm.inputRequired( table, subtable, i, 'mittente_nome', '', '', request ) }}
             </div>
             <div class="col-12 col-md-4">
                 <span class="label-top ">mail mittente</span>
-                    {{ frm.input( table, subtable, i, 'mittente_mail', '', '', request ) }}
+                    {{ frm.inputRequired( table, subtable, i, 'mittente_mail', '', '', request ) }}
             </div>
             <div class="col-12 col-md-4">
             <span class="label-top ">oggetto</span>
-                {{ frm.input( table, subtable, i, 'cappello', '', '', request ) }}
+                {{ frm.inputRequired( table, subtable, i, 'cappello', '', '', request ) }}
             </div>
         </div>
 

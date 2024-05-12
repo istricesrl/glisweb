@@ -90,7 +90,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT * FROM udm_view WHERE se_massa = 1 OR se_quantita = 1 OR se_volume = 1'
+	    'SELECT * FROM udm_view WHERE se_peso = 1 OR se_quantita = 1 OR se_volume = 1'
 	);
 
 

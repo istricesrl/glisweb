@@ -34,6 +34,7 @@
             'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
             'etc'			=> array( 'tabs'	=> array(	'agenda.todo.form',
                                                             'agenda.todo.form.attivita',
+                                                            'agenda.todo.form.file',
                                                             'agenda.todo.form.chiusura',
                                                             'agenda.todo.form.archiviazione',
                                                             'agenda.todo.form.stampe',
@@ -48,6 +49,19 @@
             'parent'		=> array( 'id'		=> 'agenda' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.form.attivita.html' ),
             'macro'			=> array( $m.'_src/_inc/_macro/_agenda.todo.form.attivita.php' ),
+            'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+            'etc'			=> array( 'tabs'	=> $p['agenda.todo.form']['etc']['tabs'] )
+        );
+
+        // form gestione attivita file
+        $p['agenda.todo.form.file'] = array(
+            'sitemap'		=> false,
+            'icon'			=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+            'title'			=> array( $l		=> 'file' ),
+            'h1'			=> array( $l		=> 'file' ),
+            'parent'		=> array( 'id'		=> 'agenda' ),
+            'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'agenda.todo.form.file.html' ),
+            'macro'			=> array( $m . '_src/_inc/_macro/_agenda.todo.form.file.php' ),
             'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
             'etc'			=> array( 'tabs'	=> $p['agenda.todo.form']['etc']['tabs'] )
         );

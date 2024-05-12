@@ -16,6 +16,9 @@
 		),
 	    'importazioni' => array(
 			'label' => 'importazioni'
+		),
+	    'notifiche' => array(
+			'label' => 'notifiche'
 		)
 	);
 
@@ -55,6 +58,13 @@
 	);
 */
 
+    // anagrafica
+	$ct['etc']['select']['anagrafica'] = mysqlCachedQuery(
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM anagrafica_view WHERE se_collaboratore IS NOT NULL'
+	);
+
     // importazione contatti anagrafica
 	$ct['page']['contents']['metro']['importazioni'][] = array(
 	    'modal' => array( 'id' => 'importa_attivita', 'include' => 'inc/agenda.tools.modal.import.attivita.html' ),
@@ -62,6 +72,15 @@
 	    'fa' => 'fa-upload',
 	    'title' => 'importazione attività',
 	    'text' => 'importa nominativi e attività in formato CSV'
+	);
+
+    // importazione contatti anagrafica
+	$ct['page']['contents']['metro']['notifiche'][] = array(
+	    'modal' => array( 'id' => 'invia_promemoria_per_mail', 'include' => 'inc/agenda.tools.modal.promemoria.giornata.html' ),
+	    'icon' => NULL,
+	    'fa' => 'fa-envelope-o',
+	    'title' => 'mail di promemoria della giornata',
+	    'text' => 'invia una mail con il riepilogo delle attività in programma per una certa data'
 	);
 
 	// gestione default

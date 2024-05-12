@@ -133,7 +133,7 @@
     // campi di base del carrello
     $cf['ecommerce']['fields']['carrello']      = array(
         'id'                                    => array( 'tipe' => 'int',      'default' => NULL ),
-    //    'id_iva'                              => array( 'tipe' => 'int',      'default' => NULL ),
+        // 'id_iva'                             => array( 'tipe' => 'int',      'default' => NULL ),
         'id_listino'                            => array( 'tipe' => 'int',      'default' => 1 ),
         'session'                               => array( 'type' => 'string',   'default' => NULL ),
         'destinatario_id_anagrafica'            => array( 'type' => 'string',   'default' => NULL ),
@@ -159,6 +159,8 @@
         'fatturazione_id_tipologia_documento'   => array( 'type' => 'string',   'default' => 8 ),
         'fatturazione_sezionale'                => array( 'type' => 'string',   'default' => 'E' ),
         'fatturazione_strategia'                => array( 'type' => 'string',   'default' => 'SINGOLA', 'values' => array( 'SINGOLA', 'MULTIPLA', NULL ) ),
+        // 'spam_check'                            => array( 'type' => 'float',    'default' => NULL ),
+        // 'spam_score'                            => array( 'tipe' => 'int',      'default' => NULL ),
         'codice_coupon'                         => array( 'type' => 'string',   'default' => NULL ),
         'timestamp_checkout'                    => array( 'tipe' => 'int',      'default' => NULL ),
     );

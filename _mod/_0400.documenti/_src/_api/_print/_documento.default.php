@@ -34,6 +34,9 @@
     // ...
     $dati = generaContenutiDocumento( $_REQUEST['__documento__'] );
 
+    // debug
+    // die( print_r( $dati, true ) );
+    
     // verifico l'identità dell'utente
     if( ! in_array( 'roots', array_keys( $_SESSION['groups'] ) )
         && ( $dati['doc']['id_destinatario'] != $_SESSION['account']['id_anagrafica'] )

@@ -12,9 +12,11 @@
         '__label__' => 'nome',
         'totale' => 'totale',
         'corrente' => 'corrente',
-#        'avanzamento' => 'avanzamento',
+        'iterazioni' => 'passo',
+        'velocita' => 'velocità',
         'data_ora_esecuzione' => 'esecuzione',
         'data_ora_completamento' => 'completamento',
+        'proiezione' => 'proiezione',
         'se_foreground' => 'foreground'
         
     );
@@ -26,6 +28,7 @@
         'corrente' => 'text-right',
         'data_ora_esecuzione' => 'text-right no-wrap',
         'data_ora_completamento' => 'text-right no-wrap',
+        'proiezione' => 'd-none',
         'se_foreground' => 'text-center'
     );
 
@@ -36,6 +39,7 @@
 	foreach( $ct['view']['data'] as &$row ) {
         if( is_array( $row ) ) {
             if( $row['se_foreground'] == 1 ) { $row['se_foreground'] = '<i class="fa fa-check"></i>'; } else { $row['se_foreground'] = NULL; }
+            if( empty( $row['data_ora_completamento'] ) ) { $row['data_ora_completamento'] = ( empty( $row['proiezione'] ) ) ? '(calcolo ETA...)' : 'ETA ' . $row['proiezione']; }
             // $row['avanzamento'] = sprintf( '%01.2f', ( $row['totale'] > 0 ) ? ( ( $row['corrente'] / $row['totale'] ) * 100 ) : 0 ) . '%';
         }
 	}

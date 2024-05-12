@@ -47,7 +47,7 @@
 
 <fieldset>
     <div class="form-row">
-        {% if '1200.todo' in mods.active.array %}
+        {% if '1200.todo' in mods.active.array and etc.id_tipologia_todo %}
         <div class="col">
             <legend>nuova todo</legend>
             <div class="form-row">
@@ -59,7 +59,7 @@
             </div>
         </div>
         {% endif %}
-        {% if '0200.attivita' in mods.active.array %}
+        {% if '0200.attivita' in mods.active.array and etc.id_tipologia_attivita %}
         <div class="col">
             <legend>nuovo promemoria</legend>
             <div class="form-row">
@@ -108,6 +108,7 @@
 	    </div>
 	</div>
     {% endfor %}
+
     {% for e in etc.agenda_da_fissare.todo %}
     <div class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
         <div class="col-1 lemma text-right">
@@ -168,7 +169,7 @@
         <div class="col">
             <div class="form-row">
                 <div class="col">
-                    {% if e.nome %}<b>{{ e.nome }}</b> su {% endif %}{% if e.id_todo %}{{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
+                    {% if e.nome %}<b>{{ e.nome }}</b>{% endif %}{% if e.id_todo %} su {{ e.nome_todo }} {% if e.progetto_todo %} in {{ e.progetto_todo }} {% endif %}{% endif %}
                     {% if e.id_cliente %}<br>&ndash; cliente <b>{{ e.cliente }}</b> {% if e.telefoni or e.mail %} | contatti: {% if e.telefoni %} <i class="fa fa-phone" aria-hidden="true"></i> {{e.telefoni}} {% endif %}{% if e.mail %} <i class="fa fa-envelope-o" aria-hidden="true"></i> {{e.mail}}{% endif %} {% endif %} {% endif %}
                     <br>{{ e.note_programmazione }}
                 </div>
@@ -176,12 +177,14 @@
         </div>
     </div>
     {% set ora_old = ora %}
+    
     {% endif %}
     {% if e.entita == 't' %}
     <div  class="form-row agenda-row" onclick="window.open('{{ pages[ "agenda.todo.form" ].url[ localization.language.ietf ] }}?todo[id]={{ e.id }}&__backurl__={{page.backurl[ localization.language.ietf ]}}','_self');" style="cursor: pointer;">
         <div class="col-1 lemma text-right">
             <p>&mdash;</p>
         </div>
+        
         <div class="col">
             <div class="form-row">
                 <div class="col">
@@ -195,6 +198,7 @@
     </div>
     {% endif %}
     {% endfor %}
+    
     {% endfor %}
 </fieldset>
 {% endif %}

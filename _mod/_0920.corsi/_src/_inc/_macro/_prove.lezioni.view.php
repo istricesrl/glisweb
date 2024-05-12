@@ -67,7 +67,7 @@
         'id' => '#',
         'tipologia' => 'tipologia',
         'discipline' => 'discipline',
-        'progetto' => 'progetto',
+        'corso' => 'corso',
         'data_programmazione' => 'data',
         'ora_inizio_programmazione' => 'ora inizio',
         'ora_fine_programmazione' => 'ora fine',
@@ -94,7 +94,7 @@
     );
 
     // inclusione filtri speciali
-	// $ct['etc']['include']['filters'] = 'inc/attivita.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/prove.lezioni.view.filters.html';
 
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
@@ -144,20 +144,20 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
 	} */
 
-    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']) ){
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'ASC';
-    } 
-
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['se_prova']['EQ'] = 1;
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']) ){
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'ASC';
+    } 
+
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-             if(!empty($row['data_attivita'])){
-                // $row['data_attivita'] = date('d/m/Y', strtotime($row['data_attivita']));
+             if(!empty($row['data_programmazione'])){
+                // $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione']));
                 $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5);
             }
         }

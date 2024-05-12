@@ -5,21 +5,19 @@
         "vendor-dir": "_src/_lib/_ext"
     },
     "require": {
-        "phpoffice/phpword": "0.*",
-        "phpoffice/phpspreadsheet": "1.*",
-        "phpoffice/phppresentation": "0.9.*",
-        "html2text/html2text": "4.1.*",
-        "phpmailer/phpmailer": "6.5.*",
-        "tecnickcom/tcpdf": "6.4.*",
+        "phpoffice/phpword": "*",
+        "phpoffice/phpspreadsheet": "*",
+        "phpoffice/phppresentation": "*",
+        "html2text/html2text": "*",
+        "phpmailer/phpmailer": "6.*",
+        "tecnickcom/tcpdf": "*",
         "twig/twig": "2.*",
         "predis/predis": "*",
         "codeception/codeception": "*",
-        "codeception/module-phpbrowser": "^1.0.0",
-        "codeception/module-asserts": "^1.0.0",
-        "google/cloud-logging": "*",
-        "google/apiclient": "^2.12.1",
-        "paypal/paypal-checkout-sdk": "1.0.1",
-        "amzn/amazon-pay-api-sdk-php": "*"
+        "codeception/module-phpbrowser": "*",
+        "codeception/module-asserts": "*",
+        "google/apiclient": "*",
+        "paypal/paypal-checkout-sdk": "*"
     },
     "suggest": {
         "twig/extra-bundle": "*"

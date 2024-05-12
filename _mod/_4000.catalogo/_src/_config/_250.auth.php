@@ -21,7 +21,8 @@
 	    array(
 		'categorie_prodotti' => array(
             CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
+            CONTROL_FILTERED => array( 'staff' ),
+            METHOD_GET => array( 'users' )
 		),
 		'categorie_prodotti_caratteristiche' => array(
 		    CONTROL_FULL => array( 'roots' ),

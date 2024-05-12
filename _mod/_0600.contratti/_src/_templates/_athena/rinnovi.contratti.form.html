@@ -51,6 +51,10 @@
                 <span class="label-top">tipologia</span>
                 {{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie, request ) }}
             </div>
+            <div class="col-3 col-md">
+                <span class="label-top">durata</span>
+                {{ frm.selectRequired( table, '', '', 'id_periodicita', '', etc.select.periodicita, request ) }}
+            </div>
             <div class="col-12 col-md">
                 <span class="label-top">codice</span>
                 {{ frm.input( table, '', '', 'codice', '', '', request ) }}

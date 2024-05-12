@@ -55,6 +55,16 @@
 						<span class="label-top">categoria prodotti</span>
 						{{ frm.select( '__stats__', '', '', '__categoria__', '', etc.select.categorie, request ) }}
 					</div>
+					<div class="col-auto">
+						<span class="label-top">stato</span>
+						{{ frm.select( '__stats__', '', '', '__id_stato__', '', etc.select.stati, request ) }}
+					</div>
+					{% if request.__stats__.__id_stato__ %}
+					<div class="col-auto">
+						<span class="label-top">stato</span>
+						{{ frm.select( '__stats__', '', '', '__id_provincia__', '', etc.select.provincie, request ) }}
+					</div>
+					{% endif %}
 					<div class="col-12 col-md-auto">
 						<span class="label-top">data inizio periodo</span>
 						{{ frm.date( '__stats__', '', '', '__inizio__','','',request ) }}
@@ -104,13 +114,17 @@
 								{% for m in data.labels %}
 								<th class="table-header-static">{{ m }}</th>
 								{% endfor %}
+								<th class="table-header-static">totale</th>
 							</tr>
 							{% for l, d in data.grafico %}
+							{% set totale = 0 %}
 							<tr>
 								<td>{{ l }}</td>
 								{% for k,m in data.labels %}
 								<td>{{ d[ k ].value }}</td>
+								{% set totale = totale + d[ k ].value %}
 								{% endfor %}
+								<td>{{ totale }}</td>
 							</tr>
 							{% endfor %}
 						</table>

@@ -35,13 +35,14 @@
       'data_fine' => 'data fine',
       'tipologia' => 'tipologia',
       'id_contratto' => 'id_contratto',
-      '__label__' => 'contratto'
+      '__label__' => 'descrizione'
     );
 
     // stili della vista
     $ct['view']['class'] = array(
       'id_contratto' => 'd-none',
-      '__label__' => 'd-none text-left no-wrap'
+      'tipologia' => 'd-none',
+      '__label__' => 'text-left no-wrap'
     );
 
     $ct['etc']['include']['insert'][] = array(

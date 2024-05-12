@@ -316,8 +316,10 @@
                 }
 
                 // status
+                $job['workspace']['status']['info'][] = 'file: ' . $job['workspace']['file'];
                 $job['workspace']['status']['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
                 $job['workspace']['status']['info'][] = 'righe trovate: ' . $job['totale'];
+                $job['workspace']['status']['info'][] = 'colonne trovate: ' . implode( ', ', array_keys( $arr[0] ) );
 
             } else {
 
@@ -447,7 +449,9 @@
         $status['info'][] = 'inizio operazioni task ' . basename( __FILE__ );
 
         // chiave di lock
-        $status['token'] = getToken( __FILE__ );
+        if( ! isset( $status['token'] ) ) {
+            $status['token'] = getToken( __FILE__ );
+        }
 
         // connessione al vecchio database
         $cOld	= mysqli_connect( 'hostDb', 'userDb', 'passwordDb', 'nomeDatabase' );
@@ -568,6 +572,8 @@
 
         /* FINE CODICE TASK */
     \endcode
+
+    TODO verificare che questo esempio sia allineato ai job più recenti
 
     Riguardo alle strategie di individuazione della riga su cui lavorare, si tengano presenti alcuni fattori. Innanzitutto, è importante sottolineare
     che potrebbero esserci delle condizioni aggiuntive da considerare per le clausele WHERE (ad esempio, importando delle notizie potrei non voler importare

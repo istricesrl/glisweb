@@ -62,6 +62,22 @@
         
     }
 
+    function trovaIdSedeLegale( $idAnagrafica ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id_indirizzo 
+            FROM anagrafica_indirizzi 
+            WHERE id_anagrafica = ? 
+            AND anagrafica_indirizzi.id_ruolo IN ( 1, 4 ) 
+            LIMIT 1',
+            array( array( 's' => $idAnagrafica ) )
+        );
+
+    }
+
     function aggiungiImmagini( &$p, $id, $f, $r = null ) {
 
         aggiungiDati( $p, $id, $f, 'immagini', $r );
@@ -132,7 +148,8 @@
             'SELECT contenuti.title, contenuti.h1, contenuti.h2, contenuti.h3, '.
             'contenuti.testo, contenuti.cappello, lingue.ietf, main_lingue.ietf AS main_ietf, '.
             'metadati.nome AS meta_nome, metadati.testo AS meta_testo, meta_lingue.ietf AS meta_ietf, '.
-            'ruoli_'.$t.'.nome AS ruolo, '.$t.'.id, '.$t.'.ordine, '.$t.'.nome, '.$t.'.path, '.$tc.
+            'ruoli_'.$t.'.nome AS ruolo, '.$t.'.id, '.
+            $t.'.ordine, '.$t.'.nome, '.$t.'.path, '.$tc.
             'LEFT JOIN ruoli_'.$t.' ON ruoli_'.$t.'.id = '.$t.'.id_ruolo '.
             'LEFT JOIN contenuti ON contenuti.'.$tf.' = '.$t.'.id '.
             'LEFT JOIN lingue ON lingue.id = contenuti.id_lingua '.
@@ -810,7 +827,21 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
 
         if( ! empty( $riga['id'] ) ) {
 
-            $riga['timestamp_aggiornamento'] = time();
+            $tRef = time();
+
+            foreach( array( 'timestamp_inserimento', 'timestamp_aggiornamento' ) as $fRef ) {
+                if( empty( $riga[ $fRef ] ) ) {
+                    $riga[ $fRef ] = $tRef;
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE anagrafica SET ' . $fRef . ' = ? WHERE id = ?',
+                        array(
+                            array( 's' => $riga[ $fRef ] ),
+                            array( 's' => $riga['id'] )
+                        )
+                    );
+                }
+            }
 
             updateAnagraficaViewStaticCategorie( $id, $riga );
 

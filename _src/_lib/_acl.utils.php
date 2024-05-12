@@ -69,7 +69,7 @@
     function getAclPermission( $t, $a, &$i = NULL ) {
 
 	// ...
-	$t = str_replace( array( '_attivi', '_archiviati' ), NULL, $t );
+	$t = str_replace( array( '_attivi', '_archiviati' ), '', $t );
 
 	// log
 	    logWrite( 'richiesta di accesso per ' . $t . '/' . $a, 'auth' );
@@ -376,7 +376,7 @@
     function getAclRightsTable( $c, $t ) {
 
 	// ...
-	$t = str_replace( array( '_attivi', '_archiviati' ), NULL, $t );
+	$t = str_replace( array( '_attivi', '_archiviati' ), '', $t );
 
 	// verifico se l'utente non è root
 	    if( $_SESSION['account']['username'] == 'root' || in_array( 'roots', $_SESSION['account']['gruppi'] ) ) {
@@ -436,6 +436,7 @@
 			// print_r( $row );
 			// print_r( array_diff_key( $row, array( '__firma__' => 'test' ) ) );
 
+			// TODO calcolata così la challenge non è debole? andrebbe migliorata in modo da comprendere altri campi
 			$challenge = hash(
 				getAvailableHashMethod(),
 				// serialize( array_diff_key( $row, array( '__firma__' => null ) ) ) . $cf['auth']['import']['secret']

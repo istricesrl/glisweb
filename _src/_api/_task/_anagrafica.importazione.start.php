@@ -18,8 +18,8 @@
         array(
             array( 's' => 'importazione automatica contatti anagrafica' ),
             array( 's' => '_src/_api/_job/_anagrafica.importazione.php' ),
-            array( 's' => 15 ),
-            array( 's' => 1 ),
+            array( 's' => 30 ),
+            array( 's' => NULL ),
             array( 's' => json_encode(
                 array(
                     'file' => 'var/contenuti/upload/'.basename( $_REQUEST['file'] )

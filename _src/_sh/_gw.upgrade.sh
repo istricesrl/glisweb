@@ -39,9 +39,20 @@ else
     # se è specificata una branch di aggiornamento
     if [[ -n "$1" ]]; then
 
+        cartellaDisallineamenti="../disallineamenti.$( date '+%Y%m%d%H%M%S' )/"
+
         # faccio il backup della cartella corrente
-        rm -rf ../backup.tar.gz
-        tar -cvzf ../backup.tar.gz --exclude='var/log/*' --exclude='var/cache/*' .
+        # rm -rf ../backup.tar.gz
+        tar -czf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz --exclude='var/log/*' --exclude='var/cache/*' .
+
+        # salvo i disallineamenti rispetto alla versione correntemente installata
+        for f in $( find ./_* -newer ./var/latest.upgrade.conf ); do
+            if [ -f $f ]; then
+                echo "$f è disallineato"
+                mkdir -p $cartellaDisallineamenti
+                cp --parents $f $cartellaDisallineamenti
+            fi
+        done
 
         # branch da scaricare
         BRANCH=$1
@@ -80,12 +91,27 @@ else
         ## permessi
         ./_src/_sh/_lamp.permissions.secure.sh
 
+        ## salvo la data di aggiornamento
+        echo $(date '+%Y-%m-%d %H:%M:%S' ) > ./var/latest.upgrade.conf
+
         ## pulizia
         clear
 
         ## conferma
         # TODO verificare davvero che sia andato tutto bene
         echo "aggiornamento del framework effettuato con successo"
+
+        # elimino i disallineamenti già risolti
+        for disallineamento in $( find $cartellaDisallineamenti -type f ); do
+
+            # debug
+            echo "faccio il diff di $disallineamento"
+            echo "file originale: $( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" )"
+
+            # faccio il diff del file disallineato rispetto al file standard
+            diff -u $( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" ) $disallineamento > $disallineamento.diff
+
+        done
 
     else
 

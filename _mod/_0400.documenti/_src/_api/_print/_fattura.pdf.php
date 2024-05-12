@@ -11,7 +11,7 @@
      */
 
     // inclusione del framework
-	require '../../../../../_src/_config.php';
+	require_once '../../../../../_src/_config.php';
 
     // configurazioni specifiche
     $cnf['estensione'] = 'pdf';
@@ -438,7 +438,7 @@
 */
 
     // oggetto del documento
-    $dobj = str_replace( ' ', '_' , $r['doc']['oggetto'] );
+    $dobj = str_replace( ' ', '_' , $dati['doc']['oggetto'] );
 
     // output
 	if( isset( $_REQUEST['d'] ) ) {

@@ -143,3 +143,30 @@ div.numero-verde div.telefono {
 .vh-100 {
     min-height: 100vh;
 }
+
+@keyframes fa-blink {
+    0% {
+        opacity: 1;
+    }
+
+    25% {
+        opacity: 0.25;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    75% {
+        opacity: 0.75;
+    }
+
+}
+
+.fa-blink {
+    -webkit-animation: fa-blink 1.3s linear infinite;
+    -moz-animation: fa-blink 1.3s linear infinite;
+    -ms-animation: fa-blink 1.3s linear infinite;
+    -o-animation: fa-blink 1.3s linear infinite;
+    animation: fa-blink 1.3s linear infinite;
+}

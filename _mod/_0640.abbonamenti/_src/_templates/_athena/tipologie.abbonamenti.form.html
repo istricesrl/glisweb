@@ -57,22 +57,16 @@
                         <span class="label-top">nome</span>
                         {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
                     </div>
-                </div>
-                <div class="form-group form-row">
 <!--
                     <div class="col-12 col-md">
-                        <span class="label-top">disciplina</span>
-                        {{ frm.selectRequired( table, '', '', 'id_categoria_progetti', '', etc.select.materie, request, '', '1', '', '' ) }}
+                        <span class="label-top">minimo iscritti</span>
+                        {% set subtable = 'metadati' %}
+                        {{ frm.input( table, subtable, etc.sub.minimo_iscritti.idx, 'id', '', '', '', etc.sub.minimo_iscritti.id, 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.minimo_iscritti.idx, 'id_tipologia_contratti', '', '', '', '__parent_id__', 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.minimo_iscritti.idx, 'nome', '', '', '', etc.sub.minimo_iscritti.nome, 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.minimo_iscritti.idx, 'testo', '', '', '', etc.sub.minimo_iscritti.testo ) }}
                     </div>
 -->
-                    <div class="col-12 col-md">
-                        <span class="label-top">durata (mesi)</span>
-                        {% set subtable = 'metadati' %}
-                        {{ frm.input( table, subtable, etc.sub.durata_mesi.idx, 'id', '', '', '', etc.sub.durata_mesi.id, 'hidden' ) }}
-                        {{ frm.input( table, subtable, etc.sub.durata_mesi.idx, 'id_tipologia_contratti', '', '', '', '__parent_id__', 'hidden' ) }}
-                        {{ frm.input( table, subtable, etc.sub.durata_mesi.idx, 'nome', '', '', '', etc.sub.durata_mesi.nome, 'hidden' ) }}
-                        {{ frm.input( table, subtable, etc.sub.durata_mesi.idx, 'testo', '', '', '', etc.sub.durata_mesi.testo ) }}
-                    </div>
                     <div class="col-12 col-md">
                         <span class="label-top">accessi a scalare</span>
                         {% set subtable = 'metadati' %}
@@ -81,6 +75,34 @@
                         {{ frm.input( table, subtable, etc.sub.numero_accessi.idx, 'nome', '', '', '', etc.sub.numero_accessi.nome, 'hidden' ) }}
                         {{ frm.input( table, subtable, etc.sub.numero_accessi.idx, 'testo', '', '', '', etc.sub.numero_accessi.testo ) }}
                     </div>
+                </div>
+
+                <div class="form-group form-row">
+<!--
+                    <div class="col-12 col-md">
+                        <span class="label-top">disciplina</span>
+                        {{ frm.selectRequired( table, '', '', 'id_categoria_progetti', '', etc.select.materie, request, '', '1', '', '' ) }}
+                    </div>
+                    <div class="col-12 col-md">
+                        <span class="label-top">durata (mesi)</span>
+                        {% set subtable = 'metadati' %}
+                        {{ frm.input( table, subtable, etc.sub.durata_mesi.idx, 'id', '', '', '', etc.sub.durata_mesi.id, 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.durata_mesi.idx, 'id_tipologia_contratti', '', '', '', '__parent_id__', 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.durata_mesi.idx, 'nome', '', '', '', etc.sub.durata_mesi.nome, 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.durata_mesi.idx, 'testo', '', '', '', etc.sub.durata_mesi.testo ) }}
+                    </div>
+-->
+<!--
+                    <div class="col-12 col-md">
+                        <span class="label-top">accessi a scalare</span>
+                        {% set subtable = 'metadati' %}
+                        {{ frm.input( table, subtable, etc.sub.numero_accessi.idx, 'id', '', '', '', etc.sub.numero_accessi.id, 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.numero_accessi.idx, 'id_tipologia_contratti', '', '', '', '__parent_id__', 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.numero_accessi.idx, 'nome', '', '', '', etc.sub.numero_accessi.nome, 'hidden' ) }}
+                        {{ frm.input( table, subtable, etc.sub.numero_accessi.idx, 'testo', '', '', '', etc.sub.numero_accessi.testo ) }}
+                    </div>
+-->
+<!--
                     <div class="col-12 col-md">
                         <span class="label-top">lezioni a scalare</span>
                         {% set subtable = 'metadati' %}
@@ -89,10 +111,12 @@
                         {{ frm.input( table, subtable, etc.sub.numero_lezioni.idx, 'nome', '', '', '', etc.sub.numero_lezioni.nome, 'hidden' ) }}
                         {{ frm.input( table, subtable, etc.sub.numero_lezioni.idx, 'testo', '', '', '', etc.sub.numero_lezioni.testo ) }}
                     </div>
+-->
                 </div>
 
             </fieldset>
     
+<!--
             <fieldset>
                 <legend>funzioni dell'abbonamento</legend>
         
@@ -102,9 +126,18 @@
                             {{ frm.checkbox( table, '', '', 'se_scalare', 'abbonamento a scalare', '', request ) }}
                         </div>
                     </div>
+                    <div class="col-4 col-md-2 col-form-label">
+                        <div class="form-check">
+                            {{ frm.checkbox( table, '', '', 'se_online', 'prenotabile on-line', '', request ) }}
+                        </div>
+                    </div>
                 </div>
     
             </fieldset>
+-->
+
+            {# SUBFORM ORARI #}
+            {{ sub.orari( table, 'orari', 'orari di accesso', site, page, pages, ietf, etc, request, session ) }}
 
             {# SUBFORM DISCIPLINE #}
             {{ sub.discipline( table, 'metadati', 'discipline', site, page, pages, ietf, etc, request, session ) }}

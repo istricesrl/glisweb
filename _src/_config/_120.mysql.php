@@ -6,8 +6,16 @@
      * In questo file sono impostati i profili di funzionamento di MySQL
      * e i parametri di configurazione dei server disponibili.
      *
+     * introduzione
+     * ============
+     * Anche per MySQL come visto per Google viene applicata la logica dei profili. Per ulteriori
+     * dettagli su questo si vedano i commenti al file _src/_config/_110.google.php.
+     * 
+     * Alla logica dei profili si aggiunge qui la logica dei server, per cui sotto la chiave $cf['mysql']['servers']
+     * vengono dichiarati i server disponibili, che poi verranno referenziati e utilizzati nei vari profili.
+     * 
      * array di configurazione dei server
-     * ==================================
+     * ----------------------------------
      * L'array $cf['mysql']['servers'] contiene tutte le informazioni necessarie
      * al framework per utilizzare uno o più server MySQL. Ogni chiave rappresenta un
      * diverso server e deve puntare a un array associativo che riporti i seguenti dati:
@@ -21,7 +29,7 @@
      * db               | il database da utilizzare sul server
      *
      * array di configurazione dei profili
-     * ===================================
+     * -----------------------------------
      * Ogni profilo di funzionamento del sito può avere associati server diversi; questo
      * consente lo switch veloce da un profilo all'altro senza doversi preoccupare di
      * modificare la configurazione del database. Ogni profilo è descritto da un sottoarray
@@ -33,6 +41,12 @@
      * -----------------|-----------------------------------------------------------------------
      * servers          | i server attivi per il profilo
      *
+     * array di configurazione delle connessioni
+     * -----------------------------------------
+     * 
+     * 
+     * 
+     * 
      *
      *
      *
@@ -40,33 +54,28 @@
      *
      *
      *
-     * @todo implementare bilanciamento del carico
+     * TODO implementare bilanciamento del carico
      *
-     * @file
+     *
      *
      */
 
     // server disponibili
-	$cf['mysql']['servers']				= array();
-
-    // profili di funzionamento
-	$cf['mysql']['profiles'][ DEVELOPEMENT ]	=
-	$cf['mysql']['profiles'][ TESTING ]		=
-	$cf['mysql']['profiles'][ PRODUCTION ]		= array();
+    $cf['mysql']['servers']                     = array();
 
     // connessioni disponibili
-	$cf['mysql']['connections']			= array();
+    $cf['mysql']['connections']                 = array();
 
-    // configurazione extra
-	if( isset( $cx['mysql'] ) ) {
-	    $cf['mysql'] = array_replace_recursive( $cf['mysql'], $cx['mysql'] );
-	}
-
-    // collegamento all'array $ct
-	$ct['mysql']					= &$cf['mysql'];
+    // profili di funzionamento
+    $cf['mysql']['profiles'][ DEVELOPEMENT ]    =
+    $cf['mysql']['profiles'][ TESTING ]         =
+    $cf['mysql']['profiles'][ PRODUCTION ]      = array();
 
     // debug
-	// echo $cf['site']['status'];
-	// die( print_r( $cf['mysql']['profile'], true ) );
-	// print_r( $cf['mysql'] );
-	// print_r( $cx['mysql'] );
+    // echo $cf['site']['status'];
+    // die( print_r( $cf['mysql']['profile'], true ) );
+    // print_r( $cf['mysql'] );
+    // print_r( $cx['mysql'] );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
+    // die( __FILE__ );

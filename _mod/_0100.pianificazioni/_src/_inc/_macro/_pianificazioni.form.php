@@ -31,7 +31,7 @@
         array( 'id' => 'attivita', '__label__' => 'attività' )
     );
 
-    //tendina periodi
+    // tendina periodi
     $ct['etc']['select']['periodi'] = array(
         array( 'id' => 1, '__label__' => 'giorni' ),
         array( 'id' => 2, '__label__' => 'settimane' ),
@@ -39,12 +39,22 @@
     //    array( 'id' => 4, '__label__' => 'anno' )
     );
 
-    //elenco periodicità
+/*
+    // elenco periodicità
     $ct['etc']['select']['periodicita'] = array(
         array( 'id' => 1, '__label__' => 'giornaliera' ),
         array( 'id' => 2, '__label__' => 'settimanale' ),
         array( 'id' => 3, '__label__' => 'mensile' ),
         array( 'id' => 4, '__label__' => 'annuale' )
+    );
+*/
+
+    // tendina tipologia abbonamento
+    $ct['etc']['select']['periodicita'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM periodicita_view ORDER BY giorni ASC'
     );
 
     //tendina ripetizioni mensili
@@ -55,13 +65,13 @@
 
     // elenco giorni della settimana
     $ct['etc']['giorni_settimana'] = array(
-        array( 'id' => 0, '__label__' => 'lunedì' ),
-        array( 'id' => 1, '__label__' => 'martedì' ),
-        array( 'id' => 2, '__label__' => 'mercoledì' ),
-        array( 'id' => 3, '__label__' => 'giovedì' ),
-        array( 'id' => 4, '__label__' => 'venerdì' ),
-        array( 'id' => 5, '__label__' => 'sabato' ),
-        array( 'id' => 6, '__label__' => 'domenica' )
+        array( 'id' => 0, '__label__' => 'domenica' ),
+        array( 'id' => 1, '__label__' => 'lunedì' ),
+        array( 'id' => 2, '__label__' => 'martedì' ),
+        array( 'id' => 3, '__label__' => 'mercoledì' ),
+        array( 'id' => 4, '__label__' => 'giovedì' ),
+        array( 'id' => 5, '__label__' => 'venerdì' ),
+        array( 'id' => 6, '__label__' => 'sabato' )
     );
 
     // estraggo la data di partenza e l'id dell'oggetto genitore, a seconda della sua tipologia

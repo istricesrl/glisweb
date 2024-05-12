@@ -6,7 +6,7 @@
 {% block main %}
 
 {% if session.carrello.articoli %}
-<form id="carrello" class="carrello" action="{{ pages['carrello.riepilogo'].url[ localization.language.ietf ] }}" method="post">
+<form id="formCarrello" class="carrello" action="{{ pages['carrello.riepilogo'].url[ localization.language.ietf ] }}" method="post">
 
     {# BLOCCO ARTICOLI NEL CARRELLO #}
     <fieldset class="articoli">
@@ -19,7 +19,7 @@
             <div class="col-12 col-md col-form-label"><span class="descrizione">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></div>
             <div class="col-4 col-md-1"><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></div>
             <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
-            <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
+            <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
         </div>
         {% endfor %}
         <div class="form-row">
@@ -61,7 +61,7 @@
 
         <div class="form-row">
             <div class="col">
-                <input class="btn btn-secondary btn-sm btn-block" type="button" value="RICALCOLA CARRELLO" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">        
+                {{ cms.formButton( 'RICALCOLA CARRELLO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Ricalcolo' ) }}
             </div>
         </div>
     </fieldset>
@@ -212,7 +212,7 @@
     <fieldset class="conferma">
         <div class="form-row">
             <div class="col">
-                <button type="submit" class="btn btn-secondary btn-sm btn-block" >CONFERMA ORDINE</button>
+                {{ cms.formButton( 'CONFERMA ORDINE', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '' ) }}
             </div>
         </div>
     </fieldset>

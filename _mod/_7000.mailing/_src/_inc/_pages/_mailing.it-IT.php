@@ -301,5 +301,5 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_aurora/', 'schema' => 'disiscrizione.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_disiscrizione.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
-		'auth'		=> array( 'groups'	=> array(	'guests' ) )
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff', 'guest' ) )
 	);

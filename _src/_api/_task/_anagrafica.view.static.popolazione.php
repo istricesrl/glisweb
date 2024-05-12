@@ -16,17 +16,47 @@
 			$cf['mysql']['connection'],
 			'SELECT anagrafica.id FROM anagrafica 
             LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = anagrafica.id
-            WHERE coalesce( anagrafica.timestamp_aggiornamento, anagrafica.timestamp_inserimento ) > anagrafica_view_static.timestamp_aggiornamento 
-            OR anagrafica_view_static.timestamp_aggiornamento IS NULL
+            WHERE
+                ( anagrafica_view_static.timestamp_inserimento IS NULL OR anagrafica.timestamp_inserimento > anagrafica_view_static.timestamp_inserimento )
+                OR
+                ( anagrafica_view_static.timestamp_aggiornamento IS NULL OR anagrafica.timestamp_aggiornamento > anagrafica_view_static.timestamp_aggiornamento )
+			ORDER BY anagrafica.id DESC
 			LIMIT 1'
 		);
 
-		// ...
-		if( ! empty( $status['aggiornare']['id'] ) ) {
-			updateAnagraficaViewStatic(
-				$status['aggiornare']['id']
-			);
-		}
+        // verifico le tabelle collegate
+		if( empty( $status['aggiornare'] ) ) {
+
+			// ...
+			$aggiornare = array();
+
+			// tabelle collegate
+			foreach( array( 'anagrafica_categorie' ) as $table ) {
+
+				// trovo una riga da aggiornare
+				$aggiornare[] = mysqlSelectValue(
+					$cf['mysql']['connection'],
+					'SELECT ' . $table . '.id_anagrafica 
+					FROM ' . $table . ' 
+					LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = ' . $table . '.id_anagrafica
+					WHERE coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento ) > anagrafica_view_static.timestamp_aggiornamento 
+					OR anagrafica_view_static.timestamp_aggiornamento IS NULL
+					LIMIT 1'
+				);
+
+			}
+
+            // status
+			$status['aggiornare']['id'] = max( $aggiornare );
+            $status['modalita'] = 'categorie';
+
+		} else {
+
+            // status
+            $status['modalita'] = 'standard';
+
+        }
+
 /*
 		// ...
 		if( ! empty( $status['aggiornare']['id_mastro_destinazione'] ) ) {
@@ -41,11 +71,19 @@
     } elseif( isset( $_REQUEST['idAnagrafica'] ) ) {
 
         // scrivo la riga
-        updateAnagraficaViewStatic( $status['aggiornare']['id'] );
+        $status['aggiornare']['id'] = $_REQUEST['idAnagrafica'];
+        $status['modalita'] = 'forzata';
 
 	}
 
-    // debug
+	// ...
+	if( ! empty( $status['aggiornare']['id'] ) ) {
+		updateAnagraficaViewStatic(
+			$status['aggiornare']['id']
+		);
+	}
+
+	// debug
     // print_r( $_REQUEST );
 
 	// output

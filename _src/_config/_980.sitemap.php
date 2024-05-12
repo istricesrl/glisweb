@@ -8,7 +8,7 @@
 	 * - https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap?hl=it
      * - https://developers.google.com/search/docs/advanced/sitemaps/image-sitemaps?hl=it
      *
-     *
+     * TODO la generazione della sitemap dovrebbe essere un task a parte
      *
      * @todo implementare
      * @todo documentare

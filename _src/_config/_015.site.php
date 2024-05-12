@@ -32,122 +32,136 @@
      *
      *
      *
-     * @todo visto che la licenza è per deploy (non per sito) dovrebbe essere $cf['license'] e non $cf['site']['license']
-     * @todo verificare se dietro proxy serve di considerare X-FORWARDED-FOR anziché HTTP_HOST https://stackoverflow.com/questions/11452938/how-to-use-http-x-forwarded-for-properly
-     * @todo documentare FILE_STATUS
-     * @todo finire di documentare
+     * TODO visto che la licenza è per deploy (non per sito) dovrebbe essere $cf['license'] e non $cf['site']['license']
+     * TODO verificare se dietro proxy serve di considerare X-FORWARDED-FOR anziché HTTP_HOST https://stackoverflow.com/questions/11452938/how-to-use-http-x-forwarded-for-properly
+     * TODO documentare FILE_STATUS
+     * TODO finire di documentare
      *
-     * @file
+     *
      *
      */
 
-    // multisito di default
-	if( ! defined( 'SITE_DEFAULT' ) ) {
-	    define( 'SITE_DEFAULT'		, 1 );
-	}
+    // debug
+    // print_r( $cf['sites'] );
+    // die( print_r( $cx['sites'], true ) );
 
-    // cerco di ricavare il sito corrente dal dominio
-	foreach( $cf['sites'] as $id => &$site ) {
+    // configurazione extra
+    if( isset( $cx['sites'] ) ) {
+        $cf['sites'] = array_replace_recursive( $cf['sites'], $cx['sites'] );
+    }
 
-	    // assegno l'id del sito corrente alla chiave 'id'
-		$site['id'] = $id;
+    // collegamento a $ct
+    $ct['sites'] = &$cf['sites'];
 
-		// debug
-		// print_r( $sito );
-		// die();
-
-		// ciclo sugli stati del sito
-		foreach( $site['domains'] as $status => $domain ) {
-
-			// debug
-			// echo $status . '->' . $domain . PHP_EOL;
-			// echo $domain .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
-
-		    // se c'è un dominio per questo status
-			if( ! empty( $domain ) ) {
-
-			    // inizializzazioni
-				$hosts = $domains = array();
-
-			    // per lo stato corrente, verifico se c'è un host specificato
-				if( isset( $site['hosts'][ $status ] ) ) {
-				    $hosts[] = $site['hosts'][ $status ];
-				}
-
-			    // per lo stato corrente, verifico se ci sono degli alias di host
-				if( isset( $site['alias']['hosts'][ $status ] ) ) {
-				    $hosts = array_merge( $hosts, $site['alias']['hosts'][ $status ] );
-				}
-
-			    // per lo stato corrente, aggiungo il domain
-				$domains[] = $site['domains'][ $status ];
-
-			    // per lo stato corrente, verifico se ci sono degli alias di domain
-				if( isset( $site['alias']['domains'][ $status ] ) ) {
-				    $domains = array_merge( $domains, $site['alias']['domains'][ $status ] );
-				}
-
-			    // numeratore host in base a www
-				if( in_array( 'www', $hosts ) ) {
-				    $numerator = '{0,1}';
-				} else {
-				    $numerator = '{1}';
-				}
-
-			    // regola di match per i domini
-				$drule = str_replace( '.', '\.', implode( '|', $domains ) );
-
-			    // regola di match per gli host
-				$hrule = implode( '|', $hosts );
-
-			    // composizione dell'espressione regolare
-				$regex = '/^(?:' . $hrule . ')' . $numerator . '(?:\.)*(' . $drule . '){1}/';
-
-			    // debug
-				// echo $regex .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
-
-			    // espressione regolare
-				if( preg_match( $regex, $_SERVER['HTTP_HOST'] ) === 1 ) {
-				    if( ! defined( 'SITE_CURRENT' ) ) {
-					// echo 'MATCH (' . $status . ') -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
-					define( 'SITE_CURRENT', $id ); 
-					$cStatus = $status;
-				    }
-				}
-
-			}
-
-		}
-
-	}
-
-    // multisito corrente
-	if( ! defined( 'SITE_CURRENT' ) ) {
-
-	    // TODO questo comportamento causa problemi nel caso in cui il framework sia chiamato per indirizzo IP
-		// define( 'SITE_CURRENT'		, SITE_DEFAULT );
-
-		// TODO questa è una soluzione temporanea e un po' brutale
-		die( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare che il file config.json sia nella posizione giusta oppure i dati in 010.site.php' );
-
-	}
-
-    // link al sito corrente
-	$cf['site'] = &$cf['sites'][ SITE_CURRENT ];
-
-    // status del sito
-	if( isset( $cStatus ) ) {
-	    $cf['site']['status']		= $cStatus;
-	} elseif( file_exists( FILE_STATUS ) ) {
-	    $cf['site']['status']		=  readStringFromFile( FILE_STATUS );
-	} else {
-	    $cf['site']['status']		= DEVELOPEMENT;
-	}
-
-    // status del sito
-	define( 'SITE_STATUS'			, $cf['site']['status'] );
+    /**
+     * ricerca del sito corrente
+     * =========================
+     * 
+     * 
+     */
 
     // debug
-	// die( 'host: ' . $_SERVER['HTTP_HOST'] );
-	// print_r( $cf['site'] );
+    // die( print_r( $cf['sites'], true ) );
+
+    // cerco di ricavare il sito corrente dal dominio
+    foreach( $cf['sites'] as $id => &$site ) {
+
+        // assegno l'id del sito corrente alla chiave 'id'
+        $site['id'] = $id;
+
+        // ciclo sugli stati del sito
+        foreach( $site['domains'] as $status => $domain ) {
+
+            // debug
+            // echo $status . '->' . $id . PHP_EOL;
+            // echo $status . '->' . $domain . PHP_EOL;
+            // echo $domain .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
+
+            // se c'è un dominio per questo status
+            if( ! empty( $domain ) ) {
+
+                // inizializzazioni
+                $hosts = $domains = array();
+
+                // per lo stato corrente, verifico se c'è un host specificato
+                if( isset( $site['hosts'][ $status ] ) ) {
+                    $hosts[] = $site['hosts'][ $status ];
+                }
+
+                // per lo stato corrente, verifico se ci sono degli alias di host
+                if( isset( $site['alias']['hosts'][ $status ] ) ) {
+                    $hosts = array_merge( $hosts, $site['alias']['hosts'][ $status ] );
+                }
+
+                // per lo stato corrente, aggiungo il domain
+                $domains[] = $site['domains'][ $status ];
+
+                // per lo stato corrente, verifico se ci sono degli alias di domain
+                if( isset( $site['alias']['domains'][ $status ] ) ) {
+                    $domains = array_merge( $domains, $site['alias']['domains'][ $status ] );
+                }
+
+                // numeratore host in base a www
+                if( in_array( 'www', $hosts ) ) {
+                    $numerator = '{0,1}';
+                } else {
+                    $numerator = '{1}';
+                }
+
+                // regola di match per i domini
+                $drule = str_replace( '.', '\.', implode( '|', $domains ) );
+
+                // regola di match per gli host
+                $hrule = implode( '|', $hosts );
+
+                // composizione dell'espressione regolare
+                $regex = '/^(?:' . $hrule . ')' . $numerator . '(?:\.)*(' . $drule . '){1}/';
+
+                // debug
+                // echo $regex .' -> ' . $_SERVER['HTTP_HOST'] . PHP_EOL;
+                $site['regexp'] = $regex;
+
+                // espressione regolare
+                if( preg_match( $regex, $_SERVER['HTTP_HOST'] ) === 1 ) {
+                    if( ! defined( 'SITE_CURRENT' ) ) {
+                        define( 'SITE_CURRENT', $id ); 
+                        $cStatus = $status;
+                    }
+                }
+
+            }
+
+        }
+
+    }
+
+    // multisito corrente
+    if( ! defined( 'SITE_CURRENT' ) ) {
+        die( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare che il file config.json sia nella posizione giusta oppure i dati in 010.site.php' );
+    }
+
+    /**
+     * configurazioni che dipendono dal sito corrente
+     * ==============================================
+     * 
+     * 
+     * 
+     */
+
+    // link al sito corrente
+    $cf['site'] = &$cf['sites'][ SITE_CURRENT ];
+
+    // status del sito
+    if( isset( $cStatus ) ) {
+        $cf['site']['status'] = $cStatus;
+    } else {
+        $cf['site']['status'] = DEVELOPEMENT;
+    }
+
+    // status del sito
+    define( 'SITE_STATUS', $cf['site']['status'] );
+
+    // debug
+    // die( 'host: ' . $_SERVER['HTTP_HOST'] );
+    // print_r( $cf['site'] );
     // echo 'OUTPUT';

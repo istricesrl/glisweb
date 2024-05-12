@@ -99,8 +99,8 @@
         }
 
         // forzatura dei contenuti correnti per one-char parameter debug
-        if( isset( $_REQUEST['m'] ) ) {
-            $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['m'], '<p>'.$cf['common']['lorem']['std'].'</p>' ) );
+        if( isset( $_REQUEST['l'] ) ) {
+            $ct['page']['content'][ $cf['localization']['language']['ietf'] ]	= implode( PHP_EOL, array_fill( 0, $_REQUEST['l'], '<p>'.$cf['common']['lorem']['std'].'</p>' ) );
         }
 
     }
@@ -118,7 +118,9 @@
 
     // TODO la forzatura del nome del sito nel <title> dev'essere opzionale
     if( ! empty( TITLE_SEPARATOR ) ) {
-        $ct['page']['title'][ LINGUA_CORRENTE ] = $cf['site']['name'][ LINGUA_CORRENTE ] . TITLE_SEPARATOR . $ct['page']['title'][ LINGUA_CORRENTE ];
+        if( ! isset( $cf['site']['metadati']['noSiteNameInTitle'] ) ) {
+            $ct['page']['title'][ LINGUA_CORRENTE ] = $cf['site']['name'][ LINGUA_CORRENTE ] . TITLE_SEPARATOR . $ct['page']['title'][ LINGUA_CORRENTE ];
+        }
     }
 
     /*

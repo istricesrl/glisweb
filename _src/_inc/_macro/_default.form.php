@@ -10,11 +10,22 @@
      *
      */
 
+    // pagina di destinazione
+    $ct['form']['action'] = ( isset( $ct['form']['action'] ) ) ? $ct['form']['action'] : $ct['page']['url'][ LINGUA_CORRENTE ];
+
+    // metodo da utilizzare
+    $ct['form']['method'] = ( isset( $ct['form']['method'] ) ) ? $ct['form']['method'] : ( ( empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? 'post' : 'update' );
+
+    // attività svolta
+    $ct['form']['activity'] = ( isset( $ct['form']['activity'] ) ) ? $ct['form']['activity'] : ( ( empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? 'inserimento' : 'aggiornamento' );
+
     // se è presente un id, sostituisco il titolo della pagina corrente con la __label__ dell'oggetto
 	if( isset( $ct['form']['table'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
 	    $ct['page']['query'][ LINGUA_CORRENTE ] = '?' . $ct['form']['table'] . '[id]=' . $_REQUEST[ $ct['form']['table'] ]['id'];
 	    $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ] .= $ct['page']['query'][ LINGUA_CORRENTE ];
-	    $ct['page']['parents']['h1'][ max( array_keys( $ct['page']['parents']['h1'] ) ) ][ LINGUA_CORRENTE ] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $ct['form']['table'] . getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $ct['form']['table'] ) . ' WHERE id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
+        if( ! isset( $ct['form']['__filesystem_mode__'] ) ) {
+            $ct['page']['parents']['h1'][ max( array_keys( $ct['page']['parents']['h1'] ) ) ][ LINGUA_CORRENTE ] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $ct['form']['table'] . getStaticViewExtension( $cf['memcache']['connection'], $cf['mysql']['connection'], $ct['form']['table'] ) . ' WHERE id = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) );
+        }
 	    $backurl = $ct['page']['parents']['path'][ max( array_keys( $ct['page']['parents']['path'] ) ) ][ LINGUA_CORRENTE ] . '&' . $ct['form']['table'] . '[__method__]=get';
 	    $backmd5 = md5( $backurl );
 	    $_SESSION['backurls'][ $backmd5 ] = $backurl;

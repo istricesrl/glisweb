@@ -1,0 +1,35 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+{# CONTENUTO PRINCIPALE DELLA PAGINA #}
+
+<h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+{% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
+<div>{{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}</div>
+
+{# CICLO SOTTO CATEGORIE #}
+
+<ul>
+{% for p in page.children.id %}
+{% if p.metadati.id_categoria_annunci %}
+{% set p = pages[ p ] %}
+<li><a href="{{ p.url[ localization.language.ietf ] }}">{{ p.h1[ localization.language.ietf ] }}</a></li>
+{% endif %}
+{% endfor %}
+</ul>
+
+{# CICLO NOTIZIE DELLA CATEGORIA #}
+
+<ul>
+{% for p in page.children.id %}
+{% if p.metadati.id_annuncio %}
+{% set p = pages[ p ] %}
+<li><a href="{{ p.url[ localization.language.ietf ] }}">{{ p.h1[ localization.language.ietf ] }}</a></li>
+{% endif %}
+{% endfor %}
+</ul>
+
+{% endblock %}

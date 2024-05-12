@@ -119,6 +119,10 @@
 		CONTROL_FULL => array( 'roots' ),
 		METHOD_GET => array( 'staff', 'users', 'guests' )
 		),
+	    'stati' => array(
+		CONTROL_FULL => array( 'roots' ),
+		METHOD_GET => array( 'staff', 'users', 'guests' )
+		),
 	    'contenuti' => array(
 			CONTROL_FULL => array( 'roots' ,'staff'),
 		),
@@ -174,6 +178,9 @@
 			CONTROL_FULL => array( 'roots', 'staff' )
 		),
 		'periodi' => array(
+			CONTROL_FULL => array( 'roots', 'staff' )
+		),
+		'orari' => array(
 			CONTROL_FULL => array( 'roots', 'staff' )
 		),
 #		'progetti_anagrafica' => array(

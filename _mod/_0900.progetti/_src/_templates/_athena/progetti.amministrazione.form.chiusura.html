@@ -47,16 +47,68 @@
                 <legend>chiusura del progetto</legend>
                 <div class="form-group form-row">
                     <div class="col-12 col-md-auto">
+                        <span class="label-top">data apertura</span>
+                        {{ frm.date( table, '', '', 'data_apertura', '', '', request ) }}
+                    </div>
+                    <div class="col col-md-2">
+                        <span class="label-top">periodicità</span>
+                        {{ frm.select( table, '', '', 'id_periodicita_prevista', '', etc.select.periodicita, request ) }}
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">valore progetto (€)</span>
+                        {{ frm.inputRequired( table, '', '', 'entrate_previste', '', '', request, __preset__[table].nome ) }}
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">stima costi (€)</span>
+                        {{ frm.inputRequired( table, '', '', 'costi_previsti', '', '', request, __preset__[table].nome ) }}
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">stima ore</span>
+                        {{ frm.inputRequired( table, '', '', 'ore_previste', '', '', request, __preset__[table].nome ) }}
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-12 col-md-auto">
+                        <span class="label-top">data accettazione</span>
+                        {{ frm.date( table, '', '', 'data_accettazione', '', '', request ) }}
+                    </div>
+                    <div class="col col-md-2">
+                        <span class="label-top">periodicità</span>
+                        {{ frm.select( table, '', '', 'id_periodicita_prevista', '', etc.select.periodicita, request ) }}
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">valore accettazione (€)</span>
+                        {{ frm.inputRequired( table, '', '', 'entrate_accettazione', '', '', request ) }}
+                    </div>
+                </div>
+                <div class="form-group form-row">
+                    <div class="col-12 col-md-auto">
                         <span class="label-top">data chiusura</span>
                         {{ frm.date( table, '', '', 'data_chiusura', '', '', request ) }}
                     </div>
+                    <div class="col col-md-2">
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">valore finale (€)</span>
+                        {{ frm.inputRequired( table, '', '', 'entrate_totali', '', '', request, __preset__[table].nome ) }}
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">costi finali (€)</span>
+                        {{ frm.inputRequired( table, '', '', 'uscite_totali', '', '', request, __preset__[table].nome ) }}
+                    </div>
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">ore finali</span>
+                        {{ frm.inputRequired( table, '', '', 'ore_totali', '', '', request, __preset__[table].nome ) }}
+                    </div>
+                </div>
+                <div class="form-group form-row">
                     <div class="col-12 col-md">
                         <span class="label-top">note chiusura</span>
                         {{ frm.textarea( table, '', '', 'note_chiusura', '', 3, request ) }}
                     </div>
                 </div>
             </fieldset>
-            
+
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, table, request ) }}

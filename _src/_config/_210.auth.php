@@ -409,14 +409,14 @@
 							logWrite( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
 						}
 
-/*
-					    // attribuzione dei privilegi utente
-						if( isset( $_SESSION['account']['privilegi'] ) ) {
-							foreach( $_SESSION['account']['privilegi'] as $pr ) {
-								$_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
-							}
-						}
-*/
+                        /*
+                            // attribuzione dei privilegi utente
+                            if( isset( $_SESSION['account']['privilegi'] ) ) {
+                                foreach( $_SESSION['account']['privilegi'] as $pr ) {
+                                    $_SESSION['privilegi'][ $pr ] = &$cf['auth']['privileges'][ $pr ];
+                                }
+                            }
+                        */
 
 						// gruppi di attribuzione automatica dell'utente
 						if( ! empty( $_SESSION['account']['id_gruppi_attribuzione'] ) ) {
@@ -468,7 +468,7 @@
 
 					}
 
-				} else {
+                } else {
 
 				    // status
 					$cf['auth']['status'] = LOGIN_ERR_NO_CONNECTION;
@@ -483,7 +483,16 @@
 		    // speed
 			timerCheck( $cf['speed'], '-> fine login via database' );
 
-		} else {
+            // se il login ha avuto successo, aggiungo i permessi
+			if( $cf['auth']['status'] == LOGIN_SUCCESS ) {
+
+                // TODO
+                // prelevare il codice da _255.auth.php
+
+
+            }
+
+        } else {
 
 		    // status
 			$cf['auth']['status'] = LOGIN_ERR_NO_DATA;

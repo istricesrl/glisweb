@@ -64,8 +64,10 @@
             }
 
             // status
+            $job['workspace']['status']['info'][] = 'file: ' . $job['workspace']['file'];
             $job['workspace']['status']['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
             $job['workspace']['status']['info'][] = 'righe trovate: ' . $job['totale'];
+            $job['workspace']['status']['info'][] = 'colonne trovate: ' . implode( ', ', array_keys( $arr[0] ) );
 
         } else {
 
@@ -134,8 +136,9 @@
 
                     // ...
                     if( ! empty( $idDestinatario ) ) {
-
+/*
                         // aggiornamento
+			// TODO verificare che il codice non sia vuoto prima di fare l'aggiornamento
                         mysqlQuery(
                             $cf['mysql']['connection'],
                             'UPDATE anagrafica SET codice = ? WHERE id = ?',
@@ -144,14 +147,16 @@
                                 array( 's' => $idDestinatario )
                             )
                         );
-
+*/
                         // status
                         $job['workspace']['status']['info'][] = 'assegno il codice ' . $job['riga']['codice'] . ' al cliente ' . $idDestinatario . ' per la riga ' . $job['corrente'];
 
                     } else {
 
                         // status
-                        $job['workspace']['status']['error'][] = 'destinatario non trovato per la riga ' . $job['corrente'] . ' (tipologia: ' . $idTipologia . ' numero: ' . $job['riga']['numero'] . ' sezionale: ' . $job['riga']['sezionale'] . ')';
+                        $job['workspace']['status']['error'][] = 'destinatario non trovato per la riga ' . $job['corrente'] . 
+                            ' (tipologia: ' . $idTipologia . 
+                            ' numero: ' . $job['riga']['numero'] . ' sezionale: ' . $job['riga']['sezionale'] . ')';
     
                     }
 

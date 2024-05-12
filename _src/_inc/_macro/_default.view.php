@@ -36,7 +36,11 @@
 	    $ct['page']['backurl'][ LINGUA_CORRENTE ] = $backmd5;
 	}
 
-	// contatore per i campi della vista
+    if( ! isset( $ct['view']['extra']['cols'] ) ) {
+        $ct['view']['extra']['cols'] = array();
+    }
+
+    // contatore per i campi della vista
 	$i = 10;
 
     // campi della vista
@@ -80,10 +84,19 @@
 		$_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];
 	}
 
+	// ordinamenti presettati
+	if( isset( $ct['view']['__sort__'] ) ) {
+        if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'] ) ) {
+            foreach( $ct['view']['__sort__'] as $field => $direction ) {
+                $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'][ $field ] = $direction;
+            }
+        }
+	}
+
     // aggiungo le colonne da prelevare
 	// $_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = array_keys( $ct['view']['cols'] );
 	// $ct['view']['data']['__fields__'] = array_keys( $ct['view']['cols'] );
-	$_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = arrayTrim( array_keys( $ct['view']['cols'] ) );
+	$_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = arrayTrim( array_diff( array_keys( $ct['view']['cols'] ), $ct['view']['extra']['cols'] ) );
 
 #    // aggiungo i campi di filtro
 #	if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] ) ) {
@@ -126,14 +139,18 @@
     // debug
 	// print_r( $filters );
 	// print_r( $ct['view']['data'] );
+	// echo "stocazzo";
 
     // prelevamento dei dati
 	// controller( $cf['mysql']['connection'], $_REQUEST['__view__'][ $ct['view']['id'] ], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $k ] );
-	controller( $cf['mysql']['connection'], $cf['memcache']['connection'], $ct['view']['data'], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $ct['view']['id'] ], $_REQUEST['__view__'][ $ct['view']['id'] ] );
+	if( ! isset( $ct['view']['data']['__filesystem_mode__'] ) ) {
+		controller( $cf['mysql']['connection'], $cf['memcache']['connection'], $ct['view']['data'], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $ct['view']['id'] ], $_REQUEST['__view__'][ $ct['view']['id'] ] );
+	}
 #print_r( $_REQUEST['__view__'][ $ct['view']['id'] ]);
 #print_r( $_REQUEST['__view__'][ $ct['view']['id'] ]);
     // debug
 	// echo 'dati: ' .  print_r( $ct['view']['data'], true );
+
 
     // campo di gestione di default
 	if( ! isset( $ct['view']['open']['field'] ) ) {
@@ -156,13 +173,21 @@
     // percorso della pagina di gestione
 	if( isset( $ct['view']['open']['page'] ) && ! empty( $ct['view']['open']['page'] ) && ( getAclPermission( $ct['view']['table'], METHOD_PUT ) || getAclPermission( $ct['view']['table'], METHOD_GET ) ) ) {
 //	if( isset( $ct['view']['open']['page'] ) && ! empty( $ct['view']['open']['page'] ) ) {
-	    $ct['view']['open']['path'] = $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+        if( isset( $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ] ) ) {
+            $ct['view']['open']['path'] = $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+        } else {
+            die( 'La pagina di gestione ' . $ct['view']['open']['page'] . ' non è stata definita o non è valida' );
+        }
 	}
 
     // percorso della pagina di inserimento
 	if( isset( $ct['view']['insert']['page'] ) && ! empty( $ct['view']['insert']['page'] ) && getAclPermission( $ct['view']['table'], METHOD_POST ) ) {
 //	if( isset( $ct['view']['insert']['page'] ) && ! empty( $ct['view']['insert']['page'] ) ) {
-	    $ct['view']['insert']['path'] = $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+        if( isset( $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ] ) ) {
+            $ct['view']['insert']['path'] = $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+        } else {
+            die( 'La pagina di inserimento ' . $ct['view']['insert']['page'] . ' non è stata definita o non è valida' );
+        }
 	}
 
 	if( isset( $ct['view']['footer']['cols'] ) ) {

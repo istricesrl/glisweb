@@ -288,7 +288,7 @@
 
 		// controllo in background dello status della sessione
 		setInterval( function() {
-			getws( '/report/session.status', null, function( obj ){
+			getws( '/status/session.status', null, function( obj ){
 //				var obj = JSON.parse( d );
 				if( obj.time > ( obj.expires - ( obj.lifetime / 100 ) ) ) {
 					$('#widget-session').fadeIn();

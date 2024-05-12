@@ -21,7 +21,7 @@
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'documenti.articoli.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
-    $ct['view']['open']['field'] = 'id_riga';
+    $ct['view']['open']['field'] = 'id';
 
     // campi della vista
 	$ct['view']['cols'] = array(
@@ -32,7 +32,7 @@
 #        'quantita' => 'quantità',
 #        'importo' => 'importo',
 #        'id_listino' => 'id_listino',
-        'id_riga' => 'id_riga',
+        'id' => 'id',
 #        'cliente' => 'cliente',
 #        'id_emittente' => 'emittente',
 #        'id_tipologia' => 'id_tipologia',
@@ -40,9 +40,10 @@
 #        'progetto' => 'progetto',
 #        'matricola' => 'matricola'
 'data' => 'data',
-'tipologia' => 'documento',
-'documento' => 'nome',
+'tipologia' => 'tipologia',
+'documento' => 'documento',
 'numero' => 'numero',
+'sezionale' => 'sezionale',
 'emittente' => 'emittente',
 'destinatario' => 'destinatario',
 'categorie' => 'categorie',
@@ -51,11 +52,11 @@
 'codice_produttore' => 'cod. produttore',
 'id_articolo' => 'codice articolo',
 'articolo' => 'descrizione',
-'carico' => 'carico',
-'qta_carico' => 'q.tà carico',
-'scarico' => 'scarico',
-'qta_scarico' => 'q.tà scarico',
-'udm_qta' => 'udm'
+'mastro_provenienza' => 'da',
+'mastro_destinazione' => 'a',
+'quantita' => 'quantita',
+'quantita_movimento' => 'q.tà movimento',
+'udm_movimento' => 'udm'
 
 	);
 
@@ -75,20 +76,22 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none',
-        'id_riga' => 'd-none',
+#        'id_riga' => 'd-none',
         'numero' => 'd-none',
         'data' => 'no-wrap', 
-        'documento' => 'd-none',
+        'documento' => 'text-left no-wrap',
+        'numero' => 'd-none',
+        'sezionale' => 'd-none',
 #        'id_listino' => 'd-none',
 #        'id_tipologia' => 'd-none',
 #        'id_emittente' => 'd-none',
 'emittente' => 'd-none',
 'destinatario' => 'd-none',
-        'tipologia' => 'text-left',
-        'carico' => 'text-right',
-        'scarico' => 'text-right',
-        'qta_carico' => 'd-none',
-        'qta_scarico' => 'd-none',
+        'tipologia' => 'd-none',
+        'quantita' => 'text-right',
+        'quantita_movimento' => 'text-right',
+#        'qta_carico' => 'd-none',
+#        'qta_scarico' => 'd-none',
 #	    'descrizione' => 'text-left',
 'categorie' => 'd-none',
 'id_prodotto' => 'd-none',
@@ -98,15 +101,21 @@
 #        'importo' => 'text-right',
 #        'cliente' => 'text-left',
 #        'emittente' => 'text-left'
+'mastro_provenienza' => 'text-left',
+'mastro_destinazione' => 'text-left',
 'articolo' => 'text-left',
-'udm_qta' => 'd-none'
+'udm_movimento' => 'd-none'
 );
 
 #    $ct['etc']['include']['filters'] = 'inc/documenti.articoli.view.filters.html';
 
     // preset filtro mastro corrente
 	// $ct['view']['__restrict__']['id']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
-    $ct['view']['__restrict__']['mastri_path_check( id, '.$_REQUEST[ $ct['form']['table'] ]['id'].' )']['EQ'] = 1;
+//    $ct['view']['__restrict__']['mastri_path_check( id_mastro_provenienza, '.$_REQUEST[ $ct['form']['table'] ]['id'].' )']['EQ'] = 1;
+//    $ct['view']['__restrict__']['mastri_path_check( id_mastro_destinazione, '.$_REQUEST[ $ct['form']['table'] ]['id'].' )']['EQ'] = 1;
+//    $ct['view']['__restrict__']['( mastri_path_check( id_mastro_provenienza, '.$_REQUEST[ $ct['form']['table'] ]['id'].' )  mastri_path_check( id_mastro_destinazione, '.$_REQUEST[ $ct['form']['table'] ]['id'].' ) )']['EQ'] = 1;
+
+    $ct['view']['__restrict__']['( mastri_path_check( id_mastro_provenienza, '.$_REQUEST[ $ct['form']['table'] ]['id'].' ) + mastri_path_check( id_mastro_destinazione, '.$_REQUEST[ $ct['form']['table'] ]['id'].' ) )']['GE'] = 1;
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
@@ -114,7 +123,8 @@
     // trasformazione icona attivo/inattivo
 	foreach( $ct['view']['data'] as &$row ) {
         if( is_array( $row ) ) {
-            $row['tipologia'] .= ' ' . $row['documento'] . ' ' . ' n° '.$row['numero'];
+#            $row['tipologia'] .= ' ' . $row['documento'] . ' ' . ' n. '.$row['numero'].'/'.$row['sezionale'];
+            $row['quantita_movimento'] .= ' ' . $row['udm_movimento'];
         }
 	}
 

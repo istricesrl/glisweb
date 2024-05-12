@@ -200,10 +200,13 @@ CREATE TABLE `attivita_view_static` (
   `documento` char(255) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `progetto` char(255) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `contratto` char(255) DEFAULT NULL,
   `discipline` char(255) DEFAULT NULL,
   `id_matricola` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `id_step` int(11) DEFAULT NULL,
+  `step` char(255) DEFAULT NULL,
   `id_pianificazione`	int(11) DEFAULT NULL,
   `id_todo` int(11) DEFAULT NULL,
   `todo` char(255) DEFAULT NULL,
@@ -214,7 +217,10 @@ CREATE TABLE `attivita_view_static` (
   `codice_archivium` char(128) DEFAULT NULL,
   `token` char(128) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_archiviazione` int(11) DEFAULT NULL,
   `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 

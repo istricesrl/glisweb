@@ -4,6 +4,8 @@
      * 
      * 
      * 
+     * TODO questa cosa è fuori posto qui, va in un task a parte
+     * 
      */
 
 
@@ -91,8 +93,9 @@
                 foreach( $pFiles as $pFile ) {
 
                     // ricavo il livello di patch del file dal nome
-                    $pFilePatchLevel = substr( basename( $pFile ), 1, 12 );
-        
+                    // $pFilePatchLevel = substr( basename( $pFile ), 1, 12 );
+                    $pFilePatchLevel = substr( str_replace( '_', '', basename( $pFile ) ), 0, 12 );
+
                     // debug
                     // echo 'patch level del file ' . $pFilePatchLevel . PHP_EOL;
                     // echo 'patch level del database ' . $patchLevel . PHP_EOL;

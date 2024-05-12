@@ -50,6 +50,10 @@
                         <span class="label-top">data apertura</span>
                         {{ frm.date( table, '', '', 'data_apertura', '', '', request ) }}
                     </div>
+                    <div class="col col-md-2">
+                        <span class="label-top">periodicità</span>
+                        {{ frm.select( table, '', '', 'id_periodicita_prevista', '', etc.select.periodicita, request ) }}
+                    </div>
                     <div class="col-12 col-md-2">
                         <span class="label-top">valore progetto (€)</span>
                         {{ frm.inputRequired( table, '', '', 'entrate_previste', '', '', request, __preset__[table].nome ) }}
@@ -68,6 +72,10 @@
                         <span class="label-top">data accettazione</span>
                         {{ frm.date( table, '', '', 'data_accettazione', '', '', request ) }}
                     </div>
+                    <div class="col col-md-2">
+                        <span class="label-top">periodicità</span>
+                        {{ frm.select( table, '', '', 'id_periodicita_prevista', '', etc.select.periodicita, request ) }}
+                    </div>
                     <div class="col-12 col-md-2">
                         <span class="label-top">valore accettazione (€)</span>
                         {{ frm.inputRequired( table, '', '', 'entrate_accettazione', '', '', request ) }}
@@ -77,6 +85,8 @@
                     <div class="col-12 col-md-auto">
                         <span class="label-top">data chiusura</span>
                         {{ frm.date( table, '', '', 'data_chiusura', '', '', request ) }}
+                    </div>
+                    <div class="col col-md-2">
                     </div>
                     <div class="col-12 col-md-2">
                         <span class="label-top">valore finale (€)</span>
@@ -98,7 +108,7 @@
                     </div>
                 </div>
             </fieldset>
-            
+
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, table, request ) }}

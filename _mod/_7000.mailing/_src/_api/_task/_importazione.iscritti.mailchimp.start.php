@@ -19,8 +19,8 @@
         array(
             array( 's' => 'importazione automatica iscritti alla newsletter' ),
             array( 's' => '_mod/_7000.mailing/_src/_api/_job/_importazione.iscritti.mailchimp.php' ),
-            array( 's' => 1 ),
-            array( 's' => 1 ),
+            array( 's' => 10 ),
+            array( 's' => 0 ),
             array( 's' => json_encode(
                 array(
                     'file' => 'var/contenuti/upload/'.basename( $_REQUEST['file'] ),

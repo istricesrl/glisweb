@@ -75,6 +75,7 @@ if( $cf['contents']['cached'] === false ) {
                 $cf['contents']['pages'][$pid] = array(
                     'sitemap'        => (($pg['se_sitemap'] == 1) ? true : false),
                     'cacheable'        => (($pg['se_cacheable'] == 1) ? true : false),
+                    // TODO 'robots'        => $pg['robots'],
                     'parent'        => array('id'        => $pip),
                     'template'        => array(
                         'path'      =>  $pg['template'],
@@ -190,6 +191,7 @@ if( $cf['contents']['cached'] === false ) {
                 $cf['contents']['pages'][$pid] = array(
                     'sitemap'		=> ( ( $pg['se_sitemap'] == 1 ) ? true : false ),
                     'cacheable'		=> ( ( $pg['se_cacheable'] == 1 ) ? true : false ),
+                    // TODO 'robots'        => $pg['robots'],
                     'parent'        => array('id'        => $cid),
                     'canonical'        => $canon,
                     'template'        => array('path'    => $cf['risorse']['pages']['scheda']['template'], 'schema' => $cf['risorse']['pages']['scheda']['schema'], 'theme' => $cf['risorse']['pages']['scheda']['css']),

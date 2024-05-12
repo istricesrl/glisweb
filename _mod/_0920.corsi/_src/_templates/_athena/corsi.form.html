@@ -111,6 +111,15 @@
 -->
 
 				<div class="col-12 col-md-1">
+					<span class="label-top">minimo iscritti</span>
+					{% set subtable = 'metadati' %}
+					{{ frm.input( table, subtable, etc.sub.iscritti_min.idx, 'id', '', '', '', etc.sub.iscritti_min.id, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_min.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_min.idx, 'nome', '', '', '', etc.sub.iscritti_min.nome, 'hidden' ) }}
+					{{ frm.input( table, subtable, etc.sub.iscritti_min.idx, 'testo', '', '', '', etc.sub.iscritti_min.testo ) }}
+				</div>  
+
+				<div class="col-12 col-md-1">
 					<span class="label-top">massimo iscritti</span>
 					{% set subtable = 'metadati' %}
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'id', '', '', '', etc.sub.iscritti_max.id, 'hidden' ) }}
@@ -118,7 +127,7 @@
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'nome', '', '', '', etc.sub.iscritti_max.nome, 'hidden' ) }}
 					{{ frm.input( table, subtable, etc.sub.iscritti_max.idx, 'testo', '', '', '', etc.sub.iscritti_max.testo ) }}
 				</div>  
-
+<!-- NOTA questo campo va bene nella Masi ma NON in GM Servizi, decommentare nella Masi
 				<div class="col-4 col-md-1">
 					<span class="label-top">massimo recuperi</span>
 					{% set subtable = 'metadati' %}
@@ -128,7 +137,7 @@
 					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'nome', '', '', '', etc.sub[ metadato ].nome, 'hidden' ) }}
 					{{ frm.input( table, subtable, etc.sub[ metadato ].idx, 'testo', '', '', '', etc.sub[ metadato ].testo ) }}
 				</div>
-
+-->
 			</div>
 
 			<div class="form-group form-row">
@@ -144,6 +153,7 @@
 			<legend>dettagli corso</legend>
 
 			<div class="form-group form-row">
+<!-- NOTA questi due flag vanno bene per la Masi ma NON per GM Servizi, decommentarli nella Masi
 				<div class="col-4 col-md-auto col-form-label">
 					<div class="form-check">
 						{% set subtable = 'metadati' %}
@@ -153,7 +163,6 @@
 						{{ frm.checkbox( table, subtable, etc.sub.non_applicare_sconti.idx, 'testo', 'non applicare sconti', '', '', etc.sub.non_applicare_sconti.testo ) }}
 					</div>
 				</div>
-
 				<div class="col-4 col-md-auto col-form-label">
 					<div class="form-check">
 						{% set subtable = 'metadati' %}
@@ -161,6 +170,16 @@
 						{{ frm.input( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
 						{{ frm.input( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'nome', '', '', '', etc.sub.non_disponibile_per_recuperi.nome, 'hidden' ) }}
 						{{ frm.checkbox( table, subtable, etc.sub.non_disponibile_per_recuperi.idx, 'testo', 'non disponibile per recuperi', '', '', etc.sub.non_disponibile_per_recuperi.testo ) }}
+					</div>
+				</div>
+-->
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{% set subtable = 'metadati' %}
+						{{ frm.input( table, subtable, etc.sub.prenotabile_online.idx, 'id', '', '', '', etc.sub.prenotabile_online.id, 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.prenotabile_online.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.prenotabile_online.idx, 'nome', '', '', '', etc.sub.prenotabile_online.nome, 'hidden' ) }}
+						{{ frm.checkbox( table, subtable, etc.sub.prenotabile_online.idx, 'testo', 'prenotabile online', '', '', etc.sub.prenotabile_online.testo ) }}
 					</div>
 				</div>
 			</div>

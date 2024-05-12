@@ -50,10 +50,12 @@
                         <span class="label-top">tipologia</span>
                         {{ frm.select( table, '', '', 'id_tipologia', '', etc.select.tipologie_contratti, request ) }}
                     </div>
+<!--
                     <div class="col-12 col-md">
                         <span class="label-top">badge</span>
                         {{ frm.selectBox( table, '', '', 'id_badge', '', etc.select.badge, request, '', '', 1, '', '', 'badge.form', 'badge.form', 'badge', 'id', page, pages, ietf, 'badge' ) }}
                     </div>
+-->
 <!--
                     <div class="col-12 col-md-2">
                         <span class="label-top">badge</span>
@@ -68,7 +70,7 @@
                     {{ frm.input( table, subtable, 0, 'id_ruolo', '', '', '', '34', 'hidden' ) }}
                     <div class="col-12 col-md">
                         <span class="label-top">abbonato</span>
-                        {{ frm.selectBox( table, subtable, 0, 'id_anagrafica', '', etc.select.anagrafica, request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                        {{ frm.selectBox( table, subtable, 0, 'id_anagrafica', '', '', request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
                     </div>
                     {% set subtable = 'contratti_anagrafica' %}
                     {{ frm.input( table, subtable, 1, 'id', '', '', request, '', 'hidden' ) }}

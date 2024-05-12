@@ -6,7 +6,7 @@
      *
      *
      *
-     *
+     * TODO spostare a _130.redirect.php per risparmiare risorse
      *
      * @todo $cf['redirect'] dovrebbe stare in cache, visto che elaborarlo può essere oneroso se i redirect sono tanti
      * @todo finire di documentare
@@ -38,10 +38,13 @@
 			$r,
 			mysqlQuery(
 				$cf['mysql']['connection'],
-				'SELECT id,id_sito,codice,sorgente,destinazione FROM redirect_view'
+				'SELECT id,id_sito,codice_stato_http,sorgente,destinazione FROM redirect_view'
 			)
 	    );
 	}
+
+    // var_dump( $r );
+    // die();
 
     // configurazione extra
 	if( isset( $cx['redirect'] ) ) {
@@ -60,4 +63,4 @@
 	// die( 'cx -> ' . print_r( $cx, true ) );
 	// print_r( $cx['redirect'] );
 	// var_dump( strtok( $_SERVER['REQUEST_URI'], '?' ) );
-	// var_dump( mysqlQuery( $cf['mysql']['connection'], 'SELECT codice,sorgente,destinazione FROM redirect_view' ) );
+	// var_dump( mysqlQuery( $cf['mysql']['connection'], 'SELECT codice_stato_http,sorgente,destinazione FROM redirect_view' ) );

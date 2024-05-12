@@ -14,18 +14,19 @@
     // inizializzo l'array del risultato
 	$status = array();
 
-    # TODO c'è modo di evitare che le mail già inviate vengano generate nuovamente? magari sostituendo REPLACE con INSERT IGNORE?
+    // TODO verificare che le mail già inviate non vengano generate nuovamente
+    // avendo sostituito REPLACE con INSERT IGNORE
 
     // nome file di default
     if( isset( $_REQUEST['idMailing'] ) ) { 
 
         $status['inserimento'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'REPLACE INTO mailing_mail ( id_mailing, id_mail ) '.
-            'SELECT mailing_liste.id_mailing, liste_mail.id_mail '.
-            'FROM liste_mail '.
-            'INNER JOIN mailing_liste ON mailing_liste.id_lista = liste_mail.id_lista '.
-            'WHERE mailing_liste.id_mailing = ?',
+            'INSERT IGNORE INTO mailing_mail ( id_mailing, id_mail )
+                SELECT mailing_liste.id_mailing, liste_mail.id_mail 
+                FROM liste_mail 
+                INNER JOIN mailing_liste ON mailing_liste.id_lista = liste_mail.id_lista 
+                WHERE mailing_liste.id_mailing = ?',
             array(
                 array( 's' => $_REQUEST['idMailing'] )
             )

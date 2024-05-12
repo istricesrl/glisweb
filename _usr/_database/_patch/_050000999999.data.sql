@@ -354,7 +354,8 @@ INSERT IGNORE INTO `iva` (`id`, `aliquota`, `nome`, `descrizione`, `codice`, `ti
 (55,	0.00,	'regime ex art. 36 c. 6 d.l. 41/1995',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 36 comma 6 d.l. 41/1995',	'N5',	NULL),
 (56,	0.00,	'regime ex art. 74 ter d.P.R. 633/1972 (ag. di viaggio)',	'operazione soggetta a regime del margine IVA non esposta in fattura ex art. 74 ter del d.P.R. 633/1972 (regime speciale agenzie di viaggio)',	'N5',	NULL),
 (57,	0.00,	'regime ex art. 17 c. 6 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 comma 6 del d.P.R. 633/1972',	'N6',	NULL),
-(58,	0.00,	'regime ex art. 17 cc. 7 e 8 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 commi 7 e 8 del d.P.R. 633/1972',	'N6',	NULL);
+(58,	0.00,	'regime ex art. 17 cc. 7 e 8 d.P.R. 633/1972 (rev. charge)',	'operazione soggetta a inversione contabile (reverse charge) ex art. 17 commi 7 e 8 del d.P.R. 633/1972',	'N6',	NULL),
+(59,	0.00,	'esente ex art. 36 bis l. 112/2023',	'operazione esente IVA ex art. 36 bis legge 112/2023',	'N4',	NULL);
 
 -- | 050000016800
 
@@ -737,8 +738,9 @@ INSERT IGNORE INTO `regioni` (`id`, `id_stato`, `nome`, `codice_istat`) VALUES
 -- reparti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-09 15:34 Fabio Mosti
-INSERT IGNORE INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_inserimento`, `id_account_inserimento`, `timestamp_aggiornamento`, `id_account_aggiornamento`) VALUES
+INSERT INTO `reparti` (`id`, `id_iva`, `id_settore`, `nome`, `note`, `timestamp_inserimento`, `id_account_inserimento`, `timestamp_aggiornamento`, `id_account_aggiornamento`) VALUES
 (1,	1,	NULL,	'VENDITA IVA 22%',	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	59,	NULL,	'DIDATTICA ASD 0%',	'operazione esente IVA ex art. 36 bis legge 112/2023',	NULL,	NULL,	NULL,	NULL),
 (9,	9,	NULL,	'LOCAZIONE IVA 0%',	'fuori campo IVA ex art. 3 d.P.R. 633/1972',	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000034000
@@ -783,7 +785,8 @@ INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 (34,	NULL,	'abbonato',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
 (35,	NULL,	'proponente',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL),
 (36,	NULL,	'referente fatturazione',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(37,	NULL,	'referente tecnico',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(37,	NULL,	'referente tecnico',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(38,	NULL,	'supervisore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000034200
 
@@ -844,7 +847,9 @@ INSERT IGNORE INTO `ruoli_immagini` (`id`, `id_genitore`, `ordine_scalamento`, `
 (13,	NULL,	NULL,	'utenze',		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
 (14,	NULL,	NULL,	'condominio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1),
 (15,	NULL,	NULL,	'anteprima',	NULL,	NULL,	NULL,	NULL,	1,		1,		1,		NULL,	NULL,	NULL,	NULL,	NULL),
-(16,	NULL,	NULL,	'applicazioni',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(16,	NULL,	NULL,	'applicazioni',	NULL,	NULL,	NULL,	NULL,	1,		1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(17,	NULL,	NULL,	'etichetta',	NULL,	NULL,	NULL,	NULL,	1,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
+(18,	NULL,	NULL,	'miniatura',	NULL,	NULL,	1,	1,	1,	1,	1,	1,	1,	1,	1,	1);
 
 -- | 050000034800
 
@@ -1184,6 +1189,15 @@ INSERT IGNORE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661al
 INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 (1,     1,	    1);
 
+-- | 050000042500
+
+-- step
+INSERT INTO `step` (`id`, `id_funnel`, `ordine`, `nome`, `note`) VALUES
+(1,	NULL,	NULL,	'apertura',	NULL),
+(2,	NULL,	NULL,	'in corso',	NULL),
+(3,	NULL,	NULL,	'esito positivo',	NULL),
+(4,	NULL,	NULL,	'esito negativo',	NULL);
+
 -- | 050000043000
 
 -- task
@@ -1192,15 +1206,9 @@ INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
 INSERT IGNORE INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, `timestamp_esecuzione`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_images.resize.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_mail.queue.send.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(3,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(4,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_indirizzi.geocode.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(5,		6,		2,		6,		2,		NULL,	NULL,	'_src/_api/_task/_comuni.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,		6,		6,		6,		6,		NULL,	NULL,	'_src/_api/_task/_settori.importazione.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,		6,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.fe.passive.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,		7,		5,		NULL,	NULL,	NULL,	NULL,	'_mod/_0400.documenti/_src/_api/_task/_download.note.attive.start.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_7000.mailing/_src/_api/_task/_genera.mail.php',	20,	2,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_0200.attivita/_src/_api/_task/_autotask.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_mod/_0100.pianificazioni/_src/_api/_task/_pianificazioni.populate.php',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(3,		NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'_src/_api/_task/_sms.queue.send.php',	3,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- TODO fare una guida di qualche tipo che spieghi cosa fanno i vari task e quali servono per far funzionare i vari moduli
 
 -- | 050000050000
 
@@ -1223,42 +1231,46 @@ INSERT INTO `tipologie_anagrafica` (`id`, `id_genitore`, `ordine`, `nome`, `sigl
 -- tipologie_attivita
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT IGNORE INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `se_sistema`, `se_stampa`, `se_cartellini`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(3,	NULL,	NULL,	NULL,	'permessi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(4,	NULL,	NULL,	NULL,	'malattie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(5,	NULL,	NULL,	NULL,	'SDI',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(6,	5,	NULL,	'RC',	'ricevuta di consegna',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(7,	5,	NULL,	'MC',	'mancata consegna',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(8,	5,	NULL,	'NS',	'notifica di scarto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(9,	5,	NULL,	'AT',	'presa in carico con impossibilità di recapito',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(10,	5,	NULL,	'DT',	'decorrenza termini',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(11,	5,	NULL,	'EC',	'esito committente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(12,	5,	NULL,	'NE',	'notifica di esito',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(13,	5,	NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(14,	1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(15,	18,	NULL,	NULL,	'frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(16,	1,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(17,	1,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(18,	NULL,	NULL,	NULL,	'didattica',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(19,	18,	NULL,	NULL,	'assenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
-(20,	17,	NULL,	NULL,	'carico ore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(21,	17,	NULL,	NULL,	'promemoria scadenze',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(22,	NULL,	NULL,	NULL,	'stampe',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(23,	22,	NULL,	NULL,	'stampa PDF',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(24,	22,	NULL,	NULL,	'stampa XML',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
-(25,	17,	NULL,	NULL,	'sollecito insoluti',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(26,	16,	NULL,	NULL,	'invio proposta commerciale',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(27,	NULL,	NULL,	NULL,	'invio',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(28,	27,	NULL,	NULL,	'invio via e-mail',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(29,	27,	NULL,	NULL,	'invio via PEC',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(30,	18,	NULL,	NULL,	'docenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(31,	18,	NULL,	NULL,	'co-docenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(32,	18,	NULL,	NULL,	'recupero frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(33,	18,	NULL,	NULL,	'frequenza di prova',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(34,	NULL,	NULL,	NULL,	'mailing',	        NULL,	NULL,	NULL,	NULL,	1,	    NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(35,	34,	NULL,	NULL,	'apertura mail',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_attivita` (`id`, `id_genitore`, `ordine`, `codice`, `nome`, `html_entity`, `font_awesome`, `se_anagrafica`, `se_agenda`, `se_sistema`, `se_stampa`, `se_cartellini`, `se_corsi`, `se_accesso`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	NULL,	'lavoro',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	NULL,	'ferie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	NULL,	'permessi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	NULL,	NULL,	'malattie',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	NULL,	NULL,	'SDI',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	5,	NULL,	'RC',	'ricevuta di consegna',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	5,	NULL,	'MC',	'mancata consegna',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	5,	NULL,	'NS',	'notifica di scarto',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	5,	NULL,	'AT',	'presa in carico con impossibilità di recapito',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	5,	NULL,	'DT',	'decorrenza termini',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	5,	NULL,	'EC',	'esito committente',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	5,	NULL,	'NE',	'notifica di esito',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	5,	NULL,	'MT',	'notifica di metadati per fattura passiva',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	1,	NULL,	NULL,	'produzione',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	18,	NULL,	NULL,	'frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(16,	1,	NULL,	NULL,	'commerciale',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(17,	1,	NULL,	NULL,	'amministrazione',	NULL,	NULL,	NULL,	1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(18,	NULL,	NULL,	NULL,	'didattica',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(19,	18,	NULL,	NULL,	'assenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(20,	17,	NULL,	NULL,	'carico ore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(21,	17,	NULL,	NULL,	'promemoria scadenze',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(22,	NULL,	NULL,	NULL,	'stampe',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(23,	22,	NULL,	NULL,	'stampa PDF',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(24,	22,	NULL,	NULL,	'stampa XML',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(25,	17,	NULL,	NULL,	'sollecito insoluti',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(26,	16,	NULL,	NULL,	'invio proposta commerciale',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(27,	NULL,	NULL,	NULL,	'invio',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(28,	27,	NULL,	NULL,	'invio via e-mail',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(29,	27,	NULL,	NULL,	'invio via PEC',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(30,	18,	NULL,	NULL,	'docenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(31,	18,	NULL,	NULL,	'co-docenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(32,	18,	NULL,	NULL,	'recupero frequenza',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(33,	18,	NULL,	NULL,	'frequenza di prova',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(34,	NULL,	NULL,	NULL,	'mailing',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(35,	34,	NULL,	NULL,	'apertura mail',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(36,	NULL,	NULL,	NULL,	'invio report',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(37,	NULL,	NULL,	NULL,	'accesso',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(38,	37,	NULL,	NULL,	'riuscito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL),
+(39,	37,	NULL,	NULL,	'fallito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000050450
 
@@ -1346,7 +1358,11 @@ INSERT IGNORE INTO `tipologie_documenti` (`id`, `id_genitore`, `ordine`, `codice
 (25,	1,	NULL,	'TD24',	'F',	'fattura differita ex art. 21 c. 4 terzo per. lett. a d.P.R. 633/1972',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (26,	1,	NULL,	'TD25',	'F',	'fattura differita ex art. 21 c. 4 terzo per. lett. b d.P.R. 633/1972',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (27,	1,	NULL,	'TD26',	'F',	'cessione beni ammortizzabili e per passaggi interni',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
-(28,	1,	NULL,	'TD27',	'F',	'fattura per autoconsumo o cessioni gratuite senza rivalsa',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+(28,	1,	NULL,	'TD27',	'F',	'fattura per autoconsumo o cessioni gratuite senza rivalsa',	'fatt.',	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(29,	NULL,	NULL,	NULL,	'D',	'distinta',	'dist.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(30,	29,	NULL,	NULL,	'D',	'distinta analitica',	'dist. anal.',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(31,	29,	NULL,	NULL,	'D',	'distinta easy',	'dist. easy',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(32,	29,	NULL,	NULL,	'D',	'distinta Italia / estero contest, racc. market, ass. market',	'dist. Ita / est',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000052800
 
@@ -1455,7 +1471,7 @@ INSERT IGNORE INTO `tipologie_mastri` (`id`, `id_genitore`, `ordine`, `nome`, `h
 INSERT IGNORE INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
--- | 010000054000
+-- | 050000054000
 
 -- tipologie_pagamenti
 INSERT INTO `tipologie_pagamenti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
@@ -1486,7 +1502,7 @@ INSERT INTO `tipologie_periodi` (`id`, `id_genitore`, `ordine`, `codice`, `nome`
 -- tipologie_prodotti
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 16:17 Fabio Mosti
-INSERT IGNORE INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_colori`, `se_taglie`, `se_periodicita`, `se_tipologia_rinnovo`, `se_dimensioni`, `se_volume`, `se_capacita`, `se_massa`, `se_imballo`, `se_spedizione`, `se_trasporto`, `se_prodotto`, `se_servizio`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `tipologie_prodotti` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `se_colori`, `se_taglie`, `se_periodicita`, `se_tipologia_rinnovo`, `se_dimensioni`, `se_volume`, `se_capacita`, `se_peso`, `se_imballo`, `se_spedizione`, `se_trasporto`, `se_prodotto`, `se_servizio`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	NULL,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'servizio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	2,	NULL,	NULL,	NULL,	NULL),
 (3,	1,	NULL,	'alimentare (peso)',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1580,15 +1596,29 @@ INSERT IGNORE INTO `tipologie_todo` (`id`, `id_genitore`, `ordine`, `nome`, `htm
 -- tipologie_url
 -- tipologia: tabella assistita
 -- verifica: 2021-11-09 12:45 Chiara GDL
-INSERT IGNORE INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	'sito web',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `tipologie_url` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'web',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	NULL,	'social',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	NULL,	'servizi',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	1,	NULL,	'sito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	1,	NULL,	'portale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	1,	NULL,	'e-commerce',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	1,	NULL,	'blog',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	1,	NULL,	'landing page',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	2,	NULL,	'LinkedIn',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	2,	NULL,	'Facebook',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(11,	2,	NULL,	'Twitter / X',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(12,	2,	NULL,	'Instagram',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(13,	2,	NULL,	'YouTube',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(14,	2,	NULL,	'TikTok',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(15,	3,	NULL,	'FTP',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000062000
 
 -- udm
 -- tipologia: tabella standard
 -- verifica: 2021-10-19 13:02 Fabio Mosti
-INSERT IGNORE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_massa`, `se_tempo`, `se_quantita`, `se_area`) VALUES
+INSERT IGNORE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note`, `se_lunghezza`, `se_volume`, `se_peso`, `se_tempo`, `se_quantita`, `se_area`) VALUES
 (1,	NULL,	NULL,	'pezzi',	'pz.',	'unità di misura usata genericamente per misurare le quantità',	NULL,	NULL,	NULL,	NULL,	1,	NULL),
 (2,	NULL,	1,	'millimetro',	'mm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	2,	10,	'centimetro',	'cm',	'https://it.wikipedia.org/wiki/Metro',	1,	NULL,	NULL,	NULL,	NULL,	NULL),

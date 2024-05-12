@@ -1677,7 +1677,7 @@ ALTER TABLE `funnel`
 -- tipologia: tabella gestita
 ALTER TABLE `funnel` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
--- | 0300000151510
+-- | 030000015150
 
 -- giorni
 ALTER TABLE `giorni` 
@@ -2559,7 +2559,7 @@ ALTER TABLE `orari`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
 	ADD KEY `indice` (`id`,`id_tipologia_contratti`,`id_periodicita`,`id_giorno`,`ora_inizio`,`ora_fine`);
 
--- | 030000022300
+-- | 030000022301
 
 -- orari
 ALTER TABLE `orari` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
@@ -3120,7 +3120,7 @@ ALTER TABLE `redirect`
 	ADD KEY `id_sito` (`id_sito`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`codice`,`sorgente`,`destinazione`); 
+	ADD KEY `indice` (`id`,`codice_stato_http`,`sorgente`,`destinazione`);
 
 -- | 030000029401
 
@@ -3868,7 +3868,7 @@ ALTER TABLE `step`
 	ADD KEY `nome` (`nome`),
 	ADD KEY `indice` (`id`,`id_funnel`,`ordine`,`nome`);
 
--- | 030000042201
+-- | 030000042501
 
 -- step
 -- tipologia: tabella standard
@@ -4658,7 +4658,7 @@ ALTER TABLE `udm`
 	ADD UNIQUE KEY `unica` (`id_base`,`sigla`),
 	ADD KEY `id_base` (`id_base`),
 	ADD KEY `se_volume`(`se_volume`),
-	ADD KEY `se_massa`(`se_massa`),
+	ADD KEY `se_peso`(`se_peso`),
 	ADD KEY `se_tempo`(`se_tempo`),
 	ADD KEY `se_lunghezza`(`se_lunghezza`),
 	ADD KEY `se_quantita`(`se_quantita`),

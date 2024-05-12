@@ -24,6 +24,9 @@
     deploy via rsync remoto
     -----------------------
 
+    deploy via Google Cloud
+    -----------------------
+
     struttura del sistema di deploy
     ===============================
     Per comprendere il funzionamento del sistema di deploy tramite Phing del framework, è necessario studiare e comprendere il file

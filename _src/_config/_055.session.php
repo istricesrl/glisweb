@@ -31,7 +31,7 @@
 	timerCheck( $cf['speed'], '-> inizio avvio sessione' );
 
 	// policy di sicurezza
-	ini_set( 'session.cookie_samesite', 'strict' );
+	ini_set( 'session.cookie_samesite', 'lax' );
 	ini_set( 'session.cookie_httponly', 1 );
 	ini_set( 'session.cookie_secure', 1 );
 

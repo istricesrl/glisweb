@@ -1,0 +1,176 @@
+{# MACRO GENERICHE PER LA GENERAZIONE DEGLI ELEMENTI DI NAVIGAZIONE
+    Questa libreria contiene alcune macro utili per generare gli elementi di navigazione (menu, briciole di pane, eccetera). Per coerenza
+    e continuità stilistica fra una pagina e l'altra, si raccomanda di includere sempre questa libreria con il prefisso nav. #}
+
+{# menu() - genera un menu di navigazione strutturato in lista non ordinata
+    Questa funzione genera una serie di elementi <li> che contengono le voci del menù specificato con l'argomento links per la lingua specificata
+    con l'argomento lang; dev'essere chiamata all'interno di un tag <ul> preesistente; gli elementi <li> ricevono di default la classe nav-item
+    mentre gli elementi <a> al loro interno ricevono di default la classe nav-link. TODO l'argomento site non sembra essere utilizzato. #}
+{% macro menu( links, lang, site, query, parent ) %}
+
+    {# importazione di _self #}
+    {% import _self as nav %}
+
+    {# ciclo principale #}
+    {% for id,link in links %}
+
+        {# sostituzione dei caratteri speciali con il trattino #}
+        {% set id = id|replace({'|': "-", "." : "-"}) %}
+
+        {# classe principale #}
+        {% set class = 'nav-item' %}
+
+        {# se il link è attivo #}
+        {% if link.active %}
+            {% set class = class ~ ' active' %}
+        {% elseif link.current %}
+            {% set class = class ~ ' current' %}
+        {% endif %}
+
+        {# se il link ha un genitore #}
+        {% if parent %}
+            {% set class = class ~ ' child-of-' ~ parent %}
+        {% endif %}
+
+        {# costruzione del tag li #}
+        <li class="{{ class }}" data-page-id="{{ id }}">
+
+            {# se è presente una destinazione per il link #}
+            {% if link.location[ lang ] %}
+
+                {# se è presente un'etichetta per il link #}
+                {% if link.label[ lang ] %}
+
+                    {# costruzione dell'attributo href #}
+                    {% set href = link.location[ lang ] %}
+
+                    {# se è presente un'ancora #}
+                    {% if link.ancora %}
+                        {% set href = href ~ '#' ~ link.ancora %}
+                    {% endif %}
+
+                    {# se è presente una query #}
+                    {% if query %}
+                        {% set href = href ~ '?' ~ query %}
+                    {% endif %}
+
+                    {# costruzione dell'attributo href #}
+                    {% set href = 'href="' ~ href ~ '"' %}
+
+                    {# costruzione dell'attributo target #}
+                    {% if link.target %}
+                        {% set target = 'target="' ~ link.target ~ '"' %}
+                    {% endif %}
+
+                    {# costruzione del tag a #}
+                    <a {{ href }} {{ target }} class="nav-link">
+                        {{ link.label[ lang ]|raw }}
+                    </a>
+
+                {% else %}
+                    <!-- link.label non presente per la lingua {{ lang }} / pagina {{ id }} -->
+                    <!-- in questo caso l'elemento <a> non viene mostrato -->
+                {% endif %}
+
+            {% else %}
+                <!-- link.location non presente per la lingua {{ lang }} / pagina {{ id }} -->
+                <!-- in questo caso l'attributo href, l'ancora e la query non vengono mostrate -->
+            {% endif %}
+
+            {# chiamata ricorsiva per i sottomenu #}
+            {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query, id ) }}</ul>{% endif %}
+
+        </li>
+    {% endfor %}
+
+{% endmacro menu %}
+
+{# TODO documentare #}
+{% macro selectMenu( links, lang, site, query, offset ) %}
+{% import _self as nav %}
+{% for link in links %}
+    <option class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}"{% if link.active or link.current %} selected{% endif %}>{{ offset }}{{ link.label[ lang ] }}</option>
+    {% if link.content %}
+    {{ nav.selectMenu( link.content, lang, site, query, offset ~ '— ' ) }}
+    {% endif %}
+{% endfor %}
+{% endmacro %}
+
+{# TODO documentare #}
+{% macro lineMenu( links, lang, site, query ) %}
+{% import _self as nav %}
+<div>
+{% for link in links %}
+    <a class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}">{{ link.label[ lang ] }}</a>{% if not loop.last %} | {% endif %}
+    {% if link.content %}
+    {% set submenu = link.content %}
+    {% endif %}
+{% endfor %}
+</div>
+{% if submenu %}{{ nav.selectMenu( submenu , lang, site, query ) }}{% endif %}
+{% endmacro %}
+
+{# TODO documentare #}
+{% macro tabs( page, pages, lang, etc, form, request ) %}
+{% if pages[ page.id ].etc.tabs %}
+<section class="row d-print-none">
+    <div class="col-12 d-block d-md-none div-tabs">
+        <select class="form-control form-control-sm select-tabs" onchange="window.open( $('option:selected',this).attr('href'), '_self' );">
+            {% for t in pages[ page.id ].etc.tabs %}
+            <option class="nav-item nav-link{% if t == page.id %} active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}"{% if t == page.id %} selected{% endif %}>{{ offset }}{{ pages[ t ].h1[ lang ] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12 d-none d-md-block">
+	<ul class="nav nav-tabs">
+        {% for t in pages[ page.id ].etc.tabs %}
+        {% if not pages[ t ].icon %}
+        <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% elseif pages[ t ].tab[ lang ] %}{{ include( template_from_string( pages[ t ].tab[ lang ] ) | raw ) }}{% else %}{{ include( template_from_string( pages[ t ].h1[ lang ] ) | raw ) }}{% endif %}</a></li>
+        {% endif %}
+	    {% endfor %}
+        <span style="margin-left: auto;">        </span>
+        {% for t in pages[ page.id ].etc.tabs %}
+        {% if pages[ t ].icon %}
+        {% if pages[ t ].onclick %}
+        <li class="nav-item nav-icon d-flex align-items-stretch"><a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" href="{{ pages[  pages[ t ].onclick[ lang ] ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}" target="{{  pages[ t ].target  }}">{{ pages[ t ].icon|raw }}</a></li>
+        {% else %}
+        <li class="nav-item nav-icon d-flex align-items-stretch"><a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{{ pages[ t ].icon|raw }}</a></li>
+        {% endif %}
+        {% endif %}
+	    {% endfor %}
+    </ul>
+    </div>
+</section>
+{% endif %}
+{% endmacro %}
+
+{# TODO documentare #}
+{% macro breadcrumbs( links, lang, site, query ) %}
+{% for link in links %}<li class="breadcrumb-item{% if link.active %} active{% endif %}"><a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a></li>{% endfor %}
+{% endmacro %}
+
+{# TODO documentare #}
+{% macro lineBreadcrumbs( links, lang, site, query, separator ) %}
+{% for link in links %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a>{% if not loop.last %} {% if separator %} {{ separator }} {% else %} | {% endif %}{% endif %}{% endfor %}
+{% endmacro %}
+
+{# TODO documentare #}
+{% macro flags( links, lang, site, query ) %}
+{% for link in links %}<li class="flags-item{% if link.active %} active{% endif %}"><a href="{{ link.location }}{% if query %}?{{ query }}{% endif %}" class="flags-link"><img data-src="{{ site.root }}_src/_img/_flags/{{ link.country }}.png" alt="change language to {{ link.country }}" class="lazyload"></a></li>{% endfor %}
+{% endmacro %}
+
+{# TODO documentare #}
+{% macro sheets( page, pages, lang, etc, form, request ) %}
+{% if pages[ page.id ].etc.sheets %}
+
+    {% for t in pages[ page.id ].etc.sheets %}
+        <div class="text-left  d-flex justify-content-start">
+            <button type="button" class="btn {% if pages[ t ].id == page.id %} btn-dark{% else %}btn-secondary {% endif %}  btn-sm " onclick='window.open( "{{ pages[ t ].path[ lang ]}}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}", "_self" );' data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% else %}{{ pages[ t ].h1[ lang ] }}{% endif %}</button>
+        </div>
+    {% endfor %}
+
+{% endif %}
+
+</section>
+
+{% endmacro %}

@@ -11,6 +11,7 @@
 		    height: hg,
 		    allowedContent: true,
 		    entities: false,
+//			fullPage: true,
 		    toolbarGroups: [
 			{ name: 'document', groups: [ 'mode', 'document', 'doctools' ] },
 			{ name: 'clipboard', groups: [ 'clipboard', 'undo' ] },
@@ -27,7 +28,7 @@
 			{ name: 'about', groups: [ 'about' ] }
 		    ],
 		    removeButtons: 'Save,Undo,Redo,NewPage,Preview,Print,Templates,Find,Replace,SelectAll,Scayt,Form,Checkbox,Radio,TextField,Textarea,Select,Button,ImageButton,HiddenField,CopyFormatting,RemoveFormat,Outdent,Indent,Blockquote,CreateDiv,BidiLtr,BidiRtl,Language,Flash,Smiley,PageBreak,Iframe,ShowBlocks,About,Styles,Cut,Copy,Paste,PasteText,PasteFromWord',
-		    extraPlugins: 'colorbutton,font,colordialog,ckawesome,autogrow,htmlwriter',
+		    extraPlugins: 'colorbutton,font,justify,colordialog,ckawesome,autogrow,htmlwriter',
 		    extraAllowedContent: 'img',
 		    filebrowserBrowseUrl: siteRoot + 'file-browser?type=Files'
 		});

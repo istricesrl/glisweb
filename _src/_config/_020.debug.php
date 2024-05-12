@@ -21,36 +21,52 @@
      *
      * la costante LOG_CURRENT_LEVEL
      * -----------------------------
-     * @todo documentare questo paragrafo e rimandare al capitolo sulle costanti della documentazione tecnica
+     * TODO documentare questo paragrafo e rimandare al capitolo sulle costanti della documentazione tecnica
+     * TODO a tendere questa cosa potrebbe diventare obsoleta
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
-     * @file
+     *
      *
      */
 
-    // costante che descrive il livello corrente di report
-	define( 'REPORT_CURRENT_LEVEL'		, $cf['debug'][ SITE_STATUS ]['*']['report']['lvl'] );
-
-    // imposto la visualizzazione degli errori
-	ini_set( 'display_errors', REPORT_CURRENT_LEVEL );
-
-    // imposto il livello di debug
-	error_reporting( REPORT_CURRENT_LEVEL );
-
-    // costante che descrive il livello corrente di log
-	define( 'LOG_CURRENT_LEVEL'		, $cf['debug'][ SITE_STATUS ]['*']['log']['lvl'] );
+    /**
+     * configurazioni generali per il debug
+     * ====================================
+     * 
+     * 
+     */
 
     // tempo massimo di esecuzione
-    ini_set( 'max_execution_time', 900 );
-
-    // timeout delle connessioni MySQL
-    ini_set( 'mysql.connect_timeout', 900 );
+    ini_set( 'max_execution_time', $cf['debug']['run']['timeout'] );
 
     // timeout dei socket
-    ini_set( 'default_socket_timeout', 900 );
+    ini_set( 'default_socket_timeout', $cf['debug']['socket']['timeout'] );
 
-    // non esporre la versione di PHP
-    ini_set( 'expose_php', 'Off' );
+    /**
+     * sezione report
+     * ==============
+     * 
+     * 
+     */
+
+    // costante che descrive il livello corrente di report
+    define( 'REPORT_CURRENT_LEVEL', $cf['debug'][ SITE_STATUS ]['report']['lvl'] );
+
+    // determina se gli errori vengono mostrati o meno
+    ini_set( 'display_errors', REPORT_CURRENT_LEVEL );
+
+    // determina quali errori vengono mostrati
+    error_reporting( REPORT_CURRENT_LEVEL );
+
+    /**
+     * sezione log
+     * ===========
+     * 
+     * 
+     */
+
+    // costante per     logger() che descrive il livello corrente di log
+    define( 'LOG_CURRENT_LEVEL', $cf['debug'][ SITE_STATUS ]['log']['lvl'] );

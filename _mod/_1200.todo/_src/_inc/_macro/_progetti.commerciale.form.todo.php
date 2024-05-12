@@ -18,7 +18,7 @@
 	$ct['view']['table'] = 'todo';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'todo.form';
+	$ct['view']['open']['page'] = 'todo.commerciale.form';
 
     $ct['view']['cols'] = array(
 	    'id' => '#',
@@ -46,10 +46,10 @@
 	);
     
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'todo.form';
+	$ct['view']['open']['page'] = 'todo.commerciale.form';
 
     // pagina per l'inserimento di un nuovo oggetto
-	$ct['view']['insert']['page'] = 'todo.form';
+	$ct['view']['insert']['page'] = 'todo.commerciale.form';
 
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_progetto';
@@ -63,3 +63,6 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // debug
+    // print_r( $ct['view'] );

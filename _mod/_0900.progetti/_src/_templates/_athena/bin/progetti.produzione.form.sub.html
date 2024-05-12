@@ -1,9 +1,9 @@
 {% macro ruoli( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
@@ -14,10 +14,12 @@
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
 	{{ frm.input( table, subtable, i, 'id_progetto', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
+        <!--
         <div class="col-auto">
             <span class="label-top">funzione</span>
             {{ frm.select( table, subtable, i, 'se_sostituto', '', etc.select.funzioni, request, '', '', '', '', '', disabled  ) }}
         </div>
+        -->
         <div class="col-12 col-md-3">
 		<span class="label-top">tipologia</span>
 		{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_anagrafica, request, '', '', '', '', '', disabled ) }}
@@ -26,6 +28,10 @@
             <span class="label-top">anagrafica</span>
             {{ frm.selectBox( table, subtable, i, 'id_anagrafica', 'anagrafica', etc.select.anagrafica, request, '', '', '', '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, lang, 'anagrafica', disabled ) }}
         </div>
+	    <div class="col">
+			<span class="label-top">specifiche</span>
+			{{ frm.input( table, subtable, i, 'nome', '', '', request, '', '', '', '', disabled ) }}
+		</div>
         {% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">
 		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
@@ -47,9 +53,9 @@
 {% macro categorie( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}

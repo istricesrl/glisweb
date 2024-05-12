@@ -111,6 +111,10 @@
 			)
 		);
 */
+
+		// ...
+		if( isset( $r['id_indirizzo'] ) && ! empty( $r['id_indirizzo'] ) ) {
+
 		// ...
 		$r = mysqlSelectRow(
 			$cf['mysql']['connection'],
@@ -130,6 +134,12 @@
 		// debug
 		 	// die( 'risultato -> ' . print_r( $r, true ) );
 
+		} else {
+
+			$r = array();
+
+		}
+
 		// valore di ritorno
 			return $r;
 
@@ -139,7 +149,7 @@
 
 		$r = anagraficaGetSedeLegale( $id );
 
-		return $r['id'];
+		return isset( $r['id'] ) ? $r['id'] : null;
 
 	}
 

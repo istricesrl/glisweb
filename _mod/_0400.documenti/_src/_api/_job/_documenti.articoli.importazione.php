@@ -44,6 +44,14 @@
             // inizializzo l'array
             $arr = csvFile2array( $job['workspace']['file'], NULL );
 
+            // se memcache è diponibile, salvo $arr
+            if( ! empty( $cf['memcache']['connection'] ) ) {
+                $e = memcacheWrite( $cf['memcache']['connection'], 'JOB_' . $job['id'] . '_DATA', $arr );
+                if( ! empty( $e ) ) {
+                    $job['workspace']['status']['info'][] = 'dataset salvato in cache';
+                }
+            }
+
             // segno il totale delle cose da fare
             $job['totale'] = count( $arr );
 
@@ -64,13 +72,20 @@
             }
 
             // status
+            $job['workspace']['status']['info'][] = 'file: ' . $job['workspace']['file'];
             $job['workspace']['status']['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
             $job['workspace']['status']['info'][] = 'righe trovate: ' . $job['totale'];
+            $job['workspace']['status']['info'][] = 'colonne trovate: ' . implode( ', ', array_keys( $arr[0] ) );
 
         } else {
 
+            // se memcache è diponibile, leggo $arr
+            $arr = memcacheRead( $cf['memcache']['connection'], 'JOB_' . $job['id'] . '_DATA' );
+
             // leggo la lista
-            $arr = csvFile2array( $job['workspace']['file'], NULL );
+            if( empty( $arr ) ) {
+                $arr = csvFile2array( $job['workspace']['file'], NULL );
+            }
 
             // incremento l'indice di lavoro
             $job['corrente']++;

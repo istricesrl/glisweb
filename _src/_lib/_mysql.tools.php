@@ -62,24 +62,40 @@
      * @todo documentare
      *
      */
-    function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = 0, &$e = array() ) {
 
-		return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
+        if( defined( 'MEMCACHE_DEFAULT_TTL' ) && $t == 0 ) {
+            $t = MEMCACHE_DEFAULT_TTL;
+        }
 
-	}
+        return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
+
+    }
 
     /**
      *
      * @todo documentare
      *
      */
-    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array(), &$i = array() ) {
+    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = 0, &$e = array(), &$i = array() ) {
+
+	// debug
+	    // var_dump( $q );
+	    // die();
+
+        if( defined( 'MEMCACHE_DEFAULT_TTL' ) && $t == 0 ) {
+            $t = MEMCACHE_DEFAULT_TTL;
+        }
 
 	// calcolo la chiave della query
 	    $k = md5( $q . serialize( $p ) );
 
 	// cerco il valore in cache
 	    $r = memcacheRead( $m, $k );
+
+	// debug
+	    // var_dump( $r );
+	    // die();
 
 	// se il valore non è stato trovato
 	    if( $r === false || $t === false ) {
@@ -120,7 +136,7 @@
 	    if( empty( $c ) ) {
 
 		// log
-		    logWrite( 'chiamata a mysqlQuery() con connessione assente', 'mysql', LOG_ERR );
+		    logWrite( 'chiamata a mysqlQuery() con connessione assente per eseguire -> ' . $q, 'mysql', LOG_ERR );
 
 		// restituisco false
 		    return false;
@@ -218,7 +234,7 @@
 
 			// log
 			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $p, true ), 'mysql/details', LOG_ERR );
+			    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $p, true ), 'details/mysql/query', LOG_ERR );
 
 			// gestione specifici errori
 			    switch( mysqli_errno( $c ) ) {
@@ -350,7 +366,7 @@
 
 				// log
 				    logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
+					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'details/mysql/query', LOG_ERR );
 
 				// gestione specifici errori
 				    switch( mysqli_errno( $c ) ) {
@@ -402,7 +418,7 @@
 
 				// log
 					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
+					logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'details/mysql/query', LOG_ERR );
 
 				// debug
 					// var_dump( mysqli_errno( $c ) );
@@ -412,7 +428,7 @@
 
 					// log
 						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'mysql/details', LOG_ERR );
+						logWrite( md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . PHP_EOL . 'dati -> ' . print_r( $params, true ), 'details/mysql/query', LOG_ERR );
 
 					// gestione specifici errori
 						switch( mysqli_errno( $c ) ) {
@@ -781,17 +797,27 @@
 	// composizione della query
 	    $q = 'INSERT IGNORE INTO ' . $t . ' (' . implode( ',', $fieldsInsert ) . ') SELECT ' . str_repeat( '?,', count( $fieldsChanged ) ) . implode( ',', $fieldsCopied ) . ' FROM ' . $t . ' WHERE id = ?';
 
-	// esecuzione della query
-		$id = mysqlQuery( $c, $q, $values );
+	// NOTA perché sono stati scambiati $id e $n? è corretto o andava bene prima?
 
+	// esecuzione della query
+		// $id = mysqlQuery( $c, $q, $values );
+		$n = mysqlQuery( $c, $q, $values );
+
+/*
 		if( empty( $id ) ){
 			$id = $n;
+		}
+*/
+
+		if( empty( $n ) ){
+			$n = $id;
 		}
 
 	// popolo l'oggetto
 		$y = mysqlSelectRow(
 			$c, 'SELECT * FROM ' . $t . ' WHERE id = ?',
-			array( array( 's' => $id ) )
+//			array( array( 's' => $id ) )
+			array( array( 's' => $n ) )
 		);
 
 	// debug
@@ -801,7 +827,8 @@
 	    // print_r( $fields );
 
 	// ritorno l'id nel nuovo record inserito
-	    return $id;
+//	    return $id;
+	    return $n;
 
     }
 

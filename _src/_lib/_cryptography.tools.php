@@ -1,20 +1,44 @@
 <?php
 
     /**
-     *
-     *
-     *
-     * @todo finire di documentare
-     *
-     * @file
-     *
+     * libreria di funzioni per la crittografia
+     * 
+     * Questa libreria contiene alcune funzioni utili per crittografare e decrittare file e stringhe.
+     * 
+     * introduzione
+     * ============
+     * Questa libreria è stata creata per semplificare le operazioni più comnuni relative alla crittografia di file
+     * e stringhe. Inoltre incapsulando le specifiche funzioni crittografiche di PHP, consente di mantenere il codice
+     * aggiornato facilmente ogni volta che le conoscenze in materia di crittografia si evolvono.
+     * 
+     * costanti
+     * ========
+     * Questa libreria non definisce alcuna costante.
+     * 
+     * funzioni
+     * ========
+     * Questa libreria è molto semplice e le sue funzioni non sono divise in gruppi.
+     * 
+     * funzione                     | descrizione
+     * -----------------------------|---------------------------------------------------------------
+     * encryptString()              | crittografa una stringa
+     * decryptString()              | decrittografa una stringa
+     * getAvailableHashMethods()    | restituisce un array dei metodi di crittografia disponibili
+     * getAvailableHashMethod()     | trova un metodo di crittografia disponibile
+     * 
+     * 
      */
 
     /**
-     *
-     *
-     * @todo documentare
-     *
+     * questa funzione crittografa una stringa
+     * 
+     * Questa funzione crittografa una stringa tramite una chiave di crittografia data, utilizzando la libreria OpenSSL.
+     * 
+     * @param       string      $s      la stringa da crittografare
+     * @param       string      $k      la chiave di crittografia
+     * 
+     * @return      string              la stringa crittografata
+     * 
      */
     function encryptString( $s, $k ) {
 
@@ -45,10 +69,15 @@
     }
 
     /**
-     *
-     *
-     * @todo documentare
-     *
+     * questa funzione decrittografa una stringa
+     * 
+     * Questa funzione decrittografa una stringa crittografata tramite una chiave di crittografia data, utilizzando la libreria OpenSSL.
+     * 
+     * @param       string      $s      la stringa da decrittografare
+     * @param       string      $k      la chiave di crittografia
+     * 
+     * @return      string              la stringa decrittografata
+     * 
      */
     function decryptString( $s, $k ) {
 
@@ -78,17 +107,34 @@
 
     }
 
-    function getAvailableCryptographyMethod() {
-
-
-    }
-
-    function getAvailableHashMethod() {
+    /**
+     * questa funzione restituisce un array dei metodi di crittografia disponibili
+     * 
+     * Questa funzione restituisce un array contenente i metodi di crittografia disponibili tra quelli indicati come preferiti.
+     * 
+     * @return      array       l'array dei metodi di crittografia disponibili
+     * 
+     */
+    function getAvailableHashMethods() {
 
         $available = hash_algos();
         $preferred = array( 'sha3-512', 'sha512', 'md5' );
-        $algorithms = array_intersect( $preferred, $available );
+        
+        return array_intersect( $preferred, $available );
 
+    }
+
+    /**
+     * questa funzione trova un metodo di crittografia disponibile
+     * 
+     * Questa funzione restituisce il primo metodo di crittografia disponibile tra quelli indicati come preferiti.
+     * 
+     * @return      string      il metodo di crittografia disponibile
+     * 
+     */
+    function getAvailableHashMethod() {
+
+        $algorithms = getAvailableHashMethods();
         $candidate = array_shift( $algorithms );
 
         return $candidate;

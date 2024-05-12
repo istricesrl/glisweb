@@ -2,6 +2,9 @@
 
     function paypalAdvancedGetAccessToken( $k ) {
 
+        // debug
+        // die( print_r( $k, true ) );
+
         // TODO ottengo l'Access Token
         // curl -v -X POST "https://api-m.sandbox.paypal.com/v1/oauth2/token" -u "<CLIENT_ID>:<CLIENT_SECRET>" -H "Content-Type: application/x-www-form-urlencoded"-d "grant_type=client_credentials"
         $result = restCall(
@@ -17,11 +20,11 @@
             $error
         );
 
-    // debug
+        // debug
         // die( print_r( $result, true ) );
         // die( print_r( $error, true ) );
 
-    // recupero l'access token o l'errore
+        // recupero l'access token o l'errore
         if( isset( $result['access_token'] ) ) {
 
             return $result['access_token'];

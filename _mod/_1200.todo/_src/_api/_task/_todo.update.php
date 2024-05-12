@@ -48,7 +48,7 @@
                         $params = array();
 
                         $params[] = array( 's' => $_REQUEST['__l__'] );
-                        $params[] = array( 's' => $_REQUEST['__l__'] );
+                        // $params[] = array( 's' => $_REQUEST['__l__'] );
                         $params[] = array( 's' => $_REQUEST['progetto'] );
 
                         
@@ -68,10 +68,35 @@
                         foreach( $restult as $data ){
 
                             $params[count($params)] =  array( 's' => $data );
+/*
+                            mysqlQuery( $cf['mysql']['connection'],
+                            'UPDATE attivita, todo SET todo.id_luogo = ?, attivita.id_luogo = ?, 
+                                attivita.timestamp_aggiornamento = unix_timestamp(), todo.timestamp_aggiornamento = unix_timestamp() 
+                                WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione = ?  ',
+                            $params
+                            );
+*/
+
+                            $query = 'UPDATE todo SET todo.id_luogo = ?, 
+                            todo.timestamp_aggiornamento = unix_timestamp() 
+                            WHERE todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ';
+
+                            $status['query'][] = $query;
 
                             mysqlQuery( $cf['mysql']['connection'],
-                            'UPDATE attivita, todo SET todo.id_luogo = ?, attivita.id_luogo = ? WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione = ?  ',
-                            $params
+                                $query,
+                                $params
+                            );
+
+                            $query = 'UPDATE attivita, todo SET attivita.id_luogo = ?, 
+                            attivita.timestamp_aggiornamento = unix_timestamp()
+                            WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ';
+
+                            $status['query'][] = $query;
+
+                            mysqlQuery( $cf['mysql']['connection'],
+                                $query,
+                                $params
                             );
 
                             unset($params[count($params)-1]);
@@ -219,7 +244,9 @@
                             $params[] = array( 's' => $todo );
 
                             mysqlQuery(  $cf['mysql']['connection'],
-                            'UPDATE attivita SET id_anagrafica_programmazione = ? WHERE id_anagrafica_programmazione = ?  '.$where.'  AND data_programmazione = ? AND id_todo = ?',
+                            'UPDATE attivita SET id_anagrafica_programmazione = ?, 
+                                attivita.timestamp_aggiornamento = unix_timestamp()
+                                WHERE id_anagrafica_programmazione = ?  '.$where.'  AND data_programmazione = ? AND id_todo = ?',
                             $params
                             );
                         }
@@ -227,14 +254,29 @@
                     }
 
                 }
-
+/*
                 // aggiornare todo_view_static
                 mysqlQuery( $cf['mysql']['connection'], 'CALL todo_view_static( ? )', array( array( 's' => NULL ) ) );
                 logWrite( 'aggiornata todo view statica per tutti i record', 'speed' );
 
                 mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => NULL ) ) );
                 logWrite( 'aggiornata attivita view statica per tutti i record', 'speed' );
+*/
 
+                // aggiorno il report lezioni corsi
+                // TODO fare solo se la todo è una lezione di un corso!
+                $status['job'] = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO job ( nome, job, iterazioni, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ? )',
+                    array(
+                        array( 's' => 'popolazione report lezioni corsi' ),
+                        array( 's' => '_mod/_0920.corsi/_src/_api/_job/_report.lezioni.corsi.popolazione.php' ),
+                        array( 's' => 15 ),
+                        array( 's' => 1 ),
+                        array( 's' => json_encode( array( 'id_corso' => $_REQUEST['progetto'] ) ) )
+                    )
+                );
+            
             } else {
 
                 
@@ -244,6 +286,7 @@
             }
 
             } else {
+
                 // tutti i giorni
                 if( ! empty( $_REQUEST['__l__'] ) ){
 
@@ -253,7 +296,7 @@
                         $params = array();
 
                         $params[] = array( 's' => $_REQUEST['__l__'] );
-                        $params[] = array( 's' => $_REQUEST['__l__'] );
+                        // $params[] = array( 's' => $_REQUEST['__l__'] );
                         $params[] = array( 's' => $_REQUEST['progetto'] );
 
                         
@@ -271,12 +314,34 @@
 
                         $params[] = array( 's' => $_REQUEST['__di__'] );
                         $params[] = array( 's' => $_REQUEST['__df__'] );
+/*
+                        $query = 'UPDATE attivita, todo SET todo.id_luogo = ?, attivita.id_luogo = ?, 
+                        attivita.timestamp_aggiornamento = unix_timestamp(), todo.timestamp_aggiornamento = unix_timestamp() 
+                        WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione 
+                        BETWEEN ? AND ?  ';
+*/
+
+                        $query = 'UPDATE todo SET todo.id_luogo = ?, 
+                        todo.timestamp_aggiornamento = unix_timestamp() 
+                        WHERE todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ';
+
+                        $status['query'][] = $query;
 
                         mysqlQuery( $cf['mysql']['connection'],
-                            'UPDATE attivita, todo SET todo.id_luogo = ?, attivita.id_luogo = ? WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ',
+                            $query,
                             $params
                         );
 
+                        $query = 'UPDATE attivita, todo SET attivita.id_luogo = ?, 
+                        attivita.timestamp_aggiornamento = unix_timestamp()
+                        WHERE todo.id = attivita.id_todo AND todo.id_progetto = ? '.$where.' AND  todo.data_programmazione BETWEEN ? AND ?  ';
+
+                        $status['query'][] = $query;
+
+                        mysqlQuery( $cf['mysql']['connection'],
+                            $query,
+                            $params
+                        );
 
                     } 
                 
@@ -423,7 +488,9 @@
                             foreach($todo as $t){
     
                                 mysqlQuery(  $cf['mysql']['connection'],
-                                'UPDATE attivita SET id_anagrafica_programmazione = ? WHERE  id_anagrafica_programmazione = ?   AND id_todo = ?',
+                                'UPDATE attivita SET id_anagrafica_programmazione = ?, 
+                                    attivita.timestamp_aggiornamento = unix_timestamp() 
+                                    WHERE  id_anagrafica_programmazione = ?   AND id_todo = ?',
                                 array(
                                     array( 's' => $_REQUEST['__newi__'] ),
                                     array( 's' => $_REQUEST['__deletei__'] ),
@@ -437,23 +504,38 @@
 
 
                 }
-
+/*
                 // aggiornare todo_view_static
                 mysqlQuery( $cf['mysql']['connection'], 'CALL todo_view_static( ? )', array( array( 's' => NULL ) ) );
                 logWrite( 'aggiornata todo view statica per tutti i record', 'speed' );
 
                 mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => NULL ) ) );
                 logWrite( 'aggiornata attivita view statica per tutti i record', 'speed' );
-
+*/
+                // aggiorno il report lezioni corsi
+                // TODO fare solo se la todo è una lezione di un corso!
+                $status['job'] = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'INSERT INTO job ( nome, job, iterazioni, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ? )',
+                    array(
+                        array( 's' => 'popolazione report lezioni corsi' ),
+                        array( 's' => '_mod/_0920.corsi/_src/_api/_job/_report.lezioni.corsi.popolazione.php' ),
+                        array( 's' => 15 ),
+                        array( 's' => 1 ),
+                        array( 's' => json_encode( array( 'id_corso' => $_REQUEST['progetto'] ) ) )
+                    )
+                );
 
             }
 
         } else {
 
+
+
         }
-   
 
-
+        // status
+        $status['__status__'] = 'OK';
 
     } else {
 

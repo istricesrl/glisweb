@@ -1,0 +1,176 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+	    {# SELETTORE LINGUA #}
+	    <fieldset>
+		<legend>lingua</legend>
+
+		<div class="form-group form-row">
+		    <div class="col-12">
+				{{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+		    </div>
+		</div>
+
+	    </fieldset>
+
+		{# DEFINIZIONI SPECIALI #}
+		{% set subtable = form.subtable %}
+
+		{# CICLO SULLE LINGUE #}
+		{% set i = 0 %}
+		{% for l in localization.languages %}
+
+		{% set r = request[ table ][ subtable ][ i ] %}
+
+		{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_annuncio', '', '', request, '__parent_id__', 'hidden' ) }}
+	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
+
+	    {% if r.id_lingua == session.__view__.__lang__ %}
+
+	    {# MODULO PRINCIPALE #}
+	    <fieldset>
+			<legend>opzioni URL</legend>
+
+			<div class="form-group form-row">
+		    	<div class="col-12 col-md-4">
+					<span class="label-top">path custom</span>
+					{{ frm.input( table, subtable, i, 'path_custom', 'alias non canonico (IMPORTANTE iniziare sempre con slash)', '', request ) }}
+				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">URL custom</span>
+					{{ frm.input( table, subtable, i, 'url_custom', 'URL custom (per i link interni DEVE iniziare con slash)', '', request ) }}
+				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">rewrite custom</span>
+					{{ frm.input( table, subtable, i, 'rewrite_custom', 'rewrite custom (sostituisce il tag title ai fini del rewrite)', '', request ) }}
+				</div>
+			</div>
+
+	    </fieldset>
+
+	    <fieldset>
+			<legend>meta tag</legend>
+
+			<div class="form-group form-row">
+		    	<div class="col-12 col-md-4">
+					<span class="label-top">tag title</span>
+					{{ frm.input( table, subtable, i, 'title', 'tag title', '', request ) }}
+				</div>
+				<div class="col-12 col-md-8">
+					<span class="label-top">tag keywords</span>
+					{{ frm.input( table, subtable, i, 'keywords', 'tag keywords', '', request ) }}
+				</div>
+			</div>
+			<div class="form-group form-row">
+				<div class="col-12">
+					<span class="label-top">tag description</span>
+					{{ frm.textarea( table, subtable, i, 'description', 'tag description', 3, request ) }}
+				</div>
+			</div>
+
+		</fieldset>
+
+	    <fieldset>
+			<legend>OpenGraph protocol</legend>
+
+			<div class="form-group form-row">
+		    	<div class="col-12 col-md-3">
+					<span class="label-top">OG:type</span>
+					{{ frm.input( table, subtable, i, 'og_type', 'og:type', '', request ) }}
+				</div>
+				<div class="col-12 col-md-3">
+					<span class="label-top">OG:determiner</span>
+					{{ frm.input( table, subtable, i, 'og_determiner', 'og:determiner', '', request ) }}
+				</div>
+				<div class="col-12 col-md-6">
+					<span class="label-top">OG:title</span>
+					{{ frm.input( table, subtable, i, 'og_title', 'og:title', '', request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+		    	<div class="col-12 col-md-4">
+					<span class="label-top">OG:image</span>
+					{{ frm.input( table, subtable, i, 'og_image', 'og:image', '', request ) }}
+				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">OG:audio</span>
+					{{ frm.input( table, subtable, i, 'og_audio', 'og:audio', '', request ) }}
+				</div>
+				<div class="col-12 col-md-4">
+					<span class="label-top">OG:video</span>
+					{{ frm.input( table, subtable, i, 'og_video', 'og:video', '', request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12">
+					<span class="label-top">OG:description</span>
+					{{ frm.textarea( table, subtable, i, 'og_description', 'og:description', 3, request ) }}
+				</div>
+			</div>
+
+		</fieldset>
+
+		{% else %}
+
+		{% for field in ['id','id_pagina','id_lingua','path_custom','url_custom','rewrite_custom','title','keyword','description','og_type','og_determiner','og_title','og_image','og_audio','og_video','og_description'] %}
+	    {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
+		{% endfor %}
+
+		{% endif %}
+
+	    {% set i = i + 1 %}
+	    {% endfor %}
+
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

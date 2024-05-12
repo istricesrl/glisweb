@@ -68,7 +68,6 @@
             $job['workspace']['status']['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
             $job['workspace']['status']['info'][] = 'righe trovate: ' . $job['totale'];
             $job['workspace']['status']['info'][] = 'colonne trovate: ' . implode( ', ', array_keys( $arr[0] ) );
-            $job['workspace']['status']['info'][] = 'contenuto del CSV: ' . print_r( $arr[0], true );
 
         } else {
 

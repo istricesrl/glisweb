@@ -22,6 +22,8 @@
     // tabella gestita
 	$ct['form']['table'] =  '__templates__';
 
+    $ct['form']['__filesystem_mode__'] = 1;
+
     // tendina tipologie file
 	$ct['etc']['select']['tipologie'] = array( 
 	    array( 'id' => 'html', '__label__' => 'schemi HTML/Twig' ),

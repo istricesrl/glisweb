@@ -509,6 +509,7 @@ CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 		anagrafica_certificazioni.codice,
 		anagrafica_certificazioni.data_emissione,
 		anagrafica_certificazioni.data_scadenza,
+		from_unixtime( anagrafica_certificazioni.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_inserimento,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
 			' / ',
@@ -519,7 +520,7 @@ CREATE OR REPLACE VIEW `anagrafica_certificazioni_view` AS
 	FROM anagrafica_certificazioni
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_certificazioni.id_anagrafica
 		LEFT JOIN anagrafica AS emittente ON emittente.id = anagrafica_certificazioni.id_emittente
-		INNER JOIN certificazioni ON certificazioni.id = anagrafica_certificazioni.id_certificazione		
+		LEFT JOIN certificazioni ON certificazioni.id = anagrafica_certificazioni.id_certificazione		
 ;
 
 -- | 090000000700
@@ -701,6 +702,8 @@ CREATE OR REPLACE VIEW attesa_view AS
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		anagrafica_progetti.id_progetto,
 		progetti.nome AS progetto,
+		todo.data_programmazione AS data_lezione,
+		todo.ora_inizio_programmazione AS ora_lezione,
 		anagrafica_progetti.id_ruolo,
 		ruoli_progetti.nome as ruolo,
 		anagrafica_progetti.ordine,
@@ -718,7 +721,8 @@ CREATE OR REPLACE VIEW attesa_view AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = anagrafica_progetti.id_anagrafica
 		LEFT JOIN progetti ON progetti.id = anagrafica_progetti.id_progetto
 		LEFT JOIN ruoli_progetti ON ruoli_progetti.id = anagrafica_progetti.id_ruolo
-WHERE anagrafica_progetti.se_attesa IS NOT NULL
+        LEFT JOIN todo ON todo.id = anagrafica_progetti.id_todo
+    WHERE anagrafica_progetti.se_attesa IS NOT NULL
 ;
 
 -- | 090000001200
@@ -883,6 +887,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 				''
 			)
 		) AS nome,
+		group_concat( DISTINCT prodotti_categorie.id_categoria SEPARATOR ' | ' ) AS id_categorie,
 		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		group_concat( DISTINCT concat_ws( ' ', listini.nome, valute.iso4217, format( prezzi.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' ) AS prezzi,
 		concat_ws(
@@ -1020,11 +1025,14 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		) AS documento,
 		attivita.id_progetto,
 		progetti.nome AS progetto,
+		attivita.id_contratto,
+		concat_ws( ' ', tipologie_contratti.nome, contratti.nome ) AS contratto,
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
 		attivita.id_contratto,
 		attivita.id_matricola,
         attivita.id_immobile,
         attivita.id_step,
+        step.nome AS step,
 		attivita.id_pianificazione,
 		attivita.id_todo,
 		todo.nome AS todo,
@@ -1035,7 +1043,10 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.codice_archivium,
 		attivita.token,
 		attivita.id_account_inserimento,
+		attivita.timestamp_inserimento,
 		attivita.id_account_aggiornamento,
+		attivita.timestamp_aggiornamento,
+		attivita.timestamp_archiviazione,
 		concat(
 			attivita.nome,
 			' / ',
@@ -1054,11 +1065,14 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
 		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
 		LEFT JOIN todo ON todo.id = attivita.id_todo
+		LEFT JOIN step ON step.id = attivita.id_step
 		LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo
 		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
 		LEFT JOIN documenti ON documenti.id = attivita.id_documento
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN contratti ON contratti.id = attivita.id_contratto
+		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 	GROUP BY attivita.id
 ;
 
@@ -1691,6 +1705,7 @@ CREATE OR REPLACE VIEW categorie_prodotti_view AS
 	SELECT
 		categorie_prodotti.id,
 		categorie_prodotti.id_genitore,
+		categorie_prodotti.codice,
 		categorie_prodotti.ordine,
 		categorie_prodotti.nome,
 		categorie_prodotti.template,
@@ -2026,7 +2041,7 @@ DROP TABLE IF EXISTS `consensi_view`;
 
 -- | 090000006401
 
--- consensi
+-- consensi_view
 -- tipologia: tabella standard
 -- verifica: 2022-08-23 11:12 Chiara GDL
 CREATE OR REPLACE VIEW `consensi_view` AS
@@ -2260,10 +2275,10 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ) )  SEPARATOR ', ' ) AS proponenti,
 		group_concat( DISTINCT contraente.codice  SEPARATOR ', ' ) AS codici_contraenti,
 		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ) )  SEPARATOR ', ' ) AS contraenti,
-		group_concat( licenze.codice SEPARATOR ', ' ) AS licenze,
+		group_concat( DISTINCT licenze.codice SEPARATOR ', ' ) AS licenze,
 		max( licenze.postazioni ) AS postazioni,
 		group_concat( DISTINCT tipologie_licenze.nome SEPARATOR ', ' ) AS tipologia_licenza,
-		group_concat( concat_ws( ' ', licenze.codice, tipologie_licenze.nome, licenze.nome ) SEPARATOR ' | ' ) AS dettagli_licenze,
+		group_concat( DISTINCT concat_ws( ' ', licenze.codice, tipologie_licenze.nome, licenze.nome ) SEPARATOR ' | ' ) AS dettagli_licenze,
 		concat_ws( ' ', tipologie_contratti.nome, contratti.nome, group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), NULL )  SEPARATOR ', ' ) ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
@@ -3269,10 +3284,10 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			' del ',
 			documenti.data
 		) AS documento,
-		documenti_articoli.data,
-		documenti_articoli.id_emittente,
+		coalesce( documenti_articoli.data, documenti.data ) AS data,
+		coalesce( documenti_articoli.id_emittente, documenti.id_emittente ) AS id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
-		documenti_articoli.id_destinatario,
+		coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario ) AS id_destinatario,
 		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
 		documenti_articoli.id_reparto,
 		documenti_articoli.id_progetto,
@@ -3356,8 +3371,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 	FROM
 		documenti_articoli
         LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
-		LEFT JOIN anagrafica AS a1 ON a1.id = documenti_articoli.id_emittente
-		LEFT JOIN anagrafica AS a2 ON a2.id = documenti_articoli.id_destinatario
+		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti_articoli.id_emittente, documenti.id_emittente )
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario )
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
 		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
@@ -4520,6 +4535,8 @@ CREATE OR REPLACE VIEW job_view AS
 		job.token,
 		job.se_foreground,
 		job.timestamp_apertura,
+        concat( ( ( unix_timestamp() - job.timestamp_apertura ) / job.corrente ), 's' ) AS velocita,
+        from_unixtime( ceil( unix_timestamp() + ( ( ( unix_timestamp() - job.timestamp_apertura ) / job.corrente ) * ( job.totale - job.corrente ) ) ), '%Y-%m-%d %H:%i' ) AS proiezione,
 		from_unixtime( job.timestamp_apertura, '%Y-%m-%d %H:%i' ) AS data_ora_apertura,
 		job.timestamp_esecuzione,
 		from_unixtime( job.timestamp_esecuzione, '%Y-%m-%d %H:%i' ) AS data_ora_esecuzione,
@@ -4550,9 +4567,9 @@ CREATE OR REPLACE VIEW licenze_view AS
     	licenze.id_tipologia,                
 		tipologie_licenze.nome AS tipologia,               
 		licenze.id_anagrafica,
-		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,               
+		group_concat( DISTINCT coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) ) AS anagrafica,
 		licenze.id_rivenditore,              
-		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS rivenditore,                 
+		group_concat( DISTINCT coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) ) AS rivenditore,
 		licenze.codice,                      
 		licenze.postazioni,                  
 		licenze.nome,                        
@@ -4563,8 +4580,8 @@ CREATE OR REPLACE VIEW licenze_view AS
 		min( rinnovi.data_inizio ) AS data_inizio,
 		max( rinnovi.data_fine ) AS data_fine,
 		max( rinnovi.id_contratto ) AS id_contratto,
-		tipologie_contratti.nome AS tipologia_contratto,
-		group_concat( DISTINCT concat_ws( ' ', software.codice, software.nome ) SEPARATOR ' | ' ) AS software,
+		group_concat( DISTINCT tipologie_contratti.nome SEPARATOR ', ' ) AS tipologia_contratto,
+		group_concat( DISTINCT concat_ws( '§', software.codice, software.nome ) SEPARATOR ' | ' ) AS software,
 		licenze.timestamp_distribuzione,     
 		licenze.timestamp_inizio,            
 		licenze.timestamp_fine,              
@@ -5154,7 +5171,7 @@ CREATE OR REPLACE VIEW `mailing_mail_view` AS
 	FROM mailing_mail
 		INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing
 		INNER JOIN mail ON mail.id = mailing_mail.id_mail
-		INNER JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
+		LEFT JOIN anagrafica AS a1 ON a1.id = mail.id_anagrafica
 ;
 
 -- | 090000020200
@@ -6170,6 +6187,7 @@ CREATE OR REPLACE VIEW `pianificazioni_view` AS
 		pianificazioni.id_todo,
 		pianificazioni.id_attivita,
 		pianificazioni.id_contratto,
+		pianificazioni.id_anagrafica,
 		pianificazioni.nome,
 		pianificazioni.id_periodicita,
 		periodicita.nome AS periodicita,
@@ -7338,7 +7356,7 @@ CREATE OR REPLACE VIEW redirect_view AS
 	SELECT
 		redirect.id,
 		redirect.id_sito,
-		redirect.codice,
+		redirect.codice_stato_http,
 		redirect.sorgente,
 		redirect.destinazione,
 		redirect.id_account_inserimento,
@@ -7346,7 +7364,7 @@ CREATE OR REPLACE VIEW redirect_view AS
 		concat_ws(
 			' ',
 			redirect.sorgente,
-			redirect.codice,
+			redirect.codice_stato_http,
 			redirect.destinazione
 		) AS __label__
 	FROM redirect
@@ -8729,9 +8747,9 @@ CREATE OR REPLACE VIEW step_view AS
 		funnel.nome AS funnel,
 		step.ordine,
 		step.nome,
-		concat(
-			funnel.nome,
+		concat_ws(
 			' / ',
+			funnel.nome,
 			step.nome
 		) AS __label__
 	FROM step
@@ -9569,6 +9587,7 @@ CREATE OR REPLACE VIEW `tipologie_periodi_view` AS
 		tipologie_periodi.font_awesome,
 		tipologie_periodi.se_corsi,
 		tipologie_periodi.se_tesseramenti,
+		tipologie_periodi.se_abbonamenti,
 		tipologie_periodi.id_account_inserimento,
 		tipologie_periodi.id_account_aggiornamento,
 		tipologie_periodi_path( tipologie_periodi.id ) AS __label__
@@ -9629,7 +9648,7 @@ CREATE OR REPLACE VIEW `tipologie_prodotti_view` AS
 		tipologie_prodotti.se_servizio,
 		tipologie_prodotti.se_volume,
 		tipologie_prodotti.se_capacita,
-		tipologie_prodotti.se_massa,
+		tipologie_prodotti.se_peso,
 		tipologie_prodotti.id_account_inserimento,
 		tipologie_prodotti.id_account_aggiornamento,
 		tipologie_prodotti_path( tipologie_prodotti.id ) AS __label__
@@ -10391,7 +10410,7 @@ CREATE OR REPLACE VIEW udm_view AS
 		udm.sigla,
 		udm.se_lunghezza,
 		udm.se_volume,
-		udm.se_massa,
+		udm.se_peso,
 		udm.se_tempo,
 		udm.se_quantita,
 		udm.se_area,

@@ -18,8 +18,8 @@
         array(
             array( 's' => 'importazione automatica documenti' ),
             array( 's' => '_mod/_0400.documenti/_src/_api/_job/_documenti.articoli.importazione.php' ),
-            array( 's' => 15 ),
-            array( 's' => 1 ),
+            array( 's' => 30 ),
+            array( 's' => NULL ),
             array( 's' => json_encode(
                 array(
                     'file' => 'var/contenuti/upload/'.basename( $_REQUEST['file'] )

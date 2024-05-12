@@ -27,9 +27,11 @@
 
     // id della vista
     // TODO fare una funzione getViewId()
+    /*
     $ct['view']['id'] = md5(
 		$ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__']
 	);
+    */
         
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'lezioni.form';
@@ -72,6 +74,7 @@
         'data_programmazione' => 'data',
         'ora_inizio_programmazione' => 'ora',
 //        'ora_fine_programmazione' => 'ora fine',
+        'note_programmazione' => 'ora',
         'id_progetto' => 'ID corso',
         'corso' => 'corso',
         'discipline' => 'disciplina',
@@ -97,6 +100,7 @@
 	    'data_programmazione' => 'no-wrap',
         'ora_inizio_programmazione' => 'd-none',
         'ora_fine_programmazione' => 'd-none',
+        'note_programmazione' => 'd-none',
 //        'data_attivita' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left',
@@ -105,7 +109,7 @@
     );
 
     // inclusione filtri speciali
-	// $ct['etc']['include']['filters'] = 'inc/attivita.view.filters.html';
+	$ct['etc']['include']['filters'] = 'inc/lezioni.view.filters.html';
 
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {

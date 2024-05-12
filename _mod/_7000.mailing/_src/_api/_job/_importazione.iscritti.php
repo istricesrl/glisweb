@@ -64,8 +64,10 @@
             }
 
             // status
+            $job['workspace']['status']['info'][] = 'file: ' . $job['workspace']['file'];
             $job['workspace']['status']['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
             $job['workspace']['status']['info'][] = 'righe trovate: ' . $job['totale'];
+            $job['workspace']['status']['info'][] = 'colonne trovate: ' . implode( ', ', array_keys( $arr[0] ) );
 
         } else {
 
@@ -104,10 +106,10 @@
                 // status
                 $job['workspace']['status']['error'][] = 'nome lista non settato per la riga ' . $job['corrente'];
 
-            } elseif( ( ! isset( $row['id'] ) || empty( $row['id'] ) ) && ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) ) {
-
-                // status
-                $job['workspace']['status']['error'][] = 'codice utente e codice fiscale non settati per la riga ' . $job['corrente'];
+#            } elseif( ( ! isset( $row['id'] ) || empty( $row['id'] ) ) && ( ! isset( $row['codice'] ) || empty( $row['codice'] ) ) && ( ! isset( $row['codice_fiscale'] ) || empty( $row['codice_fiscale'] ) ) ) {
+#
+#                // status
+#                $job['workspace']['status']['error'][] = 'codice utente e codice fiscale non settati per la riga ' . $job['corrente'];
 
             } elseif( ! isset( $row['mail'] ) || empty( $row['mail'] ) ) {
 
@@ -117,6 +119,7 @@
             } else {
 
                 // trovo l'ID dell'anagrafica
+                if( ( isset( $row['id'] ) && ! empty( $row['id'] ) ) || ( isset( $row['codice'] ) && ! empty( $row['codice'] ) ) || ( isset( $row['codice_fiscale'] ) && empty( $row['codice_fiscale'] ) ) ) {
                 $idAnagrafica = mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
@@ -129,6 +132,9 @@
                     ),
                     'anagrafica'
                 );
+                } else {
+                    $idAnagrafica = NULL;
+                }
 
                 // se sono presenti delle categorie...
                 if( isset( $row['categorie'] ) && ! empty( $row['categorie'] ) ) {

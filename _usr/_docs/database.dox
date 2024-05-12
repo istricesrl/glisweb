@@ -503,8 +503,13 @@
 
 
 
-    view statiche
-    -------------
+    view statiche e report
+    ----------------------
+
+    [...] la differenza fra view statiche e report è che le view statiche si riferiscono principalmente a un'entità, mentre i report mettono assieme più entità per
+    produrre un dato di sintesi; ad esempio la anagrafica_view_static è una view statica perché contiene soltanto informazioni sulle anagrafiche e sulle tabelle
+    collegate, mentre il report delle giacenze di magazzino mette insieme dati diversi per produrre il totale della giacenza, ossia non esiste una tabella delle giacenze
+    di cui fare la vista statica, ma solo il report.  
 
     [...] per ogni view statica dovrebbe essere predisposto quanto segue:
 

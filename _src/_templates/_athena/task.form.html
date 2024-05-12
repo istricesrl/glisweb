@@ -45,8 +45,8 @@
 		{# MODULO PRINCIPALE #}
 	
 	    <fieldset>
-            <legend>dati generali</legend>
-    
+            <legend>pianificazione task</legend>
+
             <div class="form-group form-row">
                 <div class="col">
                     <span class="label-top">minuto</span>
@@ -57,20 +57,41 @@
                     {{ frm.input( table, '', '', 'ora', '', '', request ) }}
                 </div>
                 <div class="col">
-                    <span class="label-top">giorno/mese</span>
+                    <span class="label-top">giorno del mese</span>
                     {{ frm.input( table, '', '', 'giorno_del_mese', '', '', request ) }}
                 </div>
                 <div class="col">
                     <span class="label-top">mese</span>
-                    {{ frm.input( table, '', '', 'mese', '', '', request ) }}
+                    {# frm.input( table, '', '', 'mese', '', '', request ) #}
+                    {{ frm.select( table, '', '', 'mese', '', etc.select.mesi, request ) }}
                 </div>
                 <div class="col">
-                    <span class="label-top">giorno/sett.</span>
-                    {{ frm.input( table, '', '', 'giorno_della_settimana', '', '', request ) }}
+                    <span class="label-top">giorno della sett.</span>
+                    {# frm.input( table, '', '', 'giorno_della_settimana', '', '', request ) #}
+                    {{ frm.select( table, '', '', 'giorno_della_settimana', '', etc.select.giorni_della_settimana, request ) }}
                 </div>
                 <div class="col">
                     <span class="label-top">settimana</span>
                     {{ frm.input( table, '', '', 'settimana', '', '', request ) }}
+                </div>
+                <!--
+                <div class="col-12 col-md-3">
+                    <span class="label-top">token</span>
+                    {{ frm.input( table, '', '', 'token', '', '', request ) }}
+                </div>
+                -->
+            </div>
+
+        </fieldset>
+
+        <fieldset>
+            <legend>esecuzione task</legend>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md-8">
+                    <span class="label-top">script da eseguire</span>
+                    {# frm.input( table, '', '', 'task', '', '', request ) #}
+                    {{ frm.selectRequired( table, '', '', 'task', '', etc.select.task, request ) }}
                 </div>
                 <div class="col">
                     <span class="label-top">iterazioni</span>
@@ -80,26 +101,23 @@
                     <span class="label-top">delay</span>
                     {{ frm.input( table, '', '', 'delay', '', '', request ) }}
                 </div>
-                <div class="col-12 col-md-5">
-                    <span class="label-top">token</span>
-                        {{ frm.input( table, '', '', 'token', '', '', request ) }}
-                </div>
             </div>
-    
+
+        </fieldset>
+
+        <fieldset>
+            <legend>stato del task</legend>
+
             <div class="form-group form-row">
-                <div class="col-12 col-md-8">
-                    <span class="label-top">script da eseguire</span>
-                    {{ frm.input( table, '', '', 'task', '', '', request ) }}
-                </div>
-                <div class="col-12 col-md-4">
-                <span class="label-top">data e ora esecuzione task</span>
-                {{ frm.datetime( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">data e ora esecuzione task</span>
+                    {{ frm.datetime( table, '', '', 'timestamp_esecuzione', '', '', request ) }}
                 </div>
             </div>
 
-            </fieldset>
-    
-	    {# BOTTONI E COMANDI DEL MODULO #}
+        </fieldset>
+
+        {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>

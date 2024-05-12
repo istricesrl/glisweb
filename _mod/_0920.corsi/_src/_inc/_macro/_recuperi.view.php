@@ -30,7 +30,7 @@
 	);
         
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'presenze.form';
+	// $ct['view']['open']['page'] = 'presenze.form';
 	$ct['view']['open']['table'] = 'attivita';
 
 /*

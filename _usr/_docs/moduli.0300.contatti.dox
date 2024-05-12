@@ -252,6 +252,19 @@
 
     utilizzo di reCAPTCHA
     =====================
+    Per utilizzare reCAPTCHA oltre ovviamente alle chiavi pubblica e privata che dovete inserire nella configurazione, vi servono poche cose nel contesto del
+    modulo che volete proteggere:
+
+    - l'inclusione del codice di reCAPTCHA
+    - un campo hidden con un nome convenzionale che contenga il valore da trasmettere al backend
+    - una funzione JavaScript che si occupi di inserire il valore nel campo hidden e di fare il submit del form
+    - un bottone che inneschi la funzione Javascript
+
+    Premesso che il codice di reCAPTCHA si può includere normalmente specificandolo fra i JS della pagina o direttamente del template, facciamo qualche
+    esempio relativo al codice del form; iniziamo dal campo hidden:
+
+    <input type="hidden" name="prefissoModulo[nomeModulo][__recaptcha_token__]" value="" id="nomeFormRecaptchaToken">
+
 
     \code{.html}
     {% import '_bin/_privacy.html' as prv %}

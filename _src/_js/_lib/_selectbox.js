@@ -24,9 +24,9 @@
 
 	    // lunghezza minima del filtro
 	    if( $.isNumeric( select.attr( 'min-filter' ) ) ) {
-		var min = select.attr( 'min-filter' );
+		    var min = select.attr( 'min-filter' );
 	    } else {
-		var min = 0;
+		    var min = 0;
 	    }
 
 		// se la select è disabilitata
@@ -44,7 +44,7 @@
 
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'data-required' ) == 'true' ) {
-		$( box ).prop( 'required', true );
+		    $( box ).prop( 'required', true );
 	    }
 
 	    // prelevo il valore corrente
@@ -52,12 +52,20 @@
 	    var current = $( select ).find( 'option:selected' ).text().trim();
 		var currvalue = $( select ).val();
 
-	    // imposto il valore corrente
+        if( current == '' ) {
+            current = currvalue;
+        }
+
+        // console.log( 'valore corrente: ' + current + '/' + currvalue );
+        // alert( 'valore corrente: ' + current + '/' + currvalue );
+
+        // imposto il valore corrente
 	    // aggiungo l'attributo required
 	    if( $( select ).attr( 'placeholder-api' ) ) {
 			$( box ).val( $( select ).attr( 'placeholder-api' ) );
 			// se, cliccando sulla selectbox per scrivere, non scompare il placeholder, decommentare questo codice
-		/*	$( box ).on( "click", function() {
+		/* da qui... */
+			$( box ).on( "click", function() {
 				if( $( box ).val() == $( select ).attr( 'placeholder-api' ) ){
 					$( box ).val('');
 				}
@@ -67,12 +75,25 @@
 					$( box ).val( $( select ).attr( 'placeholder-api' ) );
 				}
 			  });
-		*/
+		/* ...fin qui era commentato, perché? */
 		} else {
 			box.val( current );
 		}
 
-	    // TODO creo la <ul> con le opzioni
+        if( current != '' ) {
+            // alert( 'prelevo #' + current + ' da ' + $( select ).attr( 'populate-api' ) );
+            getws(
+                '/api/' + $( select ).attr( 'populate-api' ) + '/' + current,
+                null,
+                function( data ) {
+                    // alert( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
+                    box.val( data.__label__ );
+                    $( select ).val( current );
+                }
+            );
+        }
+
+        // TODO creo la <ul> con le opzioni
 	    var lista = $('<ul class="combobox-dropdown remove-on-duplicate" id="' + base_id + '_list"> </ul>');
 
 		// evento custom per mostrare l'intera lista
@@ -92,7 +113,7 @@
 	    box.keyup( function( e, d ) {
 
 		// debug
-		console.log( d );
+		// console.log( d );
 
 		// filtro
 		if( typeof d !== 'undefined' && typeof d.val !== 'undefined' ) {
@@ -219,6 +240,7 @@
 				var valore = $( li ).attr( 'value' );
 				$( li ).bind( 'click', function() {
 					$( select ).val( valore );
+					$( select ).change();
 					$( box ).val( $.parseHTML( opzione )[0].nodeValue );
 					$( box ).addClass( 'combobox-base-background' );
 					$( box ).removeClass( 'combobox-active-background' );

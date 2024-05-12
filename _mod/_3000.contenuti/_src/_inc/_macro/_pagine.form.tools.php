@@ -57,7 +57,7 @@
     }
 
     // ...
-    $ct['etc']['upload'] = array_merge(
+    $ct['etc']['upload']['all'] = array_merge(
         mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM immagini WHERE id_pagina = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) )
         ,
         mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM file WHERE id_pagina = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) )
@@ -71,17 +71,31 @@
     );
 
     // ...
-    $ct['etc']['upload'] = array_merge(
-        $ct['etc']['upload'],
+    $ct['etc']['upload']['all'] = array_merge(
+        $ct['etc']['upload']['all'],
         getRecursiveFileList( path2custom( DIR_BASE . '/' . $template ) )
     );
 
     // dati della vista per i moduli
     foreach( $cf['mods']['active']['array'] as $mod ) {
-        $ct['etc']['upload'] = array_merge(
-            $ct['etc']['upload'],
+        $ct['etc']['upload']['all'] = array_merge(
+            $ct['etc']['upload']['all'],
             getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ) )
         );
+    }
+
+    // ...
+    // TODO questo e gli altri file latest andrebbero spostati in var/spool/latest/
+    foreach( $ct['etc']['stages'] as $stage ) {
+        $stage = strtolower( $stage['id'] );
+        if( file_exists( DIR_VAR .'latest.deploy.'.$stage.'.conf' ) ) {
+            $refDate = filemtime( DIR_VAR .'latest.deploy.'.$stage.'.conf' );
+            foreach( $ct['etc']['upload']['all'] as $file ) {
+                if( filemtime( $file ) > $refDate ) {
+                    $ct['etc']['upload'][ $stage ] = $file;
+                }
+            }
+        }
     }
 
     // debug

@@ -2,9 +2,9 @@
 {% macro pianificazioni( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
-<fieldset id="{{ subtable ~ legend|replace({' ': '_'}) }}">
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
 	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
-    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_'}), legend ) }}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
 	{% for i in -1..t %}
@@ -15,9 +15,9 @@
 	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
 	{{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
 	<div class="form-group form-row">
-		{% if request[ table ][ subtable ][ i ].entita %}
+		{% if request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ].entita %}
 		{{ frm.input( table, subtable, i, 'entita', '', '', request, '', 'hidden', '', '', disabled ) }}
-		{% if request[ table ][ subtable ][ i ].entita == 'documenti_articoli' %}
+		{% if request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ].entita == 'documenti_articoli' %}
 		<div class="col-2 col-md">
 			<span class="label-top">nome</span>
 			{{ frm.inputRequired( table, subtable, i, 'model_nome', '', '', request, '', '', '', disabled  ) }}
@@ -46,7 +46,7 @@
 			<span class="label-top">listino</span>
 			{{ frm.selectRequired( table, subtable, i, 'model_id_listino', '', etc.select.listini, request, '', '', '', '', disabled ) }}
 	    </div>
-		{% elseif request[ table ][ subtable ][ i ].entita == 'pagamenti' %}
+		{% elseif request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ].entita == 'pagamenti' %}
 		<div class="col-auto">
 			<span class="label-top">modalità</span>
 			{{ frm.selectRequired( table, subtable, i, 'model_id_modalita_pagamento', '', etc.select.modalita_pagamento, request, '', '', '', disabled ) }}

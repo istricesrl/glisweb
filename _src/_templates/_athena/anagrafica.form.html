@@ -99,7 +99,9 @@
 	    {# SUBFORM URL #}
 	    {{ sub.url( table, 'url', 'URL', site, page, pages, ietf, etc, request, session ) }}
 
-		{% if anagrafica.indirizzi.inserimento.rapido == 1 %}
+        {# TODO APPROFONDIRE BENE QUESTA COSA DEGLI INDIRIZZI RAPIDI anche nella sub.indirizzi #}
+
+        {% if anagrafica.indirizzi.inserimento.rapido == 1 %}
 		{# SUBFORM INDIRIZZI RAPIDI #}
 	    {{ sub.indirizzi_rapidi( table, 'anagrafica_indirizzi', 'indirizzi', site, page, pages, ietf, etc, request, session ) }}
 		{% else %}

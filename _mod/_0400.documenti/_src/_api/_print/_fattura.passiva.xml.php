@@ -11,7 +11,7 @@
      */
 
     // inclusione del framework
-	require '../../../../../_src/_config.php';
+	require_once '../../../../../_src/_config.php';
 
 	// se è settato il documento
 	if( isset( $_REQUEST['__documento__'] ) ) {

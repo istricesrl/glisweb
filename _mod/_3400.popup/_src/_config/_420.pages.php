@@ -17,8 +17,10 @@
             $cf['mysql']['connection'],
             'SELECT popup.* FROM popup '
             .'LEFT JOIN popup_pagine ON popup_pagine.id_popup = popup.id '
-            .'WHERE (popup_pagine.id_pagina = ? OR popup.se_ovunque = 1 ) AND popup.id_sito = ? AND template IS NOT NULL AND schema_html IS NOT NULL '
-            .'AND popup.template = ?',
+			.'LEFT JOIN pubblicazioni ON pubblicazioni.id_popup = popup.id '
+			.'LEFT JOIN tipologie_pubblicazioni ON pubblicazioni.id_tipologia = tipologie_pubblicazioni.id  '
+		    .'WHERE (popup_pagine.id_pagina = ? OR popup.se_ovunque = 1 ) AND popup.id_sito = ? AND popup.schema_html IS NOT NULL '
+            .'AND popup.template = ? AND tipologie_pubblicazioni.se_pubblicato = 1',
             array(
                 array( 's' => $cf['contents']['page']['id'] ),
                 array( 's' => SITE_CURRENT ),

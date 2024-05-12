@@ -528,7 +528,7 @@
         $s = preg_replace('/\s+/', ' ', $s); // reduce all multiple whitespace to a single space
       
         if( $s != $string ) {
-            logWrite( $string . ' pulito a ' . $s, 'csv/cleanstring', LOG_ERR );
+            logWrite( $string . ' pulito a ' . $s, 'details/csv/cleanstring', LOG_ERR );
         }
 
         return $s;
@@ -542,5 +542,17 @@
             return ( utf8_encode( utf8_decode( $string ) ) == $string ) ? 'UTF-8' : 'ASCII';
 
         }
+
+    }
+
+    /**
+     * questa funzione rimuove da una stringa tutti i caratteri diversi da numeri, vigola e punto
+     * 
+     * @todo documentare
+     * 
+     */
+    function extractNumber( $string ) {
+
+        return preg_replace( '/[^0-9\.\,]/', '', $string );
 
     }

@@ -44,6 +44,14 @@
             // inizializzo l'array
             $arr = csvFile2array( $job['workspace']['file'], NULL );
 
+            // se memcache è diponibile, salvo $arr
+            if( ! empty( $cf['memcache']['connection'] ) ) {
+                $e = memcacheWrite( $cf['memcache']['connection'], 'JOB_' . $job['id'] . '_DATA', $arr );
+                if( ! empty( $e ) ) {
+                    $job['workspace']['status']['info'][] = 'dataset salvato in cache';
+                }
+            }
+
             // segno il totale delle cose da fare
             $job['totale'] = count( $arr );
 
@@ -64,13 +72,20 @@
             }
 
             // status
+            $job['workspace']['status']['info'][] = 'file: ' . $job['workspace']['file'];
             $job['workspace']['status']['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
             $job['workspace']['status']['info'][] = 'righe trovate: ' . $job['totale'];
+            $job['workspace']['status']['info'][] = 'colonne trovate: ' . implode( ', ', array_keys( $arr[0] ) );
 
         } else {
 
+            // se memcache è diponibile, leggo $arr
+            $arr = memcacheRead( $cf['memcache']['connection'], 'JOB_' . $job['id'] . '_DATA' );
+
             // leggo la lista
-            $arr = csvFile2array( $job['workspace']['file'], NULL );
+            if( empty( $arr ) ) {
+                $arr = csvFile2array( $job['workspace']['file'], NULL );
+            }
 
             // incremento l'indice di lavoro
             $job['corrente']++;
@@ -155,6 +170,7 @@
                         'nome' => ( ( isset( $job['riga']['nome'] ) ) ? $job['riga']['nome'] : NULL ),
                         'cognome' => ( ( isset( $job['riga']['cognome'] ) ) ? $job['riga']['cognome'] : NULL ),
                         'denominazione' => ( ( isset( $job['riga']['denominazione'] ) ) ? $job['riga']['denominazione'] : NULL ),
+                        'note' => ( ( isset( $job['riga']['note'] ) ) ? $job['riga']['note'] : NULL ),
                         'note_commerciali' => ( ( isset( $job['riga']['note_commerciali'] ) ) ? $job['riga']['note_commerciali'] : NULL )
                     ),
                     'anagrafica'
@@ -259,7 +275,10 @@
 
                         // status
                         if( empty( $idAssociazioneIndirizzo ) ) {
-                            $job['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'] . ' anagrafica ' . $idAnagrafica;
+                            $job['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . 
+                                $job['riga']['indirizzo'] . $job['riga']['civico'] . ' ' . 
+                                $job['riga']['comune'] . ' non associato per la riga ' . $job['corrente'] . 
+                                ' anagrafica ' . $idAnagrafica;
                         }
 
                     } else {
@@ -366,7 +385,7 @@
                     $indirizzi = explode( '|', $job['riga']['pec'] );
 
                     // TODO qui si potrebbe sotto esplodere per § e dare il ruolo alla mail
-                    // tipo amministrazione@stocazzo.com§4|commerciale@stocazzo.com§2 eccetera
+                    // tipo note#amministrazione@stocazzo.com§4|altre note#commerciale@stocazzo.com§2 eccetera
 
                     // per ogni categoria...
                     foreach( $indirizzi as $indirizzo ) {

@@ -80,7 +80,7 @@
     
      // tendina funzioni
 	$ct['etc']['select']['funzioni'] = array(
-	    array( 'id' => NULL, '__label__' => 'titolare' ),
+	    array( 'id' => 0, '__label__' => 'titolare' ),
 	    array( 'id' => 1, '__label__' => 'sostituto' )
 	);
 

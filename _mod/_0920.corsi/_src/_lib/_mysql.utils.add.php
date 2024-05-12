@@ -12,12 +12,12 @@
 
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT progetti.id, progetti.id_periodo, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura, 
+            'SELECT progetti.id, progetti.id_periodo, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_inserimento, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura, 
             if(
                 progetti.data_accettazione > CURRENT_DATE(), "futuro",
                 if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), "attivo", "concluso" )
             ) AS stato
-            FROM progetti INNER JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia 
+            FROM progetti LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia 
             WHERE progetti.id = ?',
             array( array( 's' => $idCorso ) )
         );
@@ -30,6 +30,32 @@
         `posti_disponibili` char(255) DEFAULT NULL,
         `timestamp_aggiornamento` int(11) DEFAULT NULL,        
         */
+
+        // print_r( $riga );
+
+        if( empty( $riga['timestamp_inserimento'] ) ) {
+            $riga['timestamp_inserimento'] = time();
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE progetti SET timestamp_inserimento = ? WHERE id = ?',
+                array(
+                    array( 's' => $riga['timestamp_inserimento'] ),
+                    array( 's' => $riga['id'] )
+                )
+            );
+        }
+
+        if( empty( $riga['timestamp_aggiornamento'] ) ) {
+            $riga['timestamp_aggiornamento'] = time();
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE progetti SET timestamp_aggiornamento = ? WHERE id = ?',
+                array(
+                    array( 's' => $riga['timestamp_aggiornamento'] ),
+                    array( 's' => $riga['id'] )
+                )
+            );
+        }
 
         $riga['fasce'] = mysqlSelectValue(
             $cf['mysql']['connection'],
@@ -182,6 +208,8 @@
 
         global $cf;
 
+        // var_dump( $idLezione );
+
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT todo.id, todo.id_tipologia, tipologie_todo.nome AS tipologia, todo.codice, 
@@ -191,11 +219,12 @@
 		        todo.id_indirizzo, todo.id_luogo, 
                 todo.timestamp_apertura,
                 todo.data_scadenza, todo.ora_scadenza, todo.data_programmazione, todo.ora_inizio_programmazione,
+                dayname( todo.data_programmazione ) AS note_programmazione,
                 todo.ora_fine_programmazione, todo.anno_programmazione, todo.settimana_programmazione, todo.ore_programmazione,
                 todo.data_chiusura, todo.nome, todo.id_contatto, todo.id_progetto, todo.id_pianificazione, todo.id_immobile,
                 todo.data_archiviazione, todo.id_account_inserimento, todo.timestamp_inserimento, 
                 todo.id_account_aggiornamento, todo.timestamp_aggiornamento,
-                progetti.nome AS corso, group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR " | " ) AS discipline,
+                progetti.nome AS corso, m1.testo AS se_prenotabile_online, group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR " | " ) AS discipline,
                 concat(
                     todo.nome,
                     coalesce( concat( " per ", a2.denominazione, concat( a2.cognome, " ", a2.nome ) ), "" ),
@@ -207,8 +236,9 @@
                 LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
                 LEFT JOIN progetti ON progetti.id = todo.id_progetto
                 LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
-                LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
-            WHERE todo.id = ? AND todo.id_tipologia IN (14, 15, 18) 
+                LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1
+                LEFT JOIN metadati AS m1 ON m1.id_progetto = progetti.id AND m1.nome = "prenotabile_online"
+            WHERE todo.id = ? -- AND todo.id_tipologia IN (14, 15, 18) 
             GROUP BY todo.id ',
             array( array( 's' => $idLezione ) )
         );
@@ -217,9 +247,17 @@
 
             if( empty( $riga['timestamp_aggiornamento'] ) ) {
                 $riga['timestamp_aggiornamento'] = time();
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'UPDATE todo SET timestamp_aggiornamento = ? WHERE id = ?',
+                    array(
+                        array( 's' => $riga['timestamp_aggiornamento'] ),
+                        array( 's' => $riga['id'] )
+                    )
+                );
             }
 
-            $posti = mysqlSelectValue(
+            $riga['numero_posti'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT coalesce( max( m.testo ), "∞" )
                 FROM metadati AS m
@@ -231,14 +269,14 @@
 
             $riga['numero_alunni'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT count( distinct( id_anagrafica ) )
+                'SELECT coalesce( count( distinct( id_anagrafica ) ), 0 )
                 FROM attivita
                 WHERE attivita.id_todo = ?
                 AND attivita.id_tipologia IN ( 15, 32 )',
                 array( array( 's' => $riga['id'] ) )
             );
 
-            $riga['posti_disponibili'] = $riga['numero_alunni'] . ' / ' . $posti;
+            $riga['posti_disponibili'] = $riga['numero_alunni'] . ' / ' . $riga['numero_posti'];
 
             $riga['posti_prova'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
@@ -296,10 +334,24 @@
                 array( array( 's' => $riga['id'] ) )
             );
 */
-            mysqlInsertRow(
+            // inserisco la riga
+            $idLezione = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 $riga,
                 '__report_lezioni_corsi__'
+            );
+
+            // ...
+            // var_dump( $idLezione );
+
+            // aggiorno le tabelle collegate che possono innescare l'aggiornamento
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE attivita SET timestamp_aggiornamento = ? WHERE id_todo = ? AND timestamp_aggiornamento IS NULL',
+                array(
+                    array( 's' => time() ),
+                    array( 's' => $idLezione )
+                )
             );
 
         } else {

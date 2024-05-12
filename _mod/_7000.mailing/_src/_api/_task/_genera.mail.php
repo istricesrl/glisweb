@@ -11,6 +11,11 @@
      *
      */
 
+    // debug
+	ini_set('display_errors', 1);
+	ini_set('display_startup_errors', 1);
+	error_reporting(E_ALL);
+
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    require '../../../../../_src/_config.php';
@@ -23,7 +28,12 @@
 	$status['info'][] = 'inizio operazioni di generazione mail';
 
     // chiave di lock
-	$status['token'] = getToken( __FILE__ );
+	if( ! isset( $status['token'] ) ) {
+	    $status['token'] = getToken( __FILE__ );
+	}
+
+    // debug
+	// var_dump( $status['token'] );
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -38,7 +48,10 @@
                 array( 's' => $_REQUEST['id'] )
             )
         );
-        
+
+        // status
+        $status['info'][] = 'selezione forzata';
+
     } else {
 
         // token della riga
@@ -54,6 +67,9 @@
                 array( 's' => $status['token'] )
             )
 	    );
+
+        // status
+        $status['info'][] = 'selezione normale';
 
     }
 
@@ -83,6 +99,15 @@
 			)
 		);
 
+        // status
+        $status['info'][] = 'selezione diretta';
+
+		// debug
+		// print_r( $status );
+		// print_r( $_REQUEST );
+		// print_r( $row );
+		// die();
+
 	} else {
 
 		// prelevo una riga dalla coda
@@ -95,23 +120,35 @@
 			'FROM mailing_mail '.
 			'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
 			'INNER JOIN mail ON mail.id = mailing_mail.id_mail '.
-			'INNER JOIN anagrafica ON anagrafica.id = mail.id_anagrafica '.
+			'LEFT JOIN anagrafica ON anagrafica.id = mail.id_anagrafica '.
 			'WHERE token = ? ',
 			array(
 				array( 's' => $status['token'] )
 			)
 		);
 
+        // status
+        $status['info'][] = 'selezione da token (' . $status['token'] . ')';
+
+        // debug
+        // print_r( $row );
+        // var_dump( $status['token'] );
+
 	}
 
-	// debug
-	// print_r( $row );
 
     // se c'è almeno una mail da inviare
     if( ! empty( $row ) ) {
 
+        // debug
+        // $status['info'][] = $row;
+		// var_dump( $row );
+
 		// calcolo il token di cancellazione
 		$row['mtk'] = md5( $row['id_mail'].$row['indirizzo'] );
+
+		// log
+		logWrite( print_r( $row, true ), 'details/mailing/' . $row['id'], LOG_ERR );
 
 		// inizializzo il template
 		$tpl = array(
@@ -119,9 +156,11 @@
 			'nome' => $row['nome']
 		);
 
-		// prelevo i contenuti
-		$cnts = mysqlCachedQuery(
-			$cf['memcache']['connection'],
+		// log
+		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+
+        // prelevo i contenuti
+		$cnts = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT contenuti.*,lingue.ietf FROM contenuti '.
 			'INNER JOIN lingue ON lingue.id = contenuti.id_lingua '.
@@ -129,29 +168,39 @@
 			array( array( 's' => $row['id'] ) )
 		);
 
+		// log
+		logWrite( print_r( $cnts, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+
+        // debug
+        // var_dump( $cnts );
+        // die();
+
 		// ciclo sui contenuti
 		foreach( $cnts as $cnt ) {
 			$cnt['testo'] = path2url( $cnt['testo'], 1, $row['id'], $row['id_mail'] );
 			$tpl[ $cnt['ietf'] ] = array(
 			'from' => array( $cnt['mittente_nome'] => $cnt['mittente_mail'] ),
-# dopo		'to' => array( $row['destinatario'] => $row['indirizzo'] ),
 			'to' => array(),
-# prelevare dall'invio				'to_cc' => array( $cnt['destinatario_cc_nome'] => $cnt['destinatario_cc_mail'] ),
 			'to_cc' => array(),
-# prelevare dall'invio				'to_bcc' => array( $cnt['destinatario_ccn_nome'] => $cnt['destinatario_ccn_mail'] ),
 			'to_bcc' => array(),
 			'oggetto' => $cnt['cappello'], // è giusto cappello?
 			'testo' => $cnt['testo']
 			);
-# TODO appendere automaticamente:
-# <p>ricevi questa mail perché sei iscritto alla nostra newsletter, per cancellarti <a href="https://crm.eurosnodi.it/disiscrizione?mtk={{ row.mtk }}&amp;isc={{ row.id_mail }}">clicca qui</a></p>
-# se nel testo non è presente la stringa:
-# mtk={{ row.mtk }}&amp;isc={{ row.id_mail }}
+
+            // TODO appendere automaticamente:
+            // <p>ricevi questa mail perché sei iscritto alla nostra newsletter,
+            // per cancellarti <a href="https://crm.eurosnodi.it/disiscrizione?mtk={{ row.mtk }}&amp;isc={{ row.id_mail }}">clicca qui</a></p>
+            // se nel testo non è presente la stringa:
+            // mtk={{ row.mtk }}&amp;isc={{ row.id_mail }}
+            // e se sono disponibili i valori di row.mtk e row.id_mail
+
 		}
 
-		// prelevo gli allegati
-		$files = mysqlCachedQuery(
-			$cf['memcache']['connection'],
+        // debug
+		// var_dump($tpl );
+
+        // prelevo gli allegati
+		$files = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT file.*,lingue.ietf FROM file '.
 			'INNER JOIN lingue ON lingue.id = file.id_lingua '.
@@ -164,17 +213,52 @@
 			$tpl[ $file['ietf'] ]['attach'][ basename( $file['path'] ) ] = $file['path'];
 		}
 
+        // debug
+		// var_dump( $tpl );
+		// die();
+
+		// log
+		logWrite( print_r( $tpl, true ), 'details/mailing/' . $row['id'], LOG_ERR );
+
+        // debug
+        // die( print_r( $tpl, true ) );
+
 		// invio la mail
 		$invio = queueMailFromTemplate(
 			$cf['mysql']['connection'],
 			$tpl,
-# TODO prelevare i dati dai metadati del mailing e inserirli come dt
-# TODO prelevare i dati del destinatario e inserirli come ds
 			array( 'row' => $row ),
 			$row['timestamp_invio'],
 			array( $row['destinatario'] => $row['indirizzo'] ),
-			$cf['localization']['language']['ietf']
-		);
+			$cf['localization']['language']['ietf'],
+            array(),
+            array(),
+            array(),
+            array(
+                'List-unsubscribe' => 
+                    '<mailto:'.$cnt['mittente_mail'].'?subject=Unsubscribe%20:%20{'.$row['indirizzo'].'}>,'.
+                    '<' . $cf['site']['url'] . 'disiscrizione?mtk=' . md5( $row['id_mail'] . $row['indirizzo'] ) . '&isc=' . $row['id_mail'] . '>',
+                'List-Unsubscribe-Post' => 'List-Unsubscribe=One-Click'
+            )
+        );
+
+        // TODO prelevare i dati dai metadati del mailing e inserirli come dt
+        // TODO prelevare i dati del destinatario e inserirli come ds
+
+        // debug
+        // die( 'h='.$invio );
+
+        /**
+         * TODO list-unsubscribe
+         * bisogna aggiungere a ogni invio di newsletter gli header per il list-unsubscribe
+         * https://crm.eurosnodi.it/disiscrizione?mtk={{ row.mtk }}
+         * 
+         */
+
+        // debug
+        // echo 'invio';
+		// var_dump( $invio );
+		// die();
 
 		// aggiorno la coda
 		if( $invio ) {
@@ -196,16 +280,25 @@
 						array( 's' => $status['token'] )
 					)
 				);
-				
+
+                // debug
+				// echo 'mailing_mail aggiornata ' . $status['id'] . '<br>';
+
 			}
 
 			// status
 			$status['info'][] = 'mail generata correttamente con id #' . $invio;
 
+            // debug
+            // die( 'mail generata correttamente con id #' . $invio );
+
 		} else {
 
 			// status
 			$status['err'][] = 'impossibile generare la mail';
+
+            // debug
+            // die( 'impossibile generare la mail' );
 
 		}
 				

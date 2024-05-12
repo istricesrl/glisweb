@@ -56,14 +56,14 @@
 
         // headers
         $filename = 'ore.'.$_REQUEST['__anno__'].'.'.$_REQUEST['__mese__'].'.xml';
-        header('Content-Type: text/html/force-download');
+        header('Content-Type: text/html; charset=utf-8');
         header('Content-Disposition: attachment; filename='.$filename);
 
         // inizializzo l'oggetto XML
 		$xml = new XMLWriter();
 
 	    // specifico il file di destinazione
-		$xml->openURI( 'php://output' );
+		$xml->openURI( DIR_TMP . microtime( true ) . '.xml' );
 
 	    // inizio il documento
 		$xml->startDocument( '1.0', 'UTF-8' );
@@ -144,44 +144,6 @@
 
 	    // scrittura su file
 		$xml->flush();
-
-        /*
-
-        // esportazione
-		if( ! empty( $ct['anagrafica'] ) ) {
-
-            // debug
-            // die( print_r($ct['anagrafica'] ) );
-
-			header('Content-Type: text/csv');
-			header('Content-Disposition: attachment; filename="esportazione contatti mail.csv"');
-
-			$csv[0] = array( 'contatto', 'tipologia', 'indirizzo', 'civico', 'cap', 'comune', 'provincia', 'latitudine', 'longitudine' );
-
-            foreach($ct['anagrafica'] as $anagrafica ) {
-
-                $csv[] = array(
-                    $anagrafica['contatto'],
-                    $anagrafica['tipologia'],
-                    $anagrafica['indirizzo'],
-                    $anagrafica['civico'],
-                    $anagrafica['cap'],
-                    $anagrafica['comune'],
-                    $anagrafica['provincia'],
-                    $anagrafica['latitudine'],
-                    $anagrafica['longitudine']
-                ); 
-
-			}
-
-			$fp = fopen('php://output', 'wb');
-			foreach ($csv as $line) {fputcsv($fp, $line, ',');}
-			fclose($fp);
-
-
-			} else { buildText( 'nessun risultato per la ricerca effettuata' ); }
-
-		*/
 
 	} else {
 

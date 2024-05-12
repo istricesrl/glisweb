@@ -26,7 +26,9 @@
 	logWrite( 'richiesta di elaborazione della coda delle mail in uscita', 'mail' );
 
     // chiave di lock
-	$status['token'] = getToken( __FILE__ );
+    if( ! isset( $status['token'] ) ) {
+        $status['token'] = getToken( __FILE__ );
+    }
 
     // inizializzo la variabile per l'invio
 	// $mail = NULL;
@@ -40,7 +42,7 @@
         // token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET token = ? WHERE id = ? AND token IS NULL',
+            'UPDATE mail_out SET token = ? WHERE id = ?',
             array(
                 array( 's' => $status['token'] ),
                 array( 's' => $_REQUEST['id'] )
@@ -55,8 +57,8 @@
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET token = ? WHERE token IS NULL '.
-            'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
+            'UPDATE mail_out SET token = ? WHERE token IS NULL 
+                ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
@@ -81,9 +83,9 @@
 		// token della riga
         $status['id'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'UPDATE mail_out SET token = ? WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ) '.
-            'AND token IS NULL '.
-            'ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
+            'UPDATE mail_out SET token = ? WHERE ( timestamp_invio <= unix_timestamp() OR timestamp_invio IS NULL ) 
+                AND token IS NULL 
+                ORDER BY ordine ASC, timestamp_invio ASC LIMIT 1',
             array(
                 array( 's' => $status['token'] )
             )
@@ -114,8 +116,39 @@
 			: $cf['smtp']['server']
 		);
 
+		// NOTA questa cosa è super grezza, non consente di salvare il selettore DKIM che è inchiodato a glisweb
+		// la firma DKIM segue il dominio e in ogni dominio può essercene più d'una, ognuna identificata da un selettore diverso
+
+		// ricavo il dominio di invio
+		// NOTA fin qui va bene
+		$mittente = unserialize( $mail['mittente'] );
+		$dominio = explode( '@', array_shift( $mittente ) );
+		$dominio = $dominio[1];
+
+		// debug
+		// print_r( unserialize( $mail['mittente'] ) );
+		// var_dump( $dominio );
+
+		// se è configurato il DKIM per il dominio
+		// NOTA qui il selettore dovrebbe essere indicato da...?
+		if( isset( $cf['smtp']['dkim'][ $dominio ]['glisweb'] ) ) {
+			$dkim = array(
+				'domain' => $dominio,
+				'pasw' => $cf['smtp']['dkim'][ $dominio ]['glisweb']['password']
+			);
+		} else {
+			$dkim = array(
+				'domain' => '',
+				'pasw' => ''
+			);
+		}
+
 		// debug
 		// var_dump( $smtp );
+		// var_dump( $dkim );
+
+		// log
+		logWrite( 'DKIM: ' . print_r( $dkim, true ), 'dkim', LOG_DEBUG );
 
 		// invio la mail
 		$r = sendMail(
@@ -130,7 +163,9 @@
 			unserialize( $mail['headers'] ),
 			$smtp['username'],
 			$smtp['password'],
-			$smtp['port']
+			$smtp['port'],
+			$dkim['domain'],
+			$dkim['pasw']
 		);
 
 		// controllo l'esito dell'invio
