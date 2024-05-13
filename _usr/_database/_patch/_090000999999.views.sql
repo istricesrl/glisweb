@@ -2626,7 +2626,15 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 		corrispondenza.timestamp_inserimento,
 		corrispondenza.id_account_aggiornamento,
 		corrispondenza.timestamp_aggiornamento,
-		concat_ws( ' ', corrispondenza.id ) AS __label__
+		concat_ws(
+            ' ',
+            'da',
+            coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+            concat( '(', organizzazioni_path( corrispondenza.id_organizzazione_mittente ), ')' ),
+            tipologie_corrispondenza_path( corrispondenza.id_tipologia ),
+            'per',
+            coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' )
+        ) AS __label__
 	FROM corrispondenza
         INNER JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
 		LEFT JOIN pesi_tipologie_corrispondenza ON pesi_tipologie_corrispondenza.id = corrispondenza.id_peso
@@ -2679,7 +2687,16 @@ CREATE OR REPLACE VIEW atti_view AS
 		corrispondenza.timestamp_inserimento,
 		corrispondenza.id_account_aggiornamento,
 		corrispondenza.timestamp_aggiornamento,
-		concat_ws( ' ', corrispondenza.id ) AS __label__
+		concat_ws(
+            ' ',
+            'da',
+            coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
+            concat( '(', organizzazioni_path( corrispondenza.id_organizzazione_mittente ), ')' ),
+            tipologie_corrispondenza_path( corrispondenza.id_tipologia ),
+            'per',
+            coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ),
+            concat( '(', concat_ws( ', ', coalesce( concat( 'C.F. ', destinatario_codice_fiscale ), ''), coalesce( concat( 'P.IVA ', destinatario_partita_iva ) ) ), ')' )
+        ) AS __label__
 	FROM corrispondenza
         INNER JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
 		LEFT JOIN pesi_tipologie_corrispondenza ON pesi_tipologie_corrispondenza.id = corrispondenza.id_peso

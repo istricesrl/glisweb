@@ -20,6 +20,8 @@
 
     // print_r( $ct['page']['contents'] );
 
+    // TODO qui ordinare i prodotti per prezzo, dimensione, colore, ecc. secondo i filtri applicati dall'utente
+
     if( isset( $ct['page']['metadati']['id_prodotto'] )  && ! empty( $ct['page']['metadati']['id_prodotto'] ) ) {
 
         $ct['page']['contents']['articoli'] = mysqlQuery( $cf['mysql']['connection'],
@@ -29,7 +31,7 @@
             .'LEFT JOIN contenuti ON ( contenuti.id_articolo = articoli.id AND contenuti.id_lingua = ? ) '
             .'LEFT JOIN lingue_view ON lingue_view.id = contenuti.id_lingua '
             .'WHERE articoli.id_prodotto = ? '
-            .'GROUP BY articoli.id ',
+            .'GROUP BY articoli.id ORDER BY contenuti.h1 ',
             array(
                 array( 's' => $cf['localization']['language']['id'] ),
                 array( 's' => $ct['page']['metadati']['id_prodotto'] )

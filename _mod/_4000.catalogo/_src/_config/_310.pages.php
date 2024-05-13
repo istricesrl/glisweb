@@ -32,11 +32,12 @@ if ($cf['contents']['cached'] === false) {
         'SELECT categorie_prodotti.* FROM categorie_prodotti ' .
             'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_prodotti = categorie_prodotti.id ' .
             'INNER JOIN tipologie_pubblicazioni ON tipologie_pubblicazioni.id = pubblicazioni.id_tipologia '.
+            'LEFT JOIN contenuti ON contenuti.id_categoria_prodotti = categorie_prodotti.id '.
             'WHERE categorie_prodotti.id_sito = ? ' .
             'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) ' .
             'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ' .
             'AND tipologie_pubblicazioni.se_pubblicato = 1 '.
-            'GROUP BY categorie_prodotti.id ',
+            'GROUP BY categorie_prodotti.id ORDER BY contenuti.h1 ',
         array(
             array('s' => SITE_CURRENT),
             array('s' => time()),
