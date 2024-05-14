@@ -26,13 +26,20 @@
     // log
 	logWrite( 'metto in coda la mail', 'mail', LOG_DEBUG );
 
+	
+	$to = explode(";",str_replace(" ", "",$_REQUEST['__to__']));
+
+	foreach( $to as $t ) {
+		$destinatari[$t] = $t;
+	}
+		
 
 	// template per la mail
 	    $template = array(
 		    'type' => 'twig',
 		    'it-IT' => array(
 			'from' => array( $_REQUEST['__from__'] => $_REQUEST['__from__'] ),
-			'to' => array( $_REQUEST['__to__'] => $_REQUEST['__to__'] ),
+			'to' => $destinatari,
 			'oggetto' => $_REQUEST['__og__'],
 			'testo' => substr($_REQUEST['__t__'], 1,sizeof($_REQUEST['__t__'])-2 )
 #			'testo' => $_REQUEST['__t__']
