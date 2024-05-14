@@ -88,6 +88,18 @@
 		    });
 		});
 
+		// gestione popup che devono apparire su tutte le pagine
+		$('.popup-modal').on('hidden.bs.modal', function () {
+			var id = $(this).attr('id');
+			$.ajax({
+				type: "POST",
+				url: '/_mod/_3400.popup/_src/_api/_task/_popup.dismiss.php',
+				data: {idPopup:id},
+				success: function(data) {
+				}
+			  });
+		});
+
 	    // ???
 		$('.in').modal('show');
 

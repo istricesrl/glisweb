@@ -89,7 +89,11 @@
 				<div class="col-12 col-md-3">
 					<span class="label-top">classe attivazione</span>
 					{{ frm.input( table, '', '', 'classe_attivazione', '', '', request ) }}
-					</div>
+				</div>
+				<div class="col-12 col-md-auto">
+					<span class="label-top">sito</span>
+					{{ frm.selectRequired( table, '', '', 'id_sito', '', etc.select.siti, request) }}
+				</div>  
 				<div class="col-auto col-form-label">
 					<span class="label-top">&nbsp;</span>
 					<div class="form-check">
