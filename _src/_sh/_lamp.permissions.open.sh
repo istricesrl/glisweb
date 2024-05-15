@@ -4,7 +4,7 @@
 #
 # NOTA dopo aver terminato l'installazione, eseguire _lamp.permission.secure.sh
 #
-# TODO finire di documentare questo script
+# TODO documentare questo script
 #
 
 ## pulizia schermo

@@ -5,7 +5,7 @@
      *
      * Questa libreria è inserita solo per garantire la retrocompatibilità con il vecchio sistema di log del framework.
      *
-     * TODO finire di documentare
+     * TODO documentare
      *
      */
 

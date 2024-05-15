@@ -1343,6 +1343,8 @@ CREATE TABLE IF NOT EXISTS `coupon` (
   `sconto_fisso` decimal(15,2) DEFAULT NULL,
   `se_multiuso` tinyint(1) DEFAULT NULL,
   `se_globale` tinyint(1) DEFAULT NULL,
+  `causale` text DEFAULT NULL,
+  `causale_id_contratto` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

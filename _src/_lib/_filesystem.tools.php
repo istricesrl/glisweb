@@ -465,7 +465,7 @@
      * @param string        $f    il nome del file dal quale leggere comprensivo di percorso
      * @param string        $m    la modalita' con cui si desidera aprire il file
      *
-     * TODO finire di documentare
+     * TODO documentare
      *
      */
     function readFromFile( $f, $m = FILE_READ_AS_ARRAY ) {

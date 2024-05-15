@@ -10,7 +10,7 @@
      *
      * TODO usare glob per trovare i dizionari (non limitarsi a 'generic')
      * TODO ogni modulo dovrebbe avere i suoi dizionari
-     * TODO finire di documentare
+     * TODO documentare
      * TODO completare l'inserimento dei dizionari
      *
      *

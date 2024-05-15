@@ -6,11 +6,11 @@
      *
      *
      *
-     *
+     * TODO documentare meglio sia i file dei dizionari sia il modo in cui si può utilizzare l'array $cf['tr']
      *
      * TODO usare glob per trovare i dizionari (non limitarsi a 'generic')
      * TODO ogni modulo dovrebbe avere i suoi dizionari
-     * TODO finire di documentare
+     * TODO documentare
      * TODO completare l'inserimento dei dizionari
      *
      * TODO salvare in cache i dizionari

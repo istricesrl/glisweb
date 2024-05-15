@@ -158,6 +158,8 @@
                             'id_sede_emittente' => trovaIdSedeLegale( trovaIdAziendaGestita() ),
                             'id_destinatario' => $articolo['destinatario_id_anagrafica'],
                             'id_sede_destinatario' => trovaIdSedeLegale( $articolo['destinatario_id_anagrafica'] ),
+                            'id_condizione_pagamento' => 2,
+                            'esigibilita' => 'I',
                             'data' => date( 'Y-m-d' ),
                             'numero' => $numero,
                             'sezionale' => $sezionale,
@@ -178,8 +180,11 @@
                                 'id_carrelli_articoli' => $articolo['id'],
                                 'id_articolo' => $articolo['id_articolo'],
                                 'quantita' => 1,
+                                'id_udm' => 1,
+                                'importo_netto_totale' => $articolo['prezzo_lordo_finale'],
                                 'importo_lordo_totale' => $articolo['prezzo_lordo_finale'],
                                 'id_listino' => 1,
+                                'id_reparto' => 5,
                                 'nome' => 'riga generata automaticamente per il carrello #' . $idCarrello . ' documento #' . $idDocumento
                             ),
                             'documenti_articoli'

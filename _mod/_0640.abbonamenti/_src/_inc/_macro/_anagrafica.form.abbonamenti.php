@@ -84,6 +84,10 @@
     // azioni
     foreach( $ct['view']['data'] as &$row ) {
         if( is_array( $row ) ) {
+
+            // azioni
+            $buttons = '';
+
 /*
             $pagato = mysqlSelectValue(
                 $cf['mysql']['connection'],
@@ -169,6 +173,11 @@
             } elseif( ( $rinnovi['pagato'] == $rinnovi['ordinato'] ) || ( $rinnovi['pagato_carrelli'] == $rinnovi['ordinato'] ) ) {
                 $row['pagamento'] = 'totalmente pagato € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
             }
+
+            $href = $cf['contents']['pages']['abbonamenti.form.tools']['url'][ LINGUA_CORRENTE ] . '?contratti[id]=' . $row['id_contratto'] . '&__backurl__='. $ct['page']['backurl'][LINGUA_CORRENTE];
+            $buttons .= '<a href="'.$href.'"><i class="fa fa-cogs"></i></a>';
+
+            $row[ NULL ] = $buttons;
 
         }
     }

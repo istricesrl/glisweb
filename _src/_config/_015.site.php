@@ -35,7 +35,7 @@
      * TODO visto che la licenza è per deploy (non per sito) dovrebbe essere $cf['license'] e non $cf['site']['license']
      * TODO verificare se dietro proxy serve di considerare X-FORWARDED-FOR anziché HTTP_HOST https://stackoverflow.com/questions/11452938/how-to-use-http-x-forwarded-for-properly
      * TODO documentare FILE_STATUS
-     * TODO finire di documentare
+     * TODO documentare
      *
      *
      *

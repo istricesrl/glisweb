@@ -121,6 +121,9 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__']['rows'] = 20;
 	}
 
+	// TODO risolvere il problema per cui se la pagina corrente non contiene più righe (ad es. dopo una cancellazione) la paginazione non viene aggiornata
+	// e ci si trova su una pagina bianca
+
 #    // paginazione
 #	$ct['view']['data']['__pager__'] = $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__'];
 

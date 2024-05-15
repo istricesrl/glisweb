@@ -87,8 +87,8 @@
      * Per comprendere meglio il funzionamento di questo file si consiglia di leggerne il codice con questo schema a portata
      * di mano.
      * 
-     * gestione delle chiamate HTTP
-     * ----------------------------
+     * il file .htaccess e la gestione delle chiamate HTTP
+     * ---------------------------------------------------
      * Le chiamate alla cartella dove è installato il framework vengono smistate tramite il file .htaccess in diversi modi; il
      * più semplice è l'accesso diretto a un file nel caso che questo esista. Ad esempio se è presente il file prova.html nella
      * document root sarà possibile utilizzare un URL del tipo:
@@ -113,6 +113,8 @@
      *         +--------+      +-------+      |  I  | <--------------------------+
      *         | output | <--- | macro | <--- |     |
      *         +--------+      +-------+      +-----+
+     * 
+     * TODO documentare relativamente al file .htaccess anche il file _etc/_robots/_robots.txt e in generale il ruolo del file robots.txt
      * 
      * organizzazione del filesystem del framework
      * ===========================================
@@ -986,6 +988,11 @@
      * Il framework gestisce le librerie esterne tramite composer; le librerie vengono installate
      * nella sottocartella _src/_lib/_external/ che sostituisce la classica cartella vendor/ di
      * composer in modo da semplificarne la distribuzione tramite FTP.
+     * 
+     * librerie esterne utilizzate dal framework
+     * -----------------------------------------
+     * 
+     * TODO documentare con una tabella le librerie esterne (vedi composer.json)
      * 
      */
 

@@ -175,10 +175,16 @@
 
     La chiave view.insert.path decreta la presenza o meno del pulsante + per l'inserimento di una nuova riga a partire da una vista.
     Per far si che non sia possibile inserire un nuovo elementi nonostante si abbiano permessi sufficienti basterà inserire il seguente codice dopo aver incluso la _default.view.php
+
     \code{.php}
     // nascondere il button + per l'inserimento di una nuova riga
     $ct['view']['insert']['path'] = NULL;
     \endcode
+
+    [...] view restrict [...]
+
+    [...] per ordinare nativamente le view si può utilizzare l'array $ct['view']['__sort__'] ad esempio [...] che viene poi integrato con
+    $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__'] in _src/_inc/_macro/_default.view.php [...]
 
     le pagine form
     --------------

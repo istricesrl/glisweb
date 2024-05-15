@@ -40,71 +40,107 @@
      * Redis
      * -----
      *
+     * 
+     * 
+     * 
+     * 
+     * sistema di prevenzione delle collisioni di chiave
+     * =================================================
+     * 
+     * 
+     * 
+     * MEMCACHE_UNIQUE_SEED e REDIS_UNIQUE_SEED
+     * 
+     * 
      *
      *
+     * TODO implementare un sistema di compartimentazione più sicuro dell'unique seed, per lo meno in produzione
+     * TODO documentare
      *
      *
-     * @todo perché non c'è la chiave univoca per Redis?
-     * @todo finire di documentare
-     *
-     * @file
      *
      */
 
-    // stringa di unicità per sito
-	define( 'MEMCACHE_UNIQUE_SEED'			, strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
-
     // costanti per i blocchi di dati da salvare in cache
-	define( 'CONTENTS_PAGES_DATA'			    , 'CONTENTS_PAGES_DATA' );
-	define( 'CONTENTS_PAGES_UPDATED'		    , 'CONTENTS_PAGES_UPDATED' );
-	define( 'CONTENTS_PAGES_CACHED'		        , 'CONTENTS_PAGES_CACHED' );
-	define( 'CONTENTS_INDEX_KEY'			    , 'CONTENTS_INDEX_KEY' );
-	define( 'CONTENTS_REVERSE_KEY'			    , 'CONTENTS_REVERSE_KEY' );
-	define( 'CONTENTS_TREE_KEY'			        , 'CONTENTS_TREE_KEY' );
-	define( 'CONTENTS_PAGES_KEY'			    , 'CONTENTS_PAGES_KEY' );
-	define( 'CONTENTS_SHORTCUTS_KEY'		    , 'SHORTCUTS_PAGES_KEY' );
+    define( 'CONTENTS_PAGES_DATA'               , 'CONTENTS_PAGES_DATA' );
+    define( 'CONTENTS_PAGES_UPDATED'            , 'CONTENTS_PAGES_UPDATED' );
+    define( 'CONTENTS_PAGES_CACHED'             , 'CONTENTS_PAGES_CACHED' );
+    define( 'CONTENTS_INDEX_KEY'                , 'CONTENTS_INDEX_KEY' );
+    define( 'CONTENTS_REVERSE_KEY'              , 'CONTENTS_REVERSE_KEY' );
+    define( 'CONTENTS_TREE_KEY'                 , 'CONTENTS_TREE_KEY' );
+    define( 'CONTENTS_PAGES_KEY'                , 'CONTENTS_PAGES_KEY' );
+    define( 'CONTENTS_SHORTCUTS_KEY'            , 'SHORTCUTS_PAGES_KEY' );
+
+    /**
+     * sezione memcache
+     * ================
+     * 
+     * 
+     */
+
+    // stringa di unicità per sito
+    define( 'MEMCACHE_UNIQUE_SEED'              , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
 
     // server memcache disponibili
-	$cf['memcache']['servers']			        = array();
+    $cf['memcache']['servers']                  = array();
 
     // profili di funzionamento del sistema memcache
-	$cf['memcache']['profiles'][ DEVELOPEMENT ]	=
-	$cf['memcache']['profiles'][ TESTING ]		=
-	$cf['memcache']['profiles'][ PRODUCTION ]	= array();
+    $cf['memcache']['profiles'][ DEVELOPEMENT ] =
+    $cf['memcache']['profiles'][ TESTING ]      =
+    $cf['memcache']['profiles'][ PRODUCTION ]   = array();
 
     // connessioni disponibili
-	$cf['memcache']['connections']			    = array();
+    $cf['memcache']['connections']              = array();
 
-    // configurazione extra
-	if( isset( $cx['memcache'] ) ) {
-	    $cf['memcache'] = array_replace_recursive( $cf['memcache'], $cx['memcache'] );
-	}
-
-    // collegamento all'array $ct
-	$ct['memcache']					            = &$cf['memcache'];
+    /**
+     * sezione redis
+     * =============
+     * 
+     * 
+     */
 
     // stringa di unicità per sito
-	define( 'REDIS_UNIQUE_SEED'			    , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
+    define( 'REDIS_UNIQUE_SEED'                 , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
 
     // server redis disponibili
-	$cf['redis']['servers']				= array();
+    $cf['redis']['servers']                     = array();
 
     // profili di funzionamento del sistema redis
-	$cf['redis']['profiles'][ DEVELOPEMENT ]	=
-	$cf['redis']['profiles'][ TESTING ]		=
-	$cf['redis']['profiles'][ PRODUCTION ]		= array();
+    $cf['redis']['profiles'][ DEVELOPEMENT ]    =
+    $cf['redis']['profiles'][ TESTING ]         =
+    $cf['redis']['profiles'][ PRODUCTION ]      = array();
 
     // connessioni disponibili
-	$cf['redis']['connections']			= array();
+    $cf['redis']['connections']                 = array();
 
-    // configurazione extra
-	if( isset( $cx['redis'] ) ) {
-	    $cf['redis'] = array_replace_recursive( $cf['redis'], $cx['redis'] );
-	}
+    /**
+     * sezione APCU
+     * ============
+     * 
+     * 
+     */
 
-    // collegamento all'array $ct
-	$ct['redis']					= &$cf['redis'];
+    // stringa di unicità per sito
+    define( 'APCU_UNIQUE_SEED'                  , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
+
+    /**
+     * sezione cache su disco
+     * ======================
+     * 
+     * 
+     * 
+     */
+
+    // profili di funzionamento del sistema cache su disco per DEV e TEST
+    $cf['cache']['profiles'][ DEVELOPEMENT ]    =
+    $cf['cache']['profiles'][ TESTING ]         = array();
+
+    // profili di funzionamento del sistema cache su disco per PROD
+    $cf['cache']['profiles'][ PRODUCTION ]      = array(
+        'pages' => DIR_VAR_CACHE_PAGES
+    );
 
     // debug
-	// print_r( $cf['memcache'] );
-	// print_r( $cf['redis'] );
+    // print_r( $cf['memcache'] );
+    // print_r( $cf['redis'] );
+    // print_r( $cf['cache'] );

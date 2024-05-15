@@ -168,16 +168,20 @@
         // carico le righe del documento
         $r['doc']['righe'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT documenti_articoli.*, '.
-            'iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, '.
-            'udm.sigla AS udm FROM documenti_articoli '.
-            'INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto '.
-            'INNER JOIN iva ON iva.id = reparti.id_iva '.
-            'INNER JOIN udm ON udm.id = documenti_articoli.id_udm '.
-            'WHERE documenti_articoli.id_documento = ? '.
-            'AND documenti_articoli.id_genitore IS NULL',
+            'SELECT documenti_articoli.*,
+            iva.aliquota, iva.codice, iva.id AS id_iva, iva.nome AS nome_iva, iva.codice AS codice_iva, iva.descrizione AS descrizione_iva, 
+            udm.sigla AS udm FROM documenti_articoli 
+            INNER JOIN reparti ON reparti.id = documenti_articoli.id_reparto 
+            INNER JOIN iva ON iva.id = reparti.id_iva 
+            INNER JOIN udm ON udm.id = documenti_articoli.id_udm 
+            WHERE documenti_articoli.id_documento = ? 
+            AND documenti_articoli.id_genitore IS NULL ',
             array( array( 's' => $r['doc']['id'] ) )
         );
+
+        // debug
+        // var_dump( $r['doc']['id'] );
+        // print_r( $r['doc']['righe'] );
 
         // controllo contenuto
         if( empty( $r['doc']['righe'] ) ) {

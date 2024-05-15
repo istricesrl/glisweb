@@ -497,6 +497,8 @@
     /**
      * ricerca delle favicons
      * ======================
+     * 
+     * TODO documentare il file _src/_img/_favicon.ico e spiegare come inserire le favicons nei template
      *
      * 
      */

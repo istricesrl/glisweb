@@ -5,6 +5,49 @@
 
     // modulo di questo file
 	$m = DIR_MOD . '_4140.coupon/';
+
+	// vista coupon
+	$p['coupon.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'coupon' ),
+	    'h1'			=> array( $l		=> 'coupon' ),
+	    'parent'		=> array( 'id'		=> 'catalogo' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_coupon.view.php' ),
+		'etc'			=> array( 'tabs'	=> array( 'coupon.view' ) ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'coupon' ),
+								'priority'	=> '035' ) ) )
+	);
+
+	// gestione coupon
+	$p['coupon.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'coupon.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'coupon.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'coupon.form',
+#													'coupon.form.gruppi'
+													'coupon.form.stampe'
+												) )
+	);
+
+	// gestione coupon stampe
+	$p['coupon.form.stampe'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'stampe del coupon' ),
+		'h1'		=> array( $l		=> 'stampe' ),
+		'parent'		=> array( 'id'		=> 'coupon.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.stampe.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['coupon.form']['etc']['tabs'] )
+	);
+
 /*
 	// vista listini
 	$p['listini.view'] = array(

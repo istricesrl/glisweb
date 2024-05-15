@@ -1,3 +1,7 @@
+{% import '_bin/_form.html' as frm %}
+
+{% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ localization.language.ietf ] %}{% endif %}
+
 {% set cnt = 0 %}
 
 {% for k,m in page.contents.metros %}
@@ -49,3 +53,11 @@
 {% endfor %}
 {% endif %}
 {% endfor %}
+
+<div class="row view-controls mt-auto no-gutters d-print-none">
+
+	<div class="col-auto mr-1">
+		{{ frm.button( '<i class="fa fa-undo"></i>', 'button', 'btn-secondary', 'window.open("' ~ back ~ '","_self")','torna indietro senza salvare le modifiche' ) }}
+	</div>
+	
+</div>
