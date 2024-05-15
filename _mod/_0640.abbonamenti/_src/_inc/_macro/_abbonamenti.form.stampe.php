@@ -46,12 +46,12 @@
         if( ! empty( $coupon ) ) {
 
             // percorsi
-            $base = $ct['site']['url'].'_mod/_4140.coupon/_src/_api/_print/';
+            $base = $ct['site']['url'].'print/4140.coupon/';
 
             // ...
             $ct['page']['contents']['metro']['pdf'][] = array(
                 'target' => '_blank' ,
-                'url' => $base . '_coupon.pdf.php?__coupon__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                'url' => $base . 'coupon.pdf?__id__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                 'icon' => NULL,
                 'fa' => 'fa-file-pdf-o',
                 'title' => 'stampa PDF',

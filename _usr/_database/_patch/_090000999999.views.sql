@@ -2807,6 +2807,8 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.sconto_fisso,
 		coupon.se_multiuso,
 		coupon.se_globale,
+		coupon.causale,
+		coupon.causale_id_contratto,
 		coupon.id_account_inserimento,
 		coupon.id_account_aggiornamento,
 		coupon.nome AS __label__

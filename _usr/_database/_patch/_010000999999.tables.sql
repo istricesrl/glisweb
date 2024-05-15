@@ -1336,6 +1336,7 @@ CREATE TABLE IF NOT EXISTS `corrispondenza` (
 CREATE TABLE IF NOT EXISTS `coupon` (
   `id` char(32) NOT NULL,
   `nome` char(255) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `timestamp_inizio` int(11) DEFAULT NULL,
   `timestamp_fine` int(11) DEFAULT NULL,
