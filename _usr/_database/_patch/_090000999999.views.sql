@@ -2799,6 +2799,7 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 	SELECT
 		coupon.id,
 		coupon.nome,
+		coupon.id_anagrafica,
 		coupon.timestamp_inizio,
 		from_unixtime( coupon.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
 		coupon.timestamp_fine,
