@@ -61,7 +61,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static'
     );
-
+/*
+    // tendina abbonamenti
+    $ct['etc']['select']['id_contratto'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM contratti_view WHERE id_tipologia = 1'
+    );
+*/
     // tendina tipologie
     $ct['etc']['select']['id_tipologia'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

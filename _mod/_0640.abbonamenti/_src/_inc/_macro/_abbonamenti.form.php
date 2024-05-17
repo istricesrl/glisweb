@@ -67,11 +67,14 @@
 	);
 
     // ID della scuola
+    $ct['etc']['gestita'] = trovaIdAziendaGestita();
+    /*
 	$ct['etc']['gestita'] = mysqlSelectCachedValue(
 		$cf['memcache']['connection'],
 		$cf['mysql']['connection'],
 		'SELECT id FROM anagrafica_view WHERE se_gestita = 1'
 	);
+    */
 
 	// debug
 	// print_r( $_REQUEST[ $ct['form']['table'] ]['rinnovi'] );

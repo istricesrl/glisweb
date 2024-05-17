@@ -1077,6 +1077,8 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
      * 
      * @todo documentare
      * 
+     * TODO implementare la cancellazione di specifiche righe
+     * 
      */
     function cleanAnagraficaViewStatic() {
 

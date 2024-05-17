@@ -7,10 +7,15 @@
     <input type="hidden" id="account" name="{{ view.open.table }}[id_account_inserimento]" value="{{ account }}" disabled>
     {{ frm.input( view.open.table, '', '', 'id_todo', '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
     {{ frm.input( view.open.table, '', '', 'id_genitore', '', '', '', etc.defaults.id_genitore, 'hidden', '', '', 2 ) }}
+    <input type="hidden" id="method" name="{{ view.open.table }}[__prenotazione_abbonamento__]" value="post" disabled>
     <div class="form-row d-print-none">
         <div class="col-12 col-md">
             <span class="label-top">iscritto</span>
             {{ frm.selectBox( view.open.table, '', '', 'id_anagrafica', '', etc.select.id_anagrafica, '', etc.defaults.id_anagrafica, '','','','','anagrafica.form','','anagrafica', 'id_account_', page, pages, ietf, 'anagrafica', 2 ) }}
+        </div>
+        <div class="col-12 col-md">
+            <span class="label-top">abbonamento</span>
+            {{ frm.selectBox( view.open.table, '', '', 'id_contratto', '', '', '', '', '','','','','abbonamenti.form','','contratti', '', page, pages, ietf, 'abbonamenti', 2 ) }}
         </div>
         <div class="col-12 col-md-auto">
             <span class="label-top">tipologia</span>

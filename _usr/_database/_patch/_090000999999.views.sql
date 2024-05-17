@@ -30,26 +30,30 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
 		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.id, '' )  SEPARATOR ', ' ) AS id_iscritti,
 		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
-        MIN(rinnovi.data_inizio) AS data_inizio,
-        MAX(rinnovi.data_fine) AS data_fine,
+        max(rinnovi.data_inizio) AS data_inizio,
+        max(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
-		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+		concat(
+			group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ), ' ',
+			coalesce( contratti.nome, '' ), ' ', tipologie_contratti.nome, ' dal ',
+			max(rinnovi.data_inizio), ' al ', max(rinnovi.data_fine) ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
 		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
-		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 34
 		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
     WHERE tipologie_contratti.se_abbonamento = 1
-    GROUP BY contratti.id, tipologie_contratti.nome
+    GROUP BY contratti.id
 ;
 
 -- | 090000000020
@@ -70,21 +74,25 @@ CREATE OR REPLACE VIEW `abbonamenti_attivi_view` AS
 		contratti.id_tipologia,
         tipologie_contratti.nome AS tipologia,
 		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.id, '' )  SEPARATOR ', ' ) AS id_iscritti,
 		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
 		contratti.id_progetto,
 		progetti.nome AS progetto,
 		contratti.codice,
 		contratti.nome,
-        MAX(rinnovi.data_inizio) AS data_inizio,
-        MAX(rinnovi.data_fine) AS data_fine,
+        max(rinnovi.data_inizio) AS data_inizio,
+        max(rinnovi.data_fine) AS data_fine,
 		contratti.id_account_inserimento,
 		contratti.id_account_aggiornamento,
-		concat( contratti.nome , ' - ', tipologie_contratti.nome )AS __label__
+		concat(
+			group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ), ' ',
+			coalesce( contratti.nome, '' ), ' ', tipologie_contratti.nome, ' dal ',
+			max(rinnovi.data_inizio), ' al ', max(rinnovi.data_fine) ) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
 		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
-		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 29
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 34
 		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id
@@ -2811,7 +2819,9 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.causale,
 		coupon.causale_id_contratto,
 		coupon.id_account_inserimento,
+		coupon.timestamp_inserimento,
 		coupon.id_account_aggiornamento,
+		coupon.timestamp_aggiornamento,
 		coupon.nome AS __label__
 	FROM coupon
 ;

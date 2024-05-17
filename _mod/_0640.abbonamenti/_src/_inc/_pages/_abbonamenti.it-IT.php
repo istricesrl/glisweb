@@ -74,9 +74,9 @@
 			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 			'etc'				=> array( 'tabs'	=> array(	'abbonamenti.form',
 																'abbonamenti.form.rinnovi',
+																'abbonamenti.form.sospensioni',
 																'abbonamenti.form.entrate',
 																'abbonamenti.form.lezioni',
-																'abbonamenti.form.tornelli',
 																'abbonamenti.form.stampe',
 																'abbonamenti.form.tools' 
 															) )
@@ -119,13 +119,13 @@
 		);
 
 		// rinnovi contratti
-		$p['abbonamenti.form.tornelli' ] = array(
+		$p['abbonamenti.form.sospensioni' ] = array(
 			'sitemap'		=> false,
-			'title'			=> array( $l		=> 'tornelli' ),
-			'h1'			=> array( $l		=> 'tornelli' ),
+			'title'			=> array( $l		=> 'sospensioni' ),
+			'h1'			=> array( $l		=> 'sospensioni' ),
 			'parent'		=> array( 'id'		=> 'abbonamenti.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.tornelli.html' ),
-			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.tornelli.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.sospensioni.html' ),
+			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.sospensioni.php' ),
 			'etc'			=> array( 'tabs'	=> $p['abbonamenti.form']['etc']['tabs'] ),
 			'auth'			=> array( 'groups'	=> array(	'roots' ) )
 		);

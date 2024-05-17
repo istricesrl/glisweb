@@ -79,7 +79,8 @@
                     $cf['mysql']['connection'],
                     array(
                         'id_contratto' => $idAbbonamento,
-                        'id_anagrafica' => $articolo['destinatario_id_anagrafica']
+                        'id_anagrafica' => $articolo['destinatario_id_anagrafica'],
+                        'id_ruolo' => 34
                     ),
                     'contratti_anagrafica'
                 );

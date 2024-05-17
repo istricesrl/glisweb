@@ -49,14 +49,19 @@
             $base = $ct['site']['url'].'print/4140.coupon/';
 
             // ...
-            $ct['page']['contents']['metro']['pdf'][] = array(
-                'target' => '_blank' ,
-                'url' => $base . 'coupon.pdf?__id__='.$_REQUEST[ $ct['form']['table'] ]['id'],
-                'icon' => NULL,
-                'fa' => 'fa-file-pdf-o',
-                'title' => 'stampa PDF',
-                'text' => 'stampa una copia del coupon in formato PDF'
-            );
+            foreach( $coupon as $cpn ) {
+
+                // ...
+                $ct['page']['contents']['metro']['pdf'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $base . 'coupon.pdf?__id__='.$cpn['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF #' . $cpn['id'],
+                    'text' => 'stampa una copia del coupon in formato PDF'
+                );
+
+            }
 
         }
 
