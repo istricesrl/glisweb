@@ -651,9 +651,7 @@ CREATE OR REPLACE VIEW anagrafica_organizzazioni_view AS
 		anagrafica_organizzazioni.id,
 		anagrafica_organizzazioni.id_anagrafica,
 		anagrafica_organizzazioni.id_organizzazione,
-		organizzazioni.denominazione AS organizzazione,
-		anagrafica_organizzazioni.id_ruolo,
-		ruoli_organizzazioni.nome AS ruolo,
+		anagrafica_organizzazioni.id_ruolo
 	FROM anagrafica_organizzazioni
 		LEFT JOIN anagrafica ON anagrafica.id = anagrafica_organizzazioni.id_anagrafica
 		LEFT JOIN organizzazioni ON organizzazioni.id = anagrafica_organizzazioni.id_organizzazione
@@ -771,7 +769,7 @@ CREATE OR REPLACE VIEW `anagrafica_settori_view` AS
 -- annunci
 DROP TABLE IF EXISTS `annunci_view`;
 
--- | 090000022001
+-- | 090000001251
 
 -- annunci_view
 -- tipologia: tabella gestita
@@ -788,18 +786,18 @@ CREATE OR REPLACE VIEW `annunci_view` AS
 		annunci.nome AS __label__
 	FROM annunci
 		-- LEFT JOIN tipologie_annunci ON tipologie_annunci.id = annunci.id_tipologia
-		LEFT JOIN annunci_categorie ON annunci_categorie.id_notizia = annunci.id
+		LEFT JOIN annunci_categorie ON annunci_categorie.id_annuncio = annunci.id
 		LEFT JOIN categorie_annunci ON categorie_annunci.id = annunci_categorie.id_categoria
 	GROUP BY annunci.id
 ;
 
--- | 090000022200
+-- | 090000001260
 
 -- annunci_categorie_view
 -- tipologia: tabella gestita
 DROP TABLE IF EXISTS `annunci_categorie_view`;
 
--- | 090000022201
+-- | 090000001261
 
 -- annunci_categorie_view
 -- tipologia: tabella gestita
@@ -807,8 +805,8 @@ DROP TABLE IF EXISTS `annunci_categorie_view`;
 CREATE OR REPLACE VIEW `annunci_categorie_view` AS
 	SELECT
 		annunci_categorie.id,
-		annunci_categorie.id_notizia,
-		annunci.nome AS notizia,
+		annunci_categorie.id_annuncio,
+		annunci.nome AS annuncio,
 		annunci_categorie.id_categoria,
 		categorie_annunci_path( annunci_categorie.id_categoria ) AS categoria,
 		annunci_categorie.ordine,
@@ -820,7 +818,7 @@ CREATE OR REPLACE VIEW `annunci_categorie_view` AS
 			categorie_annunci_path( annunci_categorie.id_categoria )
 		) AS __label__
 	FROM annunci_categorie
-		LEFT JOIN annunci ON annunci.id = annunci_categorie.id_notizia
+		LEFT JOIN annunci ON annunci.id = annunci_categorie.id_annuncio
 ;
 
 -- | 090000001300
@@ -1036,7 +1034,6 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id_contratto,
 		concat_ws( ' ', tipologie_contratti.nome, contratti.nome ) AS contratto,
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
-		attivita.id_contratto,
 		attivita.id_matricola,
         attivita.id_immobile,
         attivita.id_step,
@@ -1216,7 +1213,7 @@ CREATE OR REPLACE VIEW `audio_view` AS
 		audio.id_notizia,
 		audio.id_annuncio,
 		audio.id_categoria_notizie,
-		audio.id_categorie_annunci,
+		audio.id_categoria_annunci,
 		audio.id_indirizzo,
 		audio.id_edificio,
 		audio.id_immobile,
@@ -2170,7 +2167,7 @@ CREATE OR REPLACE VIEW contenuti_view AS
 		contenuti.id_notizia,
 		contenuti.id_annuncio,
 		contenuti.id_categoria_notizie,
-		contenuti.id_categorie_annunci,
+		contenuti.id_categoria_annunci,
 		contenuti.id_template,
 		contenuti.id_colore,
 		contenuti.id_progetto,
@@ -2564,7 +2561,7 @@ CREATE OR REPLACE VIEW conversazioni_view AS
 		conversazioni.id,
 		conversazioni.id_annuncio,
 		conversazioni.nome,
-		conversazioni.id_articolo
+		conversazioni.id_articolo,
 		conversazioni.timestamp_apertura,
 		conversazioni.timestamp_chiusura,
 		conversazioni.nome AS __label__
@@ -4006,7 +4003,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_notizia,
 		file.id_annuncio,
 		file.id_categoria_notizie,
-		file.id_categorie_annunci,
+		file.id_categoria_annunci,
 		file.id_risorsa,
 		file.id_categoria_risorse,
 		file.id_mail_out,                    
@@ -4182,7 +4179,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS
 		immagini.id_notizia,
 		immagini.id_annuncio,
 		immagini.id_categoria_notizie,
-		immagini.id_categorie_annunci,
+		immagini.id_categoria_annunci,
 		immagini.id_progetto,
 		immagini.id_categoria_progetti,
 		immagini.id_indirizzo,
@@ -4954,7 +4951,7 @@ CREATE OR REPLACE VIEW `macro_view` AS
 		macro.id_notizia,
 		macro.id_annuncio,
 		macro.id_categoria_notizie,
-		macro.id_categorie_annunci,
+		macro.id_categoria_annunci,
 		macro.id_risorsa,
 		macro.id_categoria_risorse,
 		macro.id_progetto,
@@ -5443,7 +5440,7 @@ CREATE OR REPLACE VIEW `menu_view` AS
 		menu.id_pagina,
 		menu.id_categoria_prodotti,
 		menu.id_categoria_notizie,
-		menu.id_categorie_annunci,
+		menu.id_categoria_annunci,
 		menu.id_categoria_risorse,
 		menu.id_categoria_progetti,
 		menu.ordine,
@@ -5513,7 +5510,7 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_notizia,
 		metadati.id_annuncio,
 		metadati.id_categoria_notizie,
-		metadati.id_categorie_annunci,
+		metadati.id_categoria_annunci,
 		metadati.id_risorsa,
 		metadati.id_categoria_risorse,
 		metadati.id_immagine,
@@ -5821,7 +5818,7 @@ CREATE OR REPLACE VIEW `notizie_categorie_view` AS
 -- orari_view
 DROP TABLE IF EXISTS `orari_view`;
 
--- | 090000022300
+-- | 090000022301
 
 -- orari_view
 CREATE OR REPLACE VIEW `orari_view` AS
@@ -7248,7 +7245,7 @@ CREATE OR REPLACE VIEW `pubblicazioni_view` AS
 		pubblicazioni.id_categoria_prodotti,
 		pubblicazioni.id_notizia,
 		pubblicazioni.id_categoria_notizie,
-		pubblicazioni.id_categorie_annunci,
+		pubblicazioni.id_categoria_annunci,
 		pubblicazioni.id_pagina,
 		pubblicazioni.id_popup,
 		pubblicazioni.id_risorsa,
@@ -8027,7 +8024,7 @@ CREATE OR REPLACE VIEW `righe_ricevute_attive_view` AS
 -- tipologia: vista virtuale
 DROP TABLE IF EXISTS `righe_ricevute_passive_view`;
 
--- | 090000031401
+-- | 090000031409
 
 -- righe_ricevute_passive_view
 -- tipologia: vista virtuale
@@ -8840,6 +8837,16 @@ CREATE OR REPLACE VIEW step_view AS
 	FROM step
 		LEFT JOIN funnel ON funnel.id = step.id_funnel
 	ORDER BY step.id_funnel, step.ordine
+;
+
+-- | 090000042701
+
+-- taglie_view
+CREATE OR REPLACE VIEW taglie_view AS
+	SELECT
+		taglie.id,
+		taglie.nome AS __label__
+	FROM taglie
 ;
 
 -- | 090000043000
@@ -10715,7 +10722,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_notizia,
 		video.id_annuncio,
 		video.id_categoria_notizie,
-		video.id_categorie_annunci,
+		video.id_categoria_annunci,
 		video.id_lingua,
 		lingue.nome AS lingua,
 		video.id_ruolo,

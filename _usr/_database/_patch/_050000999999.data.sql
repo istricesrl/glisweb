@@ -8,6 +8,9 @@
 -- caratteristiche
 -- tipologia: tabella gestita
 -- verifica: 2022-05-02 17:22 Chiara GDL
+INSERT INTO `caratteristiche` (`id`, `nome`, `font_awesome`, `html_entity`, `se_immobili`, `se_categorie_prodotti`, `se_prodotto`, `se_articolo`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'peso indicativo',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	'standard tecnici',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000003100
 
@@ -418,6 +421,21 @@ INSERT IGNORE INTO `modalita_pagamento` (`id`, `codice`, `nome`) VALUES
 (23,  'MP08', 'bancomat' ),
 (24, 'MP08', 'paypal' );
 
+-- | 050000023600
+
+-- periodicita
+-- tipologia: tabella standard
+-- verifica: 2021-10-05 17:57 Fabio Mosti
+INSERT IGNORE INTO `periodicita` (`id`, `nome`, `giorni`) VALUES
+(1,	'giornaliera',	1),
+(2,	'settimanale',	7),
+(3,	'mensile',	30),
+(4,	'bimestrale',	60),
+(5,	'trimestrale',	90),
+(6,	'quadrimestrale',	120),
+(7,	'semestrale',	180),
+(8,	'annuale',	365);
+
 -- | 050000023700
 
 -- pesi_tipologie_corrispondenza
@@ -523,21 +541,6 @@ INSERT IGNORE INTO `pesi_tipologie_corrispondenza` (`id`, `id_tipologia`, `nome`
 (111,	15,	'RE da 251g a 350g',	250.00,	350.00),
 (112,	15,	'RE da 351g a 1000g',	350.00,	1000.00),
 (113,	15,	'RE da 1001g a 2000g',	1000.00,	2000.00);
-
--- | 050000023600
-
--- periodicita
--- tipologia: tabella standard
--- verifica: 2021-10-05 17:57 Fabio Mosti
-INSERT IGNORE INTO `periodicita` (`id`, `nome`, `giorni`) VALUES
-(1,	'giornaliera',	1),
-(2,	'settimanale',	7),
-(3,	'mensile',	30),
-(4,	'bimestrale',	60),
-(5,	'trimestrale',	90),
-(6,	'quadrimestrale',	120),
-(7,	'semestrale',	180),
-(8,	'annuale',	365);
 
 -- | 050000028000
 
@@ -1197,6 +1200,36 @@ INSERT INTO `step` (`id`, `id_funnel`, `ordine`, `nome`, `note`) VALUES
 (2,	NULL,	NULL,	'in corso',	NULL),
 (3,	NULL,	NULL,	'esito positivo',	NULL),
 (4,	NULL,	NULL,	'esito negativo',	NULL);
+
+-- | 050000042700
+
+-- taglie
+INSERT INTO `taglie` (`id`, `id_tipologia_prodotti`, `nome`, `sesso`, `taglia_internazionale`, `circonferenza_testa_min`, `circonferenza_testa_max`) VALUES
+(1,	12,	'abbigliamento XXXS uomo',	'M',	'XXXS',	NULL,	NULL),
+(2,	12,	'abbigliamento XXS uomo',	'M',	'XXS',	NULL,	NULL),
+(3,	12,	'abbigliamento XS uomo',	'M',	'XS',	NULL,	NULL),
+(4,	12,	'abbigliamento S uomo',	'M',	'S',	NULL,	NULL),
+(5,	12,	'abbigliamento M uomo',	'M',	'M',	NULL,	NULL),
+(6,	12,	'abbigliamento L uomo',	'M',	'L',	NULL,	NULL),
+(7,	12,	'abbigliamento XL uomo',	'M',	'XL',	NULL,	NULL),
+(8,	12,	'abbigliamento XXL uomo',	'M',	'XXL',	NULL,	NULL),
+(9,	12,	'abbigliamento XXXL uomo',	'M',	'XXXL',	NULL,	NULL),
+(10,	12,	'abbigliamento 4XL uomo',	'M',	'4XL',	NULL,	NULL),
+(11,	12,	'abbigliamento XXS donna',	'F',	'XXXS',	NULL,	NULL),
+(12,	12,	'abbigliamento XS donna',	'F',	'XXS',	NULL,	NULL),
+(13,	12,	'abbigliamento S donna',	'F',	'XS',	NULL,	NULL),
+(14,	12,	'abbigliamento M donna',	'F',	'S',	NULL,	NULL),
+(15,	12,	'abbigliamento L donna',	'F',	'M',	NULL,	NULL),
+(16,	12,	'abbigliamento XL donna',	'F',	'L',	NULL,	NULL),
+(17,	12,	'abbigliamento XXL donna',	'F',	'XL',	NULL,	NULL),
+(18,	12,	'abbigliamento XXXL donna',	'F',	'XXL',	NULL,	NULL),
+(19,	13,	'caschi XXS',	NULL,	'XXS',	510,	529),
+(20,	13,	'caschi XS',	NULL,	'XS',	530,	549),
+(21,	13,	'caschi S',	NULL,	'S',	550,	569),
+(22,	13,	'caschi M',	NULL,	'M',	570,	589),
+(23,	13,	'caschi L',	NULL,	'L',	590,	609),
+(24,	13,	'caschi XL',	NULL,	'XL',	610,	629),
+(25,	13,	'caschi XXL',	NULL,	'XXL',	630,	649);
 
 -- | 050000043000
 

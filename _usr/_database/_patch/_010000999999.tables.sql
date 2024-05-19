@@ -240,7 +240,12 @@ CREATE TABLE IF NOT EXISTS `anagrafica_organizzazioni` (
   `id_organizzazione` int NULL,
   `id_ruolo` int NULL,
   `nome` char(255) NULL,
-  `note` text NULL
+  `note` text NULL,
+  `timestamp_elaborazione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 );
 
 -- | 010000000940
@@ -284,7 +289,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_settori` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
--- | 001000001250
+-- | 010000001250
 
 -- annunci
 CREATE TABLE IF NOT EXISTS `annunci` (
@@ -296,7 +301,7 @@ CREATE TABLE IF NOT EXISTS `annunci` (
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
   `quantita` decimal(9,2) DEFAULT NULL,
-  `id_udm` char(32) DEFAULT NULL,
+  `id_udm` int(11) DEFAULT NULL,
   `data_inizio_validita` date DEFAULT NULL,
   `ora_inizio_validita` time DEFAULT NULL,
   `note_inizio_validita` text DEFAULT NULL,
@@ -1270,6 +1275,7 @@ CREATE TABLE `conversazioni` (
   `id_articolo` char(32) DEFAULT NULL,
   `quantita` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `timestamp_apertura` int(11) DEFAULT NULL,
   `timestamp_chiusura` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -1611,8 +1617,8 @@ CREATE TABLE IF NOT EXISTS `file` (
   `id_template` int(11) DEFAULT NULL,
   `id_mailing` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,
-  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_notizie` int(11) DEFAULT NULL,
+  `id_annuncio` int(11) DEFAULT NULL,
   `id_categoria_annunci` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
@@ -2305,10 +2311,14 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
 
 -- messaggi_account
 CREATE TABLE `messaggi_account` (
-  `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  `id` int(11) NOT NULL,
   `id_messaggio` int NULL,
   `id_account` int NULL,
-  `timestamp_lettura` int NULL
+  `timestamp_lettura` int NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 );
 
 -- | 010000021800
@@ -2753,6 +2763,7 @@ CREATE TABLE IF NOT EXISTS `prodotti_caratteristiche` (
   `id_prodotto` char(32) DEFAULT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
   `id_lingua` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
   `valore` text DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
@@ -3680,7 +3691,20 @@ CREATE TABLE `step` (
   `ordine` char(32) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000042700
+
+CREATE TABLE `taglie` (
+  `id` int(11) NOT NULL,
+  `id_tipologia_prodotti` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `sesso` enum('M','F','-') DEFAULT NULL,
+  `taglia_internazionale` char(8) DEFAULT NULL,
+  `circonferenza_testa_min` int(11) DEFAULT NULL,
+  `circonferenza_testa_max` int(11) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000043000
 
@@ -3777,6 +3801,23 @@ CREATE TABLE IF NOT EXISTS `tipologie_anagrafica` (
   `se_persona_giuridica` tinyint(1) DEFAULT NULL,
   `se_pubblica_amministrazione` tinyint(1) DEFAULT NULL,
   `se_ecommerce` tinyint(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000050100
+
+-- tipologie_annunci
+CREATE TABLE IF NOT EXISTS `tipologie_annunci` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `sigla` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

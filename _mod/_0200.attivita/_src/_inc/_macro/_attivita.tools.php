@@ -79,7 +79,7 @@
         $ct['etc']['select']['anni'][ $y ] = array( 'id' => $y, '__label__' => $y ) ;
     }
 
-    
+/*    
     // elenco dei job per export ore operatori
     $jo = mysqlQuery(
         $cf['mysql']['connection'],
@@ -180,7 +180,7 @@
             
         }
     }
-
+*/
     // nelle tabelle di report inserire colonna id_job e salvare l'id del job
     // todo qui leggere id_job (con group by) dalla tabella dei report
     // controllo se job esiste ed è in corso, se è in corso metto stato "in corso"
