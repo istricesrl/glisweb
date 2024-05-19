@@ -74,7 +74,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
-
+/*
     // tendina mittenti
 	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -90,7 +90,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__'
 	);
-
+*/
     // tendina aziende
 	$ct['etc']['select']['aziende'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

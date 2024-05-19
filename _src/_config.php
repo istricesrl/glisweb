@@ -693,10 +693,48 @@
      * composer suggests | xargs -i composer require {}
      * ```
      * 
+     * versioni di Debian
+     * ------------------
+     * Raccomandiamo di installare GlisWeb su Debian stable, per garantiere la massima compatibilità e sicurezza; tutti gli script di
+     * amministrazione sono pensati per Debian e Ubuntu, quindi è possibile che su altre distribuzioni Linux o sistemi operativi non
+     * funzionino correttamente - anche se si tratta di una funzionalità aggiuntiva, può semplificare parecchio la manutenzione quindi
+     * consigliamo di non sottovalutarla.
+     * 
+     * versione | nome          | architetture              | supporto                  | tipo di supporto
+     * ---------|---------------|---------------------------|---------------------------|-----------------------
+     * 6        | Squeeze       | i386, amd64               | 02/06/2014 - 29/02/2016   | EOL
+     * 7        | Wheezy        | i386, amd64, armel, armhf | 26/04/2016 - 31/05/2018   | EOL
+     * 8        | Jessie        | i386, amd64, armel, armhf | 17/06/2018 - 30/06/2020   | EOL
+     * 9        | Stretch       | i386, amd64, armel, armhf | 06/07/2020 - 30/06/2022   | EOL
+     * 10       | Buster        | i386, amd64, armhf, arm64 | 01/08/2022 - 30/06/2024   | LTS
+     * 11       | Bullseye      | i386, amd64, armhf, arm64 | 15/08/2024 - 30/06/2026   | future LTS
+     * 12       | Bookworm      | i386, amd64, armhf, arm64 | 11/06/2026 - 30/06/2028   | future LTS
+     * 
+     * Vedi https://wiki.debian.org/LTS.
+     * 
+     * versioni di PHP
+     * ---------------
+     * Il framework cerca di mantenere la massima retrocompatibilità possibile, entro i limiti concessi dalla necessità di garantire
+     * la sicurezza delle applicazioni.
+     * 
+     * versione | rilascio          | fine supporto         | supporto da GlisWeb
+     * ---------|-------------------|-----------------------|-----------------------------------
+     * 7.0      | 3 dicembre 2015   | 3 dicembre 2018       | deprecata
+     * 7.1      | 1 dicembre 2016   | 1 dicembre 2019       | deprecata
+     * 7.2      | 30 novembre 2017  | 30 novembre 2020      | deprecata
+     * 7.3      | 6 dicembre 2018   | 6 dicembre 2021       | deprecata
+     * 7.4      | 28 novembre 2019  | 28 novembre 2022      | deprecata
+     * 8.0      | 26 novembre 2020  | 26 novembre 2023      | supportata
+     * 8.1      | 25 novembre 2021  | 25 novembre 2024      | supportata
+     * 8.2      | 8 dicembre 2022   | 8 dicembre 2025       | supportata
+     * 8.3      | 23 novembre 2023  | 23 novembre 2026      | non testata
+     * 
+     * Vedi https://www.php.net/supported-versions.php.
+     * 
      */
 
     // versione di PHP richiesta
-    $cf['php']['required']['version'] = '7.3.10';       // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
+    $cf['php']['required']['version'] = '7.0.0';       // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
 
     // versione di PHP suggerita
     $cf['php']['preferred']['version'] = '8.2.0';       // rilasciata l'8 dicembre 2022
@@ -717,7 +755,12 @@
 
     // moduli di Apache2 richiesti
     $cf['apache']['required']['modules'] = array(
-        'mod_rewrite'                                   // necessario per il rewrite degli URL
+        'core',                                         // modulo core
+        'mod_deflate',                                  // necessario per la compressione gzip
+        'mod_expires',                                  // necessario per la gestione della cache lato client
+        'mod_headers',                                  // necessario per la gestione degli header HTTP
+        'mod_rewrite',                                  // necessario per il rewrite degli URL
+        'mod_ssl'                                       // necessario per la gestione delle connessioni sicure
     );
 
     /**
@@ -765,6 +808,9 @@
 
     // timer
 	timerCheck( $cf['speed'], 'fine verifica requisiti ambiente' );
+
+    // debug
+    // die( print_r( apache_get_modules(), true ) );
 
     /**
      * inizializzazione dell'array di configurazione per il template manager
