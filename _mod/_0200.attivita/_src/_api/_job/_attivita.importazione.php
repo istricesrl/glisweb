@@ -163,7 +163,7 @@
                     } else {
 
                         // status
-                        $job['status']['error'][] = 'anagrafica programmazione (responsabile) per la riga ' . $job['corrente'];
+                        $job['status']['error'][] = 'anagrafica programmazione ('.$job['riga']['anagrafica_programmazione_attivita'].') non trovato per la riga ' . $job['corrente'];
 
                     }
 

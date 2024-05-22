@@ -379,8 +379,10 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
   `id` int(11) NOT NULL,
   `id_articolo` char(32) NOT NULL,
   `id_caratteristica` int(11) DEFAULT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `valore` text DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
-  `valore` decimal(5,2) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `se_assente` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2725,6 +2727,21 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000025500
+
+-- procedure
+CREATE TABLE `procedure` (
+  `id` int NOT NULL,
+  `id_tipologia` int NOT NULL,
+  `id_prodotto` char(32) NOT NULL,
+  `id_articolo` char(32) NOT NULL,
+  `nome` int NOT NULL,
+  `id_account_inserimento` int NOT NULL,
+  `timestamp_inserimento` int NOT NULL,
+  `id_account_aggiornamento` int NOT NULL,
+  `timestamp_aggiornamento` int NOT NULL
+);
 
 -- | 010000026000
 

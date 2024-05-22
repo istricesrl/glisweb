@@ -99,13 +99,13 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
-
+/*
     // categorie anagrafica
 	$ct['etc']['select']['anagrafica'] = mysqlCachedQuery(
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
-
+*/
 	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';

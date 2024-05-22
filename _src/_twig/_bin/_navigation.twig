@@ -128,7 +128,7 @@
         <li class="nav-item"><a class="nav-link {% if t == page.id %}active{% endif %}" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{% if pages[ t ].icon %}{{ pages[ t ].icon|raw }}{% elseif pages[ t ].tab[ lang ] %}{{ include( template_from_string( pages[ t ].tab[ lang ] ) | raw ) }}{% else %}{{ include( template_from_string( pages[ t ].h1[ lang ] ) | raw ) }}{% endif %}</a></li>
         {% endif %}
 	    {% endfor %}
-        <span style="margin-left: auto;">        </span>
+        <li style="margin-left: auto;"></li>
         {% for t in pages[ page.id ].etc.tabs %}
         {% if pages[ t ].icon %}
         {% if pages[ t ].onclick %}

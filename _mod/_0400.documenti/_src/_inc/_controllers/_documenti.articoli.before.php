@@ -84,4 +84,38 @@
 
 		break;
 
-	}
+	    case METHOD_DELETE:
+
+            // log
+            logWrite( "controller before per ${t}/${a} metodo DELETE", 'controller', LOG_ERR );
+
+            logWrite( print_r( $vs, true ), 'controller', LOG_ERR );
+            logWrite( print_r( $ks, true ), 'controller', LOG_ERR );
+
+            if( isset( $vs['codice'] ) && ( ! isset( $vs['id'] ) || empty( $vs['id']['s'] ) ) ) {
+
+                logWrite( "controller before per ${t}/${a} metodo DELETE per CODICE anziché per ID", 'controller', LOG_ERR );
+
+                $id = mysqlSelectValue(
+					$c,
+					'SELECT id FROM documenti_articoli WHERE codice = ?',
+					array( array( 's' => $vs['codice']['s'] ) )
+				);
+
+				if( ! in_array( 'id', $ks ) ) {
+					$ks[] = 'id';
+				}
+
+				$vs['id']['s'] = $id;
+
+                unset( $vs['codice'] );
+                removeFromArray( $ks, 'codice' );
+
+                logWrite( print_r( $vs, true ), 'controller', LOG_ERR );
+                logWrite( print_r( $ks, true ), 'controller', LOG_ERR );
+
+            }
+
+        break;
+
+    }
