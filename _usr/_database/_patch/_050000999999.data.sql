@@ -8,9 +8,11 @@
 -- caratteristiche
 -- tipologia: tabella gestita
 -- verifica: 2022-05-02 17:22 Chiara GDL
-INSERT INTO `caratteristiche` (`id`, `nome`, `font_awesome`, `html_entity`, `se_immobili`, `se_categorie_prodotti`, `se_prodotto`, `se_articolo`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	'peso indicativo',	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
-(2,	'standard tecnici',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+INSERT INTO `caratteristiche` (`id`, `nome`, `font_awesome`, `html_entity`, `se_prodotti`, `se_immobili`, `se_categorie_prodotti`, `se_prodotto`, `se_articolo`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	'peso indicativo',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(2,	'standard tecnici',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(3,	'unità di vendita',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL),
+(4,	'normativa FSC',	NULL,	NULL,	NULL,	NULL,	NULL,	1,	1,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000003100
 

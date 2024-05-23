@@ -2730,8 +2730,8 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
 
 -- | 010000025500
 
--- procedure
-CREATE TABLE `procedure` (
+-- istruzioni
+CREATE TABLE `istruzioni` (
   `id` int NOT NULL,
   `id_tipologia` int NOT NULL,
   `id_prodotto` char(32) NOT NULL,
@@ -2741,6 +2741,20 @@ CREATE TABLE `procedure` (
   `timestamp_inserimento` int NOT NULL,
   `id_account_aggiornamento` int NOT NULL,
   `timestamp_aggiornamento` int NOT NULL
+);
+
+-- | 010000025560
+
+-- istruzioni_tipologie_attivita
+CREATE TABLE `istruzioni_tipologie_attivita` (
+  `id` int NOT NULL,
+  `ordine` int NULL,
+  `id_istruzione` int NULL,
+  `id_tipologia_attivita` int NULL,
+  `id_account_inserimento` int NULL,
+  `timestamp_inserimento` int NULL,
+  `id_account_aggiornamento` int NULL,
+  `timestamp_aggiornamento` int NULL
 );
 
 -- | 010000026000
