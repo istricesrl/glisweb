@@ -141,6 +141,18 @@
     }
 
     /**
+     * sito di default
+     * ===============
+     * 
+     * 
+     */
+
+    // sito di default
+    if( ! defined( 'SITE_DEFAULT' ) ) {
+        define( 'SITE_DEFAULT', array_key_first( $cf['sites'] ) );
+    }
+
+    /**
      * configurazioni che dipendono dal sito corrente
      * ==============================================
      * 
