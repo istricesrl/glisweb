@@ -14,11 +14,24 @@
 			'parent'		=> array( 'id'		=> 'logistica' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 			'macro'			=> array( $m . '_src/_inc/_macro/_magazzini.view.php' ),
-			'etc'			=> array( 'tabs'	=> array(	'magazzini.view' ) ),
+			'etc'			=> array( 'tabs'	=> array(	'magazzini.view', 'magazzini.tools' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'magazzini' ),
 															'priority'	=> '230' ) ) )
 		);
+
+	// tools produzione
+	$p['magazzini.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'logistica' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_magazzini.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['magazzini']['etc']['tabs'] )
+	);
 
 		// gestione magazzini
 		$p['magazzini.form'] = array(
