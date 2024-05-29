@@ -29,6 +29,11 @@
             </div>  
 
             <div class="col">
+                <span class="label-top">etichetta</span>
+                {{ frm.input( table, subtable, i, 'nome', '', '', request, '', '', '', '', disabled ) }}
+            </div>
+
+            <div class="col">
                 <span class="label-top">valore</span>
                 {{ frm.input( table, subtable, i, 'valore', '', '', request, '', '', '', '', disabled ) }}
             </div>

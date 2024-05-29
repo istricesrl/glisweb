@@ -168,7 +168,8 @@
                                         getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ) )
                                     );
                                 }
-/*
+
+                                /*
                                 // creo il job
                                 $status['inserimento'] = mysqlQuery(
                                     $cf['mysql']['connection'],
@@ -189,9 +190,7 @@
                                 );
 
                                 // die( $status['inserimento'] );
-*/
-/*
-*/
+                                */
 
                                 // ...
                                 $ftpSrv = $cf['ftp']['servers'][ $cf['ftp']['profiles'][ $_REQUEST['target'] ]['servers'][0] ];
@@ -230,116 +229,150 @@
 
                                 // connessione al server FTP
                                 $ftpConn = ftp_connect( $ftpSrv['address'], $ftpSrv['port'], 5 );
-                                $ftpLogin = ftp_login( $ftpConn, $ftpSrv['username'], $ftpSrv['password'] );
-                                $ftpPasw = ftp_pasv( $ftpConn, true );
 
-                                // contatori
-                                $done = 0;
-                                $fail = 0;
+                                // se ho connessione
+                                if( ! empty( $ftpConn ) ) {
 
-                                $base = time();
+                                    // login al server FTP
+                                    $ftpLogin = ftp_login( $ftpConn, $ftpSrv['username'], $ftpSrv['password'] );
 
-// $toFtp = array_slice( $toFtp, 2, 3, true);
+                                    // se sono riuscito ad effettuare il login
+                                    if( $ftpLogin == true ) {
 
-                                // ...
-                                // deleteFile( 'tmp/ftp.done' );
-                                // deleteFile( 'tmp/ftp.fail' );
-                                // deleteFile( 'tmp/ftp.progress' );
+                                        // impostazione modalità passiva
+                                        $ftpPasw = ftp_pasv( $ftpConn, true );
 
-                                // ...
-                                foreach( $toFtp as $to ) {
+                                        // se sono riuscito ad impostare la modalità passiva
+                                        if( $ftpPasw == true ) {
 
-                                    // ...
-                                    $refFile = DIR_VAR .'latest.deploy.'.strtolower( $_REQUEST['target'] ).'.conf';
+                                            // contatori
+                                            $done = 0;
+                                            $fail = 0;
 
-                                    // ...
-                                    $refTime = ( file_exists( $refFile ) ) ? filemtime( $refFile ) : 0;
+                                            $base = time();
 
-                                    // ...
-                                    if( filemtime( fullPath( $to ) ) < $refTime ) {
+                                            // $toFtp = array_slice( $toFtp, 2, 3, true);
 
-                                        // ...
-                                        set_time_limit( 240 );
+                                            // ...
+                                            // deleteFile( 'tmp/ftp.done' );
+                                            // deleteFile( 'tmp/ftp.fail' );
+                                            // deleteFile( 'tmp/ftp.progress' );
 
-                                        // normalizzazione percorsi
-                                        $to = shortPath( $to );
+                                            // ...
+                                            foreach( $toFtp as $to ) {
 
-                                        // tipo di upload per tipo di file
-                                        $mode = ftpGetTransferTypeByFile( $to );
+                                                // ...
+                                                $refFile = DIR_VAR .'latest.deploy.'.strtolower( $_REQUEST['target'] ).'.conf';
 
-                                        // ...
-                                        $path = explode( '/', dirname( $to ) );
-                                        foreach( $path as $chdir ) {
-                                            $ftpDir = ftp_chdir( $ftpConn, $chdir );
-                                            // var_dump( $chdir );
-                                            // var_dump( $ftpDir );
-                                            if( empty( $ftpDir ) ) {
-                                                $ftpDir = ftp_mkdir( $ftpConn, $chdir );
-                                                // var_dump( $ftpDir );
-                                                $ftpDir = ftp_chdir( $ftpConn, $chdir );
-                                                // var_dump( $ftpDir );
+                                                // ...
+                                                $refTime = ( file_exists( $refFile ) ) ? filemtime( $refFile ) : 0;
+
+                                                // ...
+                                                if( filemtime( fullPath( $to ) ) < $refTime ) {
+
+                                                    // ...
+                                                    set_time_limit( 240 );
+
+                                                    // normalizzazione percorsi
+                                                    $to = shortPath( $to );
+
+                                                    // tipo di upload per tipo di file
+                                                    $mode = ftpGetUploadTypeByFile( $to );
+
+                                                    // ...
+                                                    $path = explode( '/', dirname( $to ) );
+                                                    foreach( $path as $chdir ) {
+                                                        $ftpDir = ftp_chdir( $ftpConn, $chdir );
+                                                        // var_dump( $chdir );
+                                                        // var_dump( $ftpDir );
+                                                        if( empty( $ftpDir ) ) {
+                                                            $ftpDir = ftp_mkdir( $ftpConn, $chdir );
+                                                            // var_dump( $ftpDir );
+                                                            $ftpDir = ftp_chdir( $ftpConn, $chdir );
+                                                            // var_dump( $ftpDir );
+                                                        }
+                                                    }
+
+                                                    // echo 'cartella corrente: ' . PHP_EOL;
+                                                    // var_dump( ftp_pwd( $ftpConn ) );
+
+                                                    // upload del file
+                                                    // $ftpPut = @ftp_put( $ftpConn, basename( $to ), DIR_BASE . $to, $mode );
+                                                    // $ftpPut = ftp_put( $ftpConn, basename( $to ), DIR_BASE . $to, $mode );
+                                                    // $ftpPut = ftp_put( $ftpConn, $to, DIR_BASE . $to, $mode );
+                                                    $ftpPut = ftp_put( $ftpConn, basename( $to ), DIR_BASE . $to );
+
+                                                    // var_dump( basename( $to ) );
+                                                    // var_dump( DIR_BASE . $to );
+                                                    // var_dump( file_exists( DIR_BASE . $to ) );
+                                                    // var_dump( $ftpPut );
+
+                                                    // die();
+
+                                                    // status
+                                                    if( $ftpPut == false ) {
+                                                        $error = error_get_last();
+                                                        $status['err'][] = 'impossibile trasferire ' . $to . ' (' . boolean2string( $ftpPut ) . ') errore: ' . $error['message'];
+                                                        logger( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL . ' errore: ' . $error['message'], 'details/ftp.'.$base.'.fail' );
+                                                        $esito = 'KO';
+                                                    } else {
+                                                        $fail++;
+                                                        $status['err'][] = 'impossibile trasferire ' . $to . ' (' . boolean2string( $ftpPut ) . ')';
+                                                        logger( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL, 'details/ftp.'.$base.'.success' );
+                                                        $esito = 'KO';
+                                                    }
+
+                                                    // ...
+                                                    appendToFile( date( 'Y-m-d H:i:s' ) . ' ' . $esito . ' -> ' . $to . PHP_EOL, $refFile );
+
+                                                    // ...
+                                                    for( $i = 0; $i < count( $path ); $i++ ) {
+                                                        $ftpDir = ftp_cdup( $ftpConn );
+                                                    }
+
+                                                    // ...
+                                                    writeToFile(
+                                                        json_encode(
+                                                            array(
+                                                                'total' => count( $toFtp ),
+                                                                'done' => $done,
+                                                                'fail' => $fail,
+                                                                'current' => ( $done + $fail ),
+                                                                'connection' => ( ( empty( $ftpConn ) ) ? 'NO' : 'OK' ),
+                                                                'login' => $ftpLogin,
+                                                                'server' => $ftpSrv['address']
+                                                            )
+                                                        ),
+                                                        'var/progress/ftp.'.$_REQUEST['id'].'.progress'
+                                                    );
+
+                                                }
+
                                             }
+
+                                            // ...
+                                            ftp_close( $ftpConn );
+
+                                        } else {
+
+                                            // status
+                                            $status['err'][] = 'impossibile impostare la modalità FTP passiva per lo stage ' . $_REQUEST['target'];
+    
                                         }
 
-                                        // echo 'cartella corrente: ' . PHP_EOL;
-                                        // var_dump( ftp_pwd( $ftpConn ) );
-
-                                        // upload del file
-                                        // $ftpPut = @ftp_put( $ftpConn, basename( $to ), DIR_BASE . $to, $mode );
-                                        // $ftpPut = ftp_put( $ftpConn, basename( $to ), DIR_BASE . $to, $mode );
-                                        // $ftpPut = ftp_put( $ftpConn, $to, DIR_BASE . $to, $mode );
-                                        $ftpPut = ftp_put( $ftpConn, basename( $to ), DIR_BASE . $to );
-
-                                        // var_dump( basename( $to ) );
-                                        // var_dump( DIR_BASE . $to );
-                                        // var_dump( file_exists( DIR_BASE . $to ) );
-                                        // var_dump( $ftpPut );
-
-                                        // die();
+                                    } else {
 
                                         // status
-                                        if( $ftpPut == true ) {
-                                            $done++;
-                                            // $status['info'][] = 'completato trasferimento di ' . $to . ' (' . boolean2string( $ftpPut ) . ')';
-                                            appendToFile( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL, 'tmp/ftp.'.$base.'.done' );
-                                            $esito = 'OK';
-                                        } else {
-                                            $fail++;
-                                            $status['err'][] = 'impossibile trasferire ' . $to . ' (' . boolean2string( $ftpPut ) . ')';
-                                            appendToFile( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL, 'tmp/ftp.'.$base.'.fail' );
-                                            $esito = 'KO';
-                                        }
-
-                                        // ...
-                                        appendToFile( date( 'Y-m-d H:i:s' ) . ' ' . $esito . ' -> ' . $to . PHP_EOL, $refFile );
-
-                                        // ...
-                                        for( $i = 0; $i < count( $path ); $i++ ) {
-                                            $ftpDir = ftp_cdup( $ftpConn );
-                                        }
-
-                                        // ...
-                                        writeToFile(
-                                            json_encode(
-                                                array(
-                                                    'total' => count( $toFtp ),
-                                                    'done' => $done,
-                                                    'fail' => $fail,
-                                                    'current' => ( $done + $fail ),
-                                                    'connection' => ( ( empty( $ftpConn ) ) ? 'NO' : 'OK' ),
-                                                    'login' => $ftpLogin,
-                                                    'server' => $ftpSrv['address']
-                                                )
-                                            ),
-                                            'var/progress/ftp.'.$_REQUEST['id'].'.progress'
-                                        );
+                                        $status['err'][] = 'errore al login FTP per lo stage ' . $_REQUEST['target'];
 
                                     }
 
-                                }
+                                } else {
 
-                                // ...
-                                ftp_close( $ftpConn );
+                                    // status
+                                    $status['err'][] = 'connessione FTP assente per lo stage ' . $_REQUEST['target'];
+
+                                }
 
                             } else {
 

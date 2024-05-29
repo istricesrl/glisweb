@@ -353,7 +353,7 @@ ALTER TABLE `articoli_caratteristiche`
 	ADD UNIQUE KEY `unica` (`id_articolo`,`id_caratteristica`), 
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_caratteristica` (`id_caratteristica`),
-	ADD KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`,`valore`,`se_assente` );
+	ADD KEY `indice` (`id`,`id_articolo`,`id_caratteristica`,`ordine`,`valore` (255),`se_assente` );
 
 -- | 030000001601
 
@@ -2830,6 +2830,44 @@ ALTER TABLE `prezzi`
 -- tipologia: tabella gestita
 ALTER TABLE `prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000025500
+
+-- istruzioni
+ALTER TABLE `istruzioni`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id`,`id_tipologia`,`nome`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice_prodotti` (`id`,`id_tipologia`,`id_prodotto`,`nome`),
+	ADD KEY `indice_articoli` (`id`,`id_tipologia`,`id_articolo`,`nome`);
+
+-- | 030000025501
+
+-- istruzioni
+ALTER TABLE `istruzioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000025560
+
+-- istruzioni_tipologie_attivita
+ALTER TABLE `istruzioni_tipologie_attivita`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_istruzione`,`id_tipologia_attivita`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_istruzione` (`id_istruzione`),
+	ADD KEY `id_tipologia_attivita` (`id_tipologia_attivita`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_istruzione`,`id_tipologia_attivita`);
+
+-- | 030000025561
+
+-- istruzioni_tipologie_attivita
+ALTER TABLE `istruzioni_tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000026000
 
 -- prodotti
@@ -4260,6 +4298,24 @@ ALTER TABLE `tipologie_indirizzi`
 -- tipologie_indirizzi
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000053100
+
+-- tipologie_istruzioni
+ALTER TABLE `tipologie_istruzioni`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+-- | 030000053101
+
+-- tipologie_istruzioni
+ALTER TABLE `tipologie_istruzioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000053200
 

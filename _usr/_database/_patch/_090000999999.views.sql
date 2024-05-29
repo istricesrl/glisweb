@@ -6472,6 +6472,55 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 		LEFT JOIN iva ON iva.id = prezzi.id_iva
 ;
 
+-- | 090000025500
+
+-- istruzioni_view
+DROP TABLE IF EXISTS `istruzioni_view`;
+
+-- | 090000025501
+
+-- istruzioni_view
+CREATE OR REPLACE VIEW `istruzioni_view` AS
+	SELECT
+		istruzioni.id,
+		istruzioni.id_tipologia,
+		tipologie_istruzioni.nome AS tipologia,
+		istruzioni.id_prodotto,
+		concat (prodotti.id, prodotti.nome),
+		istruzioni.id_articolo,
+		concat (articoli.id, articoli.nome),
+		istruzioni.nome,
+		istruzioni.id_account_inserimento,
+		istruzioni.id_account_aggiornamento
+	FROM istruzioni
+		LEFT JOIN tipologie_istruzioni ON tipologie_istruzioni.id = istruzioni.id_tipologia
+		LEFT JOIN prodotti ON prodotti.id = istruzioni.id_prodotto
+		LEFT JOIN articoli ON articoli.id = istruzioni.id_articolo
+;
+
+-- | 090000025560
+
+-- istruzioni_tipologie_attivita_view
+DROP TABLE IF EXISTS `istruzioni_tipologie_attivita_view`;
+
+-- | 090000025561
+
+-- istruzioni_tipologie_attivita_view
+CREATE OR REPLACE VIEW `istruzioni_tipologie_attivita_view` AS
+	SELECT
+		istruzioni_tipologie_attivita.id,
+		istruzioni_tipologie_attivita.ordine,
+		istruzioni_tipologie_attivita.id_istruzione,
+		concat ( istruzioni.id, istruzioni.nome ),
+		istruzioni_tipologie_attivita.id_tipologia_attivita,
+		tipologie_attivita.nome AS tipologia,
+		istruzioni_tipologie_attivita.id_account_inserimento,
+		istruzioni_tipologie_attivita.id_account_aggiornamento
+	FROM istruzioni_tipologie_attivita
+		LEFT JOIN istruzioni ON istruzioni.id = istruzioni_tipologie_attivita.id_istruzione
+		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = istruzioni_tipologie_attivita.id_tipologia_attivita
+;
+
 -- | 090000026000
 
 -- prodotti_view
@@ -9526,6 +9575,28 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS
 		tipologie_indirizzi.id_account_aggiornamento,
 		tipologie_indirizzi_path( tipologie_indirizzi.id ) AS __label__
 	FROM tipologie_indirizzi
+;
+
+-- | 090000053100
+
+-- tipologie_istruzioni_view
+DROP TABLE IF EXISTS `tipologie_istruzioni_view`;
+
+-- | 090000053101
+
+-- tipologie_istruzioni_view
+CREATE OR REPLACE VIEW `tipologie_istruzioni_view` AS
+	SELECT
+		tipologie_istruzioni.id,
+		tipologie_istruzioni.id_genitore,
+		tipologie_istruzioni.ordine,
+		tipologie_istruzioni.nome,
+		tipologie_istruzioni.html_entity,
+		tipologie_istruzioni.font_awesome,
+		tipologie_istruzioni.id_account_inserimento,
+		tipologie_istruzioni.id_account_aggiornamento,
+		tipologie_istruzioni_path( tipologie_istruzioni.id ) AS __label__
+	FROM tipologie_istruzioni
 ;
 
 -- | 090000053200

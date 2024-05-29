@@ -64,6 +64,8 @@
      $ct['view']['cols'] = array(
 	    'id' => '#',
         'tipologia' => 'tipologia',
+        'id_progetto' => 'ID progetto',
+        'progetto' => 'progetto',
         'codice_cliente' => 'codice',
         'cliente' => 'cliente',
         'data_programmazione' => 'programmata',
@@ -83,6 +85,8 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
+        'id_progetto' => 'd-none',
+        'progetto' => 'd-none',
 	    '__label__' => 'text-left',
         'cliente' => 'text-left d-none d-md-table-cell',
         'anagrafica_programmazione' => 'text-left',

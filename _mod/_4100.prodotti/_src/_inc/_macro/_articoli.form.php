@@ -36,6 +36,13 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM colori_view' );
 
+    // tendina taglie
+	$ct['etc']['select']['taglie'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM taglie_view' );
+
     // tendina id_tipologia_pubblicazioni
 	$ct['etc']['select']['tipologie_pubblicazioni'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

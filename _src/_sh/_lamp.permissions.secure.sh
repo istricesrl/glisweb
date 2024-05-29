@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO documentare
+# questo script è un buon posto dove mettere la documentazione su come GlisWeb gestisce i permessi
+#
+
 ## pulizia schermo
 clear
 

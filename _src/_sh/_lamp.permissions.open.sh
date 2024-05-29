@@ -4,7 +4,8 @@
 #
 # NOTA dopo aver terminato l'installazione, eseguire _lamp.permission.secure.sh
 #
-# TODO documentare questo script
+# TODO documentare
+# questo script è un buon posto dove mettere la documentazione su come GlisWeb gestisce i permessi
 #
 
 ## pulizia schermo

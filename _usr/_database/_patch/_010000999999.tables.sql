@@ -2731,31 +2731,31 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
 -- | 010000025500
 
 -- istruzioni
-CREATE TABLE `istruzioni` (
-  `id` int NOT NULL,
-  `id_tipologia` int NOT NULL,
-  `id_prodotto` char(32) NOT NULL,
-  `id_articolo` char(32) NOT NULL,
-  `nome` int NOT NULL,
-  `id_account_inserimento` int NOT NULL,
-  `timestamp_inserimento` int NOT NULL,
-  `id_account_aggiornamento` int NOT NULL,
-  `timestamp_aggiornamento` int NOT NULL
-);
+CREATE TABLE IF NOT EXISTS `istruzioni` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000025560
 
 -- istruzioni_tipologie_attivita
-CREATE TABLE `istruzioni_tipologie_attivita` (
-  `id` int NOT NULL,
-  `ordine` int NULL,
-  `id_istruzione` int NULL,
-  `id_tipologia_attivita` int NULL,
-  `id_account_inserimento` int NULL,
-  `timestamp_inserimento` int NULL,
-  `id_account_aggiornamento` int NULL,
-  `timestamp_aggiornamento` int NULL
-);
+CREATE TABLE IF NOT EXISTS `istruzioni_tipologie_attivita` (
+  `id` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_istruzione` int(11) DEFAULT NULL,
+  `id_tipologia_attivita` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000026000
 
@@ -4077,6 +4077,22 @@ CREATE TABLE `tipologie_immobili` (
 -- tipologia: tabella assistita
 -- verifica: 2021-10-15 17:29 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000053100
+
+-- tipologie_istruzioni
+CREATE TABLE IF NOT EXISTS `tipologie_istruzioni` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,

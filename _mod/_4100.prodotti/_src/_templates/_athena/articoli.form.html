@@ -68,7 +68,7 @@
 		    <legend>produttore</legend>
             <div class="form-group form-row">
                 <div class="col-12 col-md">
-                    <span class="label-top">codice ean produttore</span>
+                    <span class="label-top">codice EAN produttore</span>
                     {{ frm.input( table, '', '', 'ean', '', '', request ) }}
                 </div>
             </div>
@@ -111,6 +111,18 @@
                 <div class="col-4 col-md-auto">
                     <span class="label-top">udm</span>
                     {{ frm.select( table, '', '', 'id_udm_capacita', '', etc.select.udm_volume, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_taglie %}
+                <div class="col-12 col-md">
+                    <span class="label-top">taglia</span>
+                    {{ frm.select( table, '', '', 'id_taglia', '', etc.select.taglie, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_colori %}
+                <div class="col-12 col-md">
+                    <span class="label-top">colore</span>
+                    {{ frm.select( table, '', '', 'id_colore', '', etc.select.colori, request ) }}
                 </div>
                 {% endif %}
             </div>

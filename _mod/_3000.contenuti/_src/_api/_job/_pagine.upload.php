@@ -142,7 +142,7 @@
                         ftp_pasv( $ftpConn, true );
 
                         // ...
-                        $mode = ftpGetTransferTypeByFile( $to );
+                        $mode = ftpGetUploadTypeByFile( $to );
 
                         // ...
                         $ftpDir = ftp_chdir( $ftpConn, dirname( $to ) );

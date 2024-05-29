@@ -1,6 +1,6 @@
 <?php
 
-    function ftpGetTransferTypeByFile( $f ) {
+    function ftpGetUploadTypeByFile( $f ) {
 
         fullpath( $f );
 
