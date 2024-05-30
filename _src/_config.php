@@ -113,8 +113,15 @@
      *         +--------+      +-------+      |  I  | <--------------------------+
      *         | output | <--- | macro | <--- |     |
      *         +--------+      +-------+      +-----+
+     *                            ^ |           ^ |
+     *                            | v           | v
+     *                   +---------------------------------+
+     *                   | template o factory di rendering |
+     *                   +---------------------------------+
      * 
      * TODO documentare relativamente al file .htaccess anche il file _etc/_robots/_robots.txt e in generale il ruolo del file robots.txt
+     * 
+     * TODO documentare la parte dopo il _config.php (API, macro di pagina, inclusione template, rendering, output)
      * 
      * organizzazione del filesystem del framework
      * ===========================================

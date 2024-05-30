@@ -1,0 +1,80 @@
+/*!
+
+    \page cartelle_var la cartella var/ del framework
+
+    Descrizione del contenuto e della funzione della cartella var/.
+
+    TODO finire di scrivere questo file
+
+    introduzione
+    ============
+
+
+    
+    cartelle custom
+    ===============
+
+
+
+    file                            | descrizione
+    --------------------------------|-------------------------------------
+    var/latest.release.conf         | contiene il numero dell'ultima release del framework letta da glisweb.istricesrl.it (una copia locale del dato fatta per velocizzare)
+    var/latest.version.conf         | contiene il numero dell'ultima versione del framework letta da glisweb.istricesrl.it (una copia locale del dato fatta per velocizzare)
+
+
+
+    la sottocartella var/cache/
+    ---------------------------
+
+
+
+    la sottocartella var/log/
+    -------------------------
+
+
+    TODO fare una tabella con i vari file di log e la loro spiegazione
+
+
+    la sottocartella var/log/latest/
+    --------------------------------
+
+
+    TODO fare una tabella con i vari file di log e la loro spiegazione
+
+
+    la sottocartella var/log/details/
+    ---------------------------------
+
+
+    TODO fare una tabella con i vari file di log e la loro spiegazione
+
+
+
+    la sottocartella var/sitemap/
+    -----------------------------
+
+
+
+
+
+
+    la sottocartella var/spool/
+    ---------------------------
+
+
+
+
+
+    la sottocartella var/spool/security/
+    ------------------------------------
+
+
+
+
+    la sottocartella var/spool/import/
+    ----------------------------------
+
+
+
+
+*/

@@ -1,0 +1,18 @@
+/*!
+
+    \page documentazione organizzazione della documentazione del framework
+
+    La logica con cui è costruita e distribuita la documentazione del framework.
+
+    TODO finire di scrivere questo file
+
+    introduzione
+    ============
+
+
+    Doxygen
+    =======
+
+    [...] lo script _src/_sh/_doxygen.build.sh
+
+*/

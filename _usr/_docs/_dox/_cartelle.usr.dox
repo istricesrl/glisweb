@@ -1,0 +1,183 @@
+/*!
+
+    \page cartelle_usr la cartella _usr/ del framework
+
+    Descrizione del contenuto e della funzione della cartella _usr/.
+
+    TODO finire di scrivere questo file
+
+    introduzione
+    ============
+
+
+
+
+    cartelle standard
+    =================
+
+
+
+
+    la sottocartella _usr/_database/
+    --------------------------------
+
+
+
+
+    la sottocartella _usr/_database/_patch/
+    ---------------------------------------
+
+
+
+    file                                                    | descrizione
+    --------------------------------------------------------|---------------------------------
+    _usr/_database/_patch/_010000999999.tables.sql          | query SQL per la creazione delle tabelle
+    _usr/_database/_patch/_030000999999.indexes.sql         | query SQL per la creazione degli indici
+    _usr/_database/_patch/_050000999999.data.sql            | query SQL per l'inserimento iniziale dei dati standard
+    _usr/_database/_patch/_060000999999.constraints.sql     | query SQL per la creazione dei vincoli di integrità referenziale
+    _usr/_database/_patch/_090000999999.views.sql           | query SQL per la creazione delle viste
+
+    
+
+
+    la sottocartella _usr/_docs/
+    ----------------------------
+
+
+
+    file                                                    | descrizione
+    --------------------------------------------------------|---------------------------------
+    _usr/_docs/_cartelle.dox                                | spiegazione della struttura e del contenuto delle cartelle del framework
+    _usr/_docs/_cartelle.etc.dox                            | spiegazione in dettaglio della cartella _etc/ e delle sue sottocartelle
+    _usr/_docs/_cartelle.mod.dox                            | spiegazione in dettaglio della cartella _mod/ e delle sue sottocartelle
+    _usr/_docs/_cartelle.src.dox                            | spiegazione in dettaglio della cartella _src/ e delle sue sottocartelle
+    _usr/_docs/_cartelle.tmp.dox                            | spiegazione in dettaglio della cartella _tmp/ e delle sue sottocartelle
+    _usr/_docs/_cartelle.usr.dox                            | spiegazione in dettaglio della cartella _usr/ e delle sue sottocartelle
+    _usr/_docs/_cartelle.var.dox                            | spiegazione in dettaglio della cartella _var/ e delle sue sottocartelle
+    _usr/_docs/_documentazione.dox                          | spiegazione della struttura e del contenuto della documentazione del framework
+    _usr/_docs/_glossario.dox                               | spiegazione dei termini tecnici utilizzati nel framework
+    _usr/_docs/_mainpage.dox                                | pagina principale della documentazione del framework
+
+
+
+
+
+    la sottocartella _usr/_docs/_html/
+    ----------------------------------
+
+
+    TODO documentare
+
+
+
+
+    la sottocartella _usr/_docs/_pdf/
+    ---------------------------------
+
+
+    TODO documentare
+
+
+
+
+    la sottocartella _usr/_examples/
+    --------------------------------
+
+
+    TODO documentare
+
+
+
+    la sottocartella _usr/_examples/_config/
+    ----------------------------------------
+
+
+    TODO documentare
+
+
+
+    la sottocartella _usr/_examples/_config/_apache/
+    ------------------------------------------------
+
+
+    TODO documentare
+
+
+    la sottocartella _usr/_examples/_config/_framework/
+    ---------------------------------------------------
+    Questa sottocartella contiene esempi di file di configurazione per il framework; i file presenti in questa sottocartella e nelle sue sottocartelle possono
+    anche essere utilizzati come modelli dagli script di configurazione automatica o assistita del framework.
+
+
+    TODO documentare
+
+
+    la sottocartella _usr/_examples/_core/
+    --------------------------------------
+    Questa sottocartella contiene esempi relativi alle funzionalità core del framework [...]
+
+    TODO documentare
+    TODO verificare che i file contenuti in questa sottocartella siano OK e fare la tabella
+
+
+    la sottocartella _usr/_examples/_mod/
+    -------------------------------------
+
+
+    TODO documentare
+
+
+
+    la sottocartella _usr/_examples/_lab/
+    -------------------------------------
+    Questa sottocartella contiene vari file di esperimenti che dimostrano funzionalità di PHP o del framework.
+
+
+    TODO documentare
+
+
+
+    la sottocartella _usr/_examples/_lib/
+    -------------------------------------
+
+
+    TODO documentare
+    TODO finire di creare tutti gli esempi per le librerie
+
+
+
+
+    la sottocartella _usr/_examples/_lib/_apcu.tools/
+    -------------------------------------------------
+
+
+    TODO documentare
+
+
+
+    la sottocartella _usr/_examples/_lib/_filesystem.tools/
+    -------------------------------------------------------
+
+
+    TODO documentare
+
+
+
+    la sottocartella _usr/_test/
+    ----------------------------
+
+
+
+    TODO documentare
+
+
+
+
+
+    cartelle custom
+    ===============
+
+
+
+
+*/

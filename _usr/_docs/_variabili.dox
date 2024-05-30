@@ -1,0 +1,12 @@
+/*!
+
+    \page variabili variabili del framework
+
+    Descrizione delle strutture dati portanti del framework.
+
+    l'array $cf
+    ===========
+    L'array $cf contiene tutti i valori di lavoro e di funzionamento e i parametri di configurazione
+    e di controllo del framework.
+
+*/

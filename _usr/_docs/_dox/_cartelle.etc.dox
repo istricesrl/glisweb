@@ -1,0 +1,95 @@
+/*!
+
+    \page cartelle_etc la cartella _etc/ del framework
+
+    Descrizione del contenuto e della funzione della cartella _etc/.
+
+    TODO finire di scrivere questo file
+
+    introduzione
+    ============
+
+    file                        | descrizione
+    ----------------------------|-------------------------------------
+    _etc/_current.release       | file che contiene la release corrente del framework
+    _etc/_current.version       | file che contiene la versione corrente del framework
+
+
+    cartelle standard
+    =================
+
+
+    la sottocartella _etc/_common/
+    ------------------------------
+
+    file                        | descrizione
+    ----------------------------|-------------------------------------
+    _etc/_common/_lorem.conf    | file che contiene il testo placeholder di default
+    
+    la sottocartella _etc/_doxygen/
+    -------------------------------
+
+    file                            | descrizione
+    --------------------------------|-------------------------------------
+    _etc/_doxygen/_doxygen.conf     | file di configurazione di Doxygen per la compilazione della documentazione
+
+    la sottocartella _etc/_dictionaries/
+    ---------------------------
+
+    [...] contiene i dizionari dei microcontenuti del framework.
+
+    file                            | descrizione
+    --------------------------------|-------------------------------------
+    _etc/_dictionaries/_generic.cs-CZ.conf   | dizionario generico ceco
+    _etc/_dictionaries/_generic.de-DE.conf   | dizionario generico tedesco
+    _etc/_dictionaries/_generic.en-GB.conf   | dizionario generico inglese
+    _etc/_dictionaries/_generic.en-US.conf   | dizionario generico inglese americano
+    _etc/_dictionaries/_generic.es-ES.conf   | dizionario generico spagnolo
+    _etc/_dictionaries/_generic.fr-FR.conf   | dizionario generico francese
+    _etc/_dictionaries/_generic.hr-HR.conf   | dizionario generico croato
+    _etc/_dictionaries/_generic.hu-HU.conf   | dizionario generico ungherese
+    _etc/_dictionaries/_generic.it-IT.conf   | dizionario generico italiano
+    _etc/_dictionaries/_generic.ja-JP.conf   | dizionario generico giapponese
+    _etc/_dictionaries/_generic.pl-PL.conf   | dizionario generico polacco
+    _etc/_dictionaries/_generic.pt-PT.conf   | dizionario generico portoghese
+    _etc/_dictionaries/_generic.pt-BR.conf   | dizionario generico portoghese brasiliano
+    _etc/_dictionaries/_generic.ro-RO.conf   | dizionario generico rumeno
+    _etc/_dictionaries/_generic.ru-RU.conf   | dizionario generico russo
+    _etc/_dictionaries/_generic.sv-SE.conf   | dizionario generico svedese
+
+    la sottocartella _etc/_security/
+    --------------------------------
+
+    file                                | descrizione
+    ------------------------------------|-------------------------------------
+    _etc/_security/_banned.words.conf   | dizionario delle parole proibite per la validazione dei dati in arrivo
+
+
+
+    cartelle custom
+    ===============
+
+
+
+    file                        | descrizione
+    ----------------------------|-------------------------------------
+    etc/redirect.csv            | file di configurazione per i redirect del framework
+
+
+
+
+    la sottocartella etc/doxygen/
+    -----------------------------
+
+
+    file                            | descrizione
+    --------------------------------|-------------------------------------
+    etc/doxygen/doxygen.conf        | file di configurazione di Doxygen per la compilazione della documentazione
+
+
+
+    TODO documentare
+
+
+
+*/

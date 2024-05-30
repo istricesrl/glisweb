@@ -1,0 +1,377 @@
+/*!
+
+    \page database database del framework
+
+    Descrizione del layer di database del framework.
+
+    introduzione
+    ============
+    Il framework è in grado di operare su database multipli, anche di diverso tipo, sia per gestire i dati di
+    lavoro sia per recuperare informazioni necessarie al proprio funzionamento. In particolare, il database che
+    contiene i dati di funzionamento del framework è detto database di supporto, mentre gli altri sono detti
+    database di lavoro.
+
+    Le tabelle del database di supporto si dividono in tre categorie secondo la politica di aggiornamento dei dati
+    da parte dell'utente:
+
+    - tabelle standard
+    - tabelle assistite
+    - tabelle gestite
+
+    [...] dal punto di vista della gerarchia dei dati [...] tipologie:
+    - tabelle principali (es. anagrafica) che descrivono gli oggetti principali e indipendenti
+    - tabelle secondarie (es. telefoni) che descrivono gli oggetti dipendenti dagli oggetti principali
+    - tabelle di relazione (es. anagrafica_progetti) che descrivono le relazioni fra oggetti principali o secondari
+    - tabelle di multirelazione (es. documenti_articoli) che descrivono le relazioni fra più oggetti principali o secondari
+    - tabelle di specifica (es. tipologie_anagrafica, ruoli_anagrafica) che qualificano rispettivamente gli oggetti principali o secondari e le relazioni fra essi
+
+    [...] dal punto di vista della presenza di riferimenti a sé stesse, le tabelle si distiguono in:
+    - tabelle base (es. anagrafica), che non hanno relazioni con sé stesse
+    - tabelle ricorsive (es. tipologie_anagrafica), che hanno relazioni con sé stesse
+
+    Le tabelle principali si distiguono per il fatto che contengono dati indipendenti da altre tabelle, ovverosia che hanno senso di per sé (ad esempio una persona descritta da
+    una riga della tabella anagrafica); le tabelle secondarie invece contengono dati dipendenti dalle righe delle tabelle principali (ad esempio i numeri di telefono di una persona)
+    e che quindi non hanno senso di esistere senza di esse.
+
+    In caso di relazione fra tabelle principali si applicherà quindi un vincolo di tipo SET NULL mentre nelle relazioni fra tabelle principali e tabelle secondarie si applicherà
+    un vincolo di tipo CASCADE in modo da evitare che rimangano nel database dati orfani, che sarebbero privi di senso in quanto non collegati a un'entità principale che li
+    qualifichi e li contestualizzi. Nel caso invece in cui la relazione vada verso la tabella principale si applicherà la strategia SET NULL.
+
+    Le tabelle di specifica precisano il significato di una riga di tabella principale o secondaria, che quindi non avrebbe senso o sarebbe decontestualizzata senza la relazione;
+    (ad esempio una riga di anagrafica priva di tipologia non dice se si tratta di una persona fisica o giuridica); pertanto nelle relazioni fra tabelle principali e tabelle di
+    specifica si applicherà la strategia NO ACTION.
+
+    Le tabelle di relazione mettono in relazione fra loro i dati presenti su altre tabelle e quindi le righe che contengono non hanno senso di esistere senza i dati cui fanno
+    riferimento; pertanto nelle relazioni con queste tabelle si applicherà sempre la strategia CASCADE.
+
+    Le tabelle ricorsive possono essere considerate di specifica verso sé stesse ovvero relativamente alla colonna id_genitore si applicherà sempre la strategia di relazione NO ACTION
+    per evitare che possano crearsi inconsistenze nell'albero.
+
+    [...] non rilevanti per la struttura del database ma dal punto di vista dell'applicazione [...] gruppi:
+    - tabelle categorie_*
+    - tabelle tipologie_*
+    - tabelle relazioni_*
+    - tabelle ruoli_*
+
+    [...] per la loro funzione di specifica, le tabelle di ruoli_* stanno alle tabelle di relazione come le tabelle di tipologie_* stanno alle tabelle principali.
+
+    tipologie di tabelle
+    ====================
+    Il database di supporto contiene dati strutturali come lingue, informazioni geografiche, fusi orari, unità
+    di misura, valute, e così via; anche se non è indispensabile dal momento che il framework può funzionare
+    anche senza, svolge comunque un ruolo importante e se è possibile si consiglia sempre di installarlo. Il
+    database di supporto può contenere sia tabelle standard che tabelle assistite o gestite (vedi sotto), mentre
+    i database di lavoro possono contenere solo tabelle assistite e gestite.
+
+    le tabelle standard
+    -------------------
+    La differenza principale fra le tabelle standard e le altre è che contengono informazioni non
+    modificabili tramite l'interfaccia del framework, in quanto sono considerate parte del framework stesso
+    e la modifica dei loro contenuti è considerata un aggiornamento; le tabelle di lavoro (gestite e assistite)
+    invece sono pensate proprio per essere modificate tramite le interfacce del framework.
+
+    Una caratteristica fondamentale delle tabelle standard è quella di integrare array già presenti nel
+    framework, aggiungendo dati e informazioni. Si veda ad esempio l'array $cf['localization']['languages']
+    prima e dopo il file _src/_config/_195.localization.php. La struttura dei dati nel database non corrisponde
+    sempre esattamente a quella degli array del framework, ma si è cercato di tenerle il più simili possibile per
+    semplificarne la lettura e la gestione e a tendere si cercherà di farle convergere con gli aggiornamenti.
+
+    le tabelle assistite
+    --------------------
+    Le tabelle assistite contengono dati standard per comodità dell'utente ma possono essere gestite tramite le interfacce
+    del framework. Il loro contenuto non è quindi considerato parte del framework e può essere liberamente modificato dagli
+    utenti.
+
+    le tabelle gestite
+    ------------------
+    Le tabelle gestite contengono i dati che vengono manipolati tramite le interfacce del framework;
+    sono sempre vuote nelle nuove installazioni e accolgono i dati che vengono via via inseriti dagli utenti.
+
+    tabelle e moduli
+    ================
+    Non tutti i moduli necessitano di tutte le tabelle. Per sapere quali tabelle sono richieste dai vari moduli è
+    possibile fare riferimento alla seguente tabella:
+
+    modelli di tabelle
+    ==================
+
+    tabelle base
+    ------------
+    Le tabelle di base costituiscono l'ossatura principale del database del framework. Sono in relazione fra loro,
+    ma non con sé stesse.
+
+    tabelle di relazione
+    --------------------
+    Le tabelle base possono essere in relazione uno a molti fra loro, ma per ottenere relazioni di tipo molti a molti
+    è necessario ricorrere a tabelle di appoggio, che mettono in relazione fra loro entità rappresentate da due
+    diverse tabelle base. Quando una tabella mette in relazione molti a molti le entità di una sola tabella base,
+    allora prende il nome di tabella di correlazione.
+
+    tabelle ricorsive
+    -----------------
+    Le tabelle che rappresentano dati strutturati ad albero sono in relazione con sé stesse, tipicamente tramite il
+    campo *id_genitore*, e a parte questo si comportano come normali tabelle base.
+
+    gruppi di tabelle
+    =================
+
+    tabelle principali
+    ------------------
+
+    tabelle secondarie
+    ------------------
+
+    tabelle per i contenuti
+    -----------------------
+
+    tabelle per le categorie
+    ------------------------
+
+    tabelle per le tipologie
+    ------------------------
+
+    tabelle per i ruoli
+    -------------------
+
+    tabelle e view
+    ==============
+    Normalmente il framework prevede che le tabelle abbiano una vista corrispondente, identificata dallo stesso
+    nome della tabella al quale si aggiunge il suffisso '_view'. Queste view hanno la funzione principale di
+    semplificare l'accesso ai dati, e vanno costruite in base agli indici delle tabelle per massimizzare le
+    performance. Le viste devono avere la colonna '__label__', che viene utilizzata normalmente nella creazione
+    dei selettori a tendina assieme al campo 'id'.
+
+    logica di selezione dei campi per le view
+    -----------------------------------------
+
+
+    view virtuali
+    -------------
+
+
+
+    view statiche e report
+    ----------------------
+
+    [...] la differenza fra view statiche e report è che le view statiche si riferiscono principalmente a un'entità, mentre i report mettono assieme più entità per
+    produrre un dato di sintesi; ad esempio la anagrafica_view_static è una view statica perché contiene soltanto informazioni sulle anagrafiche e sulle tabelle
+    collegate, mentre il report delle giacenze di magazzino mette insieme dati diversi per produrre il totale della giacenza, ossia non esiste una tabella delle giacenze
+    di cui fare la vista statica, ma solo il report.  
+
+    [...] per ogni view statica dovrebbe essere predisposto quanto segue:
+
+    - una funzione in mysql.utils che contenga le logiche di scrittura di una singola riga (ad es. updateAnagraficaViewStatic() per la anagrafica_view_static o updateReportCorsi() per la __report_corsi__)
+    - una funzione in mysql.utils che pulisca la view (ad es. cleanAnagraficaViewStatic() o cleanReportCorsi())
+    - una funzione in mysql.utils che svuoti la view (ad es. emptyAnagraficaViewStatic() o emptyReportCorsi())
+    - un job per la popolazione (ad es. _src/_api/_job/_anagrafica.view.static.popolazione.php o _src/_api/_job/_report.corsi.popolazione.php)
+    - un task per l'avvio del job di popolazione (ad es. _src/_api/_task/_anagrafica.view.static.popolazione.start.php o _src/_api/_task/_report.corsi.popolazione.start.php)
+    - un task per la popolazione di una riga alla volta, specifica o meno (ad es. _src/_api/_task/_anagrafica.view.static.popolazione.php o _src/_api/_task/_report.corsi.popolazione.php)
+    - un task per la pulizia della vista statica (ad es. _src/_api/_task/_anagrafica.view.static.pulizia.php o _src/_api/_task/_report.corsi.pulizia.php)
+    - un task per lo svuotamento della vista statica (ad es. _src/_api/_task/_anagrafica.view.static.svuotamento.php o _src/_api/_task/_report.corsi.svuotamento.php)
+
+    [...] NOTA IMPORTANTE in linea teorica alcune view storicamente affollate (oppure tutte a un certo punto) potrebbero essere staticizzate implicitamente cioè rendendo la *_view statica,
+    questo renderebbe superflua la presenza della coppia *_view / *_view_static semplificando di molto la struttura del database e in questo caso anche le funzioni avrebbero un nome più semplice,
+    ad es. updateAnagraficaViewStatic() sarebbe semplicemente updateAnagraficaView() e così via [...]
+
+    [...] NOTA come conseguenza della semplificazione vista sopra, cesserebbe anche di avere senso la moltiplicazione di viste tipo anagrafica_attivi_view, anagrafica_archiviati_view, eccetera, in quanto
+    rendendo le viste statiche si può usare direttamente un __restrict__ sulla vista unica anagrafica_view statica grazie alla sua maggiore velocità.
+
+    [...] NOTA visto che i task e i job di questo tipo possono diventare molti, sarebbe opportuno radunarli in sottocartelle:
+    
+    - _src/_api/_task/_static/
+    - _src/_api/_job/_static/
+    - _src/_api/_task/_report/
+    - _src/_api/_job/_report/
+
+    tabelle di report
+    -----------------
+
+
+
+    [...] NOTA IMPORTANTE come si relazionano i report alle ACL?
+
+
+
+    campi
+    =====
+
+
+    campi per le chiavi primarie
+    ----------------------------
+
+
+    campi per le chiavi esterne
+    ---------------------------
+
+
+    campi per le timestamp
+    ----------------------
+
+
+    campi per data e ora
+    --------------------
+
+
+    campi nome e campi note
+    -----------------------
+
+
+    campi per i flag
+    ----------------
+
+
+    diritti, permessi e privilegi
+    =============================
+
+
+
+    tabelle di ACL
+    --------------
+
+
+
+    chiavi e indici
+    ===============
+
+
+
+
+    indici
+    ------
+
+
+
+
+    chiavi esterne
+    --------------
+
+
+
+
+    auto follow delle chiavi esterne
+    --------------------------------
+
+
+
+
+    procedure e funzioni
+    ====================
+
+
+
+    aggiornamento del database e patch
+    ==================================
+
+
+    aggiornamento automatico del database in _src/_config/_125.mysql.php
+    --------------------------------------------------------------------
+
+
+    la tabella __patch__
+    --------------------
+    
+
+    schema e dati della release
+    ---------------------------
+
+
+    patch incrementali per la release corrente
+    ------------------------------------------
+
+
+    patch di installazione da zero
+    ------------------------------
+
+
+    come creare una patch
+    ---------------------
+
+    [...] ogni volta che si modifica il database, occorre quindi:
+
+    - modificare i file di patch di base integrando la modifica
+        - _010000999999.tables.sql
+        - _030000999999.indexes.sql
+        - _050000999999.data.sql (se necessario)
+        - _060000999999.constraints.sql
+        - _080000999999.static.sql (se necessario)
+        - _090000999999.views.sql
+    - aggiornare la documentazione integrando la modifica
+    - creare un file di patch incrementale per propagare la modifica
+
+    Si noti che è importante, al fine di garantire una corretta propagazione della patch, non modificare direttamente il
+    database di DEV, ma lasciare che sia la patch appena creata a farlo; in questo modo si sarà sicuri che essa sia
+    corretta e che verrà eseguita senza errori una volta propagata.
+
+    Se la patch riguarda un report, andrà modificato il file:
+    - _100000999999.reports.sql
+
+    Mentre se la patch riguarda una procedura, andrà modificato il file:
+    - _070000999999.procedures.sql
+
+    esempi di patch frequenti
+    -------------------------
+
+    [...] per aggiungere una colonna con chiave esterna a una tabella:
+
+    \code{.sql}
+    --
+    -- PATCH
+    --
+
+    --| 202210070010
+    ALTER TABLE `metadati`
+        ADD COLUMN `id_tipologia_todo` int(11) DEFAULT NULL AFTER `id_pianificazione`,
+        ADD UNIQUE KEY `unica_tipologia_todo` (`id_lingua`,`id_tipologia_todo`,`nome`),
+        ADD KEY `id_tipologia_todo` (`id_tipologia_todo`);
+
+    --| 202210070020
+    ALTER TABLE `metadati`
+        ADD CONSTRAINT `metadati_ibfk_27` FOREIGN KEY (`id_tipologia_todo`) REFERENCES `tipologie_todo` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+
+    --| 202210070030
+    CREATE OR REPLACE VIEW `metadati_view` AS
+        SELECT
+            metadati.id,
+            metadati.id_lingua,
+            lingue.ietf,
+            metadati.id_anagrafica,
+            metadati.id_account,
+            metadati.id_pagina,
+            metadati.id_prodotto,
+            metadati.id_articolo,
+            metadati.id_categoria_prodotti,
+            metadati.id_notizia,
+            metadati.id_categoria_notizie,
+            metadati.id_risorsa,
+            metadati.id_categoria_risorse,
+            metadati.id_immagine,
+            metadati.id_video,
+            metadati.id_audio,
+            metadati.id_file,
+            metadati.id_progetto,
+            metadati.id_categoria_progetti,
+            metadati.id_indirizzo,
+            metadati.id_edificio,
+            metadati.id_immobile,
+            metadati.id_contratto,
+            metadati.id_valutazione,
+            metadati.id_rinnovo,
+            metadati.id_tipologia_attivita,
+            metadati.id_banner,
+            metadati.id_pianificazione,
+            metadati.id_tipologia_todo,
+            metadati.id_account_inserimento,
+            metadati.id_account_aggiornamento,
+            concat(
+                metadati.nome,
+                ':',
+                metadati.testo
+            ) AS __label__
+        FROM metadati
+            LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+    ;
+
+    --| FINE
+    \endcode
+
+*/

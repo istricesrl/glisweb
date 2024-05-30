@@ -1,0 +1,161 @@
+/*!
+
+    \page cartelle_src la cartella _src/ del framework
+
+    Descrizione del contenuto e della funzione della cartella _src/.
+
+    TODO finire di scrivere questo file
+
+    introduzione
+    ============
+
+
+    cartelle standard
+    =================
+
+
+
+
+
+    file                    | descrizione
+    ------------------------|-----------------------------------------
+    _src/_config.php        | file principale di esecuzione del framework
+
+
+
+
+    la sottocartella _src/_api/
+    ---------------------------
+
+
+    file                    | descrizione
+    ------------------------|-----------------------------------------
+    _src/_api/_pages.php    | API che fornisce le pagine del sito
+
+
+
+
+    la sottocartella _src/_api/_status/
+    -----------------------------------
+
+
+    file                                | descrizione
+    ------------------------------------|-----------------------------------------
+    _src/_api/_status/_cf.php           | API che fornisce il contenuto dell'array $cf in formato navigabile
+    _src/_api/_status/_framework.php    | API che fornisce lo stato del framework
+
+
+
+
+    la sottocartella _src/_api/_task/
+    ---------------------------------
+
+
+    file                                    | descrizione
+    ----------------------------------------|-----------------------------------------
+    _src/_api/_task/_framework.setup.php    | API per la configurazione del framework appena installato
+    _src/_api/_task/_mysql.patch.php        | API per l'applicazione delle patch al database MySQL
+
+
+
+    la sottocartella _src/_config/
+    ------------------------------
+
+    TODO la sottocartella _src/_config/ deve diventare _src/_runlevels/?
+
+
+    TODO fare la tabella di tutti i file di questa cartella
+
+
+
+    la sottocartella _src/_img/
+    ---------------------------
+
+
+    file                        | descrizione
+    ----------------------------|-----------------------------------------
+    _src/_img/_favicon.ico      | favicon di default del framework
+
+
+    TODO cambiare la favicon di default inserendo il logo di GlisWeb al posto dell'ingranaggino
+
+
+    la sottocartella _src/_inc/
+    ---------------------------
+
+
+
+
+    la sottocartella _src/_inc/_macro/
+    ----------------------------------
+
+
+    file                                | descrizione
+    ------------------------------------|-----------------------------------------
+    _src/_inc/_macro/_security.php      | firewall applicativo del framework
+
+
+
+
+
+    la sottocartella _src/_lib/
+    ---------------------------
+
+
+
+    file                                | descrizione
+    ------------------------------------|----------------------------------------------
+    _src/_lib/_apcu.tools.php           | libreria per la gestione della cache APCu
+    _src/_lib/_array.tools.php          | libreria per la gestione degli array
+    _src/_lib/_csv.tools.php            | libreria per la gestione dei file CSV
+    _src/_lib/_filesystem.tools.php     | libreria per la gestione dei file e delle cartelle
+    _src/_lib/_jwt.tools.php            | libreria per la gestione dei token JWT
+    _src/_lib/_localization.tools.php   | libreria per la gestione della localizzazione
+    _src/_lib/_memcache.tools.php       | libreria per la gestione della cache Memcache
+    _src/_lib/_mysql.tools.php          | libreria per la gestione del database MySQL
+    _src/_lib/_output.tools.php         | libreria per la gestione dell'output
+    _src/_lib/_recaptcha.tools.php      | libreria per la gestione di reCAPTCHA
+    _src/_lib/_rest.tools.php           | libreria per la gestione delle API REST
+    _src/_lib/_string.tools.php         | libreria per la gestione delle stringhe
+    _src/_lib/_xml.tools.php            | libreria per la gestione dei file XML
+
+
+
+    la sottocartella _src/_lib/_ext/
+    --------------------------------
+
+
+
+
+
+
+    la sottocartella _src/_sh/
+    --------------------------
+
+    
+
+    file                                    | descrizione
+    ----------------------------------------|-----------------------------------------
+    _src/_sh/_codeception.init.sh           | script per l'inizializzazione di Codeception
+    _src/_sh/_codeception.run.sh            | script per l'esecuzione di Codeception
+    _src/_sh/_doxygen.build.sh              | script per la generazione della documentazione Doxygen
+    _src/_sh/_lamp.permissions.open.sh      | script per l'apertura dei permessi della document root
+    _src/_sh/_lamp.permissions.secure.sh    | script per la messa in sicurezza dei permessi della document root
+    _src/_sh/_lamp.setup.sh                 | script per la configurazione dell'ambiente LAMP
+    _src/_sh/_password.hash.sh              | script per la generazione di una password con il relativo hash
+
+
+
+
+    cartelle custom
+    ===============
+
+
+
+    file                    | descrizione
+    ------------------------|-----------------------------------------
+    src/config.json         | file di configurazione del framework in formato JSON
+    src/config.yaml         | file di configurazione del framework in formato YAML
+
+
+*/
