@@ -97,3 +97,6 @@
 
     // tempo massimo di connessione ai socket
     $cf['debug']['socket']['timeout']                           = 900;
+
+    // debug
+    // die( print_r( $_REQUEST, true ) );

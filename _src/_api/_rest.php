@@ -190,6 +190,7 @@
 
 			// debug
 			// print_r( $_REQUEST[ $cf['ws']['table'] ] );
+            // die( print_r( $cf['ws'], true ) );
 
 			// inclusione del framework
 			require '../_config.php';
