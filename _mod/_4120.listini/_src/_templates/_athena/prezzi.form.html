@@ -1,0 +1,105 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+        <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+         {# MODULO PRINCIPALE #}
+	    <fieldset>
+            <legend>dati generali <small>{{ legend }}</small></legend>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">listino</span>
+                    {{ frm.select( table, '', '', 'id_listino', '', etc.select.listini, request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">prezzo</span>
+                    {{ frm.input( table, '', '', 'prezzo', 'prezzo netto', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">fascia</span>
+                    {{ frm.input( table, '', '', 'fascia', 'fascia descrittiva', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">q.tà min</span>
+                    {{ frm.input( table, '', '', 'qta_min', 'q.tà min', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">q.tà max</span>
+                    {{ frm.input( table, '', '', 'qta_max', 'q.tà max', '', request ) }}
+                </div>
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">IVA</span>
+                    {{ frm.select( table, '', '', 'id_iva', '', etc.select.iva, request ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">prodotto</span>
+                    {{ frm.selectBox( table, '', '', 'id_prodotto', '', '', request, '', '', 1, '', '', 'prodotti.form', 'prodotti.form', 'prodotti', 'id_prodotto', page, pages, ietf, 'prodotti' ) }}
+                </div>  
+                <div class="col-12 col-md">
+                    <span class="label-top">articolo</span>
+                    {{ frm.selectBox( table, '', '', 'id_articolo', '', '', request, '', '', 1, '', '', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
+                </div>  
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <span class="label-top">note</span>
+                    {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+                </div>
+            </div>
+    
+        </fieldset>
+
+	    {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

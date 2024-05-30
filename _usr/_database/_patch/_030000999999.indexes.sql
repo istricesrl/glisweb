@@ -2811,8 +2811,8 @@ ALTER TABLE `popup_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-04 16:53 Fabio Mosti
 ALTER TABLE `prezzi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`id_listino`,`id_iva`), 
-	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`id_listino`,`id_iva`), 
+	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`fascia`,`id_listino`,`id_iva`), 
+	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`fascia`,`id_listino`,`id_iva`), 
 	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_articolo` (`id_articolo`), 
 	ADD KEY `id_listino` (`id_listino`),

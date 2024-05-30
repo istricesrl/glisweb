@@ -1,6 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
-{% import 'bin/default.form.pubblicazioni.sub.html' as sub %}
+{% import 'bin/listini.form.prezzi.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -37,32 +37,13 @@
 	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
-        <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
 	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
 	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
 	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
-         {# MODULO PRINCIPALE #}
-	    <fieldset>
-            <legend>dati generali <small>{{ legend }}</small></legend>
-
-            <div class="form-group form-row">
-                <div class="col-12 col-md">
-                    <span class="label-top">nome</span>
-                    {{ frm.input( table, '', '', 'nome', 'nome del listino', '', request ) }}
-                </div>
-                <div class="col-12 col-md">
-                    <span class="label-top">valuta</span>
-                    {{ frm.select( table, '', '', 'id_valuta', '', etc.select.valute, request ) }}
-                </div>
-            </div>
-
-		</fieldset>
-
-	    {# BOTTONI E COMANDI DEL MODULO #}
-	    <fieldset class="form-controls mt-auto">
-			{{ def.controls( page, pages, ietf, session, table, request ) }}
-	    </fieldset>
+		{# VIEW PRINCIPALE #}
+		{% include 'inc/view.html' %}
 
 	</form>
     </div>

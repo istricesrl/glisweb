@@ -2001,8 +2001,11 @@ CREATE TABLE `liste_mail` (
 -- verifica: 2021-09-24 17:49 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `listini` (
   `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
   `id_valuta` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
+  `note` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -2719,6 +2722,9 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
   `id` int(11) NOT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
+  `fascia` char(32) DEFAULT NULL,
+  `qta_min` int(11) DEFAULT NULL,
+  `qta_max` int(11) DEFAULT NULL,
   `prezzo` decimal(16,5) NOT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_iva` int(11) DEFAULT NULL,

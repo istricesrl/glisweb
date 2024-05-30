@@ -1,4 +1,5 @@
 <?php
+
 /**
      *
      *
@@ -17,10 +18,10 @@
      */
     
     // tabella della vista
-	$ct['view']['table'] = 'coupon';
+	$ct['view']['table'] = 'prezzi';
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'coupon.form';
+	$ct['view']['open']['page'] = 'prezzi.form';
 
     // campi della vista
 	$ct['view']['cols'] = array(
