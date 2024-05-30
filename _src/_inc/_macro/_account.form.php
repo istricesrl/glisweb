@@ -14,7 +14,7 @@
     // tabella gestita
 	$ct['form']['table'] = 'account';
 
-    // tendina account
+    // tendina gruppi
 	$ct['etc']['select']['gruppi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
