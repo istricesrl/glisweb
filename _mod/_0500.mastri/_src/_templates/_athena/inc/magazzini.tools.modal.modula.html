@@ -3,10 +3,11 @@
 <script>
     function test_modula() {
 
-        var comando = $('#__modula__comando').val();
+        var prefisso = $('#__modula___prefisso').val();
+        var comando = $('#__modula___comando').val();
 
-        console.log(comando);
-        console.log(Date.now());
+        console.log('comando rilevato: ' + comando);
+        console.log('timestamp: ' + (Math.floor(Date.now() / 1000)).toString());
 
         // getws('/_src/_api/_task/_anagrafica.importazione.start.php?file='+data);
         // getws('/task/anagrafica.importazione.start?file='+data);
@@ -14,63 +15,105 @@
         // location.reload();
 
         // test 1 - status macchina
-        comando = '11|' + Date.now() + '|STATUS';
+        // comando = '11|' + (Math.floor(Date.now() / 1000)) + '|STATUS';
 
         // test 2 - chiamata                     numero cassetto 1001 -> 2050
-         comando = '11|' + Date. now() + '|CALL|1001|1';
+        // comando = '11|' + (Math.floor(Date.now() / 1000)) + '|CALL|1001|1';
 
         // test 3 - ritorno cassetto
-        // comando = '11|' + Date. now() + '|RETURN|1';
+        // comando = '11|' + ( Math.floor(Date.now() / 1000) ) + '|RETURN|1';
 
         // test 4 - ???
-        // comando = '11|' + Date. now() + '|EXCHANGE';
+        // comando = '11|' + ( Math.floor(Date.now() / 1000) ) + '|EXCHANGE';
+
+        // test 5 - ???
+        comando = prefisso + '|' + (Math.floor(Date.now() / 1000)).toString() + '|' + comando;
 
         // log
-        console.log(comando);
-/*
-        // chiamata
-        $.ajax({
-            url: 'http://192.168.1.85:11000',
-            type: 'POST',
-            dataType: 'text',
-            data: comando,
-            crossDomain: true,
-            async: true,
-            done: function(data) {
-                console.log(data);
-                $('#test_modula').modal('toggle');
-            },
-            fail: function(data) {
-                console.log(data);
-                $('#test_modula').modal('toggle');
-            },
-            always: function(data) {
-                console.log(data);
-                $('#test_modula').modal('toggle');
-            }
-        });
-*/
+        console.log('comando completo: ' + comando);
 
-//var client = new WebSocket();
-//client.connect("wss://192.168.1.85:11001", null, null, null, {rejectUnauthorized: false});
-//or depending on the implementation you're using (this applies to Nodejs and web browser implementation:
-var client = new WebSocket("wss://192.168.1.85:11001", null, null, null, {rejectUnauthorized: false});
-
-        // client = new WebSocket("wss://192.168.1.85:11001");
-        client.onopen = (event) => {
-            client.send(comando);
-        };
-
-        client.onmessage = (event) => {
-            console.log(event.data);
-        };
-
+        /*
+                // chiamata
+                $.ajax({
+                    url: 'http://192.168.1.85:11000',
+                    type: 'POST',
+                    dataType: 'text',
+                    data: comando,
+                    crossDomain: true,
+                    async: true,
+                    done: function(data) {
+                        console.log(data);
+                        $('#test_modula').modal('toggle');
+                    },
+                    fail: function(data) {
+                        console.log(data);
+                        $('#test_modula').modal('toggle');
+                    },
+                    always: function(data) {
+                        console.log(data);
+                        $('#test_modula').modal('toggle');
+                    }
+                });
+        */
+        /*
+        //var client = new WebSocket();
+        //client.connect("wss://192.168.1.85:11001", null, null, null, {rejectUnauthorized: false});
+        //or depending on the implementation you're using (this applies to Nodejs and web browser implementation:
+        var client = new WebSocket("wss://192.168.1.85:11001", null, null, null, {rejectUnauthorized: false});
+        
+                // client = new WebSocket("wss://192.168.1.85:11001");
+                client.onopen = (event) => {
+                    client.send(comando);
+                };
+        
+                client.onmessage = (event) => {
+                    console.log(event.data);
+                };
+        */
         /*
         var socket = new WebSocket("https://192.168.1.85:11000");
         socket.onopen = function () {
             console.log("WebSocket connection established");
         }
         */
+        /*
+                var xtel = new XMLHttpRequest();
+                xtel.open("POST", "http://192.168.1.91:11001", true);
+                xtel.onreadystatechange = function () {return true;} 
+                xtel.send(comando + "\n");
+        */
+
+        // chiamata
+        $.ajax({
+            url: 'http://127.0.0.1:5000/modula',
+            type: 'POST',
+            data: JSON.stringify({ 'comando': comando }),
+            contentType: 'application/json',  // specifica che stai inviando del JSON
+            crossDomain: true,
+            async: true,
+            beforeSend: function (xhr) {
+                $('#command_output').append( $('<p>').text('comando: ' + comando ) );
+            },
+            success: function (data) {
+                console.log(data);
+                if( data.status == 'OK' ) {
+                    $('#command_output').append( $('<p>').text('risposta: ' + data.risposta) );
+                } else {
+                    $('#command_output').append( $('<p>').text('errori: ' + data.errori) );
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                $('#command_output').append( $('<p>').text(data) );
+            },
+            complete: function (data) {
+                console.log(data);
+                // $('#command_output').append( $('<p>').text(data) );
+                // $('#test_modula').modal('toggle');
+                $('#command_output_row').removeClass('d-none');
+            }
+        });
+
 
     }
 </script>
@@ -86,8 +129,15 @@ var client = new WebSocket("wss://192.168.1.85:11001", null, null, null, {reject
             <div class="modal-body">
                 <div class="container-fluid">
                     <div class="form-row">
+                        <div class="col-auto">
+                            {{ frm.select( '__modula__', '', '', 'prefisso', '', etc.select.prefissi, '', '', '' ) }}
+                        </div>
                         <div class="col">
                             {{ frm.input( '__modula__', '', '', 'comando', '', '', '', '', '' ) }}
+                        </div>
+                    </div>
+                    <div class="form-row d-none" id="command_output_row">
+                        <div class="col" id="command_output">
                         </div>
                     </div>
                 </div>
