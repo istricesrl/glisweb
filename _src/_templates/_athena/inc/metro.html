@@ -54,6 +54,7 @@
 {% endif %}
 {% endfor %}
 
+{% if not metro.options.nocontrols %}
 <div class="row view-controls mt-auto no-gutters d-print-none">
 
 	<div class="col-auto mr-1">
@@ -61,3 +62,4 @@
 	</div>
 	
 </div>
+{% endif %}
