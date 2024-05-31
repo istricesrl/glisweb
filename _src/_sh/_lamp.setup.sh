@@ -111,11 +111,17 @@ if [ -n "$SRVPASS" ]; then
 #    sudo killall mysqld
 #    sudo service mysql restart
 
-# TODO verificare che lo faccia davvero
+# TODO verificare che lo faccia davvero (vedi Calabash)
 #     sudo mysql -u root mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '$SRVPASS';"
 #     sudo mysql -u root -p$SRVPASS mysql -e "FLUSH PRIVILEGES;"
 
 fi
+
+## installazione di python
+sudo apt-get install python3 python3-pip
+sudo apt-get install python3-daemon
+sudo apt-get install python3-flask
+sudo apt-get install python3-plyer
 
 ## installazione di certbot
 apt-get install -y python3-certbot-apache
