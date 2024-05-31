@@ -7,6 +7,56 @@
      * 
      */
 
+    // trovo le sottocartelle della cartella di importazione
+    $programmati = getDirList( DIR_VAR_SPOOL_IMPORT . 'todo/' );
+
+    // ...
+    if( ! empty( $programmati ) ) {
+
+        // log
+        logWrite( 'cartelle programmate: ' . print_r( $programmati, true ), 'import', LOG_ERR );
+
+        // cerco le cartelle programmate nel passato
+        foreach( $programmati as $programmata ) {
+
+            // se la cartella è programmata nel passato
+            if( basename( $programmata ) <= date('YmdHis') ) {
+
+                // log
+                logWrite( 'cartella da elaborare (su '.date('YmdHis').'): ' . $programmata, 'import', LOG_ERR );
+
+                // ottengo l'elenco dei file nella cartella
+                $programmati = getFileList( DIR_VAR_SPOOL_IMPORT . 'todo/' . $programmata . '/' );
+
+                // ...
+                if( ! empty( $programmati ) ) {
+
+                    // log
+                    logWrite( 'file da elaborare: ' . print_r( $programmati, true ), 'import', LOG_ERR );
+
+                    // sposto i file nella cartella di importazione
+                    foreach( $programmati as $programmato ) {
+
+                        // log
+                        logWrite( 'file da elaborare: ' . $programmato, 'import', LOG_ERR );
+
+                        // sposto il file nella cartella di importazione
+                        moveFile( DIR_VAR_SPOOL_IMPORT . 'todo/' . $programmata . '/' . $programmato, DIR_VAR_SPOOL_IMPORT . $programmato );
+
+                    }
+
+                    // elimino la cartella
+                    deleteDir( DIR_VAR_SPOOL_IMPORT . 'todo/' . $programmata . '/' );
+
+                }
+
+            }
+
+
+        }
+
+    }
+
     // cerco file CSV da importare
     $csv = glob( DIR_VAR_SPOOL_IMPORT . '*.csv' );
 
