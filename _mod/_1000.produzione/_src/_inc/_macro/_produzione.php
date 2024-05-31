@@ -50,6 +50,8 @@
         'schema' => 'inc/produzione.modal.attivita.html'
     );
 
+    $ct['metro']['options']['nocontrols'] = 1;
+
     // ...
 	if( in_array( "1000.produzione", $cf['mods']['active']['array'] ) ) {
 

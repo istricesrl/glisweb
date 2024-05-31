@@ -33,7 +33,9 @@
         'nome' => 'attività',
 	    'ore' => 'ore',
         'ora_inizio' => 'oi',
-        'ora_fine' => 'of'
+        'ora_fine' => 'of',
+        'mastro_destinazione' => 'carico',
+        'mastro_provenienza' => 'scarico'
       );
 
     // stili della vista
