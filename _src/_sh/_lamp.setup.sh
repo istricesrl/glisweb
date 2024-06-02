@@ -122,6 +122,8 @@ sudo apt-get install python3 python3-pip
 sudo apt-get install python3-daemon
 sudo apt-get install python3-flask
 sudo apt-get install python3-plyer
+sudo apt-get install python3-kivy
+sudo apt-get install python3-venv
 
 ## installazione di certbot
 apt-get install -y python3-certbot-apache

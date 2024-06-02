@@ -11,29 +11,54 @@
      *
      *
      *
+     * NOTA qui si introduce il concetto di configurazione per sito
      *
      *
      *
      *
+     * TODO applicare la strategia della configurazione extra per sito anche ai vari slack, google, criteo, ecc.
+     * TODO rimuovere quel brutto codice che fa il controllo della configurazione per sito nei vari slack, google, criteo, ecc.
      *
-     * @todo applicare la strategia della configurazione extra per sito anche ai vari slack, google, criteo, ecc.
-     * @todo rimuovere quel brutto codice che fa il controllo della configurazione per sito nei vari slack, google, criteo, ecc.
-     * @file
      *
      */
 
     // debug
     // print_r( $_COOKIE );
 
-	// se è stato inviato un modulo di consenso
-	if( isset( $_REQUEST['__cookie__'] ) ) {
+    // configurazione extra
+    if( isset( $cx['privacy'] ) ) {
+        $cf['privacy'] = array_replace_recursive( $cf['privacy'], $cx['privacy'] );
+    }
+
+    // configurazione extra per sito
+    if( isset( $cf['site']['privacy'] ) ) {
+        $cf['privacy'] = array_replace_recursive( $cf['privacy'], $cf['site']['privacy'] );
+    }
+
+    // recupero i consensi dai cookie
+    if( isset( $_COOKIE['privacy'] ) ) {
+        $cf['privacy']['cookie'] = array_replace_recursive( $cf['privacy']['cookie'], unserialize( $_COOKIE['privacy'] ) );
+    }
+
+    // collegamento con l'array $ct
+    $ct['privacy'] = &$cf['privacy'];
+
+    /**
+     * gestione dell'invio dei moduli di consenso
+     * ==========================================
+     * 
+     * 
+     */
+
+    // se è stato inviato un modulo di consenso
+    if( isset( $_REQUEST['__cookie__'] ) ) {
 
         /*
                 // registro il consenso nel cookie dei consensi
                 $cf['privacy']['cookie'][ $_REQUEST['__cookie__']['owner'] ][ $_REQUEST['__cookie__']['type'] ][ $_REQUEST['__cookie__']['name'] ]['consenso'] = $_REQUEST['__cookie__']['value'];
         
                 // TODO log del consenso
-                // @todo implementare il log dei consensi
+                // TODO implementare il log dei consensi
         */
 
         foreach( $_REQUEST['__cookie__'] as $cookie => $val ) {

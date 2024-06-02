@@ -381,6 +381,7 @@ ALTER TABLE `attivita`
 	ADD KEY `id_mailing` (`id_mailing`), 
 	ADD KEY `id_mail` (`id_mail`), 
 	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_corrispondenza` (`id_corrispondenza`), 
 	ADD KEY `id_pagamento` (`id_pagamento`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
 	ADD KEY `id_contratto` (`id_contratto`), 
@@ -2648,7 +2649,7 @@ ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2022-05-24 12:57 Chiara GDL
 ALTER TABLE `periodi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `nome`, `id_genitore`),
+	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `id_contratto`, `nome`, `id_genitore`),
 	ADD	KEY `id_genitore` (`id_genitore`),
 	ADD	KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
@@ -4685,6 +4686,9 @@ ALTER TABLE `todo`
 	ADD KEY `id_luogo` (`id_luogo`), 
 	ADD KEY `id_contatto` (`id_contatto`), 
 	ADD KEY `id_progetto` (`id_progetto`), 
+	ADD KEY `id_documento` (`id_documento`), 
+	ADD KEY `id_documenti_articoli` (`id_documenti_articoli`), 
+	ADD KEY `id_istruzione` (`id_istruzione`), 
 	ADD KEY `id_pianificazione` (`id_pianificazione`), 
 	ADD KEY `id_immobile` (`id_immobile`),
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 

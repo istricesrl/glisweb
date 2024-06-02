@@ -42,7 +42,7 @@
 	);
 
     // elenco template
-    $templates = getFilteredDirList( DIR_SRC_TEMPLATES );
+    $templates = getFilteredDirList( '_src/_templates/' );
 
     // dati della vista
     foreach( $templates as $template ) {

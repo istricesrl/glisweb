@@ -18,9 +18,9 @@
      * ISO 3166-2 per l'indicazione di regioni, provincie e città in quanto la prima parte
      * del codice ISO 3166-2 è un codice ISO 3166-1 alpha-2.
      *
-     * - lo standard ISO 3166-1 alpha-2		http://it.wikipedia.org/wiki/ISO_3166-1_alpha-2
-     * - lo standard ISO 3166-1 alpha-3		http://it.wikipedia.org/wiki/ISO_3166-1_alpha-3
-     * - lo standard ISO 3166-2			https://it.wikipedia.org/wiki/ISO_3166-2
+     * - lo standard ISO 3166-1 alpha-2        http://it.wikipedia.org/wiki/ISO_3166-1_alpha-2
+     * - lo standard ISO 3166-1 alpha-3        http://it.wikipedia.org/wiki/ISO_3166-1_alpha-3
+     * - lo standard ISO 3166-2            https://it.wikipedia.org/wiki/ISO_3166-2
      *
      * Questi codici sono registrati nel \ref database "database di supporto", nelle tabelle
      * geografiche.
@@ -36,9 +36,9 @@
      * i linguaggi. Tutte le indicazioni relative alle lingue presenti nel framework sono,
      * salvo diversa indicazione, riferite a questo standard.
      *
-     * - lo standard IETF language tag		http://en.wikipedia.org/wiki/IETF_language_tag
-     * - lo standard ISO 639-1 alpha-2		http://it.wikipedia.org/wiki/ISO_639-1
-     * - lo standard ISO 639-3 alpha-3		http://it.wikipedia.org/wiki/ISO_639-3
+     * - lo standard IETF language tag        http://en.wikipedia.org/wiki/IETF_language_tag
+     * - lo standard ISO 639-1 alpha-2        http://it.wikipedia.org/wiki/ISO_639-1
+     * - lo standard ISO 639-3 alpha-3        http://it.wikipedia.org/wiki/ISO_639-3
      *
      * Per compatibilità con altri sistemi, il framework supporta altresì lo standard ISO 639,
      * e in particolare ISO 639-1 per i codici a due lettere e ISO 639-3 per i codici a tre
@@ -77,55 +77,32 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
+     *
      *
      */
 
     // debug
-	// print_r( $_REQUEST );
+    // print_r( $_REQUEST );
 
     // moduli attivi
-	define( 'LINGUE_ATTIVE'			, implode( ',', array_keys( $cf['site']['name'] ) ) );
+    define( 'LINGUE_ATTIVE'            , implode( ',', array_keys( $cf['site']['name'] ) ) );
 
     // lingue attive in base ai titoli del sito nelle varie lingue
-	foreach( array_keys( $cf['site']['name'] ) as $l ) {
-	    $cf['localization']['languages'][ $l ]['id'] = NULL;
-	    $cf['localization']['languages'][ $l ]['ietf'] = $l;
-	}
-
-    // lingua di default
-	$lg = current( array_keys( $cf['site']['name'] ) );
-
-    // lingua richiesta o lingua di default
-	if( isset( $_REQUEST['__lg__'] ) && ! empty( $_REQUEST['__lg__'] ) ) {
-	    if( array_key_exists( $_REQUEST['__lg__'], $cf['site']['name'] ) ) {
-		$lg = $_REQUEST['__lg__'];
-	    } else {
-		logWrite( 'lingua ' . $lg . ' non supportata', 'localization', LOG_NOTICE );
-	    }
-	}
-
-    // localizzazione di default ricavata dal titolo del sito
-	$cf['localization']['language']			= &$cf['localization']['languages'][ $lg ];
+    foreach( array_keys( $cf['site']['name'] ) as $l ) {
+        $cf['localization']['languages'][ $l ]['id'] = NULL;
+        $cf['localization']['languages'][ $l ]['ietf'] = $l;
+    }
 
     // timezone di default
-	$cf['localization']['timezone']['name']		= 'Europe/Rome';
+    $cf['localization']['timezone']['name']     = 'Europe/Rome';
 
     // valuta di default
-	$cf['localization']['currency']['iso4217']	= 'EUR';
+    $cf['localization']['currency']['iso4217']  = 'EUR';
 
     // charset utilizzato di default per l'output
-	$cf['localization']['charset']			= ENCODING_UTF8;
-
-    // collegamento all'array $ct
-	$ct['localization']				= &$cf['localization'];
-
-/*
-    // lingua corrente del sito
-	$cf['site']['ietf']				= &$cf['localization']['language']['ietf'];
-*/
+    $cf['localization']['charset']              = ENCODING_UTF8;
 
     // debug
     // echo 'OUTPUT';

@@ -11,66 +11,74 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
+     *
      *
      */
 
     // costante per la durata massima della sessione
-	if( ! defined( 'SESSION_LIMIT' ) ) {
-	    define( 'SESSION_LIMIT'		, 3600 );
-	}
+    if( ! defined( 'SESSION_LIMIT' ) ) {
+        define( 'SESSION_LIMIT', 3600 );
+    }
 
     // controllo output
-	if( headers_sent( $file, $line ) ) {
-	    die( 'output iniziato in ' . $file . ' linea ' . $line );
-	}
+    if( headers_sent( $wf, $wl ) ) {
+        die( 'output iniziato in ' . $wf . ' linea ' . $wl );
+    }
 
     // timer
-	timerCheck( $cf['speed'], '-> inizio avvio sessione' );
+    timerCheck( $cf['speed'], '-> inizio avvio sessione' );
 
-	// policy di sicurezza
-	ini_set( 'session.cookie_samesite', 'lax' );
-	ini_set( 'session.cookie_httponly', 1 );
-	ini_set( 'session.cookie_secure', 1 );
+    // policy di performance
+    ini_set( 'session.lazy_write', 0 );
 
-	// avvio della sessione php
-	if( session_start() ) {
+    // policy di sicurezza
+    ini_set( 'session.cookie_samesite', 'strict' );
+    ini_set( 'session.cookie_httponly', 1 );
+    ini_set( 'session.cookie_secure', 1 );
 
-	    // registro l'id della sessione nell'array $cf
-		$_SESSION['id']				= session_id();
+    // avvio della sessione php
+    if( session_start() ) {
 
-		// imposto il tempo se la sessione è appena stata creata
-		if( ! isset( $_SESSION['used'] ) ) {
-			$_SESSION['used']			= time();
-		}
+        // registro l'id della sessione nell'array $cf
+        $_SESSION['id']                = session_id();
 
-	    // log
-		logWrite( 'avviata la sessione ' . session_id(), 'session' );
+        // imposto il tempo se la sessione è appena stata creata
+        if( ! isset( $_SESSION['used'] ) ) {
+            $_SESSION['used']            = time();
+        }
 
-	} else {
+        // log
+        logger( 'avviata la sessione ' . $_SESSION['id'], 'session' );
 
-	    // log
-		logWrite( 'impossibile avviare la sessione', 'session', LOG_CRIT );
+    } else {
 
-	}
+        // log
+        logger( 'impossibile avviare la sessione', 'session', LOG_CRIT );
+
+    }
 
     // timer
-	timerCheck( $cf['speed'], '-> fine avvio sessione' );
+    timerCheck( $cf['speed'], '-> fine avvio sessione' );
 
     // debug
-	// $h = fopen( DIRECTORY_BASE . 'var/log/sessions.debug', 'a+' );
-	// fwrite( $h, date('Y-m-d H:i:s') . ' ' . session_id() . ' -> current' . PHP_EOL );
-	// fclose( $h );
+    // $h = fopen( DIRECTORY_BASE . 'var/log/sessions.debug', 'a+' );
+    // fwrite( $h, date('Y-m-d H:i:s') . ' ' . session_id() . ' -> current' . PHP_EOL );
+    // fclose( $h );
+
+    // punteggio e controllo antispam
+    $cf['session']['spam']['limit'] = 0.5;
+    $cf['session']['spam']['score'] = 1.0;
+    $cf['session']['spam']['check'] = true;
 
     // connetto i dati della sessione all'array $cf
-	$cf['session']				= &$_SESSION;
+    $cf['session'] = &$_SESSION;
 
     // collegamento all'array $ct
-	$ct['session']				= &$cf['session'];
+    $ct['session'] = &$cf['session'];
 
     // debug
-	// echo 'sessione ' . session_id();
-	// print_r( $cf['session'] );
+    // echo 'sessione ' . session_id();
+    // print_r( $cf['session'] );
     // echo 'OUTPUT';

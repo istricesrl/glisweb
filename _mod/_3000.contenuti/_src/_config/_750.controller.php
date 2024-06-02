@@ -27,7 +27,7 @@
                     ( ( isset( $_REQUEST['__template_files__']['folder'] ) ) ? $_REQUEST['__template_files__']['folder'] : NULL ) .
                     '/' . $_REQUEST['__template_files__']['id'];
             } else {
-                $base = DIR_SRC_TEMPLATES . 
+                $base = '_src/_templates/' . 
                     '_' . $_REQUEST['__templates__']['id'] . 
                     ( ( isset( $_REQUEST['__template_files__']['folder'] ) ) ? $_REQUEST['__template_files__']['folder'] : NULL ) .
                     '/' . $_REQUEST['__template_files__']['id'];

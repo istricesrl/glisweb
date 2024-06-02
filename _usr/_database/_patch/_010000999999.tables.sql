@@ -88,6 +88,9 @@ CREATE TABLE IF NOT EXISTS `account_gruppi_attribuzione` (
 -- anagrafica
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 19:30 Fabio Mosti
+-- NOTA il nome "anagrafica" è l'ultimo residuo di un vecchio sistema di naming
+-- TODO nel nuovo sistema di naming del framework questa tabella si dovrebbe chiamare "persone"
+-- NOTA "anagrafica" nel nuovo sistema di naming indica il "gruppo di funzionalità" (ad es. "produzione" o "logistica" ecc.)
 CREATE TABLE IF NOT EXISTS `anagrafica` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
@@ -430,6 +433,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_mailing` int(11) DEFAULT NULL,
   `id_mail` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
+  `id_corrispondenza` int(11) DEFAULT NULL,
   `id_pagamento` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL,
@@ -1354,6 +1358,7 @@ CREATE TABLE IF NOT EXISTS `coupon` (
   `se_globale` tinyint(1) DEFAULT NULL,
   `causale` text DEFAULT NULL,
   `causale_id_contratto` int(11) DEFAULT NULL,
+  `causale_id_rinnovo` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1495,6 +1500,8 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `id_immobile` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
   `xml` longtext DEFAULT NULL,
+  `data_consegna` date DEFAULT NULL,
+  `note_consegna` text DEFAULT NULL,
   `note` text DEFAULT NULL,
   `note_cliente` text DEFAULT NULL,
   `note_invio` text DEFAULT NULL,
@@ -1545,6 +1552,8 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `nome` char(255) DEFAULT NULL,
   `specifiche` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `data_consegna` date DEFAULT NULL,
+  `note_consegna` text DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -2531,10 +2540,13 @@ CREATE TABLE IF NOT EXISTS `pagine` (
 -- periodi
 -- tipologia: tabella di supporto
 -- verifica: 2022-05-24 12:57 Chiara GDL
+-- NOTA la tabella periodi è in pratica un doppione della tabella rinnovi
+-- TODO unire rinnovi e periodi nella tabella periodi (i rinnovi sono periodi con tipologia rinnovo)
 CREATE TABLE IF NOT EXISTS `periodi` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
   `data_inizio` date DEFAULT NULL,
   `data_fine` date DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
@@ -2843,6 +2855,8 @@ CREATE TABLE IF NOT EXISTS `progetti` (
   `id_prodotto` char(32) DEFAULT NULL,
   `id_periodo` int(11) DEFAULT NULL, 
   `nome` char(255) DEFAULT NULL,
+  `data_consegna` date DEFAULT NULL,
+  `note_consegna` text DEFAULT NULL,
   `note` text DEFAULT NULL,
   `template` char(255) DEFAULT NULL,
   `schema_html` char(128) DEFAULT NULL,
@@ -4475,6 +4489,9 @@ CREATE TABLE IF NOT EXISTS `todo` (
   `testo` text DEFAULT NULL,
   `id_contatto` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_documenti_articoli` int(11) DEFAULT NULL,
+  `id_istruzione` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `note_pianificazione` text DEFAULT NULL,

@@ -1029,6 +1029,16 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 			' del ',
 			documenti.data
 		) AS documento,
+		attivita.id_corrispondenza,
+		concat_ws(
+            ' ',
+            'da',
+            coalesce( a4.denominazione , concat( a4.cognome, ' ', a4.nome ), '' ),
+            concat( '(', organizzazioni_path( corrispondenza.id_organizzazione_mittente ), ')' ),
+            tipologie_corrispondenza_path( corrispondenza.id_tipologia ),
+            'per',
+            coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' )
+        ) AS corrispondenza,
 		attivita.id_progetto,
 		progetti.nome AS progetto,
 		attivita.id_contratto,
@@ -1064,6 +1074,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = attivita.id_anagrafica
 		LEFT JOIN anagrafica AS a2 ON a2.id = attivita.id_cliente
 		LEFT JOIN anagrafica AS a3 ON a3.id = attivita.id_anagrafica_programmazione
+		LEFT JOIN anagrafica AS a4 ON a4.id = attivita.id_corrispondenza
 		LEFT JOIN contatti AS c1 ON c1.id = attivita.id_contatto
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
 		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
@@ -1078,6 +1089,9 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN contratti ON contratti.id = attivita.id_contratto
 		LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+		LEFT JOIN corrispondenza ON corrispondenza.id = attivita.id_corrispondenza
+		LEFT JOIN organizzazioni ON organizzazioni.id = corrispondenza.id_organizzazione_mittente
+		LEFT JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
 	GROUP BY attivita.id
 ;
 
@@ -2661,38 +2675,47 @@ DROP TABLE IF EXISTS `atti_view`;
 -- | 090000007803
 
 -- atti_view
-CREATE OR REPLACE VIEW atti_view AS 
-	SELECT 
-		corrispondenza.id,
-		corrispondenza.id_distinta,
-		corrispondenza.id_tipologia,
-		tipologie_corrispondenza_path( corrispondenza.id_tipologia ) AS tipologia,
-		corrispondenza.id_peso,
-		pesi_tipologie_corrispondenza.nome AS peso,
-		corrispondenza.id_formato,
-		formati_tipologie_corrispondenza.nome AS formato,
-		corrispondenza.quantita,
-		corrispondenza.id_mittente,
-		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS mittente,
-		corrispondenza.id_organizzazione_mittente,
-		organizzazioni_path( corrispondenza.id_organizzazione_mittente ) AS organizzazione_mittente,
-		corrispondenza.id_commesso,
-		coalesce( commessi.denominazione , concat( commessi.cognome, ' ', commessi.nome ), '' ) AS commesso,
-		corrispondenza.nome,
-		coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ) AS destinatario,
+CREATE OR REPLACE VIEW atti_view AS
+    WITH ultimo_status AS (
+        SELECT
+            a.id_corrispondenza,
+            ta.nome AS status,
+            ROW_NUMBER() OVER (PARTITION BY a.id_corrispondenza ORDER BY a.data_attivita DESC) AS rn
+        FROM attivita a
+        INNER JOIN tipologie_attivita ta ON a.id_tipologia = ta.id
+    )
+    SELECT
+        corrispondenza.id,
+        corrispondenza.id_distinta,
+        corrispondenza.id_tipologia,
+        tipologie_corrispondenza_path( corrispondenza.id_tipologia ) AS tipologia,
+        corrispondenza.id_peso,
+        pesi_tipologie_corrispondenza.nome AS peso,
+        corrispondenza.id_formato,
+        formati_tipologie_corrispondenza.nome AS formato,
+        corrispondenza.quantita,
+        corrispondenza.id_mittente,
+        coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS mittente,
+        corrispondenza.id_organizzazione_mittente,
+        organizzazioni_path( corrispondenza.id_organizzazione_mittente ) AS organizzazione_mittente,
+        corrispondenza.id_commesso,
+        coalesce( commessi.denominazione , concat( commessi.cognome, ' ', commessi.nome ), '' ) AS commesso,
+        corrispondenza.nome,
+        coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ) AS destinatario,
         concat_ws( '|', coalesce( concat( 'C.F. ', destinatario_codice_fiscale ), ''), coalesce( concat( 'P.IVA ', destinatario_partita_iva ) ) ) AS riferimenti_destinatario,
-		coalesce(
-			concat( corrispondenza.destinatario_indirizzo, ' ', corrispondenza.destinatario_civico, ', ', corrispondenza.destinatario_cap, ' ', coalesce( corrispondenza.destinatario_citta, '' ), comuni.nome, ' ', provincie.sigla ),
-			concat( comuni.nome, ' ', provincie.sigla ),
-			stati.nome,
-			''
-		) AS destinazione,
-		corrispondenza.timestamp_elaborazione,
-		corrispondenza.id_account_inserimento,
-		corrispondenza.timestamp_inserimento,
-		corrispondenza.id_account_aggiornamento,
-		corrispondenza.timestamp_aggiornamento,
-		concat_ws(
+        coalesce(
+            concat( corrispondenza.destinatario_indirizzo, ' ', corrispondenza.destinatario_civico, ', ', corrispondenza.destinatario_cap, ' ', coalesce( corrispondenza.destinatario_citta, '' ), comuni.nome, ' ', provincie.sigla ),
+            concat( comuni.nome, ' ', provincie.sigla ),
+            stati.nome,
+            ''
+        ) AS destinazione,
+        corrispondenza.timestamp_elaborazione,
+        corrispondenza.id_account_inserimento,
+        corrispondenza.timestamp_inserimento,
+        corrispondenza.id_account_aggiornamento,
+        corrispondenza.timestamp_aggiornamento,
+        ultimo_status.status,
+        concat_ws(
             ' ',
             'da',
             coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),
@@ -2702,17 +2725,18 @@ CREATE OR REPLACE VIEW atti_view AS
             coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ),
             concat( '(', concat_ws( ', ', coalesce( concat( 'C.F. ', destinatario_codice_fiscale ), ''), coalesce( concat( 'P.IVA ', destinatario_partita_iva ) ) ), ')' )
         ) AS __label__
-	FROM corrispondenza
+    FROM corrispondenza
         INNER JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
-		LEFT JOIN pesi_tipologie_corrispondenza ON pesi_tipologie_corrispondenza.id = corrispondenza.id_peso
-		LEFT JOIN formati_tipologie_corrispondenza ON formati_tipologie_corrispondenza.id = corrispondenza.id_formato
-		LEFT JOIN anagrafica ON anagrafica.id = corrispondenza.id_mittente
-		LEFT JOIN anagrafica AS commessi ON anagrafica.id = corrispondenza.id_commesso
-		LEFT JOIN comuni ON comuni.id = corrispondenza.destinatario_id_comune
-		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN stati ON stati.id = corrispondenza.destinatario_id_stato
+        LEFT JOIN pesi_tipologie_corrispondenza ON pesi_tipologie_corrispondenza.id = corrispondenza.id_peso
+        LEFT JOIN formati_tipologie_corrispondenza ON formati_tipologie_corrispondenza.id = corrispondenza.id_formato
+        LEFT JOIN anagrafica ON anagrafica.id = corrispondenza.id_mittente
+        LEFT JOIN anagrafica AS commessi ON anagrafica.id = corrispondenza.id_commesso
+        LEFT JOIN comuni ON comuni.id = corrispondenza.destinatario_id_comune
+        LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+        LEFT JOIN stati ON stati.id = corrispondenza.destinatario_id_stato
+        LEFT JOIN (SELECT id_corrispondenza, status FROM ultimo_status WHERE rn = 1) ultimo_status ON ultimo_status.id_corrispondenza = corrispondenza.id
     WHERE tipologie_corrispondenza.se_atto = 1
-	GROUP BY corrispondenza.id
+    GROUP BY corrispondenza.id
 ;
 
 -- | 090000007900
@@ -3305,6 +3329,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_trasportatore,
 		documenti.id_immobile,
 		documenti.id_pianificazione,
+		documenti.data_consegna,
 		documenti.timestamp_chiusura,
 		from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
 		documenti.id_account_inserimento,
@@ -3312,9 +3337,11 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		concat(
 			tipologie_documenti.sigla,
 			' ',
-			documenti.numero,
-			'/',
-			year( documenti.data ),
+            concat_ws(
+                '/',
+                documenti.numero,
+                documenti.sezionale
+            ),
 			' del ',
 			documenti.data,
 			' per ',
@@ -3433,6 +3460,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.id_collo,
 		matricole.data_scadenza,
 		documenti_articoli.nome,
+		documenti_articoli.data_consegna,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
 		concat(
@@ -6205,6 +6233,7 @@ CREATE OR REPLACE VIEW `periodi_view` AS
 		periodi.id,
 		periodi.id_genitore,
 		periodi.id_tipologia,
+		periodi.id_contratto,
 		tipologie_periodi_path( periodi.id_tipologia ) AS tipologia,
 		periodi.data_inizio,
 		periodi.data_fine,
@@ -6494,7 +6523,12 @@ CREATE OR REPLACE VIEW `istruzioni_view` AS
 		concat (articoli.id, articoli.nome),
 		istruzioni.nome,
 		istruzioni.id_account_inserimento,
-		istruzioni.id_account_aggiornamento
+		istruzioni.id_account_aggiornamento,
+		concat(
+			istruzioni.id_tipologia,
+			coalesce( istruzioni.id_prodotto, istruzioni.id_articolo ),
+			istruzioni.nome
+		) AS __label__
 	FROM istruzioni
 		LEFT JOIN tipologie_istruzioni ON tipologie_istruzioni.id = istruzioni.id_tipologia
 		LEFT JOIN prodotti ON prodotti.id = istruzioni.id_prodotto
@@ -6518,7 +6552,14 @@ CREATE OR REPLACE VIEW `istruzioni_tipologie_attivita_view` AS
 		istruzioni_tipologie_attivita.id_tipologia_attivita,
 		tipologie_attivita.nome AS tipologia,
 		istruzioni_tipologie_attivita.id_account_inserimento,
-		istruzioni_tipologie_attivita.id_account_aggiornamento
+		istruzioni_tipologie_attivita.id_account_aggiornamento,
+		concat (
+			istruzioni.id_tipologia,
+			coalesce( istruzioni.id_prodotto, istruzioni.id_articolo ),
+			istruzioni.nome,
+			' / ',
+			tipologie_attivita_path( istruzioni_tipologie_attivita.id_tipologia_attivita ) 
+		) AS __label__
 	FROM istruzioni_tipologie_attivita
 		LEFT JOIN istruzioni ON istruzioni.id = istruzioni_tipologie_attivita.id_istruzione
 		LEFT JOIN tipologie_attivita ON tipologie_attivita.id = istruzioni_tipologie_attivita.id_tipologia_attivita
@@ -6727,6 +6768,7 @@ CREATE OR REPLACE VIEW `progetti_view` AS
 		progetti.id_prodotto,
 		progetti.id_periodo,
 		progetti.nome,
+		progetti.data_consegna,
 		progetti.template,
 		progetti.schema_html,
 		progetti.tema_css,
@@ -10088,6 +10130,34 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		todo.id_progetto,
 		progetti.nome AS progetto,
 		group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR ' | ' ) AS discipline,
+		todo.id_documento,
+		concat(
+			tipologie_documenti.sigla,
+			' ',
+            concat_ws(
+                '/',
+                documenti.numero,
+                documenti.sezionale
+            ),
+			' del ',
+			documenti.data
+		) AS documento,
+		todo.id_documenti_articoli,
+		concat(
+			documenti_articoli.data,
+			' / ',
+			tipologie_documenti.sigla,
+			' / ',
+			documenti_articoli.quantita,
+			' x ',
+			documenti_articoli.id_articolo
+		) AS documenti_articoli,
+		todo.id_istruzione,
+		concat (
+			istruzioni.id_tipologia,
+			coalesce( istruzioni.id_prodotto, istruzioni.id_articolo ),
+			istruzioni.nome
+		) AS istruzione,
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
@@ -10108,6 +10178,11 @@ CREATE OR REPLACE VIEW `todo_view` AS
 		LEFT JOIN progetti ON progetti.id = todo.id_progetto
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
 		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
+		LEFT JOIN documenti ON documenti.id = todo.id_documento
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN documenti_articoli ON documenti_articoli.id = todo.id_documenti_articoli
+		LEFT JOIN tipologie_documenti AS tipologie_documenti_articoli ON tipologie_documenti_articoli.id = documenti_articoli.id_tipologia
+		LEFT JOIN istruzioni ON istruzioni.id = todo.id_istruzione
 	GROUP BY todo.id
 ;
 

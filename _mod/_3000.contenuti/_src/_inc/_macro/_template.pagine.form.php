@@ -85,7 +85,7 @@
     );
 
     // directory del template
-    $base = DIR_SRC_TEMPLATES . '_' . $_REQUEST[ $ct['form']['table'] ]['id'];
+    $base = '_src/_templates/_' . $_REQUEST[ $ct['form']['table'] ]['id'];
 
     // file del template
     $files = getRecursiveFileList( $base );
