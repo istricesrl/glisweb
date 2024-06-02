@@ -32,7 +32,7 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
+	    'id' => 'd-none',
 	    'id_contratto' => 'd-none',
         'id_anagrafica' => 'd-none',
 	    'id_tipologia' => 'd-none',
@@ -164,7 +164,19 @@
             if( empty( $rinnovi ) ) {
                 $row['pagamento'] = 'nessun rinnovo trovato';
             } elseif( $rinnovi['ordinato'] == 0 ) {
-                $row['pagamento'] = 'da aggiungere al carrello';
+                $checkCoupon = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT sum( coupon.sconto_fisso ) AS rimborso FROM coupon WHERE coupon.causale_id_contratto = ?',
+                    array( array( 's' => $row['id_contratto'] ) )
+                );
+                // TODO adesso "ritirato" è relavivo all'intero contratto, ma bisogna considerare in realtà il ritiro
+                // dal singolo rinnovo altrimenti se uno si ritira una volta e poi si abbona di nuovo allo stesso abbonamento
+                // c'è il rischio che risulti come "ritirato" anche se non lo è
+                if( empty( $checkCoupon ) ) {
+                    $row['pagamento'] = 'da aggiungere al carrello';
+                } else {
+                    $row['pagamento'] = 'ritirato (rimborsati € ' . number_format( $checkCoupon, 2, ',', '.') . ')';
+                }
             } elseif( $rinnovi['pagato'] == 0 && $rinnovi['pagato_carrelli'] == 0 ) {
                 $row['pagamento'] = 'interamente da pagare € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
             } elseif( ( $rinnovi['pagato'] < $rinnovi['ordinato'] ) && ( $rinnovi['pagato_carrelli'] < $rinnovi['ordinato'] ) ) {

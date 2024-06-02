@@ -293,3 +293,70 @@
 		'etc'		=> array( 'tabs'	=> $p['rinnovi.contratti.form']['etc']['tabs'] )
 	);
 
+	// vista periodi contratti
+	$p['periodi.contratti.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'periodi contratti' ),
+		'h1'		=> array( $l		=> 'periodi' ),
+		'parent'		=> array( 'id'		=> 'contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_periodi.contratti.view.php' ),
+		'etc'		=> array( 'tabs'	=> $p['contratti.view']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione tipologie contratti
+	$p['periodi.contratti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'periodi.contratti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'periodi.contratti.form.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_periodi.contratti.form.php' ),
+		'etc'		=> array( 'tabs'	=> array(   'periodi.contratti.form',
+													'periodi.contratti.form.immagini',
+													'periodi.contratti.form.file',
+													'periodi.contratti.form.metadati' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
+	);
+
+		// form contratti immagini
+	$p['periodi.contratti.form.immagini'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-picture-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'immagini' ),
+		'h1'		=> array( $l		=> 'immagini' ),
+		'parent'		=> array( 'id'		=> 'periodi.contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'periodi.contratti.form.immagini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_periodi.contratti.form.immagini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['periodi.contratti.form']['etc']['tabs'] )
+	);
+	
+	// form contratti file
+	$p['periodi.contratti.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'periodi.contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'periodi.contratti.form.file.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_periodi.contratti.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['periodi.contratti.form']['etc']['tabs'] )
+	);
+
+
+	// form contratti metadati
+	$p['periodi.contratti.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'periodi.contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'periodi.contratti.form.metadati.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_periodi.contratti.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['periodi.contratti.form']['etc']['tabs'] )
+	);
+
