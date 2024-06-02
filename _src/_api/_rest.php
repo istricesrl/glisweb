@@ -158,6 +158,9 @@
 			// faccio convergere l'ID sulla $_REQUEST
 			if( isset( $_REQUEST['__id__'] ) && ! empty( $_REQUEST['__id__'] ) ) {
 				$_REQUEST[ $cf['ws']['table'] ]['id'] = $_REQUEST['__id__'];
+                // if( $r['method'] == METHOD_GET ) {
+				    $_REQUEST[ $cf['ws']['table'] ]['__forced_view__'] = 1;
+                // }
 			}
 
 			// paginazione

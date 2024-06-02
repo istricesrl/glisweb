@@ -56,7 +56,7 @@
             current = currvalue;
         }
 
-        // console.log( 'valore corrente: ' + current + '/' + currvalue );
+         console.log( 'valore corrente: ' + current + '/' + currvalue );
         // alert( 'valore corrente: ' + current + '/' + currvalue );
 
         // imposto il valore corrente
@@ -82,11 +82,13 @@
 
         if( current != '' ) {
             // alert( 'prelevo #' + current + ' da ' + $( select ).attr( 'populate-api' ) );
+            console.log( 'prelevo #' + current + ' da ' + $( select ).attr( 'populate-api' ) );
             getws(
                 '/api/' + $( select ).attr( 'populate-api' ) + '/' + current,
                 null,
                 function( data ) {
                     // alert( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
+                    console.log( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
                     box.val( data.__label__ );
                     $( select ).val( current );
                 }

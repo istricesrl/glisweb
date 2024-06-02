@@ -67,6 +67,8 @@
 				$r = string2boolean( $v );								// richiesta esplicita di svuotare $_REQUEST[ $t ]
 			} elseif( strtolower( $k )	== '__view_mode__' ) {			//
 				$vm = true;												//
+			} elseif( strtolower( $k )	== '__forced_view__' ) {        //
+				$fvm = true;										    //
 			} elseif( strtolower( $k )	== '__report_mode__' ) {		//
 				$rm = NULL;												//
 			} elseif( strtolower( $k )	== '__filesystem_mode__' ) {	//
@@ -113,6 +115,7 @@
 			// se è stata effettuata una GET senza ID, passo alla modalità view
 		    if( $a === METHOD_GET && ( ! array_key_exists( 'id', $d ) || $vm === true ) ) {
 
+                // die('view_mode');
 				/*
 				// verifico se esiste la view statica
 					$stv = mysqlSelectValue(
@@ -477,8 +480,12 @@
 				// prelevamento di un record già esistente
 				    case METHOD_GET:
 
+
+                        // TODO ma il view_mode qui?
+                        // TODO se la tabella non esiste usare la view
+
 					// compongo la query
-					    $q = "SELECT * FROM ${t}";
+					    $q = "SELECT * FROM ${t}" . ( ( $fvm ) ? '_view' : '' );
 
 					// compongo i campi della query
 					    foreach( $ks as $k ) {
