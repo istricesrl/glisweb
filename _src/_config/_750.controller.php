@@ -256,6 +256,9 @@
 	// print_r( $_REQUEST );
 	// print_r( $_POST );
 	// print_r( $_GET );
+    // if( isset( $cf['ws']['table'] ) ) {
+    //    var_dump( $cf['ws']['table'] );
+    // }
 
     // timer
 	timerCheck( $cf['speed'], '-> inizio lavoro controller' );
@@ -304,6 +307,11 @@
 				// print_r( $_REQUEST['__info__'] );
 				// if( $k == 'prodotti' ) { print_r( $v ); }
                 // if( ! array_key_exists( $k, $_REQUEST['__info__'] ) ) { echo $k . 'non è in ' . print_r( $_REQUEST['__info__'], true ); }
+                // if( isset( $cf['ws']['table'] ) ) {
+                //    var_dump( $cf['ws']['table'] );
+                //    die(print_r( $_REQUEST, true ) );
+                //     die( print_r( $_REQUEST[ $cf['ws']['table'] ], true ) );
+                // }
 
 			    // timer
 				timerCheck( $cf['speed'], '-> fine elaborazione blocco ' . $k );
@@ -332,4 +340,8 @@
     // print_r( $_REQUEST );
     // print_r( $_REQUEST['__err__'] );
     // print_r( $_REQUEST['__info__'] );
+    // if( isset( $cf['ws']['table'] ) ) {
+    //    var_dump( $cf['ws']['table'] );
+    //     die( print_r( $_REQUEST[ $cf['ws']['table'] ], true ) );
+    // }
     // die();

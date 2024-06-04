@@ -186,3 +186,6 @@
 
     // debug
     // print_r( $_REQUEST );
+    // if( isset( $cf['ws']['table'] ) ) {
+        // die( print_r( $_REQUEST[ $cf['ws']['table'] ], true ) );
+    // }
