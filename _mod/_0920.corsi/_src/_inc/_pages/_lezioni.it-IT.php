@@ -6,6 +6,18 @@
     // modulo di questo file
 	$m = DIR_MOD . '_0920.corsi/';
 
+    // gestione anagrafica abbonamenti
+	$p['anagrafica.form.prove'] = array(
+	    'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'prove' ),
+	    'h1'				=> array( $l		=> 'prove' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'anagrafica.form.prove.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.prove.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.form' )
+	);
+
 	// RELAZIONI CON IL MODULO CATALOGO
 	if( in_array( "4000.catalogo", $cf['mods']['active']['array'] ) ) {
 
