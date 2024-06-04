@@ -208,7 +208,7 @@
 			$response = $_REQUEST[ $cf['ws']['table'] ];
 
 			// debug
-			// print_r( $response );
+			// die( print_r( $response, true ) );
 
 			// codice di stato HTTP generato in base all'esito delle operazioni del controller
 			if( isset( $cf['controller']['status'][ $cf['ws']['table'] ] ) ) {
@@ -222,7 +222,7 @@
 			}
 
 			// debug
-			// print_r( $_REQUEST[ $cf['ws']['table'] ] );
+			// die( print_r( $_REQUEST[ $cf['ws']['table'] ], true ) );
 			// print_r( $cf['ws'] );
 			// die( print_r( $cf['ws'], true ) );
 			// print_r( $cf['controller'] );

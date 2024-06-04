@@ -89,6 +89,7 @@
                 function( data ) {
                     // alert( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
                     console.log( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
+					console.log( data );
                     box.val( data.__label__ );
                     $( select ).val( current );
                 }

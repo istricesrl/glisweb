@@ -485,7 +485,8 @@
                         // TODO se la tabella non esiste usare la view
 
 					// compongo la query
-					    $q = "SELECT * FROM ${t}" . ( ( $fvm ) ? '_view' : '' );
+					    // $q = "SELECT * FROM ${t}" . ( ( $fvm ) ? '_view' : '' );
+						$q = "SELECT * FROM ${t}" . ( ( $fvm ) ? $rm : '' );
 
 					// compongo i campi della query
 					    foreach( $ks as $k ) {
@@ -498,7 +499,12 @@
 						// print_r( $tks );
 					    }
 
-				    break;
+					// debug
+						// if( ! empty(  $fvm ) ) {
+							// die( $q );
+						// }
+
+					break;
 
 			    }
 
@@ -551,7 +557,12 @@
 						$d = array_shift( $d );
 					    }
 
-				    break;
+						if( ! empty( $fvm ) ) {
+							// die( print_r( $d, true ) );
+							// die( $q );
+						}
+
+					break;
 
 			    }
 
@@ -638,6 +649,8 @@
 			// debug
 			// print_r( $d );
 
+if( empty($fvm) ) {
+
 			// elaborazione dei sottomoduli
 			    switch( strtoupper( $a ) ) {
 				case METHOD_POST:
@@ -712,6 +725,8 @@ foreach( $x as $ref ) {
 				    }
 				break;
 			    }
+
+}
 
 			// controller post elaborazione (finally)
 			    $cn = 'finally.php';
