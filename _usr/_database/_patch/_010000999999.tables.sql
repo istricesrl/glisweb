@@ -394,6 +394,22 @@ CREATE TABLE IF NOT EXISTS `articoli_caratteristiche` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000001700
+
+-- asset
+CREATE TABLE IF NOT EXISTS `asset` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `codice` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `cespite` char(32) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+)  ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000001800
 
 -- attivita
@@ -409,6 +425,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `referenti` char(255) DEFAULT NULL,
   `id_indirizzo` int(11) DEFAULT NULL,
   `id_luogo` int(11) DEFAULT NULL,
+  `id_oggetto` int(11) DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
   `ora_scadenza` time DEFAULT NULL,
   `note_scadenza` text DEFAULT NULL,
@@ -426,6 +443,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,
   `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,
   `id_anagrafica` int(11) DEFAULT NULL,
+  `id_asset` int(11) DEFAULT NULL,
   `ore` decimal(5,2) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
@@ -2013,6 +2031,8 @@ CREATE TABLE IF NOT EXISTS `listini` (
   `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_valuta` int(11) DEFAULT NULL,
+  `sconto_su_genitore` decimal(5,2) DEFAULT NULL,
+  `se_default_su_genitore` tinyint(1) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -3867,6 +3887,22 @@ CREATE TABLE IF NOT EXISTS `tipologie_annunci` (
   `ordine` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `sigla` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000050200
+
+-- tipologie_asset
+CREATE TABLE IF NOT EXISTS `tipologie_asset` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `font_awesome` char(16) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

@@ -1,19 +1,25 @@
 <?php
 
     /**
-     * 
-     * 
      * gestione dei tag UTM per la tracciatura delle conversione
      * 
+     * In questo file andiamo a raccogliere dalla $_REQUEST eventuali tag UTM e li memorizziamo in sessione,
+     * in questo modo è poi possibile associare diversi oggetti del framework (contatti, carrelli, eccetera)
+     * a una specifica campagna sponsorizzata.
+     * 
+     * introduzione
+     * ============
+     * Per ulteriori dettagli sui tag UTM vedi https://ga-dev-tools.web.app/campaign-url-builder/
      * 
      * 
-     * vedi https://ga-dev-tools.web.app/campaign-url-builder/
+     * applicazione agli oggetti del framework
+     * =======================================
+     * I tag UTM sono applicabili agli oggetti più comuni (ad es. banner su newsletter, CPC da Facebook,
+     * Google Ads, banner su siti terzi, volantini cartacei, eccetera)
      * 
      * 
      * 
      * 
-     * 
-     * @file
      * 
      */
 
@@ -27,10 +33,7 @@
         'utm_content'                   // Used for A/B testing and content-targeted ads. Use utm_content to differentiate ads or links that point to the same URL.
     );
 
-    // TODO
+    // ...
     foreach( $cf['utm']['fields'] as $field ) {
         $_SESSION['utm'][ $field ] = ( isset( $_REQUEST[ $field ] ) ) ? $_REQUEST[ $field ] : ( ( isset( $_SESSION['utm'][ $field ] ) ) ? $_SESSION['utm'][ $field ] : NULL );
     }
-
-    // TODO
-    // fare alcuni esempi di tag UTM da inserire per gli oggetti più comuni (ad es. banner su newsletter, CPC da Facebook, Google Ads, banner su siti terzi, volantini cartacei, eccetera)

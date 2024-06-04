@@ -972,6 +972,32 @@ CREATE OR REPLACE VIEW `articoli_caratteristiche_view` AS
 		LEFT JOIN caratteristiche ON caratteristiche.id = articoli_caratteristiche.id_caratteristica
 ;
 
+-- | 090000001700
+
+-- asset_view
+DROP TABLE IF EXISTS `asset_view`;
+
+-- | 090000001701
+
+-- asset_view
+CREATE OR REPLACE VIEW `asset_view` AS
+	SELECT
+		asset.id,
+		asset.id_tipologia,
+		tipologie_asset.nome AS tipologia,
+		asset.codice,
+		asset.nome,
+		asset.cespite,
+		asset.note,
+		asset.id_account_inserimento,
+		asset.timestamp_inserimento,
+		asset.id_account_aggiornamento,
+		asset.timestamp_aggiornamento,
+		concat( asset.id, asset.nome, asset.codice) AS __label__
+	FROM asset
+		LEFT JOIN tipologie_asset ON tipologie_asset.id = asset.id_tipologia
+;
+
 -- | 090000001800
 
 -- attivita_view
@@ -997,6 +1023,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		indirizzi.indirizzo AS indirizzo,
 		attivita.id_luogo,
 		luoghi_path( coalesce( attivita.id_luogo, todo.id_luogo ) ) AS luogo,
+		attivita.id_oggetto,
+		concat( asset1.id, ' ', asset1.nome ) AS oggetto,
 		attivita.data_scadenza,
 		attivita.ora_scadenza,
 		attivita.data_programmazione,
@@ -1017,6 +1045,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.longitudine_ora_fine,
 		attivita.id_anagrafica,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
+		attivita.id_asset,
+		concat( asset2.id, ' ', asset2.nome ) AS asset,
 		attivita.ore,
 		attivita.nome,
 		attivita.id_documento,
@@ -1092,6 +1122,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN corrispondenza ON corrispondenza.id = attivita.id_corrispondenza
 		LEFT JOIN organizzazioni ON organizzazioni.id = corrispondenza.id_organizzazione_mittente
 		LEFT JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
+		LEFT JOIN asset AS asset1 ON asset1.id = attivita.id_asset
+		LEFT JOIN asset AS asset2 ON asset2.id = attivita.id_asset
 	GROUP BY attivita.id
 ;
 
@@ -9346,6 +9378,28 @@ CREATE OR REPLACE VIEW `cartellini_view` AS
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 	WHERE
 		tipologie_attivita.se_cartellini IS NOT NULL
+;
+
+-- | 090000050200
+
+-- tipologie_asset
+DROP TABLE IF EXISTS `tipologie_asset_view`;
+
+-- | 090000050201
+
+-- tipologie_asset_view
+CREATE OR REPLACE VIEW `tipologie_asset_view` AS
+	SELECT
+		tipologie_asset.id,
+		tipologie_asset.id_genitore,
+		tipologie_asset.ordine,
+		tipologie_asset.nome,
+		tipologie_asset.html_entity,
+		tipologie_asset.font_awesome,
+		tipologie_asset.id_account_inserimento,
+		tipologie_asset.id_account_aggiornamento,
+		tipologie_asset_path( tipologie_asset.id ) AS __label__
+	FROM tipologie_asset
 ;
 
 -- | 090000050450

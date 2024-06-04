@@ -361,6 +361,23 @@ ALTER TABLE `articoli_caratteristiche`
 -- tipologia: tabella gestita
 ALTER TABLE `articoli_caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000001700
+
+-- asset
+ALTER TABLE `asset`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`codice`), 
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `codice` (`codice`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` ( `id`,`id_tipologia`,`codice` );
+
+-- | 030000001701
+
+-- asset
+ALTER TABLE `asset` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000001800
 
 -- attivita
@@ -376,8 +393,10 @@ ALTER TABLE `attivita`
 	ADD KEY `id_contatto` (`id_contatto`),
 	ADD KEY `id_indirizzo` (`id_indirizzo`), 
 	ADD KEY `id_luogo` (`id_luogo`), 
+	ADD KEY `id_oggetto` (`id_oggetto`), 
 	ADD KEY `id_anagrafica_programmazione` (`id_anagrafica_programmazione`),
 	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_asset` (`id_asset`), 
 	ADD KEY `id_mailing` (`id_mailing`), 
 	ADD KEY `id_mail` (`id_mail`), 
 	ADD KEY `id_documento` (`id_documento`), 
@@ -4039,6 +4058,24 @@ ALTER TABLE `tipologie_annunci`
 
 -- tipologie_annunci
 ALTER TABLE `tipologie_annunci` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000050200
+
+-- tipologie_asset
+ALTER TABLE `tipologie_asset`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`,`font_awesome`);
+
+-- | 030000050201
+
+-- tipologie_asset
+ALTER TABLE `tipologie_asset` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000050400
 

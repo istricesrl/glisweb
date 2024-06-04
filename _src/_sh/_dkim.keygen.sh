@@ -16,6 +16,9 @@ echo "lavoro su: $(pwd)"
 ## se ho la password
 if [ -n "$1" ]; then
 
+## se la cartella non esiste
+if [ ! -d ./etc/secret/$1/ ]; then
+
 ## creo la cartella
 mkdir -p ./etc/secret/$1/
 
@@ -25,6 +28,12 @@ openssl genrsa -out ./etc/secret/$1/dkim.private.pem 2048
 
 ## esporto la chiave pubblica
 openssl rsa -in ./etc/secret/$1/dkim.private.pem -pubout -outform der 2>/dev/null | openssl base64 -A > ./etc/secret/$1/dkim.public.pem
+
+else
+
+echo "il certificato per $1 esiste già"
+
+fi
 
 else
 

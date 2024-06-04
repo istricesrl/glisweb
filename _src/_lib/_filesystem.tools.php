@@ -38,14 +38,14 @@
      *
      * costanti
      * ========
-     * Le costanti definite e utilizzate dalla libreria sono elencate nella seguente tabella.
+     * La libreria definisce le seguenti costanti per indicare le varie modalità di apertura e di lettura dei file.
      *
      * costante                  | spiegazione
      * --------------------------|--------------------------------------------------------------
      * READ_FILE_AS_ARRAY        | legge il file come un array con la funzione file()
      * READ_FILE_AS_STRING       | legge il file come una stringa con file_get_contents()
-     * WRITE_FILE_OVERWRITE      | sovrascrive il file (lo crea se non esiste)
-     * WRITE_FILE_APPEND         | appende al file (lo crea se non esiste)
+     * WRITE_FILE_OVERWRITE      | sovrascrive il file (lo crea se non esiste, w+)
+     * WRITE_FILE_APPEND         | appende al file (lo crea se non esiste, a+)
      *
      * funzioni
      * ========

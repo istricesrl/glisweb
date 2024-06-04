@@ -79,6 +79,7 @@
 
     // debug
     // var_dump( $_REQUEST );
+    // echo 'DEBUG';
 
     /**
      * tokenizzazione di __rw__
@@ -114,6 +115,7 @@
 	// ini_set( 'display_errors', 1 );
 	// ini_set( 'display_startup_errors', 1 );
 	// error_reporting( E_ALL );
+    // echo 'DEBUG';
 
     // timer
 	timerCheck( $cf['speed'], 'inizio eleborazione API pages' );
@@ -366,6 +368,7 @@
 
 	// debug
 	// print_r( $ct['page']['template'] );
+    // echo 'DEBUG';
 
     // timer
 	timerCheck( $cf['speed'], 'fine controllo permessi' );
@@ -435,6 +438,9 @@
 
 			}
 
+            // debug
+            // echo $macro;
+
         }
 
     }
@@ -442,6 +448,7 @@
     // debug
 	// print_r( $ct['page']['macro'] );
 	// print_r( get_included_files() );
+    // echo 'DEBUG';
 
     // timer
 	timerCheck( $cf['speed'], 'fine inclusione macro' );
@@ -472,6 +479,7 @@
 	// debug
 	// var_dump( $ctFile );
     // var_dump( $ct['page']['content'] );
+    // echo 'DEBUG';
 
     // timer
 	timerCheck( $cf['speed'], 'fine inclusione contenuti statici' );
@@ -648,6 +656,7 @@
 
     // debug
     // die( print_r( $ct['page']['css'], true ) );
+    // echo 'DEBUG';
 
     // timer
 	timerCheck( $cf['speed'], 'fine ricerca CSS minificati' );

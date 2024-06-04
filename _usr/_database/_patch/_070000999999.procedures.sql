@@ -3918,6 +3918,146 @@ CREATE
 
 END;
 
+-- | 070000050200
+
+-- tipologie_asset_path
+DROP FUNCTION IF EXISTS `tipologie_asset_path`;
+
+-- | 070000050201
+
+-- tipologie_asset_path
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_asset_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_asset_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_asset.id_genitore,
+				tipologie_asset.nome
+			FROM tipologie_asset
+			WHERE tipologie_asset.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000050210
+
+-- tipologie_asset_path_check
+DROP FUNCTION IF EXISTS `tipologie_asset_path_check`;
+
+-- | 070000050211
+
+-- tipologie_asset_path_check
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_asset_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_asset_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_asset.id_genitore
+			FROM tipologie_asset
+			WHERE tipologie_asset.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000050220
+
+-- tipologie_asset_path_find_ancestor
+DROP FUNCTION IF EXISTS `tipologie_asset_path_find_ancestor`;
+
+-- | 070000050221
+
+-- tipologie_asset_path_find_ancestor
+-- verifica: 2021-11-15 11:29 Chiara GDL
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_asset_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_asset_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_asset.id_genitore,
+				tipologie_asset.id
+			FROM tipologie_asset
+			WHERE tipologie_asset.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
+
 -- | 070000050400
 
 -- tipologie_attivita_path

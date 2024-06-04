@@ -128,6 +128,11 @@
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.abbonamenti' );
 	}
 
+	// RELAZIONI CON IL MODULO CORSI
+	if( in_array( "0920.corsi", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.prove' );
+	}
+
 	// RELAZIONI CON IL MODULO SOFTWARE
 	if( in_array( "V900.software", $cf['mods']['active']['array'] ) ) {
 		arrayInsertBefore( 'anagrafica.form.immagini', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.licenze' );
@@ -610,4 +615,3 @@
 		'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'				=> array( 'tabs'	=> $p['ranking.anagrafica.form']['etc']['tabs'] )
 	);
-	

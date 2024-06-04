@@ -39,3 +39,46 @@
     {% endfor %}
 </fieldset>
 {% endmacro %}
+
+{# TODO spostare in una macro di default a parte #}
+{% macro categorie( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
+	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
+    {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = require %}{% endif %}
+	{% for i in -1..t %}
+	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+        {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
+        {{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
+        <div class="form-group form-row">
+            <div class="col">
+            <span class="label-top">gruppo</span>
+            {{ frm.select( table, subtable, i, 'id_categoria', '', etc.select.categorie, request, '', '', '', '', '', disabled ) }}
+            </div>
+            {% if r.id %}
+            <div class="col-auto text-right remove-on-duplicate d-print-none">
+            {{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+            </div>
+            <div class="col-auto text-right show-on-duplicate d-print-none hidden">
+            {{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
+            </div>
+            {% else %}
+            <div class="col-auto text-right d-print-none">
+            {{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
+            </div>
+            {% endif %}
+	    </div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}

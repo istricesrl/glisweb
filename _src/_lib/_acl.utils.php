@@ -453,11 +453,11 @@
 			
 			} elseif( isset( $row['__firma__'] ) && $row['__firma__'] != $challenge ) {
 
-				logWrite( 'firma non corrispondente: ' . $row['__firma__'] . ' (prevista: ' . $challenge . ') per: ' . print_r( $row ), 'firme', LOG_ERR );
+				logWrite( 'firma non corrispondente: ' . $row['__firma__'] . ' (prevista: ' . $challenge . ') per: ' . print_r( $row, true ), 'firme', LOG_ERR );
 
 			} else {
 
-				logWrite( 'firma non trovata per: ' . print_r( $row ), 'firme', LOG_ERR );
+				logWrite( 'firma non trovata per: ' . print_r( $row, true ), 'firme', LOG_ERR );
 
 			}
 
