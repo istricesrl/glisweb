@@ -45,7 +45,10 @@
 		{# SUBFORM GRUPPI #}
 		{{ sub.gruppi( table, 'listini_gruppi', 'gruppi', site, page, pages, ietf, etc, request, session, 'id_listino' ) }}
 
-	    {# BOTTONI E COMANDI DEL MODULO #}
+	    {# SUBFORM CATEGORIE #}
+	    {{ sub.categorie( table, 'anagrafica_categorie', 'categorie', site, page, pages, ietf, etc, request, session, 'id_categoria' ) }}
+
+        {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>

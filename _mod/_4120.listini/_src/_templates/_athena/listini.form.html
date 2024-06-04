@@ -70,7 +70,28 @@
     
         </fieldset>
 
-	    {# BOTTONI E COMANDI DEL MODULO #}
+        {# RELAZIONE CON IL LISTINO GENITORE #}
+        {% if request[ table ].id_genitore %}
+            <fieldset>
+                <legend>relazione con il listino genitore</legend>
+
+                <div class="form-group form-row">
+                    <div class="col-12 col-md-2">
+                        <span class="label-top">% sconto sul genitore</span>
+                        {{ frm.input( table, '', '', 'sconto_su_genitore', 'sconto sul genitore', '', request ) }}
+                    </div>
+                    <div class="col-12 col-md">
+                        <span class="label-top">strategia di default</span>
+                        {{ frm.select( table, '', '', 'se_default', '', etc.select.se_default, request ) }}
+                    </div>
+                </div>
+
+            </fieldset>
+        {% endif %}
+
+        {# MODULO DI GESTIONE DEI PRODOTTI #}
+
+        {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
 			{{ def.controls( page, pages, ietf, session, table, request ) }}
 	    </fieldset>

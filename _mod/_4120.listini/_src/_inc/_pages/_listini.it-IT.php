@@ -32,7 +32,7 @@
 	    'etc'		=> array( 'tabs'	=> array(	'listini.form',
 													'listini.form.prezzi',
 													'listini.form.anagrafiche',
-													'listini.form.account',
+#													'listini.form.account',
 													'listini.form.gruppi'	) )
 	);
 
@@ -111,7 +111,24 @@
 	    'etc'		=> array( 'tabs'	=> array(	'prezzi.form'	) )
 	);
 
-	// vista reparti
+	// gestione listini
+	$p['listini.clienti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione listini clienti' ),
+	    'h1'		=> array( $l		=> 'gestione listini clienti' ),
+	    'parent'		=> array( 'id'		=> 'listini.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.clienti.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.clienti.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'listini.clienti.form',
+#													'listini.form.prezzi',
+#													'listini.form.anagrafiche',
+#													'listini.form.account',
+#													'listini.form.gruppi'	
+                                                ) )
+	);
+
+    // vista reparti
 	$p['reparti.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'reparti' ),

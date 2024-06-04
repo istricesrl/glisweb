@@ -30,5 +30,13 @@
         'SELECT id, __label__ FROM gruppi_view'
     );   
 
+    // tendina categorie 
+	$ct['etc']['select']['categorie'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM categorie_anagrafica_view'
+    );   
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

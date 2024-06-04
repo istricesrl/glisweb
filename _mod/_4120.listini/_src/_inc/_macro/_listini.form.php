@@ -36,6 +36,12 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM valute_view' );
 
+    // tendina notifiche
+	$ct['etc']['select']['se_default'] = array(
+	    array( 'id' => NULL, '__label__' => 'se un prezzo è assente in questo listino, NON prelevarlo dal listino genitore' ),
+	    array( 'id' => 1, '__label__' => 'se un prezzo è assente in questo listino, PRELEVALO dal listino genitore' )
+	);
+
 
 
   
