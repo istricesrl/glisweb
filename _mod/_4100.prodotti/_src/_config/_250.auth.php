@@ -47,6 +47,12 @@
                 CONTROL_FULL => array( 'roots' ),
                 CONTROL_FILTERED => array( 'staff' )
             ),
+            'relazioni_prodotti' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
+            'relazioni_articoli' => array(
+                CONTROL_FULL => array( 'roots' )
+            ),
             'tipologie_prodotti' => array(
                 CONTROL_FULL => array( 'roots' ),
                 METHOD_GET => array( 'staff' )

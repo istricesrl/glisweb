@@ -46,6 +46,7 @@
 	    'etc'		=> array( 'tabs'	=> array(	'articoli.form',
      //                                               'articoli.form.pubblicazioni',
 													'articoli.form.caratteristiche',
+													'articoli.form.relazioni',
 #													'articoli.form.sem',
 #													'articoli.form.testo',
 													'articoli.form.prezzi',
@@ -99,6 +100,18 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.caratteristiche.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.caratteristiche.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// gestione articoli caratteristiche
+	$p['articoli.form.relazioni'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'relazioni' ),
+		'h1'		=> array( $l		=> 'relazioni' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.relazioni.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.relazioni.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);

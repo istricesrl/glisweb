@@ -20,7 +20,7 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'anagrafica';
+	$ct['form']['table'] = 'prodotti';
 
     // tendina  agente
     // TODO mettere le relazioni per le persone fisiche e i ruoli organizzazione per le persone giuridiche?
@@ -28,7 +28,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_anagrafica_view WHERE se_relazioni IS NOT NULL OR se_organizzazioni IS NOT NULL'
+	    'SELECT id, __label__ FROM ruoli_prodotti_view'
     );
 /*
     // tendina  anagrafica
@@ -43,7 +43,7 @@
     // print_r( $ct['etc']['select']['anagrafica'] );
 
     // macro di default per l'entità anagrafica
-	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
+	// require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

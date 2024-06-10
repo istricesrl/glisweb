@@ -146,6 +146,12 @@ if( $cf['contents']['cached'] === false ) {
                     'id_prodotto'
                 );
 
+                aggiungiPrezzi(
+                    $cf['contents']['pages'][$pid],
+                    $pg['id'],
+                    'id_prodotto'
+                );
+
 /*
                 aggiungiMenu(
                     $cf['contents']['pages'][$pid],

@@ -58,6 +58,7 @@
 	    'etc'		=> array( 'tabs'	=> array(	'prodotti.form',
                                                     'prodotti.form.categorie',
 													'prodotti.form.caratteristiche',
+													'prodotti.form.relazioni',
 #													'prodotti.form.sem',
 #													'prodotti.form.testo',
 													'prodotti.form.articoli',
@@ -100,6 +101,18 @@
 		'parent'		=> array( 'id'		=> 'prodotti.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.caratteristiche.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.caratteristiche.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
+	);
+
+	// gestione prodotti categorie
+	$p['prodotti.form.relazioni'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'relazioni' ),
+		'h1'		=> array( $l		=> 'relazioni' ),
+		'parent'		=> array( 'id'		=> 'prodotti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'prodotti.form.relazioni.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_prodotti.form.relazioni.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['prodotti.form']['etc']['tabs'] )
 	);
