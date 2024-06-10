@@ -7,6 +7,7 @@
 <!-- macro {{ _self }}::checkConsensi() -->
 {% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
 {% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
+{% if items.consensi is traversable %}
 {% for codice,check in items.consensi|sort((a, b) => a.ordine <=> b.ordine) %}
 {% if key %}{% set nm = '['~ref~']['~key~']['~codice~']' %}{% set id = ref~key~codice %}{% else %}{% set nm = '['~ref~']['~codice~']' %}{% set id = ref~codice %}{% endif %}
 <div class="{{ rclass }} row-privacy">
@@ -31,4 +32,11 @@
     </div>
 </div>
 {% endfor %}
+{% else %}
+<div class="{{ rclass }} row-privacy">
+	<div class="{{ class }}">
+		<p>nessun consenso privacy impostato per questo modulo</p>
+	</div>
+</div>
+{% endif %}
 {% endmacro %}

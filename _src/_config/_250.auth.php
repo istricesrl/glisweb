@@ -86,6 +86,9 @@
 		'anagrafica_indirizzi' => array(
 			CONTROL_FULL => array( 'roots','staff' )
 		),
+		'__report_variazioni_anagrafica__' => array(
+			CONTROL_FULL => array( 'roots','staff' )
+		),
 #		'anagrafica_modalita_pagamento' => array(
 #		CONTROL_FULL => array( 'roots' ),
 #		CONTROL_FILTERED => array( 'staff' )

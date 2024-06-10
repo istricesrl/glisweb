@@ -896,9 +896,11 @@ INSERT IGNORE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 10:46 Fabio Mosti
 INSERT IGNORE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
-(1,	    NULL,	'prodotto',	    NULL,	NULL),
-(2,	    NULL,	'principale',	NULL,	NULL),
-(3,	    NULL,	'suggerito',	NULL,	NULL);
+(1,	NULL,	'prodotto',	NULL,	NULL),
+(2,	NULL,	'principale',	NULL,	NULL),
+(3,	NULL,	'suggerito',	NULL,	NULL),
+(4,	NULL,	'accessorio',	NULL,	NULL),
+(5,	NULL,	'consumabile',	NULL,	NULL);
 
 -- | 050000035100
 
