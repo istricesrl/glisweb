@@ -26,8 +26,20 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.carrello.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.carrello.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.pagamento' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.ricerca', 'ecommerce.pagamento' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cassa' ), 'priority'	=> '660' ) ) )
+	);
+
+	// carrello
+	$p['ecommerce.ricerca'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'ricerca' ),
+		'h1'			=> array( $l		=> 'ricerca' ),
+		'parent'		=> array( 'id'		=> 'ecommerce' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.ricerca.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.ricerca.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> 'ecommerce.carrello' )
 	);
 
 	// carrello
@@ -39,7 +51,7 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.pagamento.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.pagamento.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.pagamento' ) )
+		'etc'		=> array( 'tabs'	=> 'ecommerce.carrello' )
 	);
 
     // carrello

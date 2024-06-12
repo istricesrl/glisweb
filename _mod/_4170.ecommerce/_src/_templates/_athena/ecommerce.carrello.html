@@ -182,6 +182,7 @@
     </div>
     <div class="col-md-4 d-flex flex-column">
         {# TODO SE È ATTIVO IL MODULO ISCRIZIONI... #}
+        {% if '0630.iscrizioni' in mods.active.array %}
 	    <fieldset>
             <legend>gestione iscrizioni</legend>
             <div class="form-group form-row">
@@ -195,22 +196,35 @@
                 </div>
             </div>
         </fieldset>
+        {% endif %}
         {# ...FINE BLOCCO ISCRIZIONI #}
         <fieldset>
             <legend>gestione articoli</legend>
             {# TODO QUI FARE UN SELETTORE AGGIUNGI/RIMUOVI #}
             {# TODO QUI AGGIUNGERE CAMPO PER BIPPARE GLI ARTICOLI PER CODICE O MATRICOLA CON AUTOFOCUS (INPUT) #}
             {# TODO QUI BOX AGGIUNTA ARTICOLO PER CODICE O MATRICOLA (TENDINA INTELLIGENTE) #}
+            <form action="{{ pages['ecommerce.ricerca'].path[ localization.language.ietf ] }}" method="post">
+                <div class="form-group form-row">
+                    <div class="col">
+                        <input type="text" id="ricerca" class="form-control form-control-sm" name="__ricerca__" value="{{ request.__ricerca__ }}">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary btn-sm btn-sqr btn-block"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
             <div class="form-group form-row">
                 <div class="col-12 col-md">
                     <button onclick="window.open('{{ pages['articoli.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai agli articoli</button>
                 </div>
             </div>
         </fieldset>
-	    <fieldset>
+        {% if frequenti %}
+        <fieldset>
             <legend>articoli frequenti</legend>
             {# TODO QUI BOX ARTICOLI FREQUENTI #}
         </fieldset>
+        {% endif %}
 <!--
 	    <fieldset>
             <legend>riga libera</legend>
@@ -219,4 +233,12 @@
 -->
     </div>
 </section>
+{% endblock %}
+
+{% block javascript %}
+<script async defer type="text/javascript">
+	window.addEventListener( 'DOMContentLoaded', function() {
+        document.getElementById('ricerca').focus();
+    });	
+</script>
 {% endblock %}

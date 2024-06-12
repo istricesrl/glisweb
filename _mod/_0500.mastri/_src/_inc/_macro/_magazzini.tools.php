@@ -66,5 +66,12 @@
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
 */
+
+    // tendina prefissi
+	$ct['etc']['select']['prefissi'] = array( 
+	    array( 'id' => '11', '__label__' => 'Modula 1' ),
+	    array( 'id' => '21', '__label__' => 'Modula 2' ),
+	);
+
 	// gestione default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';

@@ -1,0 +1,201 @@
+{% import '_bin/_default.html' as cms %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+<section class="row flex-fill">
+    <div class="col-md-8 d-flex flex-column">
+        <fieldset>
+            <legend>risultati della ricerca</legend>
+            {% for risultato in risultati %}
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <h3>{{ risultato.id_prodotto }}/{{ risultato.id }} {{ risultato.prodotto }} {{ risultato.nome }}</h3>
+                    <p><i>giacenza in {{ risultato.prefisso_modula }}/{{ risultato.codice_modula }}: {{ risultato.giacenza }}</i></p>
+                    {% if risultato.note %}<p>{{ risultato.note }}</p>{% endif %}
+                </div>
+                <div class="col-12 col-md-auto">
+                    <button onclick="chiama_cassetto('{{ risultato.prefisso_modula }}','{{ risultato.codice_modula}}');" class="btn btn-secondary btn-sm btn-block">richiama</button>
+                </div>
+                <div class="col-1">
+                    <input type="text" id="ricerca" class="form-control form-control-sm" id="__aggiungi_{{ loop.index }}__" value="">
+                </div>
+                <div class="col-12 col-md-auto">
+                    <button onclick="aggiungi_al_carrello('{{ risultato.prefisso_modula }}','{{ risultato.id}}',$('#__aggiungi_{{ loop.index }}__').val());" class="btn btn-secondary btn-sm btn-block">aggiungi</button>
+                </div>
+            </div>
+            {% else %}
+            <p>prova a inserire dei termini differenti o più generici per ottenere risultati</p>
+            {% endfor%}
+        </fieldset>
+    </div>
+    <div class="col-md-4 d-flex flex-column">
+        {# TODO SE È ATTIVO IL MODULO ISCRIZIONI... #}
+        {% if '0630.iscrizioni' in mods.active.array %}
+	    <fieldset>
+            <legend>gestione iscrizioni</legend>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <button onclick="window.open('{{ pages['iscrizioni.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai alle iscrizioni</button>
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <button onclick="window.open('{{ pages['corsi.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai ai corsi</button>
+                </div>
+            </div>
+        </fieldset>
+        {% endif %}
+        {# ...FINE BLOCCO ISCRIZIONI #}
+        <fieldset>
+            <legend>gestione articoli</legend>
+            {# TODO QUI FARE UN SELETTORE AGGIUNGI/RIMUOVI #}
+            {# TODO QUI AGGIUNGERE CAMPO PER BIPPARE GLI ARTICOLI PER CODICE O MATRICOLA CON AUTOFOCUS (INPUT) #}
+            {# TODO QUI BOX AGGIUNTA ARTICOLO PER CODICE O MATRICOLA (TENDINA INTELLIGENTE) #}
+            <form action="{{ pages['ecommerce.ricerca'].path[ localization.language.ietf ] }}" method="post">
+                <div class="form-group form-row">
+                    <div class="col">
+                        <input type="text" id="ricerca" class="form-control form-control-sm" name="__ricerca__" value="{{ request.__ricerca__ }}">
+                    </div>
+                    <div class="col-auto">
+                        <button type="submit" class="btn btn-secondary btn-sm btn-sqr btn-block"><i class="fa fa-search"></i></button>
+                    </div>
+                </div>
+            </form>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <button onclick="window.open('{{ pages['articoli.view'].url[ localization.language.ietf ] }}','_self');" class="btn btn-secondary btn-sm btn-block">vai agli articoli</button>
+                </div>
+            </div>
+        </fieldset>
+        {% if frequenti %}
+        <fieldset>
+            <legend>articoli frequenti</legend>
+            {# TODO QUI BOX ARTICOLI FREQUENTI #}
+        </fieldset>
+        {% endif %}
+<!--
+	    <fieldset>
+            <legend>riga libera</legend>
+            {# TODO QUI METTERE I CAMPI PER L'AGGIUNTA DI UNA RIGA SENZA ARTICOLO (OPPURE UN BOTTONE PER ANDARE AL FORM DI INSERIMENTO RIGHE?) #}
+        </fieldset>
+-->
+        <fieldset class="mt-auto">
+            <legend>log comandi</legend>
+            <div id="command_output">
+
+            </div>
+        </fieldset>
+
+    </div>
+</section>
+{% endblock %}
+
+{% block javascript %}
+<script async defer type="text/javascript">
+
+    function chiama_cassetto( prefisso, cassetto ) {
+
+        comando = prefisso + '|' + (Math.floor(Date.now() / 1000)).toString() + '|CALL|' + cassetto + '|1';
+
+        // chiamata
+        $.ajax({
+            url: 'http://127.0.0.1:5000/modula',
+            type: 'POST',
+            data: JSON.stringify({ 'comando': comando }),
+            contentType: 'application/json',  // specifica che stai inviando del JSON
+            crossDomain: true,
+            async: true,
+            beforeSend: function (xhr) {
+                $('#command_output').empty();
+                $('#command_output').append( $('<p>').text('comando: ' + comando ) );
+            },
+            success: function (data) {
+                console.log(data);
+                if( data.status == 'OK' ) {
+                    $('#command_output').append( $('<p>').text('richiesta inviata') );
+                    $('#command_output').append( $('<p>').text('risposta: ' + data.risposta) );
+                } else {
+                    $('#command_output').append( $('<p>').text('richiesta inviata') );
+                    if( typeof(data.errori) != 'undefined' ) {
+                        $('#command_output').append( $('<p>').text('errori: ' + data.errori) );
+                    } else {
+                        $('#command_output').append( $('<p>').text('impossibile comunicare con l\'agent, è avviato?') );
+                    }
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                $('#command_output').append( $('<p>').text('errore generico, verificare agent') );
+            },
+            complete: function (data) {
+                console.log(data);
+                // $('#command_output').append( $('<p>').text(data) );
+                // $('#test_modula').modal('toggle');
+                $('#command_output_row').removeClass('d-none');
+            }
+        });
+
+    }
+
+    function aggiungi_al_carrello( prefisso, articolo, quantita ) {
+
+        alert( 'aggiungo al carrello ' + quantita + 'x ' + articolo );
+        alert( 'rientro cassetto ' + prefisso );
+
+        comando = prefisso + '|' + (Math.floor(Date.now() / 1000)).toString() + '|RETURN|1';
+
+
+        // chiamata
+        $.ajax({
+            url: 'http://127.0.0.1:5000/modula',
+            type: 'POST',
+            data: JSON.stringify({ 'comando': comando }),
+            contentType: 'application/json',  // specifica che stai inviando del JSON
+            crossDomain: true,
+            async: true,
+            beforeSend: function (xhr) {
+                $('#command_output').empty();
+                $('#command_output').append( $('<p>').text('comando: ' + comando ) );
+            },
+            success: function (data) {
+                console.log(data);
+                if( data.status == 'OK' ) {
+                    $('#command_output').append( $('<p>').text('richiesta inviata') );
+                    $('#command_output').append( $('<p>').text('risposta: ' + data.risposta) );
+                } else {
+                    $('#command_output').append( $('<p>').text('richiesta inviata') );
+                    if( typeof(data.errori) != 'undefined' ) {
+                        $('#command_output').append( $('<p>').text('errori: ' + data.errori) );
+                    } else {
+                        $('#command_output').append( $('<p>').text('impossibile comunicare con l\'agent, è avviato?') );
+                    }
+                }
+            },
+            error: function (data) {
+                console.log(data);
+                $('#command_output').append( $('<p>').text('errore generico, verificare agent') );
+            },
+            complete: function (data) {
+                console.log(data);
+                // $('#command_output').append( $('<p>').text(data) );
+                // $('#test_modula').modal('toggle');
+                $('#command_output_row').removeClass('d-none');
+                window.open('{{ pages["ecommerce.carrello"].path[ localization.language.ietf ] }}?__carrello__[__articolo__][id_articolo]='+articolo+'&__carrello__[__articolo__][quantita]='+quantita,'_self');
+            }
+        });
+
+    }
+
+    function comando_modula( comando ) {
+
+        // TODO attenzione supportare le callback
+
+    }
+
+    window.addEventListener( 'DOMContentLoaded', function() {
+        document.getElementById('ricerca').focus();
+    });
+
+</script>
+{% endblock %}
