@@ -1,6 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="DEPLOY" default="dist.interactive">
-    
+
+    <!--
+
+        INTRODUZIONE
+        ============
+        Questo file è utilizzato da Phing (https://www.phing.info/) per automatizzare il processo di deploy dei progetti GlisWeb; si occupa di
+        svolgere alcune operazioni fondamentali per la buona riuscita del deploy, e in particolare:
+
+        TODO documentare, fare elenco di tutte le cose che fa questo file e in che ordine
+        
+    -->
+
+    <!--
+
+        01. PROPRIETÀ
+        =============
+        In questa sezione vengono definite le proprietà del progetto, ovvero i valori che verranno utilizzati per l'esecuzione del deploy.
+
+    -->
+
     <!-- inclusione file proprietà -->
     <!-- chiamare phing -propertyfile ./usr/deploy/phing/build.properties dalla cartella radice -->
     <!-- <property file="../../../usr/deploy/phing/build.properties" /> -->
@@ -15,12 +34,14 @@
     </tstamp>
 
     <!-- proprietà di base -->
+    <!-- TODO documentare cos'è 'sta roba? -->
     <property name="rsc.xcd" value="etc/sitemap,tmp,var,usr,.git,.github" />
     <property name="rsc.xcf" value=".gitignore,robots.txt,sitemap.xml,sitemap.csv,build.properties" />
     <property name="rsc.xcl" value="${rsc.xcd},${rsc.xcf}" />
 
     <!-- comandi -->
     <!-- TODO per tutti i chown e chmod usare semplicemente lo script lamp permission secure? -->
+    <!-- TODO rivedere e razionalizzare tutti questi comandi -->
     <property name="cmd.amp" value="&amp;&amp;" />
     <property name="cmd.bak" value="tar -cvzf ${dst.fld}/backup.deploy.${bak.ext}.tar.gz ${dst.dir}" />
     <property name="cmd.cds" value="cd ${src.dir}" />
@@ -39,12 +60,20 @@
     <property name="cmd.F20" value="ncftpget -u ${ftp.usr} -p ${ftp.psw} -DD -c ${ftp.hst} ${ftp.dir}tmp/.upgrade > /dev/null" />
     <property name="cmd.FX1" value="echo | ncftpput -u ${ftp.usr} -p ${ftp.psw} -m -c ${ftp.hst} ${ftp.dir}src/bugfix.json" />
 
-    <!-- comandi da implementare
+    <!-- TODO comandi da implementare
     <property name="cmd.cll" value="cd ${dst.dir} &amp;&amp; rm -f ./var/log/*.log &amp;&amp; rm -f ./var/log/slow/*.log" />
     <property name="cmd.clc" value="cd ${dst.dir} &amp;&amp; rm -rf ./var/cache/" />
     <property name="cmd.pfx" value="va.lamp.permission.fix.sh ${dst.fld}" />
     <property name="cmd.ckf" value="cd ${dst.dir} &amp;&amp; mkdir -p ./tmp" />
     <property name="cmd.mnf" value="cd ${dst.dir} &amp;&amp; _src/_sh/_optimize.sh" />
+    -->
+
+    <!--
+
+        02. FILESET
+        ===========
+        In questa sezione vengono definiti gli insiemi di file su cui lavorare.
+
     -->
 
     <!-- fileset del progetto -->
@@ -67,6 +96,15 @@
         <exclude name="robots.txt" />
 
     </fileset>
+
+    <!--
+
+        03. TARGET DI SERVIZIO
+        ======================
+        In questa sezione vengono definiti tutti i target utilizzati per il deploy.
+
+    -->
+
 
     <!-- target da implementare
     <target name="mysql.diff">
@@ -338,6 +376,15 @@
 
     </target>
 
+    <!--
+
+        04. TARGET DI DISTRIBUZIONE
+        ===========================
+        In questa sezione vengono definiti i target di distribuzione, ovvero quelli che si occupano direttamente del deploy; ognuno di essi
+        rappresenta una specifica strategia di deploy.
+
+    -->
+
     <!-- distribuzione via FTP -->
     <target name="dist.ftp">
 
@@ -472,62 +519,13 @@
 
     </target>
 
-    <!-- distribuzione interattiva (chiede il tipo di release -->
-    <target name="dist.interactive">
+    <!--
 
-        <!-- messaggi -->
-        <echo msg="ATTENZIONE! inserire il tipo di release (le etichette sono case sensitive)" />
-        <echo msg="ATTENZIONE! se non si desidera aumentare la versione, lasciare il campo in bianco" />
+        05. TARGET PRINCIPALE
+        =====================
 
-        <!-- richiedo il tipo di deploy -->
-        <propertyprompt propertyName="prj.inc" defaultValue="" promptText="tipo di distribuzione (Major|Minor|Bugfix)" />
 
-        <!-- passo all'esecuzione del deploy -->
-        <phingcall target="dist.exec" />
-
-    </target>
-
-    <!-- distribuzione major -->
-    <target name="dist.major">
-
-        <!-- forzo il tipo di avanzamento a Major -->
-        <property name="prj.inc" value="Major" override="true" />
-
-        <!-- messaggi -->
-        <echo msg="impostato avanzamento: ${prj.inc}" />
-
-        <!-- passo all'esecuzione del deploy -->
-        <phingcall target="dist.exec" />
-
-    </target>
-
-    <!-- distribuzione minor -->
-    <target name="dist.minor">
-
-        <!-- forzo il tipo di avanzamento a Minor -->
-        <property name="prj.inc" value="Minor" override="true" />
-
-        <!-- messaggi -->
-        <echo msg="impostato avanzamento: ${prj.inc}" />
-
-        <!-- passo all'esecuzione del deploy -->
-        <phingcall target="dist.exec" />
-
-    </target>
-
-    <!-- distribuzione bugfix -->
-    <target name="dist.bugfix">
-
-        <!-- forzo il tipo di avanzamento a Bugfix -->
-        <property name="prj.inc" value="Bugfix" override="true" />
-
-        <!-- messaggi -->
-        <echo msg="impostato avanzamento: ${prj.inc}" />
-
-        <!-- passo all'esecuzione del deploy -->
-        <phingcall target="dist.exec" />
-
-    </target>
+    -->
 
     <!-- esecuzione del deploy -->
     <target name="dist.exec" depends="version.increment,git.push">
@@ -636,6 +634,74 @@
 
             </else>
         </if>
+
+    </target>
+
+    <!--
+
+        05. TARGET DI INGRESSO
+        ======================
+        In questa sezione vengono definiti i target di ingresso, ovvero quelli che gestiscono l'interazione con l'utente
+        e l'avvio del deploy. Lo schema di esecuzione di un tipico deploy si può riassumere come segue:
+
+        dist.<tipo> -> dist.exec -> dist.<strategia> -> notify.<canale>
+
+    -->
+
+    <!-- distribuzione interattiva (chiede il tipo di release -->
+    <target name="dist.interactive">
+
+        <!-- messaggi -->
+        <echo msg="ATTENZIONE! inserire il tipo di release (le etichette sono case sensitive)" />
+        <echo msg="ATTENZIONE! se non si desidera aumentare la versione, lasciare il campo in bianco" />
+
+        <!-- richiedo il tipo di deploy -->
+        <propertyprompt propertyName="prj.inc" defaultValue="" promptText="tipo di distribuzione (Major|Minor|Bugfix)" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- distribuzione major -->
+    <target name="dist.major">
+
+        <!-- forzo il tipo di avanzamento a Major -->
+        <property name="prj.inc" value="Major" override="true" />
+
+        <!-- messaggi -->
+        <echo msg="impostato avanzamento: ${prj.inc}" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- distribuzione minor -->
+    <target name="dist.minor">
+
+        <!-- forzo il tipo di avanzamento a Minor -->
+        <property name="prj.inc" value="Minor" override="true" />
+
+        <!-- messaggi -->
+        <echo msg="impostato avanzamento: ${prj.inc}" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
+
+    </target>
+
+    <!-- distribuzione bugfix -->
+    <target name="dist.bugfix">
+
+        <!-- forzo il tipo di avanzamento a Bugfix -->
+        <property name="prj.inc" value="Bugfix" override="true" />
+
+        <!-- messaggi -->
+        <echo msg="impostato avanzamento: ${prj.inc}" />
+
+        <!-- passo all'esecuzione del deploy -->
+        <phingcall target="dist.exec" />
 
     </target>
 
