@@ -24,6 +24,20 @@
 	    array( array( 's' => $_REQUEST['__documento__'] ) )
 	);
 
+    // annoto l'attività di stampa
+    $idAttivitaStampa = mysqlInsertRow(
+        $cf['mysql']['connection'],
+        array(
+            'id_tipologia' => ( ( $cnf['estensione'] == 'pdf' ) ? 23 : ( ( $cnf['estensione'] == 'xml' ) ? 24 : 22 ) ),
+            'id_documento' => $_REQUEST['__documento__'],
+            'data_attivita' => date('Y-m-d'),
+            'nome' => 'stampa documento',
+            'ora_inizio' => date( 'H:i:s' ),
+            'ora_fine' => date( 'H:i:s' )
+        ),
+        'attivita'
+    );
+
 
     // inizializzo il totale
     $doc['tot']['importo_netto_totale'] = 0;

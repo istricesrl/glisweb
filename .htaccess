@@ -231,6 +231,33 @@ Options -Indexes
     RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_$2.php -f
     RewriteRule ^task/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_$2.php [L,QSA]
 
+    ## TASK DI POPOLAZIONE DEI REPORT
+    #
+    # queste regole riguardano l'esecuzione dei task specificamente pensati per popolare i report, che si trovano di solito nella sotto
+    # cartella report della cartella task; per maggiori informazioni su questo punto si veda la documentazione relativa alle modalità
+    # di popolazione delle tabelle dei report
+    #
+
+    # gestione dei task di popolazione report custom base
+    # questa regola intercetta chiamate del tipo task/report/<nomeTask> e le reindirizza a src/api/task/report/<nomeTask>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/src/api/task/report/$1.php -f
+    RewriteRule ^task/report/([a-zA-Z0-9_\-\.]+)$ src/api/task/report/$1.php [L,QSA]
+
+    # gestione dei task di popolazione report standard base
+    # questa regola intercetta chiamate del tipo task/report/<nomeTask> e le reindirizza a _src/_api/_task/_report/_<nomeTask>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/_src/_api/_task/_report/_$1.php -f
+    RewriteRule ^task/report/([a-zA-Z0-9_\-\.]+)$ _src/_api/_task/_report/_$1.php [L,QSA]
+
+    # gestione dei task di popolazione report custom moduli
+    # questa regola intercetta chiamate del tipo task/report/<modulo>/<nomeTask> e le reindirizza a mod/<modulo>/src/api/task/report/<nomeTask>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/mod/$1/src/api/task/report/$2.php -f
+    RewriteRule ^task/report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ mod/$1/src/api/task/report/$2.php [L,QSA]
+
+    # gestione dei task di popolazione report standard moduli
+    # questa regola intercetta chiamate del tipo task/report/<modulo>/<nomeTask> e le reindirizza a _mod/_<modulo>/_src/_api/_task/_report/_<nomeTask>.php se esiste
+    RewriteCond %{DOCUMENT_ROOT}/_mod/_$1/_src/_api/_task/_report/_$2.php -f
+    RewriteRule ^task/report/([a-zA-Z0-9_\-\.]+)/([a-zA-Z0-9_\-\.]+)$ _mod/_$1/_src/_api/_task/_report/_$2.php [L,QSA]
+
     ## REPORT
     #
     # queste regole riguardano la produzione di report, i report sono contenuti nella sottocartella report della cartella delle API, sia nel modulo

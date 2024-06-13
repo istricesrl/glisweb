@@ -16,6 +16,9 @@
      *
      */
 
+    // debug
+    // print_r( $_REQUEST['__pagamenti__'] );
+
     // pagine di default
     $cf['ecommerce']['pages']['acquisto']		    = 'carrello';			                        // pagina di visualizzazione articoli aggiunti, gestisce anche l'aggiunta vera e propria
     $cf['ecommerce']['pages']['dettagli']		    = 'carrello';			                        // usare carrello_dettagli per two-step checkout
@@ -175,6 +178,7 @@
         'id_articolo'                   => array( 'tipe' => 'string',   'default' => NULL ),
         'id_iva'                        => array( 'tipe' => 'int',      'default' => NULL ),
         'destinatario_id_anagrafica'    => array( 'type' => 'string',   'default' => NULL ),
+        'id_mastro_provenienza'         => array( 'type' => 'int',      'default' => NULL ),
         'id_rinnovo'                    => array( 'type' => 'int',      'default' => NULL ),
         'id_progetto'                   => array( 'type' => 'string',   'default' => NULL ),
         'quantita'                      => array( 'tipe' => 'int',      'default' => NULL ),

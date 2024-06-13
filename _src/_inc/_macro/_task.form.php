@@ -8,7 +8,8 @@
     $tsk = array_unique(
         array_merge(
             glob( glob2custom( DIR_SRC_API_TASK . '*.php' ), GLOB_BRACE ),
-            glob( glob2custom( DIR_MOD_ATTIVI_SRC_API_TASK . '*.php' ), GLOB_BRACE )
+            glob( glob2custom( DIR_MOD_ATTIVI_SRC_API_TASK . '*.php' ), GLOB_BRACE ),
+            glob( glob2custom( DIR_MOD_ATTIVI_SRC_API_TASK . '_report/*.php' ), GLOB_BRACE )
         )
     );
 

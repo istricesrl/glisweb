@@ -21,7 +21,7 @@
                     <input type="text" id="ricerca" class="form-control form-control-sm" id="__aggiungi_{{ loop.index }}__" value="">
                 </div>
                 <div class="col-12 col-md-auto">
-                    <button onclick="aggiungi_al_carrello('{{ risultato.prefisso_modula }}','{{ risultato.id}}',$('#__aggiungi_{{ loop.index }}__').val());" class="btn btn-secondary btn-sm btn-block">aggiungi</button>
+                    <button onclick="aggiungi_al_carrello('{{ risultato.prefisso_modula }}','{{ risultato.id_mastro_provenienza }}','{{ risultato.id }}',$('#__aggiungi_{{ loop.index }}__').val());" class="btn btn-secondary btn-sm btn-block">aggiungi</button>
                 </div>
             </div>
             {% else %}
@@ -138,13 +138,12 @@
 
     }
 
-    function aggiungi_al_carrello( prefisso, articolo, quantita ) {
+    function aggiungi_al_carrello( prefisso, magazzino, articolo, quantita ) {
 
-        alert( 'aggiungo al carrello ' + quantita + 'x ' + articolo );
-        alert( 'rientro cassetto ' + prefisso );
+        // alert( 'aggiungo al carrello ' + quantita + 'x ' + articolo );
+        // alert( 'rientro cassetto ' + prefisso );
 
         comando = prefisso + '|' + (Math.floor(Date.now() / 1000)).toString() + '|RETURN|1';
-
 
         // chiamata
         $.ajax({
@@ -181,7 +180,7 @@
                 // $('#command_output').append( $('<p>').text(data) );
                 // $('#test_modula').modal('toggle');
                 $('#command_output_row').removeClass('d-none');
-                window.open('{{ pages["ecommerce.carrello"].path[ localization.language.ietf ] }}?__carrello__[__articolo__][id_articolo]='+articolo+'&__carrello__[__articolo__][quantita]='+quantita,'_self');
+                window.open('{{ pages["ecommerce.carrello"].path[ localization.language.ietf ] }}?__carrello__[__articolo__][id_mastro_provenienza]='+magazzino+'&__carrello__[__articolo__][id_articolo]='+articolo+'&__carrello__[__articolo__][quantita]='+quantita,'_self');
             }
         });
 

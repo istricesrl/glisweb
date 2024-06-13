@@ -6,6 +6,9 @@
      *
      */
 
+    // debug
+    // print_r( $_REQUEST['__pagamenti__'] );
+
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
     // verifico se è presente una richiesta per il modulo ecommerce
@@ -209,6 +212,7 @@
                                 'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'],
                                 'id_rinnovo' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] : NULL,
                                 'destinatario_id_anagrafica' => ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL,
+                                'id_mastro_provenienza' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_mastro_provenienza'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_mastro_provenienza'] : NULL,
                                 'id_iva' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_iva'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_iva'] : 1,
                                 // 'sconto_percentuale' => 0,
                                 // 'sconto_valore' => 0
@@ -408,6 +412,7 @@
                                 'id_carrello'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'],
                                 'id_articolo'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'],
                                 'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica'],
+                                'id_mastro_provenienza'         => $_SESSION['carrello']['articoli'][ $rowKey ]['id_mastro_provenienza'],
                                 'id_rinnovo'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'],
                                 'id_iva'                        => $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
                                 'quantita'                      => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'] ),

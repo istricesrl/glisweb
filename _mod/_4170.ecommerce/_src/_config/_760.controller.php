@@ -22,6 +22,11 @@
 
         // se il carrello corrente è chiuso, lo elimino dalla sessione
         if( ! empty( $_SESSION['carrello']['timestamp_checkout'] ) ) {
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'UPDATE carrelli SET session = NULL WHERE id = ?',
+                array( array( 's' => $_SESSION['carrello']['id'] ) )
+            );
             $_SESSION['carrello'] = array();
         }
 

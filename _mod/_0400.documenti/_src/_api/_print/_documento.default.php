@@ -58,7 +58,7 @@
     }
 
     // annoto l'attività di stampa
-    mysqlInsertRow(
+    $idAttivitaStampa = mysqlInsertRow(
         $cf['mysql']['connection'],
         array(
             'id_tipologia' => ( ( $cnf['estensione'] == 'pdf' ) ? 23 : ( ( $cnf['estensione'] == 'xml' ) ? 24 : 22 ) ),
@@ -70,6 +70,9 @@
         ),
         'attivita'
     );
+
+    // debug
+    // die( $idAttivitaStampa );
 
 /*
     // TODO svuoto il token

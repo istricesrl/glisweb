@@ -12,79 +12,71 @@
             <input type="hidden" name="__pagamenti__[id_cliente]" value="{{ request.__pagamenti__.id_cliente }}">
             <fieldset>
                 <legend>documenti da generare per {% if request.__pagamenti__.id_carrello %}il carrello #{{ request.__pagamenti__.id_carrello }}{% elseif request.__pagamenti__.id_cliente %}il cliente #{{ request.__pagamenti__.id_cliente }}{% endif %}</legend>
-                <div class="form-row">
-                    <div class="col-1">
-                        <p></p>
-                    </div>
-                    <div class="col-2">
-                        <p>cliente</p>
-                    </div>
-                    <div class="col-4">
-                        <p>descrizione</p>
-                    </div>
-                    <div class="col-1">
-                        <p>importo</p>
-                    </div>
-                    <div class="col-1">
-                        <p>pagato</p>
-                    </div>
-                    <div class="col-1">
-                        <p>rateizzato</p>
-                    </div>
-                    <div class="col-1">
-                        <p>da pagare</p>
-                    </div>
-                    <div class="col">
-                        <p>documenti</p>
-                    </div>
-                </div>
-                {% for r in etc.righe %}
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id]" value="{{ r.id }}">
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_pagamento]" value="{{ r.id_pagamento }}">
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_carrello]" value="{{ r.id_carrello }}">
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario_id_anagrafica]" value="{{ r.destinatario_id_anagrafica }}">
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_rinnovo]" value="{{ r.id_rinnovo }}">
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario]" value="{{ r.destinatario }}">
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_articolo]" value="{{ r.id_articolo }}">
-                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][fatturazione_id_tipologia_documento]" value="{{ r.fatturazione_id_tipologia_documento }}">
-                <div class="form-row">
-                    <div class="col-1">
-                        <div class="form-check">
-                            <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][da_fare]" class="" value="">
-                            <input type="checkbox" class="form-check-input">
-                        </div>
-                    </div>
-                    <div class="col-2">
-                        <p>{{ r.destinatario }}</p>
-                    </div>
-                    <div class="col-4">
-                        <p>{{ r.descrizione }}</p>
-                    </div>
-                    <div class="col-1">
-                        <p>{{ '%0.2f'|format( r.prezzo_lordo_finale ) }}</p>
-                    </div>
-                    <div class="col-1">
-                        <p>{{ '%0.2f'|format( r.totale_lordo_pagato ) }}</p>
-                    </div>
-                    <div class="col-1">
-                        <p>{{ '%0.2f'|format( r.totale_lordo_rateizzato ) }}</p>
-                    </div>
-                    <div class="col-1">
-                        {% if not r.id_pagamento %}
-                        <label class="label-top">importo</label>
-                        <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
-                        {% else %}
-                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}">
-                        <p>{{ r.totale_lordo_da_pagare }} €</p>
-                        {% endif %}
-                    </div>
-                    <div class="col d-flex flex-row align-items-stretch">
-                        {% for doc in r.documenti_da_stampare %}
-                        <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endfor %}
+
+                <table class="table form-table">
+
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>cliente</th>
+                            <th>descrizione</th>
+                            <th>quantità</th>
+                            <th>importo</th>
+                            <th>pagato</th>
+                            <th>rateizzato</th>
+                            <th>da pagare</th>
+                            <th>documenti</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for r in etc.righe %}
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id]" value="{{ r.id }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_pagamento]" value="{{ r.id_pagamento }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_carrello]" value="{{ r.id_carrello }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario_id_anagrafica]" value="{{ r.destinatario_id_anagrafica }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_mastro_provenienza]" value="{{ r.id_mastro_provenienza }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_rinnovo]" value="{{ r.id_rinnovo }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][destinatario]" value="{{ r.destinatario }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][id_articolo]" value="{{ r.id_articolo }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][quantita]" value="{{ r.quantita }}">
+                        <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][fatturazione_id_tipologia_documento]" value="{{ r.fatturazione_id_tipologia_documento }}">
+                        <tr>
+                            <td>
+                                <div class="form-check">
+                                    <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][da_fare]" class="" value="">
+                                    <input type="checkbox" class="form-check-input">
+                                </div>
+                            </td>
+                            <td>{{ r.destinatario }}</td>
+                            <td>{{ r.descrizione }}</td>
+                            <td>{{ '%0.2f'|format( r.quantita ) }}</td>
+                            <td>{{ '%0.2f'|format( r.prezzo_lordo_finale ) }}</td>
+                            <td>{{ '%0.2f'|format( r.totale_lordo_pagato ) }}</td>
+                            <td>{{ '%0.2f'|format( r.totale_lordo_rateizzato ) }}</td>
+                            <td>
+                                {% if not r.id_pagamento %}
+                                <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
+                                {% else %}
+                                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}">
+                                <p>{{ r.totale_lordo_da_pagare }} €</p>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% for doc in r.documenti_da_stampare %}
+                                <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
+                                {% endfor %}
+                            </td>
+                        </tr>
+                        {% endfor %}                
+                    </tbody>
+
+                    <tfoot>
+
+                    </tfoot>
+
+                </table>
+
             </fieldset>
             <fieldset class="mt-auto">
                 <legend>generazione rate</legend>
@@ -139,7 +131,7 @@
                 <div class="form-row">
                     <div class="col-10">
                         <label class="label-top">ID carrello</label>
-                        <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[id_carrello]" value="">
+                        <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[id_carrello]" value="{{ request.__pagamenti__.id_carrello}}">
                     </div>
                     <div class="col-2">
                         <input type="submit" class="btn btn-secondary btn-sm btn-block" value="cerca">
