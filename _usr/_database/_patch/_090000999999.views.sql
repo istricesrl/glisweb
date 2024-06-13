@@ -1442,6 +1442,24 @@ CREATE OR REPLACE VIEW `banner_zone_view` AS
 		LEFT JOIN banner ON banner.id = banner_zone.id_banner
 ;
 
+-- | 090000002700
+
+-- campagne_view
+DROP TABLE IF EXISTS `campagne_view`;
+
+-- | 090000002701
+
+-- campagne_view
+CREATE OR REPLACE VIEW `campagne_view` AS
+	SELECT
+		campagne.id,
+		campagne.nome,
+		campagne.id_account_inserimento,
+		campagne.id_account_aggiornamento,
+		campagne.nome AS __label__
+	FROM campagne
+;
+
 -- | 090000002900
 
 -- caratteristiche_view
@@ -1453,7 +1471,7 @@ DROP TABLE IF EXISTS `caratteristiche_view`;
 -- caratteristiche_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 18:51 Fabio Mosti
-CREATE OR REPLACE VIEW caratteristiche_view AS
+CREATE OR REPLACE VIEW `caratteristiche_view` AS
 	SELECT
 		caratteristiche.id,
 		caratteristiche.nome,
@@ -1480,7 +1498,7 @@ DROP TABLE IF EXISTS `carrelli_view`;
 -- carrelli_view
 -- tipologia: tabella gestita
 -- verifica: 2022-07-12 14:45 Chiara GDL
-CREATE OR REPLACE VIEW carrelli_view AS
+CREATE OR REPLACE VIEW `carrelli_view` AS
 	SELECT
 	carrelli.id,
 	carrelli.session,
@@ -1493,9 +1511,18 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.destinatario_indirizzo,
 	carrelli.destinatario_cap,
 	carrelli.destinatario_citta,
+	carrelli.destinatario_id_comune,
 	carrelli.destinatario_id_provincia,
 	carrelli.destinatario_id_stato,
+	carrelli.destinatario_id_comune_nascita,
+	carrelli.destinatario_giorno_nascita,
+	carrelli.destinatario_mese_nascita,
+	carrelli.destinatario_anno_nascita,
+	carrelli.destinatario_id_provincia_nascita,
+	carrelli.destinatario_id_stato_nascita,
 	carrelli.destinatario_telefono,
+	carrelli.destinatario_mobile,
+	carrelli.destinatario_fax,
 	carrelli.destinatario_mail,
 	carrelli.destinatario_codice_fiscale,
 	carrelli.destinatario_partita_iva,
@@ -1509,8 +1536,15 @@ CREATE OR REPLACE VIEW carrelli_view AS
 	carrelli.intestazione_cap,
 	carrelli.intestazione_citta,
 	carrelli.intestazione_id_provincia,
-	carrelli.intestazione_id_stato,
+	carrelli.intestazione_id_comune_nascita,
+	carrelli.intestazione_giorno_nascita,
+	carrelli.intestatione_mese_nascita,
+	carrelli.intestazione_anno_nascita,
+	carrelli.intestazione_id_provincia_nascita,
+	carrelli.intestazione_id_stato_nascita,
 	carrelli.intestazione_telefono,
+	carrelli.intestazione_mobile,
+	carrelli.intestazione_fax,
 	carrelli.intestazione_mail,
 	carrelli.intestazione_codice_fiscale,
 	carrelli.intestazione_partita_iva,
@@ -1540,6 +1574,7 @@ CREATE OR REPLACE VIEW carrelli_view AS
     carrelli.utm_campaign,
     carrelli.utm_term,
     carrelli.utm_content,
+	carrelli.id_campagna,
 	carrelli.spam_score,
 	carrelli.spam_check,
     carrelli.id_reseller,
@@ -1562,7 +1597,7 @@ DROP TABLE IF EXISTS `carrelli_articoli_view`;
 -- carrelli_articoli_view
 -- tipologia: tabella gestita
 -- verifica: 2022-07-12 14:45 Chiara GDL
-CREATE OR REPLACE VIEW carrelli_articoli_view AS
+CREATE OR REPLACE VIEW `carrelli_articoli_view` AS
 	SELECT
 		carrelli_articoli.id,
 		carrelli_articoli.id_carrello,

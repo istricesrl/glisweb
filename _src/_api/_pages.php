@@ -79,6 +79,7 @@
 
     // debug
     // var_dump( $_REQUEST );
+    // die( print_r( $_REQUEST, true ) );
     // echo 'DEBUG';
 
     /**

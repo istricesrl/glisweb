@@ -605,6 +605,19 @@ CREATE TABLE IF NOT EXISTS `banner_zone` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+-- | 010000002700
+
+-- campagne
+CREATE TABLE IF NOT EXISTS `campagne` (
+  `id` int(11) NOT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000002900
 
 -- caratteristiche
@@ -644,9 +657,18 @@ CREATE TABLE `carrelli` (
   `destinatario_indirizzo` char(255) DEFAULT NULL,
   `destinatario_cap` char(16) DEFAULT NULL,
   `destinatario_citta` char(255) DEFAULT NULL,
+  `destinatario_id_comune` int(11) DEFAULT NULL,
   `destinatario_id_provincia` int(11) DEFAULT NULL,
   `destinatario_id_stato` int(11) DEFAULT NULL,
+  `destinatario_id_comune_nascita` int(11) DEFAULT NULL,
+  `destinatario_giorno_nascita` int(2) DEFAULT NULL,
+  `destinatario_mese_nascita` int(2) DEFAULT NULL,
+  `destinatario_anno_nascita` int(2) DEFAULT NULL,
+  `destinatario_id_provincia_nascita` int(11) DEFAULT NULL,
+  `destinatario_id_stato_nascita` int(11) DEFAULT NULL,
   `destinatario_telefono` char(255) DEFAULT NULL,
+  `destinatario_mobile` char(255) DEFAULT NULL,
+  `destinatario_fax` char(255) DEFAULT NULL,
   `destinatario_mail` char(255) DEFAULT NULL,
   `destinatario_codice_fiscale` char(255) DEFAULT NULL,
   `destinatario_partita_iva` char(255) DEFAULT NULL,
@@ -662,7 +684,15 @@ CREATE TABLE `carrelli` (
   `intestazione_id_comune` int(11) DEFAULT NULL,
   `intestazione_id_provincia` int(11) DEFAULT NULL,
   `intestazione_id_stato` int(11) DEFAULT NULL,
+  `intestazione_id_comune_nascita` int(11) DEFAULT NULL,
+  `intestazione_giorno_nascita` int(2) DEFAULT NULL,
+  `intestazione_mese_nascita` int(2) DEFAULT NULL,
+  `intestazione_anno_nascita` int(2)
+  `intestazione_id_provincia_nascita` int(11) DEFAULT NULL,
+  `intestazione_id_stato_nascita` int(11) DEFAULT NULL,
   `intestazione_telefono` char(255) DEFAULT NULL,
+  `intestazione_mobile` char(255) DEFAULT NULL,
+  `intestazione_fax` char(255) DEFAULT NULL,
   `intestazione_mail` char(255) DEFAULT NULL,
   `intestazione_codice_fiscale` char(255) DEFAULT NULL,
   `intestazione_partita_iva` char(255) DEFAULT NULL,
@@ -699,6 +729,7 @@ CREATE TABLE `carrelli` (
   `utm_campaign` char(128) DEFAULT NULL,
   `utm_term` char(128) DEFAULT NULL,
   `utm_content` char(128) DEFAULT NULL,
+  `id_campagna` int(11) DEFAULT NULL,-
   `spam_score` decimal(8,2) DEFAULT NULL,
   `spam_check` int(1) DEFAULT NULL,
   `id_reseller` int(11) DEFAULT NULL,
@@ -726,6 +757,7 @@ CREATE TABLE `carrelli_articoli` (
   `prezzo_netto_unitario` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_unitario` decimal(16,5) DEFAULT NULL,
   `quantita` int(11) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `prezzo_netto_totale` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_totale` decimal(16,5) DEFAULT NULL,
