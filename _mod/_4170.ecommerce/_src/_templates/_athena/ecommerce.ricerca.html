@@ -21,7 +21,10 @@
                     <input type="text" id="ricerca" class="form-control form-control-sm" id="__aggiungi_{{ loop.index }}__" value="">
                 </div>
                 <div class="col-12 col-md-auto">
-                    <button onclick="aggiungi_al_carrello('{{ risultato.prefisso_modula }}','{{ risultato.id_mastro_provenienza }}','{{ risultato.id }}',$('#__aggiungi_{{ loop.index }}__').val());" class="btn btn-secondary btn-sm btn-block">aggiungi</button>
+                    <button onclick="window.open('{{ pages['ecommerce.carrello'].path[ localization.language.ietf ] }}?__carrello__[__articolo__][id_mastro_provenienza]={{ risultato.id_mastro_provenienza }}&__carrello__[__articolo__][id_articolo]={{ risultato.id }}&__carrello__[__articolo__][quantita]='+$('#__aggiungi_{{ loop.index }}__').val(),'_self');" class="btn btn-secondary btn-sm btn-block">aggiungi</button>
+                </div>
+                <div class="col-12 col-md-auto">
+                    <button onclick="aggiungi_al_carrello('{{ risultato.prefisso_modula }}','{{ risultato.id_mastro_provenienza }}','{{ risultato.id }}',$('#__aggiungi_{{ loop.index }}__').val());" class="btn btn-secondary btn-sm btn-block">aggiungi e chiudi</button>
                 </div>
             </div>
             {% else %}

@@ -88,18 +88,28 @@
             url: 'http://127.0.0.1:5000/modula',
             type: 'POST',
             data: JSON.stringify({ 'comando': comando }),
-            contentType: 'application/json',  // specifica che stai inviando del JSON
+            contentType: 'application/json',
             crossDomain: true,
             async: true,
             beforeSend: function (xhr) {
+                $('#command_output_row').removeClass('d-none');
                 $('#command_output').append( $('<p>').text('comando: ' + comando ) );
+                console.log('aggiungo il comando: ' + comando);
             },
             success: function (data) {
                 console.log(data);
                 if( data.status == 'OK' ) {
-                    $('#command_output').append( $('<p>').text('risposta: ' + data.risposta) );
+                    if( typeof data.risposta == 'undefined' ) {
+                        $('#command_output').append( $('<p>').text('risposta: ' + data) );
+                    } else {
+                        $('#command_output').append( $('<p>').text('risposta: ' + data.risposta) );
+                    }
                 } else {
-                    $('#command_output').append( $('<p>').text('errori: ' + data.errori) );
+                    if( typeof data.errori == 'undefined' ) {
+                        $('#command_output').append( $('<p>').text('errori: ' + data) );
+                    } else {
+                        $('#command_output').append( $('<p>').text('errori: ' + data.errori) );
+                    }
                 }
             },
             error: function (data) {
@@ -110,7 +120,6 @@
                 console.log(data);
                 // $('#command_output').append( $('<p>').text(data) );
                 // $('#test_modula').modal('toggle');
-                $('#command_output_row').removeClass('d-none');
             }
         });
 
