@@ -1538,7 +1538,7 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 	carrelli.intestazione_id_provincia,
 	carrelli.intestazione_id_comune_nascita,
 	carrelli.intestazione_giorno_nascita,
-	carrelli.intestatione_mese_nascita,
+	carrelli.intestazione_mese_nascita,
 	carrelli.intestazione_anno_nascita,
 	carrelli.intestazione_id_provincia_nascita,
 	carrelli.intestazione_id_stato_nascita,

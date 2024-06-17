@@ -1397,6 +1397,7 @@ CREATE TABLE `__report_lezioni_corsi__` (
   `docenti` char(255) DEFAULT NULL,
   `numero_alunni` int(11) DEFAULT NULL,
   `numero_posti` int(11) DEFAULT NULL,
+  `numero_alunni_in_attesa` int(11) DEFAULT NULL,
   `timestamp_apertura` int(11) DEFAULT NULL,
   `data_scadenza` char(255) DEFAULT NULL,
   `ora_scadenza` char(255) DEFAULT NULL,
