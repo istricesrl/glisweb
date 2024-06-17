@@ -8,6 +8,17 @@
 			{% endfor %}
 		</select>
 	</div>
+
+	<div class="col-12 col-md-auto">
+		<span class="label-top">operatore</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_account_inserimento][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_account_inserimento.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for operatore in etc.select.operatori %}
+			<option value="{{ operatore.id }}" {% if request.__view__[ view.id ].__filters__['id_account_inserimento'].EQ == operatore.id %}selected{% endif %}>{{ operatore.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
 	<!--
 	<div class="col-12 col-md-auto">
 		<span class="label-top">tipologia</span>
@@ -65,7 +76,7 @@
 		</select>
 	</div>
 -->
-	
+
 <div class="col-6 col-md-auto">
     <span class="label-top">giorno</span>
 	<select name="__view__[{{ view.id }}][__filters__][giorno_pagamento][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
@@ -98,8 +109,8 @@
 	<div class="col-12 col-md-auto">
 		<span class="label-top">pagamento</span>
 		<select name="__view__[{{ view.id }}][__filters__][timestamp_pagamento][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non pagate</option>
 			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "" %}selected{% endif %}>tutte</option>
+			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non pagate</option>
 		</select>
 	</div>
 	<div class="col-12 col-md-auto">
@@ -111,7 +122,7 @@
 			{% endfor %}
 		</select>
 	</div>
-	<div class="col">
+    <div class="col">
 		<span class="label-top">cerca</span>
 	<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>
@@ -122,3 +133,17 @@
 	{% endif %}
     </div>
 </div>
+
+{% if etc.totali %}
+<legend>totali di giornata per {{ etc.totali.livello }}</legend>
+<div class="form-row view-filters d-print-none">
+	<div class="col-12 col-md-6 text-center">
+		<h3>totale contanti: {{ etc.totali.contanti|number_format( 2,',','.' ) }} €</h3>
+    </div>
+	<div class="col-12 col-md-6 text-center">
+		<h3>totale pagamenti elettronici: {{ etc.totali.carte|number_format( 2,',','.' ) }} €</h3>
+    </div>
+</div>
+{% endif %}
+
+<legend>dettaglio operazioni</legend>

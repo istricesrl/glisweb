@@ -657,18 +657,18 @@ CREATE TABLE `carrelli` (
   `destinatario_indirizzo` char(255) DEFAULT NULL,
   `destinatario_cap` char(16) DEFAULT NULL,
   `destinatario_citta` char(255) DEFAULT NULL,
-  `destinatario_id_comune` int(11) DEFAULT NULL,
+  `destinatario_id_comune` int(11) DEFAULT NULL, --
   `destinatario_id_provincia` int(11) DEFAULT NULL,
   `destinatario_id_stato` int(11) DEFAULT NULL,
-  `destinatario_id_comune_nascita` int(11) DEFAULT NULL,
-  `destinatario_giorno_nascita` int(2) DEFAULT NULL,
-  `destinatario_mese_nascita` int(2) DEFAULT NULL,
-  `destinatario_anno_nascita` int(2) DEFAULT NULL,
-  `destinatario_id_provincia_nascita` int(11) DEFAULT NULL,
-  `destinatario_id_stato_nascita` int(11) DEFAULT NULL,
+  `destinatario_id_comune_nascita` int(11) DEFAULT NULL, --
+  `destinatario_giorno_nascita` int(2) DEFAULT NULL, --
+  `destinatario_mese_nascita` int(2) DEFAULT NULL, --
+  `destinatario_anno_nascita` int(2) DEFAULT NULL, --
+  `destinatario_id_provincia_nascita` int(11) DEFAULT NULL, --
+  `destinatario_id_stato_nascita` int(11) DEFAULT NULL, --
   `destinatario_telefono` char(255) DEFAULT NULL,
-  `destinatario_mobile` char(255) DEFAULT NULL,
-  `destinatario_fax` char(255) DEFAULT NULL,
+  `destinatario_mobile` char(255) DEFAULT NULL, --
+  `destinatario_fax` char(255) DEFAULT NULL, --
   `destinatario_mail` char(255) DEFAULT NULL,
   `destinatario_codice_fiscale` char(255) DEFAULT NULL,
   `destinatario_partita_iva` char(255) DEFAULT NULL,
@@ -684,15 +684,15 @@ CREATE TABLE `carrelli` (
   `intestazione_id_comune` int(11) DEFAULT NULL,
   `intestazione_id_provincia` int(11) DEFAULT NULL,
   `intestazione_id_stato` int(11) DEFAULT NULL,
-  `intestazione_id_comune_nascita` int(11) DEFAULT NULL,
-  `intestazione_giorno_nascita` int(2) DEFAULT NULL,
-  `intestazione_mese_nascita` int(2) DEFAULT NULL,
-  `intestazione_anno_nascita` int(2)
-  `intestazione_id_provincia_nascita` int(11) DEFAULT NULL,
-  `intestazione_id_stato_nascita` int(11) DEFAULT NULL,
+  `intestazione_id_comune_nascita` int(11) DEFAULT NULL, --
+  `intestazione_giorno_nascita` int(2) DEFAULT NULL, --
+  `intestazione_mese_nascita` int(2) DEFAULT NULL, --
+  `intestazione_anno_nascita` int(2), --
+  `intestazione_id_provincia_nascita` int(11) DEFAULT NULL, --
+  `intestazione_id_stato_nascita` int(11) DEFAULT NULL, --
   `intestazione_telefono` char(255) DEFAULT NULL,
-  `intestazione_mobile` char(255) DEFAULT NULL,
-  `intestazione_fax` char(255) DEFAULT NULL,
+  `intestazione_mobile` char(255) DEFAULT NULL, --
+  `intestazione_fax` char(255) DEFAULT NULL, --
   `intestazione_mail` char(255) DEFAULT NULL,
   `intestazione_codice_fiscale` char(255) DEFAULT NULL,
   `intestazione_partita_iva` char(255) DEFAULT NULL,
@@ -729,7 +729,7 @@ CREATE TABLE `carrelli` (
   `utm_campaign` char(128) DEFAULT NULL,
   `utm_term` char(128) DEFAULT NULL,
   `utm_content` char(128) DEFAULT NULL,
-  `id_campagna` int(11) DEFAULT NULL,-
+  `id_campagna` int(11) DEFAULT NULL, --
   `spam_score` decimal(8,2) DEFAULT NULL,
   `spam_check` int(1) DEFAULT NULL,
   `id_reseller` int(11) DEFAULT NULL,
@@ -1552,6 +1552,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `id_carrello` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
   `xml` longtext DEFAULT NULL,
   `data_consegna` date DEFAULT NULL,
   `note_consegna` text DEFAULT NULL,
@@ -1580,6 +1581,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `ordine` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `data` date DEFAULT NULL,
+  `data_consegna` date DEFAULT NULL,
   `id_destinatario` int(11) DEFAULT NULL,
   `id_emittente` int(11) DEFAULT NULL,
   `id_reparto` int(11) DEFAULT NULL,

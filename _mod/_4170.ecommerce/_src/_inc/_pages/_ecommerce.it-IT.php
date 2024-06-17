@@ -26,7 +26,7 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.carrello.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.carrello.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.ricerca', 'ecommerce.pagamento' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.ricerca', 'ecommerce.pagamento', 'ecommerce.pagamenti.view' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cassa' ), 'priority'	=> '660' ) ) )
 	);
 
@@ -54,7 +54,20 @@
 		'etc'		=> array( 'tabs'	=> 'ecommerce.carrello' )
 	);
 
-    // carrello
+	// carrello
+	$p['ecommerce.pagamenti.view'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-money" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'riepilogo pagamenti' ),
+		'h1'			=> array( $l		=> 'riepilogo pagamenti' ),
+		'parent'		=> array( 'id'		=> 'ecommerce' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.pagamenti.view.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> 'ecommerce.carrello' )
+	);
+
+	// carrello
 	$p['carrello'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'carrello' ),

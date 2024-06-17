@@ -1,11 +1,20 @@
 <?php
 
     /**
-     * 
+     * gestione inserimento dati dati
      * 
      * 
      * 
      */
+
+    /**
+     * GESTIONE BLOCCHI DATI PROGRAMMATI
+     * =================================
+     * 
+     * 
+     */
+
+    // ...
 
     // trovo le sottocartelle della cartella di importazione
     $programmati = getDirList( DIR_VAR_SPOOL_IMPORT . 'todo/' );
@@ -56,6 +65,15 @@
         }
 
     }
+
+    /**
+     * GESTIONE BLOCCHI DATI
+     * =====================
+     * 
+     * 
+     */
+
+    // ...
 
     // cerco file CSV da importare
     $csv = glob( DIR_VAR_SPOOL_IMPORT . '*.csv' );
@@ -183,6 +201,22 @@
         }
 
     }
+
+    /**
+     * CONTROLLER IMMAGINI
+     * ===================
+     * 
+     * 
+     */
+
+    // ...
+
+    /**
+     * DEBUG
+     * =====
+     * 
+     * 
+     */
 
     // debug
     // print_r( $_REQUEST );

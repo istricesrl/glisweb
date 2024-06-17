@@ -50,6 +50,7 @@
                         if( $pagamento['importo_lordo_totale'] > 0 ) {
 
                             // debug
+                            // echo 'creazione rata (pagamento #' . $idPagamento . ')' . PHP_EOL;
                             // die( print_r( $pagamento, true ) );
 
                             // se sto creando una rata
@@ -601,6 +602,16 @@
         'SELECT tipologie_documenti.nome AS __label__, tipologie_documenti.id '
         .'FROM tipologie_documenti '
         // TODO .'WHERE tipologie_documenti.se_ecommerce = 1 '
+        .'ORDER BY __label__  '
+    );
+
+    $ct['etc']['id_modalita_pagamento'] = mysqlCachedQuery(
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT modalita_pagamento.nome AS __label__, modalita_pagamento.id '
+        .'FROM modalita_pagamento '
+        // TODO .'WHERE tipologie_documenti.se_ecommerce = 1 '
+        .'WHERE id IN ( 1, 2, 23, 24 ) '
         .'ORDER BY __label__ '
     );
 
@@ -636,7 +647,21 @@
             $cf['ecommerce']['fields']['carrello']['fatturazione_strategia']['default']
         )
     );
-
+/*
+    $ct['etc']['default']['fatturazione_id_modalita_pagamento'] = (
+        ( isset( $_SESSION['carrello']['fatturazione_id_modalita_pagamento'] ) && ! empty( $_SESSION['carrello']['fatturazione_id_modalita_pagamento'] ) )
+        ?
+        $_SESSION['carrello']['fatturazione_id_modalita_pagamento']
+        :
+        (
+            ( isset( $ct['etc']['carrello']['fatturazione_id_modalita_pagamento'] ) && ! empty( $ct['etc']['carrello']['fatturazione_id_modalita_pagamento'] ) )
+            ?
+            $ct['etc']['carrello']['fatturazione_id_modalita_pagamento']
+            :
+            $cf['ecommerce']['fields']['carrello']['fatturazione_id_modalita_pagamento']['default']
+        )
+    );
+*/
     // debug
     // print_r($ct['etc']['righe']);
     // die();

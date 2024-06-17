@@ -628,7 +628,6 @@ ALTER TABLE `carrelli`
 	ADD KEY `destinatario_cap` (`destinatario_cap`),
 	ADD KEY `destinatario_citta` (`destinatario_citta`),
 	ADD KEY `destinatario_id_comune` (`destinatario_id_comune`),
-	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`), 
 	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`),
 	ADD KEY `destinatario_id_comune_nascita` (`destinatario_id_comune_nascita`),
 	ADD KEY `destinatario_giorno_nascita` (`destinatario_giorno_nascita`),

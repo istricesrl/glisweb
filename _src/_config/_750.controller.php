@@ -235,7 +235,8 @@
      *
      *
      *
-     *
+     * importazione immagini
+     * =====================
      *
      *
      *
@@ -259,6 +260,13 @@
     // if( isset( $cf['ws']['table'] ) ) {
     //    var_dump( $cf['ws']['table'] );
     // }
+
+    /**
+     * CONTROLLER DATI
+     * ===============
+     * 
+     * 
+     */
 
     // timer
 	timerCheck( $cf['speed'], '-> inizio lavoro controller' );
@@ -324,6 +332,13 @@
 
     // scollego $v
 	unset( $v );
+
+    /**
+     * OPERAZIONI FINALI
+     * =================
+     * 
+     * 
+     */
 
     // connetto i dati della request all'array $cf
 	$cf['request']				= &$_REQUEST;

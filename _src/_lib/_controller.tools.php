@@ -246,7 +246,7 @@
 												$whri[] = "${fci} = ?";
 												$vs[] = array( 's' => $sv );
 											}
-											$whr[] = implode(' OR ', $whri);
+											$whr[] = '( ' . implode(' OR ', $whri) . ' )';
 
 										break;
 									}

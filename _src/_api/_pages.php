@@ -253,6 +253,28 @@
      * 
      */
 
+    // debug
+    // print_r( $ct['page']['css'] );
+
+    // aggiungo le controparti custom dei CSS
+    foreach( $ct['page']['css']['template'] as $kCss => $tCss ) {
+        if( is_array( $tCss ) ) {
+            foreach( $tCss as $ktCss => $vtCss ) {
+                $vcCss = path2custom( $ct['page']['template']['path'] . $vtCss );
+                // echo $kCss . ' -> ' . $ktCss . ' -> ' . $vcCss . PHP_EOL;
+                if( file_exists( DIR_BASE . $vcCss ) ) {
+                    // echo 'trovato: ' . $vcCss . PHP_EOL;
+                    $ct['page']['css']['custom'][ $kCss ][] = $vcCss;
+                }
+            }
+        } else {
+            $cCss = path2custom( $ct['page']['template']['path'] . $tCss );
+            if( file_exists( DIR_BASE . $cCss ) ) {
+                $ct['page']['css']['custom'][] = $cCss;
+            }
+        }
+    }
+
     // aggiunta del tema ai CSS da caricare
 	if( isset( $ct['page']['template']['theme'] ) ) {
 		foreach( array( 'css/', 'css/themes/' ) as $tDir ) {
@@ -265,6 +287,10 @@
 			}
 		}
 	}
+
+    // debug
+    // print_r( $ct['page']['css'] );
+    // die();
 
     // timer
 	timerCheck( $cf['speed'], 'fine caricamento tema del template' );
@@ -713,12 +739,18 @@
     if( isset( $ct['page']['css']['external'] ) && is_array( $ct['page']['css']['external'] ) ) {
         foreach( $ct['page']['css']['external'] as $media => $sheets ) {
             if( is_array( $sheets ) ) {
-                foreach( $sheets as $css ) {
-                    $content = file_get_contents( $css );
+                foreach( $sheets as $sheet => $css ) {
                     $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
-                    writeToFile( $content, $cachefile );
-                    $ct['page']['css']['internal']['media'][] = shortPath( $cachefile );
-                    unset( $css );
+                    if( ! file_exists( $cachefile ) ) {
+                        $content = file_get_contents( $css );
+                        writeToFile( $content, $cachefile );
+                    } else {
+                        $content = readStringFromFile( $cachefile );
+                        if( ! empty( $content ) ) {
+                            $ct['page']['css']['cached'][ $media ][] = shortPath( $cachefile );
+                            unset( $ct['page']['css']['external'][ $media ][ $sheet ] );
+                        }
+                    }
                 }
             }
         }
