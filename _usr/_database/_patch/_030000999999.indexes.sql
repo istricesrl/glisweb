@@ -3337,6 +3337,25 @@ ALTER TABLE `relazioni_pagamenti`
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000030470
+
+-- relazioni_prodotti
+ALTER TABLE `relazioni_prodotti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_prodotto`,`id_prodotto_collegato`,`id_ruolo`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_prodotto_collegato` (`id_prodotto_collegato`),
+	ADD KEY `id_articolo_collegato` (`id_articolo_collegato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000030471
+
+-- relazioni_prodotti
+ALTER TABLE `relazioni_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+
 -- | 030000030490
 
 -- relazioni_progetti

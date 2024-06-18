@@ -861,7 +861,7 @@
         $f2 = getFullPath( $f2 );
 
         // verifico che la cartella di destinazione esista
-        checkFolder( dirname( $f1 ) );
+        checkFolder( dirname( $f2 ) );
 
         // preparo lo spostamento
         if( substr( $f2, -1 ) == '/' ) {
@@ -870,6 +870,9 @@
         } else {
             checkFolder( dirname( $f2 ) );
         }
+
+        // log
+        logger( 'sposto ' . $f1 . ' su ' . $f2, 'filesystem' );
 
         // sposto il file e restituisco il risultato
         return rename( $f1, $f2 );

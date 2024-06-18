@@ -7777,6 +7777,20 @@ CREATE OR REPLACE VIEW relazioni_pagamenti_view AS
 	FROM relazioni_pagamenti
 ;
 
+-- | 090000030470
+
+-- relazioni_prodotti_view
+CREATE OR REPLACE VIEW `relazioni_prodotti_view` AS
+	SELECT 
+		relazioni_prodotti.id,
+		relazioni_prodotti.id_prodotto,
+		relazioni_prodotti.id_ruolo,
+		relazioni_prodotti.id_prodotto_collegato,
+		relazioni_prodotti.id_articolo_collegato,
+		concat( relazioni_prodotti.id_prodotto,' - ', relazioni_prodotti.id_prodotto_collegato) AS __label__
+	FROM relazioni_prodotti
+;
+
 -- | 090000030490
 
 -- relazioni_progetti_view

@@ -3262,6 +3262,21 @@ CREATE TABLE IF NOT EXISTS `relazioni_pagamenti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000030470
+
+-- relazioni_prodotti
+CREATE TABLE IF NOT EXISTS `relazioni_prodotti` (
+  `id` int(11) NOT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_prodotto_collegato` char(32) DEFAULT NULL,
+  `id_articolo_collegato` char(32) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+);
+
 -- | 010000030490
 
 -- relazioni_progetti
@@ -3807,6 +3822,7 @@ CREATE TABLE `step` (
 
 -- | 010000042700
 
+-- taglie
 CREATE TABLE `taglie` (
   `id` int(11) NOT NULL,
   `id_tipologia_prodotti` int(11) DEFAULT NULL,

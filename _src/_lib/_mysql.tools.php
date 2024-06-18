@@ -347,6 +347,7 @@
 			    }
 
 			// esecuzione dello statement
+            // TODO mettere dentro un try... catch
 			    $xStatement = mysqli_stmt_execute( $pq );
 
 			// cronometro

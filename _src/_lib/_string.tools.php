@@ -114,17 +114,17 @@
      *
      */
     function string2num( $s ) {
-        if( is_numeric( str_replace( array( ',', '.' ), NULL, $s ) ) ) {
+        if( is_numeric( str_replace( array( ',', '.' ), '', $s ) ) ) {
             if( strpos( $s, ',' ) !== false && strpos( $s, '.' ) === false ) {
                 // es. 1000,50 -> 1000.50
                 $s = str_replace( ',', '.', $s );
             } elseif( strpos( $s, ',' ) !== false && strpos( $s, '.' ) !== false ) {
                 if( strpos( $s, ',' ) < strpos( $s, '.' ) ) {
                     // es. 1,000.50 -> 1000.50
-                    $s = str_replace( ',', NULL, $s );
+                    $s = str_replace( ',', '', $s );
                 } else {
                     // es. 1.000,50 -> 1000.50
-                    $s = str_replace( ',', '.', str_replace( '.', NULL, $s ) );
+                    $s = str_replace( ',', '.', str_replace( '.', '', $s ) );
                 }
             }
         }
