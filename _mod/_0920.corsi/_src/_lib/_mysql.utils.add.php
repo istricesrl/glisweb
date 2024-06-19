@@ -278,6 +278,15 @@
 
             $riga['posti_disponibili'] = $riga['numero_alunni'] . ' / ' . $riga['numero_posti'];
 
+            $riga['numero_alunni_in_attesa'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT coalesce( count( distinct( id_anagrafica ) ), 0 )
+                FROM attivita
+                WHERE attivita.id_todo = ?
+                AND attivita.id_tipologia IN ( 40 )',
+                array( array( 's' => $riga['id'] ) )
+            );
+
             $riga['posti_prova'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT metadati.testo 
