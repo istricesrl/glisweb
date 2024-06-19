@@ -54,7 +54,7 @@
 			'LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria '.
 			'LEFT JOIN progetti ON progetti.id = attivita.id_progetto LEFT JOIN todo ON todo.id = attivita.id_todo '.
 			'LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo '.
-			'WHERE ( attivita.data_attivita IS NULL  AND  ( attivita.id_anagrafica_programmazione = ? OR attivita.id_anagrafica_programmazione IS NULL ) '.
+			'WHERE ( tipologie_attivita.se_agenda IS NOT NULL AND attivita.data_attivita IS NULL  AND  ( attivita.id_anagrafica_programmazione = ? OR attivita.id_anagrafica_programmazione IS NULL ) '.
 			$limit.
 			') '.
 			'GROUP BY attivita.id '.
@@ -62,7 +62,9 @@
 			array( array( 's' => $_SESSION['account']['id_anagrafica'] ) )
 		);
 
-		// print_r( $ct['etc']['attivita'] );
+        // NOTA il controllo tipologie_attivita.se_agenda IS NOT NULL è stato aggiunto di recente, controllare se è corretto
+
+        // print_r( $ct['etc']['attivita'] );
 /*
 		$ct['etc']['agenda_da_fissare']['todo'] = mysqlQuery(
 			$cf['mysql']['connection'],
@@ -153,7 +155,7 @@
 
 	if( ! empty( $ct['etc']['attivita'] ) ) {
 		
-		foreach( $ct['etc']['attivita']  as $evento ) {
+		foreach( $ct['etc']['attivita'] as $evento ) {
 			
 			if( validateDate( $evento['data_programmazione'], 'Y-m-d' ) == 1 ) {
 				$ct['etc']['agenda'][ date( 'Y', strtotime( $evento['data_programmazione'] ) ) ][ date( 'W', strtotime( $evento['data_programmazione'] ) ) ][ $evento['data_programmazione'] ][ $evento['ora_inizio_programmazione'] ][] = $evento;
