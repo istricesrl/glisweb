@@ -208,134 +208,151 @@
 
         }
 
-    }
+        /**
+         * CONTROLLER IMMAGINI
+         * ===================
+         * 
+         * 
+         */
 
-    /**
-     * CONTROLLER IMMAGINI
-     * ===================
-     * 
-     * 
-     */
-
-    // trovo le immagini presenti in var/spool/import/
-    $img = glob( DIR_VAR_SPOOL_IMPORT . '*.{jpg,png,jpeg}', GLOB_BRACE );
-
-    // debug
-    // die( print_r( $img, true ) );
-
-    // se c'è almeno un'immagine da elaborare
-    if( ! empty( $img ) ) {
-
-        // prelevo un'immagine dalla lista
-        $f = array_shift( $img );
+        // trovo le immagini presenti in var/spool/import/
+        $img = glob( DIR_VAR_SPOOL_IMPORT . '*.{jpg,png,jpeg}', GLOB_BRACE );
 
         // debug
         // die( print_r( $img, true ) );
 
-        // ricavo l'azione e l'entità
-        $req = explode( '§', basename( $f ) );
+        // se c'è almeno un'immagine da elaborare
+        if( ! empty( $img ) ) {
 
-        // gestione del formato [NN§]azione§entita§codice§ruolo[§ordine][§varie].{jpg,png,jpeg}
-        if( is_numeric( $req[0] ) ) {
-            $action = $req[1];
-            $table = $req[2];
-            $codice = $req[3];
-            $ruolo = $req[4];
-            $ordine = ( isset( $req[5] ) ) ? $req[5] : NULL;
-        } else {
-            $action = $req[0];
-            $table = $req[1];
-            $codice = $req[2];
-            $ruolo = $req[3];
-            $ordine = ( isset( $req[4] ) ) ? $req[4] : NULL;
-        }
+            // prelevo un'immagine dalla lista
+            $f = array_shift( $img );
 
-        // ...
-        if( ! is_numeric( $ordine ) ) {
-            $ordine = NULL;
-        }
+            // debug
+            // die( print_r( $img, true ) );
 
-        // debug
-        // die( print_r( $req, true ) );
+            // ricavo l'azione e l'entità
+            $req = explode( '§', basename( $f ) );
 
-        // gestione del ruolo passato come ID numerico
-        if( ! is_numeric( $ruolo ) ) {
-            $ruolo = mysqlSelectValue(
-                $cf['mysql']['connection'],
-                'SELECT id FROM ruoli_immagini WHERE nome = ?',
-                array( array( 's' => $ruolo ) )
-            );
-        }
-
-        // dati per l'inserimento
-        switch( $table ) {
-            case 'prodotti':
-                $field = 'id_prodotto';
-            break;
-            case 'articoli':
-                $field = 'id_articolo';
-            break;
-        }
-
-        // collante
-        foreach( array( '§', '-' ) as $g ) {
-            if( strpos( $codice, $g ) === false ) {
-                $gl = $g;
+            // gestione del formato [NN§]azione§entita§codice§ruolo[§ordine][§varie].{jpg,png,jpeg}
+            if( is_numeric( $req[0] ) ) {
+                $action = $req[1];
+                $table = $req[2];
+                $codice = $req[3];
+                $ruolo = $req[4];
+                $ordine = ( isset( $req[5] ) ) ? $req[5] : NULL;
+            } else {
+                $action = $req[0];
+                $table = $req[1];
+                $codice = $req[2];
+                $ruolo = $req[3];
+                $ordine = ( isset( $req[4] ) ) ? $req[4] : NULL;
             }
-        }
 
-        // percorso di destinazione
-        $dst = DIR_VAR_IMMAGINI . implode( $gl, arrayTrim( array( $table, $codice, $ruolo, $ordine ) ) ) . '.' . strtolower( getFileExtension( $f ) );
+            // ...
+            if( ! is_numeric( $ordine ) ) {
+                $ordine = NULL;
+            }
 
-        // debug
-        // die( $dst );
-        // die( $ruolo );
+            // debug
+            // die( print_r( $req, true ) );
 
-        // preparo l'oggetto
-        $riga = array(
-            'id_ruolo' => $ruolo,
-            'path' => $dst,
-            'timestamp_inserimento' => time()
-        );
+            // gestione del ruolo passato come ID numerico
+            if( ! is_numeric( $ruolo ) ) {
+                $ruolo = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM ruoli_immagini WHERE nome = ?',
+                    array( array( 's' => $ruolo ) )
+                );
+            }
 
-        $riga[ $field ] = $codice;
+            // dati per l'inserimento
+            switch( $table ) {
+                case 'prodotti':
+                    $field = 'id_prodotto';
+                break;
+                case 'articoli':
+                    $field = 'id_articolo';
+                break;
+            }
 
-        // debug
-        // die( print_r( $riga, true ) );
+            // verifico che l'oggetto collegato esista
+            $check = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT id FROM ' . $table . ' WHERE id = ?',
+                array( array( 's' => $codice ) )
+            );
 
-        // inserisco la riga nella tabella immagini
-        $idImmagine = mysqlInsertRow(
-            $cf['mysql']['connection'],
-            $riga,
-            'immagini'
-        );
+            // se l'oggetto esiste
+            if( ! empty( $check ) ) {
 
-        // debug
-        // die( $idImmagine );
+                // collante
+                foreach( array( '§', '-' ) as $g ) {
+                    if( strpos( $codice, $g ) === false ) {
+                        $gl = $g;
+                    }
+                }
 
-        // se l'immagine è stata inserita
-        if( ! empty( $idImmagine ) ) {
+                // percorso di destinazione
+                $dst = DIR_VAR_IMMAGINI . implode( $gl, arrayTrim( array( $table, $codice, $ruolo, $ordine ) ) ) . '.' . strtolower( getFileExtension( $f ) );
 
-            // sposto il file
-            moveFile( $f, $dst );
+                // debug
+                // die( $dst );
+                // die( $ruolo );
 
-            // se il file è stato spostato
-            if( file_exists( $dst ) ) {
+                // preparo l'oggetto
+                $riga = array(
+                    'id_ruolo' => $ruolo,
+                    'path' => $dst,
+                    'timestamp_inserimento' => time()
+                );
 
-                // log
-                logger( 'importato file ' . $f . ' su ' . $dst, 'immagini' );
+                $riga[ $field ] = $codice;
+
+                // debug
+                // die( print_r( $riga, true ) );
+
+                // inserisco la riga nella tabella immagini
+                $idImmagine = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    $riga,
+                    'immagini'
+                );
+
+                // debug
+                // die( $idImmagine );
+
+                // se l'immagine è stata inserita
+                if( ! empty( $idImmagine ) ) {
+
+                    // sposto il file
+                    moveFile( $f, $dst );
+
+                    // se il file è stato spostato
+                    if( file_exists( $dst ) ) {
+
+                        // log
+                        logger( 'importato file ' . $f . ' su ' . $dst, 'immagini' );
+
+                    } else {
+
+                        // log
+                        logger( 'impossibile importare il file ' . $f . ' su ' . $dst, 'immagini' );
+
+                        // pulizia databare
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'DELETE FROM immagini WHERE id = ?',
+                            array( array( 's' => $idImmagine ) )
+                        );
+
+                    }
+
+                }
 
             } else {
 
-                // log
-                logger( 'impossibile importare il file ' . $f . ' su ' . $dst, 'immagini' );
-
-                // pulizia databare
-                mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'DELETE FROM immagini WHERE id = ?',
-                    array( array( 's' => $idImmagine ) )
-                );
+                // sposto il file fuori dalle scatole
+                moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
 
             }
 

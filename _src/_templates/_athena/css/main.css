@@ -459,7 +459,8 @@ select.font-awesome {
 
 .btn-xsm {
     font-size: .8em;
-    padding: 1px 4px;
+    padding: 2px 8px;
+    margin: 0px 3px;
 }
 
 .btn-sm-1x1 {
