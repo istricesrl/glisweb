@@ -1245,6 +1245,7 @@ CREATE TABLE IF NOT EXISTS `contenuti` (
   `destinatario_cc_mail` char(128) DEFAULT NULL,
   `destinatario_ccn_nome` char(128) DEFAULT NULL,
   `destinatario_ccn_mail` char(128) DEFAULT NULL,
+  `robots` text DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
@@ -3199,6 +3200,21 @@ CREATE TABLE IF NOT EXISTS `relazioni_anagrafica` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000030320
+
+-- relazioni_articoli
+CREATE TABLE IF NOT EXISTS `relazioni_articoli` (
+  `id` int(11) NOT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_prodotto_collegato` char(32) DEFAULT NULL,
+  `id_articolo_collegato` char(32) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+);
 
 -- | 010000030350
 

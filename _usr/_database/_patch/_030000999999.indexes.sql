@@ -3259,6 +3259,24 @@ ALTER TABLE `relazioni_anagrafica`
 -- tipologia: tabella relazione
 ALTER TABLE `relazioni_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000030320
+
+-- relazioni_articoli
+ALTER TABLE `relazioni_articoli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unico` (`id_articolo`,`id_ruolo`, `id_prodotto_collegato`, `id_articolo_collegato`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_prodotto_collegato` (`id_prodotto_collegato`),
+	ADD KEY `id_articolo_collegato` (`id_articolo_collegato`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000030321
+
+-- relazioni_articoli
+ALTER TABLE `relazioni_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000030350
 
 -- relazioni_categorie_progetti

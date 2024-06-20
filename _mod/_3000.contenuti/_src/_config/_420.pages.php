@@ -85,7 +85,7 @@
         // prelevo i contenuti della pagina corrente dal database
         $cnt = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT testo AS content, abstract, specifiche, keywords, description FROM contenuti '.
+            'SELECT testo AS content, abstract, specifiche, keywords, description, robots FROM contenuti '.
             'WHERE ' . $joinField . ' = ? AND id_lingua = ?',
             array(
                 array( 's' => $joinValue ),
@@ -115,6 +115,11 @@
             // assegno il meta tag description
             if( ! isset( $cf['contents']['page']['description'] ) || empty( $cf['contents']['page']['description'] ) ) {
                 $cf['contents']['page']['description'][ $cf['localization']['language']['ietf'] ] = $cnt['description'];
+            }
+
+            // assegno il meta tag robots
+            if( ! isset( $cf['contents']['page']['robots'] ) || empty( $cf['contents']['page']['robots'] ) ) {
+                $cf['contents']['page']['robots'][ $cf['localization']['language']['ietf'] ] = $cnt['robots'];
             }
 
         }

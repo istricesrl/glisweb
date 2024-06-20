@@ -19,8 +19,16 @@
                 {{ frm.selectRequired( table, subtable, i, 'id_listino', '', etc.select.listini, request, '', '', '', disabled ) }}
             </div>
             <div class="col-10 col-md">
+                <span class="label-top">prefisso</span>
+                {{ frm.input( table, subtable, i, 'prefisso', '', '', request, '', '', '', '', disabled ) }}
+            </div>           
+            <div class="col-10 col-md">
                 <span class="label-top">prezzo</span>
                 {{ frm.input( table, subtable, i, 'prezzo', '', '', request, '', '', '', '', disabled ) }}
+            </div>           
+            <div class="col-10 col-md">
+                <span class="label-top">suffisso</span>
+                {{ frm.input( table, subtable, i, 'suffisso', '', '', request, '', '', '', '', disabled ) }}
             </div>           
             <div class="col col-md-auto">
                 <span class="label-top">iva</span>

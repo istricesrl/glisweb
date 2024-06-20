@@ -20,6 +20,24 @@
 														'priority'	=> '210' ) ) )
 	);
 
+	if( in_array( "0100.pianificazioni", $cf['mods']['active']['array'] ) ) {
+
+		arrayInsertSeq( 'amministrazione.gestiti', $p['amministrazione']['etc']['tabs'], 'amministrazione.ricorrente' );
+
+		// dashboard amministrazione
+		$p['amministrazione.ricorrente'] = array(
+			'sitemap'		=> false,
+			'title'		=> array( $l		=> 'ricorrente' ),
+			'h1'		=> array( $l		=> 'analisi ricorrente' ),
+			'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'amministrazione.ricorrente.html' ),
+			'macro'		=> array( $m . '_src/_inc/_macro/_amministrazione.ricorrente.php' ),
+			'parent'	=> array( 'id'		=> 'amministrazione' ),
+			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'		=> array( 'tabs'	=> $p['amministrazione']['etc']['tabs'] )
+		);
+
+	}
+
 	if( in_array( "0900.progetti", $cf['mods']['active']['array'] ) ) {
 
 		// dashboard amministrazione

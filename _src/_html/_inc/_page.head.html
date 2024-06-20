@@ -1,48 +1,49 @@
 
 {# FILE PER LA GENERAZIONE DEL TAG <head> STANDARD #}
 
-{% include '_inc/_gtm.head.html' %}
-
-{% include '_inc/_analytics.head.html' %}
-
-{% include '_inc/_ads.head.html' %}
-
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-
-<meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
-<meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
-
-<!-- TODO finire di implementare
-<meta http-equiv="Content-Security-Policy" content="{% for policy, domains in page.csp %}{% if domains %}{{ policy }}{% for domain in domains %} {{ domain|raw }}{% endfor %}; {% endif %}{% endfor %}">
--->
-
-{% if page.robots %}<meta name="robots" content="{{ page.robots }}">{% endif %}
-
-{% for icon in page.template.favicons %}<link rel="{{ icon.rel }}" sizes="{{ icon.sizes }}"{% if icon.type %} type="{{ icon.type }}"{% endif %} href="{{ site.url }}{{ icon.path }}/{{ icon.file }}">{% endfor %}
-
-{% if page.canonical %}<link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">{% endif %}
-
-<title>{{ page.title[ localization.language.ietf ] }}</title>
-
-{% include '_inc/_opengraph.head.html' %}
-
-{% for c in page.css.external %}<link rel="stylesheet" href="{{ c }}" media="screen">{% endfor %}
-
-{% for c in page.css.preload %}<link rel="preload" as="style" href="{{ c }}" media="screen" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
-
-{% for c in page.css.internal %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
-
-{% for c in page.css.template %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% endfor %}
-{% for c in page.css.template_print %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="print">{% endfor %}
-
-{% for c in page.css.custom %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
-
-{% include '_inc/_facebook.head.html' %}
-
-{% include '_inc/_hotjar.head.html' %}
-
-<noscript>
-    {% for c in page.css.preload %}<link rel="stylesheet" href="{{ c }}">{% endfor %}
-</noscript>
+    {% include '_inc/_gtm.head.html' %}
+    
+    {% include '_inc/_analytics.head.html' %}
+    
+    {% include '_inc/_ads.head.html' %}
+    
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    
+    <meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
+    <meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
+    
+    <!-- TODO finire di implementare
+    <meta http-equiv="Content-Security-Policy" content="{% for policy, domains in page.csp %}{% if domains %}{{ policy }}{% for domain in domains %} {{ domain|raw }}{% endfor %}; {% endif %}{% endfor %}">
+    -->
+    
+    {% if page.robots %}<meta name="robots" content="{{ page.robots[ localization.language.ietf ] }}">{% endif %}
+    
+    {% for icon in page.template.favicons %}<link rel="{{ icon.rel }}" sizes="{{ icon.sizes }}"{% if icon.type %} type="{{ icon.type }}"{% endif %} href="{{ site.url }}{{ icon.path }}/{{ icon.file }}">{% endfor %}
+    
+    {% if page.canonical %}<link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">{% endif %}
+    
+    <title>{{ page.title[ localization.language.ietf ] }}</title>
+    
+    {% include '_inc/_opengraph.head.html' %}
+    
+    {% for c in page.css.external %}<link rel="stylesheet" href="{{ c }}" media="screen">{% endfor %}
+    
+    {% for c in page.css.preload %}<link rel="preload" as="style" href="{{ c }}" media="screen" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
+    
+    {% for c in page.css.internal %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
+    
+    {% for c in page.css.template %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% endfor %}
+    {% for c in page.css.template_print %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="print">{% endfor %}
+    
+    {% for c in page.css.custom %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
+    
+    {% include '_inc/_facebook.head.html' %}
+    
+    {% include '_inc/_hotjar.head.html' %}
+    
+    <noscript>
+        {% for c in page.css.preload %}<link rel="stylesheet" href="{{ c }}">{% endfor %}
+    </noscript>
+    

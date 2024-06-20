@@ -44,6 +44,7 @@
 
 		{# CAMPI HIDDEN SPECIALI #}
 	    <input type="hidden" id="id_contratto" name="{{ table }}[id_contratto]" value="{% if request.__preset__[ table ].id_contratto %}{{ request.__preset__[ table ].id_contratto }}{% else %}{{ request[ table ].id_contratto }}{% endif %}">
+	    <input type="hidden" id="id_progetto" name="{{ table }}[id_progetto]" value="{% if request.__preset__[ table ].id_progetto %}{{ request.__preset__[ table ].id_progetto }}{% else %}{{ request[ table ].id_progetto }}{% endif %}">
 
 	    {# MODULO PRINCIPALE #}
 	    <fieldset>

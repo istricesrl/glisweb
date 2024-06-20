@@ -2256,6 +2256,7 @@ CREATE OR REPLACE VIEW contenuti_view AS
 		contenuti.id_banner,
 		contenuti.title,
 		contenuti.h1,
+		contenuti.robots,
 		contenuti.id_account_inserimento,
 		contenuti.id_account_aggiornamento,
 		concat(
@@ -7690,15 +7691,34 @@ CREATE OR REPLACE VIEW relazioni_anagrafica_view AS
 	FROM relazioni_anagrafica
 ;
 
+-- | 090000030320
+
+-- relazioni_articoli_view
+DROP TABLE IF EXISTS `relazioni_articoli_view`;
+
+-- | 090000030321
+
+-- relazioni_articoli_view
+CREATE OR REPLACE VIEW `relazioni_articoli_view` AS
+	SELECT 
+		relazioni_articoli.id,
+		relazioni_articoli.id_articolo,
+		relazioni_articoli.id_ruolo,
+		relazioni_articoli.id_prodotto_collegato,
+		relazioni_articoli.id_articolo_collegato,
+		concat( relazioni_articoli.id_articolo,' - ', relazioni_articoli.id_articolo_collegato) AS __label__
+	FROM relazioni_articoli
+;
+
 -- | 090000030350
 
--- relazioni_anagrafica_view
+-- relazioni_categorie_progetti_view
 -- tipologia: tabella relazione
 DROP TABLE IF EXISTS `relazioni_categorie_progetti_view`;
 
 -- | 090000030351
 
--- relazioni_anagrafica_view
+-- relazioni_categorie_progetti_view
 -- tipologia: tabella relazione
 -- verifica: 2022-01-17 16:12 Chiara GDL
 CREATE OR REPLACE VIEW relazioni_categorie_progetti_view AS

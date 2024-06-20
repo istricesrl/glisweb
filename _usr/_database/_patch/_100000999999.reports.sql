@@ -381,8 +381,11 @@ CREATE TABLE `__report_giacenza_magazzini__` (
   `__label__` mediumtext DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`(1024)),
+  KEY `id_articolo` (`id_articolo`),
+  KEY `id_prodotto` (`id_prodotto`),
+  KEY `id_matricola` (`id_matricola`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 100000020500
 
@@ -1426,6 +1429,33 @@ CREATE TABLE `__report_lezioni_corsi__` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL,
   `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `nome` (`nome`),
+  KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 100000060400
+
+-- __report_variazioni_anagrafica__
+CREATE TABLE `__report_variazioni_anagrafica__` (
+  `id` int(11) NOT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `cognome` char(128) DEFAULT NULL,
+  `telefono` char(128) DEFAULT NULL,
+  `mobile` char(128) DEFAULT NULL,
+  `mail` char(128) DEFAULT NULL,
+  `residenza_indirizzo` char(128) DEFAULT NULL,
+  `residenza_civico` char(128) DEFAULT NULL,
+  `residenza_cap` char(128) DEFAULT NULL,
+  `residenza_localita` char(128) DEFAULT NULL,
+  `residenza_id_comune` int(11) DEFAULT NULL,
+  `id_account_evasione` int(11) DEFAULT NULL,
+  `timestamp_evasione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)

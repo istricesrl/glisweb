@@ -98,6 +98,11 @@
 			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.backlog' );
 		}
 
+		// RELAZIONI CON IL MODULO PIANIFICAZIONI
+		if( in_array( "0100.pianificazioni", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'progetti.produzione.form', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.pianificazioni' );
+		}
+
 		// RELAZIONI CON IL MODULO AMMINISTRAZIONE
 		if( in_array( "6000.amministrazione", $cf['mods']['active']['array'] ) ) {
 			arrayInsertBefore( 'progetti.produzione.form.archiviazione', $p['progetti.produzione.form']['etc']['tabs'], 'progetti.produzione.form.chiusura' );
@@ -284,6 +289,7 @@
 	*/
 		// gestione progetti pianificazioni
 		# NOTA questa va nel modulo pianificazioni
+		/*
 		$p['progetti.produzione.form.pianificazioni'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'pianificazione' ),
@@ -295,6 +301,7 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['progetti.produzione.form']['etc']['tabs'] )
 		);
+		*/
 
 		// gestione progetti accettazione
 		$p['progetti.produzione.form.accettazione'] = array(

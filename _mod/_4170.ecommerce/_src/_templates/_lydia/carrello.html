@@ -11,62 +11,14 @@
     {# BLOCCO ARTICOLI NEL CARRELLO #}
     <fieldset class="articoli">
         <legend>articoli nel carrello</legend>
-        {% for articolo, dati in session.carrello.articoli  %}
-        <div class="form-row articolo">
-            <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_articolo]" value="{{ dati.id_articolo }}">
-            <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][destinatario_id_anagrafica]" value="{{ dati.destinatario_id_anagrafica }}">
-            <div class="d-none d-md-block col-md-3 col-form-label"><span class="id-articolo">{{ dati.id_articolo }}</span></div>
-            <div class="col-12 col-md col-form-label"><span class="descrizione">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></div>
-            <div class="col-4 col-md-1"><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></div>
-            <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
-            <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></div>
-        </div>
-        {% endfor %}
-        <div class="form-row">
-            <div class="col-12 col-md col-form-label">modalità di pagamento</div>
-            <div class="col-4 col-md-4">
-                <select class="form-control form-control-sm hint-toggle" id="costo-pagamento" hint-toggle="modalita_pagamento" name="__carrello__[provider_pagamento]">
-                    {% for cons in ecommerce.profile.provider %}
-                    <option value="{{ cons.id }}" min="{{ cons.importo_min }}" max="{{ cons.importo_max }}" prezzo="{{ cons.prezzo }}" relativo="{{ cons.prezzo_relativo }}" {% if cons.id == session.carrello.provider_pagamento %}selected{% endif %}>{{ cons.__label__ }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-4 col-md-1 col-form-label text-right"></div>
-            <div class="col-4 col-md-1 text-center"></div>
-        </div>
-        <div class="form-row">
-            <div class="col-12 col-md col-form-label">modalità di fatturazione</div>
-            <div class="col-4 col-md-auto">
-                <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__carrello__[fatturazione_id_tipologia_documento]">
-                    {% for tdoc in etc.id_tipologia_documenti %}
-                    <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == session.carrello.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-4 col-md-auto">
-                <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__carrello__[fatturazione_strategia]">
-                    {% for strf in etc.strategie_fatturazione %}
-                    <option value="{{ strf.id }}" {% if strf.id == session.carrello.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            <div class="col-4 col-md-1 col-form-label text-right"></div>
-            <div class="col-4 col-md-1 text-center"></div>
-        </div>
-        <div class="form-row totali">
-            <div class="col-12 col-md col-form-label"><b>totale carrello</b></div>
-            <div class="col-4 col-md-1 col-form-label text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</div>
-            <div class="col-4 col-md-1 text-center"></div>
-        </div>
 
-        <div class="form-row">
-            <div class="col">
-                {{ cms.formButton( 'RICALCOLA CARRELLO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Ricalcolo' ) }}
-            </div>
-        </div>
+
+
+<!--
     </fieldset>
-
+    -->
     <!--
+    -->
     <div class="form-group form-row">
         <div class="col">
             <table class="table">
@@ -123,7 +75,11 @@
             </table>
         </div>
     </div>
-    -->
+    <div class="form-row">
+        <div class="col">
+            {{ cms.formButton( 'RICALCOLA CARRELLO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Ricalcolo' ) }}
+        </div>
+    </div>
 
     {# BLOCCO DATI DEL CARRELLO #}
     <fieldset class="dati">

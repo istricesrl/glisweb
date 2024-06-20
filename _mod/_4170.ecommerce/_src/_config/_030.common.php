@@ -44,6 +44,7 @@
         'provider' => array(
             'contanti' => array(
                 'id'            => 'contanti',                                                      // ID del provider per le tendine
+                'available'     => true,                                                            // disponibilità del provider
                 'modalita'      => 1,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'action'        => 'carrello.checkout',                                             // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
@@ -52,6 +53,7 @@
             ),
             'contrassegno' => array(
                 'id'            => 'contrassegno',                                                  // ID del provider per le tendine
+                'available'     => true,                                                            // disponibilità del provider
                 'modalita'      => 1,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'action'        => 'carrello.checkout',                                             // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                          // metodo per il form di riepilogo
@@ -60,6 +62,7 @@
             ),
             'nexi' => array(
                 'id'            => 'nexi',                                                          // ID del provider per le tendine
+                'available'     => true,                                                            // disponibilità del provider
                 'modalita'      => 8,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
                 'alias'         => NULL,                                                            // 
                 'key'           => NULL,                                                            // 
@@ -73,6 +76,7 @@
             ),
             'paypal' => array(
                 'id'            => 'paypal',                                                        // ID del provider per le tendine
+                'available'     => true,                                                            // disponibilità del provider
                 'modalita'      => 24,                                                              // ID della modalità di pagamento (per l'emissione dei documenti)
                 'business'      => NULL,                                                            // 
                 'action_url'    => 'https://www.sandbox.paypal.com/cgi-bin/webscr',                 // pagina per l'action del form di riepilogo
@@ -85,6 +89,7 @@
             ),
             'paypal-advanced' => array(
                 'id'            => 'paypal-advanced',                                               // ID del provider per le tendine
+                'available'     => true,                                                            // disponibilità del provider
                 'modalita'      => 24,                                                              // ID della modalità di pagamento (per l'emissione dei documenti)
                 'advanced'      => false,                                                           // impostare a true per consentire il pagamento con carta dal sito
                 'business'      => NULL,                                                            // 
@@ -156,6 +161,7 @@
         'intestazione_cap'                      => array( 'type' => 'string',   'default' => NULL ),
         'intestazione_citta'                    => array( 'type' => 'string',   'default' => NULL ),
         'intestazione_id_provincia'             => array( 'tipe' => 'int',      'default' => NULL ),
+        'intestazione_id_stato'                 => array( 'tipe' => 'int',      'default' => 1 ),
         'intestazione_telefono'                 => array( 'type' => 'string',   'default' => NULL ),
         'intestazione_mail'                     => array( 'type' => 'string',   'default' => NULL ),
         'provider_pagamento'                    => array( 'type' => 'string',   'default' => NULL ),

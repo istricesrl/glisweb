@@ -8,12 +8,20 @@
         .'ORDER BY __label__ '
     );
 
+    $ct['etc']['id_stato'] = mysqlCachedQuery(
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT stati.nome AS __label__, stati.id '
+        .'FROM stati '
+        .'ORDER BY __label__ '
+    );
+
     $ct['etc']['id_tipologia_documenti'] = mysqlCachedQuery(
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
         'SELECT tipologie_documenti.nome AS __label__, tipologie_documenti.id '
         .'FROM tipologie_documenti '
-        // TODO .'WHERE tipologie_documenti.se_ecommerce = 1 '
+        .'WHERE tipologie_documenti.se_ecommerce = 1 '
         .'ORDER BY __label__ '
     );
 
@@ -27,6 +35,6 @@
         $cf['mysql']['connection'],
         'SELECT tipologie_anagrafica_view.__label__, tipologie_anagrafica_view.id '
         .'FROM tipologie_anagrafica_view '
-        // TODO .'WHERE tipologie_anagrafica_view.se_ecommerce = 1 '
+        .'WHERE tipologie_anagrafica_view.id_genitore IS NULL '
         .'ORDER BY __label__ '
     );
