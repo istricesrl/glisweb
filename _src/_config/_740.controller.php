@@ -230,10 +230,13 @@
             // debug
             // die( print_r( $img, true ) );
 
-            // ricavo l'azione e l'entità
-            $req = explode( '§', basename( $f ) );
+            // log
+            logger( 'trovata immagine da importare: ' . basename( $f ), 'image' );
 
-            // gestione del formato [NN§]azione§entita§codice§ruolo[§ordine][§varie].{jpg,png,jpeg}
+            // ricavo l'azione e l'entità
+            $req = explode( '#', basename( $f ) );
+
+            // gestione del formato [NN#]azione#entita#codice#ruolo[#ordine][#varie].{jpg,png,jpeg}
             if( is_numeric( $req[0] ) ) {
                 $action = $req[1];
                 $table = $req[2];
@@ -285,8 +288,11 @@
             // se l'oggetto esiste
             if( ! empty( $check ) ) {
 
+                // log
+                logger( 'check sulla tabella ' . $table . ': ' . $check, 'image' );
+
                 // collante
-                foreach( array( '§', '-' ) as $g ) {
+                foreach( array( '#', '-', '.' ) as $g ) {
                     if( strpos( $codice, $g ) === false ) {
                         $gl = $g;
                     }
@@ -324,6 +330,9 @@
                 // se l'immagine è stata inserita
                 if( ! empty( $idImmagine ) ) {
 
+                    // log
+                    logger( 'ID immagine inserita: ' . $idImmagine, 'image' );
+
                     // sposto il file
                     moveFile( $f, $dst );
 
@@ -331,12 +340,12 @@
                     if( file_exists( $dst ) ) {
 
                         // log
-                        logger( 'importato file ' . $f . ' su ' . $dst, 'immagini' );
+                        logger( 'importato file ' . $f . ' su ' . $dst, 'image' );
 
                     } else {
 
                         // log
-                        logger( 'impossibile importare il file ' . $f . ' su ' . $dst, 'immagini' );
+                        logger( 'impossibile importare il file ' . $f . ' su ' . $dst, 'image' );
 
                         // pulizia databare
                         mysqlQuery(
@@ -347,9 +356,17 @@
 
                     }
 
+                } else {
+
+                    // log
+                    logger( 'ID immagine vuoto', 'image' );
+
                 }
 
             } else {
+
+                // log
+                logger( 'impossibile associare il file: ' . $f, 'image' );
 
                 // sposto il file fuori dalle scatole
                 moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );

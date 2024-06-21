@@ -8,6 +8,7 @@
 
     // debug
     // print_r( $_REQUEST['__pagamenti__'] );
+    // print_r( $_REQUEST['__carrello__'] );
 
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
@@ -49,6 +50,11 @@
 
         // log
         logWrite( 'esito del controllo antispam: ' . $spamScore . '/' . ( ( $spamCheck == true ) ? 'OK' : 'NO' ), 'cart' );
+
+        // debug
+        // var_dump( $spamScore );
+        // var_dump( $spamCheck );
+        // die();
 
         // TODO qui fare il controllo anti spam
         if( $spamCheck === true ) {
@@ -326,6 +332,9 @@
                                 array( 's' => $_SESSION['carrello']['id'] )
                             )
                         );
+
+                        // debug
+                        // die( 'elimino articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] );
 
                         // log
                         logWrite( 'eliminato articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' dal carrello ' . $_SESSION['carrello']['id'], 'cart' );

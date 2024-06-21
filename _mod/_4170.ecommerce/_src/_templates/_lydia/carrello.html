@@ -47,7 +47,7 @@
                     <td>{{ dati.note }}</td>
 
                     <td>
-                        <button type="button" class="btn btn-secondary btn-sm btn-sqr" onclick="$('#a{{ loop.index }}').val('0'); $('#carrello').prop('action', '{{ pages['carrello'].url[ ietf ] }}'); $('#carrello').submit();"><i class="fa fa-trash " aria-hidden="true"></i></button>
+                        {{ cms.formButton( '<i class="fa fa-trash"></i>', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#a' ~ loop.index ~ '").val("0"); $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Elimina' ~ loop.index, 1 ) }}
                     </td>
 
                 </tr>
@@ -77,7 +77,7 @@
     </div>
     <div class="form-row">
         <div class="col">
-            {{ cms.formButton( 'RICALCOLA CARRELLO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Ricalcolo' ) }}
+            {{ cms.formButton( 'RICALCOLA CARRELLO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Ricalcola', 1 ) }}
         </div>
     </div>
 

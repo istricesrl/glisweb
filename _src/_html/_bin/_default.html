@@ -382,14 +382,15 @@ window.addEventListener( 'DOMContentLoaded', function() {
 <a class="btn {{ class }}" target="_blank" href="{{ a }}"></a>
 {% endmacro %}
 
-{% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo, extra ) %}
+{% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo, extra, dup ) %}
 <!-- macro {{ _self }}::formButton() -->
 {% if recaptcha.keys.public %}
 <!-- type settato automaticamente a button -->
 {% set type = 'button' %}
 <!-- onclick settato automaticamente vuoto -->
 <!-- campo hidden generato automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
-<input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}{{ extra }}RecaptchaToken">
+<!-- <input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}{{ extra }}RecaptchaToken"> -->
+{% if not dup %}<input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">{% endif %}
 <!-- funzione generata automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
 <script>
 	function onSubmit{{ form }}{{ extra }}( token ) {
@@ -397,7 +398,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
         var forceValid = 0;
         {{ onclick|raw }}
         console.log( 'forzatura validità: ' + forceValid );
-        document.getElementById("{{ form }}{{ extra }}RecaptchaToken").value = token;
+        document.getElementById("{{ form }}RecaptchaToken").value = token;
 		var contactForm = document.getElementById("{{ form }}");
         console.log( 'onSubmit da reCAPTCHA per {{ form }}' );
 		if(contactForm.checkValidity()||forceValid==1) {
