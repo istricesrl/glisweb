@@ -80,9 +80,27 @@
 
             }
 
-			// die( __FILE__ );
+            // ...
+            if( empty( $vs['id_documento']['s'] ) ) {
+                if( ! empty( $vs['codice_documento']['s'] ) ) {
 
-		break;
+                    $vs['id_documento']['s'] = mysqlSelectValue( $c, 'SELECT id FROM documenti WHERE codice = ?', array( array( 's' => $vs['codice_documento']['s'] ) ) );
+                    if( ! in_array( 'id_documento', $ks ) ) { $ks[] = 'id_documento'; }
+
+                    unset( $vs['codice_documento'] );
+                    removeFromArray( $ks, 'codice_documento' );
+
+                } else {
+
+                    unset( $vs['codice_documento'] );
+                    removeFromArray( $ks, 'codice_documento' );
+
+                }
+            }
+
+            // die( __FILE__ );
+
+        break;
 
 	    case METHOD_DELETE:
 

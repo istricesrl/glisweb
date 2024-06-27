@@ -48,7 +48,7 @@ CREATE OR REPLACE VIEW `abbonamenti_view` AS
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
 		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
 		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
-		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo = 34
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo IN ( 29, 34 )
 		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
         LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id

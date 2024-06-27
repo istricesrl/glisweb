@@ -33,7 +33,10 @@
 													'listini.form.prezzi',
 													'listini.form.anagrafiche',
 #													'listini.form.account',
-													'listini.form.gruppi'	) )
+													'listini.form.gruppi',
+													'listini.form.stampe',
+													'listini.form.tools',
+                                                	) )
 	);
 
 	// gestione listini gruppi
@@ -87,7 +90,33 @@
 		'etc'		=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
 	);
 
-	// vista reparti
+	// gestione anagrafica stampe
+	$p['listini.form.stampe'] = array(
+	    'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe prodotto' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'listini.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_listini.form.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
+	);
+
+	// form azioni pagine
+	$p['listini.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni prodotto' ),
+	    'h1'		=> array( $l		=> 'azioni prodotto' ),
+	    'parent'		=> array( 'id'		=> 'listini.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
+	);
+
+    // vista reparti
 	$p['prezzi.view'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'prezzi' ),

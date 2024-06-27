@@ -96,7 +96,11 @@
 		// print_r( $d );
 		// die( 'test' );
 
-		// controllo permessi (il gruppo può eseguire l'azione sull'entità?) getAclPermission()
+        // ...
+        // trimArray( $vs );
+        // trimArray( $ks );
+
+        // controllo permessi (il gruppo può eseguire l'azione sull'entità?) getAclPermission()
 		if( count( $ks ) == 0 && count( $s ) > 0 ) {
 
 			// debug

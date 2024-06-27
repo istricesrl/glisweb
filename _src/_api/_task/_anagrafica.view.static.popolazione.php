@@ -39,8 +39,8 @@
 					'SELECT ' . $table . '.id_anagrafica 
 					FROM ' . $table . ' 
 					LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = ' . $table . '.id_anagrafica
-					WHERE coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento ) > anagrafica_view_static.timestamp_aggiornamento 
-					OR anagrafica_view_static.timestamp_aggiornamento IS NULL
+					WHERE ( coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento, 0 ) > anagrafica_view_static.timestamp_aggiornamento 
+					OR anagrafica_view_static.timestamp_aggiornamento IS NULL )
 					LIMIT 1'
 				);
 

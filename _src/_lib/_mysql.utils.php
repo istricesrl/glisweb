@@ -660,7 +660,9 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
         // aggiorno le viste statiche
         updateAnagraficaViewStatic( $destinazione );
         cleanAnagraficaViewStatic();
-        
+
+        updateAttivitaViewStatic();
+
         // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
         // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
 
@@ -700,6 +702,7 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
 
             // debug
             // echo 'modifico tutte le referenze di ' . $chiave['TABLE_NAME'] . '.' . $chiave['COLUMN_NAME'] . ' da ' , $sorgente . ' a ' . $destinazione . PHP_EOL;
+            logger( 'modifico tutte le referenze di ' . $chiave['TABLE_NAME'] . '.' . $chiave['COLUMN_NAME'] . ' da ' . $sorgente . ' a ' . $destinazione, 'deduplica' );
 
             // eseguo la migrazione
             mysqlQuery(
@@ -827,6 +830,14 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
 
         if( ! empty( $riga['id'] ) ) {
 
+            updateAnagraficaViewStaticCategorie( $id, $riga );
+
+            updateAnagraficaViewStaticTelefoni( $id, $riga );
+
+            updateAnagraficaViewStaticMail( $id, $riga );
+
+            updateAnagraficaViewStaticIndirizzi( $id, $riga );
+
             $tRef = time();
 
             foreach( array( 'timestamp_inserimento', 'timestamp_aggiornamento' ) as $fRef ) {
@@ -842,14 +853,6 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
                     );
                 }
             }
-
-            updateAnagraficaViewStaticCategorie( $id, $riga );
-
-            updateAnagraficaViewStaticTelefoni( $id, $riga );
-
-            updateAnagraficaViewStaticMail( $id, $riga );
-
-            updateAnagraficaViewStaticIndirizzi( $id, $riga );
 
             // $riga['__label__'] = ( ! empty( $riga['soprannome'] ) ) ? $riga['soprannome'] : ( ( ! empty( $riga['denominazione'] ) ) ? $riga['denominazione'] : ( trim( implode( ' ', array( $riga['nome'], $riga['cognome'] ) ) ) ) );
             $riga['__label__'] = (
@@ -936,6 +939,16 @@ if( isset( ( $p['metadati'] ) ) && is_array( $p['metadati'] ) ) {
                 'anagrafica_view_static'
             );
 
+        }
+
+        $tCat = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max( timestamp_aggiornamento ) FROM anagrafica_categorie WHERE id_anagrafica = ?',
+            array( array( 's' => $riga['id'] ) )
+        );
+
+        if( $tCat > $riga['timestamp_aggiornamento'] ) {
+            $riga['timestamp_aggiornamento'] = $tCat;
         }
 
     }

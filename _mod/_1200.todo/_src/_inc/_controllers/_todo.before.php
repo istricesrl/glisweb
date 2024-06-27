@@ -33,6 +33,19 @@
                 }
             }
 
+            // ...
+            if( empty( $vs['id_documenti_articoli']['s'] ) ) {
+                if( ! empty( $vs['codice_documenti_articoli']['s'] ) ) {
+
+                    $vs['id_documenti_articoli']['s'] = mysqlSelectValue( $c, 'SELECT id FROM documenti_articoli WHERE codice = ?', array( array( 's' => $vs['codice_documenti_articoli']['s'] ) ) );
+                    if( ! in_array( 'id_documenti_articoli', $ks ) ) { $ks[] = 'id_documenti_articoli'; }
+
+                    unset( $vs['codice_documenti_articoli'] );
+                    removeFromArray( $ks, 'codice_documenti_articoli' );
+
+                }
+            }
+
         break;
 
     }

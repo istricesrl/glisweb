@@ -23,14 +23,16 @@
 					<div class="col">
 						<span class="label-top">anagrafica sorgente (verrà eliminata)</span>
 						{# frm.selectRequired( table, '', '', 'id_sorgente', 'tutte', etc.select.anagrafica, request, '', '','selectpicker' ) #}
-						{{ frm.selectBox( table, '', '', 'id_sorgente', '', '', request, '', '','1','','','','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+						{# frm.selectBox( table, '', '', 'id_sorgente', '', '', request, '', '','1','','','','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) #}
+						{{ frm.selectBox( table, '', '', 'id_sorgente', '', '', '', '', '', 1, '', '', '', '', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
 					</div>
 				</div>
 				<div class="form-row">
 					<div class="col">
 						<span class="label-top">anagrafica destinazione (verrà sovrascritta)</span>
 						{# frm.selectRequired( table, '', '', 'id_destinazione', 'tutte', etc.select.anagrafica, request, '', '','selectpicker' ) #}
-						{{ frm.selectBox( table, '', '', 'id_sorgente', '', '', request, '', '','1','','','','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+						{# frm.selectBox( table, '', '', 'id_sorgente', '', '', request, '', '','1','','','','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) #}
+						{{ frm.selectBox( table, '', '', 'id_destinazione', '', '', '', '', '', 1, '', '', '', '', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
 					</div>
 				</div>
 			</div>

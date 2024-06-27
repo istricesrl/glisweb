@@ -63,6 +63,63 @@
                 }
             }
 
+            // ...
+            if( empty( $vs['id_todo']['s'] ) ) {
+                if( ! empty( $vs['codice_todo']['s'] ) ) {
+
+                    $vs['id_todo']['s'] = mysqlSelectValue( $c, 'SELECT id FROM todo WHERE codice = ?', array( array( 's' => $vs['codice_todo']['s'] ) ) );
+                    if( ! in_array( 'id_todo', $ks ) ) { $ks[] = 'id_todo'; }
+
+                    unset( $vs['codice_todo'] );
+                    removeFromArray( $ks, 'codice_todo' );
+
+                }
+            }
+
+            // ...
+            if( empty( $vs['id_tipologia']['s'] ) ) {
+                if( ! empty( $vs['codice_tipologia']['s'] ) ) {
+
+                    $vs['id_tipologia']['s'] = mysqlSelectValue( $c, 'SELECT id FROM tipologie_attivita WHERE codice = ?', array( array( 's' => $vs['codice_tipologia']['s'] ) ) );
+                    if( ! in_array( 'id_tipologia', $ks ) ) { $ks[] = 'id_tipologia'; }
+
+                    unset( $vs['codice_tipologia'] );
+                    removeFromArray( $ks, 'codice_tipologia' );
+
+                }
+            }
+
+            // ...
+            if( empty( $vs['id_asset']['s'] ) ) {
+                if( ! empty( $vs['codice_asset']['s'] ) ) {
+
+                    $vs['id_asset']['s'] = mysqlSelectValue( $c, 'SELECT id FROM asset WHERE codice = ?', array( array( 's' => $vs['codice_asset']['s'] ) ) );
+                    if( ! in_array( 'id_asset', $ks ) ) { $ks[] = 'id_asset'; }
+
+                    unset( $vs['codice_asset'] );
+                    removeFromArray( $ks, 'codice_asset' );
+
+                }
+            }
+
+            // ...
+            if( empty( $vs['id_anagrafica']['s'] ) ) {
+                if( ! empty( $vs['codice_operatore']['s'] ) ) {
+
+                    $vs['id_anagrafica']['s'] = mysqlSelectValue( $c, 'SELECT id FROM anagrafica WHERE codice = ?', array( array( 's' => $vs['codice_operatore']['s'] ) ) );
+                    if( ! in_array( 'id_anagrafica', $ks ) ) { $ks[] = 'id_anagrafica'; }
+
+                    unset( $vs['codice_operatore'] );
+                    removeFromArray( $ks, 'codice_operatore' );
+
+                } else {
+
+                    unset( $vs['codice_operatore'] );
+                    removeFromArray( $ks, 'codice_operatore' );
+
+                }
+            }
+
         break;
 
 	}
