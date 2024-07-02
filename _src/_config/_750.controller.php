@@ -288,6 +288,8 @@
 
 			    // debug
 				// echo $k . '/' . $_SERVER['REQUEST_METHOD'] . PHP_EOL;
+                // print_r( $_REQUEST );
+                // print_r( $v );
 
                 // parametri aggiuntivi
                 $pi = $ci = array();
@@ -309,6 +311,7 @@
 
 			    // debug
                 // echo $k;
+                // print_r( $v );
 				// print_r( $_SESSION );
 				// print_r( $_REQUEST );
 				// print_r( $_REQUEST['__err__'] );

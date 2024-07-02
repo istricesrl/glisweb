@@ -4,7 +4,7 @@
 	$l = 'it-IT';
 
     // pagina principale
-	$p['fornitura'] = array(
+	$p['condizioni.vendita'] = array(
 	    'sitemap'		=> false,
 	    'title'		    => array( $l		=> 'condizioni di vendita' ),
 	    'h1'		    => array( $l		=> 'condizioni di vendita' ),

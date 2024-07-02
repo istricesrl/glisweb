@@ -36,6 +36,9 @@
 	// print_r( $p['produzione']['etc']['tabs'] );
 	// print_r( $_COOKIE );
 
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
+
     // NOTA a questo punto non hanno ancora girato le macro, quindi le stampe migliori
     // si fanno non da qui ma da /_src/_api/_pages.php
 

@@ -66,37 +66,37 @@
 
         // die( print_r( $ct['page']['contents']['articoli'], true ) );
 
+        $ct['page']['contents']['accessori'] = mysqlQuery( $cf['mysql']['connection'],
+            'SELECT prodotti.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
+            .'contenuti.title, '
+            .'lingue_view.ietf FROM prodotti '
+            .'INNER JOIN relazioni_prodotti ON relazioni_prodotti.id_prodotto_collegato = prodotti.id '
+            .'LEFT JOIN contenuti ON ( contenuti.id_prodotto = prodotti.id AND contenuti.id_lingua = ? ) '
+            .'LEFT JOIN lingue_view ON lingue_view.id = contenuti.id_lingua '
+            .'WHERE relazioni_prodotti.id_prodotto = ? AND relazioni_prodotti.id_ruolo = 4 '
+            .'GROUP BY prodotti.id ORDER BY contenuti.h1 ',
+            array(
+                array( 's' => $cf['localization']['language']['id'] ),
+                array( 's' => $ct['page']['metadati']['id_prodotto'] )
+            )
+        );
+
+        $ct['page']['contents']['suggeriti'] = mysqlQuery( $cf['mysql']['connection'],
+            'SELECT prodotti.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
+            .'contenuti.title, '
+            .'lingue_view.ietf FROM prodotti '
+            .'INNER JOIN relazioni_prodotti ON relazioni_prodotti.id_prodotto_collegato = prodotti.id '
+            .'LEFT JOIN contenuti ON ( contenuti.id_prodotto = prodotti.id AND contenuti.id_lingua = ? ) '
+            .'LEFT JOIN lingue_view ON lingue_view.id = contenuti.id_lingua '
+            .'WHERE relazioni_prodotti.id_prodotto = ? AND relazioni_prodotti.id_ruolo = 3 '
+            .'GROUP BY prodotti.id ORDER BY contenuti.h1 ',
+            array(
+                array( 's' => $cf['localization']['language']['id'] ),
+                array( 's' => $ct['page']['metadati']['id_prodotto'] )
+            )
+        );
+
     }
-
-    $ct['page']['contents']['accessori'] = mysqlQuery( $cf['mysql']['connection'],
-        'SELECT prodotti.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
-        .'contenuti.title, '
-        .'lingue_view.ietf FROM prodotti '
-        .'INNER JOIN relazioni_prodotti ON relazioni_prodotti.id_prodotto_collegato = prodotti.id '
-        .'LEFT JOIN contenuti ON ( contenuti.id_prodotto = prodotti.id AND contenuti.id_lingua = ? ) '
-        .'LEFT JOIN lingue_view ON lingue_view.id = contenuti.id_lingua '
-        .'WHERE relazioni_prodotti.id_prodotto = ? AND relazioni_prodotti.id_ruolo = 4 '
-        .'GROUP BY prodotti.id ORDER BY contenuti.h1 ',
-        array(
-            array( 's' => $cf['localization']['language']['id'] ),
-            array( 's' => $ct['page']['metadati']['id_prodotto'] )
-        )
-    );
-
-    $ct['page']['contents']['suggeriti'] = mysqlQuery( $cf['mysql']['connection'],
-        'SELECT prodotti.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
-        .'contenuti.title, '
-        .'lingue_view.ietf FROM prodotti '
-        .'INNER JOIN relazioni_prodotti ON relazioni_prodotti.id_prodotto_collegato = prodotti.id '
-        .'LEFT JOIN contenuti ON ( contenuti.id_prodotto = prodotti.id AND contenuti.id_lingua = ? ) '
-        .'LEFT JOIN lingue_view ON lingue_view.id = contenuti.id_lingua '
-        .'WHERE relazioni_prodotti.id_prodotto = ? AND relazioni_prodotti.id_ruolo = 3 '
-        .'GROUP BY prodotti.id ORDER BY contenuti.h1 ',
-        array(
-            array( 's' => $cf['localization']['language']['id'] ),
-            array( 's' => $ct['page']['metadati']['id_prodotto'] )
-        )
-    );
 
     // TODO riconciliare questo codice con quello di _src/_inc/_macro/_prodotti.scheda.php
 

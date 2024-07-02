@@ -18,10 +18,23 @@
 			'macro'		=> array( $m . '_src/_inc/_macro/_logistica.documenti.attivi.php' ),
 			'parent'	=> array( 'id'		=> 'logistica' ),
 			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> array( 'logistica.documenti.attivi' ) ),
+			'etc'		=> array( 'tabs'	=> array( 'logistica.documenti.attivi', 'logistica.documenti.attivi.tools' ) ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ciclo attivo' ),
 			'priority'	=> '020' ) ) )	
 		);
+
+        // tools documenti
+        $p['logistica.documenti.attivi.tools'] = array(
+            'sitemap'			=> false,
+            'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+            'title'				=> array( $l		=> 'azioni' ),
+            'h1'				=> array( $l		=> 'azioni' ),
+            'parent'			=> array( 'id'		=> 'logistica.documenti.attivi' ),
+            'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+            'macro'				=> array( $m . '_src/_inc/_macro/_logistica.documenti.attivi.tools.php' ),
+            'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+            'etc'				=> array( 'tabs'	=> $p['logistica.documenti.attivi']['etc']['tabs'] )
+        );
 
 		// dashboard logistica doc. passivi
 		$p['logistica.documenti.passivi'] = array(
@@ -32,9 +45,22 @@
 			'macro'		=> array( $m . '_src/_inc/_macro/_logistica.documenti.passivi.php' ),
 			'parent'	=> array( 'id'		=> 'logistica' ),
 			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> array( 'logistica.documenti.passivi' ) ),
+			'etc'		=> array( 'tabs'	=> array( 'logistica.documenti.passivi', 'logistica.documenti.passivi.tools' ) ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ciclo passivo' ),
 			'priority'	=> '030' ) ) )	
 		);
 
-	}
+        // tools documenti
+        $p['logistica.documenti.passivi.tools'] = array(
+            'sitemap'			=> false,
+            'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+            'title'				=> array( $l		=> 'azioni' ),
+            'h1'				=> array( $l		=> 'azioni' ),
+            'parent'			=> array( 'id'		=> 'logistica.documenti.passivi' ),
+            'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+            'macro'				=> array( $m . '_src/_inc/_macro/_logistica.documenti.passivi.tools.php' ),
+            'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+            'etc'				=> array( 'tabs'	=> $p['logistica.documenti.passivi']['etc']['tabs'] )
+        );
+
+    }

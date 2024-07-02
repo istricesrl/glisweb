@@ -23,7 +23,7 @@
     // print_r( $_COOKIE );
 
     // se è attiva la cache delle pagine
-    if( $cf['cache']['profile']['pages'] === true ) {
+    if( isset( $cf['cache']['profile']['pages'] ) && $cf['cache']['profile']['pages'] === true ) {
 
         // file per la cache della pagina corrente
         $cachefile = DIR_VAR_CACHE_PAGES . md5(

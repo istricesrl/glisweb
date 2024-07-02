@@ -272,5 +272,9 @@
 	    'zone' => array(
 			CONTROL_FULL => array( 'roots' ),
 			CONTROL_FILTERED => array( 'staff' )
+		),
+	    'zone_stati' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
 		)
 	);

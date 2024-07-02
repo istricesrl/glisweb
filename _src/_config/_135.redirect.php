@@ -35,7 +35,7 @@
     // var_dump( $cf['redirect']['index'][ SITE_CURRENT ] );
 
     // esecuzione
-    if( array_key_exists( $cf['uri']['base'], $cf['redirect']['index'][ SITE_CURRENT ] ) ) {
+    if( isset( $cf['redirect']['index'][ SITE_CURRENT ] ) && array_key_exists( $cf['uri']['base'], $cf['redirect']['index'][ SITE_CURRENT ] ) ) {
 
         // oggetto redirect
         $cf['redirect']['found'] = $cf['redirect']['index'][ SITE_CURRENT ][ $cf['uri']['base'] ];

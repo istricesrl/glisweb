@@ -47,7 +47,7 @@
 	$tRef = time() - SESSION_LIMIT;
 
     // verifica tempo di sessione
-	if( $_SESSION['used'] <= $tRef ) {
+	if( isset( $_SESSION['used'] ) && $_SESSION['used'] <= $tRef ) {
 
 	    // logout implicito per timeout
 		$_REQUEST['__logout__'] = true;
@@ -55,10 +55,15 @@
 	    // log
 		logWrite( 'logout implicito per timeout: ' . $_SESSION['used'] . ' <= ' . $tRef, 'session' );
 
-	} else {
+	} elseif( isset( $_SESSION['used'] ) ) {
 
 	    // log
 		logWrite( 'sessione ancora attiva: ' . $_SESSION['used'] . ' > ' . $tRef, 'session' );
+
+	} else {
+
+	    // log
+		// logWrite( 'sessione non configurata', 'session' );
 
 	}
 

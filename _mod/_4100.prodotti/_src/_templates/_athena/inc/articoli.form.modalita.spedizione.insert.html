@@ -1,0 +1,38 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+<fieldset id="{{ view.id }}-insert" class="view-insert hidden">
+    <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
+    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+    <input type="hidden" id="account" name="{{ table }}[id_account_inserimento]" value="{{ account }}" disabled>
+    {{ frm.input( view.open.table, '', '', view.insert.field, '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
+    <div class="form-row d-print-none">
+        <div class="col">
+            <span class="label-top remove-after-duplicate">zona</span>
+            {{ frm.selectBox( view.open.table, '', '', 'id_zona', '', '', '', '', '', '', '', 'font-awesome', '', '', 'zone', 'id_zona', page, pages, ietf, 'zone', 2 ) }}
+        </div>
+        <div class="col-1">
+            <span class="label-top">lotto</span>
+            {{ frm.input( view.open.table, '', '', 'lotto_spedizione', '', '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col-1">
+            <span class="label-top">importo</span>
+            {{ frm.input( view.open.table, '', '', 'importo_netto', '', '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col-12 col-md-auto">
+            <span class="label-top">IVA</span>
+            {{ frm.select( view.open.table, '', '', 'id_iva', '', etc.select.iva, '', '', '', 1, '', '', 2  ) }}
+        </div>
+        <div class="col-1">
+            <span class="label-top">gg. sped.</span>
+            {{ frm.input( view.open.table, '', '', 'giorni_spedizione', '', '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col-1">
+            <span class="label-top">gg. cons.</span>
+            {{ frm.input( view.open.table, '', '', 'giorni_consegna', '', '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col-auto">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>

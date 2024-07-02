@@ -208,6 +208,7 @@
 			$response = $_REQUEST[ $cf['ws']['table'] ];
 
 			// debug
+            // var_dump( $cf['controller']['status'][ $cf['ws']['table'] ] );
 			// die( print_r( $response, true ) );
 
 			// codice di stato HTTP generato in base all'esito delle operazioni del controller
@@ -228,8 +229,12 @@
 			// print_r( $cf['controller'] );
 			// print_r( $_REQUEST['__err__'][ $cf['ws']['table'] ] );
 
-			// genero l'output
-			switch( $cf['ws']['accept'] ) {
+            $ac1 = explode( ';', $cf['ws']['accept'] );
+            $act = explode( ',', $ac1[0] );
+            $ack = $act[0];
+
+            // genero l'output
+			switch( $ack ) {
 				case 'application/json':
 					buildJson( $response );
 				break;

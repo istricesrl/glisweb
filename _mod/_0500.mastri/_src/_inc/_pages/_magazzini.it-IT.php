@@ -42,7 +42,11 @@
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_magazzini.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'magazzini.form', 'magazzini.form.giacenze', 'magazzini.form.movimenti', 'magazzini.form.stampe', 'magazzini.form.tools' ) )
+			'etc'			=> array( 'tabs'	=> array(	'magazzini.form',
+                                                            'magazzini.form.giacenze',
+                                                            'magazzini.form.movimenti',
+                                                            'magazzini.form.stampe',
+                                                            'magazzini.form.tools' ) )
 		);
 
 		// vista giacenze magazzini
@@ -69,4 +73,30 @@
 			'etc'			=> array( 'tabs'	=> $p['magazzini.form']['etc']['tabs'] )
 		);
 
-	}
+        // gestione articoli stampe
+        $p['magazzini.form.stampe'] = array(
+            'sitemap'			=> false,
+            'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+            'title'				=> array( $l		=> 'stampe' ),
+            'h1'				=> array( $l		=> 'stampe' ),
+            'parent'			=> array( 'id'		=> 'magazzini.view' ),
+            'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+            'macro'				=> array( $m . '_src/_inc/_macro/_magazzini.form.stampe.php' ),
+            'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+            'etc'				=> array( 'tabs'	=> $p['magazzini.form']['etc']['tabs'] )
+        );
+
+        // form azioni articoli
+        $p['magazzini.form.tools'] = array(
+            'sitemap'		=> false,
+            'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+            'title'		=> array( $l		=> 'azioni pagina' ),
+            'h1'		=> array( $l		=> 'azioni pagina' ),
+            'parent'		=> array( 'id'		=> 'magazzini.view' ),
+            'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+            'macro'		=> array( $m . '_src/_inc/_macro/_magazzini.form.tools.php' ),
+            'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+            'etc'		=> array( 'tabs'	=> $p['magazzini.form']['etc']['tabs'] )
+        );
+
+    }

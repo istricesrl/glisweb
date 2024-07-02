@@ -143,6 +143,7 @@
         'id'                                    => array( 'tipe' => 'int',      'default' => NULL ),
         // 'id_iva'                             => array( 'tipe' => 'int',      'default' => NULL ),
         'id_listino'                            => array( 'tipe' => 'int',      'default' => 1 ),
+        'id_zona'                               => array( 'tipe' => 'int',      'default' => 1 ),
         'session'                               => array( 'type' => 'string',   'default' => NULL ),
         'destinatario_id_anagrafica'            => array( 'type' => 'string',   'default' => NULL ),
         'destinatario_id_tipologia_anagrafica'  => array( 'type' => 'string',   'default' => NULL ),

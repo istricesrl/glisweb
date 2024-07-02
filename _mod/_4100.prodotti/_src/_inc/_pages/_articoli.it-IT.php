@@ -50,6 +50,7 @@
 #													'articoli.form.sem',
 #													'articoli.form.testo',
 													'articoli.form.prezzi',
+													'articoli.form.spedizioni',
 													'articoli.form.immagini',
 													'articoli.form.video',
 													'articoli.form.audio',
@@ -192,6 +193,18 @@
 	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);
 
+	// gestione articoli prezzi
+	$p['articoli.form.spedizioni'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-truck" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'spedizioni' ),
+	    'h1'		=> array( $l		=> 'spedizioni' ),
+	    'parent'		=> array( 'id'		=> 'articoli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.spedizioni.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.spedizioni.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
 
 	// gestione articoli immagini
 	$p['articoli.form.immagini'] = array(

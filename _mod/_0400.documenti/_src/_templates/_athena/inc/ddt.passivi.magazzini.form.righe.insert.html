@@ -28,6 +28,9 @@
             <span class="label-top remove-after-duplicate">carico su</span>
             {{ frm.selectBox( view.open.table, '', '', 'id_mastro_destinazione', '', etc.select.id_mastri, request, '', '', '', '', 'font-awesome', '', '', '', '', page, pages, ietf, 'magazzini', 2 ) }}
         </div>
+        <div class="col-auto">
+            <button type="button" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="helper_collocazione();"><i class="fa fa-question" style="padding-left:3px;"></i></button>
+        </div>
         <div class="col-1">
             <span class="label-top remove-after-duplicate">quantità</span>
             {{ frm.input( view.open.table, '', '', 'quantita', '', '', '', '', '', '', '', 2 ) }}
@@ -37,3 +40,33 @@
         </div>
     </div>
 </fieldset>
+<script>
+    function helper_collocazione() {
+        // alert( $('#documenti_articoli_id_articolo').val() );
+        // interrogo l'API delle giacenze di magazzino per sapere dove collocare l'articolo
+        $.ajax({
+            url: '/api/0500.mastri/magazzini.collocazioni',
+            type: 'GET',
+            data: {
+                __id__: $('#documenti_articoli_id_articolo').val()
+            },
+            contentType: "application/json",
+            accept: "application/json",
+            dataType: "json",
+            beforeSend: function(data) {
+                console.log(data);
+            },
+            success: function(data) {
+                console.log(data);
+                // recupero l'ID del magazzino di destinazione
+                // var id_mastro_destinazione = data.id_mastro;
+                // imposto il valore del campo id_mastro_destinazione
+                $('#documenti_articoli_id_mastro_destinazione').val(data[0].id_mastro);
+                $('#documenti_articoli_id_mastro_destinazione_inputbox').val(data[0].nome);
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        });
+    }
+</script>

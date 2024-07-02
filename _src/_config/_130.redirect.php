@@ -32,7 +32,9 @@
     // die( __FILE__ );
 
     // inizializzazione array redirect
-    $cf['redirect'] = array();
+    $cf['redirect'] = array(
+        'index' => array()
+    );
 
     // redirect da CSV
     if( file_exists( FILE_REDIRECT ) ) {

@@ -289,10 +289,37 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_zone.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
-		'etc'		=> array( 'tabs'	=> array( 'zone.form') )
-		
+		'etc'		=> array( 'tabs'	=> array(	'zone.form',
+													'zone.form.stati',
+												) )
 	);
-	
+
+	// zone stati
+	$p['zone.form.stati'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'stati' ),
+		'h1'		=> array( $l		=> 'stati' ),
+		'parent'		=> array( 'id'		=> 'zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.form.stati.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_zone.form.stati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> 'zone.form' )
+	);
+
+	// gestione zone
+	$p['zone.stati.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione stati zona' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'zone.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'zone.stati.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_zone.stati.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array(	'zone.stati.form',
+//													'zone.form.stati',
+												) )
+	);
+
 	// vista tipologie zone
 	$p['tipologie.zone.view'] = array(
 		'sitemap'		=> false,
@@ -731,6 +758,32 @@
 		'macro'		=> array( '_src/_inc/_macro/_reparti.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots'  ) ),
 		'etc'		=> array( 'tabs'	=> array( 'reparti.form') )
+		
+	);
+
+	// vista tipologie periodi
+	$p['modalita.spedizione.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'modalità spedizione' ),
+		'h1'		=> array( $l		=> 'modalità spedizione' ),
+		'parent'		=> array( 'id'		=> 'archivio.amministrazione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_modalita.spedizione.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'modalita.spedizione.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+//		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'reparti' ), 'priority'	=> '265' ) ) )
+	);
+
+	// gestione periodi
+	$p['modalita.spedizione.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'modalita.spedizione.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'modalita.spedizione.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_modalita.spedizione.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'modalita.spedizione.form') )
 		
 	);
 

@@ -46,8 +46,8 @@
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
 									'priority'	=> '010' ) ) )	
 	);
-	
-    // gestione categorie prodotti
+
+	// gestione categorie prodotti
 	$p['categorie.prodotti.form'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),

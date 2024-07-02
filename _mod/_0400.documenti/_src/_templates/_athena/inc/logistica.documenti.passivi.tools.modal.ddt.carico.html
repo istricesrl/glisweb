@@ -1,0 +1,90 @@
+{% import '_bin/_form.html' as frm %}
+
+<script>
+    function crea_ddt_carico() {
+    	// var src = $('#_id_sorgente').val();
+    	// var dst = $('#_id_destinazione').val();
+    	// getws('/task/anagrafica.deduplica?src='+src+'&dst='+dst);
+    	// $('#deduplica_anagrafiche').modal('toggle');
+    	// location.reload();
+
+        var id_emittente = $('#id_emittente').val();
+
+        // dati del documento
+        /*
+        var doc = {
+            documenti: {
+                id_tipologia: 4,
+                id_emittente: id_emittente,
+//            id_destinatario: {{ etc.id_azienda }},
+//            sezionale: {{ now|date('Y') }},
+                nome: 'DDT di carico generato automaticamente'
+            }
+        };
+        */
+
+        // creo l'array multidimensionale documenti.id_tipologia
+        var doc = {
+            __method__: "post",
+            id_tipologia: 4,
+            id_emittente: id_emittente,
+            id_destinatario: {{ etc.id_azienda }},
+            sezionale: {{ now|date('Y') }},
+            nome: "DDT di carico generato automaticamente"
+        };
+
+        // invio i dati in formato JSON all'API documenti e recupero l'ID del documento appena creato
+        $.ajax({
+            url: '/api/documenti',
+            type: 'POST',
+            data: JSON.stringify( doc ),
+            contentType: "application/json",
+            accept: "application/json",
+            dataType: "json",
+            beforeSend: function(data) {
+                console.log(data);
+            },
+            success: function(data) {
+
+                console.log(data);
+
+                // recupero l'ID del documento appena creato
+                var id_ddt = data.id;
+
+                // aggiorno la pagina
+                window.open('{{ pages["ddt.passivi.magazzini.form.righe"].path[ localization.language.ietf ] }}?documenti[id]='+id_ddt,'_self');
+
+            },
+            error: function(data) {
+                console.log(data);
+            }
+
+        });
+
+    }
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="crea_ddt_carico">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+		<h5 class="modal-title">crea DDT di carico</h5>
+		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+			<div class="container-fluid">
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">fornitore</span>
+						{{ frm.selectBox( '', '', '', 'id_emittente', '', '', request, '', '','1','','','','','anagrafica', 'id_anagrafica' , page, pages, ietf,'anagrafica' ) }}
+					</div>
+				</div>
+			</div>
+	    </div>
+	    <div class="modal-footer">
+			<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="crea_ddt_carico();">crea</button>
+			<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

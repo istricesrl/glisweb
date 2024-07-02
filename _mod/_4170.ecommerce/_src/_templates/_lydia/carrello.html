@@ -23,8 +23,11 @@
         <div class="col">
             <table class="table">
                 <tr>
-                    <th>articolo</th>                
+                    <th>articolo</th>
                     <th>prezzo</th>
+                    <th>quantita</th>
+                    <th>spedizione</th>
+                    <th>totale</th>
                     <th>note</th>
                     <th></th>
                 </tr>
@@ -37,13 +40,19 @@
                     <td>
                         {{ dati.id_articolo }}
                     </td>
-    
-                    {% if dati.sconto_percentuale %}
-                    <td>€ {{ dati.prezzo_lordo_totale|number_format(2, ',', '.') }}</s>  € {{ dati.prezzo_lordo_finale|number_format(2, ',', '.') }}</td>
-                    {% else %}
+
                     <td>€ {{ dati.prezzo_lordo_totale|number_format(2, ',', '.') }}</td>
-                    {% endif %}
     
+                    <td>{{ dati.quantita }}x</td>
+
+                    <td>€ {{ dati.costo_spedizione_lordo|number_format(2, ',', '.') }}</td>
+
+                    {% if dati.sconto_percentuale %}
+                    <td>€ {{ dati.prezzo_lordo_finale|number_format(2, ',', '.') }}</s>  € {{ dati.prezzo_lordo_finale|number_format(2, ',', '.') }}</td>
+                    {% else %}
+                    <td>€ {{ dati.prezzo_lordo_finale|number_format(2, ',', '.') }}</td>
+                    {% endif %}
+
                     <td>{{ dati.note }}</td>
 
                     <td>
@@ -54,6 +63,9 @@
                 {% endfor %}
                 <tr>
                     <td><b>totale</b></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                     <td><b>€ {% if session.carrello.sconto_percentuale %}{{ session.carrello.prezzo_lordo_totale|number_format(2, ',', '.') }}{% else %}{{ session.carrello.prezzo_lordo_finale|number_format(2, ',', '.') }}{% endif %}</b></td>
                     <td></td>
                     <td></td>
@@ -62,12 +74,14 @@
                 <tr>
                     <td><b>sconto </b></td>
                     <td><b>€ {{ (session.carrello.sconto_percentuale * session.carrello.prezzo_lordo_totale / 100)|number_format(2, ',', '.') }}</b></td>
+                    <td></td>
                     <td><b>{{ session.carrello.note }}</b></td>
                     <td></td>
                 </tr>
                 <tr>
                     <td><b>totale scontato</b></td>
                     <td><b>€ {{ session.carrello.prezzo_lordo_finale|number_format(2, ',', '.') }}</b></td>
+                    <td></td>
                     <td></td>
                     <td></td>
                 </tr>

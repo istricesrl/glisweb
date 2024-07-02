@@ -556,3 +556,14 @@
         return preg_replace( '/[^0-9\.\,]/', '', $string );
 
     }
+
+    /**
+     * 
+     * 
+     * 
+     */
+    function writeCurrency( $v, $c = '€' ) {
+
+        return $c . ' ' . number_format( $v, 2, ',', '.' );
+
+    }

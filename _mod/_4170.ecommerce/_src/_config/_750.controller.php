@@ -59,8 +59,55 @@
         // TODO qui fare il controllo anti spam
         if( $spamCheck === true ) {
 
+            // STEP 1.1 - pre settaggi che impattano sul calcolo dei prezzi e dei costi (zona, listino)
+
+            // zona del carrello
+            // TODO fare meglio, considerare le altre cose che determinano la zona e il set spedizione_*
+            if( isset( $_REQUEST['__carrello__']['intestazione_id_stato'] ) ) {
+                $_SESSION['carrello']['id_zona'] = mysqlSelectCachedValue(
+                    $cf['memcache']['connection'],
+                    $cf['mysql']['connection'],
+                    'SELECT id_zona FROM zone_stati WHERE id_stato = ?',
+                    array( array( 's' => $_REQUEST['__carrello__']['intestazione_id_stato'] ) )
+                );
+            }
+
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
+
+                // SDF controllo e reset eventuale carrello a database associato alla sessione corrente
+                logWrite( 'nessun carrello in sessione per la sessione corrente ' . $_SESSION['id'], 'cart' );
+
+                //  verifico che non sia già presente un carrello nel database con quella sessione
+                $carrelloEsistente = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM carrelli WHERE session = ?',
+                    array( array( 's' => $_SESSION['id'] ) )
+                );
+
+                // se lo trovo, lo resetto
+                if( !empty( $carrelloEsistente ) ){
+
+                    logWrite( 'presente a database il carrello ' . $carrelloEsistente['id'] . ' associato alla sessione ' . $_SESSION['id'] . ', procedo con il reset' , 'cart' );
+
+                    // reset articoli
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'DELETE FROM carrelli_articoli WHERE id_carrello = ?',
+                         array( array( 's' => $carrelloEsistente['id'] ) )
+                    );
+
+                    // reset carrello ( e in automatico vengono rimossi metadati e consensi )
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'DELETE FROM carrelli WHERE id = ?',
+                         array( array( 's' => $carrelloEsistente['id'] ) )
+                    );
+                }
+                else{
+                    logWrite( 'nessun carrello preesistente' , 'cart' );
+                }
+                // FINE SDF
 
                 // inizializzazione dei valori base del carrello
                 foreach( $cf['ecommerce']['fields']['carrello'] as $field => $model ) {
@@ -409,10 +456,31 @@
                             $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] / 100 * $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'];
                         }
 
+                        // calcolo e applico le spese di spedizione nette per riga
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] = calcolaCostoSpedizioneNettoArticolo(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            $dati['id_articolo'],
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'],
+                            $_SESSION['carrello']['id_listino'],
+                            $_SESSION['carrello']['id_zona']
+                        );
+
+                        // calcolo e applico le spese di spedizione lorde per riga
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] = calcolaCostoSpedizioneLordoArticolo(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            $dati['id_articolo'],
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'],
+                            $_SESSION['carrello']['id_listino'],
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
+                            $_SESSION['carrello']['id_zona']
+                        );
+
                         // TODO trovo i prezzi finali
                         // TODO calcolare correttamente lo sconto sul netto
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'];
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'];
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'];
 
                         // aggiorno la riga
                         mysqlInsertRow(
@@ -429,6 +497,8 @@
                                 'prezzo_lordo_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] ),
                                 'prezzo_netto_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] ),
                                 'prezzo_lordo_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] ),
+                                'costo_spedizione_netto'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] ),
+                                'costo_spedizione_lordo'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] ),
                                 'sconto_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ),
                                 'sconto_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ),
                                 'prezzo_netto_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] ),

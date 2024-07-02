@@ -11145,12 +11145,16 @@ CREATE OR REPLACE VIEW zone_stati_view AS
 	SELECT
 		zone_stati.id,
 		zone_stati.id_stato,
+		stati.nome AS stato,
 		zone_stati.id_zona,
+		zone.nome AS zona,
 		zone_stati.ordine,
 		zone_stati.id_account_inserimento,
 		zone_stati.id_account_aggiornamento,
 		concat(zone_stati.id_stato, ' - ', zone_stati.id_zona) AS __label__
 	FROM zone_stati
-; 
+		LEFT JOIN stati ON stati.id = zone_stati.id_stato
+		LEFT JOIN zone ON zone.id = zone_stati.id_zona
+;
 
 -- | FINE FILE
