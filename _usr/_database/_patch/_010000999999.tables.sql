@@ -2097,6 +2097,22 @@ CREATE TABLE IF NOT EXISTS `listini_clienti` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000017490
+
+-- listini_zone
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 18:12 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `listini_zone` (
+  `id` int(11) NOT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000018000
 
 -- luoghi

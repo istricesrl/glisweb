@@ -72,6 +72,14 @@
                 );
             }
 
+            // listino del carrello
+            $_SESSION['carrello']['id_listino'] = mysqlSelectCachedValue(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT coalesce( id_listino, 1 ) FROM listini_zone WHERE id_zona = ?',
+                array( array( 's' => $_SESSION['carrello']['id_zona'] ) )
+            );
+
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
 

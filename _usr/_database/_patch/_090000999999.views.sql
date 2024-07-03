@@ -4945,6 +4945,40 @@ CREATE OR REPLACE VIEW `listini_clienti_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = listini_clienti.id_cliente
 ;
 
+-- | 090000017490
+
+-- listini_zone_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `listini_zone_view`;
+
+-- | 090000017491
+
+-- listini_zone_view
+-- tipologia: tabella gestita
+-- verifica: 2021-09-24 18:20 Fabio Mosti
+CREATE OR REPLACE VIEW `listini_zone_view` AS
+	SELECT
+		listini_zone.id,
+		listini_zone.id_listino,
+		concat( listini.nome, ' ', valute.iso4217 ) AS listino,
+		listini_zone.id_zona,
+		zone.nome AS zona,
+		listini_zone.ordine,
+		listini_zone.id_account_inserimento,
+		listini_zone.id_account_aggiornamento,
+		concat(
+			listini.nome,
+			' ',
+			valute.iso4217,
+			' / ',
+			zone.nome
+		) AS __label__
+	FROM listini_zone
+		LEFT JOIN listini ON listini.id = listini_zone.id_listino
+		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN zone ON zone.id = listini_zone.id_zona
+;
+
 -- | 090000017600
 
 -- livelli_view
