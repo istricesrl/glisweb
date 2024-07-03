@@ -6548,19 +6548,22 @@ DROP TABLE IF EXISTS `prezzi_view`;
 CREATE OR REPLACE VIEW `prezzi_view` AS
 	SELECT
 		prezzi.id,
-		prezzi.id_prodotto,
+		coalesce( prezzi.id_prodotto, articoli.id_prodotto ) AS id_prodotto,
 		prezzi.id_articolo,
+        concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
 		prezzi.fascia,
 		prezzi.qta_min,
 		prezzi.qta_max,
 		prezzi.prezzo,
 		prezzi.id_listino,
 		listini.nome AS listino,
-		valute.iso4217 AS iso4217,
-		valute.utf8 AS utf8,
+		valute.iso4217 AS valuta_iso4217,
+		valute.utf8 AS valuta_utf8,
 		prezzi.id_iva,
 		iva.descrizione AS iva,
 		iva.aliquota AS aliquota,
+        prezzi.data_inizio,
+        prezzi.data_fine,
 		prezzi.id_account_inserimento,
 		prezzi.id_account_aggiornamento,
 		concat_ws(
@@ -6576,6 +6579,8 @@ CREATE OR REPLACE VIEW `prezzi_view` AS
 		LEFT JOIN listini ON listini.id = prezzi.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN iva ON iva.id = prezzi.id_iva
+        LEFT JOIN articoli ON articoli.id = prezzi.id_articolo
+        LEFT JOIN prodotti ON prodotti.id = coalesce( prezzi.id_prodotto, articoli.id_prodotto )
 ;
 
 -- | 090000025500
