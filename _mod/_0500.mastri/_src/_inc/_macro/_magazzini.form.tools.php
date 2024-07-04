@@ -29,7 +29,9 @@
 	if( in_array( "E300.modula", $cf['mods']['active']['array'] ) ) {
 
 		$ct['page']['contents']['metro']['ecommerce'][] = array(
-			'ws' => 'http://localhost/modula?comando=' . $_REQUEST[ $ct['form']['table'] ]['prefisso_modula'] . '|' . time() . '|CALL|' . $_REQUEST[ $ct['form']['table'] ]['codice_modula'] . '|1',
+			'ws' => 'http://localhost:5000/modula',
+            'wsmethod' => 'POST',
+            'wsdata' => '{"comando":"' . $_REQUEST[ $ct['form']['table'] ]['prefisso_modula'] . '|' . time() . '|CALL|' . $_REQUEST[ $ct['form']['table'] ]['codice_modula'] . '|1"}',
 			'callback' => 'aggiornaCarrello',
 			'icon' => NULL,
 			'fa' => 'fa-level-down',

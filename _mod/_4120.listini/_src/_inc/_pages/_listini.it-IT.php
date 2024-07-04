@@ -31,6 +31,7 @@
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'listini.form',
 													'listini.form.prezzi',
+													'listini.form.zone',
 													'listini.form.anagrafiche',
 #													'listini.form.account',
 													'listini.form.gruppi',
@@ -47,6 +48,19 @@
 		'parent'		=> array( 'id'		=> 'listini.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.prezzi.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.prezzi.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
+	);
+
+	// gestione listini gruppi
+	$p['listini.form.zone'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-map-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'zone' ),
+		'h1'		=> array( $l		=> 'zone' ),
+		'parent'		=> array( 'id'		=> 'listini.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.form.zone.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_listini.form.zone.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['listini.form']['etc']['tabs'] )
 	);
@@ -150,6 +164,23 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.clienti.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'listini.clienti.form',
+#													'listini.form.prezzi',
+#													'listini.form.anagrafiche',
+#													'listini.form.account',
+#													'listini.form.gruppi'	
+                                                ) )
+	);
+
+	// gestione listini
+	$p['listini.zone.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione listini zone' ),
+	    'h1'		=> array( $l		=> 'gestione listini zone' ),
+	    'parent'		=> array( 'id'		=> 'listini.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'listini.zone.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_listini.zone.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'listini.zone.form',
 #													'listini.form.prezzi',
 #													'listini.form.anagrafiche',
 #													'listini.form.account',

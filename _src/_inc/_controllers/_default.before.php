@@ -41,7 +41,7 @@
                     }
 
                 // nei numeri sostituisco la , con il .
-                    if(( ! empty( $vVal['s'] ) && is_numeric( $vVal['s'] ) ) ) {
+                    if(( ! empty( $vVal['s'] ) && is_numeric( str_replace( ',', '', $vVal['s'] ) ) ) ) {
                         $vs[ $vKey ]['s'] = str_replace(',','.',$vs[ $vKey ]['s']);
                     }
 		    }

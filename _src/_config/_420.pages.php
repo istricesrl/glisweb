@@ -41,7 +41,11 @@
     // NOTA è una brutta asimmetria, ma giustificata dalla brevità di scrittura?
 
     // collego l'array delle pagine a $ct
+    // TODO obsoleto
 	$ct['pages']				= &$cf['contents']['pages'];
+
+    // TODO buono
+    $ct['contents']				= &$cf['contents'];
 
     // collego la pagina corrente a $ct
 	$ct['page']				= &$cf['contents']['page'];

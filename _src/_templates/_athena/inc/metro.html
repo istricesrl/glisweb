@@ -22,7 +22,7 @@
 	{% if obj.confirm %}
 	<a href="#" onclick="if( confirm('sei sicuro?') ){ $(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});}">
 	{% else %}
-	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
+	<a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %}{% if obj.wsmethod %}, '{{ obj.wsmethod }}' {% endif %}{% if obj.wsdata %}, '{{ obj.wsdata }}' {% endif %});">
 	{% endif %}
 	{% elseif obj.lws %}
 	<a href="#" onclick="$(this).metroLoopWs('{{ obj.host }}{{ obj.lws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">

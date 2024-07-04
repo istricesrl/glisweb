@@ -42,7 +42,7 @@
 
         // settaggi per Memcache
         ini_set( 'session.save_handler', 'memcached' );
-        ini_set( 'session.save_path', 'tcp://'.$cf['memcache']['server']['address'].':'.$cf['memcache']['server']['port'] );
+        ini_set( 'session.save_path', $cf['memcache']['server']['address'].':'.$cf['memcache']['server']['port'] );
         ini_set( 'memcached.sess_locking', 'off' );
 
         // tipo di sessione
@@ -63,3 +63,4 @@
 
     // debug
     // die( ini_get( 'session.save_handler' ) );
+    // die( print_r( $cf['memcache'], true ) );

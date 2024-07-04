@@ -11,21 +11,25 @@
             <div class="form-group form-row">
                 <div class="col-12 col-md">
                     <h3>{{ risultato.id_prodotto }}/{{ risultato.id }} {{ risultato.prodotto }} {{ risultato.nome }}</h3>
-                    <p><i>giacenza in {{ risultato.prefisso_modula }}/{{ risultato.codice_modula }}: {{ risultato.giacenza }}</i></p>
+                    <p><i>{% if risultato.giacenza %}giacenza in {{ risultato.magazzino }}: {{ risultato.giacenza }}{% else %}nessuna giacenza{% endif %}</i></p>
                     {% if risultato.note %}<p>{{ risultato.note }}</p>{% endif %}
                 </div>
+                {% if 'E300.modula' in mods.active.array %}
                 <div class="col-12 col-md-auto">
                     <button onclick="chiama_cassetto('{{ risultato.prefisso_modula }}','{{ risultato.codice_modula}}');" class="btn btn-secondary btn-sm btn-block">richiama</button>
                 </div>
+                {% endif %}
                 <div class="col-1">
                     <input type="text" id="ricerca" class="form-control form-control-sm" id="__aggiungi_{{ loop.index }}__" value="">
                 </div>
                 <div class="col-12 col-md-auto">
                     <button onclick="window.open('{{ pages['ecommerce.carrello'].path[ localization.language.ietf ] }}?__carrello__[__articolo__][id_mastro_provenienza]={{ risultato.id_mastro_provenienza }}&__carrello__[__articolo__][id_articolo]={{ risultato.id }}&__carrello__[__articolo__][quantita]='+$('#__aggiungi_{{ loop.index }}__').val(),'_self');" class="btn btn-secondary btn-sm btn-block">aggiungi</button>
                 </div>
+                {% if 'E300.modula' in mods.active.array %}
                 <div class="col-12 col-md-auto">
                     <button onclick="aggiungi_al_carrello('{{ risultato.prefisso_modula }}','{{ risultato.id_mastro_provenienza }}','{{ risultato.id }}',$('#__aggiungi_{{ loop.index }}__').val());" class="btn btn-secondary btn-sm btn-block">aggiungi e chiudi</button>
                 </div>
+                {% endif %}
             </div>
             {% else %}
             <p>prova a inserire dei termini differenti o più generici per ottenere risultati</p>

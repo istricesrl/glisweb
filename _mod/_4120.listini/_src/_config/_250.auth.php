@@ -27,6 +27,10 @@ $cf['auth']['permissions'] = array_merge_recursive(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
         ),
+        'listini_zone' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
         'listini_gruppi' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')

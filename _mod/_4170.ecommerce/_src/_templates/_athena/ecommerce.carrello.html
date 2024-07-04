@@ -18,10 +18,10 @@
                         <tr>
                             <th>codice</th>
                             <th>descrizione</th>
-                            <th>sc. %</th>
-                            <th>sc. €</th>
-                            <th>q.tà</th>
-                            <th>prezzo</th>
+                            <th class="text-right">sc. %</th>
+                            <th class="text-right">sc. €</th>
+                            <th class="text-right">q.tà</th>
+                            <th class="text-right">prezzo</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -32,12 +32,12 @@
                         <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][destinatario_id_anagrafica]" value="{{ dati.destinatario_id_anagrafica }}">
                         <tr class="articolo">
                             <td><span class="id-articolo">{{ dati.id_articolo }}</span></td>
-                            <td><span class="descrizione">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></td>
+                            <td><span class="descrizione nowrap">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></td>
                             <td><input class="form-control form-control-sm text-right" type="text" id="scperc{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_percentuale]" value="{{ '%0.2f'|format(dati.sconto_percentuale) }}"></td>
                             <td><input class="form-control form-control-sm text-right" type="text" id="scval{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_valore]" value="{{ '%0.2f'|format(dati.sconto_valore) }}"></td>
                             <td><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></td>
-                            <td>{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
-                            <td><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
+                            <td class="text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
+                            <td class="text-right"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
                         </tr>
                         {% endfor %}
                         <tr>
@@ -45,19 +45,17 @@
                             <td><input class="form-control form-control-sm text-right quantita" type="text" id="coupon" name="__carrello__[codice_coupon]" value="{{ session.carrello.codice_coupon }}"></td>
                             <td>{% if session.carrello.sconto_percentuale_coupon %}{{ '%0.2f'|format(session.carrello.sconto_percentuale_coupon) }}%{% else %}-{% endif %}</td>
                             <td>{% if session.carrello.sconto_valore_coupon %}{{ '%0.2f'|format(session.carrello.sconto_valore_coupon) }} {{ session.carrello.valuta_utf8 }}{% endif %}</td>
-                            <td>{% if session.carrello.codice_coupon %}<input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#coupon').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">{% endif %}</td>
+                            <td></td>
+                            <td></td>
+                            <td class="text-right">{% if session.carrello.codice_coupon %}<input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#coupon').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">{% endif %}</td>
                         </tr>
                     </tbody>
 
                     <tfoot>
                         <tr>
-                            <td>totale generale</td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td></td>
-                            <td>{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
-                            <td><input class="btn btn-secondary btn-sm" type="button" value="ricalcola" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
+                            <td class="text-right" colspan="5">totale generale</td>
+                            <td class="nowrap text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
+                            <td class="text-right"><input class="btn btn-secondary btn-sm" type="button" value="ricalcola" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
                         </tr>
                     </tfoot>
 

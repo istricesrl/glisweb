@@ -17,6 +17,12 @@
      *
      */
 
+    // debug
+    // print_r( $cf['debug'] );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
+    // echo 'OUTPUT';
+
     // costante per la durata massima della sessione
     if( ! defined( 'SESSION_LIMIT' ) ) {
         define( 'SESSION_LIMIT', 3600 );
@@ -56,6 +62,9 @@
 
         // log
         logger( 'impossibile avviare la sessione', 'session', LOG_CRIT );
+
+        // errore
+        die( 'impossibile avviare la sessione' );
 
     }
 

@@ -41,11 +41,69 @@
      *
      * @todo documentare
      *
-     */
-    function calcolaPrezzoNettoArticolo( $m, $c, $a, $l, $t = MEMCACHE_DEFAULT_TTL ) {
+    function calcolaPrezzoNettoArticolo( $m, $c, $a, $l, $r = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
+
+        // il prodotto dell'articolo
+        $p = mysqlSelectCachedValue(
+            $m,
+            $c,
+            'SELECT id_prodotto FROM articoli WHERE id = ?',
+            array(
+                array( 's' => $a )
+            )
+        );
+
+        // debug
+        // die( 'ID prodotto: ' . $p );
+
+        // calcolo la quantità rilevante
+        if( $r !== NULL ) {
+
+            // la quantità del singolo articolo nel carrello
+            $q1 = mysqlSelectValue(
+                $c,
+                'SELECT quantita FROM carrelli_articoli WHERE id_articolo = ? AND id_carrello = ?',
+                array(
+                    array( 's' => $a ),
+                    array( 's' => $r )
+                )
+            );
+
+            // debug
+            // die( 'quantità articolo: ' . $q1 );
+
+            // la quantità del prodotto nel carrello
+            $q2 = mysqlSelectValue(
+                $c,
+                'SELECT sum( carrelli_articoli.quantita ) ù
+                FROM carrelli_articoli
+                INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
+                WHERE articoli.id_prodotto = ? AND carrelli_articoli.id_carrello = ?',
+                array(
+                    array( 's' => $p ),
+                    array( 's' => $r )
+                )
+            );
+
+            // debug
+            // die( 'quantità prodotto: ' . $q2 );
+
+            // TODO quantità per gruppo di prodotti
+
+            // la quantità $q è il valore più alto fra $q1 e $q2
+            $q = max( $q1, $q2 );
+
+        } else {
+
+            $q = 1;
+
+        }
+
+        // debug
+        // die( 'quantità: ' . $q );
 
         // calcolo la chiave della query
-        $k = md5( PRICES_DATA . $a . $l );
+        $k = md5( PRICES_DATA . $a . $l . $q );
 
         // cerco il valore in cache
         $r = memcacheRead( $m, $k );
@@ -53,23 +111,53 @@
         // se il valore non è stato trovato
         if( empty( $r ) || $t === false ) {
 
-            // recupero il prezzo
-            $r = mysqlSelectValue(
-                $c,
-                'SELECT coalesce( p1.prezzo, p2.prezzo, 0.0 ) '.
-                'FROM articoli '.
-                'LEFT JOIN prezzi AS p1 ON ( p1.id_listino = ? AND p1.id_articolo = articoli.id ) '.
-                'LEFT JOIN prezzi AS p2 ON ( p2.id_listino = ? AND p2.id_prodotto = articoli.id_prodotto ) '.
-                'WHERE articoli.id = ? ',
+            // trovo il prezzo per l'articolo
+            $p1 = mysqlSelectCachedValue( $m, $c,
+                'SELECT prezzo 
+                FROM prezzi 
+                WHERE id_articolo = ? 
+                AND id_listino = ?
+                AND ( qta_min IS NULL OR qta_min <= ? )
+                AND data_inizio <= NOW() OR data_inizio IS NULL',
                 array(
+                    array( 's' => $a ),
                     array( 's' => $l ),
-                    array( 's' => $l ),
-                    array( 's' => $a )
+                    array( 's' => $q )
                 )
             );
 
+            // debug
+            // die( 'prezzo articolo: ' . $p1 );
+
+            // trovo il prezzo per il prodotto
+            $p2 = mysqlSelectCachedValue( $m, $c,
+                'SELECT prezzo 
+                FROM prezzi 
+                WHERE id_prodotto = ? 
+                AND id_listino = ?
+                AND ( qta_min IS NULL OR qta_min <= ? )
+                AND data_inizio <= NOW() OR data_inizio IS NULL',
+                array(
+                    array( 's' => $p ),
+                    array( 's' => $l ),
+                    array( 's' => $q )
+                )
+            );
+
+            // debug
+            // die( 'prezzo prodotto: ' . $p2 );
+
             // calcolo le variazioni
             // TODO
+
+            // calcolo il prezzo
+            if( ! empty( $p1 ) && $p1 < $p2 ) {
+                $r = $p1;
+            } elseif( ! empty( $p2 ) ) {
+                $r = $p2;
+            } else {
+                $r = 0.0;
+            }
 
             // salvo il risultato in cache
             memcacheWrite( $m, $k, $r, $t );
@@ -85,16 +173,76 @@
         return $r;
 
     }
+     */
 
     /**
      *
      * @todo documentare
      *
-     */
-    function calcolaPrezzoLordoArticolo( $m, $c, $a, $l, $i, $t = MEMCACHE_DEFAULT_TTL ) {
+    function calcolaPrezzoLordoArticolo( $m, $c, $a, $l, $i, $r = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
+
+        // il prodotto dell'articolo
+        $p = mysqlSelectCachedValue(
+            $m,
+            $c,
+            'SELECT id_prodotto FROM articoli WHERE id = ?',
+            array(
+                array( 's' => $a )
+            )
+        );
+
+        // debug
+        // die( 'ID prodotto: ' . $p );
+        // die( 'ID carrello: ' . $r );
+
+        // calcolo la quantità rilevante
+        if( $r !== NULL ) {
+
+            // la quantità del singolo articolo nel carrello
+            $q1 = mysqlSelectValue(
+                $c,
+                'SELECT quantita FROM carrelli_articoli WHERE id_articolo = ? AND id_carrello = ?',
+                array(
+                    array( 's' => $a ),
+                    array( 's' => $r )
+                )
+            );
+
+            // debug
+            // die( 'quantità articolo: ' . $q1 );
+
+            // la quantità del prodotto nel carrello
+            $q2 = mysqlSelectValue(
+                $c,
+                'SELECT sum( carrelli_articoli.quantita )
+                FROM carrelli_articoli
+                INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
+                WHERE articoli.id_prodotto = ? AND carrelli_articoli.id_carrello = ?',
+                array(
+                    array( 's' => $p ),
+                    array( 's' => $r )
+                )
+            );
+
+            // debug
+            // die( 'quantità prodotto: ' . $q2 );
+
+            // TODO quantità per gruppo di prodotti
+
+            // la quantità $q è il valore più alto fra $q1 e $q2
+            $q = max( $q1, $q2 );
+
+        } else {
+
+            $q = 1;
+
+        }
+
+        // debug
+        // die( 'quantità: ' . $q );
 
         // calcolo la chiave della query
-        $k = md5( PRICES_DATA . $a . $l . $i );
+        $k = md5( PRICES_DATA . $a . $l . $i . $q );
 
         // cerco il valore in cache
         $r = memcacheRead( $m, $k );
@@ -103,7 +251,7 @@
         if( empty( $r ) || $t === false ) {
 
             // recupero il prezzo
-            $n = calcolaPrezzoNettoArticolo( $m, $c, $a, $l );
+            $n = calcolaPrezzoNettoArticolo( $m, $c, $a, $l, $r );
 
             // recupero l'aliquota
             $v = mysqlSelectCachedValue( $m, $c, 'SELECT aliquota FROM iva WHERE id = ?', array( array( 's' => $i ) ) );
@@ -115,6 +263,195 @@
 
             // log
             logWrite( 'prezzo di ' . $a . ' letto dalla cache', 'speed' );
+
+        }
+
+        // restituisco il risultato
+        return $r;
+
+    }
+     */
+
+
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function calcolaPrezzoNettoArticolo( $m, $c, $a, $l, $qa = 1, $qp = 1, $date = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
+
+        // debug
+        // die( 'listino: ' . $l );
+
+        // data di riferimento
+        $date = empty( $date ) ? date( 'Y-m-d' ) : $date;
+
+        // calcolo la chiave della query
+        $k = md5( PRICES_DATA . $a . $l . $qa . $qp . $date );
+
+        // cerco il valore in cache
+        $r = memcacheRead( $m, $k );
+
+        // se il valore non è stato trovato
+        if( empty( $r ) || $t === false ) {
+
+            // il prodotto dell'articolo
+            $p = mysqlSelectCachedValue( $m, $c,
+                'SELECT id_prodotto FROM articoli WHERE id = ?',
+                array(
+                    array( 's' => $a )
+                )
+            );
+
+            // trovo il prezzo per il prodotto
+            $p1 = mysqlSelectCachedValue( $m, $c,
+                'SELECT prezzo 
+                FROM prezzi 
+                WHERE id_prodotto = ? 
+                AND id_listino = ?
+                AND ( qta_min IS NULL OR qta_min <= ? )
+                AND ( data_inizio IS NULL OR data_inizio <= ? )
+                ORDER BY data_inizio DESC, qta_min DESC',
+                array(
+                    array( 's' => $p ),
+                    array( 's' => $l ),
+                    array( 's' => $qp ),
+                    array( 's' => $date )
+                )
+            );
+
+            // trovo il prezzo per l'articolo
+            $p2 = mysqlSelectCachedValue( $m, $c,
+                'SELECT prezzo  
+                FROM prezzi 
+                WHERE id_articolo = ? 
+                AND id_listino = ?
+                AND ( qta_min IS NULL OR qta_min <= ? )
+                AND ( data_inizio IS NULL OR data_inizio <= ? )
+                ORDER BY data_inizio DESC, qta_min DESC',
+                array(
+                    array( 's' => $a ),
+                    array( 's' => $l ),
+                    array( 's' => $qa ),
+                    array( 's' => $date )
+                )
+            );
+
+            // trovo il prezzo
+            $r = ( ! empty( $p2 ) && ( empty( $p1 ) || $p2 < $p1 ) ) ? $p2 : $p1;
+
+            // log
+            logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ' e ' . $p2 . ' scelgo ' . $r, 'listini' );
+
+            // calcolo le variazioni
+            // TODO
+
+            // salvo il risultato in cache
+            memcacheWrite( $m, $k, $r, $t );
+
+        } else {
+
+            // log
+            logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') ho recuperato dalla cache il prezzo ' . $r, 'listini' );
+
+        }
+
+        // restituisco il risultato
+        return $r;
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function calcolaPrezzoLordoArticolo( $m, $c, $a, $l, $i, $qa = 1, $qp = 1, $date = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
+
+        // debug
+        // die( 'listino: ' . $l . ' aliquota: ' . $i );
+
+        // data di riferimento
+        $date = empty( $date ) ? date( 'Y-m-d' ) : $date;
+
+        // calcolo la chiave della query
+        $k = md5( PRICES_DATA . 'L' . $a . $l . $i . $qa . $qp . $date );
+
+        // cerco il valore in cache
+        $r = memcacheRead( $m, $k );
+
+        // se il valore non è stato trovato
+        if( empty( $r ) || $t === false ) {
+
+            // il prodotto dell'articolo
+            $p = mysqlSelectCachedValue( $m, $c,
+                'SELECT id_prodotto FROM articoli WHERE id = ?',
+                array(
+                    array( 's' => $a )
+                )
+            );
+
+            // trovo il prezzo per il prodotto
+            $p1 = mysqlSelectCachedRow( $m, $c,
+                'SELECT prezzo, id_iva 
+                FROM prezzi 
+                WHERE id_prodotto = ? 
+                AND id_listino = ?
+                AND ( qta_min IS NULL OR qta_min <= ? )
+                AND ( data_inizio IS NULL OR data_inizio <= ? )
+                ORDER BY data_inizio DESC, qta_min DESC',
+                array(
+                    array( 's' => $p ),
+                    array( 's' => $l ),
+                    array( 's' => $qp ),
+                    array( 's' => $date )
+                )
+            );
+
+            // trovo il prezzo per l'articolo
+            $p2 = mysqlSelectCachedRow( $m, $c,
+                'SELECT prezzo, id_iva  
+                FROM prezzi 
+                WHERE id_articolo = ? 
+                AND id_listino = ?
+                AND ( qta_min IS NULL OR qta_min <= ? )
+                AND ( data_inizio IS NULL OR data_inizio <= ? )
+                ORDER BY data_inizio DESC, qta_min DESC',
+                array(
+                    array( 's' => $a ),
+                    array( 's' => $l ),
+                    array( 's' => $qa ),
+                    array( 's' => $date )
+                )
+            );
+
+            // trovo il prezzo
+            $r = ( ! empty( $p2['prezzo'] ) && ( empty( $p1['prezzo'] ) || $p2['prezzo'] < $p1['prezzo'] ) ) ? $p2['prezzo'] : $p1['prezzo'];
+            $i = ( ! empty( $i ) ) ? $i : ( ( ! empty( $p2['prezzo'] ) && ( empty( $p1['prezzo'] ) || $p2['prezzo'] < $p1['prezzo'] ) ) ? $p2['id_iva'] : $p1['id_iva'] );
+
+            // debug
+            // die( 'prezzo: ' . $r . ' aliquota: ' . $i );
+
+            // recupero l'aliquota
+            $v = mysqlSelectCachedValue( $m, $c, 'SELECT aliquota FROM iva WHERE id = ?', array( array( 's' => $i ) ) );
+
+            // calcolo il lordo
+            $r = $r + ( $r / 100 * $v );
+
+            // log
+            logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ' e ' . $p2 . ' scelgo ' . $r, 'listini' );
+
+            // calcolo le variazioni
+            // TODO
+
+            // salvo il risultato in cache
+            memcacheWrite( $m, $k, $r, $t );
+
+        } else {
+
+            // log
+            logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') ho recuperato dalla cache il prezzo ' . $r, 'listini' );
 
         }
 

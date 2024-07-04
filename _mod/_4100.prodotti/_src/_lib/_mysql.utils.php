@@ -3,7 +3,8 @@
 function aggiungiPrezzi( &$p, $id, $f ) {
 
     global $cf;
-    
+
+    /*
     $prezzi['prodotto'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT prezzi_view.*, iva.aliquota, '
@@ -33,6 +34,8 @@ function aggiungiPrezzi( &$p, $id, $f ) {
     // TODO l'array dei prezzi va sotto contents, la chiave dev'essere il nome del listino, il prezzo del prodotto
     // dev'essere il prezzo dell'articolo più alto, tenere conto di eventuali listini associati all'account connesso
 
+    // TODO supportare la data_inizio dei prezzi
+*/
 /*
 
 VEDI COME SONO GESTITI I PREZZI DEGLI ARTICOLI NELLA PAGINA PRODOTTO:
@@ -109,7 +112,7 @@ Array
 #                    $p['metadati'],
 #                    metadati2associativeArray( $mta )
 #                );
-
+/*
         if( isset( ( $p['prezzi'] ) ) && is_array( $p['prezzi'] ) ) {
 
             $p['prezzi'] = array_replace_recursive(
@@ -122,6 +125,29 @@ Array
             $p['prezzi'] = $prezzi;
 
         }
+*/
+
+            $prezzi['prodotto'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT prezzi_view.*, iva.aliquota,
+                ( prezzi_view.prezzo * ( ( iva.aliquota + 100 ) / 100 ) ) AS prezzo_lordo
+                FROM prezzi_view
+                LEFT JOIN iva ON iva.id = prezzi_view.id_iva
+                WHERE prezzi_view.' . $f . ' = ? 
+                -- AND prezzi_view.data_inizio <= now()
+                ORDER BY prezzi_view.prezzo ASC',
+                array( array( 's' => $id ) )
+            );
+
+            foreach( $prezzi as $ambito => $dettaglio ) {
+
+                foreach( $dettaglio as $prezzo ) {
+
+                    $p['prezzi'][ $ambito ][ $prezzo['listino'] ] = $prezzo;
+
+                }
+
+            }
 
 #        }
 

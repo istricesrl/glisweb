@@ -9,6 +9,8 @@
     // debug
     // print_r( $_REQUEST['__pagamenti__'] );
     // print_r( $_REQUEST['__carrello__'] );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
 
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
@@ -274,7 +276,7 @@
                                 'id_rinnovo' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] : NULL,
                                 'destinatario_id_anagrafica' => ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL,
                                 'id_mastro_provenienza' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_mastro_provenienza'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_mastro_provenienza'] : NULL,
-                                'id_iva' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_iva'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_iva'] : 1,
+                                'id_iva' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_iva'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_iva'] : NULL,
                                 // 'sconto_percentuale' => 0,
                                 // 'sconto_valore' => 0
                             )
@@ -418,42 +420,43 @@
 
                         // trovo la descrizione dell'articolo
                         $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'] = implode( ' / ',
-                            array(
-                                mysqlSelectCachedValue(
-                                    $cf['memcache']['connection'],
-                                    $cf['mysql']['connection'],
-                                    'SELECT __label__ FROM anagrafica_view WHERE id = ?',
-                                    array(
-                                        array( 's' => $dati['destinatario_id_anagrafica'] )
-                                    )
-                                ),
-                                mysqlSelectCachedValue(
-                                    $cf['memcache']['connection'],
-                                    $cf['mysql']['connection'],
-                                    'SELECT nome FROM articoli_view WHERE id = ?',
-                                    array(
-                                        array( 's' => $dati['id_articolo'] )
+                            trimArray(
+                                array(
+                                    mysqlSelectCachedValue(
+                                        $cf['memcache']['connection'],
+                                        $cf['mysql']['connection'],
+                                        'SELECT __label__ FROM anagrafica_view WHERE id = ?',
+                                        array(
+                                            array( 's' => $dati['destinatario_id_anagrafica'] )
+                                        )
+                                    ),
+                                    mysqlSelectCachedValue(
+                                        $cf['memcache']['connection'],
+                                        $cf['mysql']['connection'],
+                                        'SELECT nome FROM articoli_view WHERE id = ?',
+                                        array(
+                                            array( 's' => $dati['id_articolo'] )
+                                        )
                                     )
                                 )
                             )
                         );
 
                         // trovo il prezzo base dell'articolo
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticolo(
-                            $cf['memcache']['connection'],
-                            $cf['mysql']['connection'],
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticoloCarrello(
                             $dati['id_articolo'],
-                            $_SESSION['carrello']['id_listino']
+                            $_SESSION['carrello']
                         );
 
                         // trovo il prezzo lordo dell'articolo
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] = calcolaPrezzoLordoArticolo(
-                            $cf['memcache']['connection'],
-                            $cf['mysql']['connection'],
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] = calcolaPrezzoLordoArticoloCarrello(
                             $dati['id_articolo'],
-                            $_SESSION['carrello']['id_listino'],
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva']
+                            $_SESSION['carrello'],
+                            $rowKey
                         );
+
+                        // debug
+                        // die( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] );
 
                         // trovo i prezzi totali
                         $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] * $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'];

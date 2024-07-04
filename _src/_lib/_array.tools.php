@@ -264,7 +264,7 @@
      * @return      array                   l'array ripulito
      * 
      */
-    function trimArray( &$ar, $limit = 0 ) {
+    function trimArray( $ar, $limit = 0 ) {
         $ar = array_map( 'strval', $ar ); #elimina i null
         $ar = array_map( 'trim', $ar );
         $ar = array_filter( $ar );

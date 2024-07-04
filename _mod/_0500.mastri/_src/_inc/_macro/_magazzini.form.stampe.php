@@ -53,13 +53,13 @@
 	    );
 */
 
-    $ct['page']['contents']['metro']['general'][] = array(
+    $ct['page']['contents']['metro']['stampe'][] = array(
         'target' => '_blank' ,
-        'url' => 'print/0500.mastri/?articolo='.$_REQUEST[ $ct['form']['table'] ]['id'] ,
+        'url' => '/print/0500.mastri/etichette.articoli.57x26.pdf?mastro='.$_REQUEST[ $ct['form']['table'] ]['id'] ,
         'icon' => NULL,
         'fa' => 'fa-file-pdf-o',
-        'title' => 'cartellini vetrina',
-        'text' => 'stampa l\'etichetta prezzo di tutti gli articoli in pdf'
+        'title' => 'stampa etichette 57x26',
+        'text' => 'stampa le etichette di tutti gli articoli presenti nel magazzino'
     );
 
     // macro di default per l'entità anagrafica

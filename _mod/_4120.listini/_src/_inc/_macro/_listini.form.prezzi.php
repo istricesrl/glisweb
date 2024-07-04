@@ -27,23 +27,26 @@
 
     // campi della vista
 	$ct['view']['cols'] = array(
-	    'id' => '#',
+        'id' => '#',
+        'id_listino' => 'ID listino',
+        'listino' => 'listino',
         'id_prodotto' => 'prodotto',
-	    'id_articolo' => 'articolo',
-        'fascia' => 'fascia',
-        'qta_min' => 'q.tà min.',
-        'qta_max' => 'q.tà max.',
+        'id_articolo' => 'articolo',
+        'articolo' => 'descrizione',
         'prezzo' => 'prezzo',
-        'iso4217' => 'valuta',
-        'iva' => 'iva'
+        'valuta_utf8' => 'valuta',
+        'qta_min' => 'q.tà min',
+        'qta_max' => 'q.tà max',
+	    'data_inizio' => 'valido_dal'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'id' => 'text-left',
-	    'iva' => 'text-left',
+	    '__label__' => 'text-left',
+        'id' => 'd-none',
+        'valuta_utf8' => 'd-none', 
         'prezzo' => 'text-right',
-//        'id_prodotto' => 'd-none'
+        'articolo' => 'text-left',
 	);
 
     // pagina per la gestione degli oggetti esistenti
@@ -65,3 +68,10 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // elaborazione risultato
+    foreach( $ct['view']['data'] as &$row ) {
+        if( is_array( $row ) ) {
+            $row['prezzo'] = number_format( $row['prezzo'], 2, ',', '.' ) . ' ' . $row['valuta_utf8'];
+        }
+    }

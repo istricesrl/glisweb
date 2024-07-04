@@ -39,10 +39,10 @@
         // die( print_r( $etichette, true ) );
 
         // ...
-        $fntSizeCodice = ( strlen( $codice ) < 8 ) ? 20 : ( ( strlen( $codice ) < 11 ) ? 14 : 12 );
+        $fntSizeCodice = ( strlen( $codice ) < 12 ) ? 22 : ( ( strlen( $codice ) < 16 ) ? 16 : 14 );
 
         // creazione del PDF
-        $pdf = new TCPDF( 'L', 'mm', array( 57, 32 ) );						// portrait, millimetri, A4 (x->210 y->297)
+        $pdf = new TCPDF( 'L', 'mm', array( 57, 26 ) );						// portrait, millimetri, A4 (x->210 y->297)
 
         // rimozione di header e footer
         $pdf->SetPrintHeader( false );							// se stampare l'header
@@ -72,18 +72,17 @@
             $pdf->image( DIR_BASE . 'var/contenuti/logo_Eurosnodi.png', 22.5, 13, 12, 12, NULL, NULL, 'T', false, 300, '', false, false, 1, true );
 
             // codice
-            $pdf-> setXY( 24, 2 );
+            $pdf-> setXY( 3, 2 );
             $pdf->setTextColor( 0, 0, 0 );
             $pdf->SetFillColor(  255, 255, 255 );
             $pdf -> SetFont( 'helvetica', 'B', $fntSizeCodice );
-            $pdf-> Cell( 30, 10, strtoupper( $etichetta['id_articolo'] ), '','', 'R', 1 );
+            $pdf-> Cell( 50, 10, strtoupper( $etichetta['id_articolo'] ), '','', 'C', 1 );
 
             // descrizione
-            $pdf->setXY( 10, 10 );
             $pdf->setTextColor( 0, 0, 0 );
             $pdf->SetFillColor(  255, 255, 255 );
             $pdf->SetFont( 'helvetica', 'B', 9 );
-            $pdf->MultiCell( 48, 8, $etichetta['articolo'], 0, 'L', 0, 0, 3, 0, true, 0, false, true, 32, 'M' );
+            $pdf->MultiCell( 48, 4, trim( $etichetta['articolo'] ), 0, 'C', 0, 0, 3, 12, true, 0, false, true, 0, 'M' );
 
             // etichetta quantità
             // $pdf-> setXY( 34, 14 );
@@ -100,11 +99,11 @@
             // $pdf-> Cell( 20, 7, strtoupper( $_REQUEST['__etichette__']['quantita'] ), '','', 'R', 1 );
 
             // data
-            $pdf-> setXY( 3, 22 );
-            $pdf->setTextColor( 0, 0, 0 );
-            $pdf->SetFillColor(  255, 255, 255 );
-            $pdf -> SetFont( 'helvetica', '', 9 );
-            $pdf-> Cell( 25, 8, date( 'd/m/Y' ), '','', 'L', 1 );
+            // $pdf-> setXY( 3, 22 );
+            // $pdf->setTextColor( 0, 0, 0 );
+            // $pdf->SetFillColor(  255, 255, 255 );
+            // $pdf -> SetFont( 'helvetica', '', 9 );
+            // $pdf-> Cell( 25, 8, date( 'd/m/Y' ), '','', 'L', 1 );
 
         }
 
