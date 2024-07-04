@@ -276,5 +276,10 @@
 	    'zone_stati' => array(
 			CONTROL_FULL => array( 'roots' ),
 			CONTROL_FILTERED => array( 'staff' )
+		),
+	    '__report_documenti_carrelli__' => array(
+			CONTROL_FULL => array( 'roots' ),
+			CONTROL_FILTERED => array( 'staff' )
 		)
 	);
+ 

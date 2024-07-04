@@ -50,6 +50,52 @@ CREATE TABLE `__report_ore_progetti_tipologie_mastri__` (
   KEY `id_job` (`id_job`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
+-- | 100000003100
+
+-- __report_documenti_carrelli__
+
+CREATE OR REPLACE VIEW `__report_documenti_carrelli__` AS
+SELECT
+carrelli_articoli.id,
+carrelli_articoli.id_carrello,
+articoli.id_prodotto,
+carrelli_articoli.id_articolo,
+carrelli_articoli.id_rinnovo,
+tipologie_contratti.nome AS tipologia_contratto,
+carrelli_articoli.destinatario_id_anagrafica,
+concat_ws( ' ', a1.nome, a1.cognome ) AS anagrafica,
+carrelli_articoli.prezzo_lordo_finale,
+coalesce( sum( p1.importo_lordo_totale ), 0.0 ) AS pagato,
+coalesce( sum( p2.importo_lordo_totale ), 0.0 ) AS rateizzato,
+coalesce( sum( p3.importo_lordo_totale ), 0.0 ) AS scaduto,
+(
+    carrelli_articoli.prezzo_lordo_finale
+    -
+    (
+        coalesce( sum( p1.importo_lordo_totale ), 0.0 )
+        +
+        coalesce( sum( p2.importo_lordo_totale ), 0.0 )
+    )
+) AS sospeso,
+from_unixtime( carrelli.timestamp_checkout, "%Y-%m-%d" ) AS data_acquisto
+FROM carrelli_articoli
+INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello
+INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
+INNER JOIN anagrafica AS a1 ON a1.id = carrelli_articoli.destinatario_id_anagrafica
+LEFT JOIN pagamenti AS p1 ON p1.id_carrelli_articoli = carrelli_articoli.id AND p1.timestamp_pagamento IS NOT NULL
+LEFT JOIN pagamenti AS p2 ON p2.id_carrelli_articoli = carrelli_articoli.id AND p2.timestamp_pagamento IS NULL AND p2.data_scadenza >= date_format( now(), '%Y-%m-%d' )
+LEFT JOIN pagamenti AS p3 ON p3.id_carrelli_articoli = carrelli_articoli.id AND p3.timestamp_pagamento IS NULL AND p3.data_scadenza < date_format( now(), '%Y-%m-%d' )
+LEFT JOIN rinnovi ON rinnovi.id = carrelli_articoli.id_rinnovo
+LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto
+LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+WHERE carrelli.timestamp_checkout IS NOT NULL
+GROUP BY carrelli_articoli.id
+ORDER BY carrelli_articoli.id ASC, carrelli_articoli.id_carrello ASC
+;
+
+-- NOTA la colonna scaduto è sbagliata, trasformare questo report in una tabella e fare i calcoli nel task di popolazione
+-- occhio che le cose che possono innescare il ricalcolo sono parecchie, vedi quello che abbiamo dovuto fare per l'anagrafica con le categorie
+
 -- | 100000007200
 -- __report_status_contratti__
 -- tipologia: report
