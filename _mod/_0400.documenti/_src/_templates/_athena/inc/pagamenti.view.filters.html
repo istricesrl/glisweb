@@ -98,7 +98,7 @@
 	<div class="col-12 col-md-auto">
 		<span class="label-top">pagamento</span>
 		<select name="__view__[{{ view.id }}][__filters__][timestamp_pagamento][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non pagate</option>
+			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non pagate</option>
 			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "" %}selected{% endif %}>tutte</option>
 		</select>
 	</div>

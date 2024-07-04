@@ -66,7 +66,9 @@
                                         'id_rinnovo' => ( ( isset( $pagamento['id_rinnovo'] ) ) ? $pagamento['id_rinnovo'] : NULL ),
                                         'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                         'data_scadenza' => $_REQUEST['__pagamenti__']['data_rate'],
-                                        'nome' => 'rata da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
+                                        'nome' => 'rata da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
+                                        'timestamp_inserimento' => time(),
+                                        'id_account_inserimento' => $_SESSION['account']['id']
                                     ),
                                     'pagamenti'
                                 );
@@ -158,16 +160,20 @@
                                     array(
                                         'id' => ( ( ! empty( $pagamento['id_pagamento'] ) ) ? $pagamento['id_pagamento'] : null ),
                                         'id_documento' => $idDocumento,
+                                        'id_carrelli_articoli' => $pagamento['id'],
+                                        'id_rinnovo' => ( ( isset( $pagamento['id_rinnovo'] ) ) ? $pagamento['id_rinnovo'] : NULL ),
                                         'timestamp_pagamento' => time(),
                                         'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
                                         'nome' => ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'rata pagata' : 'pagamento diretto' ) . 
-                                            ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
-                                    ),
+                                            ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
+                                        'timestamp_inserimento' => time(),
+                                        'id_account_inserimento' => $_SESSION['account']['id']
+                                        ),
                                     'pagamenti'
                                 );
 
                                 if( isset( $pagamento['autoprint'] ) && ! empty( $pagamento['autoprint'] ) ) {
-/*
+
                                     // annoto l'attività di stampa
                                     $idAttivitaStampa = mysqlInsertRow(
                                         $cf['mysql']['connection'],
@@ -181,7 +187,7 @@
                                         ),
                                         'attivita'
                                     );
-*/
+
                                     // debug
                                     // var_dump( $idAttivitaStampa );
                                     // var_dump( $idDocumento );
@@ -330,7 +336,7 @@
             if( isset( $idDocumento ) ) {
 
                 if( isset( $_REQUEST['__pagamenti__']['autoprint'] ) && ! empty( $_REQUEST['__pagamenti__']['autoprint'] ) ) {
-/*
+
                     // annoto l'attività di stampa
                     $idAttivitaStampa = mysqlInsertRow(
                         $cf['mysql']['connection'],
@@ -344,7 +350,7 @@
                         ),
                         'attivita'
                     );
-*/
+
                     // debug
                     // var_dump( $idAttivitaStampa );
                     // var_dump( $idDocumento );

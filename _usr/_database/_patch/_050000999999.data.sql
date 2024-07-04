@@ -1726,4 +1726,11 @@ INSERT IGNORE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note
 INSERT IGNORE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
 (1,	'EUR',	'&#8634;',	'€');
 
+
+-- | 050000100000
+
+-- zone
+INSERT INTO `zone` (`id`, `id_genitore`, `id_tipologia`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	1,	'DEFAULT',	NULL,	NULL,	NULL,	NULL,	NULL);
+
 -- | FINE FILE

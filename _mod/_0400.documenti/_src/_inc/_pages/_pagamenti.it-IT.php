@@ -47,6 +47,11 @@
 															'priority'	=> '900' ) ) )	
 		);
 
+		// RELAZIONI CON IL MODULO ECOMMERCE
+		if( in_array( "4170.ecommerce", $cf['mods']['active']['array'] ) ) {
+			arrayInsertSeq( 'pagamenti.amministrazione.view', $p['pagamenti.amministrazione.view']['etc']['tabs'], 'ecommerce.scadenziario.carrelli' );
+		}
+
 		// gestione pagamenti
 		$p['pagamenti.amministrazione.form'] = array(
 			'sitemap'		=> false,
