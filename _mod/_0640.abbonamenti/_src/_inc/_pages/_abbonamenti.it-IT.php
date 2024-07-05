@@ -76,6 +76,7 @@
 																'abbonamenti.form.rinnovi',
 																'abbonamenti.form.sospensioni',
 																'abbonamenti.form.entrate',
+																'abbonamenti.form.presenze',
 																'abbonamenti.form.lezioni',
 																'abbonamenti.form.stampe',
 																'abbonamenti.form.tools' 
@@ -114,6 +115,18 @@
 			'parent'		=> array( 'id'		=> 'abbonamenti.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.entrate.html' ),
 			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.entrate.php' ),
+			'etc'			=> array( 'tabs'	=> $p['abbonamenti.form']['etc']['tabs'] ),
+			'auth'			=> array( 'groups'	=> array(	'roots' ) )
+		);
+
+		// rinnovi contratti
+		$p['abbonamenti.form.presenze' ] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'presenze' ),
+			'h1'			=> array( $l		=> 'presenze' ),
+			'parent'		=> array( 'id'		=> 'abbonamenti.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'abbonamenti.form.presenze.html' ),
+			'macro'			=> array(  $m . '_src/_inc/_macro/_abbonamenti.form.presenze.php' ),
 			'etc'			=> array( 'tabs'	=> $p['abbonamenti.form']['etc']['tabs'] ),
 			'auth'			=> array( 'groups'	=> array(	'roots' ) )
 		);
