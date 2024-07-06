@@ -4,16 +4,15 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
      *
      */
 
     // configurazione extra
-	if( isset( $cx['auth'] ) ) {
-	    $cf['auth'] = array_replace_recursive( $cf['auth'], $cx['auth'] );
-	}
+    if( isset( $cx['auth'] ) ) {
+        $cf['auth'] = array_replace_recursive( $cf['auth'], $cx['auth'] );
+    }
 
     // debug
-	// print_r( $cf['auth'] );
+    // print_r( $cf['auth'] );

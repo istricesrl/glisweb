@@ -71,59 +71,38 @@
      *
      *
      *
-     * @todo documentare
-     *
-     * @file
+     * TODO documentare
      *
      */
 
-    // costanti che descrivono lo stato del login
-    // TODO hanno senso tutte queste costanti?
-    if( ! defined( 'LOGIN_ERR_NO_DATA' ) ) {
-	define( 'LOGIN_ERR_NO_DATA'		, 'NODATA' );
-	define( 'LOGIN_ERR_NO_CONNECTION'	, 'NOCONNECTION' );
-	define( 'LOGIN_ERR_NO_USER'		, 'NOUSER' );
-	define( 'LOGIN_ERR_WRONG_PW'		, 'WRONGPW' );
-	define( 'LOGIN_ERR_INACTIVE'		, 'USERDOWN' );
-	define( 'LOGIN_SUCCESS'			, 'SUCCESS' );
-	define( 'LOGIN_LOGGED'			, 'LOGGED' );
-	define( 'LOGIN_LOGOUT'			, 'LOGOUT' );
-    }
+    // gruppi
+    $cf['auth']['groups'] = array(
+        'roots' => array(
+            'id' => NULL,
+            'nome' => 'roots',
+            'privilegi' => array(
+                'EDIT_CONFIGURAZIONE',
+                'GESTIONE_ACCOUNT',
+                'INVIO_DIRETTO_MAIL'
+            )
+        ),
+        'staff' => array(
+            'id' => NULL,
+            'nome' => 'staff'
+        ),
+        'users' => array(
+            'id' => NULL,
+            'nome' => 'users'
+        )
+    );
 
-    // chiave segreta per JWT
-    // TODO abbiamo abbandonato per ora il progetto di implementare JWT
-	// $cf['auth']['jwt']['secret']		= false;
-
-    // gruppi di default della piattaforma
-	$cf['auth']['groups'] = array(
-	    'roots' => array(
-		'id' => NULL,
-		'nome' => 'roots',
-		'privilegi' => array(
-		    'EDIT_CONFIGURAZIONE',
-            'GESTIONE_ACCOUNT',
-            'INVIO_DIRETTO_MAIL'
-		)
-	    ),
-	    'staff' => array(
-		'id' => NULL,
-		'nome' => 'staff'
-	    ),
-	    'users' => array(
-		'id' => NULL,
-		'nome' => 'users'
-	    )
-	);
-
-    // TODO gli ID dei privilegi dovrebbero essere delle costanti
-
-    // privilegi della piattaforma
-	$cf['auth']['privileges'] = array(
-	    'EDIT_CONFIGURAZIONE' => array(
+    // privilegi
+    $cf['auth']['privileges'] = array(
+        'EDIT_CONFIGURAZIONE' => array(
             'id' => NULL,
             'nome' => 'editare la configurazione del framework'
         ),
-	    'INVIO_ANAGRAFICA_ARCHIVIUM' => array(
+        'INVIO_ANAGRAFICA_ARCHIVIUM' => array(
             'id' => NULL,
             'nome' => 'inviare una anagrafica ad Archivium'
         ),
@@ -135,50 +114,47 @@
             'id' => NULL,
             'nome' => 'inviare mail da API REST'
         )
-	);
+    );
 
-    // account di default della piattaforma
-    // TODO è corretto che nome cognome e denominazione stiano allo stesso livello di id ecc? non crea confusione?
-    // TODO gli oggetti mappati da database dovrebbero somigliare il più possibile alla corrispettiva riga di database!
-	$cf['auth']['accounts'] = array(
-	    'root' => array(
-		'id' => NULL,
-#		'nome' => NULL,
-#		'cognome' => NULL,
-#		'denominazione' => NULL,
-		'username' => 'root',
-		'password' => NULL,
-		'gruppi' => array(
-		    'roots'
-		),
-		'permissions' => array(),
-		'privilegi' => array(
-		    'EDIT_CONFIGURAZIONE',
-            'INVIO_ANAGRAFICA_ARCHIVIUM'
-		)
-	    )
-	);
-/*
-    // password di root da variabile d'ambiente
-	if( ! empty( $_ENV['ROOT_PW'] ) ) {
-	    $cf['auth']['accounts']['root']['password'] = md5( getenv('ROOT_PW') );
-	}
-*/
+    // account
+    $cf['auth']['accounts'] = array(
+        'root' => array(
+            'id' => NULL,
+            'username' => 'root',
+            'password' => NULL,
+            'gruppi' => array(
+                'roots'
+            ),
+            'permissions' => array(),
+            'privilegi' => array(
+                'EDIT_CONFIGURAZIONE',
+                'INVIO_ANAGRAFICA_ARCHIVIUM'
+            )
+        )
+    );
 
-    // comportamento di default
-	$cf['auth']['profili']['admin'] = array(
-        'nome' => 'utente amministratore',
-	    'gruppi' => array( 'roots', 'staff', 'users' ),
-	    'categorie' => array( 'collaboratori' ),
-        'username' => true,
-        'sms' => false,
-        'mail' => 'DEFAULT_NUOVO_ACCOUNT_ATTIVO',
-        'landing' => 'dashboard',
-	    'attivo' => true
-	);
+    // profili di creazione nuovi account
+    $cf['auth']['profili'] = array(
+        'admin' => array(
+            'nome' => 'utente',
+            'cognome' => 'amministratore',
+            'gruppi' => array( 'roots', 'staff', 'users' ),
+            'categorie' => array( 'collaboratori' ),
+            'username' => true,
+            'sms' => false,
+            'mail' => 'DEFAULT_NUOVO_ACCOUNT_ATTIVO',
+            'landing' => 'dashboard',
+            'attivo' => true
+        )
+    );
 
-    // scadenza della chiave JWT
-    $cf['auth']['jwt']['salt'] = 'Y-m-d';
+    // salt e scadenza della chiave JWT
+    // NOTA calcolato in questo modo il salt cambia ogni giorno quindi non è possibile riusarlo troppo a lungo
+    // TODO non c'è un modo più fine per farlo?
+    $cf['auth']['jwt']['salt'] = date( 'Y-m-d' );
+
+    // inizializzazione della password per JWT
+    $cf['auth']['jwt']['pass'] = NULL;
 
     // debug
-	// print_r( $cf['auth'] );
+    // print_r( $cf['auth'] );
