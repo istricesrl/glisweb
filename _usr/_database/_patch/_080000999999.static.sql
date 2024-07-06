@@ -112,6 +112,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_archiviati_view_static` (
 -- anagrafica_attivi_view_static
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 18:47 Fabio Mosti
+-- TODO eliminare
 CREATE TABLE IF NOT EXISTS `anagrafica_attivi_view_static` (
   `id` int(11) PRIMARY KEY NOT NULL,
   `tipologia` char(32) DEFAULT NULL,

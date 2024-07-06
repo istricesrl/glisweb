@@ -2548,6 +2548,26 @@ ALTER TABLE `modalita_pagamento`
 -- tipologia: tabella standard
 ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000021950
+
+-- modalita_spedizione
+ALTER TABLE `modalita_spedizione`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_zona`,`id_prodotto`,`id_articolo`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_zona` (`id_zona`),
+	ADD KEY `id_categoria_prodotti` (`id_categoria_prodotti`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `lotto_spedizione` (`lotto_spedizione`),
+	ADD KEY `importo_netto` (`importo_netto`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_iva` (`id_iva`),
+	ADD KEY `giorni_spedizione` (`giorni_spedizione`),
+	ADD KEY `giorni_consegna` (`giorni_consegna`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
 -- | 030000022000
 
 -- notizie
@@ -2858,8 +2878,8 @@ ALTER TABLE `popup_pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- verifica: 2021-10-04 16:53 Fabio Mosti
 ALTER TABLE `prezzi`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unica_prodotto` (`id_prodotto`,`fascia`,`id_listino`,`id_iva`), 
-	ADD UNIQUE KEY `unica_articolo` (`id_articolo`,`fascia`,`id_listino`,`id_iva`), 
+	ADD UNIQUE key `id_prodotto_id_listino_id_iva_data_inizio_data_fine` (`id_prodotto`, `id_listino`, `id_iva`, `data_inizio`, `data_fine`),
+	ADD UNIQUE key `id_articolo_id_listino_id_iva_data_inizio_data_fine` (`id_articolo`, `id_listino`, `id_iva`, `data_inizio`, `data_fine`),
 	ADD KEY `id_prodotto` (`id_prodotto`), 
 	ADD KEY `id_articolo` (`id_articolo`), 
 	ADD KEY `id_listino` (`id_listino`),
@@ -3864,6 +3884,58 @@ ALTER TABLE `ruoli_video`
 -- tipologia: tabella standard
 ALTER TABLE `ruoli_video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000036000
+
+-- sconti
+ALTER TABLE `sconti`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_tipologia`,`nome`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_valuta` (`id_valuta`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_tipologia`,`nome`,`sconto_percentuale`,`sconto_fisso`,`qta_min`,`id_valuta`,`timestamp_inizio`,`timestamp_fine`);
+
+-- | 030000036001
+
+-- sconti
+ALTER TABLE `sconti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000036200
+
+-- sconti_articoli
+ALTER TABLE `sconti_articoli`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_sconto`,`id_articolo`),
+	ADD KEY `id_sconto` (`id_sconto`),
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_sconto`,`id_articolo`);
+
+-- | 030000036201
+
+-- sconti_articoli
+ALTER TABLE `sconti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000036400
+
+-- sconti_listini
+ALTER TABLE `sconti_listini`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_sconto`,`id_listino`),
+	ADD KEY `id_sconto` (`id_sconto`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_sconto`,`id_listino`);
+
+-- | 030000036401
+
+-- sconti_listini
+ALTER TABLE `sconti_listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000037000
 
 -- settori
@@ -4681,6 +4753,41 @@ ALTER TABLE `tipologie_risorse`
 -- tipologie_risorse
 -- tipologia: tabella assistita
 ALTER TABLE `tipologie_risorse` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000055900
+
+-- tipologie_sconti
+ALTER TABLE `tipologie_sconti`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`nome`);
+
+-- | 030000055901
+
+-- tipologie_sconti
+ALTER TABLE `tipologie_sconti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000056000
+
+-- tipologie_spedizioni
+ALTER TABLE `tipologie_spedizioni`
+	ADD PRIMARY KEY (`id`),
+  	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
+	ADD KEY `id_genitore` (`id_genitore`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+  	ADD KEY `indice` (`id`,`id_genitore`,`ordine`,`nome`,`html_entity`);
+
+-- | 030000056001
+
+-- tipologie_spedizioni
+ALTER TABLE `tipologie_spedizioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000056200
 

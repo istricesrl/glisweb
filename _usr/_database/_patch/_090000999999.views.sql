@@ -400,6 +400,7 @@ CREATE OR REPLACE VIEW anagrafica_archiviati_view AS
 
 -- anagrafica_attivi_view
 -- tipologia: tabella gestita
+-- TODO eliminare
 DROP TABLE IF EXISTS `anagrafica_attivi_view`;
 
 -- | 090000000413
@@ -407,6 +408,7 @@ DROP TABLE IF EXISTS `anagrafica_attivi_view`;
 -- anagrafica_attivi_view
 -- tipologia: tabella gestita
 -- verifica: 2021-05-20 19:15 Fabio Mosti
+-- TODO eliminare
 CREATE OR REPLACE VIEW anagrafica_attivi_view AS
 	SELECT
 		anagrafica.id,
@@ -1628,7 +1630,6 @@ CREATE OR REPLACE VIEW `carrelli_articoli_view` AS
 		carrelli_articoli.destinatario_mail,
 		carrelli_articoli.destinatario_codice_fiscale,
 		carrelli_articoli.destinatario_partita_iva,
-		carrelli_articoli.destinatario_id_anagrafica,
 		carrelli_articoli.prezzo_netto_unitario,
 		carrelli_articoli.prezzo_lordo_unitario,
 		carrelli_articoli.quantita,
@@ -5718,6 +5719,38 @@ CREATE OR REPLACE VIEW `modalita_pagamento_view` AS
 	FROM modalita_pagamento
 ;
 
+-- | 090000021950
+
+-- modalita_spedizione
+DROP TABLE IF EXISTS `modalita_spedizione_view`;
+
+-- | 090000021951
+
+-- modalita_spedizione
+CREATE OR REPLACE VIEW `modalita_spedizione_view` AS
+	SELECT
+		modalita_spedizione.id,
+		modalita_spedizione.id_tipologia,
+		modalita_spedizione.id_zona,
+		zone.nome AS zona,
+		modalita_spedizione.id_categoria_prodotti,
+		modalita_spedizione.id_prodotto,
+		modalita_spedizione.id_articolo,
+		modalita_spedizione.lotto_spedizione,
+		modalita_spedizione.importo_netto,
+		modalita_spedizione.id_valuta,
+		valute.utf8 AS valuta,
+		modalita_spedizione.id_iva,
+		iva.nome AS iva,
+		modalita_spedizione.giorni_spedizione,
+		modalita_spedizione.giorni_consegna,
+		concat( zone.nome, ' - ', coalesce( modalita_spedizione.id_prodotto, modalita_spedizione.id_articolo ) ) AS __label__
+	FROM modalita_spedizione
+		LEFT JOIN zone ON zone.id = modalita_spedizione.id_zona
+		LEFT JOIN iva ON iva.id = modalita_spedizione.id_iva
+		LEFT JOIN valute ON valute.id = modalita_spedizione.id_valuta
+;
+
 -- | 090000021970
 
 -- note_credito_view
@@ -8892,6 +8925,70 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 	FROM ruoli_video
 ;
 
+-- | 090000036000
+
+-- sconti_view
+DROP TABLE IF EXISTS `sconti_view`;
+
+-- | 090000036001
+
+-- sconti_view
+CREATE OR REPLACE VIEW `sconti_view` AS
+	SELECT
+	sconti.id,
+	sconti.nome,
+	sconti.timestamp_inizio,
+	from_unixtime( sconti.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
+	sconti.timestamp_fine,
+	from_unixtime( sconti.timestamp_fine, '%Y-%m-%d' ) AS data_ora_fine,
+	concat_ws( ' ', sconti.id, sconti.nome ) AS __label__
+	FROM sconti
+;
+
+-- | 090000036200
+
+-- sconti_articoli_view
+DROP TABLE IF EXISTS `sconti_articoli_view`;
+
+-- | 090000036201
+
+-- sconti_articoli_view
+CREATE OR REPLACE VIEW `sconti_articoli_view` AS
+	SELECT
+		sconti_articoli.id,
+		sconti_articoli.id_sconto,
+		sconti.nome AS sconto,
+		sconti_articoli.id_articolo,
+		articoli.id_prodotto,
+		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		concat_ws( ' ', sconti.nome, articoli.id ) AS __label__
+	FROM sconti_articoli
+		LEFT JOIN sconti ON sconti.id = sconti_articoli.id_sconto
+		LEFT JOIN articoli ON articoli.id = sconti_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+;
+
+-- | 090000036400
+
+-- sconti_listini_view
+DROP TABLE IF EXISTS `sconti_listini_view`;
+
+-- | 090000036401
+
+-- sconti_listini_view
+CREATE OR REPLACE VIEW `sconti_listini_view` AS
+	SELECT
+		sconti_listini.id,
+		sconti_listini.id_sconto,
+		sconti.nome AS sconto,
+		sconti_listini.id_listino,
+		listini.nome AS listino,	
+		concat_ws( ' ', sconti.nome, listini.nome ) AS __label__
+	FROM sconti_listini
+		LEFT JOIN sconti ON sconti.id = sconti_listini.id_sconto
+		LEFT JOIN listini ON listini.id = sconti_listini.id_listino
+;
+
 -- | 090000037000
 
 -- settori_view
@@ -10166,6 +10263,44 @@ CREATE OR REPLACE VIEW `tipologie_risorse_view` AS
 		tipologie_risorse.id_account_aggiornamento,
 		tipologie_risorse_path( tipologie_risorse.id ) AS __label__
 	FROM tipologie_risorse
+;
+
+-- | 090000055900
+
+-- tipologie_sconti_view
+DROP TABLE IF EXISTS `tipologie_sconti_view`;
+
+-- | 090000055901
+
+-- tipologie_sconti_view
+CREATE OR REPLACE VIEW `tipologie_sconti_view` AS
+	SELECT
+		tipologie_sconti.id,
+		tipologie_sconti.nome,
+		tipologie_sconti.nome AS __label__
+	FROM tipologie_sconti
+;
+
+-- | 090000056000
+
+-- tipologie_spedizioni_view
+DROP TABLE IF EXISTS `tipologie_spedizioni_view`;
+
+-- | 090000056001
+
+-- tipologie_spedizioni_view
+CREATE OR REPLACE VIEW `tipologie_spedizioni_view` AS
+	SELECT
+		tipologie_spedizioni.id,
+		tipologie_spedizioni.id_genitore,
+		tipologie_spedizioni.ordine,
+		tipologie_spedizioni.nome,
+		tipologie_spedizioni.html_entity,
+		tipologie_spedizioni.font_awesome,
+		tipologie_spedizioni.id_account_inserimento,
+		tipologie_spedizioni.id_account_aggiornamento,
+		tipologie_spedizioni_path( tipologie_spedizioni.id ) AS __label__
+	FROM tipologie_spedizioni
 ;
 
 -- | 090000056200

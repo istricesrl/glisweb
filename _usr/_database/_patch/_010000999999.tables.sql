@@ -239,10 +239,10 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
 -- anagrafica_organizzazioni
 CREATE TABLE IF NOT EXISTS `anagrafica_organizzazioni` (
   `id` int NOT NULL,
-  `id_anagrafica` int NULL,
-  `id_organizzazione` int NULL,
-  `id_ruolo` int NULL,
-  `nome` char(255) NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_organizzazione` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text NULL,
   `timestamp_elaborazione` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -520,11 +520,11 @@ CREATE TABLE IF NOT EXISTS `audio` (
 -- tipologia: tabella gestita
 CREATE TABLE `badge` (
   `id` int(11) NOT NULL,
-  `id_tipologia` int(11) NULL,
-  `id_contratto` int(11) NULL,
-  `codice` char(32) NULL,
-  `rfid` char(32) NULL,
-  `nome` char(255) NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_contratto` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `rfid` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `note` text NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
@@ -2428,14 +2428,14 @@ CREATE TABLE IF NOT EXISTS `messaggi` (
 -- messaggi_account
 CREATE TABLE `messaggi_account` (
   `id` int(11) NOT NULL,
-  `id_messaggio` int NULL,
-  `id_account` int NULL,
-  `timestamp_lettura` int NULL,
+  `id_messaggio` int(11) DEFAULT NULL,
+  `id_account` int(11) DEFAULT NULL,
+  `timestamp_lettura` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
-);
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000021800
 
@@ -2493,10 +2493,33 @@ CREATE TABLE IF NOT EXISTS `metadati` (
 -- tipologia: tabella standard
 -- verifica: 2022-01-18 12:06 Chiara GDL
 CREATE TABLE IF NOT EXISTS `modalita_pagamento` (
-`id` int(11) NOT NULL,
+  `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
   `provider` char(64) DEFAULT NULL,
   `codice` char(32) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000021950
+
+-- modalita_spedizione
+-- tipologia: tabella assistita
+CREATE TABLE IF NOT EXISTS `modalita_spedizione` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `id_zona` int(11) DEFAULT NULL,
+  `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `lotto_spedizione` int(11) DEFAULT NULL,
+  `importo_netto` int(11) DEFAULT NULL,
+  `id_valuta` int(11) DEFAULT NULL,
+  `id_iva` int(11) DEFAULT NULL,
+  `giorni_spedizione` int(11) DEFAULT NULL,
+  `giorni_consegna` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000022000
@@ -2543,17 +2566,17 @@ CREATE TABLE IF NOT EXISTS `notizie_categorie` (
 -- orari
 CREATE TABLE `orari` (
   `id` int(11) NOT NULL,
-  `nome` char(128) NULL,
-  `id_tipologia_contratti` int(11) NULL,
-  `id_periodicita` int(11) NULL,
-  `id_giorno` int(11) NULL,
+  `nome` char(128) DEFAULT NULL,
+  `id_tipologia_contratti` int(11) DEFAULT NULL,
+  `id_periodicita` int(11) DEFAULT NULL,
+  `id_giorno` int(11) DEFAULT NULL,
   `ora_inizio` time NULL,
   `ora_fine` time NULL,
   `note` text NULL,
-  `id_account_inserimento` int(11) NULL,
-  `timestamp_inserimento` int(11) NULL,
-  `id_account_aggiornamento` int(11) NULL,
-  `timestamp_aggiornamento` int(11) NULL
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
@@ -3757,6 +3780,52 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_immobili` tinyint(1) DEFAULT NULL 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000036000
+
+-- sconti
+CREATE TABLE `sconti` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `nome` varchar(255) DEFAULT NULL,
+  `sconto_percentuale` decimal(5,2) DEFAULT NULL,
+  `sconto_fisso` decimal(5,2) DEFAULT NULL,
+  `qta_min` int(11) DEFAULT NULL,
+  `id_valuta` int(11) DEFAULT NULL,
+  `timestamp_inizio` int(11) DEFAULT NULL,
+  `timestamp_fine` int(11) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000036200
+
+-- sconti_articoli
+CREATE TABLE IF NOT EXISTS `sconti_articoli` (
+  `id` int(11) NOT NULL,
+  `id_sconto` int(11) DEFAULT NULL,
+  `id_articolo` char(32) NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000036400
+
+-- sconti_listini
+CREATE TABLE IF NOT EXISTS `sconti_listini` (
+  `id` int(11) NOT NULL,
+  `id_sconto` int(11) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000037000
 
 -- settori
@@ -4521,6 +4590,35 @@ CREATE TABLE IF NOT EXISTS `tipologie_rinnovi` (
 -- tipologia: tabella di supporto
 -- verifica: 2021-10-15 17:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `tipologie_risorse` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000055900
+
+-- tipologie_sconti
+CREATE TABLE IF NOT EXISTS `tipologie_sconti` (
+  `id` int NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000056000
+
+-- tipologie_spedizioni
+CREATE TABLE IF NOT EXISTS `tipologie_spedizioni` (
   `id` int(11) NOT NULL,
   `id_genitore` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,

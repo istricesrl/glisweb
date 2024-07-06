@@ -7256,6 +7256,145 @@ CREATE
 
 END;
 
+-- | 070000056000
+
+-- tipologie_spedizioni_path
+DROP FUNCTION IF EXISTS `tipologie_spedizioni_path`;
+
+-- | 070000056001
+
+-- tipologie_spedizioni_path
+-- verifica: 2021-10-04 11:49 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_spedizioni_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_spedizioni_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_spedizioni.id_genitore,
+				tipologie_spedizioni.nome
+			FROM tipologie_spedizioni
+			WHERE tipologie_spedizioni.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000056010
+
+-- tipologie_spedizioni_path_check
+DROP FUNCTION IF EXISTS `tipologie_spedizioni_path_check`;
+
+-- | 070000056011
+
+-- tipologie_spedizioni_path_check
+-- verifica: 2021-10-04 11:49 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_spedizioni_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_spedizioni_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_spedizioni.id_genitore
+			FROM tipologie_spedizioni
+			WHERE tipologie_spedizioni.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000056020
+
+-- tipologie_spedizioni_path_find_ancestor
+DROP FUNCTION IF EXISTS `tipologie_spedizioni_path_find_ancestor`;
+
+-- | 070000056021
+
+-- tipologie_spedizioni_path_find_ancestor
+-- verifica: 2021-10-04 11:49 Fabio Mosti
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_spedizioni_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_spedizioni_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_spedizioni.id_genitore,
+				tipologie_spedizioni.id
+			FROM tipologie_spedizioni
+			WHERE tipologie_spedizioni.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | 070000056200
 
 -- tipologie_telefoni_path

@@ -9,27 +9,6 @@
      *
      *
      *
-     * @todo documentare
-     *
-     * @file
+     * TODO documentare
      *
      */
-
-    // array dei permessi
-	$cf['auth']['permissions'] = array_merge_recursive( 
-	    $cf['auth']['permissions'],
-	    array(
-            'abbonamenti' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
-            ),
-            'abbonamenti_attivi' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
-            ),
-            'abbonamenti_archiviati' => array(
-                CONTROL_FULL => array( 'roots' ),
-                CONTROL_FILTERED => array( 'staff' )
-            )
-        )
-	);
