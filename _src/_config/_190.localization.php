@@ -46,7 +46,7 @@
             );
 
             // se ho trovato la lingua nel database
-            if( is_array( $c ) ) {
+            if( isset( $c['id'] ) ) {
 
                 // aggiorno i dettagli della lingua all'array delle lingue
                 $cf['localization']['languages'][ $k ] = array_replace_recursive( $cf['localization']['languages'][ $k ], $c );

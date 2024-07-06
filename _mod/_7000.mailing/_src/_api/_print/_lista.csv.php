@@ -41,7 +41,8 @@
 
 			// print_r( $lista );
 
-			buildCsv( array2csvString( $lista, ';' ), 'iscritti.csv' );
+			// TODO usare array2csvFile()
+            // buildCsv( array2csvString( $lista, ';' ), 'iscritti.csv' );
 
 		}
 

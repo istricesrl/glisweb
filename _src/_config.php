@@ -303,8 +303,12 @@
     /**
      * questa funzione scrive un messaggio di log
      * 
-     * La funzione     logger() si appoggia alla più complessa     loggerMessage() se esiste (libreria _log.utils.php) altrimenti
-     * effettua una semplice scrittura su file di log.
+     * La funzione logger() effettua una semplice scrittura su file di log. Si noti che la funzione logga soltanto i messaggi di gravità
+     * uguale o superiore a quella corrente, che è definita dalla costante LOG_CURRENT_LEVEL; se questa non è definita, tutti i messaggi
+     * vengono loggati.
+     * 
+     * Per impostare il livello di log si faccia riferimento al codice del file _src/_config/_000.debug.php; per impostare il livello di
+     * gravità è possibile intervenire sulla versione custom di questo file oppure sul file di configurazione JSON/YAML.
      * 
      * @param       string      $m      il messaggio da scrivere
      * @param       string      $f      il percorso e il nome (senza estensione) del file di log da scrivere rispetto alla cartella dei log
