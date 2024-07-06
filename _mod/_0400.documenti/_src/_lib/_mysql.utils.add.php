@@ -412,14 +412,15 @@
         // indirizzo fiscale
         $r['sri']['indirizzo_fiscale'] = $r['sri']['tipologia'] . ' ' . $r['sri']['indirizzo'] . ', ' . $r['sri']['civico'];
         $r['sri']['comune_indirizzo_fiscale'] = $r['sri']['cap'] . ' ' . $r['sri']['comune'] . ' ' . $r['sri']['provincia'];
-/*
+
         // regime fiscale dell'emittente
-        $srr = mysqlSelectRow(
+        // TODO questa cosa era commentata, perché?
+        $r['srr'] = mysqlSelectRow(
             $cf['mysql']['connection'],
             'SELECT * FROM regimi WHERE id = ?',
             array( array( 's' => $r['src']['id_regime'] ) )
         );
-*/
+
         // recupero i dati del destinatario
         $r['dst'] = mysqlSelectRow(
             $cf['mysql']['connection'],

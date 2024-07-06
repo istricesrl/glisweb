@@ -15,16 +15,21 @@
 
     // configurazioni specifiche
     $cnf['estensione'] = 'xml';
+    $cnf['cartella'] = 'fatture';
 
     // inclusione dei dati base
 	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
+
+	// die( print_r( $dati, true ) );
+     error_reporting( E_ALL );
+     ini_set( 'display_errors', TRUE );
 
     // annoto l'attività di stampa
     mysqlInsertRow(
         $cf['mysql']['connection'],
         array(
             'id_tipologia' => 24,
-            'id_documento' => $doc['id'],
+            'id_documento' => $dati['doc']['id'],
             'data_attivita' => date('Y-m-d'),
             'nome' => 'stampa documento',
             'ora_inizio' => date( 'H:i:s' ),
@@ -35,9 +40,9 @@
 
     // debug
 	// header( 'Content-type: text/plain;' );
-	// die( print_r( $doc, true ) );
-	// die( print_r( $src, true ) );
-	// die( print_r( $dst, true ) );
+	// die( print_r( $dati['doc'], true ) );
+	// die( print_r( $dati['src'], true ) );
+	// die( print_r( $dati['dst'], true ) );
 
     // creazione dell'oggetto XML
 	$xml = new XMLWriter();
@@ -56,7 +61,7 @@
 	$xml->startElement( 'p:FatturaElettronica' );
 	
 	// versione PA o privati
-	if( !$dst['se_pubblica_amministrazione'] == 1 ){
+	if( !$dati['dst']['se_pubblica_amministrazione'] == 1 ){
 		$xml->writeAttribute( 'versione', 'FPR12' );
 	} else {
 		$xml->writeAttribute( 'versione', 'FPA12' );
@@ -77,18 +82,18 @@
 	$xml->startElement( 'IdTrasmittente' );
 
     // - - - - IdPaese / lo stato del trasmittente
-	$xml->writeElement( 'IdPaese', $sri['sigla_stato'] );
+	$xml->writeElement( 'IdPaese', $dati['sri']['sigla_stato'] );
 
     // - - - - IdCodice / identificativo fiscale del trasmittente
-	$xml->writeElement( 'IdCodice', $src['codice_fiscale'] );
+	$xml->writeElement( 'IdCodice', $dati['src']['codice_fiscale'] );
 
     // - - - /IdTrasmittente
 	$xml->endElement();
 
     // - - - ProgressivoInvio / identificativo univoco del documento
-	$xml->writeElement( 'ProgressivoInvio', $doc['progressivo_invio'] );
+	$xml->writeElement( 'ProgressivoInvio', $dati['doc']['progressivo_invio'] );
 
-	if( ! $dst['se_pubblica_amministrazione'] == 1 ) {
+	if( ! $dati['dst']['se_pubblica_amministrazione'] == 1 ) {
 		// - - - FormatoTrasmissione / privati
 		$xml->writeElement( 'FormatoTrasmissione', 'FPR12' );
 	} else {
@@ -97,11 +102,11 @@
 	}
 
     // - - - CodiceDestinatario / codice SDI del destinatario
-	$xml->writeElement( 'CodiceDestinatario', $dst['codice_sdi'] );
+	$xml->writeElement( 'CodiceDestinatario', $dati['dst']['codice_sdi'] );
 
     // - - - PECDestinatario / PEC del destinatario
-	if( ! empty( $dst['pec_sdi'] ) ) {
-	    $xml->writeElement( 'PECDestinatario', $dst['pec_sdi'] );
+	if( ! empty( $dati['dst']['pec_sdi'] ) ) {
+	    $xml->writeElement( 'PECDestinatario', $dati['dst']['pec_sdi'] );
 	}
 
     // - - /DatiTrasmissione
@@ -117,10 +122,10 @@
 	$xml->startElement( 'IdFiscaleIVA' );
 
     // - - - - - IdPaese / lo stato del cedente
-	$xml->writeElement( 'IdPaese', $sri['sigla_stato'] );
+	$xml->writeElement( 'IdPaese', $dati['sri']['sigla_stato'] );
 
     // - - - - - IdCodice / la partita IVA del cedente
-	$xml->writeElement( 'IdCodice', $src['partita_iva'] );
+	$xml->writeElement( 'IdCodice', $dati['src']['partita_iva'] );
 
     // - - - - /IdFiscaleIVA
 	$xml->endElement();
@@ -129,16 +134,16 @@
 	$xml->startElement( 'Anagrafica' );
 
     // - - - - - Denominazione / la denominazione del cedente
-	$xml->writeElement( 'Denominazione', $src['denominazione_fiscale'] );
+	$xml->writeElement( 'Denominazione', $dati['src']['denominazione_fiscale'] );
 
     // - - - - /Anagrafica
 	$xml->endElement();
 
     // - - - - RegimeFiscale / il regime fiscale del cedente
-	if( empty( $srr['codice'] ) ) {
+	if( empty( $dati['srr']['codice'] ) ) {
 		die( 'regime fiscale inviante non specificato o errato' );
 	} else {
-		$xml->writeElement( 'RegimeFiscale', $srr['codice'] );
+		$xml->writeElement( 'RegimeFiscale', $dati['srr']['codice'] );
 	}
 
     // - - - /DatiAnagrafici
@@ -148,19 +153,19 @@
 	$xml->startElement( 'Sede' );
 
     // - - - - Indirizzo / l'indirizzo della sede del cedente
-	$xml->writeElement( 'Indirizzo', $sri['indirizzo_fiscale'] );
+	$xml->writeElement( 'Indirizzo', $dati['sri']['indirizzo_fiscale'] );
 
     // - - - - CAP / il CAP della sede del cedente
-	$xml->writeElement( 'CAP', $sri['cap'] );
+	$xml->writeElement( 'CAP', $dati['sri']['cap'] );
 
     // - - - - Comune / il comune della sede del cedente
-	$xml->writeElement( 'Comune', $sri['comune'] );
+	$xml->writeElement( 'Comune', $dati['sri']['comune'] );
 
     // - - - - Provincia / la sigla della provincia della sede del cedente
-	$xml->writeElement( 'Provincia', $sri['provincia'] );
+	$xml->writeElement( 'Provincia', $dati['sri']['provincia'] );
 
     // - - - - Nazione / la nazione della sede del cedente
-	$xml->writeElement( 'Nazione', $sri['sigla_stato'] );
+	$xml->writeElement( 'Nazione', $dati['sri']['sigla_stato'] );
 
     // - - - /Sede
 	$xml->endElement();
@@ -175,10 +180,10 @@
 	$xml->startElement( 'DatiAnagrafici' );
 
     // azienda / privato
-	if( empty( $dst['partita_iva'] ) ) {
+	if( empty( $dati['dst']['partita_iva'] ) ) {
 
 	    // - - - - CodiceFiscale / il codice fiscale del cliente privato
-		$xml->writeElement( 'CodiceFiscale', strtoupper( $dst['codice_fiscale'] ) );
+		$xml->writeElement( 'CodiceFiscale', strtoupper( $dati['dst']['codice_fiscale'] ) );
 
 	} else {
 
@@ -186,10 +191,10 @@
 		$xml->startElement( 'IdFiscaleIVA' );
 
 	    // - - - - - IdPaese / lo stato del cedente
-		$xml->writeElement( 'IdPaese', $dsi['sigla_stato'] );
+		$xml->writeElement( 'IdPaese', $dati['dsi']['sigla_stato'] );
 
 	    // - - - - - IdCodice / la partita IVA del cedente
-		$xml->writeElement( 'IdCodice', $dst['partita_iva'] );
+		$xml->writeElement( 'IdCodice', $dati['dst']['partita_iva'] );
 
 	    // - - - - /IdFiscaleIVA
 		$xml->endElement();
@@ -200,18 +205,18 @@
 	$xml->startElement( 'Anagrafica' );
 
     // azienda / privato
-	if( empty( $dst['partita_iva'] ) && ( !empty($dst['cognome']) ) ) {
+	if( empty( $dati['dst']['partita_iva'] ) && ( !empty($dati['dst']['cognome']) ) ) {
 
 	    // - - - - - Nome / il nome del cliente privato
-		$xml->writeElement( 'Nome', $dst['nome'] );
+		$xml->writeElement( 'Nome', $dati['dst']['nome'] );
 
 	    // - - - - - Cognome / il cognome del cliente privato
-		$xml->writeElement( 'Cognome', $dst['cognome'] );
+		$xml->writeElement( 'Cognome', $dati['dst']['cognome'] );
 
 	} else {
 
 	    // - - - - - Denominazione / la denominazione del cliente aziendale
-		$xml->writeElement( 'Denominazione', $dst['denominazione_fiscale'] );
+		$xml->writeElement( 'Denominazione', $dati['dst']['denominazione_fiscale'] );
 
 	}
 
@@ -225,19 +230,19 @@
 	$xml->startElement( 'Sede' );
 
     // - - - - Indirizzo / l'indirizzo della sede del cliente
-	$xml->writeElement( 'Indirizzo', $dsi['indirizzo_fiscale'] );
+	$xml->writeElement( 'Indirizzo', $dati['dsi']['indirizzo_fiscale'] );
 
     // - - - - CAP / il CAP della sede del cliente
-	$xml->writeElement( 'CAP', $dsi['cap'] );
+	$xml->writeElement( 'CAP', $dati['dsi']['cap'] );
 
     // - - - - Comune / il comune della sede del cliente
-	$xml->writeElement( 'Comune', $dsi['comune'] );
+	$xml->writeElement( 'Comune', $dati['dsi']['comune'] );
 
     // - - - - Provincia / la sigla della provincia della sede del cliente
-	$xml->writeElement( 'Provincia', $dsi['provincia'] );
+	$xml->writeElement( 'Provincia', $dati['dsi']['provincia'] );
 
     // - - - - Nazione / la nazione della sede del cliente
-	$xml->writeElement( 'Nazione', $dsi['sigla_stato'] );
+	$xml->writeElement( 'Nazione', $dati['dsi']['sigla_stato'] );
 
     // - - - /Sede
 	$xml->endElement();
@@ -258,43 +263,43 @@
 	$xml->startElement( 'DatiGeneraliDocumento' );
 
     // - - - - TipoDocumento / la tipologia del documento
-	$xml->writeElement( 'TipoDocumento', $doc['codice_tipologia'] );
+	$xml->writeElement( 'TipoDocumento', $dati['doc']['codice_tipologia'] );
 
     // - - - - Divisa / la valuta del documento
-	$xml->writeElement( 'Divisa', $doc['divisa'] );
+	$xml->writeElement( 'Divisa', $dati['doc']['divisa'] );
 
     // - - - - Data / la data del documento
-	$xml->writeElement( 'Data', $doc['data'] );
+	$xml->writeElement( 'Data', $dati['doc']['data'] );
 
     // - - - - Numero / il numero del documento
-	$xml->writeElement( 'Numero', $doc['numero'] );
+	$xml->writeElement( 'Numero', $dati['doc']['numero'] );
 
     // - - - - ImportoTotaleDocumento / l'importo lordo totale del documento
-	$xml->writeElement( 'ImportoTotaleDocumento',  $doc['tot']['importo_lordo_totale'] );
+	$xml->writeElement( 'ImportoTotaleDocumento',  $dati['doc']['tot']['importo_lordo_totale'] );
 
     // - - - - Causale / la causale del documento
-	$xml->writeElement( 'Causale', $doc['causale'] );
+	$xml->writeElement( 'Causale', $dati['doc']['causale'] );
 
     // - - - /DatiGeneraliDocumento
 	$xml->endElement();
 
-	if( $dst['se_pubblica_amministrazione'] == 1 ){
+	if( $dati['dst']['se_pubblica_amministrazione'] == 1 ){
 
-		if( empty( $doc['cig']) ){die( 'cig mancante' ); } 
+		if( empty( $dati['doc']['cig']) ){die( 'cig mancante' ); } 
 
-		if( empty( $doc['riferimento']) ){die( 'riferimento documento per PA assente' ); } 
+		if( empty( $dati['doc']['riferimento']) ){die( 'riferimento documento per PA assente' ); } 
 
 		// - - - DatiOrdineAcquisto
 		$xml->startElement( 'DatiOrdineAcquisto' );
 
 		$xml->writeElement( 'RiferimentoNumeroLinea', '1' );
 
-		$xml->writeElement( 'IdDocumento', $doc['riferimento']);
+		$xml->writeElement( 'IdDocumento', $dati['doc']['riferimento']);
 
-		$xml->writeElement( 'CodiceCIG', $doc['cig'] );
+		$xml->writeElement( 'CodiceCIG', $dati['doc']['cig'] );
 
-		if(!empty( $doc['cup'] )){
-			$xml->writeElement( 'CodiceCUP', $doc['cup'] );
+		if(!empty( $dati['doc']['cup'] )){
+			$xml->writeElement( 'CodiceCUP', $dati['doc']['cup'] );
 			
 		}
 
@@ -305,18 +310,20 @@
 	}
 
 	// ciclo sulle fatture collegate
-	foreach( $dcl AS $dc ) {
+	if( isset( $dati['dcl'] ) && ! empty( $dati['dcl'] ) ) {
+		foreach( $dati['dcl'] AS $dcl ) {
 
-		// - - - DatiFattureCollegate
+			// - - - DatiFattureCollegate
 
-		// - - - - RiferimentoNumeroLinea
+			// - - - - RiferimentoNumeroLinea
 
-		// - - - - IdDocumento
+			// - - - - IdDocumento
 
-		// - - - - Data
+			// - - - - Data
 
-		// - - - /DatiFattureCollegate
+			// - - - /DatiFattureCollegate
 
+		}
 	}
 
 	// ciclo sui DDT collegati
@@ -334,7 +341,7 @@
 	$xml->startElement( 'DatiBeniServizi' );
 
     // ciclo sulle righe
-	foreach( $doc['righe'] as $num => $row ) {
+	foreach( $dati['doc']['righe'] as $num => $row ) {
 
 	    // - - - DettaglioLinee
 		$xml->startElement( 'DettaglioLinee' );
@@ -377,7 +384,7 @@
 	}
 
     // ciclo sulle aliquote IVA
-	foreach( $doc['iva'] as $iva => $row ) {
+	foreach( $dati['doc']['iva'] as $iva => $row ) {
 
 	    // - - - DatiRiepilogo
 		$xml->startElement( 'DatiRiepilogo' );
@@ -397,7 +404,7 @@
 		$xml->writeElement( 'Imposta', $row['tot'] );
 
 	    // - - - - EsigibilitaIVA / l'esigibilità della riga
-		$xml->writeElement( 'EsigibilitaIVA', $doc['codice_esigibilita'] );
+		$xml->writeElement( 'EsigibilitaIVA', $dati['doc']['codice_esigibilita'] );
 
 	    // - - - - RiferimentoNormativo / il riferimento normativo dell'esenzione della riga
 		if( ! empty( $row['riferimento'] ) ) {
@@ -416,10 +423,10 @@
 	$xml->startElement( 'DatiPagamento' );
 
     // - - CondizioniPagamento / le condizioni di pagamento del documento
-	$xml->writeElement( 'CondizioniPagamento', $doc['condizioni_pagamento'] );
+	$xml->writeElement( 'CondizioniPagamento', $dati['doc']['condizioni_pagamento'] );
 
     // ciclo sulle scadenze
-	foreach( $doc['pagamenti'] as $row ) {
+	foreach( $dati['doc']['pagamenti'] as $row ) {
 
 	    // - - - DettaglioPagamento
 		$xml->startElement( 'DettaglioPagamento' );
@@ -469,7 +476,7 @@
         buildXml( implode( $rows ) );
 	} else {
 	    header( 'Content-disposition: inline; filename=' . basename( $outFile ) );
-		if( $dst['se_pubblica_amministrazione'] == 1 ){
+		if( $dati['dst']['se_pubblica_amministrazione'] == 1 ){
 			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaPA_v1.2.1.xsl" ?>' . PHP_EOL ) );
 		} else {
 			array_splice( $rows, 1, 0, array( '<?xml-stylesheet type="text/xsl" href="'.$cf['site']['url'].'_src/_xsl/fatturaordinaria_v1.2.1.xsl" ?>' . PHP_EOL ) );
