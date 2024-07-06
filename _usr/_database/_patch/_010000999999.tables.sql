@@ -657,18 +657,18 @@ CREATE TABLE `carrelli` (
   `destinatario_indirizzo` char(255) DEFAULT NULL,
   `destinatario_cap` char(16) DEFAULT NULL,
   `destinatario_citta` char(255) DEFAULT NULL,
-  `destinatario_id_comune` int(11) DEFAULT NULL, --
+  `destinatario_id_comune` int(11) DEFAULT NULL,
   `destinatario_id_provincia` int(11) DEFAULT NULL,
   `destinatario_id_stato` int(11) DEFAULT NULL,
-  `destinatario_id_comune_nascita` int(11) DEFAULT NULL, --
-  `destinatario_giorno_nascita` int(2) DEFAULT NULL, --
-  `destinatario_mese_nascita` int(2) DEFAULT NULL, --
-  `destinatario_anno_nascita` int(2) DEFAULT NULL, --
-  `destinatario_id_provincia_nascita` int(11) DEFAULT NULL, --
-  `destinatario_id_stato_nascita` int(11) DEFAULT NULL, --
+  `destinatario_id_comune_nascita` int(11) DEFAULT NULL, 
+  `destinatario_giorno_nascita` int(2) DEFAULT NULL, 
+  `destinatario_mese_nascita` int(2) DEFAULT NULL, 
+  `destinatario_anno_nascita` int(2) DEFAULT NULL, 
+  `destinatario_id_provincia_nascita` int(11) DEFAULT NULL, 
+  `destinatario_id_stato_nascita` int(11) DEFAULT NULL, 
   `destinatario_telefono` char(255) DEFAULT NULL,
-  `destinatario_mobile` char(255) DEFAULT NULL, --
-  `destinatario_fax` char(255) DEFAULT NULL, --
+  `destinatario_mobile` char(255) DEFAULT NULL, 
+  `destinatario_fax` char(255) DEFAULT NULL, 
   `destinatario_mail` char(255) DEFAULT NULL,
   `destinatario_codice_fiscale` char(255) DEFAULT NULL,
   `destinatario_partita_iva` char(255) DEFAULT NULL,
@@ -684,15 +684,15 @@ CREATE TABLE `carrelli` (
   `intestazione_id_comune` int(11) DEFAULT NULL,
   `intestazione_id_provincia` int(11) DEFAULT NULL,
   `intestazione_id_stato` int(11) DEFAULT NULL,
-  `intestazione_id_comune_nascita` int(11) DEFAULT NULL, --
-  `intestazione_giorno_nascita` int(2) DEFAULT NULL, --
-  `intestazione_mese_nascita` int(2) DEFAULT NULL, --
-  `intestazione_anno_nascita` int(2), --
-  `intestazione_id_provincia_nascita` int(11) DEFAULT NULL, --
-  `intestazione_id_stato_nascita` int(11) DEFAULT NULL, --
+  `intestazione_id_comune_nascita` int(11) DEFAULT NULL, 
+  `intestazione_giorno_nascita` int(2) DEFAULT NULL, 
+  `intestazione_mese_nascita` int(2) DEFAULT NULL, 
+  `intestazione_anno_nascita` int(2), 
+  `intestazione_id_provincia_nascita` int(11) DEFAULT NULL, 
+  `intestazione_id_stato_nascita` int(11) DEFAULT NULL, 
   `intestazione_telefono` char(255) DEFAULT NULL,
-  `intestazione_mobile` char(255) DEFAULT NULL, --
-  `intestazione_fax` char(255) DEFAULT NULL, --
+  `intestazione_mobile` char(255) DEFAULT NULL, 
+  `intestazione_fax` char(255) DEFAULT NULL, 
   `intestazione_mail` char(255) DEFAULT NULL,
   `intestazione_codice_fiscale` char(255) DEFAULT NULL,
   `intestazione_partita_iva` char(255) DEFAULT NULL,
@@ -730,7 +730,7 @@ CREATE TABLE `carrelli` (
   `utm_campaign` char(128) DEFAULT NULL,
   `utm_term` char(128) DEFAULT NULL,
   `utm_content` char(128) DEFAULT NULL,
-  `id_campagna` int(11) DEFAULT NULL, --
+  `id_campagna` int(11) DEFAULT NULL, 
   `spam_score` decimal(8,2) DEFAULT NULL,
   `spam_check` int(1) DEFAULT NULL,
   `id_reseller` int(11) DEFAULT NULL,
@@ -753,7 +753,30 @@ CREATE TABLE `carrelli_articoli` (
   `id_articolo` char(32) DEFAULT NULL,
   `id_iva` int(11) DEFAULT NULL,
   `id_pagamento` int(11) DEFAULT NULL,
+  `destinatario_nome` char(255) DEFAULT NULL,
+  `destinatario_cognome` char(255) DEFAULT NULL,
+  `destinatario_denominazione` char(255) DEFAULT NULL,
+  `destinatario_id_tipologia_anagrafica` INT(11) DEFAULT NULL,
   `destinatario_id_anagrafica` int(11) DEFAULT NULL,
+  `destinatario_id_account` int(11) DEFAULT NULL,
+  `destinatario_indirizzo` char(255) DEFAULT NULL,
+  `destinatario_cap` char(16) DEFAULT NULL,
+  `destinatario_citta` char(255) DEFAULT NULL,
+  `destinatario_id_comune` int(11) DEFAULT NULL, 
+  `destinatario_id_provincia` int(11) DEFAULT NULL,
+  `destinatario_id_stato` int(11) DEFAULT NULL,
+  `destinatario_id_comune_nascita` int(11) DEFAULT NULL,
+  `destinatario_giorno_nascita` int(2) DEFAULT NULL,
+  `destinatario_mese_nascita` int(2) DEFAULT NULL, 
+  `destinatario_anno_nascita` int(2) DEFAULT NULL, 
+  `destinatario_id_provincia_nascita` int(11) DEFAULT NULL,
+  `destinatario_id_stato_nascita` int(11) DEFAULT NULL,
+  `destinatario_telefono` char(255) DEFAULT NULL,
+  `destinatario_mobile` char(255) DEFAULT NULL,
+  `destinatario_fax` char(255) DEFAULT NULL,
+  `destinatario_mail` char(255) DEFAULT NULL,
+  `destinatario_codice_fiscale` char(255) DEFAULT NULL,
+  `destinatario_partita_iva` char(255) DEFAULT NULL,
   `id_rinnovo` int(11) DEFAULT NULL,
   `prezzo_netto_unitario` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_unitario` decimal(16,5) DEFAULT NULL,
