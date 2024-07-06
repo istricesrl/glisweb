@@ -288,7 +288,8 @@
 			echo '[ OK ] connessione MySQL su ' . $cf['mysql']['server']['address'] . ':' . $cf['mysql']['server']['port'] . ' presente' . PHP_EOL;
 			echo '[ -- ] versione del server MySQL: ' . $cf['mysql']['server']['version'] . PHP_EOL;
 			echo '[ -- ] database selezionato: ' . $cf['mysql']['server']['db'] . PHP_EOL;
-/* TODO ripristinare
+
+			/* TODO ripristinare
 			echo '[ -- ] livello di patch: ' . $cf['mysql']['profile']['patch']['current'] . PHP_EOL;
 			if( $cf['mysql']['profile']['patch']['current'] == $cf['mysql']['profile']['patch']['latest'] ) {
 				echo '[ OK ] database aggiornato alla patch: ' . $cf['mysql']['profile']['patch']['latest'] . PHP_EOL;
@@ -301,7 +302,8 @@
 			foreach( $fails as $fail ) {
 				echo '[WARN] applicare manualmente la patch: ' . basename( $fail ) . PHP_EOL;
 			}
-*/
+			*/
+
 			$myerr = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT count( id ) FROM __patch__ WHERE note_esecuzione != "OK"' );
 
 			if( $myerr > 0 ) {
@@ -313,6 +315,7 @@
 		} else {
 			echo( '[FAIL] connessione assente' . PHP_EOL );
 	    }
+
 	} else {
 	    echo '[ -- ] backend MySQL non attivato' . PHP_EOL;
 	}

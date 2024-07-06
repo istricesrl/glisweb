@@ -5,10 +5,9 @@
      *
      *
      *
-     * @todo le costanti LINGUE_ATTIVE e LINGUA_CORRENTE dovrebbero diventare IETF_ATTIVI e IETF_CORRENTE?
-     * @todo trovare un modo sensato per convertire la lingua corrente del sito
+     * TODO le costanti LINGUE_ATTIVE e LINGUA_CORRENTE dovrebbero diventare IETF_ATTIVI e IETF_CORRENTE?
+     * TODO trovare un modo sensato per convertire la lingua corrente del sito
      *
-     * @file
      *
      */
 
