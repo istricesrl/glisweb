@@ -1,0 +1,149 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/carrelli.form.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+	    
+		{# MODULO PRINCIPALE #}
+
+	    <fieldset>
+			<legend>dati generali</legend>
+
+			<div class="form-group form-row">
+				<div class="col-auto">
+					<span class="label-top">id</span>
+					{{ frm.input( table, '', '', 'id', 'id', '', request ) }}
+				</div>
+				<div class="col-auto">
+					<span class="label-top">data apertura</span>
+					{{ frm.datetime( table, '', '', 'timestamp_inserimento', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">nome</span>
+					{{ frm.input( table, '', '', 'intestazione_nome', 'nome', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">cognome</span>
+					{{ frm.input( table, '', '', 'intestazione_cognome', 'cognome', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">denominazione</span>
+					{{ frm.input( table, '', '', 'intestazione_denominazione', 'denominazione', '', request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col">
+					<span class="label-top">indirizzo</span>
+					{{ frm.input( table, '', '', 'intestazione_indirizzo', '', '', request ) }}
+				</div>
+				<div class="col-1">
+					<span class="label-top">cap</span>
+					{{ frm.input( table, '', '', 'intestazione_cap', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">comune</span>
+					{{ frm.select( table, '', '', 'intestazione_id_comune', '', etc.select.comuni, request ) }}
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col">
+					<span class="label-top">C.F.</span>
+					{{ frm.input( table, '', '', 'intestazione_codice_fiscale', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">P.IVA</span>
+					{{ frm.input( table, '', '', 'intestazione_partita_iva', '', '', request ) }}
+				</div>
+				
+				<div class="col">
+					<span class="label-top">email</span>
+					{{ frm.input( table, '', '', 'intestazione_mail', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">telefono</span>
+					{{ frm.input( table, '', '', 'intestazione_telefono', '', '', request ) }}
+				</div>
+			</div>
+		</fieldset>
+		 
+		<fieldset>
+			<legend>dati pagamento</legend>
+
+			<div class="form-group form-row">
+				<div class="col">
+					<span class="label-top">provider pagamento</span>
+					{{ frm.input( table, '', '', 'provider_pagamento', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">esito pagamento</span>
+					{{ frm.input( table, '', '', 'status_pagamento', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">data pagamento</span>
+					{{ frm.datetime( table, '', '', 'timestamp_pagamento', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">data chiusura</span>
+					{{ frm.datetime( table, '', '', 'timestamp_checkout', '', '', request ) }}
+				</div>
+				<div class="col">
+					<span class="label-top">importo pagamento</span>
+					{{ frm.input( table, '', '', 'prezzo_lordo_finale', '', '', request ) }}
+				</div>
+			</div>
+		</fieldset>	
+		
+
+	    {{ sub.articoli( table, 'carrelli_articoli', 'articoli', site, page, pages, ietf, etc, request, session ) }}
+
+
+	   {# BOTTONI E COMANDI DEL MODULO #}
+	    <fieldset class="form-controls mt-auto">
+			{{ def.controls( page, pages, ietf, session, table, request ) }}
+	    </fieldset>
+
+	</form>
+    </div>
+</section>
+
+{% endblock %}

@@ -133,3 +133,29 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_lydia/', 'schema' => 'carrello.fallimento.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_carrello.fallimento.php' )
 	);
+
+	// vista carrelli
+	$p['carrelli.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'ecommerce' ),
+	    'h1'			=> array( $l		=> 'ecommerce' ),
+	    'parent'		=> array( 'id'		=> NULL ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_carrelli.view.php' ),
+		'auth'			=> array( 'groups'	=> array( 'roots' ) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'ecommerce' ),
+																		'priority'	=> '700' ) ) )	
+	);
+	
+	// gestione carrelli
+	$p['carrelli.form'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'gestione' ),
+	    'h1'			=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'carrelli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'carrelli.form.html' ),
+	    'macro'			=> array( $m.'_src/_inc/_macro/_carrelli.form.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'carrelli.form' ) )
+	);
+	
