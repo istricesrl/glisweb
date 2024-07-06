@@ -20,7 +20,7 @@
     rksort( $cf );
 
     // output
-    $tx	= '<span style="font-family: monospace;">';
+    $tx    = '<span style="font-family: monospace;">';
 
     // array da stampare
     $print = $cf;
@@ -50,8 +50,8 @@
     }
 
     // output
-    $tx	.= '<p>' . implode( ' → ', $txa ) . '</p>';
-    $tx	.= '<ul>';
+    $tx    .= '<p>' . implode( ' → ', $txa ) . '</p>';
+    $tx    .= '<ul>';
 
     // stampa
     if( empty( $print ) ) {
@@ -85,8 +85,8 @@
     // echo '<pre>' . print_r( $cf, true ) . '</pre>';
 
     // output
-    $tx	.= '</ul>';
-    $tx	.= '</span>';
+    $tx    .= '</ul>';
+    $tx    .= '</span>';
 
     // output
     buildHtml( $tx, 'variabili del framework' );

@@ -46,7 +46,7 @@
      */
 
     // inclusione del framework
-	require '../_config.php';
+    require '../_config.php';
 
     // debug
     // print_r( $_REQUEST );
@@ -181,9 +181,9 @@
      */
 
     // ricerca delle macro di download
-	$arrayMacroBase             = glob( glob2custom( DIR_SRC_INC_MACRO . '_download.php' ), GLOB_BRACE );
-	$arrayMacroModuli           = glob( glob2custom( DIR_MOD_ATTIVI_SRC_INC_MACRO . '_download.php' ), GLOB_BRACE );
-	$arrayMacro                 = array_unique( array_merge( $arrayMacroBase , $arrayMacroModuli ) );
+    $arrayMacroBase             = glob( glob2custom( DIR_SRC_INC_MACRO . '_download.php' ), GLOB_BRACE );
+    $arrayMacroModuli           = glob( glob2custom( DIR_MOD_ATTIVI_SRC_INC_MACRO . '_download.php' ), GLOB_BRACE );
+    $arrayMacro                 = array_unique( array_merge( $arrayMacroBase , $arrayMacroModuli ) );
 
     // inclusione delle macro
     foreach( $arrayMacro as $fileMacro ) {
@@ -208,7 +208,7 @@
     } else {
 
         // header
-	    http_response_code( 403 );
+        http_response_code( 403 );
         header( 'content-type: text/plain' );
 
         // messaggio di errore

@@ -295,6 +295,8 @@
     -----------------
     Questa tabella *virtuale* contiene le anagrafiche non archiviate, individuate in base al fatto che il campo *data_archiviazione* è NULL.
 
+    NOTA questa tabella virtuale è deprecata.
+
     anagrafica_archiviati
     ---------------------
     Questa tabella *virtuale* contiene le anagrafiche archiviate, individuate in base al fatto che il campo data_archiviazione è NOT NULL.

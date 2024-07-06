@@ -176,6 +176,8 @@
     [...] NOTA come conseguenza della semplificazione vista sopra, cesserebbe anche di avere senso la moltiplicazione di viste tipo anagrafica_attivi_view, anagrafica_archiviati_view, eccetera, in quanto
     rendendo le viste statiche si può usare direttamente un __restrict__ sulla vista unica anagrafica_view statica grazie alla sua maggiore velocità.
 
+    NOTA anagrafica_attivi è ufficialmente deprecata.
+
     [...] NOTA visto che i task e i job di questo tipo possono diventare molti, sarebbe opportuno radunarli in sottocartelle:
     
     - _src/_api/_task/_static/

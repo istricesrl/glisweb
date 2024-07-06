@@ -112,20 +112,20 @@
 
     // debug
     // print_r( $ct['page'] );
-	// die('inizio api pages');
-	// ini_set( 'display_errors', 1 );
-	// ini_set( 'display_startup_errors', 1 );
-	// error_reporting( E_ALL );
+    // die('inizio api pages');
+    // ini_set( 'display_errors', 1 );
+    // ini_set( 'display_startup_errors', 1 );
+    // error_reporting( E_ALL );
     // echo 'DEBUG';
 
     // timer
-	timerCheck( $cf['speed'], 'inizio eleborazione API pages' );
+    timerCheck( $cf['speed'], 'inizio eleborazione API pages' );
 
     // log
-	logger( 'avvio API pages per ' . $_SERVER['REDIRECT_URL'] . ' -> ' . $_SERVER['REQUEST_URI'], 'pages' );
+    logger( 'avvio API pages per ' . $_SERVER['REDIRECT_URL'] . ' -> ' . $_SERVER['REQUEST_URI'], 'pages' );
 
     // log
-	loggerLatest( 'inizio caricamento file INI del template' );
+    loggerLatest( 'inizio caricamento file INI del template' );
 
     /**
      * parsing del file di configurazione del template
@@ -158,37 +158,37 @@
      */
 
     // file di configurazione del template
-	$ct['page']['template']['ini'] = DIR_BASE . $ct['page']['template']['path'] . 'etc/template.conf';
-	$ct['page']['template']['yaml'] = DIR_BASE . $ct['page']['template']['path'] . 'etc/template.yaml';
+    $ct['page']['template']['ini'] = DIR_BASE . $ct['page']['template']['path'] . 'etc/template.conf';
+    $ct['page']['template']['yaml'] = DIR_BASE . $ct['page']['template']['path'] . 'etc/template.yaml';
 
     // includo il file di configurazione del template
-	if( file_exists( $ct['page']['template']['ini'] ) ) {
+    if( file_exists( $ct['page']['template']['ini'] ) ) {
 
         // sostituisco il file di configurazione del template con la controparte custom se presente
-		if( file_exists( path2custom( $ct['page']['template']['ini'] ) ) ) {
-			$ct['page']['template']['ini'] = path2custom( $ct['page']['template']['ini'] );
-		}
+        if( file_exists( path2custom( $ct['page']['template']['ini'] ) ) ) {
+            $ct['page']['template']['ini'] = path2custom( $ct['page']['template']['ini'] );
+        }
 
         // unisco le direttive di configurazione del file a quelle già esistenti
-	    $ct['page'] = array_replace_recursive(
-			$ct['page'],
-			parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
-	    );
+        $ct['page'] = array_replace_recursive(
+            $ct['page'],
+            parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
+        );
 
         // includo i file di configurazione aggiuntivi del template
-		foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
-			$ct['page'] = array_merge_recursive(
-				$ct['page'],
-				parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
-			);
-		}
+        foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
+            $ct['page'] = array_merge_recursive(
+                $ct['page'],
+                parse_ini_file( $addCnf, true, INI_SCANNER_RAW )
+            );
+        }
 
         // debug
         // print_r( $ct['page'] );
         // print_r( $ct['page']['template'] );
         // die('lettura file INI del template completata');
 
-	} elseif( file_exists( $ct['page']['template']['yaml'] ) ) {
+    } elseif( file_exists( $ct['page']['template']['yaml'] ) ) {
 
         // debug
         // var_dump( $ct['page']['template']['yaml'] );
@@ -230,13 +230,13 @@
     }
 
     // timer
-	timerCheck( $cf['speed'], 'fine caricamento file INI del template' );
+    timerCheck( $cf['speed'], 'fine caricamento file INI del template' );
 
     // log
-	loggerLatest( 'fine caricamento file INI del template' );
+    loggerLatest( 'fine caricamento file INI del template' );
 
     // debug
-	// print_r( $ct['page'] );
+    // print_r( $ct['page'] );
     // print_r( $ct['page']['template'] );
     // die();
 
@@ -276,27 +276,27 @@
     }
 
     // aggiunta del tema ai CSS da caricare
-	if( isset( $ct['page']['template']['theme'] ) ) {
-		foreach( array( 'css/', 'css/themes/' ) as $tDir ) {
-			$tFile = $ct['page']['template']['path'] . $tDir . $ct['page']['template']['theme'];
-			$tcFile = path2custom( $tFile );
-			if( file_exists( DIR_BASE . $tcFile ) ) {
-				$ct['page']['css']['custom'][] = $tcFile;
-			} elseif( file_exists( DIR_BASE . $tFile ) ) {
-				$ct['page']['css']['template'][] = $tDir . $ct['page']['template']['theme'];
-			}
-		}
-	}
+    if( isset( $ct['page']['template']['theme'] ) ) {
+        foreach( array( 'css/', 'css/themes/' ) as $tDir ) {
+            $tFile = $ct['page']['template']['path'] . $tDir . $ct['page']['template']['theme'];
+            $tcFile = path2custom( $tFile );
+            if( file_exists( DIR_BASE . $tcFile ) ) {
+                $ct['page']['css']['custom'][] = $tcFile;
+            } elseif( file_exists( DIR_BASE . $tFile ) ) {
+                $ct['page']['css']['template'][] = $tDir . $ct['page']['template']['theme'];
+            }
+        }
+    }
 
     // debug
     // print_r( $ct['page']['css'] );
     // die();
 
     // timer
-	timerCheck( $cf['speed'], 'fine caricamento tema del template' );
+    timerCheck( $cf['speed'], 'fine caricamento tema del template' );
 
     // log
-	loggerLatest( 'fine caricamento tema del template' );
+    loggerLatest( 'fine caricamento tema del template' );
 
     /**
      * Content Security Policy
@@ -309,63 +309,63 @@
      */
 
     // ...
-	foreach( array( 'external', 'preload' ) as $type ) {
-		if( isset( $ct['page']['css'][ $type ] ) && is_array( $ct['page']['css'][ $type ] ) ) {
-			foreach( $ct['page']['css'][ $type ] as $k => $v ) {
-				$ct['page']['csp']['style-src'][] = domainFromURL( $v );
-			}
-			$ct['page']['csp']['style-src'] = array_unique( $ct['page']['csp']['style-src'] );
-		} else {
-			$ct['page']['csp']['style-src'] = array();
-		}
-	}
-
-	// ...
-	foreach( array( 'external' ) as $type ) {
-		if( isset( $ct['page']['js'][ $type ] ) && is_array( $ct['page']['js'][ $type ] ) ) {
-			foreach( $ct['page']['js'][ $type ] as $k => $v ) {
-				$ct['page']['csp']['script-src'][] = domainFromURL( $v );
-			}
-			$ct['page']['csp']['script-src'] = array_unique( $ct['page']['csp']['script-src'] );
-		} else {
-			$ct['page']['csp']['script-src'] = array();
-		}
-	}
+    foreach( array( 'external', 'preload' ) as $type ) {
+        if( isset( $ct['page']['css'][ $type ] ) && is_array( $ct['page']['css'][ $type ] ) ) {
+            foreach( $ct['page']['css'][ $type ] as $k => $v ) {
+                $ct['page']['csp']['style-src'][] = domainFromURL( $v );
+            }
+            $ct['page']['csp']['style-src'] = array_unique( $ct['page']['csp']['style-src'] );
+        } else {
+            $ct['page']['csp']['style-src'] = array();
+        }
+    }
 
     // ...
-	if( isset( $ct['page']['csp']['default-src'] ) ) {
+    foreach( array( 'external' ) as $type ) {
+        if( isset( $ct['page']['js'][ $type ] ) && is_array( $ct['page']['js'][ $type ] ) ) {
+            foreach( $ct['page']['js'][ $type ] as $k => $v ) {
+                $ct['page']['csp']['script-src'][] = domainFromURL( $v );
+            }
+            $ct['page']['csp']['script-src'] = array_unique( $ct['page']['csp']['script-src'] );
+        } else {
+            $ct['page']['csp']['script-src'] = array();
+        }
+    }
+
+    // ...
+    if( isset( $ct['page']['csp']['default-src'] ) ) {
 
         // ...
-		$ct['page']['csp']['default-src'] = array_merge(
-			array( "'self'" ),
-			array_intersect(
-				$ct['page']['csp']['script-src'],
-				$ct['page']['csp']['style-src']
-			)
-		);
-	
+        $ct['page']['csp']['default-src'] = array_merge(
+            array( "'self'" ),
+            array_intersect(
+                $ct['page']['csp']['script-src'],
+                $ct['page']['csp']['style-src']
+            )
+        );
+    
         // ...
-		$ct['page']['csp']['style-src'] = array_diff(
-			$ct['page']['csp']['style-src'],
-			$ct['page']['csp']['default-src']
-		);
+        $ct['page']['csp']['style-src'] = array_diff(
+            $ct['page']['csp']['style-src'],
+            $ct['page']['csp']['default-src']
+        );
 
         // ...
         $ct['page']['csp']['script-src'] = array_diff(
-			$ct['page']['csp']['script-src'],
-			$ct['page']['csp']['default-src']
-		);
-	
-	}
+            $ct['page']['csp']['script-src'],
+            $ct['page']['csp']['default-src']
+        );
+    
+    }
 
-	// timer
-	timerCheck( $cf['speed'], 'fine elaborazione dati per CSP' );
+    // timer
+    timerCheck( $cf['speed'], 'fine elaborazione dati per CSP' );
 
     // log
-	loggerLatest( 'fine elaborazione dati per CSP' );
+    loggerLatest( 'fine elaborazione dati per CSP' );
 
-	// debug
-	// print_r( array_intersect( $ct['page']['csp']['script-src'], $ct['page']['csp']['style-src'] ) );
+    // debug
+    // print_r( array_intersect( $ct['page']['csp']['script-src'], $ct['page']['csp']['style-src'] ) );
     // print_r( $ct['page'] );
     // print_r( $ct['page']['css'] );
     // print_r( $ct['page']['csp'] );
@@ -381,27 +381,27 @@
      */
 
     // log
-	loggerLatest( 'inizio controllo permessi' );
+    loggerLatest( 'inizio controllo permessi' );
 
     // switch dello schema in caso di permessi insufficienti
-	if( getPagePermission( $ct['page'] ) !== true ) {
-	    $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['login'] ) ) ? $ct['page']['template']['login'] : 'login.html';
-	} 
+    if( getPagePermission( $ct['page'] ) !== true ) {
+        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['login'] ) ) ? $ct['page']['template']['login'] : 'login.html';
+    } 
 
     // switch dello schema in caso di schema non specificato
     if( ! isset( $ct['page']['template']['schema'] ) ) {
-	    $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['default'] ) ) ? $ct['page']['template']['default'] : 'default.html';
-	}
+        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['default'] ) ) ? $ct['page']['template']['default'] : 'default.html';
+    }
 
-	// debug
-	// print_r( $ct['page']['template'] );
+    // debug
+    // print_r( $ct['page']['template'] );
     // echo 'DEBUG';
 
     // timer
-	timerCheck( $cf['speed'], 'fine controllo permessi' );
+    timerCheck( $cf['speed'], 'fine controllo permessi' );
 
     // log
-	loggerLatest( 'fine controllo permessi' );
+    loggerLatest( 'fine controllo permessi' );
 
     /**
      * macro di pagina
@@ -411,59 +411,59 @@
      */
 
     // debug
-	$includes = array();
+    $includes = array();
 
     // se ci sono macro richieste per la pagina corrente
-	if( isset( $ct['page']['macro'] ) && is_array( $ct['page']['macro'] ) ) {
+    if( isset( $ct['page']['macro'] ) && is_array( $ct['page']['macro'] ) ) {
 
         // per ogni macro richiesta
         foreach( $ct['page']['macro'] as $macro ) {
 
             // cerco le macro alternative
-			$macroAlternative = path2custom( str_replace( '.php', '.alt.php', $macro ) );
+            $macroAlternative = path2custom( str_replace( '.php', '.alt.php', $macro ) );
 
             // se ci sono macro alternative...
-			if( file_exists( fullPath( $macroAlternative ) ) ) {
+            if( file_exists( fullPath( $macroAlternative ) ) ) {
 
                 // includo la macro alternativa
-				loggerLatest( 'avvio inclusione macro -> ' . $macroAlternative );
-				require fullPath( $macroAlternative );
-				timerCheck( $cf['speed'], $macroAlternative );
-				loggerLatest( 'fine inclusione macro -> ' . $macroAlternative );
-				$includes[] = $macroAlternative;
+                loggerLatest( 'avvio inclusione macro -> ' . $macroAlternative );
+                require fullPath( $macroAlternative );
+                timerCheck( $cf['speed'], $macroAlternative );
+                loggerLatest( 'fine inclusione macro -> ' . $macroAlternative );
+                $includes[] = $macroAlternative;
 
-			} else {
+            } else {
 
                 // cerco la macro custom
-				$macroLocal = path2custom( $macro );
+                $macroLocal = path2custom( $macro );
 
                 // se esiste la macro custom
-				if( file_exists( fullPath( $macroLocal ) ) && $macro !== $macroLocal ) {
+                if( file_exists( fullPath( $macroLocal ) ) && $macro !== $macroLocal ) {
 
                     // includo la macro custom
-					loggerLatest( 'avvio inclusione macro -> ' . $macroLocal );
-					require fullPath( $macroLocal );
-					timerCheck( $cf['speed'], $macroLocal );
-					loggerLatest( 'fine inclusione macro -> ' . $macroLocal );
-					$includes[] = $macroLocal;
+                    loggerLatest( 'avvio inclusione macro -> ' . $macroLocal );
+                    require fullPath( $macroLocal );
+                    timerCheck( $cf['speed'], $macroLocal );
+                    loggerLatest( 'fine inclusione macro -> ' . $macroLocal );
+                    $includes[] = $macroLocal;
 
-				} elseif( file_exists( fullPath( $macro ) ) ) {
+                } elseif( file_exists( fullPath( $macro ) ) ) {
 
                     // includo la macro standard
-					loggerLatest( 'avvio inclusione macro -> ' . $macro . PHP_EOL );
-					require fullPath( $macro );
-					timerCheck( $cf['speed'], fullPath( $macro ) );
-					loggerLatest( 'fine inclusione macro -> ' . $macro . PHP_EOL );
-					$includes[] = $macro;
+                    loggerLatest( 'avvio inclusione macro -> ' . $macro . PHP_EOL );
+                    require fullPath( $macro );
+                    timerCheck( $cf['speed'], fullPath( $macro ) );
+                    loggerLatest( 'fine inclusione macro -> ' . $macro . PHP_EOL );
+                    $includes[] = $macro;
 
-				} else {
+                } else {
 
                     // debug
-					die( 'impossibile trovare la macro di pagina ' . $macro );
+                    die( 'impossibile trovare la macro di pagina ' . $macro );
 
-				}
+                }
 
-			}
+            }
 
             // debug
             // echo $macro;
@@ -473,15 +473,15 @@
     }
 
     // debug
-	// print_r( $ct['page']['macro'] );
-	// print_r( get_included_files() );
+    // print_r( $ct['page']['macro'] );
+    // print_r( get_included_files() );
     // echo 'DEBUG';
 
     // timer
-	timerCheck( $cf['speed'], 'fine inclusione macro' );
+    timerCheck( $cf['speed'], 'fine inclusione macro' );
 
     // log
-	loggerLatest( 'fine inclusione macro' );
+    loggerLatest( 'fine inclusione macro' );
 
     /**
      * contenuti statici
@@ -494,25 +494,25 @@
     // TODO usare glob() per prendere anche i contenuti statici dai moduli
     // TODO gli ID delle pagine dovrebbero già contenere . anziché _
     // NOTA solo un contenuto statico alla volta può essere incluso, quindi individuare il criterio con cui sceglierlo
-	$ctName = str_replace( '_', '.', $ct['page']['id'] );
-	$ctFile = DIR_SRC_INC_CONTENTS . '_' . $ctName . '.' . $cf['localization']['language']['ietf'] . '.html';
-	$ctFileLocal = str_replace( '_', '', $ctFile );
-	if( file_exists( $ctFileLocal ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFileLocal . ' -->' . PHP_EOL . readStringFromFile( $ctFileLocal );
-	} elseif( file_exists( $ctFile ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFile . ' -->' . PHP_EOL . readStringFromFile( $ctFile );
-	}
+    $ctName = str_replace( '_', '.', $ct['page']['id'] );
+    $ctFile = DIR_SRC_INC_CONTENTS . '_' . $ctName . '.' . $cf['localization']['language']['ietf'] . '.html';
+    $ctFileLocal = str_replace( '_', '', $ctFile );
+    if( file_exists( $ctFileLocal ) ) {
+        $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFileLocal . ' -->' . PHP_EOL . readStringFromFile( $ctFileLocal );
+    } elseif( file_exists( $ctFile ) ) {
+        $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFile . ' -->' . PHP_EOL . readStringFromFile( $ctFile );
+    }
 
-	// debug
-	// var_dump( $ctFile );
+    // debug
+    // var_dump( $ctFile );
     // var_dump( $ct['page']['content'] );
     // echo 'DEBUG';
 
     // timer
-	timerCheck( $cf['speed'], 'fine inclusione contenuti statici' );
+    timerCheck( $cf['speed'], 'fine inclusione contenuti statici' );
 
-	// log
-	loggerLatest( 'fine inclusione contenuti statici' );
+    // log
+    loggerLatest( 'fine inclusione contenuti statici' );
 
     /**
      * scrittura dell'indice della cache
@@ -522,12 +522,12 @@
      * 
      */
 
-	// scrittura dell'indice della cache
-	memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
-	// memcacheWrite( $cf['memcache']['connection'], 'CACHE_REGISTRY', $cf['memcache']['registry'] );
+    // scrittura dell'indice della cache
+    memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
+    // memcacheWrite( $cf['memcache']['connection'], 'CACHE_REGISTRY', $cf['memcache']['registry'] );
 
     // timer
-	timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
+    timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
 
     /**
      * ricerca delle favicons
@@ -539,50 +539,50 @@
      */
 
     // ricerca favicons
-	$favicons = glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'img/favicons/*.png', GLOB_BRACE );
-	if( empty( $favicons ) ) {
-		$favicons = glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'img/favicons/'.$cf['site']['id'].'/*.png', GLOB_BRACE );
-	}
+    $favicons = glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'img/favicons/*.png', GLOB_BRACE );
+    if( empty( $favicons ) ) {
+        $favicons = glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'img/favicons/'.$cf['site']['id'].'/*.png', GLOB_BRACE );
+    }
 
-	// preparazione favicons
-	$ct['page']['template']['favicons'] = array();
-	foreach( $favicons as $favicon ) {
-		$path = shortPath( dirname( $favicon ) );
-	    $favicon = basename( $favicon );
-	    preg_match_all( '/([a-z\-]*)\-([0-9x]*)\.([a-z]*)/', $favicon, $details );
-	    if( ! empty( $details[0][0] ) ) {
-			switch( $details[1][0] ) {
-				case 'apple-icon':
-					$ct['page']['template']['favicons'][] = array(
-						'rel' => 'apple-touch-icon',
-						'sizes' => $details[2][0],
-						'file' => $details[0][0],
-						'path' => $path
-					);
-				break;
-				case 'android-icon':
-				case 'favicon':
-					$ct['page']['template']['favicons'][] = array(
-						'rel' => 'icon',
-						'sizes' => $details[2][0],
-						'file' => $details[0][0],
-						'type' => 'image/png',
-						'path' => $path
-					);
-				break;
-			}
-	    }
-	}
+    // preparazione favicons
+    $ct['page']['template']['favicons'] = array();
+    foreach( $favicons as $favicon ) {
+        $path = shortPath( dirname( $favicon ) );
+        $favicon = basename( $favicon );
+        preg_match_all( '/([a-z\-]*)\-([0-9x]*)\.([a-z]*)/', $favicon, $details );
+        if( ! empty( $details[0][0] ) ) {
+            switch( $details[1][0] ) {
+                case 'apple-icon':
+                    $ct['page']['template']['favicons'][] = array(
+                        'rel' => 'apple-touch-icon',
+                        'sizes' => $details[2][0],
+                        'file' => $details[0][0],
+                        'path' => $path
+                    );
+                break;
+                case 'android-icon':
+                case 'favicon':
+                    $ct['page']['template']['favicons'][] = array(
+                        'rel' => 'icon',
+                        'sizes' => $details[2][0],
+                        'file' => $details[0][0],
+                        'type' => 'image/png',
+                        'path' => $path
+                    );
+                break;
+            }
+        }
+    }
 
     // debug
-	// print_r( $ct['page']['template']['favicons'] );
-	// print_r( $ct['contatti'] );
+    // print_r( $ct['page']['template']['favicons'] );
+    // print_r( $ct['contatti'] );
 
     // timer
-	timerCheck( $cf['speed'], 'fine ricerca favicons' );
+    timerCheck( $cf['speed'], 'fine ricerca favicons' );
 
-	// log
-	loggerLatest( 'fine ricerca favicons' );
+    // log
+    loggerLatest( 'fine ricerca favicons' );
 
     /**
      * costruzione degli elementi di navigazione
@@ -605,31 +605,31 @@
      */
 
     // debug
-	// print_r( $ct['page'] );
-	// print_r( $ct['page']['template']['menu'] );
-	// print_r( $ct['page']['content'] );
-	// if( headers_sent( $file, $line ) ) { echo $file . '->' . $line; } else { echo 'output non iniziato'; }
-	// print_r( $ct['page']['css'] );
+    // print_r( $ct['page'] );
+    // print_r( $ct['page']['template']['menu'] );
+    // print_r( $ct['page']['content'] );
+    // if( headers_sent( $file, $line ) ) { echo $file . '->' . $line; } else { echo 'output non iniziato'; }
+    // print_r( $ct['page']['css'] );
 
     // costruzione dei menu
-	if( isset( $ct['page']['template']['menu'] ) ) {
-	    foreach( $ct['page']['template']['menu'] as $menu => &$nav) {
-			$nav = buildMenu( $menu, $cf['contents']['tree'][ NULL ], $cf['contents']['pages'], $ct['page']['id'] );
-			timerCheck( $cf['speed'], 'fine generazione menu ' . $menu );
-	    }
-	}
+    if( isset( $ct['page']['template']['menu'] ) ) {
+        foreach( $ct['page']['template']['menu'] as $menu => &$nav) {
+            $nav = buildMenu( $menu, $cf['contents']['tree'][ NULL ], $cf['contents']['pages'], $ct['page']['id'] );
+            timerCheck( $cf['speed'], 'fine generazione menu ' . $menu );
+        }
+    }
 
     // costruzione delle briciole di pane
-	$ct['page']['template']['breadcrumbs'] = buildBreadcrumbs( $ct['page'], $ct['page']['id'] );
+    $ct['page']['template']['breadcrumbs'] = buildBreadcrumbs( $ct['page'], $ct['page']['id'] );
 
     // costruzione del selettore lingua
-	$ct['page']['template']['flags'] = buildFlags( $ct['page'], $cf['localization']['language']['ietf'] );
+    $ct['page']['template']['flags'] = buildFlags( $ct['page'], $cf['localization']['language']['ietf'] );
 
     // timer
-	timerCheck( $cf['speed'], 'fine generazione elementi secondari di navigazione' );
+    timerCheck( $cf['speed'], 'fine generazione elementi secondari di navigazione' );
 
-	// log
-	loggerLatest( 'fine generazione elementi secondari di navigazione' );
+    // log
+    loggerLatest( 'fine generazione elementi secondari di navigazione' );
 
     /**
      * ricerca delle risorse minificate
@@ -640,16 +640,16 @@
      */
 
     // debug
-	// print_r( $ct['page']['template'] );
-	// $tms = array_keys( $cf['speed'] );
-	// $run = end( $tms );
-	// echo 'corsa: ' . $run;
-	// die( 'float: ' . floatval( str_replace( ',', '.', $run ) ) );
+    // print_r( $ct['page']['template'] );
+    // $tms = array_keys( $cf['speed'] );
+    // $run = end( $tms );
+    // echo 'corsa: ' . $run;
+    // die( 'float: ' . floatval( str_replace( ',', '.', $run ) ) );
     // die( print_r( $ct['page']['css'], true ) );
 
     // ricerca delle risorse CSS minificate
-	if( isset( $ct['page']['css'] ) && is_array( $ct['page']['css'] ) ) {
-	    foreach( $ct['page']['css'] as $tier => $media ) {
+    if( isset( $ct['page']['css'] ) && is_array( $ct['page']['css'] ) ) {
+        foreach( $ct['page']['css'] as $tier => $media ) {
             switch( $tier ) {
                 case 'internal':
                     $pre = DIR_BASE;
@@ -678,24 +678,24 @@
                     }
                 }
             }
-	    }
-	}
+        }
+    }
 
     // debug
     // die( print_r( $ct['page']['css'], true ) );
     // echo 'DEBUG';
 
     // timer
-	timerCheck( $cf['speed'], 'fine ricerca CSS minificati' );
+    timerCheck( $cf['speed'], 'fine ricerca CSS minificati' );
 
-	// log
-	loggerLatest( 'fine ricerca CSS minificati' );
+    // log
+    loggerLatest( 'fine ricerca CSS minificati' );
 
     // ricerca delle risorse JS minificate
-	if( isset( $ct['page']['js'] ) && is_array( $ct['page']['js'] ) ) {
-	    foreach( $ct['page']['js'] as $tier => &$rJs ) {
-			foreach( $rJs as &$js ) {
-				switch( $tier ) {
+    if( isset( $ct['page']['js'] ) && is_array( $ct['page']['js'] ) ) {
+        foreach( $ct['page']['js'] as $tier => &$rJs ) {
+            foreach( $rJs as &$js ) {
+                switch( $tier ) {
                     case 'internal':
                         $pre = DIR_BASE;
                     break;
@@ -705,23 +705,23 @@
                     default:
                         $pre = NULL;
                     break;
-				}
-				if( strpos( $js, '.min.js' ) === false ) {
+                }
+                if( strpos( $js, '.min.js' ) === false ) {
                     $new = str_replace( '.js', '.min.js', $js );
                     if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
                         logger( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
                         $js = $new;
                     }
-				}
-			}
-	    }
-	}
+                }
+            }
+        }
+    }
 
     // timer
-	timerCheck( $cf['speed'], 'fine ricerca JS minificati' );
+    timerCheck( $cf['speed'], 'fine ricerca JS minificati' );
 
-	// log
-	loggerLatest( 'fine ricerca JS minificati' );
+    // log
+    loggerLatest( 'fine ricerca JS minificati' );
 
     // debug
     // die( print_r( $ct['page']['css'], true ) );
@@ -764,20 +764,20 @@
      */
 
     // debug
-	// print_r( $ct['page'] );
-	// print_r( $ct['contatti'] );
-	// print_r( $ct['view']['open'] );
-	// print_r( $cf['contents'] );
+    // print_r( $ct['page'] );
+    // print_r( $ct['contatti'] );
+    // print_r( $ct['view']['open'] );
+    // print_r( $cf['contents'] );
     // die( print_r( $ct['page']['css'], true ) );
 
     // censuro l'array $ct per evitare fughe accidentali di informazioni sensibili
-	array2censored( $ct );
+    array2censored( $ct );
 
     // riordino l'array $ct ricorsivamente
-	rksort( $ct );
+    rksort( $ct );
 
     // timer
-	timerCheck( $cf['speed'], 'fine censura e ordinamento array $ct' );
+    timerCheck( $cf['speed'], 'fine censura e ordinamento array $ct' );
 
     /**
      * rendering del template
@@ -788,28 +788,28 @@
      */
 
     // inizio le operazioni di rendering del template se è specificato il tipo di template
-	if( isset( $ct['page']['template']['type'] ) ) {
+    if( isset( $ct['page']['template']['type'] ) ) {
 
         // aggiungo all'output le informazioni su GlisWeb
-		echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_EOL;
+        echo PHP_EOL . '<!-- sito realizzato tramite GlisWeb framework (https://glisweb.istricesrl.it) -->' . PHP_EOL;
 
         // aggiungo all'output l'ID della pagina
         echo PHP_EOL . '<!-- ID pagina: ' . $ct['page']['id'] . ' -->' . PHP_EOL;
 
         // aggiungo all'output il percorso del template
         if( ! empty( $ct['page']['template']['path'] ) ) {
-			echo PHP_EOL . '<!-- template: ' . $ct['page']['template']['path'] . ' -->' . PHP_EOL;
-		}
+            echo PHP_EOL . '<!-- template: ' . $ct['page']['template']['path'] . ' -->' . PHP_EOL;
+        }
 
         // aggiungo all'output lo schema del template
-		if( ! empty( $ct['page']['template']['schema'] ) ) {
-			echo PHP_EOL . '<!-- schema: ' . $ct['page']['template']['schema'] . ' -->' . PHP_EOL;
-		}
+        if( ! empty( $ct['page']['template']['schema'] ) ) {
+            echo PHP_EOL . '<!-- schema: ' . $ct['page']['template']['schema'] . ' -->' . PHP_EOL;
+        }
 
         // aggiungo all'output il tema del template
-		if( ! empty( $ct['page']['template']['theme'] ) ) {
-			echo PHP_EOL . '<!-- tema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
-		}
+        if( ! empty( $ct['page']['template']['theme'] ) ) {
+            echo PHP_EOL . '<!-- tema: ' . $ct['page']['template']['theme'] . ' -->' . PHP_EOL;
+        }
 
         // aggiungo all'output l'uso della cache
         if( ! empty( $cf['contents']['cached'] ) ) {
@@ -819,15 +819,15 @@
         }
 
         // aggiungo all'output una riga vuota
-		echo PHP_EOL;
+        echo PHP_EOL;
 
         // aggiungo all'output le macro incluse
         foreach( $includes as $include ) {
-			echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
-		}
+            echo '<!-- macro: ' . $include . ' -->' . PHP_EOL;
+        }
 
         // rendering del template in base al tipo
-		switch( $ct['page']['template']['type'] ) {
+        switch( $ct['page']['template']['type'] ) {
 
             case 'twig':
 
@@ -960,12 +960,12 @@
 
             break;
 
-	    }
+        }
 
-	} elseif( empty( $ct['page']['template']['type'] ) ) {
+    } elseif( empty( $ct['page']['template']['type'] ) ) {
 
-	    // log
-		logger( 'tipo di template non specificato', 'template' );
+        // log
+        logger( 'tipo di template non specificato', 'template' );
 
         // debug
         die( 'tipo di template non specificato' );
@@ -973,19 +973,19 @@
     }
 
     // timer
-	timerCheck( $cf['speed'], 'fine output' );
+    timerCheck( $cf['speed'], 'fine output' );
 
     // debug
-	// rksort( $cf );
-	// echo '<pre>' . print_r( $ct['debug'], true ) . '</pre>';
-	// echo '<pre>' . print_r( $ct['pages'], true ) . '</pre>';
-	// echo '<pre>' . print_r( $ct['page'], true ) . '</pre>';
-	// echo '<pre>' . print_r( $ct['site'], true ) . '</pre>';
-	// echo '<pre>' . print_r( $ct, true ) . '</pre>';
-	// echo '<pre>' . print_r( $cf['speed'], true ) . '</pre>';
-	// echo '<pre>' . print_r( $_REQUEST, true ) . '</pre>';
-	// print_r( $ct['page']['headers'] );
-	// print_r( $ct['contatti'] );
+    // rksort( $cf );
+    // echo '<pre>' . print_r( $ct['debug'], true ) . '</pre>';
+    // echo '<pre>' . print_r( $ct['pages'], true ) . '</pre>';
+    // echo '<pre>' . print_r( $ct['page'], true ) . '</pre>';
+    // echo '<pre>' . print_r( $ct['site'], true ) . '</pre>';
+    // echo '<pre>' . print_r( $ct, true ) . '</pre>';
+    // echo '<pre>' . print_r( $cf['speed'], true ) . '</pre>';
+    // echo '<pre>' . print_r( $_REQUEST, true ) . '</pre>';
+    // print_r( $ct['page']['headers'] );
+    // print_r( $ct['contatti'] );
     // die( print_r( $ct['page']['css'], true ) );
 
     /**
@@ -996,21 +996,21 @@
      */
 
     // codice di stato HTTP
-	// TODO verificare che questa funzione possa essere effettivamente chiamata qui
-	if( isset( $ct['page']['http']['status'] ) ) {
-	    http_response_code( $ct['page']['http']['status'] );
-	} else {
-	    http_response_code( 200 );
-	}
+    // TODO verificare che questa funzione possa essere effettivamente chiamata qui
+    if( isset( $ct['page']['http']['status'] ) ) {
+        http_response_code( $ct['page']['http']['status'] );
+    } else {
+        http_response_code( 200 );
+    }
 
     // debug
-	// print_r( get_included_files() );
+    // print_r( get_included_files() );
 
     // timer
-	timerCheck( $cf['speed'], 'fine headers' );
+    timerCheck( $cf['speed'], 'fine headers' );
 
-	// log
-	loggerLatest( 'fine invio headers HTTP' );
+    // log
+    loggerLatest( 'fine invio headers HTTP' );
 
     /**
      * gestione dei parametri di una lettera
@@ -1022,11 +1022,11 @@
      * 
      */
 
-	// i parametri di una lettera sono riservati a DEV e TEST
-	if( SITE_STATUS != PRODUCTION ) {
+    // i parametri di una lettera sono riservati a DEV e TEST
+    if( SITE_STATUS != PRODUCTION ) {
 
-		// rivelazione dei dati
-		if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
+        // rivelazione dei dati
+        if( isset( $_REQUEST['u'] ) && is_array( $_REQUEST['u'] ) ) {
             $blocks = $_REQUEST['u'];
         } elseif( isset( $_REQUEST['u'] ) ) {
             $blocks = explode( '/', $_REQUEST['u'] );
@@ -1035,24 +1035,24 @@
         // ...
         if( isset( $blocks ) && is_array( $blocks ) ) {
             $tpu = $ct;
-			foreach( $blocks as $tu ) {
-				if( isset( $tpu[ $tu ] ) ) {
-					$tpu = $tpu[ $tu ];
-				}
-			}
-			echo '<!-- DUMP CT: ' . implode( ' / ', $blocks ) . PHP_EOL . print_r( $tpu, true ) . ' -->';
-		}
+            foreach( $blocks as $tu ) {
+                if( isset( $tpu[ $tu ] ) ) {
+                    $tpu = $tpu[ $tu ];
+                }
+            }
+            echo '<!-- DUMP CT: ' . implode( ' / ', $blocks ) . PHP_EOL . print_r( $tpu, true ) . ' -->';
+        }
 
-		// debug
-		// print_r( $cf );
+        // debug
+        // print_r( $cf );
 
-	}
+    }
 
     // timer
-	timerCheck( $cf['speed'], 'fine gestione parametri di una lettera' );
+    timerCheck( $cf['speed'], 'fine gestione parametri di una lettera' );
 
-	// log
-	loggerLatest( 'fine gestione parametri di una lettera' );
+    // log
+    loggerLatest( 'fine gestione parametri di una lettera' );
 
     /**
      * pulizia dell'output
@@ -1084,7 +1084,7 @@
     echo $tidy;
 
     // output
-	echo PHP_EOL;
+    echo PHP_EOL;
 
     /**
      * gestione cache statica delle pagine
@@ -1100,14 +1100,14 @@
         // cache del buffer
         if( isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
             writeToFile( ob_get_contents(), DIR_VAR_CACHE_PAGES . basename( FILE_CACHE_PAGE ) );
-            echo '<!-- pagina con autorizzazione al caching -->'				. PHP_EOL;
+            echo '<!-- pagina con autorizzazione al caching -->'                . PHP_EOL;
             if( FILE_CACHE_PAGE_TIME === NULL ) {
-                echo '<!-- page cached for the first time -->'					. PHP_EOL;
+                echo '<!-- page cached for the first time -->'                    . PHP_EOL;
             } else {
-                echo '<!-- expired: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_TIME ) . ' -->'	. PHP_EOL;
+                echo '<!-- expired: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_TIME ) . ' -->'    . PHP_EOL;
             }
-            echo '<!-- expire: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_LIMIT ) . ' -->'	. PHP_EOL;
-            echo '<!-- file: ' . basename( FILE_CACHE_PAGE ) . ' -->'				. PHP_EOL;
+            echo '<!-- expire: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_LIMIT ) . ' -->'    . PHP_EOL;
+            echo '<!-- file: ' . basename( FILE_CACHE_PAGE ) . ' -->'                . PHP_EOL;
         } else {
             header( 'X-Proxy-Cache: BYPASS' );
             header( 'X-GlisWeb-No-Cache: true' );
@@ -1135,13 +1135,13 @@
      */
 
     // fine del buffer
-	ob_end_flush();
+    ob_end_flush();
 
     // timer
-	timerCheck( $cf['speed'], 'fine esecuzione framework' );
+    timerCheck( $cf['speed'], 'fine esecuzione framework' );
 
-	// log
-	loggerLatest( 'fine esecuzione framework' );
+    // log
+    loggerLatest( 'fine esecuzione framework' );
 
     // debug
     // print_r( $ct['page']['css'] );
@@ -1154,18 +1154,18 @@
      */
 
     // calcolo tempi
-	$tms = array_keys( $cf['speed'] );
-	$run = end( $tms );
-	$flt = floatval( str_replace( ',', '.', substr( $run, 1 ) ) );
+    $tms = array_keys( $cf['speed'] );
+    $run = end( $tms );
+    $flt = floatval( str_replace( ',', '.', substr( $run, 1 ) ) );
 
     // log
-	if( $flt > 0.75 || memory_get_usage( true ) > ( 1024 * 1024 * 15 ) ) {
-	    writeToFile(
-			$_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
-			'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
-			print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
-			'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
-			' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
-			DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
-	    );
-	}
+    if( $flt > 0.75 || memory_get_usage( true ) > ( 1024 * 1024 * 15 ) ) {
+        writeToFile(
+            $_SERVER['REQUEST_URI'] . PHP_EOL . PHP_EOL .
+            'tempo di completamento per gli step di esecuzione del framework:' . PHP_EOL . PHP_EOL .
+            print_r( $cf['speed'], true ) . PHP_EOL . 'tempo totale di esecuzione: ' . $flt . PHP_EOL .
+            'memoria utilizzata ' . writeByte( memory_get_usage( true ) ) .
+            ' (picco ' . writeByte( memory_get_peak_usage( true ) ) . ')' . PHP_EOL,
+            DIR_VAR_LOG_SLOW . microtime( true ) . '.' . $_SERVER['REMOTE_ADDR'] . '.log'
+        );
+    }

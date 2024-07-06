@@ -43,12 +43,12 @@
     <form action="{{ form.action }}" id="form-{{ form.table }}" method="post" enctype="{{ form.enctype }}" class="{{ form.class }}">
 
         {# campi hidden di default #}
-	    <input type="hidden" id="id" name="{{ form.table }}[id]" value="{{ request[ form.table ].id }}">
-	    <input type="hidden" id="method" name="{{ form.table }}[__method__]" value="{{ form.method }}">
-	    <input type="hidden" id="reset" name="{{ form.table }}[__reset__]" value="">
-	    <input type="hidden" id="timestamp" name="{{ form.table }}[timestamp_{{ form.activity }}]" value="{{ 'now'|date('U') }}">
-	    <input type="hidden" id="account" name="{{ form.table }}[id_account_{{ form.activity }}]" value="{{ session.account.id }}">
-	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+        <input type="hidden" id="id" name="{{ form.table }}[id]" value="{{ request[ form.table ].id }}">
+        <input type="hidden" id="method" name="{{ form.table }}[__method__]" value="{{ form.method }}">
+        <input type="hidden" id="reset" name="{{ form.table }}[__reset__]" value="">
+        <input type="hidden" id="timestamp" name="{{ form.table }}[timestamp_{{ form.activity }}]" value="{{ 'now'|date('U') }}">
+        <input type="hidden" id="account" name="{{ form.table }}[id_account_{{ form.activity }}]" value="{{ session.account.id }}">
+        <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
 {% endmacro openForm %}
 
