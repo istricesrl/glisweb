@@ -14,7 +14,7 @@
 	    'parent'		=> array( 'id'		=> 'catalogo' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_listini.view.php' ),
-		'etc'			=> array( 'tabs'	=> array( 'listini.view', 'prezzi.view' ) ),
+		'etc'			=> array( 'tabs'	=> array( 'listini.view', 'prezzi.view', 'sconti.view' ) ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'listini' ),
 								'priority'	=> '035' ) ) )
@@ -243,3 +243,76 @@
 	    'etc'		=> array( 'tabs'	=> array(	'coupon.form'		) )
 	);
 */
+
+    // vista reparti
+	$p['sconti.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'sconti' ),
+	    'h1'			=> array( $l		=> 'sconti' ),
+	    'parent'		=> array( 'id'		=> 'listini.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_sconti.view.php' ),
+		'etc'			=> array( 'tabs'	=> 'listini.view' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+
+	// gestione listini
+	$p['sconti.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione sconti' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'sconti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sconti.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sconti.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'sconti.form', 'sconti.form.listini', 'sconti.form.articoli'	) )
+	);
+
+	// gestione listini gruppi
+	$p['sconti.form.listini'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'listini' ),
+		'h1'		=> array( $l		=> 'listini' ),
+		'parent'		=> array( 'id'		=> 'sconti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sconti.form.listini.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_sconti.form.listini.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['sconti.form']['etc']['tabs'] )
+	);
+
+	// gestione sconti gruppi
+	$p['sconti.form.articoli'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'articoli' ),
+		'h1'		=> array( $l		=> 'articoli' ),
+		'parent'		=> array( 'id'		=> 'sconti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sconti.form.articoli.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_sconti.form.articoli.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['sconti.form']['etc']['tabs'] )
+	);
+
+	// gestione listini
+	$p['sconti.articoli.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione sconti articoli' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'sconti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sconti.articoli.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sconti.articoli.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'sconti.articoli.form'	) )
+	);
+
+	// gestione listini
+	$p['sconti.listini.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione sconti listini' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'parent'		=> array( 'id'		=> 'sconti.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sconti.listini.form.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sconti.listini.form.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'sconti.listini.form'	) )
+	);
+

@@ -60,6 +60,27 @@
             ( ( empty( $carrello['timestamp_checkout'] ) ) ? date('Y-m-d') : $carrello['timestamp_checkout'] )
         );
 
+        // sconti quantità
+        $scQta = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT sconti.* FROM sconti 
+            INNER JOIN sconti_articoli ON sconti_articoli.id_sconto = sconti.id 
+            LEFT JOIN sconti_listini ON sconti_listini.id_sconto = sconti.id
+            WHERE sconti_articoli.id_articolo = ? 
+                AND ( sconti_listini.id_listino = ? OR sconti_listini.id_listino IS NULL ) 
+                AND ( sconti.timestamp_inizio <= ? OR sconti.timestamp_inizio IS NULL )
+                AND ( sconti.timestamp_fine >= ? OR sconti.timestamp_fine IS NULL )',
+            array(
+                array( 's' => $a ),
+                array( 's' => $carrello['id_listino'] ),
+                array( 's' => ( ( empty( $carrello['timestamp_checkout'] ) ) ? time() : $carrello['timestamp_checkout'] ) ),
+                array( 's' => ( ( empty( $carrello['timestamp_checkout'] ) ) ? time() : $carrello['timestamp_checkout'] ) )
+            )
+        );
+
+        // debug
+        // die( print_r( $scQta, true ) );
+
         // restituisco il risultato
         return $r;
 

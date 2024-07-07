@@ -9,8 +9,34 @@
         <form id="carrello" class="carrello d-flex flex-column flex-fill" action="" method="post">
             <input type="hidden" id="ts_checkout" name="__carrello__[timestamp_checkout]" value="">
             <input type="hidden" id="ck_carrello" name="ck_carrello" value="">
+
             <fieldset>
-                <legend>carrello <small>#{{ session.carrello.id }}</small></legend>
+                <legend>dati carrello <small>#{{ session.carrello.id }}</small></legend>
+                {# DATI DI INTESTAZIONE DEL CARRELLO #}
+                <div class="form-row">
+                    <div class="col">
+                        <label class="label-top">zona</label>
+                        <select class="form-control form-control-sm" id="id_zona" name="__carrello__[id_zona]" required>
+                        {% for zona in etc.id_zona %}
+                        <option value="{{ zona.id }}"{% if zona.id == session.carrello.id_zona %} selected{% endif %}>{{ zona.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col">
+                        <label class="label-top">listino</label>
+                        <select class="form-control form-control-sm" id="id_listino" name="__carrello__[id_listino]" required>
+                        {% for listino in etc.id_listino %}
+                        <option value="{{ listino.id }}"{% if listino.id == session.carrello.id_listino %} selected{% endif %}>{{ listino.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+        
+            </fieldset>
+
+            <fieldset>
+                <legend>contenuto carrello</legend>
+                {# ARTICOLI DEL CARRELLO #}
 
                 <table class="table">
 

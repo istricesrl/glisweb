@@ -63,24 +63,72 @@
 
             // STEP 1.1 - pre settaggi che impattano sul calcolo dei prezzi e dei costi (zona, listino)
 
+            // controlli da fare
+            $controlloListino = false;
+
             // zona del carrello
             // TODO fare meglio, considerare le altre cose che determinano la zona e il set spedizione_*
             if( isset( $_REQUEST['__carrello__']['intestazione_id_stato'] ) ) {
-                $_SESSION['carrello']['id_zona'] = mysqlSelectCachedValue(
+
+                // zona del carrello
+                $zona = mysqlSelectCachedValue(
                     $cf['memcache']['connection'],
                     $cf['mysql']['connection'],
                     'SELECT id_zona FROM zone_stati WHERE id_stato = ?',
                     array( array( 's' => $_REQUEST['__carrello__']['intestazione_id_stato'] ) )
                 );
+
+                // ...
+                if( $zona != $_SESSION['carrello']['id_zona'] ) {
+
+                    // controlli da fare
+                    $controlloListino = false;
+
+                    // log
+                    logWrite( 'cambio zona carrello da ' . $_SESSION['carrello']['id_zona'] . ' a ' . $zona, 'cart' );
+
+                    // cambio zona
+                    $_SESSION['carrello']['id_zona'] = $zona;
+
+                }
+
             }
 
             // listino del carrello
-            $_SESSION['carrello']['id_listino'] = mysqlSelectCachedValue(
-                $cf['memcache']['connection'],
-                $cf['mysql']['connection'],
-                'SELECT coalesce( id_listino, 1 ) FROM listini_zone WHERE id_zona = ?',
-                array( array( 's' => $_SESSION['carrello']['id_zona'] ) )
-            );
+            if( isset( $_REQUEST['__carrello__']['id_listino'] ) ) {
+
+                // ...
+                $_SESSION['carrello']['id_listino'] = $_REQUEST['__carrello__']['id_listino'];
+
+                // controlli da fare
+                $controlloListino = false;
+
+            }
+
+            // controllo listino
+            if( $controlloListino === true ) {
+
+                // listino del carrello
+                $listiniZona = mysqlSelectCachedColumn(
+                    $cf['memcache']['connection'],
+                    'id',
+                    $cf['mysql']['connection'],
+                    'SELECT listini.id FROM listini LEFT JOIN listini_zone ON listini_zone.id_listino = listini.id WHERE ( listini_zone.id_zona = ? OR listini_zone IS NULL )',
+                    array( array( 's' => $_SESSION['carrello']['id_zona'] ) )
+                );
+
+                // ...
+                if( ! in_array( $_SESSION['carrello']['id_listino'], $listiniZona ) ) {
+
+                    // log
+                    logWrite( 'cambio listino carrello da ' . $_SESSION['carrello']['id_listino'] . ' a ' . $listiniZona[0], 'cart' );
+
+                    // cambio listino
+                    $_SESSION['carrello']['id_listino'] = $listiniZona[0];
+
+                }
+
+            }
 
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {

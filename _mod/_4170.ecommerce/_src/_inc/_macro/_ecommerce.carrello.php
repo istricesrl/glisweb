@@ -31,4 +31,22 @@
         .'ORDER BY __label__ '
     );
 
+    $ct['etc']['id_zona'] = mysqlCachedQuery(
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT zone_view.__label__, zone_view.id '
+        .'FROM zone_view '
+        // TODO .'WHERE tipologie_anagrafica_view.se_ecommerce = 1 '
+        .'ORDER BY __label__ '
+    );
+
+    $ct['etc']['id_listino'] = mysqlCachedQuery(
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT listini_view.__label__, listini_view.id '
+        .'FROM listini_view '
+        // TODO .'WHERE tipologie_anagrafica_view.se_ecommerce = 1 '
+        .'ORDER BY __label__ '
+    );
+
     // print_r( $_SESSION['carrello'] );

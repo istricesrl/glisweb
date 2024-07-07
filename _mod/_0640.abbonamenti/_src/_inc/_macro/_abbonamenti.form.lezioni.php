@@ -19,42 +19,126 @@
      *
      */
 
+    // debug
+    // die( print_r( $_REQUEST, true ) );
+
+    // ...
+    $idIscritto = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT id_anagrafica FROM contratti_anagrafica WHERE id_contratto = ? AND id_ruolo = 29',
+        array(
+            array( 's' => $_REQUEST['contratti']['id'] )
+        )
+    );
+
+    // debug
+    // die( print_r( $idIscritto, true ) );
+
+    // gestione iscrizioni
+    if( isset( $_REQUEST['__iscrivi__'] ) ) {
+
+        // carico i dati della lezione
+        $ct['lezione'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT __report_lezioni_corsi__.*
+                FROM __report_lezioni_corsi__
+                WHERE __report_lezioni_corsi__.id = ?
+            ',
+            array(
+                array( 's' => $_REQUEST['__iscrivi__'] )
+            )
+        );
+
+        // debug
+        // print_r( $ct['lezione'] );
+
+        // verifico la disponibilità di posti
+        if( $ct['lezione']['numero_alunni'] < $ct['lezione']['numero_posti'] ) {
+            $idTipologia = 15;
+        } else {
+            $idTipologia = 40;
+        }
+
+        // inserisco la prenotazione
+        $ct['id_attivita'] = mysqlInsertRow(
+            $cf['mysql']['connection'],
+            array(
+                'id_tipologia' => $idTipologia,
+                'id_todo' => $_REQUEST['__iscrivi__'],
+                'id_anagrafica' => $idIscritto,
+                'id_contratto' => $_REQUEST['contratti']['id']
+            ),
+            'attivita',
+            true,
+            false,
+            array(
+                'id_tipologia',
+                'id_todo',
+                'id_anagrafica'
+            )
+        );
+
+        // aggiorno il report delle lezioni
+        updateReportLezioniCorsi( $_REQUEST['__iscrivi__'] );
+        updateAttivitaViewStatic( $ct['id_attivita'] );
+
+        // debug
+        // die( print_r( $ct['id_attivita'] ) );
+
+    }
+
+    // gestisco la prenotazione
+    if( isset( $_REQUEST['__cancella__'] ) ) {
+
+        // elimino la prenotazione
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE FROM attivita WHERE id_todo = ? AND id_anagrafica = ?',
+            array(
+                array( 's' => $_REQUEST['__cancella__'] ),
+                array( 's' => $idIscritto )
+            )
+        );
+
+        // aggiorno il report delle lezioni
+        updateReportLezioniCorsi( $_REQUEST['__cancella__'] );
+        // cleanAttivitaViewStatic( $_REQUEST['__cancellazione__']['id_frequenza'] );
+        cleanAttivitaViewStatic();
+
+    }
+
     // tabella gestita
 	$ct['form']['table'] = 'contratti';
 
     // tabella della vista
-    $ct['view']['table'] = 'attivita';
+    $ct['view']['data']['__report_mode__'] = 1;
+    $ct['view']['table'] = '__report_lezioni_corsi__';
 
     // pagina per la gestione degli oggetti esistenti
 	// $ct['view']['open']['page'] = 'presenze.form';
-	$ct['view']['open']['table'] = 'attivita';
+	$ct['view']['open']['page'] = 'lezioni.form';
+	$ct['view']['open']['table'] = 'todo';
 
      // campi della vista
      $ct['view']['cols'] = array(
 	    'id' => '#',
-        'data_programmazione' => 'data',
-	    'id_anagrafica' => 'ID iscritto',
-	    'anagrafica' => 'iscritto',
         'tipologia' => 'tipologia',
+//        'cliente' => 'cliente',
+        'data_programmazione' => 'data',
         'ora_inizio_programmazione' => 'ora',
-        'ora_fine_programmazione' => 'ora fine',
-/*
-        'cliente' => 'cliente',
-        'data_programmazione' => 'programmata',
-        'anagrafica_programmazione' => 'assegnata a',
-        'data_programmazione' => 'eseguita',
-	    'anagrafica' => 'svolta da',
-        'nome' => 'attività',
+//        'ora_fine_programmazione' => 'ora fine',
+        'note_programmazione' => 'ora',
+        'id_progetto' => 'ID corso',
+        'corso' => 'corso',
+        'discipline' => 'disciplina',
+        'posti_disponibili' => 'posti',
+//        'anagrafica_programmazione' => 'assegnata a',
+//        'data_programmazione' => 'data',
+//	    'anagrafica' => 'svolta da',
+/*        'nome' => 'attività',
 	    'ore' => 'ore',
         'ora_inizio' => 'oi',
-        'ora_fine' => 'of'
-*/
-        'timestamp_archiviazione' => 'archiviazione',
-        'discipline' => 'discipline',
-        'id_progetto' => 'ID corso',
-        'progetto' => 'corso',
-        'luogo' => 'luogo',
-        'data_attivita' => 'frequentata',
+        'ora_fine' => 'of' */
         NULL => 'azioni'
       );
 
@@ -63,22 +147,20 @@
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
         'cliente' => 'text-left d-none d-md-table-cell',
-        'id_anagrafica' => 'd-none',
         'anagrafica_programmazione' => 'text-left',
+        'id_progetto' => 'd-none',
+        'corso' => 'text-left',
+        'discipline' => 'text-left',
 	    'data_programmazione' => 'no-wrap',
         'ora_inizio_programmazione' => 'd-none',
         'ora_fine_programmazione' => 'd-none',
-        'data_programmazione' => 'no-wrap',
+        'note_programmazione' => 'd-none',
+//        'data_attivita' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left',
-        'id_progetto' => 'd-none',
-        'progetto' => 'text-left',
-        'timestamp_archiviazione' => 'd-none',
-        'discipline' => 'text-left',
-        'luogo' => 'd-none',
         'ora_inizio' => 'd-none',
         'ora_fine' => 'd-none',
-        NULL => 'nowrap'
+        NULL => 'no-wrap'
     );
 
     // javascript della vista
@@ -86,14 +168,61 @@
         NULL => 'event.stopPropagation();'
     );
 
+    // ordinamento di default
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']) ){
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'DESC';
+    } 
+
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['id_tipologia']['EQ'] = 15;
-    $ct['view']['__restrict__']['id_anagrafica']['EQ'] = $_REQUEST['contratti']['contratti_anagrafica'][0]['id_anagrafica'];
-    $ct['view']['__restrict__']['id_contratto']['EQ'] = $_REQUEST['contratti']['id'];
+    // TODO decommentare, l'ho commentato per i test $ct['view']['__restrict__']['data_programmazione']['GE'] = date( 'Y-m-d' );
+
+    /**
+     * TODO IMPORTANTE aggiungere al report lezioni un campo con gli abbonamenti compatibili su cui fare LIKE (ad es [1],[3])
+     * 
+     * TODO ricavare le date di validità dell'abbonamento e i periodi di sospensione e aggiungerli come __restrict__ aggiuntivi
+     * 
+     * TODO aggiungere __restrict__ per le lezioni che iniziano fra meno di tot ore, ecc. come da app
+     * 
+     */
 
     // debug
     // die( print_r( $_REQUEST, true ) );
     // die( print_r( $ct['view'], true ) );
+    // die( print_r( $orari, true ) );
+
+    // inclusione filtri speciali
+	$ct['etc']['include']['filters'] = 'inc/lezioni.view.filters.html';
+
+    // tendina mesi
+	foreach( range( 1, 12 ) as $mese ) {
+	    $ct['etc']['select']['mesi'][$mese] =  int2month( $mese ) ;
+	}
+
+    // tendina anni
+	foreach( range( date( 'Y' ) - 5,  date( 'Y' ) ) as $y ) {
+	    $ct['etc']['select']['anni'][$y] = $y ;
+	}
+
+    // tendina operatori
+	$ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'], 
+        $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static WHERE se_interno = 1 OR se_collaboratore = 1 ORDER BY __label__');
+
+    // tendina clienti
+	$ct['etc']['select']['clienti'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'], 
+        $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__');
+
+    // tendina tipologie attività
+	$ct['etc']['select']['tipologie_attivita'] = mysqlCachedQuery(
+        $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__');
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
@@ -101,3 +230,29 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    if( !empty( $ct['view']['data'] ) ) {
+		foreach ( $ct['view']['data'] as &$row ) {
+
+            $iscritto = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT COUNT(*) FROM attivita WHERE id_todo = ? AND id_anagrafica = ?',
+                array(
+                    array( 's' => $row['id'] ),
+                    array( 's' => $idIscritto )
+                )
+            );
+
+            $buttons = '';
+
+            if( ! empty( $iscritto ) ) {
+                $onclick = "$('#form-contratti').attr('action','?__cancella__=".$row['id']."'); $('#form-contratti').submit();";
+                $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-calendar-minus-o"></i></a>';
+            } else {
+                $onclick = "$('#form-contratti').attr('action','?__iscrivi__=".$row['id']."'); $('#form-contratti').submit();";
+                $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-graduation-cap"></i></a>';
+            }
+
+            $row[ NULL ] = $buttons;
+
+        }
+	}
