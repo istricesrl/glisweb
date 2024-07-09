@@ -334,8 +334,6 @@
         }
     }
 
-    */
-
     // ...
     if( isset( $ct['page']['csp']['default-src'] ) ) {
 
@@ -367,6 +365,8 @@
 
     // log
     loggerLatest( 'fine elaborazione dati per CSP' );
+
+    */
 
     // debug
     // print_r( array_intersect( $ct['page']['csp']['script-src'], $ct['page']['csp']['style-src'] ) );
