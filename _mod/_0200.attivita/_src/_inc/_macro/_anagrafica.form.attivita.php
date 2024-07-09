@@ -26,6 +26,7 @@
      // campi della vista
      $ct['view']['cols'] = array(
 	    'id' => '#',
+        'data_riferimento' => 'cronologia',
         'data_programmazione' => 'programmata',
         'ora_inizio_programmazione' => 'ora',
         'ora_fine_programmazione' => 'ora fine',
@@ -41,7 +42,7 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
+	    'id' => 'd-none',
 	    '__label__' => 'text-left',
         'anagrafica_programmazione' => 'text-left',
 	    'data_programmazione' => 'text-left no-wrap',
@@ -97,12 +98,18 @@
     // NOTA come cazzo possono funzionare questi due preset? se li metti prima dell'inclusione della default view non hanno l'id della vista, se li metti dopo
     // non possono ordinare la vista visto che è già stata fatta...?
 
+/*
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita'] ) ) {
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'DESC';
     } 
 
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione'] ) ) {
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'DESC';
+    } 
+*/
+
+    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_riferimento'] ) ) {
+        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_riferimento']	= 'DESC';
     } 
 
     if( !empty( $ct['view']['data'] ) ){

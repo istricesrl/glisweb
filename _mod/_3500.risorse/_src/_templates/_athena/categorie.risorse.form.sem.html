@@ -157,7 +157,7 @@
 
 			{% else %}
 
-			{% for field in ['id','id_pagina','id_lingua','path_custom','url_custom','rewrite_custom','title','keyword','description','og_type','og_determiner','og_title','og_image','og_audio','og_video','og_description'] %}
+			{% for field in ['id','id_pagina','id_lingua','path_custom','url_custom','rewrite_custom','title','keywords','description','og_type','og_determiner','og_title','og_image','og_audio','og_video','og_description'] %}
 			{{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
 			{% endfor %}
 	

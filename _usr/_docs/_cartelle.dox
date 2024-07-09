@@ -40,6 +40,7 @@
     _etc/_common/                               | contiene i file di configurazione comuni del framework
     _etc/_dictionaries/                         | contiene i dizionari di traduzione del framework
     _etc/_doxygen/                              | contiene i file di configurazione standard di Doxygen
+    _etc/_robots/                               | contiene il file robots.txt standard
     _etc/_security/                             | contiene i file di configurazione della sicurezza del framework
     _mod/                                       | contiene i moduli del framework
     _src/                                       | contiene i file sorgenti del framework
@@ -93,6 +94,7 @@
     ----------------------------|---------------------------------------------------------------------------------------
     etc/                        | controparte custom di _etc/
     etc/doxygen                 | controparte custom di _etc/_doxygen
+    etc/robots                  | controparte custom di _etc/_robots
     src/                        | controparte custom di _src/
     src/config                  | controparte custom di _src/_config
     src/inc                     | controparte custom di _src/_inc

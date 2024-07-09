@@ -4,23 +4,32 @@
 
     Descrizione del contenuto e della funzione della cartella _etc/.
 
-    TODO finire di scrivere questo file
+    TODO documentare e finire di scrivere questo file
 
     introduzione
     ============
+    La cartella _etc/ contiene diversi file testuali di configurazione o di utilità generale, come ad esempio testi di prova,
+    dizionari di microcontenuti, elenchi di parole proibite per la sicurezza, eccetera. Normalmente non c'è motivo di customizzare
+    i file di questa cartella, con l'eccezione forse dei dizionari.
 
     file                        | descrizione
     ----------------------------|-------------------------------------
     _etc/_current.release       | file che contiene la release corrente del framework
     _etc/_current.version       | file che contiene la versione corrente del framework
 
+    Il sistema di versioning del framework è ampiamente descritto nei commenti al file _src/_config/_030.common.php al quale si
+    rimanda per ogni ulteriore approfondimento in materia.
 
     cartelle standard
     =================
-
+    La cartella _etc/ contiene alcune sotto cartelle standard, che consentono di raggruppare per area i vari file di utilità
+    e configurazione che contiene. Nei paragrafi seguenti analizziamo nel dettaglio le varie sotto cartelle di _etc/ e i file che
+    contengono.
 
     la sottocartella _etc/_common/
     ------------------------------
+    Questa sotto cartella contiene file informativi o di utilità generica che vengono letti da _src/_config/_030.common.php; si
+    tratta di informazioni generiche che possono essere necessarie durante il funzionamento del framework.
 
     file                        | descrizione
     ----------------------------|-------------------------------------
@@ -28,48 +37,65 @@
     
     la sottocartella _etc/_doxygen/
     -------------------------------
+    Questa sotto cartella contiene le configurazioni di Doxygen necessarie per la compilazione della documentazione; per ulteriori
+    informazioni sulla compilazione della documentazione si vedano anche il codice e i commenti del file _src/_sh/_doxygen.build.sh che
+    si occupa materialmente di compilare la documentazione del framework.
 
     file                            | descrizione
     --------------------------------|-------------------------------------
     _etc/_doxygen/_doxygen.conf     | file di configurazione di Doxygen per la compilazione della documentazione
 
     la sottocartella _etc/_dictionaries/
-    ---------------------------
+    ------------------------------------
+    Questa cartella contiene i dizionari dei microcontenuti del framework; GlisWeb supporta un rudimentale ma potente sistema di traduzione
+    dei microcontenuti basato su dizionari, che consente agli sviluppatori di sveltire l'implementazione di siti e applicazioni multi lingua;
+    per ulteriori informazioni sul funzionamento del sistema di traduzione dei microcontenuti si vedano il codice e i commenti dei file
+    _src/_config/_090.translation.php e _src/_config/_095.translation.php.
 
-    [...] contiene i dizionari dei microcontenuti del framework.
+    file                                        | descrizione
+    --------------------------------------------|-------------------------------------
+    _etc/_dictionaries/_generic.cs-CZ.conf      | dizionario generico ceco
+    _etc/_dictionaries/_generic.de-DE.conf      | dizionario generico tedesco
+    _etc/_dictionaries/_generic.en-GB.conf      | dizionario generico inglese
+    _etc/_dictionaries/_generic.en-US.conf      | dizionario generico inglese americano
+    _etc/_dictionaries/_generic.es-ES.conf      | dizionario generico spagnolo
+    _etc/_dictionaries/_generic.fr-FR.conf      | dizionario generico francese
+    _etc/_dictionaries/_generic.hr-HR.conf      | dizionario generico croato
+    _etc/_dictionaries/_generic.hu-HU.conf      | dizionario generico ungherese
+    _etc/_dictionaries/_generic.it-IT.conf      | dizionario generico italiano
+    _etc/_dictionaries/_generic.ja-JP.conf      | dizionario generico giapponese
+    _etc/_dictionaries/_generic.pl-PL.conf      | dizionario generico polacco
+    _etc/_dictionaries/_generic.pt-PT.conf      | dizionario generico portoghese
+    _etc/_dictionaries/_generic.pt-BR.conf      | dizionario generico portoghese brasiliano
+    _etc/_dictionaries/_generic.ro-RO.conf      | dizionario generico rumeno
+    _etc/_dictionaries/_generic.ru-RU.conf      | dizionario generico russo
+    _etc/_dictionaries/_generic.sv-SE.conf      | dizionario generico svedese
 
-    file                            | descrizione
-    --------------------------------|-------------------------------------
-    _etc/_dictionaries/_generic.cs-CZ.conf   | dizionario generico ceco
-    _etc/_dictionaries/_generic.de-DE.conf   | dizionario generico tedesco
-    _etc/_dictionaries/_generic.en-GB.conf   | dizionario generico inglese
-    _etc/_dictionaries/_generic.en-US.conf   | dizionario generico inglese americano
-    _etc/_dictionaries/_generic.es-ES.conf   | dizionario generico spagnolo
-    _etc/_dictionaries/_generic.fr-FR.conf   | dizionario generico francese
-    _etc/_dictionaries/_generic.hr-HR.conf   | dizionario generico croato
-    _etc/_dictionaries/_generic.hu-HU.conf   | dizionario generico ungherese
-    _etc/_dictionaries/_generic.it-IT.conf   | dizionario generico italiano
-    _etc/_dictionaries/_generic.ja-JP.conf   | dizionario generico giapponese
-    _etc/_dictionaries/_generic.pl-PL.conf   | dizionario generico polacco
-    _etc/_dictionaries/_generic.pt-PT.conf   | dizionario generico portoghese
-    _etc/_dictionaries/_generic.pt-BR.conf   | dizionario generico portoghese brasiliano
-    _etc/_dictionaries/_generic.ro-RO.conf   | dizionario generico rumeno
-    _etc/_dictionaries/_generic.ru-RU.conf   | dizionario generico russo
-    _etc/_dictionaries/_generic.sv-SE.conf   | dizionario generico svedese
-
-    la sottocartella _etc/_security/
-    --------------------------------
+    la sottocartella _etc/_robots/
+    ------------------------------
+    Questa cartella contiene i valori di default per il file robots.txt; come è possibile vedere dal codice del file .htaccess, se
+    non esiste una versione custom (etc/robots/robots.txt) del file, alla richiesta del file robots.txt viene risposto con il file di
+    default standard.
 
     file                                | descrizione
     ------------------------------------|-------------------------------------
-    _etc/_security/_banned.words.conf   | dizionario delle parole proibite per la validazione dei dati in arrivo
+    _etc/_robots/_robots.txt            | file robots.txt di default
 
+    la sottocartella _etc/_security/
+    --------------------------------
+    Questa cartella contiene varie liste di sicurezza utilizzate da diversi componenti del framework per effettuare un'auto valutazione di
+    sicurezza oppure per bloccare alcuni tipi di attacchi.
+
+    file                                        | descrizione
+    --------------------------------------------|-------------------------------------
+    _etc/_security/_banned.words.conf           | dizionario delle parole proibite per la validazione dei dati in arrivo
+    _etc/_security/_common.passwords.conf       | dizionario delle password più comuni per la verifica della robustezza degli account
 
 
     cartelle custom
     ===============
 
-
+    TODO documentare
 
     file                        | descrizione
     ----------------------------|-------------------------------------
@@ -77,19 +103,17 @@
 
 
 
-
     la sottocartella etc/doxygen/
     -----------------------------
 
+    TODO documentare
 
     file                            | descrizione
     --------------------------------|-------------------------------------
     etc/doxygen/doxygen.conf        | file di configurazione di Doxygen per la compilazione della documentazione
 
 
-
     TODO documentare
-
 
 
 */

@@ -32,6 +32,8 @@
         if( empty( $attivita['ora_fine_programmazione'] ) ) {
             $attivita['ora_fine_programmazione'] = $todo['ora_fine_programmazione'];
         }
+
+        $attivita['data_riferimento'] = ( ( ! empty( $attivita['data_attivita'] ) ) ? $attivita['data_attivita'] : $attivita['data_programmazione'] );
 /*
         mysqlInsertRow(
             $cf['mysql']['connection'],

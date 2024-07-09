@@ -77,12 +77,16 @@ INSERT IGNORE INTO `classi_energetiche` (`id`, `nome`, `ep_min`, `ep_max`, `rgb`
 -- colori
 -- tipologia: tabella standard
 -- verifica: 2021-06-02 22:27 Fabio Mosti
-INSERT IGNORE INTO `colori` (`id`, `nome`, `hex`, `r`, `g`, `b`) VALUES
-(1,	    'rosso',	'ff0000',	255,	0,	    0),
-(3,	    'bianco',	'ffffff',	255,	255,	255),
-(4,	    'nero',	    '000000',	0,	    0,	    0),
-(5,	    'blu',	    '0000ff',	0,	    0,	    255),
-(6,	    'verde',	'00ff00',	0,	    255,	0);
+INSERT INTO `colori` (`id`, `id_genitore`, `nome`, `hex`, `r`, `g`, `b`, `ral`, `pantone`, `c`, `m`, `y`, `k`, `css`) VALUES
+(1,	NULL,	'rosso',	'ff0000',	255,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'bianco',	'ffffff',	255,	255,	255,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'nero',	'000000',	0,	0,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'blu',	'0000ff',	0,	0,	255,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'verde',	'00ff00',	0,	255,	0,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(7,	NULL,	'traffic white',	'edede6',	237,	237,	230,	'9016',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(8,	NULL,	'signal red',	'9a2926',	154,	41,	38,	'3001',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(9,	NULL,	'luminous yellow',	'ffff00',	255,	255,	0,	'1026',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(10,	NULL,	'carbon look',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	'background-color: rgb(32, 32, 32); background-image: linear-gradient( 45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32) ); background-size: 10px 10px, 10px 10px, 10px 5px; background-position: 0px 0px, 5px 5px, 0px 0px;');
 
 -- | 050000005300
 
@@ -1233,7 +1237,8 @@ INSERT INTO `taglie` (`id`, `id_tipologia_prodotti`, `nome`, `sesso`, `taglia_in
 (22,	13,	'caschi M',	NULL,	'M',	570,	589),
 (23,	13,	'caschi L',	NULL,	'L',	590,	609),
 (24,	13,	'caschi XL',	NULL,	'XL',	610,	629),
-(25,	13,	'caschi XXL',	NULL,	'XXL',	630,	649);
+(25,	13,	'caschi XXL',	NULL,	'XXL',	630,	649),
+(26,	13,	'caschi taglia unica',	NULL,	'UNICA',	NULL,	NULL);
 
 -- | 050000043000
 

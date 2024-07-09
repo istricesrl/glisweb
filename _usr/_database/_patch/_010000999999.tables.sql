@@ -1098,7 +1098,8 @@ CREATE TABLE IF NOT EXISTS `colori` (
   `c` decimal(5,2) DEFAULT NULL,
   `m` decimal(5,2) DEFAULT NULL,
   `y` decimal(5,2) DEFAULT NULL,
-  `k` decimal(5,2) DEFAULT NULL
+  `k` decimal(5,2) DEFAULT NULL,
+  `css` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000005300

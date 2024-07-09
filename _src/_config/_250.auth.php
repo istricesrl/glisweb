@@ -386,6 +386,38 @@
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
         ),
+        'listini' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'listini_clienti' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'listini_zone' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'listini_gruppi' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'sconti' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'sconti_listini' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'sconti_articoli' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
+        'tipologie_sconti' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
         'listini_gruppi' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')

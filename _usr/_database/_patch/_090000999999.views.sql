@@ -1027,6 +1027,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		luoghi_path( coalesce( attivita.id_luogo, todo.id_luogo ) ) AS luogo,
 		attivita.id_oggetto,
 		concat( asset1.id, ' ', asset1.nome ) AS oggetto,
+        coalesce( attivita.data_attivita, attivita.data_programmazione ) AS data_riferimento,
 		attivita.data_scadenza,
 		attivita.ora_scadenza,
 		attivita.data_programmazione,

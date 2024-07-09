@@ -177,6 +177,7 @@ CREATE TABLE `attivita_view_static` (
   `luogo` char(255) DEFAULT NULL,
   `id_oggetto` int(11) DEFAULT NULL,
   `oggetto` char(255) DEFAULT NULL,
+  `data_riferimento` date DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
   `ora_scadenza` time DEFAULT NULL,
   `data_programmazione` date DEFAULT NULL,

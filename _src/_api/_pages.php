@@ -308,6 +308,8 @@
      * 
      */
 
+    /*
+
     // ...
     foreach( array( 'external', 'preload' ) as $type ) {
         if( isset( $ct['page']['css'][ $type ] ) && is_array( $ct['page']['css'][ $type ] ) ) {
@@ -331,6 +333,8 @@
             $ct['page']['csp']['script-src'] = array();
         }
     }
+
+    */
 
     // ...
     if( isset( $ct['page']['csp']['default-src'] ) ) {
@@ -494,13 +498,36 @@
     // TODO usare glob() per prendere anche i contenuti statici dai moduli
     // TODO gli ID delle pagine dovrebbero già contenere . anziché _
     // NOTA solo un contenuto statico alla volta può essere incluso, quindi individuare il criterio con cui sceglierlo
-    $ctName = str_replace( '_', '.', $ct['page']['id'] );
+	$ctName = '_src/_inc/_contents/_'.  str_replace( '_', '.', $ct['page']['id'] ) . '.' . $cf['localization']['language']['ietf'] . '.{html,twig}';
+
+    $ctArray = (
+        array_merge(
+            glob( glob2custom( DIR_BASE . $ctName ), GLOB_BRACE ),
+            glob( glob2custom( DIR_MOD_ATTIVI . $ctName ), GLOB_BRACE )
+        )
+    );
+
+    // ...
+    rsort( $ctArray );
+
+    // 
+    // die( print_r( $ctArray, true ) );
+    // die( glob2custom( DIR_BASE . $ctName ) );
+    // die( glob2custom( DIR_MOD_ATTIVI . $ctName ) );
+
+    /*
     $ctFile = DIR_SRC_INC_CONTENTS . '_' . $ctName . '.' . $cf['localization']['language']['ietf'] . '.html';
-    $ctFileLocal = str_replace( '_', '', $ctFile );
+	$ctFileLocal = str_replace( '_', '', $ctFile );
+
     if( file_exists( $ctFileLocal ) ) {
-        $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFileLocal . ' -->' . PHP_EOL . readStringFromFile( $ctFileLocal );
-    } elseif( file_exists( $ctFile ) ) {
-        $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFile . ' -->' . PHP_EOL . readStringFromFile( $ctFile );
+	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFileLocal . ' -->' . PHP_EOL . readStringFromFile( $ctFileLocal );
+	} elseif( file_exists( $ctFile ) ) {
+	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFile . ' -->' . PHP_EOL . readStringFromFile( $ctFile );
+	}
+    */
+
+    if( ! empty( $ctArray ) ) {
+        $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctArray[0] . ' -->' . PHP_EOL . readStringFromFile( $ctArray[0] );
     }
 
     // debug

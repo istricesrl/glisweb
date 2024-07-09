@@ -81,6 +81,10 @@
         // debug
         // die( print_r( $scQta, true ) );
 
+        // per ogni sconto quantità, recupero i codici papabili
+
+        // per ogni sconto quantità 
+
         // restituisco il risultato
         return $r;
 

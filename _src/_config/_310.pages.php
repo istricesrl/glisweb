@@ -216,11 +216,6 @@
 	    // ultimo aggiornamento delle pagine, per la generazione della sitemap
 		$cf['contents']['updated']		= NULL;
 
-	    // configurazione extra
-		if( isset( $cx['contents'] ) ) {
-		    $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
-		}
-
 	    // variabili di lavoro
 		$lingue					= '{' . LINGUE_ATTIVE . '}';
 		$folder					= '{,_}src/{,_}inc/{,_}pages/{,_}*';
@@ -267,6 +262,11 @@
 # NOTA questa cosa è obsoleta?
 #		$cf['contents']['cacheable']['pages'] = true;
 		// TODO? $cf['cache']['todo'][ CONTENTS_PAGES_KEY ] = true;
+
+	    // configurazione extra
+		if( isset( $cx['contents'] ) ) {
+		    $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
+		}
 
 	    // configurazione extra per sito
 		if( isset( $cf['site']['contents'] ) ) {

@@ -66,7 +66,8 @@
 	    {{ frm.input( table, subtable, i, 'id_pagina', '', '', request, '__parent_id__', 'hidden' ) }}
 	    {{ frm.input( table, subtable, i, 'id_lingua', '', '', request, '', 'hidden' ) }}
 
-	    {% if r.id_lingua == request.__view__.__lang__ %}
+        {# TODO fare meglio questa cosa, usare la lingua di default e non 1 fisso #}
+	    {% if r.id_lingua == session.__view__.__lang__ or ( not session.__view__.__lang__ and r.id_lingua == 1 ) %}
 
         {# MODULO PRINCIPALE #}
         <fieldset>
@@ -107,13 +108,14 @@
 
         <div class="form-group form-row flex-fill">
             <div class="col cke-switch" id="cke-testo">
-            {{ frm.textArea( table, subtable, i, 'testo', 'contenuto della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
+            {# frm.textArea( table, subtable, i, 'testo', 'contenuto della pagina', 10, request, '', '', 'ckEditor', 200 ) #}
+            {{ frm.textArea( table, subtable, i, 'testo', 'contenuto della pagina', 10, request, '', '', 'quillEditor', 200 ) }}
             </div>
             <div class="col cke-switch" id="cke-abstract" style="display: none;">
-            {{ frm.textArea( table, subtable, i, 'abstract', 'abstract della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
+            {{ frm.textArea( table, subtable, i, 'abstract', 'abstract della pagina', 10, request, '', '', 'quillEditor', 200 ) }}
             </div>
             <div class="col cke-switch" id="cke-specifiche" style="display: none;">
-            {{ frm.textArea( table, subtable, i, 'specifiche', 'specifiche della pagina', 10, request, '', '', 'ckEditor', 200 ) }}
+            {{ frm.textArea( table, subtable, i, 'specifiche', 'specifiche della pagina', 10, request, '', '', 'quillEditor', 200 ) }}
             </div>
         </div>
 
