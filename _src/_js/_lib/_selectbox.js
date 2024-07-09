@@ -56,7 +56,7 @@
             current = currvalue;
         }
 
-         console.log( 'valore corrente: ' + current + '/' + currvalue );
+         console.log( 'valore corrente (' + base_id + '): ' + current + '/' + currvalue );
         // alert( 'valore corrente: ' + current + '/' + currvalue );
 
         // imposto il valore corrente
@@ -88,10 +88,19 @@
                 null,
                 function( data ) {
                     // alert( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
-                    console.log( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
-					console.log( data );
-                    box.val( data.__label__ );
-                    $( select ).val( current );
+                    console.log( 'prelevo i dati' );
+                    if( data ) {
+                        if( data.hasOwnProperty('__label__') ) {
+                            console.log( 'prelevato ' + data.__label__ + ' da ' + $( select ).attr( 'populate-api' ) );
+                            console.log( data );
+                            box.val( data.__label__ );
+                            $( select ).val( current );
+                        } else {
+                            console.log( 'label non trovata' );
+                        }
+                    } else {
+                        console.log( 'dati non ricevuti' );
+                    }
                 }
             );
         }

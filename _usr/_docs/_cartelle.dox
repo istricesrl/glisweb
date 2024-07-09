@@ -123,7 +123,9 @@
 
     file                        | descrizione
     ----------------------------|---------------------------------------------------------------------------------------
-
+    .htaccess                   | file di configurazione di Apache per la gestione del traffico in ingresso
+    composer.json               | file di configurazione di Composer per la gestione delle dipendenze
+    composer.lock               | file di lock di Composer
 
 
 

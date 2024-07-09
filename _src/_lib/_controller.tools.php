@@ -375,7 +375,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 			// echo $q;
 
 			// log
-			logWrite("eseguo (${a}) la query: ${q}", 'controller', LOG_DEBUG);
+			logWrite("view mode / eseguo (${a}) la query: ${q}", 'controller', LOG_DEBUG);
 
 			// TODO il valore di ritorno dipende da eventuali errori
 			$i['__status__'] = 200;
@@ -577,7 +577,8 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 
 					// eseguo la query
 					$d = mysqlQuery($c, $q, $vs, $e['__codes__']);
-					if (is_array($d)) {
+
+                    if (is_array($d)) {
 						$d = array_shift($d);
 					}
 
@@ -586,8 +587,13 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 						// die( $q );
 					}
 
-					break;
-			}
+                    logger('righe recuperate dalla query ' . $q . ': ' . count($d), 'controller');
+                    logger('righe recuperate dalla query ' . $q . ': ' . print_r($d,true), 'details/controller');
+                    logger('valori utilizzati dalla query ' . $q . ': ' . print_r($vs,true), 'details/controller');
+
+                    break;
+
+            }
 
 
 			$i['__status__'] = 200;
@@ -616,7 +622,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 			} else {
 
 				// log
-				logWrite("eseguo ($a) la query: $q", 'controller', LOG_DEBUG);
+				logWrite("row mode / eseguo ($a) la query: $q", 'controller', LOG_DEBUG);
 
 				// debug
 				// echo 'controller ' . $t . '/' . $a . ' -> ' . $q . PHP_EOL;

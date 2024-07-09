@@ -202,7 +202,7 @@
 			timerCheck( $cf['speed'], 'inizio eleborazione API REST' );
 
 			// log
-			logWrite( $_REQUEST['__ws__'] . '/' . $_SERVER['REQUEST_METHOD'] . '/' . print_r( $cf['ws'], true ), 'rest' );
+			logger( $_REQUEST['__ws__'] . '/' . $_SERVER['REQUEST_METHOD'] . '/' . print_r( $cf['ws'], true ), 'rest' );
 
 			// output
 			$response = $_REQUEST[ $cf['ws']['table'] ];

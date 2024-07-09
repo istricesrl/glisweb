@@ -4,8 +4,6 @@
 
     Descrizione del contenuto e della funzione della cartella _etc/.
 
-    TODO documentare e finire di scrivere questo file
-
     introduzione
     ============
     La cartella _etc/ contiene diversi file testuali di configurazione o di utilità generale, come ad esempio testi di prova,
@@ -91,29 +89,25 @@
     _etc/_security/_banned.words.conf           | dizionario delle parole proibite per la validazione dei dati in arrivo
     _etc/_security/_common.passwords.conf       | dizionario delle password più comuni per la verifica della robustezza degli account
 
-
     cartelle custom
     ===============
-
-    TODO documentare
+    Normalmente i file e le cartelle di _etc/ non vengono customizzati, ma in alcuni casi può essere necessario farlo; le customizzazioni più
+    frequenti riguardano i dizionari dei microcontenuti. In aggiunta alla customizzazione dello standard, è possibile incontrare nella versione
+    custom della cartella _etc/ alcuni file e sotto cartelle specifici della parte custom.
 
     file                        | descrizione
     ----------------------------|-------------------------------------
-    etc/redirect.csv            | file di configurazione per i redirect del framework
+    etc/redirect.csv            | file di configurazione per i redirect custom del framework
 
-
+    Per ulteriori informazioni sui redirect si vedano il codice e i commenti dei file  _src/_config/_130.redirect.php e  _src/_config/_135.redirect.php.
 
     la sottocartella etc/doxygen/
     -----------------------------
-
-    TODO documentare
+    Qualora si voglia generare la documentazione in un progetto custom, sarà probabilmente necessario creare una controparte custom del file
+    _etc/_doxygen/_doxygen.conf.
 
     file                            | descrizione
     --------------------------------|-------------------------------------
     etc/doxygen/doxygen.conf        | file di configurazione di Doxygen per la compilazione della documentazione
-
-
-    TODO documentare
-
 
 */
