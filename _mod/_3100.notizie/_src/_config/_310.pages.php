@@ -45,7 +45,10 @@
 	    // timer
 		timerCheck( $cf['speed'], ' -> fine recupero categorie notizie dal database' );
 
-	    // se ci sono pagine trovate le inserisco nell'array principale
+        // log
+        logger( 'categorie notizie trovate: ' . print_r( $pgs, true ), 'notizie' );
+
+        // se ci sono pagine trovate le inserisco nell'array principale
 		if( is_array( $pgs ) ) {
 
 		    // ciclo principale
@@ -154,7 +157,10 @@
 	    // timer
 		timerCheck( $cf['speed'], ' -> fine recupero notizie dal database' );
 
-	    // se ci sono pagine trovate le inserisco nell'array principale
+        // log
+        logger( 'notizie trovate: ' . print_r( $pgs, true ), 'notizie' );
+
+        // se ci sono pagine trovate le inserisco nell'array principale
 		if( is_array( $pgs ) ) {
 
             // ciclo principale

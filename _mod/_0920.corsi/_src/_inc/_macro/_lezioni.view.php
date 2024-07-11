@@ -86,6 +86,7 @@
 	    'ore' => 'ore',
         'ora_inizio' => 'oi',
         'ora_fine' => 'of' */
+        NULL => 'azioni'
       );
 
     // stili della vista
@@ -105,8 +106,15 @@
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left',
         'ora_inizio' => 'd-none',
-        'ora_fine' => 'd-none'
+        'ora_fine' => 'd-none',
+        NULL => 'nowrap'
     );
+
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
+    );
+
 
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/lezioni.view.filters.html';
@@ -339,8 +347,11 @@
 
     if( !empty( $ct['view']['data'] ) ){
 		foreach ( $ct['view']['data'] as &$row ){
-             if(!empty($row['data_programmazione'])){
+            $buttons = '';
+            if(!empty($row['data_programmazione'])){
                 $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5);
             }
+            $buttons .=  '<a href="'.$cf['contents']['pages']['lezioni.form.presenze']['path'][LINGUA_CORRENTE].'?todo[id]='.$row['id'].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';
+            $row[ NULL ] = $buttons;
         }
 	}

@@ -338,6 +338,15 @@
      */
     function csvString2matrix( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
 
+        // debug
+        error_reporting( E_ALL );
+        ini_set( 'display_errors', TRUE );
+
+        // TODO implementare guessNewline()
+
+        // trim della stringa
+        $f = trim( $f );
+
         // esplodo la stringa per newline
         $a = explode( PHP_EOL, $f );
 
@@ -425,7 +434,7 @@
         $t = array2csvString( $d, $s, $h, $c, $e );
 
         // scrivo la stringa su file utilizzando writeToFile()
-        $r = writeToFile( $f, $t, $m );
+        $r = writeToFile( $t, $f, $m );
 
         // restituisco l'esito dell'operazione
         return $r;
@@ -473,7 +482,15 @@
      * 
      * Questa funzione riceve in input un array di array associativi e lo scrive in un array di stringhe CSV; se non vengono fornite
      * intestazioni, la funzione le ricava dalle chiavi del primo array. La funzione utilizza csvRow2array() per convertire ogni riga
+     * in una stringa CSV.
      * 
+     * @param       array       $d      l'array da scrivere
+     * @param       string      $s      il separatore da utilizzare
+     * @param       array       $h      le intestazioni da utilizzare
+     * @param       string      $c      il carattere di delimitazione dei campi di testo
+     * @param       string      $e      il carattere di escape
+     * 
+     * @return      array               l'array di stringhe CSV
      * 
      */
     function array2csvArray( $d, $s = ',', $h = NULL, $c = '"', $e = '\\' ) {
@@ -502,7 +519,7 @@
 
         // leggo tutte le righe
         while( $buf = fgets( $b ) ) {
-            $a[] = $buf;
+            $a[] = trim( $buf );
         }
 
         // chiudo il buffer
@@ -516,24 +533,124 @@
     /**
      * scrive un array di array non associativi in un file CSV
      * 
+     * Questa funzione scrive un array di array non associativi in un file CSV; se non vengono fornite intestazioni, la funzione
+     * non fa nulla, altrimenti le aggiunge all'inizio dell'array. La funzione utilizza matrix2csvString() per generare la stringa
+     * da scrivere e writeToFile() per scriverla su file.
+     * 
+     * @param       array       $d      l'array da scrivere
+     * @param       string      $f      il file su cui scrivere
+     * @param       string      $s      il separatore da utilizzare
+     * @param       array       $h      le intestazioni da utilizzare
+     * @param       string      $c      il carattere di delimitazione dei campi di testo
+     * @param       string      $e      il carattere di escape
+     * @param       string      $m      la modalità di scrittura
+     *
+     * @return      boolean             l'esito dell'operazione 
+     * 
      */
     function matrix2csvFile( $d, $f, $s = ',', $h = NULL, $c = '"', $e = '\\', $m = FILE_WRITE_OVERWRITE ) {
+
+        // log
+        logger( 'scrittura file CSV: ' . $f, 'csv' );
+
+        // se ho un array di intestazioni lo aggiungo all'inizio del file
+        if( ! empty( $h ) ) {
+            array_unshift( $d, $h );
+        }
+
+        // genero la stringa da scrivere su file tramite matrix2csvString()
+        $t = matrix2csvString( $d, $s, NULL, $c, $e );
+
+        // scrivo la stringa su file utilizzando writeToFile()
+        $r = writeToFile( $t, $f, $m );
+
+        // restituisco l'esito dell'operazione
+        return $r;
 
     }
 
     /**
      * scrive un array di array non associativi in una stringa CSV
      * 
+     * Questa funzione riceve in input un array di array non associativi e lo scrive in una stringa CSV; se non vengono fornite
+     * intestazioni, la funzione non fa nulla, altrimenti le aggiunge all'inizio dell'array. La funzione utilizza matrix2csvArray()
+     * per generare l'array di stringhe da scrivere e implode() per concatenarle in una stringa.
+     * 
+     * @param       array       $d      l'array da scrivere
+     * @param       string      $s      il separatore da utilizzare
+     * @param       array       $h      le intestazioni da utilizzare
+     * @param       string      $c      il carattere di delimitazione dei campi di testo
+     * @param       string      $e      il carattere di escape
+     * 
+     * @return      string              la stringa CSV
+     * 
      */
     function matrix2csvString( $d, $s = ',', $h = NULL, $c = '"', $e = '\\' ) {
+
+        // se ho un array di intestazioni lo aggiungo all'inizio del file
+        if( ! empty( $h ) ) {
+            array_unshift( $d, $h );
+        }
+
+        // trasformo gli array di riga in stringhe tramite la matrix2csvArray()
+        $a = matrix2csvArray( $d, $s, NULL, $c, $e );
+
+        // implodo le stringhe per newline
+        if( is_array( $a ) ) {
+            $r = implode( PHP_EOL, $a );
+        }
+
+        // restituisco la stringa
+        return $r;
 
     }
 
     /**
      * scrive un array di array non associativi in un array di stringhe CSV
      * 
+     * Questa funzione riceve in input un array di array non associativi e lo scrive in un array di stringhe CSV; se non vengono fornite
+     * intestazioni, la funzione non fa nulla, altrimenti le aggiunge all'inizio dell'array. La funzione utilizza csvRow2vector()
+     * per convertire ogni riga in una stringa CSV.
+     * 
+     * @param       array       $d      l'array da scrivere
+     * @param       string      $s      il separatore da utilizzare
+     * @param       array       $h      le intestazioni da utilizzare
+     * @param       string      $c      il carattere di delimitazione dei campi di testo
+     * @param       string      $e      il carattere di escape
+     * 
+     * @return      array               l'array di stringhe CSV
+     * 
      */
     function matrix2csvArray( $d, $s = ',', $h = NULL, $c = '"', $e = '\\' ) {
+
+        // array per il risultato
+        $a = array();
+
+        // se ho un array di intestazioni lo aggiungo all'inizio del file
+        if( ! empty( $h ) ) {
+            array_unshift( $d, $h );
+        }
+        // apro un buffer in memoria
+        $b = fopen('php://memory', 'r+');
+
+        // scrivo tutte le righe nel buffer
+        foreach( $d as $r ) {
+            fputcsv( $b, $r, $s, $c, $e );
+        }
+
+        // leggo il buffer
+        rewind( $b );
+
+        // leggo tutte le righe
+        while( $buf = fgets( $b ) ) {
+            $a[] = trim( $buf );
+        }
+
+        // chiudo il buffer
+        fclose( $b );
+
+        // restituisco l'array di stringhe
+        return $a;
 
     }
 

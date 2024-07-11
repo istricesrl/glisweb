@@ -797,6 +797,18 @@ INSERT INTO `ruoli_anagrafica` (`id`, `id_genitore`, `nome`, `html_entity`, `fon
 (37,	NULL,	'referente tecnico',	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (38,	NULL,	'supervisore',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	NULL);
 
+
+-- | 050000034100
+
+-- ruoli_articoli
+INSERT INTO `ruoli_articoli` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`, `se_progetti`, `se_risorse`, `se_acquisto`, `se_rinnovo`) VALUES
+(1,	NULL,	'prodotto',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(2,	NULL,	'principale',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(3,	NULL,	'suggerito',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(4,	NULL,	'accessorio',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(5,	NULL,	'consumabile',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
+(6,	NULL,	'bundle',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
 -- | 050000034200
 
 -- ruoli_audio
@@ -899,12 +911,13 @@ INSERT IGNORE INTO `ruoli_matricole` (`id`, `nome`, `html_entity`, `font_awesome
 -- ruoli_prodotti
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 10:46 Fabio Mosti
-INSERT IGNORE INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
+INSERT INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
 (1,	NULL,	'prodotto',	NULL,	NULL),
 (2,	NULL,	'principale',	NULL,	NULL),
 (3,	NULL,	'suggerito',	NULL,	NULL),
 (4,	NULL,	'accessorio',	NULL,	NULL),
-(5,	NULL,	'consumabile',	NULL,	NULL);
+(5,	NULL,	'consumabile',	NULL,	NULL),
+(6,	NULL,	'bundle',	NULL,	NULL);
 
 -- | 050000035100
 
