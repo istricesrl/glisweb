@@ -15,7 +15,7 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_commerciale.php' ),
 	    'parent'	=> array( 'id'		=> NULL ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'commerciale', 'commerciale.gestiti', 'commerciale.tools' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'commerciale', 'commerciale.gestiti', 'commerciale.stampe', 'commerciale.tools' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'commerciale' ),
 														'priority'	=> '190' ) ) )	
     );
@@ -41,6 +41,19 @@
 	    'parent'			=> array( 'id'		=> 'commerciale' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_commerciale.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['commerciale']['etc']['tabs'] )
+	);
+
+    // tools produzione
+	$p['commerciale.stampe'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'commerciale' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_commerciale.stampe.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['commerciale']['etc']['tabs'] )
 	);

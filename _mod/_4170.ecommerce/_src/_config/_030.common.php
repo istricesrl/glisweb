@@ -183,6 +183,7 @@
     $cf['ecommerce']['fields']['articoli']      = array(
         'id'                            => array( 'tipe' => 'int',      'default' => NULL ),
         'id_articolo'                   => array( 'tipe' => 'string',   'default' => NULL ),
+        'id_listino'                    => array( 'tipe' => 'int',      'default' => NULL ),
         'id_iva'                        => array( 'tipe' => 'int',      'default' => NULL ),
         'destinatario_id_anagrafica'    => array( 'type' => 'string',   'default' => NULL ),
         'id_mastro_provenienza'         => array( 'type' => 'int',      'default' => NULL ),

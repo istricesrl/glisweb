@@ -99,7 +99,8 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM categorie_anagrafica_view'
 	);
-/*
+
+    /*
     // categorie anagrafica
 	$ct['etc']['select']['anagrafica'] = mysqlCachedQuery(
 	    $cf['memcache']['connection'],

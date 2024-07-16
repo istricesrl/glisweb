@@ -47,6 +47,7 @@
                             <th class="text-right">sc. %</th>
                             <th class="text-right">sc. €</th>
                             <th class="text-right">q.tà</th>
+                            <th class="text-right">listino</th>
                             <th class="text-right">prezzo</th>
                             <th></th>
                         </tr>
@@ -62,6 +63,13 @@
                             <td><input class="form-control form-control-sm text-right" type="text" id="scperc{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_percentuale]" value="{{ '%0.2f'|format(dati.sconto_percentuale) }}"></td>
                             <td><input class="form-control form-control-sm text-right" type="text" id="scval{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_valore]" value="{{ '%0.2f'|format(dati.sconto_valore) }}"></td>
                             <td><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></td>
+                            <td>
+                                <select class="form-control form-control-sm" id="" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_listino]" required>
+                                    {% for listino in etc.id_listino %}
+                                    <option value="{{ listino.id }}"{% if listino.id == dati.id_listino %} selected{% endif %}>{{ listino.__label__ }}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
                             <td class="text-right">{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
                             <td class="text-right"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
                         </tr>
@@ -73,13 +81,14 @@
                             <td>{% if session.carrello.sconto_valore_coupon %}{{ '%0.2f'|format(session.carrello.sconto_valore_coupon) }} {{ session.carrello.valuta_utf8 }}{% endif %}</td>
                             <td></td>
                             <td></td>
+                            <td></td>
                             <td class="text-right">{% if session.carrello.codice_coupon %}<input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#coupon').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">{% endif %}</td>
                         </tr>
                     </tbody>
 
                     <tfoot>
                         <tr>
-                            <td class="text-right" colspan="5">totale generale</td>
+                            <td class="text-right" colspan="6">totale generale</td>
                             <td class="nowrap text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
                             <td class="text-right"><input class="btn btn-secondary btn-sm" type="button" value="ricalcola" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
                         </tr>

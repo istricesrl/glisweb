@@ -13,6 +13,7 @@
     <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
 	    {{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
         {{ frm.input( table, subtable, i, field, '', '', '', '__parent_id__', 'hidden', '', '', disabled  ) }}
+        {{ frm.input( table, subtable, i, 'data_inizio', '', '', request, "now"|date("Y-m-d"), 'hidden', '', '', disabled  ) }}
 	    <div class="form-group form-row">
             <div class="col col-md-2">
                 <span class="label-top">listino</span>
@@ -29,6 +30,10 @@
             <div class="col-10 col-md">
                 <span class="label-top">suffisso</span>
                 {{ frm.input( table, subtable, i, 'suffisso', '', '', request, '', '', '', '', disabled ) }}
+            </div>           
+            <div class="col-10 col-md">
+                <span class="label-top">q.tà min.</span>
+                {{ frm.input( table, subtable, i, 'qta_min', '', '', request, '', '', '', '', disabled ) }}
             </div>           
             <div class="col col-md-auto">
                 <span class="label-top">iva</span>

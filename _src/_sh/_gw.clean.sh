@@ -61,6 +61,11 @@ else
             rm -rf ./var/spool/*
         fi
 
+        ## elimino le sitemap
+        if [ -d ./var/sitemap ]; then
+            rm -rf ./var/sitemap/*
+        fi
+
     fi
 
     ## ripristino cartelle

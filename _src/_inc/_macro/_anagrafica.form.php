@@ -39,12 +39,14 @@
 	);
 
     // tendina comuni
+    /*
 	$ct['etc']['select']['comuni'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM comuni_view'
 	);
+    */
 
 	// preset post inserimento rapido 
 	$ct['etc']['preset']['table'] = 'anagrafica';

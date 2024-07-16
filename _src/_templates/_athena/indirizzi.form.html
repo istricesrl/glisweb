@@ -71,7 +71,8 @@
             </div>
             <div class="col-12 col-md">
             <span class="label-top ">comune</span>
-                {{ frm.selectBox( table, '', '', 'id_comune', 'comune', etc.select.comuni, request, '', '', '' ) }}
+                {# frm.selectBox( table, '', '', 'id_comune', 'comune', etc.select.comuni, request, '', '', '' ) #}
+                {{ frm.selectBox( table, '', '', 'id_comune', 'comune', '', request, '', '', '', '', '', '', '', comuni, 'id_comune', page, pages, ietf, 'comuni', '' ) }}
             </div>
         </div>
 

@@ -57,7 +57,8 @@
 	    );
 	}
 
-	// filtri aggiuntivi
+    /*
+    // filtri aggiuntivi
 	if( isset( $_REQUEST['__filters__'] )  ) {
 		if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] ) ) {
 			$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] = array_replace_recursive(
@@ -67,6 +68,14 @@
 		} else {
 			$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] = $_REQUEST['__filters__'];
 		}
+	}
+    */
+
+	// ordinamenti presettati
+	if( isset( $ct['view']['__filters__'] ) ) {
+        if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] ) ) {
+			$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] = $ct['view']['__filters__'];
+        }
 	}
 
 	// report mode

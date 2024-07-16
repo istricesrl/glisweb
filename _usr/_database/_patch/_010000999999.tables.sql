@@ -751,6 +751,7 @@ CREATE TABLE `carrelli_articoli` (
   `id` int(11) NOT NULL,
   `id_carrello` int(11) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
   `id_iva` int(11) DEFAULT NULL,
   `id_pagamento` int(11) DEFAULT NULL,
   `destinatario_nome` char(255) DEFAULT NULL,

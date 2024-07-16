@@ -41,7 +41,7 @@
      * @todo documentare
      * 
      */
-    function calcolaPrezzoNettoArticoloCarrello( $a, $carrello ) {
+    function calcolaPrezzoNettoArticoloCarrello( $a, $carrello, $rowKey ) {
 
         // globalizzazione di $cf
         global $cf;
@@ -54,12 +54,14 @@
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
             $a,
-            $carrello['id_listino'],
+            ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $carrello['id_listino'] ),
             $qs[0],
             $qs[1],
+            $qs[2],
             ( ( empty( $carrello['timestamp_checkout'] ) ) ? date('Y-m-d') : $carrello['timestamp_checkout'] )
         );
 
+        /* TODO implementare in futuro
         // sconti quantità
         $scQta = mysqlQuery(
             $cf['mysql']['connection'],
@@ -84,6 +86,12 @@
         // per ogni sconto quantità, recupero i codici papabili
 
         // per ogni sconto quantità 
+
+        */
+
+        // debug
+        // var_dump( $a );
+        // die( print_r( $qs, true ) );
 
         // restituisco il risultato
         return $r;
@@ -111,10 +119,11 @@
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
             $a,
-            $carrello['id_listino'],
+            ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $carrello['id_listino'] ),
             $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
             $qs[0],
             $qs[1],
+            $qs[2],
             ( ( empty( $carrello['timestamp_checkout'] ) ) ? date('Y-m-d') : $carrello['timestamp_checkout'] )
         );
 
@@ -146,6 +155,9 @@
         $qa = 0;
         $qp = 0;
 
+        // contatore per i bundle
+        $qb = array();
+
         // ciclo sui prodotti
         foreach( $carrello['articoli'] as $k => $v ) {
 
@@ -169,12 +181,31 @@
                 $qp += $v['quantita'];
             }
 
+            // trovo i bundle di cui fa parte l'articolo
+            $bs = mysqlSelectColumn(
+                'id_prodotto_collegato',
+                $cf['mysql']['connection'],
+                'SELECT id_prodotto_collegato FROM relazioni_articoli WHERE id_articolo = ? AND id_ruolo = 6',
+                array(
+                    array( 's' => $a )
+                )
+            );
+
+            // debug
+            // var_dump( $a );
+            // var_dump( $bs );
+
+            // ciclo sui bundle
+            foreach( $bs as $bd ) {
+                $qb[ $bd ] = ( ( ! isset( $qb[ $bd ] ) ) ? $v['quantita'] : $qb[ $bd ] + $v['quantita'] );
+            }
+
             // log
             logger( 'contaQuantitaArticoliCarrello(): $qa = ' . $qa . ', $qp = ' . $qp . ' ( $a = ' . $a . ', $p = ' . $p . ' )', 'listini' );
 
         }
 
         // restituisco il risultato
-        return array( $qa, $qp );
+        return array( $qa, $qp, $qb );
 
     }

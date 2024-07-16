@@ -15,8 +15,8 @@
 	{# frm.input( table, subtable, i, 'id_prodotto', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) #}
 	<div class="form-group form-row">
 	    <div class="col-12 col-md">
-		<span class="label-top">prodotto principale</span>
-		{{ frm.selectBox( table, subtable, i, 'id_prodotto', '', '', request, request[ table ].id, '', '', '', 'font-awesome', 'prodotti.form', 'prodotti.form', 'prodotti', 'id_prodotto', page, pages, lang, 'prodotti', disabled ) }}
+		<span class="label-top">articolo principale</span>
+		{{ frm.selectBox( table, subtable, i, 'id_articolo', '', '', request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, lang, 'articoli', disabled ) }}
 		</div>
 	    <div class="col-auto">
 		<span class="label-top">relazione</span>
@@ -24,7 +24,7 @@
 		</div>
 		<div class="col-12 col-md">
 		<span class="label-top">prodotto collegato</span>
-		{{ frm.selectBox( table, subtable, i, 'id_prodotto_collegato', '', '', request, '', '', '', '', 'font-awesome', 'prodotti.form', 'prodotti.form', 'prodotti', 'id_prodotto_collegato', page, pages, lang, 'prodotti', disabled ) }}
+		{{ frm.selectBox( table, subtable, i, 'id_prodotto_collegato', '', '', request, request[ table ].id, '', '', '', 'font-awesome', 'prodotti.form', 'prodotti.form', 'prodotti', 'id_prodotto_collegato', page, pages, lang, 'prodotti', disabled ) }}
 		</div>
 		<div class="col-12 col-md">
 		<span class="label-top">articolo collegato</span>

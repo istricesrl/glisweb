@@ -131,22 +131,41 @@
 
                 if( $_REQUEST['__stats__']['__confronto__'] == 'ANNO' ) {
 
+                    // debug
+                    // die('CONFRONTO ANNO');
+
                     $whr = NULL;
                     $ijn = NULL;
-                    $cnd = array(
+                    $cnd = array();
+                    $cnw = array(
                         array( 's' => date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__inizio__'] . ' -1 year' ) ) ),
                         array( 's' => date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__fine__'] . ' -1 year' ) ) )
                     );
 
                     if( isset( $_REQUEST['__stats__']['__categoria__'] ) && ! empty( $_REQUEST['__stats__']['__categoria__'] ) ) {
-                        $ijn = 'INNER JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id AND categorie_prodotti_path_check( prodotti_categorie.id_categoria, ? ) ';
+                        $ijn .= 'INNER JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id AND categorie_prodotti_path_check( prodotti_categorie.id_categoria, ? ) ';
                         $cnd = array(
                             array( 's' => $_REQUEST['__stats__']['__categoria__'] ),
                             array( 's' => date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__inizio__'] . ' -1 year' ) ) ),
                             array( 's' => date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__fine__'] . ' -1 year' ) ) )
                             );
                     }
-        
+
+                    if( isset( $_REQUEST['__stats__']['__id_stato__'] ) && ! empty( $_REQUEST['__stats__']['__id_stato__'] ) ) {
+                        $ijn .= 'INNER JOIN anagrafica_view_static ON anagrafica_view_static.id = documenti.id_emittente AND anagrafica_view_static.id_stato = ? ';
+                        $cnd = array_merge( $cnd, array(
+                            array( 's' => $_REQUEST['__stats__']['__id_stato__'] )
+                            )
+                        );
+                        if( isset( $_REQUEST['__stats__']['__id_provincia__'] ) && ! empty( $_REQUEST['__stats__']['__id_provincia__'] ) ) {
+                            $ijn .= 'AND anagrafica_view_static.id_provincia = ? ';
+                            $cnd = array_merge( $cnd, array(
+                                array( 's' => $_REQUEST['__stats__']['__id_provincia__'] )
+                                )
+                            );
+                        }
+                    }
+    
                     $dati = mysqlQuery(
                         $cf['mysql']['connection'],
                         'SELECT sum( documenti_articoli.importo_netto_totale ) AS importo, '.
@@ -160,7 +179,7 @@
                         'AND documenti.data >= ? AND documenti.data <= ? '.
                         $whr.
                         'GROUP BY date_format( documenti.data, "' . $m . '" )',
-                        $cnd
+                        array_merge( $cnd, $cnw )
                     );
 
                     // var_dump( date( 'Y-m-d', strtotime( $_REQUEST['__stats__']['__inizio__'] . ' -1 year' ) ) );

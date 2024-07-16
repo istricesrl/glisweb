@@ -23,7 +23,7 @@
 	// trovo un indirizzo
     $status['row'] = mysqlSelectRow(
         $cf['mysql']['connection'],
-        'SELECT * FROM anagrafica_indirizzi WHERE indirizzo IS NOT NULL ORDER BY timestamp_elaborazione, id_anagrafica ASC LIMIT 1'
+        'SELECT * FROM anagrafica_indirizzi WHERE indirizzo IS NOT NULL AND id_anagrafica IS NOT NULL ORDER BY timestamp_elaborazione, id_anagrafica ASC LIMIT 1'
     );
 
     // scompongo l'indirizzo manuale
@@ -151,17 +151,25 @@
             )
         );
 
-        $status['inserimenti']['id_anagrafica_indirizzi'] = mysqlInsertRow(
-            $cf['mysql']['connection'],
-            array(
-                'id_anagrafica' => $status['row']['id_anagrafica'],
-                'id_indirizzo' => $status['inserimenti']['id_indirizzo'],
-                'indirizzo' => NULL,
-                'timestamp_elaborazione' => time(),
-                'id_ruolo' => ( ( $sede === false ) ? 1 : NULL )
-            ),
-            'anagrafica_indirizzi'
-        );
+        if( ! empty( $status['row']['id_anagrafica'] ) ) {
+
+            $status['inserimenti']['id_anagrafica_indirizzi'] = mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id_anagrafica' => $status['row']['id_anagrafica'],
+                    'id_indirizzo' => $status['inserimenti']['id_indirizzo'],
+                    'indirizzo' => NULL,
+                    'timestamp_elaborazione' => time(),
+                    'id_ruolo' => ( ( $sede === false ) ? 1 : NULL )
+                ),
+                'anagrafica_indirizzi'
+            );
+    
+        } else {
+
+            $status['considerazioni'][ $indirizzo['id'] ][] = 'indirizzo non associabile per mancanza di anagrafica';
+
+        }
 
     } else {
 

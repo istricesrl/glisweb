@@ -42,6 +42,8 @@
     }
 */
 
+    $ct['metro']['options']['nocontrols'] = 1;
+
     $ct['page']['contents']['modals']['metro'][] = array(
         'schema' => 'inc/commerciale.modal.todo.html'
     );

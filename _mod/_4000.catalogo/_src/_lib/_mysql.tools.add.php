@@ -279,7 +279,7 @@
      * @todo documentare
      *
      */
-    function calcolaPrezzoNettoArticolo( $m, $c, $a, $l, $qa = 1, $qp = 1, $date = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
+    function calcolaPrezzoNettoArticolo( $m, $c, $a, $l, $qa = 1, $qp = 1, $qb = array(), $date = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
 
         // debug
         // die( 'listino: ' . $l );
@@ -288,7 +288,7 @@
         $date = empty( $date ) ? date( 'Y-m-d' ) : $date;
 
         // calcolo la chiave della query
-        $k = md5( PRICES_DATA . $a . $l . $qa . $qp . $date );
+        $k = md5( PRICES_DATA . $a . $l . $qa . $qp . md5( serialize( $qb ) ) . $date );
 
         // cerco il valore in cache
         $r = memcacheRead( $m, $k );
@@ -338,11 +338,45 @@
                 )
             );
 
+            // trovo il prezzo per il bundle
+            if( ! empty( $qb ) ) {
+                $bp = array_shift( array_keys( $qb ) );
+                $qbn = array_shift( $qb );
+                $p3 = mysqlSelectCachedValue( $m, $c,
+                    'SELECT prezzo, id_iva  
+                    FROM prezzi 
+                    WHERE id_prodotto = ? 
+                    AND id_listino = ?
+                    AND ( qta_min IS NULL OR qta_min <= ? )
+                    AND ( data_inizio IS NULL OR data_inizio <= ? )
+                    ORDER BY data_inizio DESC, qta_min DESC',
+                    array(
+                        array( 's' => $bp ),
+                        array( 's' => $l ),
+                        array( 's' => $qbn ),
+                        array( 's' => $date )
+                    )
+                );
+            } else {
+                $p3 = 0;
+                $qbn = 0;
+            }
+
+            // defailt
+            $r = 0;
+
             // trovo il prezzo
-            $r = ( ! empty( $p2 ) && ( empty( $p1 ) || $p2 < $p1 ) ) ? $p2 : $p1;
+            foreach( array( $p1, $p2, $p3 ) as $pf ) {
+                if( ! empty( $pf ) ) {
+                    if( $pf < $r || empty( $r ) ) {
+                        $r = $pf;
+                    }
+                }
+            }
 
             // log
-            logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ' e ' . $p2 . ' scelgo ' . $r, 'listini' );
+            // logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ', ' . $p2 . ' e ' . $p3 . ' scelgo ' . $r, 'listini' );
+            logger( 'per ' . $a . ' rilevate quantità ' . $qa . ' (articolo), ' . $qp . ' (prodotto) e ' . $qbn . ' (bundle)', 'listini' );
 
             // calcolo le variazioni
             // TODO
@@ -353,7 +387,7 @@
         } else {
 
             // log
-            logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') ho recuperato dalla cache il prezzo ' . $r, 'listini' );
+            logger( 'per ' . $a . ' (' . $qp . ') ho recuperato dalla cache il prezzo ' . $r, 'listini' );
 
         }
 
@@ -367,7 +401,7 @@
      * @todo documentare
      *
      */
-    function calcolaPrezzoLordoArticolo( $m, $c, $a, $l, $i, $qa = 1, $qp = 1, $date = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
+    function calcolaPrezzoLordoArticolo( $m, $c, $a, $l, $i, $qa = 1, $qp = 1, $qb = array(), $date = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
 
         // debug
         // die( 'listino: ' . $l . ' aliquota: ' . $i );
@@ -376,7 +410,7 @@
         $date = empty( $date ) ? date( 'Y-m-d' ) : $date;
 
         // calcolo la chiave della query
-        $k = md5( PRICES_DATA . 'L' . $a . $l . $i . $qa . $qp . $date );
+        $k = md5( PRICES_DATA . 'L' . $a . $l . $i . $qa . $qp . md5( serialize( $qb ) ) . $date );
 
         // cerco il valore in cache
         $r = memcacheRead( $m, $k );
@@ -426,9 +460,50 @@
                 )
             );
 
+            // trovo il prezzo per il bundle
+            if( ! empty( $qb ) ) {
+                $bp = array_shift( array_keys( $qb ) );
+                $qbn = array_shift( $qb );
+                $p3 = mysqlSelectCachedRow( $m, $c,
+                    'SELECT prezzo, id_iva  
+                    FROM prezzi 
+                    WHERE id_prodotto = ? 
+                    AND id_listino = ?
+                    AND ( qta_min IS NULL OR qta_min <= ? )
+                    AND ( data_inizio IS NULL OR data_inizio <= ? )
+                    ORDER BY data_inizio DESC, qta_min DESC',
+                    array(
+                        array( 's' => $bp ),
+                        array( 's' => $l ),
+                        array( 's' => $qbn ),
+                        array( 's' => $date )
+                    )
+                );
+            } else {
+                $p3 = 0;
+                $qbn = 0;
+            }
+
+            // debug
+            // var_dump( $qb );
+
+            // defailt
+            $r = 0;
+            $i = 0;
+
             // trovo il prezzo
-            $r = ( ! empty( $p2['prezzo'] ) && ( empty( $p1['prezzo'] ) || $p2['prezzo'] < $p1['prezzo'] ) ) ? $p2['prezzo'] : $p1['prezzo'];
-            $i = ( ! empty( $i ) ) ? $i : ( ( ! empty( $p2['prezzo'] ) && ( empty( $p1['prezzo'] ) || $p2['prezzo'] < $p1['prezzo'] ) ) ? $p2['id_iva'] : $p1['id_iva'] );
+            foreach( array( $p1['prezzo'] => $p1['id_iva'], $p2['prezzo'] => $p2['id_iva'], $p3['prezzo'] => $p3['id_iva'] ) as $pf => $pi ) {
+                if( ! empty( $pf ) ) {
+                    if( $pf < $r || empty( $r ) ) {
+                        $r = $pf;
+                        $i = $pi;
+                    }
+                }
+            }
+
+            // log
+            // logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ', ' . $p2 . ' e ' . $p3 . ' scelgo ' . $r, 'listini' );
+            logger( 'per ' . $a . ' rilevate quantità ' . $qa . ' (articolo), ' . $qp . ' (prodotto) e ' . $qbn . ' (bundle)', 'listini' );
 
             // debug
             // die( 'prezzo: ' . $r . ' aliquota: ' . $i );
@@ -440,7 +515,7 @@
             $r = $r + ( $r / 100 * $v );
 
             // log
-            logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ' e ' . $p2 . ' scelgo ' . $r, 'listini' );
+            // logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ' e ' . $p2 . ' scelgo ' . $r, 'listini' );
 
             // calcolo le variazioni
             // TODO
@@ -451,7 +526,7 @@
         } else {
 
             // log
-            logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') ho recuperato dalla cache il prezzo ' . $r, 'listini' );
+            logger( 'per ' . $a . ' (' . $qp . ') ho recuperato dalla cache il prezzo ' . $r, 'listini' );
 
         }
 

@@ -1109,12 +1109,12 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN anagrafica AS a3 ON a3.id = attivita.id_anagrafica_programmazione
 		LEFT JOIN anagrafica AS a4 ON a4.id = attivita.id_corrispondenza
 		LEFT JOIN contatti AS c1 ON c1.id = attivita.id_contatto
-		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
-		LEFT JOIN progetti ON progetti.id = attivita.id_progetto
-		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
-		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
 		LEFT JOIN todo ON todo.id = attivita.id_todo
 		LEFT JOIN step ON step.id = attivita.id_step
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = attivita.id_progetto
+		LEFT JOIN progetti ON progetti.id = coalesce( attivita.id_progetto, todo.id_progetto )
+		LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria
+		LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1		
 		LEFT JOIN indirizzi ON indirizzi.id = attivita.id_indirizzo
 		LEFT JOIN mastri AS m1 ON m1.id = attivita.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = attivita.id_mastro_destinazione
