@@ -50,7 +50,7 @@
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
 		'h1'		=> array( $l		=> 'gestione' ),
-		'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+		'parent'		=> array( 'id'		=> 'template.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.form.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_template.form.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
@@ -140,13 +140,25 @@
 		'parent'		=> array( 'id'		=> 'archivio.logistica' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( '_src/_inc/_macro/_indirizzi.view.php' ),
-		'etc'		=> array( 'tabs'	=> array( 'indirizzi.view', 'indirizzi.tools' ) ),
+		'etc'		=> array( 'tabs'	=> array( 'indirizzi.view', 'indirizzi.normalizzazione.view', 'indirizzi.tools' ) ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'indirizzi' ),
 		'priority'	=> '050' ) ) )
 	);
 
 	// gestione indirizzi strumenti
+	$p['indirizzi.normalizzazione.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'indirizzi da normalizzare' ),
+	    'h1'		=> array( $l		=> 'indirizzi da normalizzare' ),
+	    'parent'		=> array( 'id'		=> 'indirizzi.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_indirizzi.normalizzazione.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['indirizzi.view']['etc']['tabs'] )
+	);
+
+    // gestione indirizzi strumenti
 	$p['indirizzi.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -210,6 +222,32 @@
 	    'macro'		=> array( '_src/_inc/_macro/_indirizzi.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['indirizzi.form']['etc']['tabs'] )
+	);
+
+	// gestione indirizzi
+	$p['indirizzi.normalizzazione.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.normalizzazione.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'indirizzi.normalizzazione.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_indirizzi.normalizzazione.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'indirizzi.normalizzazione.form',
+												'indirizzi.normalizzazione.form.tools' ) )
+	);
+
+	// gestione indirizzi
+	$p['indirizzi.normalizzazione.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'indirizzi.normalizzazione.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_indirizzi.normalizzazione.form.tools.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> 'indirizzi.normalizzazione.form' )	
 	);
 
 	// vista luoghi

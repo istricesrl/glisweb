@@ -55,7 +55,7 @@
                     INNER JOIN comuni ON comuni.id = indirizzi.id_comune
                     INNER JOIN provincie ON provincie.id = comuni.id_provincia
                     INNER JOIN regioni ON regioni.id = provincie.id_regione
-                    WHERE categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL
+                    WHERE ( categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL )
                     AND regioni.id_stato = ?
                     AND anagrafica.data_archiviazione IS NULL
                     ORDER BY anagrafica.denominazione, anagrafica.cognome, anagrafica.nome',
@@ -72,7 +72,7 @@
                     'SELECT anagrafica.*, concat_ws( " ", anagrafica.codice, anagrafica.denominazione, anagrafica.cognome, anagrafica.nome ) AS __label__ FROM anagrafica
                     INNER JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id AND categorie_anagrafica_path_check( anagrafica_categorie.id_categoria, ? ) 
                     INNER JOIN categorie_anagrafica ON anagrafica_categorie.id_categoria = categorie_anagrafica.id
-                    WHERE categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL
+                    WHERE ( categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL )
                     AND anagrafica.data_archiviazione IS NULL
                     ORDER BY anagrafica.denominazione, anagrafica.cognome, anagrafica.nome',
                     array(
@@ -90,7 +90,8 @@
                 'SELECT anagrafica.*, concat_ws( " ", anagrafica.codice, anagrafica.denominazione, anagrafica.cognome, anagrafica.nome ) AS __label__ FROM anagrafica
                 INNER JOIN anagrafica_categorie ON anagrafica.id = anagrafica_categorie.id_anagrafica
                 INNER JOIN categorie_anagrafica ON anagrafica_categorie.id_categoria = categorie_anagrafica.id
-                WHERE categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL
+                WHERE ( categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL )
+                AND anagrafica.data_archiviazione IS NULL
                 ORDER BY anagrafica.denominazione, anagrafica.cognome, anagrafica.nome'
             );
 

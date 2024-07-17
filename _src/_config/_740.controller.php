@@ -161,8 +161,12 @@
                     */
 
                     // ...
-                    if( ! isset( $riga['id'] ) ) {
-                        $riga['id'] = NULL;
+                    // NOTA questo if METHOD_POST l'ho aggiunto perché sennò all'update creava una nuova riga...
+                    // verificare che sia la soluzione migliore (vedere anche come funziona mysqlInsertRow()
+                    if( $riga['__method__'] == METHOD_POST ) {
+                        if( ! isset( $riga['id'] ) ) {
+                            $riga['id'] = NULL;
+                        }
                     }
 
                     // firma per l'autorizzazione della riga

@@ -24,7 +24,7 @@ if [ -n "$PNOARGS" ]; then
     echo "utilizzo: $0 [opzioni]"
     echo "opzioni:"
     echo "  --soft      elimina i log, i file temporanei e le cache"
-    echo "  --hard      elimina i log, i file temporanei, le cache e i file in spool"
+    echo "  --hard      elimina i log, i file temporanei, e sitemap, le cache e i file in spool"
     exit 1
 
 else

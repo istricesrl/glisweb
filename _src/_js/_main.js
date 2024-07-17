@@ -22,6 +22,12 @@
 
 	}
 
+    function ciEquals(a, b) {
+        return typeof a === 'string' && typeof b === 'string'
+            ? a.localeCompare(b, undefined, { sensitivity: 'accent' }) === 0
+            : a === b;
+    }
+
 	// verifica se esiste un attributo
 	$.fn.hasAttr = function( name ) {  
 		var attr = this.attr( name );

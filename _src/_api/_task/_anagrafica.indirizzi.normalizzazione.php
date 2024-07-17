@@ -4,11 +4,16 @@
      * normalizzazione indirizzi manuali
      * 
      * questo task normalizza gli indirizzi inseriti manualmente nel formato
+     * 
      * indirizzo | civico | localita | cap | comune | stato
+     * 
+     * oppure:
+     * 
+     * indirizzo | civico | localita | cap | comune | provincia | stato
      * 
      * ad esempio:
      * 
-     * via Dalle Scatole | 231 | zona ind. Lavoro Sodo | 12345 | Chisslè | IT
+     * via Dalle Scatole | 231 | zona ind. Lavoro Sodo | 12345 | Chisslè | BO | IT
      * 
      */
 
@@ -18,12 +23,24 @@
 	}
 
     // inizializzo l'array del risultato
-	$status = array();
+	$status = array(
+        'start' => date( 'Y-m-d H:i:s' )
+    );
 
-	// trovo un indirizzo
+    // debug
+    // die( print_r( $status, true ) );
+
+    // ...
+    // modifico la timestamp di elaborazione
+    mysqlQuery(
+        $cf['mysql']['connection'],
+        'DELETE FROM anagrafica_indirizzi WHERE id_indirizzo IS NULL AND indirizzo IS NULL'
+    );
+
+    // trovo un indirizzo
     $status['row'] = mysqlSelectRow(
         $cf['mysql']['connection'],
-        'SELECT * FROM anagrafica_indirizzi WHERE indirizzo IS NOT NULL AND id_anagrafica IS NOT NULL ORDER BY timestamp_elaborazione, id_anagrafica ASC LIMIT 1'
+        'SELECT * FROM anagrafica_indirizzi WHERE indirizzo IS NOT NULL AND id_anagrafica IS NOT NULL ORDER BY timestamp_elaborazione ASC LIMIT 1'
     );
 
     // scompongo l'indirizzo manuale
@@ -34,29 +51,71 @@
         $status['elementi'][5] = 'IT';
     }
 
+    // mappatura
+    $status['valori']['indirizzo']      = $status['elementi'][0];
+    $status['valori']['civico']         = $status['elementi'][1];
+    $status['valori']['localita']       = $status['elementi'][2];
+    $status['valori']['cap']            = $status['elementi'][3];
+    $status['valori']['comune']         = $status['elementi'][4];
+
+    // ...
+    if( count( $status['elementi'] ) == 6 ) {
+
+        $status['valori']['stato']      = $status['elementi'][5];
+
+    } elseif( count( $status['elementi'] ) == 7 ) {
+
+        $status['valori']['provincia']  = $status['elementi'][5];
+        $status['valori']['stato']      = $status['elementi'][6];
+
+    }
+
     // cerco lo stato
     $status['trovati']['id_stato'] = mysqlSelectValue(
         $cf['mysql']['connection'],
         'SELECT id FROM stati WHERE iso31661alpha2 = ? OR nome = ?',
-        array( array( 's' => $status['elementi'][5] ), array( 's' => $status['elementi'][5] ) )
+        array( array( 's' => $status['valori']['stato'] ), array( 's' => $status['valori']['stato'] ) )
     );
 
-	// cerco i possibili comuni
-    $status['trovati']['comuni'] = mysqlQuery(
+    // cerco la provincia
+    $status['trovati']['id_provincia'] = mysqlSelectValue(
         $cf['mysql']['connection'],
-        'SELECT regioni.id_stato, comuni.id_provincia, comuni.id, comuni.nome
+        'SELECT id FROM provincie WHERE sigla = ? OR nome = ?',
+        array( array( 's' => $status['valori']['provincia'] ), array( 's' => $status['valori']['provincia'] ) )
+    );
+
+    // ...
+    $whr = 'SELECT regioni.id_stato, comuni.id_provincia, comuni.id, comuni.nome
         FROM comuni
             LEFT JOIN provincie ON provincie.id = comuni.id_provincia
             LEFT JOIN regioni ON regioni.id = provincie.id_regione
-        WHERE comuni.nome = ? AND id_stato = ?',
-        array( array( 's' => $status['elementi'][4] ), array( 's' => $status['trovati']['id_stato'] ) )
-    );
+        WHERE comuni.nome = ? AND regioni.id_stato = ?';
+
+    // ...
+    $cnd = array( array( 's' => $status['valori']['comune'] ), array( 's' => $status['trovati']['id_stato'] ) );
+
+    // ...
+    if( ! empty( $status['trovati']['id_provincia'] ) ) {
+        $whr .= ' AND comuni.id_provincia = ?';
+        $cnd = array_merge(
+            $cnd, array( 's' => $status['trovati']['id_provincia'] )
+        );
+    }
+
+    // cerco i possibili comuni
+    $status['trovati']['comuni'] = mysqlQuery( $cf['mysql']['connection'], $whr, $cnd );
 
 	// disambigua comune
     if( count( $status['trovati']['comuni'] ) > 1 ) {
-        // TODO
-    } else {
+
+        $status['considerazioni'][ $indirizzo['id'] ][] = 'possibile ambiguità fra comuni';
+
         $status['trovati']['id_comune'] = $status['trovati']['comuni'][0]['id'];
+
+    } else {
+
+        $status['trovati']['id_comune'] = $status['trovati']['comuni'][0]['id'];
+
     }
 
     // ricerca indirizzi già esistenti
@@ -92,13 +151,13 @@
             if( $indirizzo['id_comune'] == $status['trovati']['id_comune'] ) {
                 $status['considerazioni'][ $indirizzo['id'] ][] = 'ID comune uguale';
 
-                if( $indirizzo['localita'] == $status['elementi'][2] ) {
+                if( $indirizzo['localita'] == $status['valori']['localita'] ) {
                     $status['considerazioni'][ $indirizzo['id'] ][] = 'indirizzo uguale';
 
-                    if( $indirizzo['indirizzo'] == $status['elementi'][0] ) {
+                    if( $indirizzo['indirizzo'] == $status['valori']['indirizzo'] ) {
                         $status['considerazioni'][ $indirizzo['id'] ][] = 'indirizzo uguale';
 
-                        if( $indirizzo['civico'] == $status['elementi'][1] ) {
+                        if( $indirizzo['civico'] == $status['valori']['civico'] ) {
                             $status['considerazioni'][ $indirizzo['id'] ][] = 'civico uguale';
 
                             $presente = true;
@@ -134,10 +193,10 @@
             $cf['mysql']['connection'],
             array(
                 'id_comune' => $status['trovati']['id_comune'],
-                'indirizzo' => $status['elementi'][0],
-                'civico' => $status['elementi'][1],
-                'localita' => $status['elementi'][2],
-                'cap' => $status['elementi'][3]
+                'indirizzo' => $status['valori']['indirizzo'],
+                'civico' => $status['valori']['civico'],
+                'localita' => $status['valori']['localita'],
+                'cap' => $status['valori']['cap']
             ),
             'indirizzi',
             true,
@@ -176,16 +235,22 @@
         $status['considerazioni'][ $indirizzo['id'] ][] = 'indirizzo non presente in anagrafica';
         $status['considerazioni'][ $indirizzo['id'] ][] = 'inserimento impossibile per mancanza di comune';
 
-        // modifico la timestamp di elaborazione
-        $status['trovati']['id_stato'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'UPDATE anagrafica_indirizzi SET timestamp_elaborazione = ? WHERE id = ?',
-            array( array( 's' => time() ), array( 's' => $status['row']['id'] ) )
-        );
-
     }
 
-	// aggiornamento anagrafica_view_static
+    // modifico la timestamp di elaborazione
+    $status['check']['id'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'UPDATE anagrafica_indirizzi SET timestamp_elaborazione = ? WHERE id = ?',
+        array( array( 's' => time() ), array( 's' => $status['row']['id'] ) )
+    );
+
+    // debug
+    // die( print_r( $status, true ) );
+
+    // log
+    logWrite( $status['row']['indirizzo'] . ' gestito: ' . print_r( $status['considerazioni'], true ), 'indirizzi', LOG_ERR );
+
+    // aggiornamento anagrafica_view_static
     updateAnagraficaViewStaticIndirizzi( $status['row']['id_anagrafica'] );
 
     // debug

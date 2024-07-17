@@ -1,0 +1,151 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.form.file.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+    {% set composizione = request[ table ].timestamp_composizione %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+    {% set composizione = 'now'|date('U') %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+        {# CAMPI HIDDEN SPECIFICI #}
+	    <input type="hidden" id="composizione" name="{{ table }}[timestamp_composizione]" value="{{ composizione }}">
+	    <input type="hidden" id="allegati" name="{{ table }}[allegati]" value="{{ request[ table ].allegati }}">
+
+        {# MODULO PRINCIPALE #}
+        <fieldset>
+        <legend>contenuto <small>{{ legend }}</small></legend>
+    
+        <div class="form-group form-row">
+            <div class="col-12 col-md-4">
+                <span class="label-top ">mittente</span>
+                    {{ frm.input( table, '', '', 'mittente', '', '', request ) }}
+                </div>
+            <div class="col">
+            <span class="label-top ">oggetto</span>
+                {{ frm.inputRequired( table, '', '', 'oggetto', '', '', request ) }}
+            </div>
+        </div>
+
+        <div class="form-group form-row">
+            <div class="col">
+            <span class="label-top">testo</span>
+            {{ frm.textarea( table, '', '', 'corpo', '', 3, request, '', '1', 'ckEditor', 200 ) }}
+            </div>
+        </div>
+       
+        </fieldset>
+
+        <fieldset>
+            <legend>destinatari</legend>
+            
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top ">destinatari</span>
+                        {{ frm.input( table, '', '', 'destinatari', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top ">destinatari CC</span>
+                        {{ frm.input( table, '', '', 'destinatari_cc', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top ">destinatari BCC</span>
+                        {{ frm.input( table, '', '', 'destinatari_bcc', '', '', request ) }}
+                </div>
+            </div>
+
+        </fieldset>
+    
+        <fieldset>
+            <legend>invio <small>mail generata il {{ request[ table ].timestamp_inserimento|date('Y-m-d H:i') }}{% if request[ table ].tentativi > 1%} | tentativi falliti: {{request[ table ].tentativi}} {% endif %}</small></legend>
+            
+            <div class="form-group form-row">
+                <div class="col-12 col-md-3">
+                <span class="label-top">data e ora di invio</span>
+                {{ frm.datetimeRequired( table, '', '', 'timestamp_invio', 'data e ora di invio', '', request ) }}
+                </div>
+
+                <div class="col">
+                    <span class="label-top">server</span>
+                    {{ frm.select( table, '', '', 'server', '', etc.select.server, request ) }}
+                </div>
+
+            </div>
+
+        </fieldset>
+    
+        {% if session.__work__.mailattach.items %}
+        <!--
+        <fieldset>
+            <legend>memoria di lavoro</legend>
+            
+            <div class="form-row">
+				<div class="col-2 text-right">
+					{{ frm.button(  'aggiungi allegati' ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#form-' ~ table ~ '").submit();','aggiungi allegati' ) }}
+				</div>
+				<div class="col-2 text-right">
+					{{ frm.button(  'aggiungi allegati e svuota memoria' ,'button','btn btn-secondary btn-sm btn-block', 'submitFormOkay = true; $("#form-' ~ table ~ '").submit();','aggiungi allegati e svuota memoria di lavoro' ) }}
+				</div>
+			</div>
+
+        </fieldset>
+        -->
+        {% endif %}
+
+        {% if not request[ table ].id %}
+        {% for attach in session.__work__.mailattach.items %}
+        <!-- allegato: {{ attach.path }} -->
+        <input type="hidden" name="{{ table }}[file][{{ loop.index0 }}][ordine]" value="{{ loop.index * 10 }}">
+        <input type="hidden" name="{{ table }}[file][{{ loop.index0 }}][id_mail_out]" value="__parent_id__">
+        <input type="hidden" name="{{ table }}[file][{{ loop.index0 }}][nome]" value="{{ attach.label }}">
+        <input type="hidden" name="{{ table }}[file][{{ loop.index0 }}][id_ruolo]" value="1">
+        <input type="hidden" name="{{ table }}[file][{{ loop.index0 }}][path]" value="{{ attach.path }}">
+        {% endfor %}
+        {% endif %}
+
+        {# BOTTONI E COMANDI DEL MODULO #}
+        <fieldset class="form-controls mt-auto">
+            {{ def.controls( page, pages, ietf, session, table, request ) }}
+        </fieldset>
+	
+	</form>
+    </div>
+</section>
+
+{% endblock %}

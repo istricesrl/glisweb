@@ -610,6 +610,8 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		ruoli_indirizzi.nome AS ruolo,
 		anagrafica_indirizzi.id_account_inserimento,
 		anagrafica_indirizzi.id_account_aggiornamento,
+		anagrafica_indirizzi.timestamp_elaborazione,
+        from_unixtime( anagrafica_indirizzi.timestamp_elaborazione, '%Y-%m-%d %H:%i' ) AS data_ora_elaborazione,
 		IF( anagrafica_indirizzi.id_indirizzo IS NOT NULL ,
 		concat(
 			coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ),

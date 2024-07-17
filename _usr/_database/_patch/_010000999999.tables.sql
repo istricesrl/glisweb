@@ -228,6 +228,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_indirizzi` (
   `indirizzo` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `timestamp_elaborazione` int(11) DEFAULT NULL,
+  `note_elaborazione` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -3252,7 +3253,7 @@ CREATE TABLE IF NOT EXISTS `regimi` (
 CREATE TABLE IF NOT EXISTS `regioni` (
   `id` int(11) NOT NULL,
   `id_stato` int(11) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
+  `nome` char(64) DEFAULT NULL,
   `codice_istat` char(2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 

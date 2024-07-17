@@ -1,0 +1,203 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/default.html' as sub %}
+{% import 'bin/indirizzi.form.sub.html' as sub_indirizzi %}
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    <input type="hidden" id="elaborazione" name="{{ table }}[timestamp_elaborazione]" value="">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+        {# MODULO PRINCIPALE #}
+        <fieldset>
+        <legend>dati generali <small>{{ legend }}</small></legend>
+    
+        <div class="form-group form-row">
+            <div class="col-12 col-md">
+                <span class="label-top">anagrafica</span>
+                {{ frm.selectBox( table, '', '', 'id_anagrafica', '', '', request, '', '', 1, '', '', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <div class="col-12 col-md-auto">
+                <span class="label-top ">ruolo</span>
+                {{ frm.select( table, '', '', 'id_ruolo', '', etc.select.ruoli, request, '', '', '', 1, '', '' ) }}
+            </div>
+            <div class="col">
+                <span class="label-top ">indirizzo</span>
+                {{ frm.inputRequired( table, '', '', 'indirizzo', '', '', request ) }}
+            </div>
+        </div>
+        <div class="form-group form-row">
+            <div class="col">
+            <span class="label-top">note</span>
+			{{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+            </div>
+        </div>
+       
+    </fieldset>
+
+    <fieldset>
+        <legend>analisi</legend>
+    
+        <div class="form-group form-row">
+            <div class="col-12 col-md">
+                <p>indirizzo</p>
+                <p style="font-weight: bold;" id="indirizzo"></p>
+            </div>
+            <div class="col-12 col-md-auto">
+                <p>civico</p>
+                <p style="font-weight: bold;" id="civico"></p>
+            </div>
+            <div class="col-12 col-md">
+                <p>località</p>
+                <p style="font-weight: bold;" id="localita"></p>
+            </div>
+            <div class="col-12 col-md-auto">
+                <p>CAP</p>
+                <p style="font-weight: bold;" id="cap"></p>
+            </div>
+            <div class="col-12 col-md">
+                <p>comune</p>
+                <p style="font-weight: bold;" id="comune"></p>
+            </div>
+            <div class="col-12 col-md-auto">
+                <p>provincia</p>
+                <p style="font-weight: bold;" id="provincia"></p>
+            </div>
+            <div class="col-12 col-md">
+                <p>stato</p>
+                <p style="font-weight: bold;" id="stato"></p>
+            </div>
+        </div>
+       
+    </fieldset>
+
+    {# BOTTONI E COMANDI DEL MODULO #}
+    <fieldset class="form-controls mt-auto">
+        {{ def.controls( page, pages, ietf, session, table, request ) }}
+	</fieldset>
+	
+	</form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+
+    function parseIndirizzo( indirizzo ) {
+
+        // esplodo l'indirizzo per |
+        var parti = indirizzo.split('|');
+
+        console.log( 'elementi trovati: ' + parti.length );
+
+        $('#indirizzo').html( parti[0] );
+        $('#civico').html( parti[1] );
+        $('#localita').html( parti[2] );
+        $('#cap').html( parti[3] );
+        $('#comune').html( parti[4] );
+
+        if( parti.length == 6 ) {
+
+            $('#provincia').html( '-' );
+            $('#stato').html( parti[5] );
+
+        } else if( parti.length == 7 ) {
+
+            $('#provincia').html( parti[5] );
+            $('#stato').html( parti[6] );
+
+        }
+
+
+        // url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + parti[0] + ' ' + parti[1] + ' ' + parti[2] + ' ' + parti[3] + ' ' + parti[4] + ' ' + parti[5] + '.json?access_token=pk.eyJ1IjoiYXRoZW5hIiwiYSI6ImNqZ2J2Z3Z2ZzB6c3YycW1zZ3Z2Z3Z2ZzgifQ.1Z6J9Q6
+
+        $.ajax({
+            url: '/api/comuni',
+            type: 'GET',
+            data: {
+                __info__: {
+                    comuni: {
+                        __search__: parti[4],
+                        __fields__: [ 'id', 'nome', '__label__' ]
+                    }
+                }
+            },
+            dataType: 'json',
+            contentType: 'application/json',
+			headers: {
+                accept: 'application/json'
+            },
+            success: function( data ) {
+                console.log( data );
+                if ( data.length == 1 ) {
+                    if( ciEquals( data[0].nome, parti[4] ) ) {
+                        $('#comune').html( 'OK ' + data[0].__label__ );
+                    } else {
+                        $('#comune').html( data[0].__label__ + '?' );
+                    }
+                } else if ( data.length > 1 ) {
+                    $('#comune').html( '<strong>AMBIGUITÀ TROVATE</strong>' );
+                    data.forEach( function( el ) {
+                        // $('#comune').parent().append( '<p>' + data[0].__label__ + '?</p>' );
+                        $('#comune').append( '<br>' + data[0].__label__ + '?' );
+                    });
+                }
+            }
+        });
+
+        console.log( parti );
+
+    }
+
+    window.addEventListener( 'DOMContentLoaded', function() {
+
+        $('#anagrafica_indirizzi_indirizzo').each( function() {
+            parseIndirizzo( $(this).val() );
+        });
+
+        $('#anagrafica_indirizzi_indirizzo').keyup( function() {
+            parseIndirizzo( $(this).val() );
+		});
+
+	});	
+</script>
+{% endblock %}

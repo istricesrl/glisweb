@@ -38,9 +38,13 @@
             )
         );
 
-        // print_r( $ct['page']['contents']['articoli'] );
+        // debug
+        // die( print_r( $ct['page']['contents']['articoli'], true ) );
 
         foreach( $ct['page']['contents']['articoli'] as &$a ) {
+
+            $ct['etc']['selettore']['taglie'][ $a['id_taglia'] ]['articoli'][] = $a['id'];
+            $ct['etc']['selettore']['colori'][ $a['id_colore'] ]['articoli'][] = $a['id'];
 
             $p = mysqlQuery(
                 $cf['mysql']['connection'],
@@ -64,7 +68,24 @@
 
         }
 
+        foreach( $ct['etc']['selettore']['taglie'] as $id_taglia => &$taglia ) {
+            $taglia['dettagli'] = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT taglie.* FROM taglie WHERE taglie.id = ? ',
+                array( array( 's' => $id_taglia ) )
+            );
+        }
+
+        foreach( $ct['etc']['selettore']['colori'] as $id_colore => &$colore ) {
+            $colore['dettagli'] = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT colori.* FROM colori WHERE colori.id = ? ',
+                array( array( 's' => $id_colore ) )
+            );
+        }
+
         // die( print_r( $ct['page']['contents']['articoli'], true ) );
+        // die( print_r( $ct['etc']['selettore'], true ) );
 
         $ct['page']['contents']['accessori'] = mysqlQuery( $cf['mysql']['connection'],
             'SELECT prodotti.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
