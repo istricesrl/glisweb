@@ -43,7 +43,7 @@
 
     // defaults
 	if( ! isset( $_SESSION['__view__']['__lang__'] ) ) {
-	    $_SESSION['__view__']['__lang__'] = LINGUA_CORRENTE;
+	    $_SESSION['__view__']['__lang__'] = ID_LINGUA_CORRENTE;
 	}
 
     // inizializzo l'array degli errori
@@ -60,3 +60,4 @@
 	// print_r( $_REQUEST );
 	// print_r( $_SESSION );
 	// print_r( $cf['contents']['pages']['licenza']['content'] );
+    // die( 'lingua corrente: ' . $_SESSION['__view__']['__lang__'] );
