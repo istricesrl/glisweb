@@ -60,6 +60,15 @@
                 'autosubmit'    => false,                                                           // autosubmit del modulo di riepilogo
                 '__label__'     => 'contrassegno'                                                   // etichetta del provider per le tendine
             ),
+            'bonifico' => array(
+                'id'            => 'bonifico',                                                      // ID del provider per le tendine
+                'available'     => true,                                                            // disponibilità del provider
+                'modalita'      => 5,                                                               // ID della modalità di pagamento (per l'emissione dei documenti)
+                'action'        => 'carrello.checkout',                                             // pagina per l'action del form di riepilogo
+                'method'        => 'post',                                                          // metodo per il form di riepilogo
+                'autosubmit'    => false,                                                           // autosubmit del modulo di riepilogo
+                '__label__'     => 'bonifico anticipato'                                            // etichetta del provider per le tendine
+            ),
             'nexi' => array(
                 'id'            => 'nexi',                                                          // ID del provider per le tendine
                 'available'     => true,                                                            // disponibilità del provider

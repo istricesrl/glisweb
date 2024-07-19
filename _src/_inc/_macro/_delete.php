@@ -11,6 +11,10 @@
      *
      */
 
+    // rimpiazzo le parentesi tonde con le parentesi quadre
+    $_REQUEST['__delete__']['target'] = str_replace( array( '(', ')' ), array( '[', ']' ), $_REQUEST['__delete__']['target'] );
+    $_REQUEST['__delete__']['rollback'] = str_replace( array( '(', ')' ), array( '[', ']' ), $_REQUEST['__delete__']['rollback'] );
+
     // richiesta o conferma
     if( isset( $_REQUEST['__delete__']['conferma'] ) && $_REQUEST['__delete__']['conferma'] == 1 ) {
 
@@ -22,7 +26,7 @@
 	    // print_r( ob_get_status( true ) );
 
         // ritorno alla pagina richiedente
-	    header( 'Location: '.$_REQUEST['__delete__']['target'] );
+        header( 'Location: '.$_REQUEST['__delete__']['target'] );
 
 	// status code che indica la redirezione
 	    $ct['page']['http']['status'] = 303;

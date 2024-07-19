@@ -306,7 +306,8 @@
 {% endif %}
 {% if not back %}{% set back = page.path[ lang ] ~ query ~ backurl %}{% endif %}
 {% if not rollback %}{% set rollback = page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ backurl %}{% endif %}
-{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|url_encode ~ '&__delete__[rollback]=' ~ rollback|url_encode ~ '","_self")','elimina' ) }}
+{# frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|url_encode ~ '&__delete__[rollback]=' ~ rollback|url_encode ~ '","_self")','elimina' ) #}
+{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr' ~ class, submitOk ~ ' window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|replace({'[': "(", ']': ")"}) ~ '&__delete__[rollback]=' ~ rollback|replace({'[': "(", ']': ")"}) ~ '","_self")','elimina' ) }}
 {% endmacro %}
 
 {% macro editButton( table, subtable, edit, page, pages, r, lang, request, back, rollback ) %}

@@ -46,6 +46,11 @@
     deploy manuale
     --------------
 
+    script Bash
+    -----------
+
+    [...] il file etc/deploy/<target>.properties
+
     Phing
     -----
 

@@ -16,7 +16,7 @@ function check-args() {
         return
     fi
 
-    options=$(getopt -o bhr --long hard,test: -- "$@")
+    options=$(getopt -o bhr --long soft,hard,increment:,test: -- "$@")
 
     eval set -- "$options"
 
@@ -32,8 +32,16 @@ function check-args() {
             -r)
                 PARGR=1
                 ;;
+            --soft)
+                PARGSOFT=1
+                ;;
             --hard)
                 PARGHARD=1
+                ;;
+            --increment)
+                shift;
+                PARGINCREMENT=1
+                PVALINCREMENT=$1
                 ;;
             --test)
                 shift;
@@ -50,4 +58,11 @@ function check-args() {
 
     done
 
+}
+
+increment-version() {
+  local delimiter=.
+  local array=($(echo "$1" | tr $delimiter '\n'))
+  array[$2]=$((array[$2]+1))
+  echo $(local IFS=$delimiter ; echo "${array[*]}")
 }

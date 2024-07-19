@@ -41,6 +41,11 @@
 	    $_SESSION['__view__']['__site__'] = SITE_CURRENT;
 	}
 
+    // defaults
+	if( ! isset( $_SESSION['__view__']['__lang__'] ) ) {
+	    $_SESSION['__view__']['__lang__'] = LINGUA_CORRENTE;
+	}
+
     // inizializzo l'array degli errori
 	if( ! isset( $_REQUEST['__err__'] ) ) {
 	    $_REQUEST['__err__'] = array();

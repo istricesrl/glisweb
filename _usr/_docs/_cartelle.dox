@@ -93,6 +93,7 @@
     cartella                    | descrizione
     ----------------------------|---------------------------------------------------------------------------------------
     etc/                        | controparte custom di _etc/
+    etc/deploy                  | cartella per i file di configurazione dei deploy
     etc/doxygen                 | controparte custom di _etc/_doxygen
     etc/robots                  | controparte custom di _etc/_robots
     src/                        | controparte custom di _src/

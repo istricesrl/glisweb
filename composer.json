@@ -15,9 +15,7 @@
         "predis/predis": "*",
         "codeception/codeception": "*",
         "codeception/module-phpbrowser": "*",
-        "codeception/module-asserts": "*",
-        "google/apiclient": "*",
-        "paypal/paypal-checkout-sdk": "*"
+        "codeception/module-asserts": "*"
     },
     "suggest": {
         "twig/extra-bundle": "*"

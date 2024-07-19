@@ -204,6 +204,20 @@
     salvataggio sul database
     ------------------------
 
+    feedback all'utente
+    ===================
+
+    \code{.html}
+
+    {% if request.__contatti__.esempio.__status__ == 'OK' %}
+    <!-- qui inserire il testo di ringraziamento, è tutto ok -->
+    {% else %}
+    <!-- qui inserire il modulo da compilare, non è stato ricevuto alcun modulo dal backend -->
+    {% endif %}
+
+    \endcode
+
+
     privacy dei moduli
     ==================
     Dal momento che il modulo contatti riceve dati dall'utente potenzialmente suscettibili di rientrare nel regolamento sulla protezione dei dati personali,
