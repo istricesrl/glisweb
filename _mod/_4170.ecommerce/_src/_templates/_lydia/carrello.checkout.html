@@ -5,7 +5,15 @@
 {% block main %}
 
 {% if etc.esito == session.carrello.id %}
-    <p>ordine piazzato correttamente</p>
+    <h1>ordine piazzato correttamente!</h1>
+    {% if session.carrello.provider_pagamento == 'bonifico' %}
+    <h2>Per completare l'ordine effettuare un bonifico bancario di € <span>{{ session.carrello.prezzo_lordo_finale }}</span> a:</h2>
+    <p><span>Banca:</span><br>
+    <span>Indirizzo:</span><br>
+    <span>IBAN:</span><br>
+    <span>Codice Swift:</span></p>
+    <p>Indicando nella causale il tuo numero d'ordine: <span>#{{ session.carrello.id }}</span>.</p>
+    {% endif %}
 {% else %}
     <p>errore nella conferma dell'ordine</p>
 {% endif %}

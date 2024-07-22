@@ -93,7 +93,7 @@
 
                 // debug
                     // print_r( $ct['etc'] );
-                    // print_r( $k );
+                    // die( print_r( $k, true ) );
                     // print_r( $result );
 
             break;
@@ -129,6 +129,16 @@
                         'divisa=EURimporto=' . $ct['etc']['fields']['importo'] .
                         $ct['etc']['meta']['macKey']
                     );                    
+
+            break;
+
+            case 'monetaweb':
+
+                // richiedo il PaymentID e l'URL per il redirect
+                $paymentID = monetawebGetPaymentDetails( $c, $k );
+
+                // modifico la destinazione del form di riepilogo
+                $ct['etc']['meta']['action'] = $paymentID[2];
 
             break;
 

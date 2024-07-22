@@ -69,6 +69,7 @@
     function getAclPermission( $t, $a, &$i = NULL ) {
 
 	// ...
+	// TODO fare questa cosa solo se non esiste il permesso esplicito per attivi e archiviati
 	$t = str_replace( array( '_attivi', '_archiviati' ), '', $t );
 
 	// log
@@ -145,6 +146,7 @@
     function getAclRights( $c, $t, $a, $id, &$i = NULL ) {
 
 	// ...
+	// TODO fare questa cosa solo se non esiste il permesso esplicito per attivi e archiviati
 	$t = str_replace( array( '_attivi', '_archiviati' ), NULL, $t );
 
 	// log
@@ -376,6 +378,7 @@
     function getAclRightsTable( $c, $t ) {
 
 	// ...
+	// TODO fare questa cosa solo se non esiste il permesso esplicito per attivi e archiviati
 	$t = str_replace( array( '_attivi', '_archiviati' ), '', $t );
 
 	// verifico se l'utente non è root

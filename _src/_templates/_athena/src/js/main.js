@@ -107,6 +107,12 @@
 			$(this).selectBox();
 		});
 
+        // se nella pagina c'è bisogno di scatenare eventi custom al duplicate(), definire la funzione onDuplicate()
+        if( typeof onDuplicate === "function") { 
+            onDuplicate( base );
+        } else {
+            console.log('onDuplicate() not defined');
+        }
 
 // SDF questa è la parte aggiunta ma c'è ancora qualco sa che non funziona
 // creando una nuova riga di orario al check non applica correttamente i value...

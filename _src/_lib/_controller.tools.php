@@ -313,6 +313,12 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 										}
 
 										break;
+                                    case 'BT':
+                                        $sva = explode('|', $sv);
+                                        $whr[] = "${fc} BETWEEN ? AND ?";
+                                        $vs[] = array('s' => $sva[0]);
+                                        $vs[] = array('s' => $sva[1]);
+                                        break;
 								}
 							}
 						}

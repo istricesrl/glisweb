@@ -4,6 +4,49 @@
 --
 
 
+
+-- | 100000000014
+-- __report_abbonamenti_attivi__
+-- tipologia: report
+DROP TABLE IF EXISTS `__report_abbonamenti_attivi__`;
+
+-- | 100000000015
+-- __report_abbonamenti_attivi__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_abbonamenti_attivi__` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+        tipologie_contratti.nome AS tipologia,
+		group_concat( DISTINCT coalesce( istituto.denominazione , concat( istituto.cognome, ' ', istituto.nome ), '' )  SEPARATOR ', ' ) AS istituti,
+		group_concat( DISTINCT coalesce( iscritto.id, '' )  SEPARATOR ', ' ) AS id_iscritti,
+		group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ) AS iscritti,
+		contratti.id_progetto,
+		progetti.nome AS progetto,
+		contratti.codice,
+		contratti.nome,
+        max(rinnovi.data_inizio) AS data_inizio,
+        max(rinnovi.data_fine) AS data_fine,
+		contratti.id_account_inserimento,
+		contratti.id_account_aggiornamento,
+		concat(
+			group_concat( DISTINCT coalesce( iscritto.denominazione , concat( iscritto.cognome, ' ', iscritto.nome ), '' )  SEPARATOR ', ' ), ' ',
+			coalesce( contratti.nome, '' ), ' ', tipologie_contratti.nome, ' dal ',
+			max(rinnovi.data_inizio), ' al ', max(rinnovi.data_fine) ) AS __label__
+	FROM contratti
+        INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id
+        LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 30
+		LEFT JOIN anagrafica AS istituto ON istituto.id = contratti_anagrafica.id_anagrafica 
+		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo IN ( 29, 34 )
+		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
+        LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+    WHERE tipologie_contratti.se_abbonamento = 1
+    AND rinnovi.data_inizio <= now()
+    AND rinnovi.data_fine >= now()
+    GROUP BY contratti.id
+;
+
 -- | 100000001860
 -- __report_ore_operatori__
 -- tipologia: report

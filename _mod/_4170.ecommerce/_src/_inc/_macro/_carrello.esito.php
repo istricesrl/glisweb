@@ -85,6 +85,27 @@
                 $ct['etc']['esito'] = 0;
             }
 
+        } elseif(  isset( $_REQUEST['PaymentID'] )  ) {
+
+            // Monetaweb
+
+            // recupero il carrello
+            $carrello = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM carrelli WHERE ordine_pagamento = ?',
+                array( array( 's' => $_REQUEST['idOrdine'] ) )
+            );
+
+            // debug
+            // echo '<pre>' . print_r( $carrello, true ) . '</pre>';
+
+            // esito
+            if( isset( $carrello['status_pagamento'] ) && in_array( $carrello['status_pagamento'], array( 'APPROVED', 'CAPTURED' ) ) ) {
+                $ct['etc']['esito'] = 1;
+            } else {
+                $ct['etc']['esito'] = 0;
+            }
+
         }
 
 /*

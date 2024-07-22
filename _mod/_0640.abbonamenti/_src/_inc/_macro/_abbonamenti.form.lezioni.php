@@ -25,14 +25,14 @@
     // ...
     $idIscritto = mysqlSelectValue(
         $cf['mysql']['connection'],
-        'SELECT id_anagrafica FROM contratti_anagrafica WHERE id_contratto = ? AND id_ruolo = 29',
+        'SELECT id_anagrafica FROM contratti_anagrafica WHERE id_contratto = ? AND id_ruolo IN( 29, 32, 33, 34 )',
         array(
             array( 's' => $_REQUEST['contratti']['id'] )
         )
     );
 
     // debug
-    // die( print_r( $idIscritto, true ) );
+    // die( 'iscritto: ' . $idIscritto );
 
     // gestione iscrizioni
     if( isset( $_REQUEST['__iscrivi__'] ) ) {
@@ -50,7 +50,7 @@
         );
 
         // debug
-        // print_r( $ct['lezione'] );
+        // die( print_r( $ct['lezione'], true ) );
 
         // verifico la disponibilità di posti
         if( $ct['lezione']['numero_alunni'] < $ct['lezione']['numero_posti'] ) {
@@ -58,6 +58,9 @@
         } else {
             $idTipologia = 40;
         }
+
+        // debug
+        // die( 'tipologia: ' . $idTipologia );
 
         // inserisco la prenotazione
         $ct['id_attivita'] = mysqlInsertRow(
@@ -83,7 +86,7 @@
         updateAttivitaViewStatic( $ct['id_attivita'] );
 
         // debug
-        // die( print_r( $ct['id_attivita'] ) );
+        // die( 'attività: ' . $ct['id_attivita'] );
 
     }
 
@@ -131,6 +134,7 @@
         'id_progetto' => 'ID corso',
         'corso' => 'corso',
         'discipline' => 'disciplina',
+        'luogo' => 'luogo',
         'posti_disponibili' => 'posti',
 //        'anagrafica_programmazione' => 'assegnata a',
 //        'data_programmazione' => 'data',
@@ -152,11 +156,12 @@
         'corso' => 'text-left',
         'discipline' => 'text-left',
 	    'data_programmazione' => 'no-wrap',
-        'ora_inizio_programmazione' => 'd-none',
+//        'ora_inizio_programmazione' => 'd-none',
         'ora_fine_programmazione' => 'd-none',
         'note_programmazione' => 'd-none',
 //        'data_attivita' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
+        'luogo' => 'text-left',
         'nome' => 'text-left',
         'ora_inizio' => 'd-none',
         'ora_fine' => 'd-none',
@@ -169,9 +174,8 @@
     );
 
     // ordinamento di default
-    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']) ){
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'DESC';
-    } 
+    $ct['view']['__sort__']['data_programmazione']	= 'ASC';
+    $ct['view']['__sort__']['ora_inizio_programmazione']	= 'ASC';
 
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['id_tipologia']['EQ'] = 15;
@@ -194,6 +198,7 @@
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/lezioni.view.filters.html';
 
+    /*
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
 	    $ct['etc']['select']['mesi'][$mese] =  int2month( $mese ) ;
@@ -203,6 +208,17 @@
 	foreach( range( date( 'Y' ) - 5,  date( 'Y' ) ) as $y ) {
 	    $ct['etc']['select']['anni'][$y] = $y ;
 	}
+    */
+
+    // tendina mesi
+    $start = '2024-01-01';
+    for( $i = 0; $i < 12; $i++ ){
+        $ct['etc']['select']['mesi'][] = array(
+            'id' => date( 'Y-m-01', strtotime( $start ) ) . '|' . date( 'Y-m-t', strtotime( $start ) ),
+            '__label__' => date( 'Y-m-01', strtotime( $start ) ) . ' / ' . date( 'Y-m-t', strtotime( $start ) )
+        );
+        $start = date( 'Y-m-01', strtotime( $start . ' +1 month' ) );
+    }
 
     // tendina operatori
 	$ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
@@ -224,6 +240,12 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__');
 
+    // tendina tipologie attività
+	$ct['etc']['select']['corsi'] = mysqlCachedQuery(
+        $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM corsi_view WHERE data_chiusura > now() ORDER BY __label__');
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
@@ -235,7 +257,7 @@
 
             $iscritto = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT COUNT(*) FROM attivita WHERE id_todo = ? AND id_anagrafica = ?',
+                'SELECT count(*) FROM attivita WHERE id_todo = ? AND id_anagrafica = ?',
                 array(
                     array( 's' => $row['id'] ),
                     array( 's' => $idIscritto )
@@ -245,10 +267,10 @@
             $buttons = '';
 
             if( ! empty( $iscritto ) ) {
-                $onclick = "$('#form-contratti').attr('action','?__cancella__=".$row['id']."'); $('#form-contratti').submit();";
+                $onclick = "$('#form-contratti').attr('action','?contratti[id]=".$_REQUEST[ $ct['form']['table'] ]['id']."&__cancella__=".$row['id']."'); $('#form-contratti').submit();";
                 $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-calendar-minus-o"></i></a>';
             } else {
-                $onclick = "$('#form-contratti').attr('action','?__iscrivi__=".$row['id']."'); $('#form-contratti').submit();";
+                $onclick = "$('#form-contratti').attr('action','?contratti[id]=".$_REQUEST[ $ct['form']['table'] ]['id']."&__iscrivi__=".$row['id']."'); $('#form-contratti').submit();";
                 $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-graduation-cap"></i></a>';
             }
 

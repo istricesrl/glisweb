@@ -71,7 +71,7 @@
 	}
     */
 
-	// ordinamenti presettati
+	// filtri presettati
 	if( isset( $ct['view']['__filters__'] ) ) {
         if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] ) ) {
 			$_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] = $ct['view']['__filters__'];

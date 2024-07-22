@@ -76,8 +76,9 @@
 //        'ora_fine_programmazione' => 'ora fine',
         'note_programmazione' => 'ora',
         'id_progetto' => 'ID corso',
-        'corso' => 'corso',
         'discipline' => 'disciplina',
+        'corso' => 'corso',
+        'luogo' => 'luogo',
         'posti_disponibili' => 'posti',
 //        'anagrafica_programmazione' => 'assegnata a',
 //        'data_programmazione' => 'data',
@@ -91,7 +92,7 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
+	    'id' => 'd-none',
 	    '__label__' => 'text-left',
         'cliente' => 'text-left d-none d-md-table-cell',
         'anagrafica_programmazione' => 'text-left',
@@ -105,6 +106,7 @@
 //        'data_attivita' => 'no-wrap',
 	    'anagrafica' => 'text-left no-wrap',
         'nome' => 'text-left',
+        'luogo' => 'text-left',
         'ora_inizio' => 'd-none',
         'ora_fine' => 'd-none',
         NULL => 'nowrap'
@@ -119,6 +121,7 @@
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/lezioni.view.filters.html';
 
+    /*
     // tendina mesi
 	foreach( range( 1, 12 ) as $mese ) {
 	    $ct['etc']['select']['mesi'][$mese] =  int2month( $mese ) ;
@@ -128,6 +131,20 @@
 	foreach( range( date( 'Y' ) - 5,  date( 'Y' ) ) as $y ) {
 	    $ct['etc']['select']['anni'][$y] = $y ;
 	}
+    */
+
+    // tendina mesi
+    $start = '2024-01-01';
+    for( $i = 0; $i < 12; $i++ ){
+        $ct['etc']['select']['mesi'][] = array(
+            'id' => date( 'Y-m-01', strtotime( $start ) ) . '|' . date( 'Y-m-t', strtotime( $start ) ),
+            '__label__' => date( 'Y-m-01', strtotime( $start ) ) . ' / ' . date( 'Y-m-t', strtotime( $start ) )
+        );
+        $start = date( 'Y-m-01', strtotime( $start . ' +1 month' ) );
+    }
+
+    // debug
+    // die( print_r( $ct['etc']['select']['mesi'], true ) );
 
     // tendina operatori
 	$ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
@@ -143,12 +160,26 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__');
 
+    // tendina clienti
+	$ct['etc']['select']['luoghi'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'], 
+        $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM luoghi_view ORDER BY __label__');
+
     // tendina tipologie attività
 	$ct['etc']['select']['tipologie_attivita'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM tipologie_attivita_view WHERE se_sistema IS NULL ORDER BY __label__');
-/*
+
+    // tendina tipologie attività
+	$ct['etc']['select']['corsi'] = mysqlCachedQuery(
+        $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM corsi_view WHERE data_chiusura > now() ORDER BY __label__');
+
+        /*
     // tendina tipologie attività inps
 	$ct['etc']['select']['tipologie_attivita_inps'] = mysqlCachedQuery(
         $cf['memcache']['connection'], 
@@ -167,9 +198,10 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
 	} */
 
-    if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']) ){
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_programmazione']	= 'DESC';
-    } 
+	$ct['view']['__filters__']['data_programmazione']['BT'] = $ct['etc']['select']['mesi'][0]['id'];
+
+    $ct['view']['__sort__']['data_programmazione']	= 'ASC';
+    $ct['view']['__sort__']['ora_inizio_programmazione']	= 'ASC';
 
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['id_tipologia']['EQ'] = 15;

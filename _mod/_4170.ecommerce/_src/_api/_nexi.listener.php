@@ -10,7 +10,7 @@
 		$idCarrello = $_REQUEST['codTrans'];
 
 		// nome del file di ricevuta
-		$fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_REQUEST['codTrans'] ) . '.log';
+		$fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'nexi/' . sprintf( '%08d', $_REQUEST['codTrans'] ) . '.log';
 
 		// log
 		appendToFile( date( 'Y-m-d H:i:s' ) . ' ricevuta comunicazione IPN' . PHP_EOL, $fileRicevuta );
@@ -59,7 +59,7 @@
 					}
 
 					// log
-					logWrite( 'pagamento effettuato con successo per il carrello ' . $_REQUEST['codTrans'], 'paypal', LOG_INFO );
+					logWrite( 'pagamento effettuato con successo per il carrello ' . $_REQUEST['codTrans'], 'nexi', LOG_INFO );
 
 				break;
 
@@ -91,7 +91,7 @@
 					}
 
 					// log
-					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['codTrans'], 'paypal', LOG_ERR );
+					logWrite( 'pagamento non completato per il carrello ' . $_REQUEST['codTrans'], 'nexi', LOG_ERR );
 					appendToFile( 'pagamento non completato' . PHP_EOL, $fileRicevuta );
 
 				break;
@@ -108,6 +108,6 @@
 	} else {
 
 	    // log
-		logWrite( 'item_number mancante', 'paypal', LOG_ERR );
+		logWrite( 'codTrans mancante', 'nexi', LOG_ERR );
 
 	}

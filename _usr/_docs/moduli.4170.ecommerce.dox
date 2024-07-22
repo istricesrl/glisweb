@@ -333,8 +333,18 @@
 
     [...] vedi anche https://developers.satispay.com/docs/welcome
 
+    pagamento tramite Monetaweb
+
     note sull'implementazione di nuove forme di pagamento
     -----------------------------------------------------
+
+    [...] aggiungere un elemento all'array delle forme di pagamento in _mod/_4170.ecommerce/_src/_config/_030.common.php
+
+    [...] implementare le logiche necessarie in _mod/_4170.ecommerce/_src/_inc/_macro/_carrello.riepilogo.php
+
+    [...] creare i listener necessari in _mod/_4170.ecommerce/_src/_api/
+
+    [...] se necessario aggiungere un ramo in _mod/_4170.ecommerce/_src/_inc/_macro/_carrello.esito.php
 
     correlazioni fra il modulo e-commerce e gli altri moduli
     ========================================================

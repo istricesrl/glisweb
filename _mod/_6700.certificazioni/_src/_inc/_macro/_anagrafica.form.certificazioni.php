@@ -21,6 +21,7 @@
         'SELECT id, __label__ FROM certificazioni_view'
     );
 
+    /*
     // tendina emittenti
 	$ct['etc']['select']['emittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -28,6 +29,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static'
     );
+    */
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';

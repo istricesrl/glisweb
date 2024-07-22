@@ -30,6 +30,7 @@
     }
 
     // tendina anagrafica
+    // TODO serve?
 	$ct['etc']['select']['id_anagrafica'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -37,7 +38,7 @@
         'SELECT id, __label__ FROM anagrafica_view_static'
     );
 
-
+    // TODO serve?
 	$ct['etc']['select']['id_anagrafica_collaboratori'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
@@ -54,6 +55,7 @@
     );
 
     // tendina clienti
+    // TODO serve?
 	$ct['etc']['select']['id_cliente'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -80,6 +82,7 @@
     );
 
     // tendina progetti
+    // TODO serve?
 	$ct['etc']['select']['id_progetto'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
@@ -90,6 +93,7 @@
 	
 
     // tendina todo
+    // TODO serve?
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) ) {
 	    $ct['etc']['select']['id_todo'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
@@ -110,6 +114,7 @@
 	}
 
     // tendina indirizzi
+    // TODO serve?
     $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -126,6 +131,7 @@
     );
 
     // tendina matricole
+    // TODO serve?
 	$ct['etc']['select']['matricole'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
@@ -134,6 +140,7 @@
     );
 
     // tendina matricole
+    // TODO serve?
 	$ct['etc']['select']['immobili'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],

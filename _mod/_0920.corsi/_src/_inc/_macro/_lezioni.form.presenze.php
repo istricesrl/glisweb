@@ -29,9 +29,13 @@
         'id' => '#',
 //        'id_todo' => 'iscrizione',
         'anagrafica' => 'iscritto',
+        'contratto' => 'abbonamento',
         'id_tipologia' => 'ID tipologia',
         'tipologia' => 'tipologia',
         'data_attivita' => 'data attività',
+        'discipline' => 'discipline',
+        'id_progetto' => 'ID corso',
+        'progetto' => 'corso',
 //        'data_inizio' => 'data inizio',
 //        'data_fine' => 'data fine',
         NULL => 'azioni'
@@ -43,6 +47,10 @@
         'id_tipologia' => 'd-none',
         'data_attivita' => 'd-none',
         'anagrafica' => 'text-left',
+        'id_progetto' => 'd-none',
+        'progetto' => 'text-left',
+        'timestamp_archiviazione' => 'd-none',
+        'discipline' => 'text-left',
         NULL => 'nowrap'
     );
 

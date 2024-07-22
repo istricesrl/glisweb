@@ -3,52 +3,105 @@
 {% extends 'ext/main.html' %}
 
 {% block main %}
+{% if etc.client_token %}
+<!-- PAGAMENTO TRAMITE PAYPAL STANDARD O ADVANCED CHECKOUT -->
 
-{% if session.carrello.se_login and not session.account.id %}
+<!-- variabile per l'URL di ritorno -->
+{% if ecommerce.profile.provider['paypal-advanced'].return_url %}
+<script> var return_url = "{{ ecommerce.profile.provider['paypal-advanced'].return_url }}";</script>
+{% endif %}
+
+<!-- titolo -->
+<h1>paga con PayPal</h1>
+
+<!-- inclusione dello script di PayPal -->
+<script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id={{ ecommerce.profile.provider['paypal-advanced'].client_id }}" data-client-token="{{ etc.client_token }}"></script>
+
+<!-- div per la creazione del bottone PayPal Standard Checkout e Advanced Checkout --> 
+<div id="paypal-button-container" class="paypal-button-container"></div>
+
+<!-- titolo -->
+<h2>oppure, paga con carta di credito</h2>
+
+<!-- form per il pagamento tramite PayPal Advanced Checkout -->
+{% if ecommerce.profile.provider['paypal-advanced'].advanced %}
+<style>
+  div.card_field {
+    height: 1em;
+    margin-bottom: .5em;
+  }
+</style>
+<div class="card_container">
+    <form id="card-form">
+        <label for="card-number">Card Number</label>
+        <div id="card-number" class="card_field"></div>
     <div>
-        <p>per poter completare questo ordine, devi aver effettuato il login</p>
+        <label for="expiration-date">Expiration Date</label>
+        <div id="expiration-date" class="card_field"></div>
     </div>
-    {% include 'inc/login.html' %}
-{% elseif etc.client_token %}
-    {# PAYPAL ADVANCED #}
-    {% if ecommerce.profile.provider['paypal-advanced'].return_url %}
-    <script> var return_url = "{{ ecommerce.profile.provider['paypal-advanced'].return_url }}";</script>';
-    {% endif %}
-    <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&amp;currency=EUR&amp;disable-funding=sofort,mybank&amp;client-id={{ ecommerce.profile.provider['paypal-advanced'].client_id }}" data-client-token="{{ etc.client_token }}"></script>
-    <div id="paypal-button-container" class="paypal-button-container"></div>
-    <script src="/_src/_js/_lib/_paypal.js"></script>
-{% else %}
-    {# ALTRE FORME DI PAGAMENTO #}
-    <div class="container d-flex flex-fill">
-        <div class="row d-flex flex-fill">
-            <div class="col d-flex flex-fill">
-                <form id="carrello" class="carrello d-flex flex-fill" method="{{ etc.meta.method }}" action="{{ etc.meta.action }}">
-                    {% for name,value in etc.fields %}
-                    <input type="hidden" name="{{ name }}" value="{{ value }}">
-                    {% endfor %}
+    <div>
+        <label for="cvv">CVV</label>
+        <div id="cvv" class="card_field"></div>
+    </div>
+    <div>
+        <label for="card-holder-name">Name on Card</label>
+        <input type="text" id="card-holder-name" name="card-holder-name" autocomplete="off" placeholder="card holder name"/>
+    </div>
+    <div>
+        <label for="card-billing-address-street">Billing Address</label>
+        <input type="text" id="card-billing-address-street" name="card-billing-address-street" autocomplete="off" placeholder="street address"/>
+    </div>
+    <div>
+        <label for="card-billing-address-unit">&nbsp;</label>
+        <input type="text" id="card-billing-address-unit" name="card-billing-address-unit" autocomplete="off" placeholder="unit"/>
+    </div>
+    <div>
+        <label for="card-billing-address-city">&nbsp;</label>
+        <input type="text" id="card-billing-address-city" name="card-billing-address-city" autocomplete="off" placeholder="city"/>
+    </div>
+    <div>
+        <label for="card-billing-address-state">&nbsp;</label>
+        <input type="text" id="card-billing-address-state" name="card-billing-address-state" autocomplete="off" placeholder="state"/>
+    </div>
+    <div>
+        <label for="card-billing-address-zip">&nbsp;</label>
+        <input type="text" id="card-billing-address-zip" name="card-billing-address-zip" autocomplete="off" placeholder="zip / postal code"/>
+    </div>
+    <div>
+        <label for="card-billing-address-country">&nbsp;</label>
+        <input type="text" id="card-billing-address-country" name="card-billing-address-country" autocomplete="off" placeholder="country code" />
+    </div>
+    <button value="submit" id="submit" class="btn">Pay</button>
+    </form>
+</div>
+<script src="/_src/_js/_lib/_paypal.js"></script>
+{% endif %}
 
-                    <div class="row d-none d-flex flex-fill">
-                        <div class="col-12 col-form-label col-form-label-sm justify-content-center d-flex">
-                            <button class="btn btn-sm btn-secondary align-self-center text-center btn-loader p-3" type="submit">
-                                <p class="spinner"><i class="fa fa-spinner fa-pulse fa-3x fa-fw"></i></p>
-                                <p>clicca qui se non vieni indirizzato automaticamente alla pagina di pagamento</p>
-                            </button>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
+{% elseif etc.meta.action and etc.meta.method %}
+<!-- PAGAMENTO TRAMITE PAYPAL PAYMENTS STANDARD, NEXI, E SIMILI -->
+
+<!-- form per il pagamento -->
+<form action="{{ etc.meta.action }}" method="{{ etc.meta.method }}">
+  {% for field, value in etc.fields %}
+  <input type="hidden" name="{{ field }}" value="{{ value }}" />
+  {% endfor %}
+  <button type="submit">PAGA</button>
+</form>
+
 {% endif %}
 
 {% endblock %}
 
 {% block javascript %}
-{% if etc.meta.autosubmit %}
 <script>
-    window.addEventListener( 'DOMContentLoaded', function() {
-	    $('#carrello').submit();
-    });
+  function setProviderCheckAndSubmit( provider ) {
+    var carrelloForm = document.getElementById('carrelloForm');
+    document.getElementById('carrelloProviderPagamento').value = provider;
+    if( carrelloForm.checkValidity() ) {
+        carrelloForm.submit();
+    } else {
+        carrelloForm.reportValidity();
+    } 
+  }
 </script>
-{% endif %}
 {% endblock %}

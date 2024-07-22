@@ -112,6 +112,11 @@
                     unset( $vs['codice_operatore'] );
                     removeFromArray( $ks, 'codice_operatore' );
 
+                } elseif( ! empty( $vs['id_contratto']['s'] ) ) {
+
+                    $vs['id_anagrafica']['s'] = mysqlSelectValue( $c, 'SELECT id_anagrafica FROM contratti_anagrafica WHERE id_contratto = ? AND id_ruolo IN (29,32,33,34)', array( array( 's' => $vs['id_contratto']['s'] ) ) );
+                    if( ! in_array( 'id_anagrafica', $ks ) ) { $ks[] = 'id_anagrafica'; }
+
                 } else {
 
                     unset( $vs['codice_operatore'] );

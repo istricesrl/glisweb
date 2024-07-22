@@ -1,5 +1,22 @@
 <?php
 
+    /**
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * TODO nella libreria tools di ogni metodo di pagamento bisognerebbe riportare la spiegazione di come funziona
+     * quello specifico metodo di pagamento, questo andrebbe fatto per tutti i metodi
+     * 
+     */
+
+    /**
+     * 
+     * 
+     * 
+     */
     function paypalAdvancedGetAccessToken( $k ) {
 
         // debug
@@ -39,6 +56,12 @@
 
     }
 
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
     function paypalAdvancedGetClientToken( $k ) {
 
         $tk = paypalAdvancedGetAccessToken( $k );

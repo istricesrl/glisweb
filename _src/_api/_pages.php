@@ -423,6 +423,9 @@
         // per ogni macro richiesta
         foreach( $ct['page']['macro'] as $macro ) {
 
+            // TODO a cosa servono le macro alternative?
+            // delle due servirebbero più le macro aggiuntive (pre e post)
+
             // cerco le macro alternative
             $macroAlternative = path2custom( str_replace( '.php', '.alt.php', $macro ) );
 

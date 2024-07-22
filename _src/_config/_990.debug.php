@@ -35,6 +35,7 @@
 	// print_r( $cf['auth']['permissions']);
 	// print_r( $p['produzione']['etc']['tabs'] );
 	// print_r( $_COOKIE );
+	// die( print_r( $ct['request'] ) );
 
     // error_reporting( E_ALL );
     // ini_set( 'display_errors', TRUE );

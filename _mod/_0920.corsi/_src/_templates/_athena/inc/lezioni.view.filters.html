@@ -1,7 +1,7 @@
 <div class="form-row view-filters d-print-none">
 	<div class="col-12 col-md-auto">
 		<span class="label-top">giorno</span>
-		<select name="__view__[{{ view.id }}][__filters__][note_programmazione][LK]" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][note_programmazione][LK]" onchange="submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.note_programmazione.LK == "" %}selected{% endif %}>tutti</option>
 			{% for giorno in ['lunedì','martedì','mercoledì','giovedì','venerdì','sabato','domenica'] %}
 			<option value="{{ giorno }}" {% if request.__view__[ view.id ].__filters__.note_programmazione.LK == giorno %}selected{% endif %}>{{ giorno }}</option>
@@ -9,12 +9,32 @@
 		</select>
 	</div>
 
+	<div class="col-12 col-md-auto">
+		<span class="label-top">mese</span>
+		<select name="__view__[{{ view.id }}][__filters__][data_programmazione][BT]" onchange="submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.data_programmazione.BT == "" %}selected{% endif %}>tutti</option>
+			{% for mese in etc.select.mesi %}
+			<option value="{{ mese.id }}" {% if request.__view__[ view.id ].__filters__.data_programmazione.BT == mese.id %}selected{% endif %}>{{ mese.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
     <div class="col-12 col-md-auto">
 		<span class="label-top">luogo</span>
-		<select name="__view__[{{ view.id }}][__filters__][luoghi][LK]" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.livelli.LK == "" %}selected{% endif %}>tutti</option>
-			{% for tipologia in etc.select.luoghi %}
-			<option value="{{ tipologia.__label__ }}" {% if request.__view__[ view.id ].__filters__.livelli.LK == tipologia.__label__ %}selected{% endif %}>{{ tipologia.__label__ }}</option>
+		<select name="__view__[{{ view.id }}][__filters__][id_luogo][LK]" onchange="submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_luogo.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for luogo in etc.select.luoghi %}
+			<option value="{{ luogo.id }}" {% if request.__view__[ view.id ].__filters__.id_luogo.EQ == luogo.id %}selected{% endif %}>{{ luogo.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
+    <div class="col-12 col-md-auto">
+		<span class="label-top">corso</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_progetto][EQ]" onchange="submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for corso in etc.select.corsi %}
+			<option value="{{ corso.id }}" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ == corso.id %}selected{% endif %}>{{ corso.__label__ }}</option>
 			{% endfor %}
 		</select>
 	</div>
