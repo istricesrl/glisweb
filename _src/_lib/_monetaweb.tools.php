@@ -76,8 +76,8 @@
             'amt'           => sprintf( '%0.2f', $c['prezzo_lordo_totale'] ),   // totale lordo del carrello
             'currencycode'  => 978,                                             // euro
             'langid'        => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU)
-            'responseurl'   => $k['success'],                                   // URL di ritorno in caso di successo
-            'errorurl'      => $c['error'],                                     // URL di ritorno in caso di errore
+            'responseurl'   => $k['success_url'],                               // URL di ritorno in caso di successo
+            'errorurl'      => $k['error_url'],                                 // URL di ritorno in caso di errore
             'trackid'       => $c['id'],                                        // ID del carrello
             'udf1'          => 'pagamento Monetaweb'                            // descrizione del pagamento
         ) );

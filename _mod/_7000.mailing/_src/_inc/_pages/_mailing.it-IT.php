@@ -59,12 +59,26 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_mailing.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'mailing.form',
+													'mailing.form.promemoria',		// TODO mettere solo se è attivo il modulo attività
 													'mailing.form.testo',
 													'mailing.form.invio',
 													'mailing.form.file',
 													'mailing.form.metadati',
 													'mailing.form.tools'
 												) )
+	);
+
+	// form mailing testo
+	$p['mailing.form.promemoria'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-calendar-plus-o" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'follow-up' ),
+	    'h1'		=> array( $l		=> 'follow-up' ),
+	    'parent'		=> array( 'id'		=> 'mailing.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mailing.form.promemoria.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_mailing.form.promemoria.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['mailing.form']['etc']['tabs'] )
 	);
 
 	// form mailing testo

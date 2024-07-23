@@ -58,6 +58,7 @@
                     WHERE ( categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL )
                     AND regioni.id_stato = ?
                     AND anagrafica.data_archiviazione IS NULL
+                    GROUP BY anagrafica.id
                     ORDER BY anagrafica.denominazione, anagrafica.cognome, anagrafica.nome',
                     array(
                         array( 's' => $_REQUEST['__categoria__'] ),
@@ -74,6 +75,7 @@
                     INNER JOIN categorie_anagrafica ON anagrafica_categorie.id_categoria = categorie_anagrafica.id
                     WHERE ( categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL )
                     AND anagrafica.data_archiviazione IS NULL
+                    GROUP BY anagrafica.id
                     ORDER BY anagrafica.denominazione, anagrafica.cognome, anagrafica.nome',
                     array(
                         array( 's' => $_REQUEST['__categoria__'] )
@@ -92,6 +94,7 @@
                 INNER JOIN categorie_anagrafica ON anagrafica_categorie.id_categoria = categorie_anagrafica.id
                 WHERE ( categorie_anagrafica.se_cliente IS NOT NULL OR categorie_anagrafica.se_lead IS NOT NULL )
                 AND anagrafica.data_archiviazione IS NULL
+                GROUP BY anagrafica.id
                 ORDER BY anagrafica.denominazione, anagrafica.cognome, anagrafica.nome'
             );
 

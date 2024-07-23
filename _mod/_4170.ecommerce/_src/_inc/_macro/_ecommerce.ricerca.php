@@ -11,9 +11,9 @@
 
             $whr .= '
             AND ( 
-                articoli.id = ?
+                articoli.id LIKE ?
                 OR
-                prodotti.id = ?
+                prodotti.id LIKE ?
                 OR
                 articoli.nome LIKE ?
                 OR
@@ -23,8 +23,8 @@
             )
             ';
 
-            $cnd[] = array( 's' => $token );
-            $cnd[] = array( 's' => $token );
+            $cnd[] = array( 's' => '%'.$token.'%' );
+            $cnd[] = array( 's' => '%'.$token.'%' );
             $cnd[] = array( 's' => '%'.$token.'%' );
             $cnd[] = array( 's' => '%'.$token.'%' );
             $cnd[] = array( 's' => '%'.$token.'%' );

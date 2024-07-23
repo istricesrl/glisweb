@@ -62,7 +62,11 @@
     }
 
     // leggo l'elenco degli attacker
-    $attackers = array_map( 'trim', file( FILE_BANNED_HOSTS ) );
+    if( file_exists( FILE_BANNED_HOSTS ) ) {
+        $attackers = array_map( 'trim', file( FILE_BANNED_HOSTS ) );
+    } else {
+        $attackers = array();
+    }
 
     // blocco la richiesta se proviene da un attacker noto
     if( in_array( $_SERVER['REMOTE_ADDR'], $attackers ) ) {

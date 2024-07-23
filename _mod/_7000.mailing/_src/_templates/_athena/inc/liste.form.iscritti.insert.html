@@ -7,7 +7,7 @@
     <input type="hidden" id="account" name="{{ table }}[id_account_inserimento]" value="{{ account }}" disabled>
     {{ frm.input( view.open.table, '', '', view.insert.field, '', '', '', request[ table ].id, 'hidden', '', '', 2 ) }}
     <div class="form-row d-print-none">
-        <div class="col-4">
+        <div class="col">
             <span class="label-top remove-after-duplicate">iscritto</span>
             {{ frm.selectBox( view.open.table, '', '', 'id_mail', '', '', '', '', '', '', '', 'font-awesome', '', '', 'mail', 'id_mail', page, pages, ietf, 'mail', 2 ) }}
         </div>

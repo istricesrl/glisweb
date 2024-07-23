@@ -87,18 +87,31 @@ function checkForm( f ){
         // verifico se il campo è required
         if( $(this).prop('required') ){
             ck += checkRequired( $(this) );   
+            if( checkRequired( $(this) ) == 0 ){
+                console.log('errore mancata compilazione campo required ' + $(this).prop('name') );
+            }
+            
         }
 
         // se il campo è un'email ed è valorizzato controllo la sintassi
         if( $(this).attr('type') == 'email' && $(this).val() ){
             ck += checkEmail( $(this) );
+            if( checkEmail( $(this) ) == 0 ){
+                console.log('errore formato email campo ' + $(this).prop('name') );
+            }
+            
         }
 
         // se il campo è un telefono ed è valorizzato controllo la sintassi
         if( $(this).attr('type') == 'tel' && $(this).val() ){
             ck += checkTelefono( $(this) );
+            if( checkTelefono( $(this) ) == 0 ){
+                console.log('errore formato telefono campo ' + $(this).prop('name') );
+            }
         }
     });
+
+    console.log('check: ' + ck );
 
     if( ck.indexOf('0') >= 0 ){
         return false;

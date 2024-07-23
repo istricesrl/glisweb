@@ -92,7 +92,7 @@
                 'term_passwd'   => NULL,                                                                // password del terminale
                 'success'       => 'carrello.esito',                                                    // pagina di ritorno in caso di pagamento effettuato con successo
                 'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
-                'listener'      => '_mod/_4170.ecommerce/_src/_monetaweb/_nexi.listener.php',           // listener per la conferma di pagamento in background
+                'listener'      => '_mod/_4170.ecommerce/_src/_api/_monetaweb.listener.php',            // listener per la conferma di pagamento in background
                 '__label__'     => 'carta di credito'                                                   // etichetta del provider per le tendine
             ),
             'paypal' => array(

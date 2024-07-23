@@ -35,6 +35,7 @@
 
 	// pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'liste.mail.form';
+    $ct['view']['insert']['field'] = 'id_lista';
 
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_lista';
@@ -78,7 +79,7 @@
 
 	$ct['etc']['include']['insert'][] = array(
         'name' => 'insert',
-        'file' => 'inc/liste.form.stati.insert.html',
+        'file' => 'inc/liste.form.iscritti.insert.html',
         'fa' => 'fa-plus-circle'
     );
 

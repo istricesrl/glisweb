@@ -134,6 +134,9 @@
 
             case 'monetaweb':
 
+                $k['success_url'] = $cf['contents']['pages'][ $k['success'] ]['url'][ $l ];
+                $k['error_url'] = $cf['contents']['pages'][ $k['error'] ]['url'][ $l ];
+
                 // richiedo il PaymentID e l'URL per il redirect
                 $paymentID = monetawebGetPaymentDetails( $c, $k );
 

@@ -115,7 +115,7 @@
 			$cf['mysql']['connection'],
 			'SELECT mailing.*, mailing_mail.id_mail, '.
 			'mail.indirizzo, anagrafica.codice AS codice_destinatario, '.
-			'anagrafica.nome AS nome_destinatario, anagrafica.cognome AS cognome_destinatario, anagrafica.denominazione AS denominazione_destinatario, '.
+			'anagrafica.id AS id_destinatario, anagrafica.nome AS nome_destinatario, anagrafica.cognome AS cognome_destinatario, anagrafica.denominazione AS denominazione_destinatario, '.
 			'concat_ws( \' \', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS destinatario '.
 			'FROM mailing_mail '.
 			'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
@@ -283,6 +283,32 @@
 
                 // debug
 				// echo 'mailing_mail aggiornata ' . $status['id'] . '<br>';
+
+				// follow-up
+				if( ! empty( $row['promemoria_id_tipologia'] ) ) {
+
+					// follow-up
+					if( ! empty( $row['id_destinatario'] ) ) {
+
+						// inserisco il follow-up
+						$status['id_follow_up'] = mysqlInsertRow(
+							$cf['mysql']['connection'],
+							array(
+								'id_tipologia' => $row['promemoria_id_tipologia'],
+								'id_cliente' => $row['id_destinatario'],
+								'id_mail' => $invio,
+								'id_mailing' => $row['id'],
+								'id_anagrafica_programmazione' => $row['promemoria_id_anagrafica_programmazione'],
+								'nome' => $row['promemoria_nome'],
+								'note_programmazione' => $row['promemoria_note_programmazione'],
+								'data_programmazione' => date( 'Y-m-d', strtotime( '+' . $row['promemoria_giorni_programmazione'] . ' days' ) )
+							),
+							'attivita'
+						);
+
+					}
+
+				}
 
 			}
 
