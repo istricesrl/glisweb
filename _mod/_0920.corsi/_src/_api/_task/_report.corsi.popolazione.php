@@ -21,14 +21,10 @@
 			$cf['mysql']['connection'],
 			'SELECT progetti.id FROM progetti 
             LEFT JOIN __report_corsi__ ON __report_corsi__.id = progetti.id
-            WHERE (
-				(
-					coalesce( progetti.timestamp_aggiornamento, progetti.timestamp_inserimento ) > __report_corsi__.timestamp_aggiornamento 
-					OR
-					coalesce( progetti.timestamp_aggiornamento, progetti.timestamp_inserimento ) IS NULL
-				)
-            )
-			OR __report_corsi__.timestamp_aggiornamento IS NULL
+            WHERE
+                ( __report_corsi__.timestamp_inserimento IS NULL OR progetti.timestamp_inserimento > __report_corsi__.timestamp_inserimento )
+                OR
+                ( __report_corsi__.timestamp_aggiornamento IS NULL OR progetti.timestamp_aggiornamento > __report_corsi__.timestamp_aggiornamento )
 			ORDER BY progetti.id DESC
 			LIMIT 1'
 		);

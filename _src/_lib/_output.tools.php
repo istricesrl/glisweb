@@ -100,11 +100,16 @@
 	    $html = $document->documentElement;
 	    $head = $document->createElement( 'head' );
 	    $title = $document->createElement( 'title' );
-	    $text = $document->createTextNode( ( ! empty( $name ) ) ? $name : 'documento generato ' . date( 'r' ) );
+
+        $meta = $document->createElement( 'meta' );
+        $meta->setAttribute( 'charset', 'utf-8' );
+        $head->appendChild( $meta );
+
+        $text = $document->createTextNode( ( ! empty( $name ) ) ? $name : 'documento generato ' . date( 'r' ) );
 	    $body = $document->createElement( 'body' );
 
 	    $contentFragment = $document->createDocumentFragment();
-	    $contentFragment->appendXML( xmlEntities( $content ) );
+        $contentFragment->appendXML( xmlEntities( $content ) );
 
 	    $title->appendChild( $text );
 	    $head->appendChild( $title );

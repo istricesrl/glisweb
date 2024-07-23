@@ -89,6 +89,18 @@
 	    'SELECT id, __label__ FROM tipologie_documenti_view'
 	);
 
+    // tendina tipologie
+	$ct['etc']['select']['modalita_pagamento'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM modalita_pagamento_view'
+	);
+
+    // filtri di default
+    $ct['view']['__filters__']['data_scadenza']['GE'] = date( 'Y-m-d' );
+    $ct['view']['__filters__']['data_scadenza']['LE'] = date( 'Y-m-d', strtotime( '+1 month' ) );
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 

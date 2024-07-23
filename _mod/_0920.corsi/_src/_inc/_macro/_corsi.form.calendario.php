@@ -46,7 +46,13 @@
         'anagrafica' => 'responsabile',
         'docenti' => 'docenti',
         'numero_alunni' => 'iscritti',
-        'id_progetto' => 'id_progetto'
+        'id_progetto' => 'id_progetto',
+        NULL => 'azioni'
+    );
+
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
     );
 
     // stili della vista
@@ -123,3 +129,10 @@
     // macro di default
     require DIR_SRC_INC_MACRO . '_default.form.php';
 
+    if( !empty( $ct['view']['data'] ) ){
+		foreach ( $ct['view']['data'] as &$row ){
+            $buttons = '';
+            $buttons .=  '<a href="'.$cf['contents']['pages']['lezioni.form.presenze']['path'][LINGUA_CORRENTE].'?todo[id]='.$row['id'].'&__backurl__='.$ct['page']['backurl'][ LINGUA_CORRENTE ].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';
+            $row[ NULL ] = $buttons;
+        }
+	}

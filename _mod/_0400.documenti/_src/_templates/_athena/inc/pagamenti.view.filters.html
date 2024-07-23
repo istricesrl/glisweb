@@ -66,8 +66,9 @@
 	</div>
 -->
 	
+<!--
 <div class="col-6 col-md-auto">
-    <span class="label-top">giorno</span>
+	<span class="label-top">giorno</span>
 	<select name="__view__[{{ view.id }}][__filters__][giorno_pagamento][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 	    <option value="" {% if request.__view__[ view.id ].__filters__.giorno_pagamento.EQ == "" %}selected{% endif %}>tutti</option>
 	{% for i in 1..31 %}
@@ -93,6 +94,15 @@
 	    <option value="{{ idanno }}" {% if request.__view__[ view.id ].__filters__.anno_pagamento.EQ == idanno %}selected{% endif %}>{{ nomeanno }}</option>
 	{% endfor %}
 	</select>
+    </div>
+-->
+    <div class="col-6 col-md-auto">
+        <span class="label-top">dal</span>
+        <input type="date" class="form-control form-control-sm" name="__view__[{{ view.id }}][__filters__][data_scadenza][GE]" value="{{ request.__view__[ view.id ].__filters__.data_scadenza.GE }}">
+    </div>
+    <div class="col-6 col-md-auto">
+        <span class="label-top">al</span>
+        <input type="date" class="form-control form-control-sm" name="__view__[{{ view.id }}][__filters__][data_scadenza][LE]" value="{{ request.__view__[ view.id ].__filters__.data_scadenza.LE }}">
     </div>
 
 	<div class="col-12 col-md-auto">

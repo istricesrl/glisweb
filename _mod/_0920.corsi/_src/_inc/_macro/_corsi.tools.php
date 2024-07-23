@@ -19,7 +19,10 @@
 		'label' => NULL
 	    ),
 	    'cache' => array(
-		'label' => 'gestione delle cache'
+		'label' => 'gestione delle cache dei corsi'
+	    ),
+	    'cache_lezioni' => array(
+		'label' => 'gestione delle cache delle lezioni'
 	    ),
 	    'gestione' => array(
 		'label' => 'gestione massiva corsi'
@@ -51,11 +54,20 @@
         'icon' => NULL,
         'fa' => 'fa-clock-o',
         'title' => 'aggiornamento report corsi',
-        'text' => 'forza l\'aggiornamento del report corsi'
+        'text' => 'forza l\'avvio dell\'aggiornamento del report corsi'
     );
 
+    // ...
+	$ct['page']['contents']['metro']['cache'][] = array(
+		'lws' => $base . 'report.corsi.popolazione',
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'ripopola report corsi',
+		'text' => 'ripopola immediatamente il report dei corsi'
+	);
+
     // aggiornamento cache
-    $ct['page']['contents']['metro']['cache'][] = array(
+    $ct['page']['contents']['metro']['cache_lezioni'][] = array(
         'ws' => $base . 'report.lezioni.corsi.popolazione.start',
         'callback' => 'location.reload()',
         'icon' => NULL,
@@ -65,16 +77,7 @@
     );
 
     // ...
-	$ct['page']['contents']['metro']['cache'][] = array(
-		'lws' => $base . 'report.corsi.popolazione',
-		'icon' => NULL,
-		'fa' => 'fa-refresh',
-		'title' => 'ripopola report corsi',
-		'text' => 'ripopola il report dei corsi'
-	);
-
-    // ...
-	$ct['page']['contents']['metro']['cache'][] = array(
+	$ct['page']['contents']['metro']['cache_lezioni'][] = array(
 		'lws' => $base . 'report.lezioni.corsi.popolazione',
 		'icon' => NULL,
 		'fa' => 'fa-refresh',

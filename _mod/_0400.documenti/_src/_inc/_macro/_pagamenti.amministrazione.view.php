@@ -19,12 +19,14 @@
 
     // tabella della vista
     $ct['view']['table'] = 'pagamenti';
-    
+
+    /*
     // id della vista
     $ct['view']['id'] = md5(
         $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__'] .
         ( ( isset( $ct['form']['table'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id'] : NULL )
     );
+    */
     
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'pagamenti.amministrazione.form';
@@ -39,6 +41,7 @@
         'destinatario' => 'a',
 		'id_tipologia_documento' => 'id_tipologia_documento',
 #		'mastro_destinazione' => 'carico',
+        'modalita_pagamento' => 'modalità',
         'importo_lordo_totale' => 'importo',
         'data_ora_pagamento' => 'pagato'
 	);
@@ -99,29 +102,46 @@
 	    'SELECT id, __label__ FROM anagrafica_view_static WHERE se_gestita = 1 ORDER BY __label__'
 	);
 
+    // tendina tipologie
+	$ct['etc']['select']['modalita_pagamento'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM modalita_pagamento_view'
+	);
+
+
 /*
     if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_tipologia_documento']['EQ'] )  ) {
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_tipologia_documento']['EQ'] = 1;
     }
 */
-
+/*
     if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_pagamento']['NL'] ) ) {
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_pagamento']['NL'] = 1;
     }
+*/
+    $ct['view']['__filters__']['timestamp_pagamento']['NL'] = 1;
 
 /*
     if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente']['EQ'] )  ) {
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente']['EQ'] = trovaIdAziendaGestita();
     }
 */
-
+/*
     if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente|id_destinatario']['EQ'] ) ) {
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente|id_destinatario']['EQ'] = trovaIdAziendaGestita();
     }
+*/
 
-    // debug
-    // print_r( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'] );
+    $ct['view']['__filters__']['id_emittente|id_destinatario']['EQ'] = trovaIdAziendaGestita();
+
+    // filtri di default
+    $ct['view']['__filters__']['data_scadenza']['GE'] = date( 'Y-m-d' );
+    $ct['view']['__filters__']['data_scadenza']['LE'] = date( 'Y-m-d', strtotime( '+1 month' ) );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    // debug
+    // die( print_r( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'], true ) );

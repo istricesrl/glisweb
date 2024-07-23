@@ -45,6 +45,69 @@ else
     echo "progetto: ${PRJ_NAME}"
     echo "deploy su: $1"
 
+    ## cartella sorgente
+    if [ -n "$SRC_FOLDER" -a -n "$SRC_STAGE" ]; then
+
+        # percorso sorgente
+        SRC_PATH="$SRC_FOLDER/$SRC_STAGE"
+
+        # informazioni
+        echo "cartella sorgente: $SRC_PATH"
+
+        # se la cartella sorgente non esiste
+        if [ ! -d "$SRC_PATH" ]; then
+
+            # informazioni
+            echo "cartella sorgente non esistente, impossibile effettuare il deploy"
+
+            # uscita
+            exit 1
+
+        fi
+
+    else
+
+        # informazioni
+        echo "informazioni sulla sorgente mancanti, impossibile effettuare il deploy"
+
+        # uscita
+        exit 1
+
+    fi
+
+    ## cartella destinazione
+    if [ -n "$DST_FOLDER" -a -n "$DST_STAGE" ]; then
+
+        # percorso destinazione
+        DST_PATH="$DST_FOLDER/$DST_STAGE"
+
+        # informazioni
+        echo "cartella destinazione: $DST_PATH"
+
+    else
+
+        # informazioni
+        echo "informazioni sulla destinazione mancanti, impossibile effettuare il deploy"
+
+        # uscita
+        exit 1
+
+    fi
+
+    ## registro il deploy
+    if [ -f "../TODO.md" ]; then
+
+        ## aggiungo una newline al file se non c'è già
+        sed -i '$a\' ../TODO.md
+
+        ## registro dei deploy
+        echo "$( date "+%Y-%m-%d %H:%M" ) DEPLOY TRAMITE SCRIPT" >> ../TODO.md
+        echo "======================================" >> ../TODO.md
+        echo "Questa è una registrazione automatica di deploy ($1) effettuata dallo script $0" >> ../TODO.md
+        echo >> ../TODO.md
+
+    fi
+
     ## leggo la versione corrente
     if [ -f ./etc/version.conf ]; then
 
@@ -53,8 +116,7 @@ else
 
     else
 
-        # imposto la versione
-        echo "0.0.0" > ./etc/version.conf
+        VERSION="0.0.0"
 
     fi
 
@@ -85,6 +147,9 @@ else
         # informazioni
         echo "nuova versione: $VERSION"
 
+        # imposto la versione
+        echo $VERSION > ./etc/version.conf
+
     else
 
         # informazioni
@@ -110,25 +175,6 @@ else
 
     fi
 
-    ## cartella sorgente
-    if [ -n "$SRC_FOLDER" -a -n "$SRC_STAGE" ]; then
-
-        # percorso sorgente
-        SRC_PATH="$SRC_FOLDER/$SRC_STAGE"
-
-        # informazioni
-        echo "cartella sorgente: $SRC_PATH"
-
-    else
-
-        # informazioni
-        echo "informazioni sulla sorgente mancanti, impossibile effettuare il deploy"
-
-        # uscita
-        exit 1
-
-    fi
-
     ## host di destinazione
     if [ -n "$DST_HOST" ]; then
 
@@ -142,25 +188,6 @@ else
 
         # informazioni
         echo "deploy locale"
-
-    fi
-
-    ## cartella destinazione
-    if [ -n "$DST_FOLDER" -a -n "$DST_STAGE" ]; then
-
-        # percorso destinazione
-        DST_PATH="$DST_FOLDER/$DST_STAGE"
-
-        # informazioni
-        echo "cartella destinazione: $DST_PATH"
-
-    else
-
-        # informazioni
-        echo "informazioni sulla destinazione mancanti, impossibile effettuare il deploy"
-
-        # uscita
-        exit 1
 
     fi
 
@@ -259,16 +286,28 @@ else
                 echo "comando: $CMD"
 
                 # backup
-                # $CMD
+                $CMD
 
                 # comando
-                CMD="rsync -avz --delete $EXCLUDE -e ssh $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
+                CMD="rsync $EXCLUDE -avuz --delete -e ssh $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
+
+                # aggiungo una newline al file se non c'è già
+                sed -i '$a\' ../TODO.md
+
+                # registro dei deploy
+                echo "$CMD" >> ../TODO.md
 
                 # informazioni
                 echo "comando: $CMD"
 
                 # deploy
-                # $CMD
+                $CMD
+
+                # comando per composer update
+                CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST \"$DST_PATH/_src/_sh/_composer.update.sh --hard\""
+
+                # aggiornamento di composer
+                $CMD
 
             else
 

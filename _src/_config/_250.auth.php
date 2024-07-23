@@ -768,6 +768,14 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        '__report_abbonamenti__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        '__report_abbonamenti_attivi__' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         '__report_avanzamento_trattative__' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )

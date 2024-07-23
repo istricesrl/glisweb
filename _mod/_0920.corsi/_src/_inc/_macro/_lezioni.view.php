@@ -73,7 +73,7 @@
 //        'cliente' => 'cliente',
         'data_programmazione' => 'data',
         'ora_inizio_programmazione' => 'ora',
-//        'ora_fine_programmazione' => 'ora fine',
+        'ora_fine_programmazione' => 'ora fine',
         'note_programmazione' => 'ora',
         'id_progetto' => 'ID corso',
         'discipline' => 'disciplina',
@@ -131,7 +131,6 @@
 	foreach( range( date( 'Y' ) - 5,  date( 'Y' ) ) as $y ) {
 	    $ct['etc']['select']['anni'][$y] = $y ;
 	}
-    */
 
     // tendina mesi
     $start = '2024-01-01';
@@ -142,6 +141,8 @@
         );
         $start = date( 'Y-m-01', strtotime( $start . ' +1 month' ) );
     }
+
+    */
 
     // debug
     // die( print_r( $ct['etc']['select']['mesi'], true ) );
@@ -198,7 +199,7 @@
 	    $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
 	} */
 
-	$ct['view']['__filters__']['data_programmazione']['BT'] = $ct['etc']['select']['mesi'][0]['id'];
+	// $ct['view']['__filters__']['data_programmazione']['BT'] = $ct['etc']['select']['mesi'][0]['id'];
 
     $ct['view']['__sort__']['data_programmazione']	= 'ASC';
     $ct['view']['__sort__']['ora_inizio_programmazione']	= 'ASC';
@@ -374,6 +375,10 @@
 
     }
 
+    // filtri di default
+    $ct['view']['__filters__']['data_programmazione']['GE'] = date( 'Y-m-d' );
+    $ct['view']['__filters__']['data_programmazione']['LE'] = date( 'Y-m-d', strtotime( '+1 month' ) );
+
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
@@ -381,7 +386,8 @@
 		foreach ( $ct['view']['data'] as &$row ){
             $buttons = '';
             if(!empty($row['data_programmazione'])){
-                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5);
+                // $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5);
+                $row['data_programmazione'] = date('d/m/Y', strtotime($row['data_programmazione'])).' '.substr($row['ora_inizio_programmazione'],0,5).' &mdash; '.substr($row['ora_fine_programmazione'],0,5);
             }
             $buttons .=  '<a href="'.$cf['contents']['pages']['lezioni.form.presenze']['path'][LINGUA_CORRENTE].'?todo[id]='.$row['id'].'"><span class="media-left"><i class="fa fa-graduation-cap"></i></span></a>';
             $row[ NULL ] = $buttons;

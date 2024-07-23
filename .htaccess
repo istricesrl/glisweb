@@ -136,6 +136,9 @@ Options -Indexes
     # gestione del browser delle variabili
     RewriteRule ^cf$ _src/_api/_status/_cf.php [L,QSA]
 
+    # gestione del browser della geografia
+    RewriteRule ^geo$ _src/_api/_status/_geo.php [L,QSA]
+
     # report sullo stato di funzionamento
     RewriteRule ^status$ _src/_api/_status/_framework.php [L]
 

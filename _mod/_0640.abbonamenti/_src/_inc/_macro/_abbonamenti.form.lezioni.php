@@ -156,7 +156,7 @@
         'corso' => 'text-left',
         'discipline' => 'text-left',
 	    'data_programmazione' => 'no-wrap',
-//        'ora_inizio_programmazione' => 'd-none',
+        'ora_inizio_programmazione' => 'd-none',
         'ora_fine_programmazione' => 'd-none',
         'note_programmazione' => 'd-none',
 //        'data_attivita' => 'no-wrap',
@@ -176,6 +176,10 @@
     // ordinamento di default
     $ct['view']['__sort__']['data_programmazione']	= 'ASC';
     $ct['view']['__sort__']['ora_inizio_programmazione']	= 'ASC';
+
+    // filtri di default
+    $ct['view']['__filters__']['data_programmazione']['GE'] = date( 'Y-m-d' );
+    $ct['view']['__filters__']['data_programmazione']['LE'] = date( 'Y-m-d', strtotime( '+1 month' ) );
 
     // preset filtro custom progetti aperti
     $ct['view']['__restrict__']['id_tipologia']['EQ'] = 15;
@@ -208,7 +212,6 @@
 	foreach( range( date( 'Y' ) - 5,  date( 'Y' ) ) as $y ) {
 	    $ct['etc']['select']['anni'][$y] = $y ;
 	}
-    */
 
     // tendina mesi
     $start = '2024-01-01';
@@ -219,6 +222,7 @@
         );
         $start = date( 'Y-m-01', strtotime( $start . ' +1 month' ) );
     }
+    */
 
     // tendina operatori
 	$ct['etc']['select']['operatori'] = mysqlCachedIndexedQuery(
