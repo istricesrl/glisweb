@@ -47,6 +47,9 @@
 		'text' => 'stampa la costina per la cartella sospesa'
 	    );
 
+    // macro di default
+	require DIR_SRC_INC_MACRO . '_default.tools.php';
+
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 

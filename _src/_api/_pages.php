@@ -1164,6 +1164,16 @@
      * 
      */
 
+	// debug
+	if( ! empty( $_REQUEST['q'] ) ) {
+
+		echo '<!-- REPORT VELOCITÀ' . PHP_EOL;
+		print_r( $cf['speed'] );
+		echo '-->' . PHP_EOL;
+        echo PHP_EOL;
+
+    }
+
     // fine del buffer
     ob_end_flush();
 

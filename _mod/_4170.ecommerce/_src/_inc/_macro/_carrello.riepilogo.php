@@ -136,15 +136,25 @@
 
                 $k['success_url'] = $cf['contents']['pages'][ $k['success'] ]['url'][ $l ];
                 $k['error_url'] = $cf['contents']['pages'][ $k['error'] ]['url'][ $l ];
+                $k['listener_url'] = $cf['site']['url'] . $k['listener'];
 
                 // richiedo il PaymentID e l'URL per il redirect
                 $paymentID = monetawebGetPaymentDetails( $c, $k );
 
                 // modifico la destinazione del form di riepilogo
-                $ct['etc']['meta']['action'] = $paymentID[2];
+                $ct['etc']['meta']['action'] = $paymentID[3];
+                // $ct['etc']['meta']['action'] = $paymentID['redirecturl'];
+
+                // debug
+                // die( print_r( $paymentID, true ) );
 
             break;
 
         }
+
+    } else {
+
+        // debug
+        // die( 'nessun provider di pagamento impostato' );
 
     }

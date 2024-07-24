@@ -1531,6 +1531,7 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 	carrelli.destinatario_mail,
 	carrelli.destinatario_codice_fiscale,
 	carrelli.destinatario_partita_iva,
+	coalesce( concat( carrelli.destinatario_nome, ' ', carrelli.destinatario_cognome ), carrelli.destinatario_denominazione ) AS destinatario,
 	carrelli.intestazione_nome,
 	carrelli.intestazione_cognome,
 	carrelli.intestazione_denominazione,
@@ -1541,6 +1542,7 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 	carrelli.intestazione_cap,
 	carrelli.intestazione_citta,
 	carrelli.intestazione_id_provincia,
+	carrelli.intestazione_id_stato,
 	carrelli.intestazione_id_comune_nascita,
 	carrelli.intestazione_giorno_nascita,
 	carrelli.intestazione_mese_nascita,
@@ -1555,6 +1557,7 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 	carrelli.intestazione_partita_iva,
 	carrelli.intestazione_sdi,
 	carrelli.intestazione_pec,
+	coalesce( concat( carrelli.intestazione_nome, ' ', carrelli.intestazione_cognome ), carrelli.intestazione_denominazione ) AS intestazione,
 	carrelli.id_listino,
     carrelli.fatturazione_id_tipologia_documento,
     carrelli.fatturazione_sezionale,
@@ -1565,14 +1568,18 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 	carrelli.sconto_valore,
 	carrelli.prezzo_netto_finale,
 	carrelli.prezzo_lordo_finale,
+	from_unixtime( carrelli.timestamp_inserimento, '%Y-%m-%d' ) AS data_ora_inserimento,
 	carrelli.provider_checkout,
 	carrelli.timestamp_checkout,
+	from_unixtime( carrelli.timestamp_checkout, '%Y-%m-%d' ) AS data_ora_checkout,
 	carrelli.provider_pagamento,
 	carrelli.timestamp_pagamento,
+	from_unixtime( carrelli.timestamp_pagamento, '%Y-%m-%d' ) AS data_ora_pagamento,
 	carrelli.codice_pagamento,
     carrelli.ordine_pagamento,
 	carrelli.status_pagamento,
 	carrelli.importo_pagamento,
+	from_unixtime( carrelli.timestamp_evasione, '%Y-%m-%d' ) AS data_ora_evasione,
     carrelli.utm_id,
     carrelli.utm_source,
     carrelli.utm_medium,
@@ -1588,7 +1595,8 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 	carrelli.id_account_inserimento,
 	carrelli.timestamp_inserimento,
 	carrelli.id_account_aggiornamento,
-	carrelli.timestamp_aggiornamento
+	carrelli.timestamp_aggiornamento,
+	carrelli.id AS __label__
 FROM carrelli;
 
 -- | 090000003050

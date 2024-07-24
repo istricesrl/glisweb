@@ -1,0 +1,51 @@
+<div class="form-row view-filters d-print-none">
+
+	<div class="col-12 col-md-auto">
+		<span class="label-top">conferma</span>
+		<select name="__view__[{{ view.id }}][__filters__][timestamp_checkout][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_checkout.NL == "" %}selected{% endif %}>tutti</option>
+			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_checkout.NL == "-1" %}selected{% endif %}>confermati</option>
+			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_checkout.NL == "1" %}selected{% endif %}>non confermati</option>
+		</select>
+	</div>
+
+	<div class="col-12 col-md-auto">
+		<span class="label-top">pagamento</span>
+		<select name="__view__[{{ view.id }}][__filters__][timestamp_pagamento][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "" %}selected{% endif %}>tutti</option>
+			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "-1" %}selected{% endif %}>confermati</option>
+			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non confermati</option>
+		</select>
+	</div>
+
+	<div class="col-12 col-md-auto">
+		<span class="label-top">provider</span>
+		<select name="__view__[{{ view.id }}][__filters__][provider_pagamento][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.provider_pagamento.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for provider in ecommerce.profile.provider %}
+			<option value="{{ provider.id }}" {% if request.__view__[ view.id ].__filters__.provider_pagamento.EQ == provider.id %}selected{% endif %}>{{ provider.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
+	<div class="col-12 col-md-auto">
+		<span class="label-top">evasione</span>
+		<select name="__view__[{{ view.id }}][__filters__][timestamp_evasione][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "" %}selected{% endif %}>tutti</option>
+			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "-1" %}selected{% endif %}>confermati</option>
+			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "1" %}selected{% endif %}>non confermati</option>
+		</select>
+	</div>
+
+	<div class="col">
+		<span class="label-top">cerca</span>
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+	</div>
+	<div class="col-auto">
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		{% if view.insert.path %}
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		{% endif %}
+	</div>
+
+</div>

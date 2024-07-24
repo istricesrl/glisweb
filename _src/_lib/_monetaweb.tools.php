@@ -69,39 +69,125 @@
      */
     function monetawebGetPaymentDetails( $c, $k ) {
 
-        $url = $k['init_api'] . '?' . http_build_query( array(
+
+/*
+
+
+$parameters = array(
+	  'id' => $terminalId,
+	  'password' => $terminalPassword,
+	  'operationType' => 'initialize',
+	  'amount' => '1.00',	  
+	  'language' => 'ITA',
+	  'responseToMerchantUrl' => $merchantDomain.'/notify.php',
+          'merchantOrderId' => 'TRCK0001',
+  );
+
+  $curlHandle = curl_init();
+  curl_setopt($curlHandle, CURLOPT_URL, $setefiPaymentGatewayDomain.'/monetaweb/payment/2/xml');
+  curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
+  curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
+  curl_setopt($curlHandle, CURLOPT_POST, true);
+  curl_setopt($curlHandle, CURLOPT_POSTFIELDS, http_build_query($parameters));
+  curl_setopt($curlHandle, CURLOPT_SSL_CIPHER_LIST, 'TLSv1');
+  $xmlResponse = curl_exec($curlHandle);
+  curl_close($curlHandle);
+
+  $response = new SimpleXMLElement($xmlResponse);
+  $paymentId = $response->paymentid;
+  $paymentUrl = $response->hostedpageurl;
+
+  $securityToken = $response->securitytoken;
+
+  $setefiPaymentPageUrl = "$paymentUrl?PaymentID=$paymentId";
+  header("Location: $setefiPaymentPageUrl");
+
+*/
+
+//        $url = $k['init_api'] . '?' . http_build_query( array(
+        $params = array(
             'id'            => $k['term_id'],                                   // ID del terminale
             'password'      => $k['term_passwd'],                               // password del terminale
             'action'        => 4,                                               // richiesta di autorizzazione
-            'amt'           => sprintf( '%0.2f', $c['prezzo_lordo_totale'] ),   // totale lordo del carrello
+            // 'operationType' => 'initialize',                                    // tipo di operazione
+            'amt'           => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_totale'] ) ),   // totale lordo del carrello
+            // 'amount'        => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_totale'] ) ),   // totale lordo del carrello
             'currencycode'  => 978,                                             // euro
-            'langid'        => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU)
-            'responseurl'   => $k['success_url'],                               // URL di ritorno in caso di successo
-            'errorurl'      => $k['error_url'],                                 // URL di ritorno in caso di errore
+            // 'langid'        => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU)
+            'language'      => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU, RUS)
+             'responseurl'   => $k['success_url'],                               // URL di ritorno in caso di successo
+             'errorurl'      => $k['error_url'],                                 // URL di ritorno in caso di errore
+            // 'responseTomerchantUrl' => $k['success_url'],                       // URL di ritorno in caso di successo
+            // 'responseTomerchantUrl' => $k['listener_url'],                       // URL di ritorno in caso di successo
+            //'recoveryUrl'   => $k['error_url'],                                 // URL di ritorno in caso di errore
             'trackid'       => $c['id'],                                        // ID del carrello
-            'udf1'          => 'pagamento Monetaweb'                            // descrizione del pagamento
-        ) );
+            // 'merchantOrderId' => $c['id'],                                      // ID del carrello
+            // 'udf1'          => 'pagamento Monetaweb'                            // descrizione del pagamento
+        );
+//        ) );
 
+        logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $k['init_api'] . ') invio: ' . print_r( $params, true ), 'monetaweb' );
+
+        /*
         $result = restCall(
             $url,
             METHOD_POST,
             array(),
             MIME_X_WWW_FORM_URLENCODED,
+            // MIME_APPLICATION_XML,
             MIME_TEXT_PLAIN,
             $status,
-            array(),
-            $k['client_id'],
-            $k['client_secret'],
-            $error
+            // array(),
+            // $k['client_id'],
+            // $k['client_secret'],
+            // $error
         );
+        */
 
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, $k['init_api']);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+        curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, 'TLSv1');
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $k['init_api'] . ') risposta: ' . $result, 'monetaweb' );
+
+        // print_r( $params );
+        // die( 'risposta: ' . $result );
+
+/*
+        $response = new SimpleXMLElement( $xmlResponse );
+        $paymentId = $response->paymentid;
+        $paymentUrl = $response->hostedpageurl;
+        $securityToken = $response->securitytoken;
+      
         logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $url . ') risposta: ' . print_r( $result, true ), 'monetaweb' );
+*/
 
         $dettagli = explode( ':', $result );
 
-        if( count( $dettagli ) == 2 ) {
+        /*
+        <response>
+              <paymentid>123456789012345678</paymentid>
+              <securitytoken>80957febda6a467c82d34da0e0673a6e</securitytoken>
+              <hostedpageurl>https://www.monetaonline.it/monetaweb/...</hostedpageurl>
+        </response>
+        */
 
-            $dettagli[2] = $dettagli[1] . '?PaymentID=' . $dettagli[0];
+        // $dettagli = xml2array( $result, false );
+
+        if( count( $dettagli ) == 3 ) {
+        // if( ! empty( $dettagli['response']['paymentid'] ) && ! empty( $dettagli['response']['hostedpageurl'] ) ) {
+
+            $dettagli[3] = $dettagli[1] . ':' . $dettagli[2] . '?PaymentID=' . $dettagli[0];
+            // $dettagli['redirecturl'] = $dettagli['response']['hostedpageurl'] . '?PaymentID=' . $dettagli['response']['paymentid'];
 
         }
 

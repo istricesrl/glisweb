@@ -3,8 +3,9 @@
 {% extends 'ext/main.html' %}
 
 {% block main %}
-{% if etc.client_token %}
+
 <!-- PAGAMENTO TRAMITE PAYPAL STANDARD O ADVANCED CHECKOUT -->
+{% if etc.client_token %}
 
 <!-- variabile per l'URL di ritorno -->
 {% if ecommerce.profile.provider['paypal-advanced'].return_url %}
@@ -77,8 +78,8 @@
 <script src="/_src/_js/_lib/_paypal.js"></script>
 {% endif %}
 
-{% elseif etc.meta.action and etc.meta.method %}
 <!-- PAGAMENTO TRAMITE PAYPAL PAYMENTS STANDARD, NEXI, E SIMILI -->
+{% elseif etc.meta.action and etc.meta.method %}
 
 <!-- form per il pagamento -->
 <form action="{{ etc.meta.action }}" method="{{ etc.meta.method }}">
@@ -88,6 +89,10 @@
   <button type="submit">PAGA</button>
 </form>
 
+{% else %}
+<!-- qualcosa manca qui... per funzionare questa pagina ha bisogno di: -->
+<!-- action: {{ etc.meta.action }} -->
+<!-- method: {{ etc.meta.method }} -->
 {% endif %}
 
 {% endblock %}

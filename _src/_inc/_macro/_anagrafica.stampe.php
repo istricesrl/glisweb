@@ -42,7 +42,5 @@
 		'text' => 'stampa le costine per le cartelle sospese'
 	    );
 
-
-    
-	// macro di default
+    // macro di default
 	require DIR_SRC_INC_MACRO . '_default.tools.php';

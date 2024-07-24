@@ -3,9 +3,12 @@
     $ct['etc']['id_provincia'] = mysqlCachedQuery(
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT provincie.nome AS __label__, provincie.sigla, provincie.id '
-        .'FROM provincie '
-        .'ORDER BY __label__ '
+        'SELECT provincie.nome AS __label__, provincie.sigla, provincie.id 
+        FROM provincie 
+        INNER JOIN regioni ON provincie.id_regione = regioni.id 
+        WHERE regioni.id_stato = ?
+        ORDER BY __label__ ',
+        array( array( 's' => ( ( $_SESSION['carrello']['intestazione_id_stato'] ) ? $_SESSION['carrello']['intestazione_id_stato'] : 1 ) ) )
     );
 
     $ct['etc']['id_stato'] = mysqlCachedQuery(

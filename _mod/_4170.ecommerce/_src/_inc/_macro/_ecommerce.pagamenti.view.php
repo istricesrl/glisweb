@@ -19,13 +19,13 @@
 
     // tabella della vista
     $ct['view']['table'] = 'pagamenti';
-
+/*
     // id della vista
     $ct['view']['id'] = md5(
         $ct['page']['id'] . $ct['view']['table'] . $_SESSION['__view__']['__site__'] .
         ( ( isset( $ct['form']['table'] ) && isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) ? $_REQUEST[ $ct['form']['table'] ]['id'] : NULL )
     );
-    
+*/
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'pagamenti.amministrazione.form';
 
@@ -137,22 +137,22 @@
     }
 */
 
-    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_pagamento']['NL'] ) ) {
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_pagamento']['NL'] = 1;
-    }
+#    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_pagamento']['NL'] ) ) {
+    $ct['view']['__filters__']['timestamp_pagamento']['NL'] = 1;
+#    }
 
 /*
-    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente']['EQ'] )  ) {
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente']['EQ'] = trovaIdAziendaGestita();
+    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__']['__filters__']['id_emittente']['EQ'] )  ) {
+        $_REQUEST['__view__']['__filters__']['id_emittente']['EQ'] = trovaIdAziendaGestita();
     }
 */
 
-    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente|id_destinatario']['EQ'] ) ) {
-        $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_emittente|id_destinatario']['EQ'] = trovaIdAziendaGestita();
-    }
+#    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__']['__filters__']['id_emittente|id_destinatario']['EQ'] ) ) {
+    $ct['view']['__filters__']['id_emittente|id_destinatario']['EQ'] = trovaIdAziendaGestita();
+#    }
 
     // debug
-    // die( print_r( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__'], true ) );
+    // die( print_r( $_REQUEST['__view__']['__filters__'], true ) );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

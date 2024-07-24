@@ -22,11 +22,13 @@ define('ROW_UNMODIFIED', 'INVARIATO');
  * @todo documentare
  *
  */
-function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = NULL)
-{
+function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = NULL) {
 
 	// log
 	logWrite("${t}/${a}", 'controller');
+
+	// timer
+	timerCheck( $timer, '-> -> inizio lavoro controller per ' . $t . '/' . $a );
 
 	// inizializzazioni
 	$q                    = NULL;                                        // la query MySQL che verrà eseguita
@@ -274,10 +276,12 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 							if ((string) $sv != '') {
 								switch ($sk) {
 									case 'NN':
-										$whr[] = "${fc} IS NOT NULL";
+										$not = ( $sv == '1' ) ? 'NOT' : ( ( $sv < 0 ) ? '' : '' );
+										$whr[] = "${fc} IS ${not} NULL";
 										break;
 									case 'NL':
-										$whr[] = "${fc} IS NULL";
+										$not = ( $sv == '1' ) ? '' : ( ( $sv < 0 ) ? 'NOT' : '' );
+										$whr[] = "${fc} IS ${not} NULL";
 										break;
 									case 'EQ':
 										$whr[] = "${fc} = ?";
@@ -409,6 +413,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 			);
 			foreach ($ct as $f) {
 				require $f;
+				timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
 			}
 
 			// TODO NOTA se attiviamo la valorizzazione di $befores in cima, qui si arriva con la $befores già valorizzata
@@ -544,6 +549,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 			);
 			foreach ($ct as $f) {
 				require $f;
+				timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
 			}
 
 			// esecuzione della query
@@ -672,6 +678,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 			);
 			foreach ($ct as $f) {
 				require $f;
+				timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
 			}
 
 			// reintegrazione dei sottomoduli
@@ -687,6 +694,9 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 
 			// debug
 			// print_r( $d );
+
+			// timer
+			timerCheck( $timer, '-> -> inizio elaborazione sotto moduli' );
 
 			if (empty($fvm)) {
 
@@ -766,6 +776,9 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 				}
 			}
 
+			// timer
+			timerCheck( $timer, '-> -> fine elaborazione sotto moduli' );
+
 			// controller post elaborazione (finally)
 			$cn = 'finally.php';
 			$ct = array_merge(
@@ -777,6 +790,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 			logWrite(print_r($ct, true), 'controllers/' . $t, LOG_ERR);
 			foreach ($ct as $f) {
 				require $f;
+				timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
 			}
 
 			// svuotamento o integrazione del blocco dati
@@ -795,11 +809,16 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 					case METHOD_PUT:
 					case METHOD_REPLACE:
 					case METHOD_UPDATE:
+
 						$w = mysqlSelectRow($c, "SELECT * FROM ${t}$rm WHERE id = ?", array(array('s' => $d['id'])));
+
+						timerCheck( $timer, '-> -> fine integrazione blocco dati' );
+
 						// echo "${t}$rm";
 						// echo $d['id'];
 						// print_r( $d );
 						// ATTENZIONE		if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $d, $w ); }
+
 						if (is_array($w) && is_array($d)) {
 							$d = array_merge($w, $d);
 						}

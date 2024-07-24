@@ -27,7 +27,7 @@
 		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.carrello.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.ricerca', 'ecommerce.pagamento', 'ecommerce.pagamenti.view' ) ),
-		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cassa' ), 'priority'	=> '660' ) ) )
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cassa' ), 'priority'	=> '100' ) ) )
 	);
 
 	// carrello
@@ -133,3 +133,71 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_lydia/', 'schema' => 'carrello.fallimento.html' ),
 	    'macro'			=> array( $m . '_src/_inc/_macro/_carrello.fallimento.php' )
 	);
+
+	 // vista categorie prodotti
+	 $p['carrelli.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'carrelli' ),
+	    'h1'		=> array( $l		=> 'carrelli' ),
+	    'parent'		=> array( 'id'		=> 'ecommerce' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_carrelli.view.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> array(	'carrelli.view') ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'carrelli' ),
+									'priority'	=> '500' ) ) )	
+	);
+
+	// gestione carrelli
+	$p['carrelli.form'] = array(
+		'sitemap'		=> false,
+		'title'			=> array( $l		=> 'gestione' ),
+		'h1'			=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'carrelli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'carrelli.form.html' ),
+		'macro'			=> array( $m.'_src/_inc/_macro/_carrelli.form.php' ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'carrelli.form', 
+														'carrelli.form.evasione',
+														'carrelli.form.stampe',
+														'carrelli.form.tools' ) )
+	);
+
+	// gestione carrelli
+	$p['carrelli.form.evasione'] = array(
+	    'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'evasione' ),
+	    'h1'				=> array( $l		=> 'evasione' ),
+	    'parent'			=> array( 'id'		=> 'carrelli.view' ),
+	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'carrelli.form.evasione.html' ),
+	    'macro'				=> array( $m.'_src/_inc/_macro/_carrelli.form.evasione.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> $p['carrelli.form']['etc']['tabs'] )
+	);
+
+	// gestione carrelli stampe
+	$p['carrelli.form.stampe'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+		'title'				=> array( $l		=> 'stampe form carrelli' ),
+		'h1'				=> array( $l		=> 'stampe' ),
+		'parent'			=> array( 'id'		=> 'carrelli.view' ),
+		'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'				=> array( $m.'_src/_inc/_macro/_carrelli.form.stampe.php' ),
+		'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'				=> array( 'tabs'	=> $p['carrelli.form']['etc']['tabs'] )
+	);
+
+	// carrelli tools
+	$p['carrelli.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni carrello' ),
+		'h1'			=> array( $l		=> 'azioni' ),
+		'parent'		=> array( 'id'		=> 'carrelli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_carrelli.form.tools.php' ),
+		'etc'			=> array( 'tabs'	=> $p['carrelli.form']['etc']['tabs'] ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
+	);
+

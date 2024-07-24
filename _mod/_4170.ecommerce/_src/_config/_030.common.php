@@ -81,19 +81,24 @@
                 'success'       => 'carrello.esito',                                                    // pagina di ritorno in caso di pagamento effettuato con successo
                 'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_nexi.listener.php',                 // listener per la conferma di pagamento in background
-                '__label__'     => 'carta di credito'                                                   // etichetta del provider per le tendine
+                '__label__'     => 'Nexi'                                                               // etichetta del provider per le tendine
             ),
             'monetaweb' => array(
                 'id'            => 'monetaweb',                                                         // ID del provider per le tendine
                 'available'     => true,                                                                // disponibilità del provider
                 'modalita'      => 8,                                                                   // ID della modalità di pagamento (per l'emissione dei documenti)
-                'init_api'      => 'https://www.monetaonline.it/MPI2/servlet/PaymentInitHTTPServlet',   // API che restituisce orderId:paymentUrl
+                // 'init_api'      => 'https://www.monetaonline.it/MPI2/servlet/PaymentInitHTTPServlet',   // API che restituisce orderId:paymentUrl
+                // 'init_api'      => 'https://test.monetaonline.it/monetaweb/payment/2/xml',              // API che restituisce orderId:paymentUrl
+                'init_api'      => 'https://217.220.17.40/payment/2/xml',                // API che restituisce orderId:paymentUrl
+                'merchant_id'   => NULL,                                                                // ID del commerciante
                 'term_id'       => NULL,                                                                // ID del terminale
                 'term_passwd'   => NULL,                                                                // password del terminale
                 'success'       => 'carrello.esito',                                                    // pagina di ritorno in caso di pagamento effettuato con successo
                 'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_monetaweb.listener.php',            // listener per la conferma di pagamento in background
-                '__label__'     => 'carta di credito'                                                   // etichetta del provider per le tendine
+                'method'        => 'post',                                                              // metodo per il form di riepilogo
+                'autosubmit'    => false,                                                               // autosubmit del modulo di riepilogo
+                '__label__'     => 'Monetaweb'                                                          // etichetta del provider per le tendine
             ),
             'paypal' => array(
                 'id'            => 'paypal',                                                            // ID del provider per le tendine
@@ -156,6 +161,9 @@
      * 
      * NOTA SU PAYPAL
      * l'URL delle API di produzione è https://api-m.paypal.com anziché https://api-m.sandbox.paypal.com
+     * 
+     * NOTA SU MONETAWEB
+     * l'URL delle API di produzione è https://www.monetaonline.it/monetaweb/payment/2/xml
      * 
      */
 

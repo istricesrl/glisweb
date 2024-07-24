@@ -61,6 +61,57 @@
 
                 </tr>
                 {% endfor %}
+
+                <tr>
+                    <td>modalità di pagamento</td>
+                    <td colspan="2">
+                        <select class="form-control form-control-sm hint-toggle" id="costo-pagamento" hint-toggle="modalita_pagamento" name="__carrello__[provider_pagamento]">
+                            {% for cons in ecommerce.profile.provider %}
+                            {% if cons.available %}
+                            <option value="{{ cons.id }}" min="{{ cons.importo_min }}" max="{{ cons.importo_max }}" prezzo="{{ cons.prezzo }}" relativo="{{ cons.prezzo_relativo }}" {% if cons.id == session.carrello.provider_pagamento %}selected{% endif %}>{{ cons.__label__ }}</option>
+                            {% endif %}
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>modalità di fatturazione</td>
+                    <td>
+                        <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__carrello__[fatturazione_id_tipologia_documento]">
+                            {% for tdoc in etc.id_tipologia_documenti %}
+                            <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == session.carrello.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td>
+                        <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__carrello__[fatturazione_strategia]">
+                            {% for strf in etc.strategie_fatturazione %}
+                            <option value="{{ strf.id }}" {% if strf.id == session.carrello.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
+                            {% endfor %}
+                        </select>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>codice sconto</td>
+                    <td colspan="2">
+                        <input class="form-control form-control-sm text-right quantita" type="text" id="coupon" name="__carrello__[codice_coupon]" value="{{ session.carrello.codice_coupon }}">
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        {{ cms.formButton( 'APPLICA SCONTO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '"); $("#formCarrello").submit();','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'ApplicaSconto', 1 ) }}
+                    </td>
+                </tr>
+
                 <tr>
                     <td><b>totale</b></td>
                     <td></td>
@@ -149,15 +200,25 @@
 			    <label class="label-top">CAP</label>
 			    <input class="form-control form-control-sm" id="intestazione_cap" type="text" name="__carrello__[intestazione_cap]" value="{{ session.carrello.intestazione_cap }}" required>
 			</div>
-			<div class="col-7 col-md-4">
+			<div class="col-7 col-md-3">
 			    <label class="label-top">città</label>
 			    <input class="form-control form-control-sm" id="intestazione_citta" type="text" name="__carrello__[intestazione_citta]" value="{{ session.carrello.intestazione_citta }}" required>
 			</div>
+            {% if session.carrello.intestazione_id_stato == 1 %}
 			<div class="col-5 col-md-2">
 			    <label class="label-top">provincia</label>
 			    <select class="form-control form-control-sm" id="intestazione_id_provincia" name="__carrello__[intestazione_id_provincia]" required>
 				{% for prov in etc.id_provincia %}
 				<option value="{{ prov.id }}"{% if prov.id == session.carrello.intestazione_id_provincia %} selected{% endif %}>{{ prov.__label__ }}</option>
+				{% endfor %}
+			    </select>
+			</div>
+            {% endif %}
+			<div class="col-5 col-md">
+			    <label class="label-top">nazione</label>
+			    <select class="form-control form-control-sm" id="intestazione_id_stato" name="__carrello__[intestazione_id_stato]" onchange="var forceValid = 1; $('#formCarrello').attr('action','{{ page.url[ localization.language.ietf ] }}'); $('#formCarrello').submit();" required>
+				{% for stato in etc.id_stato %}
+				<option value="{{ stato.id }}"{% if stato.id == session.carrello.intestazione_id_stato %} selected{% endif %}>{{ stato.__label__ }}</option>
 				{% endfor %}
 			    </select>
 			</div>
