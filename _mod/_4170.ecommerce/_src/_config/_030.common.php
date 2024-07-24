@@ -89,7 +89,8 @@
                 'modalita'      => 8,                                                                   // ID della modalità di pagamento (per l'emissione dei documenti)
                 // 'init_api'      => 'https://www.monetaonline.it/MPI2/servlet/PaymentInitHTTPServlet',   // API che restituisce orderId:paymentUrl
                 // 'init_api'      => 'https://test.monetaonline.it/monetaweb/payment/2/xml',              // API che restituisce orderId:paymentUrl
-                'init_api'      => 'https://217.220.17.40/payment/2/xml',                // API che restituisce orderId:paymentUrl
+                // 'init_api'      => 'https://217.220.17.40/payment/2/xml',                // API che restituisce orderId:paymentUrl
+                'init_api'      => 'https://www.monetaonline.it/monetaweb/hosted/init/http',              // API che restituisce orderId:paymentUrl
                 'merchant_id'   => NULL,                                                                // ID del commerciante
                 'term_id'       => NULL,                                                                // ID del terminale
                 'term_passwd'   => NULL,                                                                // password del terminale
@@ -153,7 +154,7 @@
     /**
      * NOTA SU NEXI
      * per avere i dati di test (alias, key, e numeri di carte fittizie) registrarsi su https://ecommerce.nexi.it/area-test
-     * per i test con Nexi bisogna utilizzare un importo prefissato (vedi documentazione)
+     * per i test con Nexi bisogna utilizzare un importo prefissato (vedi https://developer.nexi.it/it/servizio-ecommerce)
      * 
      * NOTA SU PAYPAL
      * per avere i dati di test (business e account clienti fittizi) registrarsi su https://developer.paypal.com/developer/accounts/
@@ -163,7 +164,7 @@
      * l'URL delle API di produzione è https://api-m.paypal.com anziché https://api-m.sandbox.paypal.com
      * 
      * NOTA SU MONETAWEB
-     * l'URL delle API di produzione è https://www.monetaonline.it/monetaweb/payment/2/xml
+     * l'URL delle API di produzione è https://www.monetaonline.it/monetaweb/hosted/init/http
      * 
      */
 
