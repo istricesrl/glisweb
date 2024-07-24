@@ -1,9 +1,35 @@
 <?php
 
-    // inclusione del framework
+	// dati grezzi
+	$rawData = file_get_contents('php://input');
+
+	// debug
+	// $h = fopen( '../../../../var/spool/payment/debug.log', 'a+' );
+	// fwrite( $h, date( 'Y-m-d H:i:s' ) . ' ' . $rawData . PHP_EOL );
+	// fclose( $h );
+
+	// inclusione del framework
 	require '../../../../_src/_config.php';
 
-    // identificativo del carrello
+	// decodifica dati
+	$_REQUEST = array_merge( $_REQUEST, json_decode( $rawData, true ) );
+
+	// allineamento dei dati con il vecchio sistema
+	if( empty( $_REQUEST['codTrans'] ) && ! empty( $_REQUEST['operation'] ) ) {
+		$_REQUEST['codTrans'] = $_REQUEST['operation']['orderId'];
+		$_REQUEST['alias'] = $_REQUEST['operation']['channel'];
+		$_REQUEST['mac'] = $_REQUEST['securityToken'];
+		$_REQUEST['importo'] = $_REQUEST['operation']['operationAmount'];
+		$_REQUEST['divisa'] = $_REQUEST['operation']['operationCurrency'];
+		$_REQUEST['esito'] = $_REQUEST['operation']['operationResult'];
+		$_REQUEST['codAut'] = $_REQUEST['operation']['additionalData']['authorizationCode'];
+		$_REQUEST['messaggio'] = $_REQUEST['operation']['eventId'];
+	}
+
+	// log
+	logger( 'attivato listener Nexi:' . print_r( $_REQUEST, true ), 'nexi' );
+
+	// identificativo del carrello
 	if( isset( $_REQUEST['codTrans'] ) ) {
 
 		// normalizzazione ID carrello
@@ -27,6 +53,7 @@
 
 				// pagamento completato con successo
 				case 'OK':
+				case 'EXECUTED':
 
 					// registro il pagamento
 					mysqlInsertRow(

@@ -599,9 +599,9 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 						// die( $q );
 					}
 
-                    logger('righe recuperate dalla query ' . $q . ': ' . count($d), 'controller');
-                    logger('righe recuperate dalla query ' . $q . ': ' . print_r($d,true), 'details/controller');
-                    logger('valori utilizzati dalla query ' . $q . ': ' . print_r($vs,true), 'details/controller');
+                    // logger('righe recuperate dalla query ' . $q . ': ' . count($d), 'controller');
+                    logger('righe recuperate dalla query ' . $q . ': ' . print_r($d,true), 'details/controller/select');
+                    logger('valori utilizzati dalla query ' . $q . ': ' . print_r($vs,true), 'details/controller/select');
 
                     break;
 

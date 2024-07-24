@@ -4,12 +4,13 @@
 
 {% block main %}
 
+<h1>esito pagamento</h1>
 {% if etc.esito == 1 %}
-    <p>pagamento andato a buon fine</p>
+    <p>il pagamento è andato a buon fine!</p>
 {% elseif etc.esito == 2 %}
-    <p>ordine in lavorazione</p>
+    <p>il tuo ordine è in lavorazione!</p>
 {% else %}
-    <p>pagamento non andato a buon fine</p>
+    <p>il pagamento non è andato a buon fine, torna al carrello e riprova</p>
 {% endif %}
 
 {% endblock %}

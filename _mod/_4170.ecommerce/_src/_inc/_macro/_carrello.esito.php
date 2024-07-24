@@ -35,6 +35,18 @@
             // log
 //            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
 
+        } elseif( isset( $_REQUEST['paymentid'])) {
+
+            // Nexi nuovo
+
+            // TODO controllare 'sto paymentid sulla tabella carrelli e chiamando l'order api
+            // https://developer.nexi.it/it/api/get-orders-orderId bisogna creare una funzione tipo nexiGetOrderDetails()
+            if( true ) {
+                $ct['etc']['esito'] = 1;
+            } else {
+                $ct['etc']['esito'] = 0;
+            }
+
         } elseif( isset( $_REQUEST['PayerID'] ) ) {
 
             // recupero il carrello

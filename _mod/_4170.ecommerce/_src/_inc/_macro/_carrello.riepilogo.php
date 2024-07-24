@@ -107,6 +107,15 @@
                 // URL espliciti
                     $k['success_url']                       = ( ! isset( $k['success_url'] ) || empty( $k['success_url'] ) ) ? $cf['contents']['pages'][ $k['success'] ]['url'][ $l ] : $k['success_url'];
                     $k['error_url']                         = ( ! isset( $k['error_url'] ) || empty( $k['error_url'] ) ) ? $cf['contents']['pages'][ $k['error'] ]['url'][ $l ] : $k['error_url'];
+                    $k['listener_url']                      = $cf['site']['url'] . $k['listener'];
+
+                // dettagli
+                    $details                                = nexiGetSecurityKey( $c, $k );
+
+                // security key
+                    $ct['etc']['meta']['seckey']            = $details['securityToken'];
+                    $ct['etc']['meta']['action']            = $details['hostedPage'];
+                    $ct['etc']['meta']['uuid']              = $details['correlationId'];
 
                 // dati per la costruzione del modulo
                     $ct['etc']['meta']['ct']		        = explode( ' ', microtime() );	                            // timestamp corrente
