@@ -43,10 +43,15 @@ fi
 
 ## cambio proprietario
 chown -R root:www-data ./$SUB/
-find ./$SUB/src/templates                                                           -exec chown -R $FTPUSER:www-data {} \;
-find ./$SUB/tmp                                                                     -exec chown -R www-data:www-data {} \;
-find ./$SUB/var                                                                     -exec chown -R $FTPUSER:www-data {} \;
-find ./$SUB/var/cache                                                               -exec chown -R www-data:www-data {} \;
+#find ./$SUB/src/templates                                                           -exec chown -R $FTPUSER:www-data {} \;
+#find ./$SUB/tmp                                                                     -exec chown -R www-data:www-data {} \;
+#find ./$SUB/var                                                                     -exec chown -R $FTPUSER:www-data {} \;
+#find ./$SUB/var/cache                                                               -exec chown -R www-data:www-data {} \;
+
+chown -R $FTPUSER:www-data ./$SUB/src/templates
+chown -R www-data:www-data ./$SUB/tmp
+chown -R $FTPUSER:www-data ./$SUB/var
+chown -R www-data:www-data ./$SUB/var/cache
 
 ## cartella .git
 if [ -d ".git" ]; then
@@ -57,6 +62,9 @@ fi
 if [ -d ".github" ]; then
     chown -R root:root ./$SUB/.github
 fi
+
+## informazioni
+echo "impostati proprietari e gruppi, modifico i permessi"
 
 ## cambio permessi (silenzioso)
 find ./$SUB/                    -type d         -not \( -path ".git" -prune \)      -exec chmod 550 {} \;
@@ -72,6 +80,9 @@ find ./$SUB/var                 -type d                                         
 find ./$SUB/src/templates       -type f                                             -exec chmod 660 {} \;
 find ./$SUB/tmp                 -type f                                             -exec chmod 660 {} \;
 find ./$SUB/var                 -type f                                             -exec chmod 660 {} \;
+
+# informazioni
+echo "permessi modificati"
 
 ## TODO
 # fare una modalità "paranoia" in cui:

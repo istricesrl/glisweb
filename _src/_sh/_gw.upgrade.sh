@@ -41,9 +41,16 @@ else
 
         cartellaDisallineamenti="../disallineamenti.$( date '+%Y%m%d%H%M%S' )/"
 
+        echo "inizio il backup"
+
+        EXCLUDE=".git .github _src/_lib/_ext _usr/_docs/_html _usr/_docs/_pdf tmp var"
+        for i in $EXCLUDE; do
+            EXC="$EXC --exclude=./$i"
+        done
+
         # faccio il backup della cartella corrente
         # rm -rf ../backup.tar.gz
-        tar -czf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz --exclude='var/log/*' --exclude='var/cache/*' .
+        tar $EXC -czf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz .
 
         # salvo i disallineamenti rispetto alla versione correntemente installata
         for f in $( find ./_* -newer ./var/latest.upgrade.conf ); do
@@ -53,6 +60,8 @@ else
                 cp --parents $f $cartellaDisallineamenti
             fi
         done
+
+        echo "backup completato"
 
         # branch da scaricare
         BRANCH=$1

@@ -198,6 +198,7 @@
      * 
      * NOTA SU MONETAWEB
      * l'URL delle API di produzione è https://www.monetaonline.it/monetaweb/hosted/init/http
+     * oppure https://www.monetaonline.it/monetaweb/payment/2/xml (verificare)
      * 
      */
 
