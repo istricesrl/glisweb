@@ -121,6 +121,22 @@
                     $ct['etc']['meta']['ct']		        = explode( ' ', microtime() );	                            // timestamp corrente
                     $ct['etc']['meta']['macKey']	        = $k['key'];											    // chiave mac
 
+            break;
+
+            // pagamento con Nexi
+            case 'nexi-semplice':
+
+                // preparazione del totale
+                    $c['prezzo_lordo_finale']               = str_replace( array( '.', ',' ), '', sprintf( '%01.2f', $c['prezzo_lordo_finale'] ) );
+
+                // URL espliciti
+                    $k['success_url']                       = ( ! isset( $k['success_url'] ) || empty( $k['success_url'] ) ) ? $cf['contents']['pages'][ $k['success'] ]['url'][ $l ] : $k['success_url'];
+                    $k['error_url']                         = ( ! isset( $k['error_url'] ) || empty( $k['error_url'] ) ) ? $cf['contents']['pages'][ $k['error'] ]['url'][ $l ] : $k['error_url'];
+
+                // dati per la costruzione del modulo
+                    $ct['etc']['meta']['ct']		        = explode( ' ', microtime() );	                            // timestamp corrente
+                    $ct['etc']['meta']['macKey']	        = $k['key'];											    // chiave mac
+
                 // dati del modulo
                     $ct['etc']['fields']['codTrans']        = $c['id'];										            // ID del carrello
                     $ct['etc']['fields']['importo']         = $c['prezzo_lordo_finale'];                                // totale a pagare

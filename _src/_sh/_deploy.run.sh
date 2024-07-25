@@ -304,7 +304,7 @@ else
                 $CMD
 
                 # comando per composer update
-                CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST \"$DST_PATH/_src/_sh/_composer.update.sh --hard\""
+                CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_composer.update.sh --hard"
 
                 # aggiornamento di composer
                 $CMD

@@ -12,18 +12,19 @@
 	require '../../../../_src/_config.php';
 
 	// decodifica dati
-	$_REQUEST = array_merge( $_REQUEST, json_decode( $rawData, true ) );
+	$xpay = json_decode( $rawData, true );
 
 	// allineamento dei dati con il vecchio sistema
-	if( empty( $_REQUEST['codTrans'] ) && ! empty( $_REQUEST['operation'] ) ) {
-		$_REQUEST['codTrans'] = $_REQUEST['operation']['orderId'];
-		$_REQUEST['alias'] = $_REQUEST['operation']['channel'];
-		$_REQUEST['mac'] = $_REQUEST['securityToken'];
-		$_REQUEST['importo'] = $_REQUEST['operation']['operationAmount'];
-		$_REQUEST['divisa'] = $_REQUEST['operation']['operationCurrency'];
-		$_REQUEST['esito'] = $_REQUEST['operation']['operationResult'];
-		$_REQUEST['codAut'] = $_REQUEST['operation']['additionalData']['authorizationCode'];
-		$_REQUEST['messaggio'] = $_REQUEST['operation']['eventId'];
+	if( empty( $_REQUEST['codTrans'] ) && ! empty( $xpay['operation'] ) ) {
+		$_REQUEST['codTrans'] = $xpay['operation']['orderId'];
+		$_REQUEST['alias'] = $xpay['operation']['channel'];
+		$_REQUEST['mac'] = $xpay['securityToken'];
+		$_REQUEST['importo'] = $xpay['operation']['operationAmount'];
+		$_REQUEST['divisa'] = $xpay['operation']['operationCurrency'];
+		$_REQUEST['esito'] = $xpay['operation']['operationResult'];
+		$_REQUEST['codAut'] = $xpay['operation']['additionalData']['authorizationCode'];
+		$_REQUEST['messaggio'] = $xpay['operation']['eventId'];
+		logger( 'dettaglio comunicazione XPay:' . print_r( $xpay, true ), 'nexi' );
 	}
 
 	// log

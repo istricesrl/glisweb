@@ -73,11 +73,9 @@
                 'id'            => 'nexi',                                                              // ID del provider per le tendine
                 'available'     => true,                                                                // disponibilità del provider
                 'modalita'      => 8,                                                                   // ID della modalità di pagamento (per l'emissione dei documenti)
-                'alias'         => NULL,                                                                // 
                 'key'           => NULL,                                                                // 
                 'terminale'     => '93000086',                                                          //
                 'api_key'       => '2e570a58-9914-477a-9ede-35baff23a376',                              // 
-                'action_url'    => 'https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet',       // pagina per l'action del form di riepilogo
                 'init_api'      => 'https://xpaysandbox.nexigroup.com/api/phoenix-0.0/psp/api/v1/orders/hpp', // API che restituisce i dettagli per il pagamento
                 'order_api'     => 'https://xpaysandbox.nexigroup.com/api/phoenix-0.0/psp/api/v1/orders/', // API che restituisce i dettagli dell'ordine
                 'method'        => 'post',                                                              // metodo per il form di riepilogo
@@ -86,6 +84,21 @@
                 'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_nexi.listener.php',                 // listener per la conferma di pagamento in background
                 '__label__'     => 'Nexi'                                                               // etichetta del provider per le tendine
+            ),
+            'nexi-semplice' => array(
+                'id'            => 'nexi-semplice',                                                              // ID del provider per le tendine
+                'available'     => true,                                                                // disponibilità del provider
+                'modalita'      => 8,                                                                   // ID della modalità di pagamento (per l'emissione dei documenti)
+                'alias'         => NULL,                                                                // 
+                'key'           => NULL,                                                                // 
+                'terminale'     => '93000086',                                                          //
+                'action_url'    => 'https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet',       // pagina per l'action del form di riepilogo
+                'method'        => 'post',                                                              // metodo per il form di riepilogo
+                'autosubmit'    => false,                                                               // autosubmit del modulo di riepilogo
+                'success'       => 'carrello.esito',                                                    // pagina di ritorno in caso di pagamento effettuato con successo
+                'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
+                'listener'      => '_mod/_4170.ecommerce/_src/_api/_nexi.listener.php',                 // listener per la conferma di pagamento in background
+                '__label__'     => 'Nexi semplice'                                                               // etichetta del provider per le tendine
             ),
             'monetaweb' => array(
                 'id'            => 'monetaweb',                                                         // ID del provider per le tendine
@@ -165,6 +178,16 @@
      * 
      * PROD https://xpay.nexigroup.com/api/phoenix-0.0/psp/api/v1/orders/{orderId}
      * TEST https://xpaysandbox.nexigroup.com/api/phoenix-0.0/psp/api/v1/orders/{orderId}
+     * 
+     * Anche Nexi come PayPal ha varie modalità di integrazione:
+     * 
+     * - form submission classica (https://ecommerce.nexi.it/specifiche-tecniche/codicebase/avviopagamento.html)
+     * - hosted page con scambio dati API (https://developer.nexi.it/it/modalita-di-integrazione/hosted-payment-page)
+     * 
+     * Per la modalità integrazione semplice con form submission classica i dati sono:
+     * 
+     * PROD https://ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet
+     * TEST https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet
      * 
      * NOTA SU PAYPAL
      * per avere i dati di test (business e account clienti fittizi) registrarsi su https://developer.paypal.com/developer/accounts/

@@ -13,8 +13,8 @@
 		<span class="label-top">pagamento</span>
 		<select name="__view__[{{ view.id }}][__filters__][timestamp_pagamento][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "" %}selected{% endif %}>tutti</option>
-			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "-1" %}selected{% endif %}>confermati</option>
-			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non confermati</option>
+			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "-1" %}selected{% endif %}>pagati</option>
+			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_pagamento.NL == "1" %}selected{% endif %}>non pagati</option>
 		</select>
 	</div>
 
@@ -32,8 +32,8 @@
 		<span class="label-top">evasione</span>
 		<select name="__view__[{{ view.id }}][__filters__][timestamp_evasione][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "" %}selected{% endif %}>tutti</option>
-			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "-1" %}selected{% endif %}>confermati</option>
-			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "1" %}selected{% endif %}>non confermati</option>
+			<option value="-1" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "-1" %}selected{% endif %}>evasi</option>
+			<option value="1" {% if request.__view__[ view.id ].__filters__.timestamp_evasione.NL == "1" %}selected{% endif %}>non evasi</option>
 		</select>
 	</div>
 

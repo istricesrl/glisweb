@@ -42,7 +42,7 @@
 
 	// filtri di default
     $ct['view']['__filters__']['timestamp_checkout']['NL'] = -1;
-    $ct['view']['__filters__']['timestamp_pagamento']['NL'] = -1;
+    // $ct['view']['__filters__']['timestamp_pagamento']['NL'] = -1;
     $ct['view']['__filters__']['timestamp_evasione']['NL'] = 1;
 
 	// gestione default
