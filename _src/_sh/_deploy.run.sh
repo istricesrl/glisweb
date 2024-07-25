@@ -95,16 +95,16 @@ else
     fi
 
     ## registro il deploy
-    if [ -f "../TODO.md" ]; then
+    if [ -z "$PARGNOLOG" ]; then
 
         ## aggiungo una newline al file se non c'è già
-        sed -i '$a\' ../TODO.md
+        sed -i -e '$a\' ../DEPLOY.md
 
         ## registro dei deploy
-        echo "$( date "+%Y-%m-%d %H:%M" ) DEPLOY TRAMITE SCRIPT" >> ../TODO.md
-        echo "======================================" >> ../TODO.md
-        echo "Questa è una registrazione automatica di deploy ($1) effettuata dallo script $0" >> ../TODO.md
-        echo >> ../TODO.md
+        echo "$( date "+%Y-%m-%d %H:%M" ) DEPLOY TRAMITE SCRIPT" >> ../DEPLOY.md
+        echo "======================================" >> ../DEPLOY.md
+        echo "Questa è una registrazione automatica di deploy ($1) effettuata dallo script $0" >> ../DEPLOY.md
+        echo >> ../DEPLOY.md
 
     fi
 
@@ -273,7 +273,7 @@ else
 
             ## file e cartelle da escludere dal deploy
             for i in $SET_EXCLUDE; do
-                EXCLUDE="$EXCLUDE --exclude '$i'"
+                EXCLUDE="$EXCLUDE --exclude $i"
             done
 
             ## host di destinazione
@@ -282,32 +282,42 @@ else
                 # comando
                 CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_backup.run.sh"
 
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
                 # informazioni
                 echo "comando: $CMD"
 
                 # backup
-                $CMD
+                # $CMD
 
                 # comando
                 CMD="rsync $EXCLUDE -avuz --delete -e ssh $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
 
-                # aggiungo una newline al file se non c'è già
-                sed -i '$a\' ../TODO.md
-
                 # registro dei deploy
-                echo "$CMD" >> ../TODO.md
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
 
                 # informazioni
                 echo "comando: $CMD"
 
                 # deploy
-                $CMD
+                $CMD >> ../DEPLOY.md
 
                 # comando per composer update
                 CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_composer.update.sh --hard"
 
+                # registro dei deploy
+                echo >> ../DEPLOY.md
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
                 # aggiornamento di composer
-                $CMD
+                # $CMD
 
             else
 

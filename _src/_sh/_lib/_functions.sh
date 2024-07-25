@@ -16,7 +16,7 @@ function check-args() {
         return
     fi
 
-    options=$(getopt -o bhr --long soft,hard,increment:,test: -- "$@")
+    options=$(getopt -o bhr --long soft,hard,nolog,nobackup,increment:,test: -- "$@")
 
     eval set -- "$options"
 
@@ -37,6 +37,12 @@ function check-args() {
                 ;;
             --hard)
                 PARGHARD=1
+                ;;
+            --nolog)
+                PARGNOLOG=1
+                ;;
+            --nobackup)
+                PARGNOBACKUP=1
                 ;;
             --increment)
                 shift;

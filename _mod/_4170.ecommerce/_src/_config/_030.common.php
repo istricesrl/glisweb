@@ -89,9 +89,9 @@
                 'id'            => 'nexi-semplice',                                                              // ID del provider per le tendine
                 'available'     => true,                                                                // disponibilità del provider
                 'modalita'      => 8,                                                                   // ID della modalità di pagamento (per l'emissione dei documenti)
-                'alias'         => NULL,                                                                // 
-                'key'           => NULL,                                                                // 
-                'terminale'     => '93000086',                                                          //
+                'alias'         => 'ALIAS_WEB_00012722',                                                                // 
+                'key'           => 'AKCFASZOH3OL7RZ3UHB08A69FL674CM9',                                                                // 
+                'terminale'     => '97509395',                                                          //
                 'action_url'    => 'https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet',       // pagina per l'action del form di riepilogo
                 'method'        => 'post',                                                              // metodo per il form di riepilogo
                 'autosubmit'    => false,                                                               // autosubmit del modulo di riepilogo

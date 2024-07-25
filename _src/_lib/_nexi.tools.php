@@ -101,7 +101,7 @@
         $apiKey = $k['api_key'];
         $orderId = $c['id'];
         
-        $$params = array(
+        $params = array(
             "order" => array(
                 "orderId" => $orderId,
                 "amount" => 10,
@@ -142,7 +142,7 @@
         logger( 'richiesta a Nexi per carrello '. $c['id'] . ' (' . $k['init_api'] . ') invio: ' . print_r( $params, true ), 'nexi' );
         
         $ch = curl_init($apiUrl);
-        $payload = json_encode($$params);
+        $payload = json_encode($params);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
