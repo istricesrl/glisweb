@@ -121,7 +121,7 @@
 			'INNER JOIN mailing ON mailing.id = mailing_mail.id_mailing '.
 			'INNER JOIN mail ON mail.id = mailing_mail.id_mail '.
 			'LEFT JOIN anagrafica ON anagrafica.id = mail.id_anagrafica '.
-			'WHERE token = ? ',
+			'WHERE mailing_mail.token = ? ',
 			array(
 				array( 's' => $status['token'] )
 			)
@@ -272,8 +272,8 @@
 					'UPDATE mailing_mail '.
 					'SET mailing_mail.timestamp_generazione = ?, '.
 					'mailing_mail.id_mail_out = ?, '.
-					'token = NULL '.
-					'WHERE token = ? ',
+					'mailing_mail.token = NULL '.
+					'WHERE mailing_mail.token = ? ',
 					array(
 						array( 's' => time() ),
 						array( 's' => $invio ),

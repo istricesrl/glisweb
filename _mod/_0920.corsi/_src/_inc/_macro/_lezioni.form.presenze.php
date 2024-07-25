@@ -145,6 +145,16 @@
         );
         updateReportLezioniCorsi( $_REQUEST[ $ct['form']['table'] ]['id'] );
         updateAttivitaViewStatic( $_REQUEST['__assente__'] );
+    } elseif( isset( $_REQUEST['__rimuovi__'] ) && ! empty( $_REQUEST['__rimuovi__'] ) ) {
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE FROM attivita WHERE id = ?',
+            array(
+                array( 's' => $_REQUEST['__rimuovi__'] )
+            )
+        );
+        updateReportLezioniCorsi( $_REQUEST[ $ct['form']['table'] ]['id'] );
+        updateAttivitaViewStatic( $_REQUEST['__rimuovi__'] );
     }
 
     // macro di default

@@ -381,27 +381,27 @@
             // seleziono le righe del carrello
             $ct['etc']['righe'] = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SELECT concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, '.
-                'concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione, '.
-                'carrelli.fatturazione_id_tipologia_documento, carrelli.id AS id_carrello, '.
-                'carrelli_articoli.* '.
-                'FROM carrelli_articoli '.
-                'INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo '.
-                'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
-                'INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello '.
-                'LEFT JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica '.
-                'WHERE id_carrello = ?',
+                'SELECT concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, 
+                    concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione, 
+                    carrelli.fatturazione_id_tipologia_documento, carrelli.id AS id_carrello, 
+                    carrelli_articoli.* 
+                    FROM carrelli_articoli 
+                    INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo 
+                    INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto 
+                    INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello 
+                    LEFT JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica 
+                    WHERE id_carrello = ?',
                 array( array( 's' => $_REQUEST['__pagamenti__']['id_carrello'] ) )
             );
 
-/*
+            /*
             // seleziono i documenti da stampare
             $ct['etc']['stampe'] = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT documenti_view.* FROM documenti_view LEFT JOIN attivita ON ( attivita.id_documento = documenti_view.id AND attivita.id_tipologia IN ( 22, 23, 24 ) ) WHERE id_destinatario = ? AND attivita.id IS NULL',
                 array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
             );
-*/
+            */
 
             // debug
             // die( print_r( $ct['etc'], true ) );
@@ -412,16 +412,16 @@
             // seleziono le righe del carrello
             $ct['etc']['righe'] = mysqlQuery(
                 $cf['mysql']['connection'],
-                'SELECT concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, '.
-                'concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione, '.
-                'carrelli.fatturazione_id_tipologia_documento, '.
-                'carrelli_articoli.* '.
-                'FROM carrelli_articoli '.
-                'INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo '.
-                'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
-                'INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello '.
-                'LEFT JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica '.
-                'WHERE carrelli_articoli.destinatario_id_anagrafica = ?',
+                'SELECT concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, 
+                    concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione, 
+                    carrelli.fatturazione_id_tipologia_documento, 
+                    carrelli_articoli.* 
+                    FROM carrelli_articoli 
+                    INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo 
+                    INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto 
+                    INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello 
+                    LEFT JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica 
+                    WHERE carrelli_articoli.destinatario_id_anagrafica = ?',
                 array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
             );
 
@@ -430,35 +430,37 @@
                 $ct['etc']['righe'],
                 mysqlQuery(
                     $cf['mysql']['connection'],
-                    'SELECT pagamenti.id AS id_pagamento, pagamenti.importo_lordo_totale, pagamenti.timestamp_pagamento, pagamenti.id_rinnovo, '.
-                    'concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, '.
-                    'concat_ws( " ", prodotti.nome, articoli.nome, " rata del ", pagamenti.data_scadenza ) AS descrizione, '.
-                    'carrelli.id AS id_carrello, carrelli.fatturazione_id_tipologia_documento, '.
-                    'carrelli_articoli.id, carrelli_articoli.id_articolo, carrelli_articoli.destinatario_id_anagrafica, carrelli_articoli.id_mastro_provenienza, carrelli_articoli.prezzo_lordo_finale '.
-                    'FROM pagamenti '.
-                    'INNER JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli '.
-                    'INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello '.
-                    'INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo '.
-                    'INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto '.
-                    'LEFT JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica '.
-                    'WHERE pagamenti.id_debitore = ? -- AND pagamenti.id_documento IS NULL',
+                    'SELECT pagamenti.id AS id_pagamento, pagamenti.importo_lordo_totale, pagamenti.timestamp_pagamento, pagamenti.id_rinnovo, 
+                        concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, 
+                        concat_ws( " ", prodotti.nome, articoli.nome, " rata del ", pagamenti.data_scadenza ) AS descrizione, 
+                        carrelli.id AS id_carrello, carrelli.fatturazione_id_tipologia_documento, 
+                        carrelli_articoli.id, carrelli_articoli.id_articolo, carrelli_articoli.destinatario_id_anagrafica, carrelli_articoli.id_mastro_provenienza, carrelli_articoli.prezzo_lordo_finale 
+                        FROM pagamenti 
+                        INNER JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli 
+                        INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello 
+                        INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo 
+                        INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto 
+                        LEFT JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica 
+                        WHERE pagamenti.id_debitore = ? -- AND pagamenti.id_documento IS NULL',
                     array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
                 )
             );
-/*
+
+            /*
             // seleziono i documenti da stampare
             $ct['etc']['stampe'] = mysqlQuery(
                 $cf['mysql']['connection'],
                 'SELECT documenti_view.* FROM documenti_view LEFT JOIN attivita ON ( attivita.id_documento = documenti_view.id AND attivita.id_tipologia IN ( 22, 23, 24 ) ) WHERE id_destinatario = ? AND attivita.id IS NULL',
                 array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
             );
-*/
+            */
+
         }
 
         // print_r( $_REQUEST );
         // var_dump( $_REQUEST['__pagamenti__']['id_carrello'] );
         // var_dump( $ct['etc']['righe'] );
-        // print_r($ct['etc']['righe']);
+        // die( print_r( $ct['etc']['righe'], true ) );
 
         // per ogni riga, cerco eventuali pagamenti già effettuati
         if( isset( $ct['etc']['righe'] ) ) {
@@ -466,35 +468,55 @@
             // ...
             foreach( $ct['etc']['righe'] as $chiave => &$riga ) {
 
+                // debug
+                // die( print_r( $riga, true ) );
+
                 if( isset( $riga['id_pagamento'] ) ) {
 
-                // cerco righe di documenti che fanno riferimento a questa riga di carrello
-                // TODO in teoria bisognerebbe poi controllare che il documento abbia pagamenti pagati ecc.
-                $righe = mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'SELECT documenti_articoli.*, pagamenti.timestamp_pagamento, '.
-                    'concat( documenti.numero, "/", date_format( documenti.data, "%y" ) ) AS documento '.
-                    'FROM documenti '.
-                    'INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento '.
-                    'INNER JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id '.
-                    'WHERE pagamenti.id = ? AND pagamenti.id_carrelli_articoli IS NOT NULL',
-                    array( array( 's' => $riga['id_pagamento'] ) )
-                );
+                    // cerco righe di documenti che fanno riferimento a questa riga di carrello
+                    // TODO in teoria bisognerebbe poi controllare che il documento abbia pagamenti pagati ecc.
+                    $righe = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT documenti_articoli.*, pagamenti.timestamp_pagamento, '.
+                        'concat( documenti.numero, "/", date_format( documenti.data, "%y" ) ) AS documento '.
+                        'FROM documenti '.
+                        'INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento '.
+                        'INNER JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id '.
+                        'WHERE pagamenti.id = ? AND pagamenti.id_carrelli_articoli IS NOT NULL',
+                        array( array( 's' => $riga['id_pagamento'] ) )
+                    );
 
                 } else {
 
-                // cerco righe di documenti che fanno riferimento a questa riga di carrello
-                // TODO in teoria bisognerebbe poi controllare che il documento abbia pagamenti pagati ecc.
-                $righe = mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'SELECT documenti_articoli.*, pagamenti.timestamp_pagamento, '.
-                    'concat( documenti.numero, "/", date_format( documenti.data, "%y" ) ) AS documento '.
-                    'FROM documenti_articoli '.
-                    'INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento '.
-                    'LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id '.
-                    'WHERE documenti_articoli.id_carrelli_articoli = ? AND pagamenti.id_carrelli_articoli IS NULL',
-                    array( array( 's' => $riga['id'] ) )
-                );
+                    // cerco righe di documenti che fanno riferimento a questa riga di carrello
+                    // TODO in teoria bisognerebbe poi controllare che il documento abbia pagamenti pagati ecc.
+                    /*
+                    $righe = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT documenti_articoli.*, pagamenti.timestamp_pagamento, 
+                            concat( documenti.numero, "/", date_format( documenti.data, "%y" ) ) AS documento 
+                            FROM documenti_articoli 
+                            INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento 
+                            LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id 
+                            WHERE documenti_articoli.id_carrelli_articoli = ? 
+                            AND pagamenti.id_carrelli_articoli IS NULL',
+                        array( array( 's' => $riga['id'] ) )
+                    );
+                    */
+
+                    $righe = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT documenti_articoli.*, pagamenti.timestamp_pagamento, 
+                            concat( documenti.numero, "/", date_format( documenti.data, "%y" ) ) AS documento 
+                            FROM documenti_articoli 
+                            INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento 
+                            LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id 
+                            WHERE documenti_articoli.id_carrelli_articoli = ?',
+                        array( array( 's' => $riga['id'] ) )
+                    );
+
+                    // echo( $riga['id'] );
+                    // die( print_r( $righe, true ) );
 
                 }
 
@@ -527,6 +549,9 @@
 
                     // ...
                     if( isset( $rdoc['id_documento'] ) && ! empty( $rdoc['id_documento'] ) ) {
+
+                        // debug
+                        // die( print_r( $rdoc, true ) );
 
                         // stampe del documento
                         $stampe = mysqlSelectValue(

@@ -30,12 +30,24 @@
             mysqlQuery( $c, 'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
 
+            // aggiornamento report lezioni
+            // TODO fare meglio non è bello avere gli ID fissi
+            if( isset( $d['id_tipologia'] ) && in_array( $d['id_tipologia'], array( 15, 19, 32, 33, 40 ) ) ) {
+                updateReportLezioniCorsi( $d['id'] );
+            }
+
         break;
         case METHOD_DELETE:
 
             mysqlQuery( $c, 'DELETE FROM attivita_view_static WHERE id = ?', array( array( 's' => $d['id'] ) ) );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
 
+            // aggiornamento report lezioni
+            // TODO fare meglio non è bello avere gli ID fissi
+            if( isset( $d['id_tipologia'] ) && in_array( $d['id_tipologia'], array( 15, 19, 32, 33, 40 ) ) ) {
+                updateReportLezioniCorsi( $d['id'] );
+            }
+
         break;
 
-	}
+    }

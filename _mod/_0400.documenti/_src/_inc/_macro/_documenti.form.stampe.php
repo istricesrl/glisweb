@@ -21,7 +21,8 @@
     $ct['form']['table'] = 'documenti';
 
     // percorsi
-	$base = $ct['site']['url'].'_mod/_0400.documenti/_src/_api/_print/';
+	// $base = $ct['site']['url'].'_mod/_0400.documenti/_src/_api/_print/';
+	$base = $ct['site']['url'].'print/0400.documenti/';
 
     $ct['page']['contents']['metros'] = array(
         'pdf' => array(
@@ -42,7 +43,7 @@
 
                 $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
-                    'url' => $base . '_fattura.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => $base . 'fattura.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF',
@@ -52,7 +53,7 @@
                 if( ! empty( $_REQUEST[ $ct['form']['table'] ]['progressivo_invio'] ) ) {
                     $ct['page']['contents']['metro']['xml'][] = array(
                         'target' => '_blank' ,
-                        'url' => $base . '_fattura.xml.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                        'url' => $base . 'fattura.xml?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                         'icon' => NULL,
                         'fa' => 'fa-file-code-o',
                         'title' => 'stampa XML',
@@ -66,7 +67,7 @@
 
                 $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
-                    'url' => $base . '_ddt.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => $base . 'ddt.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF',
@@ -80,7 +81,7 @@
 
                 $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
-                    'url' => $base . '_proforma.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => $base . 'proforma.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF',
@@ -93,7 +94,7 @@
 
                 $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
-                    'url' => $base . '_ricevuta.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => $base . 'ricevuta.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF',
