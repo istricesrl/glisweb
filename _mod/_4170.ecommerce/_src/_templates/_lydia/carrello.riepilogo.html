@@ -82,7 +82,7 @@
 {% elseif etc.meta.action and etc.meta.method %}
 
 <!-- form per il pagamento -->
-<form id="carrelloForm action="{{ etc.meta.action }}" method="{{ etc.meta.method }}">
+<form id="carrelloForm" action="{{ etc.meta.action }}" method="{{ etc.meta.method }}">
   {% for field, value in etc.fields %}
   <input type="hidden" name="{{ field }}" value="{{ value }}" />
   {% endfor %}

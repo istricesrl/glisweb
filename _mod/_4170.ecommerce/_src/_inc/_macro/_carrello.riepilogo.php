@@ -164,11 +164,11 @@
                 $k['listener_url'] = $cf['site']['url'] . $k['listener'];
 
                 // richiedo il PaymentID e l'URL per il redirect
-                $paymentID = monetawebGetPaymentDetails( $c, $k );
+                $paymentDetails = monetawebGetPaymentDetails( $c, $k );
 
                 // modifico la destinazione del form di riepilogo
-                $ct['etc']['meta']['action'] = $paymentID[3];
-                // $ct['etc']['meta']['action'] = $paymentID['redirecturl'];
+                // $ct['etc']['meta']['action'] = $paymentDetails[3];
+                $ct['etc']['meta']['action'] = $paymentDetails['redirecturl'];
 
                 // debug
                 // die( print_r( $paymentID, true ) );

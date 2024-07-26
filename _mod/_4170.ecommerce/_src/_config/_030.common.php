@@ -107,10 +107,12 @@
                 // 'init_api'      => 'https://www.monetaonline.it/MPI2/servlet/PaymentInitHTTPServlet',   // API che restituisce orderId:paymentUrl
                 // 'init_api'      => 'https://test.monetaonline.it/monetaweb/payment/2/xml',              // API che restituisce orderId:paymentUrl
                 // 'init_api'      => 'https://217.220.17.40/payment/2/xml',                // API che restituisce orderId:paymentUrl
-                'init_api'      => 'https://www.monetaonline.it/monetaweb/hosted/init/http',              // API che restituisce orderId:paymentUrl
-                'merchant_id'   => NULL,                                                                // ID del commerciante
-                'term_id'       => NULL,                                                                // ID del terminale
-                'term_passwd'   => NULL,                                                                // password del terminale
+                // 'init_api'      => 'https://www.monetaonline.it/monetaweb/hosted/init/http',              // API che restituisce orderId:paymentUrl
+                // 'init_api'      => 'https://stg-ta.nexigroup.com/monetaweb/payment/2/xml',              // API che restituisce orderId:paymentUrl
+                'init_api'      => 'https://ngwecomm-stg.nexi.it/monetaweb/payment/2/xml',              // API che restituisce orderId:paymentUrl
+                'merchant_id'   => '004400001',                                                                // ID del commerciante
+                'term_id'       => '44000001',                                                                // ID del terminale
+                'term_passwd'   => 'Password1',                                                                // password del terminale
                 'success'       => 'carrello.esito',                                                    // pagina di ritorno in caso di pagamento effettuato con successo
                 'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'listener'      => '_mod/_4170.ecommerce/_src/_api/_monetaweb.listener.php',            // listener per la conferma di pagamento in background

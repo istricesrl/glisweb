@@ -26,6 +26,28 @@
 	 * $_REQUEST['responsecode']    | codice di risposta (vedi sotto)           | 
      * 
      * 
+	 * nuova versione
+	 * 
+     * [authorizationcode] => 123456
+     * [baseamount] => 122.00
+     * [basecurrency] => 978
+     * [cardcountry] => ITALY
+     * [cardexpirydate] => 1230
+     * [cardtype] => MONETA
+     * [customfield] => 
+     * [globaloid] => MD9BF09589A1FEEA407EA88F1A06B0A
+     * [maskedpan] => 434994******0906
+     * [merchantcustomercode] => 
+     * [merchantorderid] => 300
+     * [merchanttransactioncode] => 300
+     * [paymentid] => 776804944410842089
+     * [responsecode] => 000
+     * [result] => APPROVED
+     * [rrn] => 000000000000
+     * [securitytoken] => 27877fa189894df4ab04398594543bc8
+     * [threedsecure] => N
+	 * 
+	 * 
      * 
      * 
      * valore                       | descrizione
@@ -60,7 +82,16 @@
     // inclusione del framework
 	require '../../../../_src/_config.php';
 
-    // identificativo del carrello
+	// log
+	logger( 'attivato IPN listener per Monetaweb, dati ricevuti: ' . print_r( $_REQUEST, true ), 'monetaweb' );
+
+	// riallineamento alla nuova versione
+	$_REQUEST['auth'] = ( ! empty( $_REQUEST['auth'] ) ) ? $_REQUEST['auth'] : $_REQUEST['authorizationcode'];
+	$_REQUEST['tranid'] = ( ! empty( $_REQUEST['tranid'] ) ) ? $_REQUEST['tranid'] : $_REQUEST['rrn'];
+	$_REQUEST['trackid'] = ( ! empty( $_REQUEST['trackid'] ) ) ? $_REQUEST['trackid'] : $_REQUEST['merchantorderid'];
+	$_REQUEST['ref'] = ( ! empty( $_REQUEST['ref'] ) ) ? $_REQUEST['ref'] : $_REQUEST['securitytoken'];
+
+	// identificativo del carrello
 	if( isset( $_REQUEST['trackid'] ) ) {
 
 		// normalizzazione ID carrello
@@ -178,4 +209,5 @@
     $url = $cf['contents']['pages'][ $redirect ]['url'][ LINGUA_CORRENTE ] . '?PaymentID=' . $_REQUEST['trackid'];
 
     // output
-	echo 'redirect=' . $url;
+	// echo 'redirect=' . $url;
+	echo $url;

@@ -51,10 +51,16 @@
      * 
      * 
      * 
+     * CIRCUITO	NUMERO CARTA	DATA SCADENZA	CVV	VERIFICA 3D SECURE	CODICE PIN/OTP SMS
+     * VISA	4349942499990906	12/30	034	ENROLLED	ok
+     * MC	5398322499900998	12/30	234	ENROLLED	ok
      * 
+     * vedi https://developer.nexi.it/it/Area-di-Test/Carte-di-Credito
+     * vedi https://developer.nexi.it/it/Area-di-Test/area-test
+     * vedi https://developer.nexi.it/it/gateway-di-pagamento-e-commerce/specifiche-di-utilizzo-del-servizio
      * 
-     * 
-     * 
+     * Url di produzione	https://xpay.nexigroup.com/monetaweb/payment/2/xml
+     * Url di test	https://stg-ta.nexigroup.com/monetaweb/payment/2/xml
      * 
      * 
      * TODO nella libreria tools di ogni metodo di pagamento bisognerebbe riportare la spiegazione di come funziona
@@ -69,11 +75,96 @@
      */
     function monetawebGetPaymentDetails( $c, $k ) {
 
+        
+    /*        
+        $merchantDomain = 'http://127.0.0.1';
+        $PaymentGatewayDomain = 'https://ngwecomm-stg.nexi.it';
+        $terminalId = '44000001';
+        $terminalPassword = 'Password1';
+        $tenantId = '10';
+        
+          $params = array(
+              'id' => $terminalId,
+              'password' => $terminalPassword,
+                  'tenantId' => $tenantId, // Nel caso in cui si tratti di un esercente convenzionato con Intesa inserire "10", altrimenti inserire "20"
+              'operationType' => 'initialize',
+              'amount' => '1.00',	  
+              'language' => 'ITA',
+              'responseToMerchantUrl' => $merchantDomain.'/notify.php',
+                  'merchantOrderId' => 'TRCK0001',
+                  'currencyCode' => '978',
+              'recoveryUrl' => $merchantDomain.'/recovery.php',
+                  'description' => 'Descrizione',
+                  'cardHolderName' => 'Tom Smith',
+                  'cardHolderEmail'  => 'tom.smith@test.com',
+                  'customField' => 'Custom Field'
+          );
+*/
+          $params = array(
+            'id'            => $k['term_id'],                                   // ID del terminale
+            'password'      => $k['term_passwd'],                               // password del terminale
+            'tenantId'      => $k['merchant_id'],                                 // tenant ID
+            // 'action'        => 4,                                               // richiesta di autorizzazione
+            'operationType' => 'initialize',                                    // tipo di operazione
+            // 'amt'           => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_totale'] ) ),   // totale lordo del carrello
+            'amount'        => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_totale'] ) ),   // totale lordo del carrello
+            'currencycode'  => 978,                                             // euro
+            // 'langid'        => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU)
+            'language'      => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU, RUS)
+            // 'responseurl'   => $k['success_url'],                               // URL di ritorno in caso di successo
+            // 'errorurl'      => $k['error_url'],                                 // URL di ritorno in caso di errore
+             'recoveryUrl'      => $k['error_url'],                                 // URL di ritorno in caso di errore
+            // 'responseTomerchantUrl' => $k['success_url'],                       // URL di ritorno in caso di successo
+            'responseTomerchantUrl' => $k['listener_url'],                       // URL di ritorno in caso di successo
+            //'recoveryUrl'   => $k['error_url'],                                 // URL di ritorno in caso di errore
+            // 'trackid'       => $c['id'],                                        // ID del carrello
+            'merchantOrderId' => $c['id'],                                      // ID del carrello
+            // 'udf1'          => 'pagamento Monetaweb'                            // descrizione del pagamento
+        );
+
+
+          $ch = curl_init();
+          curl_setopt($ch, CURLOPT_URL, $k['init_api']);
+          curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+          curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+          curl_setopt($ch, CURLOPT_POST, true);
+          curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
+          $result = curl_exec($ch);
+          curl_close($ch);
+
+//          $response = new SimpleXMLElement($xmlResponse);
+//          $paymentId = $response->paymentid;
+//          $paymentUrl = $response->hostedpageurl;
+//          $securityToken = $response->securitytoken;
+//          $PaymentPageUrl = "$paymentUrl?PaymentID=$paymentId";
+
+$dettagli = xml2array( $result, false );
+
+            // logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $k['init_api'] . ') risposta: ' . $result, 'monetaweb' );
+            logger( 'richiesta a Monetaweb per carrello '. $c['id'] . ' (' . $k['init_api'] . ') risposta: ' . print_r( $dettagli, true ), 'monetaweb' );
+
+
+          if( ! empty( $dettagli['response']['paymentid']['#'] ) && ! empty( $dettagli['response']['hostedpageurl']['#'] ) ) {
+
+            $info['response']['hostedpageurl'] = $dettagli['response']['hostedpageurl']['#'];
+            $info['response']['paymentid'] = $dettagli['response']['paymentid']['#'];
+            $info['response']['securitytoken'] = $dettagli['response']['securitytoken']['#'];
+
+            // $dettagli[3] = $dettagli[1] . ':' . $dettagli[2] . '?PaymentID=' . $dettagli[0];
+            $info['redirecturl'] = $dettagli['response']['hostedpageurl']['#'] . '?PaymentID=' . $dettagli['response']['paymentid']['#'];
+
+        }
+
+        return $info;
+          
+    }
+
+    function monetawebGetPaymentDetailsOld( $c, $k ) {
 
 /*
 
 
-$parameters = array(
+$params = array(
 	  'id' => $terminalId,
 	  'password' => $terminalPassword,
 	  'operationType' => 'initialize',
@@ -88,7 +179,7 @@ $parameters = array(
   curl_setopt($curlHandle, CURLOPT_SSL_VERIFYPEER, false);
   curl_setopt($curlHandle, CURLOPT_RETURNTRANSFER, true);
   curl_setopt($curlHandle, CURLOPT_POST, true);
-  curl_setopt($curlHandle, CURLOPT_POSTFIELDS, http_build_query($parameters));
+  curl_setopt($curlHandle, CURLOPT_POSTFIELDS, http_build_query($params));
   curl_setopt($curlHandle, CURLOPT_SSL_CIPHER_LIST, 'TLSv1');
   $xmlResponse = curl_exec($curlHandle);
   curl_close($curlHandle);
@@ -151,7 +242,7 @@ $parameters = array(
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($params));
-        curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, 'TLSv1');
+        // curl_setopt($ch, CURLOPT_SSL_CIPHER_LIST, 'TLSv1');
 
         $result = curl_exec($ch);
 
@@ -183,11 +274,11 @@ $parameters = array(
 
         // $dettagli = xml2array( $result, false );
 
-        if( count( $dettagli ) == 3 ) {
-        // if( ! empty( $dettagli['response']['paymentid'] ) && ! empty( $dettagli['response']['hostedpageurl'] ) ) {
+        // if( count( $dettagli ) == 3 ) {
+        if( ! empty( $dettagli['response']['paymentid'] ) && ! empty( $dettagli['response']['hostedpageurl'] ) ) {
 
-            $dettagli[3] = $dettagli[1] . ':' . $dettagli[2] . '?PaymentID=' . $dettagli[0];
-            // $dettagli['redirecturl'] = $dettagli['response']['hostedpageurl'] . '?PaymentID=' . $dettagli['response']['paymentid'];
+            // $dettagli[3] = $dettagli[1] . ':' . $dettagli[2] . '?PaymentID=' . $dettagli[0];
+            $dettagli['redirecturl'] = $dettagli['response']['hostedpageurl'] . '?PaymentID=' . $dettagli['response']['paymentid'];
 
         }
 

@@ -35,7 +35,7 @@
             // log
 //            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
 
-        } elseif( isset( $_REQUEST['paymentid'])) {
+        } elseif( isset( $_REQUEST['PaymentID'] ) ) {
 
             // Nexi nuovo
 

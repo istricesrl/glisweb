@@ -4,13 +4,13 @@
 
 {% block main %}
 
-<h1>esito pagamento</h1>
+<h2>esito pagamento</h2>
 {% if etc.esito == 1 %}
     <p>il pagamento è andato a buon fine!</p>
 {% elseif etc.esito == 2 %}
     <p>il tuo ordine è in lavorazione!</p>
 {% else %}
-    <p>il pagamento non è andato a buon fine, torna al carrello e riprova</p>
+    <p>il pagamento non è andato a buon fine, <a href="{{ pages.carrello.url[ localization.language.ietf ] }}">torna al carrello</a> e riprova</p>
 {% endif %}
 
 {% endblock %}
