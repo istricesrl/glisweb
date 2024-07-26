@@ -50,7 +50,74 @@
                 <div class="col-12 col-md">
                     <span class="label-top">nome</span>
                     {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
-                </div>  
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">causale</span>
+                    {{ frm.inputRequired( table, '', '', 'causale', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">inizio validità</span>
+                    {{ frm.dateTime( table, '', '', 'timestamp_inizio', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md-auto">
+                    <span class="label-top">fine validità</span>
+                    {{ frm.dateTime( table, '', '', 'timestamp_fine', '', '', request ) }}
+                </div>
+            </div>
+
+            <div class="form-group form-row">
+                <div class="col-12">
+                    <span class="label-top">note</span>
+                    {{ frm.textarea( table, '', '', 'note', '', 3, request ) }}
+                </div>
+            </div>
+
+        </fieldset>
+
+	    <fieldset>
+            <legend>valore del coupon</legend>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">valore percentuale</span>
+                    {{ frm.input( table, '', '', 'sconto_percentuale', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">valore fisso</span>
+                    {{ frm.input( table, '', '', 'sconto_fisso', '', '', request ) }}
+                </div>
+                <div class="col-auto col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_multiuso', 'multiuso', '', request ) }}
+                    </div>
+                </div>
+                <div class="col-auto col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_globale', 'globale', '', request ) }}
+                    </div>
+                </div>
+            </div>
+
+        </fieldset>
+
+	    <fieldset>
+            <legend>coupon nominativo</legend>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">beneficiario coupon</span>
+					{{ frm.selectBox( table, '', '', 'id_anagrafica', '', '', request, '', '', '', '', '', '', '', 'anagrafica', 'id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                </div>
+            </div>
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">riferimento contratto</span>
+					{{ frm.selectBox( table, '', '', 'causale_id_contratto', '', '', request, '', '', '', '', '', '', '', 'contratti', 'causale_id_contratto', page, pages, ietf, 'contratti' ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">riferimento rinnovo</span>
+					{{ frm.selectBox( table, '', '', 'causale_id_rinnovo', '', '', request, '', '', '', '', '', '', '', 'anagrafica', 'causale_id_rinnovo', page, pages, ietf, 'rinnovi' ) }}
+                </div>
             </div>
 
         </fieldset>

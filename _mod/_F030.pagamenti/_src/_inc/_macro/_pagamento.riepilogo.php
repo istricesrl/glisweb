@@ -53,7 +53,7 @@
     */
 
     // debug
-    // print_r( $ct['etc']['pagamento'] );
+    // die( print_r( $ct['etc']['pagamento'], true ) );
 
     /**
      * PayPal Advanced Checkout

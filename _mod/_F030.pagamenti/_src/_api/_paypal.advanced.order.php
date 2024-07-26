@@ -56,6 +56,24 @@
             // se la riga esiste
             if( isset( $riga['id'] ) ) {
 
+                // importo del pagamento
+                $dati['importo_lordo_totale'] = $riga['prezzo_lordo_finale'];
+
+                // totale già pagato
+                $riga['totale_lordo_pagato'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT coalesce( sum( pagamenti.importo_lordo_totale ), 0 ) AS totale_lordo_pagato
+                        FROM documenti 
+                        INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento 
+                        INNER JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id 
+                        WHERE documenti_articoli.id_carrelli_articoli = ? 
+                        AND pagamenti.timestamp_pagamento IS NOT NULL',
+                    array( array( 's' => $dati['id_carrelli_articoli'] ) )
+                );
+
+                // importo del pagamento
+                $dati['importo_lordo_totale'] -= $riga['totale_lordo_pagato'];
+
                 // ID del pagamento
                 $dati['id'] = mysqlInsertRow(
                     $cf['mysql']['connection'],
@@ -65,13 +83,10 @@
                         'nome' => 'pagamento creato al volo per riga di carrelli articoli #' . $riga['id'],
                         'token_pagamento' => $dati['token_pagamento'],
                         'id_carrelli_articoli' => $riga['id'],
-                        'importo_lordo_totale' => $riga['prezzo_lordo_finale']
+                        'importo_lordo_totale' => $dati['importo_lordo_totale']
                     ),
                     'pagamenti'
                 );
-
-                // importo del pagamento
-                $dati['importo_lordo_totale'] = $riga['prezzo_lordo_finale'];
 
             }
 

@@ -92,20 +92,21 @@
             <fieldset>
                 <legend>generazione documenti</legend>
                 <div class="form-row">
-                    <div class="col-4 col-md-auto">
+                    <div class="col-4 col-md">
                         <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__pagamenti__[fatturazione_id_tipologia_documento]">
                             {% for tdoc in etc.id_tipologia_documenti %}
                             <option value="{{ tdoc.id }}" require="{{ tdoc.require }}" {% if tdoc.id == etc.default.fatturazione_id_tipologia_documento %}selected{% endif %}>{{ tdoc.__label__ }}</option>
                             {% endfor %}
                         </select>
                     </div>
-                    <div class="col-4 col-md-auto">
+                    <div class="col-4 col-md">
                         <select class="form-control form-control-sm hint-toggle" id="strategia-fatturazione" hint-toggle="strategia_fatturazione" name="__pagamenti__[fatturazione_strategia]">
                             {% for strf in etc.strategie_fatturazione %}
                             <option value="{{ strf.id }}" {% if strf.id == etc.default.fatturazione_strategia %}selected{% endif %}>{{ strf.__label__ }}</option>
                             {% endfor %}
                         </select>
                     </div>
+                    <!--
                     <div class="col-4 col-md-auto">
                         <select class="form-control form-control-sm hint-toggle" id="modalita-pagamento" hint-toggle="modalita_pagamento" name="__pagamenti__[fatturazione_id_modalita_pagamento]" required>
                             <option value=""></option>
@@ -114,9 +115,20 @@
                             {% endfor %}
                         </select>
                     </div>
+                    -->
+                </div>
+                <div class="form-row">
+                    <input type="hidden" id="pagamenti_fatturazione_id_modalita_pagamento" name="__pagamenti__[fatturazione_id_modalita_pagamento]" value="{{ request.__pagamenti__.fatturazione_id_modalita_pagamento }}">
+                    {% for mp in etc.id_modalita_pagamento %}
+                    <div class="col-4 col-md">
+                        <button onclick="$('#pagamenti_fatturazione_id_modalita_pagamento').val({{ mp.id }});$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">registra pagamento {{ mp.__label__ }}</button>
+                    </div>
+                    {% endfor %}
+                    <!--
                     <div class="col">
                         <button onclick="$('#pagamento').submit();" class="btn btn-secondary btn-sm btn-block">genera documenti</button>
                     </div>
+                    -->
                 </div>
             </fieldset>
         </form>

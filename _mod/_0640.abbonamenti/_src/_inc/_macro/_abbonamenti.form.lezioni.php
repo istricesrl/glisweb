@@ -25,7 +25,7 @@
     // ...
     $idIscritto = mysqlSelectValue(
         $cf['mysql']['connection'],
-        'SELECT id_anagrafica FROM contratti_anagrafica WHERE id_contratto = ? AND id_ruolo IN( 29, 32, 33, 34 )',
+        'SELECT id_anagrafica FROM contratti_anagrafica WHERE id_contratto = ? AND id_ruolo IN ( 29, 32, 33, 34 )',
         array(
             array( 's' => $_REQUEST['contratti']['id'] )
         )

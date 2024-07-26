@@ -61,6 +61,8 @@
     // campo per il preset di apertura
 	$ct['view']['open']['preset']['field'] = 'id_anagrafica';
 
+    $ct['view']['etc']['__force_backurl__'] = 1;
+
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
         
         // preset filtro custom progetti aperti

@@ -18,7 +18,7 @@
 	);
 
 	// pagina principale
-	$p['account'] = array(
+	$p['app.account'] = array(
 	    'sitemap'		=> false,
 	    'cacheable'		=> false,
 	    'title'		=> array( $l		=> 'account' ),

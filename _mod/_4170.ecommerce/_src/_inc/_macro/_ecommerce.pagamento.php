@@ -471,6 +471,9 @@
                 // debug
                 // die( print_r( $riga, true ) );
 
+                // totale pagato
+                $riga['totale_lordo_pagato'] = 0;
+
                 if( isset( $riga['id_pagamento'] ) ) {
 
                     // cerco righe di documenti che fanno riferimento a questa riga di carrello
@@ -483,6 +486,15 @@
                         'INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento '.
                         'INNER JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id '.
                         'WHERE pagamenti.id = ? AND pagamenti.id_carrelli_articoli IS NOT NULL',
+                        array( array( 's' => $riga['id_pagamento'] ) )
+                    );
+
+                    // totale già pagato
+                    $riga['totale_lordo_pagato'] = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT pagamenti.importo_lordo_totale
+                            FROM pagamenti 
+                            WHERE pagamenti.id = ? AND pagamenti.timestamp_pagamento IS NOT NULL',
                         array( array( 's' => $riga['id_pagamento'] ) )
                     );
 
@@ -518,18 +530,18 @@
                     // echo( $riga['id'] );
                     // die( print_r( $righe, true ) );
 
-                }
+                    // totale già pagato
+                    $riga['totale_lordo_pagato'] = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT sum( pagamenti.importo_lordo_totale ) '.
+                        'FROM documenti '.
+                        'INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento '.
+                        'INNER JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id '.
+                        'WHERE documenti_articoli.id_carrelli_articoli = ? AND pagamenti.timestamp_pagamento IS NOT NULL',
+                        array( array( 's' => $riga['id'] ) )
+                    );
 
-                // totale già pagato
-                $riga['totale_lordo_pagato'] = mysqlSelectValue(
-                    $cf['mysql']['connection'],
-                    'SELECT sum( pagamenti.importo_lordo_totale ) '.
-                    'FROM documenti '.
-                    'INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento '.
-                    'INNER JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id '.
-                    'WHERE documenti_articoli.id_carrelli_articoli = ? AND pagamenti.timestamp_pagamento IS NOT NULL',
-                    array( array( 's' => $riga['id'] ) )
-                );
+                }
 
                 // totale rateizzato
                 $riga['totale_lordo_rateizzato'] = 0;
@@ -538,6 +550,8 @@
                 $riga['documenti_da_stampare'] = array();
 
                 // debug
+                // echo 'riga ' . $riga['id'] . '/' . $riga['id_pagamento'] . ' - ' . $riga['totale_lordo_pagato'] . PHP_EOL;
+                // die( 'riga ' . $riga['id'] . ' - ' . $riga['totale_lordo_pagato'] );
                 // die( print_r( $righe, true ) );
 
                 // calcolo il totale già pagato
@@ -608,7 +622,7 @@
                 if( empty( $riga['id_pagamento'] ) ) {
                     $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
                 } else {
-                    $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'];
+                    $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'] - $riga['totale_lordo_pagato'];
                 }
 
                 // se la riga è pagata e non ha documenti da stampare, non la mostro
