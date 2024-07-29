@@ -273,7 +273,46 @@ try {
 			$destinatari_cc = $to_cc;
 			$destinatari_bcc = $to_bcc;
 
-		    // TODO anche i nomi degli allegati dovrebbero passare da Twig in modo da poter inserire dati
+		    // se è definito nel template imposto il destinatario
+			if( array_key_exists( 'to_cc', $t[ $l ] ) && is_array( $t[ $l ]['to_cc'] ) && ! empty( $t[ $l ]['to_cc'][ array_key_first( $t[ $l ]['to_cc'] ) ] ) ) {
+				#print_r( $t[$l] );
+								//$to = array_replace_recursive( $to, $t[ $l ]['to'] );
+				#print_r( $to );
+								$destinatari_cc[ array_key_first( $t[ $l ]['to_cc'] ) ] = $t[ $l ]['to_cc'][ array_key_first( $t[ $l ]['to_cc'] ) ];
+							}
+				
+				// die( print_r( $t, true ) );
+				
+							// elaboro i placeholder nei destinatari
+							if( isset( $to_cc ) ) {
+								foreach( $to_cc as $k => $v ) {
+									$tm = array( 'nome' => $k, 'mail' => $v );
+									$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ), array( 'cache' => false ) );
+									$destinatari_cc[ $tw->render( 'nome', $d ) ] = $tw->render( 'mail', $d );
+								}
+							}
+				
+
+		    // se è definito nel template imposto il destinatario
+			if( array_key_exists( 'to_bcc', $t[ $l ] ) && is_array( $t[ $l ]['to_bcc'] ) && ! empty( $t[ $l ]['to_bcc'][ array_key_first( $t[ $l ]['to_bcc'] ) ] ) ) {
+				#print_r( $t[$l] );
+								//$to = array_replace_recursive( $to, $t[ $l ]['to'] );
+				#print_r( $to );
+								$destinatari_bcc[ array_key_first( $t[ $l ]['to_bcc'] ) ] = $t[ $l ]['to_bcc'][ array_key_first( $t[ $l ]['to_bcc'] ) ];
+							}
+				
+				// die( print_r( $t, true ) );
+				
+							// elaboro i placeholder nei destinatari
+							if( isset( $to_bcc ) ) {
+								foreach( $to_bcc as $k => $v ) {
+									$tm = array( 'nome' => $k, 'mail' => $v );
+									$tw = new \Twig\Environment( new \Twig\Loader\ArrayLoader( $tm ), array( 'cache' => false ) );
+									$destinatari_bcc[ $tw->render( 'nome', $d ) ] = $tw->render( 'mail', $d );
+								}
+							}
+
+			// TODO anche i nomi degli allegati dovrebbero passare da Twig in modo da poter inserire dati
 		    // variabili (ad es. una ricevuta generata ad hoc che abbia l'ID della transazione nel nome)
 			// TODO
 

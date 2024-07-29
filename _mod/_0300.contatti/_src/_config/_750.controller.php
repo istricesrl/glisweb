@@ -227,6 +227,10 @@
                                     // altrimenti la queueMailFromTemplate() potrebbe comportarsi in modo erratico
                                     // nota questo controllo andrebbe comunque implementato anche nella queueMailFromTemplate()
 
+                                // defaults
+                                    $conf['destinatari_cc'] = ( ! empty( $conf['destinatari_cc'] ) ) ? $conf['destinatari_cc'] : array();
+                                    $conf['destinatari_bcc'] = ( ! empty( $conf['destinatari_bcc'] ) ) ? $conf['destinatari_bcc'] : array();
+
                                 // accodamento
                                     queueMailFromTemplate(
                                         $cf['mysql']['connection'],
@@ -234,7 +238,9 @@
                                         array( 'dt' => $dati, 'ct' => $ct ),
                                         strtotime( '+1 minutes' ),
                                         $conf['destinatari'],
-                                        $conf['language']
+                                        $conf['language'],
+                                        $conf['destinatari_cc'],
+                                        $conf['destinatari_bcc']
                                     );
 
                             }
