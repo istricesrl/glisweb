@@ -34,7 +34,7 @@
 	<form id="form-{{ table }}" class="form-main warning-if-changed d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
 
 	    {# CAMPI HIDDEN DI BASE #}
-	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <!-- <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}"> -->
 	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
 	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
 	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
@@ -47,6 +47,10 @@
             <legend>dati generali <small>{{ legend }}</small></legend>
 
             <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">codice</span>
+                    {{ frm.inputRequired( table, '', '', 'id', '', '', request ) }}
+                </div>
                 <div class="col-12 col-md">
                     <span class="label-top">nome</span>
                     {{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}

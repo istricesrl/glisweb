@@ -47,7 +47,7 @@
 
             <div class="form-group form-row">
                 <div class="col-12">
-                    {{ frm.selectAuto( '__view__', '', '', '__lang__', '', localization.languages, request, localization.language.id ) }}
+                    {{ frm.selectAuto( '__view__', '', '', '__lang__', '', tr.languages, request, localization.language.id ) }}
                 </div>
             </div>
 
@@ -58,7 +58,7 @@
 
         {# CICLO SULLE LINGUE #}
         {% set i = 0 %}
-        {% for l in localization.languages %}
+        {% for l in tr.languages %}
 
         {% set r = request[ table ][ subtable ][ i ] %}
 

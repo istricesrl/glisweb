@@ -34,25 +34,33 @@
     // se ho una connessione al database
     if( ! empty( $cf['mysql']['connection'] ) ) {
 
-        // ciclo sulle lingue
-        foreach( $cf['localization']['languages'] as $k => $v ) {
+        // ciclo sui siti
+        foreach( $cf['sites'] as $id => &$site ) {
 
-            // recupero i dettagli sulla lingua dal database
-            $c = mysqlSelectCachedRow(
-                $cf['memcache']['connection'],
-                $cf['mysql']['connection'],
-                'SELECT * FROM lingue_view WHERE ietf = ?',
-                array( array( 's' => $cf['localization']['languages'][ $k ]['ietf'] ) )
-            );
+            // ciclo sulle lingue
+            foreach( $site['localization']['languages'] as $k => $v ) {
 
-            // se ho trovato la lingua nel database
-            if( isset( $c['id'] ) ) {
+                // recupero i dettagli sulla lingua dal database
+                $c = mysqlSelectCachedRow(
+                    $cf['memcache']['connection'],
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM lingue_view WHERE ietf = ?',
+                    array( array( 's' => $site['localization']['languages'][ $k ]['ietf'] ) )
+                );
 
-                // aggiorno i dettagli della lingua all'array delle lingue
-                $cf['localization']['languages'][ $k ] = array_replace_recursive( $cf['localization']['languages'][ $k ], $c );
+                // se ho trovato la lingua nel database
+                if( isset( $c['id'] ) ) {
 
-                // aggiorno l'indice delle lingue
-                $cf['localization']['index'][ $c['id'] ] = $v['ietf'];
+                    // aggiorno i dettagli della lingua all'array delle lingue
+                    $site['localization']['languages'][ $k ] = array_replace_recursive( $site['localization']['languages'][ $k ], $c );
+
+                    // aggiorno l'indice delle lingue
+                    $cf['localization']['index'][ $c['id'] ] = $v['ietf'];
+
+                    // aggiorno l'array delle traduzioni
+                    $cf['tr']['languages'][ $k ] = $c;
+
+                }
 
             }
 
@@ -80,5 +88,6 @@
     // print_r( $cf['localization'] );
     // print_r( $cf['localization']['languages'] );
     // print_r( $cf['localization']['language'] );
+    // print_r( $cf['tr'] );
     // echo 'OUTPUT';
     // die();

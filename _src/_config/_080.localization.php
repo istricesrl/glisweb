@@ -89,11 +89,26 @@
     // moduli attivi
     define( 'LINGUE_ATTIVE'            , implode( ',', array_keys( $cf['site']['name'] ) ) );
 
+    // cerco di ricavare il sito corrente dal dominio
+    foreach( $cf['sites'] as $id => &$site ) {
+
+        // lingue attive per il sito
+        foreach( array_keys( $site['name'] ) as $l ) {
+            $site['localization']['languages'][ $l ]['id'] = NULL;
+            $site['localization']['languages'][ $l ]['ietf'] = $l;
+        }
+    
+    }
+
     // lingue attive in base ai titoli del sito nelle varie lingue
+    $cf['localization']['languages'] = &$cf['site']['localization']['languages'];
+
+    /*
     foreach( array_keys( $cf['site']['name'] ) as $l ) {
         $cf['localization']['languages'][ $l ]['id'] = NULL;
         $cf['localization']['languages'][ $l ]['ietf'] = $l;
     }
+    */
 
     // timezone di default
     $cf['localization']['timezone']['name']     = 'Europe/Rome';
@@ -106,3 +121,7 @@
 
     // debug
     // echo 'OUTPUT';
+    // die( print_r( $cf['sites'] ) );
+    // die( print_r( $cf['site'], true ) );
+    // die( print_r( $cf['site']['localization']['languages'], true ) );
+    // die( 'lingue attive: ' . print_r( $cf['localization']['languages'], true ) );
