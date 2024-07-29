@@ -301,7 +301,7 @@
 								'id_anagrafica_programmazione' => $row['promemoria_id_anagrafica_programmazione'],
 								'nome' => $row['promemoria_nome'],
 								'note_programmazione' => $row['promemoria_note_programmazione'],
-								'data_programmazione' => date( 'Y-m-d', strtotime( '+' . $row['promemoria_giorni_programmazione'] . ' days' ) )
+								'data_programmazione' => date( 'Y-m-d', strtotime( '+' . $row['promemoria_giorni_programmazione'] . ' days', $row['timestamp_invio'] ) )
 							),
 							'attivita'
 						);
