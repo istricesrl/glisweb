@@ -40,7 +40,7 @@
     ini_set( 'session.lazy_write', 0 );
 
     // policy di sicurezza
-    ini_set( 'session.cookie_samesite', 'strict' );
+    // ini_set( 'session.cookie_samesite', 'strict' );       // Commentato da Fabio e Silvia 26-07-2024 altrimenti, tornando al sito dopo essere stati reindirizzati a siti esterni, cambiava l'id della sessione
     ini_set( 'session.cookie_httponly', 1 );
     ini_set( 'session.cookie_secure', 1 );
 

@@ -1,11 +1,11 @@
-_*/
 .github/
+_*/
+etc/secret/
 etc/latest.conf
 etc/latest.release.conf
 etc/latest.version.conf
 tmp/
 var/
-var/sitemap/
 .htaccess
 composer.*
 robots.*

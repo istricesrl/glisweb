@@ -66,6 +66,11 @@
                 $ct['etc']['esito'] = 2;
             }
 
+            // TODO in produzione l'IPN listener di PayPal è lento, e a volte il cliente torna alla pagina
+            // di esito prima che il codice di pagamento e lo status di pagamento vengano scritti, quindi
+            // conviene qui verificare solo che esista il PayerID oppure la verifica farla con un piccolo
+            // delay oppure con una chiamata Ajax al back end
+
             // TODO implementare il caso in cui il pagamento fallisce
 
             // nome del file di ricevuta

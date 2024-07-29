@@ -9,6 +9,22 @@
     introduzione
     ============
 
+    procedura per la creazione dei test
+    ===================================
+    Per creare il test di una libreria è necessario seguire la seguente procedura:
+    
+    - crere il file in _usr/_test/_tests/acceptance/ con nome nomeLibreriaCest.php
+    - all'interno del file creare una classe con lo stesso nome del file
+    - creare vuoto il metodo _before() e il lmetodo _after()
+    
+    All'interno della classe vanno inseriti tanti metodi quanti sono i test che si vuole effetturare;
+    Per ogni funzione della libreria eseguire la seguente procedura inserendo i metodi tra i metodi _before() e _after():
 
+    - determinare il numero di test necessari
+    - per ogni test bisogna creare il file _usr/_examples/_lib/_nome.libreria/_nomeFunzione.numeroTest.php
+    - all'interno del file scrivere il codice dell'esempio in modo tale che dia un output controllato
+    - aggiungere il metodo nel file _usr/_test/_tests/acceptance/nomeLibreriaCest.php
+    - scrivere il codice del metodo in modo che verifichi l'output dell'esempio
+    - lanciare lo script dev/_src/_sh/_codeception.run.sh e verificare che tutti i test siano passati
 
 */

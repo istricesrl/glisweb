@@ -198,7 +198,11 @@
 
         // se non ho passato le intestazioni, le ricavo dalla prima riga
         if( empty( $h ) ) {
-            $h = csvRow2vector( array_shift( $a ), $s, $c, $e );
+            $j = array_shift( $a );
+            $h = csvRow2vector( $j, $s, $c, $e );
+            if( empty( $s ) ) {
+                $s = guessCsvSeparator( $j );
+            }
         }
 
         // log
@@ -244,7 +248,11 @@
 
         // se non ho passato le intestazioni, le ricavo dalla prima riga
         if( empty( $h ) ) {
-            $h = csvRow2vector( array_shift( $a ), $s, $c, $e );
+            $j = array_shift( $a );
+            $h = csvRow2vector( $j, $s, $c, $e );
+            if( empty( $s ) ) {
+                $s = guessCsvSeparator( $j );
+            }
         }
 
         // restituisco l'array di array associativi elaborato da csvArray2array()
@@ -277,7 +285,11 @@
 
         // se non ho passato le intestazioni, le ricavo dalla prima riga
         if( empty( $h ) ) {
-            $h = csvRow2vector( array_shift( $a ), $s, $c, $e );
+            $j = array_shift( $a );
+            $h = csvRow2vector( $j, $s, $c, $e );
+            if( empty( $s ) ) {
+                $s = guessCsvSeparator( $j );
+            }
         }
 
         // faccio il parsing di ogni riga

@@ -136,6 +136,8 @@
      * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
      * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
      * 
+     * 
+     * 
      */
 
     // definizione delle costanti della libreria
@@ -158,7 +160,7 @@
      * converte una stringa in un array
      * 
      * Questa funzione prende in input una stringa e la converte in array; se la stringa passata è vuota restituisce
-     * un array vuoto.
+     * un array vuoto. Se non viene passato un separatore specifico, viene utilizzato il separatore di default.
      * 
      * @param       string      $s      la stringa da convertire
      * @param       string      $c      il separatore da utilizzare per la conversione
@@ -171,6 +173,7 @@
             return array();
         } else {
             $s = explode( $c, $s );
+            return $s;
         }
     }
 
@@ -191,6 +194,7 @@
             return '';
         } else {
             $a = implode( $c, $a );
+            return $a;
         }
     }
 
@@ -212,6 +216,7 @@
         if( is_array( $array ) ) {
             ksort( $array );
             array_walk( $array, 'rksort' );
+            return $array;
         }
     }
 
