@@ -24,12 +24,20 @@
 
     // tendina  agente
     // TODO mettere le relazioni per le persone fisiche e i ruoli organizzazione per le persone giuridiche?
-	$ct['etc']['select']['ruoli'] = mysqlCachedIndexedQuery(
+	$ct['etc']['select']['ruoli_prodotti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM ruoli_prodotti_view'
     );
+
+	$ct['etc']['select']['ruoli_articoli'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM ruoli_articoli_view'
+    );
+
 /*
     // tendina  anagrafica
 	$ct['etc']['select']['anagrafica'] = mysqlCachedIndexedQuery(

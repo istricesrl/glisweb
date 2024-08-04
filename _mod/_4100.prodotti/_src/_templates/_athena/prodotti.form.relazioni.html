@@ -45,7 +45,10 @@
 	    {# MODULO PRINCIPALE #}
 
 		{# SUBFORM RELAZIONI #}
-		{{ sub.relazioni( table, 'relazioni_articoli', 'relazioni', site, page, pages, localization.language.ietf, etc, request, session ) }}
+		{{ sub.relazioni_prodotti( table, 'relazioni_prodotti', 'relazioni prodotti', site, page, pages, localization.language.ietf, etc, request, session ) }}
+
+		{# SUBFORM RELAZIONI #}
+		{{ sub.relazioni_articoli( table, 'relazioni_articoli', 'relazioni articoli', site, page, pages, localization.language.ietf, etc, request, session ) }}
 
 	    {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">

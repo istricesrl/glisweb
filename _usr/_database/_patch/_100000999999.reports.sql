@@ -108,16 +108,16 @@ tipologie_contratti.nome AS tipologia_contratto,
 carrelli_articoli.destinatario_id_anagrafica,
 concat_ws( ' ', a1.nome, a1.cognome ) AS anagrafica,
 carrelli_articoli.prezzo_lordo_finale,
-coalesce( sum( p1.importo_lordo_totale ), 0.0 ) AS pagato,
-coalesce( sum( p2.importo_lordo_totale ), 0.0 ) AS rateizzato,
-coalesce( sum( p3.importo_lordo_totale ), 0.0 ) AS scaduto,
+coalesce( sum( p1.importo_lordo_finale ), 0.0 ) AS pagato,
+coalesce( sum( p2.importo_lordo_finale ), 0.0 ) AS rateizzato,
+coalesce( sum( p3.importo_lordo_finale ), 0.0 ) AS scaduto,
 (
     carrelli_articoli.prezzo_lordo_finale
     -
     (
-        coalesce( sum( p1.importo_lordo_totale ), 0.0 )
+        coalesce( sum( p1.importo_lordo_finale ), 0.0 )
         +
-        coalesce( sum( p2.importo_lordo_totale ), 0.0 )
+        coalesce( sum( p2.importo_lordo_finale ), 0.0 )
     )
 ) AS sospeso,
 from_unixtime( carrelli.timestamp_checkout, "%Y-%m-%d" ) AS data_acquisto

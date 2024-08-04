@@ -17,14 +17,20 @@
 
                     <thead>
                         <tr>
-                            <th></th>
+                            <th>
+                                <div class="form-check p-0">
+                                    <input type="checkbox" class="" onclick="$('.form-check-input').trigger('click');$('.form-check-input').prop('checked', $(this).prop('checked'));">
+                                </div>
+                            </th>
                             <th>cliente</th>
                             <th>descrizione</th>
                             <th>quantità</th>
                             <th>importo</th>
                             <th>pagato</th>
                             <th>rateizzato</th>
-                            <th>da pagare</th>
+                            <th>coupon</th>
+                            <!-- <th>sc.</th> -->
+                            <th class="text-right">da pagare</th>
                             <th>documenti</th>
                         </tr>
                     </thead>
@@ -44,7 +50,7 @@
                         <tr>
                             <td>
                                 <div class="form-check">
-                                    <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][da_fare]" class="" value="">
+                                    <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][da_fare]" class="form-check-field" value="">
                                     <input type="checkbox" class="form-check-input">
                                 </div>
                             </td>
@@ -55,14 +61,25 @@
                             <td>{{ '%0.2f'|format( r.totale_lordo_pagato ) }}</td>
                             <td>{{ '%0.2f'|format( r.totale_lordo_rateizzato ) }}</td>
                             <td>
+                                <select class="form-control form-control-sm" id="" name="__pagamenti__[righe][{{ loop.index0 }}][id_coupon]">
+                                    <option></option>
+                                    {% for coupon in etc.coupon %}
+                                    {% if coupon.id_anagrafica == r.destinatario_id_anagrafica or coupon.id_anagrafica == '' %}
+                                    <option value="{{ coupon.id }}"{% if coupon.id == r.id_coupon %} selected{% endif %}>{{ coupon.id }} {{ '%0.2f'|format(coupon.sconto_fisso) }} €</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <!-- <td>{{ '%0.2f'|format( r.coupon_valore ) }}</td> -->
+                            <td>
                                 {% if not r.id_pagamento %}
-                                <input class="form-control form-control-sm" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
+                                <input class="form-control form-control-sm text-right" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
                                 {% else %}
                                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}">
                                 <p>{{ r.totale_lordo_da_pagare }} €</p>
                                 {% endif %}
                             </td>
-                            <td>
+                            <td class="no-wrap">
                                 {% for doc in r.documenti_da_stampare %}
                                 <button type="button" onclick="window.open('/print/0400.documenti/documento.pdf?__documento__={{ doc.id }}','_blank');" class="btn btn-secondary btn-sm no-wrap mx-1">{{ doc.documento }}</button>
                                 {% endfor %}

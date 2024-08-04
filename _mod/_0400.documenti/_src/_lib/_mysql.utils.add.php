@@ -331,7 +331,7 @@
             'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, modalita_pagamento.nome AS modalita ,'.
             'date_format( data_scadenza, "%d/%m/%Y" ) AS data_italiana, '.
             'date_format( data_scadenza, "%Y-%m-%d" ) AS data_standard, '.
-            'pagamenti.importo_lordo_totale, iban.iban AS iban  '.
+            'pagamenti.importo_lordo_finale, iban.iban AS iban  '.
             'FROM pagamenti '.
             'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
             'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
@@ -345,7 +345,7 @@
             array(
                 'codice_pagamento' => 'MP01',
                 'data_standard' => '2022-01-31',
-                'importo_lordo_totale' => '122.00'
+                'importo_lordo_finale' => '122.00'
             )
         );
         */

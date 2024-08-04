@@ -243,7 +243,7 @@
         );
 
         // recupero il totale già usato del coupon
-        $t = mysqlSelectValue(
+        $t1 = mysqlSelectValue(
             $c,
             'SELECT coalesce( sum( carrelli_articoli.coupon_valore ), 0 ) 
             FROM carrelli_articoli 
@@ -256,10 +256,25 @@
         );
 
         // se $t è vuoto
-        $t = ( empty( $t ) ) ? 0 : $t;
+        $t1 = ( empty( $t1 ) ) ? 0 : $t1;
+
+        // recupero il totale già usato del coupon
+        $t2 = mysqlSelectValue(
+            $c,
+            'SELECT coalesce( sum( pagamenti.coupon_valore ), 0 ) 
+            FROM pagamenti 
+            WHERE pagamenti.id_coupon = ?
+            GROUP BY pagamenti.id_coupon',
+            array(
+                array( 's' => $coupon )
+            )
+        );
+
+        // se $t è vuoto
+        $t2 = ( empty( $t2 ) ) ? 0 : $t2;
 
         // calcolo il valore residuo del coupon
-        $r = $r - $t;
+        $r = $r - ( $t1 + $t2 );
 
         // calcolo il valore del coupon
         $r = ( $r > $limit ) ? $limit : $r;
@@ -271,3 +286,68 @@
         return $r;
 
     }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
+    function calcolaValoreCouponPerPagamento( $c, $coupon, $id, $limit ) {
+
+        // recupero il valore del coupon
+        $r = mysqlSelectValue(
+            $c,
+            'SELECT coalesce( coupon.sconto_fisso, 0 ) 
+            FROM coupon 
+            WHERE coupon.id = ? 
+            LIMIT 1',
+            array(
+                array( 's' => $coupon )
+            )
+        );
+
+        // recupero il totale già usato del coupon
+        $t1 = mysqlSelectValue(
+            $c,
+            'SELECT coalesce( sum( carrelli_articoli.coupon_valore ), 0 ) 
+            FROM carrelli_articoli 
+            WHERE carrelli_articoli.id_coupon = ?
+            GROUP BY carrelli_articoli.id_coupon',
+            array(
+                array( 's' => $coupon )
+            )
+        );
+
+        // se $t è vuoto
+        $t1 = ( empty( $t1 ) ) ? 0 : $t1;
+
+        // recupero il totale già usato del coupon
+        $t2 = mysqlSelectValue(
+            $c,
+            'SELECT coalesce( sum( pagamenti.coupon_valore ), 0 ) 
+            FROM pagamenti 
+            WHERE pagamenti.id_coupon = ? AND pagamenti.id != ?
+            GROUP BY pagamenti.id_coupon',
+            array(
+                array( 's' => $coupon ),
+                array( 's' => $id )
+            )
+        );
+
+        // se $t è vuoto
+        $t2 = ( empty( $t2 ) ) ? 0 : $t2;
+
+        // calcolo il valore residuo del coupon
+        $r = $r - ( $t1 + $t2 );
+
+        // calcolo il valore del coupon
+        $r = ( $r > $limit ) ? $limit : $r;
+
+        // debug
+        // echo 'coupon: ' . $coupon . ' valore: ' . $r . ' totale: ' . $t . ' limite: ' . $limit . ' riga: ' . $id . '<br />';
+
+        // restituisco il risultato
+        return $r;
+
+    }
+

@@ -209,7 +209,7 @@
                                     'nome' => 'pagamento inserito automaticamente per il carrello #' . $carrello['id'],
                                     'id_documento' => $idDocumento,
                                     'id_mastro_destinazione' => $cf['ecommerce']['profile']['fatturazione']['cassa'],
-                                    'importo_lordo_totale' => $carrello['prezzo_lordo_finale'],
+                                    'importo_lordo_finale' => $carrello['prezzo_lordo_finale'],
                                     'id_listino' => $carrello['id_listino'],
                                     'data_scadenza' => date( 'Y-m-d', time() ),
                                     'timestamp_pagamento' => $carrello['timestamp_pagamento']

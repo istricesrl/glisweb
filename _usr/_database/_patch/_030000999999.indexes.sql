@@ -1547,6 +1547,7 @@ ALTER TABLE `documenti_articoli`
 	ADD KEY `costo_netto_totale` (`costo_netto_totale`),
 	ADD KEY `importo_netto_totale` (`importo_netto_totale`),
 	ADD KEY `importo_lordo_totale` (`importo_lordo_totale`),
+	ADD KEY `importo_lordo_finale` (`importo_lordo_finale`),
 	ADD KEY `indice` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_todo`,`id_attivita`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`),
 	ADD KEY `indice_progetto_quantita` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_udm`,`quantita`),
 	ADD KEY `indice_progetto_valore` (`id`,`id_genitore`,`id_tipologia`,`ordine`,`id_documento`,`data`,`id_emittente`,`id_destinatario`,`id_reparto`,`id_progetto`,`id_articolo`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`importo_netto_totale`,`id_matricola`),
@@ -2674,9 +2675,10 @@ ALTER TABLE `pagamenti`
 	ADD KEY `timestamp_pagamento` (`timestamp_pagamento`), 
 	ADD KEY `data_scadenza` (`data_scadenza`), 
 	ADD KEY `importo_lordo_totale` (`importo_lordo_totale`), 
+	ADD KEY `importo_lordo_finale` (`importo_lordo_finale`), 
 	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`), 
-	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_documento`,`timestamp_pagamento`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`id_iban`,`importo_lordo_totale`);
+	ADD KEY `indice` (`id`,`id_tipologia`,`ordine`,`id_documento`,`timestamp_pagamento`,`id_mastro_provenienza`,`id_mastro_destinazione`,`id_listino`,`id_iban`,`importo_lordo_finale`);
 
 -- | 030000023101
 

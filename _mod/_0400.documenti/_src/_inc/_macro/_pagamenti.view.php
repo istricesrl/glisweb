@@ -37,7 +37,7 @@
 #		'mastro_provenienza' => 'scarico',
 #		'mastro_destinazione' => 'carico',
 		'id_tipologia_documento' => 'id_tipologia_documento',
-        'importo_lordo_totale' => 'importo',
+        'importo_lordo_finale' => 'importo',
         'data_ora_pagamento' => 'pagato'
 	);
 
@@ -54,7 +54,7 @@
         'emittente' => 'text-left',
         'destinatario' => 'text-left',
         'tipologia' => 'text-left',
-        'importo_lordo_totale' => 'text-right' 
+        'importo_lordo_finale' => 'text-right' 
     );
 
 	// RELAZIONI CON IL MODULO MASTRI

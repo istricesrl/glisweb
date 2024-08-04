@@ -353,7 +353,7 @@
             foreach( $rows as $row ) {
 
                 $twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $row ) );
-                $importo_lordo_totale = $twig->render( 'model_importo_lordo_totale', $d );
+                $importo_lordo_finale = $twig->render( 'model_importo_lordo_finale', $d );
                 $nome = $twig->render( 'model_nome', $d );
                 $scadenza = $data;
 
@@ -377,7 +377,7 @@
                         'id_documento'                  => $object,
                         'nome'                          => $nome,
                         'id_modalita_pagamento'         => $row['model_id_modalita_pagamento'],
-                        'importo_lordo_totale'          => $importo_lordo_totale,
+                        'importo_lordo_finale'          => $importo_lordo_finale,
                         'id_iban'                       => $row['model_id_iban'],
                         'id_listino'                    => $row['model_id_listino'],
                         'data_scadenza'                 => date( 'Y-m-d', $scadenza ),
@@ -387,7 +387,7 @@
                 );
 
                 // status
-                $status['dettagli'][ $data ][] = 'importo pagamento #'.$detail.': ' . $importo_lordo_totale;
+                $status['dettagli'][ $data ][] = 'importo pagamento #'.$detail.': ' . $importo_lordo_finale;
 
             }
 
@@ -404,7 +404,7 @@
         }
 
         // log
-        appendToFile( print_r( $status, true ), DIR_VAR_LOG_PIANIFICAZIONI . $current['id'] . '.log' );
+        logger( print_r( $status, true ), DIR_VAR_LOG . 'details/pianificazioni/' . $current['id'] . '.log' );
 
         // rilascio il token
         mysqlQuery(

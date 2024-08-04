@@ -1,4 +1,5 @@
 {% import '_bin/_default.html' as cms %}
+{% import '_bin/_form.html' as frm %}
 
 {% extends 'ext/main.html' %}
 
@@ -14,6 +15,10 @@
                 <legend>dati carrello <small>#{{ session.carrello.id }}</small></legend>
                 {# DATI DI INTESTAZIONE DEL CARRELLO #}
                 <div class="form-row">
+                    <div class="col">
+                        <label class="label-top">cliente</label>
+						{{ frm.selectBox( '__carrello__', '', '', 'intestazione_id_anagrafica', '', '', '', session.carrello.intestazione_id_anagrafica, '', 1, '', '', '', '', 'anagrafica', 'intestazione_id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
+                    </div>
                     <div class="col">
                         <label class="label-top">zona</label>
                         <select class="form-control form-control-sm" id="id_zona" name="__carrello__[id_zona]" required>
@@ -155,6 +160,8 @@
 
 
             </fieldset>
+
+            {% if not session.carrello.intestazione_id_anagrafica %}
             <fieldset>
                 <legend>dati cliente</legend>
                 {# DATI DELL'INTESTATARIO E DEL DESTINATARIO #}
@@ -235,6 +242,8 @@
                     </div>
                 </div>
             </fieldset>
+            {% endif %}
+
             <fieldset class="mt-auto">
                 <legend>azioni</legend>
                 {# TODO QUI METTERE I TASTI RICALCOLA E PAGA #}

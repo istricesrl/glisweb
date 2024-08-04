@@ -1,4 +1,53 @@
-{% macro relazioni( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% macro relazioni_prodotti( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
+{% import '_bin/_form.html' as frm %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
+	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {{ frm.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
+    {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = require %}{% endif %}
+	{% for i in -1..t %}
+	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
+	<div class="form-group form-row">
+	    <div class="col-12 col-md">
+		<span class="label-top">prodotto principale</span>
+		{{ frm.selectBox( table, subtable, i, 'id_prodotto', '', '', request, request[ table ].id, '', '', '', 'font-awesome', '', '', 'prodotti', 'id_prodotto', page, pages, lang, 'prodotti', disabled ) }}
+		</div>
+	    <div class="col-auto">
+		<span class="label-top">relazione</span>
+		{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_prodotti, request, '', '', '', 1, '', disabled ) }}
+		</div>
+		<div class="col-12 col-md">
+		<span class="label-top">prodotto collegato</span>
+		{{ frm.selectBox( table, subtable, i, 'id_prodotto_collegato', '', '', request, '', '', '', '', 'font-awesome', '', '', 'prodotti', 'id_prodotto_collegato', page, pages, lang, 'prodotti', disabled ) }}
+		</div>
+		<div class="col-12 col-md">
+		<span class="label-top">articolo collegato</span>
+		{{ frm.selectBox( table, subtable, i, 'id_articolo_collegato', '', '', request, '', '', '', '', 'font-awesome', '', '', 'articoli', 'id_articolo_collegato', page, pages, lang, 'articoli', disabled ) }}
+		</div>
+		{% if r.id %}
+	    <div class="col-auto text-right remove-on-duplicate d-print-none">
+		{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}
+	    </div>
+	    <div class="col-auto text-right show-on-duplicate d-print-none hidden">
+		{{ frm.button( '<i class="fa fa-trash"></i>', 'button', 'btn-secondary btn-sqr show-on-duplicate hidden', '$( this ).closest( ".form-sub" ).remove();' ) }}
+		</div>
+		{% else %}
+	    <div class="col-auto text-right d-print-none">
+		{{ frm.button( '<i class="fa fa-minus"></i>', 'button', 'btn-secondary btn-sqr', '$( this ).closest( ".form-sub" ).remove();' ) }}
+		</div>
+		{% endif %}
+	</div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}
+
+{% macro relazioni_articoli( table, subtable, legend, site, page, pages, lang, etc, request, session ) %}
 {% import '_bin/_form.html' as frm %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
@@ -16,19 +65,19 @@
 	<div class="form-group form-row">
 	    <div class="col-12 col-md">
 		<span class="label-top">articolo principale</span>
-		{{ frm.selectBox( table, subtable, i, 'id_articolo', '', '', request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, lang, 'articoli', disabled ) }}
+		{{ frm.selectBox( table, subtable, i, 'id_articolo', '', '', request, '', '', '', '', 'font-awesome', '', '', 'articoli', 'id_articolo', page, pages, lang, 'articoli', disabled ) }}
 		</div>
 	    <div class="col-auto">
 		<span class="label-top">relazione</span>
-		{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli, request, '', '', '', 1, '', disabled ) }}
+		{{ frm.select( table, subtable, i, 'id_ruolo', '', etc.select.ruoli_articoli, request, '', '', '', 1, '', disabled ) }}
 		</div>
 		<div class="col-12 col-md">
 		<span class="label-top">prodotto collegato</span>
-		{{ frm.selectBox( table, subtable, i, 'id_prodotto_collegato', '', '', request, request[ table ].id, '', '', '', 'font-awesome', 'prodotti.form', 'prodotti.form', 'prodotti', 'id_prodotto_collegato', page, pages, lang, 'prodotti', disabled ) }}
+		{{ frm.selectBox( table, subtable, i, 'id_prodotto_collegato', '', '', request, request[ table ].id, '', '', '', 'font-awesome', '', '', 'prodotti', 'id_prodotto_collegato', page, pages, lang, 'prodotti', disabled ) }}
 		</div>
 		<div class="col-12 col-md">
 		<span class="label-top">articolo collegato</span>
-		{{ frm.selectBox( table, subtable, i, 'id_articolo_collegato', '', '', request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo_collegato', page, pages, lang, 'articoli', disabled ) }}
+		{{ frm.selectBox( table, subtable, i, 'id_articolo_collegato', '', '', request, '', '', '', '', 'font-awesome', '', '', 'articoli', 'id_articolo_collegato', page, pages, lang, 'articoli', disabled ) }}
 		</div>
 		{% if r.id %}
 	    <div class="col-auto text-right remove-on-duplicate d-print-none">

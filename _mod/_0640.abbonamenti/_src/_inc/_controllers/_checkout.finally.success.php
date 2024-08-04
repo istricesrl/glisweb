@@ -198,7 +198,7 @@
                                 'id_documento' => $idDocumento,
                                 'id_tipologia' => NULL,
                                 'id_modalita_pagamento' => 24,  // TODO così è fisso a PayPal, rendere dinamico da carrello
-                                'importo_lordo_totale' => $articolo['prezzo_lordo_finale'],
+                                'importo_lordo_finale' => $articolo['prezzo_lordo_finale'],
                                 'timestamp_pagamento' => time(),
                                 'provider_pagamento' => $carrello['provider_pagamento'],
                                 'ordine_pagamento' => $carrello['ordine_pagamento'],

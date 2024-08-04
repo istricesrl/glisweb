@@ -64,11 +64,14 @@
                                         'id_debitore' => $pagamento['destinatario_id_anagrafica'],
                                         'id_carrelli_articoli' => $pagamento['id'],
                                         'id_rinnovo' => ( ( isset( $pagamento['id_rinnovo'] ) ) ? $pagamento['id_rinnovo'] : NULL ),
-                                        'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
+                                        'importo_lordo_finale' => $pagamento['importo_lordo_finale'],
                                         'data_scadenza' => $_REQUEST['__pagamenti__']['data_rate'],
                                         'nome' => 'rata da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
                                         'timestamp_inserimento' => time(),
-                                        'id_account_inserimento' => $_SESSION['account']['id']
+                                        'id_account_inserimento' => $_SESSION['account']['id'],
+                                        // TODO manca l'id listino
+                                        // TODO manca coupon valore
+                                        // TODO manca la modalità di pagamento
                                     ),
                                     'pagamenti'
                                 );
@@ -84,6 +87,15 @@
                                 // debug
                                 // die( print_r( $pagamento, true ) );
             
+                                // TODO se non è settato il destinatario per riga, recuperare quello del carrello
+                                if( empty( $pagamento['destinatario_id_anagrafica'] ) ) {
+                                    $pagamento['destinatario_id_anagrafica'] = mysqlSelectValue(
+                                        $cf['mysql']['connection'],
+                                        'SELECT intestazione_id_anagrafica FROM carrelli WHERE id = ?',
+                                        array( array( 's' => $pagamento['id_carrello'] ) )
+                                    );
+                                }
+
                                 // imposto il documento
                                 $nome = 'documento creato automaticamente per il ' . 
                                     ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'pagamento #' . $pagamento['id_pagamento'] . ' ' : NULL ) . 
@@ -127,10 +139,16 @@
                                 // trovo il reparto
                                 $reparto = mysqlSelectRow(
                                     $cf['mysql']['connection'],
-                                    'SELECT reparti.id, iva.aliquota FROM articoli INNER JOIN reparti ON reparti.id = articoli.id_reparto 
-                                        INNER JOIN iva ON iva.id = reparti.id_iva WHERE articoli.id = ?',
+                                    'SELECT reparti.id, iva.aliquota FROM articoli
+                                        INNER JOIN reparti ON reparti.id = articoli.id_reparto 
+                                        INNER JOIN iva ON iva.id = reparti.id_iva 
+                                        WHERE articoli.id = ?',
                                         array( array( 's' => $pagamento['id_articolo'] ) )
                                 );
+
+                                // debug
+                                // print_r( $pagamento );
+                                // die( print_r( $reparto, true ) );
 
                                 // calcolo il netto
                                 $pagamento['importo_netto_totale'] = $pagamento['importo_lordo_totale'] / ( 100 + $reparto['aliquota'] ) * 100;
@@ -154,6 +172,17 @@
                                     'documenti_articoli'
                                 );
 
+                                // calcolo il valore del coupon
+                                $pagamento['coupon_valore'] = ( ! empty( $pagamento['id_coupon'] ) ) ? calcolaValoreCouponPerPagamento(
+                                    $cf['mysql']['connection'],
+                                    $pagamento['id_coupon'],
+                                    $pagamento['id'],
+                                    $pagamento['importo_lordo_totale']
+                                ) : 0.0;
+
+                                // calcolo il netto
+                                $pagamento['importo_lordo_finale'] = $pagamento['importo_lordo_totale'] - $pagamento['coupon_valore'];
+
                                 // associo il pagamento
                                 $idPagamento = mysqlInsertRow(
                                     $cf['mysql']['connection'],
@@ -163,12 +192,18 @@
                                         'id_carrelli_articoli' => $pagamento['id'],
                                         'id_rinnovo' => ( ( isset( $pagamento['id_rinnovo'] ) ) ? $pagamento['id_rinnovo'] : NULL ),
                                         'timestamp_pagamento' => time(),
+                                        // 'importo_netto_totale' => $pagamento['importo_netto_totale'],
                                         'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
+                                        'id_coupon' => ( ( isset( $pagamento['id_coupon'] ) ) ? $pagamento['id_coupon'] : NULL ),
+                                        'coupon_valore' => $pagamento['coupon_valore'],
+                                        'importo_lordo_finale' => $pagamento['importo_lordo_finale'],
                                         'nome' => ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'rata pagata' : 'pagamento diretto' ) . 
                                             ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
                                         'timestamp_inserimento' => time(),
-                                        'id_account_inserimento' => $_SESSION['account']['id']
-                                        ),
+                                        'id_account_inserimento' => $_SESSION['account']['id'],
+                                        // TODO manca l'id listino
+                                        // TODO manca la modalità di pagamento
+                                    ),
                                     'pagamenti'
                                 );
 
@@ -277,8 +312,11 @@
                                 array( array( 's' => $pagamento['id_articolo'] ) )
                         );
 
+                        // debug
+                        // die( print_r( $reparto, true ) );
+
                         // calcolo il netto
-                        $pagamento['importo_netto_totale'] = $pagamento['importo_lordo_totale'] / ( 100 + $reparto['aliquota'] ) * 100;
+                        $pagamento['importo_netto_totale'] = $pagamento['importo_lordo_finale'] / ( 100 + $reparto['aliquota'] ) * 100;
 
                         // aggiungo la riga
                         $idRiga = mysqlInsertRow(
@@ -289,7 +327,7 @@
                                 'id_rinnovo' => ( ( isset( $pagamento['id_rinnovo'] ) ) ? $pagamento['id_rinnovo'] : NULL ),
                                 'id_carrelli_articoli' => $pagamento['id'],
                                 'importo_netto_totale' => $pagamento['importo_netto_totale'],
-                                'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
+                                'importo_lordo_totale' => $pagamento['importo_lordo_finale'],
                                 'id_mastro_provenienza' => $pagamento['id_mastro_provenienza'],
                                 'quantita' => $pagamento['quantita'],
                                 'id_udm' => 1,
@@ -430,7 +468,7 @@
                 $ct['etc']['righe'],
                 mysqlQuery(
                     $cf['mysql']['connection'],
-                    'SELECT pagamenti.id AS id_pagamento, pagamenti.importo_lordo_totale, pagamenti.timestamp_pagamento, pagamenti.id_rinnovo, 
+                    'SELECT pagamenti.id AS id_pagamento, pagamenti.importo_lordo_finale, pagamenti.timestamp_pagamento, pagamenti.id_rinnovo, pagamenti.coupon_valore,
                         concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, 
                         concat_ws( " ", prodotti.nome, articoli.nome, " rata del ", pagamenti.data_scadenza ) AS descrizione, 
                         carrelli.id AS id_carrello, carrelli.fatturazione_id_tipologia_documento, 
@@ -480,7 +518,7 @@
                     // TODO in teoria bisognerebbe poi controllare che il documento abbia pagamenti pagati ecc.
                     $righe = mysqlQuery(
                         $cf['mysql']['connection'],
-                        'SELECT documenti_articoli.*, pagamenti.timestamp_pagamento, '.
+                        'SELECT documenti_articoli.*, pagamenti.timestamp_pagamento, pagamenti.coupon_valore, '.
                         'concat( documenti.numero, "/", date_format( documenti.data, "%y" ) ) AS documento '.
                         'FROM documenti '.
                         'INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento '.
@@ -541,6 +579,17 @@
                         array( array( 's' => $riga['id'] ) )
                     );
 
+                    // totale già pagato
+                    $riga['coupon_valore'] = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT sum( pagamenti.coupon_valore ) '.
+                        'FROM documenti '.
+                        'INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento '.
+                        'INNER JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id '.
+                        'WHERE documenti_articoli.id_carrelli_articoli = ? AND pagamenti.timestamp_pagamento IS NOT NULL',
+                        array( array( 's' => $riga['id'] ) )
+                    );
+
                 }
 
                 // totale rateizzato
@@ -559,7 +608,7 @@
                 foreach( $righe as $rdoc ) {
 
                     // aggiungo il totale della riga
-                    // $riga['totale_lordo_pagato'] += $rdoc['importo_lordo_totale'];
+                    // $riga['totale_lordo_pagato'] += $rdoc['importo_lordo_finale'];
 
                     // ...
                     if( isset( $rdoc['id_documento'] ) && ! empty( $rdoc['id_documento'] ) ) {
@@ -622,7 +671,7 @@
                     foreach( $rate as $rata ) {
 
                         // aggiungo il totale della riga
-                        $riga['totale_lordo_rateizzato'] += $rata['importo_lordo_totale'];
+                        $riga['totale_lordo_rateizzato'] += $rata['importo_lordo_finale'];
     
                     }
                 }
@@ -724,6 +773,15 @@
         )
     );
 */
+
+    $ct['etc']['coupon'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, coupon.id 
+        FROM coupon 
+        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+        ORDER BY coupon.id '
+    );
+
     // debug
     // print_r($ct['etc']['righe']);
     // die();

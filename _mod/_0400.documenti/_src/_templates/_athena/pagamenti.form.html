@@ -70,8 +70,16 @@
 					{{ frm.select( table, '', '', 'id_iban', '', etc.select.iban, request ) }}
 				</div>
 				<div class="col-4 col-md-2">
-					<span class="label-top">importo</span>
+					<span class="label-top">totale</span>
 					{{ frm.inputRequired( table, '', '', 'importo_lordo_totale', '', '', request ) }}
+				</div>
+				<div class="col-4 col-md-2">
+					<span class="label-top">sconto coupon</span>
+					{{ frm.inputRequired( table, '', '', 'coupon_valore', '', '', request ) }}
+				</div>
+				<div class="col-4 col-md-2">
+					<span class="label-top">importo</span>
+					{{ frm.inputRequired( table, '', '', 'importo_lordo_finale', '', '', request ) }}
 				</div>
 				<div class="col-auto">
 					<span class="label-top remove-after-duplicate">listino</span>

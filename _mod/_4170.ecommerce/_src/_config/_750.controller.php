@@ -115,9 +115,18 @@
             }
 
             // STEP 1.1 - pre settaggi che impattano sul calcolo dei prezzi e dei costi (zona, listino)
+            // TODO alcune di queste modifiche dovrebbero essere limitate se l'utente non è root o se non ha i diritti di modifica sulla tabella carrelli
 
             // controlli da fare
             $controlloListino = false;
+
+            // intestazione del carrello
+            if( isset( $_REQUEST['__carrello__']['intestazione_id_anagrafica'] ) ) {
+
+                // cambio zona
+                $_SESSION['carrello']['intestazione_id_anagrafica'] = $_REQUEST['__carrello__']['intestazione_id_anagrafica'];
+
+            }
 
             // zona del carrello
             // TODO fare meglio, considerare le altre cose che determinano la zona e il set spedizione_*

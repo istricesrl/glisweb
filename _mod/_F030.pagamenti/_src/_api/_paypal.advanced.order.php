@@ -57,12 +57,12 @@
             if( isset( $riga['id'] ) ) {
 
                 // importo del pagamento
-                $dati['importo_lordo_totale'] = $riga['prezzo_lordo_finale'];
+                $dati['importo_lordo_finale'] = $riga['prezzo_lordo_finale'];
 
                 // totale già pagato
                 $riga['totale_lordo_pagato'] = mysqlSelectValue(
                     $cf['mysql']['connection'],
-                    'SELECT coalesce( sum( pagamenti.importo_lordo_totale ), 0 ) AS totale_lordo_pagato
+                    'SELECT coalesce( sum( pagamenti.importo_lordo_finale ), 0 ) AS totale_lordo_pagato
                         FROM documenti 
                         INNER JOIN pagamenti ON documenti.id = pagamenti.id_documento 
                         INNER JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id 
@@ -72,7 +72,7 @@
                 );
 
                 // importo del pagamento
-                $dati['importo_lordo_totale'] -= $riga['totale_lordo_pagato'];
+                $dati['importo_lordo_finale'] -= $riga['totale_lordo_pagato'];
 
                 // ID del pagamento
                 $dati['id'] = mysqlInsertRow(
@@ -83,7 +83,7 @@
                         'nome' => 'pagamento creato al volo per riga di carrelli articoli #' . $riga['id'],
                         'token_pagamento' => $dati['token_pagamento'],
                         'id_carrelli_articoli' => $riga['id'],
-                        'importo_lordo_totale' => $dati['importo_lordo_totale']
+                        'importo_lordo_finale' => $dati['importo_lordo_finale']
                     ),
                     'pagamenti'
                 );
@@ -129,7 +129,7 @@
                 array(
                     'amount' => array(
                         'currency_code' => 'EUR',
-                        'value' => number_format( ( float ) $dati['importo_lordo_totale'], 2, '.', '' )
+                        'value' => number_format( ( float ) $dati['importo_lordo_finale'], 2, '.', '' )
                     )
                 )
             )
