@@ -248,6 +248,10 @@ try {
 			$allegati	= ( ( isset( $t[ $l ]['attach'] ) ) ? $t[ $l ]['attach'] : array() );
 			$allegati	= array_merge( $allegati, ( ( isset( $attach[ $l ] ) ) ? $attach[ $l ] : array() ) );
 
+		    // TODO implementare la stessa cosa per i destinatari CC e BCC
+            $destinatari = $to;
+			$destinatari_cc = $to_cc;
+			$destinatari_bcc = $to_bcc;
 
 #print_r($corpo );
 		    // se è definito nel template imposto il destinatario
@@ -255,7 +259,9 @@ try {
 #print_r( $t[$l] );
 			    //$to = array_replace_recursive( $to, $t[ $l ]['to'] );
 #print_r( $to );
-			    $destinatari[ array_key_first( $t[ $l ]['to'] ) ] = $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ];
+			    // QUESTA ANDAVA ma non inviava a più destinatari
+                // $destinatari[ array_key_first( $t[ $l ]['to'] ) ] = $t[ $l ]['to'][ array_key_first( $t[ $l ]['to'] ) ];
+                $to = array_replace_recursive( $to, $t[ $l ]['to'] );
 			}
 
 // die( print_r( $t, true ) );
@@ -269,16 +275,15 @@ try {
 			    }
 			}
 
-		    // TODO implementare la stessa cosa per i destinatari CC e BCC
-			$destinatari_cc = $to_cc;
-			$destinatari_bcc = $to_bcc;
-
 		    // se è definito nel template imposto il destinatario
 			if( array_key_exists( 'to_cc', $t[ $l ] ) && is_array( $t[ $l ]['to_cc'] ) && ! empty( $t[ $l ]['to_cc'][ array_key_first( $t[ $l ]['to_cc'] ) ] ) ) {
 				#print_r( $t[$l] );
 								//$to = array_replace_recursive( $to, $t[ $l ]['to'] );
 				#print_r( $to );
-								$destinatari_cc[ array_key_first( $t[ $l ]['to_cc'] ) ] = $t[ $l ]['to_cc'][ array_key_first( $t[ $l ]['to_cc'] ) ];
+			    // QUESTA ANDAVA ma non inviava a più destinatari
+                // $destinatari_cc[ array_key_first( $t[ $l ]['to_cc'] ) ] = $t[ $l ]['to_cc'][ array_key_first( $t[ $l ]['to_cc'] ) ];
+                $to_cc = array_replace_recursive( $to_cc, $t[ $l ]['to_cc'] );
+
 							}
 				
 				// die( print_r( $t, true ) );
@@ -298,8 +303,11 @@ try {
 				#print_r( $t[$l] );
 								//$to = array_replace_recursive( $to, $t[ $l ]['to'] );
 				#print_r( $to );
-								$destinatari_bcc[ array_key_first( $t[ $l ]['to_bcc'] ) ] = $t[ $l ]['to_bcc'][ array_key_first( $t[ $l ]['to_bcc'] ) ];
-							}
+			    // QUESTA ANDAVA ma non inviava a più destinatari
+                // $destinatari_bcc[ array_key_first( $t[ $l ]['to_bcc'] ) ] = $t[ $l ]['to_bcc'][ array_key_first( $t[ $l ]['to_bcc'] ) ];
+                $to_bcc = array_replace_recursive( $to_bcc, $t[ $l ]['to_bcc'] );
+
+            }
 				
 				// die( print_r( $t, true ) );
 				
