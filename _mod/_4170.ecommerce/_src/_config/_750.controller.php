@@ -70,7 +70,6 @@
         if( $spamCheck === true ) {
 
             // registro i consensi
-            // TODO spostare questa cosa alla fine o comunque fuori dalle palle
             if( isset( $_REQUEST['__consensi__']['__carrello__'] ) ) {
 
                 // per ogni consenso...
@@ -584,6 +583,7 @@
                             array(
                                 'id_carrello'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'],
                                 'id_articolo'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'],
+                                'descrizione'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'],
                                 'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica'],
                                 'id_mastro_provenienza'         => $_SESSION['carrello']['articoli'][ $rowKey ]['id_mastro_provenienza'],
                                 'id_rinnovo'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'],
