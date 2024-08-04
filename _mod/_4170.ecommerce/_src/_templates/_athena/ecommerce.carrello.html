@@ -4,7 +4,7 @@
 
 {% block main %}
 <section class="row flex-fill">
-    <div class="col-md-8 d-flex flex-column">
+    <div class="col-md-9 d-flex flex-column">
         {% if session.carrello.id %}
         <form id="carrello" class="carrello d-flex flex-column flex-fill" action="" method="post">
             <input type="hidden" id="ts_checkout" name="__carrello__[timestamp_checkout]" value="">
@@ -44,10 +44,12 @@
                         <tr>
                             <th>codice</th>
                             <th>descrizione</th>
-                            <th class="text-right">sc. %</th>
-                            <th class="text-right">sc. €</th>
-                            <th class="text-right">q.tà</th>
-                            <th class="text-right">listino</th>
+                            <th class="text-center">sc.&nbsp;%</th>
+                            <th class="text-center">sc.&nbsp;€</th>
+                            <th class="text-center">coupon</th>
+                            <th class="text-center">sc.&nbsp;€</th>
+                            <th class="text-center">q.tà</th>
+                            <th class="text-center">listino</th>
                             <th class="text-right">prezzo</th>
                             <th></th>
                         </tr>
@@ -62,6 +64,17 @@
                             <td><span class="descrizione nowrap">{{ dati.descrizione }}</span><span class="dettagli">{{ dati.dettagli }}</span></td>
                             <td><input class="form-control form-control-sm text-right" type="text" id="scperc{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_percentuale]" value="{{ '%0.2f'|format(dati.sconto_percentuale) }}"></td>
                             <td><input class="form-control form-control-sm text-right" type="text" id="scval{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][sconto_valore]" value="{{ '%0.2f'|format(dati.sconto_valore) }}"></td>
+                            <td>
+                                <select class="form-control form-control-sm" id="" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_coupon]">
+                                    <option></option>
+                                    {% for coupon in etc.coupon %}
+                                    {% if coupon.id_anagrafica == dati.destinatario_id_anagrafica or coupon.id_anagrafica == '' %}
+                                    <option value="{{ coupon.id }}"{% if coupon.id == dati.id_coupon %} selected{% endif %}>{{ coupon.id }} {{ '%0.2f'|format(coupon.sconto_fisso) }} €</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td><input class="form-control form-control-sm text-right" type="text" id="scval{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][dati.coupon_valore]" value="{{ '%0.2f'|format(dati.coupon_valore) }}"></td>
                             <td><input class="form-control form-control-sm text-right quantita" type="text" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}"></td>
                             <td>
                                 <select class="form-control form-control-sm" id="" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_listino]" required>
@@ -74,6 +87,10 @@
                             <td class="text-right"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$(this).closest('.articolo').find('.quantita').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
                         </tr>
                         {% endfor %}
+<!-- TODO questa cosa rifarla meglio perché questo è il punto in cui si aggiungono i coupon al carrello (tabella carrelli_coupon)
+     idealmente uno qui può aggiungere vari coupon al carrello e questi vengono aggiunti alla tabella carrelli_coupon, poi qui vengono mostrati tutti con anche la possibilità di rimuoverli
+     ogni coupon della tabella carrelli_coupon ha la sua riga e il suo valore, che va scalato dal totale analogamente a come viene aggiunto il valore degli acquisti, inoltre vanno incrementati i campi
+     dei totali sul carrello in modo che il conto delle righe più il conto dei coupon torni con quello che c'è scritto sul carrello
                         <tr>
                             <td>coupon</td>
                             <td><input class="form-control form-control-sm text-right quantita" type="text" id="coupon" name="__carrello__[codice_coupon]" value="{{ session.carrello.codice_coupon }}"></td>
@@ -84,11 +101,12 @@
                             <td></td>
                             <td class="text-right">{% if session.carrello.codice_coupon %}<input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#coupon').val('');$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();">{% endif %}</td>
                         </tr>
+-->
                     </tbody>
 
                     <tfoot>
                         <tr>
-                            <td class="text-right" colspan="6">totale generale</td>
+                            <td class="text-right" colspan="8">totale generale</td>
                             <td class="nowrap text-right">{{ '%0.2f'|format(session.carrello.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</td>
                             <td class="text-right"><input class="btn btn-secondary btn-sm" type="button" value="ricalcola" onclick="$('#carrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#carrello').submit();"></td>
                         </tr>
@@ -238,7 +256,7 @@
         </fieldset>
         {% endif %}
     </div>
-    <div class="col-md-4 d-flex flex-column">
+    <div class="col-md-3 d-flex flex-column">
         {# TODO SE È ATTIVO IL MODULO ISCRIZIONI... #}
         {% if '0630.iscrizioni' in mods.active.array %}
 	    <fieldset>

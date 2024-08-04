@@ -91,6 +91,9 @@
 	$_REQUEST['trackid'] = ( ! empty( $_REQUEST['trackid'] ) ) ? $_REQUEST['trackid'] : $_REQUEST['merchantorderid'];
 	$_REQUEST['ref'] = ( ! empty( $_REQUEST['ref'] ) ) ? $_REQUEST['ref'] : $_REQUEST['securitytoken'];
 
+    // pagina di redirect
+    $redirect = $cf['ecommerce']['profile']['provider']['monetaweb']['error'];
+
 	// identificativo del carrello
 	if( isset( $_REQUEST['trackid'] ) ) {
 
@@ -146,6 +149,9 @@
 					foreach( $cnts as $cnt ) {
 						require $cnt;
 					}
+
+					// pagina di redirect
+					$redirect = $cf['ecommerce']['profile']['provider']['monetaweb']['success'];
 
 					// log
 					logWrite( 'pagamento effettuato con successo per il carrello ' . $_REQUEST['codTrans'], 'monetaweb', LOG_INFO );

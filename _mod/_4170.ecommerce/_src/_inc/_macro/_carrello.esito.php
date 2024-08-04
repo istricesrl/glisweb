@@ -34,8 +34,8 @@
 
             // log
 //            appendToFile( 'esito: ' . $ct['etc']['esito'], $fileRicevuta );
-
-        } elseif( isset( $_REQUEST['PaymentID'] ) ) {
+/*
+        } elseif( ! empty( $_REQUEST['PaymentID'] ) ) {
 
             // Nexi nuovo
 
@@ -46,8 +46,8 @@
             } else {
                 $ct['etc']['esito'] = 0;
             }
-
-        } elseif( isset( $_REQUEST['PayerID'] ) ) {
+*/
+        } elseif( ! empty( $_REQUEST['PayerID'] ) ) {
 
             // recupero il carrello
             $carrello = mysqlSelectRow(
@@ -102,7 +102,7 @@
                 $ct['etc']['esito'] = 0;
             }
 
-        } elseif(  isset( $_REQUEST['PaymentID'] )  ) {
+        } elseif( ! empty( $_REQUEST['PaymentID'] ) ) {
 
             // Monetaweb
 
@@ -110,7 +110,7 @@
             $carrello = mysqlSelectRow(
                 $cf['mysql']['connection'],
                 'SELECT * FROM carrelli WHERE ordine_pagamento = ?',
-                array( array( 's' => $_REQUEST['idOrdine'] ) )
+                array( array( 's' => $_REQUEST['PaymentID'] ) )
             );
 
             // debug

@@ -599,6 +599,15 @@
 
                 }
 
+                // TODO trovare se ci sono documenti da generare
+                $riga['documenti_generati'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT count( documenti_articoli.id ) 
+                    FROM documenti_articoli
+                    WHERE documenti_articoli.id_carrelli_articoli = ?',
+                    array( array( 's' => $riga['id'] ) )
+                );
+
                 // pagamenti in sospeso (rate)
                 $rate = mysqlQuery(
                     $cf['mysql']['connection'],
@@ -631,7 +640,10 @@
                         if( ! empty( $riga['timestamp_pagamento'] ) ) {
                             unset( $ct['etc']['righe'][ $chiave ] );
                         } elseif( isset( $riga['id_carrello'] ) && empty( $riga['totale_lordo_da_pagare'] ) ) {
-                            unset( $ct['etc']['righe'][ $chiave ] );
+                            if( $riga['documenti_generati'] > 0 ) {
+                                unset( $ct['etc']['righe'][ $chiave ] );
+                            }
+#                            unset( $ct['etc']['righe'][ $chiave ] );
                         }
                     } elseif( empty( $riga['totale_lordo_da_pagare'] ) && ! empty( $riga['documenti_stampati'] ) ) {
                         unset( $ct['etc']['righe'][ $chiave ] );

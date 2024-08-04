@@ -5,7 +5,7 @@
 
 {% block main %}
 <section class="row flex-fill">
-    <div class="col-md-8 d-flex flex-column">
+    <div class="col-md-9 d-flex flex-column">
         {% if etc.righe %}
         <form id="pagamento" class="carrello d-flex flex-column flex-fill" action="{{ page.url[ localization.language.ietf ] }}" method="post">
             <input type="hidden" name="__pagamenti__[id_carrello]" value="{{ request.__pagamenti__.id_carrello }}">
@@ -144,7 +144,7 @@
         </fieldset>
         {% endif %}
     </div>
-    <div class="col-md-4 d-flex flex-column">
+    <div class="col-md-3 d-flex flex-column">
         <form id="pagamento_carrello" class="d-flex flex-column" action="{{ page.url[ localization.language.ietf ] }}" method="post">
             <fieldset>
                 <legend>pagamenti per carrello</legend>

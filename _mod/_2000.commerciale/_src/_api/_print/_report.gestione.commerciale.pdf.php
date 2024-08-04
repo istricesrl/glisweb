@@ -111,7 +111,7 @@
         // seleziono le attività pertinenti
         $etc['dati']['anagrafiche'][ $k ]['attivita'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT * FROM attivita WHERE id_cliente = ? ORDER BY coalesce( data_attivita, data_programmazione ) ASC',
+            'SELECT * FROM attivita WHERE id_cliente = ? AND nome IS NOT NULL ORDER BY coalesce( data_attivita, data_programmazione ) ASC',
             array(
                 array( 's' => $a['id'] )
             )
@@ -128,6 +128,11 @@
 
     // titolo del documento
     $etc['txt']['titolo']                       = 'rapporto di gestione commerciale del ' . date( 'd/m/Y' );
+
+    // testate
+    $etc['txt']['testate'][0]                   = 'programmata';
+    $etc['txt']['testate'][1]                   = 'eseguita';
+    $etc['txt']['testate'][2]                   = 'descrizione';
 
     /**
      * configurazione del documento
@@ -158,11 +163,11 @@
     $etc['fnt']['intestazione'][0]['size']	    = 12;								                // dimensione del font base
 
     $etc['fnt']['intestazione'][1]['family']    = 'helvetica';						                // famiglia del font base
-    $etc['fnt']['intestazione'][1]['style']	    = 'I';						                        // stile del font base
+    $etc['fnt']['intestazione'][1]['style']	    = 'B';						                        // stile del font base
     $etc['fnt']['intestazione'][1]['size']	    = 12;								                // dimensione del font base
 
     $etc['fnt']['intestazione'][2]['family']    = 'helvetica';						                // famiglia del font base
-    $etc['fnt']['intestazione'][2]['style']	    = '';						                        // stile del font base
+    $etc['fnt']['intestazione'][2]['style']	    = 'B';						                        // stile del font base
     $etc['fnt']['intestazione'][2]['size']	    = 10;								                // dimensione del font base
 
     // spessori linee
@@ -180,11 +185,32 @@
 
     // linee
     $etc['lne']['taglio']                       = array( 'width' => $etc['thk']['sottile'], 'dash' => '10,5', 'color' => $etc['rgb']['grigio_medio'] );
+    $etc['lne']['testata']                      = array( 'width' => $etc['thk']['sottile'], 'color' => $etc['rgb']['nero'] );
 
     // immagini
     $etc['img']['logo_gimi']['path']            = DIR_BASE . 'src/templates/athena/img/logoGimi.jpg';
     $etc['img']['logo_gimi']['w']               = '50';
     $etc['img']['logo_gimi']['h']               = '50';
+
+    /**
+     * classe estesa
+     * =============
+     * 
+     * 
+     */
+     class GLISPDF extends TCPDF {
+
+        //Page header
+        public function Header() {
+        }
+    
+        // Page footer
+        public function Footer() {
+            $this->SetY(-15);
+            $this->SetFont('helvetica', 'I', 8);
+            $this->Cell(0, 10, 'pag. '.$this->getAliasNumPage().'/'.$this->getAliasNbPages(), 0, false, 'C', 0, '', 0, false, 'T', 'M');
+        }
+    }
 
     /**
      * elaborazione impostazioni
@@ -193,7 +219,7 @@
      */
 
     // creazione del PDF
-	$pdf                                        = new TCPDF( $etc['pag']['size']['o'], $etc['pag']['size']['u'], $etc['pag']['size']['f'] );
+	$pdf                                        = new GLISPDF( $etc['pag']['size']['o'], $etc['pag']['size']['u'], $etc['pag']['size']['f'] );
 
     // nome del file di output
     $etc['out']['file']['name']                 = string2rewrite( $etc['txt']['titolo'] ) . '.pdf';
@@ -236,7 +262,7 @@
 
     // imposto il PDF per non stampare l'header e il footer
     $pdf->SetPrintHeader( false );
-    $pdf->SetPrintFooter( false );
+    $pdf->SetPrintFooter( true );
 
     // imposto i margini
     $pdf->SetMargins( $etc['pag']['margin']['l'], $etc['pag']['margin']['t'], $etc['pag']['margin']['r'] );
@@ -293,15 +319,25 @@
         // spazio sotto al titolo
         $pdf->SetXY( $etc['pag']['margin']['l'], $pdf->GetY() + $etc['pag']['spacer']['row'] );
 
+        // tipografia testo
+        $pdf->SetFont( $etc['fnt']['intestazione'][2]['family'], $etc['fnt']['intestazione'][2]['style'], $etc['fnt']['intestazione'][2]['size'] );
+
+        // testata
+        $pdf->Cell( $etc['pag']['spacer']['col'] * 2, 0, $etc['txt']['testate'][0], '', 0, 'L' );
+        $pdf->Cell( $etc['pag']['spacer']['col'] * 2, 0, $etc['txt']['testate'][1], '', 0, 'L' );
+        $pdf->Cell( $etc['pag']['spacer']['col'] * 8, 0, $etc['txt']['testate'][2], '', 2, 'L' );
+
+        // linea di testata x1, y1, x2, y2
+        $pdf->Line( $etc['pag']['margin']['l'], $pdf->GetY(), $etc['pag']['margin']['l'] + $etc['pag']['size']['text_area']['w'], $pdf->GetY(), $etc['lne']['testata'] );
+
+        // spazio sotto al titolo
+        $pdf->SetXY( $etc['pag']['margin']['l'], $pdf->GetY() + $etc['pag']['spacer']['row'] / 2 );
+
         // scrivo gli eventi del cliente
         foreach( $a['attivita'] as $e ) {
 
             // tipografia testo
-            $pdf->SetFont(
-                $etc['fnt']['base']['family'],
-                $etc['fnt']['base']['style'],
-                $etc['fnt']['base']['size']
-            );
+            $pdf->SetFont( $etc['fnt']['base']['family'], $etc['fnt']['base']['style'], $etc['fnt']['base']['size'] );
 
             // cella con la data di programmazione
             $pdf->Cell( $etc['pag']['spacer']['col'] * 2, 0, $e['data_programmazione'], '', 0, 'L' );

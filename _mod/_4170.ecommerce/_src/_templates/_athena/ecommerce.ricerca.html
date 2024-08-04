@@ -4,7 +4,7 @@
 
 {% block main %}
 <section class="row flex-fill">
-    <div class="col-md-8 d-flex flex-column">
+    <div class="col-md-9 d-flex flex-column">
         <fieldset>
             <legend>risultati della ricerca</legend>
             {% for risultato in risultati %}
@@ -36,7 +36,7 @@
             {% endfor%}
         </fieldset>
     </div>
-    <div class="col-md-4 d-flex flex-column">
+    <div class="col-md-3 d-flex flex-column">
         {# TODO SE È ATTIVO IL MODULO ISCRIZIONI... #}
         {% if '0630.iscrizioni' in mods.active.array %}
 	    <fieldset>

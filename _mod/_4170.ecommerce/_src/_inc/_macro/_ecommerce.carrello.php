@@ -49,4 +49,13 @@
         .'ORDER BY __label__ '
     );
 
+    $ct['etc']['coupon'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, coupon.id 
+        FROM coupon 
+        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+        ORDER BY coupon.id '
+    );
+
     // print_r( $_SESSION['carrello'] );
+    // die( print_r( $ct['etc'], true ) );

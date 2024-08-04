@@ -53,6 +53,68 @@
         // TODO conversione Facebook
         // ...
 
+        // dati da inviare via mail
+        $carrelloMail = carrello2mail( $carrello );
+
+        // debug
+        // die( '<pre>' . print_r( $carrelloMail, true ) . '<pre>' );
+
+        // invio della mail di notifica interna
+        if( ! empty( $cf['mail']['tpl']['DEFAULT_NOTIFICA_INTERNA_ACQUISTO']['it-IT']['from'] ) ) {
+
+            if( ! empty( $cf['mail']['tpl']['DEFAULT_NOTIFICA_INTERNA_ACQUISTO']['it-IT']['from'] ) ) {
+
+                $idMailInterna = queueMailFromTemplate(
+                    $cf['mysql']['connection'],
+                    $cf['mail']['tpl']['DEFAULT_NOTIFICA_INTERNA_ACQUISTO'],
+                    array(
+                        'dt' => $carrelloMail,
+                        'ct' => $ct,
+                        '__exclude__' => array(
+                            'intestazione_id_tipologia_anagrafica',
+                            'fatturazione_id_tipologia_documento',
+                            'fatturazione_sezionale',
+                            'fatturazione_strategia',
+                            'provider_checkout',
+                            'timestamp_evasione',
+                            'id_account_evasione',
+                            'note_evasione',
+                            'spam_score',
+                            'spam_check',
+                            'timestamp_aggiornamento'
+                        )
+                    ),
+                    strtotime( '-1 minute' ),
+                    $cf['mail']['tpl']['DEFAULT_NOTIFICA_INTERNA_ACQUISTO']['it-IT']['to'],
+                    'it-IT'
+                );
+
+            }
+
+        }
+
+        // invio della mail di notifica esterna
+        if( ! empty( $cf['mail']['tpl']['DEFAULT_NOTIFICA_ESTERNA_ACQUISTO']['it-IT']['from'] ) ) {
+
+            $idMailEsterna = queueMailFromTemplate(
+                $cf['mysql']['connection'],
+                $cf['mail']['tpl']['DEFAULT_NOTIFICA_ESTERNA_ACQUISTO'],
+                array(
+                    'dt' => $carrelloMail,
+                    'ct' => $ct
+                ),
+                strtotime( '-1 minute' ),
+                array(
+                    implode( ' ', $carrello['intestazione_nome'], $carrello['intestazione_cognome'], $carrello['intestazione_denominazione'] ) => $carrello['intestazione_mail']
+                ),
+                'it-IT'
+            );
+
+        }
+
+        // debug
+        // die( '<pre>' . print_r( $carrelloMail, true ) . '<pre>' );
+
     } else {
 
         // debug

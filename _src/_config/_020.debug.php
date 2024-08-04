@@ -56,7 +56,7 @@
     define( 'REPORT_CURRENT_LEVEL', $cf['debug'][ SITE_STATUS ]['report']['lvl'] );
 
     // determina se gli errori vengono mostrati o meno
-    ini_set( 'display_errors', REPORT_CURRENT_LEVEL );
+    ini_set( 'display_errors', $cf['debug'][ SITE_STATUS ]['display'] );
 
     // determina quali errori vengono mostrati
     error_reporting( REPORT_CURRENT_LEVEL );

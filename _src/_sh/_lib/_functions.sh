@@ -18,6 +18,8 @@ function check-args() {
 
     options=$(getopt -o bhr --long soft,hard,nolog,nobackup,major,minor,patch,increment:,test: -- "$@")
 
+    echo "valuto: $options"
+
     eval set -- "$options"
 
     while true; do
@@ -45,17 +47,14 @@ function check-args() {
                 PARGNOBACKUP=1
                 ;;
             --major)
-                shift;
                 PARGINCREMENT=1
                 PVALINCREMENT="major"
                 ;;
             --minor)
-                shift;
                 PARGINCREMENT=1
                 PVALINCREMENT="minor"
                 ;;
             --patch)
-                shift;
                 PARGINCREMENT=1
                 PVALINCREMENT="patch"
                 ;;

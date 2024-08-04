@@ -21,7 +21,15 @@
         logWrite( 'attivata la controller del carrello', 'cart' );
 
         // verifico la challenge reCAPTCHA
-        if( isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+        if( getAclPermission( 'carrelli', METHOD_POST ) ) {
+
+            // registro il valore di bot
+            $spamScore = 1;
+
+            // punteggio di spam
+            $spamCheck = true;
+
+        } elseif( isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
             // registro il valore di bot
             $spamScore = reCaptchaVerifyV3( $_REQUEST['__carrello__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
@@ -60,6 +68,52 @@
 
         // TODO qui fare il controllo anti spam
         if( $spamCheck === true ) {
+
+            // registro i consensi
+            // TODO spostare questa cosa alla fine o comunque fuori dalle palle
+            if( isset( $_REQUEST['__consensi__']['__carrello__'] ) ) {
+
+                // per ogni consenso...
+                foreach( $_REQUEST['__consensi__']['__carrello__'] as $ck => $cv ) {
+
+                    // timestamp del consenso
+                    $timestamp = time();
+
+                    // contenuto del consenso
+                    $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ( ( empty( $cv['value'] ) ) ? ' non' : NULL ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __carrello__ per il carrello #' . $_SESSION['carrello']['id'];
+
+                    // se è presente un ID account
+                    if( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) {
+                        $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_account'];
+                    }
+
+                    // se è presente un ID anagrafica
+                    if( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) {
+                        $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_anagrafica'];
+                    }
+
+                    // log
+                    logWrite( $contenuto, 'privacy', LOG_CRIT );
+
+                    // salvo le informazioni nella tabella carrelli_consensi
+                    $prvId = mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'id_carrello' => $_SESSION['carrello']['id'],
+                            'id_account' => ( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) ? $_SESSION['carrello']['intestazione_id_account'] : NULL,
+                            'id_anagrafica' => ( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) ? $_SESSION['carrello']['intestazione_id_anagrafica'] : NULL,
+                            'id_consenso' => $ck,
+                            'se_prestato' => $cv['value'],
+                            'note' => $contenuto,
+                            'timestamp_consenso' => $timestamp
+                        ),
+                        'carrelli_consensi'
+                    );
+
+                }
+
+            }
 
             // STEP 1.1 - pre settaggi che impattano sul calcolo dei prezzi e dei costi (zona, listino)
 
@@ -229,6 +283,8 @@
             $_SESSION['carrello']['sconto_percentuale']         = 0.0;
             $_SESSION['carrello']['sconto_valore']              = 0.0;
 
+            // TODO aggiungere l'inizializzazione coupon_percentuale e coupon_valore
+
             // inizializzazione calcolatore articoli aggiunti
             $deltaArticoli = array();
 
@@ -314,6 +370,7 @@
                 */
 
                 // aggiunta articolo al carrello
+                // TODO aggiungere anche l'id_coupon se presente
                 $_REQUEST['__carrello__'] = array_replace_recursive(
                     $_REQUEST['__carrello__'],
                     array(
@@ -341,6 +398,8 @@
             // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
 
             // integro gli articoli
+            // TODO documentare cosa fa questa parte
+            // integra i campi dal model, poi? calcola i delta per l'evento aggiungi al carrello?
             if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
                 foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
                     $deltaArticoli[ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array(
@@ -370,51 +429,6 @@
 
             // debug
             // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
-
-            // registro i consensi
-            if( isset( $_REQUEST['__consensi__']['__carrello__'] ) ) {
-
-                // per ogni consenso...
-                foreach( $_REQUEST['__consensi__']['__carrello__'] as $ck => $cv ) {
-
-                    // timestamp del consenso
-                    $timestamp = time();
-
-                    // contenuto del consenso
-                    $contenuto = 'il ' . date( 'd/m/Y', $timestamp ) . ' alle ' . date( 'H:i:s', $timestamp ) . ( ( empty( $cv['value'] ) ) ? ' non' : NULL ) . ' è stato prestato il consenso per ' . $ck . ' tramite il modulo __carrello__ per il carrello #' . $_SESSION['carrello']['id'];
-
-                    // se è presente un ID account
-                    if( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) {
-                        $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_account'];
-                    }
-
-                    // se è presente un ID anagrafica
-                    if( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) {
-                        $contenuto .= ' account #' . $_SESSION['carrello']['intestazione_id_anagrafica'];
-                    }
-
-                    // log
-                    logWrite( $contenuto, 'privacy', LOG_CRIT );
-
-                    // salvo le informazioni nella tabella carrelli_consensi
-                    $prvId = mysqlInsertRow(
-                        $cf['mysql']['connection'],
-                        array(
-                            'id' => NULL,
-                            'id_carrello' => $_SESSION['carrello']['id'],
-                            'id_account' => ( isset( $_SESSION['carrello']['intestazione_id_account'] ) ) ? $_SESSION['carrello']['intestazione_id_account'] : NULL,
-                            'id_anagrafica' => ( isset( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) ? $_SESSION['carrello']['intestazione_id_anagrafica'] : NULL,
-                            'id_consenso' => $ck,
-                            'se_prestato' => $cv['value'],
-                            'note' => $contenuto,
-                            'timestamp_consenso' => $timestamp
-                        ),
-                        'carrelli_consensi'
-                    );
-
-                }
-
-            }
 
             // STEP 5 - acquisto articoli multipli
             if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
@@ -461,12 +475,20 @@
                         $_SESSION['carrello']['articoli'][ $rowKey ]['quantita']                    = $dati['quantita'];
                         $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica']  = $dati['destinatario_id_anagrafica'];
                         $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo']                  = $dati['id_rinnovo'];
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon']                   = $dati['id_coupon'];
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_percentuale']          = $dati['coupon_percentuale'];
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore']               = $dati['coupon_valore'];
                         $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale']          = $dati['sconto_percentuale'];
                         $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore']               = $dati['sconto_valore'];
+
+                        // TODO aggiungere colonne coupon_percentuale e coupon_valore e id_coupon
+                        // TODO qui va valorizzata solo la colonna id_coupon, le colonne del valore vanno calcolate sotto
 
                         // normalizzazione valori numerici
                         $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] = ( isset( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) ) ? str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) : 0.0;
                         $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] = ( isset( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ) ) ? str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ) : 0.0;
+
+                        // TODO qui calcolare coupon_percentuale e coupon_valore
 
                         // trovo la descrizione dell'articolo
                         $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'] = implode( ' / ',
@@ -539,13 +561,25 @@
                             $_SESSION['carrello']['id_zona']
                         );
 
+                        // TODO calcolo e applico il coupon per riga
+                        // se è presente un id_coupon
+                        // valorizzare i campi coupon_percentuale e coupon_valore
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] = calcolaValoreCouponPerRiga(
+                            $cf['mysql']['connection'],
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'],
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id'],
+                            ( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] )
+                        );
+
                         // TODO trovo i prezzi finali
                         // TODO calcolare correttamente lo sconto sul netto
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'];
+                        // TODO aggiungere al calcolo il valore del coupon per riga
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] - $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'];
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] - $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'];
 
                         // aggiorno la riga
-                        mysqlInsertRow(
+                        // TODO aggiungere i campi id_coupon, coupon_percentuale e coupon_valore
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['id'] = mysqlInsertRow(
                             $cf['mysql']['connection'],
                             array(
                                 'id_carrello'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'],
@@ -555,6 +589,7 @@
                                 'id_rinnovo'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'],
                                 'id_iva'                        => $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
                                 'id_listino'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'],
+                                'id_coupon'                     => $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'],
                                 'quantita'                      => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'] ),
                                 'prezzo_netto_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] ),
                                 'prezzo_lordo_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] ),
@@ -564,6 +599,8 @@
                                 'costo_spedizione_lordo'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] ),
                                 'sconto_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ),
                                 'sconto_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ),
+                                'coupon_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_percentuale'] ),
+                                'coupon_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] ),
                                 'prezzo_netto_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] ),
                                 'prezzo_lordo_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] )
                             ),
@@ -597,25 +634,29 @@
             }
 
             // STEP 6 - calcolo coupon
+            // TODO aggiungere tabella carrelli_coupon dove aggiungere un numero arbitrario di coupon associandoli al carrello in generale (quelli per riga sono calcolati sopra)
+            // TODO per ogni coupon associato al carrello fare i calcoli necessari se il coupon è in percentuale, dopodiché valorizzare i campi importo_lordo_coupon sulla riga e totale_lordo_coupon sul carrello
+            // TODO infine aggiustare di conseguenza il totale del carrello
 
-            // se è stato inviato un codice coupon...
+            // TODO se è stato inviato un codice coupon generale per il carrello lo aggiungo alla carrelli_coupon
+            // TODO qui gestire l'aggiunta dei coupon a carrelli_coupon
             if( $_SESSION['carrello']['codice_coupon'] ) {
 
                 // TODO verifico se il coupon può essere utilizzato con questo carrello
 
-                // TODO trovo l'ID del coupon
+                // TODO aggiungo il coupon alla carrelli_coupon per id_carrello ed eventualmente anche per id_carrelli_articoli
 
                 // debug
-                $_SESSION['carrello']['id_coupon'] = 1;
+                // $_SESSION['carrello']['id_coupon'] = 1;
 
             } else {
 
                 // rimuovo il coupon inutilizzabile
-                $_SESSION['carrello']['id_coupon'] = NULL;
+                // $_SESSION['carrello']['id_coupon'] = NULL;
 
             }
 
-            // TODO se il coupon può essere utilizzato ne calcolo il valore altrimenti lo elimino
+            // TODO qui fare un ciclo e per ogni coupon calcolare il valore poi incrementare il campo totale_lordo_coupon del carrello
             if( ! empty( $_SESSION['carrello']['id_coupon'] ) ) {
 
                 // TODO calcolo il valore percentuale del coupon se applicabile

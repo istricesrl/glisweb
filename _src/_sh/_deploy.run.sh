@@ -37,11 +37,13 @@ else
     ## passo alla cartella del deploy
     cd $RL
 
+    ## informazioni
+    echo "lavoro su: $(pwd)"
+
     ## leggo dal file properties
     . ./etc/deploy/$1.properties
 
     ## informazioni
-    echo "lavoro su: $(pwd)"
     echo "progetto: ${PRJ_NAME}"
     echo "deploy su: $1"
 
@@ -293,7 +295,7 @@ else
                 # $CMD
 
                 # comando
-                CMD="rsync $EXCLUDE -avuz --delete -e ssh $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
+                CMD="rsync $EXCLUDE -avuz --checksum --delete -e ssh $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md

@@ -33,7 +33,7 @@
     // $cf['ecommerce']['defaults']['cassa']['strategia_fatturazione']     = 'SINGOLA';                 // strategia di generazione dei documenti da usare di default in cassa
 
     // profilo di funzionamento per DEV
-	$cf['ecommerce']['profiles'][ DEVELOPEMENT ]	= array(
+        $cf['ecommerce']['profiles'][ DEVELOPEMENT ]	= array(
         'fatturazione' => array(
             'merchant' => NULL,                                                                         // ID dell'anagrafica merchant (per l'emissione dei documenti)
             'magazzino' => NULL,                                                                        // ID del mastro dal quale scaricare la merce (per l'emissione dei documenti)
@@ -191,6 +191,8 @@
      * PROD https://ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet
      * TEST https://int-ecommerce.nexi.it/ecomm/ecomm/DispatcherServlet
      * 
+     * vedi https://developer.nexi.it/it/area-test/introduzione
+     * 
      * NOTA SU PAYPAL
      * per avere i dati di test (business e account clienti fittizi) registrarsi su https://developer.paypal.com/developer/accounts/
      * i dati sono nella pagina https://developer.paypal.com/developer/applications/
@@ -202,9 +204,12 @@
      * l'URL delle API di produzione è https://www.monetaonline.it/monetaweb/hosted/init/http
      * oppure https://www.monetaonline.it/monetaweb/payment/2/xml (verificare)
      * 
+     * 
      */
 
     // campi di base del carrello
+    // TODO aggiungere $cf['utm']['fields'] ai campi del carrello
+    // TODO aggiungere campi per i coupon
     $cf['ecommerce']['fields']['carrello']      = array(
         'id'                                    => array( 'tipe' => 'int',      'default' => NULL ),
         // 'id_iva'                             => array( 'tipe' => 'int',      'default' => NULL ),
@@ -243,9 +248,7 @@
 
     // TODO occhio la timestamp_checkout dev'essere modificabile solo se l'utente ha i privilegi giusti (aggiuntere un campo all'array?)
 
-    // TODO
-    // aggiungere $cf['utm']['fields'] ai campi del carrello
-
+    // TODO aggiungere campi per i coupon id_coupon, coupon_percentuale e coupon_valore
     $cf['ecommerce']['fields']['articoli']      = array(
         'id'                            => array( 'tipe' => 'int',      'default' => NULL ),
         'id_articolo'                   => array( 'tipe' => 'string',   'default' => NULL ),
@@ -256,8 +259,13 @@
         'id_rinnovo'                    => array( 'type' => 'int',      'default' => NULL ),
         'id_progetto'                   => array( 'type' => 'string',   'default' => NULL ),
         'quantita'                      => array( 'tipe' => 'int',      'default' => NULL ),
+        'id_coupon'                     => array( 'type' => 'string',   'default' => NULL ),
+        'coupon_percentuale'            => array( 'tipe' => 'int',      'default' => NULL ),
+        'coupon_valore'                 => array( 'tipe' => 'int',      'default' => NULL ),
         'sconto_percentuale'            => array( 'tipe' => 'int',      'default' => NULL ),
         'sconto_valore'                 => array( 'tipe' => 'int',      'default' => NULL ),
     );
 
     // TODO occhio le colonne degli sconti devono essere modificabili solo se l'utente ha i privilegi giusti (aggiuntere un campo all'array?)
+
+    // TODO i database critici da tenere aggiornati per le tabelle del carrello sono gimbe DEV e PROD, glisweb master, northwall DEV e PROD, berni DEV, gmservizi DEV

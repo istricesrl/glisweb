@@ -143,9 +143,22 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_carrelli.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'		=> array( 'tabs'	=> array(	'carrelli.view') ),
+	    'etc'		=> array( 'tabs'	=> array(	'carrelli.view', 'carrelli.tools' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'carrelli' ),
 									'priority'	=> '500' ) ) )	
+	);
+
+	// carrelli tools
+	$p['carrelli.tools'] = array(
+		'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'azioni carrelli' ),
+		'h1'			=> array( $l		=> 'azioni' ),
+		'parent'		=> array( 'id'		=> 'carrelli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_carrelli.tools.php' ),
+		'etc'			=> array( 'tabs'	=> $p['carrelli.view']['etc']['tabs'] ),
+		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) )
 	);
 
 	// gestione carrelli

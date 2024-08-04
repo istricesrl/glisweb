@@ -80,6 +80,7 @@
     $cf['debug'][ DEVELOPEMENT ]['log']['lvl']                  = LOG_DEBUG;
     $cf['debug'][ DEVELOPEMENT ]['log']['rotation']             = 'Ym';
     $cf['debug'][ DEVELOPEMENT ]['report']['lvl']               = E_USER_WARNING;
+    $cf['debug'][ DEVELOPEMENT ]['display']                     = true;
 
     // impostazioni aggiuntive per TESTING
     $cf['debug'][ TESTING ]                                     = $cf['debug'][ DEVELOPEMENT ];
@@ -88,6 +89,7 @@
     // impostazioni aggiuntive per PRODUCTION
     $cf['debug'][ PRODUCTION ]                                  = $cf['debug'][ DEVELOPEMENT ];
     $cf['debug'][ PRODUCTION ]['log']['lvl']                    = LOG_ERR;
+    $cf['debug'][ PRODUCTION ]['display']                       = false;
 
     // debug utilizzo memoria
     $cf['debug']['mem']                                         = array();

@@ -1120,7 +1120,9 @@ CREATE TABLE IF NOT EXISTS `comuni` (
   `id_provincia` int(11) DEFAULT NULL,
   `nome` varchar(254) DEFAULT NULL,
   `codice_istat` char(12) DEFAULT NULL,
-  `codice_catasto` char(4) DEFAULT NULL
+  `codice_catasto` char(4) DEFAULT NULL,
+  `url_riferimento` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000006000
@@ -3135,7 +3137,9 @@ CREATE TABLE IF NOT EXISTS `provincie` (
   `id_regione` int(11) DEFAULT NULL,
   `nome` varchar(254) DEFAULT NULL,
   `sigla` char(8) DEFAULT NULL,
-  `codice_istat` char(3) DEFAULT NULL
+  `codice_istat` char(3) DEFAULT NULL,
+  `url_riferimento` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000028400
@@ -3265,7 +3269,9 @@ CREATE TABLE IF NOT EXISTS `regioni` (
   `id` int(11) NOT NULL,
   `id_stato` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
-  `codice_istat` char(2) DEFAULT NULL
+  `codice_istat` char(2) DEFAULT NULL,
+  `url_riferimento` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000030300
@@ -3935,7 +3941,8 @@ CREATE TABLE IF NOT EXISTS `stati` (
   `id` int(11) NOT NULL,
   `id_continente` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
-  `note` char(128) DEFAULT NULL,
+  `url_riferimento` char(255) DEFAULT NULL,
+  `note` text DEFAULT NULL,
   `iso31661alpha2` char(2) DEFAULT NULL,
   `iso31661alpha3` char(3) DEFAULT NULL,
   `codice_istat` char(4) DEFAULT NULL,
@@ -4801,6 +4808,7 @@ CREATE TABLE IF NOT EXISTS `udm` (
   `conversione` float DEFAULT NULL,
   `nome` char(32) DEFAULT NULL,
   `sigla` char(8) DEFAULT NULL,
+  `url_riferimento` char(255) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `se_lunghezza` tinyint(1) DEFAULT NULL,
   `se_volume` tinyint(1) DEFAULT NULL,

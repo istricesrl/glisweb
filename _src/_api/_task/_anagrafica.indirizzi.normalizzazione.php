@@ -248,6 +248,9 @@
     // die( print_r( $status, true ) );
 
     // log
+    logger( print_r( $status, true ), 'dettagli/indirizzi/' . $status['row']['id'], LOG_ERR );
+
+    // log
     logWrite( $status['row']['indirizzo'] . ' gestito: ' . print_r( $status['considerazioni'], true ), 'indirizzi', LOG_ERR );
 
     // aggiornamento anagrafica_view_static
