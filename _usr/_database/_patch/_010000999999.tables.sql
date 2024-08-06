@@ -2107,6 +2107,7 @@ CREATE TABLE IF NOT EXISTS `listini` (
   `id_genitore` int(11) DEFAULT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_valuta` int(11) DEFAULT NULL,
+  `codice` char(64) DEFAULT NULL,
   `sconto_su_genitore` decimal(5,2) DEFAULT NULL,
   `se_default_su_genitore` tinyint(1) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,

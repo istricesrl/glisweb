@@ -83,6 +83,7 @@
      * 
      * * qualsiasi combinazione di 3 numeri è accettata
      * 
+     * in test per il 3D Secure usare 123456
      * 
      * 
      * TODO nella libreria tools di ogni metodo di pagamento bisognerebbe riportare la spiegazione di come funziona
@@ -169,8 +170,15 @@
 
         logger( 'risposta per carrello ' . $c['id'] . ': ' . print_r( $resultData, true ), 'nexi' );
 
+        if( empty( $resultData->paymentId ) ) {
+            $paymentTks = explode( '=', $resultData->hostedPage );
+            $paymentId = $paymentTks[1];
+        } else {
+            $paymentId = $resultData->paymentId;
+        }
+
         return array(
-            'paymentId' => $resultData->paymentId,
+            'paymentId' => $paymentId,
             'hostedPage' => $resultData->hostedPage,
             'securityToken' => $resultData->securityToken,
             'correlationId' => $correlationId,

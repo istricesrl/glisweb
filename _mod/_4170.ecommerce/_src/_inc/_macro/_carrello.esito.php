@@ -29,6 +29,10 @@
                 $ct['etc']['esito'] = 0;
             }
 
+            // TODO arriva una roba del tipo:
+            // https://glisweb.istricesrl.it/carrello/esito-ordine.it-IT.html?xpay__lb__token=&mail=fabio.mosti%40gmail.com&data=20240806&messaggio=Message+OK&cognome=sdfg&nazionalita=ITA&regione=&mac=89face5a31fd85ab71aab626f76d4a8c8920a648&codAut=APCH4S&tipoProdotto=VISA+CLASSIC+-+CREDIT+-+N&selectedcard=&alias=ALIAS_WEB_00012722&pan=453997******0006&brand=VISA&orario=190014&divisa=EUR&scadenza_pan=203012&importo=12200&codiceEsito=0&languageId=ITA&nome=sdfg&check=&tipoTransazione=VBV_FULL&codiceConvenzione=00012722104&codTrans=328&esito=OK&aliasEffettivo=&OPTION_CF=&num_contratto=
+            // bisogna fare un controllino un po' più di fino sull'esito
+
             // nome del file di ricevuta
 //            $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'nexi/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
 
@@ -102,22 +106,46 @@
                 $ct['etc']['esito'] = 0;
             }
 
-        } elseif( ! empty( $_REQUEST['PaymentID'] ) ) {
+        } elseif( ! empty( $_REQUEST['paymentid'] ) ) {
 
-            // Monetaweb
+            // Nexi nuovo
+
+            // debug
+            // echo 'NEXINUOVO';
 
             // recupero il carrello
             $carrello = mysqlSelectRow(
                 $cf['mysql']['connection'],
                 'SELECT * FROM carrelli WHERE ordine_pagamento = ?',
-                array( array( 's' => $_REQUEST['PaymentID'] ) )
+                array( array( 's' => $_REQUEST['paymentid'] ) )
             );
 
             // debug
             // echo '<pre>' . print_r( $carrello, true ) . '</pre>';
 
             // esito
-            if( isset( $carrello['status_pagamento'] ) && in_array( $carrello['status_pagamento'], array( 'APPROVED', 'CAPTURED' ) ) ) {
+            if( isset( $carrello['status_pagamento'] ) && in_array( $carrello['status_pagamento'], array( 'APPROVED', 'CAPTURED', 'EXECUTED' ) ) ) {
+                $ct['etc']['esito'] = 1;
+            } else {
+                $ct['etc']['esito'] = 0;
+            }
+
+        } elseif( ! empty( $_REQUEST['PaymentID'] ) ) {
+
+            // Monetaweb
+
+            // debug
+            // echo 'MONETAWEB';
+
+            // recupero il carrello
+            $carrello = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM carrelli WHERE id = ?',
+                array( array( 's' => $_REQUEST['PaymentID'] ) )
+            );
+
+            // esito
+            if( isset( $carrello['status_pagamento'] ) && in_array( $carrello['status_pagamento'], array( 'APPROVED', 'CAPTURED', 'EXECUTED' ) ) ) {
                 $ct['etc']['esito'] = 1;
             } else {
                 $ct['etc']['esito'] = 0;

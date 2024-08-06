@@ -112,6 +112,13 @@
                 // dettagli
                     $details                                = nexiGetSecurityKey( $c, $k );
 
+                // salvo il PaymentID
+                    mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'UPDATE carrelli SET ordine_pagamento = ? WHERE id = ?',
+                        array( array( 's' => $details['paymentId'] ), array( 's' => $c['id'] ) )
+                    );
+
                 // security key
                     $ct['etc']['meta']['seckey']            = $details['securityToken'];
                     $ct['etc']['meta']['action']            = $details['hostedPage'];
