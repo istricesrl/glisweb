@@ -27,6 +27,7 @@
 	$ct['view']['cols'] = array(
 	    'id' => 'codice',
         'nome' => 'nome',
+        'anagrafica' => 'nominativo',
 	    'sconto_percentuale' => 'percentuale',
 	    'sconto_fisso' => 'importo'
 	);
@@ -34,6 +35,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'nome' => 'text-left',
+        'anagrafica' => 'text-left',
         'sconto_percentuale' => 'text-right',
         'sconto_fisso' => 'text-right'
 	);

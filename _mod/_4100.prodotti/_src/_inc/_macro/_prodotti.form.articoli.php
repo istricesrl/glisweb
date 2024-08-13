@@ -13,7 +13,7 @@
 
     // tabella gestita
     $ct['form']['table'] = 'prodotti';
-    
+
     // tabella della vista
 	$ct['view']['table'] = 'articoli';
 

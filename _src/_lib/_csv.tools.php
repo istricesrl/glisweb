@@ -25,7 +25,8 @@
      * 
      * costanti
      * ========
-     * Questa libreria non definisce costanti proprie.
+     * Questa libreria non definisce costanti proprie, ma richiede alcune costanti che devono essere definite in fase di configurazione
+     * (vedi più avanti).
      * 
      * funzioni
      * ========

@@ -604,6 +604,8 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 	SELECT
 		anagrafica_indirizzi.id,
 		anagrafica_indirizzi.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+        anagrafica.codice AS codice_anagrafica,
 		anagrafica_indirizzi.id_indirizzo,
 		IF( anagrafica_indirizzi.id_indirizzo IS NOT NULL , concat(indirizzi.indirizzo,' ',comuni.nome,' ',provincie.sigla), anagrafica_indirizzi.indirizzo) AS indirizzo,
 		anagrafica_indirizzi.id_ruolo,
@@ -2935,6 +2937,7 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.id,
 		coupon.nome,
 		coupon.id_anagrafica,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
 		coupon.timestamp_inizio,
 		from_unixtime( coupon.timestamp_inizio, '%Y-%m-%d' ) AS data_ora_inizio,
 		coupon.timestamp_fine,
@@ -2951,6 +2954,7 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.timestamp_aggiornamento,
 		coupon.nome AS __label__
 	FROM coupon
+		LEFT JOIN anagrafica AS a1 ON a1.id = coupon.id_anagrafica
 ;
 
 -- | 090000008200

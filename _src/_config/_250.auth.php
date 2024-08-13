@@ -860,6 +860,9 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        '__report_utilizzi_coupon__' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'metadati' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),

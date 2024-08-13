@@ -53,7 +53,7 @@
     _src/_html/_bin/                            | contiene le librerie di macro html standard del framework
     _src/_html/_inc/                            | contiene i file di inclusione html standard del framework
     _src/_twig/                                 | contiene il codice Twig standard del framework
-    _src/_twig/_bin/                            | contiene le librerie di macro Twig standard del framework
+    _src/_twig/_lilb/                            | contiene le librerie di macro Twig standard del framework
     _src/_twig/_inc/                            | contiene i file di inclusione Twig standard del framework
     _src/_img/                                  | contiene i file di immagine del framework
     _src/_inc/                                  | contiene i file di inclusione del framework

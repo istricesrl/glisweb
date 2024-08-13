@@ -214,6 +214,42 @@ CREATE TABLE `__report_corsi__` (
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 100000008005
+
+-- __report_utilizzi_coupon__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_utilizzi_coupon__` AS
+    SELECT
+        coupon.id,
+        'carrelli' AS tipo,
+        concat ( 'carrello #', carrelli.id ) AS riferimento,
+        from_unixtime( carrelli.timestamp_pagamento, "%Y-%m-%d" ) AS data_pagamento,
+        carrelli_articoli.id AS id_carrelli_articoli,
+        NULL AS id_pagamento,
+        coalesce( carrelli_articoli.prezzo_lordo_totale, 0 ) AS importo_lordo_totale,
+        coalesce( carrelli_articoli.coupon_valore, 0 ) AS coupon_valore,
+        coalesce( carrelli_articoli.prezzo_lordo_finale, 0 ) AS importo_lordo_finale
+    FROM coupon
+        INNER JOIN carrelli_articoli ON carrelli_articoli.id_coupon = coupon.id
+        INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello
+
+    UNION
+
+    SELECT
+        coupon.id,
+        'pagamenti' AS tipo,
+        concat ( 'documento n. ', documenti.numero, '/', documenti.sezionale, ' del ', documenti.data ) AS riferimento,
+        from_unixtime( pagamenti.timestamp_pagamento, "%Y-%m-%d" ) AS data_pagamento,
+        NULL AS id_carrelli_articoli,
+        pagamenti.id AS id_pagamento,
+        coalesce( pagamenti.importo_lordo_totale, 0 ) AS importo_lordo_totale,
+        coalesce( pagamenti.coupon_valore, 0 ) AS coupon_valore,
+        coalesce( pagamenti.importo_lordo_finale, 0 ) AS importo_lordo_finale
+    FROM coupon
+        INNER JOIN pagamenti ON pagamenti.id_coupon = coupon.id
+        INNER JOIN documenti ON documenti.id = pagamenti.id_documento 
+;
+
 -- | 100000009870
 -- __report_evasione_ordini__
 -- tipologia: report

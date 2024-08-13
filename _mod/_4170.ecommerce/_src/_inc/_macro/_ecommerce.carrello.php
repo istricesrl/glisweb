@@ -51,10 +51,14 @@
 
     $ct['etc']['coupon'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, coupon.id 
+        'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, sum( pagamenti.coupon_valore ) AS utilizzato
         FROM coupon 
+        LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
         WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
-        ORDER BY coupon.id '
+        GROUP BY coupon.id
+        HAVING utilizzato < coupon.sconto_fisso
+        ORDER BY coupon.id 
+        '
     );
 
     // print_r( $_SESSION['carrello'] );

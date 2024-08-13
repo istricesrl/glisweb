@@ -76,7 +76,7 @@ a.btn-light, a.btn-light:visited, a.btn-light:hover, a.btn-light:active {
     padding: 0px 15px;
 }
 
-.view-table th, .view-table td {
+.view-table.view-table-static th, .view-table td {
     padding: 5px 15px;
 }
 

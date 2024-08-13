@@ -30,9 +30,22 @@
 	    'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'coupon.form',
+													'coupon.form.utilizzi',
 #													'coupon.form.gruppi'
 													'coupon.form.stampe'
 												) )
+	);
+
+	// gestione coupon utilizzi
+	$p['coupon.form.utilizzi'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'utilizzi del coupon' ),
+		'h1'		=> array( $l		=> 'utilizzi' ),
+		'parent'		=> array( 'id'		=> 'coupon.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.utilizzi.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['coupon.form']['etc']['tabs'] )
 	);
 
 	// gestione coupon stampe

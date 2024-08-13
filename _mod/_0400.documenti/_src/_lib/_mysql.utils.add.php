@@ -328,10 +328,11 @@
         // carico i pagamenti per il documento
         $r['doc']['pagamenti'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, modalita_pagamento.nome AS modalita ,'.
+            'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, modalita_pagamento.nome AS modalita, '.
             'date_format( data_scadenza, "%d/%m/%Y" ) AS data_italiana, '.
             'date_format( data_scadenza, "%Y-%m-%d" ) AS data_standard, '.
-            'pagamenti.importo_lordo_finale, iban.iban AS iban  '.
+            'pagamenti.importo_lordo_totale, pagamenti.coupon_valore, pagamenti.id_coupon, '.
+            'pagamenti.importo_lordo_finale, iban.iban AS iban '.
             'FROM pagamenti '.
             'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
             'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
