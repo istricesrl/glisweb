@@ -51,7 +51,8 @@
 
     $ct['etc']['coupon'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, sum( pagamenti.coupon_valore ) AS utilizzato
+        'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, 
+            coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
         FROM coupon 
         LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
         WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )

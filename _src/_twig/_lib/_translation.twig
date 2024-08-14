@@ -1,0 +1,19 @@
+{# MACRO PER IL SISTEMA DI TRADUZIONE DEI MICROCONTENUTI
+    Questa libreria contiene le macro necessarie per il funzionamento del sistema di traduzione dei microcontenuti del framework #}
+
+{# tr() - traduce un microcontenuto
+    Questa macro si appoggia all'array $cf['tr'] per tradurre i microcontenuti da rappresentare sulle pagine #}
+{% macro tr( options ) %}
+
+    {# valori di default #}
+    {% set options = {
+        'l': 'it-IT'
+    }|merge( options ) %}
+
+    {% if options.v[ options.w ][ options.l ] %}
+    {{ options.v[ options.w ][ options.l ] }}
+    {% else %}
+    <strong>TOKEN MANCANTE {{ options.w }} PER {{ options.l }}</strong>
+    {% endif %}
+
+{% endmacro tr %}
