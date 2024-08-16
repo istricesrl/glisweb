@@ -17,3 +17,7 @@
     {% endif %}
 
 {% endmacro tr %}
+
+{# trw() - traduce un microcontenuto e restituisce l'output trimmato
+    Questa macro è un wrapper per tr() che restituisce l'output trimmato #}
+{% macro trw( options ) %}{{ _self.tr( options )|trim }}{% endmacro trw %}

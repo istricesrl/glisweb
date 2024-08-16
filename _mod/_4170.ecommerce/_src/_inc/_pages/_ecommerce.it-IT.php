@@ -115,7 +115,7 @@
     // checkout
 	$p['carrello.successo'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'esito ordine' ),
+	    'title'			=> array( $l		=> 'successo ordine' ),
 	    'h1'			=> array( $l		=> 'conclusione ordine' ),
 	    'h2'			=> array( $l		=> NULL ),
 	    'parent'		=> array( 'id'		=> 'carrello' ),
@@ -126,7 +126,7 @@
     // checkout
 	$p['carrello.fallimento'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'esito ordine' ),
+	    'title'			=> array( $l		=> 'fallimento ordine' ),
 	    'h1'			=> array( $l		=> 'conclusione ordine' ),
 	    'h2'			=> array( $l		=> NULL ),
 	    'parent'		=> array( 'id'		=> 'carrello' ),

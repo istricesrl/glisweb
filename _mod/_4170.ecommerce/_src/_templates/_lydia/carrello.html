@@ -1,5 +1,6 @@
 {% import '_bin/_default.html' as cms %}
 {% import '_bin/_privacy.html' as prv %}
+{% import '_lib/_translation.twig' as trn %}
 
 {% extends 'ext/main.html' %}
 
@@ -10,7 +11,7 @@
 
     {# BLOCCO ARTICOLI NEL CARRELLO #}
     <fieldset class="articoli">
-        <legend>articoli nel carrello</legend>
+        <legend>{{ trn.tr({ 'w': 'articoli_carrello', 'l': ietf, 'v': tr.generic }) }}</legend>
 
 
 
@@ -23,12 +24,12 @@
         <div class="col">
             <table class="table">
                 <tr>
-                    <th>articolo</th>
-                    <th>prezzo</th>
-                    <th>quantita</th>
-                    <th>spedizione</th>
-                    <th>totale</th>
-                    <th>note</th>
+                    <th>{{ trn.tr({ 'w': 'codice_articolo', 'l': ietf, 'v': tr.generic }) }}</th>
+                    <th>{{ trn.tr({ 'w': 'prezzo_unitario', 'l': ietf, 'v': tr.generic }) }}</th>
+                    <th>{{ trn.tr({ 'w': 'quantita', 'l': ietf, 'v': tr.generic }) }}</th>
+                    <th>{{ trn.tr({ 'w': 'costo_spedizione', 'l': ietf, 'v': tr.generic }) }}</th>
+                    <th>{{ trn.tr({ 'w': 'costo_totale', 'l': ietf, 'v': tr.generic }) }}</th>
+                    <th>{{ trn.tr({ 'w': 'note', 'l': ietf, 'v': tr.generic }) }}</th>
                     <th></th>
                 </tr>
                 {% for articolo, dati in session.carrello.articoli  %}
@@ -63,7 +64,7 @@
                 {% endfor %}
 
                 <tr>
-                    <td>modalità di pagamento</td>
+                    <td>{{ trn.tr({ 'w': 'modalita_pagamento', 'l': ietf, 'v': tr.generic }) }}</td>
                     <td colspan="2">
                         <select class="form-control form-control-sm hint-toggle" id="costo-pagamento" hint-toggle="modalita_pagamento" name="__carrello__[provider_pagamento]">
                             {% for cons in ecommerce.profile.provider %}
@@ -79,7 +80,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>modalità di fatturazione</td>
+                    <td>{{ trn.tr({ 'w': 'modalita_fatturazione', 'l': ietf, 'v': tr.generic }) }}</td>
                     <td>
                         <select class="form-control form-control-sm hint-toggle" id="tipologia-documento-fatturazione" hint-toggle="tipologia_documento_fatturazione" name="__carrello__[fatturazione_id_tipologia_documento]">
                             {% for tdoc in etc.id_tipologia_documenti %}
@@ -100,7 +101,7 @@
                     <td></td>
                 </tr>
                 <tr>
-                    <td>codice sconto</td>
+                    <td>{{ trn.tr({ 'w': 'codice_sconto', 'l': ietf, 'v': tr.generic }) }}</td>
                     <td colspan="2">
                         <input class="form-control form-control-sm text-right quantita" type="text" id="coupon" name="__carrello__[codice_coupon]" value="{{ session.carrello.codice_coupon }}">
                     </td>
@@ -108,12 +109,12 @@
                     <td></td>
                     <td></td>
                     <td>
-                        {{ cms.formButton( 'APPLICA SCONTO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '"); $("#formCarrello").submit();','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'ApplicaSconto', 1 ) }}
+                        {{ cms.formButton( trn.tr({ 'w': 'applica_sconto', 'l': ietf, 'v': tr.generic })|upper, 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '"); $("#formCarrello").submit();','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'ApplicaSconto', 1 ) }}
                     </td>
                 </tr>
 
                 <tr>
-                    <td><b>totale</b></td>
+                    <td>{{ trn.tr({ 'w': 'totale_carrello', 'l': ietf, 'v': tr.generic }) }}</td>
                     <td></td>
                     <td></td>
                     <td></td>
@@ -123,14 +124,14 @@
                 </tr>
                 {% if session.carrello.sconto_percentuale %}
                 <tr>
-                    <td><b>sconto </b></td>
+                    <td><b>{{ trn.tr({ 'w': 'sconto', 'l': ietf, 'v': tr.generic }) }} </b></td>
                     <td><b>€ {{ (session.carrello.sconto_percentuale * session.carrello.prezzo_lordo_totale / 100)|number_format(2, ',', '.') }}</b></td>
                     <td></td>
                     <td><b>{{ session.carrello.note }}</b></td>
                     <td></td>
                 </tr>
                 <tr>
-                    <td><b>totale scontato</b></td>
+                    <td><b>{{ trn.tr({ 'w': 'totale_scontato', 'l': ietf, 'v': tr.generic }) }}</b></td>
                     <td><b>€ {{ session.carrello.prezzo_lordo_finale|number_format(2, ',', '.') }}</b></td>
                     <td></td>
                     <td></td>
@@ -142,16 +143,16 @@
     </div>
     <div class="form-row">
         <div class="col">
-            {{ cms.formButton( 'RICALCOLA CARRELLO', 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Ricalcola', 1 ) }}
+            {{ cms.formButton( trn.tr({ 'w': 'ricalcola_carrello', 'l': ietf, 'v': tr.generic })|upper, 'button', 'btn btn-secondary btn-sm btn-block', 'var forceValid = 1; $("#formCarrello").attr("action","' ~ page.url[ localization.language.ietf ] ~ '");','', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '', 'Ricalcola', 1 ) }}
         </div>
     </div>
 
     {# BLOCCO DATI DEL CARRELLO #}
     <fieldset class="dati">
-        <legend>intestazione ordine</legend>
+        <legend>{{ trn.tr({ 'w': 'intestazione_ordine', 'l': ietf, 'v': tr.generic }) }}</legend>
         <div class="form-row">
 			<div class="col-auto">
-			    <label class="label-top">persona</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'tipo_persona', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <select class="form-control form-control-sm" id="intestazione_id_tipologia_anagrafica" name="__carrello__[intestazione_id_tipologia_anagrafica]" required>
 				{% for tana in etc.id_tipologia_anagrafica %}
 				<option value="{{ tana.id }}"{% if tana.id == session.carrello.intestazione_id_tipologia_anagrafica %} selected{% endif %}>{{ tana.__label__ }}</option>
@@ -159,54 +160,54 @@
 			    </select>
 			</div>
             <div class="col">
-                <label class="label-top">nome</label>
+                <label class="label-top">{{ trn.tr({ 'w': 'nome', 'l': ietf, 'v': tr.generic }) }}</label>
                 <input class="form-control form-control-sm" id="intestazione_nome" type="text" name="__carrello__[intestazione_nome]" value="{{ session.carrello.intestazione_nome }}" required>
             </div>
             <div class="col">
-                <label class="label-top">cognome</label>
+                <label class="label-top">{{ trn.tr({ 'w': 'cognome', 'l': ietf, 'v': tr.generic }) }}</label>
                 <input class="form-control form-control-sm" id="intestazione_cognome" type="text" name="__carrello__[intestazione_cognome]" value="{{ session.carrello.intestazione_cognome }}" required>
             </div>
         </div>
         <div class="form-row">
 			<div class="col-6">
-			    <label class="label-top">ragione sociale (solo aziende)</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'ragione_sociale', 'l': ietf, 'v': tr.generic }) }} ({{ trn.tr({ 'w': 'solo_aziende', 'l': ietf, 'v': tr.generic }) }})</label>
 			    <input class="form-control form-control-sm" id="intestazione_denominazione" type="text" name="__carrello__[intestazione_denominazione]" value="{{ session.carrello.intestazione_denominazione }}">
 			</div>
 			<div class="col-6 col-md-3">
-			    <label class="label-top">codice SDI (solo aziende)</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'codice_sdi', 'l': ietf, 'v': tr.generic }) }} ({{ trn.tr({ 'w': 'solo_aziende', 'l': ietf, 'v': tr.generic }) }})</label>
 			    <input class="form-control form-control-sm" id="intestazione_sdi" type="text" name="__carrello__[intestazione_sdi]" value="{{ session.carrello.intestazione_sdi }}">
 			</div>
 			<div class="col-6 col-md-3">
-			    <label class="label-top">indirizzo PEC (solo aziende)</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'indirizzo_pec', 'l': ietf, 'v': tr.generic }) }} ({{ trn.tr({ 'w': 'solo_aziende', 'l': ietf, 'v': tr.generic }) }})</label>
 			    <input class="form-control form-control-sm" id="intestazione_pec" type="text" name="__carrello__[intestazione_pec]" value="{{ session.carrello.intestazione_pec }}">
 			</div>
 		</div>
 		<div class="form-row">
 			<div class="col-6">
-			    <label class="label-top">codice fiscale</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'codice_fiscale', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <input class="form-control form-control-sm" id="intestazione_codice_fiscale" type="text" name="__carrello__[intestazione_codice_fiscale]" value="{{ session.carrello.intestazione_codice_fiscale }}" required>
 			</div>
 			<div class="col-6">
-			    <label class="label-top">partita IVA</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'partita_iva', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <input class="form-control form-control-sm" id="intestazione_partita_iva" type="text" name="__carrello__[intestazione_partita_iva]" value="{{ session.carrello.intestazione_partita_iva }}">
 			</div>
 	    </div>
 	    <div class="form-row">
 			<div class="col-9 col-md-5">
-			    <label class="label-top">indirizzo</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'indirizzo', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <input class="form-control form-control-sm" id="intestazione_indirizzo" type="text" name="__carrello__[intestazione_indirizzo]" value="{{ session.carrello.intestazione_indirizzo }}" required>
 			</div>
 			<div class="col-3 col-md-1">
-			    <label class="label-top">CAP</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'cap', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <input class="form-control form-control-sm" id="intestazione_cap" type="text" name="__carrello__[intestazione_cap]" value="{{ session.carrello.intestazione_cap }}" required>
 			</div>
 			<div class="col-7 col-md-3">
-			    <label class="label-top">città</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'citta', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <input class="form-control form-control-sm" id="intestazione_citta" type="text" name="__carrello__[intestazione_citta]" value="{{ session.carrello.intestazione_citta }}" required>
 			</div>
             {% if session.carrello.intestazione_id_stato == 1 %}
 			<div class="col-5 col-md-2">
-			    <label class="label-top">provincia</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'provincia', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <select class="form-control form-control-sm" id="intestazione_id_provincia" name="__carrello__[intestazione_id_provincia]" required>
 				{% for prov in etc.id_provincia %}
 				<option value="{{ prov.id }}"{% if prov.id == session.carrello.intestazione_id_provincia %} selected{% endif %}>{{ prov.__label__ }}</option>
@@ -215,7 +216,7 @@
 			</div>
             {% endif %}
 			<div class="col-5 col-md">
-			    <label class="label-top">nazione</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'nazione', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <select class="form-control form-control-sm" id="intestazione_id_stato" name="__carrello__[intestazione_id_stato]" onchange="var forceValid = 1; $('#formCarrello').attr('action','{{ page.url[ localization.language.ietf ] }}'); $('#formCarrello').submit();" required>
 				{% for stato in etc.id_stato %}
 				<option value="{{ stato.id }}"{% if stato.id == session.carrello.intestazione_id_stato %} selected{% endif %}>{{ stato.__label__ }}</option>
@@ -225,11 +226,11 @@
 		</div>
 	    <div class="form-row">
 			<div class="col-6">
-			    <label class="label-top">telefono</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'recapito_telefonico', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <input class="form-control form-control-sm" id="intestazione_telefono" type="tel" name="__carrello__[intestazione_telefono]" value="{{ session.carrello.intestazione_telefono }}" required>
 			</div>
 			<div class="col-6">
-			    <label class="label-top">e-mail</label>
+			    <label class="label-top">{{ trn.tr({ 'w': 'email', 'l': ietf, 'v': tr.generic }) }}</label>
 			    <input class="form-control form-control-sm" id="intestazione_mail" type="email" name="__carrello__[intestazione_mail]" value="{{ session.carrello.intestazione_mail }}" required>
 			</div>
 		</div>
@@ -237,20 +238,20 @@
 
     {# CHECKBOX CONDIZIONI E PRIVACY #}
     {{ prv.checkConsensi( '__carrello__', '', ecommerce.condizioni.vendita, localization.language.ietf, tr, pages, session ) }}
-    {{ prv.checkConsensi( '__carrello__', '', privacy.moduli.ecommerce, localization.language.ietf, tr, pages, session ) }}
+    {{ prv.checkConsensi( '__carrello__', '', privacy.moduli.carrello, localization.language.ietf, tr, pages, session ) }}
 
     {# CONTROLLI DEL CARRELLO #}
     <fieldset class="conferma">
         <div class="form-row">
             <div class="col">
-                {{ cms.formButton( 'CONFERMA ORDINE', 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '' ) }}
+                {{ cms.formButton( trn.tr({ 'w': 'invia_ordine', 'l': ietf, 'v': tr.generic })|upper, 'button', 'btn btn-secondary btn-sm btn-block', '', '', '', 'formCarrello', google.profile.recaptcha, '__carrello__', '' ) }}
             </div>
         </div>
     </fieldset>
 
 </form>
 {% else %}
-<p>non ci sono articoli nel carrello</p>
+<p>{{ trn.tr({ 'w': 'nessun_articolo_carrello', 'l': ietf, 'v': tr.generic }) }}</p>
 {% endif %}
 
 {% endblock %}

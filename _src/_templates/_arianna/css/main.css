@@ -126,6 +126,10 @@ ul.navbar-nav {
     list-style-type: none;
 }
 
+div.row-privacy a {
+    font-weight: bold;
+}
+
 @media (max-width: 576px) {
     .nav-icons a.nav-link {
         margin-left: .75em;

@@ -2,6 +2,15 @@
 {# NOTA: IMPORTARE SEMPRE COME PRV #}
 {# import '_bin/_privacy.html' as prv #}
 
+{# TODO per semplificare, ogni modulo (che sia sotto contatti, registrazione, ecommerce, ecc. poco importa) dovrebbe avere una sua sotto chiave consensi
+    contenente tutti i consensi da prestare (termini di servizio, condizioni di vendita, privacy, eccetera) e la macro checkConsensi() dovrebbe semplicemente
+    fare il ciclo e creare le checkbox con le label relative e i link se presenti; in questo modo si semplificherebbe molto la gestione a livello di
+    config.json perché adesso la roba è troppo sparsa in giro 
+
+    bisognerebbe formalizzare che ogni chiave di modulo (ecommerce, contatti, registrazione, ecc.) abbia una sottochiave moduli con i vari moduli previsit
+    per il sito corrente, e ogni modulo abbia una sottochiave consensi con i vari consensi da prestare, e la macro checkConsensi() dovrebbe fare il ciclo
+    su questi #}
+
 {% macro checkConsensi( ref, key, items, ietf, tr, pages, session, class, rclass ) %}
 {# NOTA items può sembrare ridondante rispetto a items[ key ] ma ci sono form (ad es. __carrello__) che non hanno i due livelli come __contatti__[key] #}
 <!-- macro {{ _self }}::checkConsensi() -->
