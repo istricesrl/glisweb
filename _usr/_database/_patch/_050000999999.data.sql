@@ -1211,7 +1211,8 @@ INSERT IGNORE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661al
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 15:42 Fabio Mosti
 INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
-(1,     1,	    1);
+(1,	1,	1,	1),
+(2,	12,	4,	1);
 
 -- | 050000042500
 

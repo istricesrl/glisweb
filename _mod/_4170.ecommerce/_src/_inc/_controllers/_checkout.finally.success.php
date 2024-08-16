@@ -93,8 +93,29 @@
 
         }
 
+        // ...
+        $linguaMail = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT lingue.ietf FROM lingue
+            INNER JOIN stati_lingue ON stati_lingue.id_lingua = lingue.id
+            WHERE stati_lingue.id_stato = ?',
+            array(
+                array( 's' => $carrello['intestazione_id_stato'] )
+            )
+        );
+
+        // ...
+        if( empty( $linguaMail ) ) {
+            $linguaMail = 'en-GB';
+        }
+
+        // ...
+        if( ! in_array( $linguaMail, array_keys( $cf['site']['name'] ) ) ) {
+            $linguaMail = 'it-IT';
+        }
+
         // invio della mail di notifica esterna
-        if( ! empty( $cf['mail']['tpl']['DEFAULT_NOTIFICA_ESTERNA_ACQUISTO']['it-IT']['from'] ) ) {
+        if( ! empty( $cf['mail']['tpl']['DEFAULT_NOTIFICA_ESTERNA_ACQUISTO'][ $linguaMail ]['from'] ) ) {
 
             $idMailEsterna = queueMailFromTemplate(
                 $cf['mysql']['connection'],
@@ -107,7 +128,7 @@
                 array(
                     implode( ' ', $carrello['intestazione_nome'], $carrello['intestazione_cognome'], $carrello['intestazione_denominazione'] ) => $carrello['intestazione_mail']
                 ),
-                'it-IT'
+                $linguaMail
             );
 
         }

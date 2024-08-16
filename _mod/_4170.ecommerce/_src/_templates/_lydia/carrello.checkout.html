@@ -5,21 +5,21 @@
 {% block main %}
 
 {% if etc.esito == session.carrello.id %}
-    <h2>ordine piazzato correttamente!</h2>
+    <h2>{{ trn.tr({ 'w': 'ordine_piazzato', 'l': ietf, 'v': tr.generic }) }}!</h2>
     {% if session.carrello.provider_pagamento == 'bonifico' %}
-    <p>Per completare l'ordine effettuare un bonifico bancario di € <span>{{ session.carrello.prezzo_lordo_finale }}</span> a:</p>
+    <p>{{ trn.tr({ 'w': 'per_completare_ordine_fare_bonifico', 'l': ietf, 'v': tr.generic }) }} € <span>{{ session.carrello.prezzo_lordo_finale }}</span> a:</p>
     <ul>
-        <li>banca: <span></span></li>
-        <li>indirizzo: <span></span></li>
-        <li>IBAN: <span></span></li>
-        <li>codice SWIFT: <span></span></li>
-        <li>causale: <span>ordine #{{ session.carrello.id }}</span></li>
+        <li>{{ trn.tr({ 'w': 'nome_banca', 'l': ietf, 'v': tr.generic }) }}: <span></span></li>
+        <li>{{ trn.tr({ 'w': 'indirizzo', 'l': ietf, 'v': tr.generic }) }}: <span></span></li>
+        <li>{{ trn.tr({ 'w': 'codice_iban', 'l': ietf, 'v': tr.generic }) }}: <span></span></li>
+        <li>{{ trn.tr({ 'w': 'codice_swift', 'l': ietf, 'v': tr.generic }) }}: <span></span></li>
+        <li>{{ trn.tr({ 'w': 'indica_ordine_nella_causale', 'l': ietf, 'v': tr.generic }) }}: <span>ordine #{{ session.carrello.id }}</span></li>
     </ul>
-    <p>Per accelerare l'evasione del tuo ordine puoi inviarci una copia della contabile all'indirizzo <span></span>.</p>
+    <p>{{ trn.tr({ 'w': 'invia_contabile_via_mail', 'l': ietf, 'v': tr.generic }) }} <span></span>.</p>
     {% endif %}
 {% else %}
-    <h2>errore nella conferma dell'ordine</h2>
-    <p>puoi ritentare tornando al carrello e provando un altro metodo di pagamento oppure contattarci per ottenere supporto</p>
+    <h2>{{ trn.tr({ 'w': 'errore_conferma_ordine', 'l': ietf, 'v': tr.generic }) }}</h2>
+    <p>{{ trn.tr({ 'w': 'suggerimenti_errore_conferma_ordine', 'l': ietf, 'v': tr.generic }) }}</p>
 {% endif %}
 
 {% endblock %}

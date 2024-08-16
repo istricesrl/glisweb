@@ -4,13 +4,13 @@
 
 {% block main %}
 
-<h2>esito pagamento</h2>
+<h2></h2>
 {% if etc.esito == 1 %}
-    <p>il pagamento è andato a buon fine!</p>
+    <p>{{ trn.tr({ 'w': 'esito_pagamento_buon_fine', 'l': ietf, 'v': tr.generic }) }}</p>
 {% elseif etc.esito == 2 %}
-    <p>il tuo ordine è in lavorazione!</p>
+    <p>{{ trn.tr({ 'w': 'ordine_in_lavorazione', 'l': ietf, 'v': tr.generic }) }}!</p>
 {% else %}
-    <p>il pagamento non è andato a buon fine, <a href="{{ pages.carrello.url[ localization.language.ietf ] }}">torna al carrello</a> e riprova</p>
+    <p>{{ trn.tr({ 'w': 'esito_pagamento_negativo', 'l': ietf, 'v': tr.generic }) }}, <a href="{{ pages.carrello.url[ localization.language.ietf ] }}">{{ trn.tr({ 'w': 'torna_carrello_riprova', 'l': ietf, 'v': tr.generic }) }}</a></p>
 {% endif %}
 
 {% endblock %}
