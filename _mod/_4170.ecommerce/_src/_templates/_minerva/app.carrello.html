@@ -21,10 +21,25 @@
                     <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][id_articolo]" value="{{ dati.id_articolo }}">
                     <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][destinatario_id_anagrafica]" value="{{ dati.destinatario_id_anagrafica }}">
                     <input type="hidden" name="__carrello__[__articoli__][{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}][quantita]" value="{{ '%0.0f'|format(dati.quantita) }}" id="qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}">
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-md-12">
                         <h2>{{ dati.descrizione }}</h2>
-                        <h3>{{ '%0.2f'|format(dati.prezzo_lordo_finale) }} €</h3>
-                        <div class="col-4 col-md-1 text-center"><input class="btn btn-secondary btn-sm" type="button" value="rimuovi" onclick="$('#qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}').val('');$('#formCarrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#formCarrello').submit();"></div>
+                        <h3>da pagare {{ '%0.2f'|format(dati.prezzo_lordo_finale) }} €</h3>
+
+                        {% if dati.id_coupon %}
+                        <p>il prezzo di <b>{{ '%0.2f'|format(dati.prezzo_lordo_totale) }} €</b> è scontato di <b>{{ '%0.2f'|format(dati.coupon_valore) }} €</b> per il coupon <b>{{ dati.id_coupon }} €</b></p>
+                        {% endif %}
+
+                        <div class="row">
+                            {% if dati.id_coupon %}
+                            <div class="col-auto">
+                                <input class="btn btn-secondary btn-sm" type="button" value="rimuovi coupon" onclick="window.open( '{{ pages['app.carrello'].url['it-IT'] }}?__del_coupon__={{ dati.id_coupon}}', '_self' );">
+                            </div>
+                            {% endif %}
+                            <div class="col">
+                                <input class="btn btn-secondary btn-sm" type="button" value="rimuovi articolo dal carrello" onclick="$('#qta{{ dati.id_articolo ~ dati.destinatario_id_anagrafica }}').val('');$('#formCarrello').attr('action','{{ page.url[ localization.language.ietf ] }}');$('#formCarrello').submit();">
+                            </div>
+                        </div>
+
                     </div>
                     {% else %}
                     <div class="col-12 col-md">
@@ -36,6 +51,35 @@
             </fieldset>
         </div>
     </div>
+    {% if etc.coupon.disponibili %}
+    <div class="row annunci">
+        <div class="col-12">
+            <fieldset>
+                <legend>hai dei coupon da utilizzare</legend>
+
+                <div class="form-group form-row row richieste">
+                    {% for coupon in etc.coupon.disponibili %}
+
+                    <div class="col-12 col-md-4">
+                        <h2>{{ coupon.id }}</h2>
+                        {% if coupon.timestamp_fine %}
+                        <h3>valido fino al {{ coupon.timestamp_fine|date('d/m/Y') }}</h3>
+                        {% else %}
+                        <h3>valido fino a esaurimento credito</h3>
+                        {% endif %}
+                        <p>Su questo coupon hai disponibili <b>{{ '%0.2f'|format( coupon.residuo ) }} €</b> sul valore totale di <b>{{ '%0.2f'|format( coupon.sconto_fisso ) }} €</b></p>
+                        <div class="col-4 col-md-1 text-center">
+                            <input class="btn btn-secondary btn-sm" type="button" value="{% if coupon.id in etc.coupon.usati %}rimuovi dal carrello{% else %}aggiungi al carrello{% endif %}" onclick="window.open( '{{ pages['app.carrello'].url['it-IT'] }}?{% if coupon.id in etc.coupon.usati %}__del_coupon__{% else %}__add_coupon__{% endif %}={{ coupon.id }}', '_self' );">
+                        </div>
+                    </div>
+
+                    {% endfor %}
+                </div>
+
+            </fieldset>
+        </div>
+    </div>
+    {% endif %}
     <div class="row annunci">
         <div class="col-12">
             <fieldset>

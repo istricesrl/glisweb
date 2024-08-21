@@ -51,3 +51,81 @@
     }
 
     */
+
+    /*
+    $ct['etc']['coupon'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, 
+            coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
+        FROM coupon 
+        LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
+        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() )
+        AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+        AND ( coupon.id_anagrafica = ? OR coupon.id_anagrafica IS NULL )
+        GROUP BY coupon.id
+        HAVING utilizzato < coupon.sconto_fisso
+        ORDER BY coupon.id 
+        ',
+        array(
+            array( 's' => $cf['session']['account']['id_anagrafica'] )
+        )
+    );
+    */
+
+    $ct['etc']['coupon']['disponibili'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT
+            t.id,
+            t.id_referenza,
+            t.tipologia,
+            count( t.id ) AS numero_utilizzi,
+            sum( t.coupon_valore ) AS utilizzato,
+            ( coupon.sconto_fisso - sum( t.coupon_valore ) ) AS residuo,
+            coupon.sconto_fisso,
+            coupon.timestamp_fine
+
+        FROM (
+
+            SELECT
+            carrelli_articoli.id_coupon AS id,
+            carrelli_articoli.id AS id_referenza,
+            "carrello" AS tipologia,
+            carrelli_articoli.coupon_valore
+            FROM carrelli_articoli
+            WHERE id_coupon IS NOT NULL
+
+            UNION
+
+            SELECT
+            pagamenti.id_coupon AS id,
+            pagamenti.id AS id_referenza,
+            "pagamento" AS tipologia,
+            pagamenti.coupon_valore
+            FROM pagamenti
+            WHERE id_coupon IS NOT NULL
+
+            ) AS t
+        INNER JOIN coupon ON coupon.id = t.id
+        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() )
+        AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+        AND ( coupon.id_anagrafica = ? OR coupon.id_anagrafica IS NULL )
+        GROUP BY t.id 
+        HAVING residuo > 0
+        ',
+        array(
+            array( 's' => $cf['session']['account']['id_anagrafica'] )
+        )
+    );
+
+    // ...
+    $ct['etc']['coupon']['utilizzati'] = mysqlQuery(
+        $cf['mysql']['connection'],
+        'SELECT id_coupon FROM carrelli_articoli WHERE id_carrello = ? AND id_coupon IS NOT NULL',
+        array(
+            array( 's' => $cf['session']['carrello']['id'] )
+        )
+    );
+
+    // debug
+    // echo( $cf['session']['account']['id_anagrafica'] ) . PHP_EOL;
+    // die( print_r( $ct['etc']['coupon'], true ) );

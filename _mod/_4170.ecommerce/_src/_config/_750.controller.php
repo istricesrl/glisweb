@@ -20,6 +20,9 @@
         // log
         logWrite( 'attivata la controller del carrello', 'cart' );
 
+        // debug
+        // die( print_r( $_REQUEST['__carrello__'], true ) );
+
         // verifico la challenge reCAPTCHA
         if( getAclPermission( 'carrelli', METHOD_POST ) ) {
 
@@ -377,13 +380,17 @@
                 }
                 */
 
+                // calcolo la chiave
+                $rowKey = $_REQUEST['__carrello__']['__articolo__']['id_articolo'].( ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL );
+
                 // aggiunta articolo al carrello
                 // TODO aggiungere anche l'id_coupon se presente
                 $_REQUEST['__carrello__'] = array_replace_recursive(
                     $_REQUEST['__carrello__'],
                     array(
                         '__articoli__' => array(
-                            $_REQUEST['__carrello__']['__articolo__']['id_articolo'] => array(
+                            // $_REQUEST['__carrello__']['__articolo__']['id_articolo'] => array(
+                            $rowKey => array(
                                 'quantita' => $_REQUEST['__carrello__']['__articolo__']['quantita'],
                                 'id_articolo' => $_REQUEST['__carrello__']['__articolo__']['id_articolo'],
                                 'id_rinnovo' => ( isset( $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['id_rinnovo'] : NULL,
@@ -410,28 +417,45 @@
             // integra i campi dal model, poi? calcola i delta per l'evento aggiungi al carrello?
             if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
                 foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
-                    $deltaArticoli[ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array(
-                        'id_articolo' => $item['id_articolo'],
-                        'quantita' => ( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] ) )
-                        ? $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] - $item['quantita']
-                        : $item['quantita']
-                    );
-                    foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {
-                        if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] ) ) {
-                            $item[ $field ] = $model['default'];
-                        }
-                    }
-                    // TODO IMPORTANTE nel ciclo qui sopra, oppure a parte qui sotto, accettare il valore di sconto solo se l'utente ha i privilegi appropriati (altrimenti la gente si mette gli sconti da sola)
-                    // echo '<pre>' . print_r( $item, true ) . '</pre>';
-                    if( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] ) ) {
-                        $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array_replace_recursive(
-                            $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ],
-                            $item
+                    // TODO se $key è empty, costruire come id_articolo + id_anagrafica se id_articolo non è vuoto
+                    if( ! empty( $key ) ) {
+                        // $deltaArticoli[ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array(
+                        $deltaArticoli[ $key ] = array(
+                            'id_articolo' => $item['id_articolo'],
+                            // 'quantita' => ( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] ) )
+                            'quantita' => ( isset( $_SESSION['carrello']['articoli'][ $key ][ $field ] ) )
+                            // ? $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] - $item['quantita']
+                            ? $_SESSION['carrello']['articoli'][ $key ][ $field ] - $item['quantita']
+                            : $item['quantita']
                         );
-                    } else {
-                        $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = $item;
+                        foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {
+                            // if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] ) ) {
+                            if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $key ][ $field ] ) ) {
+                                $item[ $field ] = $model['default'];
+                            }
+                        }
+                        // TODO IMPORTANTE nel ciclo qui sopra, oppure a parte qui sotto, accettare il valore di sconto solo se l'utente ha i privilegi appropriati (altrimenti la gente si mette gli sconti da sola)
+                        // echo '<pre>' . print_r( $item, true ) . '</pre>';
+                        /*
+                        if( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] ) ) {
+                            $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array_replace_recursive(
+                                $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ],
+                                $item
+                            );
+                        } else {
+                            $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = $item;
+                        }
+                        */
+                        if( isset( $_SESSION['carrello']['articoli'][ $key ] ) ) {
+                            $_SESSION['carrello']['articoli'][ $key ] = array_replace_recursive(
+                                $_SESSION['carrello']['articoli'][ $key ],
+                                $item
+                            );
+                        } else {
+                            $_SESSION['carrello']['articoli'][ $key ] = $item;
+                        }
+                        // echo '<pre>' . print_r( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ], true ) . '</pre>';
                     }
-                    // echo '<pre>' . print_r( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ], true ) . '</pre>';
                 }
             }
 
@@ -447,8 +471,11 @@
                     // chiave di riga
                     $rowKey = $dati['id_articolo'].$dati['destinatario_id_anagrafica'];
 
+                    // debug
+                    // echo 'valuto la riga ' . $rowKey . PHP_EOL;
+
                     // eliminazione articolo dal carrello
-                    if( empty( $dati['quantita'] ) ) {
+                    if( empty( $dati['quantita'] ) && ! empty( $dati['id_articolo'] ) ) {
 
                         // elimino l'articolo
                         // TODO questa cancellazione elimina tutte le righe con l'articolo per qualunque destinatario_id_anagrafica, bisogna sistemarla ma questo richiede modifiche all'interfaccia
@@ -462,7 +489,7 @@
                         );
 
                         // debug
-                        // die( 'elimino articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] );
+                         die( 'elimino articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] );
 
                         // log
                         logWrite( 'eliminato articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' dal carrello ' . $_SESSION['carrello']['id'], 'cart' );
@@ -578,6 +605,9 @@
                             $_SESSION['carrello']['articoli'][ $rowKey ]['id'],
                             ( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] )
                         );
+
+                        // debug
+                        // echo 'valore calcolato ' . $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] . ' per il coupon ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'] . PHP_EOL;
 
                         // TODO trovo i prezzi finali
                         // TODO calcolare correttamente lo sconto sul netto
@@ -731,4 +761,5 @@
     }
 
     // debug
-    // print_r( $_REQUEST['__carrello__'] );
+    // die( print_r( $_REQUEST['__carrello__'], true ) );
+    // die( print_r( $_SESSION['carrello'], true ) );
