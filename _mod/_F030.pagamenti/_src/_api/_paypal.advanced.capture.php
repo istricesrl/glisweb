@@ -98,7 +98,7 @@
             );
 
             // registro il pagamento
-            mysqlInsertRow(
+            $paymentId = mysqlInsertRow(
                 $cf['mysql']['connection'],
                 $payment,
                 'pagamenti'

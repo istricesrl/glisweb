@@ -81,6 +81,7 @@
                         'id_creditore' => trovaIdAziendaGestita(),
                         'id_debitore' => $_SESSION['account']['id_anagrafica'],
                         'nome' => 'pagamento creato al volo per riga di carrelli articoli #' . $riga['id'],
+                        'data_scadenza' => date( 'Y-m-d' ),
                         'token_pagamento' => $dati['token_pagamento'],
                         'id_carrelli_articoli' => $riga['id'],
                         'importo_lordo_finale' => $dati['importo_lordo_finale']

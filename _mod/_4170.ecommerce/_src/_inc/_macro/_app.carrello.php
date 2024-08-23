@@ -75,16 +75,18 @@
     $ct['etc']['coupon']['disponibili'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT
-            t.id,
+            coupon.id,
             t.id_referenza,
             t.tipologia,
             count( t.id ) AS numero_utilizzi,
-            sum( t.coupon_valore ) AS utilizzato,
-            ( coupon.sconto_fisso - sum( t.coupon_valore ) ) AS residuo,
+            coalesce( sum( t.coupon_valore ), 0 ) AS utilizzato,
+            ( coupon.sconto_fisso - coalesce( sum( t.coupon_valore ), 0 ) ) AS residuo,
             coupon.sconto_fisso,
             coupon.timestamp_fine
 
-        FROM (
+        FROM coupon
+        
+        LEFT JOIN (
 
             SELECT
             carrelli_articoli.id_coupon AS id,
@@ -104,8 +106,7 @@
             FROM pagamenti
             WHERE id_coupon IS NOT NULL
 
-            ) AS t
-        INNER JOIN coupon ON coupon.id = t.id
+            ) AS t ON coupon.id = t.id
         WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() )
         AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
         AND ( coupon.id_anagrafica = ? OR coupon.id_anagrafica IS NULL )
@@ -118,7 +119,8 @@
     );
 
     // ...
-    $ct['etc']['coupon']['utilizzati'] = mysqlQuery(
+    $ct['etc']['coupon']['utilizzati'] = mysqlSelectColumn(
+        'id_coupon',
         $cf['mysql']['connection'],
         'SELECT id_coupon FROM carrelli_articoli WHERE id_carrello = ? AND id_coupon IS NOT NULL',
         array(
