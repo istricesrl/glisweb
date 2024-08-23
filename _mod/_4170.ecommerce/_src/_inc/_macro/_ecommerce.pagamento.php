@@ -64,7 +64,9 @@
                                         'id_debitore' => $pagamento['destinatario_id_anagrafica'],
                                         'id_carrelli_articoli' => $pagamento['id'],
                                         'id_rinnovo' => ( ( isset( $pagamento['id_rinnovo'] ) ) ? $pagamento['id_rinnovo'] : NULL ),
-                                        'importo_lordo_finale' => $pagamento['importo_lordo_finale'],
+                                        // 'importo_lordo_finale' => $pagamento['importo_lordo_finale'],
+                                        'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
+                                        'importo_lordo_finale' => $pagamento['importo_lordo_totale'],
                                         'data_scadenza' => $_REQUEST['__pagamenti__']['data_rate'],
                                         'nome' => 'rata da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
                                         'timestamp_inserimento' => time(),
@@ -204,7 +206,15 @@
                                         // TODO manca l'id listino
                                         // TODO manca la modalità di pagamento
                                     ),
-                                    'pagamenti'
+                                    'pagamenti',
+                                    true,
+                                    false,
+                                    array(
+                                        'id_rinnovo',
+                                        'id_carrelli_articoli',
+                                        'importo_lordo_totale',
+                                        'nome'
+                                    )
                                 );
 
                                 if( isset( $pagamento['autoprint'] ) && ! empty( $pagamento['autoprint'] ) ) {
@@ -658,7 +668,7 @@
                 );
 
                 // pagamenti in sospeso (rate)
-                $rate = mysqlQuery(
+                $riga['rate'] = mysqlQuery(
                     $cf['mysql']['connection'],
                     'SELECT pagamenti.* '.
                     'FROM pagamenti '.
@@ -667,8 +677,8 @@
                 );
 
                 // calcolo il totale già pagato
-                if( is_array( $rate ) ) {
-                    foreach( $rate as $rata ) {
+                if( is_array( $riga['rate'] ) ) {
+                    foreach( $riga['rate'] as $rata ) {
 
                         // aggiungo il totale della riga
                         $riga['totale_lordo_rateizzato'] += $rata['importo_lordo_finale'];
@@ -676,11 +686,23 @@
                     }
                 }
 
+                // ...
+                if( empty( $riga['totale_lordo_pagato'] ) ) {
+                    $riga['totale_lordo_pagato'] = 0;
+                }
+
+                // ...
+                if( empty( $riga['totale_lordo_rateizzato'] ) ) {
+                    $riga['totale_lordo_rateizzato'] = 0;
+                }
+
                 // totale da pagare
                 if( empty( $riga['id_pagamento'] ) ) {
                     $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
                 } else {
-                    $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'] - $riga['totale_lordo_pagato'];
+                    // $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'] - $riga['totale_lordo_pagato'];
+                    $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_finale'] - $riga['totale_lordo_pagato'];
+                    // echo $riga['importo_lordo_finale'] . ' - ' . $riga['totale_lordo_pagato'] . ' = ' . $riga['totale_lordo_da_pagare'] . PHP_EOL;
                 }
 
                 // se la riga è pagata e non ha documenti da stampare, non la mostro
@@ -798,5 +820,5 @@
     );
 
     // debug
-    // print_r($ct['etc']['righe']);
+    // print_r( $ct['etc']['righe'] );
     // die();
