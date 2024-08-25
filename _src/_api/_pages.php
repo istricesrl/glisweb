@@ -501,7 +501,7 @@
     // TODO usare glob() per prendere anche i contenuti statici dai moduli
     // TODO gli ID delle pagine dovrebbero già contenere . anziché _
     // NOTA solo un contenuto statico alla volta può essere incluso, quindi individuare il criterio con cui sceglierlo
-	$ctName = '_src/_inc/_contents/_'.  str_replace( '_', '.', $ct['page']['id'] ) . '.' . $cf['localization']['language']['ietf'] . '.{html,twig}';
+    $ctName = '_src/_inc/_contents/_'.  str_replace( '_', '.', $ct['page']['id'] ) . '.' . $cf['localization']['language']['ietf'] . '.{html,twig}';
 
     $ctArray = (
         array_merge(
@@ -520,13 +520,13 @@
 
     /*
     $ctFile = DIR_SRC_INC_CONTENTS . '_' . $ctName . '.' . $cf['localization']['language']['ietf'] . '.html';
-	$ctFileLocal = str_replace( '_', '', $ctFile );
+    $ctFileLocal = str_replace( '_', '', $ctFile );
 
     if( file_exists( $ctFileLocal ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFileLocal . ' -->' . PHP_EOL . readStringFromFile( $ctFileLocal );
-	} elseif( file_exists( $ctFile ) ) {
-	    $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFile . ' -->' . PHP_EOL . readStringFromFile( $ctFile );
-	}
+        $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFileLocal . ' -->' . PHP_EOL . readStringFromFile( $ctFileLocal );
+    } elseif( file_exists( $ctFile ) ) {
+        $ct['page']['content'][ $cf['localization']['language']['ietf'] ] = '<!-- contenuto incluso: ' . $ctFile . ' -->' . PHP_EOL . readStringFromFile( $ctFile );
+    }
     */
 
     if( ! empty( $ctArray ) ) {
@@ -1164,12 +1164,12 @@
      * 
      */
 
-	// debug
-	if( ! empty( $_REQUEST['q'] ) ) {
+    // debug
+    if( ! empty( $_REQUEST['q'] ) ) {
 
-		echo '<!-- REPORT VELOCITÀ' . PHP_EOL;
-		print_r( $cf['speed'] );
-		echo '-->' . PHP_EOL;
+        echo '<!-- REPORT VELOCITÀ' . PHP_EOL;
+        print_r( $cf['speed'] );
+        echo '-->' . PHP_EOL;
         echo PHP_EOL;
 
     }

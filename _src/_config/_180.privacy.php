@@ -12,11 +12,10 @@
      *
      *
      *
-     * TODO questo file sembra messo qui un po' a cazzo di cane, spostarlo a un numero più alto tipo 340? riguarda più i contenuti che l'atuenticazione
+     * TODO qui documentare l'intera organizzazione della privacy nel framework
      *
      *
      *
-     * @file
      *
      */
 
@@ -33,6 +32,8 @@
     // die( print_r( $cf['privacy']['moduli'], true ) );
 
     // aggiungo le richieste di consenso ai moduli
+    // TODO questa cosa andrebbe 1) spostata negli specifici moduli (contatti, ecommerce, registrazione) inoltre
+    // i consensi andrebbero inseriti direttamente sotto ogni modulo
     if( is_array( $consensi ) ) {
         foreach( $consensi as $consenso ) {
 

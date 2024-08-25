@@ -660,6 +660,16 @@
     loggerLatest( $latestLogHeader, FILE_LATEST_SITEMAP, 'w+' );
 
     /**
+     * registrazione dell'accesso
+     * ==========================
+     * 
+     * 
+     */
+
+    // registrazione dell'accesso al framework con PID di Apache
+    logger( 'PID: ' . getmypid() . ' da ' . $_SERVER['REMOTE_ADDR'] . ' ' . $_SERVER['REDIRECT_URL'] . ' -> ' . $_SERVER['REQUEST_URI'], 'access' );
+
+    /**
      * inizializzazione dell'array di configurazione principale
      * ========================================================
      * Tutte le informazioni di configurazione e di lavoro del framework sono contenute nell'array associativo multidimensionale $cf.

@@ -37,6 +37,9 @@
         // ciclo sui siti
         foreach( $cf['sites'] as $id => &$site ) {
 
+            // log
+            logger( 'sito #' . $id . ' cerco sul database le informazioni aggiuntive per: ' . implode( ', ', array_keys( $cf['localization']['languages'] ) ), 'localization' );
+
             // ciclo sulle lingue
             foreach( $site['localization']['languages'] as $k => $v ) {
 

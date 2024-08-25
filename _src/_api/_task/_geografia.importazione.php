@@ -1,12 +1,12 @@
 <?php
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        require '../../_config.php';
+    }
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
     // file da copiare
     $status['files'] = array(
@@ -22,6 +22,6 @@
     }
 
     // output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

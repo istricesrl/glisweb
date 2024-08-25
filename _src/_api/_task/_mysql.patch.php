@@ -178,7 +178,7 @@
                             if( $pId > $patchLevel ) {
 
                                 // log
-                                logger( 'elaborazione patch -> ' . $$pId, 'mysql', LOG_NOTICE );
+                                logger( 'elaborazione patch -> ' . $pId, 'mysql', LOG_NOTICE );
 
                                 // eseguo la patch corrente
                                 $pEx = mysqlQuery(

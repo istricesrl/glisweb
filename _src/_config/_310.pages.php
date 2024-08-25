@@ -191,136 +191,124 @@
      *
      *
      *
+     * TODO verificare che questi commenti siano aggiornati
+     * TODO verificare le tabelle di questo commento, se sono aggiornate oppure no
+     * TODO documentare
      *
-     * @todo verificare le tabelle di questo commento, se sono aggiornate oppure no
-     * @todo finire di documentare
-     *
-     * @file
      *
      */
 
-    // cache
-	if( $cf['contents']['cached'] === false ) {
+    // verifica della cache
+    if( $cf['contents']['cached'] === false ) {
 
-	    // log
+        // debug
+        // print_r( $cf['localization']['language'] );
+
+        // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
-            logWrite( 'struttura delle pagine NON presente in cache, elaborazione...', 'speed', LOG_ERR );
+            logger( 'struttura delle pagine NON presente in cache, elaborazione...', 'speed', LOG_ERR );
         }
 
-	    // debug
-		// print_r( $cf['localization']['language'] );
+        // array delle pagine
+        $cf['contents']['pages'] = array();
 
-	    // array delle pagine
-		$cf['contents']['pages']		= array();
+        // timestamp dell'ultimo aggiornamento delle pagine
+        $cf['contents']['updated'] = NULL;
 
-	    // ultimo aggiornamento delle pagine, per la generazione della sitemap
-		$cf['contents']['updated']		= NULL;
+        // configurazione extra
+        if( isset( $cx['contents'] ) ) {
+            $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
+        }
 
-	    // variabili di lavoro
-		$lingue					= '{' . LINGUE_ATTIVE . '}';
-		$folder					= '{,_}src/{,_}inc/{,_}pages/{,_}*';
-		$mods					= '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/';
+        // criteri di ricerca per i file di definizione delle pagine
+        $lingue                 = '{' . LINGUE_ATTIVE . '}';
+        $folder                 = '{,_}src/{,_}inc/{,_}pages/{,_}*';
+        $mods                   = '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/';
 
-	    // ricerca dei files delle pagine
-		$arrayPagineBase			= glob( DIR_BASE . $folder . '.' . $lingue . '.php', GLOB_BRACE );
-		$arrayPagineModuli			= glob( DIR_BASE . $mods . $folder . '.' . $lingue . '.php', GLOB_BRACE );
+        // ricerca dei files delle pagine
+        $arrayPagineBase        = glob( DIR_BASE . $folder . '.' . $lingue . '.php', GLOB_BRACE );
+        $arrayPagineModuli      = glob( DIR_BASE . $mods . $folder . '.' . $lingue . '.php', GLOB_BRACE );
 
-	    // debug
-		// echo DIRECTORY_BASE . $folder . '.' . $lingue . '.php' . PHP_EOL;
-		// echo DIRECTORY_BASE . $mods . $folder . '.' . $lingue . '.php' . PHP_EOL;
-		// print_r( $arrayPagineBase );
-		// print_r( $arrayPagineModuli );
+        // debug
+        // echo DIRECTORY_BASE . $folder . '.' . $lingue . '.php' . PHP_EOL;
+        // echo DIRECTORY_BASE . $mods . $folder . '.' . $lingue . '.php' . PHP_EOL;
+        // print_r( $arrayPagineBase );
+        // print_r( $arrayPagineModuli );
 
-	    // ordinamento
-		asort( $arrayPagineBase );
-		asort( $arrayPagineModuli );
+        // ordinamento
+        asort( $arrayPagineBase );
+        asort( $arrayPagineModuli );
 
-	    // semplificazione
-		$arrayPagine				= array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
+        // semplificazione
+        $arrayPagine            = array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
 
-	    // inclusione dei files delle pagine
-		foreach( $arrayPagine as $pagina ) {
-		    $ts = filemtime( $pagina );
-		    if( $ts > $cf['contents']['updated'] ) {
-			    $cf['contents']['updated'] = $ts;
-		    }
-		    require $pagina;
+        // inclusione dei files delle pagine
+        foreach( $arrayPagine as $pagina ) {
+
+            // timestamp di modifica del file
+            $ts = filemtime( $pagina );
+
+            // se la timestamp di modifica del file è la più recente, aggiorno
+            if( $ts > $cf['contents']['updated'] ) {
+                $cf['contents']['updated'] = $ts;
+            }
+
+            // includo il file delle pagine
+            require $pagina;
+
+            // se esiste la versione custom del file...
             if( file_exists( path2custom( $pagina ) ) ) {
+
+                // timestamp di modifica del file custom
                 $ts = filemtime( path2custom( $pagina ) );
+
+                // se la timestamp di modifica del file custom è la più recente, aggiorno
                 if( $ts > $cf['contents']['updated'] ) {
                     $cf['contents']['updated'] = $ts;
                 }
+
+                // includo il file delle pagine custom
                 require path2custom( $pagina );
+
             }
-		    $cf['contents']['pages'] = array_replace_recursive( $cf['contents']['pages'], $p );
-		}
 
-	    // debug
-		// echo $cf['contents']['updated'];
+            // la variabile $p è quella che per convenzione viene utilizzata nei file delle pagine
+            // $cf['contents']['pages'] = array_replace_recursive( $cf['contents']['pages'], $p );
+            foreach( $p as $k => $v ) {
 
-	    // le pagine possono essere scritte in cache
-# NOTA questa cosa è obsoleta?
-#		$cf['contents']['cacheable']['pages'] = true;
-		// TODO? $cf['cache']['todo'][ CONTENTS_PAGES_KEY ] = true;
+                // aggiungo l'id sito
+                if( ! isset( $v['id_sito'] ) ) { $v['id_sito'] = SITE_CURRENT; }
 
-	    // configurazione extra
-		if( isset( $cx['contents'] ) ) {
-		    $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
-		}
+                // aggiungo la pagina
+                if( $v['id_sito'] == SITE_CURRENT ) {
+                    $cf['contents']['pages'][ $k ] = ( isset( $cf['contents']['pages'][ $k ] ) )
+                        ? array_replace_recursive( $cf['contents']['pages'][ $k ], $v )
+                        : $v;
+                }
 
-	    // configurazione extra per sito
-		if( isset( $cf['site']['contents'] ) ) {
-		    $cf['contents'] = array_replace_recursive(
+            }
+
+            // debug
+            // var_dump( SITE_CURRENT );
+
+        }
+
+        // debug
+        // echo $cf['contents']['updated'];
+
+        // configurazione extra per sito
+        // TODO spiegare meglio cosa fa questa cosa
+        if( isset( $cf['site']['contents'] ) ) {
+            $cf['contents'] = array_replace_recursive(
                 $cf['contents'],
                 $cf['site']['contents'] );
-		}
-
-#11	} else {
-
-	    // non è necessario scrivere le pagine in cache
-#11		$cf['contents']['cacheable']['pages'] = false;
-		// TODO? $cf['cache']['todo'][ CONTENTS_PAGES_KEY ] = false;
-
-	}
-
-/*
-    // TODO questo file non innesca il meccanismo di refresh della cache dei contenuti,
-    // vedi _mod/_3000.contenuti/_src/_config/_310.pages.php
-
-    DOVREBBE ESSERE TIPO COSÌ:
-
-    } else {
-
-	    // variabili di lavoro
-		$lingue					= '{' . LINGUE_ATTIVE . '}';
-		$folder					= '{,_}src/{,_}inc/{,_}pages/{,_}*';
-		$mods					= '{,_}mod/{,_}{' . MODULI_ATTIVI . '}/';
-
-	    // ricerca dei files delle pagine
-		$arrayPagineBase			= glob( DIR_BASE . $folder . '.' . $lingue . '.php', GLOB_BRACE );
-		$arrayPagineModuli			= glob( DIR_BASE . $mods . $folder . '.' . $lingue . '.php', GLOB_BRACE );
-
-	    // semplificazione
-		$arrayPagine				= array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
-
-	    // inclusione dei files delle pagine
-		foreach( $arrayPagine as $pagina ) {
-		    $ts = filemtime( $pagina );
-		    if( $ts > $cf['contents']['updated'] ) {
-			$cf['contents']['updated'] = $ts;
-		    }
-		}
+        }
 
     }
 
-*/
-
-
     // debug
-	// echo '300 STANDARD' . PHP_EOL;
-	// print_r( $cf['contents']['pages'][ NULL ] );
-
-    // debug
-	// print_r( $cf['localization']['language'] );
-	// print_r( $cf['contents']['pages']['licenza']['content'] );
-	// print_r( $arrayPagine );
+    // echo '300 STANDARD' . PHP_EOL;
+    // print_r( $cf['contents']['pages'][ NULL ] );
+    // print_r( $cf['localization']['language'] );
+    // print_r( $cf['contents']['pages']['licenza']['content'] );
+    // print_r( $arrayPagine );

@@ -132,7 +132,7 @@
                         // mysqlQuery( $cn, 'SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,"ONLY_FULL_GROUP_BY",""));' );
 
                         // log
-                        logger( 'connessione stabilita: ' . $server, 'mysql', LOG_INFO );
+                        logger( 'connessione stabilita: ' . $server, 'mysql' );
                         logger( 'dettagli: ' . mysqli_get_host_info( $cn ), 'mysql' );
 
                         // aggiungo la connessione all'array

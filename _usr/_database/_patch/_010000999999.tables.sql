@@ -3243,7 +3243,7 @@ CREATE TABLE IF NOT EXISTS `redirect` (
 -- | 010000029460
 
 -- redirect_azioni
-
+-- TODO questa cosa dovrebbe essere registrata sulla tabella attivita e nelle tipologie_attivita prevedere le tipologie necessarie
 CREATE TABLE `redirect_azioni` (
   `id` int(11) NOT NULL ,
   `id_redirect` int(11) DEFAULT NULL,
