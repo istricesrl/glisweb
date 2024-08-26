@@ -57,6 +57,7 @@
             if( isset( $riga['id'] ) ) {
 
                 // importo del pagamento
+                $dati['importo_lordo_totale'] = $riga['prezzo_lordo_totale'];
                 $dati['importo_lordo_finale'] = $riga['prezzo_lordo_finale'];
 
                 // totale già pagato
@@ -71,8 +72,29 @@
                     array( array( 's' => $dati['id_carrelli_articoli'] ) )
                 );
 
+                // totale già pagato
+                $riga['totale_lordo_rateizzato'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT coalesce( sum( pagamenti.importo_lordo_finale ), 0 ) AS totale_lordo_rateizzato
+                        FROM pagamenti
+                        WHERE pagamenti.id_carrelli_articoli = ? 
+                        AND pagamenti.timestamp_pagamento IS NULL AND pagamenti.id_documento IS NULL',
+                    array( array( 's' => $dati['id_carrelli_articoli'] ) )
+                );
+
+                // ...
+                if( empty( $riga['totale_lordo_pagato'] ) ) {
+                    $riga['totale_lordo_pagato'] = 0;
+                }
+
+                // ...
+                if( empty( $riga['totale_lordo_rateizzato'] ) ) {
+                    $riga['totale_lordo_rateizzato'] = 0;
+                }
+
                 // importo del pagamento
-                $dati['importo_lordo_finale'] -= $riga['totale_lordo_pagato'];
+                $dati['importo_lordo_totale'] -= ( $riga['totale_lordo_pagato'] + $riga['totale_lordo_rateizzato'] );
+                $dati['importo_lordo_finale'] -= ( $riga['totale_lordo_pagato'] + $riga['totale_lordo_rateizzato'] );
 
                 // ID del pagamento
                 $dati['id'] = mysqlInsertRow(
@@ -84,6 +106,7 @@
                         'data_scadenza' => date( 'Y-m-d' ),
                         'token_pagamento' => $dati['token_pagamento'],
                         'id_carrelli_articoli' => $riga['id'],
+                        'importo_lordo_totale' => $dati['importo_lordo_totale'],
                         'importo_lordo_finale' => $dati['importo_lordo_finale']
                     ),
                     'pagamenti'

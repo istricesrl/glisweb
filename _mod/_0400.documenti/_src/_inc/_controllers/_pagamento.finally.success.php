@@ -8,7 +8,7 @@
 
     // dati per il documento
     $idTipologia = ( ! empty( $dettagli['id_tipologia_documento'] ) ) ? $dettagli['id_tipologia_documento'] : 8;
-    $sezionale = ( ! empty( $dettagli['sezionale'] ) ) ? $dettagli['sezionale'] : 'C';
+    $sezionale = ( ! empty( $dettagli['sezionale'] ) ) ? $dettagli['sezionale'] : 'C/' . date( 'Y' );
     $idCreditore = ( ! empty( $dettagli['id_creditore'] ) ) ? $dettagli['id_creditore'] : 1;
     $idDebitore = ( ! empty( $dettagli['id_debitore'] ) ) ? $dettagli['id_debitore'] : 1;
 
