@@ -608,6 +608,7 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
         anagrafica.codice AS codice_anagrafica,
 		anagrafica_indirizzi.id_indirizzo,
 		IF( anagrafica_indirizzi.id_indirizzo IS NOT NULL , concat(indirizzi.indirizzo,' ',comuni.nome,' ',provincie.sigla), anagrafica_indirizzi.indirizzo) AS indirizzo,
+		group_concat( DISTINCT categorie_anagrafica_path( categorie_anagrafica.id ) SEPARATOR ' | ' ) AS categorie,
 		anagrafica_indirizzi.id_ruolo,
 		ruoli_indirizzi.nome AS ruolo,
 		anagrafica_indirizzi.id_account_inserimento,
@@ -637,11 +638,14 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS
 		) )AS __label__
 	FROM anagrafica_indirizzi
 		INNER JOIN anagrafica ON anagrafica.id = anagrafica_indirizzi.id_anagrafica
+		LEFT JOIN anagrafica_categorie ON anagrafica_categorie.id_anagrafica = anagrafica.id
+		LEFT JOIN categorie_anagrafica ON categorie_anagrafica.id = anagrafica_categorie.id_categoria
 		LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
 		LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
 		LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
+    GROUP BY anagrafica_indirizzi.id
 ;
 
 -- | 090000000920

@@ -18,13 +18,18 @@
     // campi della vista
 	$ct['view']['cols'] = array(
 	    'id' => '#',
+        'codice_anagrafica' => 'codice',
+        'anagrafica' => 'anagrafica',
+        'categorie' => 'categorie',
         'indirizzo' => 'indirizzo',
         'data_ora_elaborazione' => 'elaborazione'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
+	    'id' => 'd-none',
+        'anagrafica' => 'text-left',
+        'categorie' => 'text-left',
 	    'indirizzo' => 'text-left'
 	);
 

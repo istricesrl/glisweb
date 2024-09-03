@@ -1637,7 +1637,10 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_carrelli_articoli` int(11) DEFAULT NULL,
   `quantita` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
+  `costo_netto_unitario` decimal(16,2) DEFAULT NULL,
   `costo_netto_totale` decimal(16,2) DEFAULT NULL,
+  `prezzo_netto_unitario` decimal(16,2) DEFAULT NULL,
+  `prezzo_netto_totale` decimal(16,2) DEFAULT NULL,
   `importo_netto_totale` decimal(16,2) DEFAULT NULL,
   `importo_lordo_totale` decimal(16,2) DEFAULT NULL,
   `sconto_percentuale` decimal(9,2) DEFAULT NULL,
@@ -1654,6 +1657,8 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- TODO qui non costo ma prezzo? oppure vogliamo segnare sia i costi che i prezzi? forse ha senso per calcolare i margini
 
 -- | 010000012000
 

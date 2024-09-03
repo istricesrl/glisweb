@@ -75,7 +75,8 @@
                 'id_mailing' => $_REQUEST['__mailing__'],
                 'data_attivita' => date( 'Y-m-d' ),
                 'ora_fine' => date( 'H:i' ),
-                'id_mail' => $_REQUEST['__mailing_dst__']
+                'id_mail' => $_REQUEST['__mailing_dst__'],
+                'nome' => 'apertura mail da mailing #' . $_REQUEST['__mailing__']
             );
 
             // recupero l'id_cliente
@@ -85,6 +86,25 @@
                 FROM mail WHERE id = ?',
                 array(
                     array( 's' => $_REQUEST['__mailing_dst__'] )
+                )
+            );
+
+            // controllo che non ci siano attività di lettura già entro 4 ore
+            $check = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT COUNT(*) 
+                FROM attivita 
+                WHERE id_tipologia = ? 
+                AND id_mailing = ? 
+                AND id_mail = ? 
+                AND data_attivita = ? 
+                AND ora_fine > ?',
+                array(
+                    array( 's' => 35 ),
+                    array( 's' => $_REQUEST['__mailing__'] ),
+                    array( 's' => $_REQUEST['__mailing_dst__'] ),
+                    array( 's' => date( 'Y-m-d' ) ),
+                    array( 's' => date( 'H:i', strtotime( '-4 hours' ) ) )
                 )
             );
 
@@ -98,17 +118,40 @@
                 'id_tipologia' => 35,
                 'id_mailing' => $_REQUEST['__mailing__'],
                 'data_attivita' => date( 'Y-m-d' ),
-                'ora_fine' => date( 'H:i' )
+                'ora_fine' => date( 'H:i' ),
+                'nome' => 'apertura mail da mailing #' . $_REQUEST['__mailing__']
+            );
+
+            // controllo che non ci siano attività di lettura già entro 4 ore
+            $check = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT COUNT(*) 
+                FROM attivita 
+                WHERE id_tipologia = ? 
+                AND id_mailing = ? 
+                AND data_attivita = ? 
+                AND ora_fine > ?',
+                array(
+                    array( 's' => 35 ),
+                    array( 's' => $_REQUEST['__mailing__'] ),
+                    array( 's' => date( 'Y-m-d' ) ),
+                    array( 's' => date( 'H:i', strtotime( '-4 hours' ) ) )
+                )
             );
 
         }
 
         // inserimento attività di lettura
-        mysqlInsertRow(
-            $cf['mysql']['connection'],
-            $read,
-            'attivita'
-        );
+        if( empty( $check ) ) {
+
+            // inserimento attività
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $read,
+                'attivita'
+            );
+
+        }
 
     }
 

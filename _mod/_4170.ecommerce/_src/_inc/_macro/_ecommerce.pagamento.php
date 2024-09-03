@@ -711,12 +711,16 @@
 
                 // totale da pagare
                 if( empty( $riga['id_pagamento'] ) ) {
+                    $riga['ragionamento_totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'].' - '.$riga['totale_lordo_pagato'].' - '.$riga['totale_lordo_rateizzato'];
                     $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
                 } else {
                     // $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'] - $riga['totale_lordo_pagato'];
                     // ma è giusto? $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'] - $riga['totale_lordo_pagato'];
-                    $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_finale'] - $riga['totale_lordo_pagato'];
+                    // OK? $riga['ragionamento_totale_lordo_da_pagare'] = $riga['importo_lordo_finale'].' - '.$riga['totale_lordo_pagato'];
+                    // OK? $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_finale'] - $riga['totale_lordo_pagato'];
                     // echo $riga['importo_lordo_finale'] . ' - ' . $riga['totale_lordo_pagato'] . ' = ' . $riga['totale_lordo_da_pagare'] . PHP_EOL;
+                    $riga['ragionamento_totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'].' - '.$riga['totale_lordo_pagato'].' - '.$riga['totale_lordo_rateizzato'];
+                    $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
                 }
 
                 // se la riga è pagata e non ha documenti da stampare, non la mostro

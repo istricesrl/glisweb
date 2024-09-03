@@ -62,7 +62,10 @@
      */
     function buildText( $content, $encoding = ENCODING_UTF8, $headers = array() ) {
 
-	// genero l'output
+        // debug
+        // print_r( $headers );
+
+        // genero l'output
 	    build( $content, MIME_TEXT_PLAIN, $encoding, $headers );
 
     }
@@ -74,8 +77,8 @@
      */
     function dieText( $content ) {
 
-	buildContentHeader( );
-	die( $content );
+        buildContentHeader( );
+        die( $content );
 
     }
 
@@ -129,13 +132,16 @@
      */
     function build( $content, $type = MIME_TEXT_PLAIN, $encoding = ENCODING_UTF8, $headers = array() ) {
 
-	// invio gli headers
+        // debug
+        // print_r( $headers );
+
+        // invio gli headers
 	    buildHeaders( $headers );
 
-	// invio l'header per il contenuto
+	    // invio l'header per il contenuto
 	    buildContentHeader( $type, $encoding );
 
-	// invio l'output
+	    // invio l'output
 	    echo $content;
 
     }

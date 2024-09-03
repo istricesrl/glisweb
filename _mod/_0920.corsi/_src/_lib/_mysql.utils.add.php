@@ -91,6 +91,21 @@
             array( array( 's' => $idCorso ) )
         );
 
+        $dettagli['orari'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT
+                dayname( todo.data_programmazione ) AS giorno,
+                concat_ws( " - ", todo.ora_inizio_programmazione, todo.ora_fine_programmazione ) AS orario,
+                luoghi_path( todo.id_luogo ) AS luogo
+            FROM todo 
+            WHERE todo.id_progetto = ? AND todo.id_tipologia IN (14, 15) 
+            GROUP BY todo.id_progetto, dayname( todo.data_programmazione ), todo.ora_inizio_programmazione, todo.ora_fine_programmazione, todo.id_luogo
+            ',
+            array(
+                array( 's' => $idCorso )
+            )
+        );
+
         $riga['posti_disponibili'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT concat( coalesce( count( DISTINCT ca.id_anagrafica ), 0 ), " / ", coalesce( max( m.testo ), "∞" ) )
@@ -168,6 +183,9 @@
 		) AS __label__
 
 */
+
+        // ...
+        $riga['dettagli'] = json_encode( $dettagli );
 
         // print_r( $riga );
 

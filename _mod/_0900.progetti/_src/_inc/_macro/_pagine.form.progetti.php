@@ -34,6 +34,21 @@
             )
         );
 
+    } elseif( isset( $_REQUEST['__scollega_progetto__'] ) ) {
+
+        // debug
+        // die( print_r( $_REQUEST['__link_progetto__'], true ) );
+        // die( $_REQUEST[ $ct['form']['table'] ]['id'] );
+
+        // link progetto
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE progetti SET id_pagina = NULL WHERE id = ?',
+            array(
+                array( 's' => $_REQUEST['__scollega_progetto__'] )
+            )
+        );
+
     }
 
     // pagina per la gestione degli oggetti esistenti
@@ -46,7 +61,8 @@
      $ct['view']['cols'] = array(
 	    'id' => '#',
         'tipologia' => 'tipologia',
-        'nome' => 'dettagli'
+        'nome' => 'dettagli',
+        NULL => 'azioni'
       );
 
     // stili della vista
@@ -54,6 +70,12 @@
 	    'id' => 'd-none d-md-table-cell'
     );
 
+    // javascript della vista
+    $ct['view']['onclick'] = array(
+        NULL => 'event.stopPropagation();'
+    );
+
+    // inserimento rapido
     $ct['etc']['include']['insert'][] = array(
         'name' => 'insert',
         'file' => 'inc/pagine.form.progetti.link.html',
@@ -84,7 +106,7 @@
     // pagina per l'inserimento di un nuovo oggetto
 	$ct['view']['insert']['page'] = 'progetti.form';
 
-    if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
+    if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ) {
         // preset filtro custom progetti aperti
 	    $ct['view']['__restrict__']['id_pagina']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
     }
@@ -96,8 +118,23 @@
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
+	// require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // elaborazione dati
+    if( !empty( $ct['view']['data'] ) ){
+		foreach ( $ct['view']['data'] as &$row ) {
+
+            $buttons = '';
+
+            $buttons .=  '<a href="?pagine[id]='.$_REQUEST[ $ct['form']['table'] ]['id'].'&__scollega_progetto__='.$row['id'].'"><span class="media-left"><i class="fa fa-chain-broken"></i></span></a>';
+
+            $row[ NULL ] = $buttons;
+
+        }
+	}
+
+
 /*
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data'] ) ) {
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data']	= 'DESC';

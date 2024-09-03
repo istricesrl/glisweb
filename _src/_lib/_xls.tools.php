@@ -80,17 +80,40 @@
 
     }
 
-    function xlsDate2timestamp( $d ) {
+    function xlsDate2timestamp( $d, $f = 'dd/mm/YYYY' ) {
+
+        logger( 'data da elaborare: ' . $d, __FUNCTION__ );
+
+        $r = NULL;
+
         if( is_numeric( $d ) ) {
-            return ( $d - 25569 ) * 86400;
+
+            $r = ( $d - 25569 ) * 86400;
+
         } else {
+
             $date = explode( '/', $d );
-            if( strlen( $date[2] ) == 4 ) {
-                return strtotime( $date[2] . '-' . $date[1] . '-' . $date[0] );
-            } else {
-                return strtotime( $date[0] . '-' . $date[1] . '-' . $date[2] );
+
+            logger( 'array degli elementi: ' . print_r( $date, true ), __FUNCTION__ );
+
+            if( $f == 'dd/mm/YYYY' ) {
+                $rd = $date[2] . '-' . $date[1] . '-' . $date[0];
+            } elseif( $f == 'YYYY/mm/dd' ) {
+                $rd = $date[0] . '-' . $date[1] . '-' . $date[2];
+            } elseif( $f == 'mm/dd/YYYY' ) {
+                $rd = $date[2] . '-' . $date[0] . '-' . $date[1];
             }
+
+            logger( 'data riarrangiata: ' . $rd, __FUNCTION__ );
+
+            $r = strtotime( $rd );
+
         }
+
+        logger( 'data elaborata: ' . $r, __FUNCTION__ );
+
+        return $r;
+
     }
 
     function xlsNumber2mysql( $d ) {
