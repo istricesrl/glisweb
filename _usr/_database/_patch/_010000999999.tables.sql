@@ -405,6 +405,8 @@ CREATE TABLE IF NOT EXISTS `asset` (
   `id_tipologia` int(11) DEFAULT NULL,
   `codice` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
+  `hostname` char(128) DEFAULT NULL,
+  `ip_address` char(32) DEFAULT NULL,
   `cespite` char(32) DEFAULT NULL,
   `note` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

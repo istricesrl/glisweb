@@ -51,7 +51,11 @@
                     <span class="label-top">genitore</span>
                     {{ frm.select( table, '', '', 'id_genitore', '', etc.select.listini, request ) }}
                 </div>
-                    <div class="col-12 col-md">
+                <div class="col-12 col-md-1">
+                    <span class="label-top">codice</span>
+                    {{ frm.input( table, '', '', 'codice', 'codice del listino', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
                     <span class="label-top">nome</span>
                     {{ frm.input( table, '', '', 'nome', 'nome del listino', '', request ) }}
                 </div>
