@@ -340,27 +340,66 @@
 
             // trovo il prezzo per il bundle
             if( ! empty( $qb ) ) {
-                $bp = array_shift( array_keys( $qb ) );
-                $qbn = array_shift( $qb );
-                $p3 = mysqlSelectCachedValue( $m, $c,
-                    'SELECT prezzo, id_iva  
-                    FROM prezzi 
-                    WHERE id_prodotto = ? 
-                    AND id_listino = ?
-                    AND ( qta_min IS NULL OR qta_min <= ? )
-                    AND ( data_inizio IS NULL OR data_inizio <= ? )
-                    ORDER BY data_inizio DESC, qta_min DESC',
-                    array(
-                        array( 's' => $bp ),
-                        array( 's' => $l ),
-                        array( 's' => $qbn ),
-                        array( 's' => $date )
-                    )
-                );
+
+                foreach( $qb as $bp => $qbn ) {
+
+                    logger( 'calcolo il prezzo per il bundle ' . $bp, 'listini' );
+
+                    // $bp = array_shift( array_keys( $qb ) );
+                    // $qbn = array_shift( $qb );
+                    $p3r = mysqlSelectCachedValue( $m, $c,
+                        'SELECT prezzo  
+                        FROM prezzi 
+                        WHERE id_prodotto = ?
+                        AND prezzo IS NOT NULL 
+                        AND id_listino = ?
+                        AND ( qta_min IS NULL OR qta_min <= ? )
+                        AND ( data_inizio IS NULL OR data_inizio <= ? )
+                        ORDER BY data_inizio DESC, qta_min DESC',
+                        array(
+                            array( 's' => $bp ),
+                            array( 's' => $l ),
+                            array( 's' => $qbn ),
+                            array( 's' => $date )
+                        )
+                    );
+
+                    $sc1r = mysqlSelectCachedValue( $m, $c,
+                        'SELECT sconto_articoli  
+                        FROM prezzi 
+                        WHERE id_prodotto = ?
+                        AND sconto_articoli IS NOT NULL 
+                        AND id_listino = ?
+                        AND ( qta_min IS NULL OR qta_min <= ? )
+                        AND ( data_inizio IS NULL OR data_inizio <= ? )
+                        ORDER BY data_inizio DESC, qta_min DESC',
+                        array(
+                            array( 's' => $bp ),
+                            array( 's' => $l ),
+                            array( 's' => $qbn ),
+                            array( 's' => $date )
+                        )
+                    );
+
+                    if( ! empty( $p3r ) ) {
+                        $p3 = $p3r;
+                    }
+
+                    if( ! empty( $sc1r ) ) {
+                        $sc1 = $sc1r;
+                    }
+
+                }
+
             } else {
+
                 $p3 = 0;
                 $qbn = 0;
+                $sc1 = 0;
+
             }
+
+            // trovo lo sconto per il bunlde
 
             // defailt
             $r = 0;
@@ -376,7 +415,21 @@
 
             // log
             // logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ', ' . $p2 . ' e ' . $p3 . ' scelgo ' . $r, 'listini' );
-            logger( 'per ' . $a . ' rilevate quantità ' . $qa . ' (articolo), ' . $qp . ' (prodotto) e ' . $qbn . ' (bundle)', 'listini' );
+            logger( 'per ' . $a . ' rilevate quantità ' . $qa . ' (articolo), ' . $qp . ' (prodotto) e ' . $qbn . ' (bundle) prezzo ' . $r, 'listini' );
+
+            // se c'è uno sconto bundle
+            if( ! empty( $sc1 ) ) {
+
+                // calcolo lo sconto
+                $sc = $r / 100 * $sc1;
+
+                // applico lo sconto
+                $r = $r - $sc;
+
+                // log
+                logger( 'per ' . $a . ' ho applicato uno sconto di ' . $sc . ' nuovo prezzo ' . $r . ' (bundle)', 'listini' );
+
+            }
 
             // calcolo le variazioni
             // TODO
@@ -462,26 +515,63 @@
 
             // trovo il prezzo per il bundle
             if( ! empty( $qb ) ) {
-                $bp = array_shift( array_keys( $qb ) );
-                $qbn = array_shift( $qb );
-                $p3 = mysqlSelectCachedRow( $m, $c,
-                    'SELECT prezzo, id_iva  
-                    FROM prezzi 
-                    WHERE id_prodotto = ? 
-                    AND id_listino = ?
-                    AND ( qta_min IS NULL OR qta_min <= ? )
-                    AND ( data_inizio IS NULL OR data_inizio <= ? )
-                    ORDER BY data_inizio DESC, qta_min DESC',
-                    array(
-                        array( 's' => $bp ),
-                        array( 's' => $l ),
-                        array( 's' => $qbn ),
-                        array( 's' => $date )
-                    )
-                );
+
+                foreach( $qb as $bp => $qbn ) {
+
+                    logger( 'calcolo il prezzo per il bundle ' . $bp, 'listini' );
+
+                    // $bp = array_shift( array_keys( $qb ) );
+                    // $qbn = array_shift( $qb );
+                    $p3r = mysqlSelectCachedRow( $m, $c,
+                        'SELECT prezzo, id_iva  
+                        FROM prezzi 
+                        WHERE id_prodotto = ?
+                        AND prezzo IS NOT NULL 
+                        AND id_listino = ?
+                        AND ( qta_min IS NULL OR qta_min <= ? )
+                        AND ( data_inizio IS NULL OR data_inizio <= ? )
+                        ORDER BY data_inizio DESC, qta_min DESC',
+                        array(
+                            array( 's' => $bp ),
+                            array( 's' => $l ),
+                            array( 's' => $qbn ),
+                            array( 's' => $date )
+                        )
+                    );
+
+                    $sc1r = mysqlSelectCachedValue( $m, $c,
+                        'SELECT sconto_articoli  
+                        FROM prezzi 
+                        WHERE id_prodotto = ?
+                        AND sconto_articoli IS NOT NULL 
+                        AND id_listino = ?
+                        AND ( qta_min IS NULL OR qta_min <= ? )
+                        AND ( data_inizio IS NULL OR data_inizio <= ? )
+                        ORDER BY data_inizio DESC, qta_min DESC',
+                        array(
+                            array( 's' => $bp ),
+                            array( 's' => $l ),
+                            array( 's' => $qbn ),
+                            array( 's' => $date )
+                        )
+                    );
+
+                    if( ! empty( $p3r ) ) {
+                        $p3 = $p3r;
+                    }
+
+                    if( ! empty( $sc1r ) ) {
+                        $sc1 = $sc1r;
+                    }
+
+                }
+
             } else {
+
                 $p3 = 0;
                 $qbn = 0;
+                $sc1 = 0;
+
             }
 
             // debug
@@ -503,7 +593,21 @@
 
             // log
             // logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ', ' . $p2 . ' e ' . $p3 . ' scelgo ' . $r, 'listini' );
-            logger( 'per ' . $a . ' rilevate quantità ' . $qa . ' (articolo), ' . $qp . ' (prodotto) e ' . $qbn . ' (bundle)', 'listini' );
+            logger( 'per ' . $a . ' rilevate quantità ' . $qa . ' (articolo), ' . $qp . ' (prodotto) e ' . $qbn . ' (bundle) prezzo ' . $r, 'listini' );
+
+            // se c'è uno sconto bundle
+            if( ! empty( $sc1 ) ) {
+
+                // calcolo lo sconto
+                $sc = $r / 100 * $sc1;
+
+                // applico lo sconto
+                $r = $r - $sc;
+
+                // log
+                logger( 'per ' . $a . ' ho applicato uno sconto di ' . $sc . ' nuovo prezzo ' . $r . ' (bundle)', 'listini' );
+
+            }
 
             // debug
             // die( 'prezzo: ' . $r . ' aliquota: ' . $i );
