@@ -1,0 +1,14 @@
+<header class="d-flex sticky-top">
+    <div class="container d-flex flex-column">
+        <div class="row d-flex flex-row flex-fill">
+            {% block headersx %}{% include 'inc/header.1.html' %}{% endblock %}
+            {% block headercn %}{% include 'inc/header.2.html' %}{% endblock %}
+            {% block headerdx %}{% include 'inc/header.3.html' %}{% endblock %}
+        </div>
+        {% if page.template.menu.landing %}
+        <div class="row d-flex flex-row flex-fill">
+            {% block nav %}{% include 'inc/navbar.html' %}{% endblock %}
+        </div>
+        {% endif %}
+    </div>
+</header>

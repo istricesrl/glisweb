@@ -12,8 +12,10 @@
 
     {% if options.v[ options.w ][ options.l ] %}
     {{ options.v[ options.w ][ options.l ] }}
+    {% elseif options.l %}
+    TOKEN MANCANTE {{ options.w }} PER {{ options.l }}
     {% else %}
-    <strong>TOKEN MANCANTE {{ options.w }} PER {{ options.l }}</strong>
+    LINGUA MANCANTE PER {{ options.w }}
     {% endif %}
 
 {% endmacro tr %}

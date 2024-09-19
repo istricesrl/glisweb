@@ -15,7 +15,7 @@
      * sorgente             | la pagina da cui parte il reindirizzamento                | /vecchia/pagina.html
      * destinazione         | la pagina verso cui si effettua il reindirizzamento       | http://host.domain.bogus/nuova/pagina.html
      *
-     * NOTA il file dei redirect deve contenere anche le intestazioni, ad esempio:
+     * NOTA il file dei redirect (etc/redirect.csv) deve contenere anche le intestazioni, ad esempio:
      * 
      *  id_sito,codice_stato_http,sorgente,destinazione
      *  1,301,/vecchia/pagina.html,http://host.domain.bogus/nuova/pagina.html
