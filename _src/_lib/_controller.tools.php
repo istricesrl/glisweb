@@ -518,7 +518,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 
 					// compongo la query
 					// $q = "SELECT * FROM ${t}" . ( ( $fvm ) ? '_view' : '' );
-					$q = "SELECT * FROM ${t}" . (($fvm) ? $rm : '');
+					$q = "SELECT * FROM ${t}" . (( ! empty( $fvm ) ) ? $rm : '');
 
 					// compongo i campi della query
 					foreach ($ks as $k) {

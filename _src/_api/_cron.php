@@ -144,6 +144,8 @@
                         // ...
                         logWrite( 'iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
+                        // NOTA è importante che la variabile $status non venga sovrascritta nel file incluso!
+
                         // ...
                         require DIR_BASE . $task['task'];
 
@@ -309,6 +311,8 @@
 
                         // ...
                         logWrite( 'iterazione #' . $iter . ' di ' . $job['iterazioni'] . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );
+
+                        // NOTA è importante che la variabile $status non venga sovrascritta nel file incluso!
 
                         // ...
                         require DIR_BASE . $job['job'];

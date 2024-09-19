@@ -41,9 +41,19 @@ CREATE OR REPLACE VIEW `__report_abbonamenti_attivi__` AS
 		LEFT JOIN contratti_anagrafica AS c_a ON c_a.id_contratto = contratti.id AND c_a.id_ruolo IN ( 29, 34 )
 		LEFT JOIN anagrafica AS iscritto ON iscritto.id = c_a.id_anagrafica
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+        LEFT JOIN anagrafica_certificazioni ON anagrafica_certificazioni.id_anagrafica = iscritto.id
+        LEFT JOIN contratti_anagrafica AS tesseramenti ON tesseramenti.id_anagrafica = iscritto.id AND tesseramenti.id_ruolo IN ( 29, 33 )
+        LEFT JOIN contratti AS tesseramento ON tesseramento.id = tesseramenti.id_contratto AND tesseramento.id_tipologia IN ( 8, 13, 18 )
+        LEFT JOIN rinnovi AS rinnovi_tesseramento ON rinnovi_tesseramento.id_contratto = tesseramento.id
+        LEFT JOIN documenti ON documenti.id_destinatario = iscritto.id
+        LEFT JOIN pagamenti AS p1 ON p1.id_debitore = iscritto.id AND p1.data_scadenza < now() AND p1.timestamp_pagamento IS NULL
+        LEFT JOIN pagamenti AS p2 ON p2.id_documento = documenti.id AND p2.data_scadenza < now() AND p2.timestamp_pagamento IS NULL
     WHERE tipologie_contratti.se_abbonamento = 1
     AND rinnovi.data_inizio <= now()
     AND rinnovi.data_fine >= now()
+    AND ( anagrafica_certificazioni.data_scadenza >= now() AND anagrafica_certificazioni.id_certificazione IN ( 4, 5 ) )
+    AND ( rinnovi_tesseramento.data_inizio <= now() AND rinnovi_tesseramento.data_fine >= now() )
+    AND ( p1.id IS NULL AND p2.id IS NULL )
     GROUP BY contratti.id
 ;
 

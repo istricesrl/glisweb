@@ -1,0 +1,38 @@
+/*!
+
+    \page stampe gestione delle stampe nel framework
+
+    Panoramica della gestione delle stampe nel framework.
+
+
+COME CREARE UNA STAMPA NEL FRAMEWORK
+
+1) creare la funzione nella pdf.tools.add.php appropriata
+
+
+2) creare la stampa
+
+<?php
+
+    // inclusione del framework
+	require_once '../../../_src/_config.php';
+
+    // reperimento dati
+    $dati = array();
+
+    // creazione del PDF
+	$pdf = new TCPDF( 'P', 'mm', 'A4' );
+
+    // oggetto del documento
+    $documento = 'prova';
+
+    // output
+	if( isset( $_REQUEST['d'] ) ) {
+	    $pdf->Output( $documento.'.pdf' , 'D' );		// invia l'output al browser per il download diretto
+	} elseif( isset( $_REQUEST['f'] ) ) {
+	    $pdf->Output( $documento.'.pdf', 'I' );			// salva il file localmente
+	} elseif( isset( $_REQUEST['fi'] ) ) {
+	    $pdf->Output( $documento.'.pdf', 'FI' );		// salva il file localmente e invia l'output al browser
+	} else {
+	    $pdf->Output( $documento.'.pdf' );				// invia l'output al browser
+	}

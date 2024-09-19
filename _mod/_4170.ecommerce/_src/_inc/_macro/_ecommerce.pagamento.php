@@ -478,11 +478,12 @@
                 $ct['etc']['righe'],
                 mysqlQuery(
                     $cf['mysql']['connection'],
-                    'SELECT pagamenti.id AS id_pagamento, pagamenti.importo_lordo_finale, pagamenti.timestamp_pagamento, pagamenti.id_rinnovo, pagamenti.coupon_valore,
+                    'SELECT pagamenti.id AS id_pagamento, pagamenti.importo_lordo_totale, pagamenti.importo_lordo_finale, pagamenti.timestamp_pagamento, pagamenti.id_rinnovo, pagamenti.coupon_valore,
                         concat_ws( " ", a.nome, a.cognome, a.denominazione ) AS destinatario, 
                         concat_ws( " ", prodotti.nome, articoli.nome, " rata del ", pagamenti.data_scadenza ) AS descrizione, 
                         carrelli.id AS id_carrello, carrelli.fatturazione_id_tipologia_documento, 
-                        carrelli_articoli.id, carrelli_articoli.id AS id_carrelli_articoli, carrelli_articoli.id_articolo, carrelli_articoli.destinatario_id_anagrafica, carrelli_articoli.id_mastro_provenienza, carrelli_articoli.prezzo_lordo_finale 
+                        carrelli_articoli.id, carrelli_articoli.id AS id_carrelli_articoli, carrelli_articoli.id_articolo, carrelli_articoli.destinatario_id_anagrafica, carrelli_articoli.id_mastro_provenienza, carrelli_articoli.prezzo_lordo_finale,
+                        "pagamento" AS tipologia_riga
                         FROM pagamenti 
                         INNER JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli 
                         INNER JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello 
@@ -671,6 +672,9 @@
 
                 }
 
+
+                if( empty( $riga['id_pagamento'] ) ) {
+
                 // TODO trovare se ci sono documenti da generare
                 $riga['documenti_generati'] = mysqlSelectValue(
                     $cf['mysql']['connection'],
@@ -699,6 +703,8 @@
                     }
                 }
 
+                }
+
                 // ...
                 if( empty( $riga['totale_lordo_pagato'] ) ) {
                     $riga['totale_lordo_pagato'] = 0;
@@ -716,11 +722,14 @@
                 } else {
                     // $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'] - $riga['totale_lordo_pagato'];
                     // ma è giusto? $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'] - $riga['totale_lordo_pagato'];
+                    // ma questo perché l'avevo fatto così? $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_finale'] - $riga['totale_lordo_pagato'];
+                    // echo $riga['importo_lordo_finale'] . ' - ' . $riga['totale_lordo_pagato'] . ' = ' . $riga['totale_lordo_da_pagare'] . PHP_EOL;
                     // OK? $riga['ragionamento_totale_lordo_da_pagare'] = $riga['importo_lordo_finale'].' - '.$riga['totale_lordo_pagato'];
                     // OK? $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_finale'] - $riga['totale_lordo_pagato'];
                     // echo $riga['importo_lordo_finale'] . ' - ' . $riga['totale_lordo_pagato'] . ' = ' . $riga['totale_lordo_da_pagare'] . PHP_EOL;
                     $riga['ragionamento_totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'].' - '.$riga['totale_lordo_pagato'].' - '.$riga['totale_lordo_rateizzato'];
                     $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
+                    // era giusto questo? $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'];
                 }
 
                 // se la riga è pagata e non ha documenti da stampare, non la mostro
