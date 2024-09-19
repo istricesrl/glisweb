@@ -20,7 +20,7 @@
 	$status = array();
 
     // faccio il flush della cache
-	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES, false, $status['files'] );
+	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES, false );
 
     // headers
 	// header( 'Access-Control-Allow-Origin: *' );

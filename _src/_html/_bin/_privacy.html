@@ -28,7 +28,7 @@
 			<input class="form-check-input" id="consensi_{{ id }}_checkbox" type="checkbox" {% if check.required %}required{% endif %}>
 			<label class="form-check-label text-left" for="consensi_{{ id }}_checkbox">
 			{{ tr.generic[ check.action ][ ietf ] }}
-			{% if check.page %}<a href="{{ pages[ check.page ].url[ ietf ] }}">{% endif %}{{ check.label[ ietf ] | raw }}{% if check.page %}</a>{% endif %}
+			{% if check.page %}<a href="{{ pages[ check.page ].url[ ietf ] }}" target="_blank">{% endif %}{{ check.label[ ietf ] | raw }}{% if check.page %}</a>{% endif %}
 			({% if check.required %}{{ tr.generic.obbligatorio[ ietf ] | raw }}{% else %}{{ tr.generic.facoltativo[ ietf ] | raw }}{% endif %})
 			</label>
 		</div>
