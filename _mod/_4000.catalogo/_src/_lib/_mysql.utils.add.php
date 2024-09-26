@@ -171,6 +171,28 @@
                 )
             );
 
+            // i metadati dell'articolo
+            $mt = mysqlSelectCachedRow(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT m1.testo AS conf_udm, m2.testo AS conf_qta, m3.testo AS conf_bundle FROM articoli AS a
+                LEFT JOIN metadati AS m1 ON m1.id_articolo = a.id AND m1.nome = "conf_udm"
+                LEFT JOIN metadati AS m2 ON m2.id_articolo = a.id AND m2.nome = "conf_qta"
+                LEFT JOIN metadati AS m3 ON m3.id_articolo = a.id AND m3.nome = "conf_bundle"
+                LEFT JOIN metadati AS m4 ON m4.id_articolo = a.id AND m4.nome = "conf_rif_sconto"
+                WHERE a.id = ?',
+                array(
+                    array( 's' => $v['id_articolo'] )
+                )
+            );
+
+            // divisori di default
+            if( ! empty( $mt['conf_qta'] ) ) {
+                $qd = $v['quantita'] / $mt['conf_qta'];
+            } else {
+                $qd = $v['quantita'];
+            }
+
             // incremento i contatori
             if( $v['id_articolo'] == $a ) {
                 $qa += $v['quantita'];
@@ -197,11 +219,16 @@
 
             // ciclo sui bundle
             foreach( $bs as $bd ) {
-                $qb[ $bd ] = ( ( ! isset( $qb[ $bd ] ) ) ? $v['quantita'] : $qb[ $bd ] + $v['quantita'] );
+                // $qb[ $bd ] = ( ( ! isset( $qb[ $bd ] ) ) ? $v['quantita'] : $qb[ $bd ] + $v['quantita'] );
+                $qb[ $bd ] = ( ( ! isset( $qb[ $bd ] ) ) ? $qd : $qb[ $bd ] + $qd );
+                if( $mt['conf_bundle'] == 'SI' ) {
+                    $qa = $qb[ $bd ];
+                }
             }
 
             // log
             logger( 'contaQuantitaArticoliCarrello(): $qa = ' . $qa . ', $qp = ' . $qp . ' ( $a = ' . $a . ', $p = ' . $p . ' )', 'listini' );
+            logger( 'contaQuantitaArticoliCarrello(): $qb = ' . print_r( $qb, true ), 'listini' );
 
         }
 

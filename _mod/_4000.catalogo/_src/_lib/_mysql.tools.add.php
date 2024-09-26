@@ -304,6 +304,24 @@
                 )
             );
 
+            // i metadati dell'articolo
+            $mt = mysqlSelectCachedRow(
+                $m,
+                $c,
+                'SELECT m1.testo AS conf_udm, m2.testo AS conf_qta, m3.testo AS conf_bundle FROM articoli AS a
+                LEFT JOIN metadati AS m1 ON m1.id_articolo = a.id AND m1.nome = "conf_udm"
+                LEFT JOIN metadati AS m2 ON m2.id_articolo = a.id AND m2.nome = "conf_qta"
+                LEFT JOIN metadati AS m3 ON m3.id_articolo = a.id AND m3.nome = "conf_bundle"
+                LEFT JOIN metadati AS m4 ON m4.id_articolo = a.id AND m4.nome = "conf_rif_sconto"
+                WHERE a.id = ?',
+                array(
+                    array( 's' => $a )
+                )
+            );
+
+            // log
+            logger( 'metadati per ' . $a . ': ' . print_r( $mt, true ), 'listini' );
+
             // trovo il prezzo per il prodotto
             $p1 = mysqlSelectCachedValue( $m, $c,
                 'SELECT prezzo 
@@ -342,6 +360,25 @@
             if( ! empty( $qb ) ) {
 
                 foreach( $qb as $bp => $qbn ) {
+
+                    // i metadati del prodotto
+                    $mp = mysqlSelectCachedRow(
+                        $m,
+                        $c,
+                        'SELECT m1.testo AS conf_udm, m2.testo AS conf_qta, m3.testo AS conf_bundle, m4.testo AS conf_rif_sconto
+                        FROM prodotti AS p
+                        LEFT JOIN metadati AS m1 ON m1.id_prodotto = p.id AND m1.nome = "conf_udm"
+                        LEFT JOIN metadati AS m2 ON m2.id_prodotto = p.id AND m2.nome = "conf_qta"
+                        LEFT JOIN metadati AS m3 ON m3.id_prodotto = p.id AND m3.nome = "conf_bundle"
+                        LEFT JOIN metadati AS m4 ON m4.id_prodotto = p.id AND m4.nome = "conf_rif_sconto"
+                        WHERE p.id = ?',
+                        array(
+                            array( 's' => $bp )
+                        )
+                    );
+
+                    // log
+                    logger( 'metadati per ' . $bp . ': ' . print_r( $mp, true ), 'listini' );
 
                     logger( 'calcolo il prezzo per il bundle ' . $bp, 'listini' );
 
@@ -389,11 +426,69 @@
                         $sc1 = $sc1r;
                     }
 
+                    // se è settato un listino di riferimento per lo sconto
+                    if( ! empty( $sc1 ) && ! empty( $mp['conf_rif_sconto'] ) ) {
+
+                        // log
+                        logger( 'rilevato sconto ' . $sc1 . ', trovo il listino per il codice ' . $mp['conf_rif_sconto'], 'listini' );
+
+                        // ...
+                        $idlp = mysqlSelectCachedValue(
+                            $m,
+                            $c,
+                            'SELECT id FROM listini WHERE codice = ?',
+                            array(
+                                array( 's' => $mp['conf_rif_sconto'] )
+                            )
+                        );
+
+                        if( ! empty( $idlp ) ) {
+
+                            $mp['conf_rif_sconto'] = $idlp;
+
+                            // log
+                            logger( 'per il bundle ' . $bp . ' ho trovato il listino ' . $mp['conf_rif_sconto'], 'listini' );
+
+                        } else {
+
+                            // log
+                            logger( 'per il bundle ' . $bp . ' non ho trovato il listino con codice ' . $mp['conf_rif_sconto'], 'listini' );
+
+                        }
+
+                        // trovo il prezzo per l'articolo
+                        $p4 = mysqlSelectCachedValue( $m, $c,
+                            'SELECT prezzo
+                            FROM prezzi 
+                            WHERE id_articolo = ? 
+                            AND id_listino = ?
+                            AND ( qta_min IS NULL OR qta_min <= ? )
+                            AND ( data_inizio IS NULL OR data_inizio <= ? )
+                            ORDER BY data_inizio DESC, qta_min DESC',
+                            array(
+                                array( 's' => $a ),
+                                array( 's' => $mp['conf_rif_sconto'] ),
+                                array( 's' => $qa ),
+                                array( 's' => $date )
+                            )
+                        );
+
+                        // log
+                        logger( 'per il bundle ' . $bp . ' ho trovato il prezzo di riferimento ' . $p4, 'listini' );
+
+                    } else {
+
+                        // log
+                        logger( 'non è stato rilevato un listino di riferimento per lo sconto', 'listini' );
+
+                    }
+
                 }
 
             } else {
 
                 $p3 = 0;
+                $p4 = 0;
                 $qbn = 0;
                 $sc1 = 0;
 
@@ -404,8 +499,14 @@
             // defailt
             $r = 0;
 
+            // prezzi candidati
+            $pcnd = array( $p1, $p2, $p3, $p4 );
+
+            // log
+            logger( 'prezzi candidati: ' . print_r( $pcnd, true ), 'listini' );
+
             // trovo il prezzo
-            foreach( array( $p1, $p2, $p3 ) as $pf ) {
+            foreach( $pcnd as $pf ) {
                 if( ! empty( $pf ) ) {
                     if( $pf < $r || empty( $r ) ) {
                         $r = $pf;
@@ -479,6 +580,24 @@
                 )
             );
 
+            // i metadati dell'articolo
+            $mt = mysqlSelectCachedRow(
+                $m,
+                $c,
+                'SELECT m1.testo AS conf_udm, m2.testo AS conf_qta, m3.testo AS conf_bundle FROM articoli AS a
+                LEFT JOIN metadati AS m1 ON m1.id_articolo = a.id AND m1.nome = "conf_udm"
+                LEFT JOIN metadati AS m2 ON m2.id_articolo = a.id AND m2.nome = "conf_qta"
+                LEFT JOIN metadati AS m3 ON m3.id_articolo = a.id AND m3.nome = "conf_bundle"
+                LEFT JOIN metadati AS m4 ON m4.id_articolo = a.id AND m4.nome = "conf_rif_sconto"
+                WHERE a.id = ?',
+                array(
+                    array( 's' => $a )
+                )
+            );
+
+            // log
+            logger( 'metadati per ' . $a . ': ' . print_r( $mt, true ), 'listini' );
+
             // trovo il prezzo per il prodotto
             $p1 = mysqlSelectCachedRow( $m, $c,
                 'SELECT prezzo, id_iva 
@@ -518,6 +637,25 @@
 
                 foreach( $qb as $bp => $qbn ) {
 
+                    // i metadati del prodotto
+                    $mp = mysqlSelectCachedRow(
+                        $m,
+                        $c,
+                        'SELECT m1.testo AS conf_udm, m2.testo AS conf_qta, m3.testo AS conf_bundle, m4.testo AS conf_rif_sconto
+                        FROM prodotti AS p
+                        LEFT JOIN metadati AS m1 ON m1.id_prodotto = p.id AND m1.nome = "conf_udm"
+                        LEFT JOIN metadati AS m2 ON m2.id_prodotto = p.id AND m2.nome = "conf_qta"
+                        LEFT JOIN metadati AS m3 ON m3.id_prodotto = p.id AND m3.nome = "conf_bundle"
+                        LEFT JOIN metadati AS m4 ON m4.id_prodotto = p.id AND m4.nome = "conf_rif_sconto"
+                        WHERE p.id = ?',
+                        array(
+                            array( 's' => $bp )
+                        )
+                    );
+
+                    // log
+                    logger( 'metadati per ' . $bp . ': ' . print_r( $mp, true ), 'listini' );
+
                     logger( 'calcolo il prezzo per il bundle ' . $bp, 'listini' );
 
                     // $bp = array_shift( array_keys( $qb ) );
@@ -538,6 +676,10 @@
                             array( 's' => $date )
                         )
                     );
+
+                    if( ! empty( $p3r ) ) {
+                        $p3 = $p3r;
+                    }
 
                     $sc1r = mysqlSelectCachedValue( $m, $c,
                         'SELECT sconto_articoli  
@@ -564,11 +706,69 @@
                         $sc1 = $sc1r;
                     }
 
+                    // se è settato un listino di riferimento per lo sconto
+                    if( ! empty( $sc1 ) && ! empty( $mp['conf_rif_sconto'] ) ) {
+
+                        // log
+                        logger( 'rilevato sconto ' . $sc1 . ', trovo il listino per il codice ' . $mp['conf_rif_sconto'], 'listini' );
+
+                        // ...
+                        $idlp = mysqlSelectCachedValue(
+                            $m,
+                            $c,
+                            'SELECT id FROM listini WHERE codice = ?',
+                            array(
+                                array( 's' => $mp['conf_rif_sconto'] )
+                            )
+                        );
+
+                        if( ! empty( $idlp ) ) {
+
+                            $mp['conf_rif_sconto'] = $idlp;
+
+                            // log
+                            logger( 'per il bundle ' . $bp . ' ho trovato il listino ' . $mp['conf_rif_sconto'], 'listini' );
+
+                        } else {
+
+                            // log
+                            logger( 'per il bundle ' . $bp . ' non ho trovato il listino con codice ' . $mp['conf_rif_sconto'], 'listini' );
+
+                        }
+
+                        // trovo il prezzo per l'articolo
+                        $p4 = mysqlSelectCachedRow( $m, $c,
+                            'SELECT prezzo, id_iva  
+                            FROM prezzi 
+                            WHERE id_articolo = ? 
+                            AND id_listino = ?
+                            AND ( qta_min IS NULL OR qta_min <= ? )
+                            AND ( data_inizio IS NULL OR data_inizio <= ? )
+                            ORDER BY data_inizio DESC, qta_min DESC',
+                            array(
+                                array( 's' => $a ),
+                                array( 's' => $mp['conf_rif_sconto'] ),
+                                array( 's' => $qa ),
+                                array( 's' => $date )
+                            )
+                        );
+
+                        // log
+                        logger( 'per il bundle ' . $bp . ' ho trovato il prezzo di riferimento ' . $p4['prezzo'], 'listini' );
+
+                    } else {
+
+                        // log
+                        logger( 'non è stato rilevato un listino di riferimento per lo sconto', 'listini' );
+
+                    }
+
                 }
 
             } else {
 
                 $p3 = 0;
+                $p4 = 0;
                 $qbn = 0;
                 $sc1 = 0;
 
@@ -581,8 +781,14 @@
             $r = 0;
             $i = 0;
 
+            // prezzi candidati
+            $pcnd = array( $p1['prezzo'] => $p1['id_iva'], $p2['prezzo'] => $p2['id_iva'], $p3['prezzo'] => $p3['id_iva'], $p4['prezzo'] => $p4['id_iva'] );
+
+            // log
+            logger( 'prezzi candidati: ' . print_r( $pcnd, true ), 'listini' );
+
             // trovo il prezzo
-            foreach( array( $p1['prezzo'] => $p1['id_iva'], $p2['prezzo'] => $p2['id_iva'], $p3['prezzo'] => $p3['id_iva'] ) as $pf => $pi ) {
+            foreach( $pcnd as $pf => $pi ) {
                 if( ! empty( $pf ) ) {
                     if( $pf < $r || empty( $r ) ) {
                         $r = $pf;
@@ -617,6 +823,9 @@
 
             // calcolo il lordo
             $r = $r + ( $r / 100 * $v );
+
+            // log
+            logger( 'per ' . $a . ' aliquota ' . $i . ' ho calcolato il prezzo lordo ' . $r, 'listini' );
 
             // log
             // logger( 'per ' . $qa . 'x' . $a . ' (' . $qp . ') fra ' . $p1 . ' e ' . $p2 . ' scelgo ' . $r, 'listini' );
