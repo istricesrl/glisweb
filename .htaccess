@@ -194,7 +194,7 @@ Options -Indexes
 
     # gestione delle API REST generiche
     # questa regola reindirizza le richieste di tipo api/<entità>[/<id>] a _src/_api/_rest.php (vedi la documentazione del file per i dettagli)
-    RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9\.]+)*$ _src/_api/_rest.php?__ws__=$1&__id__=$2 [L,QSA]
+    RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9\.\-]+)*$ _src/_api/_rest.php?__ws__=$1&__id__=$2 [L,QSA]
 
     ## JOB
     #
