@@ -3293,7 +3293,7 @@ ALTER TABLE `relazioni_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- relazioni_articoli
 ALTER TABLE `relazioni_articoli`
 	ADD PRIMARY KEY (`id`), 
-	ADD UNIQUE KEY `unico` (`id_articolo`,`id_ruolo`, `id_prodotto_collegato`, `id_articolo_collegato`),
+	ADD UNIQUE KEY `unico` (`id_articolo`,`id_ruolo`, `id_prodotto_collegato`),
 	ADD KEY `id_articolo` (`id_articolo`),
 	ADD KEY `id_ruolo` (`id_ruolo`),
 	ADD KEY `id_prodotto_collegato` (`id_prodotto_collegato`),

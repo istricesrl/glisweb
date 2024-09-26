@@ -154,9 +154,19 @@
 {% for link in links %}<a href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}" class="breadcrumb-link">{{ link.label[ lang ] }}</a>{% if not loop.last %} {% if separator %} {{ separator }} {% else %} | {% endif %}{% endif %}{% endfor %}
 {% endmacro %}
 
-{# TODO documentare #}
-{% macro flags( links, lang, site, query ) %}
-{% for link in links %}<li class="flags-item{% if link.active %} active{% endif %}"><a href="{{ link.location }}{% if query %}?{{ query }}{% endif %}" class="flags-link"><img data-src="{{ site.root }}_src/_img/_flags/{{ link.country }}.png" alt="change language to {{ link.country }}" class="lazyload"></a></li>{% endfor %}
+{# flags() - genera un menu per il cambio lingua con icone a bandiera
+    Questa funzione genera una serie di elementi <li>, ognuno dei quali a sua volta contiene il link alla pagina corrente
+    in una delle lingue attive sul sito. #}
+{% macro flags( page, lang, site, query ) %}
+
+    {# ciclo principale #}
+    {% for l,u in page.url %}
+    <li class="flags-item{% if l == lang %} active{% endif %}">
+        <a href="{{ u }}{% if query %}?{{ query }}{% endif %}" class="flags-link">
+            <img src="{{ site.root }}_src/_img/_flags/_webp/_{{ l|split('-')[1]|lower }}.webp" alt="change language to {{ l }}">
+        </a>
+    </li>{% endfor %}
+
 {% endmacro %}
 
 {# TODO documentare #}
