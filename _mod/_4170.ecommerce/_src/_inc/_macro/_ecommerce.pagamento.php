@@ -185,6 +185,34 @@
                                 // calcolo il netto
                                 $pagamento['importo_lordo_finale'] = $pagamento['importo_lordo_totale'] - $pagamento['coupon_valore'];
 
+                                // debug
+                                // die( 'segno pagato il pagamento ' . $pagamento['id_pagamento'] );
+                                if( ! empty( $pagamento['id_pagamento'] ) ) {
+
+                                // associo il pagamento
+                                $idPagamento = mysqlInsertRow(
+                                    $cf['mysql']['connection'],
+                                    array(
+                                        'id' => $pagamento['id_pagamento'],
+                                        'id_documento' => $idDocumento,
+                                        'id_carrelli_articoli' => $pagamento['id'],
+                                        'id_rinnovo' => ( ( isset( $pagamento['id_rinnovo'] ) ) ? $pagamento['id_rinnovo'] : NULL ),
+                                        'timestamp_pagamento' => time(),
+                                        // 'importo_netto_totale' => $pagamento['importo_netto_totale'],
+                                        'importo_lordo_totale' => $pagamento['importo_lordo_totale'],
+                                        'id_coupon' => ( ( isset( $pagamento['id_coupon'] ) ) ? $pagamento['id_coupon'] : NULL ),
+                                        'coupon_valore' => $pagamento['coupon_valore'],
+                                        'importo_lordo_finale' => $pagamento['importo_lordo_finale'],
+                                        'nome' => ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'rata pagata' : 'pagamento diretto' ) . 
+                                            ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
+                                        'timestamp_inserimento' => time(),
+                                        'id_account_inserimento' => $_SESSION['account']['id']
+                                    ),
+                                    'pagamenti'
+                                );
+
+                                } else {
+
                                 // associo il pagamento
                                 $idPagamento = mysqlInsertRow(
                                     $cf['mysql']['connection'],
@@ -216,6 +244,8 @@
                                         'nome'
                                     )
                                 );
+
+                                }
 
                                 if( isset( $pagamento['autoprint'] ) && ! empty( $pagamento['autoprint'] ) ) {
 
@@ -490,7 +520,8 @@
                         INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo 
                         INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto 
                         LEFT JOIN anagrafica AS a ON a.id = carrelli_articoli.destinatario_id_anagrafica 
-                        WHERE pagamenti.id_debitore = ? AND pagamenti.id_documento IS NULL',
+                        WHERE pagamenti.id_debitore = ? AND pagamenti.id_documento IS NULL
+                        AND pagamenti.timestamp_pagamento IS NULL -- è corretta?',
                     array( array( 's' => $_REQUEST['__pagamenti__']['id_cliente'] ) )
                 )
             );
@@ -687,9 +718,12 @@
                 // pagamenti in sospeso (rate)
                 $riga['rate'] = mysqlQuery(
                     $cf['mysql']['connection'],
-                    'SELECT pagamenti.* '.
-                    'FROM pagamenti '.
-                    'WHERE id_documento IS NULL AND id_carrelli_articoli = ?',
+                    'SELECT pagamenti.* 
+                    FROM pagamenti 
+                    WHERE id_documento IS NULL
+                    AND id_carrelli_articoli = ?
+                    AND timestamp_pagamento IS NULL -- è corretta questa condizione?
+                    ',
                     array( array( 's' => $riga['id'] ) )
                 );
 
@@ -727,9 +761,10 @@
                     // OK? $riga['ragionamento_totale_lordo_da_pagare'] = $riga['importo_lordo_finale'].' - '.$riga['totale_lordo_pagato'];
                     // OK? $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_finale'] - $riga['totale_lordo_pagato'];
                     // echo $riga['importo_lordo_finale'] . ' - ' . $riga['totale_lordo_pagato'] . ' = ' . $riga['totale_lordo_da_pagare'] . PHP_EOL;
-                    $riga['ragionamento_totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'].' - '.$riga['totale_lordo_pagato'].' - '.$riga['totale_lordo_rateizzato'];
-                    $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
-                    // era giusto questo? $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'];
+                    // $riga['ragionamento_totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'].' - '.$riga['totale_lordo_pagato'].' - '.$riga['totale_lordo_rateizzato'];
+                    // era giusto questo? $riga['totale_lordo_da_pagare'] = $riga['prezzo_lordo_finale'] - $riga['totale_lordo_pagato'] - $riga['totale_lordo_rateizzato'];
+                    $riga['ragionamento_totale_lordo_da_pagare'] = $riga['importo_lordo_totale'];
+                    $riga['totale_lordo_da_pagare'] = $riga['importo_lordo_totale'];
                 }
 
                 // se la riga è pagata e non ha documenti da stampare, non la mostro
@@ -743,7 +778,8 @@
                             }
 #                            unset( $ct['etc']['righe'][ $chiave ] );
                         }
-                    } elseif( empty( $riga['totale_lordo_da_pagare'] ) && ! empty( $riga['documenti_stampati'] ) ) {
+                    // } elseif( empty( $riga['totale_lordo_da_pagare'] ) && ! empty( $riga['documenti_stampati'] ) ) {
+                    } elseif( empty( $riga['totale_lordo_da_pagare'] ) && empty( $riga['documenti_da_stampare'] ) ) {
                         unset( $ct['etc']['righe'][ $chiave ] );
                     }
                 }
@@ -847,5 +883,5 @@
     );
 
     // debug
-    // print_r( $ct['etc']['righe'] );
+    // die( print_r( $ct['etc']['righe'], true ) );
     // die();

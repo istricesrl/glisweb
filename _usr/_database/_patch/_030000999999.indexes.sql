@@ -2533,6 +2533,42 @@ ALTER TABLE `metadati`
 -- tipologia: tabella gestita
 ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000021810
+
+-- metadati_articoli
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:12 Fabio Mosti
+ALTER TABLE `metadati_articoli`
+ 	ADD PRIMARY KEY (`id`), 
+ 	ADD UNIQUE KEY `unica_articolo` (`id_lingua`,`id_articolo`,`nome`), 
+ 	ADD KEY `id_lingua` (`id_lingua`), 
+ 	ADD KEY `id_articolo` (`id_articolo`), 
+	ADD KEY `indice` (`id`,`id_lingua`,`id_articolo`,`nome`,`testo` (255));
+
+-- | 030000021811
+
+-- metadati_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `metadati_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+-- | 030000021820
+
+-- metadati_prodotti
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:12 Fabio Mosti
+ALTER TABLE `metadati_prodotti`
+ 	ADD PRIMARY KEY (`id`), 
+ 	ADD UNIQUE KEY `unica_prodotto` (`id_lingua`,`id_prodotto`,`nome`), 
+ 	ADD KEY `id_lingua` (`id_lingua`), 
+ 	ADD KEY `id_prodotto` (`id_prodotto`), 
+	ADD KEY `indice` (`id`,`id_lingua`,`id_prodotto`,`nome`,`testo` (255));
+
+-- | 030000021811
+
+-- metadati_prodotti
+-- tipologia: tabella gestita
+ALTER TABLE `metadati_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000021900
 
 -- modalita_pagamento

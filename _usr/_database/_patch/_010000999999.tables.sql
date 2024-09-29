@@ -2513,6 +2513,40 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000021810
+
+-- metadati_articoli
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:02 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `metadati_articoli` (
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `testo` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000021820
+
+-- metadati_prodotti
+-- tipologia: tabella gestita
+-- verifica: 2021-10-01 10:02 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `metadati_prodotti` (
+  `id` int(11) NOT NULL,
+  `id_lingua` int(11) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `testo` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000021900
 
 -- modalita_pagamento
