@@ -1966,6 +1966,11 @@ CREATE OR REPLACE VIEW certificazioni_view AS
 	SELECT
 		certificazioni.id,
 		certificazioni.nome,
+		certificazioni.se_identificativo,
+		certificazioni.se_medico,
+		certificazioni.se_sportivo,
+		certificazioni.se_agonistico,
+		certificazioni.se_immobili,
 	 	certificazioni.nome AS __label__
 	FROM certificazioni
 ;

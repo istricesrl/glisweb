@@ -1029,6 +1029,11 @@ CREATE TABLE IF NOT EXISTS `causali` (
 CREATE TABLE IF NOT EXISTS `certificazioni` (
   `id` int(11) NOT NULL,
   `nome` char(255) DEFAULT NULL,
+  `se_identificazione` tinyint(1) DEFAULT NULL,
+  `se_medico` tinyint(1) DEFAULT NULL,
+  `se_sportivo` tinyint(1) DEFAULT NULL,
+  `se_agonistico` tinyint(1) DEFAULT NULL,
+  `se_immobili` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
