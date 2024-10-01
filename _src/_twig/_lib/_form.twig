@@ -316,7 +316,8 @@
     {# valori di default per l'array source #}
     {% set source = {
         'values': [],
-        'api': ''
+        'api': '',
+        'restrict': []
     }|merge( options.source ) %}
 
     {# valori di default per l'array tooltip #}
@@ -401,7 +402,7 @@
             {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
             {% if field.required %}required{% endif %} 
             {% if field.onchange %}onchange="{{ field.onchange }}"{% endif %}
-            {% if not noempty %}empty{% endif %}>
+            {% if not field.noempty %}empty{% endif %}>
 
             {# opzione vuota #}
             {% if not noempty %}<option value=""></option>{% endif %}
@@ -421,11 +422,13 @@
         <div class="col combobox-container p-0">
             <input type="hidden" name="{{ nm }}" id="{{ id }}" value="{{ vl }}" class="selectbox"
                 populate-api="{{ source.api }}" min-filter="3" data-live-search="true"
-                {% if disabled %}disabled{% endif %}
-                {% if required %}data-required="true"{% endif %}
-                {% if change %}onchange="{{ change }}"{% endif %}
-                {% if default %}default="{{ default }}"{% endif %}
-                {% if not noempty %}empty{% endif %}>
+                {% for res,val in source.restrict %} restrict-{{ res }}="{{ val|keys|first }}:{{ val|first }}"{% endfor %}
+                {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
+                {% if field.disabled %}disabled{% endif %}
+                {% if field.required %}data-required="true"{% endif %}
+                {% if field.onchange %}onchange="{{ field.onchange }}"{% endif %}
+                {% if field.default %}default="{{ field.default }}"{% endif %}
+                {% if not field.noempty %}empty{% endif %}>
         </div>
 
     {% endif %}

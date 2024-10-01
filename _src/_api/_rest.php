@@ -170,7 +170,10 @@
 				$_REQUEST['__info__'][ $cf['ws']['table'] ]['__pager__']['rows'] = 100;
 			}
 
-			// debug
+            // ...
+            // $_REQUEST['__info__'][ $cf['ws']['table'] ]['__restrict__']['id_tipologia']['IN'] = '12';
+
+            // debug
 			// print_r( $_SERVER['REDIRECT_URL'] );
 			// die( print_r( $_REQUEST, true ) );
 			// die( $_SERVER['CONTENT_TYPE'] );

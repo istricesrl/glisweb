@@ -169,15 +169,31 @@
 				// perché non usiamo encodeURIComponent( filtro ) per normalizzare i caratteri strani tipo & eccetera? boh sembra funzionare comunque
 				var call = '/api/' + $( select ).attr( 'populate-api' ) + '?__info__[' + $( select ).attr( 'populate-api' ) + '][__search__]=' + filtro + '&__info__[' + $( select ).attr( 'populate-api' ) + '][__fields__][]=id&__info__[' + $( select ).attr( 'populate-api' ) + '][__fields__][]=__label__';
 
-				console.log( 'chiamata API ' + call );
+                // OK rendere dinamico call = call + '&__info__[' + $( select ).attr( 'populate-api' ) + '][__restrict__][id_tipologia][IN]=12';
+
+				// recupero il valore di tutti gli attributi di $( select ) che iniziano con restrict-
+				// console.log( '-----' );
+				// console.log( $(select) );
+				$.each($(select)[0].attributes, function(index, attr) {
+					var key = attr.name;
+					var value = attr.value;
+					// console.log('restrict: ' + key + ' -> ' + value);
+					if (key.indexOf('restrict-') === 0) {
+						var tk = value.split(':');
+						call += '&__info__[' + $(select).attr('populate-api') + '][__restrict__][' + key.replace('restrict-', '') + '][' + tk[0] + ']=' + tk[1];
+					}
+				});
+				// console.log( '-----' );
+
+                console.log( 'chiamata API ' + call );
 
 				getws(
 					call,
 					null,
 					function( data ) {
 
-		    // svuoto la lista
-		    $( lista ).empty();
+						// svuoto la lista
+						$( lista ).empty();
 
 						console.log( data );
 
