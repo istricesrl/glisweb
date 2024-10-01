@@ -249,14 +249,14 @@
                     coalesce( concat( " su ", todo.id_progetto, " ", progetti.nome ), "" )
                 ) AS __label__
             FROM todo
-                LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
-                LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
-                LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
                 LEFT JOIN progetti ON progetti.id = todo.id_progetto
+                LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
                 LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
                 LEFT JOIN categorie_progetti AS d ON d.id = progetti_categorie.id_categoria AND d.se_disciplina = 1
+                LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+                LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
                 LEFT JOIN metadati AS m1 ON m1.id_progetto = progetti.id AND m1.nome = "prenotabile_online"
-            WHERE todo.id = ? -- AND todo.id_tipologia IN (14, 15, 18) 
+            WHERE todo.id = ? AND tipologie_todo.id_genitore = 6 
             GROUP BY todo.id ',
             array( array( 's' => $idLezione ) )
         );
@@ -352,6 +352,106 @@
                 'SELECT luoghi_path( ? ) AS luogo',
                 array( array( 's' => $riga['id_luogo'] ) )
             );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        // ricavo il giorno della settimana in formato numerico
+        $riga['id_giorno_programmazione'] = date( 'N', strtotime( $riga['data_programmazione'] ) );
+
+        // tipologie contratti da inserire nel report
+        $abbonamentiCompatibili = array();
+
+        // recupero l'elenco degli abbonamenti
+        $abbonamenti = mysqlCachedQuery(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT tipologie_contratti.id, tipologie_contratti.nome
+                FROM tipologie_contratti
+                WHERE tipologie_contratti.se_abbonamento = 1'
+        );
+
+        // ciclo sugli abbonamenti
+        foreach( $abbonamenti as $abbonamento ) {
+
+            // orari in cui è valido l'abbonamento
+            $orari = mysqlCachedQuery(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT orari.*, giorni.nome AS giorno
+                    FROM orari 
+                    LEFT JOIN giorni ON orari.id_giorno = giorni.id
+                    WHERE id_tipologia_contratti = ?',
+                array(
+                    array( 's' => $abbonamento['id'] )
+                )
+            );
+
+            // check sugli orari
+            if( empty( $orari ) ) {
+
+                $checkOrari = true;
+
+            } else {
+
+                $checkOrari = false;
+
+                // ciclo sugli orari
+                foreach( $orari as $orario ) {
+
+                    // check sul giorno
+                    if( $orario['id_giorno'] == $riga['id_giorno_programmazione'] ) {
+
+                        // check sull'orario
+                        if( $riga['ora_inizio_programmazione'] >= $orario['ora_inizio'] && $riga['ora_fine_programmazione'] <= $orario['ora_fine'] ) {
+
+                            $checkOrari = true;
+
+                        } elseif( empty( $orario['ora_inizio'] ) && empty( $orario['ora_fine'] ) ) {
+
+                            $checkOrari = true;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            // aggiunta dell'abbonamento compatibile alla riga
+            if( $checkOrari == true ) {
+                $abbonamentiCompatibili[] = $abbonamento['id'];
+            }
+
+        }
+
+        // abbonamenti compatibili
+        $riga['tipologie_abbonamenti'] = '|' . implode( '|', $abbonamentiCompatibili ) . '|';
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*
             $riga['numero_alunni'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
@@ -412,3 +512,129 @@
 
     }
 
+    /**
+     * 
+     * 
+     * @todo documentare
+     * 
+     */
+    function updateReportLezioniTipologieAbbonamenti( $idLezione ) {
+
+        // globalizzazione di $cf
+        global $cf;
+
+        // log
+        logger( 'aggiorno il report della compatibilità fra lezioni e tipologie abbonamenti per la lezione ' . $idLezione, 'lezioni' );
+
+        // dettagli della lezione
+        $lezione = mysqlSelectCachedRow(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT todo.id, todo.data_programmazione, todo.timestamp_inserimento, todo.timestamp_aggiornamento FROM todo WHERE todo.id = ?',
+            array( array( 's' => $idLezione ) )
+        );
+
+        // ricavo il giorno della settimana in formato numerico
+        $lezione['id_giorno'] = date( 'N', strtotime( $lezione['data_programmazione'] ) );
+
+        // righe da inserire nel report
+        $righe = array();
+
+        // recupero l'elenco degli abbonamenti
+        $abbonamenti = mysqlCachedQuery(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT tipologie_contratti.id, tipologie_contratti.nome
+                FROM tipologie_contratti
+                WHERE tipologie_contratti.se_abbonamento = 1'
+        );
+
+        // ciclo sugli abbonamenti
+        foreach( $abbonamenti as $abbonamento ) {
+
+            // log
+            logger( 'verifico la compatibilità fra la lezione ' . $idLezione . ' e l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ')', 'lezioni' );
+
+            // orari in cui è valido l'abbonamento
+            $orari = mysqlCachedQuery(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT orari.*, giorni.nome AS giorno
+                    FROM orari 
+                    LEFT JOIN giorni ON orari.id_giorno = giorni.id
+                    WHERE id_tipologia_contratti = ?',
+                array(
+                    array( 's' => $abbonamento['id'] )
+                )
+            );
+
+            // check sugli orari
+            if( empty( $orari ) ) {
+
+                $checkOrari = 1;
+
+            } else {
+
+                $checkOrari = NULL;
+
+                // ciclo sugli orari
+                foreach( $orari as $orario ) {
+
+                    // check sul giorno
+                    if( $orario['id_giorno'] == $lezione['id_giorno'] ) {
+
+                        // check sull'orario
+                        if( $lezione['ora_inizio_programmazione'] > $orario['ora_inizio'] && $lezione['ora_fine_programmazione'] < $orario['ora_fine'] ) {
+
+                            $checkOrari = 1;
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            // composizione della riga di report
+            $righe[] = array(
+                'id_todo' => $idLezione,
+                'id_tipologia_contratti' => $abbonamento['id'],
+                'se_compatibile' => $checkOrari,
+                'timestamp_inserimento' => $lezione['timestamp_inserimento'],
+                'timestamp_aggiornamento' => $lezione['timestamp_aggiornamento']
+            );
+
+        }
+
+        // inserimento delle righe di report
+        foreach( $righe as $riga ) {
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $riga,
+                '__report_lezioni_tipologie_abbonamenti__'
+            );
+
+        }
+
+    }
+
+    /**
+     * 
+     * 
+     * @todo documentare
+     * 
+     */
+    function cleanReportLezioniTipologieAbbonamenti() {
+
+        global $cf;
+
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'DELETE __report_lezioni_tipologie_abbonamenti__ FROM __report_lezioni_tipologie_abbonamenti__
+            LEFT JOIN todo ON todo.id = __report_lezioni_tipologie_abbonamenti__.id
+            WHERE todo.id IS NULL;'
+        );
+
+    }

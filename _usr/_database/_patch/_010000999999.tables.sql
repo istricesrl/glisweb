@@ -444,6 +444,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `ora_inizio` time DEFAULT NULL,
   `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,
   `longitudine_ora_inizio` decimal(11,7) DEFAULT NULL,
+  `data_fine` date DEFAULT NULL,
   `ora_fine` time DEFAULT NULL,
   `latitudine_ora_fine` decimal(11,7) DEFAULT NULL,
   `longitudine_ora_fine` decimal(11,7) DEFAULT NULL,

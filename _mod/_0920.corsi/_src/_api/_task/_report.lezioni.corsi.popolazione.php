@@ -23,13 +23,15 @@
 			INNER JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia AND tipologie_todo.id_genitore = 6
             LEFT JOIN __report_lezioni_corsi__ ON __report_lezioni_corsi__.id = todo.id
             WHERE (
-				(
-					coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento 
-					OR
-					coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) IS NULL
-				)
-            )
-			OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL
+                (
+                    (
+                        coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento 
+                        OR
+                        coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) IS NULL
+                    )
+                )
+			    OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL
+            ) AND todo.id_progetto IS NOT NULL
 			ORDER BY todo.id DESC
 			LIMIT 1'
 		);

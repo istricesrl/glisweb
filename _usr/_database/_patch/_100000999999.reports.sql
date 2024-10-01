@@ -1540,6 +1540,7 @@ CREATE TABLE `__report_lezioni_corsi__` (
   `data_scadenza` char(255) DEFAULT NULL,
   `ora_scadenza` char(255) DEFAULT NULL,
   `data_programmazione` char(255) DEFAULT NULL,
+  `id_giorno_programmazione` int(11) DEFAULT NULL,
   `ora_inizio_programmazione` char(255) DEFAULT NULL,
   `ora_fine_programmazione` char(255) DEFAULT NULL,
   `anno_programmazione` char(255) DEFAULT NULL,
@@ -1556,6 +1557,7 @@ CREATE TABLE `__report_lezioni_corsi__` (
   `id_progetto` char(32) DEFAULT NULL,
   `corso` char(255) DEFAULT NULL,
   `discipline` char(255) DEFAULT NULL,
+  `tipologie_abbonamenti` char(255) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
   `id_immobile` int(11) DEFAULT NULL,
   `data_archiviazione` char(255) DEFAULT NULL,
@@ -1567,6 +1569,26 @@ CREATE TABLE `__report_lezioni_corsi__` (
   PRIMARY KEY (`id`),
   KEY `nome` (`nome`),
   KEY `timestamp_aggiornamento` (`timestamp_aggiornamento`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 100000060320
+
+-- __report_lezioni_tipologie_abbonamenti__
+-- tipologia: report
+
+CREATE TABLE `__report_lezioni_tipologie_abbonamenti__` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_todo` int(11) DEFAULT NULL,
+  `id_tipologia_contratti` int(11) DEFAULT NULL,
+  `se_compatibile` int(1) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` text DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unica` (`id_todo`,`id_tipologia_contratti`),
+  KEY `indice` (`id`,`id_todo`,`id_tipologia_contratti`,`se_compatibile`,`timestamp_aggiornamento`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 100000060400
