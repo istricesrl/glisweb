@@ -10,6 +10,7 @@ src/py/*/*/include/
 src/py/*/*/lib/
 src/py/*/*/lib64/
 src/py/*/*/share/
+src/py/*/*/lib64
 tmp/
 var/
 .htaccess
