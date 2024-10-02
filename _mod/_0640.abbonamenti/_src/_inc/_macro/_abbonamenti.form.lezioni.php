@@ -69,7 +69,8 @@
                 'id_tipologia' => $idTipologia,
                 'id_todo' => $_REQUEST['__iscrivi__'],
                 'id_anagrafica' => $idIscritto,
-                'id_contratto' => $_REQUEST['contratti']['id']
+                'id_contratto' => $_REQUEST['contratti']['id'],
+                'se_confermata' => 1
             ),
             'attivita',
             true,
@@ -268,11 +269,24 @@
                 )
             );
 
+            $sospensioni = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT * FROM periodi WHERE id_contratto = ? AND data_inizio <= ? AND data_fine >= ? AND id_tipologia = 5',
+                array(
+                    array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                    array( 's' => $row['data_programmazione'] ),
+                    array( 's' => $row['data_programmazione'] )
+                )
+            );
+
             $buttons = '';
 
             if( ! empty( $iscritto ) ) {
                 $onclick = "$('#form-contratti').attr('action','?contratti[id]=".$_REQUEST[ $ct['form']['table'] ]['id']."&__cancella__=".$row['id']."'); $('#form-contratti').submit();";
                 $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-calendar-minus-o"></i></a>';
+            } elseif( ! empty( $sospensioni ) ) {
+                $onclick = "$('#form-contratti').attr('action','?contratti[id]=".$_REQUEST[ $ct['form']['table'] ]['id']."&__iscrivi__=".$row['id']."'); $('#form-contratti').submit();";
+                $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-exclamation-triangle"></i></a>';
             } else {
                 $onclick = "$('#form-contratti').attr('action','?contratti[id]=".$_REQUEST[ $ct['form']['table'] ]['id']."&__iscrivi__=".$row['id']."'); $('#form-contratti').submit();";
                 $buttons .= '<a href="#" data-toggle="modal" data-target="#archivia_attivita" onclick="'.$onclick.'"><i class="fa fa-graduation-cap"></i></a>';

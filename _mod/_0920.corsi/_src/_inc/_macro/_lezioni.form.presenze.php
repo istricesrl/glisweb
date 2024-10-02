@@ -29,6 +29,7 @@
         'id' => '#',
 //        'id_todo' => 'iscrizione',
         'anagrafica' => 'iscritto',
+        'id_contratto' => 'ID abbonamento',
         'contratto' => 'abbonamento',
         'id_tipologia' => 'ID tipologia',
         'tipologia' => 'tipologia',
@@ -36,6 +37,7 @@
         'discipline' => 'discipline',
         'id_progetto' => 'ID corso',
         'progetto' => 'corso',
+        'se_confermata' => 'confermata',
 //        'data_inizio' => 'data inizio',
 //        'data_fine' => 'data fine',
         NULL => 'azioni'
@@ -45,7 +47,9 @@
     $ct['view']['class'] = array(
         'id' => 'd-none',
         'id_tipologia' => 'd-none',
+        'id_contratto' => 'd-none',
         'data_attivita' => 'd-none',
+        'se_confermata' => 'd-none',
         'anagrafica' => 'text-left',
         'id_progetto' => 'd-none',
         'progetto' => 'text-left',
@@ -104,7 +108,17 @@
     $ct['view']['__restrict__']['id_tipologia']['IN'] = '15|19|32|33|40';
 
     // ...
-    if( isset( $_REQUEST['__attesa__'] ) && ! empty( $_REQUEST['__attesa__'] ) ) {
+    if( isset( $_REQUEST['__conferma__'] ) && ! empty( $_REQUEST['__conferma__'] ) ) {
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE attivita SET se_confermata = 1 WHERE id = ?',
+            array(
+                array( 's' => $_REQUEST['__conferma__'] )
+            )
+        );
+        updateReportLezioniCorsi( $_REQUEST[ $ct['form']['table'] ]['id'] );
+        updateAttivitaViewStatic( $_REQUEST['__conferma__'] );
+    } elseif( isset( $_REQUEST['__attesa__'] ) && ! empty( $_REQUEST['__attesa__'] ) ) {
         mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE attivita SET data_attivita = NULL, id_tipologia = 40 WHERE id = ?',
@@ -211,7 +225,25 @@ if( !empty( $ct['view']['data'] ) ){
 
         $buttons = '';
 
-        if( $_REQUEST[ $ct['form']['table'] ]['data_programmazione'] < date('Y-m-d') ){
+        $sospensioni = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT * FROM periodi WHERE id_contratto = ? AND data_inizio <= ? AND data_fine >= ? AND id_tipologia = 5',
+            array(
+                array( 's' => $row['id_contratto'] ),
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['data_programmazione'] ),
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['data_programmazione'] )
+            )
+        );
+
+        if( ! empty( $sospensioni ) && empty( $row['se_confermata'] ) ) {
+
+            $onclick = "window.open('?todo[id]=".$_REQUEST[ $ct['form']['table'] ]['id']."&__conferma__=".$row['id']."','_self');";
+            $buttons .= '<button type="button" class="button btn btn-secondary btn-xsm" onclick="'.$onclick.'">conferma</button>';
+
+            $onclick = "window.open('?todo[id]=".$_REQUEST[ $ct['form']['table'] ]['id']."&__rimuovi__=".$row['id']."','_self');";
+            $buttons .= '<button type="button" class="button btn btn-secondary btn-xsm" onclick="'.$onclick.'">rimuovi</button>';
+
+        } elseif( $_REQUEST[ $ct['form']['table'] ]['data_programmazione'] < date('Y-m-d') ){
 
             if( empty( $row['data_attivita'] ) ) {
 

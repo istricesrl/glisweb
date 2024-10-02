@@ -416,6 +416,10 @@
             // TODO documentare cosa fa questa parte
             // integra i campi dal model, poi? calcola i delta per l'evento aggiungi al carrello?
             if( isset( $_REQUEST['__carrello__']['__articoli__'] ) && is_array( $_REQUEST['__carrello__']['__articoli__'] ) ) {
+
+                // timer
+                timerCheck( $cf['speed'], '-> inizio ciclo integrazione articoli' );
+
                 foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
                     // TODO se $key è empty, costruire come id_articolo + id_anagrafica se id_articolo non è vuoto
                     if( ! empty( $key ) ) {
@@ -461,6 +465,9 @@
 
             // debug
             // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
+
+            // timer
+            timerCheck( $cf['speed'], '-> inizio ciclo principale articoli' );
 
             // STEP 5 - acquisto articoli multipli
             if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
@@ -525,6 +532,9 @@
 
                         // TODO qui calcolare coupon_percentuale e coupon_valore
 
+                        // timer
+                        timerCheck( $cf['speed'], '-> inizio ricerca descrizione articolo ' . $dati['id_articolo'] );
+
                         // trovo la descrizione dell'articolo
                         $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'] = implode( ' / ',
                             trimArray(
@@ -532,7 +542,6 @@
                                     mysqlSelectCachedValue(
                                         $cf['memcache']['connection'],
                                         $cf['mysql']['connection'],
-                                        // 'SELECT __label__ FROM anagrafica_view WHERE id = ?',
                                         'SELECT __label__ FROM anagrafica_view_static WHERE id = ?',
                                         array(
                                             array( 's' => $dati['destinatario_id_anagrafica'] )
@@ -541,8 +550,7 @@
                                     mysqlSelectCachedValue(
                                         $cf['memcache']['connection'],
                                         $cf['mysql']['connection'],
-                                        // 'SELECT nome FROM articoli_view WHERE id = ?',
-                                        'SELECT nome FROM articoli WHERE id = ?',
+                                        'SELECT nome FROM articoli_view WHERE id = ?',
                                         array(
                                             array( 's' => $dati['id_articolo'] )
                                         )
@@ -550,6 +558,9 @@
                                 )
                             )
                         );
+
+                        // timer
+                        timerCheck( $cf['speed'], '-> inizio calcolo prezzi per articolo ' . $dati['id_articolo'] );
 
                         // trovo il prezzo base dell'articolo
                         $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticoloCarrello(

@@ -265,6 +265,20 @@ div.subnav p {
     border-top-right-radius: .3em;
 }
 
+.label-top-static {
+    font-size: .8em;
+    font-weight: bold;
+
+    color: #000000;
+
+    position: absolute;
+    top: -1.2em;
+    background-color: none;
+    padding: 0em;
+    z-index: 30;
+
+}
+
 .form-col {
     position: relative;
     margin-bottom: 1.5em;
@@ -275,6 +289,10 @@ div.subnav p {
 
 .form-group.row div {
     position: relative;
+}
+
+.form-group.row p {
+    margin: 0em;
 }
 
 .form-control:focus {
@@ -309,18 +327,22 @@ div.combobox-container > .spinner-border {
 
 /* stili delle tabelle */
 
-table thead tr {
+table.search-table tbody tr td {
+    border-bottom: none;
+}
+
+table.app-table thead tr {
     border-top: none;
     border-bottom: #aaaaaa 2px solid;
     font-weight: bold;
 }
 
-table tfoot tr {
+table.app-table tfoot tr {
     border-top: #aaaaaa 2px solid;
     border-bottom: none;
     font-weight: bold;
 }
 
-table tfoot tr td {
+table.app-table tfoot tr td {
     border-bottom: none;
 }
