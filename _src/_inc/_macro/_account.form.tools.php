@@ -28,15 +28,16 @@
         )
 	);
 
-    // TODO appare solo se account esiste e se ha una mail associata
-    // esportazione contatti anagrafica
-    $ct['page']['contents']['metro']['account'][] = array(
-        'modal' => array( 'id' => 'resetta_password', 'include' => 'inc/account.form.tools.resetta.password.html' ),
-        'icon' => NULL,
-        'fa' => 'fa-unlock-alt',
-        'title' => 'resetta password',
-        'text' => 'reimposta la password dell\'account e invia una mail all\'utente'
-    );
+    // ...
+    if( ! empty( $_REQUEST['account']['id_mail'] ) ) {
+        $ct['page']['contents']['metro']['account'][] = array(
+            'modal' => array( 'id' => 'resetta_password', 'include' => 'inc/account.form.tools.resetta.password.html' ),
+            'icon' => NULL,
+            'fa' => 'fa-unlock-alt',
+            'title' => 'resetta password',
+            'text' => 'reimposta la password dell\'account e invia una mail all\'utente'
+        );
+    }
 
     // debug
     // print_r($_REQUEST);
