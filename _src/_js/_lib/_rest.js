@@ -78,10 +78,16 @@
 			// tool per chiamare un webservice da un bottone dell'interfaccia metro
 			$.fn.metroWs = function( ws, callback, method, data ) {
 		
-				var el = $( this ).get( 0 );
+                var el = $( this ).get( 0 );
 				var e = this;
-		
-				// se method non è valorizzato
+
+                if( typeof callback !== "function" ) {
+                    callback = function( data ) {
+                        console.log( data );
+                    }
+                }
+
+                // se method non è valorizzato
 				if( method == null ) {
 					method = 'GET';
 				}

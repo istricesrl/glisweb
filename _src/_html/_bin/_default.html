@@ -335,7 +335,7 @@ window.addEventListener( 'DOMContentLoaded', function() {
 <div id="{{ name }}" class="row g2cb {{ class }}" style="display: none;">
     {% for k in set %}
     {% for img in page.contents.images[ k ] %}
-    <div class="col-{{ col }} col-md-{{ md }}"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
+    <div class="col col-{{ col }} col-md-{{ md }}"><a class="g2cb-gallery" href="{{ site.root }}{{ img.path }}">
 		{{ cms.picture( img, lang, site, image, '', '', 'img-fluid mb-4' ) }}
     </a></div>
     {% else %}
