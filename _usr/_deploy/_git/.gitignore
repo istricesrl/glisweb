@@ -4,6 +4,12 @@ etc/secret/
 etc/latest.conf
 etc/latest.release.conf
 etc/latest.version.conf
+src/py/*/*/.buildozer/
+src/py/*/*/bin/
+src/py/*/*/include/
+src/py/*/*/lib/
+src/py/*/*/lib64/
+src/py/*/*/share/
 tmp/
 var/
 .htaccess
