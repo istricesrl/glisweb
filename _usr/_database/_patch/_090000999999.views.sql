@@ -1044,6 +1044,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id_anagrafica_programmazione,
 		coalesce( a3.denominazione , concat( a3.cognome, ' ', a3.nome ), '' ) AS anagrafica_programmazione,
 		attivita.ore_programmazione,
+		attivita.se_confermata,
 		attivita.data_attivita,
 		day( data_attivita ) as giorno_attivita,
 		month( data_attivita ) as mese_attivita,

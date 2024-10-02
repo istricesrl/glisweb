@@ -866,6 +866,12 @@
         'metadati' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
+        'metadati_prodotti' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'metadati_articoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'periodi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),

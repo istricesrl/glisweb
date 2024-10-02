@@ -532,7 +532,8 @@
                                     mysqlSelectCachedValue(
                                         $cf['memcache']['connection'],
                                         $cf['mysql']['connection'],
-                                        'SELECT __label__ FROM anagrafica_view WHERE id = ?',
+                                        // 'SELECT __label__ FROM anagrafica_view WHERE id = ?',
+                                        'SELECT __label__ FROM anagrafica_view_static WHERE id = ?',
                                         array(
                                             array( 's' => $dati['destinatario_id_anagrafica'] )
                                         )
@@ -540,7 +541,8 @@
                                     mysqlSelectCachedValue(
                                         $cf['memcache']['connection'],
                                         $cf['mysql']['connection'],
-                                        'SELECT nome FROM articoli_view WHERE id = ?',
+                                        // 'SELECT nome FROM articoli_view WHERE id = ?',
+                                        'SELECT nome FROM articoli WHERE id = ?',
                                         array(
                                             array( 's' => $dati['id_articolo'] )
                                         )
@@ -556,12 +558,18 @@
                             $rowKey
                         );
 
+                        // timer
+                        timerCheck( $cf['speed'], '-> fine calcolo prezzo netto articolo #' . $dati['id_articolo'] );
+
                         // trovo il prezzo lordo dell'articolo
                         $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] = calcolaPrezzoLordoArticoloCarrello(
                             $dati['id_articolo'],
                             $_SESSION['carrello'],
                             $rowKey
                         );
+
+                        // timer
+                        timerCheck( $cf['speed'], '-> fine calcolo prezzo lordo articolo #' . $dati['id_articolo'] );
 
                         // debug
                         // die( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] );

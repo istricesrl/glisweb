@@ -440,6 +440,7 @@ CREATE TABLE IF NOT EXISTS `attivita` (
   `id_anagrafica_programmazione` int(11) DEFAULT NULL,
   `note_programmazione` text DEFAULT NULL,
   `ore_programmazione` decimal(5,2) DEFAULT NULL,
+  `se_confermata` int(1) DEFAULT NULL,
   `data_attivita` date DEFAULT NULL,
   `ora_inizio` time DEFAULT NULL,
   `latitudine_ora_inizio` decimal(11,7) DEFAULT NULL,

@@ -58,6 +58,9 @@
     // elaboro l'albero dei contenuti
     if( $cf['contents']['cached'] === false ) {
 
+        // debug
+        // die( 'ERRORE: la cache dei contenuti è disabilitata' );
+
         // inizializzo l'albero
         $cf['contents']['tree']            = array();
 

@@ -186,6 +186,7 @@ CREATE TABLE `attivita_view_static` (
   `id_anagrafica_programmazione` int(11) DEFAULT NULL,
   `anagrafica_programmazione` char(255) DEFAULT NULL,
   `ore_programmazione` decimal(5,2) DEFAULT NULL,
+  `se_confermata` int(1) DEFAULT NULL,
   `data_attivita` date DEFAULT NULL,
   `giorno_attivita` int(2) DEFAULT NULL,
   `mese_attivita` int(2) DEFAULT NULL,
