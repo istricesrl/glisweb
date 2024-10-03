@@ -85,44 +85,59 @@
     );
 
     // directory del template
-    $base = '_src/_templates/_' . $_REQUEST[ $ct['form']['table'] ]['id'];
+    $base = DIR_BASE . '_src/_templates/_' . $_REQUEST[ $ct['form']['table'] ]['id'];
+
+    // debug
+    // die( $base );
 
     // file del template
-    $files = getRecursiveFileList( $base );
+    $files = getRecursiveFileList( $base, true );
+
+    // ...
+    // sort( $files );
+
+    // debug
+    // die( print_r( $files, true ) );
 
     // dati della vista
     foreach( $files as $file ) {
+        // die( $file );
+        // die( dirname( $file ) );
         $key = path2custom( $file );
         $ct['view']['data'][ $key ] = array(
             'id' => $_REQUEST[ $ct['form']['table'] ]['id'],
-            'key' => str_replace( $base, NULL, $file ),
-            'folder' => str_replace( $base, NULL, dirname( $file ) ),
-            'file' => str_replace( $base, NULL, basename( $file ) ),
+            'key' => str_replace( $base, '', $file ),
+            'folder' => str_replace( $base, '', dirname( $file ) ),
+            'file' => str_replace( $base, '', basename( $file ) ),
             'tipo' => getFileExtension( $file ),
             'template' => $_REQUEST[ $ct['form']['table'] ]['id'],
             'modulo' => NULL,
-            '__label__' => str_replace( $base, NULL, $file )
+            '__label__' => str_replace( $base, '', $file )
+            // '__label__' => $file
         );
     }
+
+    // debug
+    // die( print_r( $ct['view']['data'], true ) );
 
     // directory del template
     $base = path2custom( $base );
 
     // file del template
-    $files = getRecursiveFileList( $base );
+    $files = getRecursiveFileList( $base, true );
 
     // dati della vista
     foreach( $files as $file ) {
         $key = path2custom( $file );
         $ct['view']['data'][ $key ] = array(
             'id' => $_REQUEST[ $ct['form']['table'] ]['id'],
-            'key' => str_replace( $base, NULL, $file ),
-            'folder' => str_replace( $base, NULL, dirname( $file ) ),
-            'file' => str_replace( $base, NULL, basename( $file ) ),
+            'key' => str_replace( $base, '', $file ),
+            'folder' => str_replace( $base, '', dirname( $file ) ),
+            'file' => str_replace( $base, '', basename( $file ) ),
             'tipo' => getFileExtension( $file ),
             'template' => $_REQUEST[ $ct['form']['table'] ]['id'],
             'modulo' => NULL,
-            '__label__' => str_replace( $base, NULL, $file )
+            '__label__' => str_replace( $base, '', $file )
         );
     }
 
@@ -134,28 +149,28 @@
             $key = path2custom( $file );
             $ct['view']['data'][ $key ] = array(
                 'id' => $_REQUEST[ $ct['form']['table'] ]['id'],
-                'key' => str_replace( $base, NULL, $file ),
-                'folder' => str_replace( $base, NULL, dirname( $file ) ),
-                'file' => str_replace( $base, NULL, basename( $file ) ),
+                'key' => str_replace( $base, '', $file ),
+                'folder' => str_replace( $base, '', dirname( $file ) ),
+                'file' => str_replace( $base, '', basename( $file ) ),
                 'tipo' => getFileExtension( $file ),
                 'template' => $_REQUEST[ $ct['form']['table'] ]['id'],
                 'modulo' => $mod,
-                '__label__' => str_replace( $base, NULL, $file )
+                '__label__' => str_replace( $base, '', $file )
             );
         }
         $base = path2custom( $base );
-        $files = getRecursiveFileList( $base );
+        $files = getRecursiveFileList( $base, true );
         foreach( $files as $file ) {
             $key = path2custom( $file );
             $ct['view']['data'][ $key ] = array(
                 'id' => $_REQUEST[ $ct['form']['table'] ]['id'],
-                'key' => str_replace( $base, NULL, $file ),
-                'folder' => str_replace( $base, NULL, dirname( $file ) ),
-                'file' => str_replace( $base, NULL, basename( $file ) ),
+                'key' => str_replace( $base, '', $file ),
+                'folder' => str_replace( $base, '', dirname( $file ) ),
+                'file' => str_replace( $base, '', basename( $file ) ),
                 'tipo' => getFileExtension( $file ),
                 'template' => $_REQUEST[ $ct['form']['table'] ]['id'],
                 'modulo' => $mod,
-                '__label__' => str_replace( $base, NULL, $file )
+                '__label__' => str_replace( $base, '', $file )
             );
         }
     }

@@ -27,7 +27,7 @@
                     ( ( isset( $_REQUEST['__template_files__']['folder'] ) ) ? $_REQUEST['__template_files__']['folder'] : NULL ) .
                     '/' . $_REQUEST['__template_files__']['id'];
             } else {
-                $base = '_src/_templates/' . 
+                $base = DIR_BASE . '_src/_templates/' . 
                     '_' . $_REQUEST['__templates__']['id'] . 
                     ( ( isset( $_REQUEST['__template_files__']['folder'] ) ) ? $_REQUEST['__template_files__']['folder'] : NULL ) .
                     '/' . $_REQUEST['__template_files__']['id'];
@@ -40,6 +40,7 @@
             // ...
             // if( realpath( $base ) !== $base ) {
             if( absolutePath( $base ) !== $base ) {
+                // die( $base . ' è diverso da ' . absolutePath( $base ) );
                 die( 'sorry guy, not your lucky day' );
             }
 
@@ -52,14 +53,14 @@
             // var_dump( file_exists( $custom ) );
 
             // scrittura
-            if( isset( $_REQUEST['__template_files__']['contenuto'] ) && ! empty( $_REQUEST['__template_files__']['contenuto'] ) ) {
+            if( isset( $_REQUEST['__template_files__']['contenuto'] ) && ! empty( trim( $_REQUEST['__template_files__']['contenuto'] ) ) ) {
 
                 // debug
                 // die( 'sul file: ' . $custom . ' scrivo: ' . $_REQUEST['__template_files__']['contenuto'] );
 
                 // ...
                 writeToFile( $_REQUEST['__template_files__']['contenuto'], $custom );
-
+/*
             } elseif( ! file_exists( $custom ) ) {
 
                 // debug
@@ -68,13 +69,15 @@
 
                 // ...
                 writeToFile( '', $custom );
-
+*/
             }
 
             // cerco il contenuto custom e se non esiste prendo lo standard
             if( file_exists( $custom ) ) {
+                // die( $custom );
                 $_REQUEST['__template_files__']['contenuto'] = readFromFile( $custom, FILE_READ_AS_STRING );
             } else {
+                // die( $base );
                 $_REQUEST['__template_files__']['contenuto'] = readFromFile( $base, FILE_READ_AS_STRING );
             }
 
