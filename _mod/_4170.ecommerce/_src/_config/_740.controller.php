@@ -16,7 +16,10 @@
             // debug
             // print_r( $_SESSION['carrello'] );
 
-/*
+            // log
+            logger( 'controller chiusura carrello ' . $_SESSION['carrello']['id'] . ' in cassa ' . $_REQUEST['ck_cassa'], 'cassa' );
+
+            /*
             // trovo il provider
             $provider = mysqlSelectCachedValue(
                 $cf['memcache']['connection'],
@@ -26,7 +29,7 @@
                     array( 's' => $_REQUEST['ck_cassa'] )
                 )
             );
-*/
+            */
 
             // dati di pagamento
             $payment = array(

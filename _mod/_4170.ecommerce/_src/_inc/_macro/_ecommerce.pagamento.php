@@ -5,21 +5,47 @@
     // die( print_r( $_REQUEST, true ) );
     // print_r( $_REQUEST );
 
-/*
     // checkout carrello
     if( isset( $_REQUEST['ck_carrello'] ) ) {
-        $_REQUEST['__pagamenti__']['id_carrello'] = $_REQUEST['ck_carrello'];
+
+        // log
+        logger( 'ricevuta richiesta di checkout diretto per il carrello #' . $_REQUEST['ck_carrello'], 'cassa' );
+
+        // ...
+        // $_REQUEST['__pagamenti__']['id_carrello'] = $_REQUEST['ck_carrello'];
+        $_REQUEST['__pagamenti__'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT id AS id_carrello, fatturazione_id_tipologia_documento, coalesce( intestazione_id_anagrafica, destinatario_id_anagrafica ) AS id_cliente FROM carrelli WHERE id = ?',
+            array( array( 's' => $_REQUEST['ck_carrello'] ) )
+        );
+
+        // ...
+        $_REQUEST['__pagamenti__']['righe'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT carrelli_articoli.*,
+                articoli.id_prodotto, articoli.id_reparto, articoli.nome AS nome_articolo, articoli.id_reparto
+                FROM carrelli_articoli 
+                INNER JOIN articoli ON articoli.id = carrelli_articoli.id_articolo 
+                WHERE carrelli_articoli.id_carrello = ?',
+            array( array( 's' => $_REQUEST['__pagamenti__']['id_carrello'] ) )
+        );
+
     }
-*/
 
     // se è richiesto un carrello specifico
     if( isset( $_REQUEST['__pagamenti__'] ) ) {
+
+        // log
+        logger( 'ricevuta richiesta di generazione documento:' . print_r( $_REQUEST['__pagamenti__'], true ), 'cassa' );
 
         // debug
         // die( print_r( $_REQUEST['__pagamenti__'], true ) );
 
         // creo i documenti
-        if( isset( $_REQUEST['__pagamenti__']['righe'] ) ) {
+        if( ! empty( $_REQUEST['__pagamenti__']['righe'] ) ) {
+
+            // log
+            logger( 'trovate righe per la creazione del documento: ' . print_r( $_REQUEST['__pagamenti__']['righe'], true ), 'cassa' );
 
             // debug
             // die( print_r( $_REQUEST['__pagamenti__'], true ) );
@@ -33,6 +59,9 @@
 
             // strategia di fatturazione documenti multipli
             if( $_SESSION['carrello']['fatturazione_strategia'] == 'MULTIPLA' ) {
+
+                // log
+                logger( 'creazione documenti multipli', 'cassa' );
 
                 // per ogni documento richiesto
                 foreach( $_REQUEST['__pagamenti__']['righe'] as $pagamento ) {
@@ -295,11 +324,14 @@
 
             } else {
 
+                // log
+                logger( 'creazione documento singolo', 'cassa' );
+
                 // imposto il documento
                 $nome = 'documento creato automaticamente per il ' . 
-                    ( ( ! empty( $pagamento['id_pagamento'] ) ) ? 'pagamento #' . $pagamento['id_pagamento'] . ' ' : NULL ) . 
-                    'carrello #' . $pagamento['id_carrello'] .  ' ' . 
-                    'anagrafica #'. $pagamento['destinatario_id_anagrafica'] .' (' . $pagamento['destinatario'] . ')';
+                    ( ( ! empty( $_REQUEST['__pagamenti__']['id_pagamento'] ) ) ? 'pagamento #' . $_REQUEST['__pagamenti__']['id_pagamento'] . ' ' : NULL ) . 
+                    'carrello #' . $_REQUEST['__pagamenti__']['id_carrello'] .  ' ' . 
+                    'anagrafica #'. $_REQUEST['__pagamenti__']['id_cliente'] .' (' . $_REQUEST['__pagamenti__']['destinatario'] . ')';
                 $sezionale = 'C/' . date('Y');
                 $emittente = trovaIdAziendaGestita();
 
@@ -312,7 +344,7 @@
                 }
 
                 $idSedeEmittente = anagraficaGetIdSedeLegale( $emittente );
-                $idSedeDestinatario = anagraficaGetIdSedeLegale( $pagamento['destinatario_id_anagrafica'] );
+                $idSedeDestinatario = anagraficaGetIdSedeLegale( $_REQUEST['__pagamenti__']['id_cliente'] );
                 $numero = generaProssimoNumeroDocumento( $_REQUEST['__pagamenti__']['fatturazione_id_tipologia_documento'], $sezionale, $emittente );
                 $data = date('Y-m-d');
 
@@ -328,7 +360,7 @@
                         'id_condizione_pagamento' => 2,
                         'id_emittente' => $emittente,
                         'id_sede_emittente' => $idSedeEmittente,
-                        'id_destinatario' => $pagamento['destinatario_id_anagrafica'],
+                        'id_destinatario' => $_REQUEST['__pagamenti__']['id_cliente'],
                         'id_sede_destinatario' => $idSedeDestinatario,
                         'data' => $data
                     ),
@@ -342,7 +374,7 @@
                 foreach( $_REQUEST['__pagamenti__']['righe'] as $pagamento ) {
 
                     // se la checkbox è flaggata
-                    if( ! empty( $pagamento['da_fare'] ) ) {
+                    if( ! empty( $pagamento['da_fare'] ) || ! empty( $_REQUEST['ck_carrello'] ) ) {
 
                         // trovo il reparto
                         $reparto = mysqlSelectRow(
@@ -435,12 +467,16 @@
 
                 }
 
+                if( isset( $_REQUEST['__pagamenti__']['autoexport'] ) && ! empty( $_REQUEST['__pagamenti__']['autoexport'] ) ) {
+
+                }
+
             }
 
         } else {
 
-            // debug
-            // ...
+            // log
+            logger( 'nessuna riga da inserire in un documento', 'cassa' );
 
         }
 
@@ -776,7 +812,7 @@
                             if( $riga['documenti_generati'] > 0 ) {
                                 unset( $ct['etc']['righe'][ $chiave ] );
                             }
-#                            unset( $ct['etc']['righe'][ $chiave ] );
+                            // unset( $ct['etc']['righe'][ $chiave ] );
                         }
                     // } elseif( empty( $riga['totale_lordo_da_pagare'] ) && ! empty( $riga['documenti_stampati'] ) ) {
                     } elseif( empty( $riga['totale_lordo_da_pagare'] ) && empty( $riga['documenti_da_stampare'] ) ) {
