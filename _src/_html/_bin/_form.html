@@ -241,7 +241,7 @@
 {% if not vl %}{% set vl = default %}{% endif %}
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}{% endif %}
 {% if disabled == 1 %}{% if request[ '__disabled_' ~ id ~ '__' ] %}{% set vl = request[ '__disabled_' ~ id ~ '__' ] %}{% endif %}<input type="hidden" name="__disabled_{{ id }}__" value="{{ vl }}">{% endif %}
-<input type="date" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %} {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}" {% if required %}required{% endif %}>
+<input type="date" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %} {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %} name="{{ nm }}" id="{{ id }}" value="{{ vl }}"{% if default %} default="{{ default}}"{% endif %} {% if required %}required{% endif %}>
 {% endmacro %}
 
 {% macro datetime( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled ) %}

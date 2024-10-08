@@ -220,6 +220,15 @@
 
 */
 
+    // ...
+    $ct['etc']['abbonamenti_compatibili'] = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT GROUP_CONCAT( id_tipologia_contratti SEPARATOR "|" ) FROM __report_lezioni_tipologie_abbonamenti__ WHERE id_todo = ? AND se_compatibile = IS NOT NULL',
+        array(
+            array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
+        )
+    );
+
 if( !empty( $ct['view']['data'] ) ){
     foreach ( $ct['view']['data'] as &$row ){
 

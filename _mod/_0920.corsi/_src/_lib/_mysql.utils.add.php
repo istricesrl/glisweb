@@ -571,21 +571,47 @@
             // check sugli orari
             if( empty( $orari ) ) {
 
+                // log
+                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') non ha orari definiti', 'lezioni' );
+
+                // ...
                 $checkOrari = 1;
 
             } else {
 
+                // log
+                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') ha orari definiti: ' . print_r( $orari, true ), 'lezioni' );
+
+                // ...
                 $checkOrari = NULL;
 
                 // ciclo sugli orari
                 foreach( $orari as $orario ) {
 
+                    // log
+                    logger( 'verifico la compatibilità fra la lezione ' . $idLezione . ' e l\'orario ' . $orario['giorno'] . ' ' . $orario['ora_inizio'] . ' - ' . $orario['ora_fine'], 'lezioni' );
+
                     // check sul giorno
                     if( $orario['id_giorno'] == $lezione['id_giorno'] ) {
 
-                        // check sull'orario
-                        if( $lezione['ora_inizio_programmazione'] > $orario['ora_inizio'] && $lezione['ora_fine_programmazione'] < $orario['ora_fine'] ) {
+                        // log
+                        logger( 'il giorno ' . $orario['giorno'] . ' è compatibile con il giorno della lezione ' . $lezione['id_giorno'], 'lezioni' );
 
+                        // check sull'orario
+                        if( 
+                            ( $lezione['ora_inizio_programmazione'] > $orario['ora_inizio'] 
+                            ||
+                            empty( $orario['ora_inizio'] ) )
+                            && 
+                            ( $lezione['ora_fine_programmazione'] < $orario['ora_fine'] 
+                            ||
+                            empty( $orario['ora_fine'] ) )
+                        ) {
+
+                            // log
+                            logger( 'l\'orario ' . $lezione['ora_inizio_programmazione'] . ' - ' . $lezione['ora_fine_programmazione'] . ' è compatibile con l\'orario ' . $orario['ora_inizio'] . ' - ' . $orario['ora_fine'], 'lezioni' );
+
+                            // ...
                             $checkOrari = 1;
 
                         }
