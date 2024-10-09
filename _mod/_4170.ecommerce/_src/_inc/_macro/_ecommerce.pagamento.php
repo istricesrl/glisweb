@@ -32,6 +32,17 @@
 
     }
 
+    // ...
+    if( ! empty( $_REQUEST['ck_autoexport'] ) ) {
+
+        // ...
+        $_REQUEST['__pagamenti__']['autoexport'] = $_REQUEST['ck_autoexport'];
+
+        // log
+        logger( 'ricevuta richiesta di esportazione documento:' . $_REQUEST['__pagamenti__']['autoexport'], 'cassa' );
+
+    }
+
     // se è richiesto un carrello specifico
     if( isset( $_REQUEST['__pagamenti__'] ) ) {
 
@@ -467,7 +478,44 @@
 
                 }
 
+                // se è richiesta l'esportazione
                 if( isset( $_REQUEST['__pagamenti__']['autoexport'] ) && ! empty( $_REQUEST['__pagamenti__']['autoexport'] ) ) {
+
+                    // file testata
+                    $fileTestata = DIR_VAR_SPOOL_EXPORT . 'ddt.' . microtime( true ) . '.csv';
+
+                    // file righe
+                    $fileRighe = DIR_VAR_SPOOL_EXPORT . 'ddt.righe.' . microtime( true ) . '.csv';
+
+                    // log
+                    logger( 'esporto il documento #' . $idDocumento . ' su ' . $fileTestata . ' e su ' . $fileRighe, 'cassa' );
+
+                    // scrivo la testata
+                    array2csvFile(
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'SELECT documenti.id_tipologia,documenti.numero,documenti.sezionale,documenti.data FROM documenti WHERE id = ?',
+                            array( array( 's' => $idDocumento ) )
+                        ),
+                        $fileTestata,
+                        ';'
+                    );
+
+                    // scrivo le righe
+                    array2csvFile(
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'SELECT 
+                                documenti.numero AS numero_documento, documenti.sezionale AS sezionale_documento, 
+                                documenti_articoli.id_articolo, documenti_articoli.quantita 
+                                FROM documenti_articoli 
+                                INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento
+                                WHERE id_documento = ?',
+                            array( array( 's' => $idDocumento ) )
+                        ),
+                        $fileRighe,
+                        ';'
+                    );
 
                 }
 
