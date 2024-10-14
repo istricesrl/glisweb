@@ -22,14 +22,16 @@
 			'SELECT todo.id FROM todo
 			INNER JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia AND tipologie_todo.id_genitore = 6
             LEFT JOIN __report_lezioni_tipologie_abbonamenti__ ON __report_lezioni_tipologie_abbonamenti__.id_todo = todo.id
-            WHERE (
+            WHERE ( 
 				(
-					coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_tipologie_abbonamenti__.timestamp_aggiornamento 
-					OR
-					coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) IS NULL
+					(
+						coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_tipologie_abbonamenti__.timestamp_aggiornamento 
+						OR
+						coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) IS NULL
+					)
 				)
-            )
-			OR __report_lezioni_tipologie_abbonamenti__.timestamp_aggiornamento IS NULL
+				OR __report_lezioni_tipologie_abbonamenti__.timestamp_aggiornamento IS NULL
+			) AND todo.data_programmazione >= NOW()
 			ORDER BY todo.id DESC
 			LIMIT 1'
 		);

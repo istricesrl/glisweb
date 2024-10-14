@@ -31,7 +31,6 @@
     // die( print_r( $status, true ) );
 
     // ...
-    // modifico la timestamp di elaborazione
     mysqlQuery(
         $cf['mysql']['connection'],
         'DELETE FROM anagrafica_indirizzi WHERE id_indirizzo IS NULL AND indirizzo IS NULL'
@@ -45,11 +44,6 @@
 
     // scompongo l'indirizzo manuale
     $status['elementi'] = array_map( 'trim', explode( '|', $status['row']['indirizzo'] ) );
-
-    // se lo stato è vuoto, metto default a IT
-    if( empty( $status['elementi'][5] ) ) {
-        $status['elementi'][5] = 'IT';
-    }
 
     // mappatura
     $status['valori']['indirizzo']      = $status['elementi'][0];
@@ -68,6 +62,11 @@
         $status['valori']['provincia']  = $status['elementi'][5];
         $status['valori']['stato']      = $status['elementi'][6];
 
+    }
+
+    // se lo stato è vuoto, metto default a IT
+    if( empty( $status['valori']['stato'] ) ) {
+        $status['valori']['stato'] = 'IT';
     }
 
     // cerco lo stato
@@ -248,7 +247,7 @@
     // die( print_r( $status, true ) );
 
     // log
-    logger( print_r( $status, true ), 'dettagli/indirizzi/' . $status['row']['id'], LOG_ERR );
+    logWrite( print_r( $status, true ), 'details/indirizzi/' . $status['row']['id'], LOG_ERR );
 
     // log
     logWrite( $status['row']['indirizzo'] . ' gestito: ' . print_r( $status['considerazioni'], true ), 'indirizzi', LOG_ERR );

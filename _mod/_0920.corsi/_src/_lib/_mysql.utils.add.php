@@ -242,7 +242,7 @@
                 todo.data_chiusura, todo.nome, todo.id_contatto, todo.id_progetto, todo.id_pianificazione, todo.id_immobile,
                 todo.data_archiviazione, todo.id_account_inserimento, todo.timestamp_inserimento, 
                 todo.id_account_aggiornamento, todo.timestamp_aggiornamento,
-                progetti.nome AS corso, m1.testo AS se_prenotabile_online, group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR " | " ) AS discipline,
+                progetti.nome AS corso, m1.testo AS se_prenotabile_online, max( d.id ) AS id_disciplina, group_concat( DISTINCT if( d.id, categorie_progetti_path( d.id ), null ) SEPARATOR " | " ) AS discipline,
                 concat(
                     todo.nome,
                     coalesce( concat( " per ", a2.denominazione, concat( a2.cognome, " ", a2.nome ) ), "" ),
@@ -414,7 +414,11 @@
                     if( $orario['id_giorno'] == $riga['id_giorno_programmazione'] ) {
 
                         // check sull'orario
-                        if( $riga['ora_inizio_programmazione'] >= $orario['ora_inizio'] && $riga['ora_fine_programmazione'] <= $orario['ora_fine'] ) {
+                        if(
+                            $riga['ora_inizio_programmazione'] >= $orario['ora_inizio']
+                            &&
+                            $riga['ora_fine_programmazione'] <= $orario['ora_fine']
+                        ) {
 
                             $checkOrari = true;
 
@@ -430,8 +434,77 @@
 
             }
 
+            // cerco le discipline associate alla tipologia di abbonamento
+            $discipline = mysqlSelectCachedColumn(
+                $cf['memcache']['connection'],
+                'testo',
+                $cf['mysql']['connection'],
+                'SELECT testo
+                FROM metadati
+                WHERE id_tipologia_contratti = ? AND nome = "abbonamento|discipline"',
+                array(
+                    array( 's' => $abbonamento['id'] )
+                )
+            );
+
+            // controllo compatibilità discipline
+            if( ! empty( $discipline ) ) {
+
+                // controllo compatibilità discipline
+                if( in_array( $riga['id_disciplina'], $discipline ) ) {
+
+                    $checkDiscipline = true;
+
+                } else {
+
+                    $checkDiscipline = false;
+
+                }
+
+            } else {
+
+                $checkDiscipline = false;
+
+            }
+
+            // cerco i corsi associati alla tipologia di abbonamento
+            $corsi = mysqlSelectCachedColumn(
+                $cf['memcache']['connection'],
+                'testo',
+                $cf['mysql']['connection'],
+                'SELECT testo
+                FROM metadati
+                WHERE id_tipologia_contratti = ? AND nome = "abbonamento|corsi"',
+                array(
+                    array( 's' => $abbonamento['id'] )
+                )
+            );
+
+            // controllo compatibilità corsi
+            if( ! empty( $corsi ) ) {
+
+                // controllo compatibilità corsi
+                if( in_array( $riga['id_progetto'], $corsi ) ) {
+
+                    $checkCorsi = true;
+
+                } else {
+
+                    $checkCorsi = false;
+
+                }
+
+            } else {
+
+                $checkCorsi = false;
+
+            }
+
+            // compatibilità generale
+            $checkGlobale = $checkOrari && ( $checkDiscipline || $checkCorsi );
+
             // aggiunta dell'abbonamento compatibile alla riga
-            if( $checkOrari == true ) {
+            if( $checkGlobale == true ) {
                 $abbonamentiCompatibili[] = $abbonamento['id'];
             }
 
@@ -523,22 +596,35 @@
         // globalizzazione di $cf
         global $cf;
 
+        // debug
+        // print_r( $cf['debug'] );
+         error_reporting( E_ALL );
+         ini_set( 'display_errors', TRUE );
+
         // log
-        logger( 'aggiorno il report della compatibilità fra lezioni e tipologie abbonamenti per la lezione ' . $idLezione, 'lezioni' );
+        logger( 'aggiorno il report della compatibilità fra lezioni e tipologie abbonamenti per la lezione ' . $idLezione, 'details/lezioni/' . $idLezione );
 
         // dettagli della lezione
         $lezione = mysqlSelectCachedRow(
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
-            'SELECT todo.id, todo.data_programmazione, todo.timestamp_inserimento, todo.timestamp_aggiornamento FROM todo WHERE todo.id = ?',
+            'SELECT todo.id, todo.data_programmazione, todo.ora_inizio_programmazione, todo.ora_fine_programmazione, 
+            todo.timestamp_inserimento, todo.timestamp_aggiornamento, todo.id_progetto, progetti_categorie.id_categoria AS id_disciplina
+            FROM todo
+            LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = todo.id_progetto
+            WHERE todo.id = ?',
             array( array( 's' => $idLezione ) )
         );
 
         // ricavo il giorno della settimana in formato numerico
         $lezione['id_giorno'] = date( 'N', strtotime( $lezione['data_programmazione'] ) );
 
+        // log
+        logger( 'dettagli della lezione #' . $idLezione . ': ' . print_r( $lezione, true ), 'details/lezioni/' . $idLezione );
+
         // righe da inserire nel report
         $righe = array();
+        $tipologie = array();
 
         // recupero l'elenco degli abbonamenti
         $abbonamenti = mysqlCachedQuery(
@@ -553,13 +639,13 @@
         foreach( $abbonamenti as $abbonamento ) {
 
             // log
-            logger( 'verifico la compatibilità fra la lezione ' . $idLezione . ' e l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ')', 'lezioni' );
+            logger( 'verifico la compatibilità fra la lezione ' . $idLezione . ' e l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ')', 'details/lezioni/' . $idLezione );
 
             // orari in cui è valido l'abbonamento
             $orari = mysqlCachedQuery(
                 $cf['memcache']['connection'],
                 $cf['mysql']['connection'],
-                'SELECT orari.*, giorni.nome AS giorno
+                'SELECT orari.id_giorno, orari.ora_inizio, orari.ora_fine, giorni.nome AS giorno
                     FROM orari 
                     LEFT JOIN giorni ON orari.id_giorno = giorni.id
                     WHERE id_tipologia_contratti = ?',
@@ -572,30 +658,30 @@
             if( empty( $orari ) ) {
 
                 // log
-                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') non ha orari definiti', 'lezioni' );
+                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') non ha orari definiti', 'details/lezioni/' . $idLezione );
 
                 // ...
-                $checkOrari = 1;
+                $checkOrari = true;
 
             } else {
 
                 // log
-                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') ha orari definiti: ' . print_r( $orari, true ), 'lezioni' );
+                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') ha orari definiti: ' . print_r( $orari, true ), 'details/lezioni/' . $idLezione );
 
                 // ...
-                $checkOrari = NULL;
+                $checkOrari = false;
 
                 // ciclo sugli orari
                 foreach( $orari as $orario ) {
 
                     // log
-                    logger( 'verifico la compatibilità fra la lezione ' . $idLezione . ' e l\'orario ' . $orario['giorno'] . ' ' . $orario['ora_inizio'] . ' - ' . $orario['ora_fine'], 'lezioni' );
+                    logger( 'verifico la compatibilità fra la lezione ' . $idLezione . ' e l\'orario ' . $orario['giorno'] . ' ' . ( ( ! empty( $orario['ora_inizio'] ) ) ? $orario['ora_inizio'] : 'inizio giornata' ) . ' - ' . ( ( ! empty( $orario['ora_fine'] ) ) ? $orario['ora_fine'] : 'fine giornata' ), 'details/lezioni/' . $idLezione );
 
                     // check sul giorno
                     if( $orario['id_giorno'] == $lezione['id_giorno'] ) {
 
                         // log
-                        logger( 'il giorno ' . $orario['giorno'] . ' è compatibile con il giorno della lezione ' . $lezione['id_giorno'], 'lezioni' );
+                        logger( 'il giorno ' . $orario['giorno'] . ' è compatibile con il giorno della lezione ' . $lezione['id_giorno'], 'details/lezioni/' . $idLezione );
 
                         // check sull'orario
                         if( 
@@ -609,10 +695,10 @@
                         ) {
 
                             // log
-                            logger( 'l\'orario ' . $lezione['ora_inizio_programmazione'] . ' - ' . $lezione['ora_fine_programmazione'] . ' è compatibile con l\'orario ' . $orario['ora_inizio'] . ' - ' . $orario['ora_fine'], 'lezioni' );
+                            logger( 'l\'orario ' . $lezione['ora_inizio_programmazione'] . ' - ' . $lezione['ora_fine_programmazione'] . ' è compatibile con l\'orario ' . ( ( ! empty( $orario['ora_inizio'] ) ) ? $orario['ora_inizio'] : 'inizio giornata' ) . ' - ' . ( ( ! empty( $orario['ora_fine'] ) ) ? $orario['ora_fine'] : 'fine giornata' ), 'details/lezioni/' . $idLezione );
 
                             // ...
-                            $checkOrari = 1;
+                            $checkOrari = true;
 
                         }
 
@@ -622,14 +708,136 @@
 
             }
 
+            // log
+            logger( '-> esito del check orari: ' . ( ( $checkOrari == true ) ? 'ok' : 'ko' ), 'details/lezioni/' . $idLezione );
+
+            // cerco le discipline associate alla tipologia di abbonamento
+            $discipline = mysqlSelectCachedColumn(
+                $cf['memcache']['connection'],
+                'testo',
+                $cf['mysql']['connection'],
+                'SELECT testo
+                FROM metadati
+                WHERE id_tipologia_contratti = ? AND nome = "abbonamento|discipline"',
+                array(
+                    array( 's' => $abbonamento['id'] )
+                )
+            );
+
+            // controllo compatibilità discipline
+            if( ! empty( $discipline ) ) {
+
+                // log
+                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') ha discipline associate: ' . implode( ', ', $discipline ), 'details/lezioni/' . $idLezione );
+
+                // controllo compatibilità discipline
+                if( in_array( $lezione['id_disciplina'], $discipline ) ) {
+
+                    // log
+                    logger( 'la disciplina ' . $lezione['id_disciplina'] . ' è compatibile con l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ')', 'details/lezioni/' . $idLezione );
+
+                    // ...
+                    $checkDiscipline = true;
+
+                } else {
+
+                    // log
+                    logger( 'la disciplina ' . $lezione['id_disciplina'] . ' non è compatibile con l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ')', 'details/lezioni/' . $idLezione );
+
+                    // ...
+                    $checkDiscipline = false;
+
+                }
+
+            } else {
+
+                // log
+                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') non ha discipline associate', 'details/lezioni/' . $idLezione );
+
+                // ...
+                $checkDiscipline = false;
+
+            }
+
+            // log
+            logger( '-> esito del check discipline: ' . ( ( $checkDiscipline == true ) ? 'ok' : 'ko' ), 'details/lezioni/' . $idLezione );
+
+            // cerco i corsi associati alla tipologia di abbonamento
+            $corsi = mysqlSelectCachedColumn(
+                $cf['memcache']['connection'],
+                'testo',
+                $cf['mysql']['connection'],
+                'SELECT testo
+                FROM metadati
+                WHERE id_tipologia_contratti = ? AND nome = "abbonamento|corsi"',
+                array(
+                    array( 's' => $abbonamento['id'] )
+                )
+            );
+
+            // controllo compatibilità corsi
+            if( ! empty( $corsi ) ) {
+
+                // log
+                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') ha corsi associati: ' . implode( ', ', $corsi ), 'details/lezioni/' . $idLezione );
+
+                // controllo compatibilità corsi
+                if( in_array( $lezione['id_progetto'], $corsi ) ) {
+
+                    // log
+                    logger( 'il corso ' . $lezione['id_progetto'] . ' è compatibile con l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ')', 'details/lezioni/' . $idLezione );
+
+                    // ...
+                    $checkCorsi = true;
+
+                } else {
+
+                    // log
+                    logger( 'il corso ' . $lezione['id_progetto'] . ' non è compatibile con l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ')', 'details/lezioni/' . $idLezione );
+
+                    // ...
+                    $checkCorsi = false;
+
+                }
+
+            } else {
+
+                // log
+                logger( 'l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . ') non ha corsi associati', 'details/lezioni/' . $idLezione );
+
+                // ...
+                $checkCorsi = false;
+
+            }
+
+            // log
+            logger( '-> esito del check corsi: ' . ( ( $checkCorsi == true ) ? 'ok' : 'ko' ), 'details/lezioni/' . $idLezione );
+
+            // compatibilità generale
+            $checkGlobale = $checkOrari && ( $checkDiscipline || $checkCorsi );
+
+            // log
+            logger( '-> esito del check globale: ' . ( ( $checkGlobale == true ) ? 'ok' : 'ko' ) . ' (check orari: ' . ( ( $checkOrari == true ) ? 'ok' : 'ko' ) . ', check discipline: ' . ( ( $checkDiscipline == true ) ? 'ok' : 'ko' ) . ', check corsi: ' . ( ( $checkCorsi == true ) ? 'ok' : 'ko' ) . ')', 'details/lezioni/' . $idLezione );
+
+            // log
+            logger( 'la lezione ' . $idLezione . ' è ' . ( ( $checkGlobale == true ) ? 'compatibile' : 'incompatibile' ) . ' con l\'abbonamento ' . $abbonamento['nome'] . ' (' . $abbonamento['id'] . '), check orari: ' . ( ( $checkOrari == true ) ? 'ok' : 'ko' ) . ', check discipline: ' . ( ( $checkDiscipline == true ) ? 'ok' : 'ko' ) . ', check corsi: ' . ( ( $checkCorsi == true ) ? 'ok' : 'ko' ), 'lezioni' );
+
             // composizione della riga di report
             $righe[] = array(
                 'id_todo' => $idLezione,
                 'id_tipologia_contratti' => $abbonamento['id'],
-                'se_compatibile' => $checkOrari,
+                'se_compatibile' => ( ( $checkGlobale == true ) ? 1 : 0 ),
                 'timestamp_inserimento' => $lezione['timestamp_inserimento'],
                 'timestamp_aggiornamento' => $lezione['timestamp_aggiornamento']
             );
+
+            // tipologie abbonamenti compatibili
+            if( $checkGlobale == true ) {
+                $tipologie[] = $abbonamento['id'];
+            }
+
+            // log
+            logger( '---', 'details/lezioni/' . $idLezione );
 
         }
 
@@ -643,6 +851,16 @@
             );
 
         }
+
+        // aggiorno il report lezioni corsi
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE __report_lezioni_corsi__ SET tipologie_abbonamenti = ? WHERE id = ?',
+            array(
+                array( 's' => '|' . implode( '|', $tipologie ) . '|' ),
+                array( 's' => $idLezione )
+            )
+        );
 
     }
 

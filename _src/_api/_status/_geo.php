@@ -3,6 +3,9 @@
     // inclusione del framework
     require '../../_config.php';
 
+    // debug
+    // die( $_SESSION['account']['username'] );
+
     // ...
     if( ! empty( $_REQUEST['s'] ) ) {
 

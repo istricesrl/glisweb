@@ -552,20 +552,20 @@
      * TODO documentare
      *
      */
-    function mysqlSelectCachedColumn( $m, $f, $c, $q, $p = false, &$e = array() ) {
+    function mysqlSelectCachedColumn( $m, $f, $c, $q, $p = false, $t = 0, &$e = array() ) {
 
-    // valore di ritorno
+        // valore di ritorno
         $r = array();
 
-    // prelevo il risultato
-        $rs = mysqlCachedQuery( $m, $c, $q, $p, $e );
+        // prelevo il risultato
+        $rs = mysqlCachedQuery( $m, $c, $q, $p, $t, $e );
 
-    // risultato
+        // risultato
         if( is_array( $rs ) ) {
-        $r = array_column( $rs, $f );
+            $r = array_column( $rs, $f );
         }
 
-    // ritorno
+        // ritorno
         return $r;
 
     }

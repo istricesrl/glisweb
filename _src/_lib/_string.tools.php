@@ -518,17 +518,34 @@
 
     }
 
-    function clean_string($string) {
+    function clean_string( $string ) {
 
-        $s = trim($string);
-        $s = iconv("UTF-8", "UTF-8//IGNORE", $s); // drop all non utf-8 characters
-      
-        $s = preg_replace('/(?>[\x00-\x1F]|\xC2[\x80-\x9F]|\xE2[\x80-\x8F]{2}|\xE2\x80[\xA4-\xA8]|\xE2\x81[\x9F-\xAF])/', ' ', $s);
-        $s = preg_replace('/[\x00-\x1F\x80-\xFF]/', '', $s);
-        $s = preg_replace('/\s+/', ' ', $s); // reduce all multiple whitespace to a single space
+        $s = trim( $string );
+
+        $s = iconv( "UTF-8", "UTF-8//IGNORE", $s );
       
         if( $s != $string ) {
-            logWrite( $string . ' pulito a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+            logWrite( $string . ' pulito (clean UTF-8) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+        }
+
+        $s = preg_replace( '/(?>[\x00-\x1F]|\xC2[\x80-\x9F]|\xE2[\x80-\x8F]{2}|\xE2\x80[\xA4-\xA8]|\xE2\x81[\x9F-\xAF])/', ' ', $s );
+
+        if( $s != $string ) {
+            logWrite( $string . ' pulito (rimozione caratteri speciali step 1) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+        }
+
+        /*
+        $s = preg_replace( '/[\x00-\x1F\x80-\xFF]/', '', $s );
+
+        if( $s != $string ) {
+            logWrite( $string . ' pulito (rimozione caratteri speciali step 2) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
+        }
+        */
+
+        $s = preg_replace('/\s+/', ' ', $s );
+
+        if( $s != $string ) {
+            logWrite( $string . ' pulito (rimozione spazi doppi) a ' . $s4, 'details/csv/cleanstring', LOG_ERR );
         }
 
         return $s;
