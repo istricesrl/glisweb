@@ -1466,6 +1466,22 @@ CREATE TABLE IF NOT EXISTS `coupon` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000008100
+
+-- coupon_articoli
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 16:56 Fabio Mosti
+CREATE TABLE IF NOT EXISTS `coupon_articoli` (
+  `id` int(11) NOT NULL,
+  `id_coupon` char(32) NOT NULL,
+  `id_articolo` char(32) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000008200
 
 -- coupon_categorie_prodotti

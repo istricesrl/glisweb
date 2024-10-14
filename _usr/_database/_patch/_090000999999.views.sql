@@ -2967,6 +2967,37 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = coupon.id_anagrafica
 ;
 
+-- | 090000008100
+
+-- coupon_articoli_view
+-- tipologia: tabella gestita
+DROP TABLE IF EXISTS `coupon_articoli_view`;
+
+-- | 090000008101
+
+-- coupon_articoli_view
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 17:00 Fabio Mosti
+CREATE OR REPLACE VIEW `coupon_articoli_view` AS
+	SELECT
+		coupon_articoli.id,
+		coupon_articoli.id_coupon,
+		coupon_articoli.id_articolo,
+		concat_ws( ' ', prodotti.nome, articoli.nome ) AS articolo,
+		coupon_articoli.ordine,
+		coupon_articoli.id_account_inserimento,
+		coupon_articoli.id_account_aggiornamento,
+		CONCAT(
+			coupon.nome,
+			' / ',
+			concat_ws( ' ', prodotti.nome, articoli.nome )
+		) AS __label__
+	FROM coupon_articoli
+		LEFT JOIN coupon ON coupon.id = coupon_articoli.id_coupon
+		LEFT JOIN articoli ON articoli.id = coupon_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+;
+
 -- | 090000008200
 
 -- coupon_categorie_prodotti_view

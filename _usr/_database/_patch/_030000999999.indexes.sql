@@ -1352,6 +1352,26 @@ ALTER TABLE `coupon`
 	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
 	ADD KEY `indice` (`id`,`nome`,`timestamp_inizio`,`timestamp_fine`,`sconto_percentuale`,`sconto_fisso`,`se_multiuso`,`se_globale`);
 
+-- | 030000008100
+
+-- coupon_articoli
+-- tipologia: tabella gestita
+-- verifica: 2021-06-29 16:57 Fabio Mosti
+ALTER TABLE `coupon_articoli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_coupon`,`id_articolo`),
+	ADD KEY `id_coupon` (`id_coupon`), 
+	ADD KEY `id_articolo` (`id_articolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`), 
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_coupon`,`id_articolo`,`ordine`);
+
+-- | 030000008101
+
+-- coupon_articoli
+-- tipologia: tabella gestita
+ALTER TABLE `coupon_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000008200
 
 -- coupon_categorie_prodotti
