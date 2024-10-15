@@ -1,5 +1,6 @@
 .github/
 _*/
+etc/deploy/
 etc/secret/
 etc/latest.conf
 etc/latest.release.conf
