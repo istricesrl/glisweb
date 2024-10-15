@@ -15,6 +15,7 @@ src/py/*/*/share/
 src/py/*/*/lib64
 tmp/
 var/
+.gitignore
 .htaccess
 composer.*
 robots.*
