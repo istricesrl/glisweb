@@ -910,6 +910,13 @@
      * volte no; per ora teniamo array_replace_recursive() ma in caso di comportamenti anomali delle chiavi
      * numeriche bisogna tenere conto che il problema potrebbe essere qui.
      * 
+     * protezione di username, password e altri dati sensibili
+     * -------------------------------------------------------
+     * Per evitare che password e altri dati sensibili vengano pubblicati sui repository, il framework prevede la
+     * possibilità di creare oltre ai file config.json e config.yaml anche i file shadow.json e shadow.yaml; questi
+     * file sono esclusi tramite .gitignore e vengono letti in aggiunta ai file di configurazione standard
+     * sovrascrivendo i valori corrispondenti.
+     * 
      */
 
     /** 
@@ -935,9 +942,13 @@
 
     // file di configurazione da considerare nell'ordine
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'config.yaml' );
+    $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'shadow.yaml' );
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC . 'config.yaml' );
+    $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC . 'shadow.yaml' );
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'config.json' );
+    $cf['config']['files']['json'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'shadow.json' );
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC . 'config.json' );
+    $cf['config']['files']['json'][]    = path2custom( DIR_SRC . 'shadow.json' );
 
     // lettura del file di configurazione aggiuntivi YAML o JSON
     foreach( $cf['config']['files'] as $type => $files ) {
