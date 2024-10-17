@@ -997,13 +997,15 @@ CREATE OR REPLACE VIEW `asset_view` AS
 		tipologie_asset.nome AS tipologia,
 		asset.codice,
 		asset.nome,
+        asset.hostname,
+        asset.ip_address,
 		asset.cespite,
 		asset.note,
 		asset.id_account_inserimento,
 		asset.timestamp_inserimento,
 		asset.id_account_aggiornamento,
 		asset.timestamp_aggiornamento,
-		concat( asset.id, asset.nome, asset.codice) AS __label__
+		concat_ws( ' ', concat( '#', asset.codice ), asset.nome ) AS __label__
 	FROM asset
 		LEFT JOIN tipologie_asset ON tipologie_asset.id = asset.id_tipologia
 ;
