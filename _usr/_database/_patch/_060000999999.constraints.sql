@@ -1253,7 +1253,9 @@ ALTER TABLE `metadati`
     ADD CONSTRAINT `metadati_ibfk_32`           FOREIGN KEY (`id_todo`) REFERENCES `todo` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
     ADD CONSTRAINT `metadati_ibfk_33`           FOREIGN KEY (`id_tipologia_todo`) REFERENCES `tipologie_todo` (`id`)  ON DELETE NO ACTION ON UPDATE CASCADE,
     ADD CONSTRAINT `metadati_ibfk_34`           FOREIGN KEY (`id_tipologia_contratti`) REFERENCES `tipologie_contratti` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
-    ADD CONSTRAINT `metadati_ibfk_35`           FOREIGN KEY (`id_carrello`) REFERENCES `carrelli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL;
+    ADD CONSTRAINT `metadati_ibfk_35`           FOREIGN KEY (`id_carrello`) REFERENCES `carrelli` (`id`) ON DELETE SET NULL ON UPDATE SET NULL,
+    ADD CONSTRAINT `metadati_ibfk_36`           FOREIGN KEY (`id_tipologia_corrispondenza`) REFERENCES `tipologie_corrispondenza` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+    ADD CONSTRAINT `metadati_ibfk_37`           FOREIGN KEY (`id_peso_tipologie_corrispondenza`) REFERENCES `pesi_tipologie_corrispondenza` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE;
 
 -- | 060000021810
 

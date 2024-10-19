@@ -6504,9 +6504,19 @@ CREATE OR REPLACE VIEW `pesi_tipologie_corrispondenza_view` AS
 	SELECT
 		pesi_tipologie_corrispondenza.id,
 		pesi_tipologie_corrispondenza.id_tipologia,
+		tipologie_corrispondenza_path( pesi_tipologie_corrispondenza.id_tipologia ) AS tipologia,
 		pesi_tipologie_corrispondenza.nome,
 		pesi_tipologie_corrispondenza.grammi_min,
-		pesi_tipologie_corrispondenza.grammi_max
+		pesi_tipologie_corrispondenza.grammi_max,
+		concat_ws(
+			' ',
+			tipologie_corrispondenza_path( pesi_tipologie_corrispondenza.id_tipologia ),
+			pesi_tipologie_corrispondenza.nome,
+			'da',
+			pesi_tipologie_corrispondenza.grammi_min,
+			'a',
+			pesi_tipologie_corrispondenza.grammi_max
+		) AS __label__
 	FROM pesi_tipologie_corrispondenza
 ;
 

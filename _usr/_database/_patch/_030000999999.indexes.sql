@@ -2545,6 +2545,8 @@ ALTER TABLE `metadati`
 	ADD KEY `id_tipologia_todo` (`id_tipologia_todo`),
 	ADD KEY `id_tipologia_contratti` (`id_tipologia_contratti`), 
 	ADD KEY `id_carrello` (`id_carrello`),
+	ADD KEY `id_tipologia_corrispondenza` (`id_tipologia_corrispondenza`), 
+	ADD KEY `id_peso_tipologie_corrispondenza` (`id_peso_tipologie_corrispondenza`), 
 	ADD KEY `indice` (`id`,`id_lingua`,`nome`,`testo` (255));
 
 -- | 030000021801

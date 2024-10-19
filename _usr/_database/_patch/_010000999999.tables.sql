@@ -2528,6 +2528,8 @@ CREATE TABLE IF NOT EXISTS `metadati` (
   `id_tipologia_todo` int(11) DEFAULT NULL,
   `id_tipologia_contratti` int(11) DEFAULT NULL,
   `id_carrello` int(11) DEFAULT NULL,
+  `id_tipologia_corrispondenza` int(11) DEFAULT NULL,
+  `id_peso_tipologie_corrispondenza` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `testo` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
@@ -2784,10 +2786,10 @@ CREATE TABLE IF NOT EXISTS `periodicita` (
 -- pesi_tipologie_corrispondenza
 CREATE TABLE IF NOT EXISTS `pesi_tipologie_corrispondenza` (
   `id` int(11) NOT NULL,
-  `id_tipologia` int(11) NOT NULL,
-  `nome` varchar(128) NOT NULL,
-  `grammi_min` decimal(8,2) NOT NULL,
-  `grammi_max` decimal(8,2) NOT NULL
+  `id_tipologia` int(11) DEFAULT NULL,
+  `nome` varchar(128) DEFAULT NULL,
+  `grammi_min` decimal(8,2) DEFAULT NULL,
+  `grammi_max` decimal(8,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8
 
 -- | 010000023800

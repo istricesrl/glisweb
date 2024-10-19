@@ -361,7 +361,7 @@
 	// vista tipologie zone
 	$p['tipologie.zone.view'] = array(
 		'sitemap'		=> false,
-		'title'		=> array( $l		=> 'tipologie' ),
+		'title'		=> array( $l		=> 'tipologie zone' ),
 		'h1'		=> array( $l		=> 'tipologie' ),
 		'parent'		=> array( 'id'		=> 'zone.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
@@ -383,6 +383,86 @@
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
 		'etc'		=> array( 'tabs'	=> array( 'tipologie.zone.form') )
 		
+	);
+
+	// vista tipologie corrispondenza
+	$p['tipologie.corrispondenza.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie corrispondenza' ),
+		'h1'		=> array( $l		=> 'tipologie corrispondenza' ),
+		'parent'		=> array( 'id'		=> 'archivio.logistica' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.corrispondenza.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.corrispondenza.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'corrispondenza' ),
+																				'priority'	=> '160' ) ) )
+	);
+
+	// gestione corrispondenza
+	$p['tipologie.corrispondenza.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione tipologia corrispondenza' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'tipologie.corrispondenza.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.corrispondenza.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.corrispondenza.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.corrispondenza.form', 'tipologie.corrispondenza.form.metadati' ) )
+		
+	);
+
+	// gestione immagini metadati
+	$p['tipologie.corrispondenza.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'tipologie.corrispondenza.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.corrispondenza.form.metadati.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_tipologie.corrispondenza.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['tipologie.corrispondenza.form']['etc']['tabs'] )
+	);
+
+	// vista tipologie corrispondenza
+	$p['pesi.tipologie.corrispondenza.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'pesi tipologie corrispondenza' ),
+		'h1'		=> array( $l		=> 'pesi tipologie corrispondenza' ),
+		'parent'		=> array( 'id'		=> 'tipologie.corrispondenza.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_pesi.tipologie.corrispondenza.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'pesi.tipologie.corrispondenza.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'pesi' ),
+																				'priority'	=> '060' ) ) )
+	);
+
+	// gestione corrispondenza
+	$p['pesi.tipologie.corrispondenza.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione pesi tipologia corrispondenza' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'parent'		=> array( 'id'		=> 'pesi.tipologie.corrispondenza.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pesi.tipologie.corrispondenza.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_pesi.tipologie.corrispondenza.form.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff'  ) ),
+		'etc'		=> array( 'tabs'	=> array( 'pesi.tipologie.corrispondenza.form', 'pesi.tipologie.corrispondenza.form.metadati' ) )
+		
+	);
+
+	// gestione immagini metadati
+	$p['pesi.tipologie.corrispondenza.form.metadati'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-code" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'metadati' ),
+		'h1'		=> array( $l		=> 'metadati' ),
+		'parent'		=> array( 'id'		=> 'pesi.tipologie.corrispondenza.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'pesi.tipologie.corrispondenza.form.metadati.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_pesi.tipologie.corrispondenza.form.metadati.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['pesi.tipologie.corrispondenza.form']['etc']['tabs'] )
 	);
 
     // pagina dell'archivio
