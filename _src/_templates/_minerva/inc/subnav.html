@@ -1,9 +1,9 @@
 {% if page.children %}
-    <div class="row subnav">
+    <div class="row subnav d-flex justify-content-center">
         {% for child in page.children.id %}
         {% set obj = pages[ child ] %}
         {% if obj.icon %}
-        <div class="col-12 col-md-4">
+        <div class="col-12 col-md-{% if page.etc.subnav.colsize %}{{ page.etc.subnav.colsize }}{% else %}4{% endif %}">
             {% if obj.modal %}
             <a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
             {% elseif obj.ws %}
