@@ -44,6 +44,22 @@
      * 
      * 
      * 
+     * 
+     * APCU
+     * ----
+     * 
+     * 
+     * 
+     * 
+     * 
+     * cache su disco
+     * --------------
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
      * sistema di prevenzione delle collisioni di chiave
      * =================================================
      * 
@@ -59,6 +75,13 @@
      *
      *
      *
+     */
+
+    /**
+     * dichiarazione delle costanti
+     * ============================
+     * 
+     * 
      */
 
     // costanti per i blocchi di dati da salvare in cache
@@ -139,6 +162,13 @@
     $cf['cache']['profiles'][ PRODUCTION ]      = array(
         'pages' => DIR_VAR_CACHE_PAGES
     );
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // print_r( $cf['memcache'] );

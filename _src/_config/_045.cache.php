@@ -105,8 +105,16 @@
 
     }
 
+    /*
+        // inizializzazione regustro della cache
+        // TODO se questa cosa serviva (come credo) va reimplementata
+        if( empty( $cf['memcache']['registry'] ) ){
+            $cf['memcache']['registry'] = array();
+        }
+    */
+
     /**
-     * sezione redis
+     * sezione Redis
      * =============
      * 
      * 
@@ -187,14 +195,6 @@
     // costante per il default TTL
     define( 'APCU_DEFAULT_TTL'        , ( ( isset( $cf['apcu']['ttl'] ) ) ? $cf['apcu']['ttl'] : 0 ) );
 
-/*
-    // inizializzazione regustro della cache
-    // TODO se questa cosa serviva (come credo) va reimplementata
-    if( empty( $cf['memcache']['registry'] ) ){
-        $cf['memcache']['registry'] = array();
-    }
-*/
-
     /**
      * sezione cache su disco
      * ======================
@@ -209,6 +209,13 @@
 
     // link al profilo corrente
     $cf['cache']['profile'] = &$cf['cache']['profiles'][ SITE_STATUS ];
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // print_r( $cf['memcache']['profile'] );

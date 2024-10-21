@@ -25,6 +25,13 @@
     // debug
     // print_r( $_COOKIE );
 
+    /**
+     * integrazione della configurazione da file Json/Yaml e da cookie
+     * ===============================================================
+     * 
+     * 
+     */
+
     // configurazione extra
     if( isset( $cx['privacy'] ) ) {
         $cf['privacy'] = array_replace_recursive( $cf['privacy'], $cx['privacy'] );
@@ -39,6 +46,13 @@
     if( isset( $_COOKIE['privacy'] ) ) {
         $cf['privacy']['cookie'] = array_replace_recursive( $cf['privacy']['cookie'], unserialize( $_COOKIE['privacy'] ) );
     }
+
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
 
     // collegamento con l'array $ct
     $ct['privacy'] = &$cf['privacy'];
@@ -121,6 +135,13 @@
         );
     }
     */
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // print_r( $cf['privacy']['cookie'] );

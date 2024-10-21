@@ -222,9 +222,9 @@
 {% endif %}
 {% endmacro %}
 
-{% macro textareaRequired( table, subtable, counter, field, placeholder, rows, request, default, class, height, console ) %}
+{% macro textareaRequired( table, subtable, counter, field, placeholder, rows, request, default, class, height, console, static, disabled ) %}
 {% import _self as frm %}
-{{ frm.textarea( table, subtable, counter, field, placeholder, rows, request, default, true, class, height, console ) }}
+{{ frm.textarea( table, subtable, counter, field, placeholder, rows, request, default, true, class, height, console, static, disabled ) }}
 {% endmacro %}
 
 {% macro date( table, subtable, counter, field, placeholder, etc, request, default, type, required, class, disabled ) %}
@@ -275,14 +275,14 @@
 <input type="time" class="form-control form-control-sm {% if class %}{{ class }}{% endif %}" {% if disabled %}disabled{% endif %}  {% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}  name="{{ nm }}" id="{{ id }}" value="{{ vl }}" placeholder="{{ placeholder }}"  {% if required %}required{% endif %}>
 {% endmacro %}
 
-{% macro dateRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}
+{% macro dateRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class, disabled ) %}
 {% import _self as frm %}
-{{ frm.date( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class ) }}
+{{ frm.date( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class, disabled ) }}
 {% endmacro %}
 
-{% macro datetimeRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class ) %}
+{% macro datetimeRequired( table, subtable, counter, field, placeholder, etc, request, default, type, class, disabled ) %}
 {% import _self as frm %}
-{{ frm.datetime( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class ) }}
+{{ frm.datetime( table, subtable, counter, field, placeholder, etc, request, default, type, 'true', class, disabled ) }}
 {% endmacro %}
 
 {% macro button( text, type, class, onclick, placeholder, id, disabled ) %}

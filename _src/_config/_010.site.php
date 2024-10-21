@@ -5,8 +5,8 @@
      *
      * in questo file vengono dichiarati i siti gestiti dall'installazione corrente del framework
      *
-     * il concetto di sito
-     * ===================
+     * il concetto di sito e l'approccio multisito
+     * ===========================================
      * Una sola installazione fisica del framework è in grado di gestire più siti, intesi come diversi insiemi
      * di pagine, configurazioni e risorse multimediali. Questo risulta particolarmente comodo quando si devono
      * creare e gestire gruppi di siti fortemente interconnessi, magari con contenuti condivisi fra essi.
@@ -52,6 +52,13 @@
      *
      */
 
+    /**
+     * configurazione del sito di default
+     * ==================================
+     * 
+     * 
+     */
+
     // l'etichetta del sito
     $cf['sites']['1']['__label__']                              = 'default';
 
@@ -93,5 +100,13 @@
     $cf['sites']['1']['homes'][ TESTING ]                       =
     $cf['sites']['1']['homes'][ PRODUCTION ]                    = NULL;
 
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
     // debug
     // echo 'OUTPUT';
+    // die( print_r( $cf['sites'], true ) );

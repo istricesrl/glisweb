@@ -7,13 +7,11 @@
     introduzione
     ============
     Il framework supporta un sofisticato sistema di deploy automatico tramite Phing. Grazie a questo approccio, è facilissimo effettuare
-    il deploy del framework da uno stage all'altro, per esempio da DEV a TEST e da TEST a STABLE. 
+    il deploy del framework da uno stage all'altro, per esempio da DEV a TEST e da TEST a STABLE. Si noti che il sistema Phing è deprecato
+    nella versione corrente del framework e verrà rimosso nelle versioni future.
 
     strategie di deploy
     ===================
-
-
-    TODO documentare
 
     deploy via FTP
     --------------

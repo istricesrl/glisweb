@@ -75,6 +75,7 @@
      * elaborazione delle variabili derivate del sito
      * ==============================================
      * In questa sezione vengono elaborate le informazioni del sito per ricavare dati che derivano da quelli già presenti.
+     * 
      */
 
     // elaboro gli URL del sito a partire da protocollo, host, dominio e cartella
@@ -96,6 +97,7 @@
      * creazione delle scorciatoie
      * ===========================
      * In questa sezione vengono create le scorciatoie (come puntatori) ai valori utilizzati più di frequente.
+     * 
      */
 
     // URL corrente del sito
@@ -123,9 +125,9 @@
     }
 
     /**
-     * applicazione della configurazione extra del sito
-     * ================================================
-     * In questa sezione vengono applicate le configurazioni extra del sito, se presenti nei file di configurazione JSON e YAML.
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * 
      * 
      */
 
@@ -134,8 +136,23 @@
         $cf['site'] = array_replace_recursive( $cf['site'], $cx['site'] );
     }
 
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
+
     // collegamento dell'array $ct
     $ct['site'] = &$cf['site'];
 
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
     // debug
     // dieText( print_r( $cf['site'], true ) );
+    // echo 'OUTPUT';

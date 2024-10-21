@@ -63,6 +63,13 @@
      *
      */
 
+    /**
+     * dichiarazione delle costanti
+     * ============================
+     * 
+     * 
+     */
+
     // costanti che descrivono lo stato di funzionamento del framework
     define( 'DEVELOPEMENT'                                      , 'DEV' );
     define( 'TESTING'                                           , 'TEST' );
@@ -75,6 +82,29 @@
     define( 'LOG_TO_MAIL'                                       , 'LOG2MAIL' );
     define( 'LOG_TO_SMS'                                        , 'LOG2SMS' );
     define( 'LOG_TO_MYSQL'                                      , 'LOG2MYSQL' );
+
+    /**
+     * dichiarazione variabili generali di debug
+     * =========================================
+     * 
+     * 
+     */
+
+    // debug utilizzo memoria
+    $cf['debug']['mem']                                         = array();
+
+    // tempo massimo di esecuzione
+    $cf['debug']['run']['timeout']                              = 900;
+
+    // tempo massimo di connessione ai socket
+    $cf['debug']['socket']['timeout']                           = 900;
+
+    /**
+     * configurazione dei livelli di debug
+     * ===================================
+     * 
+     * 
+     */
 
     // livello di errori dei log
     $cf['debug'][ DEVELOPEMENT ]['log']['lvl']                  = LOG_DEBUG;
@@ -91,14 +121,12 @@
     $cf['debug'][ PRODUCTION ]['log']['lvl']                    = LOG_ERR;
     $cf['debug'][ PRODUCTION ]['display']                       = false;
 
-    // debug utilizzo memoria
-    $cf['debug']['mem']                                         = array();
-
-    // tempo massimo di esecuzione
-    $cf['debug']['run']['timeout']                              = 900;
-
-    // tempo massimo di connessione ai socket
-    $cf['debug']['socket']['timeout']                           = 900;
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // die( print_r( $_REQUEST, true ) );

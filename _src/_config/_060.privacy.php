@@ -30,11 +30,25 @@
     // ini_set( 'display_errors', TRUE );
     // echo 'OUTPUT';
 
+    /**
+     * variabili generali per la privacy
+     * =================================
+     * 
+     * 
+     */
+
     // inizializzazione
     $cf['privacy'] = array();
 
     // dichiarazione dell'uso di cookie propri tecnici (cookie di sessione)
     $cf['privacy']['cookie']['propri']['tecnici'] = true;
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // echo 'OUTPUT';

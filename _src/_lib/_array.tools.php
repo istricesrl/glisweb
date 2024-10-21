@@ -104,6 +104,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * metadati2associativeArray()      | trasforma una stringa di metadati in un array associativo
+     * uploadedFilesArrayReorganize()   | riorganizza l'array $_FILES in modo da renderlo più leggibile
      * 
      * funzioni di retrocompatibilità
      * ------------------------------
@@ -760,6 +761,38 @@
 
         return( $a );
 
+    }
+
+    /**
+     * riorganizza l'array $_FILES in modo da renderlo più leggibile
+     * 
+     * Questa funzione riorganizza l'array $_FILES in modo da renderlo più leggibile.
+     * 
+     * @param       array       $files      l'array $_FILES da riorganizzare
+     * 
+     * @return      array                   l'array $_FILES riorganizzato
+     * 
+     */
+    function uploadedFilesArrayReorganize( $a ) {
+
+        $r = array();
+    
+        foreach( $a as $k1 => $v1 ) {
+    
+            foreach( $v1 as $k2 => $v2 ) {
+    
+                foreach( $v2 as $k3 => $v3 ) {
+    
+                    $r[ $k1 ][ $k3 ][ $k2 ] = $v3;
+    
+                }
+
+            }
+
+        }
+
+        return $r;
+    
     }
 
     /**
