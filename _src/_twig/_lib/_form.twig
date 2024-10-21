@@ -209,6 +209,11 @@
         {% set ks = request[ form.table ][ form.subtable ]|keys %}
         {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
         {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
+    {% elseif form.counter %}
+        {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.counter ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ form.counter ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ field.name ] %}
     {% else %}
         {% set nm = form.table ~ '[' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ field.name %}
