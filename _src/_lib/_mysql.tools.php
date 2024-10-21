@@ -132,6 +132,59 @@
      * TODO documentare
      *
      */
+//    function mysqlDiskQuery( $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function mysqlDiskQuery( $c, $q, $p = false, $t = 0, &$e = array(), &$i = array() ) {
+
+        // calcolo la chiave della query
+            $k = md5( $q . serialize( $p ) );
+    
+        // cerco il valore in cache
+    #	    $r = memcacheRead( $m, $k );
+    
+    if( ! file_exists( DIR_BASE . 'var/cache/mysql/' . $k ) ) {
+    
+            $r = mysqlQuery( $c, $q, $p, $e );
+    
+//    $h = fopen( DIR_BASE . 'var/cache/mysql/' . $k, 'w+' );
+//    fwrite( $h, serialize( $r ) );
+    
+writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
+
+    } else {
+    
+    $r = unserialize( file_get_contents( DIR_BASE . 'var/cache/mysql/' . $k ) );
+    
+    #}
+    
+    
+    #if( empty( $m ) ) {
+    #die( 'memcache non connesso' );
+    #}
+    
+        // se il valore non è stato trovato
+    #	    if( empty( $r ) || $t === false ) {
+    #		memcacheWrite( $m, $k, $r, $t );
+            }
+    
+        // restituisco il risultato
+            return $r;
+    
+        }
+    
+    /**
+     * 
+     * TODO implementare una funzione mysqlSmartQuery() che faccia da sola lo switch fra le varie cache?
+     * nel caso andrebbe in mysql utils
+     * 
+     * 
+     */
+    
+
+    /**
+     *
+     * TODO documentare
+     *
+     */
     function mysqlQuery( $c, $q, $p = false, &$e = array() ) {
 
         // ID della query

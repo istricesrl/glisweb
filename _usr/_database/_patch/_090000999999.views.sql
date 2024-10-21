@@ -2742,7 +2742,9 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 		corrispondenza.id_tipologia,
 		tipologie_corrispondenza_path( corrispondenza.id_tipologia ) AS tipologia,
 		corrispondenza.id_peso,
-		pesi_tipologie_corrispondenza.nome AS peso,
+		pesi_tipologie_corrispondenza.nome AS peso_tipologia,
+		tipologie_corrispondenza.se_pesata,
+		corrispondenza.peso,
 		corrispondenza.id_formato,
 		formati_tipologie_corrispondenza.nome AS formato,
 		corrispondenza.quantita,
@@ -2757,7 +2759,7 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 		coalesce(
 			concat( corrispondenza.destinatario_indirizzo, ' ', corrispondenza.destinatario_civico, ', ', corrispondenza.destinatario_cap, ' ', coalesce( corrispondenza.destinatario_citta, '' ), comuni.nome, ' ', provincie.sigla ),
 			concat( comuni.nome, ' ', provincie.sigla ),
-			stati.nome,
+			concat_ws( ' ', corrispondenza.destinatario_cap, stati.nome ),
 			''
 		) AS destinazione,
 		corrispondenza.timestamp_elaborazione,

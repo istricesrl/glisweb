@@ -149,6 +149,8 @@
      * js.internal              | un array contenente i percorsi dei file Js interni (ossia quelli che vengono prelevati dal framework)
      * js.template              | un array contenente i percorsi dei file Js interni (ossia quelli che vengono prelevati dalla cartella del template)
      * 
+     * TODO controllare che questa tabella sia aggiornata
+     * 
      * TODO i CSS andrebbero ulteriormente suddivisi per media (screen, print, eccetera) mentre per i JavaScript sarebbe utile specificare
      * altri parametri come la firma (per i Js esterni), il caricamento differito, eccetera. Si può quindi pensare di affiancare al file
      * di configurazione in formato INI un file di configurazione in formato JSON o YAML che consenta di specificare le informazioni in

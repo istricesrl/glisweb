@@ -117,6 +117,9 @@
      * 
      * 
      * TODO decidere come gestire la documentazione
+     * sarebbe bello avere un bel manuale su Google Docs che gli utenti possono utilizzare per imparare a usare il CMS del framework,
+     * e una documentazione tecnica in formato HTML e PDF che gli sviluppatori possono consultare per capire come funziona il framework
+     * 
 
     // link al manuale utente
     $cf['common']['docs']['user']['html'] = array(
@@ -152,8 +155,8 @@
     */
 
     /**
-     * verifica aggiornamenti
-     * ======================
+     * verifica versione e release
+     * ===========================
      * 
      * 
      */
@@ -203,3 +206,14 @@
 
     // costante per la release aggiornata del framework
     define( 'RELEASE_LATEST', $cf['common']['release']['latest'] );
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
+    // debug
+    // dieText( print_r( $cf['common'], true ) );
+    // echo 'OUTPUT';

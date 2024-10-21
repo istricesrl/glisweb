@@ -9,89 +9,58 @@
 
     GlisWeb è un framework leggero, ampiamente personalizzabile, pensato per realizzare siti e web application
     nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web. Nasce per dare a tutti
-    la possibilità di realizzare siti e soprattutto web applications a partire da codice gratuito e aperto.
+    la possibilità di realizzare siti e soprattutto web applications a partire da codice gratuito e aperto, semplice
+    e ben documentato, con un'ampia community a supporto.
+
+    struttura di questa documentazione
+    ==================================
+
+    TODO finire questo paragrafo
 
     caratteristiche principali
     ==========================
 
-
-
     TODO finire questo paragrafo
 
+    sistema di versioni e release
+    =============================
 
-
+    TODO finire questo paragrafo
 
     installazione e configurazione
     ==============================
 
-
-
-
     TODO finire questo paragrafo
-
-
-
-
 
     architettura generale
     =====================
 
-
-
     TODO finire questo paragrafo
-
-
 
     il file .htaccess
     -----------------
 
-
     TODO finire questo paragrafo
-
-
 
     il file _src/_config.php
     ------------------------
 
-
     TODO finire questo paragrafo
-
-
-
-
-
 
     i file di libreria
     ------------------
 
-
     TODO finire questo paragrafo
-
-
-
 
     i file di configurazione
     ------------------------
 
-
-
     TODO finire questo paragrafo
-
-
-
-
 
     i file dei runlevel
     -------------------
 
-
-
     TODO finire questo paragrafo
-
-
-
-
-
 
     ringraziamenti
     ==============

@@ -21,6 +21,13 @@
      *
      */
 
+    /**
+     * sistema di salvataggio delle sessioni
+     * =====================================
+     * 
+     * 
+     */
+
     // backend per il salvataggio delle sessioni
     if( isset( $cf['redis']['connection'] ) && ! empty( $cf['redis']['connection'] ) ) {
 
@@ -60,6 +67,13 @@
         logger( 'sessione salvata su Apache', 'session' );
 
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // die( ini_get( 'session.save_handler' ) );

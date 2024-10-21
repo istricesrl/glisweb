@@ -41,6 +41,13 @@
      *
      */
 
+    /**
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * 
+     * 
+     */
+
     // debug
     // print_r( $cf['sites'] );
     // die( print_r( $cx['sites'], true ) );
@@ -49,6 +56,13 @@
     if( isset( $cx['sites'] ) ) {
         $cf['sites'] = array_replace_recursive( $cf['sites'], $cx['sites'] );
     }
+
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
 
     // collegamento a $ct
     $ct['sites'] = &$cf['sites'];
@@ -172,6 +186,13 @@
 
     // status del sito
     define( 'SITE_STATUS', $cf['site']['status'] );
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // die( 'host: ' . $_SERVER['HTTP_HOST'] );

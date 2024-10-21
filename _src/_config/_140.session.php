@@ -37,3 +37,9 @@
     foreach( $cf['utm']['fields'] as $field ) {
         $_SESSION['utm'][ $field ] = ( isset( $_REQUEST[ $field ] ) ) ? $_REQUEST[ $field ] : ( ( isset( $_SESSION['utm'][ $field ] ) ) ? $_SESSION['utm'][ $field ] : NULL );
     }
+
+    // punteggio e controllo antispam
+    $cf['session']['spam']['limit'] = 0.5;
+    $cf['session']['spam']['score'] = 1.0;
+    $cf['session']['spam']['check'] = true;
+

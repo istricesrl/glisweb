@@ -22,6 +22,13 @@
     // debug
     // print_r( $_COOKIE );
 
+    /**
+     * recupero della cache dei contenuti statici
+     * ==========================================
+     * 
+     * 
+     */
+
     // se è attiva la cache delle pagine
     if( isset( $cf['cache']['profile']['pages'] ) && $cf['cache']['profile']['pages'] === true ) {
 
@@ -54,6 +61,13 @@
         }
 
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // echo 'OUTPUT';

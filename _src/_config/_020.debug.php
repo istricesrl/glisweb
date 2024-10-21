@@ -33,8 +33,8 @@
      */
 
     /**
-     * configurazioni generali per il debug
-     * ====================================
+     * applicazione delle configurazioni generali per il debug
+     * =======================================================
      * 
      * 
      */
@@ -46,8 +46,8 @@
     ini_set( 'default_socket_timeout', $cf['debug']['socket']['timeout'] );
 
     /**
-     * sezione report
-     * ==============
+     * configurazione del report degli errori a video
+     * ==============================================
      * 
      * 
      */
@@ -62,11 +62,21 @@
     error_reporting( REPORT_CURRENT_LEVEL );
 
     /**
-     * sezione log
-     * ===========
+     * configurazione del log su file
+     * ==============================
      * 
      * 
      */
 
     // costante per     logger() che descrive il livello corrente di log
     define( 'LOG_CURRENT_LEVEL', $cf['debug'][ SITE_STATUS ]['log']['lvl'] );
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
+    // debug
+    // echo 'OUTPUT';

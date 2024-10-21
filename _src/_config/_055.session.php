@@ -23,10 +23,24 @@
     // ini_set( 'display_errors', TRUE );
     // echo 'OUTPUT';
 
+    /**
+     * dichiarazione delle costanti
+     * ============================
+     * 
+     * 
+     */
+
     // costante per la durata massima della sessione
     if( ! defined( 'SESSION_LIMIT' ) ) {
         define( 'SESSION_LIMIT', 3600 );
     }
+
+    /**
+     * avvio della sessione
+     * ====================
+     * 
+     * 
+     */
 
     // controllo output
     if( headers_sent( $wf, $wl ) ) {
@@ -76,16 +90,25 @@
     // fwrite( $h, date('Y-m-d H:i:s') . ' ' . session_id() . ' -> current' . PHP_EOL );
     // fclose( $h );
 
-    // punteggio e controllo antispam
-    $cf['session']['spam']['limit'] = 0.5;
-    $cf['session']['spam']['score'] = 1.0;
-    $cf['session']['spam']['check'] = true;
+    /**
+     * connessione della sessione a $cf e $ct
+     * ======================================
+     * 
+     * 
+     */
 
     // connetto i dati della sessione all'array $cf
     $cf['session'] = &$_SESSION;
 
     // collegamento all'array $ct
     $ct['session'] = &$cf['session'];
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // echo 'sessione ' . session_id();
