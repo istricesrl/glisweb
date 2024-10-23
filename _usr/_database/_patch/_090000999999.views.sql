@@ -2823,6 +2823,8 @@ CREATE OR REPLACE VIEW atti_view AS
         corrispondenza.id_commesso,
         coalesce( commessi.denominazione , concat( commessi.cognome, ' ', commessi.nome ), '' ) AS commesso,
         corrispondenza.nome,
+		corrispondenza.codice,
+		coalesce( corrispondenza.codice, corrispondenza.nome ) AS riferimento,
         coalesce( corrispondenza.destinatario_denominazione , concat( corrispondenza.destinatario_cognome, ' ', corrispondenza.destinatario_nome ), '' ) AS destinatario,
         concat_ws( '|', coalesce( concat( 'C.F. ', destinatario_codice_fiscale ), ''), coalesce( concat( 'P.IVA ', destinatario_partita_iva ) ) ) AS riferimenti_destinatario,
         coalesce(

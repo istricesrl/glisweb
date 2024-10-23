@@ -1326,6 +1326,7 @@ ALTER TABLE `conversazioni_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 ALTER TABLE `corrispondenza`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_tipologia`,`id_peso`,`id_formato`,`id_mittente`,`id_organizzazione_mittente`,`id_commesso`),
+	ADD UNIQUE KEY `codice` ( `codice` ),
 	ADD KEY `id_tipologia` (`id_tipologia`),
 	ADD KEY `id_peso` (`id_peso`),
 	ADD KEY `id_formato` (`id_formato`),

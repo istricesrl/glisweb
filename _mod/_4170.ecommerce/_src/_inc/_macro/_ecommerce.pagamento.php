@@ -482,12 +482,10 @@
                 if( isset( $_REQUEST['__pagamenti__']['autoexport'] ) && ! empty( $_REQUEST['__pagamenti__']['autoexport'] ) ) {
 
                     // file testata
-                    // TODO fare per titpo di documento?
                     // $fileTestata = DIR_VAR_SPOOL_EXPORT . 'ddt.' . microtime( true ) . '.csv';
                     $fileTestata = DIR_VAR_SPOOL_EXPORT . 'ddt.csv';
 
                     // file righe
-                    // TODO fare per titpo di documento?
                     // $fileRighe = DIR_VAR_SPOOL_EXPORT . 'ddt.righe.' . microtime( true ) . '.csv';
                     $fileRighe = DIR_VAR_SPOOL_EXPORT . 'ddt.righe.csv';
 
