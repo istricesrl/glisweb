@@ -482,10 +482,12 @@
                 if( isset( $_REQUEST['__pagamenti__']['autoexport'] ) && ! empty( $_REQUEST['__pagamenti__']['autoexport'] ) ) {
 
                     // file testata
+                    // TODO fare per titpo di documento?
                     // $fileTestata = DIR_VAR_SPOOL_EXPORT . 'ddt.' . microtime( true ) . '.csv';
                     $fileTestata = DIR_VAR_SPOOL_EXPORT . 'ddt.csv';
 
                     // file righe
+                    // TODO fare per titpo di documento?
                     // $fileRighe = DIR_VAR_SPOOL_EXPORT . 'ddt.righe.' . microtime( true ) . '.csv';
                     $fileRighe = DIR_VAR_SPOOL_EXPORT . 'ddt.righe.csv';
 
@@ -496,11 +498,19 @@
                     array2csvFile(
                         mysqlQuery(
                             $cf['mysql']['connection'],
-                            'SELECT documenti.id_tipologia,documenti.numero,documenti.sezionale,documenti.data FROM documenti WHERE id = ?',
+                            'SELECT documenti.id_tipologia,documenti.numero,documenti.sezionale,documenti.data,
+                            anagrafica.codice AS codice_cliente
+                            FROM documenti 
+                            LEFT JOIN anagrafica ON anagrafica.id = documenti.id_destinatario
+                            WHERE documenti.id = ?',
                             array( array( 's' => $idDocumento ) )
                         ),
                         $fileTestata,
-                        ';'
+                        ';',
+                        NULL,
+                        '"',
+                        '\\',
+                        FILE_WRITE_APPEND
                     );
 
                     // scrivo le righe
@@ -508,15 +518,19 @@
                         mysqlQuery(
                             $cf['mysql']['connection'],
                             'SELECT 
-                                documenti.numero AS numero_documento, documenti.sezionale AS sezionale_documento, 
+                                documenti.numero AS numero_documento, documenti.sezionale AS sezionale_documento, documenti.id_tipologia AS id_tipologia_documento,
                                 documenti_articoli.id_articolo, documenti_articoli.quantita 
                                 FROM documenti_articoli 
                                 INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento
-                                WHERE id_documento = ?',
+                                WHERE documenti_articoli.id_documento = ?',
                             array( array( 's' => $idDocumento ) )
                         ),
                         $fileRighe,
-                        ';'
+                        ';',
+                        NULL,
+                        '"',
+                        '\\',
+                        FILE_WRITE_APPEND
                     );
 
                 }
