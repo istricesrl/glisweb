@@ -29,7 +29,7 @@
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
-	    'utente' => 'text-left',
+	    'anagrafica' => 'text-left',
 	    'se_attivo' => 'text-left',
 	    'gruppi' 	=> 'text-left'
 	);

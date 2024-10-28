@@ -24,16 +24,19 @@
 	$ct['view']['cols'] = array(
 	    'id' => '#',
 	    '__label__' => 'account',
-	    'utente' => 'anagrafica',
-	    'se_attivo' => 'attivo'
+	    'anagrafica' => 'anagrafica',
+	    'se_attivo' => 'attivo',
+#	    'gruppi' 	=> 'gruppi'
+#		'gruppi_attribuzione' => 'attribuzione automatica'
 	);
 
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
 	    '__label__' => 'text-left',
-	    'utente' => 'text-left',
-	    'se_attivo' => 'text-left'
+	    'anagrafica' => 'text-left',
+	    'se_attivo' => 'text-left',
+#	    'gruppi' 	=> 'text-left'
 	);
 
     // preset filtro custom progetti aperti

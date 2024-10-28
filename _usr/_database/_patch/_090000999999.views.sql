@@ -167,7 +167,7 @@ CREATE OR REPLACE DEFINER = CURRENT_USER() VIEW account_view AS
 		account.timestamp_login,
 		account.timestamp_cambio_password,
 		group_concat( gruppi.nome ORDER BY gruppi.id SEPARATOR '|' ) AS gruppi,
-		group_concat( gruppi.id ORDER BY gruppi.id SEPARATOR '|' ) AS id_gruppi,
+		concat( '|', group_concat( gruppi.id ORDER BY gruppi.id SEPARATOR '|' ), '|' ) AS id_gruppi,
 		group_concat(
 			DISTINCT
 			concat( account_gruppi_attribuzione.entita,'#',account_gruppi_attribuzione.id_gruppo )
