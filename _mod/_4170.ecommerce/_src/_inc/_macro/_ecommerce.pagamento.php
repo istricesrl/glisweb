@@ -359,7 +359,7 @@
                         die( 'impossibile trovare l\'azienda gestita' );
                     }
 
-                    die( 'CASO 2' );
+                    // die( 'CASO 2' );
 
                     $idSedeEmittente = anagraficaGetIdSedeLegale( $emittente );
                     $idSedeDestinatario = anagraficaGetIdSedeLegale( $_REQUEST['__pagamenti__']['id_cliente'] );
