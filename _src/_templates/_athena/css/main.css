@@ -1035,6 +1035,10 @@ ul.browsing-tree {
     border-radius: 0px;
 }
 
+.cassa-table thead tr th {
+    border: 0px;
+}
+
 /* stili per i cartellini */
 .cartellini {
     width: auto !important;

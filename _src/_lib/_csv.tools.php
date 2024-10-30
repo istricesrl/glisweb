@@ -437,7 +437,7 @@
     function array2csvFile( $d, $f, $s = ',', $h = NULL, $c = '"', $e = '\\', $m = FILE_WRITE_OVERWRITE ) {
 
         // log
-        logger( 'scrittura file CSV: ' . $f, 'csv' );
+        logger( 'scrittura file CSV: ' . $f . ' (modalità ' . $m . ')', 'csv' );
 
         // ricavo le intestazioni dalle chiavi della prima riga
         if( empty( $h ) ) {
@@ -445,9 +445,12 @@
         }
 
         // decido se scrivere le intestazioni in base alla modalità di scrittura e all'esistenza del file
-        if( $m == FILE_WRITE_APPEND && file_exists( $f ) ) {
+        if( $m == FILE_WRITE_APPEND && file_exists( getFullPath( $f ) ) ) {
             $h = false;
         }
+
+        // log
+        logger( 'il file ' . $f . ( ( file_exists( getFullPath( $f ) ) ) ? ' ' : 'non ' ) . 'esiste', 'csv' );
 
         // genero la stringa da scrivere su file tramite array2csvString()
         $t = array2csvString( $d, $s, $h, $c, $e );
@@ -479,7 +482,7 @@
     function array2csvString( $d, $s = ',', $h = NULL, $c = '"', $e = '\\' ) {
 
         // ricavo le intestazioni dalle chiavi della prima riga
-        if( $h == NULL ) {
+        if( $h === NULL ) {
             $h = array_keys( $d[0] );
         }
 
@@ -518,7 +521,7 @@
         $a = array();
 
         // ricavo le intestazioni dalle chiavi della prima riga
-        if( $h == NULL ) {
+        if( $h === NULL ) {
             $h = array_keys( $d[0] );
         }
 

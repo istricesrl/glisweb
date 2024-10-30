@@ -397,10 +397,15 @@
      * @return  boolean             restituisce true se la scrittura è andata a buon fine, false altrimenti
      * 
      */
-    function writeToFile( $t, $f, $m = FILE_WRITE_OVERWRITE ) {
+    function writeToFile( $t, $f, $m = FILE_WRITE_OVERWRITE, $n = "\n" ) {
 
         // apro il file
         $h = openFile( $f, $m );
+
+        // se $t non termina con newline
+        if( substr( $t, -1 ) != $n ) {
+            $t .= $n;
+        }
 
         // se l'apertura è andata a buon fine
         if( $h ) {
