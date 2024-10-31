@@ -30,15 +30,20 @@
      */
     function buildJson( $content, $encoding = ENCODING_UTF8, $headers = array() ) {
 
-	// generazione del contenuto
+	    // generazione del contenuto
 	    $json = json_encode( string2utf8( $content ) );
 
-	// log
+	    // log
 	    if( ! empty( json_last_error() ) ) {
-		logWrite( 'errore #'.json_last_error().' '.json_last_error_msg(), 'json', LOG_ERR );
+		    logWrite( 'errore #'.json_last_error().' '.json_last_error_msg(), 'json', LOG_ERR );
 	    }
 
-	// genero l'output
+        // se non esiste il content-type
+        if( ! isset( $headers['Content-Type'] ) ) {
+            $headers['Content-Type'] = MIME_APPLICATION_JSON;
+        }
+
+	    // genero l'output
 	    build( $json, MIME_APPLICATION_JSON, $encoding, $headers );
 
     }
@@ -153,9 +158,13 @@
      */
     function buildHeaders( $headers ) {
 
-	// invio gli headers
-	    foreach( $headers as $header ) {
-		header( $header );
+	    // invio gli headers
+	    foreach( $headers as $header => $value ) {
+            if( is_string( $header ) ) {
+                header( $header . ': ' . $value );
+            } else {
+		        header( $value );
+            }
 	    }
 
     }

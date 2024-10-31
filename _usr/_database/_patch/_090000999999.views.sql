@@ -2763,6 +2763,7 @@ CREATE OR REPLACE VIEW corrispondenza_view AS
 			''
 		) AS destinazione,
 		corrispondenza.timestamp_elaborazione,
+		corrispondenza.timestamp_gestione,
 		corrispondenza.id_account_inserimento,
 		corrispondenza.timestamp_inserimento,
 		corrispondenza.id_account_aggiornamento,
@@ -9871,6 +9872,7 @@ CREATE OR REPLACE VIEW `tipologie_corrispondenza_view` AS
 		tipologie_corrispondenza.se_massivo,
 		tipologie_corrispondenza.se_corrispondenza,
 		tipologie_corrispondenza.se_atto,
+		tipologie_corrispondenza.se_ricevuta_ritorno,
 		tipologie_corrispondenza.id_account_inserimento,
 		tipologie_corrispondenza.id_account_aggiornamento,
 		tipologie_corrispondenza_path( tipologie_corrispondenza.id ) AS __label__

@@ -1440,9 +1440,12 @@ CREATE TABLE IF NOT EXISTS `corrispondenza` (
   `nome_consegna` char(255) DEFAULT NULL,
   `cognome_consegna` char(255) DEFAULT NULL,
   `timestamp_consegna` int(11) DEFAULT NULL,
+  `requisiti_consegna` text DEFAULT NULL,
   `note_consegna` text DEFAULT NULL,
   `timestamp_elaborazione` int(11) DEFAULT NULL,
   `note_elaborazione` text DEFAULT NULL,
+  `timestamp_gestione` int(11) DEFAULT NULL,
+  `note_gestione` text DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1685,6 +1688,24 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `data_consegna` date DEFAULT NULL,
   `note_consegna` text DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- TODO qui non costo ma prezzo? oppure vogliamo segnare sia i costi che i prezzi? forse ha senso per calcolare i margini
+
+-- | 010000010100
+
+-- documenti_corrispondenza
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `documenti_corrispondenza` (
+  `id` int(11) NOT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `id_corrispondenza` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -4343,6 +4364,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_corrispondenza` (
   `se_massivo` tinyint(1) DEFAULT NULL,
   `se_corrispondenza` tinyint(1) DEFAULT NULL,
   `se_atto` tinyint(1) DEFAULT NULL,
+  `se_ricevuta_ritorno` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

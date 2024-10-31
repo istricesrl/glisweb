@@ -42,6 +42,22 @@
      * @todo documentare
      *
      */
+    function trovaListinoDaCodice( $m, $c, $codice ) {
+
+        return mysqlSelectCachedValue( $m, $c,
+            'SELECT id FROM listini WHERE codice = ?',
+            array(
+                array( 's' => $codice )
+            )
+        );
+
+    }
+
+    /**
+     *
+     * @todo documentare
+     *
+     */
     function calcolaPrezzoNettoArticolo( $m, $c, $a, $l, $qa = 1, $qp = 1, $qb = array(), $date = NULL, $t = MEMCACHE_DEFAULT_TTL ) {
 
         // debug
