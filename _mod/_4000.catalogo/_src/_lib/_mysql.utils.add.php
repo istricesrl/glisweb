@@ -295,7 +295,7 @@
                     $cf['mysql']['connection'],
                     'SELECT id_prodotto_collegato FROM relazioni_articoli WHERE id_articolo = ? AND id_ruolo = 6',
                     array(
-                        array( 's' => $a )
+                        array( 's' => $v['id_articolo'] )
                     )
                 );
 
@@ -307,7 +307,7 @@
                 timerCheck( $cf['speed'], '-> -> fine analisi righe carrello per calcolo quantità carrello per articolo #' . $a );
 
                 // log
-                logger( '- l\'articolo ' . $a . ' nel carrello ' . $carrello['id'] . ' è parte dei bundle ' . implode( ', ', $bs ), 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+                logger( '- l\'articolo ' . $v['id_articolo'] . ' nel carrello ' . $carrello['id'] . ' è parte dei bundle ' . implode( ', ', $bs ), 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
 
                 // ciclo sui bundle
                 foreach( $bs as $bd ) {
