@@ -310,7 +310,8 @@
                             FROM prezzi 
                             WHERE id_articolo = ? 
                             AND id_listino = ?
-                            AND ( ( data_inizio IS NULL OR data_inizio < ? ) AND ( data_fine IS NULL OR data_fine > ? ) )
+                            AND ( ( data_inizio IS NULL OR data_inizio < ? ) 
+                            AND ( data_fine IS NULL OR data_fine > ? ) )
                             AND prezzo IS NOT NULL
                             ORDER BY data_inizio DESC, qta_min DESC',
                             array(
@@ -324,10 +325,10 @@
                         if( ! empty( $p4 ) ) {
 
                             // log
-                            logger( 'per il bundle ' . $bp . ' ho trovato il prezzo di riferimento ' . $p4, 'listini' );
+                            logger( 'per il bundle ' . $bp . ' ho trovato il prezzo netto di riferimento ' . $p4, 'listini' );
 
                             // log
-                            logger( 'per il bundle ' . $bp . ' articolo ' . $a . ' ho trovato il prezzo di riferimento ' . $p4 . ' per la quantità ' . $qa . ' sul listino ' . $mp['conf_rif_sconto'], 'details/listini/prezzi/articolo.' . $a );
+                            logger( 'per il bundle ' . $bp . ' articolo ' . $a . ' ho trovato il prezzo netto di riferimento ' . $p4 . ' per la quantità ' . $qa . ' sul listino ' . $mp['conf_rif_sconto'], 'details/listini/prezzi/articolo.' . $a );
 
                         } elseif( ! empty( $p4sc ) ) {
 
@@ -335,18 +336,18 @@
                             $p4 = $p4sc;
 
                             // log
-                            logger( 'per il bundle ' . $bp . ' ho forzato il prezzo di riferimento ' . $p4, 'listini' );
+                            logger( 'per il bundle ' . $bp . ' ho forzato il prezzo netto di riferimento ' . $p4, 'listini' );
 
                             // log
-                            logger( 'per il bundle ' . $bp . ' articolo ' . $a . ' ho forzato il prezzo di riferimento ' . $p4 . ' sul listino ' . $mp['conf_rif_sconto'], 'details/listini/prezzi/articolo.' . $a );
+                            logger( 'per il bundle ' . $bp . ' articolo ' . $a . ' ho forzato il prezzo netto di riferimento ' . $p4 . ' sul listino ' . $mp['conf_rif_sconto'], 'details/listini/prezzi/articolo.' . $a );
 
                         } else {
 
                             // log
-                            logger( 'per il bundle ' . $bp . ' non ho trovato il prezzo di riferimento', 'listini' );
+                            logger( 'per il bundle ' . $bp . ' non ho trovato il prezzo netto di riferimento', 'listini' );
 
                             // log
-                            logger( 'per il bundle ' . $bp . ' articolo ' . $a . ' non ho trovato il prezzo di riferimento per la quantità ' . $qa . ' sul listino ' . $mp['conf_rif_sconto'], 'details/listini/prezzi/articolo.' . $a );
+                            logger( 'per il bundle ' . $bp . ' articolo ' . $a . ' non ho trovato il prezzo netto di riferimento per la quantità ' . $qa . ' sul listino ' . $mp['conf_rif_sconto'], 'details/listini/prezzi/articolo.' . $a );
 
                         }
 
