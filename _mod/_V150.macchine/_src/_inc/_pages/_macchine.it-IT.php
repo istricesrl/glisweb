@@ -9,7 +9,7 @@
 	// dashboard macchine
 	$p['macchine'] = array(
 	    'sitemap'		=> false,
-	    'title'			=> array( $l		=> 'macchine' ),
+	    'title'			=> array( $l		=> 'dashboard macchine' ),
 	    'h1'			=> array( $l		=> 'macchine' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'macchine.html' ),
@@ -40,7 +40,7 @@
 	$p['macchine.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-	    'title'			=> array( $l		=> 'azioni' ),
+	    'title'			=> array( $l		=> 'azioni macchine' ),
 	    'h1'			=> array( $l		=> 'azioni' ),
 	    'parent'		=> array( 'id'		=> 'macchine' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
@@ -59,25 +59,30 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_macchine.form.php' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'			=> array( 'tabs'	=> array(	'macchine.form',
-														'macchine.form.caratteristiche',
-														'macchine.form.immagini',
-														'macchine.form.video',
-														'macchine.form.audio',
-														'macchine.form.file',
-														'macchine.form.metadati',
-														'macchine.form.stampe',
+#														'macchine.form.caratteristiche',
+#														'macchine.form.immagini',
+#														'macchine.form.video',
+#														'macchine.form.audio',
+#														'macchine.form.file',
+#														'macchine.form.metadati',
+#														'macchine.form.stampe',
 														'macchine.form.tools'
 													) )
 	);
 
 	// RELAZIONI CON IL MODULO CONTRATTI
 	if( in_array( "0600.contratti", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'macchine.form.caratteristiche', $p['macchine.form']['etc']['tabs'], 'macchine.form.contratti' );
+		arrayInsertSeq( 'macchine.form', $p['macchine.form']['etc']['tabs'], 'macchine.form.contratti' );
 	}
 
 	// RELAZIONI CON IL MODULO VALUTAZIONI
 	if( in_array( "0800.valutazioni", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'macchine.form.caratteristiche', $p['macchine.form']['etc']['tabs'], 'macchine.form.valutazioni' );
+		arrayInsertSeq( 'macchine.form', $p['macchine.form']['etc']['tabs'], 'macchine.form.valutazioni' );
+	}
+
+	// RELAZIONI CON IL MODULO ATTIVITA
+	if( in_array( "0200.attivita", $cf['mods']['active']['array'] ) ) {
+		arrayInsertBefore( 'macchine.form.tools', $p['macchine.form']['etc']['tabs'], 'macchine.form.attivita' );
 	}
 
 	// form macchine immagini
@@ -190,15 +195,15 @@
 	$p['macchine.form.tools'] = array(
 		'sitemap'		=> false,
 		'icon'			=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-		'title'			=> array( $l		=> 'azioni' ),
+		'title'			=> array( $l		=> 'azioni macchina' ),
 		'h1'			=> array( $l		=> 'azioni' ),
-		'parent'		=> array( 'id'		=> 'macchine' ),
+		'parent'		=> array( 'id'		=> 'macchine.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_macchine.form.tools.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots' ) ),
-		'etc'			=> array( 'tabs'	=> $p['macchine.view']['etc']['tabs'] )
+		'etc'			=> array( 'tabs'	=> $p['macchine.form']['etc']['tabs'] )
 	);
-
+/*
 	// vista edifici
 	$p['edifici.view'] = array(
 	    'sitemap'		=> false,
@@ -350,3 +355,4 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['edifici.form']['etc']['tabs'] )
 	);
+*/
