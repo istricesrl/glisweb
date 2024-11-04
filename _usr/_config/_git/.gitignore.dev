@@ -1,5 +1,6 @@
 .github/
 _*/
+etc/deploy/
 etc/secret/
 etc/latest.conf
 etc/latest.release.conf
@@ -10,8 +11,14 @@ src/py/*/*/include/
 src/py/*/*/lib/
 src/py/*/*/lib64/
 src/py/*/*/share/
+src/py/*/*/lib64
+src/py/*/*/todo/
+src/py/*/*/done/
+src/ext/shadow.*
+src/shadow.*
 tmp/
 var/
+.gitignore
 .htaccess
 composer.*
 robots.*
