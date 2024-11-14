@@ -57,6 +57,9 @@
         // trovo la quantità dell'articolo
         $qs = contaQuantitaArticoliCarrello( $a, $carrello );
 
+        // log
+        // logger( 'quantità rilevanti per l\'articolo ' . $a . ' nel carrello ' . $carrello['id'] . ': ' . print_r( $qs, true ), 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+
         // timer
         timerCheck( $cf['speed'], '-> -> fine calcolo quantità carrello per articolo #' . $a );
 
@@ -217,6 +220,16 @@
             // contatore per i bundle
             $qb = array();
 
+            // trovo i bundle di cui fa parte l'articolo
+            $bsa = mysqlSelectColumn(
+                'id_prodotto_collegato',
+                $cf['mysql']['connection'],
+                'SELECT id_prodotto_collegato FROM relazioni_articoli WHERE id_articolo = ? AND id_ruolo = 6',
+                array(
+                    array( 's' => $a )
+                )
+            );
+
             // ciclo sui prodotti
             foreach( $carrello['articoli'] as $k => $v ) {
 
@@ -322,7 +335,23 @@
                     logger( '- ' . ( ( ! isset( $qb[ $bd ] ) ) ? 'imposto a ' . $qd . ' la quantità per il bundle ' . $bd : 'aggiungo ' . $qd . ' alla quantità ' . $qb[ $bd ] . ' del bundle ' . $bd ), 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
 
                     // $qb[ $bd ] = ( ( ! isset( $qb[ $bd ] ) ) ? $v['quantita'] : $qb[ $bd ] + $v['quantita'] );
-                    $qb[ $bd ] = ( ( ! isset( $qb[ $bd ] ) ) ? $qd : $qb[ $bd ] + $qd );
+
+                    // se il bundle è pertinente per l'articolo
+                    if( in_array( $bd, $bsa ) ) {
+
+                        // log
+                        logger( '- il bundle ' . $bd . ' è pertinente per l\'articolo ' . $v['id_articolo'] . ' nel carrello ' . $carrello['id'], 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+
+                        // incremento i contatori
+                        // $qb[ $bd ] = ( ( ! isset( $qb[ $bd ] ) ) ? $qd : $qb[ $bd ] + $qd );
+                        $qb[ $bd ] = ( ( ! isset( $qb[ $bd ] ) ) ? $qd : $qb[ $bd ] + $qd );
+
+                    } else {
+
+                        // log
+                        logger( '- il bundle ' . $bd . ' non è pertinente per l\'articolo ' . $v['id_articolo'] . ' nel carrello ' . $carrello['id'], 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+
+                    }
 
                     /*
                     if( $mt['conf_bundle'] == 'SI' ) {
@@ -352,16 +381,34 @@
 
             // ciclo sui bundle
             foreach( $bs as $bd ) {
+
+                // ...
                 if( $ma['conf_bundle'] == 'SI' ) {
-                    if( $qb[ $bd ] > 0 ) {
-                        logger( 'per l\'articolo ' . $a . ' la quantità ' . $qa . ' è forzata a ' . $qb[ $bd ] . ' per il bundle ' . $bd . ' in quanto ha il flag conf_bundle settato a ' . $ma['conf_bundle'], 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
-                        $qa = $qb[ $bd ];
+
+                    // se il bundle è pertinente per l'articolo
+                    if( in_array( $bd, $bsa ) ) {
+
+                        // log
+                        logger( '- il bundle ' . $bd . ' è pertinente per l\'articolo ' . $v['id_articolo'] . ' nel carrello ' . $carrello['id'], 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+
+                        if( $qb[ $bd ] > 0 ) {
+                            logger( 'per l\'articolo ' . $a . ' la quantità ' . $qa . ' è forzata a ' . $qb[ $bd ] . ' per il bundle ' . $bd . ' in quanto ha il flag conf_bundle settato a ' . $ma['conf_bundle'], 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+                            $qa = $qb[ $bd ];
+                        } else {
+                            logger( 'l\'articolo ' . $a . ' ha settato correttamente il flag conf_bundle (' . $ma['conf_bundle'] . ') ma la quantità di bundle è ' . $qb[ $bd ] . ' per il bundle ' . $bd . ' quindi non effettuo conversione di quantità', 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+                        }
+
                     } else {
-                        logger( 'l\'articolo ' . $a . ' ha settato correttamente il flag conf_bundle (' . $ma['conf_bundle'] . ') ma la quantità di bundle è ' . $qb[ $bd ] . ' per il bundle ' . $bd . ' quindi non effettuo conversione di quantità', 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+
+                        // log
+                        logger( '- il bundle ' . $bd . ' non è pertinente per l\'articolo ' . $v['id_articolo'] . ' nel carrello ' . $carrello['id'], 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+
                     }
+
                 } else {
                     logger( 'l\'articolo ' . $a . ' non ha il flag conf_bundle settato quindi non effettuo conversione di quantità', 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
                 }
+
             }
 
             // memorizzo il risultato

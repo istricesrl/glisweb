@@ -159,11 +159,14 @@
             // trovo il prezzo per il bundle
             if( ! empty( $qb ) ) {
 
+                // log
+                // logger( 'valuto i bundle per l\'articolo ' . $a . ': ' . print_r( $qb, true ), 'details/listini/prezzi/articolo.' . $a );
+
                 // ...
                 foreach( $qb as $bp => $qbn ) {
 
                     // logger
-                    logger( 'valuto il bundle ' . $bp . ' quantità ' . $qbn, 'details/listini/prezzi/articolo.' . $a );
+                    logger( 'valuto il bundle (netto) ' . $bp . ' quantità ' . $qbn . ' per ' . $a, 'details/listini/prezzi/articolo.' . $a );
 
                     // i metadati del prodotto
                     $mp = mysqlSelectCachedRow(
@@ -231,13 +234,15 @@
                             array( 's' => $date )
                         )
                     );
-/*
+
+                    /*
                     if( ! empty( $p3r ) ) {
                         logger( 'rilevato prezzo ' . $p3 . ' su listino ' . $l . ' quantità di bundle ' . $qbn, 'listini' );
                     } else {
                         logger( 'non ho rilevato un prezzo per il bundle ' . $bp . ' su listino ' . $l . ' quantità di bundle ' . $qbn, 'listini' );
                     }
-*/
+                    */
+
                     if( ! empty( $sc1r ) ) {
                         logger( 'per il bundle ' . $bp . ' ho rilevato il prezzo ' . $sc1r . ' su listino ' . $l . ' quantità di bundle ' . $qbn, 'details/listini/prezzi/articolo.' . $a );
                         $sc1 = $sc1r;
@@ -295,11 +300,13 @@
                             AND id_listino = ?
                             AND ( qta_min IS NULL OR qta_min <= ? )
                             AND ( data_inizio IS NULL OR data_inizio <= ? )
+                            AND ( data_fine IS NULL OR data_fine > ? ) )
                             ORDER BY data_inizio DESC, qta_min DESC',
                             array(
                                 array( 's' => $a ),
                                 array( 's' => $mp['conf_rif_sconto'] ),
                                 array( 's' => $qa ),
+                                array( 's' => $date ),
                                 array( 's' => $date )
                             )
                         );
@@ -312,12 +319,15 @@
                             AND id_listino = ?
                             AND ( ( data_inizio IS NULL OR data_inizio < ? ) 
                             AND ( data_fine IS NULL OR data_fine > ? ) )
+                            AND ( qta_min IS NULL OR qta_min <= ? )
                             AND prezzo IS NOT NULL
                             ORDER BY data_inizio DESC, qta_min DESC',
                             array(
                                 array( 's' => $a ),
                                 array( 's' => $mp['conf_rif_sconto'] ),
-                                array( 's' => $date )
+                                array( 's' => $date ),
+                                array( 's' => $date ),
+                                array( 's' => $qa )
                             )
                         );
 
@@ -405,7 +415,7 @@
             logger( 'per ' . $a . ' rilevate quantità ' . $qa . ' (articolo), ' . $qp . ' (prodotto) e ' . $qbn . ' (bundle) prezzo ' . $r, 'listini' );
 
             // log
-            logger( 'per l\'articolo ' . $a . ' ho scelto il prezzo ' . $r, 'details/listini/prezzi/articolo.' . $a );
+            logger( 'per l\'articolo ' . $a . 'x' . $qa . ' ho scelto il prezzo ' . $r, 'details/listini/prezzi/articolo.' . $a );
 
             // se c'è uno sconto bundle
             if( ! empty( $sc1 ) ) {
