@@ -46,6 +46,11 @@
         // globalizzazione di $cf
         global $cf;
 
+        // ...
+        if( empty( $carrello['articoli'] ) ) {
+            $carrello['articoli'] = $_SESSION['carrello']['articoli'];
+        }
+
         // timer
         timerCheck( $cf['speed'], '-> -> inizio calcolo quantità carrello per articolo #' . $a );
 
@@ -60,7 +65,8 @@
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
             $a,
-            ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $carrello['id_listino'] ),
+            // ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $carrello['id_listino'] ),
+            ( ( ! empty( $carrello['articoli'][ $rowKey ]['id_listino'] ) ) ? $carrello['articoli'][ $rowKey ]['id_listino'] : $carrello['id_listino'] ),
             $qs[0],
             $qs[1],
             $qs[2],

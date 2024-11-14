@@ -185,7 +185,7 @@
                     logger( 'metadati per ' . $bp . ': ' . print_r( $mp, true ), 'listini' );
 
                     // log
-                    logger( 'calcolo il prezzo per il bundle ' . $bp, 'listini' );
+                    logger( 'calcolo il prezzo netto per il bundle ' . $bp, 'listini' );
 
                     // $bp = array_shift( array_keys( $qb ) );
                     // $qbn = array_shift( $qb );
@@ -358,6 +358,8 @@
 
                         // log
                         logger( 'non è stato rilevato un listino di riferimento per lo sconto', 'details/listini/prezzi/articolo.' . $a );
+
+                        logger( 'dettagli: ' . $sc1 . ' ' . ( ( ! empty( $mp['conf_rif_sconto'] ) ) ? $mp['conf_rif_sconto'] : 'conf_rif_sconto vuota' ), 'details/listini/prezzi/articolo.' . $a );
 
                     }
 
