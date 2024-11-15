@@ -526,7 +526,7 @@
 	    fullPath( $dobj . 'tmp/' );
 	    $pdf->Output( $dobj.'.pdf', 'FI' );				// salva il file localmente e invia l'output al browser
 	} else {
-	    $pdf->Output( $dobj.'.pdf', 'I');								// invia l'output al browser
+	    $pdf->Output( $dobj.'.pdf','F');								// invia l'output al browser
 	}
 
 */

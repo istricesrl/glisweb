@@ -116,7 +116,7 @@
 	if( isset( $_REQUEST['d'] ) ) {
 	    $pdf->Output($dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto
 	} elseif( isset( $_REQUEST['f'] ) ) {
-	    $pdf->Output( $dobj.'.pdf', 'I' );				// salva il file localmente
+	    $pdf->Output( $dobj.'.pdf', 'F' );				// salva il file localmente
 	} elseif( isset( $_REQUEST['fi'] ) ) {
 	    $pdf->Output( $dobj.'.pdf', 'FI' );				// salva il file localmente e invia l'output al browser
 	} else {

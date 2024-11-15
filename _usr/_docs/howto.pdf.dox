@@ -73,7 +73,7 @@
             $pdf->Output($dobj.'.pdf' , 'D' );
         } elseif( isset( $_REQUEST['f'] ) ) {
             // salva il file localmente
-            $pdf->Output( $dobj.'.pdf', 'I' );
+            $pdf->Output( $dobj.'.pdf','F' );
         } elseif( isset( $_REQUEST['fi'] ) ) {
             // salva il file localmente e invia l'output al browser
             $pdf->Output( $dobj.'.pdf', 'FI' );

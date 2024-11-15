@@ -30,7 +30,7 @@ COME CREARE UNA STAMPA NEL FRAMEWORK
 	if( isset( $_REQUEST['d'] ) ) {
 	    $pdf->Output( $documento.'.pdf' , 'D' );		// invia l'output al browser per il download diretto
 	} elseif( isset( $_REQUEST['f'] ) ) {
-	    $pdf->Output( $documento.'.pdf', 'I' );			// salva il file localmente
+	    $pdf->Output( $documento.'.pdf','F' );			// salva il file localmente
 	} elseif( isset( $_REQUEST['fi'] ) ) {
 	    $pdf->Output( $documento.'.pdf', 'FI' );		// salva il file localmente e invia l'output al browser
 	} else {
