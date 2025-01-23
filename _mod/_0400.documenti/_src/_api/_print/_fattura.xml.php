@@ -208,15 +208,15 @@
 	if( empty( $dati['dst']['partita_iva'] ) && ( !empty($dati['dst']['cognome']) ) ) {
 
 	    // - - - - - Nome / il nome del cliente privato
-		$xml->writeElement( 'Nome', $dati['dst']['nome'] );
+		$xml->writeElement( 'Nome', xmlEntities( $dati['dst']['nome'] ) );
 
 	    // - - - - - Cognome / il cognome del cliente privato
-		$xml->writeElement( 'Cognome', $dati['dst']['cognome'] );
+		$xml->writeElement( 'Cognome', xmlEntities( $dati['dst']['cognome'] ) );
 
 	} else {
 
-	    // - - - - - Denominazione / la denominazione del cliente aziendale
-		$xml->writeElement( 'Denominazione', $dati['dst']['denominazione_fiscale'] );
+	    // - - - - - Denominazione / la denominazione del cliente
+		$xml->writeElement( 'Denominazione', xmlEntities( $dati['dst']['denominazione_fiscale'] ) );
 
 	}
 
@@ -296,17 +296,15 @@
 
 		$xml->writeElement( 'IdDocumento', $dati['doc']['riferimento']);
 
-		$xml->writeElement( 'CodiceCIG', $dati['doc']['cig'] );
-
-		if(!empty( $dati['doc']['cup'] )){
+		if( ! empty( $dati['doc']['cup'] ) ) {
 			$xml->writeElement( 'CodiceCUP', $dati['doc']['cup'] );
-			
 		}
+
+		$xml->writeElement( 'CodiceCIG', $dati['doc']['cig'] );
 
 		// - - - /DatiOrdineAcquisto
 		$xml->endElement();
 
-	
 	}
 
 	// ciclo sulle fatture collegate

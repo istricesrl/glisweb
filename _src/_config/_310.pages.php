@@ -198,11 +198,15 @@
      *
      */
 
+    // debug
+    // die( 'inizio ' . __FILE__ );
+
     // verifica della cache
     if( $cf['contents']['cached'] === false ) {
 
         // debug
         // print_r( $cf['localization']['language'] );
+        // die( 'contenuti non cacheati' );
 
         // log
         if( ! empty( $cf['memcache']['connection'] ) ) {
@@ -234,6 +238,7 @@
         // echo DIRECTORY_BASE . $mods . $folder . '.' . $lingue . '.php' . PHP_EOL;
         // print_r( $arrayPagineBase );
         // print_r( $arrayPagineModuli );
+        // die( print_r( $arrayPagineBase, true ) . PHP_EOL . print_r( $arrayPagineModuli, true ) );
 
         // ordinamento
         asort( $arrayPagineBase );
@@ -241,6 +246,9 @@
 
         // semplificazione
         $arrayPagine            = array_unique( array_merge( $arrayPagineBase , $arrayPagineModuli ) );
+
+        // debug
+        // die( print_r( $arrayPagine, true ) );
 
         // inclusione dei files delle pagine
         foreach( $arrayPagine as $pagina ) {
@@ -256,6 +264,9 @@
             // includo il file delle pagine
             require $pagina;
 
+            // log
+            loggerLatest( 'incluso file delle pagine ' . $pagina );
+
             // se esiste la versione custom del file...
             if( file_exists( path2custom( $pagina ) ) ) {
 
@@ -269,6 +280,9 @@
 
                 // includo il file delle pagine custom
                 require path2custom( $pagina );
+
+                // log
+                loggerLatest( 'incluso file delle pagine custom ' . path2custom( $pagina ) );
 
             }
 
@@ -295,6 +309,7 @@
 
         // debug
         // echo $cf['contents']['updated'];
+        // die( 'fine inclusione pagine' );
 
         // configurazione extra per sito
         // TODO spiegare meglio cosa fa questa cosa
@@ -307,8 +322,9 @@
     }
 
     // debug
-    // echo '300 STANDARD' . PHP_EOL;
+    // echo __FILE__ . PHP_EOL;
     // print_r( $cf['contents']['pages'][ NULL ] );
     // print_r( $cf['localization']['language'] );
     // print_r( $cf['contents']['pages']['licenza']['content'] );
     // print_r( $arrayPagine );
+    // die( 'fine ' . __FILE__ );

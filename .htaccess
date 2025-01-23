@@ -181,7 +181,7 @@ Options -Indexes
 
     # gestione dell'API di download generica
     # questa regola reindirizza qualunque richiesta diretta al contenuto di var/ all'api _src/_api/_download.php (vedi la documentazione dell'API per i dettagli)
-    RewriteRule ^var/(.+)$ _src/_api/_download.php?__download__=var/$1 [B,L,QSA]
+    RewriteRule ^var/(\s.+)$ _src/_api/_download.php?__download__=$1 [L,QSA]
 
     # gestione dell'API di download per il mailing
     # questa regola reindirizza qualunque richiesta del tipo mailing/<idMailing>/var/<risorsa>
