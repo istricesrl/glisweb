@@ -18,6 +18,7 @@
 
     // debug
     // print_r( $_REQUEST['__pagamenti__'] );
+    // die( print_r( $_REQUEST['__carrello__'], true ) );
 
     // pagine di default
     $cf['ecommerce']['pages']['acquisto']		    = 'carrello';			                            // pagina di visualizzazione articoli aggiunti, gestisce anche l'aggiunta vera e propria
