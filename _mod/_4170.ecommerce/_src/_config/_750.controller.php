@@ -422,6 +422,8 @@
 
                 foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
                     // TODO se $key è empty, costruire come id_articolo + id_anagrafica se id_articolo non è vuoto
+                    $rKey = $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL );
+                    $key = ( $key != $rKey ) ? $rKey : $key;
                     if( ! empty( $key ) ) {
                         // $deltaArticoli[ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array(
                         $deltaArticoli[ $key ] = array(
@@ -698,39 +700,83 @@
 
             // TODO se è stato inviato un codice coupon generale per il carrello lo aggiungo alla carrelli_coupon
             // TODO qui gestire l'aggiunta dei coupon a carrelli_coupon
-            if( $_SESSION['carrello']['codice_coupon'] ) {
+            if( $_REQUEST['__carrello__']['codice_coupon'] ) {
 
-                // TODO verifico se il coupon può essere utilizzato con questo carrello
+                // ...
+                $_SESSION['carrello']['id_coupon'] = $_REQUEST['__carrello__']['codice_coupon'];
 
-                // TODO aggiungo il coupon alla carrelli_coupon per id_carrello ed eventualmente anche per id_carrelli_articoli
+            } elseif( $_REQUEST['__carrello__']['id_coupon'] ) {
 
-                // debug
-                // $_SESSION['carrello']['id_coupon'] = 1;
-
-            } else {
-
-                // rimuovo il coupon inutilizzabile
-                // $_SESSION['carrello']['id_coupon'] = NULL;
+                // ...
+                $_SESSION['carrello']['id_coupon'] = $_REQUEST['__carrello__']['id_coupon'];
 
             }
 
             // TODO qui fare un ciclo e per ogni coupon calcolare il valore poi incrementare il campo totale_lordo_coupon del carrello
             if( ! empty( $_SESSION['carrello']['id_coupon'] ) ) {
 
-                // TODO calcolo il valore percentuale del coupon se applicabile
+                // prelevo i dettagli relativi al coupon
+                $coupon = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM coupon WHERE id = ?',
+                    array( array( 's' => $_SESSION['carrello']['id_coupon'] ) )
+                );
 
                 // debug
-                $_SESSION['carrello']['sconto_percentuale_coupon'] = 10;
+                // die( print_r( $coupon, true ) );
 
-                // TODO calcolo il valore assoluto del coupon (direttamente o in conseguenza dello sconto percentuale)
+                // TODO verifico se il coupon può essere utilizzato con questo carrello
+                if( true ) {
 
-                // debug
-                $_SESSION['carrello']['sconto_valore_coupon'] = 100;
+                    // TODO aggiungo il coupon alla carrelli_coupon per id_carrello ed eventualmente anche per id_carrelli_articoli
+
+                    // TODO calcolo il valore percentuale del coupon se applicabile
+                    if( ! empty( $coupon['sconto_fisso'] ) ) {
+
+                        // ...
+                        $_SESSION['carrello']['sconto_valore_coupon'] = $coupon['sconto_fisso'];
+
+                        // ...
+                        $_SESSION['carrello']['sconto_percentuale_coupon'] = $_SESSION['carrello']['sconto_valore_coupon'] / $_SESSION['carrello']['prezzo_lordo_totale'] * 100;
+
+                        // debug
+                        // $_SESSION['carrello']['sconto_percentuale_coupon'] = 10;
+
+                    }
+
+                    // TODO calcolo il valore assoluto del coupon (direttamente o in conseguenza dello sconto percentuale)
+                    if( ! empty( $coupon['sconto_percentuale'] ) ) {
+
+                        // ...
+                        $_SESSION['carrello']['sconto_percentuale_coupon'] = $coupon['sconto_percentuale'];
+
+                        // ...
+                        $_SESSION['carrello']['sconto_valore_coupon'] = $_SESSION['carrello']['prezzo_lordo_totale'] / 100 * $_SESSION['carrello']['sconto_percentuale_coupon'];
+
+                        // debug
+                        // $_SESSION['carrello']['sconto_valore_coupon'] = 100;
+
+                    }
+
+                    // calcolo il prezzo lordo finale
+                    $_SESSION['carrello']['prezzo_lordo_finale'] = $_SESSION['carrello']['prezzo_lordo_totale'] - $_SESSION['carrello']['sconto_valore_coupon'];
+
+                } else {
+
+                    // debug
+                    // die( 'coupon ' . $_SESSION['carrello']['id_coupon'] . ' non utilizzabile' );
+
+                    // rimuovo il coupon inutilizzabile
+                    $_SESSION['carrello']['id_coupon'] =
+                    $_SESSION['carrello']['sconto_valore_coupon'] =
+                    $_SESSION['carrello']['sconto_percentuale_coupon'] = NULL;
+
+                }
 
             } else {
 
                 // rimuovo il coupon inutilizzabile
-                $_SESSION['carrello']['codice_coupon'] =
+                $_SESSION['carrello']['id_coupon'] =
                 $_SESSION['carrello']['sconto_valore_coupon'] =
                 $_SESSION['carrello']['sconto_percentuale_coupon'] = NULL;
 
