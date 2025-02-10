@@ -5756,6 +5756,8 @@ CREATE OR REPLACE VIEW `metadati_view` AS
 		metadati.id_tipologia_contratti,
 		metadati.id_account_inserimento,
 		metadati.id_account_aggiornamento,
+		metadati.nome,
+		metadati.testo,
 		concat(
 			metadati.nome,
 			':',
