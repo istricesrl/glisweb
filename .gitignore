@@ -9,6 +9,13 @@
 /src
 /src/ext/shadow.*
 /src/shadow.*
+src/py/*/*/.buildozer/
+src/py/*/*/bin/
+src/py/*/*/include/
+src/py/*/*/lib/
+src/py/*/*/lib64/
+src/py/*/*/share/
+src/py/*/*/lib64
 /tmp
 /usr
 /var
@@ -19,3 +26,4 @@
 /*.txt
 .#*
 *.old
+*.log

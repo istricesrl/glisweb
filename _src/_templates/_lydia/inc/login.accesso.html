@@ -1,6 +1,7 @@
 {% import '_bin/_default.html' as cms %}
 {% import '_bin/_privacy.html' as prv %}
 
+<!-- file incluso: {{ _self }} -->
 <form action="{{ page.path[ localization.language.ietf ] }}" class="" id="formLogin" method="post">
 	{% for e,d in request %}{% if d.id %}
 	<input type="hidden" name="{{ e }}[id]" value="{{ d.id }}">

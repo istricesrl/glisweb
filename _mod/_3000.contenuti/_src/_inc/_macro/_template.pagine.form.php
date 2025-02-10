@@ -19,6 +19,12 @@
      *
      */
 
+    // debug
+    // print_r( $cf['debug'] );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
+    // echo 'OUTPUT';
+
     // tabella gestita
 	$ct['form']['table'] =  '__templates__';
 
@@ -87,22 +93,14 @@
     // directory del template
     $base = DIR_BASE . '_src/_templates/_' . $_REQUEST[ $ct['form']['table'] ]['id'];
 
-    // debug
-    // die( $base );
-
     // file del template
     $files = getRecursiveFileList( $base, true );
-
-    // ...
-    // sort( $files );
 
     // debug
     // die( print_r( $files, true ) );
 
     // dati della vista
     foreach( $files as $file ) {
-        // die( $file );
-        // die( dirname( $file ) );
         $key = path2custom( $file );
         $ct['view']['data'][ $key ] = array(
             'id' => $_REQUEST[ $ct['form']['table'] ]['id'],
@@ -113,12 +111,8 @@
             'template' => $_REQUEST[ $ct['form']['table'] ]['id'],
             'modulo' => NULL,
             '__label__' => str_replace( $base, '', $file )
-            // '__label__' => $file
         );
     }
-
-    // debug
-    // die( print_r( $ct['view']['data'], true ) );
 
     // directory del template
     $base = path2custom( $base );
@@ -144,7 +138,7 @@
     // dati della vista per i moduli
     foreach( $cf['mods']['active']['array'] as $mod ) {
         $base = DIR_MOD . '_' . $mod . '/_src/_templates/_' . $_REQUEST[ $ct['form']['table'] ]['id'];
-        $files = getRecursiveFileList( $base );
+        $files = getRecursiveFileList( $base, true );
         foreach( $files as $file ) {
             $key = path2custom( $file );
             $ct['view']['data'][ $key ] = array(

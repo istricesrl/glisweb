@@ -122,6 +122,14 @@
 		    // chiudo il file base
 			fclose( $h );
 
+			// log
+			logWrite( 'completato caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_ERR );
+
+		} else {
+
+			// log
+			logWrite( 'caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_ERR );
+
 		}
 
 	    // risposta ajax

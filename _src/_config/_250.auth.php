@@ -75,6 +75,22 @@
         'contatti' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
+        'comuni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
+        'provincie' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
+        'regioni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
+        'stati' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users', 'guests' )
+        ),
 
         // TODO l'ordine alfabetico arriva fin qui
 
@@ -623,14 +639,6 @@
         ),
         'categorie_anagrafica' => array(
             CONTROL_FULL => array( 'roots','staff' )
-        ),
-        'comuni' => array(
-            CONTROL_FULL => array( 'roots' ),
-            METHOD_GET => array( 'staff', 'users', 'guests' )
-        ),
-        'stati' => array(
-            CONTROL_FULL => array( 'roots' ),
-            METHOD_GET => array( 'staff', 'users', 'guests' )
         ),
         'contenuti' => array(
             CONTROL_FULL => array( 'roots' ,'staff'),

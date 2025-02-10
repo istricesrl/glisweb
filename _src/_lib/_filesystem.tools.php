@@ -1095,11 +1095,16 @@
         // inizializzo l'array
         $r = array();
 
-        // ciclo sul contenuto
-        foreach( getFolderIterator( $d ) as $f ) {
-            if( $f->isFile() ) {
-                $r[] = ( $s === true ) ? $f->getRealPath() : $f->getFileName();
+        // se la cartella è leggibile
+        if( is_dir( $d ) && is_readable( $d ) ) {
+
+            // ciclo sul contenuto
+            foreach( getFolderIterator( $d ) as $f ) {
+                if( $f->isFile() ) {
+                    $r[] = ( $s === true ) ? $f->getRealPath() : $f->getFileName();
+                }
             }
+
         }
 
         // restituisco l'array

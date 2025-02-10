@@ -27,7 +27,7 @@
                     ( ( isset( $_REQUEST['__template_files__']['folder'] ) ) ? $_REQUEST['__template_files__']['folder'] : NULL ) .
                     '/' . $_REQUEST['__template_files__']['id'];
             } else {
-                $base = DIR_BASE . '_src/_templates/' . 
+                $base = '_src/_templates/' . 
                     '_' . $_REQUEST['__templates__']['id'] . 
                     ( ( isset( $_REQUEST['__template_files__']['folder'] ) ) ? $_REQUEST['__template_files__']['folder'] : NULL ) .
                     '/' . $_REQUEST['__template_files__']['id'];
@@ -39,8 +39,8 @@
 
             // ...
             // if( realpath( $base ) !== $base ) {
-            if( absolutePath( $base ) !== $base ) {
-                // die( $base . ' è diverso da ' . absolutePath( $base ) );
+            if( trim( absolutePath( $base ), '/' ) !== $base ) {
+                die( absolutePath( $base ) . ' !== ' . $base );
                 die( 'sorry guy, not your lucky day' );
             }
 
@@ -60,7 +60,7 @@
 
                 // ...
                 writeToFile( $_REQUEST['__template_files__']['contenuto'], $custom );
-/*
+
             } elseif( ! file_exists( $custom ) ) {
 
                 // debug
@@ -69,7 +69,7 @@
 
                 // ...
                 writeToFile( '', $custom );
-*/
+
             }
 
             // cerco il contenuto custom e se non esiste prendo lo standard

@@ -242,6 +242,7 @@
 					buildJson( $response );
 				break;
 				default:
+					logger( $_REQUEST['__ws__'] . '/' . $_SERVER['REQUEST_METHOD'] . ' ' . $ack . ' -> 406 not acceptable', 'rest', LOG_ERR );
 					http_response_code( 406 );
 				break;
 			}

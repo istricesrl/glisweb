@@ -242,8 +242,8 @@
             function( $a, $b ) use ( $fields, $direction ) {
                 $direction = ( $direction == ARRAY_SORT_ASC ) ? -1 : 1;
                 foreach( $fields as $field ) {
-                    $a = strtolower( $a[ $field ] );
-                    $b = strtolower( $b[ $field ] );
+                    $a = ( isset( $a[ $field ] ) ) ? strtolower( $a[ $field ] ) : 0;
+                    $b = ( isset( $b[ $field ] ) ) ? strtolower( $b[ $field ] ) : 0;
                     if ( empty( $a ) && ! empty( $b ) ) return -1 * $direction;
                     if ( ! empty( $a ) && empty(  $b ) ) return 1 * $direction;
                     if ( $a > $b ) return -1 * $direction;
