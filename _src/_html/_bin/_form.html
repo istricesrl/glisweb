@@ -109,7 +109,7 @@
 {# NOTA if per retrocompatibilità con le chiamate che passano ancora le stringhe estese degli URL #}
 {% if not vl %}{% set vl = default %}{% endif %}
 {% if not vl and request.__preset__[ table ][ field ] %}{% set vl = request.__preset__[ table ][ field ] %}
-{% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}<!-- TEST -->{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
+{% elseif not vl and request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% set vl = request.__preset__[ table ][ subtable ][ counter ][ field ] %}{% endif %}
 {% if not bl and vl %}{% set bl = vl %}{% endif %}
 {% if key %}
     {% set editor = pages[ edit ].path[ ietf ] ~ '?' ~ entity ~ '[id]=' ~ bl ~ '&__backurl__=' ~ page.backurl[ ietf ] %}
