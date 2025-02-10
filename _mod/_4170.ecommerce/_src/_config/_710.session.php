@@ -93,3 +93,4 @@
 
     // debug
     // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+    // die( print_r( $_REQUEST['__carrello__'], true ) );
