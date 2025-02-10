@@ -107,7 +107,11 @@
             // 'action'        => 4,                                               // richiesta di autorizzazione
             'operationType' => 'initialize',                                    // tipo di operazione
             // 'amt'           => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_totale'] ) ),   // totale lordo del carrello
+        
+            // SDF 13-12-2024 sostituito prezzo_lordo_totale con prezzo_lordo_finale altrimenti se ci sono sconti si manda al pagamento del prezzo non scontato
+        #    'amount'        => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_totale'] ) ),   // totale lordo del carrello
             'amount'        => str_replace( ',', '.', sprintf( '%0.2f', $c['prezzo_lordo_finale'] ) ),   // totale lordo del carrello
+        
             'currencycode'  => 978,                                             // euro
             // 'langid'        => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU)
             'language'      => 'ITA',                                           // lingua della pagina di pagamento (ITA, USA, SPA, FRA, DEU, RUS)
