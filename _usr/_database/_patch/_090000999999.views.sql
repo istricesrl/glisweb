@@ -2963,6 +2963,7 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.sconto_fisso,
 		coupon.se_multiuso,
 		coupon.se_globale,
+		coupon.se_vincolato,
 		coupon.causale,
 		coupon.causale_id_contratto,
 		coupon.id_account_inserimento,

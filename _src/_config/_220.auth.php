@@ -79,5 +79,8 @@
 
     }
 
+    // ...
+    $cf['session']['auth']['status'] = $cf['auth']['status'];
+
     // debug
     // print_r( $cf['localization']['language'] );

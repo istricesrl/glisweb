@@ -725,8 +725,36 @@
                 // debug
                 // die( print_r( $coupon, true ) );
 
+                // ...
+                $couponOk = true;
+
+                // se il coupon è vincolato
+                if( $coupon['se_vincolato'] == 1 ) {
+
+                    // recupero i vincoli di articolo
+                    $vincoliArticolo = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT * FROM coupon_articoli WHERE id_coupon = ? ORDER BY coupon_articoli.gruppo_alternative ASC',
+                        array( array( 's' => $_SESSION['carrello']['id_coupon'] ) )
+                    );
+
+                    // ...
+                    $arrayAlternative = array();
+
+                    // per ogni articolo vincolato controllo che sia nel carrello
+                    foreach( $vincoliArticolo as $vincolo ) {
+
+                        // ...
+                        $arrayAlternative[ $vincolo['gruppo_alternative'] ][] = $vincolo['id_articolo'];
+
+                    }
+
+                    // per ogni gruppo, controllo che abbia almeno un membro nel carrello
+
+                }
+
                 // TODO verifico se il coupon può essere utilizzato con questo carrello
-                if( true ) {
+                if( $couponOk ) {
 
                     // TODO aggiungo il coupon alla carrelli_coupon per id_carrello ed eventualmente anche per id_carrelli_articoli
 

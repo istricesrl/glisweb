@@ -100,6 +100,11 @@
                         {{ frm.checkbox( table, '', '', 'se_globale', 'globale', '', request ) }}
                     </div>
                 </div>
+                <div class="col-auto col-form-label">
+                    <div class="form-check">
+                        {{ frm.checkbox( table, '', '', 'se_vincolato', 'vincolato', '', request ) }}
+                    </div>
+                </div>
             </div>
 
         </fieldset>
@@ -133,10 +138,10 @@
         {{ sub.categorie( table, 'coupon_categorie_prodotti', 'categorie prodotti', site, page, pages, localization.language.ietf, etc, request, session, 'id_coupon' ) }}
 
         {# SUBFORM CATEGORIE DEL PRODOTTO #}
-        {{ sub.prodotti( table, 'prodotti', 'prodotti', site, page, pages, localization.language.ietf, etc, request, session, 'id_coupon' ) }}
+        {{ sub.prodotti( table, 'coupon_prodotti', 'prodotti', site, page, pages, localization.language.ietf, etc, request, session, 'id_coupon' ) }}
 
         {# SUBFORM CATEGORIE DEL PRODOTTO #}
-        {{ sub.articoli( table, 'articoli', 'articoli', site, page, pages, localization.language.ietf, etc, request, session, 'id_coupon' ) }}
+        {{ sub.articoli( table, 'coupon_articoli', 'articoli', site, page, pages, localization.language.ietf, etc, request, session, 'id_coupon' ) }}
 
         {# BOTTONI E COMANDI DEL MODULO #}
 	    <fieldset class="form-controls mt-auto">
