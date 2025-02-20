@@ -148,6 +148,10 @@
 			<span class="label-top">articolo</span>
 			{{ frm.selectBox( table, subtable, i, 'id_articolo', '', '', request, '', '', '1', '', '', '', '', 'articoli', field, page, pages, ietf, 'articoli', disabled ) }}
 			</div>
+            <div class="col">
+                <span class="label-top">gruppo alternative</span>
+                {{ frm.input( table, subtable, i, 'gruppo_alternative', '', '', request, '', '', '', '', disabled ) }}
+            </div>
 			{% if r.id %}
 			<div class="col-auto text-right remove-on-duplicate d-print-none">
 			{{ frm.trashButton( table, subtable, page, pages, r, lang, request ) }}

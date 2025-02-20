@@ -463,6 +463,10 @@
                 CONTROL_FULL => array('roots'),
                 CONTROL_FILTERED => array('staff')
         ),
+        'coupon_articoli' => array(
+                CONTROL_FULL => array('roots'),
+                CONTROL_FILTERED => array('staff')
+        ),
         'coupon_listini' => array(
                 CONTROL_FULL => array('roots'),
                 CONTROL_FILTERED => array('staff')
