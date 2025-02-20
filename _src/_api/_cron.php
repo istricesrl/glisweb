@@ -132,6 +132,9 @@
 				// log
 				logWrite( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
 
+                // log
+                appendToFile( 'eseguo il task ' . $task['id'] . ' -> ' . $task['task'] . PHP_EOL, FILE_LATEST_RUN );
+
 				// eseguo il task
                 if( ! empty( $task['iterazioni'] ) ) {
 
@@ -190,7 +193,10 @@
 
                 }
 		
-			} else {
+                // log
+                appendToFile( 'eseguito il task ' . $task['id'] . ' -> ' . $task['task'] . PHP_EOL, FILE_LATEST_RUN );
+
+            } else {
 
                 // status
                 $status['task'][ $task['id'] ]['errors'][] = 'il file di task ' . $task['task'] . ' non esiste';

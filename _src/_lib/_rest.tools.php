@@ -42,7 +42,7 @@
      * TODO documentare
      *
      */
-    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC, &$raw = NULL ) {
+    function restCall( $url, $method = METHOD_GET, $data = NULL, $datatype = MIME_APPLICATION_JSON, $answertype = MIME_APPLICATION_JSON, &$status = NULL, $headers = array(), $user = NULL, $pasw = NULL, &$error = NULL, $token = NULL, $auth = CURLAUTH_BASIC, &$raw = NULL, &$resHeaders = array() ) {
 
         // inizializzo l'oggetto CURL
         $curl = curl_init();
@@ -52,6 +52,19 @@
 
         // evito l'inclusione degli header nell'output
         curl_setopt( $curl, CURLOPT_HEADER, false );
+
+        // gestisco gli header di risposta
+        curl_setopt( $curl, CURLOPT_HEADERFUNCTION,
+            function( $curl, $header ) use ( &$resHeaders ) {
+                $len = strlen( $header );
+                $header = explode(':', $header, 2);
+                if (count($header) < 2) {
+                    return $len;
+                }
+                $resHeaders[ strtolower( trim( $header[0] ) ) ][] = trim( $header[1] );
+                return $len;
+            }
+        );
 
         // salto la verifica ssl
         curl_setopt( $curl, CURLOPT_SSL_VERIFYPEER, false );
