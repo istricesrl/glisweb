@@ -818,6 +818,24 @@
             // aggiornamento del flag se_login
             aggiornaFlagCarrelloSeLogin( $_SESSION['carrello'] );
 
+            // aggiornamento del flag arrotonda_prezzo_finale
+            aggiornaFlagCarrelloSeArrotondamento( $_SESSION['carrello'] );
+
+            // se è settato il flag arrotonda_prezzo_finale arrotondo il prezzo finale
+            if( $_SESSION['carrello']['arrotonda_prezzo_finale'] == 1 ) {
+
+                // debug
+                // die( 'arrotondo il prezzo finale ' . $_SESSION['carrello']['prezzo_netto_finale'] );
+                // die( 'arrotondo il prezzo finale ' . $_SESSION['carrello']['prezzo_lordo_finale'] );
+
+                // arrotondo il prezzo finale
+                // $_SESSION['carrello']['prezzo_netto_finale'] = sprintf( '%0.2f', round( $_SESSION['carrello']['prezzo_netto_finale'], 1 ) );
+                // $_SESSION['carrello']['prezzo_lordo_finale'] = sprintf( '%0.2f', round( $_SESSION['carrello']['prezzo_lordo_finale'], 1 ) );
+                $_SESSION['carrello']['prezzo_netto_finale'] = round( $_SESSION['carrello']['prezzo_netto_finale'], 1 );
+                $_SESSION['carrello']['prezzo_lordo_finale'] = round( $_SESSION['carrello']['prezzo_lordo_finale'], 1 );
+
+            }
+
             // timestamp di aggiornamento del carrello
             $_SESSION['carrello']['timestamp_aggiornamento'] = time();
 
@@ -830,6 +848,7 @@
                         'metadati' => array(),
                         'valuta_utf8' => NULL,
                         'se_login' => NULL,
+                        'arrotonda_prezzo_finale' => NULL,
                         'timestamp_inserimento' => NULL
                     )
                 ),

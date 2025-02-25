@@ -85,3 +85,32 @@
         // die( $carrello['se_login'] );
 
     }
+
+    function aggiornaFlagCarrelloSeArrotondamento( &$carrello ) {
+
+        global $cf;
+    
+        $ids = array_keys( $carrello['articoli'] );
+        $par = array();
+
+        // debug
+        // die( print_r( $ids, true ) );
+        // die( 'SELECT max( testo ) FROM metadati WHERE nome = "arrotonda_prezzo_finale" AND id_articolo IN (' . implode( ',', array_fill( 0, count( $ids ), '?' ) ) . ')' );
+
+        foreach( $ids as $id ) {
+            $par[] = array( 's' => $id );
+        }
+
+        // debug
+        // die( print_r( $par, true ) );
+
+        $carrello['arrotonda_prezzo_finale'] = ( empty( $ids ) ) ? NULL : mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max( testo ) FROM metadati_articoli WHERE nome = "arrotonda_prezzo_finale" AND id_articolo IN (' . implode( ',', array_fill( 0, count( $ids ), '?' ) ) . ')',
+            $par
+        );
+
+        // debug
+        // die( $carrello['arrotonda_prezzo_finale'] );
+
+    }
