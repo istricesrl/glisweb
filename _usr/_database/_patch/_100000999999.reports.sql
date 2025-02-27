@@ -209,6 +209,7 @@ CREATE TABLE `__report_corsi__` (
   `discipline` char(255) DEFAULT NULL,
   `livelli` char(255) DEFAULT NULL,
   `giorni_orari_luoghi` text DEFAULT NULL,
+  `dettagli` text DEFAULT NULL,
   `posti_disponibili` char(255) DEFAULT NULL,
   `lista_attesa` char(255) DEFAULT NULL,
   `stato` char(255) DEFAULT NULL,

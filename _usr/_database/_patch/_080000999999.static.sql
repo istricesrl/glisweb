@@ -244,6 +244,8 @@ CREATE TABLE `attivita_view_static` (
   `id_asset` int(11) DEFAULT NULL,
   `asset` char(255) DEFAULT NULL,
   `ore` decimal(5,2) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `quantita_prevista` decimal(9,2) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `documento` char(255) DEFAULT NULL,

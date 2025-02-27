@@ -1054,6 +1054,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.ora_inizio,
 		attivita.latitudine_ora_inizio,
 		attivita.longitudine_ora_inizio,
+		attivita.data_fine,
 		attivita.ora_fine,
 		attivita.latitudine_ora_fine,
 		attivita.longitudine_ora_fine,
@@ -1062,6 +1063,8 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		attivita.id_asset,
 		concat( asset2.id, ' ', asset2.nome ) AS asset,
 		attivita.ore,
+        documenti_articoli.id_articolo,
+        documenti_articoli.quantita AS quantita_prevista,
 		attivita.nome,
 		attivita.id_documento,
 		concat(
@@ -1138,6 +1141,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS
 		LEFT JOIN tipologie_corrispondenza ON tipologie_corrispondenza.id = corrispondenza.id_tipologia
 		LEFT JOIN asset AS asset1 ON asset1.id = attivita.id_asset
 		LEFT JOIN asset AS asset2 ON asset2.id = attivita.id_asset
+        LEFT JOIN documenti_articoli ON documenti_articoli.id = todo.id_documenti_articoli
 	GROUP BY attivita.id
 ;
 
