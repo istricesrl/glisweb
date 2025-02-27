@@ -225,6 +225,31 @@
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
 	);
 
+	// vista tipologie rinnovi
+	$p['tipologie.rinnovi.view'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'tipologie rinnovi' ),
+		'h1'		=> array( $l		=> 'tipologie rinnovi' ),
+		'parent'		=> array( 'id'		=> 'contratti.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.rinnovi.view.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.rinnovi.view' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'menu'		=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'tipologie rinnovi' ),
+									'priority'	=> '120' ) ) )
+	);
+
+	// gestione tipologie rinn
+	$p['tipologie.rinn.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione tipologie rinnovi' ),
+	    'h1'		=> array( $l		=> 'gestione tipologie rinnovi' ),
+	    'parent'		=> array( 'id'		=> 'tipologie.rinnovi.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'tipologie.rinnovi.form.html' ),
+		'macro'		=> array(  $m . '_src/_inc/_macro/_tipologie.rinnovi.form.php' ),
+		'etc'		=> array( 'tabs'	=> array( 'tipologie.rinnovi.form' ) ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )		
+	);
 
 	// vista rinnovi contratti
 	$p['rinnovi.contratti.view'] = array(

@@ -123,8 +123,10 @@
      */
     function splitAddress( $a ) {
 
+        // $a = strtolower( $a );
+
         // trovo il civico
-        preg_match( '/([0-9\/a-zA-Z]+)$/', $a, $pCivici );
+        preg_match( '/([0-9]+[\/0-9a-zA-Z]+)$/', $a, $pCivici );
         $pCivico = ( is_array( $pCivici ) && ! empty( $pCivici ) ) ? $pCivici[0] : NULL;
 
         // pulisco l'indirizzo
