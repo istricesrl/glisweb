@@ -114,3 +114,17 @@
         // die( $carrello['arrotonda_prezzo_finale'] );
 
     }
+
+    function checkArrotondamento( $articolo) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max( testo ) FROM metadati_articoli WHERE nome = "arrotonda_prezzo_finale" AND id_articolo = ?',
+            array(
+                array( 's' => $articolo )
+            )
+        );
+
+    }
