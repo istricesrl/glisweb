@@ -799,6 +799,9 @@ CREATE TABLE `carrelli_articoli` (
   `costo_spedizione_lordo` decimal(16,5) DEFAULT NULL,
   `sconto_percentuale` decimal(16,5) DEFAULT NULL,
   `sconto_valore` decimal(16,5) DEFAULT NULL,
+  `id_coupon` char(32) DEFAULT NULL,
+  `coupon_percentuale` decimal(16,5) DEFAULT NULL,
+  `coupon_valore` decimal(16,6) DEFAULT NULL,
   `prezzo_netto_finale` decimal(16,5) DEFAULT NULL,
   `prezzo_lordo_finale` decimal(16,5) DEFAULT NULL,
   `id_account_evasione` int(11) DEFAULT NULL,
@@ -1132,7 +1135,7 @@ CREATE TABLE IF NOT EXISTS `comuni` (
   `codice_istat` char(12) DEFAULT NULL,
   `codice_catasto` char(4) DEFAULT NULL,
   `url_riferimento` char(255) DEFAULT NULL,
-  `note` text DEFAULT NULL,
+  `note` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000006000
@@ -2741,7 +2744,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `importo_lordo_totale` decimal(9,2) DEFAULT NULL,
   `id_coupon` char(32) DEFAULT NULL,
   `coupon_valore` decimal(9,2) DEFAULT NULL,
-  `importo_lordo_finale` decimal(9,2) DEFAULT NULL;
+  `importo_lordo_finale` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_pianificazione` int(11) DEFAULT NULL, 
   `provider_pagamento` char(128) DEFAULT NULL,
@@ -2987,8 +2990,8 @@ CREATE TABLE IF NOT EXISTS `prezzi` (
   `prefisso` char(64) DEFAULT NULL,
   `prezzo` decimal(16,5) DEFAULT NULL,
   `suffisso` char(64) DEFAULT NULL,
-  `provvigione_percentuale` decimal(16,5) NOT NULL,
-  `provvigione_fissa` decimal(16,5) NOT NULL,
+  `provvigione_percentuale` decimal(16,5) DEFAULT NULL,
+  `provvigione_fissa` decimal(16,5) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_iva` int(11) DEFAULT NULL,
   `data_inizio` date DEFAULT NULL,
@@ -4365,6 +4368,7 @@ CREATE TABLE IF NOT EXISTS `tipologie_corrispondenza` (
   `nome` char(255) DEFAULT NULL,
   `se_massivo` tinyint(1) DEFAULT NULL,
   `se_corrispondenza` tinyint(1) DEFAULT NULL,
+  `se_pesata` tinyint(1) DEFAULT NULL,
   `se_atto` tinyint(1) DEFAULT NULL,
   `se_ricevuta_ritorno` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

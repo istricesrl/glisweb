@@ -46,7 +46,7 @@ INSERT IGNORE INTO `categorie_progetti` (`id`, `id_genitore`, `ordine`, `nome`, 
 -- certificazioni
 -- tipologia: tabella assistita
 -- verifica: 2022-02-03 11:12 Chiara GDL
-INSERT IGNORE INTO `certificazioni` (`id`, `nome`, `se_identificativo`, `se_medico`, `se_sportivo`, `se_agonistico`, `se_immobili`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+INSERT IGNORE INTO `certificazioni` (`id`, `nome`, `se_identificazione`, `se_medico`, `se_sportivo`, `se_agonistico`, `se_immobili`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
 (1,	'carta di identità',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	'passaporto',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	'patente di guida',	1,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
@@ -1210,7 +1210,7 @@ INSERT IGNORE INTO `stati` (`id`, `id_continente`, `iso31661alpha2`, `iso31661al
 -- stati_lingue
 -- tipologia: tabella standard
 -- verifica: 2021-10-12 15:42 Fabio Mosti
-INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`) VALUES
+INSERT IGNORE INTO `stati_lingue` (`id`, `id_stato`, `id_lingua`, `ordine`) VALUES
 (1,	1,	1,	1),
 (2,	12,	4,	1);
 

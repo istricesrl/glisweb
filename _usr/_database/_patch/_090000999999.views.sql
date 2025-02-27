@@ -1973,7 +1973,7 @@ CREATE OR REPLACE VIEW certificazioni_view AS
 	SELECT
 		certificazioni.id,
 		certificazioni.nome,
-		certificazioni.se_identificativo,
+		certificazioni.se_identificazione,
 		certificazioni.se_medico,
 		certificazioni.se_sportivo,
 		certificazioni.se_agonistico,
