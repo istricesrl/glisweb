@@ -68,7 +68,7 @@
         timerCheck( $cf['speed'], 'fine selezione job pinnato' );
 
         // ...
-        if( is_array( $job ) ) {
+        if( is_array( $job ) && ! empty( $job ) ) {
 
             // se il job è stato correttamente recuperato dal database
             if( isset( $job['workspace'] ) && ! empty( $job['workspace'] ) ) {

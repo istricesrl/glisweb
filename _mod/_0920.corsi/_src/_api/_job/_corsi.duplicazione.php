@@ -169,7 +169,7 @@
                     // prelevo i metadati
                     $metadati = mysqlQuery(
                         $cf['mysql']['connection'],
-                        'SELECT * FROM metadati WHERE id_articolo = ?',
+                        'SELECT * FROM metadati_articoli WHERE id_articolo = ?',
                         array( array( 's' => $articolo['id'] ) )
                     );
 
@@ -216,7 +216,7 @@
                         mysqlInsertRow(
                             $cf['mysql']['connection'],
                             $metadato,
-                            'metadati'
+                            'metadati_articoli'
                         );
 
                     }
@@ -383,11 +383,17 @@
                 $intervalliMax = explode( ',', $job['workspace']['sostituzioni']['intervallo_max'] );
             }
 
+            // debug
+            // die( 'numero lezioni: ' . count( $lezioni ) );
+
             // elaboro le lezioni
             foreach( $lezioni as $lezione ) {
 
                 // giorni di differenza fra la data di questa lezione e la data della lezione precedente nel vecchio calendario
                 $deltaGiorni = daysBetweenDates( $vecchiaDataLezione, $lezione['data_programmazione'] );
+
+                // debug
+                // die( 'delta giorni: ' . $deltaGiorni );
 
                 // ...
                 // if( ! empty( $job['workspace']['sostituzioni']['intervallo_max'] ) ) {
@@ -426,6 +432,9 @@
 
                 // aggiorno la vecchia data lezione
                 $vecchiaDataLezione = $lezione['data_programmazione'];
+
+                // debug
+                // die( 'data lezione: ' . $dataLezione );
 
                 // se sono ancora nel range...
                 if( $dataLezione <= $job['corso']['data_chiusura'] ) {
@@ -468,6 +477,9 @@
                     );
 
                 }
+
+                // debug
+                echo 'fine elaborazione lezione ' . $dataLezione . '<br>';
 
             }
 

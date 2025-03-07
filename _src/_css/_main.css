@@ -170,3 +170,21 @@ div.numero-verde div.telefono {
     -o-animation: fa-blink 1.3s linear infinite;
     animation: fa-blink 1.3s linear infinite;
 }
+
+/* tools per le griglie */
+
+.ratio-1x1 {
+    aspect-ratio: 1 / 1;
+}
+
+.ratio-2x1 {
+    aspect-ratio: 2 / 1;
+}
+
+@media screen and ( min-width: 760px ){
+
+.ratio-md-1x1 {
+    aspect-ratio: 1 / 1 !important;
+}
+
+}

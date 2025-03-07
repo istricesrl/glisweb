@@ -6,7 +6,7 @@
     // print_r( $_REQUEST );
 
     // checkout carrello
-    if( isset( $_REQUEST['ck_carrello'] ) ) {
+    if( isset( $_REQUEST['ck_carrello'] ) && ! empty( $_REQUEST['ck_carrello'] ) ) {
 
         // log
         logger( 'ricevuta richiesta di checkout diretto per il carrello #' . $_REQUEST['ck_carrello'], 'cassa' );
@@ -33,7 +33,7 @@
     }
 
     // ...
-    if( ! empty( $_REQUEST['ck_autoexport'] ) ) {
+    if( isset( $_REQUEST['ck_autoexport'] ) && ! empty( $_REQUEST['ck_autoexport'] ) ) {
 
         // ...
         $_REQUEST['__pagamenti__']['autoexport'] = $_REQUEST['ck_autoexport'];
@@ -338,7 +338,7 @@
             } else {
 
                 // ...
-                if( ! empty( $_REQUEST['ck_documento'] ) ) {
+                if( isset( $_REQUEST['ck_documento'] ) && ! empty( $_REQUEST['ck_documento'] ) ) {
 
                     // log
                     logger( 'creazione documento singolo', 'cassa' );
