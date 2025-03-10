@@ -19,13 +19,17 @@
 			console.log('controllo avanzamento');
 
 			getws( progress, '', function( data ) {
+                data = JSON.parse(data);
 				console.log( data );
 				$('#ftp-progress').attr('aria-valuemax',data.total);
 				$('#ftp-progress').attr('aria-valuenow',data.current);
 				$('#ftp-progress').css('width',(data.current/data.total*100)+'%');
+                console.log('corrente: ' + $('#ftp-progress').attr('aria-valuenow'));
+                console.log('totale: ' + $('#ftp-progress').attr('aria-valuemax'));
+                console.log('progress: ' + $('#ftp-progress').css('width'));
 			});
 
-		}, 1000);
+        }, 1000);
 
 		getws( call,'', function() {
 			$('#btnpubblica').html('<i class="fa fa-check"></i>');

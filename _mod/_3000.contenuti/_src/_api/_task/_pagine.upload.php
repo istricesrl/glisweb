@@ -212,14 +212,14 @@
                                 // ...
                                 $toFtp = array_merge(
                                     $toFtp,
-                                    getRecursiveFileList( path2custom( DIR_BASE . '/' . $template ) )
+                                    getRecursiveFileList( path2custom( DIR_BASE . '/' . $template ), true )
                                 );
 
                                 // dati della vista per i moduli
                                 foreach( $cf['mods']['active']['array'] as $mod ) {
                                     $toFtp = array_merge(
                                         $toFtp,
-                                        getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ) )
+                                        getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ), true )
                                     );
                                 }
 
@@ -311,15 +311,17 @@
 
                                                     // status
                                                     if( $ftpPut == false ) {
+                                                        $fail++;
                                                         $error = error_get_last();
                                                         $status['err'][] = 'impossibile trasferire ' . $to . ' (' . boolean2string( $ftpPut ) . ') errore: ' . $error['message'];
                                                         logger( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL . ' errore: ' . $error['message'], 'details/ftp.'.$base.'.fail' );
                                                         $esito = 'KO';
                                                     } else {
-                                                        $fail++;
+                                                        //$fail++;
+                                                        $done++;
                                                         $status['err'][] = 'impossibile trasferire ' . $to . ' (' . boolean2string( $ftpPut ) . ')';
                                                         logger( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL, 'details/ftp.'.$base.'.success' );
-                                                        $esito = 'KO';
+                                                        $esito = 'OK';
                                                     }
 
                                                     // ...
@@ -340,7 +342,9 @@
                                                                 'current' => ( $done + $fail ),
                                                                 'connection' => ( ( empty( $ftpConn ) ) ? 'NO' : 'OK' ),
                                                                 'login' => $ftpLogin,
-                                                                'server' => $ftpSrv['address']
+                                                                'server' => $ftpSrv['address'],
+                                                                // 'lista' => $toFtp,
+                                                                'status' => $status
                                                             )
                                                         ),
                                                         'var/progress/ftp.'.$_REQUEST['id'].'.progress'

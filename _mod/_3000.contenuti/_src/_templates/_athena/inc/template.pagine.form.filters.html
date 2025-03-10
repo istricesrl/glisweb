@@ -1,6 +1,6 @@
 <div class="form-row view-filters d-print-none">
     <div class="col-12 col-md-auto">
-		<select name="__view__[{{ view.id }}][__filters__][tipologie][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][tipologie][EQ]" onchange="submitFormOkay = true; $('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.tipologie.EQ == "" %}selected{% endif %}>tutti</option>
 			{% for o in etc.select.tipologie %}
 			<option value="{{ o.id }}" {% if request.__view__[ view.id ].__filters__.tipologie.EQ == o.id %}selected{% endif %}>{{ o.__label__ }}</option>
@@ -8,7 +8,7 @@
 		</select>
     </div>
     <div class="col-12 col-md-auto">
-		<select name="__view__[{{ view.id }}][__filters__][moduli][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+		<select name="__view__[{{ view.id }}][__filters__][moduli][EQ]" onchange="submitFormOkay = true; $('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.moduli.EQ == "" %}selected{% endif %}>tutti</option>
 			{% for o in etc.select.moduli %}
 			<option value="{{ o.id }}" {% if request.__view__[ view.id ].__filters__.moduli.EQ == o.id %}selected{% endif %}>{{ o.__label__ }}</option>
@@ -19,9 +19,9 @@
 		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>
     <div class="col-auto">
-		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
+		<button type="submit" class="btn btn-secondary btn-sqr btn-sm" onclick="submitFormOkay = true;"><i class="fa fa-search"></i></button>
 		{% if view.insert.path %}
-		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}{% for f,v in view.open.preset.fields %}&__preset__[{{ view.open.table }}][{{ f }}]={{ v }}{% endfor %}','_self');"><i class="fa fa-plus"></i></button>
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="submitFormOkay = true; window.open('{{ view.insert.path }}{% if view.open.preset.field %}?__preset__[{{ view.open.table }}]{% if view.open.preset.subform %}[{{ view.open.preset.subform }}][0]{% endif %}[{{ view.open.preset.field }}]={{ request[ form.table ].id }}{% endif %}{% if page.backurl %}{% if view.open.preset.field %}&{% else %}?{% endif %}__backurl__={{ page.backurl[ localization.language.ietf ] }}{% endif %}{% for f,v in view.open.preset.fields %}&__preset__[{{ view.open.table }}][{{ f }}]={{ v }}{% endfor %}','_self');"><i class="fa fa-plus"></i></button>
 		{% endif %}
 
 		{% for extra in view.insert.extras %}

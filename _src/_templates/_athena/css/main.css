@@ -313,6 +313,11 @@ legend small {
     height: 31px;
 }
 
+.form-control-codice {
+    font-family: monospace;
+    font-size: 1.1em;
+}
+
 textarea.form-control-sm {
     padding: 0.5em 1em;    
 }
