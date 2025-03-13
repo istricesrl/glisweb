@@ -1676,6 +1676,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `id_matricola` int(11) DEFAULT NULL,
   `id_rinnovo` int(11) DEFAULT NULL,
   `id_carrelli_articoli` int(11) DEFAULT NULL,
+  `quantita_prevista` decimal(9,2) DEFAULT NULL,
   `quantita` decimal(9,2) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `costo_netto_unitario` decimal(16,2) DEFAULT NULL,

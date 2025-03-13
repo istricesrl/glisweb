@@ -1123,12 +1123,14 @@ DROP VIEW IF EXISTS `__report_backlog_todo__`;
 CREATE OR REPLACE VIEW `__report_backlog_todo__` AS
 	SELECT
 		todo.id,
+        documenti.codice AS codice_documento,
+		todo.codice,
 		todo.id_tipologia,
 		tipologie_todo.nome AS tipologia,
 		tipologie_todo.se_agenda,
 		todo.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		todo.id_cliente,
+		coalesce( todo.id_cliente, documenti.id_destinatario, progetti.id_cliente ) AS id_cliente,
 		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
 		todo.id_indirizzo,
 		concat_ws(
@@ -1153,8 +1155,16 @@ CREATE OR REPLACE VIEW `__report_backlog_todo__` AS
 		todo.data_chiusura,
 		todo.nome,
 		todo.id_contatto,
-		todo.id_progetto,
+		coalesce( todo.id_progetto, documenti_articoli.id_progetto, documenti.id_progetto ) AS id_progetto,
 		progetti.nome AS progetto,    
+        tipologie_progetti.id AS id_tipologia_progetto,
+        tipologie_progetti.nome AS tipologia_progetto,
+        group_concat( DISTINCT tipologie_attivita_path( attivita.id_tipologia ) ) AS tipologie_attivita,
+        sum( documenti_articoli.quantita_prevista ) AS quantita, -- TODO bisogna trovare un modo per associare quantità e articoli alle attività a consuntivo in modo da incrociarli con il tempo di attività
+        sum( attivita.ore ) AS ore,
+        tipologie_progetti.se_pacchetto,
+        documenti_articoli.id AS id_documenti_articoli,
+        documenti_articoli.id_articolo,
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
@@ -1163,19 +1173,25 @@ CREATE OR REPLACE VIEW `__report_backlog_todo__` AS
 		concat(
 			todo.nome,
 			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
-			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+			coalesce( concat( ' su ', coalesce( todo.id_progetto, documenti_articoli.id_progetto ), ' ', progetti.nome ), '' )
 		) AS __label__
 	FROM todo
-		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
-		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN documenti_articoli ON documenti_articoli.id = todo.id_documenti_articoli
+		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
 		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
-		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+		LEFT JOIN progetti ON progetti.id = coalesce( todo.id_progetto, documenti_articoli.id_progetto, documenti.id_progetto )
+        LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( todo.id_cliente, documenti.id_destinatario, progetti.id_cliente )
+        LEFT JOIN attivita ON attivita.id_todo = todo.id
   WHERE ( todo.data_chiusura IS NULL AND todo.data_archiviazione IS NULL )
     AND coalesce( todo.data_programmazione, todo.settimana_programmazione ) IS NULL
     AND tipologie_todo.se_produzione IS NOT NULL
+  GROUP BY
+    todo.id
 ;
 
 -- | 100000056612
@@ -1368,12 +1384,14 @@ DROP VIEW IF EXISTS `__report_done_todo__`;
 CREATE OR REPLACE VIEW `__report_done_todo__` AS
 	SELECT
 		todo.id,
+        documenti.codice AS codice_documento,
+		todo.codice,
 		todo.id_tipologia,
 		tipologie_todo.nome AS tipologia,
 		tipologie_todo.se_agenda,
 		todo.id_anagrafica,
 		coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ) AS anagrafica,
-		todo.id_cliente,
+		coalesce( todo.id_cliente, documenti.id_destinatario, progetti.id_cliente ) AS id_cliente,
 		coalesce( a2.denominazione, concat( a2.cognome, ' ', a2.nome ), '' ) AS cliente,
 		todo.id_indirizzo,
 		concat_ws(
@@ -1398,8 +1416,16 @@ CREATE OR REPLACE VIEW `__report_done_todo__` AS
 		todo.data_chiusura,
 		todo.nome,
 		todo.id_contatto,
-		todo.id_progetto,
+		coalesce( todo.id_progetto, documenti_articoli.id_progetto, documenti.id_progetto ) AS id_progetto,
 		progetti.nome AS progetto,    
+        tipologie_progetti.id AS id_tipologia_progetto,
+        tipologie_progetti.nome AS tipologia_progetto,
+        group_concat( DISTINCT tipologie_attivita_path( attivita.id_tipologia ) ) AS tipologie_attivita,
+        sum( documenti_articoli.quantita ) AS quantita, -- TODO bisogna trovare un modo per associare quantità e articoli alle attività a consuntivo in modo da incrociarli con il tempo di attività
+        sum( attivita.ore ) AS ore,
+        tipologie_progetti.se_pacchetto,
+        documenti_articoli.id AS id_documenti_articoli,
+        documenti_articoli.id_articolo,
 		todo.id_pianificazione,
 		todo.id_immobile,
 		todo.data_archiviazione,
@@ -1408,18 +1434,24 @@ CREATE OR REPLACE VIEW `__report_done_todo__` AS
 		concat(
 			todo.nome,
 			coalesce( concat( ' per ', a2.denominazione, concat( a2.cognome, ' ', a2.nome ) ), '' ),
-			coalesce( concat( ' su ', todo.id_progetto, ' ', progetti.nome ), '' )
+			coalesce( concat( ' su ', coalesce( todo.id_progetto, documenti_articoli.id_progetto ), ' ', progetti.nome ), '' )
 		) AS __label__
 	FROM todo
-		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
-		LEFT JOIN anagrafica AS a2 ON a2.id = todo.id_cliente
+		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
+		LEFT JOIN documenti_articoli ON documenti_articoli.id = todo.id_documenti_articoli
+		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
 		LEFT JOIN indirizzi ON indirizzi.id = todo.id_indirizzo
 		LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
 		LEFT JOIN provincie ON provincie.id = comuni.id_provincia
-		LEFT JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia
-		LEFT JOIN progetti ON progetti.id = todo.id_progetto
+		LEFT JOIN progetti ON progetti.id = coalesce( todo.id_progetto, documenti_articoli.id_progetto, documenti.id_progetto )
+        LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia
+		LEFT JOIN anagrafica AS a1 ON a1.id = todo.id_anagrafica
+		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( todo.id_cliente, documenti.id_destinatario, progetti.id_cliente )
+        LEFT JOIN attivita ON attivita.id_todo = todo.id
   WHERE ( todo.data_chiusura IS NOT NULL AND todo.data_archiviazione IS NULL )
     AND tipologie_todo.se_produzione IS NOT NULL
+  GROUP BY
+    todo.id
 ;
 
 -- | 100000056620

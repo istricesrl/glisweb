@@ -23,4 +23,6 @@ var/
 composer.*
 robots.*
 sitemap.*
+config.*
+*.log
 *.md
