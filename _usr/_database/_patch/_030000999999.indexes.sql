@@ -2649,6 +2649,26 @@ ALTER TABLE `notizie`
 -- tipologia: tabella gestita
 ALTER TABLE `notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
+-- | 030000022100
+
+-- notizie_anagrafica
+ALTER TABLE `notizie_anagrafica`
+	ADD PRIMARY KEY (`id`), 
+	ADD UNIQUE KEY `unica` (`id_notizia`,`id_anagrafica`,`id_ruolo`), 
+	ADD KEY `id_notizia` (`id_notizia`), 
+	ADD KEY `id_anagrafica` (`id_anagrafica`), 
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_notizia`,`id_anagrafica`,`id_ruolo`,`ordine`);
+
+-- | 030000022101
+
+-- notizie_anagrafica
+-- tipologia: tabella gestita
+ALTER TABLE `notizie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
 -- | 030000022200
 
 -- notizie_categorie
@@ -3670,6 +3690,7 @@ ALTER TABLE `ruoli_anagrafica`
 	ADD KEY `se_didattica` (`se_didattica`),
 	ADD KEY `se_produzione` (`se_produzione`),
 	ADD KEY `se_organizzazioni` (`se_organizzazioni`), 
+	ADD KEY `se_notizie` (`se_notizie`), 
 	ADD KEY `se_risorse` (`se_risorse`), 
 	ADD KEY `se_progetti` (`se_progetti`), 
 	ADD KEY `se_immobili` (`se_immobili`),

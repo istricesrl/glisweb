@@ -6044,6 +6044,37 @@ CREATE OR REPLACE VIEW `notizie_view` AS
 	GROUP BY notizie.id
 ;
 
+-- | 090000022100
+
+-- notizie_anagrafica_view
+DROP TABLE IF EXISTS `notizie_anagrafica_view`;
+
+-- | 090000022101
+
+-- notizie_anagrafica_view
+CREATE OR REPLACE VIEW notizie_anagrafica_view AS 
+	SELECT 
+		notizie_anagrafica.id,
+		notizie_anagrafica.id_notizia,
+		notizie_anagrafica.id_anagrafica,
+		coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ) AS anagrafica,
+		notizie_anagrafica.id_ruolo,
+		ruoli_anagrafica.nome AS ruolo,
+		notizie_anagrafica.ordine,
+		notizie_anagrafica.id_account_inserimento ,
+		notizie_anagrafica.id_account_aggiornamento ,
+		tipologie_notizie.id AS id_tipologia,
+		tipologie_notizie.nome AS tipologia,
+		notizie.nome,
+		concat( 'notizia ', notizie.nome, ' - ', coalesce( anagrafica.denominazione , concat( anagrafica.cognome, ' ', anagrafica.nome ), '' ), ' ruolo ', ruoli_anagrafica.nome  ) AS __label__
+	FROM notizie_anagrafica
+		LEFT JOIN notizie ON notizie.id = notizie_anagrafica.id_notizia
+		LEFT JOIN tipologie_notizie ON tipologie_notizie.id = notizie.id_tipologia
+		LEFT JOIN ruoli_anagrafica ON ruoli_anagrafica.id = notizie_anagrafica.id_ruolo
+		LEFT JOIN anagrafica ON anagrafica.id = notizie_anagrafica.id_anagrafica
+	GROUP BY notizie.id, anagrafica.id
+;
+
 -- | 090000022200
 
 -- notizie_categorie_view
@@ -8703,10 +8734,13 @@ CREATE OR REPLACE VIEW ruoli_anagrafica_view AS
 		ruoli_anagrafica.se_didattica,
 		ruoli_anagrafica.se_organizzazioni,
 		ruoli_anagrafica.se_relazioni,
+		ruoli_anagrafica.se_notizie,
 		ruoli_anagrafica.se_risorse,
 		ruoli_anagrafica.se_progetti,
 		ruoli_anagrafica.se_immobili,
 		ruoli_anagrafica.se_contratti,
+		ruoli_anagrafica.se_proponente,
+		ruoli_anagrafica.se_contraente,
 	 	ruoli_anagrafica_path( ruoli_anagrafica.id ) AS __label__
 	FROM ruoli_anagrafica
 ;
