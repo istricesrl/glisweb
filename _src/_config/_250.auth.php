@@ -1079,6 +1079,10 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        'notizie_anagrafica' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
        '__report_documenti_carrelli__' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED        => array( 'staff' )

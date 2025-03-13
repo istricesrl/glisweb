@@ -43,7 +43,8 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM categorie_notizie_view'
+	    'SELECT id, __label__ FROM categorie_notizie_view WHERE categorie_notizie_path_check( categorie_notizie_view.id, ? ) = 0',
+        array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
 	);
 
 	// tendina siti

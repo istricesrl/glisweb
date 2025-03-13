@@ -49,7 +49,15 @@
 	    'SELECT id, __label__ FROM categorie_notizie_view'
 	);
 
-      // tendina templates
+    // tendina ruoli progetti
+	$ct['etc']['select']['ruoli'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'],
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM ruoli_anagrafica_view WHERE se_notizie = 1'
+    );
+
+    // tendina templates
 	$tpl = glob( DIR_BASE . '{_,}src/{_,}templates/*', GLOB_BRACE );
 	foreach( $tpl as $t ) {
         if( file_exists( $t . '/etc/template.conf' ) ) {

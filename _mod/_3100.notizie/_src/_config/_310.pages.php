@@ -29,12 +29,12 @@
 	    // recupero le categorie notizie dal database
 		$pgs = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT categorie_notizie.* FROM categorie_notizie '.
-            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_notizie = categorie_notizie.id '.
-            'WHERE categorie_notizie.id_sito = ? '.
-            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
-            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) '.
-            'GROUP BY categorie_notizie.id ',
+            'SELECT categorie_notizie.* FROM categorie_notizie 
+            INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_notizie = categorie_notizie.id 
+            WHERE categorie_notizie.id_sito = ? 
+            AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) 
+            AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) 
+            GROUP BY categorie_notizie.id ',
             array(
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),
