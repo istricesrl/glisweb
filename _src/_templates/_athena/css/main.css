@@ -1105,3 +1105,13 @@ div.combobox-container > .spinner-border {
     font-weight: bold;
     font-size: 1.2em;
 }
+
+/* stili per CodeMirror */
+.CodeMirror {
+    border: 1px solid #eee;
+    height: auto;
+  }
+
+  .CodeMirror-lines {
+    font-size: 1.2em;
+}

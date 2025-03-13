@@ -49,13 +49,13 @@
 
             {# MODULO PRINCIPALE #}
             <fieldset class="d-flex flex-column flex-fill">
-                <legend>dati generali <small>{{ legend }}</small></legend>
+                <legend>contenuto di {{ etc.reading }} <small>{{ legend }}</small></legend>
 
                 {% if request.__template_files__ %}
                 <div class="form-group form-row d-flex flex-fill">
                     <div class="col-12 d-flex flex-fill">
-                        <span class="label-top">contenuto di {{ etc.reading }}</span>
-                        {{ frm.textarea( '__template_files__', '', '', 'contenuto', '', 3, request, '', '', 'form-control form-control-sm form-control-codice' ) }}
+                        <!-- <span class="label-top">contenuto di {{ etc.reading }}</span> -->
+                        {{ frm.textarea( '__template_files__', '', '', 'contenuto', '', 3, request, '', '', 'form-control form-control-sm form-control-codice CodeMirror' ) }}
                     </div>
                 </div>
                 {% else %}
@@ -77,4 +77,39 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block javascript %}
+<script>
+    window.addEventListener('DOMContentLoaded', function() {
+
+        var editor = CodeMirror.fromTextArea(
+            document.getElementById('__template_files___contenuto'), 
+            {
+                lineNumbers: true,
+                mode: 'htmlmixed',
+                theme: 'default',
+                tabSize: 4,
+                indentUnit: 4,
+                indentWithTabs: true,
+                lineWrapping: true,
+                matchBrackets: true,
+                autoCloseBrackets: true,
+                autoCloseTags: true,
+                foldGutter: true,
+                // "basicConfig" non esiste di default, 
+                // forse lo volevi usare come custom, o puoi ometterlo
+                gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+                extraKeys: {
+                    'Ctrl-Space': 'autocomplete',  // richiede l’addon giusto
+                    'Ctrl-S': function(cm) {
+                        // Esempio, salvataggio
+                        document.getElementById('form-{{ table }}').submit();
+                    }
+                }
+            }
+        );
+
+    });
+</script>
 {% endblock %}
