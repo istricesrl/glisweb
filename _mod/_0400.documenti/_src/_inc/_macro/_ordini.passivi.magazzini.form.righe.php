@@ -26,7 +26,9 @@
     // tabella della vista
 	$ct['view']['table'] = 'documenti_articoli';
 
-	$ct['view']['open']['page'] = 'ordini.magazzini.righe.form';
+	$ct['view']['insert']['page'] = 'righe.ordini.passivi.magazzini.form';
+
+	$ct['view']['open']['page'] = 'righe.ordini.passivi.magazzini.form';
     $ct['view']['open']['table'] = 'documenti_articoli';
     $ct['view']['open']['field'] = 'id';
 

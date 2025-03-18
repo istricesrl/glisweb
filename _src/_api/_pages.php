@@ -112,6 +112,7 @@
 
     // debug
     // print_r( $ct['page'] );
+    // die(print_r($ct['page']));
     // die('inizio api pages');
     // ini_set( 'display_errors', 1 );
     // ini_set( 'display_startup_errors', 1 );
@@ -171,11 +172,18 @@
             $ct['page']['template']['ini'] = path2custom( $ct['page']['template']['ini'] );
         }
 
+        // debug
+        // die(print_r($ct['page']));
+
         // unisco le direttive di configurazione del file a quelle già esistenti
-        $ct['page'] = array_replace_recursive(
+        // NOTA perché prima qui era $ct['page'] = array_replace_recursive(
+        $ct['page'] = array_merge_recursive(
             $ct['page'],
             parse_ini_file( $ct['page']['template']['ini'], true, INI_SCANNER_RAW )
         );
+
+        // debug
+        // die(print_r($ct['page']));
 
         // includo i file di configurazione aggiuntivi del template
         foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.conf', GLOB_BRACE ) as $addCnf ) {
@@ -189,6 +197,7 @@
         // print_r( $ct['page'] );
         // print_r( $ct['page']['template'] );
         // die('lettura file INI del template completata');
+        // die(print_r($ct['page']));
 
     } elseif( file_exists( $ct['page']['template']['yaml'] ) ) {
 
@@ -723,6 +732,9 @@
     // log
     loggerLatest( 'fine ricerca CSS minificati' );
 
+    // debug
+    // die( print_r( $ct['page']['js'], true ) );
+
     // ricerca delle risorse JS minificate
     if( isset( $ct['page']['js'] ) && is_array( $ct['page']['js'] ) ) {
         foreach( $ct['page']['js'] as $tier => &$rJs ) {
@@ -756,7 +768,7 @@
     loggerLatest( 'fine ricerca JS minificati' );
 
     // debug
-    // die( print_r( $ct['page']['css'], true ) );
+    // die( print_r( $ct['page']['js'], true ) );
 
     /**
      * caching locale delle risorse esterne

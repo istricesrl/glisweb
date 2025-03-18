@@ -29,7 +29,7 @@
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
 	    'amministrazione' => array(
-		'label' => 'operazioni amministrative'
+		    'label' => 'operazioni amministrative'
 	    )
 	);
 

@@ -162,9 +162,9 @@
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'ordini.passivi.magazzini.form',
 															'ordini.passivi.magazzini.form.righe',
-															'ordini.magazzini.form.chiusura',
-															'ordini.magazzini.form.stampe',
-															'ordini.magazzini.form.tools' ) )
+															'ordini.passivi.magazzini.form.chiusura',
+															'ordini.passivi.magazzini.form.stampe',
+															'ordini.passivi.magazzini.form.tools' ) )
 		);        
 
         // gestione righe ordini
@@ -173,8 +173,21 @@
 			'title'			=> array( $l		=> 'righe ordine passivo' ),
 			'h1'			=> array( $l		=> 'righe' ),
 			'parent'		=> array( 'id'		=> 'ordini.passivi.magazzini.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.magazzini.form.righe.html' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.passivi.magazzini.form.righe.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.passivi.magazzini.form.righe.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['ordini.passivi.magazzini.form']['etc']['tabs'] )
+		);
+
+		// gestione chiusura fatture
+		$p['ordini.passivi.magazzini.form.chiusura'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'chiusura ordine passivo' ),
+			'h1'			=> array( $l		=> 'chiusura' ),
+			'parent'		=> array( 'id'		=> 'ordini.passivi.magazzini.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.passivi.magazzini.form.chiusura.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.passivi.magazzini.form.chiusura.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['ordini.passivi.magazzini.form']['etc']['tabs'] )
 		);
@@ -188,7 +201,7 @@
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
             'macro'		=> array( $m.'_src/_inc/_macro/_ordini.passivi.magazzini.form.stampe.php' ),
             'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-            'etc'		=> array( 'tabs'	=> $p['ordini.magazzini.form']['etc']['tabs'] )
+            'etc'		=> array( 'tabs'	=> $p['ordini.passivi.magazzini.form']['etc']['tabs'] )
         );
 
 		// gestione tools fatture
@@ -204,15 +217,15 @@
 			'etc'			=> array( 'tabs'	=> $p['ordini.passivi.magazzini.form']['etc']['tabs'] )
 		);
 
-		$p['ordini.passivi.magazzini.righe.form'] = array(
+		$p['righe.ordini.passivi.magazzini.form'] = array(
 			'sitemap'		=> false,
 			'title'			=> array( $l		=> 'gestione righe ordini passivi' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'ordini.passivi.magazzini.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.passivi.magazzini.righe.form.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.passivi.magazzini.righe.form.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ordini.passivi.magazzini.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ordini.passivi.magazzini.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'			=> array( 'tabs'	=> array(	'ordini.passivi.magazzini.righe.form') )
+			'etc'			=> array( 'tabs'	=> array(	'righe.ordini.passivi.magazzini.form') )
 		);    
 
 	}

@@ -187,24 +187,36 @@
 	}
 
     // percorso della pagina di gestione
-	if( isset( $ct['view']['open']['page'] ) && ! empty( $ct['view']['open']['page'] ) && ( getAclPermission( $ct['view']['table'], METHOD_PUT ) || getAclPermission( $ct['view']['table'], METHOD_GET ) ) ) {
-//	if( isset( $ct['view']['open']['page'] ) && ! empty( $ct['view']['open']['page'] ) ) {
-        if( isset( $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ] ) ) {
-            $ct['view']['open']['path'] = $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+	if( isset( $ct['view']['open']['page'] ) && ! empty( $ct['view']['open']['page'] ) ) {
+        if( getAclPermission( $ct['view']['table'], METHOD_PUT ) || getAclPermission( $ct['view']['table'], METHOD_GET ) ) {
+            if( isset( $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ] ) ) {
+                $ct['view']['open']['path'] = $cf['contents']['pages'][ $ct['view']['open']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+            } else {
+                die( 'la pagina di gestione ' . $ct['view']['open']['page'] . ' non è stata definita o non è valida' );
+            }
         } else {
-            die( 'La pagina di gestione ' . $ct['view']['open']['page'] . ' non è stata definita o non è valida' );
+            die( 'non hai i permessi per gestire la tabella ' . $ct['view']['table'] );
         }
-	}
+    } else {
+        // die( 'la pagina di gestione non è stata definita' );
+    }
 
     // percorso della pagina di inserimento
-	if( isset( $ct['view']['insert']['page'] ) && ! empty( $ct['view']['insert']['page'] ) && getAclPermission( $ct['view']['table'], METHOD_POST ) ) {
-//	if( isset( $ct['view']['insert']['page'] ) && ! empty( $ct['view']['insert']['page'] ) ) {
-        if( isset( $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ] ) ) {
-            $ct['view']['insert']['path'] = $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+	if( isset( $ct['view']['insert']['page'] ) && ! empty( $ct['view']['insert']['page'] ) ) {
+        if( getAclPermission( $ct['view']['table'], METHOD_POST ) ) {
+            if( isset( $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ] ) ) {
+                $ct['view']['insert']['path'] = $cf['contents']['pages'][ $ct['view']['insert']['page'] ]['path'][ $cf['localization']['language']['ietf'] ];
+            } else {
+                die( 'la pagina di inserimento ' . $ct['view']['insert']['page'] . ' non è stata definita o non è valida' );
+            }
         } else {
-            die( 'La pagina di inserimento ' . $ct['view']['insert']['page'] . ' non è stata definita o non è valida' );
+            die( 'non hai i permessi per inserire dati nella tabella ' . $ct['view']['table'] );
         }
-	}
+	} else {
+        // die( 'la pagina di inserimento non è stata definita' );
+    }
+
+    // debug
 
 	if( isset( $ct['view']['footer']['cols'] ) ) {
 		foreach( $ct['view']['footer']['cols'] as $field => $data ) {
