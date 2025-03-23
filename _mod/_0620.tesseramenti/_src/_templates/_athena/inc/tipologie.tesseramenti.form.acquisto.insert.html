@@ -24,7 +24,7 @@
         </div>
 		<input type="hidden" id="account" name="articoli[prezzi][0][id_articolo]" value="__parent_id__" disabled>
 		<input type="hidden" id="listino" name=articoli[prezzi][0][id_listino]" value="1" disabled>
-		<input type="hidden" id="iva" name="articoli[prezzi][0][id_iva]" value="5" disabled>
+		<input type="hidden" id="iva" name="articoli[prezzi][0][id_iva]" value="10" disabled><!-- TODO questo valore va ricavato dal reparto vedi il form di inserimento -->
         <div class="col-12 col-md-2">
             <span class="label-top">prezzo</span>
             {{ frm.input( 'articoli', 'prezzi', '0', 'prezzo', '', '', '', '', '', 1, '', 2 ) }}
