@@ -145,6 +145,9 @@
             ( ( empty( $carrello['timestamp_checkout'] ) ) ? date('Y-m-d') : $carrello['timestamp_checkout'] )
         );
 
+        // log
+        logger( 'il prezzo lordo per l\'articolo ' . $a . ' nel carrello ' . $carrello['id'] . ' è ' . $r, 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+
         // restituisco il risultato
         return $r;
 

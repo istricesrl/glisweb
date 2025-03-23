@@ -65,6 +65,7 @@
 
         // data di riferimento
         $date = empty( $date ) ? date( 'Y-m-d' ) : $date;
+        $date = is_numeric( $date ) ? date( 'Y-m-d', $date ) : $date;
 
         // log
         logger( '---', 'details/listini/prezzi/articolo.' . $a );
@@ -478,6 +479,7 @@
 
         // data di riferimento
         $date = empty( $date ) ? date( 'Y-m-d' ) : $date;
+        $date = is_numeric( $date ) ? date( 'Y-m-d', $date ) : $date;
 
         // calcolo la chiave della query
         $k = md5( PRICES_DATA . 'L' . $a . $l . $i . $qa . $qp . md5( serialize( $qb ) ) . $date );
@@ -758,6 +760,9 @@
             logger( 'per ' . $a . ' (' . $qp . ') ho recuperato dalla cache il prezzo ' . $r, 'listini' );
 
         }
+
+        // log
+        logger( 'il prezzo complessivo lordo finale per ' . $a . ' è ' . $r . ' x ' . $qa . ' totale ' . ( $r * $qa ) . ' su listino ' . $l, 'listini' );
 
         // restituisco il risultato
         return $r;
