@@ -28,7 +28,7 @@
 
 	    // altri formati
 		foreach( $cf['image']['formats'] as $k => $v ) {
-		    $f = ( ( $k == 'l' ) ? 'LANDSCAPE' : 'PORTRAIT' );
+		    $f = ( ( $k == 'l' ) ? 'LANDSCAPE' : ( ( $k == 'p' ) ? 'PORTRAIT' : 'SQUARE' ) );
 		    foreach( $v as $j ) {
                 $y = 'var/immagini/' . $j . $k . '/' . basename( $_REQUEST['immagini']['path'] );
                 if( file_exists( DIR_BASE . $y ) ) {
@@ -43,6 +43,7 @@
 	    array( 'id' => NULL, '__label__' => 'automatico' ),
 	    array( 'id' => 'L', '__label__' => 'landscape' ),
 	    array( 'id' => 'P', '__label__' => 'portrait' ),
+	    array( 'id' => 'S', '__label__' => 'square' ),
 	);
 
 	// tendina categorie

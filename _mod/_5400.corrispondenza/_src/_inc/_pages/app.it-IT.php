@@ -23,4 +23,3 @@
 		'menu'				=> array( 'app'	=> array(	'' => 	array(	'label'		=> array( $l => 'corrispondenza' ),
 																	'priority'	=> '010' ) ) )
 	);
-

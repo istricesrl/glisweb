@@ -68,7 +68,10 @@
                 // die( $custom );
 
                 // ...
-                writeToFile( '', $custom );
+                $standard = file_get_contents( DIR_BASE . $base );
+
+                // ...
+                writeToFile( $standard, $custom );
 
             }
 

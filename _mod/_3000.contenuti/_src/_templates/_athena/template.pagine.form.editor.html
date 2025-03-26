@@ -87,23 +87,20 @@
             document.getElementById('__template_files___contenuto'), 
             {
                 lineNumbers: true,
-                mode: 'htmlmixed',
+                mode: '{% if ".css" in etc.reading %}css{% else %}htmlmixed{% endif %}',
                 theme: 'default',
                 tabSize: 4,
                 indentUnit: 4,
-                indentWithTabs: true,
+                indentWithTabs: false,
                 lineWrapping: true,
                 matchBrackets: true,
                 autoCloseBrackets: true,
                 autoCloseTags: true,
                 foldGutter: true,
-                // "basicConfig" non esiste di default, 
-                // forse lo volevi usare come custom, o puoi ometterlo
                 gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
                 extraKeys: {
-                    'Ctrl-Space': 'autocomplete',  // richiede l’addon giusto
-                    'Ctrl-S': function(cm) {
-                        // Esempio, salvataggio
+                    'Ctrl-Space': 'autocomplete',
+                    'Ctrl-Alt-S': function(cm) {
                         document.getElementById('form-{{ table }}').submit();
                     }
                 }

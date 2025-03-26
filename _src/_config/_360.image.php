@@ -43,6 +43,19 @@
 	    1024 => 1200
 	);
 
+	$cf['image']['formats']['s'] = array(
+	    160 => 160,
+	    320 => 320,
+	    480 => 480,
+	    640 => 640,
+	    960 => 960,
+	    1024 => 1024,
+	    1280 => 1280,
+	    1600 => 1600,
+	    1920 => 1920,
+	    2048 => 2048
+	);
+
     // definisco le tabelle in cui cercare le immagini e i relativi formati
 #	$cf['image']['resize'] = array();
 
