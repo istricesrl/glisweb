@@ -252,6 +252,9 @@
                         $pg['id'],
                         'id_notizia'
                     );
+
+                    
+
 /*
                     aggiungiMenu(
                         $cf['contents']['pages'][$pid],

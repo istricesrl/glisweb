@@ -64,9 +64,10 @@
 		if( file_exists( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] . '/etc/template.conf' ) ) {
 
              // ricerca schemi
+             // TODO attenzione agli underscore nel path?
              $schemi = array_merge(
-                glob( DIR_BASE . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE ),
-                glob( DIR_MOD_ATTIVI . glob2custom( $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE )
+                glob( glob2custom( DIR_BASE . $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE ),
+                glob( glob2custom( DIR_MOD_ATTIVI . $_REQUEST[ $ct['form']['table'] ]['template'] ) . '/*.html', GLOB_BRACE )
              );
 
 		    // tendina schemi

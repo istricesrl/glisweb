@@ -35,6 +35,9 @@
     // ...
     if( isset( $_REQUEST['ck_autoexport'] ) && ! empty( $_REQUEST['ck_autoexport'] ) ) {
 
+        // log
+        logger( 'ricevuto ck_autoexport:' . $_REQUEST['ck_autoexport'], 'cassa' );
+
         // ...
         $_REQUEST['__pagamenti__']['autoexport'] = $_REQUEST['ck_autoexport'];
 
@@ -556,6 +559,9 @@
         // tipo di ricerca (carrello o cliente)
         if( isset( $_REQUEST['__pagamenti__']['id_carrello'] ) && ! empty( $_REQUEST['__pagamenti__']['id_carrello'] ) ) {
 
+            // log
+            logger( 'carrello da caricare per la gestione pagamenti: ' . $_REQUEST['__pagamenti__']['id_carrello'], 'cassa' );
+
             // seleziono i dettagli del carrello
             $ct['etc']['carrello'] = mysqlQuery(
                 $cf['mysql']['connection'],
@@ -595,6 +601,9 @@
             // die( print_r( $ct['etc']['righe'], true ) );
 
         } elseif( isset( $_REQUEST['__pagamenti__']['id_cliente'] ) && ! empty( $_REQUEST['__pagamenti__']['id_cliente'] ) ) {
+
+            // log
+            logger( 'cliente da caricare per la gestione pagamenti: ' . $_REQUEST['__pagamenti__']['id_cliente'], 'cassa' );
 
             // seleziono le righe del carrello
             $ct['etc']['righe'] = mysqlQuery(
@@ -654,16 +663,25 @@
         // per ogni riga, cerco eventuali pagamenti già effettuati
         if( isset( $ct['etc']['righe'] ) ) {
 
+            // log
+            logger( 'righe di cui gestire i pagamenti: ' . print_r( $ct['etc']['righe'], true ), 'cassa' );
+
             // ...
             foreach( $ct['etc']['righe'] as $chiave => &$riga ) {
 
                 // debug
                 // die( print_r( $riga, true ) );
 
+                // log
+                logger( 'gestisco la riga: ' . print_r( $riga, true ), 'cassa' );
+
                 // totale pagato
                 $riga['totale_lordo_pagato'] = 0;
 
                 if( isset( $riga['id_pagamento'] ) ) {
+
+                    // log
+                    logger( 'la riga è collegata al pagamento: ' . $riga['id_pagamento'], 'cassa' );
 
                     // cerco righe di documenti che fanno riferimento a questa riga di carrello
                     // TODO in teoria bisognerebbe poi controllare che il documento abbia pagamenti pagati ecc.
@@ -701,6 +719,9 @@
                     );
 
                 } else {
+
+                    // log
+                    logger( 'la riga non è collegata a nessun pagamento', 'cassa' );
 
                     // cerco righe di documenti che fanno riferimento a questa riga di carrello
                     // TODO in teoria bisognerebbe poi controllare che il documento abbia pagamenti pagati ecc.
@@ -812,39 +833,46 @@
 
                 }
 
-
                 if( empty( $riga['id_pagamento'] ) ) {
 
-                // TODO trovare se ci sono documenti da generare
-                $riga['documenti_generati'] = mysqlSelectValue(
-                    $cf['mysql']['connection'],
-                    'SELECT count( documenti_articoli.id ) 
-                    FROM documenti_articoli
-                    WHERE documenti_articoli.id_carrelli_articoli = ?',
-                    array( array( 's' => $riga['id'] ) )
-                );
+                    // log
+                    logger( '(secondo controllo) la riga NON è collegata a nessun pagamento', 'cassa' );
 
-                // pagamenti in sospeso (rate)
-                $riga['rate'] = mysqlQuery(
-                    $cf['mysql']['connection'],
-                    'SELECT pagamenti.* 
-                    FROM pagamenti 
-                    WHERE id_documento IS NULL
-                    AND id_carrelli_articoli = ?
-                    AND timestamp_pagamento IS NULL -- è corretta questa condizione?
-                    ',
-                    array( array( 's' => $riga['id'] ) )
-                );
+                    // TODO trovare se ci sono documenti da generare
+                    $riga['documenti_generati'] = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT count( documenti_articoli.id ) 
+                        FROM documenti_articoli
+                        WHERE documenti_articoli.id_carrelli_articoli = ?',
+                        array( array( 's' => $riga['id'] ) )
+                    );
 
-                // calcolo il totale già pagato
-                if( is_array( $riga['rate'] ) ) {
-                    foreach( $riga['rate'] as $rata ) {
+                    // pagamenti in sospeso (rate)
+                    $riga['rate'] = mysqlQuery(
+                        $cf['mysql']['connection'],
+                        'SELECT pagamenti.* 
+                        FROM pagamenti 
+                        WHERE id_documento IS NULL
+                        AND id_carrelli_articoli = ?
+                        AND timestamp_pagamento IS NULL -- è corretta questa condizione?
+                        ',
+                        array( array( 's' => $riga['id'] ) )
+                    );
 
-                        // aggiungo il totale della riga
-                        $riga['totale_lordo_rateizzato'] += $rata['importo_lordo_finale'];
-    
+                    // calcolo il totale già pagato
+                    if( is_array( $riga['rate'] ) ) {
+                        foreach( $riga['rate'] as $rata ) {
+
+                            // aggiungo il totale della riga
+                            $riga['totale_lordo_rateizzato'] += $rata['importo_lordo_finale'];
+        
+                        }
                     }
-                }
+
+                } else {
+
+                    // log
+                    logger( 'attenzione, al secondo controllo la riga è collegata al pagamento: ' . $riga['id_pagamento'], 'cassa' );
 
                 }
 
@@ -878,24 +906,65 @@
 
                 // se la riga è pagata e non ha documenti da stampare, non la mostro
                 if( count( $riga['documenti_da_stampare'] ) == 0 ) {
+
+                    // log
+                    logger( 'la riga non ha documenti da stampare', 'cassa' );
+
                     if( ! empty( $riga['prezzo_lordo_totale'] ) ) {
+
+                        // log
+                        logger( 'la riga vale ' . $riga['prezzo_lordo_totale'], 'cassa' );
+
                         if( ! empty( $riga['timestamp_pagamento'] ) ) {
+
+                            // log
+                            logger( 'la riga è stata pagata il ' . date( 'd/m/Y', $riga['timestamp_pagamento'] ), 'cassa' );
+
                             unset( $ct['etc']['righe'][ $chiave ] );
+
                         } elseif( isset( $riga['id_carrello'] ) && empty( $riga['totale_lordo_da_pagare'] ) ) {
+
+                            // log
+                            logger( 'la riga NON è stata pagata e vale ' . $riga['prezzo_lordo_totale'], 'cassa' );
+
                             if( $riga['documenti_generati'] > 0 ) {
+
+                                // log
+                                logger( 'documenti generati per la riga: ' . print_r( $riga['documenti_generati'], true ), 'cassa' );
+
                                 unset( $ct['etc']['righe'][ $chiave ] );
+
                             }
+
                             // unset( $ct['etc']['righe'][ $chiave ] );
+
                         }
+
                     // } elseif( empty( $riga['totale_lordo_da_pagare'] ) && ! empty( $riga['documenti_stampati'] ) ) {
                     } elseif( empty( $riga['totale_lordo_da_pagare'] ) && empty( $riga['documenti_da_stampare'] ) ) {
+
+                        // log
+                        logger( 'la riga è stata pagata e non ha documenti da stampare', 'cassa' );
+
                         unset( $ct['etc']['righe'][ $chiave ] );
+
                     }
+
+                } else {
+
+                    // log
+                    logger( 'documenti da stampare per la riga: ' . print_r( $riga['documenti_da_stampare'], true ), 'cassa' );
+
                 }
 
                 // print_r( $riga );
 
             }
+
+        } else {
+
+            // log
+            logger( 'nessuna riga di cui gestire i pagamenti', 'cassa' );
 
         }
 

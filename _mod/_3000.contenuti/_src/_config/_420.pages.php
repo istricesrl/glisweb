@@ -93,6 +93,8 @@
             )
         );
 
+        // die( 'contenuto ' . print_r( $cnt, true ) );
+
         // se sono presenti contenuti
         if( ! empty( $cnt ) ) {
 

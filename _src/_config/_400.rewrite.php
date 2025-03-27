@@ -240,3 +240,4 @@
 
     // debug
 	// print_r( $cf['contents']['index'] );
+	// die( 'contenuto ' . $ct['page']['content'] );

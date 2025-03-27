@@ -144,3 +144,4 @@
 	// print_r( $_SESSION['account']['gruppi'] );
 	// echo $cf['contents']['updated'];
     // die(print_r($ct['page']));
+	// die( 'contenuto ' . $ct['page']['content'] );

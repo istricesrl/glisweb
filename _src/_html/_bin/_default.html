@@ -39,7 +39,7 @@
 	{% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
 	srcset="{% if set.formats %}{% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
     {% endif %}
-    <img data-src="{{ site.root }}{{ path|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}" alt="{% if alt %}{{ alt }}{% else %}{{ img.alt }}{% endif %}" class="img-fluid{% if imgclass %} {{ imgclass }}{% endif %} lazyload">
+    <img data-src="{{ site.root }}{{ path|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}" alt="{% if alt %}{{ alt }}{% else %}{{ img.alt }}{% endif %}" class="img-fluid{% if imgclass %} {{ imgclass }}{% endif %} lazyload" style="width: 100%;">
 </picture>
 {% endmacro %}
 
@@ -180,9 +180,11 @@ window.addEventListener( 'DOMContentLoaded', function() {
 </div>
 {% endmacro %}
 
-{% macro jumbotron( page, lang, site, name, class, img ) %}
+{% macro jumbotron( page, lang, site, name, class, img, image ) %}
 {% import _self as cms %}
-<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); background-size: cover; background-position: center;">
+<div id="{{ name }}" class="jumbotron {{ class }} {% if img %}d-none d-lg-block{% endif%}" style="background-image: url('{{ site.root }}{{ page.contents.images.jumbotron|first().path }}'); 
+
+    background-size: cover; background-position: center;">
     <div class="container">
 		<div class="row">
 			<div class="{% if page.metadati.jt_col_class %}{{ page.metadati.jt_col_class }}{% else %}col{% endif %}">

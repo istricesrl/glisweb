@@ -1,5 +1,10 @@
 {% import '_bin/_default.html' as cms %}
 
 {% if page.contents.images.jumbotron|length > 0 %}
-{{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId' ) }}
+<div class="d-none d-md-block">
+    {{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId', image ) }}
+</div>
+<div class="d-block d-md-none" style="width: 100%;">
+    {{ cms.image( page, ietf, site, 'jumbotron', '10', image ) }}
+</div>
 {% endif %}
