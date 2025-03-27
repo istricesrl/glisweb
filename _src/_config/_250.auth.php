@@ -235,6 +235,10 @@
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
         ),
+        'missioni' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'video' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
@@ -1060,10 +1064,6 @@
             CONTROL_FILTERED => array( 'staff' )
         ),
         'relazioni_documenti' => array(
-            CONTROL_FULL => array( 'roots' ),
-            CONTROL_FILTERED => array( 'staff' )
-        ),
-        'missioni' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
