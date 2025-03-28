@@ -75,7 +75,7 @@
             if( $_SESSION['carrello']['fatturazione_strategia'] == 'MULTIPLA' ) {
 
                 // log
-                logger( 'creazione documenti multipli', 'cassa' );
+                logger( 'modalità di fatturazione MULTIPLA', 'cassa' );
 
                 // per ogni documento richiesto
                 foreach( $_REQUEST['__pagamenti__']['righe'] as $pagamento ) {
@@ -339,6 +339,9 @@
                 }
 
             } else {
+
+                // log
+                logger( 'modalità di fatturazione SINGOLA', 'cassa' );
 
                 // ...
                 if( isset( $_REQUEST['ck_documento'] ) && ! empty( $_REQUEST['ck_documento'] ) ) {
