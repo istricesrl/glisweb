@@ -1661,6 +1661,7 @@ CREATE TABLE IF NOT EXISTS `documenti_articoli` (
   `ordine` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `data` date DEFAULT NULL,
+  `id_missione` int(11) DEFAULT NULL,
   `id_destinatario` int(11) DEFAULT NULL,
   `id_emittente` int(11) DEFAULT NULL,
   `id_reparto` int(11) DEFAULT NULL,

@@ -3557,6 +3557,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			documenti.data
 		) AS documento,
 		coalesce( documenti_articoli.data, documenti.data ) AS data,
+		documenti_articoli.id_missione,
 		coalesce( documenti_articoli.id_emittente, documenti.id_emittente ) AS id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario ) AS id_destinatario,
@@ -3627,19 +3628,19 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
 		concat(
-			documenti_articoli.data,
+			coalesce( documenti_articoli.data, '' ),
 			' / ',
-			tipologie_documenti.sigla,
+			coalesce( tipologie_documenti.sigla, '' ),
 			' / ',
-			documenti_articoli.quantita,
+			coalesce( documenti_articoli.quantita, 0 ),
 			' x ',
-			documenti_articoli.id_articolo,
+			coalesce( documenti_articoli.id_articolo, '' ),
 			' / ',
-			documenti_articoli.nome,
+			coalesce( documenti_articoli.nome, '' ),
 			' / ',
-			documenti_articoli.importo_netto_totale,
+			coalesce( documenti_articoli.importo_netto_totale, 0 ),
 			' ',
-			valute.utf8
+			coalesce( valute.utf8, '' )
 		) AS __label__
 	FROM
 		documenti_articoli
