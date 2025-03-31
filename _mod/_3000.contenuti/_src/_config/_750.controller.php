@@ -61,10 +61,10 @@
                 // ...
                 writeToFile( $_REQUEST['__template_files__']['contenuto'], $custom );
 
-            } elseif( ! file_exists( DIR_BASE . $custom ) ) {
+            } elseif( ! file_exists( DIR_BASE . $custom ) && file_exists( DIR_BASE . $base ) ) {
 
                 // debug
-                // die( 'creazione nuovo file' );
+                // die( 'creazione nuovo file da standard' );
                 // die( $custom );
 
                 // ...
@@ -73,17 +73,30 @@
                 // ...
                 writeToFile( $standard, $custom );
 
+            } elseif( ! file_exists( DIR_BASE . $custom ) ) {
+
+                // debug
+                // die( 'creazione nuovo file vuoto' );
+                // die( $custom );
+
+                // ...
+                writeToFile( PHP_EOL, $custom );
+
             }
 
             // cerco il contenuto custom e se non esiste prendo lo standard
             if( file_exists( DIR_BASE . $custom ) ) {
+
                 // die( $custom );
                 $_REQUEST['__template_files__']['contenuto'] = readFromFile( $custom, FILE_READ_AS_STRING );
                 $ct['etc']['reading'] = $custom;
+
             } else {
+
                 // die( $base );
                 $_REQUEST['__template_files__']['contenuto'] = readFromFile( $base, FILE_READ_AS_STRING );
                 $ct['etc']['reading'] = $base;
+
             }
 
         }
