@@ -26,15 +26,16 @@
 	$ct['view']['table'] = 'documenti_articoli';
 
     // id della vista
-   # $ct['view']['id'] = md5( $ct['view']['table'] );
+    # $ct['view']['id'] = md5( $ct['view']['table'] );
 
-        // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'documenti.articoli.form';
-    $ct['view']['open']['table'] = 'documenti_articoli';
-    $ct['view']['open']['field'] = 'id';
+    // pagina per la gestione degli oggetti esistenti
+	// $ct['view']['open']['page'] = 'documenti.articoli.form';
+    // $ct['view']['open']['table'] = 'documenti_articoli';
+    // $ct['view']['open']['field'] = 'id';
 
 	// pagina per l'inserimento di un nuovo oggetto
 	// $ct['view']['insert']['page'] = 'documenti.articoli.form';
+    // $ct['view']['insert']['field'] = 'id_missione';
 
     // campo per il preset di apertura
 	// $ct['view']['open']['preset']['field'] = 'id_missione';
@@ -80,6 +81,15 @@
 
 	}
 */
+
+    // ...
+    if( isset( $_REQUEST['__associazione_riga__'] ) ) {
+
+        // debug
+        die( print_r( $_REQUEST, true ) );
+
+    }
+
 	$ct['view']['cols'] = array(
         'id' => '#',
 #        'tipologia' => 'tipologia',
@@ -89,9 +99,10 @@
 #		'mastro_provenienza' => 'scarico',
 #		'mastro_destinazione' => 'carico',
         'quantita' => 'quantità',
-        'importo_netto_totale' => 'importo netto',
-		'id_genitore' => 'aggregata a',
-		'id_documento' => 'id_documento'
+#        'importo_netto_totale' => 'importo netto',
+#		'id_genitore' => 'aggregata a',
+		'id_documento' => 'id_documento',
+		'id_missione' => 'id_missione'
 	);
 
     // stili della vista
@@ -153,6 +164,12 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // tendina righe non in missione
+	$ct['etc']['select']['righe'] = mysqlQuery(
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM documenti_articoli_view WHERE id_missione IS NULL AND id_tipologia = 7 ORDER BY __label__'
+	);
 
 /*
     // tendina articoli
