@@ -221,10 +221,12 @@
 		    $(this).find('.fa').toggle();
 		});
 
-	    // faccio il bind della funzione tooltip() ai campi con l'attributo data-toggle impostato a tooltip
+        /*
+        // faccio il bind della funzione tooltip() ai campi con l'attributo data-toggle impostato a tooltip
 		if( $('[data-toggle="tooltip"]').length ) {
 		    $('[data-toggle="tooltip"]').tooltip();
 		}
+        */
 
 	    // ???
 		$('[img-hover]').on('mouseover mouseout', function() {
@@ -238,9 +240,11 @@
 		// NOTA prima per la checkbox vuota settavamo zero, ma incasina i filtri delle viste
 		$('input[type=checkbox]').click( function() {
 		    if( this.checked ) {
-			$(this).prev().val('1');
+                console.log( 'checked' );
+			    $(this).prev().val('1');
 		    } else {
-			$(this).prev().val('');
+                console.log( 'unchecked' );
+			    $(this).prev().val('');
 		    }
 		});
 
