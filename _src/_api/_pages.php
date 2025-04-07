@@ -236,7 +236,7 @@
         logger( 'il file ' . $ct['page']['template']['ini'] . ' non esiste', 'template', LOG_CRIT );
 
         // debug
-        die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') dannaeggiato o mancante' );
+        die( 'file di configurazione del template (' . $ct['page']['template']['ini'] . ') danneggiato o mancante per la pagina #' . $ct['page']['id'] );
 
     }
 
