@@ -78,6 +78,7 @@ find ./$SUB/tmp                 -type d                                         
 find ./$SUB/var                 -type d                                             -exec chmod 770 {} \;
 
 find ./$SUB/src/templates       -type f                                             -exec chmod 660 {} \;
+find ./$SUB/mod/*/src/templates -type f                                             -exec chmod 660 {} \;
 find ./$SUB/tmp                 -type f                                             -exec chmod 660 {} \;
 find ./$SUB/var                 -type f                                             -exec chmod 660 {} \;
 
