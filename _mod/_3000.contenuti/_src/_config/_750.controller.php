@@ -39,9 +39,8 @@
 
             // ...
             // if( realpath( $base ) !== $base ) {
-            if( trim( absolutePath( $base ), '/' ) !== $base ) {
-                die( absolutePath( $base ) . ' !== ' . $base );
-                die( 'sorry guy, not your lucky day' );
+            if( rtrim( absolutePath( $base ), '/' ) !== $base ) {
+                die( rtrim( absolutePath( $base ), '/' ) . ' !== ' . $base );
             }
 
             // nome del file custom
@@ -61,19 +60,19 @@
                 // ...
                 writeToFile( $_REQUEST['__template_files__']['contenuto'], $custom );
 
-            } elseif( ! file_exists( DIR_BASE . $custom ) && file_exists( DIR_BASE . $base ) ) {
+            } elseif( ! file_exists( getFullPath( $custom ) ) && file_exists( getFullPath( $base ) ) ) {
 
                 // debug
                 // die( 'creazione nuovo file da standard' );
                 // die( $custom );
 
                 // ...
-                $standard = file_get_contents( DIR_BASE . $base );
+                $standard = readFromFile( $base );
 
                 // ...
                 writeToFile( $standard, $custom );
 
-            } elseif( ! file_exists( DIR_BASE . $custom ) ) {
+            } elseif( ! file_exists( getFullPath( $custom ) ) ) {
 
                 // debug
                 // die( 'creazione nuovo file vuoto' );
@@ -85,15 +84,17 @@
             }
 
             // cerco il contenuto custom e se non esiste prendo lo standard
-            if( file_exists( DIR_BASE . $custom ) ) {
+            if( file_exists( getFullPath( $custom ) ) ) {
 
                 // die( $custom );
+                // die( 'leggo dal file: ' . $custom );
                 $_REQUEST['__template_files__']['contenuto'] = readFromFile( $custom, FILE_READ_AS_STRING );
                 $ct['etc']['reading'] = $custom;
 
             } else {
 
                 // die( $base );
+                // die( 'leggo dal file: ' . $base . ' perché ' . $custom . ' non esiste' );
                 $_REQUEST['__template_files__']['contenuto'] = readFromFile( $base, FILE_READ_AS_STRING );
                 $ct['etc']['reading'] = $base;
 
