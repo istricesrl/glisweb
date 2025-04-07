@@ -64,6 +64,18 @@
 			'etc'				=> array( 'tabs'	=> $p['iscrizioni.view']['etc']['tabs'] )
 		);
 
+		// tools form iscrizioni
+		$p['iscrizioni.tools'] = array(
+			'sitemap'			=> false,
+			'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+			'title'				=> array( $l		=> 'azioni iscrizioni' ),
+			'h1'				=> array( $l		=> 'azioni' ),
+			'parent'			=> array( 'id'		=> 'iscrizioni.view' ),
+			'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+			'macro'				=> array( $m . '_src/_inc/_macro/_iscrizioni.tools.php' ),
+			'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+			'etc'				=> array( 'tabs'	=> 'iscrizioni.view' )
+		);
 
 		// stampe iscrizioni
 		$p['iscrizioni.form'] = array(

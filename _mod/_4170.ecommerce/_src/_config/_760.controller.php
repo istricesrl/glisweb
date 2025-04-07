@@ -32,3 +32,5 @@
 
     }
 
+    // debug
+    // die( print_r( $_SESSION['carrello']['articoli'], true ) );

@@ -118,7 +118,12 @@
 			$cf['memcache']['index'],
 			$cf['memcache']['connection'],
 			$cf['mysql']['connection'],
-			'SELECT articoli.id, articoli.nome, metadati.nome AS meta, metadati.testo FROM articoli LEFT JOIN metadati ON metadati.id_articolo  = articoli.id AND metadati.nome = "periodo_iscrizione" WHERE articoli.id_prodotto = ?',
+			'SELECT articoli.id, articoli.nome, metadati.nome AS meta, metadati.testo 
+            FROM articoli 
+            INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto
+            INNER JOIN progetti ON progetti.id_prodotto = prodotti.id
+            LEFT JOIN metadati ON metadati.id_articolo  = articoli.id AND metadati.nome = "periodo_iscrizione" 
+            WHERE progetti.id = ? -- articoli.id_prodotto = ?',
 			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_progetto'] ) )
 		);
 
@@ -129,7 +134,9 @@
 				$cf['memcache']['index'],
 				$cf['memcache']['connection'],
 				$cf['mysql']['connection'],
-				'SELECT * FROM prezzi WHERE prezzi.id_articolo = ? AND prezzi.id_listino = 1',
+				'SELECT * FROM prezzi 
+                WHERE prezzi.id_articolo = ? 
+                AND prezzi.id_listino = 1',
 				array( array( 's' => $a['id'] ) )
 			);
 
@@ -145,7 +152,9 @@
 
 			$ct['etc']['carrello'] = mysqlSelectValue(
 				$cf['mysql']['connection'],
-				'SELECT id_carrello FROM carrelli_articoli WHERE destinatario_id_anagrafica = ? AND id_articolo IN (\'' . implode( '\',\'', $articoli ) . '\')',
+				'SELECT id_carrello 
+                FROM carrelli_articoli 
+                WHERE destinatario_id_anagrafica = ? AND id_articolo IN (\'' . implode( '\',\'', $articoli ) . '\')',
 				array( array( 's' => $_REQUEST['contratti']['contratti_anagrafica'][0]['id_anagrafica'] ) )
 			);
 
