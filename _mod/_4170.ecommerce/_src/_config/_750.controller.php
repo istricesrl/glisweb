@@ -638,41 +638,45 @@
 
                         // aggiorno la riga
                         // TODO aggiungere i campi id_coupon, coupon_percentuale e coupon_valore
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['id'] = mysqlInsertRow(
-                            $cf['mysql']['connection'],
-                            array(
-                                'id_carrello'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'],
-                                'id_articolo'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'],
-                                'descrizione'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'],
-                                'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica'],
-                                'id_mastro_provenienza'         => $_SESSION['carrello']['articoli'][ $rowKey ]['id_mastro_provenienza'],
-                                'id_rinnovo'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'],
-                                'id_iva'                        => $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
-                                'id_listino'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'],
-                                'id_coupon'                     => $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'],
-                                'quantita'                      => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'] ),
-                                'prezzo_netto_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] ),
-                                'prezzo_lordo_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] ),
-                                'prezzo_netto_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] ),
-                                'prezzo_lordo_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] ),
-                                'costo_spedizione_netto'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] ),
-                                'costo_spedizione_lordo'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] ),
-                                'sconto_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ),
-                                'sconto_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ),
-                                'coupon_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_percentuale'] ),
-                                'coupon_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] ),
-                                'prezzo_netto_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] ),
-                                'prezzo_lordo_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] )
-                            ),
-                            'carrelli_articoli',
-                            true,
-                            false,
-                            array(
-                                'id_carrello',
-                                'id_articolo',
-                                'destinatario_id_anagrafica'
-                            )
-                        );
+                        if( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'] ) ) {
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id'] = mysqlInsertRow(
+                                $cf['mysql']['connection'],
+                                array(
+                                    'id_carrello'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'],
+                                    'id_articolo'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'],
+                                    'descrizione'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'],
+                                    'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica'],
+                                    'id_mastro_provenienza'         => $_SESSION['carrello']['articoli'][ $rowKey ]['id_mastro_provenienza'],
+                                    'id_rinnovo'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'],
+                                    'id_iva'                        => $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
+                                    'id_listino'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'],
+                                    'id_coupon'                     => $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'],
+                                    'quantita'                      => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'] ),
+                                    'prezzo_netto_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] ),
+                                    'prezzo_lordo_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] ),
+                                    'prezzo_netto_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] ),
+                                    'prezzo_lordo_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] ),
+                                    'costo_spedizione_netto'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] ),
+                                    'costo_spedizione_lordo'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] ),
+                                    'sconto_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ),
+                                    'sconto_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ),
+                                    'coupon_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_percentuale'] ),
+                                    'coupon_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] ),
+                                    'prezzo_netto_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] ),
+                                    'prezzo_lordo_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] )
+                                ),
+                                'carrelli_articoli',
+                                true,
+                                false,
+                                array(
+                                    'id_carrello',
+                                    'id_articolo',
+                                    'destinatario_id_anagrafica'
+                                )
+                            );
+                        } else {
+                            logWrite( 'impossibile aggiornare l\'articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' per id carrello mancante', 'cart', LOG_ERR );
+                        }
 
                         // arrotondo il prezzo finale
                         $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'], 2 );
