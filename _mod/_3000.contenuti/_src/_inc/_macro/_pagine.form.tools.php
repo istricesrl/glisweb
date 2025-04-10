@@ -88,8 +88,8 @@
     // TODO questo e gli altri file latest andrebbero spostati in var/spool/latest/
     foreach( $ct['etc']['stages'] as $stage ) {
         $stage = strtolower( $stage['id'] );
-        if( file_exists( DIR_VAR .'latest.deploy.'.$stage.'.conf' ) ) {
-            $refDate = filemtime( DIR_VAR .'latest.deploy.'.$stage.'.conf' );
+        if( file_exists( DIR_VAR .'latest.deploy.'.$stage.'.time.conf' ) ) {
+            $refDate = filemtime( DIR_VAR .'latest.deploy.'.$stage.'.time.conf' );
             foreach( $ct['etc']['upload']['all'] as $file ) {
                 if( filemtime( $file ) > $refDate ) {
                     $ct['etc']['upload'][ $stage ] = $file;

@@ -7954,6 +7954,7 @@ CREATE OR REPLACE VIEW regioni_view AS
 		regioni.id,
 		regioni.id_stato,
 		stati.nome AS stato,
+		regioni.nome,
 		regioni.codice_istat,
 		concat_ws(
 			' ',
