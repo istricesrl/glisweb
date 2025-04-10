@@ -1101,7 +1101,7 @@
             // ciclo sul contenuto
             foreach( getFolderIterator( $d ) as $f ) {
                 if( $f->isFile() ) {
-                    $r[] = ( $s === true ) ? $f->getRealPath() : $f->getFileName();
+                    $r[] = ( $s === false ) ? $f->getRealPath() : $f->getFileName();
                 }
             }
 
