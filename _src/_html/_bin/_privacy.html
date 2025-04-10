@@ -18,6 +18,7 @@
 {% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
 {% if items.consensi is iterable %}
 {% for codice,check in items.consensi|sort((a, b) => a.ordine <=> b.ordine) %}
+{% if check.label[ ietf ] %}
 {% if key %}{% set nm = '['~ref~']['~key~']['~codice~']' %}{% set id = ref~key~codice %}{% else %}{% set nm = '['~ref~']['~codice~']' %}{% set id = ref~codice %}{% endif %}
 <div class="{{ rclass }} row-privacy">
     <div class="{{ class }}">
@@ -35,6 +36,9 @@
     </div>
 </div>
 {% else %}
+<!-- il consenso {{ codice }} non ha una label per la lingua {{ ietf }} -->
+{% endif %}
+{% else %}
 <div class="{{ rclass }} row-privacy">
     <div class="{{ class }}">
 		<p>nessun consenso richiesto per questo modulo</p>
@@ -44,4 +48,5 @@
 {% else %}
 <!-- nessun consenso configurato per questo modulo -->
 {% endif %}
+<!-- fine macro {{ _self }}::checkConsensi() -->
 {% endmacro %}

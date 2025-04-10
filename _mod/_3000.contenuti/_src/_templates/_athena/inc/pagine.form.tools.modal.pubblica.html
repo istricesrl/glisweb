@@ -5,12 +5,16 @@
 {% set ietf = localization.language.ietf %}
 
 <script>
-    function pubblica( ) {
+    function pubblica() {
+
 		$('#btnpubblica').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 	
 		var call = '{{ site.url }}_mod/_3000.contenuti/_src/_api/_task/_pagine.upload.php?id={{ request[table].id }}&target=' + $('#___stage__').val();
 
 		var progress = '{{ site.url }}var/progress/ftp.{{ request[table].id }}.progress';
+
+		var total = 0;
+		var current = 0;
 
 		$('#progress-row').fadeIn();
 
@@ -27,11 +31,14 @@
                 console.log('corrente: ' + $('#ftp-progress').attr('aria-valuenow'));
                 console.log('totale: ' + $('#ftp-progress').attr('aria-valuemax'));
                 console.log('progress: ' + $('#ftp-progress').css('width'));
+				total = data.total;
+				current = data.current;
 			});
 
         }, 1000);
 
 		getws( call,'', function() {
+			console.log('-- caricamento DATABASE --');
 			$('#btnpubblica').html('<i class="fa fa-check"></i>');
 			location.reload();
 		});

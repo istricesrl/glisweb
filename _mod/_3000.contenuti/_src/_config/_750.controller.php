@@ -39,8 +39,8 @@
 
             // ...
             // if( realpath( $base ) !== $base ) {
-            if( rtrim( absolutePath( $base ), '/' ) !== $base ) {
-                die( rtrim( absolutePath( $base ), '/' ) . ' !== ' . $base );
+            if( trim( absolutePath( $base ), '/' ) !== trim( $base , '/' ) ) {
+                die( trim( absolutePath( $base ), '/' ) . ' !== ' . trim( $base , '/' ) );
             }
 
             // nome del file custom

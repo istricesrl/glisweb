@@ -161,6 +161,12 @@
                                     getRecursiveFileList( path2custom( DIR_BASE . '/' . $template ) )
                                 );
 
+                                // ...
+                                $toFtp = array_merge(
+                                    $toFtp,
+                                    getRecursiveFileList( DIR_VAR_CONTENUTI )
+                                );
+
                                 // dati della vista per i moduli
                                 foreach( $cf['mods']['active']['array'] as $mod ) {
                                     $toFtp = array_merge(
@@ -169,32 +175,9 @@
                                     );
                                 }
 
-                                /*
-                                // creo il job
-                                $status['inserimento'] = mysqlQuery(
-                                    $cf['mysql']['connection'],
-                                    'INSERT INTO job ( nome, job, iterazioni, delay, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ?, ? )',
-                                    array(
-                                        array( 's' => 'caricamento FTP file aggiornati' ),
-                                        array( 's' => '_mod/_3000.contenuti/_src/_api/_job/_pagine.upload.php' ),
-                                        array( 's' => 3 ),
-                                        array( 's' => 20 ),
-                                        array( 's' => 1 ),
-                                        array( 's' => json_encode(
-                                            array(
-                                                'files' => array_map( 'shortPath', $toFtp ),
-                                                'server' => $cf['ftp']['servers'][ $cf['ftp']['profiles'][ $_REQUEST['target'] ]['servers'][0] ]
-                                            )
-                                        ) )
-                                    )
-                                );
-
-                                // die( $status['inserimento'] );
-                                */
-
                                 // ...
                                 $ftpSrv = $cf['ftp']['servers'][ $cf['ftp']['profiles'][ $_REQUEST['target'] ]['servers'][0] ];
-
+/*
                                 // ...
                                 $toFtp = array_merge(
                                     mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM immagini WHERE id_pagina = ?', array( array( 's' => $_REQUEST['id'] ) ) )
@@ -222,7 +205,7 @@
                                         getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ), true )
                                     );
                                 }
-
+*/
                                 // debug
                                 // die( $template );
                                 // die( print_r( $toFtp, true ) );
@@ -259,16 +242,25 @@
                                             // deleteFile( 'tmp/ftp.progress' );
 
                                             // ...
+                                            $refFile = DIR_VAR .'latest.deploy.'.strtolower( $_REQUEST['target'] ).'.time.conf';
+
+                                            // ...
+                                            $refTime = ( file_exists( $refFile ) ) ? filemtime( $refFile ) : 0;
+
+                                            // log
+                                            logger( 'tref di ' . $refFile . ' -> ' . $refTime, 'details/ftp.log' );
+
+                                            // ...
                                             foreach( $toFtp as $to ) {
 
                                                 // ...
-                                                $refFile = DIR_VAR .'latest.deploy.'.strtolower( $_REQUEST['target'] ).'.conf';
+                                                $refToTime = filemtime( getFullPath( $to ) );
 
                                                 // ...
-                                                $refTime = ( file_exists( $refFile ) ) ? filemtime( $refFile ) : 0;
+                                                if( $refTime < $refToTime ) {
 
-                                                // ...
-                                                if( filemtime( fullPath( $to ) ) < $refTime ) {
+                                                    // log
+                                                    logger( 'procedo al caricamento in quanto tref ' . $refTime . ' < ' . $refToTime . ' per ' . getFullPath( $to ), 'details/ftp.log' );
 
                                                     // ...
                                                     set_time_limit( 240 );
@@ -319,43 +311,63 @@
                                                     } else {
                                                         //$fail++;
                                                         $done++;
-                                                        $status['err'][] = 'impossibile trasferire ' . $to . ' (' . boolean2string( $ftpPut ) . ')';
+                                                        $status['info'][] = 'trasferito ' . $to . ' (' . boolean2string( $ftpPut ) . ')';
                                                         logger( ftp_pwd( $ftpConn ) . ' -> ' . $mode . ' -> ' . $to . PHP_EOL, 'details/ftp.'.$base.'.success' );
                                                         $esito = 'OK';
                                                     }
 
                                                     // ...
-                                                    appendToFile( date( 'Y-m-d H:i:s' ) . ' ' . $esito . ' -> ' . $to . PHP_EOL, $refFile );
+                                                    appendToFile( date( 'Y-m-d H:i:s' ) . ' ' . $esito . ' -> ' . $to . PHP_EOL, 'details/ftp.'.$base.'.log' );
 
                                                     // ...
                                                     for( $i = 0; $i < count( $path ); $i++ ) {
                                                         $ftpDir = ftp_cdup( $ftpConn );
                                                     }
 
+                                                } else {
+
+                                                    // log
+                                                    logger( 'non procedo al caricamento in quanto tref ' . $refTime . ' >= ' . $refToTime, 'details/ftp.log' );
+
+                                                    // conta come done visto che non va trasferito
+                                                    $done++;
+                                                    $status['info'][] = 'saltato ' . $to . ' (' . boolean2string( $ftpPut ) . ')';
+                                                    logger( ftp_pwd( $ftpConn ) . ' -> saltato -> ' . $to . PHP_EOL, 'details/ftp.'.$base.'.success' );
+                                                    $esito = 'SKIPPED';
+
                                                     // ...
-                                                    writeToFile(
-                                                        json_encode(
-                                                            array(
-                                                                'total' => count( $toFtp ),
-                                                                'done' => $done,
-                                                                'fail' => $fail,
-                                                                'current' => ( $done + $fail ),
-                                                                'connection' => ( ( empty( $ftpConn ) ) ? 'NO' : 'OK' ),
-                                                                'login' => $ftpLogin,
-                                                                'server' => $ftpSrv['address'],
-                                                                // 'lista' => $toFtp,
-                                                                'status' => $status
-                                                            )
-                                                        ),
-                                                        'var/progress/ftp.'.$_REQUEST['id'].'.progress'
-                                                    );
+                                                    appendToFile( date( 'Y-m-d H:i:s' ) . ' ' . $esito . ' -> ' . $to . PHP_EOL, 'details/ftp.'.$base.'.log' );
 
                                                 }
+
+                                                // ...
+                                                writeToFile(
+                                                    json_encode(
+                                                        array(
+                                                            'total' => count( $toFtp ),
+                                                            'done' => $done,
+                                                            'fail' => $fail,
+                                                            'current' => ( $done + $fail ),
+                                                            'connection' => ( ( empty( $ftpConn ) ) ? 'NO' : 'OK' ),
+                                                            'login' => $ftpLogin,
+                                                            'server' => $ftpSrv['address'],
+                                                            // 'lista' => $toFtp,
+                                                            // 'status' => $status
+                                                        )
+                                                    ),
+                                                    'var/progress/ftp.'.$_REQUEST['id'].'.progress'
+                                                );
+
+                                                // ...
+                                                writeToFile( date( 'Y-m-d H:i:s' ) . ' completato caricamento FTP' . PHP_EOL, $refFile );
 
                                             }
 
                                             // ...
                                             ftp_close( $ftpConn );
+
+                                            // ...
+                                            // moveFile( 'var/progress/ftp.'.$_REQUEST['id'].'.progress', 'var/progress/ftp.'.$_REQUEST['id'].'.progress.' . time() . '.done' );
 
                                         } else {
 

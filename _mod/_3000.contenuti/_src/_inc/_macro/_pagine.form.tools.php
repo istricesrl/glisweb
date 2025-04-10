@@ -56,6 +56,7 @@
         }
     }
 
+/*
     // ...
     $ct['etc']['upload']['all'] = array_merge(
         mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM immagini WHERE id_pagina = ?', array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) ) )
@@ -97,6 +98,7 @@
             }
         }
     }
+*/
 
     // debug
     // die( $template );
