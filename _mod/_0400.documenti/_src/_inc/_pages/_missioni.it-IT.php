@@ -47,12 +47,26 @@
 			'js'			=> array( 'internal' => array( $m . '_src/_templates/_athena/src/js/missioni.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'missioni.form',
+															'missioni.form.contenuto',
+															'missioni.form.evasione',
 															'missioni.form.righe',
 															'missioni.form.chiusura',
 															'missioni.form.invio',
 															'missioni.form.stampe',
 															'missioni.form.tools' ) )
 		);        
+
+        // gestione tools missioni
+        $p['missioni.form.contenuto'] = array(
+            'sitemap'		=> false,
+            'title'			=> array( $l		=> 'contenuto missione' ),
+            'h1'			=> array( $l		=> 'contenuto' ),
+            'parent'		=> array( 'id'		=> 'missioni.view' ),
+            'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'missioni.form.contenuto.html' ),
+            'macro'			=> array( $m.'_src/_inc/_macro/_missioni.form.contenuto.php' ),
+            'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+            'etc'			=> array( 'tabs'	=> $p['missioni.form']['etc']['tabs'] )
+        );
 
         // gestione tools missioni
         $p['missioni.form.righe'] = array(
@@ -62,6 +76,18 @@
             'parent'		=> array( 'id'		=> 'missioni.view' ),
             'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'missioni.form.righe.html' ),
             'macro'			=> array( $m.'_src/_inc/_macro/_missioni.form.righe.php' ),
+            'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+            'etc'			=> array( 'tabs'	=> $p['missioni.form']['etc']['tabs'] )
+        );
+
+        // gestione tools missioni
+        $p['missioni.form.evasione'] = array(
+            'sitemap'		=> false,
+            'title'			=> array( $l		=> 'evasione' ),
+            'h1'			=> array( $l		=> 'evasione' ),
+            'parent'		=> array( 'id'		=> 'missioni.view' ),
+            'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'missioni.form.evasione.html' ),
+            'macro'			=> array( $m.'_src/_inc/_macro/_missioni.form.evasione.php' ),
             'auth'			=> array( 'groups'	=> array(	'roots' ) ),
             'etc'			=> array( 'tabs'	=> $p['missioni.form']['etc']['tabs'] )
         );

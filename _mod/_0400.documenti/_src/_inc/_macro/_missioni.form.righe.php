@@ -174,12 +174,6 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
-    // tendina righe non in missione
-	$ct['etc']['select']['righe'] = mysqlQuery(
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM documenti_articoli_view WHERE id_missione IS NULL AND id_tipologia = 7 ORDER BY __label__'
-	);
-
 /*
     // tendina articoli
 	$ct['etc']['select']['id_articoli'] = mysqlCachedIndexedQuery(

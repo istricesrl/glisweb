@@ -1,0 +1,109 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+{% import 'bin/documenti.form.sub.html' as sub %}
+
+{% extends "ext/main.html" %}
+
+{% block main %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+{# ACCOUNT #}
+{% if session.account.id %}
+    {% set account = session.account.id %}
+{% else %}
+    {% set account = '__null__' %}
+{% endif %}
+
+{# TIPO DI METODO E ATTIVITA' SVOLTA #}
+{% if request[ table ].id %}
+    {% set method = 'update' %}
+    {% set activity = 'aggiornamento' %}
+    {% set legend = 'aggiornato ' ~ request[ table ][ 'timestamp_aggiornamento' ]|date('Y/m/d H:i:s') %}
+{% else %}
+    {% set method = 'post' %}
+    {% set activity = 'inserimento' %}
+    {% set legend = 'inserimento nuovo oggetto' %}
+{% endif %}
+
+{# FORM DI GESTIONE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+	<form id="form-{{ table }}" class="form-main d-flex flex-column flex-fill" action="{{ page.path[ ietf ] }}" method="post" autocomplete="off">
+
+	    {# CAMPI HIDDEN DI BASE #}
+	    <input type="hidden" id="id" name="{{ table }}[id]" value="{{ request[ table ].id }}">
+	    <input type="hidden" id="method" name="{{ table }}[__method__]" value="{{ method }}">
+	    <input type="hidden" id="reset" name="{{ table }}[__reset__]" value="">
+	    <input type="hidden" id="timestamp" name="{{ table }}[timestamp_{{ activity }}]" value="{{ 'now'|date('U') }}">
+	    <input type="hidden" id="account" name="{{ table }}[id_account_{{ activity }}]" value="{{ account }}">
+	    {% if request.__backurl__ %}{# TODO VEDERE SE FUNZIONA ANCHE COSÌ FUORI DALL'IF #}{% endif %}
+	    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+
+        {# BIP DEGLI ARTICOLI #}
+        <fieldset>
+            <legend>dati generali <small>{{ legend }}</small></legend>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">codice o matricola</span>
+                    {{ frm.inputRequired( '__bip__', '', '', '__codice__', '', '', '', '', '', 'focus-on-load' ) }}
+                </div>
+                <div class="col-12 col-md-auto">
+                    <button type="submit" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;">INVIA</button>
+                </div>
+            </div>
+        </fieldset>
+
+        {# VIEW PRINCIPALE #}
+        <table class="table view-table-static">
+            <thead>
+                <tr>
+                    <th>
+                        collocazione
+                    </th>
+                    <th>
+                        articolo
+                    </th>
+                    <th>
+                        da prelevare
+                    </th>
+                    <th>
+                        prelevato
+                    </th>
+                    <th>
+                        ordini collegati
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for riga in etc.dati %}
+                <tr>
+                    <td>
+                        {{ riga.collocazione }}
+                    </td>
+                    <td>
+                        {{ riga.descrizione }}
+                    </td>
+                    <td>
+                        {{ riga.qta_da_prelevare|number_format(2, ',', '.') }}
+                    </td>
+                    <td>
+                        {{ riga.qta_prelevata|number_format(2, ',', '.') }}
+                    </td>
+                    <td>
+                        {{ riga.documenti|replace({'|': '<br>'})|raw }}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+            <tfoot></tfoot>
+        </table>
+        
+    </form>
+</div>
+</section>
+
+{% endblock %}
