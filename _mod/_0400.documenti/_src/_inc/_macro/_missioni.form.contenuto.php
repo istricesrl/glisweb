@@ -152,12 +152,17 @@
 
 	}
 
+	$ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/missioni.form.contenuto.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
+
 	// preset filtro righe documento
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		$ct['view']['__restrict__']['id_missione']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
-		$ct['view']['__restrict__']['id_genitore']['NN'] = true;
+		$ct['view']['__restrict__']['id_genitore']['NL'] = true;
 	}
-
 
     $ct['etc']['select']['righe'] = mysqlQuery(
         $cf['mysql']['connection'],
@@ -173,12 +178,6 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
-
-    // tendina righe non in missione
-	$ct['etc']['select']['righe'] = mysqlQuery(
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM documenti_articoli_view WHERE id_missione IS NULL AND id_tipologia = 7 ORDER BY __label__'
-	);
 
 /*
     // tendina articoli
