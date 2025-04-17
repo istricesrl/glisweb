@@ -44,16 +44,28 @@ function checkTelefono( obj ) {
  * @param {*} obj   oggetto su cui effettuare il controllo
  * @returns         ritorna 1 o 0 a seconda dell'esito del controllo
  */
- function checkRequired( obj ){
+ function checkRequired( obj, l ){
+
+    console.log( 'checkRequired ' + obj.attr('id') + ' ' + l );
+
+    if( l == 'en-GB' ) {
+        var msg = 'mandatory field';
+    } else {
+        var msg = 'campo obbligatorio';
+    }
 
     if( obj.attr('type') == 'checkbox' ){
         if( obj.is(':checked') ){
             return 1;
         }
         else{
-            // leggo le classi del padre per associarle alla div di errore
-            var c =  obj.parent().attr('class');
-            obj.parent().after('<div class="label-err ' + c + '"><label>campo obbligatorio</label></div>');
+            // se l'id dell'oggetto non è in errorFields
+            if( errorFields.indexOf( obj.attr('id') ) < 0 ){
+                // leggo le classi del padre per associarle alla div di errore
+                var c =  obj.parent().attr('class');
+                obj.parent().after('<div class="label-err ' + c + '"><label>' + msg + '</label></div>');
+                errorFields.push( obj.attr('id') );
+            }
             return 0;
         }
     }
@@ -62,7 +74,11 @@ function checkTelefono( obj ) {
             return 1;
         }
         else{
-            obj.after('<div class="label-err"><label>campo obbligatorio</label></div>');
+            // se l'id dell'oggetto non è in errorFields
+            if( errorFields.indexOf( obj.attr('id') ) < 0 ){
+                obj.after('<div class="label-err"><label>' + msg + '</label></div>');
+                errorFields.push( obj.attr('id') );
+            }
             return 0;
         }  
     }
@@ -74,7 +90,7 @@ function checkTelefono( obj ) {
  * @param {*} f     id del form
  * @returns         ritorna true o false a seconda dell'esito del controllo
  */
-function checkForm( f ){
+function checkForm( f, l ){
 
     // rimozione degli eventuali messaggi di errore
     $( '#'+f ).find('.label-err').remove();
@@ -86,8 +102,9 @@ function checkForm( f ){
         
         // verifico se il campo è required
         if( $(this).prop('required') ){
-            ck += checkRequired( $(this) );   
-            if( checkRequired( $(this) ) == 0 ){
+            e = checkRequired( $(this), l );
+            ck += e;   
+            if( e == 0 ){
                 console.log('errore mancata compilazione campo required ' + $(this).prop('name') );
             }
             
@@ -124,6 +141,9 @@ function checkForm( f ){
 
 // operazioni da eseguire al caricamento della pagina
 $( document ).ready( function() {
+
+    // ...
+    errorFields = [];
 
     // debug
     console.log( 'form.js' );

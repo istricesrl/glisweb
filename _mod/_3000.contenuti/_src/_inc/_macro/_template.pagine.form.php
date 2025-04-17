@@ -94,7 +94,7 @@
     $base = DIR_BASE . '_src/_templates/_' . $_REQUEST[ $ct['form']['table'] ]['id'];
 
     // file del template
-    $files = getRecursiveFileList( $base, true );
+    $files = getRecursiveFileList( $base, false );
 
     // debug
     // die( print_r( $files, true ) );
@@ -118,7 +118,7 @@
     $base = path2custom( $base );
 
     // file del template
-    $files = getRecursiveFileList( $base, true );
+    $files = getRecursiveFileList( $base, false );
 
     // dati della vista
     foreach( $files as $file ) {

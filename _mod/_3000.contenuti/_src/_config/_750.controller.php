@@ -26,12 +26,12 @@
             if( isset( $_REQUEST['__template_files__']['modulo'] ) && ! empty( $_REQUEST['__template_files__']['modulo'] ) ) {
                 $base = DIR_MOD . 
                     '_' . $_REQUEST['__template_files__']['modulo'] . 
-                    '/_src/_templates/_' . $_REQUEST['__templates__']['id'] . 
+                    '/_src/_templates/_' . $_REQUEST['__templates__']['id'] . '/' . 
                     ( ( isset( $_REQUEST['__template_files__']['folder'] ) ) ? $_REQUEST['__template_files__']['folder'] : NULL ) .
                     '/' . $_REQUEST['__template_files__']['id'];
             } else {
                 $base = '_src/_templates/' . 
-                    '_' . $_REQUEST['__templates__']['id'] . 
+                    '_' . $_REQUEST['__templates__']['id'] . '/' . 
                     ( ( isset( $_REQUEST['__template_files__']['folder'] ) ) ? $_REQUEST['__template_files__']['folder'] : NULL ) .
                     '/' . $_REQUEST['__template_files__']['id'];
             }
@@ -39,6 +39,9 @@
             // debug
             // var_dump( $base );
             // var_dump( absolutePath( $base ) );
+
+            // ...
+            $base = str_replace( '//', '/', $base );
 
             // ...
             // if( realpath( $base ) !== $base ) {
