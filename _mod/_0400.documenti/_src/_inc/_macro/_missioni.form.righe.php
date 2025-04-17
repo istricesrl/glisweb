@@ -28,10 +28,10 @@
     // id della vista
    # $ct['view']['id'] = md5( $ct['view']['table'] );
 
-        // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'documenti.articoli.form';
-    $ct['view']['open']['table'] = 'documenti_articoli';
-    $ct['view']['open']['field'] = 'id';
+    // pagina per la gestione degli oggetti esistenti
+	// $ct['view']['open']['page'] = 'documenti.articoli.form';
+    // $ct['view']['open']['table'] = 'documenti_articoli';
+    // $ct['view']['open']['field'] = 'id';
 
 	// pagina per l'inserimento di un nuovo oggetto
 	// $ct['view']['insert']['page'] = 'documenti.articoli.form';
@@ -158,6 +158,11 @@
 		$ct['view']['__restrict__']['id_genitore']['NN'] = true;
 	}
 
+	$ct['etc']['include']['insert'][] = array(
+        'name' => 'insert',
+        'file' => 'inc/missioni.form.righe.insert.html',
+        'fa' => 'fa-plus-circle'
+    );
 
     $ct['etc']['select']['righe'] = mysqlQuery(
         $cf['mysql']['connection'],
@@ -173,6 +178,12 @@
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+
+    // tendina righe non in missione
+	$ct['etc']['select']['righe'] = mysqlQuery(
+	    $cf['mysql']['connection'],
+	    'SELECT id, __label__ FROM documenti_articoli_view WHERE id_missione IS NULL AND id_tipologia = 7 ORDER BY __label__'
+	);
 
 /*
     // tendina articoli

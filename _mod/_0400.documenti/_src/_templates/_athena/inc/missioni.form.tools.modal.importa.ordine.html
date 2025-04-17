@@ -1,34 +1,33 @@
 {% import '_bin/_form.html' as frm %}
 
 <script>
-    function esporta() {
-	var data = $('#_id_categoria').val();
-	window.open( '/print/anagrafica.csv?__categoria__='+data, '_self');
+    function importa() {
+	var data = $('#_id_documento').val();
+	window.open( '?documenti[id]={{ request[ form.table ].id }}&__ordine__='+data, '_self');
     }
 </script>
 
-<div class="modal" tabindex="-1" role="dialog" id="esporta_per_mail">
+<div class="modal" tabindex="-1" role="dialog" id="importa_intero_ordine">
     <div class="modal-dialog" role="document">
 	<div class="modal-content">
 	    <div class="modal-header">
-		<h5 class="modal-title">esporta CSV categoria anagrafica</h5>
+		<h5 class="modal-title">importa intero ordine</h5>
 		<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	    </div>
 	    <div class="modal-body">
 			<div class="container-fluid">
 				<div class="form-row">
 					<div class="col">
-						<span class="label-top">categoria</span>
-						{{ frm.selectRequired( table, '', '', 'id_categoria', 'tutte', etc.select.categorie_anagrafica, request, '', '','selectpicker' ) }}
+						<span class="label-top">documento</span>
+						{{ frm.selectRequired( '', '', '', 'id_documento', 'tutte', etc.select.documenti, request, '', '','selectpicker' ) }}
 					</div>
 				</div>
 			</div>
 	    </div>
 	    <div class="modal-footer">
-			<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="esporta();">esporta</button>
+			<button type="button" class="btn btn-secondary btn-sm" id="duplica-btn" onclick="importa();">importa</button>
 			<button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
 	    </div>
 	</div>
     </div>
 </div>
-

@@ -151,13 +151,13 @@
 		}
 
 	}
-
+/*
 	$ct['etc']['include']['insert'][] = array(
         'name' => 'insert',
         'file' => 'inc/missioni.form.contenuto.insert.html',
         'fa' => 'fa-plus-circle'
     );
-
+*/
 	// preset filtro righe documento
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		$ct['view']['__restrict__']['id_missione']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
