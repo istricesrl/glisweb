@@ -19,6 +19,9 @@
         // se è specificato un file per il template
         if( isset( $_REQUEST['__template_files__']['id'] ) && ! empty( $_REQUEST['__template_files__']['id'] ) ) {
 
+            // ...
+            $_REQUEST['__template_files__']['folder'] = trim( $_REQUEST['__template_files__']['folder'], './' );
+
             // se è specificato un modulo per il template
             if( isset( $_REQUEST['__template_files__']['modulo'] ) && ! empty( $_REQUEST['__template_files__']['modulo'] ) ) {
                 $base = DIR_MOD . 
@@ -50,6 +53,7 @@
             // var_dump( $_REQUEST['__template_files__']['contenuto'] );
             // var_dump( $custom );
             // var_dump( file_exists( $custom ) );
+            // die( 'custom: ' . $custom );
 
             // scrittura
             if( isset( $_REQUEST['__template_files__']['contenuto'] ) && ! empty( trim( $_REQUEST['__template_files__']['contenuto'] ) ) ) {
@@ -86,6 +90,7 @@
             // cerco il contenuto custom e se non esiste prendo lo standard
             if( file_exists( getFullPath( $custom ) ) ) {
 
+                // debug
                 // die( $custom );
                 // die( 'leggo dal file: ' . $custom );
                 $_REQUEST['__template_files__']['contenuto'] = readFromFile( $custom, FILE_READ_AS_STRING );

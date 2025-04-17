@@ -128,7 +128,8 @@
                         'codice_fiscale' => ( ! empty( $row['codice_fiscale'] ) ) ? $row['codice_fiscale'] : NULL,
                         'nome' => $row['nome'],
                         'cognome' => $row['cognome'],
-                        'denominazione' => $row['denominazione']
+                        'denominazione' => $row['denominazione'],
+                        'sesso' => ( ! empty( $row['sesso'] ) ) ? $row['sesso'] : NULL
                     ),
                     'anagrafica'
                 );

@@ -3543,7 +3543,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
     SELECT
 		documenti_articoli.id,
 		documenti_articoli.id_genitore,
-		documenti_articoli.id_tipologia,
+		coalesce( documenti_articoli.id_tipologia, documenti.id_tipologia ) AS id_tipologia,
 		tipologie_documenti.nome AS tipologia,
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
