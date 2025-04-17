@@ -25,7 +25,7 @@
     if( isset( $ct['page']['metadati']['id_prodotto'] )  && ! empty( $ct['page']['metadati']['id_prodotto'] ) ) {
 
         $ct['page']['contents']['articoli'] = mysqlQuery( $cf['mysql']['connection'],
-            'SELECT articoli.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
+            'SELECT articoli.id, contenuti.h1, contenuti.h2, contenuti.cappello, contenuti.specifiche, contenuti.abstract, '
             .'contenuti.title, articoli.id_taglia, articoli.id_colore,  '
             .'lingue_view.ietf FROM articoli '
             .'LEFT JOIN contenuti ON ( contenuti.id_articolo = articoli.id AND contenuti.id_lingua = ? ) '
@@ -88,7 +88,7 @@
         // die( print_r( $ct['etc']['selettore'], true ) );
 
         $ct['page']['contents']['accessori'] = mysqlQuery( $cf['mysql']['connection'],
-            'SELECT prodotti.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
+            'SELECT prodotti.id, contenuti.h1, contenuti.h2, contenuti.cappello, contenuti.specifiche, contenuti.abstract, '
             .'contenuti.title, '
             .'lingue_view.ietf FROM prodotti '
             .'INNER JOIN relazioni_prodotti ON relazioni_prodotti.id_prodotto_collegato = prodotti.id '
@@ -103,7 +103,7 @@
         );
 
         $ct['page']['contents']['suggeriti'] = mysqlQuery( $cf['mysql']['connection'],
-            'SELECT prodotti.id, contenuti.h1, contenuti.cappello, contenuti.specifiche, '
+            'SELECT prodotti.id, contenuti.h1, contenuti.h2, contenuti.cappello, contenuti.specifiche, contenuti.abstract, '
             .'contenuti.title, '
             .'lingue_view.ietf FROM prodotti '
             .'INNER JOIN relazioni_prodotti ON relazioni_prodotti.id_prodotto_collegato = prodotti.id '
