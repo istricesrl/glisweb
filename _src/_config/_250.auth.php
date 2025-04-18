@@ -94,6 +94,10 @@
 
         // TODO l'ordine alfabetico arriva fin qui
 
+        'colli' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'abbonamenti' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )

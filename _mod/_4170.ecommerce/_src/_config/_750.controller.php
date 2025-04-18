@@ -838,15 +838,37 @@
             aggiornaFlagCarrelloSeArrotondamento( $_SESSION['carrello'] );
 
             // se è settato il flag arrotonda_prezzo_finale arrotondo il prezzo finale
-            if( $_SESSION['carrello']['arrotonda_prezzo_finale'] == 1 ) {
+            if( $_SESSION['carrello']['arrotonda_prezzo_finale'] == 1000 ) {
+
+                // arrotondo il prezzo finale
+                $_SESSION['carrello']['prezzo_netto_finale'] = round( $_SESSION['carrello']['prezzo_netto_finale'], 5 );
+                $_SESSION['carrello']['prezzo_lordo_finale'] = round( $_SESSION['carrello']['prezzo_lordo_finale'], 5 );
+
+                if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
+
+                    // ciclo sugli articoli
+                    foreach( $_SESSION['carrello']['articoli'] as $dati ) {
+
+                        // chiave di riga
+                        $rowKey = $dati['id_articolo'].$dati['destinatario_id_anagrafica'];
+
+                        // arrotondo il prezzo finale
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'], 5 );
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'], 5 );
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'], 5 );
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'], 5 );
+
+                    }
+
+                }
+
+            } else {
 
                 // debug
                 // die( 'arrotondo il prezzo finale ' . $_SESSION['carrello']['prezzo_netto_finale'] );
                 // die( 'arrotondo il prezzo finale ' . $_SESSION['carrello']['prezzo_lordo_finale'] );
 
                 // arrotondo il prezzo finale
-                // $_SESSION['carrello']['prezzo_netto_finale'] = round( $_SESSION['carrello']['prezzo_netto_finale'], 1 );
-                // $_SESSION['carrello']['prezzo_lordo_finale'] = round( $_SESSION['carrello']['prezzo_lordo_finale'], 1 );
                 $_SESSION['carrello']['prezzo_netto_finale'] = round( $_SESSION['carrello']['prezzo_netto_finale'], 2 );
                 $_SESSION['carrello']['prezzo_lordo_finale'] = round( $_SESSION['carrello']['prezzo_lordo_finale'], 2 );
 
@@ -859,10 +881,6 @@
                         $rowKey = $dati['id_articolo'].$dati['destinatario_id_anagrafica'];
 
                         // arrotondo il prezzo finale
-                        // $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'], 1 );
-                        // $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'], 1 );
-                        // $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'], 1 );
-                        // $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'], 1 );
                         $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'], 2 );
                         $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'], 2 );
                         $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'], 2 );
@@ -871,11 +889,6 @@
                     }
 
                 }
-
-            } else {
-
-                $_SESSION['carrello']['prezzo_netto_finale'] = round( $_SESSION['carrello']['prezzo_netto_finale'], 2 );
-                $_SESSION['carrello']['prezzo_lordo_finale'] = round( $_SESSION['carrello']['prezzo_lordo_finale'], 2 );
 
             }
 

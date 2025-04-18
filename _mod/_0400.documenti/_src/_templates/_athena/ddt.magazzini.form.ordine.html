@@ -56,6 +56,12 @@
 	    <fieldset>
 			<legend>inserimento rapido riga</legend>
 			<div class="form-group form-row">
+				{% if '5600.colli' in mods.active.array %}
+				<div class="col-12 col-md">
+					<span class="label-top">collo</span>
+					{{ frm.selectBox( '__evasione__', '', '', 'id_collo', '', '', request, '', '', 1, '', '', '', '', 'colli', 'id_collo', page, pages, ietf, 'colli' ) }}
+				</div>
+				{% endif %}
 				{% if '0500.mastri' in mods.active.array %}
 				<div class="col">
 					<span class="label-top remove-after-duplicate">scarico</span>
@@ -87,8 +93,8 @@
 						</tr>
 						{% for row in etc.evasione %}
 						<tr>
-							<td>{{ row.codice_prodotto }}</td>
-							<td>{{ row.prodotto }}</td>
+							<td>{{ row.codice_prodotto }}{% if row.codice_articolo %}.{{ row.codice_articolo }}{% endif %}</td>
+							<td class="text-left">{{ row.prodotto }} {{ row.articolo }}</td>
 							<td>{{ row.quantita_ordinata }} {{ row.udm }}</td>
 							<td>{{ row.quantita_evasa }} {{ row.udm }}</td>
 							<td>{% if row.quantita_da_evadere > 0 %}{{ row.quantita_da_evadere }} {{ row.udm }}{% else %}<i class="fa fa-check"></i>{% endif %}</td>

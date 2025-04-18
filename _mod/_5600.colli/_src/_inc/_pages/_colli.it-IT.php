@@ -1,0 +1,57 @@
+<?php
+
+	// lingua di questo file
+	$l = 'it-IT';
+
+    // modulo di questo file
+	$m = DIR_MOD . '_5400.colli/';
+
+    // dashboard logistica doc. attivi
+    $p['colli.view'] = array(
+        'sitemap'		=> false,
+        'title'		=> array( $l		=> 'colli' ),
+        'h1'		=> array( $l		=> 'colli' ),
+        'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+        'macro'		=> array( $m . '_src/_inc/_macro/_colli.view.php' ),
+        'parent'	=> array( 'id'		=> 'logistica' ),
+        'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+        'etc'		=> array( 'tabs'	=> array( 'colli.view', 'colli.tools' ) ),
+        'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'colli' ),
+            'priority'	=> '120' ) ) )	
+    );
+
+    // tools colli
+    $p['colli.tools'] = array(
+        'sitemap'			=> false,
+        'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'				=> array( $l		=> 'azioni' ),
+        'h1'				=> array( $l		=> 'azioni' ),
+        'parent'			=> array( 'id'		=> 'colli.view' ),
+        'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+        'macro'				=> array( $m . '_src/_inc/_macro/_colli.tools.php' ),
+        'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+        'etc'				=> array( 'tabs'	=> $p['colli.view']['etc']['tabs'] )
+    );
+
+    // gestione ddt
+    $p['colli.form'] = array(
+        'sitemap'		=> false,
+        'title'			=> array( $l		=> 'gestione' ),
+        'h1'			=> array( $l		=> 'gestione' ),
+        'parent'		=> array( 'id'		=> 'colli.view' ),
+        'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'colli.form.html' ),
+        'macro'			=> array( $m.'_src/_inc/_macro/_colli.form.php' ),
+        'js'			=> array( 'internal' => array( $m . '_src/_templates/_athena/src/js/colli.js' ) ),
+        'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+        'etc'			=> array( 'tabs'	=> array(	'colli.form',
+                                                        'colli.form.contenuto',
+                                                        'colli.form.evasione',
+                                                        'colli.form.righe',
+                                                        'colli.form.chiusura',
+                                                        'colli.form.invio',
+                                                        'colli.form.stampe',
+                                                        'colli.form.tools' ) )
+    );        
+
+    // debug
+    // die( print_r( $p, true ) );

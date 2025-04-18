@@ -2061,7 +2061,11 @@ CREATE OR REPLACE VIEW colli_view AS
 		colli.nome,
 		colli.id_account_inserimento,
 		colli.id_account_aggiornamento,
-		colli.nome AS __label__
+		concat_ws( ' ',
+			colli.codice,
+			tipologie_colli_path( colli.id_tipologia ),
+			colli.nome
+		) AS __label__
 	FROM colli
 	;
 
@@ -9911,6 +9915,28 @@ CREATE OR REPLACE VIEW `tipologie_chiavi_view` AS
 		tipologie_chiavi.id_account_aggiornamento,
 		tipologie_chiavi_path( tipologie_chiavi.id ) AS __label__
 	FROM tipologie_chiavi
+;
+
+-- | 090000050700
+
+-- tipologie_colli_view
+DROP TABLE IF EXISTS `tipologie_colli_view`;
+
+-- | 090000050701
+
+-- tipologie_colli_view
+CREATE OR REPLACE VIEW `tipologie_colli_view` AS
+	SELECT
+		tipologie_colli.id,
+		tipologie_colli.id_genitore,
+		tipologie_colli.ordine,
+		tipologie_colli.nome,
+		tipologie_colli.html_entity,
+		tipologie_colli.font_awesome,
+		tipologie_colli.id_account_inserimento,
+		tipologie_colli.id_account_aggiornamento,
+		tipologie_colli_path( tipologie_colli.id ) AS __label__
+	FROM tipologie_colli
 ;
 
 -- | 090000050800

@@ -279,7 +279,10 @@ WITH a AS (
      FROM attivita
 )
 
-SELECT documenti.data, anagrafica.codice, concat_ws( ' ', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS cliente, coalesce( tipologie_attivita.nome, 'ancora da iniziare' ) AS stato FROM documenti
+SELECT
+  documenti.data, anagrafica.codice, 
+  concat_ws( ' ', anagrafica.nome, anagrafica.cognome, anagrafica.denominazione ) AS cliente, 
+  coalesce( tipologie_attivita.nome, 'ancora da iniziare' ) AS stato FROM documenti
 INNER JOIN anagrafica ON anagrafica.id = documenti.id_destinatario
 LEFT JOIN a ON a.id_documento = documenti.id AND a.rank = 1
 LEFT JOIN tipologie_attivita ON tipologie_attivita.id = a.id_tipologia
@@ -294,19 +297,20 @@ DROP TABLE IF EXISTS `__report_dettaglio_evasione_ordini__`;
 
 -- | 100000009873
 
-
 CREATE OR REPLACE VIEW `__report_dettaglio_evasione_ordini__` AS
 SELECT
   ordine.id_documento,
   ordine.id_ordine,
   ordine.codice_prodotto,
   ordine.prodotto,
-  sum( ( ordine.quantita_ordinata / udm.conversione ) ) AS quantita_ordinata,
-  sum( ( ordine.quantita_evasa / udm.conversione ) ) AS quantita_evasa,
+  ordine.codice_articolo,
+  ordine.articolo,
+  sum( ( ordine.quantita_ordinata / coalesce( udm.conversione, 1 ) ) ) AS quantita_ordinata,
+  sum( ( ordine.quantita_evasa / coalesce( udm.conversione, 1 ) ) ) AS quantita_evasa,
   (
-    sum( ( ordine.quantita_ordinata / udm.conversione ) )
+    sum( ( ordine.quantita_ordinata / coalesce( udm.conversione, 1 ) ) )
     -
-    sum( ( ordine.quantita_evasa / udm.conversione ) )
+    sum( ( ordine.quantita_evasa / coalesce( udm.conversione, 1 ) ) )
   ) AS quantita_da_evadere,
   udm.sigla AS udm
 FROM (
@@ -319,7 +323,8 @@ FROM (
     ) AS codice_prodotto,
     prodotti.nome AS prodotto,
     documenti_articoli.id_articolo AS codice_articolo,
-    coalesce( ( documenti_articoli.quantita * udm.conversione ), 0 ) AS quantita_ordinata,
+    articoli.nome AS articolo,
+    coalesce( ( documenti_articoli.quantita * coalesce( udm.conversione, 1 ) ), 0 ) AS quantita_ordinata,
     0 AS quantita_evasa,
     udm_base.sigla AS udm_base,
     udm.id AS id_udm
@@ -333,7 +338,9 @@ FROM (
   LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
   WHERE tipologie_documenti.se_ordine IS NOT NULL
   HAVING codice_prodotto IS NOT NULL
+
   UNION
+
   SELECT
     relazioni_documenti.id_documento,
     relazioni_documenti.id_documento_collegato AS id_ordine,
@@ -343,8 +350,9 @@ FROM (
     ) AS codice_prodotto,
     prodotti.nome AS prodotto,
     documenti_articoli.id_articolo AS codice_articolo,
+    articoli.nome AS articolo,
     0 AS quantita_ordinata,
-    coalesce( ( articoli.peso * udm.conversione * documenti_articoli.quantita ), 0 ) AS quantita_evasa,
+    coalesce( ( coalesce( articoli.peso, 1 ) * coalesce( udm.conversione, 1 ) * documenti_articoli.quantita ), 0 ) AS quantita_evasa,
     udm_base.sigla AS udm_base,
     udm.id AS id_udm
   FROM documenti
@@ -365,9 +373,6 @@ LEFT JOIN udm ON udm.id = (
   AND ( documenti_articoli.id_prodotto = ordine.codice_prodotto OR articoli.id = ordine.codice_articolo )
 )
 GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, conversione, udm;
-
-
-
 
 -- | 100000015000
 -- __report_giacenza_crediti__

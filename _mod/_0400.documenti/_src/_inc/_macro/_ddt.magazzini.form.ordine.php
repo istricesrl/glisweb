@@ -36,8 +36,8 @@
     // tabella status evasione
     $ct['etc']['evasione'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT codice_prodotto, prodotto, quantita_ordinata, quantita_evasa, quantita_da_evadere, udm '.
-        'FROM __report_evasione_ordini__ WHERE id_ordine = ? ORDER BY quantita_da_evadere DESC',
+        'SELECT codice_prodotto, codice_articolo, prodotto, articolo, quantita_ordinata, quantita_evasa, quantita_da_evadere, udm '.
+        'FROM __report_dettaglio_evasione_ordini__ WHERE id_ordine = ? ORDER BY quantita_da_evadere DESC',
         array( array( 's' => $ct['etc']['ordine']['id'] ) )
     );
 
