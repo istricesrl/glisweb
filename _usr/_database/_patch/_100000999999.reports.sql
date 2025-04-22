@@ -337,6 +337,7 @@ FROM (
   LEFT JOIN udm ON udm.id = documenti_articoli.id_udm
   LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
   WHERE tipologie_documenti.se_ordine IS NOT NULL
+  AND relazioni_documenti.id_ruolo = 3
   HAVING codice_prodotto IS NOT NULL
 
   UNION
@@ -364,6 +365,7 @@ FROM (
   LEFT JOIN udm ON udm.id = articoli.id_udm_peso
   LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
   WHERE tipologie_documenti.se_trasporto IS NOT NULL
+  AND relazioni_documenti.id_ruolo = 3
   HAVING codice_prodotto IS NOT NULL
 ) AS ordine
 LEFT JOIN udm ON udm.id = (
@@ -372,7 +374,7 @@ LEFT JOIN udm ON udm.id = (
   WHERE documenti_articoli.id_documento IN ( ordine.id_documento, ordine.id_ordine )
   AND ( documenti_articoli.id_prodotto = ordine.codice_prodotto OR articoli.id = ordine.codice_articolo )
 )
-GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, conversione, udm;
+GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, codice_articolo, articolo, conversione, udm;
 
 -- | 100000015000
 -- __report_giacenza_crediti__
