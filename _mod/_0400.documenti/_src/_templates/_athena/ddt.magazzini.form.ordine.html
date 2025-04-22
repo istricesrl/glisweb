@@ -111,7 +111,38 @@
 				</div>
 			</div>
 
-        </fieldset>
+			<legend>packing list</legend>
+
+			<div class="form-group form-row">
+				<div class="col">
+			
+					<table class="view-table">
+						<tr>
+							<th class="table-header-static">collo</th>
+							<th class="table-header-static">codice</th>
+							<th class="table-header-static">prodotto</th>
+							<th class="table-header-static">quantità</th>
+						</tr>
+						{% for row in etc.packing %}
+						<tr>
+							<td>{{ row.collo }}</td>
+							<td>{{ row.id_prodotto }}{% if row.id_articolo %}.{{ row.id_articolo }}{% endif %}</td>
+							<td class="text-left">{{ row.prodotto }} {{ row.articolo }}</td>
+							<td>{{ row.quantita }} {{ row.udm }}</td>
+						</tr>
+						{% endfor %}
+					</table>
+			
+				</div>
+			</div>
+
+			<div class="form-group form-row">
+				<div class="col-12" >
+					<button type="button" class="btn btn-secondary btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard" onclick="">genera PDF packing list</button>
+				</div>
+			</div>
+
+		</fieldset>
 
     </form>
 </div>
