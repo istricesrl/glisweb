@@ -72,7 +72,7 @@ find ./$SUB/                    -type f         -not \( -path ".git" -prune \)  
 find ./$SUB/                    -name '*.sh'    -not \( -path ".git" -prune \)      -exec chmod 550 {} \;
 
 # permessi aggiuntivi per le cartelle
-find ./$SUB/.git/hooks          -type d                                             -exec chmod ug+x {} \;
+find ./$SUB/.git/hooks          -type f                                             -exec chmod ug+x {} \;
 find ./$SUB/src/templates       -type d                                             -exec chmod 770 {} \;
 find ./$SUB/tmp                 -type d                                             -exec chmod 770 {} \;
 find ./$SUB/var                 -type d                                             -exec chmod 770 {} \;
