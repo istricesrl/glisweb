@@ -205,11 +205,15 @@
     }
 
     // controllo cookie
-    foreach( $_COOKIE as $k => $v ) {
-        if( in_array( $k, array_keys( $cf['cookie']['index'] ) ) || inRegexpArray( $k, array_keys( $cf['cookie']['index'] ) ) ) {
-            echo '[ OK ] il cookie ' . $k . ' è correttamente descritto nelle specifiche della privacy' . PHP_EOL;
-        } else {
-            echo '[FAIL] il cookie ' . $k . ' non è descritto nelle specifiche della privacy' . PHP_EOL;
+    if( ! isset( $cf['cookie']['index'] ) ) {
+        echo '[FAIL] cookie non configurati' . PHP_EOL;
+    } else {
+        foreach( $_COOKIE as $k => $v ) {
+            if( in_array( $k, array_keys( $cf['cookie']['index'] ) ) || inRegexpArray( $k, array_keys( $cf['cookie']['index'] ) ) ) {
+                echo '[ OK ] il cookie ' . $k . ' è correttamente descritto nelle specifiche della privacy' . PHP_EOL;
+            } else {
+                echo '[FAIL] il cookie ' . $k . ' non è descritto nelle specifiche della privacy' . PHP_EOL;
+            }
         }
     }
 
@@ -385,8 +389,12 @@
         }
     }
     $pCronTasks = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM task WHERE token IS NOT NULL AND timestamp_esecuzione < ?', array( array( 's' => $rCronTime ) ) );
-    foreach( $pCronTasks as $pCronTask ) {
-        echo '[WARN] task '. $pCronTask['task'] .' bloccato alle ' . date( 'Y-m-d H:i:s', $pCronTask['timestamp_esecuzione'] ) . ' con token ' . $pCronTask['token'] . PHP_EOL;
+    if( is_array( $pCronTasks ) ) {
+        foreach( $pCronTasks as $pCronTask ) {
+            echo '[WARN] task '. $pCronTask['task'] .' bloccato alle ' . date( 'Y-m-d H:i:s', $pCronTask['timestamp_esecuzione'] ) . ' con token ' . $pCronTask['token'] . PHP_EOL;
+        }
+    } else {
+        echo '[ OK ] nessun task bloccato' . PHP_EOL;
     }
 
     // output

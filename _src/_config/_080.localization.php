@@ -86,6 +86,13 @@
     // debug
     // print_r( $_REQUEST );
 
+    /**
+     * variabili generali per la localizzazione
+     * ========================================
+     * 
+     * 
+     */
+
     // moduli attivi
     define( 'LINGUE_ATTIVE'            , implode( ',', array_keys( $cf['site']['name'] ) ) );
 
@@ -118,6 +125,13 @@
 
     // charset utilizzato di default per l'output
     $cf['localization']['charset']              = ENCODING_UTF8;
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // echo 'OUTPUT';

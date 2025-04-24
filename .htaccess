@@ -130,8 +130,11 @@ Options -Indexes
     # Queste regole hanno il solo scopo di accorciare il percorso verso determinati URL, per semplificare il lavoro degli utenti.
     #
 
-    # gestione della documentazione
-    RewriteRule ^docs/([a-zA-Z0-9_\-\/\.]*)$ _usr/_docs/_build/html/$1 [L,QSA]
+    # gestione della documentazione PDF
+    RewriteRule ^docs/pdf$ _usr/_docs/_pdf/refman.pdf [L,QSA]
+
+    # gestione della documentazione HTML
+    RewriteRule ^docs/([a-zA-Z0-9_\-\/\.]*)$ _usr/_docs/_html/$1 [L,QSA]
 
     # gestione del browser delle variabili
     RewriteRule ^cf$ _src/_api/_status/_cf.php [L,QSA]
@@ -355,6 +358,11 @@ Options -Indexes
 
     # override di robots.txt per l'ambiente di sviluppo
     RewriteCond %{ENV:STATUS} "=DEV"
+    RewriteCond %{REQUEST_FILENAME} robots.txt
+    RewriteRule ^robots.txt _etc/_robots/_deny.txt [L]
+
+    # override di robots.txt per l'ambiente di test
+    RewriteCond %{ENV:STATUS} "=TEST"
     RewriteCond %{REQUEST_FILENAME} robots.txt
     RewriteRule ^robots.txt _etc/_robots/_deny.txt [L]
 

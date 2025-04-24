@@ -15,13 +15,34 @@
     // debug
     // print_r( $_REQUEST );
 
+    /**
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * 
+     * 
+     */
+
     // configurazione extra
     if( isset( $cx['localization'] ) ) {
         $cf['localization'] = array_replace_recursive( $cf['localization'], $cx['localization'] );
     }
 
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
+
     // collegamento all'array $ct
     $ct['localization'] = &$cf['localization'];
+
+    /**
+     * individuazione della lingua corrente
+     * ====================================
+     * 
+     * 
+     */
 
     // lingua richiesta o lingua di default
     if( isset( $_REQUEST['__lg__'] ) && ! empty( $_REQUEST['__lg__'] ) ) {
@@ -33,6 +54,8 @@
     }
 
     // TODO se non è ancora settata la lingua, ricavarla dal dominio
+
+    // TODO se non è ancora settata la lingua, ricavarla dalla lingua del browser
 
     // lingua di default
     if( ! isset( $cf['localization']['lg'] ) || empty( $cf['localization']['lg'] ) ) {
@@ -48,6 +71,13 @@
 
     // SCORCIATOIA lingua corrente del sito
     $ct['ietf'] = &$cf['localization']['language']['ietf'];
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // echo 'OUTPUT';

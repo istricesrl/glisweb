@@ -207,6 +207,9 @@
         $cf['cache'] = array_replace_recursive( $cf['cache'], $cx['cache'] );
     }
 
+    // collegamento all'array $ct
+    $ct['cache'] = &$cf['cache'];
+
     // link al profilo corrente
     $cf['cache']['profile'] = &$cf['cache']['profiles'][ SITE_STATUS ];
 

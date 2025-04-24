@@ -75,6 +75,7 @@
                 // TODO implementare il log dei consensi
         */
 
+        // TODO questa cosa non si può semplificare? c'è bisogno di fare due assegnazioni?
         foreach( $_REQUEST['__cookie__'] as $cookie => $val ) {
             $cf['privacy']['cookie'][ $val['owner'] ][ $val['type'] ][ $cookie ]['consenso'] = $_REQUEST['__cookie__'][ $cookie ]['value'];
             $consensi[ $val['owner'] ][ $val['type'] ][ $cookie ]['consenso'] = $_REQUEST['__cookie__'][ $cookie ]['value'];

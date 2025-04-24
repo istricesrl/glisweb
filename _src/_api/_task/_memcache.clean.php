@@ -17,6 +17,8 @@
 
     // NOTA potete chiamare questa API con l'URL /task/memcache.clean
 
+    // TODO bisognerebbe che questo task svuotasse solo la cache del sito corrente
+
     // inclusione del framework
 	if( ! defined( 'CRON_RUNNING' ) ) {
 	    define( 'MEMCACHE_REFRESH', 1 );

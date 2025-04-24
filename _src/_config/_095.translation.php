@@ -7,14 +7,21 @@
      *
      *
      *
+     * TODO documentare
      *
      * TODO usare glob per trovare i dizionari (non limitarsi a 'generic')
      * TODO ogni modulo dovrebbe avere i suoi dizionari
-     * TODO documentare
      * TODO completare l'inserimento dei dizionari
      *
      *
      *
+     */
+
+    /**
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * 
+     * 
      */
 
     // configurazione extra
@@ -22,8 +29,22 @@
         $cf['tr'] = array_replace_recursive( $cf['tr'], $cx['tr'] );
     }
 
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
+
     // rendo le tabelle di traduzione disponibili al template
     $ct['tr'] = &$cf['tr'];
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // print_r( $arrayDizionari );

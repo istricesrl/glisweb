@@ -18,6 +18,13 @@
      *
      */
 
+    /**
+     * variabili generali per la traduzione
+     * ====================================
+     * 
+     * 
+     */
+
     // inizializzazione della tabella di traduzione
     $cf['tr'] = array();
 
@@ -33,6 +40,13 @@
             $cf['tr'] = array_replace_recursive( $cf['tr'], parse_ini_file( path2custom( $d ), true ) );
         }
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // die( print_r( $cf['tr'], true ) );

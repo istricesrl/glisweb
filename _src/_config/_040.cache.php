@@ -160,7 +160,9 @@
 
     // profili di funzionamento del sistema cache su disco per PROD
     $cf['cache']['profiles'][ PRODUCTION ]      = array(
-        'pages' => DIR_VAR_CACHE_PAGES
+        'pages'                                 => DIR_VAR_CACHE_PAGES,
+        'query'                                 => DIR_VAR_CACHE_MYSQL,
+        'twig'                                  => DIR_VAR_CACHE_TWIG
     );
 
     /**

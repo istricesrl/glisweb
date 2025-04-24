@@ -1,7 +1,7 @@
 <?php
 
     /**
-     * configurazione della cache statica delle pagine
+     * utilizzo della cache statica delle pagine
      *
      *
      *
@@ -14,6 +14,7 @@
      *
      *
      * TODO documentare
+     * TODO documentare i commenti che si trovano in fondo alla pagina quando viene letta o non letta dalla cache
      *
      *
      *
