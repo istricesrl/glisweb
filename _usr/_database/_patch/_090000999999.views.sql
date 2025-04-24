@@ -6400,6 +6400,7 @@ CREATE OR REPLACE VIEW `ordini_passivi_view` AS
 		documenti.id_account_inserimento,
 		documenti.id_account_aggiornamento,
 		documenti.timestamp_chiusura,
+        from_unixtime( documenti.timestamp_chiusura, '%Y-%m-%d %H:%i' ) AS data_ora_chiusura,
 		concat(
 			tipologie_documenti.sigla,
 			' ',

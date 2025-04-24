@@ -54,6 +54,8 @@ function checkTelefono( obj ) {
         var msg = 'campo obbligatorio';
     }
 
+    msg = '<span class="warning-campo-obbligatorio">' + msg + '</span>';
+
     if( obj.attr('type') == 'checkbox' ){
         if( obj.is(':checked') ){
             return 1;

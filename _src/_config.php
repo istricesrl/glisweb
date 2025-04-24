@@ -492,8 +492,8 @@
     define( 'DIR_USR_DEPLOY_PHING'                      , DIR_BASE . '_usr/_deploy/_phing/');
     define( 'DIR_USR_DOCS'                              , DIR_BASE . '_usr/_docs/' );
     define( 'DIR_USR_DOCS_BUILD'                        , DIR_BASE . '_usr/_docs/build/' );
-    define( 'DIR_USR_DOCS_BUILD_HTML'                    , DIR_BASE . '_usr/_docs/build/html/' );
-    define( 'DIR_USR_DOCS_BUILD_LATEX'                    , DIR_BASE . '_usr/_docs/build/latex/' );
+    define( 'DIR_USR_DOCS_BUILD_HTML'                   , DIR_BASE . '_usr/_docs/build/html/' );
+    define( 'DIR_USR_DOCS_BUILD_LATEX'                  , DIR_BASE . '_usr/_docs/build/latex/' );
     define( 'DIR_USR_DOCS_ETC'                          , DIR_BASE . '_usr/_docs/_etc/' );
     define( 'DIR_USR_DOCS_IMG'                          , DIR_BASE . '_usr/_docs/_img/' );
     define( 'DIR_USR_EXAMPLES'                          , DIR_BASE . '_usr/_examples/' );
@@ -506,35 +506,35 @@
     define( 'DIR_USR_EXAMPLES_CONFIG_PHING'             , DIR_BASE . '_usr/_examples/_config/_phing/' );
 
     // la directory tmp/ contiene i file temporanei ed è solo custom
-    define( 'DIR_TMP'                                    , DIR_BASE . 'tmp/' );
+    define( 'DIR_TMP'                                   , DIR_BASE . 'tmp/' );
 
     // la directory var/ e le sue sottocartelle contengono tutti i dati che cambiano nel tempo (log, upload utente, ecc.); è solo custom
-    define( 'DIR_VAR'                                    , DIR_BASE . 'var/' );
-    define( 'DIR_VAR_CACHE'                                , DIR_BASE . 'var/cache/' );
-    define( 'DIR_VAR_CACHE_PAGES'                        , DIR_BASE . 'var/cache/pages/' );
+    define( 'DIR_VAR'                                   , DIR_BASE . 'var/' );
+    define( 'DIR_VAR_CACHE'                             , DIR_BASE . 'var/cache/' );
+    define( 'DIR_VAR_CACHE_PAGES'                       , DIR_BASE . 'var/cache/pages/' );
     define( 'DIR_VAR_CACHE_TWIG'                        , DIR_BASE . 'var/cache/twig/' );
-    define( 'DIR_VAR_CONTENUTI'                            , DIR_BASE . 'var/contenuti/' );
-    define( 'DIR_VAR_IMMAGINI'                            , DIR_BASE . 'var/immagini/' );
-    define( 'DIR_VAR_LOG'                                , DIR_BASE . 'var/log/' );
+    define( 'DIR_VAR_CONTENUTI'                         , DIR_BASE . 'var/contenuti/' );
+    define( 'DIR_VAR_IMMAGINI'                          , DIR_BASE . 'var/immagini/' );
+    define( 'DIR_VAR_LOG'                               , DIR_BASE . 'var/log/' );
     define( 'DIR_VAR_LOG_CRON'                          , DIR_BASE . 'var/log/cron/' );
     define( 'DIR_VAR_LOG_CSV'                           , DIR_BASE . 'var/log/csv/' );
     define( 'DIR_VAR_LOG_JOB'                           , DIR_BASE . 'var/log/job/' );
     define( 'DIR_VAR_LOG_MYSQL'                         , DIR_BASE . 'var/log/mysql/' );
     define( 'DIR_VAR_LOG_LATEST'                        , DIR_BASE . 'var/log/latest/' );
-    define( 'DIR_VAR_LOG_SLOW'                            , DIR_BASE . 'var/log/slow/' );
+    define( 'DIR_VAR_LOG_SLOW'                          , DIR_BASE . 'var/log/slow/' );
     define( 'DIR_VAR_LOG_TASK'                          , DIR_BASE . 'var/log/task/' );
-    define( 'DIR_VAR_SITEMAP'                            , DIR_BASE . 'var/sitemap/' );
-    define( 'DIR_VAR_SPOOL'                                , DIR_BASE . 'var/spool/' );
+    define( 'DIR_VAR_SITEMAP'                           , DIR_BASE . 'var/sitemap/' );
+    define( 'DIR_VAR_SPOOL'                             , DIR_BASE . 'var/spool/' );
     define( 'DIR_VAR_SPOOL_CART'                        , DIR_BASE . 'var/spool/cart/' );
     define( 'DIR_VAR_SPOOL_DOCS'                        , DIR_BASE . 'var/spool/docs/' );
-    define( 'DIR_VAR_SPOOL_EXPORT'                        , DIR_BASE . 'var/spool/export/' );
-    define( 'DIR_VAR_SPOOL_IMPORT'                        , DIR_BASE . 'var/spool/import/' );
-    define( 'DIR_VAR_SPOOL_IMPORT_DONE'                    , DIR_BASE . 'var/spool/import/done/' );
+    define( 'DIR_VAR_SPOOL_EXPORT'                      , DIR_BASE . 'var/spool/export/' );
+    define( 'DIR_VAR_SPOOL_IMPORT'                      , DIR_BASE . 'var/spool/import/' );
+    define( 'DIR_VAR_SPOOL_IMPORT_DONE'                 , DIR_BASE . 'var/spool/import/done/' );
     define( 'DIR_VAR_SPOOL_MAIL'                        , DIR_BASE . 'var/spool/mail/' );
-    define( 'DIR_VAR_SPOOL_PAYMENT'                        , DIR_BASE . 'var/spool/payment/' );
-    define( 'DIR_VAR_SPOOL_PRINT'                        , DIR_BASE . 'var/spool/print/' );
+    define( 'DIR_VAR_SPOOL_PAYMENT'                     , DIR_BASE . 'var/spool/payment/' );
+    define( 'DIR_VAR_SPOOL_PRINT'                       , DIR_BASE . 'var/spool/print/' );
     define( 'DIR_VAR_SPOOL_SECURITY'                    , DIR_BASE . 'var/spool/security/' );
-    define( 'DIR_VAR_SPOOL_SIGNUP'                        , DIR_BASE . 'var/spool/signup/' );
+    define( 'DIR_VAR_SPOOL_SIGNUP'                      , DIR_BASE . 'var/spool/signup/' );
 
     // file autoload per caricare le librerie con composer
     define( 'FILE_AUTOLOAD'                             , DIR_SRC_LIB_EXT . 'autoload.php' );
@@ -545,32 +545,32 @@
     define( 'FILE_BANNED_HOSTS'                         , DIR_VAR_SPOOL_SECURITY . 'banned.hosts.conf' );
 
     // file che contengono la release e la versione corrente del framework
-    define( 'FILE_CURRENT_RELEASE'                        , DIR_ETC . '_current.release' );
-    define( 'FILE_CURRENT_VERSION'                        , DIR_ETC . '_current.version' );
+    define( 'FILE_CURRENT_RELEASE'                      , DIR_ETC . '_current.release' );
+    define( 'FILE_CURRENT_VERSION'                      , DIR_ETC . '_current.version' );
 
     // file di log per l'ultima esecuzione
-    define( 'FILE_LATEST_CRON'                            , DIR_VAR_LOG_LATEST . 'cron.latest.log');
-    define( 'FILE_LATEST_MYSQL'                            , DIR_VAR_LOG_LATEST . 'mysql.latest.log');
-    define( 'FILE_LATEST_RUN'                            , DIR_VAR_LOG_LATEST . 'run.latest.log');
-    define( 'FILE_LATEST_SITEMAP'                        , DIR_VAR_LOG_LATEST . 'sitemap.latest.log');
+    define( 'FILE_LATEST_CRON'                          , DIR_VAR_LOG_LATEST . 'cron.latest.log');
+    define( 'FILE_LATEST_MYSQL'                         , DIR_VAR_LOG_LATEST . 'mysql.latest.log');
+    define( 'FILE_LATEST_RUN'                           , DIR_VAR_LOG_LATEST . 'run.latest.log');
+    define( 'FILE_LATEST_SITEMAP'                       , DIR_VAR_LOG_LATEST . 'sitemap.latest.log');
 
     // file per il controllo dell'aggiornamento
-    define( 'FILE_LATEST_RELEASE'                        , path2custom( DIR_VAR ) . 'latest.release.conf' );
+    define( 'FILE_LATEST_RELEASE'                       , path2custom( DIR_VAR ) . 'latest.release.conf' );
     define( 'FILE_LATEST_UPGRADE'                       , path2custom( DIR_VAR ) . 'latest.upgrade.conf' );
-    define( 'FILE_LATEST_VERSION'                        , path2custom( DIR_VAR ) . 'latest.version.conf' );
+    define( 'FILE_LATEST_VERSION'                       , path2custom( DIR_VAR ) . 'latest.version.conf' );
 
     // file licenza
-    define( 'FILE_LICENSE'                                , DIR_BASE . 'LICENSE.md' );
+    define( 'FILE_LICENSE'                              , DIR_BASE . 'LICENSE.md' );
 
     // file per testo di prova
     define( 'FILE_LOREM'                                , DIR_ETC_COMMON . '_lorem.conf' );
 
     // file della documentazione
-    define( 'FILE_MANUAL_HTML'                            , DIR_USR_DOCS_BUILD_HTML . 'index.html' );
-    define( 'FILE_MANUAL_PDF'                            , DIR_USR_DOCS_BUILD_LATEX . 'refman.pdf' );
+    define( 'FILE_MANUAL_HTML'                          , DIR_USR_DOCS_BUILD_HTML . 'index.html' );
+    define( 'FILE_MANUAL_PDF'                           , DIR_USR_DOCS_BUILD_LATEX . 'refman.pdf' );
 
     // configurazioni aggiuntive
-    define( 'FILE_REDIRECT'                                , path2custom( DIR_ETC ) . 'redirect.csv' );
+    define( 'FILE_REDIRECT'                             , path2custom( DIR_ETC ) . 'redirect.csv' );
 
     // stato del login
     define( 'LOGIN_ERR_NO_DATA'                         , 'NODATA' );
@@ -583,39 +583,39 @@
     define( 'LOGIN_LOGOUT'                              , 'LOGOUT' );
 
     // livelli di controllo
-    define( 'CONTROL_FILTERED'                            , 'FILTERED' );
-    define( 'CONTROL_FULL'                                , 'FULL' );
+    define( 'CONTROL_FILTERED'                          , 'FILTERED' );
+    define( 'CONTROL_FULL'                              , 'FULL' );
 
     // azioni
-    define( 'METHOD_DELETE'                                , 'DELETE' );       // cancellazione
+    define( 'METHOD_DELETE'                             , 'DELETE' );       // cancellazione
     define( 'METHOD_GET'                                , 'GET' );          // lettura
-    define( 'METHOD_PATCH'                                , 'PATCH' );        // aggiornamento
-    define( 'METHOD_POST'                                , 'POST' );         // inserimento
+    define( 'METHOD_PATCH'                              , 'PATCH' );        // aggiornamento
+    define( 'METHOD_POST'                               , 'POST' );         // inserimento
     define( 'METHOD_PUT'                                , 'PUT' );          // modifica
     define( 'METHOD_REPLACE'                            , 'REPLACE' );      // rimpiazzo
-    define( 'METHOD_UPDATE'                                , 'UPDATE' );       // aggiornamento
+    define( 'METHOD_UPDATE'                             , 'UPDATE' );       // aggiornamento
 
     // costanti per l'identificazione dei database
-    define( 'DB_MYSQL'                                    , 'MYSQL' );
-    define( 'DB_POSTGRESQL'                                , 'PGSQL' );
-    define( 'DB_MSSQL'                                    , 'MSSQL' );
+    define( 'DB_MYSQL'                                  , 'MYSQL' );
+    define( 'DB_POSTGRESQL'                             , 'PGSQL' );
+    define( 'DB_MSSQL'                                  , 'MSSQL' );
 
     // costanti che descrivono lo stato dell'output buffering
-    define( 'OB_NON_ATTIVO'                                , 'NOOB'  );
-    define( 'OB_ATTIVO'                                    , 'OB' );
+    define( 'OB_NON_ATTIVO'                             , 'NOOB'  );
+    define( 'OB_ATTIVO'                                 , 'OB' );
     define( 'OB_ATTIVO_CON_GZIP'                        , 'OBGZ' );
 
     // costanti che descrivono il backend per le sessioni
     define( 'SESSION_APACHE'                            , 'SESS_APACHE'  );
     define( 'SESSION_FILESYSTEM'                        , 'SESS_FS'  );
-    define( 'SESSION_REDIS'                                , 'SESS_REDIS' );
-    define( 'SESSION_MEMCACHE'                            , 'SESS_MEMCACHE' );
+    define( 'SESSION_REDIS'                             , 'SESS_REDIS' );
+    define( 'SESSION_MEMCACHE'                          , 'SESS_MEMCACHE' );
 
     // costanti per il contenuto
-    define( 'MIME_APPLICATION_JSON'                        , 'application/json' );
-    define( 'MIME_APPLICATION_XML'                        , 'application/xml' );
-    define( 'MIME_MULTIPART_FORM_DATA'                    , 'multipart/form-data' );
-    define( 'MIME_TEXT_PLAIN'                            , 'text/plain' );
+    define( 'MIME_APPLICATION_JSON'                     , 'application/json' );
+    define( 'MIME_APPLICATION_XML'                      , 'application/xml' );
+    define( 'MIME_MULTIPART_FORM_DATA'                  , 'multipart/form-data' );
+    define( 'MIME_TEXT_PLAIN'                           , 'text/plain' );
     define( 'MIME_TEXT_HTML'                            , 'text/html' );
     define( 'MIME_X_WWW_FORM_URLENCODED'                , 'application/x-www-form-urlencoded' );
 
@@ -623,7 +623,7 @@
     define( 'SHOW_ALWAYS'                               , 'SHOW_ALWAYS' );
 
     // costanti per l'encoding
-    define( 'ENCODING_UTF8'                                , 'utf-8' );
+    define( 'ENCODING_UTF8'                             , 'utf-8' );
 
     // costanti per l'I/O
     define( 'PHP_INPUT'                                 , 'php://input' );
@@ -989,28 +989,28 @@
 
     // array dei moduli attivi
     if( isset( $cx['mods']['active']['array'] ) ) {
-        $cf['mods']['active']['array']    = $cx['mods']['active']['array'];
+        $cf['mods']['active']['array']                  = $cx['mods']['active']['array'];
     } elseif( file_exists( path2custom( DIR_MOD ) ) ) {
-        $cf['mods']['active']['array']    = scandir2array( path2custom( DIR_MOD ) );
+        $cf['mods']['active']['array']                  = scandir2array( path2custom( DIR_MOD ) );
     } else {
-        $cf['mods']['active']['array']    = array();
+        $cf['mods']['active']['array']                  = array();
     }
 
     // stringa dei moduli attivi
-    $cf['mods']['active']['string']                    = implode( ',', $cf['mods']['active']['array'] );
+    $cf['mods']['active']['string']                     = implode( ',', $cf['mods']['active']['array'] );
 
     // moduli attivi
-    define( 'MODULI_ATTIVI'                            , $cf['mods']['active']['string'] );
-    define( 'DIR_MOD_ATTIVI'                        , DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
-    define( 'DIR_MOD_ATTIVI_SRC_API_JOB'            , DIR_MOD_ATTIVI . '_src/_api/_job/' );
-    define( 'DIR_MOD_ATTIVI_SRC_API_TASK'            , DIR_MOD_ATTIVI . '_src/_api/_task/' );
-    define( 'DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS'    , DIR_MOD_ATTIVI . '_src/_inc/_controllers/' );
-    define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'            , DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
-    define( 'DIR_MOD_ATTIVI_SRC_LIB'                , DIR_MOD_ATTIVI . '_src/_lib/' );
-    define( 'DIR_MOD_ATTIVI_ETC_DICTIONARIES'       , DIR_MOD_ATTIVI . '_etc/_dictionaries/' );
+    define( 'MODULI_ATTIVI'                             , $cf['mods']['active']['string'] );
+    define( 'DIR_MOD_ATTIVI'                            , DIR_MOD . '_{' . MODULI_ATTIVI . '}/' );
+    define( 'DIR_MOD_ATTIVI_SRC_API_JOB'                , DIR_MOD_ATTIVI . '_src/_api/_job/' );
+    define( 'DIR_MOD_ATTIVI_SRC_API_TASK'               , DIR_MOD_ATTIVI . '_src/_api/_task/' );
+    define( 'DIR_MOD_ATTIVI_SRC_INC_CONTROLLERS'        , DIR_MOD_ATTIVI . '_src/_inc/_controllers/' );
+    define( 'DIR_MOD_ATTIVI_SRC_INC_MACRO'              , DIR_MOD_ATTIVI . '_src/_inc/_macro/' );
+    define( 'DIR_MOD_ATTIVI_SRC_LIB'                    , DIR_MOD_ATTIVI . '_src/_lib/' );
+    define( 'DIR_MOD_ATTIVI_ETC_DICTIONARIES'           , DIR_MOD_ATTIVI . '_etc/_dictionaries/' );
 
     // collego $ct
-    $ct['mods']                                        = &$cf['mods'];
+    $ct['mods']                                         = &$cf['mods'];
 
     // timer
     timerCheck( $cf['speed'], 'fine scansione dei moduli attivi' );

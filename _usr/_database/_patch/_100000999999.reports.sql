@@ -353,7 +353,7 @@ FROM (
     documenti_articoli.id_articolo AS codice_articolo,
     articoli.nome AS articolo,
     0 AS quantita_ordinata,
-    coalesce( ( coalesce( articoli.peso, 1 ) * coalesce( udm.conversione, 1 ) * documenti_articoli.quantita ), 0 ) AS quantita_evasa,
+    sum( coalesce( ( coalesce( articoli.peso, 1 ) * coalesce( udm.conversione, 1 ) * documenti_articoli.quantita ), 0 ) ) AS quantita_evasa,
     udm_base.sigla AS udm_base,
     udm.id AS id_udm
   FROM documenti
@@ -366,6 +366,7 @@ FROM (
   LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
   WHERE tipologie_documenti.se_trasporto IS NOT NULL
   AND relazioni_documenti.id_ruolo = 3
+  GROUP BY documenti_articoli.id_documento, documenti_articoli.id_prodotto, documenti_articoli.id_articolo
   HAVING codice_prodotto IS NOT NULL
 ) AS ordine
 LEFT JOIN udm ON udm.id = (

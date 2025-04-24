@@ -20,10 +20,10 @@ src/py/*/*/lib64
 /usr
 /var
 /*.html
-/*.php
 /*.lock
+/*.php
 /*.xml
 /*.txt
-.#*
 *.old
 *.log
+.#*

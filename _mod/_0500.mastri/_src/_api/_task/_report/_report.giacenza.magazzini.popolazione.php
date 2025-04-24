@@ -63,7 +63,10 @@
 
 	*/
 
-	$status['aggiornare'] = mysqlSelectRow(
+    // TODO fare in modo che quando questo task viene chiamato in loop non ricominci daccapo, ma consideri solo le righe non
+    // aggiornate da più di tot tempo
+
+    $status['aggiornare'] = mysqlSelectRow(
 	    $cf['mysql']['connection'],
 	    'SELECT
 		da.id_articolo,

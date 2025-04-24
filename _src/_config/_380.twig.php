@@ -37,24 +37,18 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
      *
      */
 
     // profili di funzionamento di Twig per DEV/TEST
-	$cf['twig']['profiles'][ DEVELOPEMENT ]		=
-	$cf['twig']['profiles'][ TESTING ]		= array(
-	    'debug' => true
-	);
+    $cf['twig']['profiles'][ DEVELOPEMENT ] =
+    $cf['twig']['profiles'][ TESTING ]      = array(
+        'debug' => true
+    );
 
     // profilo di funzionamento di Twig per PROD
-	$cf['twig']['profiles'][ PRODUCTION ]		= array(
-	    'cache' => DIR_VAR_CACHE_TWIG
-	);
-
-    // configurazione extra
-	if( isset( $cx['twig'] ) ) {
-	    $cf['twig'] = array_replace_recursive( $cf['twig'], $cx['twig'] );
-	}
+    $cf['twig']['profiles'][ PRODUCTION ]   = array(
+        'cache' => DIR_VAR_CACHE_TWIG
+    );

@@ -35,6 +35,7 @@
         'emittente' => 'emittente',
 #        'destinatario' => 'destinatario',
         'nome' => 'nome',
+        'data_ora_chiusura' => 'data chiusura',
 #        '__label__' => 'nome',
     );
 
