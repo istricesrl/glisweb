@@ -11,12 +11,12 @@
     if( isset( $_REQUEST['documenti']['id'] ) ) {
         $ct['etc']['ordine']['id'] = mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT id_documento_collegato FROM relazioni_documenti WHERE id_documento = ? LIMIT 1',
+            'SELECT id_documento_collegato FROM relazioni_documenti WHERE id_documento = ? AND id_ruolo = 3 LIMIT 1',
             array( array( 's' => $_REQUEST['documenti']['id'] ) )
         );
     }
 
-    // se c'è un ordine collegato
+    // se non c'è un ordine collegato
     if( empty( $ct['etc']['ordine']['id'] ) ) {
         $ct['page']['etc']['tabs'] = array_diff(
             $ct['page']['etc']['tabs'],
@@ -75,8 +75,9 @@
 
 		$ct['etc']['packing'] = mysqlQuery(
 			$cf['mysql']['connection'],
-			'SELECT documenti_articoli.id, documenti_articoli.id_documento, documenti_articoli.id_articolo, documenti_articoli.id_matricola, documenti_articoli.id_collo, documenti_articoli.id_udm, sum( documenti_articoli.quantita ) as quantita,
-			colli.codice AS collo, articoli.id_prodotto, prodotti.nome AS prodotto, articoli.nome AS articolo, udm.sigla AS udm
+			'SELECT documenti_articoli.id, documenti_articoli.id_documento, documenti_articoli.id_articolo, 
+                documenti_articoli.id_matricola, documenti_articoli.id_collo, documenti_articoli.id_udm, sum( documenti_articoli.quantita ) as quantita,
+			    colli.codice AS collo, articoli.id_prodotto, prodotti.nome AS prodotto, articoli.nome AS articolo, udm.sigla AS udm
 			FROM documenti_articoli 
 			INNER JOIN articoli ON articoli.id = documenti_articoli.id_articolo
 			INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto

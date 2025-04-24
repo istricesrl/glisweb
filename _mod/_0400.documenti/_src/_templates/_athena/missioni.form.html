@@ -72,7 +72,11 @@
 						<span class="label-top">nome</span>
 						{{ frm.inputRequired( table, '', '', 'nome', '', '', request ) }}
 					</div>
-				</div>
+                    <div class="col-4 col-md">
+                        <span class="label-top remove-after-duplicate">carico</span>
+                        {{ frm.selectBox( table, '', '', 'id_mastro_destinazione', '', '', request, default_md, '', '', '', 'font-awesome', 'mastri.form', 'mastri.form', 'mastri', 'id_mastro_destinazione', page, pages, ietf, 'mastri' ) }}
+                    </div>
+                        </div>
 				<div class="form-group form-row">
 					<div class="col-12">
 					<span class="label-top">note</span>

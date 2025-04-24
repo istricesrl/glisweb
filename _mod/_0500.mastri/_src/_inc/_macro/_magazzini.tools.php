@@ -19,6 +19,9 @@
 		),
 	    'connessioni' => array(
 			'label' => 'connessioni'
+		),
+	    'elaborazioni' => array(
+			'label' => 'elaborazioni'
 		)
 	);
 
@@ -30,6 +33,15 @@
 	    'title' => 'test comunicazione Modula',
 	    'text' => 'invia dei comandi di test ai magazzini Modula'
 	);
+
+    $ct['page']['contents']['metro']['elaborazioni'][] = array(
+		'lws' => '/task/report/0500.mastri/report.giacenza.magazzini.popolazione',
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'ripopola giacenza magazzini',
+		'text' => 'ripopola la tabella delle giacenze di magazzino'
+	);
+
 
 /*
     // esportazione contatti anagrafica

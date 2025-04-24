@@ -147,7 +147,7 @@
 				request.onload = function () {
 				  var data = JSON.parse( this.response );
 				  console.log( data );
-				  if( data.aggiornare.id ) {
+				  if( data.aggiornare != null ) {
 					$.fn.metroLoopWs( ws, callback, icon, el, count+1 );
 				  } else {
 					el.find('.media-left').first().html( icon );

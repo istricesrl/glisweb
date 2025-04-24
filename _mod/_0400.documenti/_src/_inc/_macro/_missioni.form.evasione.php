@@ -25,6 +25,8 @@
     // ...
     if( isset( $_REQUEST['__bip__']['__codice__'] ) && ! empty( $_REQUEST['__bip__']['__codice__'] ) ) {
 
+        // die( print_r( $_REQUEST[ $ct['form']['table'] ], true ) );
+
         $idTipologiaRiga = 4;
 
         $idGenitoreRiga = mysqlSelectRow(
@@ -46,6 +48,16 @@
         // ...
         // die( print_r( $idGenitoreRiga, true ) );
 
+        $idMastroProvenienza = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT id_mastro FROM __report_giacenza_magazzini__ WHERE id_articolo = ? AND totale_proprio > 0',
+            array( 
+                array( 's' => $_REQUEST['__bip__']['__codice__'] )
+            )
+        );
+
+        // die( 'mastro provenienza ' . $idMastroProvenienza );
+
         // ...
         $idRiga = mysqlSelectRow(
             $cf['mysql']['connection'],
@@ -60,21 +72,25 @@
         // ...
         mysqlQuery(
             $cf['mysql']['connection'],
-            'INSERT INTO documenti_articoli ( id, id_genitore, id_tipologia, id_missione, id_articolo, quantita )
-            VALUES ( ?, ?, ?, ?, ?, ? ) ON DUPLICATE KEY UPDATE 
+            'INSERT INTO documenti_articoli ( id, id_genitore, id_tipologia, id_missione, id_articolo, quantita, id_mastro_provenienza, id_mastro_destinazione )
+            VALUES ( ?, ?, ?, ?, ?, ?, ?, ? ) ON DUPLICATE KEY UPDATE 
                 id=VALUES(id), 
                 id_genitore=VALUES(id_genitore), 
                 id_tipologia=VALUES(id_tipologia), 
                 id_missione=VALUES(id_missione), 
                 id_articolo=VALUES(id_articolo), 
-                quantita=VALUES(quantita)',
+                quantita=VALUES(quantita),
+                id_mastro_provenienza=VALUES(id_mastro_provenienza),
+                id_mastro_destinazione=VALUES(id_mastro_destinazione)',
             array(
                 array( 's' => $idRiga['id'] ),
                 array( 's' => $idGenitoreRiga['id'] ),
                 array( 's' => $idTipologiaRiga ),
                 array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
                 array( 's' => $_REQUEST['__bip__']['__codice__'] ),
-                array( 's' => $idRiga['quantita'] + 1 )
+                array( 's' => $idRiga['quantita'] + 1 ),
+                array( 's' => $idMastroProvenienza ),
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_mastro_destinazione'] )
             )
         );
 

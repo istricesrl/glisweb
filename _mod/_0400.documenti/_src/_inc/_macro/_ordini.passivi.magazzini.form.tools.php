@@ -36,6 +36,7 @@
         // chiusura documento
         $ct['page']['contents']['metro']['logistica'][] = array(
             'host' => $ct['site']['url'],
+            'callback' => 'function(){window.open(\''.$ct['page']['path'][ LINGUA_CORRENTE ].'?'.$ct['form']['table'].'[id]='.$_REQUEST[ $ct['form']['table'] ]['id'].'\',\'_self\');}',
             'ws' => $base . '_chiusura.documento.php?id='.$_REQUEST[ $ct['form']['table'] ]['id'],
             'icon' => NULL,
             'fa' => 'fa-check-square-o',

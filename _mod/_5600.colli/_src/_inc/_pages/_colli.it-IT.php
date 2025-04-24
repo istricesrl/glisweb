@@ -4,7 +4,7 @@
 	$l = 'it-IT';
 
     // modulo di questo file
-	$m = DIR_MOD . '_5400.colli/';
+	$m = DIR_MOD . '_5600.colli/';
 
     // dashboard logistica doc. attivi
     $p['colli.view'] = array(

@@ -1035,6 +1035,18 @@
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )
         ),
+        'righe_ordini' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'righe_ordini_attivi' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
+        'righe_ordini_passivi' => array(
+            CONTROL_FULL => array( 'roots' ),
+            CONTROL_FILTERED => array( 'staff' )
+        ),
         'ddt' => array(
             CONTROL_FULL => array( 'roots' ),
             CONTROL_FILTERED => array( 'staff' )

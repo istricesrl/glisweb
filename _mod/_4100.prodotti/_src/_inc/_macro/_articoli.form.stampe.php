@@ -24,12 +24,15 @@
 
     $ct['page']['contents']['metros'] = array(
 	    'general' => array(
-		'label' => NULL
+		'label' => 'cartellini e etichette'
 	    )
 	);
 
-    if(file_exists(DIR_MOD.'4100.prodotti/src/api/print/manuale.barcode.pdf.php')  ){$file =  $cf['site']['url'].'4100.prodotti/src/api/print/cartellini.prezzo.articoli.pdf.php';}
-    else {$file = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.prezzo.articoli.pdf.php';  }
+    if(file_exists(DIR_MOD.'4100.prodotti/src/api/print/manuale.barcode.pdf.php')  ) {
+        $file =  $cf['site']['url'].'4100.prodotti/src/api/print/cartellini.prezzo.articoli.pdf.php';
+    } else {
+        $file = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.prezzo.articoli.pdf.php';
+    }
 
 	$ct['page']['contents']['metro']['general'][] = array(
         'target' => '_blank' ,
@@ -40,8 +43,11 @@
 		'text' => 'stampa l\'etichetta prezzo dell\'articolo in pdf'
 	    );
 
-    if( file_exists(DIR_MOD.'4100.prodotti/src/api/print/cartellini.grandi.articoli.pdf.php')  ){$file_cartellini =  $cf['site']['url'].'4100.prodotti/src/api/print/cartellini.grandi.articoli.pdf.php';}
-    else {$file_cartellini = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.grandi.articoli.pdf.php';  }
+    if( file_exists(DIR_MOD.'4100.prodotti/src/api/print/cartellini.grandi.articoli.pdf.php')  ) {
+        $file_cartellini =  $cf['site']['url'].'4100.prodotti/src/api/print/cartellini.grandi.articoli.pdf.php';
+    } else {
+        $file_cartellini = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_cartellini.grandi.articoli.pdf.php';
+    }
 
 	$ct['page']['contents']['metro']['general'][] = array(
         'target' => '_blank' ,
@@ -50,8 +56,23 @@
 		'fa' => 'fa-file-pdf-o',
 		'title' => 'cartellini vetrina',
 		'text' => 'stampa l\'etichetta prezzo di tutti gli articoli in pdf'
-	    );
-    
+    );
+
+    if( file_exists(DIR_MOD.'4100.prodotti/src/api/print/barcode.pdf.php')  ) {
+        $file_barcode =  $cf['site']['url'].'4100.prodotti/src/api/print/barcode.pdf.php';
+    } else {
+        $file_barcode = $cf['site']['url'].'_mod/_4100.prodotti/_src/_api/_print/_barcode.pdf.php';
+    }
+
+    $ct['page']['contents']['metro']['general'][] = array(
+        'target' => '_blank' ,
+        'url' => $file_barcode.'?articolo='.$_REQUEST[ $ct['form']['table'] ]['id'] ,
+        'icon' => NULL,
+        'fa' => 'fa-file-pdf-o',
+        'title' => 'barcode semplice',
+        'text' => 'stampa l\'etichetta barcode di tutti gli articoli in pdf'
+    );
+
     // macro di default per l'entità anagrafica
 	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
 
