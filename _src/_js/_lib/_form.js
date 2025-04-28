@@ -46,6 +46,8 @@ function checkTelefono( obj ) {
  */
  function checkRequired( obj, l ){
 
+    var errorFields = [];
+
     console.log( 'checkRequired ' + obj.attr('id') + ' ' + l );
 
     if( l == 'en-GB' ) {
