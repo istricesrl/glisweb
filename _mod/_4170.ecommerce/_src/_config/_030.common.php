@@ -147,6 +147,7 @@
                 'order_api'     => 'https://api-m.sandbox.paypal.com/v2/checkout/orders',               // API alla quale richiedere l'Order ID
                 'return'        => 'carrello.esito',                                                    // pagina di ritorno in caso di pagamento completato con successo o fallito
                 'cancel'        => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
+                'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 '__label__'     => 'PayPal Advanced'                                                    // etichetta del provider per le tendine
             )
         )

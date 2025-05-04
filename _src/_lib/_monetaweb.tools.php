@@ -49,7 +49,7 @@
      * AMEX         | 375200000000003           | 12/2018       | 5861  | NOT SUPPORTED     |                   | OK
      * DINERS       | 36961903000009            | 11/2018       | 553   | NOT SUPPORTED     |                   | OK
      * 
-     * 
+     * Queste carte sono testate nel 2025:
      * 
      * CIRCUITO	NUMERO CARTA	DATA SCADENZA	CVV	VERIFICA 3D SECURE	CODICE PIN/OTP SMS
      * VISA	4349942499990906	12/30	034	ENROLLED	ok

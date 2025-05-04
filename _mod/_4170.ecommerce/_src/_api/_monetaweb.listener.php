@@ -143,17 +143,24 @@
 					sort( $cnts );
 
 					// log
-					appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ), $fileRicevuta );
+					appendToFile( 'controller post checkout trovate: ' . print_r( $cnts, true ) . ' per il carrello ' . $idCarrello, $fileRicevuta );
 
 					// inclusione delle controller post checkout
 					foreach( $cnts as $cnt ) {
+                        appendToFile( 'inclusione controller: ' . $cnt, $fileRicevuta );
 						require $cnt;
+                        appendToFile( 'inclusione controller terminata: ' . $cnt, $fileRicevuta );
 					}
 
 					// pagina di redirect
 					$redirect = $cf['ecommerce']['profile']['provider']['monetaweb']['success'];
 
 					// log
+					appendToFile( 'redirigo su: ' . $cf['ecommerce']['profile']['provider']['monetaweb']['success'], $fileRicevuta );
+                    appendToFile( 'lingua: ' . LINGUA_CORRENTE, $fileRicevuta );
+                    appendToFile( 'url: ' . $cf['contents']['pages'][ $redirect ]['url'][ LINGUA_CORRENTE ], $fileRicevuta );
+
+                    // log
 					logWrite( 'pagamento effettuato con successo per il carrello ' . $_REQUEST['codTrans'], 'monetaweb', LOG_INFO );
 
                 break;

@@ -105,7 +105,7 @@
             logWrite( 'pagamento effettuato con successo per il carrello ' . $_SESSION['carrello']['id'], 'paypal', LOG_INFO );
 
             // URL di redirect in caso di successo
-            $result['return'] = $cf['contents']['pages'][ $cf['ecommerce']['profile']['provider']['paypal-advanced']['return'] ]['url']['it-IT'];
+            $result['return'] = $cf['contents']['pages'][ $cf['ecommerce']['profile']['provider']['paypal-advanced']['return'] ]['url'][ LINGUA_CORRENTE ];
 
         } else {
 
@@ -124,7 +124,8 @@
             }
 
             // TODO in caso di fallimento settare come URL di redirect l'URL della pagina di errore
-            $result['return'] = 'https://www.libero.it';
+            // $result['return'] = 'https://www.libero.it';
+            $result['return'] = $cf['contents']['pages'][ $cf['ecommerce']['profile']['provider']['paypal-advanced']['error'] ]['url'][ LINGUA_CORRENTE ];
 
         }
 

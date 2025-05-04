@@ -136,7 +136,7 @@
 
 		{% else %}
 
-		{% for field in ['id','id_pagina','id_lingua','h1','h2','h3','cappello','testo','abstract','specifiche'] %}
+		{% for field in ['id','id_pagina','id_lingua','h1','h2','h3','cappello','testo','abstract','mittente_nome','mittente_mail','destinatario_nome','destinatario_mail','destinatario_cc_nome','destinatario_cc_mail','destinatario_ccn_nome','destinatario_ccn_mail'] %}
 	    {{ frm.input( table, subtable, i, field, '', '', request, '', 'hidden' ) }}
 		{% endfor %}
 
