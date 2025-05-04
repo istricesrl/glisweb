@@ -9,14 +9,23 @@
  * @param {*} obj   oggetto su cui effettuare il controllo
  * @returns         ritorna 1 o 0 a seconda dell'esito del controllo
  */
-function checkEmail( obj ) {
+function checkEmail( obj, l ) {
 	// valore valido
 	if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test( obj.val() ) ) {
 		return 1;
 	} 
 	// valore NON valido
 	else {
-        obj.after('<div class="label-err"><label>inserire un indirizzo email valido</label></div>');
+        if( l == 'en-GB' ) {
+            var msg = 'please enter a valid email address';
+        } else {
+            var msg = 'inserire un indirizzo email valido';
+        }
+    
+        msg = '<span class="warning-campo-obbligatorio">' + msg + '</span>';
+    
+    
+        obj.after('<div class="label-err"><label>'+msg+'</label></div>');
 		return 0;
 	}
 }
@@ -27,14 +36,23 @@ function checkEmail( obj ) {
  * @param {*} obj   oggetto su cui effettuare il controllo
  * @returns         ritorna 1 o 0 a seconda dell'esito del controllo
  */
-function checkTelefono( obj ) {
+function checkTelefono( obj, l ) {
     // valore valido
     if ( /^.{8,}[0-9 -()+]+$/.test( obj.val() ) ) {
         return 1;
     } 
     // valore NON valido
     else {
-        obj.after('<div class="label-err"><label>inserire un numero di telefono valido</label></div>');
+        if( l == 'en-GB' ) {
+            var msg = 'please enter a valid phone number';
+        } else {
+            var msg = 'inserire un numero di telefono valido';
+        }
+    
+        msg = '<span class="warning-campo-obbligatorio">' + msg + '</span>';
+    
+    
+        obj.after('<div class="label-err"><label>'+msg+'</label></div>');
         return 0;
     }
 }
@@ -116,8 +134,9 @@ function checkForm( f, l ){
 
         // se il campo è un'email ed è valorizzato controllo la sintassi
         if( $(this).attr('type') == 'email' && $(this).val() ){
-            ck += checkEmail( $(this) );
-            if( checkEmail( $(this) ) == 0 ){
+            e = checkEmail( $(this), l );
+            ck += e;
+            if( e == 0 ){
                 console.log('errore formato email campo ' + $(this).prop('name') );
             }
             
@@ -125,8 +144,9 @@ function checkForm( f, l ){
 
         // se il campo è un telefono ed è valorizzato controllo la sintassi
         if( $(this).attr('type') == 'tel' && $(this).val() ){
-            ck += checkTelefono( $(this) );
-            if( checkTelefono( $(this) ) == 0 ){
+            e = checkTelefono( $(this), l );
+            ck += e;
+            if( e == 0 ){
                 console.log('errore formato telefono campo ' + $(this).prop('name') );
             }
         }
