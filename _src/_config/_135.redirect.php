@@ -1,9 +1,20 @@
 <?php
 
     /**
+     * applicazione dei redirect
      * 
      * 
-     * TODO implementare qui i redirect implicherebbe un bel risparmio di risorse
+     * 
+     * 
+     * TODO salvare i redirect in cache farebbe risparmiare tempo
+     * 
+     * 
+     */
+
+    /**
+     * indicizzazione dei redirect
+     * ===========================
+     * 
      * 
      */
 
@@ -16,16 +27,27 @@
         }
     }
 
-    // configurazione extra
-    if( isset( $cx['redirect'] ) ) {
-        $cf['redirect'] = array_replace_recursive(
-            $cf['redirect'],
-            $cx['redirect']
-        );
-    }
-
     // timer
     timerCheck( $cf['speed'], '-> fine indicizzazione dei redirect' );
+
+    /**
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * 
+     * 
+     */
+
+    // configurazione extra
+    if( isset( $cx['redirect'] ) ) {
+        $cf['redirect'] = array_replace_recursive( $cf['redirect'], $cx['redirect'] );
+    }
+
+    /**
+     * applicazione dei redirect
+     * =========================
+     * 
+     * 
+     */
 
     // URL sorgente al netto della query string
     $cf['uri']['base'] = strtok( $_SERVER['REQUEST_URI'], '?' );

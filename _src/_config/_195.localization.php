@@ -11,6 +11,13 @@
      *
      */
 
+    /**
+     * applicazione delle configurazioni di localizzazione
+     * ===================================================
+     * 
+     * 
+     */
+
     // lingua corrente
     define( 'LINGUA_CORRENTE'            , $cf['localization']['language']['ietf'] );
     define( 'ID_LINGUA_CORRENTE'        , $cf['localization']['language']['id'] );

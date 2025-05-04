@@ -54,6 +54,13 @@
      *
      */
 
+    /**
+     * definizione dei profili
+     * =======================
+     * 
+     * 
+     */
+
     // profili di funzionamento
     $cf['google']['profiles'][ DEVELOPEMENT ]   =
     $cf['google']['profiles'][ TESTING ]        =

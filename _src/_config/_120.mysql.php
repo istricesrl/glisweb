@@ -60,11 +60,32 @@
      *
      */
 
+    /**
+     * definizione dei server
+     * ======================
+     * 
+     * 
+     */
+
     // server disponibili
     $cf['mysql']['servers']                     = array();
 
+    /**
+     * definizione delle connessioni
+     * =============================
+     * 
+     * 
+     */
+
     // connessioni disponibili
     $cf['mysql']['connections']                 = array();
+
+    /**
+     * definizione dei profili
+     * =======================
+     * 
+     * 
+     */
 
     // profili di funzionamento
     $cf['mysql']['profiles'][ DEVELOPEMENT ]    =

@@ -31,10 +31,22 @@
     // var_dump( FILE_REDIRECT );
     // die( __FILE__ );
 
+    /**
+     * inizializzazioni
+     * ================
+     * 
+     * 
+     */
+
     // inizializzazione array redirect
-    $cf['redirect'] = array(
-        'index' => array()
-    );
+    $cf['redirect']['index'] = array();
+
+    /**
+     * lettura dei redirect salvati su file CSV
+     * ========================================
+     * 
+     * 
+     */
 
     // redirect da CSV
     if( file_exists( FILE_REDIRECT ) ) {
@@ -43,6 +55,13 @@
 
     // debug
     // var_dump( $cf['redirect'] );
+
+    /**
+     * lettura dei redirect salvati sul database
+     * =========================================
+     * 
+     * 
+     */
 
     // redirect da CMS
     if( ! empty( $cf['mysql']['connection'] ) ) {

@@ -15,23 +15,44 @@
 
     Per quanto riguarda l'utilizzo di Twig, si rimanda alla documentazione ufficiale sul sito https://twig.symfony.com/doc/3.x/.
 
+    struttura minima del template
+    -----------------------------
+    I file che dovete creare per impostare un template sono relativamente pochi, ed ognuno ha una funzione ben specifica.
+    Cominciamo introducendo la struttura minima del template, per poi approfondire i vari elementi.
+
+    file                        | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    css/main.css                | foglio di stile principale del template
+    etc/template.conf           | file di configurazione del template
+    ext/main.twig               | file di base del template
+    default.twig                | file di schema principale del template
+    login.twig                  | file di schema per la pagina di login
+
     Ogni template è composto da una o più basi (file HTML/Twig) che si trovano nella sottocartella ext/; questi file vengono
     estesi dagli schemi (file HTML/Twig) che si trovano nella cartella radice del template. Per convenzione la base principale
-    del template prende il nome di main.html mentre gli schemi prendono più o meno liberamente il nome dalla pagina per cui
-    sono pensati a meno che non ricadano in uno di questi casi particolari:
+    del template prende il nome di main.html (o main.twig) mentre gli schemi prendono più o meno liberamente il nome dalla
+    pagina per cui sono pensati a meno che non ricadano in uno di questi casi particolari:
 
     schema                    | ruolo
     --------------------------|---------------------------------------------------------------------------------------
-    default.html              | lo schema che viene utilizzato quando per la pagina non è specificato alcuno schema
-    login.html                | lo schema che viene utilizzato quando l'utente non ha i permessi per accedere alla pagina
+    default.twig              | lo schema che viene utilizzato quando per la pagina non è specificato alcuno schema
+    login.twig                | lo schema che viene utilizzato quando l'utente non ha i permessi per accedere alla pagina
 
     Va sottolineato che ogni template deve contenere questi schemi speciali per essere ritenuto valido, in quanto il
     framework dà per scontato che essi siano presenti.
 
-    Gli esempi seguenti fanno riferimento al codice del template Aurora (_src/_templates/_aurora/) che è pensato più come
+    Gli esempi seguenti fanno riferimento al codice del template Aurora (_src/_tpl/_aurora/) che è pensato più come
     template scuola e come base per lo sviluppo di template più complessi che come template pronto per l'uso; la sua
     semplicità tuttavia lo rende ideale per iniziare a capire come funzionano i template in GlisWeb, prima di passare
-    a qualcosa di più complesso (per cui si rimanda alla documentazione su Google Drive).
+    a qualcosa di più complesso.
+
+    Vi sono alcuni file opzionali che è bene siano presenti anche se la loro presenza non è obbligatoria; i principali
+    sono:
+
+    file                        | descrizione
+    ----------------------------|---------------------------------------------------------------------------------------
+    css/main.print.css          | foglio di stile principale del template per la stampa
+    css/main.screen.css         | foglio di stile principale del template per gli schermi
 
     struttura delle cartelle del template
     -------------------------------------
@@ -179,9 +200,9 @@
     precedenti.
 
     \code{.html}
-    {% import '_contents.html' as cms %}
+    {% import '_default.twig' as cms %}
 
-    {% extends "ext/main.html" %}
+    {% extends "ext/main.twig" %}
 
     {% block main %}
     <div>

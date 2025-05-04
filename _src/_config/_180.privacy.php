@@ -19,6 +19,13 @@
      *
      */
 
+    /**
+     * integrazione dei consensi dal database
+     * ======================================
+     * 
+     * 
+     */
+
     // TODO selezionare consensi_moduli in join con consensi e popolare $cf['privacy']['moduli']['consensi']
     $consensi = mysqlCachedQuery(
         $cf['memcache']['connection'],

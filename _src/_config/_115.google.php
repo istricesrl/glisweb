@@ -19,6 +19,13 @@
      *
      */
 
+    /**
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * 
+     * 
+     */
+
     // configurazione extra
     if( isset( $cx['google'] ) ) {
         $cf['google'] = array_replace_recursive( $cf['google'], $cx['google'] );
@@ -29,17 +36,22 @@
         $cf['google'] = array_replace_recursive( $cf['google'], $cf['site']['google'] );
     }
 
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
+
     // collegamento all'array $ct
     $ct['google'] = &$cf['google'];
 
+    /**
+     * scorciatoia per il profilo corrente
+     * ===================================
+     * 
+     * 
+     */
+
     // link al profilo corrente
     $cf['google']['profile'] = &$cf['google']['profiles'][ SITE_STATUS ];
-
-    /*
-
-        // CSP
-        if( ! empty( $cf['google']['profile']['recaptcha'] ) ) {
-            $ct['page']['csp']['script-src'][] = 'www.gstatic.com';
-        }
-
-    */

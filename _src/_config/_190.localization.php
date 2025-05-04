@@ -28,6 +28,13 @@
      *
      */
 
+    /**
+     * integrazione della localizzazione con il database
+     * =================================================
+     * 
+     * 
+     */
+
     // indice degli ID delle lingue
     $cf['localization']['index'] = array();
 

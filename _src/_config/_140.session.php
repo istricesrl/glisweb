@@ -23,7 +23,14 @@
      * 
      */
 
-    // ...
+    /**
+     * gestione dei tag UTM
+     * ====================
+     * 
+     * 
+     */
+
+    // definizione dei tag UTM da considerare
     $cf['utm']['fields'] = array(
         'utm_id',                       // Used to identify which ads campaign this referral references. Use utm_id to identify a specific ads campaign.
         'utm_source',                   // Use utm_source to identify a search engine, newsletter name, or other source.
@@ -33,10 +40,17 @@
         'utm_content'                   // Used for A/B testing and content-targeted ads. Use utm_content to differentiate ads or links that point to the same URL.
     );
 
-    // ...
+    // lettura dei tag UTM dalla $_REQUEST
     foreach( $cf['utm']['fields'] as $field ) {
         $_SESSION['utm'][ $field ] = ( isset( $_REQUEST[ $field ] ) ) ? $_REQUEST[ $field ] : ( ( isset( $_SESSION['utm'][ $field ] ) ) ? $_SESSION['utm'][ $field ] : NULL );
     }
+
+    /**
+     * impostazioni anti spam
+     * ======================
+     * 
+     * 
+     */
 
     // punteggio e controllo antispam
     $cf['session']['spam']['limit'] = 0.5;

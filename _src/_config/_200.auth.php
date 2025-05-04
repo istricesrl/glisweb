@@ -75,6 +75,13 @@
      *
      */
 
+    /**
+     * definizione dei gruppi
+     * ======================
+     * 
+     * 
+     */
+
     // gruppi
     $cf['auth']['groups'] = array(
         'roots' => array(
@@ -96,6 +103,13 @@
         )
     );
 
+    /**
+     * definizione dei privilegi
+     * =========================
+     * 
+     * 
+     */
+
     // privilegi
     $cf['auth']['privileges'] = array(
         'EDIT_CONFIGURAZIONE' => array(
@@ -116,6 +130,13 @@
         )
     );
 
+    /**
+     * definizione degli utenti
+     * ========================
+     * 
+     * 
+     */
+
     // account
     $cf['auth']['accounts'] = array(
         'root' => array(
@@ -133,6 +154,13 @@
         )
     );
 
+    /**
+     * definizione dei profili di creazione nuovi account
+     * ==================================================
+     * 
+     * 
+     */
+
     // profili di creazione nuovi account
     $cf['auth']['profili'] = array(
         'admin' => array(
@@ -147,6 +175,13 @@
             'attivo' => true
         )
     );
+
+    /**
+     * configurazioni per JWT
+     * ======================
+     * 
+     * 
+     */
 
     // salt e scadenza della chiave JWT
     // NOTA calcolato in questo modo il salt cambia ogni giorno quindi non è possibile riusarlo troppo a lungo

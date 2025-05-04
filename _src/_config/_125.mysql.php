@@ -19,13 +19,34 @@
     // ini_set('display_errors', 1);
     // error_reporting(-1);
 
+    /**
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * 
+     * 
+     */
+
     // configurazione extra
     if( isset( $cx['mysql'] ) ) {
         $cf['mysql'] = array_replace_recursive( $cf['mysql'], $cx['mysql'] );
     }
 
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
+
     // collegamento all'array $ct
     $ct['mysql']                        = &$cf['mysql'];
+
+    /**
+     * collegamento scorciatoie
+     * ========================
+     * 
+     * 
+     */
 
     // link alla connessione corrente
     $cf['mysql']['connection']          = NULL;
@@ -35,6 +56,7 @@
 
     /**
      * connessione ai server
+     * =====================
      * 
      * il codice seguente si occupa specificamente di effettuare la connessione a tutti i server
      * impostati per il profilo corrente, riportati in $cf['mysql']['profile']['servers'].
