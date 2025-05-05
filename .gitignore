@@ -19,6 +19,8 @@ src/py/*/*/lib64
 /tmp
 /usr
 /var
+/.dockerignore
+/.gitignore
 /*.html
 /*.lock
 /*.php
