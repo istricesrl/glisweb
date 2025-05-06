@@ -1,0 +1,70 @@
+{# LIBRERIE #}
+{% import '_lib/_navigation.twig' as nav %}
+
+{# CODICE DELLA PAGINA #}
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    {# HEADER #}
+    <head>
+
+        {# HEADER STANDARD #}
+        {% include '_inc/_page.head.twig' %}
+
+    </head>
+
+    {# BODY #}
+    <body>
+
+        {# CODICE DI APERTURA STANDARD DELLA PAGINA#}
+        {% include '_inc/_page.open.twig' %}
+
+        {# MENU DI NAVIGAZIONE #}
+        {% if page.template.menu.app|length > 0 %}
+        <header class="sticky-top">
+            <div class="container-fluid">
+                <div class="row">
+                    {% block nav %}{% include 'inc/navbar.twig' %}{% endblock %}
+                    {% block widget %}{% include 'inc/widget.twig' %}{% endblock %}
+                </div>
+            </div>
+        </header>
+        {% else %}
+        <!-- nessuna voce di menu trovata per page.template.menu.app -->
+        {% endif %}
+
+        {# BLOCCO MAIN #}
+        <main class="d-flex flex-column container-fluid">
+
+            {# BLOCCO TITOLO #}
+            {% block title %}
+            <div class="row">
+                <div class="col">
+                    <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+                    {% if page.subtitle[ localization.language.ietf ] %}{{ page.subtitle[ localization.language.ietf ] | raw }}{% endif %}
+                </div>
+            </div>
+            {% endblock %}
+
+            {# BLOCCO NAVIGAZIONE SECONDARIA #}
+            {% block subnav %}{% include 'inc/subnav.twig' %}{% endblock %}
+
+            {# BLOCCO CONTENUTO PRINCIPALE #}
+            {% block main %}{% endblock %}
+
+        </main>
+
+        {# BLOCCO FOOTER #}
+        {% block footer %}{% include 'inc/footer.twig' %}{% endblock %}
+
+        {# CODICE DI CHIUSURA STANDARD DELLA PAGINA #}
+        {% include '_inc/_page.close.twig' %}
+
+        {# MODAL DELLA PAGINA #}
+        {% block modals %}<!-- nessun modal per pagina specificato -->{% endblock %}
+
+        {# SCRIPT JAVASCRIPT DELLA PAGINA #}
+        {% block javascript %}<!-- nessuno script Javascript per pagina specificato -->{% endblock %}
+
+    </body>
+</html>

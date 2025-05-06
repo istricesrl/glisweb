@@ -1,0 +1,65 @@
+
+{# FILE PER LE OPERAZIONI STANDARD DA ESEGUIRE PRIMA DELLA CHIUSURA DEL TAG BODY
+    In questo file si trovano le operazioni standard da svolgere prima della chiusura del tag <body>. Come nel caso di
+    _page.head.twig e _page.open.twig, queste operazioni sono comuni a tutti i template.
+    Si noti che il JavaScript eseguito qui è al netto del JavaScript delle specifiche pagine, incluso nel blocco
+    javascript di ogni pagina. #}
+
+<!-- file: {{ _self }} -->
+
+{# CODICE PER L'OVERLAY DEI COOKIE #}
+{% include [ 'inc/cookie.overlay.html', '_inc/_cookie.overlay.html' ] %}
+
+{# VARIABILI JAVASCRIPT GLOBALI #}
+<script>
+    var siteRoot = '{{ site.root }}';
+</script>
+
+{# JAVASCRIPT ESTERNI #}
+{% for j in page.js.external %}<script defer src="{{ include( template_from_string( j ) | raw ) }}"></script>{% endfor %}
+
+{# JAVASCRIPT INTERNI #}
+{% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
+
+{# JAVASCRIPT DEL TEMPLATE #}
+{% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}"></script>{% endfor %}
+
+{# CODICE PER GOOGLE RECAPTCHA#}
+{% include '_inc/_recaptcha.close.html' %}
+
+{# CODICE PER FACEBOOK MESSENGER#}
+{% include '_inc/_facebook.messenger.html' %}
+
+{# CODICE PER CRITEO #}
+{% include '_inc/_criteo.html' %}
+
+{# CODICE PER CHART.JS #}
+{% include '_inc/_chartjs.script.html' %}
+
+{# CODICE PER SMARTSUPP #}
+{% include '_inc/_smartsupp.html' %}
+
+{# modal della pagina#}
+{% for ruolo,modals in page.contents.modals %}
+{% for modal in modals %}
+<!-- modal: {{ modal.schema }} -->
+{% include modal.schema %}
+{% else %}
+<!-- nessun modal trovato in page.contents.modals per il ruolo {{ ruolo }} -->
+{% endfor %}
+{% else %}
+<!-- nessun modal trovato in page.contents.modals -->
+{% endfor %}
+
+{# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL 
+    vedi _src/_inc/_macro/_default.tools.php #}
+
+{# LINK PER I VALIDATORI #}
+<!-- HTML5 W3C validator: https://validator.w3.org/nu/?doc={{ page.url[ localization.language.ietf ] }} -->
+{% for c in page.css.template %}
+<!-- CSS3 W3C validator: https://jigsaw.w3.org/css-validator/validator?uri={{ site.url }}{{ page.template.path }}{{ c }} -->
+{% endfor %}
+<!-- Google Mobile Friendly check: https://search.google.com/test/mobile-friendly?url={{ page.url[ localization.language.ietf ] }} -->
+<!-- Google Speed Test: https://developers.google.com/speed/pagespeed/insights/?url={{ page.url[ localization.language.ietf ] }} -->
+
+<!-- fine file: {{ _self }} -->

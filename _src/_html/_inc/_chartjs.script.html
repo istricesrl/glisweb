@@ -1,6 +1,6 @@
 
 {# FILE PER LA GENERAZIONE DEL TAG <script> PER LA LIBRERIA CHARTJS #}
-
+{% if page.contents.chartjs %}
 <script>
 
 	window.addEventListener('load', function () {
@@ -30,3 +30,4 @@
 	});
 
 </script>
+{% endif %}

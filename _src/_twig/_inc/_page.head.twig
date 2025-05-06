@@ -1,0 +1,76 @@
+
+{# FILE PER LA GENERAZIONE DEL TAG HEAD STANDARD
+    Il contenuto del tag <head> è sostanzialmente tecnico, quindi avendo poco a che fare con l'aspetto finale del template
+    può essere standardizzato. Le operazioni da svolgere qui sono quindi comuni a tutti i template. #}
+
+    <!-- file: {{ _self }} -->
+
+    {# CODICE PER GOOGLE TAG MANAGER #}
+    {% include '_inc/_gtm.head.html' %}
+
+    {# CODICE PER GOOGLE ANALYTICS #}
+    {% include '_inc/_analytics.head.html' %}
+
+    {# CODICE PER GOOGLE ADS #}
+    {% include '_inc/_ads.head.html' %}
+
+    {# META TAG #}
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <meta name="keywords" content="{{ page.keywords[ localization.language.ietf ] }}">
+    <meta name="description" content="{{ page.description[ localization.language.ietf ] }}">
+    {% if page.robots %}<meta name="robots" content="{{ page.robots[ localization.language.ietf ] }}">{% endif %}
+
+    {# FAVICONS #}
+    {% for icon in page.template.favicons %}<link
+        {% if icon.rel %} rel="{{ icon.rel }}"{% endif %}
+        {% if icon.type %} type="{{ icon.type }}"{% endif %}
+        {% if icon.sizes %} sizes="{{ icon.sizes }}"{% endif %}
+        href="{{ site.url }}{{ icon.path }}/{{ icon.file }}">
+    {% else %}
+    <!-- nessuna favicon trovata in page.template.favicons -->
+    {% endfor %}
+
+    {# LINK CANONICO DELLA PAGINA
+        vedi https://developers.google.com/search/docs/crawling-indexing/canonicalization?hl=it #}
+    {% if page.canonical %}
+    <link rel="canonical" href="{{ pages[ page.canonical ].url[ localization.language.ietf ] }}">
+    {% else %}
+    <!-- nessun link canonico trovato in page.canonical -->
+    {% endif %}
+
+    {# TAG TITLE #}
+    <title>{{ page.title[ localization.language.ietf ] }}</title>
+
+    {# TAG OPENGRAPH #}
+    {% include '_inc/_opengraph.head.html' %}
+
+    {# CSS ESTERNI #}
+    {% for c in page.css.external %}
+    <link rel="stylesheet" href="{{ c }}" media="screen">{% endfor %}
+
+    {# CSS PRELOAD #}    
+    {% for c in page.css.preload %}<link rel="preload" as="style" href="{{ c }}" media="screen" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
+    <noscript>
+        {% for c in page.css.preload %}<link rel="stylesheet" href="{{ c }}">{% endfor %}
+    </noscript>
+
+    {# CSS INTERNO #}
+    {% for c in page.css.internal %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
+
+    {# CSS DEL TEMPLATE #}    
+    {% for c in page.css.template %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% endfor %}
+    {% for c in page.css.template_screen %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% endfor %}
+    {% for c in page.css.template_print %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="print">{% endfor %}
+
+    {# CSS CUSTOM #}    
+    {% for c in page.css.custom %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
+
+    {# CODICE PER FACEBOOK #}
+    {% include '_inc/_facebook.head.html' %}
+
+    {# CODICE PER HOTJAR #}
+    {% include '_inc/_hotjar.head.html' %}
+
+    <!-- fine file: {{ _self }} -->

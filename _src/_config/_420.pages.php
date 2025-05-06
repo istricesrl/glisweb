@@ -78,17 +78,37 @@
 
         // forzatura del template corrente per one-char parameter debug
         if( isset( $_REQUEST['t'] ) ) {
-            if( file_exists( DIR_BASE . '_src/_templates/_' . $_REQUEST['t'] . '/' ) ) {
+            if( file_exists( DIR_BASE . '_src/_tpl/_' . $_REQUEST['t'] . '/' ) ) {
+                $ct['page']['template']['path']    = '_src/_tpl/_' . $_REQUEST['t'] . '/';
+            } elseif( file_exists( DIR_BASE . 'src/tpl/' . $_REQUEST['t'] . '/' ) ) {
+                $ct['page']['template']['path']    = 'src/tpl/' . $_REQUEST['t'] . '/';
+            } elseif( file_exists( DIR_BASE . '_src/_templates/_' . $_REQUEST['t'] . '/' ) ) {
                 $ct['page']['template']['path']    = '_src/_templates/_' . $_REQUEST['t'] . '/';
             } elseif( file_exists( DIR_BASE . 'src/templates/' . $_REQUEST['t'] . '/' ) ) {
                 $ct['page']['template']['path']    = 'src/templates/' . $_REQUEST['t'] . '/';
             }
-            $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['default'] ) ) ? $ct['page']['template']['default'] : 'default.html';
+            $ct['page']['template']['schema'] = (
+                ( isset( $ct['page']['template']['default'] ) ) 
+                ? 
+                $ct['page']['template']['default'] 
+                :
+                (
+                    file_exists( DIR_BASE . $ct['page']['template']['path'] . 'default.twig' )
+                    ?
+                    'default.twig'
+                    :
+                    'default.html'
+                )
+            );
         }
 
         // forzatura dello schema corrente per one-char parameter debug
         if( isset( $_REQUEST['s'] ) ) {
-            $ct['page']['template']['schema'] = $_REQUEST['s'] . '.html';
+            if( DIR_BASE . file_exists( $ct['page']['template']['path'] . $_REQUEST['s'] . '.twig' ) ) {
+                $ct['page']['template']['schema'] = $_REQUEST['s'] . '.twig';
+            } elseif( file_exists( DIR_BASE . $ct['page']['template']['path'] . $_REQUEST['s'] . '.html' ) ) {
+                $ct['page']['template']['schema'] = $_REQUEST['s'] . '.html';
+            }
         }
 
         // forzatura del tema corrente per one-char parameter string

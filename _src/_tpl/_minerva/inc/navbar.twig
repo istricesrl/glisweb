@@ -1,0 +1,40 @@
+{# LIBRERIE #}
+{% import '_lib/_navigation.twig' as nav %}
+
+<!-- file {{ _self }} -->
+<div class="col d-flex flex-column p-0">
+    <nav class="navbar navbar-expand-md navbar-light mt-auto mb-auto">
+        <button class="navbar-toggler ml-auto mx-3 my-1 order-10 order-md-1" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse order-12" id="navbarNav">
+            <ul class="navbar-nav mr-auto text-right">
+                {{ nav.menu( page.template.menu.app, localization.language.ietf ) }}
+            </ul>
+        </div>
+        {% if session.account.username %}
+        <!-- utente connesso {{ session.account.username }} -->
+        <div class="col-auto d-flex flex-row p-0 mr-auto ml-md-auto mr-md-0 order-1 order-md-12">
+            <ul class="navbar-nav ml-auto text-right icons">
+                {{ nav.menu( page.template.menu['appicons'], localization.language.ietf ) }}
+            </ul>
+            {% if session.carrello.articoli %}
+            <div class="">
+                <button type="button" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="carrello" onclick="window.open('{{ pages['app.carrello'].url['it-IT']}}','_self');"><i class="fa fa-shopping-cart"></i></button>
+            </div>
+            {% else %}
+            <!-- nessun articolo nel carrello -->
+            {% endif %}
+            <div class="">
+                    <form class="" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+                    <input type="hidden" name="__logout__" value="1">
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="logout"><i class="fa fa-sign-out"></i></button>
+                </form>    
+            </div>
+        </div>
+        {% else %}
+        <!-- nessun utente connesso (session.account.username vuoto) -->
+        {% endif %}
+    </nav>
+</div>
+<!-- fine file {{ _self }} -->

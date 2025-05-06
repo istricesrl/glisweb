@@ -1,0 +1,14 @@
+{# LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+
+{# SCHEMA ESTESO #}
+{% extends "ext/main.twig" %}
+
+{# BLOCCO MAIN #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+<div>
+    {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
+</div>
+<!-- fine blocco {{ _self }}::main -->
+{% endblock %}

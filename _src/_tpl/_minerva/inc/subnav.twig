@@ -1,0 +1,61 @@
+<!-- file {{ _self }} -->
+{% if page.children.id %}
+    <div class="row subnav d-flex justify-content-center">
+        {% for child in page.children.id %}
+        {% set obj = pages[ child ] %}
+        {% if obj.icon %}
+        <div class="col-12 col-md-{% if page.etc.subnav.colsize %}{{ page.etc.subnav.colsize }}{% else %}4{% endif %}">
+            {% if obj.modal %}
+            <a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
+            {% elseif obj.ws %}
+            <a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
+            {% elseif obj.path[ localization.language.ietf ] %}
+            <a href="{{ obj.path[ localization.language.ietf ] }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
+            {% endif %}
+                <div class="media d-flex">
+                    <div class="media-left flex-shrink-0">
+                        {{ include( template_from_string( obj.icon ) ) }}
+                    </div>
+                    <div class="media-body flex-grow-1 ms-3">
+                        <h5 class="media-title">{{ obj.h1[ localization.language.ietf ] }}</h5>
+                        <p class="media-text">{{ include( template_from_string( obj.abstract[ localization.language.ietf ] ) | raw ) }}</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        {% else %}
+        <!-- l'oggetto {{ child }} non ha l'attributo icon -->
+        {% endif %}
+        {% endfor %}
+    </div>
+{% else %}
+<!-- nessuna pagina figlia trovata in page.children.id -->
+{% endif %}
+<!-- fine file {{ _self }} -->
+
+{# ATTENZIONE
+
+Bootstrap 4.x
+
+<div class="media">
+    <div class="media-left">
+        {{ include( template_from_string( obj.icon ) ) }}
+    </div>
+    <div class="media-body">
+        <h5 class="media-title">{{ obj.h1[ localization.language.ietf ] }}</h5>
+        <p class="media-text">{{ obj.abstract[ localization.language.ietf ] }}</p>
+    </div>
+</div>
+
+Bootstrap 5.x
+
+<div class="d-flex">
+  <div class="flex-shrink-0">
+    <img src="..." alt="...">
+  </div>
+  <div class="flex-grow-1 ms-3">
+    This is some content from a media component. You can replace this with any content and adjust it as needed.
+  </div>
+</div>
+
+#}

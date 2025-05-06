@@ -409,6 +409,7 @@
     }
 
     // debug
+    // die( $ct['page']['template']['schema'] );
     // print_r( $ct['page']['template'] );
     // echo 'DEBUG';
 
@@ -894,6 +895,7 @@
                 // print_r( $cf['twig']['profile'] );
                 // print_r( $ct['page']['template']['path'] );
                 // print_r( $ct['page']['template']['paths'] );
+                // die( $ct['page']['template']['path'] );
 
                 // altri file da includere
                 $ct['page']['template']['paths'] = array_replace_recursive(
@@ -1001,6 +1003,9 @@
 
                 // log
                 logger( 'tipo di template sconosciuto: ' . $ct['page']['template']['type'], 'template', LOG_CRIT );
+
+                // debug
+                // die( 'tipo di template sconosciuto: ' . $ct['page']['template']['type'] );
 
             break;
 

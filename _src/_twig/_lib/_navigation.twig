@@ -63,7 +63,7 @@
                     {% endif %}
 
                     {# costruzione del tag a #}
-                    <a {{ href }} {{ target }} class="nav-link">
+                    <a {{ href|raw }} {{ target|raw }} class="nav-link">
                         {{ link.label[ lang ]|raw }}
                     </a>
 
