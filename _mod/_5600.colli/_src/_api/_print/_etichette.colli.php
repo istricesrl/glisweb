@@ -18,27 +18,19 @@
     require '../../../../../_src/_config.php';
 
     // ...
-    if( isset( $_REQUEST['__etichette__']['codice'] ) ) {
+    if( isset( $_REQUEST['codice'] ) ) {
 
         // ...
-        $img = mysqlSelectRow(
+        $colli = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT immagini.path, metadati.testo AS codice_alternativo FROM immagini 
-                INNER JOIN prodotti ON immagini.id_prodotto = prodotti.id 
-                INNER JOIN articoli ON articoli.id_prodotto = prodotti.id 
-                LEFT JOIN metadati ON metadati.id_articolo = articoli.id AND metadati.nome = "codice_alternativo"
-                WHERE articoli.id = ? AND immagini.path IS NOT NULL 
-                ORDER BY immagini.id DESC LIMIT 1',
+            'SELECT * FROM colli WHERE codice LIKE ?',
             array(
-                array( 's' => $_REQUEST['__etichette__']['codice'] )
+                array( 's' => $_REQUEST['codice'] . '%' )
             )
         );
 
         // debug
-        // die( print_r( $img, true ) );
-
-        // ...
-        $codice = ( ! empty( $img['codice_alternativo'] ) ) ? $img['codice_alternativo'] : $_REQUEST['__etichette__']['codice'];
+        // die( print_r( $colli, true ) );
 
         // ...
         $fntSizeCodice = ( strlen( $codice ) < 8 ) ? 20 : ( ( strlen( $codice ) < 11 ) ? 14 : 12 );
@@ -61,42 +53,40 @@
         // set auto page breaks
         $pdf->SetAutoPageBreak( false );						// se aggiungere automaticamente pagine
 
-        // aggiunta di una pagina
-        $pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
+        // per ogni collo
+        foreach( $colli as $collo ) {
 
-        // immagine articolo ( path, x, y, w, h, type, link, align, resize, dpi, palign, ismask, imgmask, border, fitbox )
-        $pdf->image( DIR_BASE . $img['path'], 3, 3, 15, 15, NULL, NULL, 'T', false, 300, '', false, false, 1, true );
+            // aggiunta di una pagina
+            $pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
 
-        // logo Eurosnodi ( path, x, y, w, h, type, link, align, resize, dpi, palign, ismask, imgmask, border, fitbox )
-        $pdf->image( DIR_BASE . 'var/contenuti/logo_Eurosnodi.png', 22.5, 13, 12, 12, NULL, NULL, 'T', false, 300, '', false, false, 1, true );
+            // set font
+            $pdf->SetFont('helvetica', '', $fontSize);				// font, stile, dimensione
 
-        // codice
-        $pdf-> setXY( 24, 2 );
-        $pdf->setTextColor( 0, 0, 0 );
-        $pdf->SetFillColor(  255, 255, 255 );
-        $pdf -> SetFont( 'helvetica', 'B', $fntSizeCodice );
-        $pdf-> Cell( 30, 10, strtoupper( $codice ), '','', 'R', 1 );
+            // define barcode style
+            $style = array(
+                'position' => '',
+                'align' => 'C',
+                'stretch' => false,
+                'fitwidth' => true,
+                'cellfitalign' => '',
+                'border' => false,
+                'hpadding' => 'auto',
+                'vpadding' => 'auto',
+                'fgcolor' => array(0,0,0),
+                'bgcolor' => false, //array(255,255,255),
+                'text' => true,
+                'font' => 'helvetica',
+                'fontsize' => 8,
+                'stretchtext' => 4
+            );
 
-        // etichetta quantità
-        $pdf-> setXY( 34, 14 );
-        $pdf->setTextColor( 0, 0, 0 );
-        $pdf->SetFillColor(  255, 255, 255 );
-        $pdf -> SetFont( 'helvetica', 'B', 9 );
-        $pdf-> Cell( 20, 8, 'QTY:', '','', 'R', 1 );
+            // posizione verticale del codice
+            $pdf->SetY( 5 );
 
-        // quantità
-        $pdf-> setXY( 34, 20 );
-        $pdf->setTextColor( 0, 0, 0 );
-        $pdf->SetFillColor(  255, 255, 255 );
-        $pdf -> SetFont( 'helvetica', 'B', 20 );
-        $pdf-> Cell( 20, 7, strtoupper( $_REQUEST['__etichette__']['quantita'] ), '','', 'R', 1 );
+            // codice del collo
+            $pdf->write1DBarcode( $collo['codice'], 'C128', '', '', '', 18, 0.4, $style, 'N');
 
-        // data
-        $pdf-> setXY( 3, 22 );
-        $pdf->setTextColor( 0, 0, 0 );
-        $pdf->SetFillColor(  255, 255, 255 );
-        $pdf -> SetFont( 'helvetica', '', 9 );
-        $pdf-> Cell( 25, 8, date( 'd/m/Y' ), '','', 'L', 1 );
+        }
 
         // invia l'output al browser
         $pdf->Output( time().'.pdf');
@@ -104,6 +94,6 @@
     } else {
 
         // debug
-        die( 'ID articolo non passato' );
+        die( 'codice di ricerca non passato' );
 
     }

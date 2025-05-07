@@ -57,10 +57,12 @@
 			<legend>inserimento rapido riga</legend>
 			<div class="form-group form-row">
 				{% if '5600.colli' in mods.active.array %}
+				<!--
 				<div class="col-12 col-md">
 					<span class="label-top">collo</span>
 					{{ frm.selectBox( '__evasione__', '', '', 'id_collo', '', '', request, '', '', 1, '', '', '', '', 'colli', 'id_collo', page, pages, ietf, 'colli' ) }}
 				</div>
+				-->
 				{% endif %}
 				{% if '0500.mastri' in mods.active.array %}
 				<div class="col">
@@ -111,6 +113,7 @@
 				</div>
 			</div>
 
+			{% if etc.packing %}
 			<legend>packing list</legend>
 
 			<div class="form-group form-row">
@@ -141,6 +144,7 @@
 					<button type="button" class="btn btn-secondary btn-block" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="torna alla dashboard" onclick="">genera PDF packing list</button>
 				</div>
 			</div>
+			{% endif %}
 
 		</fieldset>
 

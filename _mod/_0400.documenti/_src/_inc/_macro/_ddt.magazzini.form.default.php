@@ -72,7 +72,7 @@
 			}
 
 		}
-
+/*
 		$ct['etc']['packing'] = mysqlQuery(
 			$cf['mysql']['connection'],
 			'SELECT documenti_articoli.id, documenti_articoli.id_documento, documenti_articoli.id_articolo, 
@@ -87,5 +87,29 @@
 			GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola, documenti_articoli.id_collo, documenti_articoli.id_udm',
 			array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ) )
 		);
+*/
+				
+		// TODO aggiunta riga di packing list
+		if( isset( $_REQUEST['__packing__'] ) ) {
+
+			// controllo che l'articolo bippato sia presente nel DDT
+
+			// controllo che la quantità in packing list non superi la quantità in DDT
+
+			// controllo che il collo specificato non sia già chiuso
+
+			// inserisco la riga di packing list
+			mysqlInsertRow(
+				$cf['mysql']['connection'],
+				array(
+					'id_packing_list' => $_REQUEST[ $ct['form']['table'] ]['id'],
+					'id_collo' => $_REQUEST['__packing__']['id_collo'],
+					'id_articolo' => $_REQUEST['__packing__']['id_articolo'],
+					'quantita' => $_REQUEST['__packing__']['quantita']
+				),
+				'documenti_articoli'
+			);
+
+		}
 
 	}

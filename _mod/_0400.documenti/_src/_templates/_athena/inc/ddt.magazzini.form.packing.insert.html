@@ -1,0 +1,22 @@
+{% import '_bin/_form.html' as frm %}
+{% import 'bin/default.html' as def %}
+
+<fieldset id="{{ view.id }}-insert" class="view-insert hidden">
+    <div class="form-row d-print-none">
+        <div class="col">
+            <span class="label-top remove-after-duplicate">collo</span>
+            {{ frm.selectBox( '__packing__', '', '', 'id_collo', '', '', '', '', '', 1, '', 'font-awesome', '', '', '', '', page, pages, ietf, 'colli', 2 ) }}
+        </div>
+        <div class="col">
+            <span class="label-top remove-after-duplicate">articolo</span>
+            {{ frm.selectBox( '__packing__', '', '', 'id_articolo', '', '', '', '', '', 1, '', 'font-awesome', '', '', '', '', page, pages, ietf, 'articoli', 2 ) }}
+        </div>
+        <div class="col-1">
+            <span class="label-top remove-after-duplicate">quantità</span>
+            {{ frm.input( '__packing__', '', '', 'quantita', '', '', '', '', '', '', '', 2 ) }}
+        </div>
+        <div class="col-auto">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-o" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>

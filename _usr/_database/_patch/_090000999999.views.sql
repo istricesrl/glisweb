@@ -3561,6 +3561,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			documenti.data
 		) AS documento,
 		coalesce( documenti_articoli.data, documenti.data ) AS data,
+		documenti_articoli.id_packing_list,
 		documenti_articoli.id_missione,
 		coalesce( documenti_articoli.id_emittente, documenti.id_emittente ) AS id_emittente,
 		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
@@ -3626,6 +3627,8 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		matricole.matricola AS matricola,
 		documenti_articoli.id_rinnovo,
 		documenti_articoli.id_collo,
+		colli.codice AS codice_collo,
+		colli.nome AS nome_collo,
 		matricole.data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.data_consegna,
@@ -3660,6 +3663,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 		LEFT JOIN prodotti AS p ON p.id = documenti_articoli.id_prodotto
+		LEFT JOIN colli ON colli.id = documenti_articoli.id_collo
 		LEFT JOIN udm AS udm_dimensioni ON udm_dimensioni.id = articoli.id_udm_dimensioni
 		LEFT JOIN udm AS udm_peso ON udm_peso.id = articoli.id_udm_peso
 		LEFT JOIN udm AS udm_volume ON udm_volume.id = articoli.id_udm_volume
