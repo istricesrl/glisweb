@@ -15,10 +15,23 @@
         'macro'		=> array( $m . '_src/_inc/_macro/_colli.view.php' ),
         'parent'	=> array( 'id'		=> 'logistica' ),
         'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-        'etc'		=> array( 'tabs'	=> array( 'colli.view', 'colli.tools' ) ),
+        'etc'		=> array( 'tabs'	=> array( 'colli.view', 'colli.stampe', 'colli.tools' ) ),
         'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'colli' ),
             'priority'	=> '120' ) ) )	
     );
+
+	// stampe colli
+	$p['colli.stampe'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'stampe' ),
+	    'h1'		=> array( $l		=> 'stampe' ),
+	    'parent'		=> array( 'id'		=> 'colli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_colli.stampe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['colli.view']['etc']['tabs'] )
+	);
 
     // tools colli
     $p['colli.tools'] = array(
