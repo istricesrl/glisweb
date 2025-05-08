@@ -67,6 +67,10 @@
                         <span class="label-top">numero</span>
                         {{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
                     </div>
+                    <div class="col-4 col-md-1">
+                        <span class="label-top">codice</span>
+                        {{ frm.inputRequired( table, '', '', 'codice', '', '', request, default_nome ) }}
+                    </div>
                     {% if request.__ordine_da_evadere__ %}
                         {% set default_nome = 'evasione '  ~ etc.ordine.nome  ~ ' numero '  ~ etc.ordine.numero  ~ '/' ~ etc.ordine.sezionale ~ ' del '  ~ etc.ordine.data %}
                     {% endif %}

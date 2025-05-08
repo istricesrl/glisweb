@@ -245,7 +245,33 @@
      // inserisco il logo in alto a sinistra
 	$pdf->image( $lge, $ml, $mt, $lgw, $lgh, NULL, NULL, $lgn, false, 300, '', false, false, 1, true );		// x, y, w, h, type, link, align, resize
 
-        // intestazione azienda emittente
+	// define barcode style
+	$style = array(
+		'position' => 'R',
+		'align' => 'C',
+		'stretch' => false,
+		'fitwidth' => true,
+		'cellfitalign' => '',
+		'border' => false,
+		'hpadding' => 'auto',
+		'vpadding' => 'auto',
+		'fgcolor' => array(0,0,0),
+		'bgcolor' => false,
+		'text' => true,
+		'font' => 'helvetica',
+		'fontsize' => 8,
+		'stretchtext' => 4
+	);
+
+	// codice a barre del DDT
+	if( ! empty( $doc['codice'] ) ) {
+		$pdf->SetX( $ml + ( $col * 9 ) );					// x
+		$pdf->SetY( $mt + $stdsp );						// y
+		$pdf->write1DBarcode( $doc['codice'], 'C128', '', '', '', 18, 0.4, $style, 'N');
+	}
+
+	// intestazione azienda emittente
+	$pdf->SetY( $mt + $stdsp );						// y
 	$tmp = $pdf->GetX() + $stdsp;								// margine provvisorio in base alla larghezza del logo
 	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 	foreach( $sde as $k => $sdel ) {
@@ -253,7 +279,7 @@
 	    $pdf->Text( $tmp, $pdf->GetY(), $sdel, false, false, true, 0, 1 );		// x, y, testo, outline, clip, fill, border, newline
 	}
 
-    // spazio sotto l'intestazione
+	// spazio sotto l'intestazione
 	$pdf->SetY( $pdf->GetY() + $stdsp * 2 );
 
     // intestazione cliente
