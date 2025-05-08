@@ -33,7 +33,7 @@
         // die( print_r( $colli, true ) );
 
         // ...
-        $fntSizeCodice = ( strlen( $codice ) < 8 ) ? 20 : ( ( strlen( $codice ) < 11 ) ? 14 : 12 );
+        $fontSize = ( strlen( $_REQUEST['codice'] ) < 8 ) ? 20 : ( ( strlen( $_REQUEST['codice'] ) < 11 ) ? 14 : 12 );
 
         // creazione del PDF
         $pdf = new TCPDF( 'L', 'mm', array( 57, 32 ) );						// portrait, millimetri, A4 (x->210 y->297)
