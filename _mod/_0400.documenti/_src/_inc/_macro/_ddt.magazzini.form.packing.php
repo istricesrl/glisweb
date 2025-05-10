@@ -47,6 +47,7 @@
 #        'tipologia' => 'tipologia',
 #        'data' => 'data',
 #        'nome' => 'nome',
+        'ordine_collo' => 'numero',
 //		'id_articolo' => 'codice',
 		'articolo' => 'articolo',
         'quantita' => 'quantità',

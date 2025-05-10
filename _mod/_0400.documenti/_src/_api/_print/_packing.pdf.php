@@ -50,9 +50,9 @@
         $cf['mysql']['connection'],
         'SELECT documenti_articoli_view.*, count(agg.id) AS aggregate, '.
         'udm.sigla AS udm FROM documenti_articoli_view '.
-        'INNER JOIN udm ON udm.id = documenti_articoli_view.id_udm '.
+        'LEFT JOIN udm ON udm.id = documenti_articoli_view.id_udm '.
         'LEFT JOIN documenti_articoli_view AS agg ON agg.id_genitore = documenti_articoli_view.id '.
-        'WHERE documenti_articoli_view.id_documento = ? GROUP BY documenti_articoli_view.id',
+        'WHERE documenti_articoli_view.id_packing_list = ? GROUP BY documenti_articoli_view.id',
         array( array( 's' => $doc['id'] ) )
     );
 
@@ -156,8 +156,8 @@
 	$sdc = $sdec['linee'];
 
     // oggetto del documento
-	$dobj = 'DDT n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
-
+	// $dobj = 'DDT n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
+    $dobj = $doc['nome'];
   
     // recupero i dati dell'azienda emittente
 	$emittente = mysqlSelectRow( $cf['mysql']['connection'],
@@ -311,11 +311,11 @@
 
     // intestazione tabella di dettaglio
 	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-	$pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 1, 0, 'udm', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 3, 0, 'magazzino scarico', $brdh, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 3, 0, 'magazzino carico', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+    $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
     // contatore delle eventuali righe aggregate per generare l'eventuale allegato "dettaglio aggregate"
 	$countAggregate = 0;
@@ -323,34 +323,35 @@
     // tabella di dettaglio
 	$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
 	foreach( $doc['righe'] as $row ) {
-	    $trh = $pdf->GetStringHeight( $col * 4,$row['articolo'] , false, true, '', 'B' );				// 
+	    $trh = $pdf->GetStringHeight( $col * 6,$row['articolo'] , false, true, '', 'B' );				// 
 	$pdf->SetFont( $fnt, '', $fnts );
 	    // controllo se la riga di dettaglio entra nella parte rimanente del foglio
 	    if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){
 		    $pdf->AddPage(); 
 		    // intestazione tabella nel nuovo foglio
 		    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-            $pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 1, 0, 'udm', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 3, 0, 'magazzino scarico', $brdh, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 3, 0, 'magazzino carico', $brdh, 1, 'C');				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+            $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
                     // reimposto il font
 		    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
 
 								    }
 	    if( substr($row['nome'],0,1) === '*' ){$pdf->SetFillColor(230, 230, 230);} 
 	    else {	    $pdf->SetFillColor(255, 255, 255);}
-	    $pdf->MultiCell( $col * 4, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+	    // $pdf->MultiCell( $col * 4, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 
 	    // scrivo in grassetto le righe che sono aggregazioni di righe
 	    if($row['aggregate']>0 ){	$pdf->SetFont( $fnt, 'B', $fnts ); }
 
 //	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
-	    $pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 1, $trh, $row['udm'], $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 3, $trh, $row['mastro_provenienza'], $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 3, $trh, $row['mastro_destinazione'], $brdc, 0, 'R', 1, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+$pdf->Cell( $col * 1, $trh, $row['ordine_collo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+$pdf->Cell( $col * 2, $trh, $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+$pdf->MultiCell( $col * 6, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+$pdf->Cell( $col * 2, $trh, NULL, $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 1, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 
 	    $countAggregate += $row['aggregate'];
 	

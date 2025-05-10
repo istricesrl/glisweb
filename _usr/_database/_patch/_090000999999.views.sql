@@ -3629,6 +3629,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.id_collo,
 		colli.codice AS codice_collo,
 		colli.nome AS nome_collo,
+        colli.ordine AS ordine_collo,
 		matricole.data_scadenza,
 		documenti_articoli.nome,
 		documenti_articoli.data_consegna,
