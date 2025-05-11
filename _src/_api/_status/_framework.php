@@ -335,15 +335,17 @@
     if( ! empty( $cf['memcache']['profiles'][ $cf['site']['status'] ]['servers'] ) ) {
         echo '[ -- ] backend memcache attivato' . PHP_EOL;
         if( ! empty( $cf['memcache']['connection'] ) ) {
-        echo '[ OK ] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' presente' . PHP_EOL;
-        if( ! empty( $cf['memcache']['stat']['hits'] ) ) {
-            echo '[ -- ] utilizzati ' . $cf['memcache']['stat']['usage'] . ' (' . $cf['memcache']['stat']['percent'] . ')' . PHP_EOL;
-            echo '[ -- ] ' . $cf['memcache']['stat']['hits'] . ' (hit rate ' . $cf['memcache']['stat']['hitrate'] . ' ' . ( ( floatval( $cf['memcache']['stat']['hitrate'] ) > 90.0 ) ? 'OK' : 'NO' ) . ')' . PHP_EOL;
+            echo '[ OK ] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' presente' . PHP_EOL;
+            if( ! empty( $cf['memcache']['stat']['hits'] ) ) {
+                echo '[ -- ] utilizzati ' . $cf['memcache']['stat']['usage'] . ' (' . $cf['memcache']['stat']['percent'] . ')' . PHP_EOL;
+                echo '[ -- ] ' . $cf['memcache']['stat']['hits'] . ' (hit rate ' . $cf['memcache']['stat']['hitrate'] . ' ' . ( ( floatval( $cf['memcache']['stat']['hitrate'] ) > 90.0 ) ? 'OK' : 'NO' ) . ')' . PHP_EOL;
+            } else {
+                die( '[FAIL] statistiche di memcache non ancora raccolte' . PHP_EOL );
+            }
+        } elseif( isset( $cf['memcache']['server']['address'] ) && isset( $cf['memcache']['server']['port'] ) ) {
+            echo '[FAIL] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' assente' . PHP_EOL;
         } else {
-            die( '[FAIL] statistiche di memcache non ancora raccolte' . PHP_EOL );
-        }
-        } else {
-        die( '[FAIL] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' assente' . PHP_EOL );
+            echo '[FAIL] connessione memcache assente' . PHP_EOL;
         }
     } else {
         echo '[ -- ] backend memcache non attivato' . PHP_EOL;
@@ -362,7 +364,7 @@
         if( ! empty( $cf['redis']['connection'] ) ) {
         echo '[ OK ] connessione redis su ' . $cf['redis']['server']['address'] . ':' . $cf['redis']['server']['port'] . ' presente' . PHP_EOL;
         } else {
-        die( '[FAIL] connessione redis su ' . $cf['redis']['server']['address'] . ':' . $cf['redis']['server']['port'] . ' assente' . PHP_EOL );
+            echo '[FAIL] connessione redis su ' . $cf['redis']['server']['address'] . ':' . $cf['redis']['server']['port'] . ' assente' . PHP_EOL;
         }
     } else {
         echo '[ -- ] backend redis non attivato' . PHP_EOL;

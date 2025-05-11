@@ -11,6 +11,14 @@
      *
      */
 
+    /**
+     * elaborazione dei permessi per l'account connesso
+     * ================================================
+     * 
+     * 
+     * 
+     */
+
     // popolo l'array dei permessi
     if( $cf['auth']['status'] == LOGIN_SUCCESS ) {
 
@@ -39,6 +47,13 @@
         $cf['auth']['status'] = LOGIN_LOGGED;
 
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // print_r( $_SESSION['account'] );

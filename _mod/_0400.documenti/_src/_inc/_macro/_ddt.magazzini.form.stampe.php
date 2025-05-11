@@ -59,6 +59,15 @@
                     'text' => 'stampa la packing list del DDT in formato PDF'
                 );
 
+                $ct['page']['contents']['metro']['pdf'][] = array(
+                    'target' => '_blank' ,
+                    'url' => $file . 'packing.pdf.php?__bancali__=1&__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'icon' => NULL,
+                    'fa' => 'fa-file-pdf-o',
+                    'title' => 'stampa PDF packing list bancali',
+                    'text' => 'stampa la packing list del DDT in formato PDF divisa per bancali'
+                );
+
             break;
 
         }

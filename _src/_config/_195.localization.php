@@ -35,6 +35,13 @@
     // log
     logWrite( 'lingua corrente: ' . LINGUA_CORRENTE , 'localization' );
 
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
     // debug
     // print_r( $cf['localization']['language'] );
     // echo str_replace( '-', '_', $cf['localization']['language']['ietf'] ) . '.' . str_replace( '-', '_', $cf['localization']['charset'] );

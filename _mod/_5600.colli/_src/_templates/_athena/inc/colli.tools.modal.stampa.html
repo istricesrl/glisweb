@@ -1,0 +1,43 @@
+{% import '_bin/_form.html' as frm %}
+
+{# DEFINIZIONI #}
+{% set table = form.table %}
+{% set ietf = localization.language.ietf %}
+
+<script>
+    function stampa( ) {
+
+        $('#btnstampa').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
+	
+		var call = '{{ site.url }}_mod/_5600.colli/_src/_api/_print/_etichette.colli.php?codice=' + $('#_search').val();
+
+			$('#btnstampa').html('<i class="fa fa-check"></i>');
+            window.open(call, '_blank');
+
+	}
+</script>
+
+<div class="modal" tabindex="-1" role="dialog" id="stampa_etichette">
+    <div class="modal-dialog" role="document">
+	<div class="modal-content">
+	    <div class="modal-header">
+            <h5 class="modal-title">crea nuovi colli e stampa etichette</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	    </div>
+	    <div class="modal-body">
+            <div class="container-fluid">
+                <div id="periodo" class="form-row">
+                    <div class="col">
+                        <span class="label-top">codice dei colli da stampare</span>
+                        {{ frm.input( '', '', '', 'search', '', '', request ) }}
+                    </div>
+                </div>
+            </div>
+	    </div>
+	    <div class="modal-footer">
+            <button type="button" id="btnstampa" class="btn btn-secondary btn-sm" onclick="stampa();">conferma</button>
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">annulla</button>
+	    </div>
+	</div>
+    </div>
+</div>

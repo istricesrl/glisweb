@@ -23,7 +23,9 @@
         // ...
         $colli = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT * FROM colli WHERE codice LIKE ?',
+            'SELECT colli.*, tipologie_colli.nome AS tipologia FROM colli
+            INNER JOIN tipologie_colli ON tipologie_colli.id = colli.id_tipologia
+             WHERE colli.codice LIKE ?',
             array(
                 array( 's' => $_REQUEST['codice'] . '%' )
             )
@@ -33,7 +35,7 @@
         // die( print_r( $colli, true ) );
 
         // ...
-        $fontSize = ( strlen( $_REQUEST['codice'] ) < 8 ) ? 20 : ( ( strlen( $_REQUEST['codice'] ) < 11 ) ? 14 : 12 );
+        $fontSize = 12;
 
         // creazione del PDF
         $pdf = new TCPDF( 'L', 'mm', array( 57, 32 ) );						// portrait, millimetri, A4 (x->210 y->297)
@@ -82,7 +84,9 @@
 
             // posizione verticale del codice
             $pdf->SetY( 5 );
+            $pdf->Cell(0, 0, strtoupper($collo['tipologia']), 0, 1, 'C', 0, '', 0, false, 'T', 'M');
 
+            $pdf->SetY( 10 );
             // codice del collo
             $pdf->write1DBarcode( $collo['codice'], 'C128', '', '', '', 18, 0.4, $style, 'N');
 

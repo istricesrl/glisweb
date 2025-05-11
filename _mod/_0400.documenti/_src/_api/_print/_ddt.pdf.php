@@ -56,10 +56,7 @@
         array( array( 's' => $doc['id'] ) )
     );
 
-
-
-
-    // recupero i dati dell'emittente
+	// recupero i dati dell'emittente
 	$src = mysqlSelectRow(
         $cf['mysql']['connection'],
 	    'SELECT * FROM anagrafica WHERE id = ?',
@@ -71,7 +68,6 @@
 
     // denominazione fiscale
     $src['denominazione_fiscale'] = trim( $src['nome'] . ' ' . $src['cognome'] . ' ' . $src['denominazione'] );
-
 
 
     // recupero i dati della sede dell'emittente
@@ -171,7 +167,6 @@
 	    'SELECT * FROM anagrafica_view WHERE id = ?',
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
-
   
     // creazione del PDF
 	$pdf = new TCPDF( 'P', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
@@ -240,10 +235,10 @@
     // set image scale factor
 	$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );					// fattore di conversione da pixel a millimetri
 
-    // aggiunta di una pagina
+	// aggiunta di una pagina
 	$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
 
-     // inserisco il logo in alto a sinistra
+	// inserisco il logo in alto a sinistra
 	$pdf->image( $lge, $ml, $mt, $lgw, $lgh, NULL, NULL, $lgn, false, 300, '', false, false, 1, true );		// x, y, w, h, type, link, align, resize
 
 	// define barcode style
@@ -276,40 +271,40 @@
 	$tmp = $pdf->GetX() + $stdsp;								// margine provvisorio in base alla larghezza del logo
 	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 	foreach( $sde as $k => $sdel ) {
-	    if( $k !== key( $sde ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
-	    $pdf->Text( $tmp, $pdf->GetY(), $sdel, false, false, true, 0, 1 );		// x, y, testo, outline, clip, fill, border, newline
+		if( $k !== key( $sde ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
+		$pdf->Text( $tmp, $pdf->GetY(), $sdel, false, false, true, 0, 1 );		// x, y, testo, outline, clip, fill, border, newline
 	}
 
 	// spazio sotto l'intestazione
 	$pdf->SetY( $pdf->GetY() + $stdsp * 2 );
 
-    // intestazione cliente
+	// intestazione cliente
 	$tmp = $pdf->GetX();								// margine provvisorio in base alla larghezza del logo
 	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 	foreach( $sdc as $k => $sdcl ) {
-	    if( $k !== key( $sdc ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
-	    $pdf->Text( $tmp, $pdf->GetY(), $sdcl, false, false, true, 0, 1, 'R' );	// x, y, testo, outline, clip, fill, border, newline, allineamento
+		if( $k !== key( $sdc ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
+		$pdf->Text( $tmp, $pdf->GetY(), $sdcl, false, false, true, 0, 1, 'R' );	// x, y, testo, outline, clip, fill, border, newline, allineamento
 	}
 
-    // spazio sotto l'intestazione
+	// spazio sotto l'intestazione
 	$pdf->SetY( $pdf->GetY() + $stdsp * 2 );
 
-    // oggetto del documento
+	// oggetto del documento
 	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 	$pdf->Cell( $col * 2, 0, 'oggetto:', 0, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
 	$pdf->Cell( $col * 11, 0, $dobj, 0, 1 );					// larghezza, altezza, testo, bordo, newline, allineamento
 
-    // spazio sotto l'oggetto
+	// spazio sotto l'oggetto
 	$pdf->SetY( $pdf->GetY() + $stdsp );
 
-    // primo paragrafo
+	// primo paragrafo
 	$pdf->MultiCell( $wport, $lh, $tx[0] );						// w, h, testo
 
-    // spazio sotto il primo paragrafo
+	// spazio sotto il primo paragrafo
 	$pdf->SetY( $pdf->GetY() + $stdsp );
 
-    // intestazione tabella di dettaglio
+	// intestazione tabella di dettaglio
 	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 	$pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
@@ -317,42 +312,42 @@
 	$pdf->Cell( $col * 3, 0, 'magazzino scarico', $brdh, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 3, 0, 'magazzino carico', $brdh, 1, 'C' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
-    // contatore delle eventuali righe aggregate per generare l'eventuale allegato "dettaglio aggregate"
+	// contatore delle eventuali righe aggregate per generare l'eventuale allegato "dettaglio aggregate"
 	$countAggregate = 0;
 
-    // tabella di dettaglio
+	// tabella di dettaglio
 	$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
 	foreach( $doc['righe'] as $row ) {
-	    $trh = $pdf->GetStringHeight( $col * 4,$row['articolo'] , false, true, '', 'B' );				// 
+		$trh = $pdf->GetStringHeight( $col * 4,$row['articolo'] , false, true, '', 'B' );				// 
 	$pdf->SetFont( $fnt, '', $fnts );
-	    // controllo se la riga di dettaglio entra nella parte rimanente del foglio
-	    if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){
-		    $pdf->AddPage(); 
-		    // intestazione tabella nel nuovo foglio
-		    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-            $pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 1, 0, 'udm', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 3, 0, 'magazzino scarico', $brdh, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 3, 0, 'magazzino carico', $brdh, 1, 'C');				// larghezza, altezza, testo, bordo, newline, allineamento
-                    // reimposto il font
-		    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+		// controllo se la riga di dettaglio entra nella parte rimanente del foglio
+		if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){
+			$pdf->AddPage(); 
+			// intestazione tabella nel nuovo foglio
+			$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+			$pdf->Cell( $col * 4, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 1, 0, 'udm', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 3, 0, 'magazzino scarico', $brdh, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 3, 0, 'magazzino carico', $brdh, 1, 'C');				// larghezza, altezza, testo, bordo, newline, allineamento
+					// reimposto il font
+			$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
 
-								    }
-	    if( substr($row['nome'],0,1) === '*' ){$pdf->SetFillColor(230, 230, 230);} 
-	    else {	    $pdf->SetFillColor(255, 255, 255);}
-	    $pdf->MultiCell( $col * 4, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+									}
+		if( substr($row['nome'],0,1) === '*' ){$pdf->SetFillColor(230, 230, 230);} 
+		else {	    $pdf->SetFillColor(255, 255, 255);}
+		$pdf->MultiCell( $col * 4, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 
-	    // scrivo in grassetto le righe che sono aggregazioni di righe
-	    if($row['aggregate']>0 ){	$pdf->SetFont( $fnt, 'B', $fnts ); }
+		// scrivo in grassetto le righe che sono aggregazioni di righe
+		if($row['aggregate']>0 ){	$pdf->SetFont( $fnt, 'B', $fnts ); }
 
 //	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
-	    $pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 1, $trh, $row['udm'], $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 3, $trh, $row['mastro_provenienza'], $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->Cell( $col * 3, $trh, $row['mastro_destinazione'], $brdc, 0, 'R', 1, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 1, $trh, $row['udm'], $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 3, $trh, $row['mastro_provenienza'], $brdc, 0, 'C', 1, '', 0, false, 'T', 'T' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 3, $trh, $row['mastro_destinazione'], $brdc, 0, 'R', 1, '', 0, false, 'T', 'T' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
-	    $countAggregate += $row['aggregate'];
+		$countAggregate += $row['aggregate'];
 	
 	}
 
@@ -366,16 +361,14 @@ $pdf->SetY( $pdf->GetY() + $stdsp );
 if (strlen($tx[1])>0){
 
 	// note per il cliente
-	    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-	    $pdf->Cell( $col * 12, 0, 'note per il cliente: ', 0, 1, 'L' );		// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
-	    $pdf->MultiCell( $wport, $lh, $tx[1], 0, 'JL' );					// w, h, testo
+		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+		$pdf->Cell( $col * 12, 0, 'note per il cliente: ', 0, 1, 'L' );		// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+		$pdf->MultiCell( $wport, $lh, $tx[1], 0, 'JL' );					// w, h, testo
 
-        // spazio sotto le note per il cliente
-	    $pdf->SetY( $pdf->GetY() + $stdsp );
-    }
-
-
+		// spazio sotto le note per il cliente
+		$pdf->SetY( $pdf->GetY() + $stdsp );
+	}
 
     // output
 	if( isset( $_REQUEST['d'] ) ) {

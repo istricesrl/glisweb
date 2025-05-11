@@ -42,6 +42,14 @@
      *
      */
 
+    /**
+     * calcolo della scadenza della sessione
+     * =====================================
+     * 
+     * 
+     * 
+     */
+
     // tempo di riferimento
     $cf['auth']['expire'] = time() - SESSION_LIMIT;
 
@@ -60,6 +68,14 @@
             logger( 'sessione ancora attiva: ' . $_SESSION['used'] . ' > ' . $cf['auth']['expire'], 'session' );
 
     }
+
+    /**
+     * esecuzione del logout
+     * =====================
+     * 
+     * 
+     * 
+     */
 
     // intercetto eventuali tentativi di logout
     if( isset( $_REQUEST['__logout__'] ) ) {

@@ -151,7 +151,15 @@
 
     // multisito corrente
     if( ! defined( 'SITE_CURRENT' ) ) {
-        die( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare che il file config.json sia nella posizione giusta oppure i dati in 010.site.php' );
+
+        if( isset( $cf['config']['read'] ) ) {
+            $cnfSpec = implode( ', ', $cf['config']['read'] );
+        } else {
+            $cnfSpec = 'nessun file di configurazione trovato';
+        }
+
+        die( 'sito non trovato per ' . $_SERVER['HTTP_HOST'] . ' (' . DIR_BASE . ') verificare la configurazione (' . $cnfSpec . ')' );
+
     }
 
     /**

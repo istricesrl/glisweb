@@ -346,7 +346,3 @@ table.app-table tfoot tr {
 table.app-table tfoot tr td {
     border-bottom: none;
 }
-
-.form-row {
-    margin-bottom: 1em;
-}

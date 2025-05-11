@@ -28,17 +28,19 @@
      *
      */
 
+    /**
+     * dichiarazione dei permessi
+     * ==========================
+     * 
+     * 
+     * 
+     */
+
     // array dei permessi
     $cf['auth']['permissions'] = array(
-        'account' => array(
-            CONTROL_FULL            => array( 'roots' )
-        ),
-        'account_gruppi' => array(
-            CONTROL_FULL            => array( 'roots' )
-        ),
-        'account_gruppi_attribuzione' => array(
-            CONTROL_FULL            => array( 'roots' )
-        ),
+        'account' => array(                         CONTROL_FULL => array( 'roots' )),
+        'account_gruppi' => array(                  CONTROL_FULL => array( 'roots' )),
+        'account_gruppi_attribuzione' => array(     CONTROL_FULL => array( 'roots' )),
 
         // TODO commenti MySQL OK fin qui
 

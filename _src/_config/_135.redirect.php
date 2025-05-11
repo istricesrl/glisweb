@@ -20,7 +20,7 @@
 
     // indicizzazione redirect da csv
     foreach( array( 'csv', 'db' ) as $src ) {
-        if( is_array( $cf['redirect']['src'][ $src ] ) ) {
+        if( isset( $cf['redirect']['src'][ $src ] ) && is_array( $cf['redirect']['src'][ $src ] ) ) {
             foreach( $cf['redirect']['src'][ $src ] as $redirect ) {
                 $cf['redirect']['index'][ $redirect['id_sito'] ][ $redirect['sorgente'] ] = $redirect;
             }
@@ -97,6 +97,13 @@
         exit;
 
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // var_dump( strtok( $_SERVER['REQUEST_URI'], '?' ) );

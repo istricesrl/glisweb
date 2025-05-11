@@ -92,6 +92,13 @@
     $cf['mysql']['profiles'][ TESTING ]         =
     $cf['mysql']['profiles'][ PRODUCTION ]      = array();
 
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
     // debug
     // echo $cf['site']['status'];
     // die( print_r( $cf['mysql']['profile'], true ) );

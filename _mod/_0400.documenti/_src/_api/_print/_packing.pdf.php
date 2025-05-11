@@ -46,18 +46,49 @@
     $doc['tot']['importo_lordo_totale'] = 0;
 
     // carico le righe del documento
-    $doc['righe'] = mysqlQuery(
+    $doc['righe']['grezze'] = mysqlQuery(
         $cf['mysql']['connection'],
         'SELECT documenti_articoli_view.*, count(agg.id) AS aggregate, '.
         'udm.sigla AS udm FROM documenti_articoli_view '.
         'LEFT JOIN udm ON udm.id = documenti_articoli_view.id_udm '.
         'LEFT JOIN documenti_articoli_view AS agg ON agg.id_genitore = documenti_articoli_view.id '.
-        'WHERE documenti_articoli_view.id_packing_list = ? GROUP BY documenti_articoli_view.id',
+        'WHERE documenti_articoli_view.id_packing_list = ? GROUP BY documenti_articoli_view.id
+		 ORDER BY documenti_articoli_view.ordine_collo, documenti_articoli_view.id_articolo',
         array( array( 's' => $doc['id'] ) )
     );
 
 
+	// organizzo le righe in base al bancale
+	foreach( $doc['righe']['grezze'] as $row ) {
+		if( isset( $_REQUEST['__bancali__'] ) ) {
+			$doc['righe']['ordinate'][ $row['ordine_collo'] ][] = $row;
+		} else {
+			$doc['righe']['ordinate'][0][] = $row;
+		}
+	}
 
+	// dettagli bancali
+	$doc['bancali']['grezzi'] = mysqlQuery(
+		$cf['mysql']['connection'],
+		'SELECT colli.* FROM colli 
+		INNER JOIN documenti_articoli ON documenti_articoli.id_collo = colli.id 
+		WHERE documenti_articoli.id_packing_list = ? GROUP BY colli.id ORDER BY colli.ordine',
+		array( array( 's' => $doc['id'] ) )
+	);
+
+	foreach( $doc['bancali']['grezzi'] as $row ) {
+		if( isset( $_REQUEST['__bancali__'] ) ) {
+			$doc['bancali']['ordinati'][ $row['id'] ][] = $row;
+		} else {
+			$doc['bancali']['ordinati'][0][] = $row;
+		}
+	}
+
+	// debug
+	// die( print_r($doc['righe'],true) );
+
+	// ...
+	// die( print_r($doc['bancali'],true) );
 
     // recupero i dati dell'emittente
 	$src = mysqlSelectRow(
@@ -153,6 +184,7 @@
 	} else {
 	    $sdec['linee'][] = 'PEC ' . anagraficaGetPEC( $doc['id_emittente'] );
 	}
+	$sdec['linee'][] = 'cod. cliente ' . $dst['codice'];
 	$sdc = $sdec['linee'];
 
     // oggetto del documento
@@ -240,143 +272,169 @@
     // set image scale factor
 	$pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );					// fattore di conversione da pixel a millimetri
 
-    // aggiunta di una pagina
-	$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
+	// ...
+	foreach( $doc['righe']['ordinate'] as $bancale => $righe ) {
 
-     // inserisco il logo in alto a sinistra
-	$pdf->image( $lge, $ml, $mt, $lgw, $lgh, NULL, NULL, $lgn, false, 300, '', false, false, 1, true );		// x, y, w, h, type, link, align, resize
+		// aggiunta di una pagina
+		$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
 
-	// define barcode style
-	$style = array(
-		'position' => 'R',
-		'align' => 'C',
-		'stretch' => false,
-		'fitwidth' => true,
-		'cellfitalign' => '',
-		'border' => false,
-		'hpadding' => 'auto',
-		'vpadding' => 'auto',
-		'fgcolor' => array(0,0,0),
-		'bgcolor' => false,
-		'text' => true,
-		'font' => 'helvetica',
-		'fontsize' => 8,
-		'stretchtext' => 4
-	);
+		// inserisco il logo in alto a sinistra
+		$pdf->image( $lge, $ml, $mt, $lgw, $lgh, NULL, NULL, $lgn, false, 300, '', false, false, 1, true );		// x, y, w, h, type, link, align, resize
 
-	// codice a barre del DDT
-	if( ! empty( $doc['codice'] ) ) {
-		$pdf->SetX( $ml + ( $col * 9 ) );					// x
+		// define barcode style
+		$style = array(
+			'position' => 'R',
+			'align' => 'C',
+			'stretch' => false,
+			'fitwidth' => true,
+			'cellfitalign' => '',
+			'border' => false,
+			'hpadding' => 'auto',
+			'vpadding' => 'auto',
+			'fgcolor' => array(0,0,0),
+			'bgcolor' => false,
+			'text' => true,
+			'font' => 'helvetica',
+			'fontsize' => 8,
+			'stretchtext' => 4
+		);
+
+		// codice a barre del DDT
+		if( ! empty( $doc['codice'] ) ) {
+			$pdf->SetX( $ml + ( $col * 9 ) );					// x
+			$pdf->SetY( $mt + $stdsp );						// y
+			$pdf->write1DBarcode( $doc['codice'], 'C128', '', '', '', 18, 0.4, $style, 'N');
+		}
+
+		// intestazione azienda emittente
 		$pdf->SetY( $mt + $stdsp );						// y
-		$pdf->write1DBarcode( $doc['codice'], 'C128', '', '', '', 18, 0.4, $style, 'N');
-	}
+		$tmp = $pdf->GetX() + $stdsp;								// margine provvisorio in base alla larghezza del logo
+		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+		foreach( $sde as $k => $sdel ) {
+			if( $k !== key( $sde ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
+			$pdf->Text( $tmp, $pdf->GetY(), $sdel, false, false, true, 0, 1 );		// x, y, testo, outline, clip, fill, border, newline
+		}
 
-	// intestazione azienda emittente
-	$pdf->SetY( $mt + $stdsp );						// y
-	$tmp = $pdf->GetX() + $stdsp;								// margine provvisorio in base alla larghezza del logo
-	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-	foreach( $sde as $k => $sdel ) {
-	    if( $k !== key( $sde ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
-	    $pdf->Text( $tmp, $pdf->GetY(), $sdel, false, false, true, 0, 1 );		// x, y, testo, outline, clip, fill, border, newline
-	}
+		// spazio sotto l'intestazione
+		$pdf->SetY( $pdf->GetY() + $stdsp * 2 );
 
-	// spazio sotto l'intestazione
-	$pdf->SetY( $pdf->GetY() + $stdsp * 2 );
+		// intestazione cliente
+		$tmp = $pdf->GetX();								// margine provvisorio in base alla larghezza del logo
+		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+		foreach( $sdc as $k => $sdcl ) {
+			if( $k !== key( $sdc ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
+			$pdf->Text( $tmp, $pdf->GetY(), $sdcl, false, false, true, 0, 1, 'R' );	// x, y, testo, outline, clip, fill, border, newline, allineamento
+		}
 
-    // intestazione cliente
-	$tmp = $pdf->GetX();								// margine provvisorio in base alla larghezza del logo
-	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-	foreach( $sdc as $k => $sdcl ) {
-	    if( $k !== key( $sdc ) ) { $pdf->SetFont( $fnt, '', $fnts ); }		// font, stile, dimensione
-	    $pdf->Text( $tmp, $pdf->GetY(), $sdcl, false, false, true, 0, 1, 'R' );	// x, y, testo, outline, clip, fill, border, newline, allineamento
-	}
+		// spazio sotto l'intestazione
+		$pdf->SetY( $pdf->GetY() + $stdsp * 2 );
 
-    // spazio sotto l'intestazione
-	$pdf->SetY( $pdf->GetY() + $stdsp * 2 );
+		// oggetto del documento
+		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+		$pdf->Cell( $col * 2, 0, 'oggetto:', 0, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+		$pdf->Cell( $col * 11, 0, $dobj, 0, 1 );					// larghezza, altezza, testo, bordo, newline, allineamento
 
-    // oggetto del documento
-	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-	$pdf->Cell( $col * 2, 0, 'oggetto:', 0, 0, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
-	$pdf->Cell( $col * 11, 0, $dobj, 0, 1 );					// larghezza, altezza, testo, bordo, newline, allineamento
+		// spazio sotto l'oggetto
+		$pdf->SetY( $pdf->GetY() + $stdsp );
 
-    // spazio sotto l'oggetto
+		// primo paragrafo
+		$pdf->MultiCell( $wport, $lh, $tx[0] );						// w, h, testo
+
+		// spazio sotto il primo paragrafo
+		$pdf->SetY( $pdf->GetY() + $stdsp );
+
+		// intestazione tabella di dettaglio
+		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+		$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+
+		// contatore delle eventuali righe aggregate per generare l'eventuale allegato "dettaglio aggregate"
+		$countAggregate = 0;
+
+		// tabella di dettaglio
+		$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
+		foreach( $righe as $row ) {
+			$trh = $pdf->GetStringHeight( $col * 6,$row['articolo'] , false, true, '', 'B' );				// 
+		$pdf->SetFont( $fnt, '', $fnts );
+			// controllo se la riga di dettaglio entra nella parte rimanente del foglio
+			if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){
+				$pdf->AddPage(); 
+				// intestazione tabella nel nuovo foglio
+				$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+				$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+				$pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+				$pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+				$pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+				$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+						// reimposto il font
+				$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+
+										}
+			if( substr($row['nome'],0,1) === '*' ){$pdf->SetFillColor(230, 230, 230);} 
+			else {	    $pdf->SetFillColor(255, 255, 255);}
+			// $pdf->MultiCell( $col * 4, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+
+			// scrivo in grassetto le righe che sono aggregazioni di righe
+			if($row['aggregate']>0 ){	$pdf->SetFont( $fnt, 'B', $fnts ); }
+
+	//	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
+	$pdf->Cell( $col * 1, $trh, $row['ordine_collo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->Cell( $col * 2, $trh, $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->MultiCell( $col * 6, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+	$pdf->Cell( $col * 2, $trh, NULL, $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 1, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+
+			$countAggregate += $row['aggregate'];
+		
+		}
+
+	// spazio sotto la tabella di dettaglio
 	$pdf->SetY( $pdf->GetY() + $stdsp );
 
-    // primo paragrafo
-	$pdf->MultiCell( $wport, $lh, $tx[0] );						// w, h, testo
 
-    // spazio sotto il primo paragrafo
+
+		// intestazione tabella di dettaglio
+		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+		$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 3, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'largh.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'lung.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'alt.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'peso', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+
+
+		$dett = $doc['bancali']['ordinati'][$bancale];
+
+		foreach( $dett as $row ) {
+			$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+			$pdf->Cell( $col * 1, $lh, $row['ordine'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 3, $lh, $row['codice'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 2, $lh, $row['larghezza'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 2, $lh, $row['lunghezza'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 2, $lh, $row['altezza'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 2, $lh, $row['peso'], $brdc, 1, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento			
+		}
+
+	// spazio sotto la tabella IVA
 	$pdf->SetY( $pdf->GetY() + $stdsp );
 
-    // intestazione tabella di dettaglio
-	$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-    $pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-    $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+	if (strlen($tx[1])>0){
 
-    // contatore delle eventuali righe aggregate per generare l'eventuale allegato "dettaglio aggregate"
-	$countAggregate = 0;
+		// note per il cliente
+			$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
+			$pdf->Cell( $col * 12, 0, 'note per il cliente: ', 0, 1, 'L' );		// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+			$pdf->MultiCell( $wport, $lh, $tx[1], 0, 'JL' );					// w, h, testo
 
-    // tabella di dettaglio
-	$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
-	foreach( $doc['righe'] as $row ) {
-	    $trh = $pdf->GetStringHeight( $col * 6,$row['articolo'] , false, true, '', 'B' );				// 
-	$pdf->SetFont( $fnt, '', $fnts );
-	    // controllo se la riga di dettaglio entra nella parte rimanente del foglio
-	    if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){
-		    $pdf->AddPage(); 
-		    // intestazione tabella nel nuovo foglio
-		    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-            $pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-            $pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-                    // reimposto il font
-		    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+			// spazio sotto le note per il cliente
+			$pdf->SetY( $pdf->GetY() + $stdsp );
+		}
 
-								    }
-	    if( substr($row['nome'],0,1) === '*' ){$pdf->SetFillColor(230, 230, 230);} 
-	    else {	    $pdf->SetFillColor(255, 255, 255);}
-	    // $pdf->MultiCell( $col * 4, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
-
-	    // scrivo in grassetto le righe che sono aggregazioni di righe
-	    if($row['aggregate']>0 ){	$pdf->SetFont( $fnt, 'B', $fnts ); }
-
-//	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
-$pdf->Cell( $col * 1, $trh, $row['ordine_collo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-$pdf->Cell( $col * 2, $trh, $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-$pdf->MultiCell( $col * 6, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
-$pdf->Cell( $col * 2, $trh, NULL, $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 1, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-
-	    $countAggregate += $row['aggregate'];
-	
 	}
-
-// spazio sotto la tabella di dettaglio
-$pdf->SetY( $pdf->GetY() + $stdsp );
-
-
-// spazio sotto la tabella IVA
-$pdf->SetY( $pdf->GetY() + $stdsp );
-
-if (strlen($tx[1])>0){
-
-	// note per il cliente
-	    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-	    $pdf->Cell( $col * 12, 0, 'note per il cliente: ', 0, 1, 'L' );		// larghezza, altezza, testo, bordo, newline, allineamento
-	    $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
-	    $pdf->MultiCell( $wport, $lh, $tx[1], 0, 'JL' );					// w, h, testo
-
-        // spazio sotto le note per il cliente
-	    $pdf->SetY( $pdf->GetY() + $stdsp );
-    }
-
-
 
     // output
 	if( isset( $_REQUEST['d'] ) ) {

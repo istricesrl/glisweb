@@ -55,12 +55,26 @@
 
                 // registro la connessione
                 if( ! empty( $cn ) ) {
+
                     $stats = $cn->getStats();
-                    $cf['memcache']['connections'][ $server ] = $cn;
-                    $cf['memcache']['stats'][ $server ] = array_shift( $stats );
-                    logger( 'connessione effettuata al server ' . $server, 'memcache' );
+
+                    if( is_array( $stats ) ) {
+
+                        $cf['memcache']['stats'][ $server ] = array_shift( $stats );
+                        $cf['memcache']['connections'][ $server ] = $cn;
+
+                        logger( 'connessione effettuata al server ' . $server, 'memcache' );
+
+                    } else {
+
+                        logger( 'impossibile leggere le statistiche per il server ' . $server, 'memcache', LOG_ERR );
+
+                    }
+
                 } else {
+
                     logger( 'impossibile (' . $cn->getResultCode() . ') connettersi a ' . $server, 'memcache', LOG_ERR );
+
                 }
 
             }
@@ -72,11 +86,13 @@
                 $cf['memcache']['connection'] = &$cf['memcache']['connections'][ $key ];
                 $cf['memcache']['server'] = &$cf['memcache']['servers'][ $key ];
                 $cf['memcache']['stat'] = &$cf['memcache']['stats'][ $key ];
-                $cf['memcache']['stat']['usage'] = writeByte( $cf['memcache']['stat']['bytes'] ) . ' su ' . writeByte( $cf['memcache']['stat']['limit_maxbytes'] );
-                $cf['memcache']['stat']['percent'] = sprintf( '%01.2f', $cf['memcache']['stat']['bytes'] * 100 / $cf['memcache']['stat']['limit_maxbytes'] ) . '%';
-                $cf['memcache']['stat']['hits'] = 'trovati ' . $cf['memcache']['stat']['get_hits'] . ' oggetti contro ' . $cf['memcache']['stat']['get_misses'] . ' non trovati';
-                if( isset( $cf['memcache']['stat']['get_hits'] ) && ! empty( $cf['memcache']['stat']['get_hits'] ) && isset( $cf['memcache']['stat']['get_misses'] ) ) {
-                $cf['memcache']['stat']['hitrate'] = sprintf( '%01.2f', $cf['memcache']['stat']['get_hits'] * 100 / ( $cf['memcache']['stat']['get_hits'] + $cf['memcache']['stat']['get_misses'] ) ) . '%';
+                if( ! empty( $cf['memcache']['stat'] ) ) {
+                    $cf['memcache']['stat']['usage'] = writeByte( $cf['memcache']['stat']['bytes'] ) . ' su ' . writeByte( $cf['memcache']['stat']['limit_maxbytes'] );
+                    $cf['memcache']['stat']['percent'] = sprintf( '%01.2f', $cf['memcache']['stat']['bytes'] * 100 / $cf['memcache']['stat']['limit_maxbytes'] ) . '%';
+                    $cf['memcache']['stat']['hits'] = 'trovati ' . $cf['memcache']['stat']['get_hits'] . ' oggetti contro ' . $cf['memcache']['stat']['get_misses'] . ' non trovati';
+                    if( isset( $cf['memcache']['stat']['get_hits'] ) && ! empty( $cf['memcache']['stat']['get_hits'] ) && isset( $cf['memcache']['stat']['get_misses'] ) ) {
+                        $cf['memcache']['stat']['hitrate'] = sprintf( '%01.2f', $cf['memcache']['stat']['get_hits'] * 100 / ( $cf['memcache']['stat']['get_hits'] + $cf['memcache']['stat']['get_misses'] ) ) . '%';
+                    }
                 }
             }
 
@@ -143,19 +159,25 @@
             // ciclo sui server del profilo corrente
             foreach( $cf['redis']['profile']['servers'] as $server ) {
 
-                // connessione
-                $cn = new Predis\Client([
-                    'scheme' => 'tcp',
-                    'host'   => $cf['redis']['servers'][ $server ]['address'],
-                    'port'   => $cf['redis']['servers'][ $server ]['port']
-                ]);
+                try {
 
-                // registro la connessione
-                if( ! empty( $cn ) ) {
+                    // connessione
+                    $cn = new Predis\Client([
+                        'scheme' => 'tcp',
+                        'host'   => $cf['redis']['servers'][ $server ]['address'],
+                        'port'   => $cf['redis']['servers'][ $server ]['port']
+                    ]);
+
+                    $cn->connect();
+
                     $cf['redis']['connections'][ $server ] = $cn;
+
                     logger( 'connessione effettuata al server ' . $server, 'redis' );
-                } else {
-                    logger( 'impossibile connettersi al server ' . $server, 'redis', LOG_ERR );
+
+                } catch(Predis\Connection\ConnectionException $e) {
+
+                    logger( 'impossibile connettersi al server ' . $server . ' errore: ' . $e->getMessage(), 'redis', LOG_ERR );
+
                 }
 
             }

@@ -20,6 +20,15 @@
 	);
 
     // esportazione contatti anagrafica
+	$ct['page']['contents']['metro']['01.stampe'][] = array(
+	    'modal' => array( 'id' => 'stampa_etichette', 'include' => 'inc/colli.tools.modal.stampa.html' ),
+	    'icon' => NULL,
+        'fa' => 'fa-file-pdf-o',
+	    'title' => 'stampa etichette',
+	    'text' => 'stampa le etichette di un insieme di colli'
+	);
+
+    // esportazione contatti anagrafica
 	$ct['page']['contents']['metro']['03.elaborazioni'][] = array(
 	    'modal' => array( 'id' => 'crea_colli_stampa_etichette', 'include' => 'inc/colli.tools.modal.crea.e.stampa.html' ),
 	    'icon' => NULL,

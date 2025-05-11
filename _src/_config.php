@@ -966,6 +966,7 @@
                 if( empty( $cj ) ) {
                     die( 'file di configurazione ' . $file . ' danneggiato' );
                 } else {
+                    $cf['config']['read'][] = $file;
                     $cx = array_replace_recursive( $cx, $cj );
                 }
             }
