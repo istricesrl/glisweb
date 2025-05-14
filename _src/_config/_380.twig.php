@@ -42,6 +42,13 @@
      *
      */
 
+    /**
+     * definizione dei profili
+     * =======================
+     * 
+     * 
+     */
+
     // profili di funzionamento di Twig per DEV/TEST
     $cf['twig']['profiles'][ DEVELOPEMENT ] =
     $cf['twig']['profiles'][ TESTING ]      = array(

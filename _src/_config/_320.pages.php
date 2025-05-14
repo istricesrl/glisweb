@@ -55,6 +55,13 @@
     // echo '310 STANDARD BEFORE' . PHP_EOL;
     // print_r( $cf['contents']['pages'][ NULL ] );
 
+    /**
+     * verifica della cache dei contenuti
+     * ==================================
+     * 
+     * 
+     */
+
     // elaboro l'albero dei contenuti
     if( $cf['contents']['cached'] === false ) {
 
@@ -62,13 +69,16 @@
         // die( 'ERRORE: la cache dei contenuti è disabilitata' );
 
         // inizializzo l'albero
-        $cf['contents']['tree']            = array();
+        $cf['contents']['tree']             = array();
 
         // inizializzo l'indice
-        $cf['contents']['index']        = array();
+        $cf['contents']['index']            = array();
 
         // inizializzo le shortcuts
         $cf['contents']['shortcuts']        = array();
+
+        // inizializzo l'array di risoluzione inversa
+        $cf['contents']['reverse']          = array();
 
         // preparo le pagine
         foreach( $cf['contents']['pages'] as $k => &$v ) {
@@ -251,8 +261,8 @@
                 if( isset( $v['forced'][ $lk ] ) ) {
                     $v['url'][ $lk ]    = $v['forced'][ $lk ];
                 } else {
-// TODO anziché usare genericamente $cf['site']['url'], usare (se specificato) il dominio specifico per la lingua del ciclo corrente
-// NOTA dovrebbe essere valorizzato ad es. $cf['site']['default']['urls']['it-IT'][PROD] (o qualcosa di simile?)
+                    // TODO anziché usare genericamente $cf['site']['url'], usare (se specificato) il dominio specifico per la lingua del ciclo corrente
+                    // NOTA dovrebbe essere valorizzato ad es. $cf['site']['default']['urls']['it-IT'][PROD] (o qualcosa di simile?)
                     $v['url'][ $lk ]    = $cf['site']['url'] . $path;
                 }
 
@@ -287,6 +297,13 @@
         timerCheck( $cf['speed'], '-> fine generazione dei path dei parent' );
 
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // echo '310 STANDARD' . PHP_EOL;

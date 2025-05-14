@@ -49,10 +49,17 @@
      * 
      * 
      * 
-     * 
+     * TODO implementare un sistema di protezione dai DOS
      * TODO documentare
      *
      *
+     * 
+     */
+
+    /**
+     * dichiarazioni e verifiche preliminari
+     * =====================================
+     * 
      * 
      */
 
@@ -68,6 +75,16 @@
         $attackers = array();
     }
 
+    // lettura delle parole proibite
+    $words = array_map( 'trim', file( FILE_BANNED_WORDS ) );
+
+    /**
+     * blocco degli IP sorgente compromessi
+     * ====================================
+     * 
+     * 
+     */
+
     // blocco la richiesta se proviene da un attacker noto
     if( in_array( $_SERVER['REMOTE_ADDR'], $attackers ) ) {
 
@@ -80,8 +97,13 @@
 
     }
 
-    // lettura delle parole proibite
-    $words = array_map( 'trim', file( FILE_BANNED_WORDS ) );
+    /**
+     * verifica dell'URL e della $_REQUEST per le parole proibite
+     * ==========================================================
+     * 
+     * 
+     * 
+     */
 
     // controllo che l'URL e la $_REQUEST non contengano parole proibite
     foreach( $words as $word ) {

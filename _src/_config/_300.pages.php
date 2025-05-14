@@ -27,6 +27,13 @@
      *
      */
 
+    /**
+     * verifica della cache dei contenuti
+     * ==================================
+     * 
+     * 
+     */
+
     // se è presente la connessione a memcache
     if( ! empty( $cf['memcache']['connection'] ) ) {
 
@@ -82,6 +89,13 @@
         logger( 'nessuna connessione a memcache, controlli sulla cache dei contenuti bypassati', 'speed' );
 
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // var_dump( $cf['contents']['cached'] );

@@ -30,6 +30,13 @@
      *
      */
 
+    /**
+     * dichiarazioni preliminari
+     * =========================
+     * 
+     * 
+     */
+
     // link alla pagina corrente
     $cf['contents']['page'] = &$cf['contents']['pages'][ $cf['parser']['page'] ];
 
@@ -48,6 +55,13 @@
     if( ! in_array( strtok( $_SERVER['REQUEST_URI'], '?' ), $cf['contents']['page']['path'] ) ) {
         $cf['contents']['page']['canonical'] = $cf['contents']['page']['id'];
     }
+
+    /**
+     * gestione del menu a tab
+     * =======================
+     * 
+     * 
+     */
 
     // pulitura delle tab
     if( isset( $ct['page']['etc']['tabs'] ) ) {
@@ -72,6 +86,13 @@
         }
 
     }
+
+    /**
+     * gestione dei comandi di una lettera
+     * ===================================
+     * 
+     * 
+     */
 
     // attivo i comandi di una lettera soltanto per DEV e TEST
     if( SITE_STATUS != PRODUCTION ) {
@@ -123,6 +144,13 @@
 
     }
 
+    /**
+     * elaborazioni specifiche della pagina corrente
+     * =============================================
+     * 
+     * 
+     */
+
     // assegnazione del tema per specificità
     if( isset( $cf['site']['metadati']['theme'] ) ) {
 
@@ -145,6 +173,13 @@
 
     // log
     logWrite( 'pagina corrente: ' . $cf['parser']['page'], 'rewrite' );
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // print_r( $cf['contents']['pages']['licenza']['content'] );

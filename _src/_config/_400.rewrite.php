@@ -84,6 +84,13 @@
      *
      */
 
+    /**
+     * dichiarazioni preliminari
+     * =========================
+     * 
+     * 
+     */
+
     // debug
     // print_r( $cf['localization']['language'] );
     // print_r( $cf['contents']['shortcuts'] );
@@ -112,6 +119,13 @@
     if( isset( $_REQUEST['p'] ) && ! empty( isset( $_REQUEST['p'] ) ) ) {
         $_REQUEST['__pg__'] = $_REQUEST['p'];
     }
+
+    /**
+     * parsing dell'URL e determinazione della pagina corrente
+     * =======================================================
+     * 
+     * 
+     */
 
     // verifico se la pagina corrente è indicata esplicitamente tramite $_REQUEST['__pg__']
     if( empty( $_REQUEST['__pg__'] ) ) {

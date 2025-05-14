@@ -14,18 +14,6 @@
      * ATTENZIONE! Chiunque possieda un token JWT può utilizzarlo, anche se non può leggere i dati al suo interno senza sapere la chiave
      * chiave segreta. Questo ad esempio significa che se un attaccante intercetta il token JWT di login a un sito, può effettuare il
      * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
-     * login utilizzandolo esattamente come farebbe il legittimo destinatario del token stesso.
      * 
      * Da un punto di vista pratico, i token JWT sono costituiti da tre parti dove la terza è l'hash delle prime due; si veda il codice
      * della funzione getJwt() per i dettagli.

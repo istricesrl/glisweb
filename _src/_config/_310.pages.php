@@ -201,6 +201,13 @@
     // debug
     // die( 'inizio ' . __FILE__ );
 
+    /**
+     * verifica della cache dei contenuti
+     * ==================================
+     * 
+     * 
+     */
+
     // verifica della cache
     if( $cf['contents']['cached'] === false ) {
 
@@ -218,11 +225,6 @@
 
         // timestamp dell'ultimo aggiornamento delle pagine
         $cf['contents']['updated'] = NULL;
-
-        // configurazione extra
-        if( isset( $cx['contents'] ) ) {
-            $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
-        }
 
         // criteri di ricerca per i file di definizione delle pagine
         $lingue                 = '{' . LINGUE_ATTIVE . '}';
@@ -311,6 +313,11 @@
         // echo $cf['contents']['updated'];
         // die( 'fine inclusione pagine' );
 
+        // configurazione extra
+        if( isset( $cx['contents'] ) ) {
+            $cf['contents'] = array_replace_recursive( $cf['contents'], $cx['contents'] );
+        }
+
         // configurazione extra per sito
         // TODO spiegare meglio cosa fa questa cosa
         if( isset( $cf['site']['contents'] ) ) {
@@ -320,6 +327,13 @@
         }
 
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // echo __FILE__ . PHP_EOL;

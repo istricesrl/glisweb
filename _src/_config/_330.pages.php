@@ -14,6 +14,13 @@
      *
      */
 
+    /**
+     * salvataggio della cache dei contenuti
+     * =====================================
+     * 
+     * 
+     */
+
     // debug
     // print_r( $cf['contents']['pages'] );
 
@@ -63,6 +70,13 @@
         logger( 'nessuna connessione a memcache, controlli sulla cache dei contenuti bypassati', 'speed' );
 
     }
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
 
     // debug
     // memcacheDelete( $cf['memcache']['connection'], CONTENTS_TREE_KEY );

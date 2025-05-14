@@ -44,17 +44,19 @@
      * TODO documentare
      *
      */
-    function mysqlGetQueryTables( $q ) {
+    function mysqlGetQueryTables($q)
+    {
 
-    $r = array();
+        $r = array();
 
-    if( preg_match_all( '/((FROM|JOIN) ([a-z_]+))/', $q, $m ) ) {
-        $r = array_unique( $m[3] );
-        array_walk( $r, function( &$v, $k ) { $v = str_replace( '_view', '', $v ); } );
-    }
+        if (preg_match_all('/((FROM|JOIN) ([a-z_]+))/', $q, $m)) {
+            $r = array_unique($m[3]);
+            array_walk($r, function (&$v, $k) {
+                $v = str_replace('_view', '', $v);
+            });
+        }
 
-    return $r;
-
+        return $r;
     }
 
     /**
@@ -62,14 +64,14 @@
      * TODO documentare
      *
      */
-    function mysqlCachedIndexedQuery( &$i, $m, $c, $q, $p = false, $t = 0, &$e = array() ) {
+    function mysqlCachedIndexedQuery(&$i, $m, $c, $q, $p = false, $t = 0, &$e = array())
+    {
 
-        if( defined( 'MEMCACHE_DEFAULT_TTL' ) && $t == 0 ) {
+        if (defined('MEMCACHE_DEFAULT_TTL') && $t == 0) {
             $t = MEMCACHE_DEFAULT_TTL;
         }
 
-        return mysqlCachedQuery( $m, $c, $q, $p, $t, $e, $i );
-
+        return mysqlCachedQuery($m, $c, $q, $p, $t, $e, $i);
     }
 
     /**
@@ -77,54 +79,51 @@
      * TODO documentare
      *
      */
-    function mysqlCachedQuery( $m, $c, $q, $p = false, $t = 0, &$e = array(), &$i = array() ) {
+    function mysqlCachedQuery($m, $c, $q, $p = false, $t = 0, &$e = array(), &$i = array())
+    {
 
-    // debug
+        // debug
         // var_dump( $q );
         // die();
 
-        if( defined( 'MEMCACHE_DEFAULT_TTL' ) && $t == 0 ) {
+        if (defined('MEMCACHE_DEFAULT_TTL') && $t == 0) {
             $t = MEMCACHE_DEFAULT_TTL;
         }
 
-    // calcolo la chiave della query
-        $k = md5( $q . serialize( $p ) );
+        // calcolo la chiave della query
+        $k = md5($q . serialize($p));
 
-    // cerco il valore in cache
-        $r = memcacheRead( $m, $k );
+        // cerco il valore in cache
+        $r = memcacheRead($m, $k);
 
-    // debug
+        // debug
         // var_dump( $r );
         // die();
 
-    // se il valore non è stato trovato
-        if( $r === false || $t === false ) {
+        // se il valore non è stato trovato
+        if ($r === false || $t === false) {
 
-            $d = mysqlQuery( $c, $q, $p, $e );
+            $d = mysqlQuery($c, $q, $p, $e);
 
-            if( ! empty( $m ) ) {
+            if (! empty($m)) {
 
-                memcacheWrite( $m, $k, $d, $t );
+                memcacheWrite($m, $k, $d, $t);
 
-                logger( 'query ' . $k . ' non presente in cache', 'speed' );
+                logger('query ' . $k . ' non presente in cache', 'speed');
 
-                foreach( mysqlGetQueryTables( $q ) as $j ) {
-                    $i[ $j ]['query'][ memcacheUniqueKey( $k ) ] = time();
+                foreach (mysqlGetQueryTables($q) as $j) {
+                    $i[$j]['query'][memcacheUniqueKey($k)] = time();
                 }
-
             }
 
             return $d;
-
         } else {
 
-            logger( 'query ' . $k . ' letta dalla cache', 'speed' );
-
+            logger('query ' . $k . ' letta dalla cache', 'speed');
         }
 
-    // restituisco il risultato
+        // restituisco il risultato
         return $r;
-
     }
 
     /**
@@ -132,45 +131,44 @@
      * TODO documentare
      *
      */
-//    function mysqlDiskQuery( $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
-    function mysqlDiskQuery( $c, $q, $p = false, $t = 0, &$e = array(), &$i = array() ) {
+    //    function mysqlDiskQuery( $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function mysqlDiskQuery($c, $q, $p = false, $t = 0, &$e = array(), &$i = array())
+    {
 
         // calcolo la chiave della query
-            $k = md5( $q . serialize( $p ) );
-    
-        // cerco il valore in cache
-    #	    $r = memcacheRead( $m, $k );
-    
-    if( ! file_exists( DIR_BASE . 'var/cache/mysql/' . $k ) ) {
-    
-            $r = mysqlQuery( $c, $q, $p, $e );
-    
-//    $h = fopen( DIR_BASE . 'var/cache/mysql/' . $k, 'w+' );
-//    fwrite( $h, serialize( $r ) );
-    
-writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
+        $k = md5($q . serialize($p));
 
-    } else {
-    
-    $r = unserialize( file_get_contents( DIR_BASE . 'var/cache/mysql/' . $k ) );
-    
-    #}
-    
-    
-    #if( empty( $m ) ) {
-    #die( 'memcache non connesso' );
-    #}
-    
-        // se il valore non è stato trovato
-    #	    if( empty( $r ) || $t === false ) {
-    #		memcacheWrite( $m, $k, $r, $t );
-            }
-    
-        // restituisco il risultato
-            return $r;
-    
+        // cerco il valore in cache
+        #	    $r = memcacheRead( $m, $k );
+
+        if (! file_exists(DIR_BASE . 'var/cache/mysql/' . $k)) {
+
+            $r = mysqlQuery($c, $q, $p, $e);
+
+            //    $h = fopen( DIR_BASE . 'var/cache/mysql/' . $k, 'w+' );
+            //    fwrite( $h, serialize( $r ) );
+
+            writeToFile(serialize($r), DIR_BASE . 'var/cache/mysql/' . $k);
+        } else {
+
+            $r = unserialize(file_get_contents(DIR_BASE . 'var/cache/mysql/' . $k));
+
+            #}
+
+
+            #if( empty( $m ) ) {
+            #die( 'memcache non connesso' );
+            #}
+
+            // se il valore non è stato trovato
+            #	    if( empty( $r ) || $t === false ) {
+            #		memcacheWrite( $m, $k, $r, $t );
         }
-    
+
+        // restituisco il risultato
+        return $r;
+    }
+
     /**
      * 
      * TODO implementare una funzione mysqlSmartQuery() che faccia da sola lo switch fra le varie cache?
@@ -178,357 +176,342 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * 
      * 
      */
-    
+
 
     /**
      *
      * TODO documentare
      *
      */
-    function mysqlQuery( $c, $q, $p = false, &$e = array() ) {
+    function mysqlQuery($c, $q, $p = false, &$e = array())
+    {
 
         // ID della query
-        $queryId = md5( microtime() . $q );
+        $queryId = md5(microtime() . $q);
 
         // log
-        logger( 'query ID: ' . $queryId . ' -> ' . $q, 'mysql' );
+        logger('query ID: ' . $queryId . ' -> ' . $q, 'mysql');
 
         // log
-        loggerLatest( $q, FILE_LATEST_MYSQL );
+        loggerLatest($q, FILE_LATEST_MYSQL);
 
         // verifico se c'è connessione e se la query è preparata o meno
-        if( empty( $c ) ) {
+        if (empty($c)) {
 
             // log
-            logger( 'chiamata a mysqlQuery() con connessione assente per eseguire -> ' . $q, 'mysql', LOG_ERR );
-
-        // restituisco false
-            return false;
-
-#        } elseif( $p !== false ) {
-        } elseif( ! empty( $p ) ) {
-
-        // passo alla funzione con prepared statement
-            return mysqlPreparedQuery( $c, $q, $p, $e );
-
-        } else {
-
-        // cronometro
-            $tStart = timerNow();
-
-        // debug
-            // echo $q . PHP_EOL;
-
-        // in base al tipo di comando eseguo la query
-            switch( current( explode( ' ', str_replace( "\n", ' ', trim( $q ) ) ) ) ) {
-
-            case 'SELECT':
-            case 'SHOW':
-                $r = mysqlFetchResult( mysqli_query( $c, $q ) );
-            break;
-
-            case 'CALL':
-                $r = mysqli_query( $c, $q );
-            break;
-            
-            case 'SET':
-                $r = mysqli_query( $c, $q );
-            break;
-
-            case 'BEGIN':
-            case 'START':
-                $r = mysqli_begin_transaction( $c );
-            break;
-
-            case 'ROLLBACK':
-                $r = mysqli_rollback( $c );
-            break;
-
-            case 'COMMIT':
-                $r = mysqli_commit( $c );
-            break;
-
-            case 'LOCK':
-            case 'UNLOCK':
-                $r = mysqli_query( $c, $q );
-            break;
-
-            case 'ALTER':
-            case 'CREATE':
-            case 'DROP':
-            case 'OPTIMIZE':
-                $r = mysqli_query( $c, $q );
-            break;
-
-            case 'INSERT':
-                mysqli_query( $c, $q );
-                $r = mysqli_insert_id( $c );
-            break;
-
-            case 'REPLACE':
-            case 'UPDATE':
-            case 'DELETE':
-            case 'TRUNCATE':
-                mysqli_query( $c, $q );
-                $r = mysqli_affected_rows( $c );
-            break;
-
-            default:
-                logger( 'comando MySQL sconosciuto: ' . current( explode( ' ', str_replace( "\n", ' ', $q ) ) ), 'mysql', LOG_ERR );
-                return false;
-            break;
-
-            }
-
-        // cronometro
-            $tElapsed = sprintf( '%0.11f', timerDiff( $tStart ) );
-
-        // log
-            if( $tElapsed > 0.5 ) {
-            logger( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR ); 
-            logger( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query' );
-            }
-
-        // debug
-            // var_dump( mysqli_errno( $c ) );
-            // var_dump( $r );
-
-        // gestione errore
-            if( mysqli_errno( $c ) ) {
-
-            // log
-                logger( __FUNCTION__ . '() query ID: ' . $queryId . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                logger( __FUNCTION__ . '() query ID: ' . $queryId . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $p ) ) ? '§dati -> ' . print_l( $p ) : '' ), 'details/mysql', LOG_ERR );
-
-            // gestione specifici errori
-                switch( mysqli_errno( $c ) ) {
-
-                case 1062:
-                    $e['1062'][] = 'errore MySQL 1062, dati dupilcati';
-                break;
-
-                case 1054:
-                    $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
-                break;
-
-                default:
-                    $e[ mysqli_errno( $c ) ][] = mysqli_error( $c );
-                break;
-
-                }
-
-            // restituisco false per indicare il fallimento della query
-                return false;
-
-            } else {
-
-            // log
-                logger( 'query ID: ' . $queryId . ' -> OK', 'mysql' );
-
-            // restituisco il risultato
-                return $r;
-
-            }
-
-        }
-
-    // restituisco false di default
-        return false;
-
-    }
-
-    /**
-     *
-     * TODO documentare
-     *
-     */
-    function mysqlFetchResult( $r ) {
-
-    // array del risultato
-        $rs = array();
-
-    // archivio il risultato in un array
-    // TODO controllare che sia un object result mysql
-#        if( ( is_resource( $r ) ? get_resource_type( $r ) : gettype( $r ) ) == 'mysql' ) {
-        while( $row = @mysqli_fetch_assoc( $r ) ) {
-            $rs[] = $row;
-        }
-#        }
-
-    // restituisco il risultato
-        return $rs;
-
-    }
-
-    /**
-     *
-     * TODO documentare
-     *
-     */
-    function mysqlPreparedQuery( $c, $q, $params = array(), &$e = array() ) {
-
-    // log
-        logger( md5( $q ) . ' PREPARED ' . $q, 'mysql' );
-
-    // verifico se c'è connessione
-        if( empty( $c ) ) {
-
-            // log
-            logger( 'chiamata a mysqlPreparedQuery() con connessione assente', 'mysql', LOG_ERR );
+            logger('chiamata a mysqlQuery() con connessione assente per eseguire -> ' . $q, 'mysql', LOG_ERR);
 
             // restituisco false
             return false;
 
+            #        } elseif( $p !== false ) {
+        } elseif (! empty($p)) {
+
+            // passo alla funzione con prepared statement
+            return mysqlPreparedQuery($c, $q, $p, $e);
         } else {
 
-        // cronometro
+            // cronometro
             $tStart = timerNow();
 
-        // preparo la query...
-            $pq = mysqli_prepare( $c, $q );
+            // debug
+            // echo $q . PHP_EOL;
 
-        // se la preparazione dello statement è andata a buon fine...
-            if( $pq !== false ) {
+            // in base al tipo di comando eseguo la query
+            switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
 
-            // se ci sono dei parametri da bindare...
-                if( is_array( $params ) && count( $params ) ) {
+                case 'SELECT':
+                case 'SHOW':
+                    $r = mysqlFetchResult(mysqli_query($c, $q));
+                    break;
 
-                // preparazione dei parametri per il bind
-                    $aParams[0] = $pq;
-                    $aParams[1] = '';
-                    foreach( $params as $key => $val ) {
-                        $type = current( array_keys( $val ) );
-                        $aParams[1] .= $type;
-                        $aParams[] = &$params[ $key ][ $type ];
-                        if( ( $type == 'i' || $type == 'd' ) && empty( $params[ $key ][ $type ] ) ) {
-                            $params[ $key ][ $type ] = NULL;
-                        }
-                        if( is_array( $params[ $key ][ $type ] ) ) {
-                            die( 'passare solo stringhe come parametri della query: ' . PHP_EOL . $q . PHP_EOL . PHP_EOL . 'oggetto malformato: ' . print_r( $val, true ) );
-                        }
-                    }
+                case 'CALL':
+                    $r = mysqli_query($c, $q);
+                    break;
 
-                // bind dei parametri
-                    call_user_func_array( 'mysqli_stmt_bind_param', $aParams );
+                case 'SET':
+                    $r = mysqli_query($c, $q);
+                    break;
 
-                }
+                case 'BEGIN':
+                case 'START':
+                    $r = mysqli_begin_transaction($c);
+                    break;
 
-            // esecuzione dello statement
-            // TODO mettere dentro un try... catch
-                $xStatement = mysqli_stmt_execute( $pq );
+                case 'ROLLBACK':
+                    $r = mysqli_rollback($c);
+                    break;
+
+                case 'COMMIT':
+                    $r = mysqli_commit($c);
+                    break;
+
+                case 'LOCK':
+                case 'UNLOCK':
+                    $r = mysqli_query($c, $q);
+                    break;
+
+                case 'ALTER':
+                case 'CREATE':
+                case 'DROP':
+                case 'OPTIMIZE':
+                    $r = mysqli_query($c, $q);
+                    break;
+
+                case 'INSERT':
+                    mysqli_query($c, $q);
+                    $r = mysqli_insert_id($c);
+                    break;
+
+                case 'REPLACE':
+                case 'UPDATE':
+                case 'DELETE':
+                case 'TRUNCATE':
+                    mysqli_query($c, $q);
+                    $r = mysqli_affected_rows($c);
+                    break;
+
+                default:
+                    logger('comando MySQL sconosciuto: ' . current(explode(' ', str_replace("\n", ' ', $q))), 'mysql', LOG_ERR);
+                    return false;
+                    break;
+            }
 
             // cronometro
-                $tElapsed = sprintf( '%0.11f', timerDiff( $tStart ) );
+            $tElapsed = sprintf('%0.11f', timerDiff($tStart));
 
             // log
-                if( $tElapsed > 0.5 ) {
-                    logger( $q . ' -> TEMPO ' . str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi', 'speed', LOG_ERR );
-                    logger( str_pad( $tElapsed, 21, ' ', STR_PAD_LEFT ) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query' );
-                }
+            if ($tElapsed > 0.5) {
+                logger($q . ' -> TEMPO ' . str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi', 'speed', LOG_ERR);
+                logger(str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query');
+            }
 
             // debug
-                // var_dump( mysqli_errno( $c ) );
+            // var_dump( mysqli_errno( $c ) );
+            // var_dump( $r );
 
             // gestione errore
-                if( mysqli_errno( $c ) ) {
+            if (mysqli_errno($c)) {
 
-                    // log
-                    logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                    logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
+                // log
+                logger(__FUNCTION__ . '() query ID: ' . $queryId . ' -> ERRORE ' . mysqli_errno($c) . ' ' . mysqli_error($c) . '§query -> ' . $q, 'mysql', LOG_ERR);
+                logger(__FUNCTION__ . '() query ID: ' . $queryId . ' -> ERRORE ' . mysqli_errno($c) . ' ' . mysqli_error($c) . '§query -> ' . $q . ((! empty($p)) ? '§dati -> ' . print_l($p) : ''), 'details/mysql', LOG_ERR);
 
                 // gestione specifici errori
-                    switch( mysqli_errno( $c ) ) {
+                switch (mysqli_errno($c)) {
 
                     case 1062:
                         $e['1062'][] = 'errore MySQL 1062, dati dupilcati';
-                    break;
+                        break;
+
+                    case 1054:
+                        $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
+                        break;
 
                     default:
-                        $e[ mysqli_errno( $c ) ][] = mysqli_error( $c );
-                    break;
-
-                    }
+                        $e[mysqli_errno($c)][] = mysqli_error($c);
+                        break;
+                }
 
                 // restituisco false per indicare il fallimento della query
-                    return false;
+                return false;
+            } else {
 
+                // log
+                logger('query ID: ' . $queryId . ' -> OK', 'mysql');
+
+                // restituisco il risultato
+                return $r;
+            }
+        }
+
+        // restituisco false di default
+        return false;
+    }
+
+    /**
+     *
+     * TODO documentare
+     *
+     */
+    function mysqlFetchResult($r)
+    {
+
+        // array del risultato
+        $rs = array();
+
+        // archivio il risultato in un array
+        // TODO controllare che sia un object result mysql
+        #        if( ( is_resource( $r ) ? get_resource_type( $r ) : gettype( $r ) ) == 'mysql' ) {
+        while ($row = @mysqli_fetch_assoc($r)) {
+            $rs[] = $row;
+        }
+        #        }
+
+        // restituisco il risultato
+        return $rs;
+    }
+
+    /**
+     *
+     * TODO documentare
+     *
+     */
+    function mysqlPreparedQuery($c, $q, $params = array(), &$e = array())
+    {
+
+        // log
+        logger(md5($q) . ' PREPARED ' . $q, 'mysql');
+
+        // verifico se c'è connessione
+        if (empty($c)) {
+
+            // log
+            logger('chiamata a mysqlPreparedQuery() con connessione assente', 'mysql', LOG_ERR);
+
+            // restituisco false
+            return false;
+        } else {
+
+            // cronometro
+            $tStart = timerNow();
+
+            // preparo la query...
+            $pq = mysqli_prepare($c, $q);
+
+            // se la preparazione dello statement è andata a buon fine...
+            if ($pq !== false) {
+
+                // se ci sono dei parametri da bindare...
+                if (is_array($params) && count($params)) {
+
+                    // preparazione dei parametri per il bind
+                    $aParams[0] = $pq;
+                    $aParams[1] = '';
+                    foreach ($params as $key => $val) {
+                        $type = current(array_keys($val));
+                        $aParams[1] .= $type;
+                        $aParams[] = &$params[$key][$type];
+                        if (($type == 'i' || $type == 'd') && empty($params[$key][$type])) {
+                            $params[$key][$type] = NULL;
+                        }
+                        if (is_array($params[$key][$type])) {
+                            die('passare solo stringhe come parametri della query: ' . PHP_EOL . $q . PHP_EOL . PHP_EOL . 'oggetto malformato: ' . print_r($val, true));
+                        }
+                    }
+
+                    // bind dei parametri
+                    call_user_func_array('mysqli_stmt_bind_param', $aParams);
+                }
+
+                // esecuzione dello statement
+                // TODO mettere dentro un try... catch
+                $xStatement = mysqli_stmt_execute($pq);
+
+                // cronometro
+                $tElapsed = sprintf('%0.11f', timerDiff($tStart));
+
+                // log
+                if ($tElapsed > 0.5) {
+                    logger($q . ' -> TEMPO ' . str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi', 'speed', LOG_ERR);
+                    logger(str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query');
+                }
+
+                // debug
+                // var_dump( mysqli_errno( $c ) );
+
+                // gestione errore
+                if (mysqli_errno($c)) {
+
+                    // log
+                    logger(__FUNCTION__ . '() query ID: ' . md5($q) . ' -> ERRORE ' . mysqli_errno($c) . ' ' . mysqli_error($c) . '§query -> ' . $q, 'mysql', LOG_ERR);
+                    logger(__FUNCTION__ . '() query ID: ' . md5($q) . ' -> ERRORE ' . mysqli_errno($c) . ' ' . mysqli_error($c) . '§query -> ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql', LOG_ERR);
+
+                    // gestione specifici errori
+                    switch (mysqli_errno($c)) {
+
+                        case 1062:
+                            $e['1062'][] = 'errore MySQL 1062, dati dupilcati';
+                            break;
+
+                        default:
+                            $e[mysqli_errno($c)][] = mysqli_error($c);
+                            break;
+                    }
+
+                    // restituisco false per indicare il fallimento della query
+                    return false;
                 } else {
 
                     // log
-                    logger( md5( $q ) . ' -> OK', 'mysql' );
+                    logger(md5($q) . ' -> OK', 'mysql');
 
-                // valore di ritorno a seconda del tipo di query
+                    // valore di ritorno a seconda del tipo di query
                     // switch( current( explode( ' ', $q ) ) ) {
-                    switch( current( explode( ' ', str_replace( "\n", ' ', trim( $q ) ) ) ) ) {
+                    switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
 
-                    case 'SELECT':
-                        return mysqlFetchPreparedResult( $pq );
-                    break;
+                        case 'SELECT':
+                            return mysqlFetchPreparedResult($pq);
+                            break;
 
-                    case 'INSERT':
-                        $id = mysqli_stmt_insert_id( $pq );
-                        return ( ( ! empty( $id ) ) ? $id : ( ( isset( $params['id']['s'] ) ) ? $params['id']['s'] : NULL ) );
-                    break;
+                        case 'INSERT':
+                            $id = mysqli_stmt_insert_id($pq);
+                            return ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
+                            break;
 
-                    case 'REPLACE':
-                    case 'UPDATE':
-                    case 'DELETE':
-                    case 'TRUNCATE':
-                    default:
-                        return mysqli_stmt_affected_rows( $pq );
-                    break;
-
+                        case 'REPLACE':
+                        case 'UPDATE':
+                        case 'DELETE':
+                        case 'TRUNCATE':
+                        default:
+                            return mysqli_stmt_affected_rows($pq);
+                            break;
                     }
-
                 }
-
             } else {
 
                 /*
-                // log
-                    // logger( 'query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                    // logger( 'query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
-
-                // debug
-                    // var_dump( mysqli_errno( $c ) );
-
-                // gestione errore
-                if( mysqli_errno( $c ) ) {
-
                     // log
-                        logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                        logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
+                        // logger( 'query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+                        // logger( 'query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
 
-                    // gestione specifici errori
-                        switch( mysqli_errno( $c ) ) {
+                    // debug
+                        // var_dump( mysqli_errno( $c ) );
 
-                        case 1054:
-                            $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
-                        break;
-        
-                        default:
-                            $e[ mysqli_errno( $c ) ][] = mysqli_error( $c );
-                        break;
+                    // gestione errore
+                    if( mysqli_errno( $c ) ) {
+
+                        // log
+                            logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
+                            logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
+
+                        // gestione specifici errori
+                            switch( mysqli_errno( $c ) ) {
+
+                            case 1054:
+                                $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
+                            break;
+            
+                            default:
+                                $e[ mysqli_errno( $c ) ][] = mysqli_error( $c );
+                            break;
+
+                            }
 
                         }
 
-                    }
-
-                    */
+                        */
 
                 // log
-                logger( __FUNCTION__ . '() fallita la preparazione della query: ' . $q, 'mysql', LOG_ERR );
+                logger(__FUNCTION__ . '() fallita la preparazione della query: ' . $q, 'mysql', LOG_ERR);
 
                 // restituisco false
                 return false;
-
             }
-
         }
 
-    // restituisco false di default
+        // restituisco false di default
         return false;
-
     }
 
     /**
@@ -536,22 +519,22 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function mysqlFetchPreparedResult( $pq ) {
+    function mysqlFetchPreparedResult($pq)
+    {
 
         // array del risultato
-            $arRs = array();
+        $arRs = array();
 
         // estraggo il resultset dallo statement
-            $r = mysqli_stmt_get_result( $pq );
+        $r = mysqli_stmt_get_result($pq);
 
         // fetch del risultato
-            while( $row = mysqli_fetch_assoc( $r ) ) {
-                $arRs[] = $row;
-            }
+        while ($row = mysqli_fetch_assoc($r)) {
+            $arRs[] = $row;
+        }
 
         // restituisco il risultato
-            return $arRs;
-
+        return $arRs;
     }
 
     /**
@@ -559,22 +542,22 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function mysqlSelectValue( $c, $q, $p = false, &$e = array() ) {
+    function mysqlSelectValue($c, $q, $p = false, &$e = array())
+    {
 
-    // valore di ritorno
+        // valore di ritorno
         $v = NULL;
 
-    // risultato
-        $r = mysqlSelectRow( $c, $q, $p, $e );
+        // risultato
+        $r = mysqlSelectRow($c, $q, $p, $e);
 
-    // controllo che ci siano righe
-        if( is_array( $r ) && count( $r ) > 0 ) {
-        $v = array_shift( $r );
+        // controllo che ci siano righe
+        if (is_array($r) && count($r) > 0) {
+            $v = array_shift($r);
         }
 
-    // ritorno
+        // ritorno
         return $v;
-
     }
 
     /**
@@ -582,45 +565,22 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function mysqlSelectColumn( $f, $c, $q, $p = false, &$e = array() ) {
-
-    // valore di ritorno
-        $r = array();
-
-    // prelevo il risultato
-        $rs = mysqlQuery( $c, $q, $p, $e );
-
-    // risultato
-        if( is_array( $rs ) ) {
-        $r = array_column( $rs, $f );
-        }
-
-    // ritorno
-        return $r;
-
-    }
-
-    /**
-     *
-     * TODO documentare
-     *
-     */
-    function mysqlSelectCachedColumn( $m, $f, $c, $q, $p = false, $t = 0, &$e = array() ) {
+    function mysqlSelectColumn($f, $c, $q, $p = false, &$e = array())
+    {
 
         // valore di ritorno
         $r = array();
 
         // prelevo il risultato
-        $rs = mysqlCachedQuery( $m, $c, $q, $p, $t, $e );
+        $rs = mysqlQuery($c, $q, $p, $e);
 
         // risultato
-        if( is_array( $rs ) ) {
-            $r = array_column( $rs, $f );
+        if (is_array($rs)) {
+            $r = array_column($rs, $f);
         }
 
         // ritorno
         return $r;
-
     }
 
     /**
@@ -628,24 +588,22 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function mysqlSelectRow( $c, $q, $p = false, &$e = array() ) {
+    function mysqlSelectCachedColumn($m, $f, $c, $q, $p = false, $t = 0, &$e = array())
+    {
 
-    // valore di ritorno
-        $v = array();
+        // valore di ritorno
+        $r = array();
 
-    // risultato
-        $r = mysqlQuery( $c, $q, $p, $e );
+        // prelevo il risultato
+        $rs = mysqlCachedQuery($m, $c, $q, $p, $t, $e);
 
-    // controllo che ci siano righe
-        if( is_array( $r ) && count( $r ) > 0 ) {
-        $v = array_shift( $r );
-        } else {
-        logger( 'nessuna riga trovata nel risultato', 'mysql' );
+        // risultato
+        if (is_array($rs)) {
+            $r = array_column($rs, $f);
         }
 
-    // ritorno
-        return $v;
-
+        // ritorno
+        return $r;
     }
 
     /**
@@ -653,22 +611,47 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function mysqlSelectCachedValue( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function mysqlSelectRow($c, $q, $p = false, &$e = array())
+    {
 
-    // valore di ritorno
+        // valore di ritorno
+        $v = array();
+
+        // risultato
+        $r = mysqlQuery($c, $q, $p, $e);
+
+        // controllo che ci siano righe
+        if (is_array($r) && count($r) > 0) {
+            $v = array_shift($r);
+        } else {
+            logger('nessuna riga trovata nel risultato', 'mysql');
+        }
+
+        // ritorno
+        return $v;
+    }
+
+    /**
+     *
+     * TODO documentare
+     *
+     */
+    function mysqlSelectCachedValue($m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array())
+    {
+
+        // valore di ritorno
         $v = NULL;
 
-    // risultato
-        $r = mysqlSelectCachedRow( $m, $c, $q, $p, $t, $e );
+        // risultato
+        $r = mysqlSelectCachedRow($m, $c, $q, $p, $t, $e);
 
-    // controllo che ci siano righe
-        if( is_array( $r ) && count( $r ) > 0 ) {
-        $v = array_shift( $r );
+        // controllo che ci siano righe
+        if (is_array($r) && count($r) > 0) {
+            $v = array_shift($r);
         }
 
-    // ritorno
+        // ritorno
         return $v;
-
     }
 
     /**
@@ -676,22 +659,22 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function mysqlSelectCachedRow( $m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array() ) {
+    function mysqlSelectCachedRow($m, $c, $q, $p = false, $t = MEMCACHE_DEFAULT_TTL, &$e = array())
+    {
 
-    // valore di ritorno
+        // valore di ritorno
         $v = array();
 
-    // risultato
-        $r = mysqlCachedQuery( $m, $c, $q, $p, $t, $e );
+        // risultato
+        $r = mysqlCachedQuery($m, $c, $q, $p, $t, $e);
 
-    // controllo che ci siano righe
-        if( is_array( $r ) && count( $r ) > 0 ) {
-        $v = array_shift( $r );
+        // controllo che ci siano righe
+        if (is_array($r) && count($r) > 0) {
+            $v = array_shift($r);
         }
 
-    // ritorno
+        // ritorno
         return $v;
-
     }
 
     /**
@@ -728,109 +711,116 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function mysqlDuplicateRowRecursive( $c, $t, $o, $n = NULL, &$x = array(), &$y = array() ) {
+    function mysqlDuplicateRowRecursive($c, $t, $o, $n = NULL, &$x = array(), &$y = array())
+    {
 
         // debug
-    #    echo "chiamata mysqlDuplicateRowRecursive per array x" . PHP_EOL;
-    #    print_r($x);
-    #    echo "tabella principale: " . $t . " - stampo x[" . $t . "]" . PHP_EOL;
-    #    print_r( $x['t'][ $t ] );
-    #    var_dump( $n );
+        #    echo "chiamata mysqlDuplicateRowRecursive per array x" . PHP_EOL;
+        #    print_r($x);
+        #    echo "tabella principale: " . $t . " - stampo x[" . $t . "]" . PHP_EOL;
+        #    print_r( $x['t'][ $t ] );
+        #    var_dump( $n );
 
         // defaults
-        if( ! isset( $x['t'][ $t ]['f'] ) ) { $x['t'][ $t ]['f'] = array(); }
-        if( ! isset( $x['t'][ $t ]['t'] ) ) { $x['t'][ $t ]['t'] = array(); }
+        if (! isset($x['t'][$t]['f'])) {
+            $x['t'][$t]['f'] = array();
+        }
+        if (! isset($x['t'][$t]['t'])) {
+            $x['t'][$t]['t'] = array();
+        }
 
         // se non ho un ID di partenza
-        if( empty( $o ) ) {
-            die( 'ID da duplicare non passato' );
+        if (empty($o)) {
+            die('ID da duplicare non passato');
         }
 
         // defaults
-        if( ! isset( $x['t'][ $t ]['f'] ) ) { $x['t'][ $t ]['f'] = array(); }
-        if( ! isset( $x['t'][ $t ]['t'] ) ) { $x['t'][ $t ]['t'] = array(); }
+        if (! isset($x['t'][$t]['f'])) {
+            $x['t'][$t]['f'] = array();
+        }
+        if (! isset($x['t'][$t]['t'])) {
+            $x['t'][$t]['t'] = array();
+        }
 
         // duplico la riga
-        $id = mysqlDuplicateRow( $c, $t, $o, $n, $x['t'][ $t ]['f'], $y );
+        $id = mysqlDuplicateRow($c, $t, $o, $n, $x['t'][$t]['f'], $y);
 
         // debug
-    #     echo 'ID riga duplicata = ' . $id . PHP_EOL;
+        #     echo 'ID riga duplicata = ' . $id . PHP_EOL;
 
         // creo i placeholder per le tabelle richieste
         $pholders = array();
-        $values = array( array( 's' => $t ) );
-        foreach( array_keys( $x['t'][ $t ]['t'] ) as $rt ) {
+        $values = array(array('s' => $t));
+        foreach (array_keys($x['t'][$t]['t']) as $rt) {
             $pholders[] = '?';
-            $values[] = array( 's' => $rt );
+            $values[] = array('s' => $rt);
         }
-        $values[] = array( 's' => $t );
+        $values[] = array('s' => $t);
 
         // cerco le tabelle collegate
-        $ks = mysqlQuery( $c,
-            'SELECT * FROM information_schema.key_column_usage '.
-            'WHERE referenced_table_name = ? '.
-#            'AND ( constraint_name NOT LIKE "%_nofollow" OR '.
-#            'table_name IN ( ' . implode( ',', $pholders ) . ' ) ) '.
-            ( ( is_array( $pholders ) && count( $pholders ) > 0 ) ? 'AND table_name IN ( ' . implode( ',', $pholders ) . ' ) ' : NULL ).
-            'AND table_name != ? '.
-            'AND table_schema = database() ',
+        $ks = mysqlQuery(
+            $c,
+            'SELECT * FROM information_schema.key_column_usage ' .
+                'WHERE referenced_table_name = ? ' .
+                #            'AND ( constraint_name NOT LIKE "%_nofollow" OR '.
+                #            'table_name IN ( ' . implode( ',', $pholders ) . ' ) ) '.
+                ((is_array($pholders) && count($pholders) > 0) ? 'AND table_name IN ( ' . implode(',', $pholders) . ' ) ' : NULL) .
+                'AND table_name != ? ' .
+                'AND table_schema = database() ',
             $values
         );
 
         // debug
-    #    echo "tabelle collegate". PHP_EOL;
-    #    print_r( $ks );
+        #    echo "tabelle collegate". PHP_EOL;
+        #    print_r( $ks );
 
-    #    echo "per ogni relazione... ". PHP_EOL;
+        #    echo "per ogni relazione... ". PHP_EOL;
         // per ogni relazione
-        foreach( $ks as $ksr ) {
+        foreach ($ks as $ksr) {
 
-        #    echo "tabella " . $ksr['TABLE_NAME'] . PHP_EOL;
+            #    echo "tabella " . $ksr['TABLE_NAME'] . PHP_EOL;
 
-        #    echo "aggiungo il campo di relazione alle sostituzioni" . PHP_EOL;
+            #    echo "aggiungo il campo di relazione alle sostituzioni" . PHP_EOL;
 
             // aggiungo il campo di relazione alle sostituzioni
-            $x['t'][$t]['t'][ $ksr['TABLE_NAME'] ]['f'][ $ksr['COLUMN_NAME'] ] = $id;
+            $x['t'][$t]['t'][$ksr['TABLE_NAME']]['f'][$ksr['COLUMN_NAME']] = $id;
 
-            if( isset( $x['t'][$t]['t'][ $ksr['TABLE_NAME'] ]['r'] ) ) {
-                $whr = ' AND ' . implode( ' AND ', $x['t'][$t]['t'][ $ksr['TABLE_NAME'] ]['r'] );
-                die( $whr );
+            if (isset($x['t'][$t]['t'][$ksr['TABLE_NAME']]['r'])) {
+                $whr = ' AND ' . implode(' AND ', $x['t'][$t]['t'][$ksr['TABLE_NAME']]['r']);
+                die($whr);
             } else {
                 $whr = NULL;
             }
 
-        #    echo "valore attuale di x". PHP_EOL;
-        #    print_r($x);
+            #    echo "valore attuale di x". PHP_EOL;
+            #    print_r($x);
 
             // compongo la query di ricerca relazioni
             $q = 'SELECT * FROM ' . $ksr['TABLE_NAME'] . ' WHERE ' . $ksr['COLUMN_NAME'] . ' = "' . $o . '" ' . $whr;
 
             // trovo le righe collegate
-            $rls = mysqlQuery( $c, $q );
+            $rls = mysqlQuery($c, $q);
 
             // debug
-        #    echo "query di ricerca relazioni" . PHP_EOL;
-        #     var_dump( $q );
+            #    echo "query di ricerca relazioni" . PHP_EOL;
+            #     var_dump( $q );
 
-        #     echo "righe collegate" . PHP_EOL;
-        #     print_r( $rls );
+            #     echo "righe collegate" . PHP_EOL;
+            #     print_r( $rls );
 
-        #     echo "per ogni riga di relazione... ". PHP_EOL;
+            #     echo "per ogni riga di relazione... ". PHP_EOL;
             // per ogni riga della relazione
-            foreach( $rls as $rl ) {
+            foreach ($rls as $rl) {
 
-            #    echo "stampo la riga di relazione". PHP_EOL;
+                #    echo "stampo la riga di relazione". PHP_EOL;
                 // debug
-            #     print_r( $rl );
+                #     print_r( $rl );
 
-            #     echo "chiamo mysqlDuplicateRowRecursive". PHP_EOL;
+                #     echo "chiamo mysqlDuplicateRowRecursive". PHP_EOL;
                 // chiamo mysqlDuplicateRowRecursive() per ogni tabella collegata
-                mysqlDuplicateRowRecursive( $c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][ $t ], $y[ $ksr['TABLE_NAME'] ] );
-
+                mysqlDuplicateRowRecursive($c, $ksr['TABLE_NAME'], $rl['id'], NULL, $x['t'][$t], $y[$ksr['TABLE_NAME']]);
             }
-
         }
-
     }
 
     /**
@@ -844,66 +834,67 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      *
      * TODO: creare un meccanismo di sostituzione intelligente dei valori dei campi (oltre al settaggio manuale)
      */
-    function mysqlDuplicateRow( $c, $t, $o, $n = NULL, $x = array(), &$y = array() ) {
+    function mysqlDuplicateRow($c, $t, $o, $n = NULL, $x = array(), &$y = array())
+    {
 
         // salvo l'id
-        $id = isset( $x['id'] ) ? $x['id'] : null;
+        $id = isset($x['id']) ? $x['id'] : null;
 
-    // campi da modificare
-        $x = array_merge( array( 'id' => $n ), $x );
+        // campi da modificare
+        $x = array_merge(array('id' => $n), $x);
 
-    // debug
+        // debug
         // print_r( $x );
 
-    // campi della tabella
-        $fields = mysqlSelectColumn( 'COLUMN_NAME', $c, 'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', array( array( 's' => $t ) ) );
-        $fieldsChanged = array_keys( $x );
-        $fieldsCopied = array_diff( $fields, $fieldsChanged );
-        $fieldsInsert = array_merge( $fieldsChanged, $fieldsCopied );
+        // campi della tabella
+        $fields = mysqlSelectColumn('COLUMN_NAME', $c, 'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = DATABASE() AND TABLE_NAME = ?', array(array('s' => $t)));
+        $fieldsChanged = array_keys($x);
+        $fieldsCopied = array_diff($fields, $fieldsChanged);
+        $fieldsInsert = array_merge($fieldsChanged, $fieldsCopied);
 
-    // valori da sostituire
+        // valori da sostituire
         $values = array();
-        foreach( $x as $xv ) {
-            $values[] = array( 's' => $xv );
+        foreach ($x as $xv) {
+            $values[] = array('s' => $xv);
         }
-        $values[] = array( 's' => $o );
+        $values[] = array('s' => $o);
 
-    // composizione della query
-        $q = 'INSERT IGNORE INTO ' . $t . ' (' . implode( ',', $fieldsInsert ) . ') SELECT ' . str_repeat( '?,', count( $fieldsChanged ) ) . implode( ',', $fieldsCopied ) . ' FROM ' . $t . ' WHERE id = ?';
+        // composizione della query
+        $q = 'INSERT IGNORE INTO ' . $t . ' (' . implode(',', $fieldsInsert) . ') SELECT ' . str_repeat('?,', count($fieldsChanged)) . implode(',', $fieldsCopied) . ' FROM ' . $t . ' WHERE id = ?';
 
-    // NOTA perché sono stati scambiati $id e $n? è corretto o andava bene prima?
+        // NOTA perché sono stati scambiati $id e $n? è corretto o andava bene prima?
 
-    // esecuzione della query
+        // esecuzione della query
         // $id = mysqlQuery( $c, $q, $values );
-        $n = mysqlQuery( $c, $q, $values );
+        $n = mysqlQuery($c, $q, $values);
 
-/*
-        if( empty( $id ) ){
-            $id = $n;
-        }
-*/
+        /*
+            if( empty( $id ) ){
+                $id = $n;
+            }
+    */
 
-        if( empty( $n ) ){
+        if (empty($n)) {
             $n = $id;
         }
 
-    // popolo l'oggetto
+        // popolo l'oggetto
         $y = mysqlSelectRow(
-            $c, 'SELECT * FROM ' . $t . ' WHERE id = ?',
-//            array( array( 's' => $id ) )
-            array( array( 's' => $n ) )
+            $c,
+            'SELECT * FROM ' . $t . ' WHERE id = ?',
+            //            array( array( 's' => $id ) )
+            array(array('s' => $n))
         );
 
-    // debug
+        // debug
         // echo $q . PHP_EOL;
         // print_r( $values );
         // var_dump( $n );
         // print_r( $fields );
 
-    // ritorno l'id nel nuovo record inserito
-//        return $id;
+        // ritorno l'id nel nuovo record inserito
+        //        return $id;
         return $n;
-
     }
 
     /**
@@ -920,34 +911,35 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * NOTA: poiché la funzione utilizza memcache, se si apportano modifiche alle tipologia dei vincoli di chiave tra le tabelle del database, svuotare sempre memcache
      *
      */
-    function mysqlDeleteRowRecursive( $m, $c, $t, $d ) {
+    function mysqlDeleteRowRecursive($m, $c, $t, $d)
+    {
 
         // debug
-    #    echo 'chiamata funzione cancellazione ricorsiva' . PHP_EOL;
-    #    echo "richiesta la cancellazione della riga #${d} dalla tabella {$t}" . PHP_EOL;
+        #    echo 'chiamata funzione cancellazione ricorsiva' . PHP_EOL;
+        #    echo "richiesta la cancellazione della riga #${d} dalla tabella {$t}" . PHP_EOL;
 
         // cerco i vincoli di chiave esterna per l'entità $t
         // NOTA mi interessano TABLE_NAME, COLUMN_NAME, REFERENCED_COLUMN_NAME
         $x = mysqlCachedQuery(
             $m,
             $c,
-            'SELECT information_schema.key_column_usage.TABLE_NAME, information_schema.key_column_usage.COLUMN_NAME, information_schema.key_column_usage.REFERENCED_COLUMN_NAME, information_schema.key_column_usage.REFERENCED_TABLE_NAME, '.
-            'information_schema.referential_constraints.DELETE_RULE '.
-            'FROM information_schema.key_column_usage '.
-            'INNER JOIN information_schema.referential_constraints ON ( information_schema.referential_constraints.REFERENCED_TABLE_NAME = information_schema.key_column_usage.REFERENCED_TABLE_NAME '.
-            'AND information_schema.referential_constraints.TABLE_NAME = information_schema.key_column_usage.TABLE_NAME ) '.
-            'WHERE information_schema.key_column_usage.REFERENCED_TABLE_NAME = ? AND table_schema = database() AND information_schema.referential_constraints.DELETE_RULE = ? ',
+            'SELECT information_schema.key_column_usage.TABLE_NAME, information_schema.key_column_usage.COLUMN_NAME, information_schema.key_column_usage.REFERENCED_COLUMN_NAME, information_schema.key_column_usage.REFERENCED_TABLE_NAME, ' .
+                'information_schema.referential_constraints.DELETE_RULE ' .
+                'FROM information_schema.key_column_usage ' .
+                'INNER JOIN information_schema.referential_constraints ON ( information_schema.referential_constraints.REFERENCED_TABLE_NAME = information_schema.key_column_usage.REFERENCED_TABLE_NAME ' .
+                'AND information_schema.referential_constraints.TABLE_NAME = information_schema.key_column_usage.TABLE_NAME ) ' .
+                'WHERE information_schema.key_column_usage.REFERENCED_TABLE_NAME = ? AND table_schema = database() AND information_schema.referential_constraints.DELETE_RULE = ? ',
             array(
-                array( 's' => $t ),
-                array( 's' => 'NO ACTION' )
+                array('s' => $t),
+                array('s' => 'NO ACTION')
             )
         );
 
         // dati prelevati
-        foreach( $x as $x1 ) {
+        foreach ($x as $x1) {
 
             // debug
-        #    print_r( $x1 );
+            #    print_r( $x1 );
 
             // variabili in uso
             $t1 = $x1['TABLE_NAME'];
@@ -955,29 +947,27 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
             $l1 = $x1['REFERENCED_COLUMN_NAME'];
 
             // debug
-        #    echo "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?" . PHP_EOL;
-        #    echo "cerco le righe di ${t1} che hanno ${t1}.${f1} uguale a ${d}" . PHP_EOL;
+            #    echo "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?" . PHP_EOL;
+            #    echo "cerco le righe di ${t1} che hanno ${t1}.${f1} uguale a ${d}" . PHP_EOL;
 
             // prelevo le righe referenziate
             $r = mysqlQuery(
                 $c,
                 "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?",
                 array(
-                    array( 's' => $d )
+                    array('s' => $d)
                 )
             );
 
             // debug
-        #    print_r( $r );
+            #    print_r( $r );
 
             // per ogni riga delle tabelle referenziate chiamo ricorsivamente
-            foreach( $r as $r1 ) {
+            foreach ($r as $r1) {
 
                 // chiamata ricorsiva
-                mysqlDeleteRowRecursive( $m, $c, $t1, $r1[ $l1 ] );
-
+                mysqlDeleteRowRecursive($m, $c, $t1, $r1[$l1]);
             }
-
         }
 
         // debug
@@ -988,10 +978,9 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
             $c,
             "DELETE FROM ${t} WHERE ${t}.id = ?",
             array(
-                array( 's' => $d )
+                array('s' => $d)
             )
         );
-
     }
 
     /**
@@ -999,20 +988,21 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function mysqlInsertRow( $c, $r, $t, $d = true, $n = false, $u = array() ) {
+    function mysqlInsertRow($c, $r, $t, $d = true, $n = false, $u = array())
+    {
 
-        logger( $t . PHP_EOL . print_r( $r, true ), 'mysql/insertrow.'.$t );
+        logger($t . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
 
-        if( ! empty( $u ) ) {
+        if (! empty($u)) {
 
             $uQuery = 'SELECT id FROM ' . $t . ' WHERE ';
 
-            foreach( $u as $uFld ) {
-                $uConds[] = ' ' . $uFld . ( ( ! isset( $r[ $uFld ] ) || empty( $r[ $uFld ] ) ) ? ' IS NULL' : ' = "' . $r[ $uFld ] . '" ' );
+            foreach ($u as $uFld) {
+                $uConds[] = ' ' . $uFld . ((! isset($r[$uFld]) || empty($r[$uFld])) ? ' IS NULL' : ' = "' . $r[$uFld] . '" ');
             }
 
             // TODO migliorare questa query con i parametri posizionali
-            $r['id'] = mysqlSelectValue( $c, $uQuery . implode( ' AND ', $uConds ) );
+            $r['id'] = mysqlSelectValue($c, $uQuery . implode(' AND ', $uConds));
 
             // debug
             // var_dump( $uQuery );
@@ -1020,48 +1010,47 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
 
         }
 
-        if( ! array_key_exists( 'id', $r ) && $n == false ) {
+        if (! array_key_exists('id', $r) && $n == false) {
             $r['id'] = NULL;
         }
 
-        $r = array_map( 'empty2null', $r );
+        $r = array_map('empty2null', $r);
 
-        logger( $t . '( dopo array_map )' . PHP_EOL . print_r( $r, true ), 'mysql/insertrow.'.$t );
+        logger($t . '( dopo array_map )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
 
-        $r = array_map( 'string2num', $r );
+        $r = array_map('string2num', $r);
 
-        logger( $t . '( dopo string2num )' . PHP_EOL . print_r( $r, true ), 'mysql/insertrow.'.$t );
+        logger($t . '( dopo string2num )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
 
-        $q = 'INSERT ' . ( ( $d === true ) ? NULL : 'IGNORE' ) . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames( $r ) . ' ) '
-            .'VALUES ( ' . array2mysqlPlaceholders( $r ) . ' ) '
-            .( ( $d === true ) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues( $r ) : NULL );
+        $q = 'INSERT ' . (($d === true) ? NULL : 'IGNORE') . ' INTO ' . $t . ' ( ' . array2mysqlFieldnames($r) . ' ) '
+            . 'VALUES ( ' . array2mysqlPlaceholders($r) . ' ) '
+            . (($d === true) ? 'ON DUPLICATE KEY UPDATE ' . array2mysqlDuplicateKeyUpdateValues($r) : NULL);
 
-        logger( $t . PHP_EOL . $q, 'mysql/insertrow.'.$t, LOG_ERR );
+        logger($t . PHP_EOL . $q, 'mysql/insertrow.' . $t, LOG_ERR);
 
-        $a = array2mysqlStatementParameters( $r );
+        $a = array2mysqlStatementParameters($r);
 
-        logger( $t . PHP_EOL . print_r( $a, true ), 'mysql/insertrow.'.$t );
+        logger($t . PHP_EOL . print_r($a, true), 'mysql/insertrow.' . $t);
 
-        $i = mysqlQuery( $c, $q, $a );
+        $i = mysqlQuery($c, $q, $a);
 
         // var_dump( $t . '/' . $i );
 
         // TODO qui bisogna trovare una soluzione più robusta
-        memcacheCleanFromIndex( $t );
-        memcacheCleanFromIndex( $t . '_static' );
+        memcacheCleanFromIndex($t);
+        memcacheCleanFromIndex($t . '_static');
 
-        $static = getStaticView( NULL, $c, $t );
+        $static = getStaticView(NULL, $c, $t);
 
-        if( ! empty( $static ) ) {
+        if (! empty($static)) {
 
-            $function = 'update' . implode( '', array_map( 'ucfirst', explode( '_', $static ) ) );
+            $function = 'update' . implode('', array_map('ucfirst', explode('_', $static)));
 
-            if( function_exists( $function ) ) {
+            if (function_exists($function)) {
 
-                $function( $i );
+                $function($i);
 
-                logger( 'aggiornata view statica ' . $t . ' per id #' . $i, 'static' );
-
+                logger('aggiornata view statica ' . $t . ' per id #' . $i, 'static');
             }
 
             // mysqlQuery( $c, 'REPLACE INTO ' . $static . ' SELECT * FROM ' . $t . '_view WHERE id = ?', array( array( 's' => $i ) ) );
@@ -1070,7 +1059,6 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
         }
 
         return $i;
-
     }
 
     /**
@@ -1078,10 +1066,10 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function array2mysqlFieldnames( $a ) {
+    function array2mysqlFieldnames($a)
+    {
 
-        return implode( ', ', addStr2arrayElements( array_keys( $a ), '`', '`' ) );
-
+        return implode(', ', addStr2arrayElements(array_keys($a), '`', '`'));
     }
 
     /**
@@ -1089,10 +1077,10 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function array2mysqlPlaceholders( $a ) {
+    function array2mysqlPlaceholders($a)
+    {
 
-    return implode( ', ', array_fill( 0, count( $a ), '?' ) );
-
+        return implode(', ', array_fill(0, count($a), '?'));
     }
 
     /**
@@ -1100,103 +1088,102 @@ writeToFile( serialize( $r ), DIR_BASE . 'var/cache/mysql/' . $k );
      * TODO documentare
      *
      */
-    function array2mysqlDuplicateKeyUpdateValues( $a ) {
+    function array2mysqlDuplicateKeyUpdateValues($a)
+    {
 
-    $r = array();
+        $r = array();
 
-    foreach( array_keys( $a ) as $k ) {
+        foreach (array_keys($a) as $k) {
 
-//        $r[] = '`' . $k . '` = ' . ( ( $k == 'id' ) ? 'LAST_INSERT_ID' : 'VALUES' ) . '( `' . $k . '` )';
-        $r[] = '`' . $k . '` = ' . ( ( $k == 'id' && empty( $a[ $k ] ) ) ? 'LAST_INSERT_ID' : 'VALUES' ) . '( `' . $k . '` )';
-
-    }
-
-    return implode( ', ', $r );
-
-    }
-
-    /**
-     *
-     * TODO documentare
-     *
-     */
-    function array2mysqlStatementParameters( $a ) {
-
-    $r = array();
-
-    // OK foreach( $a as $v ) {
-    foreach( $a as $k => $v ) {
-
-        if( is_numeric( $v ) ) {
-            $v = str_replace( ',', '.', $v );
+            //        $r[] = '`' . $k . '` = ' . ( ( $k == 'id' ) ? 'LAST_INSERT_ID' : 'VALUES' ) . '( `' . $k . '` )';
+            $r[] = '`' . $k . '` = ' . (($k == 'id' && empty($a[$k])) ? 'LAST_INSERT_ID' : 'VALUES') . '( `' . $k . '` )';
         }
 
-        // OK $r[] = array( 's' => $v );
-        $r[ $k ] = array( 's' => $v );
-
+        return implode(', ', $r);
     }
 
-    return $r;
+    /**
+     *
+     * TODO documentare
+     *
+     */
+    function array2mysqlStatementParameters($a)
+    {
 
+        $r = array();
+
+        // OK foreach( $a as $v ) {
+        foreach ($a as $k => $v) {
+
+            if (is_numeric($v)) {
+                $v = str_replace(',', '.', $v);
+            }
+
+            // OK $r[] = array( 's' => $v );
+            $r[$k] = array('s' => $v);
+        }
+
+        return $r;
     }
 
-    function split_sql($sql_text) {
+    function split_sql($sql_text)
+    {
         // Return array of ; terminated SQL statements in $sql_text.
         $re_split_sql = '%(?#!php/x re_split_sql Rev:20170816_0600)
-            # Match an SQL record ending with ";"
-            \s*                                     # Discard leading whitespace.
-            (                                       # $1: Trimmed non-empty SQL record.
-              (?:                                   # Group for content alternatives.
-                \'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'  # Either a single quoted string,
-              | "[^"\\\\]*(?:\\\\.[^"\\\\]*)*"      # or a double quoted string,
-              | /\*[^*]*\*+(?:[^*/][^*]*\*+)*/      # or a multi-line comment,
-              | \#.*                                # or a # single line comment,
-              | --.*                                # or a -- single line comment,
-              | [^"\';#]                            # or one non-["\';#-]
-              )+                                    # One or more content alternatives
-              (?:;|$)                               # Record end is a ; or string end.
-            )                                       # End $1: Trimmed SQL record.
-            %x';  // End $re_split_sql.
+                # Match an SQL record ending with ";"
+                \s*                                     # Discard leading whitespace.
+                (                                       # $1: Trimmed non-empty SQL record.
+                (?:                                   # Group for content alternatives.
+                    \'[^\'\\\\]*(?:\\\\.[^\'\\\\]*)*\'  # Either a single quoted string,
+                | "[^"\\\\]*(?:\\\\.[^"\\\\]*)*"      # or a double quoted string,
+                | /\*[^*]*\*+(?:[^*/][^*]*\*+)*/      # or a multi-line comment,
+                | \#.*                                # or a # single line comment,
+                | --.*                                # or a -- single line comment,
+                | [^"\';#]                            # or one non-["\';#-]
+                )+                                    # One or more content alternatives
+                (?:;|$)                               # Record end is a ; or string end.
+                )                                       # End $1: Trimmed SQL record.
+                %x';  // End $re_split_sql.
         if (preg_match_all($re_split_sql, $sql_text, $matches)) {
             return $matches[1];
         }
         return array();
     }
 
-    function getStaticView( $m, $c, $t ) {
+    function getStaticView($m, $c, $t)
+    {
 
         // verifico se esiste la view statica
-            $stv = mysqlSelectCachedValue(
-                $m,
-                $c,
-                'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
-                array( array('s' => $t . '_view_static' ) )
-            );
+        $stv = mysqlSelectCachedValue(
+            $m,
+            $c,
+            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+            array(array('s' => $t . '_view_static'))
+        );
 
         // se esiste la vista statica...
-            if( ! empty( $stv ) ) {
-                return $t . '_view_static';
-            } else {
-                return false;
-            }
-
+        if (! empty($stv)) {
+            return $t . '_view_static';
+        } else {
+            return false;
+        }
     }
 
-    function getStaticViewExtension( $m, $c, $t ) {
+    function getStaticViewExtension($m, $c, $t)
+    {
 
         // verifico se esiste la view statica
-            $stv = mysqlSelectCachedValue(
-                $m,
-                $c,
-                'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
-                array( array('s' => $t . '_view_static' ) )
-            );
+        $stv = mysqlSelectCachedValue(
+            $m,
+            $c,
+            'SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = ?',
+            array(array('s' => $t . '_view_static'))
+        );
 
         // se esiste la vista statica...
-            if( ! empty( $stv ) ) {
-                return '_view_static';
-            } else {
-                return '_view';
-            }
-
+        if (! empty($stv)) {
+            return '_view_static';
+        } else {
+            return '_view';
+        }
     }

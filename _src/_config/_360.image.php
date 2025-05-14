@@ -57,19 +57,29 @@
      *
      */
 
-    // definisco i formati delle immagini
+    /**
+     * definizione dei formati di immagine supportati
+     * ==============================================
+     * 
+     * 
+     */
+
+    // definisco le dimensioni delle immagini landscape
     $cf['image']['size']['l'] = array(
         160, 320, 640, 720, 1024, 1280, 1680, 1920, 2048
     );
 
+    // definisco le dimensioni delle immagini portrait
     $cf['image']['size']['p'] = array(
         80, 240, 480, 640, 720, 960, 1024, 1280, 2048
     );
 
+    // definisco le dimensioni delle immagini square
     $cf['image']['size']['s'] = array(
         160, 320, 640, 720, 1024, 1280, 1680, 1920, 2048
     );
 
+    // definisco i formati delle immagini landscape
     $cf['image']['formats']['l'] = array(
         160 => 80,
         320 => 240,
@@ -83,6 +93,7 @@
         2048 => 1152
     );
 
+    // definisco i formati delle immagini portrait
     $cf['image']['formats']['p'] = array(
         240 => 320,
         320 => 480,
@@ -90,6 +101,7 @@
         1024 => 1200
     );
 
+    // definisco i formati delle immagini square
 	$cf['image']['formats']['s'] = array(
 	    160 => 160,
 	    320 => 320,
@@ -102,9 +114,6 @@
 	    1920 => 1920,
 	    2048 => 2048
 	);
-
-    // collego l'array $ct
-	$ct['image'] = &$cf['image'];
 
     // debug
     // echo 'OUTPUT';
