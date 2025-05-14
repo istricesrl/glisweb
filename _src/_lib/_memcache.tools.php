@@ -7,25 +7,30 @@
      *
      *
      *
-     * @file
+     *
      *
      */
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function memcacheUniqueKey( &$k ) {
 
-	if( strpos( $k, MEMCACHE_UNIQUE_SEED ) === false ) {
-	    $k = MEMCACHE_UNIQUE_SEED . $k;
-	}
+        if( strpos( $k, MEMCACHE_UNIQUE_SEED ) === false ) {
+            $k = MEMCACHE_UNIQUE_SEED . $k;
+        }
 
-	return $k;
+        return $k;
 
     }
 
+    /**
+     *
+     * TODO documentare
+     *
+     */
     function memcacheAddKeyAgeSuffix( $k ) {
 
         if( substr( $k, -4 ) != '_AGE' ) {
@@ -38,7 +43,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function memcacheWrite( $conn, $key, $data, $ttl = MEMCACHE_DEFAULT_TTL ) {
@@ -47,13 +52,13 @@
 
         if( empty( $conn ) ) {
 
-            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
+            logger( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
 
             return false;
 
         } elseif( ! is_object( $conn ) ) {
 
-            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
+            logger( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
 
             return false;
 
@@ -64,10 +69,10 @@
             $r = $conn->set( $key, serialize( $data ), $ttl );
 
             if( $r === false ) {
-                logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
+                logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
             } else {
                 $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), time(), $ttl );
-                logWrite( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache' );
+                logger( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache' );
             }
 
             return $r;
@@ -78,7 +83,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function memcacheGetKeyAge( $conn, $key ) {
@@ -91,55 +96,57 @@
      *
      * https://www.php.net/manual/en/memcached.getresultcode.php
      * 
-     * @todo documentare
+     * TODO documentare
      *
      */
-    // function memcacheRead( $conn, $key, &$err = Memcached::RES_FAILURE ) {
     function memcacheRead( $conn, $key, &$err = array() ) {
 
-	memcacheUniqueKey( $key );
+    memcacheUniqueKey( $key );
 
-	if( empty( $conn ) ) {
+    if( empty( $conn ) ) {
 
-		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
+        logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
 
-		return false;
+        return false;
 
         } elseif( ! is_object( $conn ) ) {
 
-            logWrite( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
+        logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
 
-            return false;
+        return false;
 
-	} else {
+    } else {
 
-		$r = $conn->get( $key );
+        if( empty( $err ) ) {
+            $err = Memcached::RES_FAILURE;
+        }
+
+        $r = $conn->get( $key );
 
         $err = $conn->getResultCode();
 
-		if( $r === false ) {
-		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
-		} else {
-		    logWrite( 'lettura effettuata, chiave: ' . $key, 'memcache' );
-		}
+        if( $r === false ) {
+            logger( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
+        } else {
+            logger( 'lettura effettuata, chiave: ' . $key, 'memcache' );
+        }
 
-		return unserialize( $r );
+        return unserialize( $r );
 
-	}
+    }
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
-    // function memcacheDelete( $conn, $key, &$err = Memcached::RES_FAILURE ) {
     function memcacheDelete( $conn, $key, &$err = array() ) {
 
-	memcacheUniqueKey( $key );
+        memcacheUniqueKey( $key );
 
-	if( empty( $conn ) ) {
+        if( empty( $conn ) ) {
 
 		logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
 
@@ -151,11 +158,11 @@
 
             return false;
 
-	} else {
+        } else {
 
-	    return $conn->delete( $key );
+            return $conn->delete( $key );
 
-	}
+        }
 
     }
 
@@ -164,12 +171,12 @@
      * NOTA vanno bloccate le scritture per almeno un secondo dopo il flush,
      * vedi http://php.net/manual/en/memcache.flush.php
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function memcacheFlush( $conn ) {
 
-	if( empty( $conn ) ) {
+        if( empty( $conn ) ) {
 
 		logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
 
@@ -181,61 +188,82 @@
 
             return false;
 
-	} else {
+        } else {
 
-	    return $conn->flush();
+            return $conn->flush();
 
-	}
-
+        }
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO questa funzione andrebbe resa generalista e salvata in una libreria tipo cache utils in modo da usare
+     * fra le varie cache possiili quella attiva
+     * 
+     * TODO documentare
      *
      */
-    // function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = Memcached::RES_FAILURE ) {
     function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = array() ) {
 
-	// calcolo la chiave della query
-	    $k = md5( $f );
+        if( ! empty( $m ) ) {
 
-	// cerco il valore in cache
-	    $r = memcacheRead( $m, $k, $err );
+            if( empty( $err ) ) {
+                $err = Memcached::RES_FAILURE;
+            }
 
-	// se il valore non è stato trovato
-	    if( $r === false ) {
-		$r = fileExists( $f );
-		memcacheWrite( $m, $k, $r, $t );
-	    }
+            $k = md5( $f );
 
-	// restituisco il risultato
-	    return $r;
+            $r = memcacheRead( $m, $k, $err );
+
+            if( $r === false ) {
+                $r = fileExists( $f );
+                memcacheWrite( $m, $k, $r, $t );
+            }
+
+        } else {
+
+            $r = fileExists( $f );
+
+        }
+
+        return $r;
 
     }
 
     /**
      *
-     * @todo documentare
+     * 
+     * TODO questa funzione andrebbe resa generalista e salvata in una libreria tipo cache utils in modo da usare
+     * fra le varie cache possiili quella attiva
+     * 
+     * 
+     * TODO documentare
      *
      */
-    // function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = Memcached::RES_FAILURE ) {
     function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = array() ) {
 
-	// calcolo la chiave della query
-	    $k = md5( $f );
+        if( ! empty( $m ) ) {
 
-	// cerco il valore in cache
-	    $r = memcacheRead( $m, $k, $err );
+            if( empty( $err ) ) {
+                $err = Memcached::RES_FAILURE;
+            }
 
-	// se il valore non è stato trovato
-	    if( empty( $r ) || $r === false ) {
-		$r = file_get_contents( $f );
-		memcacheWrite( $m, $k, $r, $t );
-	    }
+            $k = md5( $f );
 
-	// restituisco il risultato
-	    return $r;
+            $r = memcacheRead( $m, $k, $err );
+
+            if( empty( $r ) || $r === false ) {
+                $r = file_get_contents( $f );
+                memcacheWrite( $m, $k, $r, $t );
+            }
+
+        } else {
+
+            $r = file_get_contents( $f );
+
+        }
+
+        return $r;
 
     }
