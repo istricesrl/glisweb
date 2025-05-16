@@ -321,7 +321,6 @@ if (isset($_REQUEST['__pagamenti__'])) {
                             // die( print_r( $pagamento, true ) );
 
                         }
-
                     } else {
 
                         // debug
@@ -329,7 +328,6 @@ if (isset($_REQUEST['__pagamenti__'])) {
                         // die( print_r( $pagamento, true ) );
 
                     }
-
                 } else {
 
                     // debug
@@ -338,9 +336,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                     // log
                     logger('la riga non è da fare', 'cassa');
                 }
-
             }
-
         } else {
 
             // log
@@ -534,9 +530,10 @@ if (isset($_REQUEST['__pagamenti__'])) {
                         $cf['mysql']['connection'],
                         'SELECT 
                                 documenti.numero AS numero_documento, documenti.sezionale AS sezionale_documento, documenti.id_tipologia AS id_tipologia_documento,
-                                documenti_articoli.id_articolo, documenti_articoli.quantita 
+                                coalesce( metadati.testo, documenti_articoli.id_articolo ) AS id_articolo, documenti_articoli.quantita 
                                 FROM documenti_articoli 
                                 INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento
+                                LEFT JOIN metadati ON metadati.id_articolo = documenti_articoli.id_articolo AND metadati.nome = "codice_relax"
                                 WHERE documenti_articoli.id_documento = ?',
                         array(array('s' => $idDocumento))
                     ),
