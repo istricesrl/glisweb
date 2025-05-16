@@ -4,7 +4,7 @@
      * libreria per l'invio di SMS tramite Skebby
      *
      *
-     *
+     * https://developers.skebby.it/
      *
      *
      * @todo finire di documentare
@@ -27,12 +27,16 @@
 
 	// autenticazione
 	    $auth = restCall(
-		$url . 'login?username=' . $user . '&password=' . $pasw,
+		// $url . 'login?username=' . $user . '&password=' . $pasw,
+        $url . 'login',
 		METHOD_GET,
 		NULL,
 		'application/json',
 		'text/plain',
-		$status
+		$status,
+        array(),
+        $user,
+        $pasw
 	    );
 
 	// ricavo i parametri per l'autenticazione
@@ -49,7 +53,22 @@
 		// log
 		    logWrite( 'autenticazione su Skebby effettuata con successo: ' . $auth, 'skebby' );
 
-		// dati
+        // elimino da $to tutti i caratteri non numerici
+            foreach( $to as $key => $value ) {
+                $to[ $key ] = preg_replace( '/[^0-9]/', '', $value );
+            }
+
+        // aggiungo +39 all'inizio di ogni elemento in $to se manca
+            foreach( $to as $key => $value ) {
+                if( substr( $value, 0, 4 ) == '0039' ) {
+                    $to[ $key ] = '+' . substr( $value, 2 );
+                }
+                if( substr( $value, 0, 3 ) != '+39' ) {
+                    $to[ $key ] = '+39' . $value;
+                }
+            }
+
+        // dati
 		    $dati = array(
 			'returnCredits' => true,
 			'recipient' => $to,
@@ -63,6 +82,9 @@
 			'user_key' => $auths[0],
 			'Session_key' => $auths[1]
 		    );
+
+		// log
+        logWrite( 'invio SMS a: ' . implode( ',', $to ) . ' da: ' . $from . PHP_EOL . print_r( $dati, true), 'skebby' );
 
 		// invio
 		    $result = restCall(
@@ -89,7 +111,7 @@
 			return false;
 		    }
 
-	    } else {
+        } else {
 
 		// log
 		    logWrite( 'errore di autenticazione su Skebby: ' . $auth, 'skebby', LOG_CRIT );

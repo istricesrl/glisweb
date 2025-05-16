@@ -181,7 +181,204 @@
 	    'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
 
-	// vista job
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    // vista mail in uscita
+	$p['sms.out.view'] = array(
+	    'sitemap'		=> false,
+	    'title'			=> array( $l		=> 'SMS in uscita' ),
+	    'h1'			=> array( $l		=> 'in uscita' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'			=> array( '_src/_inc/_macro/_sms.out.view.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'			=> array( 'tabs'	=> array(	'sms.out.view',
+													'sms.sent.view',
+													'template.sms.view',
+													'sms.tools'
+												 ) ),
+		'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'sms' ),
+								'priority'	=> '950' ) ) )
+	);
+
+    // gestione sms in uscita
+	$p['sms.out.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.out.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_sms.out.form.php' ),
+	    'parent'		=> array( 'id'		=> 'sms.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'sms.out.form',
+													'sms.out.form.tools'
+												 ) ),
+	);
+
+	// gestione file sms in uscita
+	$p['sms.out.form.file'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.out.form.file.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_sms.out.form.file.php' ),
+	    'parent'		=> array( 'id'		=> 'sms.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['sms.out.form']['etc']['tabs'] )
+	);
+
+    // gestione strumenti sms in uscita
+	$p['sms.out.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'strumenti code SMS' ),
+	    'h1'		=> array( $l		=> 'strumenti' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_sms.out.form.tools.php' ),
+	    'parent'		=> array( 'id'		=> 'sms.out.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['sms.out.form']['etc']['tabs'] )
+	);
+
+    // vista sms inviate
+	$p['sms.sent.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'SMS inviati' ),
+	    'h1'		=> array( $l		=> 'inviati' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_sms.sent.view.php' ),
+	    'parent'		=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['sms.out.view']['etc']['tabs'] )
+	);
+
+    // gestione sms inviate
+	$p['sms.sent.form'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'gestione' ),
+	    'h1'		=> array( $l		=> 'gestione' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.sent.form.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_sms.sent.form.php' ),
+	    'parent'		=> array( 'id'		=> 'sms.sent.view' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'sms.sent.form',
+													'sms.sent.form.tools'
+												 ) ),
+	);
+
+	// strumenti sms
+	$p['sms.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'strumenti SMS' ),
+		'h1'		=> array( $l		=> 'strumenti' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_sms.tools.php' ),
+		'parent'		=> array( 'id'		=> 'strumenti' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['sms.out.view']['etc']['tabs'] )
+	);
+
+    // vista template sms
+	$p['template.sms.view'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'template SMS' ),
+		'h1'		=> array( $l		=> 'template' ),
+	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_template.sms.view.php' ),
+		'parent'	=> array( 'id'		=> 'strumenti' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['sms.out.view']['etc']['tabs'] )
+	);
+
+	// gestione template sms
+	$p['template.sms.form'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'gestione' ),
+		'h1'		=> array( $l		=> 'gestione' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.sms.form.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.sms.form.php' ),
+		'parent'		=> array( 'id'		=> 'template.sms.view' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'template.sms.form',
+												'template.sms.form.testo',
+												'template.sms.form.file',
+												'template.sms.form.tools' ) ),
+	);
+
+	// form template sms testo
+	$p['template.sms.form.testo'] = array(
+	    'sitemap'		=> false,
+		'icon'			=> '<i class="fa fa-file-text-o" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'testo' ),
+	    'h1'		=> array( $l		=> 'testo' ),
+	    'parent'		=> array( 'id'		=> 'template.sms.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.sms.form.testo.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.sms.form.testo.php' ),
+		'etc'		=> array( 'tabs'	=> $p['template.sms.form']['etc']['tabs'] ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) )
+	);
+
+	// gestione template file
+	$p['template.sms.form.file'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-folder-open-o" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'file' ),
+		'h1'		=> array( $l		=> 'file' ),
+		'parent'		=> array( 'id'		=> 'template.sms.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.sms.form.file.html' ),
+		'macro'		=> array( '_src/_inc/_macro/_template.sms.form.file.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['template.sms.form']['etc']['tabs'] )
+	);
+
+	// gestione sms strumenti
+	$p['template.sms.form.tools'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'azioni template SMS' ),
+	    'h1'		=> array( $l		=> 'azioni template' ),
+		'parent'		=> array( 'id'		=> 'template.sms.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+	    'macro'		=> array( '_src/_inc/_macro/_template.sms.form.tools.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['template.sms.form']['etc']['tabs'] )
+	);
+
+    // vista job
 	$p['job.view'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'job' ),
@@ -236,7 +433,7 @@
 																		'priority'	=> '970' ) ) )
 		);
 
-	// gestione job
+	// gestione task
 	$p['task.form'] = array(
 		'sitemap'		=> false,
 		'title'		=> array( $l		=> 'gestione' ),
@@ -250,7 +447,7 @@
 													) ),
 	);
 
-    // gestione strumenti mail in uscita
+    // gestione task
 	$p['task.form.tools'] = array(
 	    'sitemap'		=> false,
 		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -414,37 +611,37 @@
 	);
 
     // coda SMS in uscita
-	$p['sms_out'] = array(
+	$p['sms.out'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'SMS in uscita' ),
 	    'h1'		=> array( $l		=> 'SMS in uscita' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'view.html' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'macro'		=> array( '_src/_inc/_macro/_sms.out.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
-	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gestione SMS' ),
-									'priority'	=> 100 ) ),
+	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'SMS' ),
+									'priority'	=> 110 ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'sms_out',
 									'sms_sent' ) )
 	);
 
     // gestione SMS in uscita
-	$p['sms_out_gestione'] = array(
+	$p['sms.out.gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'sms.out.gestione.html' ),
-	    'parent'		=> array( 'id'		=> 'sms_out' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.out.gestione.html' ),
+	    'parent'		=> array( 'id'		=> 'sms.out' ),
 	    'macro'		=> array( '_src/_inc/_macro/_sms.out.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
     // coda SMS inviati
-	$p['sms_sent'] = array(
+	$p['sms.sent'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'SMS inviati' ),
 	    'h1'		=> array( $l		=> 'SMS inviati' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'view.html' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'macro'		=> array( '_src/_inc/_macro/_sms.sent.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
@@ -452,12 +649,12 @@
 	);
 
     // gestione SMS inviati
-	$p['sms_sent_gestione'] = array(
+	$p['sms.sent.gestione'] = array(
 	    'sitemap'		=> false,
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
-	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'sms.sent.gestione.html' ),
-	    'parent'		=> array( 'id'		=> 'sms_sent' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.sent.gestione.html' ),
+	    'parent'		=> array( 'id'		=> 'sms.sent' ),
 	    'macro'		=> array( '_src/_inc/_macro/_sms.sent.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
