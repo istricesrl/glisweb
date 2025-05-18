@@ -1,10 +1,10 @@
 /**
- * INDICE
- * - stili per il back to top
+ * stile per il tasto back to top
+ * ==============================
+ *
  */
 
-/* stili per il back to top */
-
+/* stile per il back to top */
 #back-to-top {
     cursor: pointer;
     position: fixed;
