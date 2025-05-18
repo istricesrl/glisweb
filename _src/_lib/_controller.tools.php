@@ -158,7 +158,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 			// print_r( $i );
 
 			// vado a cercare il campo e la tabella per le ACL
-			$aclTb = getAclRightsTable($c, $t);
+			$aclTb = getAclRightsTable($t);
 			$aclId = getAclRightsAccountId();
 
 			// campi da selezionare dalla vista
@@ -394,7 +394,7 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 			return $i['__status__'];
 
 			// ...
-		} elseif (!isset($d['id']) || (getAclRights($c, $t, $a, $d['id'], $i, $pi) != false || checkFirmaImportazione($d, $t) != false)) {
+		} elseif (!isset($d['id']) || (getAclRights($t, $a, $d['id'], $i, $pi) != false || checkFirmaImportazione($d, $t) != false)) {
 
 			// log
 			logWrite("diritti sufficienti per ${t}/${a}", 'controller', LOG_DEBUG);

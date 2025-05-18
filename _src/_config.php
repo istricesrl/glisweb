@@ -119,7 +119,8 @@
      *                   | template o factory di rendering |
      *                   +---------------------------------+
      * 
-     * TODO documentare relativamente al file .htaccess anche il file _etc/_robots/_robots.txt e in generale il ruolo del file robots.txt
+     * L'API principale del framework è _src/_api/_pages.php, che si occupa di erogare le pagine. TODO vanno implementate altre API
+     * per gli altri tipi di output che il framework può generare (ad esempio PDF, XLS, ecc.).
      * 
      * TODO documentare la parte dopo il _config.php (API, macro di pagina, inclusione template, rendering, output)
      * 
