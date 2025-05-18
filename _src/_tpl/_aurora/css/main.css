@@ -1,0 +1,75 @@
+body {
+    font-family: monospace;
+    font-size: 1.25em;
+    margin: 0.0em;
+    padding: 0.0em;
+}
+
+header, main, footer {
+    padding: 1.0em 2.0em;
+}
+
+nav {
+    margin-top: 1em;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0.5em 0em;
+}
+
+h1 {
+    font-size: 2.25em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1.25em;
+}
+
+h4, h5 {
+    font-size: 1.0em;
+}
+
+p {
+    line-height: 1.5em;
+}
+
+header p, footer p {
+    margin: 0.0em;
+}
+
+li {
+    line-height: 1.5em;
+}
+
+dd {
+    line-height: 1.5em;
+    margin: 0em;
+}
+
+a, a:visited {
+    color: #333333;
+    text-decoration: none !important;
+}
+
+a:active, a:hover {
+    color: #333333;
+    text-decoration: underline !important;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #666666;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #666666;
+    text-decoration: underline;
+}
+
+.img-fluid {
+    width: 100%;
+}
+

@@ -404,7 +404,7 @@
         if( empty( $fields ) ) {
             $fields = array_keys( $array[0] );
         } elseif( ! is_array( $fields ) ) {
-            $fields = explode( ',', $array );
+            $fields = explode( ',', $fields );
             array_map( 'trim', $fields );
         }
 

@@ -1,0 +1,32 @@
+/*!
+
+    \page entita le entità del framework
+
+    Descrizione approfondita delle entità (insiemi di oggetti) gestiti dal framework.
+
+    introduzione
+    ============
+    Un'entità, nel contesto di GlisWeb, è un concetto che raggruppa insiemi di oggetti omogenei fra loro in modo che sia
+    possibile gestirli tramite le logiche del framework. Ogni entità è rappresentata al minimo da una tabella sul database e
+    da un insieme di regole per la sua gestione, ovvero i permessi che descrivono chi può fare cosa su quella data entità.
+
+    entità              | codice                        | descrizione
+    --------------------|-------------------------------|---------------------------------------------------------------
+    account             |                          1xxx | gli account presenti nel sistema
+    consensi            |                          6xxx | i consensi che gli utenti possono prestare ai trattamenti di dati nel sistema
+    lingue              |                         16xxx | le lingue presenti nel sistema
+    redirect            |                         29xxx | i redirect attivi nel sistema
+
+    entità virtuali
+    ---------------
+    Le entità virtuali sono entità che non hanno una propria tabella sul database, ma sfruttano quella dell'entità base dalla quale
+    derivano. Questo permette di creare entità che condividono la stessa struttura di base, ma che hanno delle regole di gestione
+    differenti; infatti le entità virtuali pur non avendo una tabella hanno comunque un proprio set di permessi.
+
+    Ciò che, dal punto di vista del database, identifica una determinata entità virtuale è sempre l'ID tipologia sulla tabella
+    dell'entità base.
+
+    entità virtuale     | entità base                   | ID tipologia          | descrizione
+    --------------------|-------------------------------|-----------------------|---------------------------------------
+
+*/

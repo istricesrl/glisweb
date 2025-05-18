@@ -1,0 +1,21 @@
+template:
+  type: "twig"
+  menu:
+    main: null
+  default: "default.twig"
+  login: "login.twig"
+
+css:
+  internal:
+    all:
+      - "_src/_css/_main.css"
+  template:
+    all:
+      - "css/main.css"
+    print:
+      - "css/main.print.css"
+    screen:
+      - "css/main.screen.css"
+  external:
+    all:
+      - "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"

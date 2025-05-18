@@ -3,34 +3,68 @@
     /**
      * libreria di funzioni per le operazioni sulle stringhe
      *
+     * Questa libreria contiene funzioni per la manipolazione delle stringhe.
      *
+     * introduzione
+     * ============
+     * 
+     * constanti
+     * =========
+     * La libreria definisce le seguenti costanti 
      *
+     * costante             | spiegazione
+     * ---------------------|--------------------------------------------------------------
+     * CUT_CENTER           | 
+     * CUT_RIGHT            | 
+     * CUT_LEFT             | 
      *
-     * @todo documentare
+     * funzioni
+     * ========
+     * 
+     * dipendenze
+     * ==========
+     * 
+     * changelog
+     * =========
+     * Questa sezione riporta la storia delle modifiche più significative apportate alla libreria.
      *
-     * @file
+     * data             | autore               | descrizione
+     * -----------------|----------------------|---------------------------------------------------------------
+     * 2024-08-13       | Sara Tullini         | documentazione
+     * 
+     * licenza
+     * =======
+     * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
+     * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
+     *
      *
      */
 
     // costanti
-	define( 'CUT_CENTER'			, 'CUT_C' );
-	define( 'CUT_RIGHT'			, 'CUT_R' );
-	define( 'CUT_LEFT'			, 'CUT_L' );
+    define( 'CUT_CENTER'            , 'CUT_C' );
+    define( 'CUT_RIGHT'            , 'CUT_R' );
+    define( 'CUT_LEFT'            , 'CUT_L' );
 
     /**
-     *
-     * @questa funzione converte il peso in unità di misura byte in funzione del tipo di file. 
-     *type i : i = 0 fino alla taglia del parametro passato : filesize. finché filesize supera 1024 viene / per 1024 e i incrementa. printf di controllo : con il peso del file finale associato al tipo passato
+     * converte un intero in un numero di byte
+     * 
+     * Questa funzione prende in input un numero e attraverso divisioni successive per 1024 lo trasforma in
+     * una stringa che indica la dimensione con relativa unità di misura.
+     * 
+     * @param   int         $filesize       dimensione in byte
+     * 
+     * @return  string                      dimensione in byte, Kb, Mb, Gb, Tb
+     * 
      */
     function writeByte( $filesize ) {
 
-	$type = array( 'Bytes' , 'Kb' , 'Mb' , 'Gb' , 'Tb' );
+        $type = array( 'Bytes' , 'Kb' , 'Mb' , 'Gb' , 'Tb' );
 
-	for( $i = 0 ; $filesize > 1024 ; $i++ ) {
-	    $filesize /= 1024;
-	}
+        for( $i = 0 ; $filesize > 1024 ; $i++ ) {
+            $filesize /= 1024;
+        }
 
-	return sprintf( '%0.2f', round( $filesize , 2 ) ) . ' ' . $type[ $i ];
+        return sprintf( '%0.2f', round( $filesize , 2 ) ) . ' ' . $type[ $i ];
 
     }
 
@@ -38,67 +72,64 @@
      * questa funzione riduce i caratteri ripetuti in una stringa
      * tramite l'impiego di una espressione regolare
      *
-     * @param string $t         la stringa da modificare
-     * @param string $c         il carattere ripetuto da ridurre (opzionale, di default riduce gli spazi)
-     * @return string           la stringa modificata
-     *
-     * @author                  Fabio Mosti <fabio@videoarts.eu>
-     * @version                 2012-05-10 14:39        funzione creata
-     * @version                 2012-05-12 11:09        test unit e debug
-     *
+     * @param   string      $t         la stringa da modificare
+     * @param   string      $c         il carattere ripetuto da ridurre (opzionale, di default riduce gli spazi)
+     * 
+     * @return  string                 la stringa modificata
+     * 
      */
-    function riduciCaratteriDoppi( $t , $c = " " ) {
+    function riduciCaratteriDoppi( $t, $c = " " ) {
 
-	// compongo l'espressione regolare
-	    switch( $c ) {
+        // compongo l'espressione regolare
+        switch( $c ) {
 
-		case " ":
+            case " ":
 
-		    $expr = '/\s+/';
-		    $sost = ' ';
+                $expr = '/\s+/';
+                $sost = ' ';
 
-		break;
+            break;
 
-		case "\\":
-		case "^":
-		case "{":
-		case "}":
-		case "[":
-		case "]":
-		case "(":
-		case ")":
-		case "?":
-		case "*":
-		case "$":
-		case "+":
-		case ".":
+            case "\\":
+            case "^":
+            case "{":
+            case "}":
+            case "[":
+            case "]":
+            case "(":
+            case ")":
+            case "?":
+            case "*":
+            case "$":
+            case "+":
+            case ".":
 
-		    $expr = "/[\\$c]+/";
-		    $sost = $c;
+                $expr = "/[\\$c]+/";
+                $sost = $c;
 
-		break;
+            break;
 
-		default:
+            default:
 
-		    $expr = "/[$c]+/";
-		    $sost = $c;
+                $expr = "/[$c]+/";
+                $sost = $c;
 
-		break;
+            break;
 
-	    }
+        }
  
-	// eseguo l'espressione regolare
-	    $t = preg_replace( $expr , $sost , $t );
+        // eseguo l'espressione regolare
+        $t = preg_replace( $expr, $sost, $t );
 
-	// restituzione risultato
-	    return $t;
+        // restituzione risultato
+        return $t;
 
     }
 
     /**
      *
-     * @todo la sostituzione della virgola così è un po' grezza, migliorare (può esserci anche il punto per le migliaia, eccetera)
-     * @todo documentare
+     * TODO la sostituzione della virgola così è un po' grezza, migliorare (può esserci anche il punto per le migliaia, eccetera)
+     * TODO documentare
      *
      */
     function numeric2null( $s ) {
@@ -110,21 +141,21 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function string2num( $s ) {
-        if( is_numeric( str_replace( array( ',', '.' ), '', $s ) ) ) {
+        if( is_numeric( str_replace( array( ',', '.' ), NULL, $s ) ) ) {
             if( strpos( $s, ',' ) !== false && strpos( $s, '.' ) === false ) {
                 // es. 1000,50 -> 1000.50
                 $s = str_replace( ',', '.', $s );
             } elseif( strpos( $s, ',' ) !== false && strpos( $s, '.' ) !== false ) {
                 if( strpos( $s, ',' ) < strpos( $s, '.' ) ) {
                     // es. 1,000.50 -> 1000.50
-                    $s = str_replace( ',', '', $s );
+                    $s = str_replace( ',', NULL, $s );
                 } else {
                     // es. 1.000,50 -> 1000.50
-                    $s = str_replace( ',', '.', str_replace( '.', '', $s ) );
+                    $s = str_replace( ',', '.', str_replace( '.', NULL, $s ) );
                 }
             }
         }
@@ -132,8 +163,8 @@
     }
 
     /**
-     *
-     * @todo documentare
+     * 
+     * TODO documentare
      *
      */
     function empty2null( $s, $numeric = false ) {
@@ -150,24 +181,24 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function string2boolean( $s ) {
 
-	switch( strtolower( $s ) ) {
-	    case 'true':
-	    case 1:
-		return true;
-	    default:
-		return false;
-	}
+        switch( strtolower( $s ) ) {
+            case 'true':
+            case 1:
+                return true;
+            default:
+                return false;
+        }
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function boolean2string( $s ) {
@@ -178,25 +209,25 @@
         
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function riduciStringa( $s, $l, $c = '~', $t = CUT_CENTER ) {
 
-	$lm = $l - strlen( $c );
-	$lx = floor( $lm / 2 );
+        $lm = $l - strlen( $c );
+        $lx = floor( $lm / 2 );
 
-	switch( $t ) {
-	    case CUT_CENTER:
-		return ( substr( $s, 0, $lx ) . $c . substr( $s, 1 - ( $lm - $lx ) ) );
-	    break;
-	}
+        switch( $t ) {
+            case CUT_CENTER:
+                return ( substr( $s, 0, $lx ) . $c . substr( $s, 1 - ( $lm - $lx ) ) );
+                break;
+        }
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function int2month( $m, $l = 'it-IT' ) {
@@ -247,7 +278,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function int2day( $d, $l = 'it-IT' ) {
@@ -286,40 +317,40 @@
      *
      *
      *
-     * @todo commentare
+     * TODO commentare
      *
      */
     function logLvl2string( $l ) {
 
-	switch( $l ) {
-	    case 0:
-		    return 'LOG_EMERG';
-	    break;
-	    case 1:
-		    return 'LOG_ALERT';
-	    break;
-	    case 2:
-		    return 'LOG_CRIT';
-	    break;
-	    case 3:
-		    return 'LOG_ERR';
-	    break;
-	    case 4:
-		    return 'LOG_WARNING';
-	    break;
-	    case 5:
-		    return 'LOG_NOTICE';
-	    break;
-	    case 6:
-		    return 'LOG_INFO';
-	    break;
-	    case 7:
-    		return 'LOG_DEBUG';
-	    break;
-	    default:
-		    return NULL;
-	    break;
-	}
+        switch( $l ) {
+            case 0:
+                return 'LOG_EMERG';
+            break;
+            case 1:
+                return 'LOG_ALERT';
+            break;
+            case 2:
+                return 'LOG_CRIT';
+            break;
+            case 3:
+                return 'LOG_ERR';
+            break;
+            case 4:
+                return 'LOG_WARNING';
+            break;
+            case 5:
+                return 'LOG_NOTICE';
+            break;
+            case 6:
+                return 'LOG_INFO';
+            break;
+            case 7:
+                return 'LOG_DEBUG';
+            break;
+            default:
+                return NULL;
+            break;
+        }
 
     }
 
@@ -344,7 +375,7 @@
      * E_USER_DEPRECATED     |   16384  | errore di obsolescenza generato tramite la funzione trigger_error()
      * E_ALL                 |   32767  | tutti i messaggi di errore
      *
-     * @todo commentare
+     * TODO commentare
      *
      */
     function reportLvl2string( $l ) {
@@ -391,33 +422,33 @@
             break;
         }
     
-        }
+    }
     
         /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function ts2string( $d ) {
 
-	return date( 'j', $d ) . ' ' . int2month( date( 'n', $d ) ) . ' ' . date( 'Y', $d );
+        return date( 'j', $d ) . ' ' . int2month( date( 'n', $d ) ) . ' ' . date( 'Y', $d );
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function date2string( $d ) {
 
-	return ts2string( strtotime( $d ) );
+        return ts2string( strtotime( $d ) );
 
     }
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     if( ! function_exists( 'str_starts_with' ) ) {
@@ -426,9 +457,9 @@
 
             if( strpos( $haystack, $needle ) === 0) {
                 return true;
-             } else {
-                 return false;
-             }
+            } else {
+                return false;
+            }
 
         }
 
@@ -436,7 +467,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function str_starts_with_array( $haystack, $needles ) {
@@ -453,7 +484,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function m2km( $m ) {
@@ -464,7 +495,7 @@
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function km2m( $km ) {
@@ -475,8 +506,8 @@
 
     /**
      *
-     * @todo documentare
-     * @todo questa funzione va aggiunta a readFromFile() per evitare che dia fuori il testo con il BOM
+     * TODO documentare
+     * TODO questa funzione va aggiunta a readFromFile() per evitare che dia fuori il testo con il BOM
      *
      */
     function removeBom( $t ) {
@@ -488,20 +519,20 @@
     /**
      * 
      * 
-     * @todo documentare
+     * TODO documentare
      * 
      */
     function domainFromURL( $url ) {
 
         $array = parse_url( $url );
-        return $array["host"];
+        return $array['host'];
 
     }
 
     /**
      * 
      * 
-     * @todo documentare
+     * TODO documentare
      * 
      */
     function inRegexpArray( $t, $a ) {
@@ -518,7 +549,7 @@
 
     }
 
-    function clean_string( $string ) {
+    function clean_string($string) {
 
         $s = trim( $string );
 
@@ -563,6 +594,15 @@
     }
 
     /**
+     *
+     * TODO documentare
+     *
+     */
+    function isBinaryString( $data ) {        
+        return ! mb_check_encoding( $data, 'UTF-8' );
+    }
+
+        /**
      * questa funzione rimuove da una stringa tutti i caratteri diversi da numeri, vigola e punto
      * 
      * @todo documentare
@@ -584,3 +624,4 @@
         return $c . ' ' . number_format( $v, 2, ',', '.' );
 
     }
+

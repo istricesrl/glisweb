@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# TODO documentare
+# qui documentare come il framework gestisce le password a livello di file di configurazione
+#
+
 ## pulizia schermo
 clear
 

@@ -1,0 +1,40 @@
+/*!
+
+    \page deploy_bash strategie di deploy del framework tramite script Bash
+
+    Descrizione delle strategie di deploy del framework tramite script Bash.
+
+    introduzione
+    ============
+
+    strategie di deploy
+    ===================
+
+    deploy via FTP
+    --------------
+
+    deploy via scp
+    --------------
+
+    deploy via rsync locale
+    -----------------------
+
+    deploy via rsync remoto
+    -----------------------
+
+    deploy via Google Cloud
+    -----------------------
+
+    struttura del sistema di deploy
+    ===============================
+
+    integrazione con Git
+    ====================
+
+    notifiche
+    =========
+
+    come attivare il sistema di deploy tramite Bash per un progetto
+    ===============================================================
+
+*/

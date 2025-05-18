@@ -44,28 +44,43 @@
     <title>{{ page.title[ localization.language.ietf ] }}</title>
 
     {# TAG OPENGRAPH #}
-    {% include '_inc/_opengraph.head.html' %}
+{% include '_inc/_opengraph.head.twig' %}
 
     {# CSS ESTERNI #}
-    {% for c in page.css.external %}
-    <link rel="stylesheet" href="{{ c }}" media="screen">{% endfor %}
+{% for m,s in page.css.external %}
+{% for c in s %}<link rel="stylesheet" href="{{ c }}" media="{{ m }}">{% endfor %}
+{% endfor %}
 
-    {# CSS PRELOAD #}    
-    {% for c in page.css.preload %}<link rel="preload" as="style" href="{{ c }}" media="screen" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
-    <noscript>
-        {% for c in page.css.preload %}<link rel="stylesheet" href="{{ c }}">{% endfor %}
-    </noscript>
+    {# CSS PRELOAD #}
+{% for m,s in page.css.preload %}
+{% for c in s %}<link rel="preload" as="style" href="{{ c }}" media="{{ m }}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
+{% endfor %}
+<noscript>
+{% for m,s in page.css.preload %}
+    {% for c in S %}<link rel="stylesheet" href="{{ c }} media="{{ m }}"">{% endfor %}
+{% endfor %}
+</noscript>
 
-    {# CSS INTERNO #}
-    {% for c in page.css.internal %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
+    {# CSS IN CACHE #}
+{% for m,s in page.css.cached %}
+{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+{% endfor %}
 
-    {# CSS DEL TEMPLATE #}    
-    {% for c in page.css.template %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% endfor %}
-    {% for c in page.css.template_screen %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="screen">{% endfor %}
-    {% for c in page.css.template_print %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="print">{% endfor %}
+    {# CSS INTERNI #}
+{% for m,s in page.css.internal %}
+{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+{% endfor %}
 
-    {# CSS CUSTOM #}    
-    {% for c in page.css.custom %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">{% endfor %}
+    {# CSS DEL TEMPLATE #}
+{% for m,s in page.css.template %}
+{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="{{ m }}">{% endfor %}
+{% endfor %}
+
+    {# CSS CUSTOM #}
+{% for m,s in page.css.custom %}
+{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+{% endfor %}
+
 
     {# CODICE PER FACEBOOK #}
     {% include '_inc/_facebook.head.html' %}
