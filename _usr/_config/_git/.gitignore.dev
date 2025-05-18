@@ -25,4 +25,7 @@ robots.*
 sitemap.*
 config.*
 *.log
+*.pem
+*.old
 *.md
+.#*
