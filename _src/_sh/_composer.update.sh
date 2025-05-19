@@ -1,5 +1,13 @@
 #!/bin/bash
 
+## FILE PER L'AGGIORNAMENTO DELLE LIBRERIE ESTERNE CON COMPOSER
+# 
+# questo script esegue l'aggiornamento delle librerie esterne con composer, può lavorare in due modalità:
+#
+# 1. --soft: esegue semplicemente composer update
+# 2. --hard: pulisce la cache e la cartella vendor e poi esegue composer update
+#
+
 ## pulizia schermo
 clear
 

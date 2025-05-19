@@ -1,10 +1,17 @@
 #!/bin/bash
 
+## SCRIPT PER IL BACKUP DELLA DOCUMEBNT ROOT
+#
+# questo script crea un file di backup della document root del sito posizionandolo
+# nella cartella genitore della document root
+#
+# NOTA questo script deve girare nella cartella SUPERIORE a quella di installazione!
+#
+
 ## pulizia schermo
 clear
 
 ## livelli per la root del sito
-# NOTA questo script deve girare nella cartella SUPERIORE a quella di installazione!
 RL="../../"
 RP="../"
 
@@ -35,7 +42,7 @@ BKFILE="backup.$( date +%Y%m%d%H%M%S ).tar.gz"
 ## file e directory da escludere
 EXCLUDE=".git .github _src/_lib/_ext _usr/_docs/_html _usr/_docs/_pdf tmp var/log var/cache var/spool"
 
-# compongo la stringa di esclusione
+## compongo la stringa di esclusione
 for i in $EXCLUDE; do
     EXC="$EXC --exclude=./$SUB/$i"
 done
@@ -43,10 +50,10 @@ done
 ## comando di backup
 BKCMD="tar $EXC -cvzf $BKFILE ./$SUB"
 
-# informazioni
+## informazioni
 echo "eseguo: $BKCMD"
 
-# eseguo il backup
+## eseguo il backup
 $BKCMD
 
 ## NOTE
