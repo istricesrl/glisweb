@@ -33,10 +33,10 @@
         // generazione del contenuto
         $json = json_encode( string2utf8( $content ) );
 
-	    // log
-	    if( ! empty( json_last_error() ) ) {
-		    logWrite( 'errore #'.json_last_error().' '.json_last_error_msg(), 'json', LOG_ERR );
-	    }
+        // log
+        if( ! empty( json_last_error() ) ) {
+            logWrite( 'errore #'.json_last_error().' '.json_last_error_msg(), 'json', LOG_ERR );
+        }
 
         // se non esiste il content-type
         if( ! isset( $headers['Content-Type'] ) ) {
@@ -102,9 +102,9 @@
         $document->preserveWhiteSpace = false;
         $document->formatOutput = true;
 
-	    $html = $document->documentElement;
-	    $head = $document->createElement( 'head' );
-	    $title = $document->createElement( 'title' );
+        $html = $document->documentElement;
+        $head = $document->createElement( 'head' );
+        $title = $document->createElement( 'title' );
 
         $meta = $document->createElement( 'meta' );
         $meta->setAttribute( 'charset', 'utf-8' );
@@ -152,14 +152,14 @@
      */
     function buildHeaders( $headers ) {
 
-	    // invio gli headers
-	    foreach( $headers as $header => $value ) {
+        // invio gli headers
+        foreach( $headers as $header => $value ) {
             if( is_string( $header ) ) {
                 header( $header . ': ' . $value );
             } else {
-		        header( $value );
+                header( $value );
             }
-	    }
+        }
 
     }
 

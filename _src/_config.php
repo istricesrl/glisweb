@@ -119,8 +119,7 @@
      *                   | template o factory di rendering |
      *                   +---------------------------------+
      * 
-     * L'API principale del framework è _src/_api/_pages.php, che si occupa di erogare le pagine. TODO vanno implementate altre API
-     * per gli altri tipi di output che il framework può generare (ad esempio PDF, XLS, ecc.).
+     * TODO documentare relativamente al file .htaccess anche il file _etc/_robots/_robots.txt e in generale il ruolo del file robots.txt
      * 
      * TODO documentare la parte dopo il _config.php (API, macro di pagina, inclusione template, rendering, output)
      * 
@@ -1183,15 +1182,25 @@
         if( ! in_array( $lvl, $cf['lvls']['skip'] ) ) {
 
             // inclusione file standard
-            require $file;
-            timerCheck( $cf['speed'], $file );
-            loggerLatest( 'completato: ' . $file );
+            if( is_readable( $file ) ) {                
+                loggerLatest( 'inizio: ' . $file );
+                require $file;
+                timerCheck( $cf['speed'], $file );
+                loggerLatest( 'completato: ' . $file );
+            } else {
+                loggerLatest( 'impossibile leggere il file ' . $file );
+            }
 
             // inclusione file locale
             if( file_exists( $locale ) ) {
-                require $locale;
-                timerCheck( $cf['speed'], $locale );
-                loggerLatest( 'completato: ' . $locale );
+                if( is_readable( $locale ) ) {
+                    loggerLatest( 'inizio: ' . $locale );
+                    require $locale;
+                    timerCheck( $cf['speed'], $locale );
+                    loggerLatest( 'completato: ' . $locale );
+                } else {
+                    loggerLatest( 'impossibile leggere il file ' . $locale );
+                }
             }
 
             // controparte moduli
@@ -1200,19 +1209,29 @@
             // inclusione controparte moduli
             foreach( $moduli as $modulo ) {
 
-                // inclusione file di modulo
-                require $modulo;
-                timerCheck( $cf['speed'], $modulo );
-                loggerLatest( 'completato: ' . $modulo );
+                // inclusione file di moduloù
+                if( is_readable( $modulo ) ) {
+                    loggerLatest( 'inizio: ' . $modulo );
+                    require $modulo;
+                    timerCheck( $cf['speed'], $modulo );
+                    loggerLatest( 'completato: ' . $modulo );
+                } else {
+                    loggerLatest( 'impossibile leggere il file ' . $modulo );
+                }
 
                 // controparte modulo locale
                 $locale = path2custom( $modulo );
 
                 // inclusione controparte modulo locale
                 if( file_exists( $locale ) ) {
-                    require $locale;
-                    timerCheck( $cf['speed'], $locale );
-                    loggerLatest( 'completato: ' . $locale );
+                    if( is_readable( $locale ) ) {                        
+                        loggerLatest( 'inizio: ' . $locale );
+                        require $locale;
+                        timerCheck( $cf['speed'], $locale );
+                        loggerLatest( 'completato: ' . $locale );
+                    } else {
+                        loggerLatest( 'impossibile leggere il file ' . $locale );
+                    }
                 }
 
             }

@@ -128,3 +128,24 @@
         );
 
     }
+
+    function verificaSpam($carrelloRequest) {
+
+        global $cf;
+
+        if (getAclPermission('carrelli', METHOD_POST)) {
+            return ['score' => 1, 'check' => true];
+        }
+    
+        $token = $carrelloRequest['__recaptcha_token__'] ?? null;
+        $key = $cf['google']['profile']['recaptcha']['keys']['private'] ?? null;
+    
+        if ($token && $key) {
+            $score = reCaptchaVerifyV3($token, $key);
+            return ['score' => $score, 'check' => $score > 0.3];
+        }
+    
+        return ['score' => 0, 'check' => false];
+
+    }
+

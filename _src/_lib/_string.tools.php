@@ -169,13 +169,13 @@
      */
     function empty2null( $s, $numeric = false ) {
 
-	if( $numeric === true && is_numeric( $s ) ) {
-	    return $s;
-	} elseif( empty( $s ) ) {
-	    return NULL;
-	} else {
-	    return $s;
-	}
+    if( $numeric === true && is_numeric( $s ) ) {
+        return $s;
+    } elseif( empty( $s ) ) {
+        return NULL;
+    } else {
+        return $s;
+    }
 
     }
 

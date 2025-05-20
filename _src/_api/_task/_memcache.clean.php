@@ -20,21 +20,21 @@
     // TODO bisognerebbe che questo task svuotasse solo la cache del sito corrente
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    define( 'MEMCACHE_REFRESH', 1 );
-	    require '../../_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        define( 'MEMCACHE_REFRESH', 1 );
+        require '../../_config.php';
+    }
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
     // faccio il flush della cache
-	$status['esito'] = memcacheFlush( $cf['memcache']['connection'] );
+    $status['esito'] = memcacheFlush( $cf['memcache']['connection'] );
 
     // headers
-	header( 'Access-Control-Allow-Origin: *' );
+    header( 'Access-Control-Allow-Origin: *' );
 
     // output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

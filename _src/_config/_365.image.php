@@ -33,7 +33,7 @@
      */
 
     // collego l'array $ct
-	$ct['image'] = &$cf['image'];
+    $ct['image'] = &$cf['image'];
 
     // debug
     // print_r( $cf['image'] );

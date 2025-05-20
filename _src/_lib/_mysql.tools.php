@@ -139,7 +139,7 @@
         $k = md5($q . serialize($p));
 
         // cerco il valore in cache
-        #	    $r = memcacheRead( $m, $k );
+        #        $r = memcacheRead( $m, $k );
 
         if (! file_exists(DIR_BASE . 'var/cache/mysql/' . $k)) {
 
@@ -161,8 +161,8 @@
             #}
 
             // se il valore non è stato trovato
-            #	    if( empty( $r ) || $t === false ) {
-            #		memcacheWrite( $m, $k, $r, $t );
+            #        if( empty( $r ) || $t === false ) {
+            #        memcacheWrite( $m, $k, $r, $t );
         }
 
         // restituisco il risultato

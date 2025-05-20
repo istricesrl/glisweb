@@ -148,9 +148,9 @@
 
         if( empty( $conn ) ) {
 
-		logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
+        logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
 
-		return false;
+        return false;
 
         } elseif( ! is_object( $conn ) ) {
 
@@ -178,9 +178,9 @@
 
         if( empty( $conn ) ) {
 
-		logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
+        logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
 
-		return false;
+        return false;
 
         } elseif( ! is_object( $conn ) ) {
 

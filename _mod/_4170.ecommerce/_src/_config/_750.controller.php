@@ -24,45 +24,11 @@
         // die( print_r( $_REQUEST['__carrello__'], true ) );
 
         // verifico la challenge reCAPTCHA
-        if( getAclPermission( 'carrelli', METHOD_POST ) ) {
-
-            // registro il valore di bot
-            $spamScore = 1;
-
-            // punteggio di spam
-            $spamCheck = true;
-
-        } elseif( isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
-
-            // registro il valore di bot
-            $spamScore = reCaptchaVerifyV3( $_REQUEST['__carrello__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
-
-            // pulisco il modulo
-            unset( $_REQUEST['__carrello__']['__recaptcha_token__'] );
-
-            // punteggio di spam
-            $spamCheck = ( $spamScore > 0.3 ) ? true : false;
-
-        } elseif( ! isset( $_REQUEST['__carrello__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
-
-            // registro il valore di bot
-            $spamScore = 0;
-
-            // punteggio di spam
-            $spamCheck = false;
-
-        } else {
-
-            // registro il valore di bot
-            $spamScore = 1;
-
-            // punteggio di spam
-            $spamCheck = true;
-
-        }
+        $spam = verificaSpam($_REQUEST['__carrello__']);
 
         // log
-        logWrite( 'esito del controllo antispam: ' . $spamScore . '/' . ( ( $spamCheck == true ) ? 'OK' : 'NO' ), 'cart' );
+        // logWrite('esito del controllo antispam: ' . $spamScore . '/' . (($spamCheck == true) ? 'OK' : 'NO'), 'cart');
+        logWrite('esito del controllo antispam: ' . $spam['score'] . '/' . (($spam['check'] == true) ? 'OK' : 'NO'), 'cart');
 
         // debug
         // var_dump( $spamScore );
@@ -70,7 +36,8 @@
         // die();
 
         // TODO qui fare il controllo anti spam
-        if( $spamCheck === true ) {
+        // if ($spamCheck === true) {
+        if ($spam['check'] === true) {
 
             // registro i consensi
             if( isset( $_REQUEST['__consensi__']['__carrello__'] ) ) {
@@ -926,8 +893,9 @@
 
         }   // fine controllo antispam
 
-    }
+    } // fine controllo se c'è una request per il carrello
 
     // debug
     // die( print_r( $_REQUEST['__carrello__'], true ) );
     // die( print_r( $_SESSION['carrello'], true ) );
+    // die('H');
