@@ -14,8 +14,12 @@
     <!-- type settato automaticamente a button -->
     {% set type = 'button' %}
     <!-- onclick settato automaticamente vuoto -->
+    {% if not dup %}
+    <!-- script per reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js"></script>
     <!-- campo hidden generato automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
-    {% if not dup %}<input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">{% endif %}
+    <input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">
+    {% endif %}
     <!-- funzione generata automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
     <script>
         function onSubmit{{ form }}{{ extra }}( token ) {
