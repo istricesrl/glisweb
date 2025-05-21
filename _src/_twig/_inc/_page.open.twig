@@ -5,6 +5,15 @@
 
 <!-- file: {{ _self }} -->
 
+{# CSS PRELOAD NOSCRIPT #}
+<noscript>
+{% for m,s in page.css.preload %}
+{% for c in S %}<link rel="stylesheet" href="{{ c }}" media="{{ m }}">{% endfor %}
+{% else %}
+<!-- nessun css preload trovato in page.css.preload -->
+{% endfor %}
+</noscript>
+
 {# CODICE NOSCRIPT PER GOOGLE TAG MANAGER #}
 {% include '_inc/_gtm.noscript.twig' %}
 

@@ -44,45 +44,49 @@
     <title>{{ page.title[ localization.language.ietf ] }}</title>
 
     {# TAG OPENGRAPH #}
-{% include '_inc/_opengraph.head.twig' %}
+    {% include '_inc/_opengraph.head.twig' %}
 
     {# CSS ESTERNI #}
-{% for m,s in page.css.external %}
-{% for c in s %}<link rel="stylesheet" href="{{ c }}" media="{{ m }}">{% endfor %}
-{% endfor %}
+    {% for m,s in page.css.external %}
+    {% for c in s %}<link rel="stylesheet" href="{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css esterno trovato in page.css.external -->
+    {% endfor %}
 
     {# CSS PRELOAD #}
-{% for m,s in page.css.preload %}
-{% for c in s %}<link rel="preload" as="style" href="{{ c }}" media="{{ m }}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
-{% endfor %}
-
-{# CSS PRELOAD NOSCRIPT #}
-<noscript>
-{% for m,s in page.css.preload %}
-    {% for c in S %}<link rel="stylesheet" href="{{ c }}" media="{{ m }}">{% endfor %}
-{% endfor %}
-</noscript>
+    {% for m,s in page.css.preload %}
+    {% for c in s %}<link rel="preload" as="style" href="{{ c }}" media="{{ m }}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
+    {% else %}
+    <!-- nessun css preload trovato in page.css.preload -->
+    {% endfor %}
 
     {# CSS IN CACHE #}
-{% for m,s in page.css.cached %}
-{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
-{% endfor %}
+    {% for m,s in page.css.cached %}
+    {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css in cache trovato in page.css.cached -->
+    {% endfor %}
 
     {# CSS INTERNI #}
-{% for m,s in page.css.internal %}
-{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
-{% endfor %}
+    {% for m,s in page.css.internal %}
+    {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css interno trovato in page.css.internal -->
+    {% endfor %}
 
     {# CSS DEL TEMPLATE #}
-{% for m,s in page.css.template %}
-{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="{{ m }}">{% endfor %}
-{% endfor %}
+    {% for m,s in page.css.template %}
+    {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ page.template.path }}{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css del template trovato in page.css.template -->
+    {% endfor %}
 
     {# CSS CUSTOM #}
-{% for m,s in page.css.custom %}
-{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
-{% endfor %}
-
+    {% for m,s in page.css.custom %}
+    {% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">{% endfor %}
+    {% else %}
+    <!-- nessun css custom trovato in page.css.custom -->
+    {% endfor %}
 
     {# CODICE PER FACEBOOK #}
     {% include '_inc/_facebook.head.twig' %}

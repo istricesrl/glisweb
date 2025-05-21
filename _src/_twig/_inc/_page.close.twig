@@ -4,33 +4,45 @@
 
 <!-- Twig file included: {{ _self }} -->
 
+{# OVERLAY PER ACCETTAZIONE COOKIE #}
 {% include [ 'inc/cookie.overlay.twig', '_inc/_cookie.overlay.twig' ] %}
 
+{# VARIABILI GLOBALI JAVASCRIPT #}
 <script>
     var siteRoot = '{{ site.root }}';
 </script>
 
+{# SCRIPT JAVASCRIPT ESTERNI #}
 {% for j in page.js.external %}<script defer src="{{ include( template_from_string( j ) | raw ) }}"></script>{% endfor %}
 
+{# SCRIPT JAVASCRIPT INTERNI #}
 {% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
 
+{# SCRIPT JAVASCRIPT DEL TEMPLATE #}
 {% for j in page.js.template %}<script defer src="{{ site.root }}{{ page.template.path }}{{ j }}"></script>{% endfor %}
 
-{% include '_inc/_recaptcha.close.twig' %}
+{# CODICE DI CHIUSURA PER GOOGLE RECAPTCHA #}
+{% if google.profile.recaptcha %}{% include '_inc/_recaptcha.close.twig' %}{% endif %}
 
+{# CODICE DI CHIUSURA PER FACEBOOK MESSENGER #}
 {% if facebook.messenger.page.id %}{% include '_inc/_facebook.messenger.twig' %}{% endif %}
 
+{# CODICE DI CHIUSURA PER CRITEO #}
 {% if criteo.account %}{% include '_inc/_criteo.twig' %}{% endif %}
 
+{# CODICE DI CHIUSURA PER CHARTJS #}
 {% if page.contents.chartjs %}{% include '_inc/_chartjs.script.twig' %}{% endif %}
 
+{# CODICE DI CHIUSURA PER SMARTSUPP #}
 {% if smartsupp.key %}{% include '_inc/_smartsupp.twig' %}{% endif %}
 
+{# MODAL DELLA PAGINA #}
 {% for ruolo,modals in page.contents.modals %}{% for modal in modals %}<!-- modal: {{ modal.schema }} -->{% include modal.schema %}{% endfor %}{% endfor %}
 
 {# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
 {# vedi _src/_inc/_macro/_default.tools.php #}
 
+{# VALIDATORI #}
 <!-- HTML5 W3C validator: https://validator.w3.org/nu/?doc={{ page.url[ localization.language.ietf ] }} -->
 {% for c in page.css.template %}
 <!-- CSS3 W3C validator: https://jigsaw.w3.org/css-validator/validator?uri={{ site.url }}{{ page.template.path }}{{ c }} -->

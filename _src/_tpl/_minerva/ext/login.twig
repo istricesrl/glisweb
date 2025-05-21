@@ -1,10 +1,14 @@
+{# CODICE DELLA PAGINA #}
 <!DOCTYPE html>
 <html lang="{{ localization.language.ietf }}">
 
+    {# HEADER #}
     <head>
 
-        {% include '_inc/_page.head.html' %}
+        {# HEADER STANDARD #}
+        {% include '_inc/_page.head.twig' %}
 
+        {# STILI DI PAGINA #}
         <style>
             .form-login {
                 background-color: rgba( 255, 255, 255, .9 );
@@ -21,16 +25,21 @@
 
     </head>
 
+    {# BODY #}
     <body>
 
-        {% include '_inc/_page.open.html' %}
+        {# CODICE DI APERTURA STANDARD DELLA PAGINA#}
+        {% include '_inc/_page.open.twig' %}
 
+        {# BLOCCO MAIN #}
         <main class="container-fluid d-flex flex-fill flex-column p-0">
             {% block main %}{% endblock %}
         </main>
 
-        {% include '_inc/_page.close.html' %}
+        {# CODICE DI CHIUSURA STANDARD DELLA PAGINA #}
+        {% include '_inc/_page.close.twig' %}
 
+        {# SCRIPT JAVASCRIPT DELLA PAGINA #}
         {% block javascript %}{% endblock %}
 
     </body>
