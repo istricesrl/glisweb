@@ -3635,27 +3635,33 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		documenti_articoli.data_consegna,
 		documenti_articoli.id_account_inserimento,
 		documenti_articoli.id_account_aggiornamento,
-		concat(
-			coalesce( documenti_articoli.data, '' ),
-			' / ',
-			coalesce( tipologie_documenti.sigla, '' ),
-			' / ',
-			coalesce( documenti_articoli.quantita, 0 ),
-			' x ',
-			coalesce( documenti_articoli.id_articolo, '' ),
-			' / ',
-			coalesce( documenti_articoli.nome, '' ),
-			' / ',
-			coalesce( documenti_articoli.importo_netto_totale, 0 ),
-			' ',
-			coalesce( valute.utf8, '' )
+		concat_ws(
+            ' / ',
+			coalesce( documenti_articoli.data, documenti.data, NULL ),
+			coalesce( tipologie_documenti.sigla, NULL ),
+            concat(
+			    coalesce( documenti.numero, NULL ),
+                '/',
+                coalesce( documenti.sezionale, NULL )
+            ),
+            concat(
+                coalesce( documenti_articoli.quantita, 0 ),
+                ' x ',
+                coalesce( documenti_articoli.id_articolo, '' )
+            ),
+			coalesce( documenti_articoli.nome, NULL ),
+            concat(
+                coalesce( documenti_articoli.importo_netto_totale, NULL ),
+                ' ',
+                coalesce( valute.utf8, '' )
+            )
 		) AS __label__
 	FROM
 		documenti_articoli
         LEFT JOIN documenti ON documenti.id = documenti_articoli.id_documento
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti_articoli.id_emittente, documenti.id_emittente )
 		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti_articoli.id_destinatario, documenti.id_destinatario )
-		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti_articoli.id_tipologia
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = coalesce( documenti_articoli.id_tipologia, documenti.id_tipologia )
 		LEFT JOIN listini ON listini.id = documenti_articoli.id_listino
 		LEFT JOIN valute ON valute.id = listini.id_valuta
 		LEFT JOIN mastri AS m1 ON m1.id = documenti_articoli.id_mastro_provenienza

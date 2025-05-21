@@ -1613,6 +1613,7 @@ CREATE TABLE IF NOT EXISTS `documenti` (
   `data` date DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `id_emittente` int(11) DEFAULT NULL,
+  `id_referente_emittente` int(11) DEFAULT NULL,
   `id_sede_emittente` int(11) DEFAULT NULL,
   `id_destinatario` int(11) DEFAULT NULL,
   `id_sede_destinatario` int(11) DEFAULT NULL,

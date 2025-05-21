@@ -48,10 +48,10 @@
     // carico le righe del documento
     $doc['righe']['grezze'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT documenti_articoli_view.*, count(agg.id) AS aggregate, '.
+        'SELECT documenti_articoli_view.*, articoli.peso, count(agg.id) AS aggregate, '.
         'udm.sigla AS udm FROM documenti_articoli_view '.
         'LEFT JOIN udm ON udm.id = documenti_articoli_view.id_udm '.
-        'LEFT JOIN documenti_articoli_view AS agg ON agg.id_genitore = documenti_articoli_view.id '.
+        'LEFT JOIN documenti_articoli_view AS agg ON agg.id_genitore = documenti_articoli_view.id LEFT JOIN articoli ON articoli.id = documenti_articoli_view.id_articolo '.
         'WHERE documenti_articoli_view.id_packing_list = ? GROUP BY documenti_articoli_view.id
 		 ORDER BY documenti_articoli_view.ordine_collo, documenti_articoli_view.id_articolo',
         array( array( 's' => $doc['id'] ) )
@@ -132,13 +132,14 @@
 	 }
     $sdef['linee'][] = $src['denominazione_fiscale'];
     $sdef['linee'][] = $sri['indirizzo_fiscale'];
+	$sdef['linee'][] = $sri['cap'] . ' ' . $sri['comune'] . ' (' . $sri['provincia'] . ')';
     $sdef['linee'][] = 'P.IVA ' . $src['partita_iva'];
 	$sdef['linee'][] = 'cod.fisc. ' . $src['codice_fiscale'];
-	if( ! empty( $emittente['codice_sdi'] ) ) {
-	    $sdef['linee'][] = 'SDI ' . $src['codice_sdi'];
-	} else {
-	    $sdef['linee'][] = 'PEC ' . anagraficaGetPEC( $doc['id_emittente'] );
-	}
+	// if( ! empty( $emittente['codice_sdi'] ) ) {
+	//     $sdef['linee'][] = 'SDI ' . $src['codice_sdi'];
+	// } else {
+	//     $sdef['linee'][] = 'PEC ' . anagraficaGetPEC( $doc['id_emittente'] );
+	// }
 	$sde = $sdef['linee'];
 
     // recupero i dati del destinatario
@@ -158,12 +159,12 @@
         'comuni.nome AS comune, provincie.sigla AS provincia, '.
         'stati.iso31661alpha2 AS sigla_stato '.
         'FROM anagrafica_indirizzi '.
-        'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-        'INNER JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
-        'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
-        'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
-        'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
-        'INNER JOIN stati ON stati.id = regioni.id_stato '.
+        'LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
+        'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
+        'LEFT JOIN comuni ON comuni.id = indirizzi.id_comune '.
+        'LEFT JOIN provincie ON provincie.id = comuni.id_provincia '.
+        'LEFT JOIN regioni ON regioni.id = provincie.id_regione '.
+        'LEFT JOIN stati ON stati.id = regioni.id_stato '.
         'WHERE anagrafica_indirizzi.id_anagrafica = ? ',
         array( array( 's' => $dst['id'] ) )
     );
@@ -177,13 +178,14 @@
 
     $sdec['linee'][] = $dst['denominazione_fiscale'];
     $sdec['linee'][] = $dsi['indirizzo_fiscale'];
+	$sdec['linee'][] = $dsi['cap'] . ' ' . $dsi['comune'] . ' (' . $dsi['provincia'] . ')';
     $sdec['linee'][] = 'P.IVA ' . $dst['partita_iva'];
 	$sdec['linee'][] = 'cod.fisc. ' . $dst['codice_fiscale'];
-	if( isset($dst['codice_sdi']) && ! empty( $dst['codice_sdi'] ) ) {
-	    $sdec['linee'][] = 'SDI ' . $dst['codice_sdi'];
-	} else {
-	    $sdec['linee'][] = 'PEC ' . anagraficaGetPEC( $doc['id_emittente'] );
-	}
+	// if( isset($dst['codice_sdi']) && ! empty( $dst['codice_sdi'] ) ) {
+	//     $sdec['linee'][] = 'SDI ' . $dst['codice_sdi'];
+	// } else {
+	//     $sdec['linee'][] = 'PEC ' . anagraficaGetPEC( $doc['id_emittente'] );
+	// }
 	$sdec['linee'][] = 'cod. cliente ' . $dst['codice'];
 	$sdc = $sdec['linee'];
 
@@ -204,6 +206,7 @@
 	    array( array( 's' => $doc['id_destinatario'] ) )
 	);
 
+	$pesoNettoMerce = 0;
   
     // creazione del PDF
 	$pdf = new TCPDF( 'P', 'mm', 'A4' );						// portrait, millimetri, A4 (x->210 y->297)
@@ -278,9 +281,6 @@
 		// aggiunta di una pagina
 		$pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
 
-		// inserisco il logo in alto a sinistra
-		$pdf->image( $lge, $ml, $mt, $lgw, $lgh, NULL, NULL, $lgn, false, 300, '', false, false, 1, true );		// x, y, w, h, type, link, align, resize
-
 		// define barcode style
 		$style = array(
 			'position' => 'R',
@@ -306,8 +306,11 @@
 			$pdf->write1DBarcode( $doc['codice'], 'C128', '', '', '', 18, 0.4, $style, 'N');
 		}
 
+		// inserisco il logo in alto a sinistra
+		$pdf->image( $lge, $ml, $mt, $lgw, $lgh, NULL, NULL, $lgn, false, 300, '', false, false, 1, true );		// x, y, w, h, type, link, align, resize
+
 		// intestazione azienda emittente
-		$pdf->SetY( $mt + $stdsp );						// y
+		// $pdf->SetY( $mt + $stdsp );						// y
 		$tmp = $pdf->GetX() + $stdsp;								// margine provvisorio in base alla larghezza del logo
 		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 		foreach( $sde as $k => $sdel ) {
@@ -349,8 +352,8 @@
 		$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
 		$pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
 		$pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'peso netto', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
 		// contatore delle eventuali righe aggregate per generare l'eventuale allegato "dettaglio aggregate"
 		$countAggregate = 0;
@@ -368,8 +371,8 @@
 				$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
 				$pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
 				$pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-				$pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-				$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+				$pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+				$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 						// reimposto il font
 				$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
 
@@ -385,10 +388,11 @@
 	$pdf->Cell( $col * 1, $trh, $row['ordine_collo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 2, $trh, $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->MultiCell( $col * 6, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
-	$pdf->Cell( $col * 2, $trh, NULL, $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 1, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->Cell( $col * 2, $trh, ($row['peso']*$row['quantita']), $brdc, 0, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 1, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 
 			$countAggregate += $row['aggregate'];
+			$pesoNettoMerce += ($row['peso']*$row['quantita']);
 		
 		}
 
@@ -401,10 +405,12 @@
 		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
 		$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
 		$pdf->Cell( $col * 3, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 2, 0, 'largh.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 2, 0, 'lung.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 2, 0, 'alt.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 2, 0, 'peso', $brdh, 1, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 1, 0, 'largh.', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 1, 0, 'lung.', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 1, 0, 'alt.', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'peso netto', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 2, 0, 'peso lordo', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 1, 0, 'volume', $brdh, 1, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
 
 		$dett = $doc['bancali']['ordinati'][$bancale];
@@ -413,10 +419,12 @@
 			$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
 			$pdf->Cell( $col * 1, $lh, $row['ordine'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
 			$pdf->Cell( $col * 3, $lh, $row['codice'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $row['larghezza'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $row['lunghezza'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $row['altezza'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $row['peso'], $brdc, 1, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento			
+			$pdf->Cell( $col * 1, $lh, $row['larghezza'], $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 1, $lh, $row['lunghezza'], $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 1, $lh, $row['altezza'], $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 2, $lh, $pesoNettoMerce, $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 2, $lh, $row['peso'], $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+			$pdf->Cell( $col * 1, $lh, ($row['larghezza']*$row['lunghezza']*$row['altezza'])/100000, $brdc, 1, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento			
 		}
 
 	// spazio sotto la tabella IVA
