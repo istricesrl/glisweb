@@ -400,12 +400,14 @@
 
     // switch dello schema in caso di permessi insufficienti
     if( getPagePermission( $ct['page'] ) !== true ) {
-        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['login'] ) ) ? $ct['page']['template']['login'] : 'login.html';
+        $loginSchema = ( file_exists( DIR_BASE . $ct['page']['template']['path'] . 'login.twig' ) ) ? 'login.twig' : 'login.html';
+        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['login'] ) ) ? $ct['page']['template']['login'] : $fileSchema;
     } 
 
     // switch dello schema in caso di schema non specificato
     if( ! isset( $ct['page']['template']['schema'] ) ) {
-        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['default'] ) ) ? $ct['page']['template']['default'] : 'default.html';
+        $defaultSchema = ( file_exists( DIR_BASE . $ct['page']['template']['path'] . 'default.twig' ) ) ? 'default.twig' : 'default.html';
+        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['default'] ) ) ? $ct['page']['template']['default'] : $defaultSchema;
     }
 
     // debug
