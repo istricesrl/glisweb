@@ -1,0 +1,49 @@
+{# MACRO GENERICHE PER LA RAPPRESENTAZIONE DEI CONTENUTI
+    Questo file contiene delle macro utili per la rappresentazione dei contenuti su tutti i template
+    NOTA: IMPORTARE SEMPRE COME CMS ad es. import '_bin/_default.html' as cms #}
+
+{# formButton() - crea un bottone di invio form compatibile con reCAPTCHA
+    Questa macro crea un bottone di invio form integrato con Google reCAPTCHA, per funzionare richiede
+    alcune informazioni di base fra cui le chiavi di reCAPTCHA; è possibile inserire più di un bottone per
+    pagina specificando il parametro dup che indica alla macro di non ripetere il codice reCAPTCHA
+    ridondante. #}
+{% macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo, extra, dup ) %}
+    <!-- macro {{ _self }}::formButton() -->
+
+    {% if recaptcha.keys.public %}
+    <!-- type settato automaticamente a button -->
+    {% set type = 'button' %}
+    <!-- onclick settato automaticamente vuoto -->
+    <!-- campo hidden generato automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
+    {% if not dup %}<input type="hidden" name="{{ prefisso }}{% if modulo %}[{{ modulo }}]{% endif %}[__recaptcha_token__]" value="" id="{{ form }}RecaptchaToken">{% endif %}
+    <!-- funzione generata automaticamente dalla macro formButton() per la chiave reCaptcha {{ recaptcha.keys.public }} -->
+    <script>
+        function onSubmit{{ form }}{{ extra }}( token ) {
+            console.log( token );
+            var forceValid = 0;
+            {{ onclick|raw }}
+            console.log( 'forzatura validità: ' + forceValid );
+            document.getElementById("{{ form }}RecaptchaToken").value = token;
+            var contactForm = document.getElementById("{{ form }}");
+            console.log( 'onSubmit da reCAPTCHA per {{ form }}' );
+            if(contactForm.checkValidity()||forceValid==1) {
+                console.log( 'form valido' );
+                contactForm.submit();
+            } else {
+                console.log( 'form non valido' );
+                grecaptcha.reset();
+                contactForm.reportValidity();
+            } 
+            console.log('invocata protezione reCAPTCHA');
+        }
+    </script>
+    {% set onclick = '' %}
+    {% elseif onclick %}
+    <!-- type settato automaticamente a button -->
+    {% set type = 'button' %}
+    {% else %}
+    <!-- submit button standard -->
+    {% set type = 'submit' %}
+    {% endif %}
+    <button type="{% if type %}{{ type }}{% else %}submit{% endif %}" {% if recaptcha.keys.public %}data-sitekey="{{ recaptcha.keys.public }}" data-callback="onSubmit{{ form }}{{ extra }}" data-action="submit"{% endif %} {% if id %}id="{{id}}"{% endif %} class="btn {% if class %}{{ class }}{% else %}btn-sm btn-secondary{% endif %} {% if recaptcha.keys.public %}g-recaptcha{% endif %}" {% if onclick %}onclick="{{ onclick }}"{% endif %}{% if placeholder %} placeholder="{{ placeholder|raw }}" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="{{ placeholder|raw }}" {% endif %}>{{ text|raw }}</button>
+{% endmacro formButton %}
