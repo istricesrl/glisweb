@@ -401,7 +401,7 @@
     // switch dello schema in caso di permessi insufficienti
     if( getPagePermission( $ct['page'] ) !== true ) {
         $loginSchema = ( file_exists( DIR_BASE . $ct['page']['template']['path'] . 'login.twig' ) ) ? 'login.twig' : 'login.html';
-        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['login'] ) ) ? $ct['page']['template']['login'] : $fileSchema;
+        $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['login'] ) ) ? $ct['page']['template']['login'] : $loginSchema;
     } 
 
     // switch dello schema in caso di schema non specificato

@@ -55,9 +55,11 @@
 {% for m,s in page.css.preload %}
 {% for c in s %}<link rel="preload" as="style" href="{{ c }}" media="{{ m }}" onload="this.onload=null;this.rel='stylesheet'">{% endfor %}
 {% endfor %}
+
+{# CSS PRELOAD NOSCRIPT #}
 <noscript>
 {% for m,s in page.css.preload %}
-    {% for c in S %}<link rel="stylesheet" href="{{ c }} media="{{ m }}"">{% endfor %}
+    {% for c in S %}<link rel="stylesheet" href="{{ c }}" media="{{ m }}">{% endfor %}
 {% endfor %}
 </noscript>
 
