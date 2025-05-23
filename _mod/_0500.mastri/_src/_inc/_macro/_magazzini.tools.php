@@ -11,37 +11,41 @@
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
-	    'esportazioni' => array(
+	    '01.esportazioni' => array(
 			'label' => 'esportazioni'
 		),
-	    'importazioni' => array(
+	    '02.importazioni' => array(
 			'label' => 'importazioni'
 		),
-	    'connessioni' => array(
+	    '03.elaborazioni' => array(
+			'label' => 'elaborazioni'
+		),
+	    '04.connessioni' => array(
 			'label' => 'connessioni'
 		),
-	    'elaborazioni' => array(
-			'label' => 'elaborazioni'
+	    '05.static' => array(
+			'label' => 'viste statiche'
 		)
 	);
 
     // esportazione contatti anagrafica
-	$ct['page']['contents']['metro']['connessioni'][] = array(
-	    'modal' => array( 'id' => 'test_modula', 'include' => 'inc/magazzini.tools.modal.modula.html' ),
-	    'icon' => NULL,
-	    'fa' => 'fa-terminal',
-	    'title' => 'test comunicazione Modula',
-	    'text' => 'invia dei comandi di test ai magazzini Modula'
-	);
+	if( in_array( "E300.modula", $cf['mods']['active']['array'] ) ) {
+		$ct['page']['contents']['metro']['04.connessioni'][] = array(
+			'modal' => array( 'id' => 'test_modula', 'include' => 'inc/magazzini.tools.modal.modula.html' ),
+			'icon' => NULL,
+			'fa' => 'fa-terminal',
+			'title' => 'test comunicazione Modula',
+			'text' => 'invia dei comandi di test ai magazzini Modula'
+		);
+	}
 
-    $ct['page']['contents']['metro']['elaborazioni'][] = array(
+	$ct['page']['contents']['metro']['05.static'][] = array(
 		'lws' => '/task/report/0500.mastri/report.giacenza.magazzini.popolazione',
 		'icon' => NULL,
 		'fa' => 'fa-refresh',
 		'title' => 'ripopola giacenza magazzini',
 		'text' => 'ripopola la tabella delle giacenze di magazzino'
 	);
-
 
 /*
     // esportazione contatti anagrafica
