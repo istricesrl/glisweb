@@ -12,6 +12,37 @@
      */
 
     /**
+     * redirect verso il dominio principale
+     * ====================================
+     * 
+     * 
+     */
+
+    // debug
+    // die( $_SERVER['REQUEST_URI'] );
+    // die( $_SERVER['SERVER_NAME'] );
+
+    // ...
+    if( $_SERVER['SERVER_NAME'] != $cf['site']['domains'][ SITE_STATUS ] && $_SERVER['SERVER_NAME'] != $cf['site']['hosts'][ SITE_STATUS ] . '.' . $cf['site']['domains'][ SITE_STATUS ] ) {
+
+        // URL sorgente al netto della query string
+        $cf['uri']['base'] = strtok( $_SERVER['REQUEST_URI'], '?' );
+
+        // log
+        logger( 'reindirizzamento 301 da ' . $_SERVER['SERVER_NAME'] . ' a ' . $cf['site']['domains'][ SITE_STATUS ], 'redirect' );
+
+        // restituisco il codice di stato HTTP
+        http_response_code( 301 );
+
+        // eseguo il redirect
+        header( 'Location: https://' . $cf['site']['domains'][ SITE_STATUS ] . $cf['uri']['base'] ); 
+
+        // fine dell'esecuzione del framework
+        exit;
+
+    }
+
+    /**
      * indicizzazione dei redirect
      * ===========================
      * 

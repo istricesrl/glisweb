@@ -37,8 +37,8 @@
 
     // tendina pollice per presenza del popup sulla pagina o meno
 	$ct['etc']['select']['se_presente'] = array(
-	    array( 'id' => NULL, '__label__' => 'sì' ),
-	    array( 'id' => 1, '__label__' => 'no' )
+	    array( 'id' => 1, '__label__' => 'sì' ),
+	    array( 'id' => 2, '__label__' => 'no' )
 	);
 
     // macro di default
