@@ -106,14 +106,14 @@
     // recupero dei gruppi dal database
     $gruppi = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT * FROM gruppi'
+        "SELECT * FROM gruppi_view"
     );
 
     // integro i gruppi trovati nel database
     foreach( $gruppi as $gruppo ) {
         $cf['auth']['groups'][ $gruppo['nome'] ] = array(
             'id' => $gruppo['id'],
-            'nome' => $gruppo['nome'],
+            'nome' => $gruppo['nome']
         );
     }
 
