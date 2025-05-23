@@ -156,7 +156,7 @@
 			'title'			=> array( $l		=> 'gestione' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'ordini.passivi.magazzini.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.magazzini.form.html' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.passivi.magazzini.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.passivi.magazzini.form.php' ),
 			'js'			=> array( 'internal' => array( '_mod/_0400.documenti/_src/_templates/_athena/src/js/documenti.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
