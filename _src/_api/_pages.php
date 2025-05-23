@@ -789,8 +789,17 @@
                 foreach( $sheets as $sheet => $css ) {
                     $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
                     if( ! file_exists( $cachefile ) ) {
+                        $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
+                        $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
                         $content = file_get_contents( $css );
                         writeToFile( $content, $cachefile );
+                        $extRes = preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
+                        foreach( $matches[1] as $match ) {
+                            $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
+                            $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
+                            $content = file_get_contents( $res );
+                            writeToFile( $content, $cachefile );
+                        }
                     } else {
                         $content = readStringFromFile( $cachefile );
                         if( ! empty( $content ) ) {

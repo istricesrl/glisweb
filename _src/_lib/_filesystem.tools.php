@@ -145,6 +145,7 @@
      * funzione                         | descrizione
      * ---------------------------------|---------------------------------------------------------------
      * checkFileConsistency()           | verifica se un file esiste ed è stato aggiornato entro un certo intervallo di tempo
+     * simplifyPath()                   | semplifica un percorso eliminando i riferimenti a cartelle correnti e genitori
      * 
      * alias di funzioni inseriti per retrocompatibilità
      * -------------------------------------------------
@@ -187,6 +188,7 @@
      * data             | autore               | descrizione
      * -----------------|----------------------|---------------------------------------------------------------
      * 2024-02-05       | Fabio Mosti          | refactoring completo della libreria
+     * 2025-05-23       | Fabio Mosti          | aggiunta della funzione simplifyPath()
      * 
      * licenza
      * =======
@@ -1635,6 +1637,38 @@
         // restituisco true di default
         return true;
 
+    }
+
+    /**
+     * semplifica un percorso
+     * 
+     * Questa funzione semplifica un percorso rimuovendo i riferimenti a directory correnti e genitori.
+     * 
+     * @param       string      $path   il percorso da semplificare
+     * 
+     * @return      string              il percorso semplificato
+     * 
+     */
+    function simplifyPath($path) {
+        
+        $parts = explode('/', $path);
+        $stack = [];
+    
+        foreach ($parts as $part) {
+            if ($part === '' || $part === '.') {
+                continue; // Ignora parti vuote o `.` (directory corrente)
+            }
+            if ($part === '..') {
+                array_pop($stack); // Torna indietro di una directory
+            } else {
+                $stack[] = $part; // Aggiungi la directory corrente
+            }
+        }
+
+        // echo 'semplifico ' . $path . ' in ' . '/' . implode('/', $stack) . '<br>' . PHP_EOL;
+
+        return '/' . implode('/', $stack);
+    
     }
 
     /**

@@ -4,6 +4,13 @@
 {# SCHEMA ESTESO #}
 {% extends "ext/main.twig" %}
 
+{# BLOCCO SUBNAV #}
+{% block subnav %}
+<!-- blocco {{ _self }}::subnav -->
+<!-- blocco vuoto in standard per eventuali customizzazioni -->
+<!-- fine blocco {{ _self }}::subnav -->
+{% endblock subnav %}
+
 {# BLOCCO MAIN #}
 {% block main %}
 <!-- blocco {{ _self }}::main -->
@@ -11,4 +18,4 @@
     {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
 </div>
 <!-- fine blocco {{ _self }}::main -->
-{% endblock %}
+{% endblock main %}

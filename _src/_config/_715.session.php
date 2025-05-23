@@ -53,9 +53,6 @@
     // ribalto sulla $_REQUEST i dati di $_SESSION
 	$_REQUEST['__work__'] = &$_SESSION['__work__'];
 
-    // timestamp dell'ultima azione sulla sessione
-	$_SESSION['used']			= time();
-
     // debug
 	// print_r( $_REQUEST );
 	// print_r( $_SESSION );

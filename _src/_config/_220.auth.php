@@ -91,12 +91,20 @@
         }
 
         // log
-            logger( 'logout richiesto esplicitamente: ' . $_SESSION['id'], 'session' );
+            logger( 'logout richiesto esplicitamente: ' . $_SESSION['id'], 'auth' );
 
     }
 
     // ...
     $cf['session']['auth']['status'] = $cf['auth']['status'];
 
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
     // debug
     // print_r( $cf['localization']['language'] );
+    // die( print_r( $_REQUEST, true ) );
