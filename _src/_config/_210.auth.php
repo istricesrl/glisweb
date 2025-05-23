@@ -398,6 +398,24 @@
                                     }
                                     $_SESSION['groups'][ $r['nome'] ] = &$cf['auth']['groups'][ $r['nome'] ];
                                 }
+                                do {
+                                    $r = mysqlSelectCachedRow(
+                                        $cf['memcache']['connection'],
+                                        $cf['mysql']['connection'],
+                                        'SELECT * FROM gruppi_view WHERE id = ?',
+                                        array( array( 's' => $r['id_genitore'] ) )
+                                    );
+                                    if( count( $r ) > 0 ) {
+                                        if( isset( $cf['auth']['groups'][ $r['nome'] ] ) ) {
+                                            $cf['auth']['groups'][ $r['nome'] ] = array_replace_recursive( $r, $cf['auth']['groups'][ $r['nome'] ] );
+                                        } else {
+                                            $cf['auth']['groups'][ $r['nome'] ] = $r;
+                                        }
+                                        $_SESSION['groups'][ $r['nome'] ] = &$cf['auth']['groups'][ $r['nome'] ];
+                                        $_SESSION['account']['id_gruppi'][] = $r['id'];
+                                        $_SESSION['account']['gruppi'][] = $r['nome'];
+                                    }
+                                } while( ! empty( $r['id_genitore'] ) );
                             }
                         } else {
                             logger( 'attenzione, utente senza gruppi associati: ' . $_REQUEST['__login__']['user'], 'auth', LOG_ERR );
