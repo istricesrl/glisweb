@@ -14,8 +14,10 @@
     // tabella gestita
     $ct['form']['table'] = 'anagrafica';
     
-        // tabella della vista
-	$ct['view']['table'] = 'contratti_anagrafica';
+    // tabella della vista
+	// $ct['view']['table'] = 'contratti_anagrafica';
+	$ct['view']['table'] = '__report_iscrizioni_anagrafica__';
+    $ct['view']['data']['__report_mode__'] = 1;
 
     // campi della vista
 	$ct['view']['cols'] = array(
@@ -27,6 +29,7 @@
         'tipologia' => 'tipologia',
         'data_inizio' => 'inizio',
         'data_fine' => 'fine',
+        'pagamento' => 'pagamento',
         NULL => 'azioni'
 	);
 
@@ -46,6 +49,9 @@
     $ct['view']['onclick'] = array(
         NULL => 'event.stopPropagation();'
     );
+
+    // colonne da non prelevare dal database
+    $ct['view']['extra']['cols'] = array( 'pagamento' );
 
     // pagina per la gestione degli oggetti esistenti
 	$ct['view']['open']['page'] = 'iscrizioni.form';

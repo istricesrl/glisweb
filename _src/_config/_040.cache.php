@@ -124,6 +124,7 @@
 
     // stringa di unicità per sito
     define( 'REDIS_UNIQUE_SEED'                 , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
+    define( 'REDIS_MULTISITE_SEED'              , strtoupper( str_replace( '.', '_', $cf['sites']['1']['domains'][ SITE_STATUS ] ) ) );
 
     // server redis disponibili
     $cf['redis']['servers']                     = array();
@@ -176,3 +177,4 @@
     // print_r( $cf['memcache'] );
     // print_r( $cf['redis'] );
     // print_r( $cf['cache'] );
+    // var_dump( REDIS_MULTISITE_SEED );

@@ -85,11 +85,11 @@
 			</div>
 			<div class="col-6">
 				<span class="label-top remove-after-duplicate">articolo</span>
-				{{ frm.selectBox( table, '', '', 'id_articolo', '', etc.select.id_articoli, request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
+				{{ frm.selectBox( table, '', '', 'id_articolo', '', '', request, '', '', '', '', 'font-awesome', 'articoli.form', 'articoli.form', 'articoli', 'id_articolo', page, pages, ietf, 'articoli' ) }}
 			</div>
 			<div class="col">
 				<span class="label-top remove-after-duplicate">matricola</span>
-				{{ frm.selectBox( table, '', '', 'id_matricola', '', etc.select.matricole, request, '', '', '', '', 'font-awesome', 'matricole.form', 'matricole.form', 'matricole', 'id_matricola', page, pages, ietf, 'matricole' ) }}
+				{{ frm.selectBox( table, '', '', 'id_matricola', '', '', request, '', '', '', '', 'font-awesome', 'matricole.form', 'matricole.form', 'matricole', 'id_matricola', page, pages, ietf, 'matricole' ) }}
 			</div>
 			<div class="col col-md">
 				<span class="label-top remove-after-duplicate">specifiche</span>
@@ -120,22 +120,22 @@
 		<div class="form-group form-row">
 			<div class="col-md col">
 				<span class="label-top remove-after-duplicate">emittente</span>
-				{{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, default_emittente, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_emittente', page, pages, ietf, 'anagrafica' ) }}
+				{{ frm.selectBox( table, '', '', 'id_emittente', '', '', request, default_emittente, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_emittente', page, pages, ietf, 'anagrafica' ) }}
 			</div>
 			<div class="col-md col">
 				<span class="label-top remove-after-duplicate">destinatario</span>
-				{{ frm.selectBox( table, '', '', 'id_destinatario', '', etc.select.id_destinatari, request, default_destinatario, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
+				{{ frm.selectBox( table, '', '', 'id_destinatario', '', '', request, default_destinatario, '', '', '', 'font-awesome', 'anagrafica.form', 'anagrafica.form', 'anagrafica', 'id_destinatario', page, pages, ietf, 'anagrafica' ) }}
 			</div>
 		</div>
 		<div class="form-group form-row">
 			<div class="col-md col">
 				<span class="label-top remove-after-duplicate">documento</span>
-				{{ frm.selectBox( table, '', '', 'id_documento', '', etc.select.id_documenti, request, default_documento, 1, '', '', 'font-awesome', 'documenti.form', 'documenti.form', 'documenti', 'id_documento', page, pages, ietf, 'documenti' ) }}
+				{{ frm.selectBox( table, '', '', 'id_documento', '', '', request, default_documento, 1, '', '', 'font-awesome', 'documenti.form', 'documenti.form', 'documenti', 'id_documento', page, pages, ietf, 'documenti' ) }}
 			</div>
 			{% if ( request[ table ].id ) or default_documento %}
 			<div class="col-md-6 col">
 				<span class="label-top remove-after-duplicate">riga genitore</span>
-				{{ frm.selectBox( table, '', '', 'id_genitore', '', etc.select.id_righe_genitori, request, '', '', '', '', 'font-awesome', 'documenti.articoli.form', 'documenti.articoli.form', 'documenti_articoli', 'id_genitore', page, pages, ietf) }}
+				{{ frm.selectBox( table, '', '', 'id_genitore', '', '', request, '', '', '', '', 'font-awesome', 'documenti.articoli.form', 'documenti.articoli.form', 'documenti_articoli', 'id_genitore', page, pages, ietf, 'documenti_articoli' ) }}
 			</div>
 			{% endif %}
 		</div>

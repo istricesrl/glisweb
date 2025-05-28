@@ -168,7 +168,9 @@
         $latestRelease = restGetString( 'https://glisweb.istricesrl.it/current.release' );
 
         // scrivo l'ultima release su file
-        writeToFile( $latestRelease, FILE_LATEST_RELEASE );
+        if( preg_match( '/^\d+\.\d+\.\d+$/', $latestRelease ) ) {
+            writeToFile( $latestRelease, FILE_LATEST_RELEASE );
+        }
 
     }
 
@@ -179,7 +181,9 @@
         $latestVersion = restGetString( 'https://glisweb.istricesrl.it/current.version' );
 
         // scrivo l'ultima versione su file
-        writeToFile( $latestVersion, FILE_LATEST_VERSION );
+        if( preg_match( '/^\d{14}$/', $latestVersion ) ) {
+            writeToFile( $latestVersion, FILE_LATEST_VERSION );
+        }
 
     }
 

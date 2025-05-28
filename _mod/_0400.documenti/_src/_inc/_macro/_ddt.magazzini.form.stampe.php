@@ -52,7 +52,7 @@
 
                 $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
-                    'url' => $file . 'packing.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => '/print/0400.documenti/packing.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF packing list',
@@ -61,7 +61,7 @@
 
                 $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
-                    'url' => $file . 'packing.pdf.php?__bancali__=1&__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => '/print/0400.documenti/packing.pdf?__bancali__=1&__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF packing list bancali',

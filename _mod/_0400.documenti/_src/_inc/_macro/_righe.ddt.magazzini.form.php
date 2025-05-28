@@ -142,7 +142,7 @@
         $cf['mysql']['connection'],
         'SELECT id, __label__ FROM documenti_view '
     );
-    
+
 	if( isset( $_REQUEST[ $ct['form']['table'] ]['id_documento'] )  && !empty( $_REQUEST[ $ct['form']['table'] ]['id_documento'] ) ){
 		$documento = $_REQUEST[ $ct['form']['table'] ]['id_documento'];
 	} elseif( isset( $_REQUEST['__preset__'][ $ct['form']['table'] ]['id_documento'] ) ) {
@@ -162,6 +162,7 @@
 	} else {
 		$documento = 'ALL';
 	}
+
 
 	if( $documento == 'ALL' && isset(  $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
 		$ct['etc']['select']['id_righe_genitori'] = mysqlCachedIndexedQuery(
@@ -214,3 +215,4 @@
 
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+

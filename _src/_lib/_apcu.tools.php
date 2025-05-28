@@ -86,12 +86,15 @@
      * 
      * Questa funzione aggiunge un seme univoco alla chiave, per evitare collisioni fra siti diversi. In questo modo è possibile
      * 
-     * @param       string      $k      la chiave da modificare
+     * @param       string          $k      la chiave da modificare
+     * @param       string|null     $site   il sito per cui modificare la chiave (opzionale, se non specificato si usa il sito corrente)
      * 
-     * @return      string               la chiave modificata
+     * @return      string                  la chiave modificata
      * 
      */
-    function apcuUniqueKey( &$k ) {
+    function apcuUniqueKey( &$k, $site = null ) {
+
+        $prefix = ( isset( $site ) && !empty( $site ) ) ? strtoupper( str_replace( '.', '_', $site ) ) . '_' : APCU_UNIQUE_SEED;
 
         if( strpos( $k, APCU_UNIQUE_SEED ) === false ) {
             $k = APCU_UNIQUE_SEED . $k;
@@ -148,14 +151,17 @@
      * 
      * Questa funzione scrive un dato in cache. In particolare, serializza il dato e lo scrive in cache con la chiave specificata.
      * 
-     * @param       string      $key      la chiave con cui scrivere il dato
+     * @param       string          $key        la chiave con cui scrivere il dato
+     * @param       mixed           $data       il dato da scrivere
+     * @param       int             $ttl        il tempo di vita della chiave in cache, in secondi (default: APCU_DEFAULT_TTL)
+     * @param       string|null     $site       il sito per cui scrivere il dato (opzionale, se non specificato si usa il sito corrente)
      * 
-     * @param       mixed       $data     il dato da scrivere
+     * @return      bool                        true se il dato è stato scritto correttamente, false altrimenti
      *
      */
-    function apcuWrite( $key, $data, $ttl = APCU_DEFAULT_TTL ) {
+    function apcuWrite( $key, $data, $ttl = APCU_DEFAULT_TTL, $site = null ) {
 
-        apcuUniqueKey( $key );
+        apcuUniqueKey( $key, $site );
 
         if( function_exists( 'apcu_store' ) ) {
 
@@ -220,14 +226,15 @@
      * 
      * Questa funzione legge un dato dalla cache in base alla chiave specificata e lo deserializza.
      * 
-     * @param       string      $key      la chiave da cui leggere il dato
+     * @param       string          $key      la chiave da cui leggere il dato
+     * @param       string|null     $site     il sito per cui leggere il dato (opzionale, se non specificato si usa il sito corrente)
      * 
-     * @return      mixed                 il dato letto, oppure false se la chiave non esiste
+     * @return      mixed                     il dato letto, oppure false se la chiave non esiste
      *
      */
-    function apcuRead( $key ) {
+    function apcuRead( $key, $site = null ) {
 
-        apcuUniqueKey( $key );
+        apcuUniqueKey( $key, $site );
 
         if( function_exists( 'apcu_fetch' ) ) {
 

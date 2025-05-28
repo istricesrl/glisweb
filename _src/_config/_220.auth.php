@@ -77,11 +77,26 @@
      * 
      */
 
+    // ...
+    if( isset( $cf['session']['account']['username'] ) && ! empty( $cf['session']['account']['username'] ) ) {
+        if( ! in_array( $_SESSION['id'], array_keys( $cf['auth']['index']['users'][ $cf['session']['account']['username'] ] ) ) ) {
+            $_REQUEST['__logout__'] = true;
+            logger( 'logout richiesto per disconnessione dal multisito', 'auth', LOG_NOTICE );
+        }
+    }
+
     // intercetto eventuali tentativi di logout
     if( isset( $_REQUEST['__logout__'] ) ) {
 
         // ...
         $cf['auth']['status'] = LOGIN_LOGOUT;
+
+        // rimuovo la sessione da redis
+        $cf['auth']['index']['users'][ $cf['session']['account']['username'] ] = array();
+        $cf['redis']['connection']->set(
+            REDIS_MULTISITE_SEED,
+            json_encode( $cf['auth']['index'] )
+        );
 
         // svuoto selettivamente la $_SESSION
         foreach( $_SESSION as $k => $v ) {
@@ -91,7 +106,7 @@
         }
 
         // log
-            logger( 'logout richiesto esplicitamente: ' . $_SESSION['id'], 'auth' );
+        logger( 'logout richiesto esplicitamente: ' . $_SESSION['id'], 'auth' );
 
     }
 

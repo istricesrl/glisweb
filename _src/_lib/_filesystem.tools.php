@@ -697,7 +697,7 @@
         $p = getFullPath( $p );
 
         // creo il percorso e restituisco il risultato
-        return ( is_dir( $p ) ) ? true : mkdir( $p, $r, true );
+        return ( is_dir( $p ) ) ? true : @mkdir( $p, $r, true );
 
     }
 

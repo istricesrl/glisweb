@@ -1119,6 +1119,53 @@ CREATE OR REPLACE VIEW `__report_tesseramenti_anagrafica__` AS
   WHERE tipologie_contratti.se_tesseramento IS NOT NULL
 ;
 
+-- | 100000031514
+-- __report_iscrizioni_anagrafica__
+-- tipologia: report
+DROP VIEW IF EXISTS `__report_iscrizioni_anagrafica__`;
+
+-- | 100000031515
+-- __report_iscrizioni_anagrafica__
+-- tipologia: report
+CREATE OR REPLACE VIEW `__report_iscrizioni_anagrafica__` AS
+	SELECT
+		contratti.id,
+		contratti.id_tipologia,
+    contratti_anagrafica.id_anagrafica,
+		tipologie_contratti.nome AS tipologia,
+		tipologie_contratti.se_abbonamento,
+		tipologie_contratti.se_iscrizione,
+		tipologie_contratti.se_tesseramento,
+		tipologie_contratti.se_immobili,
+		tipologie_contratti.se_acquisto,
+		tipologie_contratti.se_locazione,
+		rinnovi.id AS id_rinnovo,
+		rinnovi.id_tipologia AS id_tipologia_rinnovo,
+		tipologie_rinnovi.nome AS tipologia_rinnovo,
+		contratti.id AS id_contratto,
+		contratti.nome AS contratto,
+		contratti.codice AS tessera,
+		rinnovi.id_licenza,
+		licenze.nome AS licenza,
+		rinnovi.id_progetto,
+		progetti.nome AS progetto,
+		rinnovi.data_inizio,
+		rinnovi.data_fine,
+		rinnovi.codice,
+		rinnovi.id_pianificazione,
+		rinnovi.id_account_inserimento,
+		rinnovi.id_account_aggiornamento,
+		concat('rinnovo ', rinnovi.id, ' dal ',CONCAT_WS('-',rinnovi.data_inizio),' al ',CONCAT_WS('-',rinnovi.data_fine)) AS __label__
+	FROM contratti
+		LEFT JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
+		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
+    LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
+    LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
+		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
+  WHERE tipologie_contratti.se_iscrizione IS NOT NULL
+;
+
 -- | 100000056610
 -- __report_backlog_todo__
 -- tipologia: report

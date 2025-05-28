@@ -106,15 +106,17 @@
     // recupero dei gruppi dal database
     $gruppi = mysqlQuery(
         $cf['mysql']['connection'],
-        "SELECT * FROM gruppi_view"
+        'SELECT * FROM gruppi_view'
     );
 
     // integro i gruppi trovati nel database
-    foreach( $gruppi as $gruppo ) {
-        $cf['auth']['groups'][ $gruppo['nome'] ] = array(
-            'id' => $gruppo['id'],
-            'nome' => $gruppo['nome']
-        );
+    if( is_array( $gruppi ) ) {
+        foreach( $gruppi as $gruppo ) {
+            $cf['auth']['groups'][ $gruppo['nome'] ] = array(
+                'id' => $gruppo['id'],
+                'nome' => $gruppo['nome']
+            );
+        }
     }
 
     /**
@@ -206,4 +208,4 @@
     $cf['auth']['jwt']['pass'] = NULL;
 
     // debug
-    // print_r( $cf['auth'] );
+    // die( print_r( $cf['auth'], true ) );
