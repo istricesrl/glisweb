@@ -1147,8 +1147,10 @@ CREATE OR REPLACE VIEW `__report_iscrizioni_anagrafica__` AS
 		contratti.codice AS tessera,
 		rinnovi.id_licenza,
 		licenze.nome AS licenza,
-		rinnovi.id_progetto,
+		coalesce( rinnovi.id_progetto, contratti.id_progetto ) AS id_progetto,
 		progetti.nome AS progetto,
+    categorie_progetti.id AS id_disciplina_progetto,
+    categorie_progetti.nome AS disciplina_progetto,
 		rinnovi.data_inizio,
 		rinnovi.data_fine,
 		rinnovi.codice,
@@ -1162,8 +1164,11 @@ CREATE OR REPLACE VIEW `__report_iscrizioni_anagrafica__` AS
     LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
     LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
-		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
+		LEFT JOIN progetti ON progetti.id = coalesce( rinnovi.id_progetto, contratti.id_progetto ) 
+    LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+    LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina IS NOT NULL
   WHERE tipologie_contratti.se_iscrizione IS NOT NULL
+    GROUP BY contratti.id, contratti_anagrafica.id_anagrafica, rinnovi.id, progetti.id
 ;
 
 -- | 100000056610

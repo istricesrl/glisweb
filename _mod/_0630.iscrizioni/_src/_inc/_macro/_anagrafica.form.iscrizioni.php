@@ -40,6 +40,7 @@
 	    'id_contratto' => 'd-none',
         'id_anagrafica' => 'd-none',
         'codice' => 'text-left d-none d-md-table-cell',
+        'progetto' => 'text-left',
         'tipologia' => 'text-left',
         'data_inizio' => 'text-left',
         'data_fine' => 'text-left'
