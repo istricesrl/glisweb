@@ -8,7 +8,7 @@
 {% import _self as nav %}
 {% for id,link in links %}{% set id = id|replace({'|': "-", "." : "-"}) %}<li class="nav-item{% if link.active %} active{% elseif link.current %} current{% endif %} {% if parent %}child-of-{{ parent }}{% endif %}" data-page-id="{{ id }}">
     {% if not link.location[ lang ] %}<!-- link.location non presente per la lingua {{ lang }}, l'attributo href, l'ancora e la query non vengono mostrate -->{% endif %}
-    {% if link.label[ lang ] %}<a {% if link.location[ lang ] %}href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}"{% endif %} class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ link.label[ lang ]|raw }}</a>{% else %}<!-- link.label non presente per la lingua {{ lang }} -->{% endif %}
+    {% if link.label[ lang ] %}<a {% if link.location[ lang ] %}href="{{ link.location[ lang ] }}{% if link.ancora %}#{{ link.ancora }}{% endif %}{% if query %}?{{ query }}{% endif %}"{% endif %} class="nav-link"{% if link.target %} target="{{ link.target }}"{% endif %}>{{ include( template_from_string ( link.label[ lang ] ) ) | raw }}</a>{% else %}<!-- link.label non presente per la lingua {{ lang }} -->{% endif %}
     {% if link.content %}<ul>{{ nav.menu( link.content, lang, site, query, id ) }}</ul>{% endif %}
 </li>{% endfor %}
 {% endmacro %}
@@ -16,7 +16,7 @@
 {% macro selectMenu( links, lang, site, query, offset ) %}
 {% import _self as nav %}
 {% for link in links %}
-    <option class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}"{% if link.active or link.current %} selected{% endif %}>{{ offset }}{{ link.label[ lang ] }}</option>
+    <option class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}"{% if link.active or link.current %} selected{% endif %}>{{ offset }}{{ include( template_from_string ( link.label[ lang ] ) ) | raw }}</option>
     {% if link.content %}
     {{ nav.selectMenu( link.content, lang, site, query, offset ~ '— ' ) }}
     {% endif %}
@@ -27,7 +27,7 @@
 {% import _self as nav %}
 <div>
 {% for link in links %}
-    <a class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}">{{ link.label[ lang ] }}</a>{% if not loop.last %} | {% endif %}
+    <a class="nav-item nav-link{% if link.active %} active{% elseif link.current %} current{% endif %}" href="{{ link.location[ lang ] }}{% if query %}?{{ query }}{% endif %}">{{ include( template_from_string ( link.label[ lang ] ) ) | raw }}</a>{% if not loop.last %} | {% endif %}
     {% if link.content %}
     {% set submenu = link.content %}
     {% endif %}
