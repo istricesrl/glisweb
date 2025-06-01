@@ -67,7 +67,7 @@
         }
 
         // status
-        $status['print'] = '/print/5600.colli/etichette.colli?codice=' . $status['codice'];
+        $status['print'] = '/print/5600.colli/etichette.colli?__etichette__[codice]=' . $status['codice'];
 
     } else {
 

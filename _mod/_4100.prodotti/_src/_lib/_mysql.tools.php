@@ -50,7 +50,9 @@
 											);
 				
 				// leggo i dati sul prezzo del prodotto per chiamare la variazionePrezzo							
-					$prodRow = mysqlSelectRow( $c, "SELECT * from prezzi_view WHERE id_prodotto = ? AND id_listino = ? ",
+					$prodRow = mysqlSelectRow( $c, "SELECT * from prezzi_view WHERE id_prodotto = ? AND id_listino = ? 
+											AND prezzi_view.data_inizio <= date(now())
+											AND (prezzi_view.data_fine IS NULL OR prezzi_view.data_fine >= date(now()))",
 											array(
 												array( "s" => $prodotto ),
 												array( "s" => $articolo['id_listino'] )
@@ -229,7 +231,9 @@
 											);
 				
 				// leggo i dati sul prezzo del prodotto per chiamare la variazionePrezzo							
-					$prodRow = mysqlSelectRow( $c, "SELECT * from prezzi_view WHERE id_prodotto = ? AND id_listino = ? ",
+					$prodRow = mysqlSelectRow( $c, "SELECT * from prezzi_view WHERE id_prodotto = ? AND id_listino = ? 
+											AND prezzi_view.data_inizio <= date(now())
+											AND (prezzi_view.data_fine IS NULL OR prezzi_view.data_fine >= date(now()))",
 											array(
 												array( "s" => $prodotto ),
 												array( "s" => $carrello['id_listino'] )

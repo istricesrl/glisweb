@@ -117,11 +117,13 @@
                 AND id_listino = ?
                 AND ( qta_min IS NULL OR qta_min <= ? )
                 AND ( data_inizio IS NULL OR data_inizio <= ? )
+                AND ( data_fine IS NULL OR data_fine > ? )
                 ORDER BY data_inizio DESC, qta_min DESC',
                 array(
                     array( 's' => $p ),
                     array( 's' => $l ),
                     array( 's' => $qp ),
+                    array( 's' => $date ),
                     array( 's' => $date )
                 )
             );
@@ -141,11 +143,13 @@
                 AND id_listino = ?
                 AND ( qta_min IS NULL OR qta_min <= ? )
                 AND ( data_inizio IS NULL OR data_inizio <= ? )
+                AND ( data_fine IS NULL OR data_fine > ? )
                 ORDER BY data_inizio DESC, qta_min DESC',
                 array(
                     array( 's' => $a ),
                     array( 's' => $l ),
                     array( 's' => $qa ),
+                    array( 's' => $date ),
                     array( 's' => $date )
                 )
             );
@@ -201,11 +205,13 @@
                         AND id_listino = ?
                         AND ( qta_min IS NULL OR qta_min <= ? )
                         AND ( data_inizio IS NULL OR data_inizio <= ? )
+                        AND ( data_fine IS NULL OR data_fine > ? )
                         ORDER BY data_inizio DESC, qta_min DESC',
                         array(
                             array( 's' => $bp ),
                             array( 's' => $l ),
                             array( 's' => $qbn ),
+                            array( 's' => $date ),
                             array( 's' => $date )
                         )
                     );
@@ -227,11 +233,13 @@
                         AND id_listino = ?
                         AND ( qta_min IS NULL OR qta_min <= ? )
                         AND ( data_inizio IS NULL OR data_inizio <= ? )
+                        AND ( data_fine IS NULL OR data_fine > ? )
                         ORDER BY data_inizio DESC, qta_min DESC',
                         array(
                             array( 's' => $bp ),
                             array( 's' => $l ),
                             array( 's' => $qbn ),
+                            array( 's' => $date ),
                             array( 's' => $date )
                         )
                     );

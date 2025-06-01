@@ -9,7 +9,7 @@
 
         $('#btnstampa').html('<i class="fa fa-circle-o-notch fa-spin fa-fw"></i>');
 	
-		var call = '{{ site.url }}_mod/_5600.colli/_src/_api/_print/_etichette.colli.php?codice=' + $('#_search').val();
+		var call = '{{ site.url }}_mod/_5600.colli/_src/_api/_print/_etichette.colli.php?__etichette__[codice]=' + $('#_search').val();
 
 			$('#btnstampa').html('<i class="fa fa-check"></i>');
             window.open(call, '_blank');
