@@ -1119,6 +1119,15 @@
         ),
         '__report_variazioni_anagrafica__' => array(
             CONTROL_FULL => array( 'roots','staff' )
+        ),
+        'messaggi' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'conversazioni' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'conversazioni_account' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
         )
     );
  

@@ -1140,6 +1140,8 @@
     $tidy->parseString( $html, $config, 'utf8' );
     $tidy->cleanRepair();
 
+    $tidy = str_replace( [ '><!--', '> <!--' ], ">\n\t<!--", $tidy );
+
     // output
     echo $tidy;
 

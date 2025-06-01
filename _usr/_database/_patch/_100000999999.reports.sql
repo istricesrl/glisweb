@@ -1606,6 +1606,26 @@ ORDER BY todo.id
 --  avg( errore_pianificazione ) AS errore_pianificazione
 -- FROM __report_pianificazione_todo__
 
+-- | 100000058000
+DROP VIEW IF EXISTS `__report_lettura_conversazioni__`;
+
+-- | 100000058001
+-- __report_lettura_conversazioni__
+
+CREATE OR REPLACE VIEW `__report_lettura_conversazioni__` AS
+    SELECT
+        conversazioni.id,
+        count( messaggi.id ) AS messaggi_non_letti,
+        conversazioni_account.id_account
+    FROM 
+        conversazioni 
+        LEFT JOIN messaggi ON messaggi.id_conversazione = conversazioni.id
+        LEFT JOIN conversazioni_account ON conversazioni_account.id_conversazione = conversazioni.id
+        LEFT JOIN attivita ON attivita.id_messaggio = messaggi.id AND attivita.id_tipologia = 42 AND attivita.id_account = conversazioni_account.id_account
+    WHERE attivita.id IS NULL
+    GROUP BY conversazioni.id, conversazioni_account.id_account
+; 	
+
 -- | 100000060300
 
 -- __report_lezioni_corsi__
