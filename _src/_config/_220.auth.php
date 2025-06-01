@@ -78,10 +78,12 @@
      */
 
     // ...
-    if( isset( $cf['session']['account']['username'] ) && ! empty( $cf['session']['account']['username'] ) ) {
-        if( ! in_array( $_SESSION['id'], array_keys( $cf['auth']['index']['users'][ $cf['session']['account']['username'] ] ) ) ) {
-            $_REQUEST['__logout__'] = true;
-            logger( 'logout richiesto per disconnessione dal multisito', 'auth', LOG_NOTICE );
+    if( isset( $cf['auth']['index']['users'] ) ) {
+        if( isset( $cf['session']['account']['username'] ) && ! empty( $cf['session']['account']['username'] ) ) {
+            if( ! in_array( $_SESSION['id'], array_keys( $cf['auth']['index']['users'][ $cf['session']['account']['username'] ] ) ) ) {
+                $_REQUEST['__logout__'] = true;
+                logger( 'logout richiesto per disconnessione dal multisito', 'auth', LOG_NOTICE );
+            }
         }
     }
 

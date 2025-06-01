@@ -122,6 +122,8 @@
 
     // debug
     // print_r( $_SESSION );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
 
     /**
      * configurazioni iniziali
@@ -602,10 +604,12 @@
                 );
 
                 // salvataggio dell'indice delle sessioni attive
-                $cf['redis']['connection']->set(
-                    REDIS_MULTISITE_SEED,
-                    json_encode( $cf['auth']['index'] )
-                );
+                if( isset( $cf['redis']['connection'] ) && ! empty( REDIS_MULTISITE_SEED ) ) {
+                    $cf['redis']['connection']->set(
+                        REDIS_MULTISITE_SEED,
+                        json_encode( $cf['auth']['index'] )
+                    );
+                }
 
                 // print_r( $cf['auth']['index'] );
 
