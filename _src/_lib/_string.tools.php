@@ -602,10 +602,10 @@
         return ! mb_check_encoding( $data, 'UTF-8' );
     }
 
-        /**
+    /**
      * questa funzione rimuove da una stringa tutti i caratteri diversi da numeri, vigola e punto
      * 
-     * @todo documentare
+     * TODO documentare
      * 
      */
     function extractNumber( $string ) {

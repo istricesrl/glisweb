@@ -168,7 +168,7 @@
     }
 
     /*
-     * @todo prevedere la forzatura anche per il tema della pagina
+     * TODO prevedere la forzatura anche per il tema della pagina
      */
 
     // log

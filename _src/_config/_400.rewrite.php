@@ -104,7 +104,7 @@
     $cf['parser']['lingua']     = $cf['localization']['language']['ietf'];
 
     /*
-     * @todo perché si parte dalla pagina NULL? il default dovrebbe essere la 404, se uno cerca una
+     * TODO perché si parte dalla pagina NULL? il default dovrebbe essere la 404, se uno cerca una
      * pagina che non esiste è corretto che approdi sulla pagina "non trovato"; oppure vogliamo rendere
      * la pagina NULL "non trovato"?
      */

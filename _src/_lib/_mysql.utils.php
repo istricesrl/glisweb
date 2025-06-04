@@ -1081,7 +1081,7 @@
 
     /**
      * 
-     * @todo documentare
+     * TODO documentare
      * 
      * TODO implementare la cancellazione di specifiche righe
      * 
@@ -1101,7 +1101,7 @@
 
     /**
      * 
-     * @todo documentare
+     * TODO documentare
      * 
      */
     function emptyAnagraficaViewStatic()

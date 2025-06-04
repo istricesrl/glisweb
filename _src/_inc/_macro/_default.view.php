@@ -195,7 +195,7 @@
                 die( 'la pagina di gestione ' . $ct['view']['open']['page'] . ' non è stata definita o non è valida' );
             }
         } else {
-            die( 'non hai i permessi per gestire la tabella ' . $ct['view']['table'] );
+            // die( 'non hai i permessi per gestire la tabella ' . $ct['view']['table'] );
         }
     } else {
         // die( 'la pagina di gestione non è stata definita' );
@@ -210,7 +210,7 @@
                 die( 'la pagina di inserimento ' . $ct['view']['insert']['page'] . ' non è stata definita o non è valida' );
             }
         } else {
-            die( 'non hai i permessi per inserire dati nella tabella ' . $ct['view']['table'] );
+            // die( 'non hai i permessi per inserire dati nella tabella ' . $ct['view']['table'] );
         }
 	} else {
         // die( 'la pagina di inserimento non è stata definita' );
