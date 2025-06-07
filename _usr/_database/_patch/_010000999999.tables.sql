@@ -1385,7 +1385,8 @@ CREATE TABLE IF NOT EXISTS `contratti_progetti` (
 CREATE TABLE `conversazioni` (
   `id` int(11) NOT NULL,
   `id_annuncio` int(11) DEFAULT NULL,
-  `nome` char(32) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
   `quantita` int(11) DEFAULT NULL,
   `note` text DEFAULT NULL,
@@ -1406,9 +1407,14 @@ CREATE TABLE IF NOT EXISTS `conversazioni_account` (
   `id` int(11) NOT NULL,
   `id_conversazione` int(11) DEFAULT NULL,
   `id_account` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
   `timestamp_lettura` int(11) DEFAULT NULL,
   `timestamp_entrata` int(11) DEFAULT NULL,
-  `timestamp_uscita` int(11) DEFAULT NULL
+  `timestamp_uscita` int(11) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000007800

@@ -2704,10 +2704,17 @@ CREATE OR REPLACE VIEW conversazioni_view AS
 	SELECT
 		conversazioni.id,
 		conversazioni.id_annuncio,
+		conversazioni.codice,
 		conversazioni.nome,
 		conversazioni.id_articolo,
+		conversazioni.quantita,
+		conversazioni.note,
 		conversazioni.timestamp_apertura,
 		conversazioni.timestamp_chiusura,
+		conversazioni.id_account_inserimento,
+		conversazioni.timestamp_inserimento,
+		conversazioni.id_account_aggiornamento,
+		conversazioni.timestamp_aggiornamento,
 		conversazioni.nome AS __label__
 	FROM
 		conversazioni
@@ -2729,9 +2736,14 @@ CREATE OR REPLACE VIEW conversazioni_account_view AS
 		conversazioni_account.id,
 		conversazioni_account.id_conversazione,
 		conversazioni_account.id_account,
+		conversazioni_account.id_ruolo,
 		conversazioni_account.timestamp_lettura,
 		conversazioni_account.timestamp_entrata,
 		conversazioni_account.timestamp_uscita,
+		conversazioni.id_account_inserimento,
+		conversazioni.timestamp_inserimento,
+		conversazioni.id_account_aggiornamento,
+		conversazioni.timestamp_aggiornamento,
 		concat( conversazioni_account.id_conversazione, ' - ', conversazioni_account.id_account) AS __label__
 	FROM
 		conversazioni_account
@@ -5722,10 +5734,13 @@ CREATE OR REPLACE VIEW `messaggi_view` AS
 	SELECT
 		messaggi.id,
 		messaggi.id_conversazione,
+		messaggi.testo,
 		messaggi.timestamp_invio,
 		messaggi.timestamp_lettura,
 		messaggi.id_account_inserimento,
+		messaggi.timestamp_inserimento,
 		messaggi.id_account_aggiornamento,
+		messaggi.timestamp_aggiornamento,
 		concat( 'messaggio #', messaggi.id )AS __label__
 	FROM messaggi
 ;
