@@ -5,7 +5,7 @@
     {% else %}
     <!-- ATTENZIONE link alla pagina privacy non trovato per questa lingua! -->
     {% endif %}
-    |
+    {% if pages.privacy.url[ localization.language.ietf ] and pages.affiliazioni.url[ localization.language.ietf ] %} | {% endif %}
     {% if pages.affiliazioni.url[ localization.language.ietf ] %}
     <a href="{{ pages.affiliazioni.url[ localization.language.ietf ] }}">{{ pages.affiliazioni.h1[ localization.language.ietf ] }}</a>
     {% else %}

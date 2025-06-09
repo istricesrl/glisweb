@@ -4,24 +4,37 @@
      * questo file contiene funzioni per l'utilizzo di redis
      *
      *
+     * vedi https://www.freecodecamp.org/news/how-to-use-redis-with-php/
+     * vedi https://www.webarea.it/howto/nosql/redis-php-installazione-configurazione-esempi-utilizzo_160
      *
-     *
-     *
-     * @file
+     * TODO documentare
      *
      */
 
-/*     
+    /**
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
     function redisUniqueKey( &$k ) {
 
-	if( strpos( $k, REDIS_UNIQUE_SEED ) === false ) {
-	    $k = REDIS_UNIQUE_SEED . $k;
-	}
+        if( strpos( $k, REDIS_UNIQUE_SEED ) === false ) {
+            $k = REDIS_UNIQUE_SEED . $k;
+        }
 
-	return $k;
+        return $k;
 
     }
 
+    /**
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
     function redisAddKeyAgeSuffix( $k ) {
 
         if( substr( $k, -4 ) != '_AGE' ) {
@@ -32,6 +45,13 @@
 
     }
 
+    /**
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
     function redisWrite( $conn, $key, $data, $ttl = REDIS_DEFAULT_TTL ) {
 
         redisUniqueKey( $key );
@@ -44,14 +64,14 @@
 
         } else {
 
-            $conn->setOption( Memcached::OPT_COMPRESSION, true );
-
-            $r = $conn->set( $key, $data, $ttl );
+            $r = $conn->set( $key, $data );
+            $conn->expire( $key, $ttl );
 
             if( $r == false ) {
-                logWrite( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'redis', LOG_ERR );
+                logWrite( 'impossibile scrivere la chiave: ' . $key, 'redis', LOG_ERR );
             } else {
-                $r = $conn->set( redisAddKeyAgeSuffix( $key ), time(), $ttl );
+                $r = $conn->set( redisAddKeyAgeSuffix( $key ), time() );
+                $conn->expire( redisAddKeyAgeSuffix( $key ), $ttl );
                 logWrite( 'scrittura effettuata, chiave: ' . redisAddKeyAgeSuffix( $key ), 'redis' );
             }
 
@@ -61,95 +81,81 @@
 
     }
 
+    /**
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
+    function redisRead( $conn, $key ) {
+
+        redisUniqueKey( $key );
+
+        if( empty( $conn ) ) {
+
+            logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'redis' );
+
+            return false;
+
+        } else {
+
+            $r = $conn->get( $key );
+
+            if( $r == false ) {
+                logWrite( 'impossibile leggere la chiave: ' . $key, 'redis' );
+            } else {
+                logWrite( 'lettura effettuata, chiave: ' . $key, 'redis' );
+            }
+
+            return $r;
+
+        }
+
+    }
+
+    /**
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
     function redisGetKeyAge( $conn, $key ) {
 
         return redisRead( $conn, redisAddKeyAgeSuffix( $key ) );
 
     }
 
-    function redisRead( $conn, $key ) {
-
-	redisUniqueKey( $key );
-
-	if( empty( $conn ) ) {
-
-		logWrite( 'connessione al server assente per leggere la chiave: ' . $key, 'redis' );
-
-		return false;
-
-	} else {
-
-		$r = $conn->get( $key );
-
-		if( $r == false ) {
-		    logWrite( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'redis' );
-		} else {
-		    logWrite( 'lettura effettuata, chiave: ' . $key, 'redis' );
-		}
-
-		return $r;
-
-	}
-
-    }
-
+    /**
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
     function redisDelete( $conn, $key ) {
 
-	redisUniqueKey( $key );
+        redisUniqueKey( $key );
 
-    if( ! empty( $conn ) ) {
-        return $conn->delete( $key );
-    } else {
-        return false;
+        if( ! empty( $conn ) ) {
+            return $conn->del( $key );
+        } else {
+            return false;
+        }
+
     }
 
-    }
-
+    /**
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
     function redisFlush( $conn ) {
 
-	return $conn->flush();
+	    return $conn->flushall();
 
     }
 
-    function fileCachedExists( $m, $f, $t = REDIS_DEFAULT_TTL, &$e = array() ) {
 
-	// calcolo la chiave della query
-	    $k = md5( $f );
-
-	// cerco il valore in cache
-	    $r = redisRead( $m, $k );
-
-	// se il valore non è stato trovato
-	    if( empty( $r ) || $r === false ) {
-		$r = fileExists( $f );
-		redisWrite( $m, $k, serialize( $r ), $t );
-	    } else {
-		$r = unserialize( $r );
-	    }
-
-	// restituisco il risultato
-	    return $r;
-
-    }
-
-    function fileGetCachedContents( $m, $f, $t = REDIS_DEFAULT_TTL, &$e = array() ) {
-
-	// calcolo la chiave della query
-	    $k = md5( $f );
-
-	// cerco il valore in cache
-	    $r = redisRead( $m, $k );
-
-	// se il valore non è stato trovato
-	    if( empty( $r ) || $r === false ) {
-		$r = file_get_contents( $f );
-		redisWrite( $m, $k, serialize( $r ), $t );
-	    } else {
-		$r = unserialize( $r );
-	    }
-
-	// restituisco il risultato
-	    return $r;
-
-    }
-*/

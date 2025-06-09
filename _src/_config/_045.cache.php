@@ -198,7 +198,7 @@
         }
 
         // costante per il default TTL
-        define( 'REDIS_DEFAULT_TTL', ( ( isset( $cf['redis']['server']['ttl'] ) ) ? $cf['redis']['server']['ttl'] : 0 ) );
+        define( 'REDIS_DEFAULT_TTL', ( ( isset( $cf['redis']['server']['ttl'] ) ) ? $cf['redis']['server']['ttl'] : 3600 ) );
 
     } else {
 

@@ -165,7 +165,10 @@
 
         if( function_exists( 'apcu_store' ) ) {
 
-            return apcu_store( $key, serialize( $data ), $ttl );
+            $r = apcu_store( $key, serialize( $data ), $ttl );
+            apcu_store( apcuAddKeyAgeSuffix( $key ), serialize( time() ) );
+
+            return $r;
 
         }
 

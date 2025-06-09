@@ -7,27 +7,27 @@
      * 
      */
 
-    // configurazioni extra per TeamSystem e Zucchetti
-    // TODO questa cosa non deve stare qui ma in un file del 600 ad es. _600.common.php
-    foreach( array( 'teamsystem', 'zucchetti' ) as $xc ) {
+    /**
+     * sezione Teamsystem
+     * ==================
+     * 
+     * 
+     */
 
-        // configurazione extra
-        if( isset( $cx[ $xc ] ) ) {
+    // profili di funzionamento
+    $cf['teamsystem']['profiles'][ DEVELOPEMENT ] =
+    $cf['teamsystem']['profiles'][ TESTING ]      =
+    $cf['teamsystem']['profiles'][ PRODUCTION ]   = array();
 
-            // recupero configurazione
-            if( isset( $cf[ $xc ] ) ) {
-                $cf[ $xc ]              = array_replace_recursive( $cf[ $xc ], $cx[ $xc ] );
-            } else {
-                $cf[ $xc ]              = $cx[ $xc ];
-            }
 
-            // collegamento all'array $ct
-            $ct[ $xc ]                    = &$cf[ $xc ];
+    /**
+     * sezione Zucchetti
+     * =================
+     * 
+     * 
+     */
 
-            // link al profilo corrente
-            $cf[ $xc ]['profile']        = &$cf[ $xc ]['profiles'][ SITE_STATUS ];
-
-        }
-
-    }
-
+    // profili di funzionamento
+    $cf['zucchetti']['profiles'][ DEVELOPEMENT ] =
+    $cf['zucchetti']['profiles'][ TESTING ]      =
+    $cf['zucchetti']['profiles'][ PRODUCTION ]   = array();

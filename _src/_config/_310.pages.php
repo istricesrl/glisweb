@@ -183,6 +183,11 @@
      * /_src/_inc/_pages/ e ne esiste una corrispettiva anche nei moduli; entrambe sono
      * sovrascritte da eventuali configurazioni custom.
      *
+     * pagine statiche e contenuti statici
+     * -----------------------------------
+     * [...] si veda _src/_api/_pages.php per ulteriori dettagli sulla gestione delle pagine
+     * statiche e dei contenuti statici.
+     * 
      * pagine di default e pagine riservate
      * ====================================
      *

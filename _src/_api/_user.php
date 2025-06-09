@@ -1,13 +1,11 @@
 <?php
 
     /**
-     * API file standard
+     * API di login/logout
      *
      *
      *
-     * @todo commentare
-     *
-     * @file
+     * TODO documentare
      *
      */
 

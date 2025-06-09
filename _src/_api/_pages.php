@@ -74,6 +74,13 @@
      * non viene punto invocata. In questo modo è possibile includervi qualsiasi tipo di contenuto che non venendo processato dal framework
      * verrà servito agli utenti da Apache senza alcuna elaborazione. Questa caratteristica di GlisWeb è intesa per usi particolari, in cui il
      * framework deve convivere con altri contenuti o addirittura con altri CMS.
+     * 
+     * contenuti statici delle pagine
+     * ------------------------------
+     * 
+     * [...] la cartella _src/_inc/_contents e la cartella src/inc/contents contengono [...]
+     * 
+     * TODO documentare
      *
      */
 
