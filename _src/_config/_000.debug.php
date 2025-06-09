@@ -66,7 +66,14 @@
     /**
      * dichiarazione delle costanti
      * ============================
-     * 
+     * Le costanti DEVELOPEMENT, TESTING e PRODUCTION sono utilizzate per tenere traccia dello status del
+     * deploy corrente; è possibile configurare facilmente altri status dichiarando in custom le relative
+     * costanti (ad esempio DBTESTING, UNSTABLE o PREPRODUCTION eccetera). Agli stati del deploy si collegano
+     * le dichiarazioni di molte variabili (vedi oltre) consentendo di fatto di modificare il comportamento
+     * del deploy semplicemente modificandone lo status.
+     *
+     * Le costanti che definiscono le destinazioni dei log sono dichiarate per implementazioni future,
+     * e non sono attualmente utilizzate.
      * 
      */
 
@@ -102,7 +109,10 @@
     /**
      * configurazione dei livelli di debug
      * ===================================
-     * 
+     * Queste variabili definiscono il comportamento del framework relativamente al debug (livello di
+     * log, display degli errori, e così via). Si noti che un insieme di variabili è dichiarato per
+     * ogni status possibile del deploy, in modo da adattare il comportamento del debug allo status
+     * stesso.
      * 
      */
 
@@ -124,7 +134,7 @@
     /**
      * debug del runlevel
      * ==================
-     * 
+     * In questa sezione sono presenti, commentate, delle righe utili per il debug di questo runlevel.
      * 
      */
 

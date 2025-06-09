@@ -44,18 +44,47 @@
      * sovrascriverlo oppure, se non si desidera rendere il sito disponibile in italiano,
      * eliminarlo tramite la funzione unset.
      *
+     * host e dominio del sito
+     * -----------------------
+     * Assegnando a un sito un nome host e un dominio consentiamo al framework di capire, in base alla
+     * richiesta HTTP che riceve, quale sito deve utilizzare. Il processo di riconoscimento del sito
+     * attivo in base a host e dominio è effettuata nel successivo runlevel 015.
      *
+     * alias di host e di dominio
+     * --------------------------
+     * Se necessario è possibile attribuire a un sito degli alias sia dell'host che del dominio; questi
+     * concorreranno all'individuazione del sito corrente al runlevel 015 assieme all'host e al dominio
+     * base. Si noti che non è necessario specificare un alias per la versione con e senza www del sito
+     * in quanto il sistema gestisce già questo specifico aspetto automaticamente.
      *
-     * TODO documentare
+     * configurazioni specifiche per sito
+     * ----------------------------------
+     * Una caratteristica molto importante del framework GlisWeb è la possibilità di specificare configurazioni
+     * relative a un sito in particolare, che si sovrappongono alle configurazioni globali; i rami dell'array
+     * $cf che sono soggetti a questo tipo di personalizzazione sono:
      *
-     *
+     * - $cf['site'] al runlevel 025
+     * - $cf['privacy'] al runlevel 065
+     * - $cf['google'] al runlevel 115
+     * - $cf['contents'] al runlevel 310
+     * - $cf['smtp'] al runlevel 515
+     * - $cf['slack'] al runlevel 555
+     * - $cf['archivium'] al runlevel 565
+     * - $cf['ftp'] al runlevel 585
+     * 
+     * la pagina home del sito
+     * -----------------------
+     * La dichiarazione della pagina home è fondamentale in quanto consente al framework di erogare una pagina
+     * quando nessuna pagina viene specificata. Si può dire che la home page sia la pagina di default del sito.
      *
      */
 
     /**
      * configurazione del sito di default
      * ==================================
-     * 
+     * Per funzionare il framework ha bisogno che sia definito almeno un sito; questa configurazione minimale mette
+     * il deploy corrente in condizione di essere utilizzato. Tipicamente si vorrà personalizzare questa configurazione
+     * con i dati specifici del proprio deploy.
      * 
      */
 
@@ -103,7 +132,7 @@
     /**
      * debug del runlevel
      * ==================
-     * 
+     * Questa sezione contiene alcune righe commentate utili per il debug del runlevel.
      * 
      */
 

@@ -34,23 +34,15 @@
      *
      * TODO visto che la licenza è per deploy (non per sito) dovrebbe essere $cf['license'] e non $cf['site']['license']
      * TODO verificare se dietro proxy serve di considerare X-FORWARDED-FOR anziché HTTP_HOST https://stackoverflow.com/questions/11452938/how-to-use-http-x-forwarded-for-properly
-     * TODO documentare FILE_STATUS
-     * TODO documentare
-     *
-     *
      *
      */
 
     /**
      * integrazione della configurazione da file Json/Yaml
      * ===================================================
-     * 
+     * In questa sezione l'array $cf['sites'] viene integrato con le direttive dei file di configurazione JSON/YAML.
      * 
      */
-
-    // debug
-    // print_r( $cf['sites'] );
-    // die( print_r( $cx['sites'], true ) );
 
     // configurazione extra
     if( isset( $cx['sites'] ) ) {
@@ -60,7 +52,7 @@
     /**
      * collegamento di $ct a $cf tramite puntatore
      * ===========================================
-     * 
+     * In questa sezione l'array $cf['sites'] viene reso disponibile al template manager linkando $ct['site'] a $cf['site'].
      * 
      */
 
@@ -70,7 +62,9 @@
     /**
      * ricerca del sito corrente
      * =========================
-     * 
+     * In questa sezione, fondamentale per il funzionamento del framework, l'URL corrente viene analizzato per capire in quale sito
+     * ci si trova. La ricerca tiene conto di host e dominio principali dei siti, nonché dei loro alias. Al termine della procedura
+     * viene dichiarata la costante SITE_CURRENT che contiene l'ID del sito corrente. 
      * 
      */
 
@@ -165,7 +159,9 @@
     /**
      * sito di default
      * ===============
-     * 
+     * In questa sezione viene dichiarata la costante SITE_DEFAULT; attualmente la policy in caso di sito non trovato è interrompere
+     * l'esecuzione, quindi la costante SITE_DEFAULT non serve; è tuttavia possibile che venga impiegata in futuro, quindi 
+     * non si è ritenuto opportuno rimuoverla.
      * 
      */
 
@@ -177,8 +173,9 @@
     /**
      * configurazioni che dipendono dal sito corrente
      * ==============================================
-     * 
-     * 
+     * In questa sezione $cf['site'] viene collegato a &$cf['sites'][ SITE_CURRENT ]; viene inoltre definita
+     * la costante SITE_STATUS che contiene lo status corrente del deploy, ricavato a sua volta dal sito
+     * corrente.
      * 
      */
 
@@ -198,11 +195,13 @@
     /**
      * debug del runlevel
      * ==================
-     * 
+     * In questa sezione sono presenti alcune righe commentate utili per il debug del runlevel.
      * 
      */
 
     // debug
+    // print_r( $cf['sites'] );
+    // die( print_r( $cx['sites'], true ) );
     // die( 'host: ' . $_SERVER['HTTP_HOST'] );
     // print_r( $cf['site'] );
     // echo 'OUTPUT';

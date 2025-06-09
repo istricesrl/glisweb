@@ -1,22 +1,24 @@
 <?php
 
     /**
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * TODO documentare
+     * applicazione delle configurazioni relative al debug del sistema
      *
-     *
-     *
+     * logica di applicazione delle configurazioni
+     * ===========================================
+     * Questo runlevel segue l'inclusione del runlevel 000, quindi recepisce eventuali modifiche alla
+     * configurazione di quel runlevel eventualmente fatte in custom; inoltre recepisce eventuali direttive
+     * presenti nei file di configurazione JSON/YAML.
+     * 
+     * Per rendere disponibile la configurazione di debug al template manager viene collegato
+     * $ct['debug'] a &$cf['debug'].
+     * 
      */
 
     /**
      * integrazione della configurazione da file Json/Yaml
      * ===================================================
-     * 
+     * In questa sezione vengono recepite le eventuali direttive presenti nei file di configurazione
+     * JSON/YAML integrandole con l'array $cf['debug'].
      * 
      */
 
@@ -28,7 +30,7 @@
     /**
      * collegamento di $ct a $cf tramite puntatore
      * ===========================================
-     * 
+     * Qquesta scorciatoia rende disponibili le informazioni di debug al template manager.
      * 
      */
 
@@ -38,7 +40,7 @@
     /**
      * debug del runlevel
      * ==================
-     * 
+     * In questa sezione sono presenti, commentate, delle righe utili per il debug di questo runlevel.
      * 
      */
 
