@@ -31,6 +31,7 @@
     // die( print_r( $status, true ) );
 
     // ...
+    // modifico la timestamp di elaborazione
     mysqlQuery(
         $cf['mysql']['connection'],
         'DELETE FROM anagrafica_indirizzi WHERE id_indirizzo IS NULL AND indirizzo IS NULL'

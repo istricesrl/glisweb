@@ -228,6 +228,9 @@
     $arrayMacroModuli           = glob( glob2custom( DIR_MOD_ATTIVI_SRC_INC_MACRO . '_download.php' ), GLOB_BRACE );
     $arrayMacro                 = array_unique( array_merge( $arrayMacroBase , $arrayMacroModuli ) );
 
+    // debug
+    // die( print_r( $arrayMacro, true ) );
+
     // inclusione delle macro
     foreach( $arrayMacro as $fileMacro ) {
         require $fileMacro;
@@ -247,7 +250,7 @@
 
         // download
         echo file_get_contents( DIR_BASE . $_REQUEST['__download__'] );
-    
+
     } else {
 
         // header

@@ -22,11 +22,15 @@
 
     $ct['view']['cols'] = array(
 	    'id' => '#',
+		'codice_documento' => 'documento',
+		'codice' => 'codice',
 #	    'data_programmazione' => 'pianificato',
 #	    'priorita' => 'priorità',
 		'tipologia' => 'tipologia',
 		'id_progetto' => 'ID progetto',
+		'cliente' => 'cliente',
 		'progetto' => 'progetto',
+        'id_articolo' => 'articolo',
 	    'nome' => 'titolo',
 	    'anagrafica' => 'assegnato a',
 		'ore_programmazione' => 'ore programmate',
@@ -40,11 +44,12 @@
 
     // stili della vista
 	$ct['view']['class'] = array(
-	    'id' => 'd-none d-md-table-cell',
+	    'id' => 'd-none',
 	    'id_priorita' => 'd-none',
 #		'completato' => 'd-none',
 	    'cliente' => 'text-left d-none d-md-table-cell',
 	    'nome' => 'text-left',
+	    'id_articolo' => 'text-left',
 	    'priorita' => 'text-left',
 	    'ore_programmazione' => 'd-none',
 	    'anagrafica' => 'text-left no-wrap d-none d-sm-table-cell',

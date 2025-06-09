@@ -66,6 +66,8 @@
 	    'id' => '#',
         'tipologia' => 'tipologia',
         'cliente' => 'cliente',
+        'id_progetto' => 'ID progetto',
+        'progetto' => 'progetto',
 //        'data_programmazione' => 'programmata',
 //        'ora_inizio_programmazione' => 'ora',
 //        'ora_fine_programmazione' => 'ora fine',
@@ -81,6 +83,7 @@
     // stili della vista
 	$ct['view']['class'] = array(
 	    'id' => 'd-none d-md-table-cell',
+	    'tipologia' => 'text-left',
 	    '__label__' => 'text-left',
         'cliente' => 'text-left d-none d-md-table-cell',
         'anagrafica_programmazione' => 'text-left',
@@ -171,6 +174,7 @@
 /*
  */
 
+/*
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] ) && isset($_SESSION['account']['id_anagrafica'] ) ){
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['id_anagrafica']['EQ'] = $_SESSION['account']['id_anagrafica'] ;
     }
@@ -190,6 +194,7 @@
     if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']) ){
         $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['data_attivita']	= 'ASC';
     } 
+*/
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

@@ -54,6 +54,22 @@
 
             }
 
+            if( isset( $vs['codice'] ) && ( ! isset( $vs['id'] ) || empty( $vs['id']['s'] ) ) ) {
+
+                $id = mysqlSelectValue(
+					$c,
+					'SELECT id FROM documenti WHERE codice = ?',
+					array( array( 's' => $vs['codice']['s'] ) )
+				);
+
+				if( ! in_array( 'id', $ks ) ) {
+					$ks[] = 'id';
+				}
+
+				$vs['id']['s'] = $id;
+
+            }
+
 	    break;
 
 	    case METHOD_DELETE:

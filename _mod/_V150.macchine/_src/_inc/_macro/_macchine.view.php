@@ -24,15 +24,21 @@
 	$ct['view']['open']['page'] = 'macchine.form';
 
     // campi della vista
-    $ct['view']['cols'] = array(
+	$ct['view']['cols'] = array(
         'id' => '#',
-        '__label__' => 'nome'
-    );
+	    'tipologia' => 'tipologia',
+	    'codice' => 'matricola',
+	    'nome' => 'nome',
+	    'hostname' => 'host',
+	    'ip_address' => 'IP address',
+	    'note' => 'note',
+        'data_ora_aggiornamento' => 'ultima trasmissione'
+	);
 
     // stili della vista
-    $ct['view']['class'] = array(
-        '__label__' => 'text-left'
-    );
+	$ct['view']['class'] = array(
+	    'nome' => 'text-left'
+	);
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';

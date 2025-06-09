@@ -205,6 +205,58 @@
     }
 
     /**
+     * login via API key
+     * =================
+     * 
+     * 
+     */
+
+    // intercetto l'header gliswebAuthKey
+    if( array_key_exists( 'gliswebAuthKey', $httpHeaders ) ) {
+
+        // TODO leggere il token da Redis
+
+        $tokenFile = DIR_BASE . 'etc/secure/tokens/' . $httpHeaders['gliswebAuthKey'];
+
+        if( file_exists( $tokenFile ) ) {
+
+            // ...
+            $apiKeyUser = trim( file_get_contents( $tokenFile ) );
+
+            // die( 'token file trovato: ' . $tokenFile );
+
+            // ...
+            if( in_array( $apiKeyUser, array_keys( $cf['auth']['accounts'] ) ) ) {
+
+                $_REQUEST['__login__']['user'] = $apiKeyUser;
+                $cf['auth']['jwt']['pass'] = $cf['auth']['accounts'][ $apiKeyUser ]['password'];
+
+            } else {
+
+                $userData = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT username, password FROM account WHERE username = ?',
+                    array(
+                    array( 's' => $apiKeyUser )
+                    )
+                );
+
+                $_REQUEST['__login__']['user'] = $userData['username'];
+                $cf['auth']['jwt']['pass'] = $userData['password'];
+
+                // die( print_r( $userData, true ) );
+
+            }
+
+        } else {
+
+            die( 'token file non trovato: ' . $tokenFile );
+
+        }
+
+    }
+
+    /**
      * login via token JWT
      * ===================
      * 

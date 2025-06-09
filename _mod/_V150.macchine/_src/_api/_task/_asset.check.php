@@ -40,9 +40,10 @@
             // ...
             mysqlQuery(
                 $cf['mysql']['connection'],
-                'UPDATE asset SET ip_address = ?, timestamp_aggiornamento = ? WHERE hostname = ?',
+                'UPDATE asset SET ip_address = ?, note = ?, timestamp_aggiornamento = ? WHERE hostname = ?',
                 array(
                     array( 's' => $status['dati']['IP'] ),
+                    array( 's' => 'macchina #' . $status['dati']['MACCHINA'] ),
                     array( 's' => time() ),
                     array( 's' => $status['dati']['hostname'] )
                 )
