@@ -216,12 +216,13 @@
 
         // TODO leggere il token da Redis
 
-        $tokenFile = DIR_BASE . 'etc/secure/tokens/' . $httpHeaders['gliswebAuthKey'];
+        // $tokenFile = DIR_BASE . 'etc/secure/tokens/' . $httpHeaders['gliswebAuthKey'];
 
         if( file_exists( $tokenFile ) ) {
 
             // ...
-            $apiKeyUser = trim( file_get_contents( $tokenFile ) );
+            // $apiKeyUser = trim( file_get_contents( $tokenFile ) );
+            $apiKeyUser = trim( redisRead( $cf['redis']['connection'], $httpHeaders['gliswebAuthKey'] ) );
 
             // die( 'token file trovato: ' . $tokenFile );
 

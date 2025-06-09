@@ -43,7 +43,8 @@
 
         // ...
         // TODO scrivere questa cosa su Redis impostando un TTL di un'ora
-        writeToFile( $_SESSION['account']['username'], 'etc/secure/tokens/' . $reply['token'] );
+        // writeToFile( $_SESSION['account']['username'], 'etc/secure/tokens/' . $reply['token'] );
+        redisWrite( $cf['redis']['connection'], $reply['token'], $_SESSION['account']['username'], 3600 );
 
     }
 
