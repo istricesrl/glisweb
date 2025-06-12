@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="CurrentVersionService"
+    targetNamespace="http://tempuri.org/"
+    xmlns:tns="http://tempuri.org/"
+    xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+    xmlns="http://schemas.xmlsoap.org/wsdl/">
+
+    <types>
+        <xsd:schema targetNamespace="http://tempuri.org/">
+            <xsd:element name="getCurrentVersion"/>
+            <xsd:element name="getCurrentVersionResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="return" type="tns:CurrentVersion"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            <xsd:complexType name="CurrentVersion">
+                <xsd:sequence>
+                    <xsd:element name="version" type="xsd:string"/>
+                    <xsd:element name="release" type="xsd:string"/>
+                </xsd:sequence>
+            </xsd:complexType>
+        </xsd:schema>
+    </types>
+
+    <message name="getCurrentVersionRequest"/>
+    <message name="getCurrentVersionResponse">
+        <part name="return" element="tns:getCurrentVersionResponse"/>
+    </message>
+
+    <portType name="CurrentVersionPortType">
+        <operation name="getCurrentVersion">
+            <input message="tns:getCurrentVersionRequest"/>
+            <output message="tns:getCurrentVersionResponse"/>
+        </operation>
+    </portType>
+
+    <binding name="CurrentVersionBinding" type="tns:CurrentVersionPortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="getCurrentVersion">
+            <soap:operation soapAction="getCurrentVersion"/>
+            <input>
+                <soap:body use="literal"/>
+            </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+        </operation>
+    </binding>
+
+    <service name="CurrentVersionService">
+        <port name="CurrentVersionPort" binding="tns:CurrentVersionBinding">
+            <soap:address location="https://{{HTTP_HOST}}/api/current.version.soap"/>
+        </port>
+    </service>
+</definitions>

@@ -44,11 +44,13 @@
 		    // se la mail è partita, imposto il flag per il modulo
 			if( $invio ) {
 			    $_REQUEST['__pwreset__']['__tk_sent__']['testo'] = array(
-				    'it-IT' => 'abbiamo inviato una mail per completare la procedura alla casella indicata'
+				    'it-IT' => 'abbiamo inviato una mail per completare la procedura alla casella indicata',
+					'en-GB' => 'we have sent an email to complete the procedure to the indicated mailbox'
 			    );
 			} else {
 			    $_REQUEST['__pwreset__']['__err__']['testo'] = array(
-				    'it-IT' => 'abbiamo rilevato un problema nella generazione della mail di conferma'
+				    'it-IT' => 'abbiamo rilevato un problema nella generazione della mail di conferma',
+					'en-GB' => 'we have detected a problem in generating the confirmation email'
 			    );
             }
 
@@ -56,7 +58,8 @@
 
             // messaggio
 			$_REQUEST['__pwreset__']['__err__']['testo'] = array(
-			    'it-IT' => 'la mail inserita non corrisponde ad alcun account valido'
+			    'it-IT' => 'la mail inserita non corrisponde ad alcun account valido',
+				'en-GB' => 'the entered email does not correspond to any valid account'
 			);
 
 		}
@@ -80,7 +83,8 @@
 
 		    // messaggio
 			$_REQUEST['__pwreset__']['__err__']['testo'] = array(
-			    'it-IT' => 'il token non è valido'
+			    'it-IT' => 'il token non è valido',
+				'en-GB' => 'the token is not valid'
 			);
 
 		}
@@ -109,14 +113,16 @@
 
 		    // imposto il flag per il modulo
 			$_REQUEST['__pwreset__']['__ok__']['testo'] = array(
-			    'it-IT' => 'password reimpostata con successo'
+			    'it-IT' => 'password reimpostata con successo',
+				'en-GB' => 'password successfully reset'
 			);
 
 		} else {
 
 		    // messaggio
 			$_REQUEST['__pwreset__']['__err__']['testo'] = array(
-			    'it-IT' => 'errore nel cambio password'
+			    'it-IT' => 'errore nel cambio password',
+				'en-GB' => 'error in changing password'
 			);
 
 		}

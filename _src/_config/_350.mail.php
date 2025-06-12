@@ -78,9 +78,14 @@
     $cf['mail']['tpl']['DEFAULT_REIMPOSTAZIONE_PASSWORD'] = array(
         'type' => 'twig',
         'it-IT' => array(
-        'from' => array( '{{ ct.site.name[ ct.localization.language.ietf ] }}' => 'noreply@{{ ct.site.fqdn }}' ),
-        'oggetto' => 'reimpostazione password',
-        'testo' => '<p>Gentile utente, utilizzi questo link per reimpostare la sua password:<br>{{ ct.pages[ dt.pg ].url[ ct.localization.language.ietf ] }}?tk={{ dt.tk }}</p>'
+            'from' => array( '{{ ct.site.name[ ct.localization.language.ietf ] }}' => 'noreply@{{ ct.site.fqdn }}' ),
+            'oggetto' => 'reimpostazione password',
+            'testo' => '<p>Gentile utente, utilizzi questo link per reimpostare la sua password:<br>{{ ct.pages[ dt.pg ].url[ ct.localization.language.ietf ] }}?tk={{ dt.tk }}</p>'
+        ),
+        'en-GB' => array(
+            'from' => array( '{{ ct.site.name[ ct.localization.language.ietf ] }}' => 'noreply@{{ ct.site.fqdn }}' ),
+            'oggetto' => 'password reset',
+            'testo' => '<p>Dear user, use this link to reset your password:<br>{{ ct.pages[ dt.pg ].url[ ct.localization.language.ietf ] }}?tk={{ dt.tk }}</p>'
         )
     );
 

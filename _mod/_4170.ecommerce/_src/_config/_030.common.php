@@ -149,6 +149,12 @@
                 'cancel'        => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 'error'         => 'carrello',                                                          // pagina di ritorno in caso di interruzione della procedura di pagamento
                 '__label__'     => 'PayPal Advanced'                                                    // etichetta del provider per le tendine
+            ),
+            'buy-now' => array(
+                'id'            => 'buy-now',                                                           // ID del provider per le tendine
+                'available'     => true,                                                                // disponibilità del provider
+                'modalita'      => 8,                                                                   // ID della modalità di pagamento (per l'emissione dei documenti)
+                '__label__'     => 'Buy Now'                                                            // etichetta del provider per le tendine
             )
         )
     );
