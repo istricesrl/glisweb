@@ -15,6 +15,7 @@
      *
      * vedi anche https://www.freecodecamp.org/news/how-to-use-redis-with-php/
      * vedi anche https://www.webarea.it/howto/nosql/redis-php-installazione-configurazione-esempi-utilizzo_160
+     * vedi anche https://redis.io/docs/latest/develop/clients/php/
      *
      * funzioni
      * ========

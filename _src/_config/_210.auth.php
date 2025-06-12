@@ -144,7 +144,12 @@
      */
 
     // verifico la challenge reCAPTCHA
-    if( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+    if( defined( 'LOGIN_VIA_API' ) ) {
+
+        // punteggio di spam
+        $cf['session']['spam']['check'] = true;
+
+    } elseif( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
         // registro il valore di bot
         $cf['session']['spam']['score'] = reCaptchaVerifyV3( $_REQUEST['__login__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
@@ -218,13 +223,14 @@
 
         // $tokenFile = DIR_BASE . 'etc/secure/tokens/' . $httpHeaders['gliswebAuthKey'];
 
-        if( file_exists( $tokenFile ) ) {
+        // if( file_exists( $tokenFile ) ) {
 
             // ...
             // $apiKeyUser = trim( file_get_contents( $tokenFile ) );
             $apiKeyUser = trim( redisRead( $cf['redis']['connection'], $httpHeaders['gliswebAuthKey'] ) );
 
             // die( 'token file trovato: ' . $tokenFile );
+            die( 'token redis trovato: ' . $httpHeaders['gliswebAuthKey'] );
 
             // ...
             if( in_array( $apiKeyUser, array_keys( $cf['auth']['accounts'] ) ) ) {
@@ -249,11 +255,11 @@
 
             }
 
-        } else {
+        // } else {
 
-            die( 'token file non trovato: ' . $tokenFile );
+            // die( 'token file non trovato: ' . $tokenFile );
 
-        }
+        // }
 
     }
 

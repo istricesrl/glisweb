@@ -89,26 +89,29 @@
 
     // intercetto eventuali tentativi di logout
     if( isset( $_REQUEST['__logout__'] ) ) {
+        if( isset( $cf['session']['account']['username'] ) ) {
 
-        // ...
-        $cf['auth']['status'] = LOGIN_LOGOUT;
+            // ...
+            $cf['auth']['status'] = LOGIN_LOGOUT;
 
-        // rimuovo la sessione da redis
-        $cf['auth']['index']['users'][ $cf['session']['account']['username'] ] = array();
-        $cf['redis']['connection']->set(
-            REDIS_MULTISITE_SEED,
-            json_encode( $cf['auth']['index'] )
-        );
+            // rimuovo la sessione da redis
+            $cf['auth']['index']['users'][ $cf['session']['account']['username'] ] = array();
+            $cf['redis']['connection']->set(
+                REDIS_MULTISITE_SEED,
+                json_encode( $cf['auth']['index'] )
+            );
 
-        // svuoto selettivamente la $_SESSION
-        foreach( $_SESSION as $k => $v ) {
-            if( ! in_array( $k, array( 'id', 'used' ) ) ) {
-                unset( $_SESSION[ $k ] );
+            // svuoto selettivamente la $_SESSION
+            foreach( $_SESSION as $k => $v ) {
+                if( ! in_array( $k, array( 'id', 'used' ) ) ) {
+                    unset( $_SESSION[ $k ] );
+                }
             }
-        }
 
-        // log
-        logger( 'logout richiesto esplicitamente: ' . $_SESSION['id'], 'auth' );
+            // log
+            logger( 'logout richiesto esplicitamente: ' . $_SESSION['id'], 'auth' );
+
+        }
 
     }
 
