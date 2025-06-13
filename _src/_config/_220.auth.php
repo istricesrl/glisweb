@@ -38,6 +38,7 @@
      *
      *
      * TODO documentare
+     * TODO invalidare l'API key
      *
      *
      */

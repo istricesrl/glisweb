@@ -194,7 +194,7 @@
      */
     function redisFlush( $conn ) {
 
-	    return $conn->flushall();
+        return $conn->flushall();
 
     }
 

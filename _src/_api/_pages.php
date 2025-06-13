@@ -218,14 +218,16 @@
         }
 
         // unisco le direttive di configurazione del file a quelle già esistenti
-        $ct['page'] = array_replace_recursive(
+        // NOTA perché prima qui era $ct['page'] = array_replace_recursive(
+        $ct['page'] = array_merge_recursive(
             $ct['page'],
             yaml_parse( file_get_contents( $ct['page']['template']['yaml'] ) )
         );
 
         // includo i file di configurazione aggiuntivi del template
+        // NOTA perché prima qui era $ct['page'] = array_replace_recursive(
         foreach( glob( DIR_BASE . glob2custom( $ct['page']['template']['path'] ) . 'etc/template.add.yaml', GLOB_BRACE ) as $addCnf ) {
-            $ct['page'] = array_replace_recursive(
+            $ct['page'] = array_merge_recursive(
                 $ct['page'],
                 yaml_parse( file_get_contents( $addCnf ) )
             );

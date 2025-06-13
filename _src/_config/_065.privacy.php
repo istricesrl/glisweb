@@ -1,7 +1,14 @@
 <?php
 
     /**
-     *
+     * integrazione della configurazione della privacy
+     * 
+     * introduzione
+     * ============
+     * 
+     * 
+     * gestione dei cookie per i consensi
+     * ==================================
      *
      *
      *

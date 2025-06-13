@@ -22,6 +22,8 @@
      * TODO applicare la strategia della configurazione extra per sito anche ai vari slack, google, criteo, ecc.
      * TODO rimuovere quel brutto codice che fa il controllo della configurazione per sito nei vari slack, google, criteo, ecc.
      *
+     * TODO i cookie di Google reCAPTCHA sono cookie tecnici o di profilazione?
+     * 
      *
      */
 
@@ -41,7 +43,22 @@
     $cf['privacy'] = array();
 
     // dichiarazione dell'uso di cookie propri tecnici (cookie di sessione)
-    $cf['privacy']['cookie']['propri']['tecnici'] = true;
+    $cf['privacy']['cookie']['propri']['tecnici'] = array(
+        'sessione' => array(
+            'id' => 'PHPSESSID',
+            'nome' => array( 'it-IT' => 'cookie di sessione' ),
+            'motivazione' => array( 'it-IT' => 'gestione della sessione utente' ),
+            'descrizione' => array( 'it-IT' => 'cookie di sessione per la gestione della sessione utente, viene eliminato alla chiusura del browser' ),
+            'conservazione' => array( 'it-IT' => 'fino alla chiusura del browser' ),
+        ),
+        'privacy' => array(
+            'id' => 'PRIVACY',
+            'nome' => array( 'it-IT' => 'cookie per la gestione della privacy' ),
+            'motivazione' => array( 'it-IT' => 'gestione dei consensi della privacy' ),
+            'descrizione' => array( 'it-IT' => 'cookie per la gestione dei consensi della privacy, viene eliminato alla chiusura del browser' ),
+            'conservazione' => array( 'it-IT' => 'fino alla chiusura del browser' ),
+        ),
+    );
 
     /**
      * debug del runlevel

@@ -11,11 +11,44 @@
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
      *
      */
 
+    /**
+     * integrazione della configurazione da file Json/Yaml
+     * ===================================================
+     * 
+     * 
+     */
+
+    // configurazione extra
+    if( isset( $cx['facebook'] ) ) {
+        $cf['facebook'] = array_replace_recursive( $cf['facebook'], $cx['facebook'] );
+    }
+
+    // configurazione extra per sito
+    if( isset( $cf['site']['facebook'] ) ) {
+        $cf['facebook'] = array_replace_recursive( $cf['facebook'], $cf['site']['facebook'] );
+    }
+
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
+
+    // collegamento all'array $ct
+    $ct['facebook']                    = &$cf['facebook'];
+
+    /**
+     * collegamento scorciatoie
+     * ========================
+     * 
+     * 
+     */
+
     // link al profilo corrente
-	$cf['facebook']['profile']			= &$cf['facebook']['profiles'][ $cf['site']['status'] ];
+    $cf['facebook']['profile']            = &$cf['facebook']['profiles'][ $cf['site']['status'] ];
