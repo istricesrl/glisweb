@@ -52,7 +52,7 @@
             'conservazione' => array( 'it-IT' => 'fino alla chiusura del browser' ),
         ),
         'privacy' => array(
-            'id' => 'PRIVACY',
+            'id' => 'privacy',
             'nome' => array( 'it-IT' => 'cookie per la gestione della privacy' ),
             'motivazione' => array( 'it-IT' => 'gestione dei consensi della privacy' ),
             'descrizione' => array( 'it-IT' => 'cookie per la gestione dei consensi della privacy, viene eliminato alla chiusura del browser' ),

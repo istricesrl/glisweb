@@ -3579,6 +3579,7 @@ CREATE TABLE IF NOT EXISTS `rinnovi` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
   `id_periodicita` int(11) DEFAULT NULL,
+  `id_periodo` int(11) DEFAULT NULL,
   `id_contratto` int(11) DEFAULT NULL,
   `id_licenza` int(11) DEFAULT NULL,
   `id_progetto` char(32) DEFAULT NULL,

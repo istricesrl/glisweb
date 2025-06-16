@@ -185,7 +185,7 @@
 
     // canale Slack
     if( ! isset( $cf['slack']['profile']['channel']['url'] ) ) {
-        echo '[INFO] canale Slack di supporto non impostata' . PHP_EOL;
+        echo '[INFO] canale Slack di supporto non impostato' . PHP_EOL;
     } else {
         echo '[ -- ] canale Slack di supporto: ' . $cf['slack']['profile']['channel']['url'] . PHP_EOL;
     }

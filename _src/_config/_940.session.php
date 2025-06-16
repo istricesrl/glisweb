@@ -15,6 +15,6 @@
      */
 
     // timestamp dell'ultima azione sulla sessione
-    $_SESSION['used']            = time();
-    $_SESSION['ip']                = $_SERVER['REMOTE_ADDR'];
-    $_SESSION['user_agent']        = $_SERVER['HTTP_USER_AGENT'];
+    $_SESSION['used']               = time();
+    $_SESSION['ip']                 = $_SERVER['REMOTE_ADDR'];
+    $_SESSION['user_agent']         = $_SERVER['HTTP_USER_AGENT'];

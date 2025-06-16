@@ -37,6 +37,8 @@
      * Questa libreria fa parte del progetto GlisWeb (https://github.com/istricesrl/glisweb) ed è distribuita
      * sotto licenza Open Source. Fare riferimento alla pagina GitHub del progetto per i dettagli.
      *
+     * 
+     * TODO documentare
      *
      */
 
@@ -538,8 +540,11 @@
     function inRegexpArray( $t, $a ) {
 
         $match = false;
-
+      
         foreach( $a as $r ) {
+            if( ! preg_match( '/^\/.*\/[a-z]*$/', $r ) ) {
+                $r = '/' . $r . '/';
+            }
             if( preg_match( $r, $t ) ) {
                 $match = true;
             }
