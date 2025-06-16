@@ -153,6 +153,14 @@
 	    'SELECT id, __label__ FROM categorie_progetti_view WHERE se_disciplina = 1'
 	);
 
+    // tendina tipologia tesseramento
+    $ct['etc']['select']['periodi'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM periodi_view WHERE id_tipologia = 4'
+    );
+
 	// debug
 	// print_r( $ct['etc']['sub']['primo_rinnovo'] );
 	// print_r( $_REQUEST );

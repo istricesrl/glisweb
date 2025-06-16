@@ -1,51 +1,68 @@
 <div class="form-row view-filters d-print-none">
 
-    <div class="col-6 col-md-auto">
-        <span class="label-top">dal</span>
-        <input type="date" class="form-control form-control-sm" name="__view__[{{ view.id }}][__filters__][data_programmazione][GE]" value="{{ request.__view__[ view.id ].__filters__.data_programmazione.GE }}">
-    </div>
-    <div class="col-6 col-md-auto">
-        <span class="label-top">al</span>
-        <input type="date" class="form-control form-control-sm" name="__view__[{{ view.id }}][__filters__][data_programmazione][LE]" value="{{ request.__view__[ view.id ].__filters__.data_programmazione.LE }}">
-    </div>
+	<div class="col-6 col-md-auto">
+		<span class="label-top">dal</span>
+		<input type="date" class="form-control form-control-sm"
+			name="__view__[{{ view.id }}][__filters__][data_programmazione][GE]"
+			value="{{ request.__view__[ view.id ].__filters__.data_programmazione.GE }}">
+	</div>
+	<div class="col-6 col-md-auto">
+		<span class="label-top">al</span>
+		<input type="date" class="form-control form-control-sm"
+			name="__view__[{{ view.id }}][__filters__][data_programmazione][LE]"
+			value="{{ request.__view__[ view.id ].__filters__.data_programmazione.LE }}">
+	</div>
 
 	<div class="col-12 col-md-auto">
 		<span class="label-top">giorno</span>
-		<select name="__view__[{{ view.id }}][__filters__][note_programmazione][LK]" onchange="submit();" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.note_programmazione.LK == "" %}selected{% endif %}>tutti</option>
+		<select name="__view__[{{ view.id }}][__filters__][note_programmazione][LK]" onchange="submit();"
+			class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.note_programmazione.LK=="" %}selected{% endif
+				%}>tutti</option>
 			{% for giorno in ['lunedì','martedì','mercoledì','giovedì','venerdì','sabato','domenica'] %}
-			<option value="{{ giorno }}" {% if request.__view__[ view.id ].__filters__.note_programmazione.LK == giorno %}selected{% endif %}>{{ giorno }}</option>
+			<option value="{{ giorno }}" {% if request.__view__[ view.id ].__filters__.note_programmazione.LK==giorno
+				%}selected{% endif %}>{{ giorno }}</option>
 			{% endfor %}
 		</select>
 	</div>
 
-    <div class="col-12 col-md-auto">
+	<div class="col-12 col-md-auto">
 		<span class="label-top">luogo</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_luogo][LK]" onchange="submit();" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.id_luogo.EQ == "" %}selected{% endif %}>tutti</option>
+		<select name="__view__[{{ view.id }}][__filters__][id_luogo][LK]" onchange="submit();"
+			class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_luogo.EQ=="" %}selected{% endif %}>tutti
+			</option>
 			{% for luogo in etc.select.luoghi %}
-			<option value="{{ luogo.id }}" {% if request.__view__[ view.id ].__filters__.id_luogo.EQ == luogo.id %}selected{% endif %}>{{ luogo.__label__ }}</option>
+			<option value="{{ luogo.id }}" {% if request.__view__[ view.id ].__filters__.id_luogo.EQ==luogo.id
+				%}selected{% endif %}>{{ luogo.__label__ }}</option>
 			{% endfor %}
 		</select>
 	</div>
 
-    <div class="col-12 col-md-auto">
+	<div class="col">
+		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]"
+			value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
+	</div>
+</div>
+<div class="form-row view-filters d-print-none">
+	<div class="col-12 col-md-auto">
 		<span class="label-top">corso</span>
-		<select name="__view__[{{ view.id }}][__filters__][id_progetto][EQ]" onchange="submit();" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ == "" %}selected{% endif %}>tutti</option>
+		<select name="__view__[{{ view.id }}][__filters__][id_progetto][EQ]" onchange="submit();"
+			class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ=="" %}selected{% endif %}>
+				tutti</option>
 			{% for corso in etc.select.corsi %}
-			<option value="{{ corso.id }}" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ == corso.id %}selected{% endif %}>{{ corso.__label__ }}</option>
+			<option value="{{ corso.id }}" {% if request.__view__[ view.id ].__filters__.id_progetto.EQ==corso.id
+				%}selected{% endif %}>{{ corso.__label__ }}</option>
 			{% endfor %}
 		</select>
 	</div>
 
-    <div class="col">
-		<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
-	</div>
-		<div class="col-auto">
+	<div class="col-auto">
 		<button type="submit" class="btn btn-secondary btn-sqr btn-sm"><i class="fa fa-search"></i></button>
 		{% if view.insert.path %}
-		<button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
+		<button type="button" class="btn btn-secondary btn-sqr btn-sm"
+			onclick="window.open('{{ view.insert.path }}','_self');"><i class="fa fa-plus"></i></button>
 		{% endif %}
-		</div>
+	</div>
 </div>
