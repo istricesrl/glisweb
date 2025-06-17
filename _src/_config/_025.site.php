@@ -37,7 +37,19 @@
      * $cf['site']['url']      | $cf['site']['urls'][ SITE_STATUS ]
      *
      * Si noti che $cf['site']['ietf'] viene dichiarata successivamente in _src/_config/_070.localization.php
+     * 
+     * $cf['site']['url']
+     * ------------------
+     * 
+     * TODO documentare
+     * 
+     * 
+     * $cf['site']['root']
+     * -------------------
      *
+     * TODO documentare
+     * 
+     * 
      * applicazione della configurazione extra del sito
      * ------------------------------------------------
      * In questa sezione vengono applicate le configurazioni extra del sito, se presenti nei file di configurazione JSON e YAML.
@@ -45,9 +57,7 @@
      *
      *
      *
-     *
      * TODO creare una scorciatoia anche per $cf['localization']['language']['ietf'] tipo $cf['site']['ietf']
-     * TODO documentare $cf['site']['url'] e $cf['site']['root']
      *
      *
      *
@@ -127,7 +137,7 @@
     /**
      * integrazione della configurazione da file Json/Yaml
      * ===================================================
-     * 
+     * In questa sezione l'array $cf['site'] viene integrato con le direttive dei file di configurazione JSON/YAML.
      * 
      */
 
@@ -139,7 +149,7 @@
     /**
      * collegamento di $ct a $cf tramite puntatore
      * ===========================================
-     * 
+     * In questa sezione l'array $cf['site'] viene reso disponibile al template manager linkando $ct['site'] a $cf['site'].
      * 
      */
 
@@ -149,7 +159,7 @@
     /**
      * debug del runlevel
      * ==================
-     * 
+     * Questa sezione contiene, commentate, alcune istruzioni di debug per questo runlevel.
      * 
      */
 

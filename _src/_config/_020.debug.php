@@ -21,20 +21,16 @@
      *
      * la costante LOG_CURRENT_LEVEL
      * -----------------------------
-     * TODO documentare questo paragrafo e rimandare al capitolo sulle costanti della documentazione tecnica
-     * TODO a tendere questa cosa potrebbe diventare obsoleta
-     *
-     *
-     *
-     * TODO documentare
-     *
-     *
+     * Questa costante viene utilizzata per rappresentare il livello di log corrente, che influenza il comportamento
+     * della funzione logger() definita in _src/_config.php.
      *
      */
 
     /**
      * applicazione delle configurazioni generali per il debug
      * =======================================================
+     * In questa sezione vengono applicate le configurazioni generali per il debug relative ai timeout
+     * di esecuzione e di connessione ai socket.
      * 
      * 
      */
@@ -48,7 +44,10 @@
     /**
      * configurazione del report degli errori a video
      * ==============================================
-     * 
+     * In questa sezione viene definito il comportamento del framework rispetto alla visualizzazione
+     * degli errori tramite una chiamata a ini_set() sulla variabile display_errors e tramite
+     * la funzione error_reporting() che imposta il livello di report degli errori. Vedi anche
+     * https://www.php.net/manual/en/function.error-reporting.php.
      * 
      */
 
@@ -64,7 +63,8 @@
     /**
      * configurazione del log su file
      * ==============================
-     * 
+     * La costante LOG_CURRENT_LEVEL viene utilizzata per rappresentare il livello di log corrente,
+     * che influenzando il comportamento della funzione logger() impatta sulla verbosità del log.
      * 
      */
 
@@ -74,7 +74,7 @@
     /**
      * debug del runlevel
      * ==================
-     * 
+     * Questa sezione contiene, commentate, alcune istruzioni di debug per questo runlevel.
      * 
      */
 

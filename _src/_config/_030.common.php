@@ -20,7 +20,7 @@
      * codici di stato HTTP
      * --------------------
      *
-     *
+     * TODO documentare
      *
      *
      *
