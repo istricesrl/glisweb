@@ -119,6 +119,8 @@
         'importo_netto_totale' => 'text-right',
         'quantita' => 'text-right',
 		'totale_riga' => 'text-right',
+        'nome' => 'text-left',
+        'articolo' => 'text-left',
         'id_documento' => 'd-none',
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
