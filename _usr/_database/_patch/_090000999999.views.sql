@@ -846,6 +846,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 	SELECT
 		articoli.id,
 		articoli.id_prodotto,
+        prodotti.nome AS prodotto,
 		articoli.ordine,
 		articoli.ean,
 		articoli.isbn,

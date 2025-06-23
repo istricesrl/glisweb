@@ -165,6 +165,7 @@ CREATE TABLE IF NOT EXISTS `anagrafica_attivi_view_static` (
 CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `id` char(32) PRIMARY KEY NOT NULL,
   `id_prodotto` char(32) DEFAULT NULL,
+  `prodotto` char(255) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `ean` char(32) DEFAULT NULL,
   `isbn` char(32) DEFAULT NULL,

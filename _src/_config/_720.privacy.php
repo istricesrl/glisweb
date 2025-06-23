@@ -75,3 +75,12 @@
     
     }
 
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
+    // ...
+    // print_r( $cf['cookie']['index'] );

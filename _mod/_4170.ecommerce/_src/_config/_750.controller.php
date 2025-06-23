@@ -538,6 +538,20 @@
                             )
                         );
 
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['prodotto'] = mysqlSelectCachedValue(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            'SELECT prodotto FROM articoli_view WHERE id = ?',
+                            array( array( 's' => $dati['id_articolo'] ) )
+                        );
+
+                        $_SESSION['carrello']['articoli'][ $rowKey ]['categorie'] = mysqlSelectCachedValue(
+                            $cf['memcache']['connection'],
+                            $cf['mysql']['connection'],
+                            'SELECT categorie FROM articoli_view WHERE id = ?',
+                            array( array( 's' => $dati['id_articolo'] ) )
+                        );
+
                         // timer
                         timerCheck( $cf['speed'], '-> inizio calcolo prezzi per articolo ' . $dati['id_articolo'] );
 
