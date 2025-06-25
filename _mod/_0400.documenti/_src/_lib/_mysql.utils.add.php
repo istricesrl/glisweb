@@ -579,3 +579,16 @@
         return $r;
 
     }
+
+    function tendinaRigheMissione() {
+
+        global $cf;
+
+        $r = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM documenti_articoli_view WHERE id_missione IS NULL AND id_tipologia = 7'
+        );
+
+        return $r;
+
+    }

@@ -1,85 +1,25 @@
 <?php
 
     /**
-     * macro form anagrafica
-     *
-     *
-     *
-     * -# definizione della tabella del modulo
-     * -# popolazione delle tendine
      *
      *
      *
      *
      *
      *
-     * @todo documentare
+     * TODO documentare
      *
-     * @file
      *
      */
 
-    // tabella gestita
-	$ct['form']['table'] = 'documenti';
-
-    // tabella della vista
-	$ct['view']['table'] = 'documenti_articoli';
-
-    // id della vista
-   # $ct['view']['id'] = md5( $ct['view']['table'] );
-
-        // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'documenti.articoli.form';
-    $ct['view']['open']['table'] = 'documenti_articoli';
-    $ct['view']['open']['field'] = 'id';
-
-	// pagina per l'inserimento di un nuovo oggetto
-	// $ct['view']['insert']['page'] = 'documenti.articoli.form';
-
-    // campo per il preset di apertura
-	// $ct['view']['open']['preset']['field'] = 'id_missione';
-
-/*
-	$ct['view']['cols'] = array(
-        'id' => '#',
-#        'tipologia' => 'tipologia',
-#        'data' => 'data',
-#        'nome' => 'nome',
-		'id_articolo' => 'codice',
-		'articolo' => 'articolo',
-		'mastro_provenienza' => 'scarico',
-		'mastro_destinazione' => 'carico',
-        'quantita' => 'quantità',
-	#	'totale_riga' => 'totale',
-		'id_documento' => 'id_documento'
-	);
-
-    // stili della vista
-	$ct['view']['class'] = array(
-        'nome' => 'text-left',
-        'quantita' => 'text-right',
-		'totale_riga' => 'text-right',
-        'id_documento' => 'd-none',
-        'cliente' => 'text-left',
-        'emittente' => 'text-left', 
-        'data' => 'no-wrap', 
-#        'tipologia' => 'text-left',
-		'articolo' => 'text-left'
-    );
-
-	// RELAZIONI CON IL MODULO MATRICOLE
-	if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
-
-		// colonna matricola
-		arrayInsertAssoc( 'id_articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
-
-		// OPZIONE scadenze
-		if( ! empty( $cf['matricole']['scadenze'] ) ) {
-			arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
-		}
-
-	}
-*/
+    /**
+     * azioni specifiche della macro
+     * =============================
+     * 
+     * 
+     * 
+     * 
+     */
 
     // ...
     if( isset( $_REQUEST['__associazione_riga__'] ) ) {
@@ -99,134 +39,116 @@
 
     }
 
-	$ct['view']['cols'] = array(
-        'id' => '#',
-#        'tipologia' => 'tipologia',
-        'data' => 'data',
-        'nome' => 'nome',
-#		'id_articolo' => 'articolo',
-#		'mastro_provenienza' => 'scarico',
-#		'mastro_destinazione' => 'carico',
-        'quantita' => 'quantità',
-        'importo_netto_totale' => 'importo netto',
-		'id_genitore' => 'aggregata a',
-		'id_documento' => 'id_documento'
-	);
+    /**
+     * configurazione del form
+     * =======================
+     * 
+     * 
+     * 
+     * 
+     */
 
-    // stili della vista
-	$ct['view']['class'] = array(
-        'nome' => 'text-left',
-        'importo_netto_totale' => 'text-right',
-        'quantita' => 'text-right',
-		'totale_riga' => 'text-right',
-        'nome' => 'text-left',
-        'articolo' => 'text-left',
-        'id_documento' => 'd-none',
-        'cliente' => 'text-left',
-        'emittente' => 'text-left', 
-        'data' => 'no-wrap', 
-#        'tipologia' => 'text-left',
-		'id_articolo' => 'text-left'
+    // tabella gestita
+	$ct['form'] = array(
+        'table' => 'documenti'
     );
 
+    /**
+     * configurazione della view
+     * =========================
+     * 
+     * 
+     * 
+     * 
+     */
+
+    // tabella della vista
+	$ct['view'] = array(
+        'table' => 'documenti_articoli',
+        'open' => array(
+            'page' => 'documenti.articoli.form',
+            'table' => 'documenti_articoli',
+            'field' => 'id',
+        ),
+        'cols' => array(
+            'id' => '#',
+            'data' => 'data',
+            'nome' => 'nome',
+            'quantita' => 'quantità',
+            'importo_netto_totale' => 'importo netto',
+            'id_genitore' => 'aggregata a',
+            'id_documento' => 'id_documento'
+        ),
+        'class' => array(
+            'nome' => 'text-left',
+            'importo_netto_totale' => 'text-right',
+            'quantita' => 'text-right',
+            'totale_riga' => 'text-right',
+            'nome' => 'text-left',
+            'articolo' => 'text-left',
+            'id_documento' => 'd-none',
+            'cliente' => 'text-left',
+            'emittente' => 'text-left', 
+            'data' => 'no-wrap', 
+            'id_articolo' => 'text-left'
+        ),
+        '__restrict__' => array(
+            'id_missione' => array( 'EQ' => $_REQUEST[ $ct['form']['table'] ]['id'] ?? null ),
+            'id_genitore' => array( 'NL' => true )
+        ),
+    );
+
+    /**
+     * relazioni con altri moduli
+     * ==========================
+     * 
+     * 
+     * 
+     * 
+     */
+
 	// RELAZIONI CON IL MODULO MASTRI
-	if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
+	if( checkMod( "0500.mastri" ) ) {
 		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'mastro_provenienza' => 'scarico', 'mastro_destinazione' => 'carico' ) );
 	}
 
 	// RELAZIONI CON IL MODULO PRODOTTI
-	if( in_array( "4100.prodotti", $cf['mods']['active']['array'] ) ) {
+	if( checkMod( "4100.prodotti" ) ) {
 		arrayInsertAssoc( 'id', $ct['view']['cols'], array( 'id_articolo' => 'codice' ) );
 		arrayInsertAssoc( 'nome', $ct['view']['cols'], array( 'articolo' => 'articolo' ) );
-
 	}
 
 	// RELAZIONI CON IL MODULO MATRICOLE
-	if( in_array( "4110.matricole", $cf['mods']['active']['array'] ) ) {
-
-		// colonna matricola
+	if( checkMod( "4110.matricole" ) ) {
 		arrayInsertAssoc( 'id_articolo', $ct['view']['cols'], array( 'matricola' => 'matricola' ) );
-
-		// OPZIONE scadenze
 		if( ! empty( $cf['matricole']['scadenze'] ) ) {
 			arrayInsertAssoc( 'matricola', $ct['view']['cols'], array( 'data_scadenza' => 'scadenza' ) );
 		}
-
-	}
-/*
-	$ct['etc']['include']['insert'][] = array(
-        'name' => 'insert',
-        'file' => 'inc/missioni.form.contenuto.insert.html',
-        'fa' => 'fa-plus-circle'
-    );
-*/
-	// preset filtro righe documento
-	if( isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) ){
-		$ct['view']['__restrict__']['id_missione']['EQ'] = $_REQUEST[ $ct['form']['table'] ]['id'];
-		$ct['view']['__restrict__']['id_genitore']['NL'] = true;
 	}
 
-    $ct['etc']['select']['righe'] = mysqlQuery(
-        $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM documenti_articoli_view WHERE id_missione IS NULL AND id_tipologia = 7'
-    );
+    /**
+     * dati delle tendine
+     * ==================
+     * 
+     * 
+     * 
+     * 
+     */
+
+    $ct['etc']['select']['righe'] = tendinaRigheMissione();
+
+    /**
+     * macro di default
+     * ================
+     * 
+     * 
+     * 
+     * 
+     */
 
     // gestione default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
-    // trasformazione icona attivo/inattivo
-	///foreach( $ct['view']['data'] as &$row ) {
-	//}
-
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
-/*
-    // tendina articoli
-	$ct['etc']['select']['id_articoli'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM articoli_view'
-	);
-
-    // tendina udm
-	$ct['etc']['select']['id_udm'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM udm_view'
-	);
-
-    // tendina iva
-	$ct['etc']['select']['id_iva'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM iva_view '
-	);
-
-	// tendina listini
-	$ct['etc']['select']['id_listini'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM listini_view '
-	);
-
-	// tendina mastri
-	$ct['etc']['select']['id_mastri'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM mastri_view '
-	);
-
-	// tendina progetti
-	$ct['etc']['select']['id_progetti'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM progetti_view '
-	);
-*/

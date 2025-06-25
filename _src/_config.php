@@ -408,7 +408,22 @@
         str_pad( '(+' . $curDelta . ' ' . $curCheck . ')', 15, ' ', STR_PAD_LEFT ) .
         str_pad( $curMemory, 15, ' ', STR_PAD_LEFT ) . ' → ' . str_replace( '->', '→', $c );
     }
-    
+
+    /**
+     * questa funzione controlla se un modulo è attivo
+     * 
+     * Questa funzione verifica se un modulo è attivo nel framework; per farlo controlla se il nome completo del modulo (numero.nome) è presente
+     * nell'array dei moduli attivi ($cf['mods']['active']['array']).
+     * 
+     * @param       string      $m      il nome del modulo da verificare, ad esempio '01.core'
+     * 
+     * @return      bool                true se il modulo è attivo, false altrimenti
+     * 
+     */
+    function checkMod( $m ) {
+        return ( isset( $GLOBALS['cf']['mods']['active']['array'] ) && in_array( $m, $GLOBALS['cf']['mods']['active']['array'], true ) );
+    }
+
     /**
      * dichiarazione delle costanti di base
      * ====================================
