@@ -1,8 +1,19 @@
 <?php
 
     /**
-     * gestione inserimento dati dati
+     * gestione inserimento dati batch
      * 
+     * introduzione
+     * ============
+     * 
+     * 
+     * 
+     * esecuzione limitata al contesto CRON_RUNNING
+     * --------------------------------------------
+     * 
+     * 
+     * 
+     * TODO documentare
      * 
      * 
      */
@@ -13,26 +24,37 @@
     // ini_set( 'display_errors', TRUE );
     // echo 'OUTPUT';
 
+    /**
+     * gestione blocchi dati programmati
+     * =================================
+     * Questo blocco si occupa di spostare i file programmati nella cartella di importazione
+     * quando la data e ora corrente sono successive alla data di programmazione, espressa
+     * dal nome stesso della cartella. Una volta spostati, i file vengono elaborati secondo
+     * la logica di importazione del blocco successivo.
+     * 
+     * inserimento dei file programmati
+     * --------------------------------
+     * Questo meccanismo permette di pianificare l'importazione di file in un momento successivo,
+     * evitando di sovraccaricare il sistema. Per sfruttare l'importazione programmata, è necessario
+     * caricare i file non nella cartella DIR_VAR_SPOOL_IMPORT, ma nella sotto cartella
+     * DIR_VAR_SPOOL_IMPORT_TODO, e all'interno di questa in una sotto cartella il cui nome
+     * rispetti il formato YmdHis (ad esempio 20231025123000 per il 25 ottobre 2023 alle 12:30:00).
+     * 
+     * Per il naming dei file da caricare, si veda più avanti la sezione "gestione blocchi dati correnti".
+     * 
+     */
+
     // ...
     if( defined( 'CRON_RUNNING' ) ) {
 
-        /**
-         * GESTIONE BLOCCHI DATI PROGRAMMATI
-         * =================================
-         * 
-         * 
-         */
-
-        // ...
-
         // trovo le sottocartelle della cartella di importazione
-        $programmati = getDirList( DIR_VAR_SPOOL_IMPORT . 'todo/' );
+        $programmati = getDirList( DIR_VAR_SPOOL_IMPORT_TODO );
 
         // ...
         if( ! empty( $programmati ) ) {
 
             // log
-            logWrite( 'cartelle programmate: ' . print_r( $programmati, true ), 'import', LOG_ERR );
+            logWrite( 'cartelle programmate: ' . print_r( $programmati, true ), 'import' );
 
             // cerco le cartelle programmate nel passato
             foreach( $programmati as $programmata ) {
@@ -41,16 +63,16 @@
                 if( basename( $programmata ) <= date('YmdHis') ) {
 
                     // log
-                    logWrite( 'cartella da elaborare (su '.date('YmdHis').'): ' . $programmata, 'import', LOG_ERR );
+                    logWrite( 'cartella da elaborare (su '.date('YmdHis').'): ' . $programmata, 'import' );
 
                     // ottengo l'elenco dei file nella cartella
-                    $programmati = getFileList( DIR_VAR_SPOOL_IMPORT . 'todo/' . $programmata . '/' );
+                    $programmati = getFileList( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' );
 
                     // ...
                     if( ! empty( $programmati ) ) {
 
                         // log
-                        logWrite( 'file da elaborare: ' . print_r( $programmati, true ), 'import', LOG_ERR );
+                        logWrite( 'file da elaborare: ' . print_r( $programmati, true ), 'import' );
 
                         // sposto i file nella cartella di importazione
                         foreach( $programmati as $programmato ) {
@@ -59,28 +81,62 @@
                             logWrite( 'file da elaborare: ' . $programmato, 'import', LOG_ERR );
 
                             // sposto il file nella cartella di importazione
-                            moveFile( DIR_VAR_SPOOL_IMPORT . 'todo/' . $programmata . '/' . $programmato, DIR_VAR_SPOOL_IMPORT . $programmato );
+                            moveFile( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato, DIR_VAR_SPOOL_IMPORT . $programmato );
 
                         }
 
                         // elimino la cartella
-                        deleteDir( DIR_VAR_SPOOL_IMPORT . 'todo/' . $programmata . '/' );
+                        deleteDir( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' );
 
                     }
 
                 }
 
-
             }
 
         }
 
-        /**
-         * GESTIONE BLOCCHI DATI
-         * =====================
-         * 
-         * 
-         */
+    }
+
+    /**
+     * gestione blocchi dati correnti
+     * ==============================
+     * In questo blocco vengono elaborati i file CSV presenti nella cartella di importazione. L'elaborazione
+     * implica che il nome del file contenga le informazioni chiave della query da eseguire, come l'azione e l'entità.
+     * 
+     * Il formato per il nome del file comprende il nome dell'entità da alimentare, l'azione da eseguire e
+     * opzionalmente un prefisso numerico per indicare l'ordine di importazione. Nomi validi pertanto possono essere:
+     * 
+     * - `azione.entita.csv`
+     * - `NN.azione.entita.csv`
+     * - `azione.entita.varie.csv`
+     * - `NN.azione.entita.varie.csv`
+     * 
+     * Negli esempi sopra "varie" rappresenta una qualsiasi stringa che contenga ulteriori informazioni utili
+     * all'essere umano, e viene ignorata dalla macchina.
+     * 
+     * elaborazione dei file CSV
+     * -------------------------
+     * Prima di tutto viene costruito l'elenco dei file CSV presenti nella cartella di importazione, dopodiché viene
+     * ordinato con sort() in modo da considerare il prefisso NN come visto sopra; a questo punto, i file vengono elaborati
+     * uno alla volta. Per ogni file, vengono estratte l'azione e l'entità dal nome, dopodiché viene verificato che
+     * non esista una collisione con una tabella già presente in $_REQUEST.
+     * 
+     * L'importazione vera e propria viene fatta leggendo i dati tramite csvFile2array() e aggiungendo il campo
+     * speciale __method__ che contiene l'azione da eseguire; dopodiché il pacchetto dati viene aggiunto alla $_REQUEST
+     * per la successiva elaborazione da parte della controller (vedi _src/_config/_750.controller.php).
+     * 
+     * firma per l'autorizzazione
+     * --------------------------
+     * Per evitare che tramite il meccanismo di importazione si possano inserire dati arbitrari, il framework prevede
+     * un meccanismo di controllo della firma dei dati importati; in pratica ad ogni riga importata viene aggiunto
+     * il campo speciale __firma__ che contiene un hash della riga con la chiave $cf['auth']['import']['secret']; questo
+     * valore viene poi verificato dalla controller per autorizzare l'importazione della riga.
+     * 
+     */
+
+    // ...
+    if( defined( 'CRON_RUNNING' ) ) {
 
         // ...
 
@@ -148,18 +204,6 @@
                     // debug
                     // print_r( $riga );
 
-                    /*
-                    // attivazione controller
-                    controller(
-                        $cf['mysql']['connection'],				// connessione al database
-                        $cf['memcache']['connection'],			// connessione a memcache
-                        $riga,							// blocco dati di lavoro
-                        $table,							// nome dell'entità su cui lavorare
-                        strtoupper( $action ),				// metodo da applicare
-                        NULL						// campo per la ricorsione
-                    );
-                    */
-
                     // ...
                     // NOTA questo if METHOD_POST l'ho aggiunto perché sennò all'update creava una nuova riga...
                     // verificare che sia la soluzione migliore (vedere anche come funziona mysqlInsertRow()
@@ -212,12 +256,42 @@
 
         }
 
-        /**
-         * CONTROLLER IMMAGINI
-         * ===================
-         * 
-         * 
-         */
+    }
+
+    /**
+     * gestione batch caricamento immagini
+     * ===================================
+     * Questo blocco si occupa di importare le immagini presenti nella cartella VAR_SPOOL_IMPORT,
+     * gestendole in base alle informazioni contenute nel nome del file. Queste comprendono:
+     * 
+     * - un prefisso numerico opzionale per l'ordinae di importazione
+     * - l'azione da eseguire
+     * - l'entità a cui l'immagine è associata
+     * - il codice dell'entità
+     * - il ruolo dell'immagine
+     * - un numero di ordine opzionale per le immagini multiple associate alla stessa entità
+     * - eventuali informazioni aggiuntive, che vengono ignorate dall'importazione
+     * 
+     * Per esempio, sono nomi di file validi:
+     * 
+     * - NN.azione.entità.codice.ruolo.ordine.{jpg,png,jpeg}
+     * - NN.azione.entità.codice.ruolo.{jpg,png,jpeg}
+     * - NN.azione.entità.codice.ruolo.ordine.varie.{jpg,png,jpeg}
+     * - azione.entità.codice.ruolo.ordine.{jpg,png,jpeg}
+     * - azione.entità.codice.ruolo.{jpg,png,jpeg}
+     * - azione.entità.codice.ruolo.ordine.varie.{jpg,png,jpeg}
+     * 
+     * Una volta ricavate le informazioni chiave dal nome del file, la procedura provvede a spostare
+     * l'immagine dalla cartella di importazione a VAR_IMMAGINI e preparare il blocco dati per l'inserimento
+     * nel database da parte della controller().
+     * 
+     * In caso di errore nel caricamento dell'immagine il blocco dati non viene creato per evitare che
+     * si generino righe orfane nel database.
+     * 
+     */
+
+    // ...
+    if( defined( 'CRON_RUNNING' ) ) {
 
         // trovo le immagini presenti in var/spool/import/
         $img = glob( DIR_VAR_SPOOL_IMPORT . '*.{jpg,png,jpeg}', GLOB_BRACE );
@@ -382,8 +456,8 @@
     }
 
     /**
-     * DEBUG
-     * =====
+     * debug del runlevel
+     * ==================
      * 
      * 
      */
@@ -391,6 +465,6 @@
     // debug
     // print_r( $_REQUEST );
     // if( isset( $cf['ws']['table'] ) ) {
-        // die( print_r( $_REQUEST[ $cf['ws']['table'] ], true ) );
+    // die( print_r( $_REQUEST[ $cf['ws']['table'] ], true ) );
     // }
     // die();
