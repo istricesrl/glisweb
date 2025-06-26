@@ -298,6 +298,14 @@
                         array( 's' => $jwt['data']['id'] )
                     )
                 );
+                if( empty( $cf['auth']['jwt']['pass'] ) ) {
+                    if( isset( $cf['auth']['accounts'][ $jwt['data']['user'] ]['password'] ) ) {
+                        $cf['auth']['jwt']['pass'] = $cf['auth']['accounts'][ $jwt['data']['user'] ]['password'];
+                    }
+                }
+                if( ! empty( $cf['auth']['jwt']['pass'] ) ) {
+                    $cf['session']['spam']['check'] = true;
+                }
             }
         }
     }
