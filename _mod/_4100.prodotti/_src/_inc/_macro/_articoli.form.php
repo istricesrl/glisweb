@@ -81,6 +81,12 @@
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM udm_view' );
 
+	$ct['etc']['select']['udm_dimensioni'] = mysqlCachedIndexedQuery(
+	    $cf['memcache']['index'],
+	    $cf['memcache']['connection'], 
+        $cf['mysql']['connection'], 
+        'SELECT id, __label__ FROM udm_view' );
+
         $ct['etc']['select']['udm_massa'] = mysqlCachedIndexedQuery(
             $cf['memcache']['index'],
             $cf['memcache']['connection'], 
@@ -137,5 +143,9 @@
     // macro di default per l'entità articoli
     require DIR_MOD . '_4100.prodotti/_src/_inc/_macro/_articoli.form.default.php';
 
+    // die( print_r( $ct['etc']['flags'], true ) );
+
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
+

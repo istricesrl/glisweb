@@ -120,6 +120,58 @@
     $cf['session']['auth']['status'] = $cf['auth']['status'];
 
     /**
+     * URL di ritorno per i multisiti
+     * ==============================
+     * 
+     * 
+     * 
+     */
+
+    // ...
+    if( isset( $_SESSION['__back_to_url__'] ) && $cf['auth']['status'] == LOGIN_SUCCESS ) {
+
+        $back = $_SESSION['__back_to_url__'];
+
+        if( isset( $cf['session']['jwt']['string'] ) ){
+            $back .= ( parse_url( $_SESSION['__back_to_url__'], PHP_URL_QUERY ) ? '&' : '?' ) . 'j=' . $cf['session']['jwt']['string'];
+        }
+
+        header( 'location: ' . $back );
+        unset( $_SESSION['__back_to_url__'] );
+        die();
+
+    }
+
+    // ...
+    if( isset( $_REQUEST['b'] ) ) {
+
+        $backDecoded = trim( $_REQUEST['b'] );
+        $backToURL = decryptString( $backDecoded, $cf['auth']['gimbe']['key'] );
+        $arrayBack = unserialize( $backToURL );
+
+        if( is_array( $arrayBack ) ) {
+
+            if( isset( $arrayBack['dstUrl'] ) ) {
+
+                $_SESSION['__back_to_url__'] = $arrayBack['dstUrl'];
+
+                if( isset( $cf['session']['account']['username'] ) ) {
+
+                    $ct['etc']['__back_to_url__'] = $_SESSION['__back_to_url__'];
+                    $ct['etc']['__back_to_url__'] .= ( parse_url( $_SESSION['__back_to_url__'], PHP_URL_QUERY ) ? '&' : '?' ) . 'j=' . $cf['session']['jwt']['string'];
+
+                    header( 'location: ' . $ct['etc']['__back_to_url__'] );
+                    unset( $_SESSION['__back_to_url__'] );
+
+                }
+
+            }
+
+        }
+
+    }
+
+    /**
      * debug del runlevel
      * ==================
      * 

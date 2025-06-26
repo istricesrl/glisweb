@@ -93,7 +93,7 @@
                     {{ frm.select( table, '', '', 'id_tipologia_rinnovo', '', etc.select.tipologie_rinnovi, request ) }}
                 </div>
                 {% endif %}
-                {% if etc.flags.se_peso %}
+                {% if etc.flags.se_peso or etc.flags.se_massa %}
                 <div class="col-8 col-md">
                     <span class="label-top">quantità per pezzo</span>
                     {{ frm.input( table, '', '', 'peso', '', '', request ) }}
@@ -111,6 +111,24 @@
                 <div class="col-4 col-md-auto">
                     <span class="label-top">udm</span>
                     {{ frm.select( table, '', '', 'id_udm_capacita', '', etc.select.udm_volume, request ) }}
+                </div>
+                {% endif %}
+                {% if etc.flags.se_dimensioni %}
+                <div class="col-8 col-md">
+                    <span class="label-top">lunghezza</span>
+                    {{ frm.input( table, '', '', 'lunghezza', '', '', request ) }}
+                </div>
+                <div class="col-8 col-md">
+                    <span class="label-top">larghezza</span>
+                    {{ frm.input( table, '', '', 'larghezza', '', '', request ) }}
+                </div>
+                <div class="col-8 col-md">
+                    <span class="label-top">altezza</span>
+                    {{ frm.input( table, '', '', 'altezza', '', '', request ) }}
+                </div>
+                <div class="col-4 col-md-auto">
+                    <span class="label-top">udm</span>
+                    {{ frm.select( table, '', '', 'id_udm_dimensioni', '', etc.select.udm_dimensioni, request ) }}
                 </div>
                 {% endif %}
                 {% if etc.flags.se_taglie %}
