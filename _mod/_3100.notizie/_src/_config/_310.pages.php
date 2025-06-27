@@ -262,6 +262,10 @@
                         'id_notizia'
                     );
 */
+
+                    // ...
+                    $cf['notizie']['index'][ $pg['id'] ] = $pid;
+
                     // canonical
 				    $canon = $pid;
 
