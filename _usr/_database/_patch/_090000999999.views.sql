@@ -3575,7 +3575,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			' ',
 			documenti.numero,
 			'/',
-			year( documenti.data ),
+			documenti.sezionale,
 			' del ',
 			documenti.data
 		) AS documento,

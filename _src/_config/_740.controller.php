@@ -5,16 +5,21 @@
      * 
      * introduzione
      * ============
-     * 
-     * 
+     * Il framework supporta l'inserimento di dati tramite processi batch, innescate dal caricamento di file
+     * nella cartella VAR_SPOOL_IMPORT. Concedendo l'accesso a questa cartella per esempio tramite FTP, è possibile
+     * realizzare un sistema di comunicazione tra applicazioni leggero e robusto.
      * 
      * esecuzione limitata al contesto CRON_RUNNING
      * --------------------------------------------
+     * Dal momento che l'importazione dei dati tramite batch può rallentare l'esecuzione del framework,
+     * essa viene eseguita solo se il sistema sta funzionando in modalità batch, ovvero se la costante
+     * CRON_RUNNING è definita.
      * 
-     * 
-     * 
-     * TODO documentare
-     * 
+     * nota sull'esportazione dei dati
+     * -------------------------------
+     * Il framework può essere configurato anche per generare periodicamente dei file CSV contenenti i dati di
+     * determinate tabelle. Questi lavori vengono di norma svolti da task custom appositamente preparati; la
+     * cartella in cui di norma si trovano i file esportati è DIR_VAR_SPOOL_EXPORT.
      * 
      */
 

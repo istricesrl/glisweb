@@ -63,6 +63,7 @@
                         'codice' => 'DDT-' . $riga['ordine']['codice'],
                         'id_tipologia' => 4,
                         'id_emittente' => trovaIdAziendaGestita(),
+                        'id_destinatario' => $riga['ordine']['id_emittente'],
                         'data' => date('Y-m-d'),
                         'nome' => 'DDT generato automaticamente da missione ' . $riga['id_missione'] . ' per ordine ' . $riga['ordine']['codice'] . ' il ' . date('Y-m-d H:i:s'),
                     ),
@@ -95,21 +96,24 @@
                 // status
                 $status['info'][] = 'trovato DDT #' . $riga['ddt'][0]['id'] . ' per il documento ' . $riga['id_documento'];
 
+                // ...
+                $idDocumento = $riga['ddt'][0]['id'];
+
             }
 
             // aggiungo la riga al DDT
-            // mysqlInsertRow(
-            //     $cf['mysql']['connection'],
-            //     array(
-            //         'codice' => 'DDT-' . $riga['codice'],
-            //         'id_documento' => $idDocumento,
-            //         'quantita' => $riga['quantita'],
-            //         'id_articolo' => $riga['id_articolo'],
-            //         'id_tipologia' => 4,
-            //         'note' => 'riga generata automaticamente da missione ' . $riga['id_missione'] . ' per ordine ' . $riga['ordine']['codice'] . ' il ' . date('Y-m-d H:i:s'),
-            //     ),
-            //     'documenti_articoli'
-            // );
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'codice' => 'DDT-' . $riga['codice'],
+                    'id_documento' => $idDocumento,
+                    'quantita' => $riga['quantita'],
+                    'id_articolo' => $riga['id_articolo'],
+                    'id_tipologia' => 4,
+                    'note' => 'riga generata automaticamente da missione ' . $riga['id_missione'] . ' per ordine ' . $riga['ordine']['codice'] . ' il ' . date('Y-m-d H:i:s'),
+                ),
+                'documenti_articoli'
+            );
 
         }
 

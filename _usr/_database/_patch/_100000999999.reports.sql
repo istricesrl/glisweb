@@ -341,7 +341,9 @@ FROM (
   LEFT JOIN udm ON udm.id = documenti_articoli.id_udm
   LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
   WHERE tipologie_documenti.se_ordine IS NOT NULL
+  AND relazioni_documenti.id_documento IS NOT NULL
   AND relazioni_documenti.id_ruolo = 3
+  AND documenti_articoli.id_packing_list IS NULL
   HAVING codice_prodotto IS NOT NULL
 
   UNION
@@ -369,7 +371,9 @@ FROM (
   LEFT JOIN udm ON udm.id = articoli.id_udm_peso
   LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
   WHERE tipologie_documenti.se_trasporto IS NOT NULL
+  AND relazioni_documenti.id_documento IS NOT NULL
   AND relazioni_documenti.id_ruolo = 3
+  AND documenti_articoli.id_packing_list IS NULL
   GROUP BY documenti_articoli.id_documento, documenti_articoli.id_prodotto, documenti_articoli.id_articolo
   HAVING codice_prodotto IS NOT NULL
 ) AS ordine

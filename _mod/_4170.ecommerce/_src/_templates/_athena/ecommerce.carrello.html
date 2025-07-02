@@ -5,7 +5,7 @@
 
 {% block main %}
 <section class="row flex-fill">
-    <div class="col-md-9 d-flex flex-column">
+    <div class="col-md-10 d-flex flex-column">
         {% if session.carrello.id %}
         <form id="carrello" class="carrello d-flex flex-column flex-fill" action="" method="post">
             <input type="hidden" id="ts_checkout" name="__carrello__[timestamp_checkout]" value="">
@@ -267,7 +267,7 @@
         </fieldset>
         {% endif %}
     </div>
-    <div class="col-md-3 d-flex flex-column">
+    <div class="col-md-2 d-flex flex-column">
         {# TODO SE È ATTIVO IL MODULO ISCRIZIONI... #}
         {% if '0630.iscrizioni' in mods.active.array %}
 	    <fieldset>
