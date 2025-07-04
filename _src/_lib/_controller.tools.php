@@ -844,3 +844,21 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 
 	return $i['__status__'] ?? 200;
 }
+
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    function checkNomeBloccoDati( $k ) {
+
+        if( substr( $k, 0, 2 ) !== '__' || substr( $k, 0, 8 ) == '__report' ) {
+            return true;
+        } elseif( strlen( $k ) < 2 ) {
+            return false;
+        } else {
+            return false;
+        }
+
+    }
