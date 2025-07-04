@@ -105,7 +105,7 @@
             mysqlInsertRow(
                 $cf['mysql']['connection'],
                 array(
-                    'codice' => 'DDT-' . $riga['codice'],
+                    'codice' => 'DDT-R-'.$riga['codice'],
                     'id_documento' => $idDocumento,
                     'quantita' => $riga['quantita'],
                     'id_articolo' => $riga['id_articolo'],

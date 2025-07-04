@@ -416,7 +416,10 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 				timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
 			}
 
-			// TODO NOTA se attiviamo la valorizzazione di $befores in cima, qui si arriva con la $befores già valorizzata
+            // ...
+            $i['__status__'] = 200;
+
+            // TODO NOTA se attiviamo la valorizzazione di $befores in cima, qui si arriva con la $befores già valorizzata
 
 			// variabile per confronto prima/dopo
 			$before = NULL;
@@ -839,5 +842,5 @@ logWrite( "trovata view static per ${t}, $stv", 'controller' );
 		$i['__status__'] = 401;
 	}
 
-	return $i['__status__'];
+	return $i['__status__'] ?? 200;
 }

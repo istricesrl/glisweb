@@ -81,6 +81,10 @@
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff', 'users', 'guests' )
         ),
+        'distinta' => array(
+            CONTROL_FULL => array( 'roots' ),
+            METHOD_GET => array( 'staff', 'users' )
+        ),
         'provincie' => array(
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff', 'users', 'guests' )

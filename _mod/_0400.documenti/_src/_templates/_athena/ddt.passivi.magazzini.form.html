@@ -62,6 +62,15 @@
                         <span class="label-top">sezionale</span>
                         {{ frm.inputRequired( table, '', '', 'sezionale', '', '', request ) }}
                     </div>
+					{% if not request[ table ].codice %}
+					<div class="col-12 col-md-auto">
+                        {{ frm.button(  'OTTIENI CODICE' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroDocumento();','ottieni in modo automatico il progressivo' ) }}
+					</div>
+					{% endif %}
+                    <div class="col-4 col-md-1">
+                        <span class="label-top">codice</span>
+                        {{ frm.inputRequired( table, '', '', 'codice', '', '', request ) }}
+                    </div>
                     <div class="col">
                         <span class="label-top">nome</span>
                         {{ frm.input( table, '', '', 'nome', '', '', request ) }}

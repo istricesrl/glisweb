@@ -101,15 +101,23 @@
      */
     function string2utf8($mixed, $encoding = null)
     {
-        if ($encoding === null) {
-            $encoding = mb_detect_encoding($mixed, mb_detect_order(), true);
-        }
-        if (is_array($mixed)) {
+        if( is_array( $mixed ) ) {
+            // Se è un array, ricodifica ogni elemento ricorsivamente
             foreach ($mixed as $key => $value) {
                 $mixed[$key] = string2utf8($value, $encoding);
             }
-        } elseif (is_string($mixed)) {
-            return mb_convert_encoding($mixed, "UTF-8", $encoding);
+            return $mixed;
+        } else {
+            if ($encoding === null) {
+                $encoding = mb_detect_encoding($mixed, mb_detect_order(), true);
+            }
+            if (is_array($mixed)) {
+                foreach ($mixed as $key => $value) {
+                    $mixed[$key] = string2utf8($value, $encoding);
+                }
+            } elseif (is_string($mixed)) {
+                return mb_convert_encoding($mixed, "UTF-8", $encoding);
+            }
+            return $mixed;
         }
-        return $mixed;
     }

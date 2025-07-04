@@ -510,6 +510,7 @@ DROP TABLE IF EXISTS `__report_giacenza_magazzini__`;
 CREATE TABLE `__report_giacenza_magazzini__` (
   `id` varchar(56) NOT NULL,
   `id_mastro` int(11) DEFAULT NULL,
+  `codice` text DEFAULT NULL,
   `nome` text DEFAULT NULL,
   `id_articolo` char(32) DEFAULT NULL,
   `articolo` varchar(331) DEFAULT NULL,

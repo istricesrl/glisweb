@@ -21,6 +21,13 @@
      * determinate tabelle. Questi lavori vengono di norma svolti da task custom appositamente preparati; la
      * cartella in cui di norma si trovano i file esportati è DIR_VAR_SPOOL_EXPORT.
      * 
+     * come testare l'importazione dei dati
+     * ------------------------------------
+     * Per testare l'importazione dei dati, è possibile utilizzare lo script /_src/_sh/_test.import.sh che crea
+     * dei file di test per la scrittura sulla tabella di test. Si vedano i commenti all'interno dello script per
+     * ulteriori dettagli.
+     * 
+     * 
      */
 
     // debug
@@ -53,16 +60,16 @@
     if( defined( 'CRON_RUNNING' ) ) {
 
         // trovo le sottocartelle della cartella di importazione
-        $programmati = getDirList( DIR_VAR_SPOOL_IMPORT_TODO );
+        $cf['import']['programmati'] = getDirList( DIR_VAR_SPOOL_IMPORT_TODO );
 
         // ...
-        if( ! empty( $programmati ) ) {
+        if( ! empty( $cf['import']['programmati'] ) ) {
 
             // log
-            logWrite( 'cartelle programmate: ' . print_r( $programmati, true ), 'import' );
+            logWrite( 'cartelle programmate: ' . print_r( $cf['import']['programmati'], true ), 'import' );
 
             // cerco le cartelle programmate nel passato
-            foreach( $programmati as $programmata ) {
+            foreach( $cf['import']['programmati'] as $programmata ) {
 
                 // se la cartella è programmata nel passato
                 if( basename( $programmata ) <= date('YmdHis') ) {
@@ -71,22 +78,31 @@
                     logWrite( 'cartella da elaborare (su '.date('YmdHis').'): ' . $programmata, 'import' );
 
                     // ottengo l'elenco dei file nella cartella
-                    $programmati = getFileList( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' );
+                    $cf['import']['programmati'] = getFileList( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' );
 
                     // ...
-                    if( ! empty( $programmati ) ) {
+                    if( ! empty( $cf['import']['programmati'] ) ) {
 
                         // log
-                        logWrite( 'file da elaborare: ' . print_r( $programmati, true ), 'import' );
+                        logWrite( 'file da elaborare: ' . print_r( $cf['import']['programmati'], true ), 'import' );
 
                         // sposto i file nella cartella di importazione
-                        foreach( $programmati as $programmato ) {
+                        foreach( $cf['import']['programmati'] as $programmato ) {
 
                             // log
                             logWrite( 'file da elaborare: ' . $programmato, 'import', LOG_ERR );
 
                             // sposto il file nella cartella di importazione
-                            moveFile( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato, DIR_VAR_SPOOL_IMPORT . $programmato );
+                            $r = moveFile( DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato, DIR_VAR_SPOOL_IMPORT . $programmato );
+
+                            // status
+                            if( $r === true ) {
+                                $cf['import']['info'][] = 'spostato file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato;
+                                logWrite( 'spostato file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato, 'import', LOG_ERR );
+                            } else {
+                                $cf['import']['info'][] = 'impossibile spostare il file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato;
+                                logWrite( 'impossibile spostare il file ' . $programmato . ' da ' . DIR_VAR_SPOOL_IMPORT_TODO . $programmata . '/' . $programmato . ' a ' . DIR_VAR_SPOOL_IMPORT . $programmato, 'import', LOG_ERR );
+                            }
 
                         }
 
@@ -146,21 +162,21 @@
         // ...
 
         // cerco file CSV da importare
-        $csv = glob( DIR_VAR_SPOOL_IMPORT . '*.csv' );
+        $cf['import']['csv'] = glob( DIR_VAR_SPOOL_IMPORT . '*.csv' );
 
         // debug
         // die( 'ricerca file di importazione' );
-        // print_r( $csv );
+        // print_r( $cf['import']['csv'] );
         // die();
 
         // ordinamento
-        sort( $csv );
+        sort( $cf['import']['csv'] );
 
         // elaboro i CSV
-        foreach( $csv as $f ) {
+        foreach( $cf['import']['csv'] as $f ) {
 
             // ...
-            // $f = array_shift( $csv );
+            // $f = array_shift( $cf['import']['csv'] );
 
             // ...
             // if( file_exists( $f ) ) {
@@ -184,6 +200,9 @@
                 $table = $req[1];
             }
 
+            // status
+            $cf['import']['info'][] = 'importazione file ' . basename( $f ) . ' come ' . strtoupper( $action ) . ' su tabella ' . $table;
+
             // debug
             // print_r( readFromFile( $f ) );
             // die();
@@ -196,6 +215,9 @@
 
                 // archivio il file importato
                 moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
+
+                // status
+                $cf['import']['info'][] = 'archiviato file ' . basename( $f ) . ' in ' . DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/';
 
                 foreach( csvFile2array( $fd, NULL ) as $riga ) {
 
@@ -236,6 +258,17 @@
 
                         // ...
                         $_REQUEST[ $table ][] = $riga;
+
+                        // status
+                        $cf['import']['rows'][ basename( $f ) ][] = $riga;
+
+                    } else {
+
+                        // log
+                        logWrite( 'impossibile importare la riga: ' . print_r( $riga, true ) . ' per chiave di sicurezza mancante', 'import', LOG_ERR );
+
+                        // status
+                        $cf['import']['err'][] = 'impossibile importare la riga: ' . implode( ',', $riga ) . ' per chiave di sicurezza mancante';
 
                     }
 
@@ -299,19 +332,19 @@
     if( defined( 'CRON_RUNNING' ) ) {
 
         // trovo le immagini presenti in var/spool/import/
-        $img = glob( DIR_VAR_SPOOL_IMPORT . '*.{jpg,png,jpeg}', GLOB_BRACE );
+        $cf['import']['img'] = glob( DIR_VAR_SPOOL_IMPORT . '*.{jpg,png,jpeg}', GLOB_BRACE );
 
         // debug
-        // die( print_r( $img, true ) );
+        // die( print_r( $cf['import']['img'], true ) );
 
         // se c'è almeno un'immagine da elaborare
-        if( ! empty( $img ) ) {
+        if( ! empty( $cf['import']['img'] ) ) {
 
             // prelevo un'immagine dalla lista
-            $f = array_shift( $img );
+            $f = array_shift( $cf['import']['img'] );
 
             // debug
-            // die( print_r( $img, true ) );
+            // die( print_r( $cf['import']['img'], true ) );
 
             // log
             logger( 'trovata immagine da importare: ' . basename( $f ), 'image' );

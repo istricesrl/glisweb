@@ -581,7 +581,7 @@
         $s = preg_replace('/\s+/', ' ', $s );
 
         if( $s != $string ) {
-            logWrite( $string . ' pulito (rimozione spazi doppi) a ' . $s4, 'details/csv/cleanstring', LOG_ERR );
+            logWrite( $string . ' pulito (rimozione spazi doppi) a ' . $s, 'details/csv/cleanstring', LOG_ERR );
         }
 
         return $s;

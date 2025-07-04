@@ -837,6 +837,21 @@ CREATE TABLE `carrelli_consensi` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000003065
+
+-- distinta
+-- tipologia: tabella gestita
+CREATE TABLE IF NOT EXISTS `distinta` (
+  `id` int(11) NOT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `id_componente` char(32) DEFAULT NULL,
+  `quantita` decimal(16,5) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000003070
 
 -- carrelli_documenti

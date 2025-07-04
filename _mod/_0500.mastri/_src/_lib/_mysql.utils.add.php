@@ -166,6 +166,15 @@
 
             $riga['id_mastro'] = $mastro;
     
+            $riga['codice'] = mysqlSelectCachedValue(
+                $cf['memcache']['connection'],
+                $cf['mysql']['connection'],
+                'SELECT codice FROM mastri WHERE id = ?',
+                array(
+                    array( 's' => $mastro )
+                )
+            );
+
             $riga['nome'] = mysqlSelectCachedValue(
                 $cf['memcache']['connection'],
                 $cf['mysql']['connection'],
