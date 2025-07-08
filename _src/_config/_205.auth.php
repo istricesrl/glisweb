@@ -33,7 +33,9 @@
      */
 
     if( ! empty( $cf['redis']['connection'] ) && ! empty( REDIS_MULTISITE_SEED ) ) {
-        $cf['auth']['index'] = json_decode( $cf['redis']['connection']->get( REDIS_MULTISITE_SEED ), true );
+        if( ! empty( $cf['redis']['connection']->get( REDIS_MULTISITE_SEED ) ) ) {
+            $cf['auth']['index'] = json_decode( $cf['redis']['connection']->get( REDIS_MULTISITE_SEED ), true );
+        }
     }
 
     // debug

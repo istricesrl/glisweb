@@ -157,7 +157,16 @@
     // prelevamento dei dati
 	// controller( $cf['mysql']['connection'], $_REQUEST['__view__'][ $ct['view']['id'] ], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $k ] );
 	if( ! isset( $ct['view']['data']['__filesystem_mode__'] ) ) {
-		controller( $cf['mysql']['connection'], $cf['memcache']['connection'], $ct['view']['data'], $ct['view']['table'], METHOD_GET, NULL, $_REQUEST['__err__'][ $ct['view']['id'] ], $_REQUEST['__view__'][ $ct['view']['id'] ] );
+		controller(
+            $cf['mysql']['connection'],
+            $cf['memcache']['connection'],
+            $ct['view']['data'],
+            $ct['view']['table'],
+            METHOD_GET,
+            NULL,
+            $_REQUEST['__err__'][ $ct['view']['id'] ],
+            $_REQUEST['__view__'][ $ct['view']['id'] ]
+        );
 	}    
     
     // debug

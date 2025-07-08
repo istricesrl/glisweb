@@ -21,7 +21,7 @@
      * In sostanza, se vogliamo che il framework processi un insieme di dati, è sufficiente che gli passiamo, tramite
      * uno dei metodi visti sopra, un array contenente in chiave il nome dell'entità cui i dati si riferiscono, e i dati
      * stessi andranno rappresentati come un array associativo. Si supponga ad esempio di voler inserire una riga
-     * nella tabella "test" con i campi "id" e "nome", l'array che dovrò passare alla controller sarà:;
+     * nella tabella "test" con i campi "id" e "nome", l'array che dovrò passare alla controller sarà:
      * 
      * ```
      * $_REQUEST['test'] = array(
