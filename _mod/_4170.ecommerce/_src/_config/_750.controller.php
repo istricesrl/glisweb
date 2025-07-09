@@ -728,6 +728,8 @@
                 // se il coupon è vincolato
                 if( $coupon['se_vincolato'] == 1 ) {
 
+                    logWrite( 'salvataggio metadato ' . $k . ' con valore ' . $v . ' per il carrello ' . $_SESSION['carrello']['id'], 'details/metadati/cart/' . $_SESSION['carrello']['id'] );
+
                     // recupero i vincoli di articolo
                     $vincoliArticolo = mysqlQuery(
                         $cf['mysql']['connection'],
