@@ -16,7 +16,7 @@
      */
 
     // log
-	logWrite( "controller default/before per ${t}/${a}", 'controller' );
+	logWrite( "controller default/before per $t/$a", 'controller' );
 
     // debug
     // print_r( $vs );

@@ -15,7 +15,7 @@
      */
 
     // log
-	logWrite( "controller finally per ${t}/${a}", 'controller' );
+	logWrite( "controller finally per $t/$a", 'controller' );
 
     // debug
     // die( var_dump( $a ) );

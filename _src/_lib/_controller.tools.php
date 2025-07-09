@@ -491,7 +491,7 @@
                  */
 
                 // log
-                logWrite("diritti sufficienti per ${t}/${a}", 'controller');
+                logWrite("diritti sufficienti per $t/$a", 'controller');
 
                 // controller pre query (before)
                 $cn = 'before.php';

@@ -10,7 +10,7 @@
      */
 
     // log
-	logWrite( "controller before per ${t}/${a}", 'controller' );
+	logWrite( "controller before per $t/$a", 'controller' );
 
     // controllo azione corrente
 	switch( strtoupper( $a ) ) {

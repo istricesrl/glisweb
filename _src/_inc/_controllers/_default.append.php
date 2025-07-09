@@ -15,4 +15,4 @@
      */
 
     // log
-	logWrite( "controller default/append per ${t}/${a}", 'controller' );
+	logWrite( "controller default/append per $t/$a", 'controller' );

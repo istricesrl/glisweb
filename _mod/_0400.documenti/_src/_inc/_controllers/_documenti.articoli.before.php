@@ -10,7 +10,7 @@
      */
 
     // log
-	logWrite( "controller before per ${t}/${a}", 'controller' );
+	logWrite( "controller before per $t/$a", 'controller' );
 
     // controllo azione corrente
 	switch( strtoupper( $a ) ) {
@@ -105,14 +105,14 @@
 	    case METHOD_DELETE:
 
             // log
-            logWrite( "controller before per ${t}/${a} metodo DELETE", 'controller', LOG_ERR );
+            logWrite( "controller before per $t/$a metodo DELETE", 'controller', LOG_ERR );
 
             logWrite( print_r( $vs, true ), 'controller', LOG_ERR );
             logWrite( print_r( $ks, true ), 'controller', LOG_ERR );
 
             if( isset( $vs['codice'] ) && ( ! isset( $vs['id'] ) || empty( $vs['id']['s'] ) ) ) {
 
-                logWrite( "controller before per ${t}/${a} metodo DELETE per CODICE anziché per ID", 'controller', LOG_ERR );
+                logWrite( "controller before per $t/$a metodo DELETE per CODICE anziché per ID", 'controller', LOG_ERR );
 
                 $id = mysqlSelectValue(
 					$c,
