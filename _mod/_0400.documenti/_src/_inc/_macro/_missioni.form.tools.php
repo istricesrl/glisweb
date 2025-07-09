@@ -62,6 +62,13 @@
             'UPDATE documenti_articoli SET id_missione = ' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' WHERE id_documento = ' . $_REQUEST['__ordine__']
         );
 
+    } elseif( isset( $_REQUEST['__codice_ordine__'] ) && ! empty( $_REQUEST['__codice_ordine__'] ) ) {
+
+        mysqlQuery( 
+            $cf['mysql']['connection'],
+            'UPDATE documenti_articoli SET id_missione = ' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' WHERE id_documento = (SELECT id FROM documenti WHERE codice = "' . $_REQUEST['__codice_ordine__'] . '" LIMIT 1)'
+        );
+
     }
 
     $ct['etc']['select']['documenti'] = mysqlQuery( 

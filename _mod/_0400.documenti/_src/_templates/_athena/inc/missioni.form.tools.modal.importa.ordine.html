@@ -3,7 +3,8 @@
 <script>
     function importa() {
 	var data = $('#_id_documento').val();
-	window.open( '?documenti[id]={{ request[ form.table ].id }}&__ordine__='+data, '_self');
+    var codice = $('#_codice_documento').val();
+	window.open( '?documenti[id]={{ request[ form.table ].id }}&__ordine__='+data+'&__codice_ordine__='+codice, '_self');
     }
 </script>
 
@@ -18,8 +19,14 @@
 			<div class="container-fluid">
 				<div class="form-row">
 					<div class="col">
-						<span class="label-top">documento</span>
-						{{ frm.selectRequired( '', '', '', 'id_documento', 'tutte', etc.select.documenti, request, '', '','selectpicker' ) }}
+						<span class="label-top">seleziona documento</span>
+						{{ frm.selectRequired( '', '', '', 'id_documento', '', etc.select.documenti, request, '', '','selectpicker' ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">bip codice documento</span>
+						{{ frm.input( '', '', '', 'codice_documento', '', '', request, '', '', '','focus-on-load' ) }}
 					</div>
 				</div>
 			</div>
