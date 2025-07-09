@@ -479,17 +479,21 @@
                 // TODO il valore di ritorno dipende da eventuali errori
                 return $i['__status__'];
 
-                // ...
             } elseif( checkModalitaModifica( $d, $t, $a, $i, $pi ) ) {
+
+                /**
+                 * la modalità di modifica, inserimento e cancellazione
+                 * ----------------------------------------------------
+                 * 
+                 * 
+                 * 
+                 * 
+                 */
 
                 // log
                 logWrite("diritti sufficienti per ${t}/${a}", 'controller');
 
-                // debug
-                // echo 'controller ' . $t . '/' . $a . ' OK' . PHP_EOL;
-
                 // controller pre query (before)
-                // NOTA spostata qui perché le elaborazioni before fanno parte del controllo before after
                 $cn = 'before.php';
                 $ct = array_merge(
                     glob($cb . $cn, GLOB_BRACE),
@@ -505,8 +509,6 @@
                 // ...
                 $i['__status__'] = 200;
 
-                // TODO NOTA se attiviamo la valorizzazione di $befores in cima, qui si arriva con la $befores già valorizzata
-
                 // variabile per confronto prima/dopo
                 $before = NULL;
 
@@ -520,27 +522,15 @@
                             $before = md5(serialize(
                                 mysqlSelectRow($c, 'SELECT ' . implode(',', array_diff($ks, array('id_account_aggiornamento', 'timestamp_aggiornamento'))) . ' FROM ' . $t . ' WHERE id = ?', array(array('s' => $d['id'])))
                             ));
-                            // TODO documentare a cosa serve $before (per il confronto con $after?)
                             $befores = mysqlSelectRow($c, 'SELECT * FROM ' . $t . ' WHERE id = ?', array(array('s' => $d['id'])));
-                            // var_dump( $d['id'] );
-                            // print_r( $befores );
                             break;
                     }
-                    #				} else {
-                    #					print_r( $d );
                 }
-
-                // debug
-                // echo( print_r( mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) ), true ) ) . PHP_EOL;
-                // print_r($d);
-                // echo $before . PHP_EOL;
-
-                // NOTA prima la controller before era qui...
 
                 // composizione della query in base all'azione richiesta
                 switch (strtoupper($a)) {
 
-                        // inserimento di un nuovo record
+                    // inserimento di un nuovo record
                     case METHOD_POST:
 
                         // compongo la query
@@ -548,7 +538,7 @@
 
                         break;
 
-                        // modifica di un record già esistente
+                    // modifica di un record già esistente
                     case METHOD_PUT:
 
                         // compongo la query
@@ -567,7 +557,7 @@
 
                         break;
 
-                        // rimpiazzo di un record già esistente
+                    // rimpiazzo di un record già esistente
                     case METHOD_REPLACE:
 
                         // compongo la query
@@ -575,7 +565,7 @@
 
                         break;
 
-                        // aggiornamento di un record già esistente con INSERT INTO ... ON DUPLICATE KEY UPDATE
+                    // aggiornamento di un record già esistente con INSERT INTO ... ON DUPLICATE KEY UPDATE
                     case METHOD_UPDATE:
 
                         // compongo la query
@@ -587,7 +577,7 @@
 
                         break;
 
-                        // eliminazione di un record già esistente
+                    // eliminazione di un record già esistente
                     case METHOD_DELETE:
 
                         // compongo la query
@@ -598,15 +588,10 @@
 
                         break;
 
-                        // prelevamento di un record già esistente
+                    // prelevamento di un record già esistente
                     case METHOD_GET:
 
-
-                        // TODO ma il view_mode qui?
-                        // TODO se la tabella non esiste usare la view
-
                         // compongo la query
-                        // $q = "SELECT * FROM ${t}" . ( ( $fvm ) ? '_view' : '' );
                         $q = "SELECT * FROM ${t}" . (( ! empty( $fvm ) ) ? $rm : '');
 
                         // compongo i campi della query
@@ -620,12 +605,8 @@
                             // print_r( $tks );
                         }
 
-                        // debug
-                        // if( ! empty(  $fvm ) ) {
-                        // die( $q );
-                        // }
-
                         break;
+
                 }
 
                 // controller in query (append)
@@ -644,17 +625,15 @@
                 // esecuzione della query
                 switch (strtoupper($a)) {
 
-                        // inserimento di un nuovo record
+                    // inserimento di un nuovo record
                     case METHOD_POST:
 
                         // eseguo la query
                         $d['id'] = mysqlQuery($c, $q, $vs, $e['__codes__']);
 
-                        // echo $d['id'];
-
                         break;
 
-                        // modifica o cancellazione di un oggetto esistente
+                    // modifica o cancellazione di un oggetto esistente
                     case METHOD_PUT:
                     case METHOD_DELETE:
 
@@ -663,7 +642,7 @@
 
                         break;
 
-                        // rimpiazzo di un oggetto esistente
+                    // rimpiazzo di un oggetto esistente
                     case METHOD_REPLACE:
                     case METHOD_UPDATE:
 
@@ -673,7 +652,7 @@
 
                         break;
 
-                        // prelevamento di un oggetto esistente
+                    // prelevamento di un oggetto esistente
                     case METHOD_GET:
 
                         // eseguo la query
@@ -683,12 +662,6 @@
                             $d = array_shift($d);
                         }
 
-                        if (!empty($fvm)) {
-                            // die( print_r( $d, true ) );
-                            // die( $q );
-                        }
-
-                        // logger('righe recuperate dalla query ' . $q . ': ' . count($d), 'controller');
                         logger('righe recuperate dalla query ' . $q . ': ' . print_r($d,true), 'details/controller/select');
                         logger('valori utilizzati dalla query ' . $q . ': ' . print_r($vs,true), 'details/controller/select');
 
@@ -700,8 +673,6 @@
                 $i['__status__'] = 200;
 
                 // gestione degli errori
-                // @todo gestire gli errori
-                // print_r( $e['__codes__'] );
                 if (isset($e['__codes__']) && is_array($e['__codes__'])) {
 
                     if (array_key_exists('1062', $e['__codes__'])) {
@@ -713,6 +684,7 @@
                         $i['__status__'] = 400;
                         $i['__err__'] = $e['__codes__']['1054'][0];
                     }
+
                 } elseif (empty($a)) {
 
                     // di default imposto lo stato a 'OK'
@@ -720,16 +692,15 @@
 
                     // log
                     logWrite("nessuna azione intrapresa per l'entità $t", 'controller');
+
                 } else {
 
                     // log
                     logWrite("row mode / eseguo ($a) la query: $q", 'controller');
 
-                    // debug
-                    // echo 'controller ' . $t . '/' . $a . ' -> ' . $q . PHP_EOL;
-
                     // di default imposto lo stato a 'OK'
                     $i['__status__'] = 200;
+
                 }
 
                 // variabile per confronto prima/dopo
@@ -749,11 +720,6 @@
                 // esito del controllo prima/dopo
                 $comparison = ($before !== $after) ? ((empty($before)) ? ROW_CREATED : ROW_MODIFIED) : ROW_UNMODIFIED;
 
-                // debug
-                // echo( print_r( mysqlSelectRow( $c, 'SELECT ' . implode( ',', array_diff( $ks, array( 'id_account_aggiornamento', 'timestamp_aggiornamento' ) ) ) . ' FROM ' . $t . ' WHERE id = ?', array( array( 's' => $d['id'] ) ) ), true ) ) . PHP_EOL;
-                // echo $after . PHP_EOL;
-                // echo $comparison . PHP_EOL;
-
                 // log
                 logWrite("record $comparison per la query: ${q}", 'controller');
 
@@ -770,19 +736,20 @@
                     timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
                 }
 
+                /**
+                 * gestione dei sotto moduli
+                 * -------------------------
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 */
+
                 // reintegrazione dei sottomoduli
                 if (is_array($d)) {
                     $d = array_merge($d, $s);
                 }
-
-                // print_r($d);
-
-                /*
-                * @todo a cosa serve questa cosa qui sopra? inoltre, verificare come si comportano __info__, __err__, e __auth__ in scenari ricorsivi
-                */
-
-                // debug
-                // print_r( $d );
 
                 // timer
                 timerCheck( $timer, '-> -> inizio elaborazione sotto moduli' );
@@ -798,26 +765,21 @@
                             foreach ($d as $k => $v) {
                                 if (is_array($v)) {
                                     foreach ($v as $x => $y) {
-                                        # echo 'elaboro il subform '.$x.' di '.$k.PHP_EOL;
                                         controller($c, $mc, $d[$k][$x], $k, $a, $d['id'], $e, $i[$k][$x], $i['__auth__']);
                                     }
                                 }
                             }
                             break;
+
                         case METHOD_GET:
-                            #				default:
                             if (in_array('id', $ks)) {
                                 $x = mysqlCachedQuery($mc, $c, 'SELECT * FROM information_schema.key_column_usage WHERE referenced_table_name = ? AND constraint_name NOT LIKE "%_nofollow" AND table_schema = database()', array(array('s' => $t)));
-                                #C					$x = mysqlQuery( $c, 'SELECT * FROM information_schema.key_column_usage WHERE referenced_table_name = ? AND constraint_name NOT LIKE "%_nofollow" AND table_schema = database()', array( array( 's' => $t ) ) );
-                                #echo "cerco le referenze a $t" . PHP_EOL;
-                                #print_r( $x );
                                 $xrefs = array();
                                 foreach ($x as $ref) {
                                     $xrefs[$ref['TABLE_NAME']]['TABLE_NAME'] = $ref['TABLE_NAME'];
                                     $xrefs[$ref['TABLE_NAME']]['COLUMN_NAME'][] = $ref['COLUMN_NAME'];
                                 }
 
-                                #1					foreach( $x as $ref ) {
                                 foreach ($xrefs as $ref) {
 
                                     $refCols = array();
@@ -825,12 +787,6 @@
                                         $refCols[] = $colName . " = '" . $d['id'] . "'";
                                     }
 
-                                    #print_r( $ref );
-                                    #if( ! is_array($d) ) {
-                                    #	var_dump($t);
-                                    #	var_dump($q);
-                                    #	var_dump($d);
-                                    #}
                                     $idx = array_column(mysqlQuery($c, 'SHOW INDEX FROM ' . $ref['TABLE_NAME'] . ' WHERE key_name = "SORTING"'), 'Column_name');
                                     $q = "SELECT id FROM " . $ref['TABLE_NAME'] . " WHERE " . implode(' OR ', $refCols) . ((count($idx)) ? ' ORDER BY ' . implode(', ', $idx) : NULL);
                                     $rows = mysqlQuery($c, $q);
@@ -838,31 +794,26 @@
                                     $tStart = timerNow();
                                     $ix = 0;
                                     foreach ($rows as $row) {
-                                        #echo $q . PHP_EOL;
-                                        #print_r( $row );
-                                        #echo $ref['TABLE_NAME'] . PHP_EOL;
-                                        #echo $i . PHP_EOL;
-                                        #var_dump( $d[ $ref['TABLE_NAME'] ] );
-                                        #var_dump( $d[ $ref['TABLE_NAME'] ][ $i ] );
-                                        #var_dump( $d[ $ref['TABLE_NAME'] ][ $i ]['id'] );
                                         if (!empty($row['id'])) {
                                             $d[$ref['TABLE_NAME']][$ix]['id'] = $row['id'];
                                             $e[$ref['TABLE_NAME']][$ix] = array();
                                             $i[$ref['TABLE_NAME']][$ix] = array();
-                                            //						    controller( $c, $d[ $ref['TABLE_NAME'] ][ $ix ], $ref['TABLE_NAME'], $a, NULL, $r, $e[ $ref['TABLE_NAME'] ][ $ix ], $i[ $ref['TABLE_NAME'] ][ $ix ] );
                                             controller($c, $mc, $d[$ref['TABLE_NAME']][$ix], $ref['TABLE_NAME'], $a, NULL, $e[$ref['TABLE_NAME']][$ix], $i[$ref['TABLE_NAME']][$ix], $i['__auth__']);
                                             $ix++;
-                                            #print_r( $d[ $ref['TABLE_NAME'] ][ $ix ] );
                                         }
                                     }
                                     $tDone = timerDiff($tStart);
                                     if (count($rows) > 10 || $tDone > 1.5) {
                                         logWrite($ref['TABLE_NAME'] . ' causa overload: ' . $tDone . ' secondi, ' . count($rows) . ' righe', 'speed', LOG_ERR);
                                     }
+
                                 }
+
                             }
+
                             break;
                     }
+
                 }
 
                 // timer
@@ -882,16 +833,26 @@
                     timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
                 }
 
-                // svuotamento o integrazione del blocco dati
-                // NOTA a cosa serve questa cosa???
-                // TODO selezionare dalla vista può essere inefficente, è possibile selezionare dalla tabella?
+                /**
+                 * operazioni finali
+                 * -----------------
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 * 
+                 */
 
+                // svuotamento o integrazione del blocco dati
                 if ($r) {
+
                     $_SESSION['__latest__'][$t] = $d;
                     $d = array();
                     $d['__reset__'] = 1;
+
                 } else {
-                    // echo "${t}$rm";
+
                     switch (strtoupper($a)) {
                         case METHOD_GET:
                         case METHOD_POST:
@@ -903,20 +864,18 @@
 
                             timerCheck( $timer, '-> -> fine integrazione blocco dati' );
 
-                            // echo "${t}$rm";
-                            // echo $d['id'];
-                            // print_r( $d );
-                            // ATTENZIONE		if( is_array( $w ) && is_array( $d ) ) { $d = array_merge( $d, $w ); }
-
                             if (is_array($w) && is_array($d)) {
                                 $d = array_merge($w, $d);
                             }
+
                             break;
+
                     }
+
                 }
-                // print_r($d);
-                // TODO il valore di ritorno di questo ramo dipende dall'esito delle operazioni sopra
+
                 return $i['__status__'];
+
             } else {
 
                 // ...
