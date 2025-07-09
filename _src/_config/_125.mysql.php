@@ -91,75 +91,80 @@
                     mysqli_options( $cn, MYSQLI_OPT_CONNECT_TIMEOUT, 3 );
 
                     // connessione
-                    mysqli_real_connect(
-                        $cn,
-                        $cf['mysql']['servers'][ $server ]['address'],
-                        $cf['mysql']['servers'][ $server ]['username'],
-                        $cf['mysql']['servers'][ $server ]['password']
-                    );
+                    try {
+                        mysqli_real_connect(
+                            $cn,
+                            $cf['mysql']['servers'][ $server ]['address'],
+                            $cf['mysql']['servers'][ $server ]['username'],
+                            $cf['mysql']['servers'][ $server ]['password']
+                        );
 
-                    // character set
-                    mysqli_set_charset( $cn, 'utf8' );
+                        // character set
+                        mysqli_set_charset( $cn, 'utf8' );
 
-                    // controllo errori
-                    if( mysqli_connect_errno() ) {
-
-                        // log
-                        logger( 'errore di connessione a ' . $server . ': ' . mysqli_connect_errno() . ' ' . mysqli_connect_error(), 'mysql', LOG_ERR );
-
-                    } else {
-
-                        // versione del server
-                        $cf['mysql']['servers'][ $server ]['version'] = mysqli_get_server_info( $cn );
-
-                        // selezione database
-                        try{
-
-                            // seleziono il database
-                            mysqli_select_db( $cn, $cf['mysql']['servers'][ $server ]['db'] );
+                        // controllo errori
+                        if( mysqli_connect_errno() ) {
 
                             // log
-                            logger( 'database selezionato: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql' );
+                            logger( 'errore di connessione a ' . $server . ': ' . mysqli_connect_errno() . ' ' . mysqli_connect_error(), 'mysql', LOG_ERR );
 
-                        } catch( \Exception $e ) {
+                        } else {
+
+                            // versione del server
+                            $cf['mysql']['servers'][ $server ]['version'] = mysqli_get_server_info( $cn );
+
+                            // selezione database
+                            try{
+
+                                // seleziono il database
+                                mysqli_select_db( $cn, $cf['mysql']['servers'][ $server ]['db'] );
+
+                                // log
+                                logger( 'database selezionato: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql' );
+
+                            } catch( \Exception $e ) {
+
+                                // log
+                                logger( 'impossibile selezionare il database: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql', LOG_CRIT );
+
+                                // ...
+                                die( 'Impossibile selezionare il database '. $e->getMessage() );
+
+                            }
+
+                            // collation
+                            mysqlQuery( $cn, 'SET collation_connection = utf8_general_ci' );
+
+                            // timezone
+                            try {
+
+                                // setto la timezone
+                                mysqlQuery( $cn, 'SET time_zone = ?', array( array( 's' => $cf['localization']['timezone']['name'] ) ) );
+
+                            } catch (mysqli_sql_exception $e) {
+
+                                // ...
+                                die( 'timezone MySQL non installate, usa il comando: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql' );
+
+                            }                    
+
+                            // localizzazione
+                            mysqlQuery( $cn, 'SET lc_time_names = ?', array( array( 's' => str_replace( '-', '_', $cf['localization']['language']['ietf'] ) ) ) );
+
+                            // modalità SQL
+                            // mysqlQuery( $cn, 'SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,"ONLY_FULL_GROUP_BY",""));' );
 
                             // log
-                            logger( 'impossibile selezionare il database: ' . $cf['mysql']['servers'][ $server ]['db'], 'mysql', LOG_CRIT );
+                            logger( 'connessione stabilita: ' . $server, 'mysql' );
+                            logger( 'dettagli: ' . mysqli_get_host_info( $cn ), 'mysql' );
 
-                            // ...
-                            die( 'Impossibile selezionare il database '. $e->getMessage() );
+                            // aggiungo la connessione all'array
+                            $cf['mysql']['connections'][ $server ] = $cn;
 
                         }
 
-                        // collation
-                        mysqlQuery( $cn, 'SET collation_connection = utf8_general_ci' );
-
-                        // timezone
-                        try {
-
-                            // setto la timezone
-                            mysqlQuery( $cn, 'SET time_zone = ?', array( array( 's' => $cf['localization']['timezone']['name'] ) ) );
-
-                        } catch (mysqli_sql_exception $e) {
-
-                            // ...
-                            die( 'timezone MySQL non installate, usa il comando: mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql' );
-
-                        }                    
-
-                        // localizzazione
-                        mysqlQuery( $cn, 'SET lc_time_names = ?', array( array( 's' => str_replace( '-', '_', $cf['localization']['language']['ietf'] ) ) ) );
-
-                        // modalità SQL
-                        // mysqlQuery( $cn, 'SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,"ONLY_FULL_GROUP_BY",""));' );
-
-                        // log
-                        logger( 'connessione stabilita: ' . $server, 'mysql' );
-                        logger( 'dettagli: ' . mysqli_get_host_info( $cn ), 'mysql' );
-
-                        // aggiungo la connessione all'array
-                        $cf['mysql']['connections'][ $server ] = $cn;
-
+                    } catch( \Exception $e ) {
+                        die( 'Impossibile connettersi al server MySQL ' . $server . ': ' . $e->getMessage() );
                     }
 
                     // debug

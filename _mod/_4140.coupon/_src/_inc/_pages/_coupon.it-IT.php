@@ -32,7 +32,8 @@
 	    'etc'		=> array( 'tabs'	=> array(	'coupon.form',
 													'coupon.form.utilizzi',
 #													'coupon.form.gruppi'
-													'coupon.form.stampe'
+													'coupon.form.stampe',
+                                                    'coupon.form.tools'
 												) )
 	);
 
@@ -44,6 +45,19 @@
 		'parent'		=> array( 'id'		=> 'coupon.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.utilizzi.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
+		'etc'		=> array( 'tabs'	=> $p['coupon.form']['etc']['tabs'] )
+	);
+
+	// gestione coupon stampe
+	$p['coupon.form.tools'] = array(
+		'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+		'title'		=> array( $l		=> 'azioni del coupon' ),
+		'h1'		=> array( $l		=> 'azioni' ),
+		'parent'		=> array( 'id'		=> 'coupon.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_coupon.form.tools.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['coupon.form']['etc']['tabs'] )
 	);
