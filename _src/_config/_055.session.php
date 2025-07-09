@@ -19,8 +19,8 @@
 
     // debug
     // print_r( $cf['debug'] );
-    // error_reporting( E_ALL );
-    // ini_set( 'display_errors', TRUE );
+     error_reporting( E_ALL );
+     ini_set( 'display_errors', TRUE );
     // echo 'OUTPUT';
 
     /**

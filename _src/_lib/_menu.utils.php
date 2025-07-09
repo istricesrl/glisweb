@@ -66,7 +66,7 @@ foreach( $pages[ $k ]['menu'][ $menu ] as $ak => $mv ) {
                             // print_r( $pages[ $k ]['url'] );
 
                         // costruisco la chiave per l'ordinamento
-                            $key = $mv['priority'] . '|' . $k . '|' . $ak;
+                            $key = ( $mv['priority'] ?? 0 ) . '|' . $k . '|' . $ak;
 
                         // log
                             if( empty( $mv['label'] ) ) {

@@ -401,7 +401,7 @@
 
         $filtered = array();
 
-        if( empty( $fields ) ) {
+        if( empty( $fields ) && is_array( $array[0] ) ) {
             $fields = array_keys( $array[0] );
         } elseif( ! is_array( $fields ) ) {
             $fields = explode( ',', $fields );
@@ -736,7 +736,7 @@
 
         foreach( $r as $row ) {
 
-            $dettagli = explode( '|', $row['nome'] );
+            $dettagli = explode( '|', $row['nome'] ?? '' );
 
             $lvl =& $a;
 

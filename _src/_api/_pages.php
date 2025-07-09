@@ -600,7 +600,7 @@
     // preparazione favicons
     $ct['page']['template']['favicons'] = array();
     foreach( $favicons as $favicon ) {
-        $path = shortPath( dirname( $favicon ) );
+        $path = getShortPath( dirname( $favicon ) );
         $favicon = basename( $favicon );
         preg_match_all( '/([a-z\-]*)\-([0-9x]*)\.([a-z]*)/', $favicon, $details );
         if( ! empty( $details[0][0] ) ) {
@@ -1134,6 +1134,9 @@
 
     // fine del buffer
     $html = ob_get_clean();
+
+    // debug
+    // die( $html );
 
     // specifiche di formattazione
     $config = array(

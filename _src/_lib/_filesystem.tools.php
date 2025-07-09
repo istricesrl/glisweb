@@ -234,7 +234,7 @@
     function fullPath( &$f ) {
 
         // se DIR_BASE non è contenuto in $f, lo aggiungo
-        if( strpos( $f, DIR_BASE ) === false ) {
+        if( empty( $f ) || strpos( $f, DIR_BASE ) === false ) {
             $f = DIR_BASE . $f;
         }
 

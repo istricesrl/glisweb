@@ -188,12 +188,16 @@
      */
     function string2boolean( $s ) {
 
-        switch( strtolower( $s ) ) {
-            case 'true':
-            case 1:
-                return true;
-            default:
-                return false;
+        if( empty( $s ) ) {
+            return false;
+        } else {
+            switch( strtolower( $s ) ) {
+                case 'true':
+                case 1:
+                    return true;
+                default:
+                    return false;
+            }
         }
 
     }
