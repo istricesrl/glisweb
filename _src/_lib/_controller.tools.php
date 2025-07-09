@@ -116,20 +116,22 @@
                 $rm = NULL;                                             //
             } elseif (substr($k, 0, 2)  !== '__') {                     //
 
-                if (strtolower($v)      == '__null__') {
-                    $v = NULL;
-                }
-                if (strtolower($v)      == '__parent_id__') {
-                    $v = $p;
-                }
-                if (strtolower($v)      == '__self_id__') {
-                    $v = (isset($d['id'])) ? $d['id'] : NULL;
-                }
-                if (strtolower($v)      == '__timestamp__') {
-                    $v = time();
-                }
-                if (strtolower($v)      == '__date__') {
-                    $v = date('Y-m-d');
+                if( ! empty( $v ) && $v !== NULL ) {
+                    if (strtolower($v)    == '__parent_id__') {
+                        $v = $p;
+                    }
+                    if (strtolower($v)    == '__self_id__') {
+                        $v = (isset($d['id'])) ? $d['id'] : NULL;
+                    }
+                    if (strtolower($v)    == '__timestamp__') {
+                        $v = time();
+                    }
+                    if (strtolower($v)    == '__date__') {
+                        $v = date('Y-m-d');
+                    }
+                    if (strtolower($v)    == '__null__') {
+                        $v = NULL;
+                    }
                 }
 
                 $vs[$k] = array( 's' => $v );                           // array dei valori per il bind dei parametri
