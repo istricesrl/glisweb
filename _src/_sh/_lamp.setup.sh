@@ -32,6 +32,9 @@ apt-get install -y mc
 ## installazione di Apache
 apt-get install -y apache2
 
+## installazione di Apache mod security
+apt-get install -y libapache2-mod-security2
+
 ## installazione di certbot
 apt-get install -y python3-certbot-apache
 
