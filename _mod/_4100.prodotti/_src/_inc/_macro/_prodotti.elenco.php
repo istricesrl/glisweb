@@ -167,7 +167,7 @@ if( isset( $cf['contents']['page']['metadati']['id_categoria_prodotti'] ) && ! e
 	if (isset($_SESSION['__view__']['__pages__'][$ct['page']['id']]['__search__'])) {
 		if (!empty($_SESSION['__view__']['__pages__'][$ct['page']['id']]['__search__'])) {
 			foreach (explode(' ', $_SESSION['__view__']['__pages__'][$ct['page']['id']]['__search__']) as $tks) {
-				$like = "%${tks}%";
+				$like = "%$tks%";
 				$cond = array();
 				foreach (array('prodotti.id', 'contenuti.title', 'contenuti.h1', 'contenuti.h2', 'contenuti.abstract', 'contenuti.testo') as $field) {
 					$cond[] = $field . ' LIKE ?';

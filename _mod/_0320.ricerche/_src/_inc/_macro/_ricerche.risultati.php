@@ -37,9 +37,9 @@
 
             // preparo la clausola WHERE
 			foreach( $tks as $tk ) {
-			    $like = "%${tk}%";
+			    $like = "%$tk%";
 			    $cond = array();
-			    foreach( preg_filter( '/^/', "${t}.", $fields ) as $field ) {
+			    foreach( preg_filter( '/^/', "$t.", $fields ) as $field ) {
                     $cond[] = $field . ' LIKE ?';
                     $vs[] = array( 's' => $like );
 			    }
@@ -80,8 +80,8 @@
 			$vs[] = array( 's' => ID_LINGUA_CORRENTE );
 
 		    // aggiungo le clausole WHERE alla query
-			$q = "SELECT ${t}.id, ${t}.h1, ${t}.cappello, ${t}.id_pagina, ${t}.id_categoria_prodotti, ${t}.id_prodotto 
-                FROM ${t} " . implode( ' ', $join ) . ' WHERE ' . implode( ' AND ', $whr );
+			$q = "SELECT $t.id, $t.h1, $t.cappello, $t.id_pagina, $t.id_categoria_prodotti, $t.id_prodotto 
+                FROM $t " . implode( ' ', $join ) . ' WHERE ' . implode( ' AND ', $whr );
 
             // ...
             // echo $q;

@@ -29,7 +29,7 @@
 #        break;
 #    }
 
-    $file = DIR_BASE . "var/cache/osm/tiles/$r/${z}_${x}_${y}.png";
+    $file = DIR_BASE . "var/cache/osm/tiles/$r/".$z."_".$x."_".$y.".png";
 
     appendToFile( 'file: ' . $file . PHP_EOL, 'var/log/osm/cache.' . date( 'Ymd' ) . '.log' );
 

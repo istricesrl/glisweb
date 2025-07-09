@@ -916,7 +916,7 @@
 
         // debug
         #    echo 'chiamata funzione cancellazione ricorsiva' . PHP_EOL;
-        #    echo "richiesta la cancellazione della riga #${d} dalla tabella {$t}" . PHP_EOL;
+        #    echo "richiesta la cancellazione della riga #$d dalla tabella {$t}" . PHP_EOL;
 
         // cerco i vincoli di chiave esterna per l'entità $t
         // NOTA mi interessano TABLE_NAME, COLUMN_NAME, REFERENCED_COLUMN_NAME
@@ -947,13 +947,13 @@
             $l1 = $x1['REFERENCED_COLUMN_NAME'];
 
             // debug
-            #    echo "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?" . PHP_EOL;
-            #    echo "cerco le righe di ${t1} che hanno ${t1}.${f1} uguale a ${d}" . PHP_EOL;
+            #    echo "SELECT * FROM $t1 WHERE $t1.$f1 = ?" . PHP_EOL;
+            #    echo "cerco le righe di $t1 che hanno $t1.$f1 uguale a $d" . PHP_EOL;
 
             // prelevo le righe referenziate
             $r = mysqlQuery(
                 $c,
-                "SELECT * FROM ${t1} WHERE ${t1}.${f1} = ?",
+                "SELECT * FROM $t1 WHERE $t1.$f1 = ?",
                 array(
                     array('s' => $d)
                 )
@@ -971,12 +971,12 @@
         }
 
         // debug
-        # echo "elimino la riga #${d} dalla tabella {$t}" . PHP_EOL;
+        # echo "elimino la riga #$d dalla tabella $t" . PHP_EOL;
 
         // cancello l'oggetto richiesto
         $r = mysqlQuery(
             $c,
-            "DELETE FROM ${t} WHERE ${t}.id = ?",
+            "DELETE FROM $t WHERE $t.id = ?",
             array(
                 array('s' => $d)
             )

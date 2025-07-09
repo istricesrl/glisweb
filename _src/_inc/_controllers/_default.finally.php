@@ -45,7 +45,7 @@
 			// attribuzione automatica
 			// TODO anziché FULL di ufficio consentire di specificare permessi diversi
 			    foreach( $_SESSION['account']['id_gruppi_attribuzione'][ $t ] as $aGrId ) {
-				$q = "REPLACE INTO __acl_${t}__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, 'FULL' )";
+				$q = "REPLACE INTO __acl_".$t."__ ( id_entita, id_gruppo, permesso ) VALUES ( ?, ?, 'FULL' )";
 				mysqlQuery( $c, $q, array( array( 's' => $d['id'] ), array( 's' => $aGrId ) ) );
 			    }
 

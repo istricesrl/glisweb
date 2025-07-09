@@ -416,7 +416,7 @@
             #            $r = mysqlSelectCachedValue(
             $r = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                "SELECT table_name FROM information_schema.tables WHERE table_name = '__acl_${t}__' AND table_schema = database()"
+                "SELECT table_name FROM information_schema.tables WHERE table_name = '__acl_".$t."__' AND table_schema = database()"
             );
 
             // log

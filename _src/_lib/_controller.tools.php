@@ -592,11 +592,11 @@
                     case METHOD_GET:
 
                         // compongo la query
-                        $q = "SELECT * FROM ${t}" . (( ! empty( $fvm ) ) ? $rm : '');
+                        $q = "SELECT * FROM $t" . (( ! empty( $fvm ) ) ? $rm : '');
 
                         // compongo i campi della query
                         foreach ($ks as $k) {
-                            $tks[] = "${k} = ?";
+                            $tks[] = "$k = ?";
                         }
 
                         // compongo la condizione WHERE
@@ -721,7 +721,7 @@
                 $comparison = ($before !== $after) ? ((empty($before)) ? ROW_CREATED : ROW_MODIFIED) : ROW_UNMODIFIED;
 
                 // log
-                logWrite("record $comparison per la query: ${q}", 'controller');
+                logWrite("record $comparison per la query: $q", 'controller');
 
                 // controller post query (after)
                 $cn = 'after.php';
@@ -860,7 +860,7 @@
                         case METHOD_REPLACE:
                         case METHOD_UPDATE:
 
-                            $w = mysqlSelectRow($c, "SELECT * FROM ${t}$rm WHERE id = ?", array(array('s' => $d['id'])));
+                            $w = mysqlSelectRow($c, "SELECT * FROM $t$rm WHERE id = ?", array(array('s' => $d['id'])));
 
                             timerCheck( $timer, '-> -> fine integrazione blocco dati' );
 
