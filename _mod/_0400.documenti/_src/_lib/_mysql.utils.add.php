@@ -112,7 +112,7 @@
         );
 
         // oggetto del documento
-        $r['doc']['oggetto'] = $r['doc']['tipologia'] . ' n. ' . $r['doc']['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $r['doc']['data'] ) );
+        $r['doc']['oggetto'] = $r['doc']['tipologia'] . ' n. ' . $r['doc']['numero'] . ' del ' . @strftime( '%d %B %Y', strtotime( $r['doc']['data'] ) );
 
         // debug
         // print_r( $r['doc'] );

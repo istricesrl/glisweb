@@ -70,7 +70,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
         }
 
         // strategia di fatturazione documenti multipli
-        if ($_SESSION['carrello']['fatturazione_strategia'] == 'MULTIPLA') {
+        if (isset( $_SESSION['carrello']['fatturazione_strategia'] ) && $_SESSION['carrello']['fatturazione_strategia'] == 'MULTIPLA') {
 
             // log
             logger('modalità di fatturazione MULTIPLA', 'cassa');
