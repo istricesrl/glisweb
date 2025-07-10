@@ -430,7 +430,9 @@
         }
 
         // log
+        if( isset( $p ) ) {
         logger( 'l\'articolo ' . $a . ' nel carrello ' . $carrello['id'] . ' ha quantità ' . $qa . ' (il prodotto ' . $p . ' ha quantità ' . $qp . ')', 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
+        }
         foreach( $qb as $k => $v ) {
             logger( 'il bundle ' . $k . ' nel carrello ' . $carrello['id'] . ' ha quantità ' . $v, 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
         }

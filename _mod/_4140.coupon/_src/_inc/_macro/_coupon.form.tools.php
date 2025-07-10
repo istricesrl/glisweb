@@ -21,7 +21,7 @@
     $ct['form']['table'] = 'coupon';
 
     // percorsi
-	$base = $ct['site']['url'].'print/4140.coupon/';
+	$base = $ct['site']['url'].'task/4140.coupon/';
 
     // gruppi di controlli
 	$ct['page']['contents']['metros'] = array(
@@ -40,7 +40,9 @@
 	);
 
 	$ct['page']['contents']['metro']['03.elaborazioni'][] = array(
-		'ws' => $base . '_nota.da.coupon.php?coupon=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+		'ws' => $base . 'nota.da.coupon?coupon=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+		// 'callback' => 'function( data ) { alert( "Nota di credito creata con successo: " + data.nota_di_credito.id ); }',
+		'callback' => 'function( data ) { window.open( "/amministrazione/ciclo-attivo/note-di-credito/stampe.it-IT.html?documenti[id]=" + data.nota_di_credito.id, "_self" ); }',
         'confirm' => true,
 		'icon' => NULL,
 		'fa' => 'fa-euro',

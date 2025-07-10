@@ -107,7 +107,7 @@
                 $mixed[$key] = string2utf8($value, $encoding);
             }
             return $mixed;
-        } else {
+        } elseif( ! empty( $mixed ) ) {
             if ($encoding === null) {
                 $encoding = mb_detect_encoding($mixed, mb_detect_order(), true);
             }
@@ -118,6 +118,8 @@
             } elseif (is_string($mixed)) {
                 return mb_convert_encoding($mixed, "UTF-8", $encoding);
             }
+            return $mixed;
+        } else {
             return $mixed;
         }
     }
