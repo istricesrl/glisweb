@@ -2775,6 +2775,7 @@ CREATE TABLE IF NOT EXISTS `organizzazioni` (
 CREATE TABLE IF NOT EXISTS `pagamenti` (
   `id` int(11) NOT NULL,
   `id_tipologia` int(11) DEFAULT NULL,
+  `codice` char(32) DEFAULT NULL,
   `id_modalita_pagamento` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `data_scadenza` date DEFAULT NULL,
