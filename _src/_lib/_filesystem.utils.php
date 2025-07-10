@@ -4,7 +4,7 @@
 
         global $cf;
 
-        $base = trim( $cf['sites'][ $s ]['url'], '/' );
+        $base = trim( $cf['sites'][ $s ]['url'] ?? '', '/' );
 
         if( ! empty( $m ) ) {
             $base .= '/mailing/' . $m;

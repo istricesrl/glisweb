@@ -35,9 +35,11 @@
 
     // tendina macro
 	foreach( $mcr as $t ) {
-        $t = str_replace( DIR_BASE, NULL, $t );
+        $t = str_replace( DIR_BASE, '', $t );
 	    $ct['etc']['select']['macro'][] = array( 'id' => $t, '__label__' => $t );
 	}
+
+    asort( $ct['etc']['select']['macro'] );
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';

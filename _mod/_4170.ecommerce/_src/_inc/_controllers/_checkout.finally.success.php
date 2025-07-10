@@ -44,11 +44,13 @@
         // die( '<pre>' . print_r( $carrello, true ) . '<pre>' );
 
         // conversione GA4
-        ga4purchase(
-            $cf['google']['profile']['analytics']['ua'],
-            $cf['google']['profile']['analytics']['mp']['secret'],
-            $carrello
-        );
+        if( isset( $cf['google']['profile']['analytics']['ua'] ) ) {
+            ga4purchase(
+                $cf['google']['profile']['analytics']['ua'],
+                $cf['google']['profile']['analytics']['mp']['secret'],
+                $carrello
+            );
+        }
     
         // TODO conversione Facebook
         // ...
