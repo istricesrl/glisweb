@@ -388,7 +388,8 @@
     /**
      * rimuove gli elementi di un array che non contengono una stringa
      * 
-     * Questa funzione rimuove gli elementi di un array che non contengono una stringa specificata.
+     * Questa funzione rimuove gli elementi di un array che non contengono una stringa specificata. Sono inseriti una serie di
+     * controlli per proteggere la logica in caso di array che contengono elementi che non sono array o che sono vuoti.
      * 
      * @param       array       $fields     i campi su cui effettuare la ricerca
      * @param       string      $match      la stringa da cercare
@@ -401,38 +402,54 @@
 
         $filtered = array();
 
-        if( empty( $fields ) && is_array( $array[0] ) ) {
-            $fields = array_keys( $array[0] );
-        } elseif( ! is_array( $fields ) ) {
-            $fields = explode( ',', $fields );
-            array_map( 'trim', $fields );
-        }
+        if( is_array( $array ) && ! empty( $array ) ) {
 
-        $tokens = explode( ' ', $match );
+            if( empty( $fields ) && is_array( $array[0] ) && ! empty( $array[0] )) {
+                $fields = array_keys( $array[0] );
+            } elseif( ! is_array( $fields ) && ! empty( $fields ) ) {
+                $fields = explode( ',', $fields );
+                array_map( 'trim', $fields );
+            } else {
+                $fields = array();
+            }
 
-        foreach( $array as $row ) {
+            $tokens = explode( ' ', $match );
 
-            $matches = 0;
+            foreach( $array as $row ) {
 
-            foreach( $row as $field ) {
+                $matches = 0;
 
-                foreach( $tokens as $token ) {
-                    if( preg_match( '/' . $token . '/i', $field ) ) {
-                        $matches++;
+                if( is_array( $row ) ) {
+
+                    foreach( $row as $field ) {
+
+                        if( ! empty( $field ) ) {
+
+                            foreach( $tokens as $token ) {
+                                if( preg_match( '/' . $token . '/i', $field ) ) {
+                                    $matches++;
+                                }
+                            }
+
+                        }
+
                     }
+
+                }
+
+                if( $matches > 0 ) {
+                    $filtered[] = $row;
                 }
 
             }
 
-            if( $matches > 0 ) {
-                $filtered[] = $row;
-            }
+            $array = $filtered;
 
+        } else {
+            logger( 'arrayFilterBy: l\'array passato è vuoto o non è un array', 'details/arrayFilterBy/errors' );
         }
 
-        $array = $filtered;
-
-    }
+    } 
 
     /**
      * implode un array associativo in una stringa

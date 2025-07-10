@@ -90,6 +90,11 @@
         '__template_files__' => array( 'modulo', 'folder' )
     );
 
+    // ...
+    if( ! isset( $_REQUEST[ $ct['form']['table'] ]['id'] ) || empty( $_REQUEST[ $ct['form']['table'] ]['id'] ) ) {
+        die( 'Nessun template selezionato.' );
+    }
+    
     // directory del template
     $base = DIR_BASE . '_src/_templates/_' . $_REQUEST[ $ct['form']['table'] ]['id'];
 

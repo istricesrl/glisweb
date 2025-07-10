@@ -364,7 +364,11 @@
         checkFolder( dirname( $f ) );
 
         // valore di ritorno
-        return fopen( getFullPath( $f ), $m );
+        if( file_exists( getFullPath( $f ) ) && is_readable( getFullPath( $f ) ) ) {
+            return fopen( getFullPath( $f ), $m );
+        } else {
+            return false;
+        }
 
     }
 
@@ -403,6 +407,11 @@
 
         // apro il file
         $h = openFile( $f, $m );
+
+        // se $t è un array
+        if( is_array( $t ) ) {
+            $t = trim( implode( PHP_EOL, str_replace( PHP_EOL, '', $t ) ) );
+        }
 
         // se $t non termina con newline
         if( substr( $t, -1 ) != $n ) {

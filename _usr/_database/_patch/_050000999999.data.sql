@@ -176,9 +176,10 @@ INSERT IGNORE INTO `condizioni_pagamento` (`id`, `codice`, `nome`) VALUES
 -- tipologia: tabella standard
 -- verifica: 2022-08-23 11:12 Chiara GDL
 INSERT IGNORE INTO `consensi` (`id`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-('PRIVACY_POLICY',	'la privacy e cookie policy del sito',	NULL,	NULL,	NULL,	NULL,	NULL),
-('EVASIONE_ORDINE',	"evasione dell\'ordine",	NULL,	NULL,	NULL,	NULL,	NULL),
-('INVIO_COMUNICAZIONI_MARKETING',	'invio di comunicazioni commerciali',	NULL,	NULL,	NULL,	NULL,	NULL);
+('CONDIZIONI_GENERALI_VENDITA',	'condizioni generali di vendita',	NULL,	NULL,	NULL,	NULL,	NULL),
+('EVASIONE_ORDINE',	'evasione ordine',	NULL,	NULL,	NULL,	NULL,	NULL),
+('INVIO_COMUNICAZIONI_MARKETING',	'invio di comunicazioni commerciali',	NULL,	NULL,	NULL,	NULL,	NULL),
+('PRIVACY_POLICY',	'la privacy e cookie policy del sito',	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000006500
 

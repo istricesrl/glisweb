@@ -1741,7 +1741,6 @@ CREATE TABLE `__report_variazioni_anagrafica__` (
   `residenza_cap` char(128) DEFAULT NULL,
   `residenza_localita` char(128) DEFAULT NULL,
   `residenza_id_comune` int(11) DEFAULT NULL,
-  `timestamp_elaborazione` int(11) DEFAULT NULL,
   `id_account_elaborazione` int(11) DEFAULT NULL,
   `timestamp_elaborazione` int(11) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,

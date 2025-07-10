@@ -407,7 +407,7 @@
             // log
             logger( 'valuto il prezzo del prodotto ' . $p . ': ' . $p1, 'details/listini/prezzi/articolo.' . $a );
             logger( 'valuto il prezzo dell\'articolo ' . $a . ': ' . $p2, 'details/listini/prezzi/articolo.' . $a );
-            logger( 'valuto il prezzo del bundle ' . $bp . ': ' . $p3, 'details/listini/prezzi/articolo.' . $a );
+            // logger( 'valuto il prezzo del bundle ' . $bp . ': ' . $p3, 'details/listini/prezzi/articolo.' . $a );
             logger( 'valuto il prezzo di riferimento ' . $p4, 'details/listini/prezzi/articolo.' . $a );
 
             // trovo il prezzo
@@ -708,7 +708,12 @@
             $i = 0;
 
             // prezzi candidati
-            $pcnd = array( $p1['prezzo'] => $p1['id_iva'], $p2['prezzo'] => $p2['id_iva'], $p3['prezzo'] => $p3['id_iva'], $p4['prezzo'] => $p4['id_iva'] );
+            $pcnd = array(
+                $p1['prezzo'] ?? 0 => $p1['id_iva'] ?? 0, 
+                $p2['prezzo'] ?? 0 => $p2['id_iva'] ?? 0, 
+                $p3['prezzo'] ?? 0 => $p3['id_iva'] ?? 0, 
+                $p4['prezzo'] ?? 0 => $p4['id_iva'] ?? 0 
+            );
 
             // log
             logger( 'prezzi lordi candidati: ' . print_r( $pcnd, true ), 'listini' );
