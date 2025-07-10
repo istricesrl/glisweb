@@ -21,8 +21,8 @@
 	require DIR_BASE . '_mod/_0400.documenti/_src/_api/_print/_documento.default.php';
 
 	// die( print_r( $dati, true ) );
-     error_reporting( E_ALL );
-     ini_set( 'display_errors', TRUE );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
 
     // annoto l'attività di stampa
     mysqlInsertRow(

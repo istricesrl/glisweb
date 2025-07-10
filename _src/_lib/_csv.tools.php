@@ -185,8 +185,8 @@
     function csvFile2array( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
 
         // debug
-        error_reporting( E_ALL );
-        ini_set( 'display_errors', TRUE );
+        // error_reporting( E_ALL );
+        // ini_set( 'display_errors', TRUE );
    
         // log
         logger( 'lettura file CSV: ' . $f, 'csv' );
@@ -352,8 +352,8 @@
     function csvString2matrix( $f, $s = NULL, $h = NULL, $c = "\"", $e = '\\' ) {
 
         // debug
-        error_reporting( E_ALL );
-        ini_set( 'display_errors', TRUE );
+        // error_reporting( E_ALL );
+        // ini_set( 'display_errors', TRUE );
 
         // TODO implementare guessNewline()
 

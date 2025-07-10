@@ -14,8 +14,8 @@
     require '../../../../../_src/_config.php';
 
     // debug
-     error_reporting( E_ALL );
-     ini_set( 'display_errors', TRUE );
+    // error_reporting( E_ALL );
+    // ini_set( 'display_errors', TRUE );
 
     /**
      * raccolta dati
