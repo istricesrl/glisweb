@@ -143,45 +143,6 @@
     $cf['auth']['status'] = NULL;
 
     /**
-     * gestione reCAPTCHA
-     * ==================
-     * 
-     * 
-     */
-
-    // verifico la challenge reCAPTCHA
-    if( defined( 'LOGIN_VIA_API' ) ) {
-
-        // punteggio di spam
-        $cf['session']['spam']['check'] = true;
-
-    } elseif( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
-
-        // registro il valore di bot
-        $cf['session']['spam']['score'] = reCaptchaVerifyV3( $_REQUEST['__login__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
-
-        // pulisco il modulo
-        unset( $_REQUEST['__login__']['__recaptcha_token__'] );
-
-        // punteggio di spam
-        $cf['session']['spam']['check'] = ( $cf['session']['spam']['score'] > $cf['session']['spam']['limit'] ) ? true : false;
-
-    } elseif( ! isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
-
-        // punteggio di spam
-        $cf['session']['spam']['check'] = false;
-
-    } else {
-
-        // punteggio di spam
-        $cf['session']['spam']['check'] = true;
-
-    }
-
-    // debug
-    // var_dump( $cf['session']['spam'] );
-
-    /**
      * login tramite header HTTP auth
      * ==============================
      * 
@@ -320,6 +281,57 @@
 
     // intercetto eventuali tentativi di login in corso
     if( isset( $_REQUEST['__login__']['user'] ) ) {
+
+        /**
+         * gestione reCAPTCHA
+         * ------------------
+         * 
+         * 
+         */
+
+        // verifico la challenge reCAPTCHA
+        if( defined( 'LOGIN_VIA_API' ) ) {
+
+            // log
+            logger( 'check anti spam al login saltato per login via API', 'auth' );
+
+            // punteggio di spam
+            $cf['session']['spam']['check'] = true;
+
+        } elseif( isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+
+            // log
+            logger( 'check anti spam al login iniziato con reCAPTCHA', 'auth' );
+
+            // registro il valore di bot
+            $cf['session']['spam']['score'] = reCaptchaVerifyV3( $_REQUEST['__login__']['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
+
+            // pulisco il modulo
+            unset( $_REQUEST['__login__']['__recaptcha_token__'] );
+
+            // punteggio di spam
+            $cf['session']['spam']['check'] = ( $cf['session']['spam']['score'] > $cf['session']['spam']['limit'] ) ? true : false;
+
+        } elseif( ! isset( $_REQUEST['__login__']['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
+
+            // log
+            logger( 'check anti spam al login fallito per token non ricevuto', 'auth' );
+
+            // punteggio di spam
+            $cf['session']['spam']['check'] = false;
+
+        } else {
+
+            // log
+            logger( 'login senza check anti spam', 'auth' );
+
+            // punteggio di spam
+            $cf['session']['spam']['check'] = true;
+
+        }
+
+        // debug
+        // var_dump( $cf['session']['spam'] );
 
         // log
         logger( 'tentativo di login in corso per ' . $_REQUEST['__login__']['user'], 'auth' );

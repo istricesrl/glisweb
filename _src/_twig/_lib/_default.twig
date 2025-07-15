@@ -7,7 +7,6 @@
     alcune informazioni di base fra cui le chiavi di reCAPTCHA; è possibile inserire più di un bottone per
     pagina specificando il parametro dup che indica alla macro di non ripetere il codice reCAPTCHA
     ridondante. #}
-{# macro formButton( text, type, class, onclick, placeholder, id, form, recaptcha, prefisso, modulo, extra, dup ) #}
 {% macro formButton( options ) %}
     <!-- macro {{ _self }}::formButton() -->
 
@@ -50,7 +49,7 @@
     }|merge( options.tooltip ) %}
 
     {# valori di default per l'array recaptcha #}
-    {% if recaptcha %}
+    {% if options.recaptcha %}
         {% set recaptcha = {
         }|merge( options.recaptcha ) %}
     {% endif %}

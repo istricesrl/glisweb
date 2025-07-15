@@ -88,35 +88,6 @@
      * in cui le entità collegate siano molte o molto grandi; in questi casi è possibile disabilitare la ricorsione
      * utilizzando il suffisso _nofollow nel nome della chiave esterna,
      *
-     * argomenti della funzione controller()
-     * =====================================
-     * 
-     * 
-     *
-     * 
-     * 
-     * 
-     * 
-     * l'array $_REQUEST['__info__']
-     * -----------------------------
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * l'array $_REQUEST['__err__']
-     * ----------------------------
-     *
-     *
-     *
-     *
-     *
-     * 
-     * 
-     *
      * modalità di ingresso dei dati
      * =============================
      *
@@ -150,6 +121,8 @@
      *
      *
      *
+     * 
+     * 
      *
      *
      *
@@ -159,6 +132,31 @@
      *
      *
      *
+     *
+     *
+     *
+     * la modalità __view_mode__ e la __forced_view__
+     * ----------------------------------------------
+     * 
+     * 
+     *
+     *
+     *
+     *
+     *
+     * la modalità __report_mode__
+     * ---------------------------
+     * 
+     * 
+     *
+     *
+     * 
+     * 
+     * la modalità __filesystem_mode__
+     * -------------------------------
+     * 
+     * 
+     * 
      *
      *
      *
@@ -176,23 +174,17 @@
      *
      *
      *
-     *
-     *
-     *
-     * l'array $_REQUEST['__view__']
-     * -----------------------------
-     *
-     *
-     *
+     * 
      *
      * 
      * 
-     * la modalità __report
-     * --------------------
+     * ordinamento degli insiemi di dati
+     * ---------------------------------
+     * 
+     *  
      * 
      * 
-     *
-     *
+     * 
      *
      *
      *
@@ -239,20 +231,6 @@
      * persistenza di filtri e ordinamenti in $_SESSION
      * ------------------------------------------------
      *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * 
-     * 
-     * 
-     * 
-     * 
      *
      *
      *
@@ -309,7 +287,7 @@
                     $_REQUEST['__info__'][ $k ],                            // array per le informazioni
                     $pi,                                                    // ...
                     $ci,                                                    // ...
-                    $cf['speed']                                            // ...
+                    $cf['speed']                                            // array per il cronometro
                 );
 
                 // timer

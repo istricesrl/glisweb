@@ -97,10 +97,12 @@
 
             // rimuovo la sessione da redis
             $cf['auth']['index']['users'][ $cf['session']['account']['username'] ] = array();
-            $cf['redis']['connection']->set(
-                REDIS_MULTISITE_SEED,
-                json_encode( $cf['auth']['index'] )
-            );
+            if( ! empty( $cf['redis']['connection'] ) ) {
+                $cf['redis']['connection']->set(
+                    REDIS_MULTISITE_SEED,
+                    json_encode( $cf['auth']['index'] )
+                );
+            }
 
             // svuoto selettivamente la $_SESSION
             foreach( $_SESSION as $k => $v ) {

@@ -492,6 +492,7 @@
 
                 // log
                 logWrite("diritti sufficienti per $t/$a", 'controller');
+                logWrite("modalità di inserimento, modifica, cancellazione per $t/$a: " . print_r($i, true), 'details/controller/'.$t.'.'.$a);
 
                 // controller pre query (before)
                 $cn = 'before.php';
