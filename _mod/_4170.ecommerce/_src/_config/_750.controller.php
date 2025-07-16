@@ -218,7 +218,16 @@
                 // inserimento del carrello a database e recupero dell'ID
                 $_SESSION['carrello']['id'] = mysqlInsertRow(
                     $cf['mysql']['connection'],
-                    $_SESSION['carrello'],
+                    array_diff_key(
+                        $_SESSION['carrello'], array(
+                            'articoli' => array(),
+                            'metadati' => array(),
+                            'valuta_utf8' => NULL,
+                            'se_login' => NULL,
+                            'arrotonda_prezzo_finale' => NULL,
+                            'timestamp_inserimento' => NULL
+                        )
+                    ),
                     'carrelli'
                 );
 
@@ -395,10 +404,8 @@
                         // $deltaArticoli[ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array(
                         $deltaArticoli[ $key ] = array(
                             'id_articolo' => $item['id_articolo'],
-                            // 'quantita' => ( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] ) )
                             'quantita' => ( isset( $_SESSION['carrello']['articoli'][ $key ][ $field ] ) )
-                            // ? $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] - $item['quantita']
-                            ? $_SESSION['carrello']['articoli'][ $key ][ $field ] - $item['quantita']
+                            ? string2num( $_SESSION['carrello']['articoli'][ $key ][ $field ] ) - string2num( $item['quantita'] )
                             : $item['quantita']
                         );
                         foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {

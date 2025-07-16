@@ -406,7 +406,14 @@
 
                 // esecuzione dello statement
                 // TODO mettere dentro un try... catch
-                $xStatement = mysqli_stmt_execute($pq);
+                try {
+                    $xStatement = mysqli_stmt_execute($pq);
+                } catch (Exception $e) {
+                    // log
+                    logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q, 'mysql', LOG_ERR);
+                    logger(__FUNCTION__ . '() errore durante l\'esecuzione della query: ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql/query', LOG_ERR);
+                    return false;
+                }
 
                 // cronometro
                 $tElapsed = sprintf('%0.11f', timerDiff($tStart));

@@ -185,6 +185,12 @@
             );
 
             $rinnovi = array_merge( $documenti, $carrelli, $carrelliPagati );
+            if( ! isset( $rinnovi['pagato_carrelli'] ) ) {
+                $rinnovi['pagato_carrelli'] = 0;
+            }
+            if( ! isset( $rinnovi['ordinato'] ) ) {
+                $rinnovi['ordinato'] = 0;
+            }
 
             // die( print_r( $carrelliPagati, true ) );
             // die( print_r( $rinnovi, true ) );

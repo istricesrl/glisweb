@@ -249,8 +249,10 @@
 						}
 					}
 					if( strpos( $field, 'ora_' ) !== FALSE ) {
-						if( preg_match( '/^([0-9]{2}):([0-9]{2}):([0-9]{2})$/', $value ) ) {
-							$row[ $field ] = substr( $value, 0, 5 );
+						if( ! empty( $value ) ) {
+							if( preg_match( '/^([0-9]{2}):([0-9]{2}):([0-9]{2})$/', $value ) ) {
+								$row[ $field ] = substr( $value, 0, 5 );
+							}
 						}
 					}
 				}

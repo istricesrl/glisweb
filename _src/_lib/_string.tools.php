@@ -146,8 +146,8 @@
      * TODO documentare
      *
      */
-    function string2num( $s ) {
-        if( ! empty( $s ) ) {
+    function string2num( $s, $force = false ) {
+        if( ! empty( $s ) && ! is_array( $s ) && ! is_object( $s ) ) {
             if( is_numeric( str_replace( array( ',', '.' ), '', $s ) ) ) {
                 if( strpos( $s, ',' ) !== false && strpos( $s, '.' ) === false ) {
                     // es. 1000,50 -> 1000.50
@@ -162,6 +162,8 @@
                     }
                 }
             }
+        } elseif( $force === true ) {
+            $s = 0;
         }
         return $s;
     }
