@@ -249,6 +249,9 @@
     // print_r( $_POST );
     // print_r( $_GET );
     // var_dump( $cf['ws']['table'] ?? null );
+    // ini_set( 'display_errors', 1 );
+    // ini_set( 'display_startup_errors', 1 );
+    // error_reporting( E_ALL );
 
     /**
      * controller dati

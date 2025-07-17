@@ -1023,19 +1023,66 @@ $ct['etc']['default']['fatturazione_strategia'] = (
     );
 */
 
-$ct['etc']['coupon'] = mysqlQuery(
-    $cf['mysql']['connection'],
-    'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, 
-            coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
-        FROM coupon 
-        LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
-        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
-        GROUP BY coupon.id
-        HAVING utilizzato < coupon.sconto_fisso
-        ORDER BY coupon.id 
-        '
-);
+if( isset( $ct['etc']['righe'] ) && is_array( $ct['etc']['righe'] ) ) {
+    foreach( $ct['etc']['righe'] as $k => $v ) {
 
+        $idFamiliari = mysqlSelectColumn(
+            'id_familiare',
+            $cf['mysql']['connection'],
+            'SELECT if( id_anagrafica = ?, id_anagrafica_collegata, id_anagrafica ) as id_familiare FROM relazioni_anagrafica
+                WHERE id_anagrafica = ? OR id_anagrafica_collegata = ? ORDER BY id_familiare',
+            array(
+                array('s' => $v['destinatario_id_anagrafica']),
+                array('s' => $v['destinatario_id_anagrafica']),
+                array('s' => $v['destinatario_id_anagrafica'])
+            )
+        );
+
+        $whr = $cnd = array();
+        foreach( $idFamiliari as $familiare ) {
+            $whr[] = '?';
+            $cnd[] = array('s' => $familiare);
+        }
+        $whr = 'OR coupon.id_anagrafica IN ( ' . implode( ',', $whr ) . ' )';
+
+        $ct['etc']['coupon'][ $k ] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, 
+                coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
+                FROM coupon 
+                LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
+                WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+                AND ( coupon.id_anagrafica IS NULL OR coupon.id_anagrafica = ? '.$whr.' )
+                GROUP BY coupon.id
+                HAVING utilizzato < coupon.sconto_fisso
+                ORDER BY coupon.id 
+            ',
+            array_merge(
+                array(array('s' => $v['destinatario_id_anagrafica'])),
+                $cnd
+            )
+        );
+    }
+}
+/*
+die( print_r(
+    array_merge(
+    array(array('s' => $v['destinatario_id_anagrafica'])),
+    $cnd
+    ),true));
+die( 'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, 
+                coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
+                FROM coupon 
+                LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
+                WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+                AND ( coupon.id_anagrafica IS NULL OR coupon.id_anagrafica = ? '.$whr.' )
+                GROUP BY coupon.id
+                HAVING utilizzato < coupon.sconto_fisso
+                ORDER BY coupon.id 
+            ');
+*/
     // debug
     // die( print_r( $ct['etc']['righe'], true ) );
+    // die( print_r( $ct['etc']['coupon'], true ) );
+    // die( print_r( $idFamiliari, true ) );
     // die();

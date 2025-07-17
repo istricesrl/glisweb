@@ -44,8 +44,7 @@
      * TODO documentare
      *
      */
-    function mysqlGetQueryTables($q)
-    {
+    function mysqlGetQueryTables($q) {
 
         $r = array();
 
@@ -64,8 +63,7 @@
      * TODO documentare
      *
      */
-    function mysqlCachedIndexedQuery(&$i, $m, $c, $q, $p = false, $t = 0, &$e = array())
-    {
+    function mysqlCachedIndexedQuery(&$i, $m, $c, $q, $p = false, $t = 0, &$e = array()) {
 
         if (defined('MEMCACHE_DEFAULT_TTL') && $t == 0) {
             $t = MEMCACHE_DEFAULT_TTL;
@@ -79,8 +77,7 @@
      * TODO documentare
      *
      */
-    function mysqlCachedQuery($m, $c, $q, $p = false, $t = 0, &$e = array(), &$i = array())
-    {
+    function mysqlCachedQuery($m, $c, $q, $p = false, $t = 0, &$e = array(), &$i = array()) {
 
         // debug
         // var_dump( $q );
@@ -117,6 +114,7 @@
             }
 
             return $d;
+
         } else {
 
             logger('query ' . $k . ' letta dalla cache', 'speed');
@@ -371,6 +369,7 @@
 
             // restituisco false
             return false;
+
         } else {
 
             // cronometro
@@ -405,13 +404,11 @@
                 }
 
                 // esecuzione dello statement
-                // TODO mettere dentro un try... catch
                 try {
                     $xStatement = mysqli_stmt_execute($pq);
                 } catch (Exception $e) {
-                    // log
                     logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q, 'mysql', LOG_ERR);
-                    logger(__FUNCTION__ . '() errore durante l\'esecuzione della query: ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql/query', LOG_ERR);
+                    logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql/query', LOG_ERR);
                     return false;
                 }
 
@@ -424,90 +421,32 @@
                     logger(str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query');
                 }
 
-                // debug
-                // var_dump( mysqli_errno( $c ) );
+                // log
+                logger(md5($q) . ' -> OK', 'mysql');
 
-                // gestione errore
-                if (mysqli_errno($c)) {
+                // valore di ritorno a seconda del tipo di query
+                switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
 
-                    // log
-                    logger(__FUNCTION__ . '() query ID: ' . md5($q) . ' -> ERRORE ' . mysqli_errno($c) . ' ' . mysqli_error($c) . '§query -> ' . $q, 'mysql', LOG_ERR);
-                    logger(__FUNCTION__ . '() query ID: ' . md5($q) . ' -> ERRORE ' . mysqli_errno($c) . ' ' . mysqli_error($c) . '§query -> ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql', LOG_ERR);
+                    case 'SELECT':
+                        return mysqlFetchPreparedResult($pq);
+                        break;
 
-                    // gestione specifici errori
-                    switch (mysqli_errno($c)) {
+                    case 'INSERT':
+                        $id = mysqli_stmt_insert_id($pq);
+                        return ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
+                        break;
 
-                        case 1062:
-                            $e['1062'][] = 'errore MySQL 1062, dati dupilcati';
-                            break;
+                    case 'REPLACE':
+                    case 'UPDATE':
+                    case 'DELETE':
+                    case 'TRUNCATE':
+                    default:
+                        return mysqli_stmt_affected_rows($pq);
+                        break;
 
-                        default:
-                            $e[mysqli_errno($c)][] = mysqli_error($c);
-                            break;
-                    }
-
-                    // restituisco false per indicare il fallimento della query
-                    return false;
-                } else {
-
-                    // log
-                    logger(md5($q) . ' -> OK', 'mysql');
-
-                    // valore di ritorno a seconda del tipo di query
-                    // switch( current( explode( ' ', $q ) ) ) {
-                    switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
-
-                        case 'SELECT':
-                            return mysqlFetchPreparedResult($pq);
-                            break;
-
-                        case 'INSERT':
-                            $id = mysqli_stmt_insert_id($pq);
-                            return ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
-                            break;
-
-                        case 'REPLACE':
-                        case 'UPDATE':
-                        case 'DELETE':
-                        case 'TRUNCATE':
-                        default:
-                            return mysqli_stmt_affected_rows($pq);
-                            break;
-                    }
                 }
+
             } else {
-
-                /*
-                    // log
-                        // logger( 'query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                        // logger( 'query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
-
-                    // debug
-                        // var_dump( mysqli_errno( $c ) );
-
-                    // gestione errore
-                    if( mysqli_errno( $c ) ) {
-
-                        // log
-                            logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q, 'mysql', LOG_ERR );
-                            logger( __FUNCTION__ . '() query ID: ' . md5( $q ) . ' -> ERRORE ' . mysqli_errno( $c ) . ' ' . mysqli_error( $c ) . '§query -> ' . $q . ( ( ! empty( $params ) ) ? '§dati -> ' . print_l( $params ) : '' ), 'details/mysql', LOG_ERR );
-
-                        // gestione specifici errori
-                            switch( mysqli_errno( $c ) ) {
-
-                            case 1054:
-                                $e['1054'][] = 'errore MySQL 1054, nome colonna errato';
-                            break;
-            
-                            default:
-                                $e[ mysqli_errno( $c ) ][] = mysqli_error( $c );
-                            break;
-
-                            }
-
-                        }
-
-                        */
 
                 // log
                 logger(__FUNCTION__ . '() fallita la preparazione della query: ' . $q, 'mysql', LOG_ERR);
