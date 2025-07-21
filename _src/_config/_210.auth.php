@@ -152,8 +152,10 @@
 
     // intercetto eventuali richieste di autenticazione HTTP
     if( ! empty( $_SERVER['PHP_AUTH_USER'] ) && ! empty( $_SERVER['PHP_AUTH_PW'] ) ) {
+        logger( 'login via header HTTP per user ' . $_SERVER['PHP_AUTH_USER'], 'auth' );
         $_REQUEST['__login__']['user'] = $_SERVER['PHP_AUTH_USER'];
         $_REQUEST['__login__']['pasw'] = $_SERVER['PHP_AUTH_PW'];
+        define( 'LOGIN_VIA_HTTP_HEADER', true );
     }
 
     // header della richiesta HTTP
@@ -294,6 +296,14 @@
 
             // log
             logger( 'check anti spam al login saltato per login via API', 'auth' );
+
+            // punteggio di spam
+            $cf['session']['spam']['check'] = true;
+
+        } elseif( defined( 'LOGIN_VIA_HTTP_HEADER' ) ) {
+
+            // log
+            logger( 'check anti spam al login saltato per login via HTTP header', 'auth' );
 
             // punteggio di spam
             $cf['session']['spam']['check'] = true;

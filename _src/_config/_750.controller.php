@@ -164,8 +164,9 @@
      * ----------------------------
      *
      *
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__fields__][]=id&__info__[comuni][__fields__][]=nome
      *
-     *
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__fields__][]=id,nome
      *
      *
      *
@@ -173,31 +174,20 @@
      * ----------------------------
      *
      *
-     *
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__filters__][id_provincia][EQ]=1
      * 
      *
      * 
      * 
-     * ordinamento degli insiemi di dati
-     * ---------------------------------
-     * 
-     *  
-     * 
-     * 
-     * 
-     *
-     *
-     *
      * ricerca negli insiemi di dati
      * -----------------------------
      * 
      * 
-     * http://glisweb.videoarts.eu/api/test?test[__fields__][]=id&test[__fields__][]=nome&test[__search__]=root
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__search__]=Bolo
      *
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__search__]=Bolo&__info__[comuni][__fields__][]=id&__info__[comuni][__fields__][]=nome
      *
-     *
-     *
-     *
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__search__]=Bolo&__info__[comuni][__fields__]=id,id_provincia,nome
      *
      *
      *
@@ -206,8 +196,7 @@
      * 
      * 
      * 
-     * http://glisweb.videoarts.eu/api/test?test[__group__][]=nome&test[__group__][]=id
-     *
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__group__][]=id_provincia
      *
      *
      *
@@ -221,7 +210,21 @@
      * ---------------------------------
      * 
      * 
-     * http://glisweb.videoarts.eu/api/test?test[__sort__][nome]=ASC
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__sort__][id_provincia]=DESC
+     *
+     *
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__sort__][id_provincia]=ASC
+     * 
+     *
+     *
+     *
+     *
+     * paginazione degli insiemi dei dati
+     * ----------------------------------
+     *
+     *
+     *
+     * https://glisweb.istricesrl.it/api/comuni?__info__[comuni][__pager__][page]=0&__info__[comuni][__pager__][rows]=5
      *
      *
      *

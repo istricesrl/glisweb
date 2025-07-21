@@ -168,8 +168,10 @@
 			// paginazione
 			// TODO farla un po' meglio
 			if( ! isset( $cf['ws']['all'] ) ) {
+			    if( ! isset( $_REQUEST['__info__'][ $cf['ws']['table'] ]['__pager__']['page'] ) ) {
 				$_REQUEST['__info__'][ $cf['ws']['table'] ]['__pager__']['page'] = 0;
 				$_REQUEST['__info__'][ $cf['ws']['table'] ]['__pager__']['rows'] = 100;
+			    }
 			}
 
             // ...

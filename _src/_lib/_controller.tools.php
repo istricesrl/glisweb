@@ -232,6 +232,11 @@
                 $aclTb = getAclRightsTable($t);
                 $aclId = getAclRightsAccountId();
 
+                // scompongo i campi nel caso siano passati come lista
+                if( isset($i['__fields__']) && ! is_array($i['__fields__']) ) {
+                    $i['__fields__'] = explode( ',', $i['__fields__'] );
+                }
+
                 // campi da selezionare dalla vista
                 if (isset($i['__fields__'])) {
                     $fld = implode(', ', preg_filter('/^/', "$t$rm.", $i['__fields__']));
