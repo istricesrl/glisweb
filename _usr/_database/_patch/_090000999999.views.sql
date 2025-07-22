@@ -6533,6 +6533,11 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 			documenti.data
 		) AS documento,
 		tipologie_documenti.id AS id_tipologia_documento,
+		group_concat( DISTINCT carrelli_articoli.id_articolo SEPARATOR '|' ) AS id_articoli,
+		group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ) AS id_categorie_progetti,
+		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
+		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) AS id_aree,
+		group_concat( DISTINCT aree.nome ) AS aree,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
 		pagamenti.id_mastro_destinazione,
@@ -6573,6 +6578,13 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
 		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
 		LEFT JOIN iban ON iban.id = pagamenti.id_iban
+		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
+		LEFT JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
+		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
+		LEFT JOIN progetti ON progetti.id_prodotto = prodotti.id
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
+		LEFT JOIN categorie_progetti AS aree ON categorie_progetti.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
 --	WHERE
 --		tipologie_documenti.se_fattura = 1
 --		OR
@@ -6581,6 +6593,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 --		tipologie_documenti.se_ricevuta = 1
 --		OR
 --		tipologie_documenti.se_pro_forma = 1
+	GROUP BY pagamenti.id
 ;
 
 -- | 090000023200

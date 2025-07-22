@@ -35,6 +35,7 @@
         'data_scadenza' => 'scadenza',
 		'documento' => 'documento',
         'nome' => 'nome',
+        'categorie_progetti' => 'discipline',
         'emittente' => 'da',
         'destinatario' => 'a',
 		'id_tipologia_documento' => 'id_tipologia_documento',
@@ -49,6 +50,7 @@
         'nome' => 'text-left',
         'documento' => 'text-left',
         'numero' => 'text-left',
+        'categorie_progetti' => 'text-left',
         'data_scadenza' => 'no-wrap',
         'data_ora_pagamento' => 'no-wrap',
         '__label__' => 'text-left',
@@ -138,7 +140,7 @@
 */
 
 #    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['timestamp_pagamento']['NL'] ) ) {
-    $ct['view']['__filters__']['timestamp_pagamento']['NL'] = 1;
+    // $ct['view']['__filters__']['timestamp_pagamento']['NL'] = 1;
 #    }
 
 /*
@@ -148,7 +150,7 @@
 */
 
 #    if( isset( $_REQUEST['__view__'] ) && isset( $ct['view']['id'] ) && ! isset( $_REQUEST['__view__']['__filters__']['id_emittente|id_destinatario']['EQ'] ) ) {
-    $ct['view']['__filters__']['id_emittente|id_destinatario']['EQ'] = trovaIdAziendaGestita();
+    // $ct['view']['__filters__']['id_emittente|id_destinatario']['EQ'] = trovaIdAziendaGestita();
 #    }
 
     // debug
@@ -157,6 +159,7 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
+    /*
     if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno_pagamento']['EQ'] ) && ! empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['giorno_pagamento']['EQ'] ) ) {
 
         if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese_pagamento']['EQ'] ) && ! empty( $_REQUEST['__view__'][ $ct['view']['id'] ]['__filters__']['mese_pagamento']['EQ'] ) ) {
@@ -186,3 +189,5 @@
         }
     
     }
+
+    */
