@@ -35,6 +35,7 @@
 															'ddt.magazzini.form.ordine',
 															'ddt.magazzini.form.righe',
 															'ddt.magazzini.form.packing',
+															'ddt.magazzini.form.chiusura',
 															'ddt.magazzini.form.stampe',
 															'ddt.magazzini.form.tools' ) )
 		);
@@ -83,6 +84,19 @@
 			'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.form.packing.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.magazzini.form.packing.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['ddt.magazzini.form']['etc']['tabs'] )
+		);
+
+		// gestione chiusura fatture
+		$p['ddt.magazzini.form.chiusura'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'chiusura' ),
+			'h1'			=> array( $l		=> 'chiusura' ),
+			'parent'		=> array( 'id'		=> 'ddt.magazzini.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ddt.magazzini.form.chiusura.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_ddt.magazzini.form.chiusura.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['ddt.magazzini.form']['etc']['tabs'] )
 		);

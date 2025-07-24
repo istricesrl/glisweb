@@ -58,8 +58,17 @@
         'url' => '/print/0500.mastri/etichette.articoli.57x26.pdf?mastro='.$_REQUEST[ $ct['form']['table'] ]['id'] ,
         'icon' => NULL,
         'fa' => 'fa-file-pdf-o',
-        'title' => 'stampa etichette 57x26',
+        'title' => 'etichette articoli 57x26',
         'text' => 'stampa le etichette di tutti gli articoli presenti nel magazzino'
+    );
+
+    $ct['page']['contents']['metro']['stampe'][] = array(
+        'target' => '_blank' ,
+        'url' => '/print/0500.mastri/etichetta.collocazione.200x40.pdf?mastro='.$_REQUEST[ $ct['form']['table'] ]['id'] ,
+        'icon' => NULL,
+        'fa' => 'fa-file-pdf-o',
+        'title' => 'etichetta collocazione 200x40',
+        'text' => 'stampa l\'etichetta di collocazione'
     );
 
     // macro di default per l'entità anagrafica

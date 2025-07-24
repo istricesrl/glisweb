@@ -1038,12 +1038,16 @@ if( isset( $ct['etc']['righe'] ) && is_array( $ct['etc']['righe'] ) ) {
             )
         );
 
-        $whr = $cnd = array();
-        foreach( $idFamiliari as $familiare ) {
-            $whr[] = '?';
-            $cnd[] = array('s' => $familiare);
+        if( is_array( $idFamiliari ) && count( $idFamiliari ) > 0 ) {
+            $whr = $cnd = array();
+            foreach( $idFamiliari as $familiare ) {
+                $whr[] = '?';
+                $cnd[] = array('s' => $familiare);
+            }
+            $whr = 'OR coupon.id_anagrafica IN ( ' . implode( ',', $whr ) . ' )';
+        } else {
+            $whr = '';
         }
-        $whr = 'OR coupon.id_anagrafica IN ( ' . implode( ',', $whr ) . ' )';
 
         $ct['etc']['coupon'][ $k ] = mysqlQuery(
             $cf['mysql']['connection'],
@@ -1051,7 +1055,7 @@ if( isset( $ct['etc']['righe'] ) && is_array( $ct['etc']['righe'] ) ) {
                 coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
                 FROM coupon 
                 LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
-                WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+                WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= unix_timestamp(NOW()) ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= unix_timestamp(NOW()) )
                 AND ( coupon.id_anagrafica IS NULL OR coupon.id_anagrafica = ? '.$whr.' )
                 GROUP BY coupon.id
                 HAVING utilizzato < coupon.sconto_fisso

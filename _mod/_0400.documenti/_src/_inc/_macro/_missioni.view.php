@@ -30,8 +30,8 @@
     $ct['view']['cols'] = array(
         'id' => '#',
         'codice' => 'cod.',
-        'numero' => 'num.',
-        'sezionale' => 'sez.',
+        // 'numero' => 'num.',
+        // 'sezionale' => 'sez.',
         'data' => 'data',
 #        'emittente' => 'emittente',
 #        'destinatario' => 'destinatario',

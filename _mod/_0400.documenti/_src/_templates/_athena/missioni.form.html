@@ -55,6 +55,7 @@
 						<span class="label-top">tipologia</span>
 						{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request ) }}
 					</div>
+                    <!--
 					<div class="col-4 col-md-1">
 						<span class="label-top">sezionale</span>
 						{{ frm.inputRequired( table, '', '', 'sezionale', '', '', request ) }}
@@ -63,6 +64,7 @@
 						<span class="label-top">numero</span>
 						{{ frm.inputRequired( table, '', '', 'numero', '', '', request ) }}
 					</div>
+                    -->
 					{% if not request[ table ].codice %}
 					<div class="col-12 col-md-auto">
                         {{ frm.button(  'OTTIENI CODICE' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroDocumento();','ottieni in modo automatico il progressivo' ) }}
