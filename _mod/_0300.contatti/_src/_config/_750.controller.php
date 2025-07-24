@@ -49,34 +49,36 @@
                     $bot = reCaptchaVerifyV3( $v['__recaptcha_token__'], $cf['google']['profile']['recaptcha']['keys']['private'] );
 
                     // integrazione dei dati
-                    $v['spam'] = $bot;
+                    $v['spam']['score'] = $bot;
 
                     // pulisco il modulo
                     unset( $v['__recaptcha_token__'] );
 
                     // punteggio di spam
-                    $spamCheck = ( $bot > 0.1 ) ? true : false;
+                    $v['spam']['check'] = ( $bot > 0.1 ) ? true : false;
 
                 } elseif( ! isset( $v['__recaptcha_token__'] ) && isset( $cf['google']['profile']['recaptcha']['keys']['private'] ) ) {
 
                     // integrazione dei dati
-                    $v['spam'] = 'token non ricevuto';
+                    $v['spam']['score'] = 0;
+                    $v['spam']['status'] = 'token non ricevuto';
 
                     // punteggio di spam
-                    $spamCheck = false;
+                    $v['spam']['check'] = false;
 
                 } else {
 
                     // integrazione dei dati
-                    $v['spam'] = 'n/a';
+                    $v['spam']['score'] = 1;
+                    $v['spam']['status'] = 'reCAPTCHA non configurato';
 
                     // punteggio di spam
-                    $spamCheck = true;
+                    $v['spam']['check'] = true;
 
                 }
 
             // verifico se è stato superato il check antispam
-                if( $spamCheck == true ) {
+                if( $v['spam']['check'] == true ) {
 
                     // verifico se la configurazione prevede l'inclusione di una o più macro
                         if( isset( $cnf['controller'] ) ) {

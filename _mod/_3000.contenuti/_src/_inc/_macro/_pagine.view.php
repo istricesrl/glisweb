@@ -60,6 +60,13 @@
     // trasformazione icona attivo/inattivo
 	foreach( $ct['view']['data'] as &$row ) {
         if( is_array( $row ) ) {
-            $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
+            if( ! empty( $row['id_sito'] ) ) {
+                if( isset( $cf['sites'][ $row['id_sito'] ] ) )
+                    $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
+                else
+                    $row['id_sito'] = 'Sito non definito';
+            } else {
+                $row['id_sito'] = 'Nessun sito';
+            }
         }
 	}

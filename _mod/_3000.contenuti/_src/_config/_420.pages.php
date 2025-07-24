@@ -18,6 +18,11 @@
      *
      */
 
+    // debug
+    ini_set( 'display_errors', 1 );
+    ini_set( 'display_startup_errors', 1 );
+    error_reporting( E_ALL );
+
     // verifico se è presente una pagina
 	if( isset( $cf['contents']['page']['id'] ) && isset( $cf['localization']['language']['id'] ) ) {
 

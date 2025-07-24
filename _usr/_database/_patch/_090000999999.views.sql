@@ -909,6 +909,7 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		group_concat( DISTINCT concat_ws( ' ', listini.nome, valute.iso4217, format( prezzi.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' ) AS prezzi,
 		concat_ws(
 			' ',
+            articoli.ean,
 			articoli.id,
 			'/',
 			prodotti.nome,
@@ -5556,6 +5557,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		mastri.id,
 		mastri.id_tipologia,
 		tipologie_mastri.nome AS tipologia,
+        mastri.codice,
 		mastri.id_anagrafica_indirizzi,
 		concat_ws(
 			' ',

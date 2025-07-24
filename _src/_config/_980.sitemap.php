@@ -101,10 +101,10 @@
 					appendToFile( 'sitemap true per: ' . $id . PHP_EOL, FILE_LATEST_SITEMAP );
 
 				    // verifico se la pagina corrente appartiene al sito corrente
-					if( $page['id_sito'] == SITE_CURRENT ) {
+					if( ! isset( $page['id_sito'] ) || $page['id_sito'] == SITE_CURRENT ) {
 
 					    // latest
-						appendToFile( 'match: ' . $page['id_sito'] . '/' . SITE_CURRENT . PHP_EOL, FILE_LATEST_SITEMAP );
+						appendToFile( 'match: ' . ( $page['id_sito'] ?? 'nessuno' ) . '/' . SITE_CURRENT . PHP_EOL, FILE_LATEST_SITEMAP );
 
 					    // inizio l'elemento <url>
 						$xml->startElement( 'url' );
@@ -152,7 +152,7 @@
 					} else {
 
 					    // latest
-						appendToFile( 'mismatch: ' . $page['id_sito'] . '/' . SITE_CURRENT . PHP_EOL, FILE_LATEST_SITEMAP );
+						appendToFile( 'mismatch: ' . ( $page['id_sito'] ?? 'nessuno' ) . '/' . SITE_CURRENT . PHP_EOL, FILE_LATEST_SITEMAP );
 
 					}
 
