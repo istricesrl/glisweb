@@ -3501,6 +3501,8 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		documenti.id_condizione_pagamento,
 		condizioni_pagamento.codice AS condizione_pagamento,
 		documenti.esigibilita, 
+		sum( coalesce( pagamenti.importo_lordo_finale, pagamenti.importo_lordo_totale, 0 ) ) AS totale_lordo_finale,
+		sum( coalesce( pagamenti.coupon_valore, 0 ) ) AS totale_coupon,
 		documenti.codice_archivium,
     	documenti.codice_sdi,
 		documenti.cig,
@@ -3552,6 +3554,9 @@ CREATE OR REPLACE VIEW `documenti_view` AS
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
 		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+		LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id
+	GROUP BY
+		documenti.id
 ;
 
 -- | 090000010000

@@ -32,7 +32,9 @@
         'data' => 'data',
         'emittente' => 'emittente',
         'destinatario' => 'destinatario',
-        '__label__' => 'nome'
+        '__label__' => 'nome',
+        'totale_lordo_finale' => 'totale',
+        'totale_coupon' => 'coupon',
 	);
 
     // stili della vista
@@ -44,7 +46,8 @@
         'destinatario' => 'text-left',
         'emittente' => 'text-left',
         'tipologia' => 'text-left',
-        'totale' => 'text-right' 
+        'totale_lordo_finale' => 'text-right',
+        'totale_coupon' => 'text-right',
     );
 
     if( isset($_REQUEST[ $ct['form']['table'] ]['id']) ){
