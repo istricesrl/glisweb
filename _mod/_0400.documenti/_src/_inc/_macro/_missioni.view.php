@@ -36,7 +36,8 @@
 #        'emittente' => 'emittente',
 #        'destinatario' => 'destinatario',
         'nome' => 'nome',
-#        '__label__' => 'nome'
+#        '__label__' => 'nome',
+        'timestamp_chiusura' => 'chiusura',
     );
 
     // stili della vista
@@ -49,7 +50,8 @@
         'destinatario' => 'text-left',
         'emittente' => 'text-left',
         'tipologia' => 'text-left',
-        'totale' => 'text-right' 
+        'totale' => 'text-right',
+        'timestamp_chiusura' => 'no-wrap',
     );
 
     // tendina mittenti

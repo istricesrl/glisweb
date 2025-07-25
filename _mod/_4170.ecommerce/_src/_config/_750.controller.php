@@ -572,6 +572,9 @@
                         // timer
                         timerCheck( $cf['speed'], '-> fine calcolo prezzo netto articolo #' . $dati['id_articolo'] );
 
+                        // debug
+                        // die( print_r( $_SESSION['carrello'], true ) );
+
                         // trovo il prezzo lordo dell'articolo
                         $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] = calcolaPrezzoLordoArticoloCarrello(
                             $dati['id_articolo'],

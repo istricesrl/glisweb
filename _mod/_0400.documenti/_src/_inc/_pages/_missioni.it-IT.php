@@ -92,6 +92,19 @@
             'etc'			=> array( 'tabs'	=> $p['missioni.form']['etc']['tabs'] )
         );
 
+		// gestione chiusura fatture
+		$p['missioni.form.chiusura'] = array(
+			'sitemap'		=> false,
+			'icon'		=> '<i class="fa fa-check-square-o" aria-hidden="true"></i>',
+			'title'			=> array( $l		=> 'chiusura' ),
+			'h1'			=> array( $l		=> 'chiusura' ),
+			'parent'		=> array( 'id'		=> 'missioni.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'missioni.form.chiusura.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_missioni.form.chiusura.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['missioni.form']['etc']['tabs'] )
+		);
+
         // tools missioni
         $p['missioni.form.tools'] = array(
             'sitemap'			=> false,
