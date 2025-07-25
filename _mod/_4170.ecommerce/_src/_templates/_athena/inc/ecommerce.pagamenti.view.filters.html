@@ -122,7 +122,18 @@
 			{% endfor %}
 		</select>
 	</div>
-    <div class="col">
+
+	<!--
+	<div class="col-12 col-md-auto">
+		<span class="label-top">raggruppamento</span>
+		<select name="__view__[{{ view.id }}][__raggruppamento__]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__raggruppamento__ == "" %}selected{% endif %}>nessuno</option>
+			<option value="disciplina" {% if request.__view__[ view.id ].__raggruppamento__ == "disciplina" %}selected{% endif %}>disciplina</option>
+		</select>
+	</div>
+	-->
+
+	<div class="col">
 		<span class="label-top">cerca</span>
 	<input type="text" class="form-control form-control-sm" name="__view__[{{ view.id }}][__search__]" value="{{ request.__view__[ view.id ].__search__ }}" onchange="$('#pager').val('0');" autofocus>
     </div>

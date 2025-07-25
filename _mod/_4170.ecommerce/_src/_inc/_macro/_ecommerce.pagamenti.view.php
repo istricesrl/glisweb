@@ -41,6 +41,7 @@
 		'id_tipologia_documento' => 'id_tipologia_documento',
 #		'mastro_destinazione' => 'carico',
         'importo_lordo_finale' => 'importo',
+        'coupon_valore' => 'coupon',
         'data_ora_pagamento' => 'pagato'
 	);
 
@@ -51,14 +52,15 @@
         'documento' => 'text-left',
         'numero' => 'text-left',
         'categorie_progetti' => 'text-left',
-        'data_scadenza' => 'no-wrap',
+        'data_scadenza' => 'd-none',
         'data_ora_pagamento' => 'no-wrap',
         '__label__' => 'text-left',
         'destinatario' => 'text-left',
-        'emittente' => 'text-left',
+        'emittente' => 'd-none',
         'destinatario' => 'text-left',
         'tipologia' => 'text-left',
-        'importo_lordo_finale' => 'text-right' 
+        'importo_lordo_finale' => 'text-right',
+        'coupon_valore' => 'text-right',
     );
 
 	// RELAZIONI CON IL MODULO MASTRI

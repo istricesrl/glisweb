@@ -26,7 +26,7 @@
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.carrello.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.carrello.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.ricerca', 'ecommerce.pagamento', 'ecommerce.pagamenti.view' ) ),
+		'etc'		=> array( 'tabs'	=> array(	'ecommerce.carrello', 'ecommerce.ricerca', 'ecommerce.pagamento', 'ecommerce.pagamenti.view', 'ecommerce.pagamenti.stats' ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'cassa' ), 'priority'	=> '100' ) ) )
 	);
 
@@ -63,6 +63,19 @@
 		'parent'		=> array( 'id'		=> 'ecommerce' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
 		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.pagamenti.view.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> 'ecommerce.carrello' )
+	);
+
+	// carrello
+	$p['ecommerce.pagamenti.stats'] = array(
+		'sitemap'		=> false,
+		'icon'				=> '<i class="fa fa-bar-chart" aria-hidden="true"></i>',
+		'title'			=> array( $l		=> 'statistiche pagamenti' ),
+		'h1'			=> array( $l		=> 'statistiche pagamenti' ),
+		'parent'		=> array( 'id'		=> 'ecommerce' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ecommerce.pagamenti.stats.html' ),
+		'macro'			=> array( $m . '_src/_inc/_macro/_ecommerce.pagamenti.stats.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> 'ecommerce.carrello' )
 	);
