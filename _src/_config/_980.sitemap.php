@@ -2,19 +2,45 @@
 
     /**
      * generazione della sitemap
-     *
-     *
-	 *
+     * 
+     * Questo file si occupa di generare la sitemap del sito corrente in base ai contenuti presenti nell'array delle pagine.
+     * 
+     * introduzione
+     * ============
+     * La sitemap è un file (XML o CSV) che contiene l'elenco delle pagine del sito, utile per i motori di ricerca in ordine
+     * all'indicizzazione delle pagine stesse. Le specifiche in base alle quali una sitemap dev'essere realizzata per poter essere
+     * utilizzata dai motori di ricerca sono le seguenti:
+	 * 
 	 * - https://developers.google.com/search/docs/crawling-indexing/sitemaps/build-sitemap?hl=it
      * - https://developers.google.com/search/docs/advanced/sitemaps/image-sitemaps?hl=it
-     *
-     * TODO la generazione della sitemap dovrebbe essere un task a parte
-     *
-     * @todo implementare
-     * @todo documentare
-     *
-     * @file
-     *
+     * 
+     * Il framework si basa sulla timestamp di ultimo aggiornamento dei contenuti per determinare se la sitemap va aggiornata o meno;
+     * inoltre, la generazione della sitemap viene forzata nel caso in cui si stia ricreando la cache (MEMCACHE_REFRESH).
+     * 
+     * meccanismo di generazione della sitemap
+     * =======================================
+     * Il meccanismo con cui viene generata la sitemap è abbastanza semplice, tutte le pagine del sito presenti nell'array $cf['contents']['pages']
+     * vengono elaborate e, se il flag 'sitemap' è impostato a true, aggiunte alla sitemap. Si noti che questo processo è ripetuto per ognuna delle
+     * lingue attive nel sito, il che genera una sitemap multilingua.
+     * 
+     * Le sitemap elaborate e completate vengono salvate in /var/sitemap/ e fornite ai client su richiesta tramite una regola di .htaccess:
+     * 
+     * ```
+     * RewriteRule ^sitemap.xml var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
+     * RewriteRule ^sitemap.csv var/sitemap/sitemap.%{HTTP_HOST}.csv [L]
+     * ```
+     * 
+     * Queste regole si occupano di reindirizzare le richieste alla sitemap appropriata in base al dominio corrente. Questo è molto importante negli
+     * scenari di tipo multisito, per evitare confusioni fra le sitemap dei vari siti.
+     * 
+     */
+
+    /**
+     * configurazioni preliminari
+     * ==========================
+     * 
+     * 
+     * 
      */
 
     // timer
@@ -23,9 +49,6 @@
     // sitemap file
     // TODO testare come si comporta con www e non www
 	$sitemapFile = DIR_VAR_SITEMAP . 'sitemap.' . $cf['site']['fqdn'] . '.xml';
-
-    // debug
-	// echo $sitemapFile;
 
     // controllo il percorso
 	checkFolder( dirname( $sitemapFile ) );
@@ -39,6 +62,15 @@
 
     // timer
 	timerCheck( $cf['speed'], 'fine verifiche preliminari per la sitemap' );
+
+    /**
+     * generazione della sitemap
+     * =========================
+     * 
+     * 
+     * 
+     * 
+     */
 
     // verifico se la sitemap va aggiornata
 	if( $cf['sitemap']['updated'] < $cf['contents']['updated'] || defined( 'MEMCACHE_REFRESH' ) ) {
@@ -72,15 +104,6 @@
 		$xml->startElement( 'urlset' );
 		$xml->writeAttribute( 'xmlns', 'http://www.sitemaps.org/schemas/sitemap/0.9' );
 		$xml->writeAttribute( 'xmlns:xhtml', 'http://www.w3.org/1999/xhtml' );
-//		$xml->writeAttributeNs( 'xhtml', 'xmlns', 'http://www.w3.org/1999/xhtml', 'http://www.sitemaps.org/schemas/sitemap/0.9' );
-
-/*
-	    // array della sitemap
-		$map = array();
-
-	    // urlset
-		$map['urlset']['@'] = array( 'xmlns' => 'http://www.sitemaps.org/schemas/sitemap/0.9', 'xmlns|xhtml' => 'http://www.w3.org/1999/xhtml' );
-*/
 
 	    // scorro l'elenco delle pagine
 		foreach( $cf['localization']['languages'] as $lang ) {
@@ -127,18 +150,6 @@
 							    $xml->writeAttribute( 'hreflang', $linklang['ietf'] );
 							    $xml->writeAttribute( 'href', $page['url'][ $linklang['ietf'] ] );
 
-#				    $current = array( 'loc' => $page['url'][ $lang['ietf'] ] );
-#				    foreach( $cf['localization']['languages'] as $linklang ) {
-#					$current['xhtml|link'][] = array(
-#					    '@' => array(
-#						'rel' => 'alternate',
-#						'hreflang' => $linklang['ietf'],
-#						'href' => $page['url'][ $linklang['ietf'] ]
-#					    )
-#					);
-#				    }
-#				    $map['urlset']['url'][] = $current;
-
 							// chiudo l'elemento <xhtml:link>
 							    $xml->endElement();
 
@@ -158,25 +169,15 @@
 
 				} else {
 
-				    // debug
-					// echo 'la pagina #' . $id . ' non è candidata per la sitemap' . PHP_EOL;
-					// var_dump( $page['sitemap'] );
-
 				    // latest
 					appendToFile( 'sitemap false per: ' . $id . PHP_EOL, FILE_LATEST_SITEMAP );
 
 				}
 
-			}	// fine ciclo pagine
+			}
 
-	    }			// fine ciclo lingue
+	    }
 
-	    // debug
-		// die( print_r( $map, true ) );
-/*
-	    // generazione sitemap
-		array2xml( $map, 'sitemap.xml' );
-*/
 	    // fine del root element
 		$xml->endElement();
 
@@ -207,9 +208,11 @@
 		    $url[] = $cf['site']['url'] . dirname( $f ) . '/' . rawurlencode( basename( $f ) );
 		}
 
-	    // pulisco e riordino l'array degli URL
+	    // pulisco l'array degli URL
 		$url = array_unique( $url );
-		sort( $url );
+
+        // ordino l'array degli URL
+        sort( $url );
 
 	    // apro la mappa CSV
 		$csv = fopen( DIR_VAR_SITEMAP . 'sitemap.' . $cf['site']['fqdn'] . '.csv', 'w+' );
@@ -231,6 +234,14 @@
 		logWrite( 'sitemap non scritta in quanto ' . $cf['contents']['updated'] . ' < ' . $cf['sitemap']['updated'], 'sitemap', LOG_DEBUG );
 
 	}
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     * 
+     */
 
     // debug
 	// echo file_get_contents( DIRECTORY_BASE . 'sitemap.xml' );

@@ -1,14 +1,20 @@
 <?php
 
     /**
-     * gestione dei job in foreground
+     * recupero dei job in foreground
+     * 
+     * Questo file si occupa di selezionare i job in foreground e renderli disponibili per il template. Nel template athena
+     * i job in foreground sono visualizzati assieme agli altri widget in /_src/_templates/_athena/inc/header.html.
      * 
      * 
-     *
-     * @todo finire la documentazione
-     *
-     * @file
-     *
+     * 
+     */
+
+    /**
+     * recupero dei job in foreground
+     * ==============================
+     * 
+     * 
      */
 
     // seleziono i job a cui ho applicato il lock
@@ -22,8 +28,23 @@
         )
     );
 
-    // debug
-        // print_r( $cf['jobs']['foreground'] );
-
+    /**
+     * collegamento di $ct a $cf tramite puntatore
+     * ===========================================
+     * 
+     * 
+     */
+    
     // collegamento a $ct
-	$ct['jobs']['foreground']				                        = &$cf['jobs']['foreground'];
+	$ct['jobs']['foreground'] = &$cf['jobs']['foreground'];
+
+    /**
+     * debug del runlevel
+     * ==================
+     * 
+     * 
+     */
+
+    // debug
+    // print_r( $cf['jobs']['foreground'] );
+
