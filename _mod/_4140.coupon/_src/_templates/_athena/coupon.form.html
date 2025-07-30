@@ -47,6 +47,11 @@
             <legend>dati generali <small>{{ legend }}</small></legend>
 
             <div class="form-group form-row">
+                {% if not request[ table ].id %}
+                <div class="col-12 col-md-auto">
+                    {{ frm.button(  'OTTIENI CODICE' ,'button','btn btn-secondary btn-sm btn-block', 'getNumeroDocumento();','ottieni in modo automatico il progressivo' ) }}
+                </div>
+                {% endif %}
                 <div class="col-12 col-md">
                     <span class="label-top">codice</span>
                     {{ frm.inputRequired( table, '', '', 'id', '', '', request ) }}
@@ -152,4 +157,16 @@
     </div>
 </section>
 
+{% endblock %}
+
+{% block javascript %}
+<script type="text/javascript">
+    function getNumeroDocumento() {
+        prefisso = 'CPN';
+        anno = new Date().getFullYear();
+        unix_timestamp = Math.floor(Date.now() / 1000);
+        numero = prefisso + '-' + unix_timestamp;
+        $('#coupon_id').val(numero);
+    }
+</script>
 {% endblock %}

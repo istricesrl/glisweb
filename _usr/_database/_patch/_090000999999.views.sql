@@ -2993,6 +2993,10 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.se_vincolato,
 		coupon.causale,
 		coupon.causale_id_contratto,
+		group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ) AS id_categorie_progetti,
+		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
+		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) AS id_aree,
+		group_concat( DISTINCT aree.nome ) AS aree,
 		coupon.id_account_inserimento,
 		coupon.timestamp_inserimento,
 		coupon.id_account_aggiornamento,
@@ -3000,6 +3004,12 @@ CREATE OR REPLACE VIEW `coupon_view` AS
 		coupon.nome AS __label__
 	FROM coupon
 		LEFT JOIN anagrafica AS a1 ON a1.id = coupon.id_anagrafica
+		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
+		LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
+		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
+		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
+	GROUP BY coupon.id
 ;
 
 -- | 090000008100
@@ -6545,6 +6555,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
 		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) AS id_aree,
 		group_concat( DISTINCT aree.nome ) AS aree,
+		group_concat( DISTINCT concat( pagamenti.id_coupon, ':', pagamenti.coupon_valore ) SEPARATOR '|' ) AS dettagli_coupon,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
 		pagamenti.id_mastro_destinazione,
@@ -6585,13 +6596,16 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
 		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
 		LEFT JOIN iban ON iban.id = pagamenti.id_iban
+		LEFT JOIN coupon ON coupon.id = pagamenti.id_coupon
+		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
+		-- LEFT JOIN progetti ON progetti.id = contratti.id_progetto
 		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
 		LEFT JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
-		LEFT JOIN progetti ON progetti.id_prodotto = prodotti.id
+		LEFT JOIN progetti ON IF( prodotti.id IS NOT NULL, progetti.id_prodotto = prodotti.id, progetti.id = contratti.id_progetto )
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
 		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
-		LEFT JOIN categorie_progetti AS aree ON categorie_progetti.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
+		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
 --	WHERE
 --		tipologie_documenti.se_fattura = 1
 --		OR
