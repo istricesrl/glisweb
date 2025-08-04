@@ -42,7 +42,7 @@
         'sconto_fisso' => 'text-right'
 	);
 
-	// preset ordinamento
+    // preset ordinamento
     $ct['view']['__sort__'] = array(
         'id' => 'ASC'
     );

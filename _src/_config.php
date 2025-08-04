@@ -667,11 +667,11 @@
     // inizializzazione del file cron.latest.log
     loggerLatest( $latestLogHeader, FILE_LATEST_CRON, 'w+' );
 
-    // inizializzazione del file run.latest.log
-    loggerLatest( $latestLogHeader, FILE_LATEST_RUN, 'w+' );
-
     // inizializzazione del file mysql.latest.log
     loggerLatest( $latestLogHeader, FILE_LATEST_MYSQL, 'w+' );
+
+    // inizializzazione del file run.latest.log
+    loggerLatest( $latestLogHeader, FILE_LATEST_RUN, 'w+' );
 
     // inizializzazione del file sitemap.latest.log
     loggerLatest( $latestLogHeader, FILE_LATEST_SITEMAP, 'w+' );

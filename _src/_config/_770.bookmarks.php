@@ -63,12 +63,12 @@
         ),
         'documenti' => array(
             'label' => 'documenti',
-            'actions' => array(
-                'mailattach' => array(
-                    'label' => 'vai alla creazione della mail',
-                    'url' => $cf['contents']['pages']['mail.out.form']['url'][ LINGUA_CORRENTE ]
-                )
-            )
+            // 'actions' => array(
+            //     'mailattach' => array(
+            //         'label' => 'vai alla creazione della mail',
+            //         'url' => $cf['contents']['pages']['mail.out.form']['url'][ LINGUA_CORRENTE ]
+            //     )
+            // )
         )
     );
 

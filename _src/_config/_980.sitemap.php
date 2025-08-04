@@ -72,6 +72,9 @@
      * 
      */
 
+    // log
+    logger( 'verifica stato aggiornamento sitemap', 'sitemap' );
+
     // verifico se la sitemap va aggiornata
 	if( $cf['sitemap']['updated'] < $cf['contents']['updated'] || defined( 'MEMCACHE_REFRESH' ) ) {
 
@@ -79,10 +82,8 @@
 		timerCheck( $cf['speed'], 'inizio scrittura sitemap' );
 
 	    // log
-		logWrite( 'sitemap scritta in quanto ' . $cf['contents']['updated'] . ' > ' . $cf['sitemap']['updated'], 'sitemap' );
-
-	    // latest
-		writeToFile( 'inizio scrittura sitemap' . PHP_EOL, FILE_LATEST_SITEMAP );
+		logger( 'sitemap scritta in quanto ' . $cf['contents']['updated'] . ' > ' . $cf['sitemap']['updated'], 'sitemap' );
+        loggerLatest( 'inizio scrittura sitemap', FILE_LATEST_SITEMAP );
 
 	    // inizializzo l'array degli URL
 		$url = array();
@@ -109,25 +110,25 @@
 		foreach( $cf['localization']['languages'] as $lang ) {
 
 		    // latest
-			appendToFile( 'lingua elaborata: ' . $lang['ietf'] . PHP_EOL, FILE_LATEST_SITEMAP );
+			loggerLatest( 'lingua elaborata: ' . $lang['ietf'], FILE_LATEST_SITEMAP );
 
 		    // scorro l'elenco delle pagine
 			foreach( $cf['contents']['pages'] as $id => $page ) {
 
 			    // latest
-				appendToFile( 'pagina elaborata: ' . $id . PHP_EOL, FILE_LATEST_SITEMAP );
+				loggerLatest( 'pagina elaborata: ' . $id, FILE_LATEST_SITEMAP );
 
 			    // verifico se la pagina va nella sitemap
 				if( isset( $page['sitemap'] ) && $page['sitemap'] == true ) {
 
 				    // latest
-					appendToFile( 'sitemap true per: ' . $id . PHP_EOL, FILE_LATEST_SITEMAP );
+					loggerLatest( 'sitemap true per: ' . $id, FILE_LATEST_SITEMAP );
 
 				    // verifico se la pagina corrente appartiene al sito corrente
 					if( ! isset( $page['id_sito'] ) || $page['id_sito'] == SITE_CURRENT ) {
 
 					    // latest
-						appendToFile( 'match: ' . ( $page['id_sito'] ?? 'nessuno' ) . '/' . SITE_CURRENT . PHP_EOL, FILE_LATEST_SITEMAP );
+						loggerLatest( 'match: ' . ( $page['id_sito'] ?? 'nessuno' ) . '/' . SITE_CURRENT, FILE_LATEST_SITEMAP );
 
 					    // inizio l'elemento <url>
 						$xml->startElement( 'url' );
@@ -163,14 +164,14 @@
 					} else {
 
 					    // latest
-						appendToFile( 'mismatch: ' . ( $page['id_sito'] ?? 'nessuno' ) . '/' . SITE_CURRENT . PHP_EOL, FILE_LATEST_SITEMAP );
+						loggerLatest( 'mismatch: ' . ( $page['id_sito'] ?? 'nessuno' ) . '/' . SITE_CURRENT, FILE_LATEST_SITEMAP );
 
 					}
 
 				} else {
 
 				    // latest
-					appendToFile( 'sitemap false per: ' . $id . PHP_EOL, FILE_LATEST_SITEMAP );
+					loggerLatest( 'sitemap false per: ' . $id, FILE_LATEST_SITEMAP );
 
 				}
 
@@ -219,7 +220,7 @@
 
 	    // scrivo la sitemap CSV
 		foreach( $url as $u ) {
-		    fwrite( $csv, $u . PHP_EOL );
+		    fwrite( $csv, $u );
 		}
 
 	    // chiudo la mappa CSV
@@ -231,7 +232,7 @@
 	} else {
 
 	    // log
-		logWrite( 'sitemap non scritta in quanto ' . $cf['contents']['updated'] . ' < ' . $cf['sitemap']['updated'], 'sitemap', LOG_DEBUG );
+		logger( 'sitemap non scritta in quanto ' . $cf['contents']['updated'] . ' < ' . $cf['sitemap']['updated'], 'sitemap' );
 
 	}
 
