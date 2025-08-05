@@ -51,6 +51,10 @@
                     <span class="label-top">codice o matricola</span>
                     {{ frm.inputRequired( '__bip__', '', '', '__codice__', '', '', '', '', '', 'focus-on-load' ) }}
                 </div>
+                <div class="col-12 col-md-1">
+                    <span class="label-top">qta</span>
+                    {{ frm.inputRequired( '__bip__', '', '', '__quantita__', '', '', '', '1', '', 'focus-on-load' ) }}
+                </div>
                 <div class="col-12 col-md-auto">
                     <button type="submit" class="btn btn-sm btn-secondary" onclick="submitFormOkay = true;">INVIA</button>
                 </div>

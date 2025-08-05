@@ -22,6 +22,9 @@
     // tabella gestita
 	$ct['form']['table'] = 'documenti';
 
+    // TODO gestire il fatto che il codice bippato può essere un codice di un articolo o la matricola di un lotto
+    // TODO gestire il campo __quantita__
+
     // ...
     if( isset( $_REQUEST['__bip__']['__codice__'] ) && ! empty( $_REQUEST['__bip__']['__codice__'] ) ) {
 

@@ -18,10 +18,23 @@
 			'macro'		=> array( $m . '_src/_inc/_macro/_missioni.view.php' ),
 			'parent'	=> array( 'id'		=> 'logistica' ),
 			'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-			'etc'		=> array( 'tabs'	=> array( 'missioni.view', 'missioni.tools' ) ),
+			'etc'		=> array( 'tabs'	=> array( 'missioni.view', 'missioni.chiuse.view', 'missioni.tools' ) ),
 			'menu'			=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'missioni' ),
 			    'priority'	=> '120' ) ) )	
 		);
+
+        // tools missioni
+        $p['missioni.chiuse.view'] = array(
+            'sitemap'			=> false,
+            'icon'				=> '<i class="fa fa-check" aria-hidden="true"></i>',
+            'title'				=> array( $l		=> 'missioni chiuse' ),
+            'h1'				=> array( $l		=> 'missioni chiuse' ),
+            'parent'			=> array( 'id'		=> 'missioni.view' ),
+            'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
+            'macro'				=> array( $m . '_src/_inc/_macro/_missioni.chiuse.view.php' ),
+            'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+            'etc'				=> array( 'tabs'	=> $p['missioni.view']['etc']['tabs'] )
+        );
 
         // tools missioni
         $p['missioni.tools'] = array(

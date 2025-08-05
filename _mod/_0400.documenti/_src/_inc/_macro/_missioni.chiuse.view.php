@@ -72,7 +72,7 @@
 
     // inclusione filtri speciali
 //	$ct['etc']['include']['filters'] = 'inc/ddt.magazzini.view.filters.html';
-	$ct['view']['__restrict__']['timestamp_chiusura']['NL'] = true;
+	$ct['view']['__restrict__']['timestamp_chiusura']['NN'] = true;
 
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
