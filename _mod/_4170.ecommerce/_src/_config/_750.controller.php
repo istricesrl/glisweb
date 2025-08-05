@@ -405,7 +405,7 @@
                         $deltaArticoli[ $key ] = array(
                             'id_articolo' => $item['id_articolo'],
                             'quantita' => ( isset( $_SESSION['carrello']['articoli'][ $key ][ $field ] ) )
-                            ? string2num( $_SESSION['carrello']['articoli'][ $key ][ $field ] ) - string2num( $item['quantita'] )
+                            ? string2num( $_SESSION['carrello']['articoli'][ $key ][ $field ], true ) - string2num( $item['quantita'], true )
                             : $item['quantita']
                         );
                         foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {
