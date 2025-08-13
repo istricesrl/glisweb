@@ -99,8 +99,26 @@
 				</div>
 
 			</fieldset>
-		
-			{# BOTTONI E COMANDI DEL MODULO #}
+
+            <fieldset>
+                <legend>dati emittente</legend>
+                <div class="form-group form-row">
+                    <div class="col-12 col-md">
+                        <span class="label-top">emittente</span>
+                        {# TODO LE FATTURE DI CICLO ATTIVO DEVONO AVERE COME DEFAULT L'AZIENDA GESTITA #}
+                        {{ frm.selectBox( table, '', '', 'id_emittente', '', etc.select.id_emittenti, request, '', '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_emittente' , page, pages, ietf,'anagrafica' ) }}
+                    </div>
+                    {% if request[ table ].id %}
+                    <div class="col-12 col-md-8">
+                        <span class="label-top">sede mittente</span>
+                        {{ frm.selectBox( table, '', '', 'id_sede_emittente', '', etc.select.id_sedi_emittente, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_emittente' , page, pages, ietf ) }}
+
+                    </div>
+                    {% endif %}
+                </div>
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
 			<fieldset class="form-controls mt-auto">
 				{{ def.controls( page, pages, ietf, session, table, request ) }}
 			</fieldset>

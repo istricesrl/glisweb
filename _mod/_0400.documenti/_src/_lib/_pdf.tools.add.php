@@ -793,3 +793,263 @@
         }
 
     }
+
+    function generaCopertinaMissionePdf( &$pdf, $dati, $cnf = array() ) {
+
+        /**
+         * SEZIONE DI CONFIGURAZIONE
+         * qui vengono dichiarati e impostati i valori e i dati che verranno
+         * poi visualizzati nel PDF
+         */
+
+        // oggetto del documento
+        $dati['doc']['oggetto'] = $dati['doc']['tipologia'] . ' n. ' . $dati['doc']['codice'] . ' del ' .  @strftime( '%d %B %Y', strtotime( $dati['doc']['data'] ) );
+
+        // titolo del documento
+        $pdf->SetTitle( $dati['doc']['oggetto'] );
+
+        // dimensioni pagina
+        $etc['pag']['size']['h']		            = 297;								                // altezza del foglio
+        $etc['pag']['size']['w']		            = 210;								                // larghezza del foglio
+        $etc['pag']['margin']['t']		            = 15;								                // margine superiore
+        $etc['pag']['margin']['l']		            = 15;								                // margine sinistro
+        $etc['pag']['margin']['r']		            = 15;								                // margine destro
+        $etc['pag']['margin']['b']		            = 15;								                // margine inferiore
+        $etc['pag']['spacer']['base']		        = 5;								                // spaziatore standard
+
+        // tipografia
+        $etc['fnt']['base']['family']		        = 'helvetica';						                // famiglia del font base
+        $etc['fnt']['base']['style']		        = '';						                        // stile del font base
+        $etc['fnt']['base']['size']		            = 10;								                // dimensione del font base
+
+        $etc['fnt']['orari']['family']		        = 'helvetica';						                // famiglia del font base
+        $etc['fnt']['orari']['style']		        = 'B';						                        // stile del font base
+        $etc['fnt']['orari']['size']		        = 10;								                // dimensione del font base
+
+        $etc['fnt']['intestazione'][0]['family']    = 'helvetica';						                // famiglia del font base
+        $etc['fnt']['intestazione'][0]['style']	    = 'B';						                        // stile del font base
+        $etc['fnt']['intestazione'][0]['size']	    = 24;								                // dimensione del font base
+
+        $etc['fnt']['intestazione'][1]['family']    = 'helvetica';						                // famiglia del font base
+        $etc['fnt']['intestazione'][1]['style']	    = 'B';						                        // stile del font base
+        $etc['fnt']['intestazione'][1]['size']	    = 12;								                // dimensione del font base
+
+        $etc['fnt']['intestazione'][2]['family']    = 'helvetica';						                // famiglia del font base
+        $etc['fnt']['intestazione'][2]['style']	    = '';						                        // stile del font base
+        $etc['fnt']['intestazione'][2]['size']	    = 10;								                // dimensione del font base
+
+        $etc['fnt']['copia']['family']		        = 'helvetica';						                // famiglia del font base
+        $etc['fnt']['copia']['style']		        = '';						                        // stile del font base
+        $etc['fnt']['copia']['size']		        = 9;								                // dimensione del font base
+
+        // spessori linee
+        $etc['thk']['base']		                    = .3;								                // spessore linea standard
+        $etc['thk']['sottile']	                    = .15;								                // spessore linea sottile
+
+        // colori
+        $etc['rgb']['nero']		                    = array( 0, 0, 0 );					                // il nero
+        $etc['rgb']['grigio_medio']		            = array( 128, 128, 128 );			                // grigio
+        $etc['rgb']['grigio']		                = array( 128, 128, 128 );			                // grigio
+        $etc['rgb']['bianco']		                = array( 255, 255, 255 );			                // il bianco
+
+        // bordi delle celle
+        $etc['tbl']['celle']['intestazione']		= array( 'B' => array( 'width' => $etc['thk']['base'], 'color' => $etc['rgb']['nero'], 'dash' => false ) );
+        $etc['tbl']['celle']['dati']		        = array( 'B' => array( 'width' => $etc['thk']['sottile'], 'color' => $etc['rgb']['grigio'], 'dash' => false ) );
+
+        // padding delle celle
+        $etc['tbl']['celle']['base']['pad']['T']    = 2;
+        $etc['tbl']['celle']['base']['pad']['B']    = 2;
+        $etc['tbl']['celle']['base']['pad']['L']    = 2;
+        $etc['tbl']['celle']['base']['pad']['R']    = 2;
+
+        $etc['tbl']['celle']['head']['pad']['T']    = 0;
+        $etc['tbl']['celle']['head']['pad']['B']    = 0;
+        $etc['tbl']['celle']['head']['pad']['L']    = 2;
+        $etc['tbl']['celle']['head']['pad']['R']    = 2;
+
+        // linee
+        $etc['lne']['taglio']                       = array( 'width' => $etc['thk']['sottile'], 'dash' => '10,5', 'color' => $etc['rgb']['grigio_medio'] );
+
+        // testi
+        $etc['txt']['intestazione'][0]              = 'copertina missione';
+
+        // immagini
+        $etc['img']['logo']['path']                 = DIR_BASE . 'src/templates/athena/img/logoMasi.jpg';
+        $etc['img']['logo']['w']                    = '50';
+        $etc['img']['logo']['h']                    = '50';
+
+        // barcode
+        $etc['bcd']['principale'] = array(
+            'position' => '',
+            'align' => 'C',
+            'stretch' => false,
+            'fitwidth' => true,
+            'cellfitalign' => '',
+            'border' => false,
+            'hpadding' => 'auto',
+            'vpadding' => 'auto',
+            'fgcolor' => array(0,0,0),
+            'bgcolor' => false,
+            'text' => true,
+            'font' => 'helvetica',
+            'fontsize' => 16,
+            'stretchtext' => 0
+        );
+
+        /**
+         * ELABORAZIONE IMPOSTAZIONI
+         * nessun valore o impostazione va modificato oltre questo punto
+         */
+
+        // unisco le impostazioni custom a quelle di base
+        $etc = array_replace_recursive( $etc, $cnf );
+
+        // centro orizzontale della pagina
+        $etc['pag']['center']['x']                  = $etc['pag']['size']['w'] / 2;
+
+        // centro verticale della pagina
+        $etc['pag']['center']['y']                  = $etc['pag']['size']['h'] / 2;
+
+        // larghezza dell'area del testo
+        $etc['pag']['size']['text_area']['w']		= $etc['pag']['size']['w'] - ( $etc['pag']['margin']['l'] + $etc['pag']['margin']['r'] );
+
+        // altezza dell'area del testo
+        $etc['pag']['size']['text_area']['h']		= $etc['pag']['size']['h'] - ( $etc['pag']['margin']['t'] + $etc['pag']['margin']['b'] );
+
+        // larghezza colonna base
+        $etc['pag']['spacer']['col']		        = $etc['pag']['size']['text_area']['w'] / 12;
+
+        // altezza riga base
+        $etc['pag']['spacer']['row']		        = $etc['pag']['size']['text_area']['h'] / 36;
+
+        // altezza stimata della linea di testo
+        $etc['fnt']['base']['line']['height']		= $pdf->getStringHeight( $etc['pag']['size']['h'], 'a' );
+
+        // rendering dei testi
+        twigRenderText( $etc['txt'], $dati );
+
+        // debug
+        // die( print_r( $dati, true ) );
+        // die( print_r( $etc['txt'], true ) );
+
+        /**
+         * IMPOSTAZIONE PAGINA
+         * nessun valore o impostazione va modificato oltre questo punto
+         */
+
+        // carattere di base
+        $pdf->SetFont( $etc['fnt']['base']['family'], $etc['fnt']['base']['style'], $etc['fnt']['base']['size'] );
+
+        // imposto il PDF per non stampare l'header e il footer
+        $pdf->SetPrintHeader( false );
+        $pdf->SetPrintFooter( false );
+
+        // imposto i margini
+        $pdf->SetMargins( $etc['pag']['margin']['l'], $etc['pag']['margin']['t'], $etc['pag']['margin']['r'] );
+
+        // margine dell'intestazione
+        $pdf->SetHeaderMargin( 0 );
+
+        // margine del footer
+        $pdf->SetFooterMargin( 0 );
+
+        // imposto il font monospaziato di default
+        $pdf->SetDefaultMonospacedFont( PDF_FONT_MONOSPACED );
+
+        // imposto l'aggiunta automatica di pagine quando il contenuto raggiunge il margine inferiore
+        $pdf->SetAutoPageBreak( true, $etc['pag']['margin']['b'] );
+
+        // fattore di conversione da pixel a millimetri
+        $pdf->setImageScale( PDF_IMAGE_SCALE_RATIO );
+
+        // aggiunta della prima pagina
+        $pdf->AddPage();
+
+        /**
+         * INIZIO INSERIMENTO CONTENUTI
+         * nessuna logica va aggiunta oltre questo punto, nessun valore va modificato oltre questo punto
+         * d'ora in poi vengono solo aggiunti gli elementi al PDF
+         */
+
+        // posizione barcode
+        $pdf->SetXY( $etc['pag']['margin']['l'] + $etc['pag']['spacer']['col'] * 0, $etc['pag']['margin']['t'] );
+
+        // barcode
+        $pdf->write1DBarcode( $dati['doc']['codice'], 'C128', '', '', '', 25, 0.4, $etc['bcd']['principale'], 'N');
+
+        // posizione dell'intestazione
+        $pdf->SetXY( $etc['pag']['margin']['l'] + $etc['pag']['spacer']['col'] * 5, $etc['pag']['margin']['t'] );
+
+        // stile intestazione
+        $pdf->SetFont( $etc['fnt']['intestazione'][0]['family'], $etc['fnt']['intestazione'][0]['style'], $etc['fnt']['intestazione'][0]['size'] );
+
+        // padding delle celle
+        $pdf->setCellPaddings(
+            $etc['tbl']['celle']['head']['pad']['L'],	// left
+            $etc['tbl']['celle']['head']['pad']['T'],	// top
+            $etc['tbl']['celle']['head']['pad']['R'],	// right
+            $etc['tbl']['celle']['head']['pad']['B']	// bottom
+        );
+
+        // intestazione riga 1
+        $pdf->Cell(
+            $etc['pag']['spacer']['col'] * 5,           // larghezza
+            0,                                          // altezza
+            $etc['txt']['intestazione'][0],             // testo
+            '',                                         // bordo
+            2,                                          // newline (0 -> nessuna, 1 -> tutto a sx, 2 -> sotto la cella precedente)
+            'L'                                         // allineamento
+        );
+
+        // stile intestazione 2
+        $pdf->SetFont( $etc['fnt']['intestazione'][1]['family'], $etc['fnt']['intestazione'][1]['style'], $etc['fnt']['intestazione'][1]['size'] );
+
+        // intestazione riga 2
+        $pdf->Cell(
+            $etc['pag']['spacer']['col'] * 5,           // larghezza
+            0,                                          // altezza
+            $dati['doc']['data'],                       // testo
+            '',                                         // bordo
+            2,                                          // newline (0 -> nessuna, 1 -> tutto a sx, 2 -> sotto la cella precedente)
+            'L'                                         // allineamento
+        );
+
+        // posizione tabella righe
+        $pdf->SetXY( $etc['pag']['margin']['l'] + $etc['pag']['spacer']['col'] * 0, $etc['pag']['margin']['t'] + $etc['pag']['spacer']['row'] * 4 );
+
+        // stile intestazione tabella righe
+        $pdf->SetFont( $etc['fnt']['intestazione'][1]['family'], $etc['fnt']['intestazione'][1]['style'], $etc['fnt']['intestazione'][1]['size'] );
+
+        // padding delle celle
+        $pdf->setCellPaddings(
+            $etc['tbl']['celle']['base']['pad']['L'],	// left
+            $etc['tbl']['celle']['base']['pad']['T'],	// top
+            $etc['tbl']['celle']['base']['pad']['R'],	// right
+            $etc['tbl']['celle']['base']['pad']['B']	// bottom
+        );
+
+        // intestazione tabella righe
+        $pdf->Cell( $etc['pag']['spacer']['col'] * 3, 0, 'collocazione', $etc['tbl']['celle']['intestazione'], '', 'C' );
+        $pdf->Cell( $etc['pag']['spacer']['col'] * 6, 0, 'descrizione', $etc['tbl']['celle']['intestazione'], 0, 'L' );
+        $pdf->Cell( $etc['pag']['spacer']['col'] * 3, 0, 'q.tà', $etc['tbl']['celle']['intestazione'], 1, 'R' );
+
+        // stile riga tabella
+        $pdf->SetFont( $etc['fnt']['base']['family'], $etc['fnt']['base']['style'], $etc['fnt']['base']['size'] );
+
+        // stile linea riga tabella
+        $pdf->SetLineStyle( $etc['tbl']['celle']['dati'] );
+
+        // righe del documento
+        foreach( $dati['doc']['missione']['righe'] as $row ) {
+
+            // calcolo altezza della riga
+            $trh = $pdf->GetStringHeight( $etc['pag']['spacer']['col'] * 6, trim( $row['descrizione'] ), false, true, '', 'B' );
+
+            // riga della tabella
+            $pdf->Cell( $etc['pag']['spacer']['col'] * 3, $trh, $row['collocazione_breve'], $etc['tbl']['celle']['dati'], 0, 'C', false, '', 0, false, 'T', 'T' );
+            $pdf->MultiCell( $etc['pag']['spacer']['col'] * 6, $trh, $row['descrizione'], $etc['tbl']['celle']['dati'], 'L', false, 0 );
+            $pdf->Cell( $etc['pag']['spacer']['col'] * 3, $trh, $row['qta_da_prelevare'], $etc['tbl']['celle']['dati'], 1, 'R', false, '', 0, false, 'T', 'T' );
+
+        }
+
+    }

@@ -106,7 +106,7 @@
             'condizioni_pagamento.codice AS codice_pagamento '.
             'FROM documenti '.
             'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
-            'INNER JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
+            'LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento '.
             'WHERE documenti.id = ?',
             array( array( 's' => $idDocumento ) )
         );
@@ -185,7 +185,7 @@
 
         // controllo contenuto
         if( empty( $r['doc']['righe'] ) ) {
-            dieText('inserire almeno una riga, oppure verificare reparti, aliquote IVA e unità di misura');
+            // dieText('inserire almeno una riga, oppure verificare reparti, aliquote IVA e unità di misura');
         }
 
         // elaboro i totali
@@ -325,6 +325,55 @@
             }
         }
 
+        // seleziono tutte le righe di missione
+        $r['doc']['missione']['righe'] = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT documenti_articoli.id_articolo, sum( quantita ) AS quantita,
+                concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione,
+                group_concat( concat_ws( " - ", concat( documenti.sezionale, year( documenti.data ), documenti.numero ), concat( documenti_articoli.quantita, "x" ), documenti_articoli.nome ) SEPARATOR "|" ) AS documenti
+            FROM documenti_articoli 
+            INNER JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+            INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto
+            INNER JOIN documenti ON documenti.id = documenti_articoli.id_documento
+            WHERE documenti_articoli.id_missione = ? GROUP BY documenti_articoli.id_articolo',
+            array( 
+                array( 's' => $r['doc']['id'] )
+            )
+        );
+
+        // recupero le collocazioni
+        foreach( $r['doc']['missione']['righe'] as &$row ) {
+
+            $row['qta_prelevata'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT coalesce( sum( quantita ), 0 ) FROM documenti_articoli WHERE id_genitore IS NOT NULL AND id_missione = ? AND id_tipologia = ? AND id_articolo = ? GROUP BY id_genitore',
+                array( 
+                    array( 's' => $r['doc']['id'] ),
+                    array( 's' => 4 ),
+                    array( 's' => $row['id_articolo'] )
+                )
+            );
+
+            $row['qta_da_prelevare'] = $row['quantita'] - $row['qta_prelevata'];
+
+            $row['collocazione'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT concat( codice, " ", nome ) FROM __report_giacenza_magazzini__ WHERE id_articolo = ? AND totale_proprio > 0',
+                array( 
+                    array( 's' => $row['id_articolo'] )
+                )
+            );
+
+            $row['collocazione_breve'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT codice FROM __report_giacenza_magazzini__ WHERE id_articolo = ? AND totale_proprio > 0',
+                array( 
+                    array( 's' => $row['id_articolo'] )
+                )
+            );
+
+        }
+
         // carico i pagamenti per il documento
         $r['doc']['pagamenti'] = mysqlQuery(
             $cf['mysql']['connection'],
@@ -429,90 +478,98 @@
             array( array( 's' => $r['doc']['id_destinatario'] ) )
         );
 
-        // tesseramento
-        $r['dst']['numero_tessera'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT max( contratti.codice ) AS tessera
-                FROM contratti 
-                    INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
-                    INNER JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia 
-                    INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
-                WHERE contratti_anagrafica.id_anagrafica = ? 
-                    AND tipologie_contratti.se_tesseramento IS NOT NULL ',
-            array( array( 's' => $r['doc']['id_destinatario'] ) )
-        );
-
-        // se il documento è una fattura, lo SDI è richiesto
-        if( $r['doc']['se_fattura'] ) {
-
-            // codice SDI di default a '0000000' per i privati senza codice SDI
-            if( empty( $r['dst']['codice_sdi'] ) && empty( $r['dst']['partita_iva'] ) ) {
-                $r['dst']['codice_sdi'] = '0000000';
-            }
-
-            // verifico che il codice SDI risponda al pattern corretto
-            if( ! preg_match( '/[a-zA-Z0-9]+/', $r['dst']['codice_sdi'] ) ) {
-                dieText('valore non corretto per codice SDI: ' . $r['dst']['codice_sdi'] );
-            }
-
-            // destinatari con PEC
-            if( ! empty( $r['dst']['id_pec_sdi'] ) ) {
-                $r['dst']['pec_sdi'] =  mysqlSelectValue(
-                    $cf['mysql']['connection'],
-                    'SELECT indirizzo from mail where id = ?',
-                    array( array( 's' => $r['dst']['id_pec_sdi'] ) ) );
-            }
-
-            // controllo CIG
-            if( ! empty( $r['dst']['se_pubblica_amministrazione'] ) ) {
-                if( empty( $r['doc']['cig'] ) ) {
-                    dieText('richiesto CIG per emettere fattura PA' );
-                }
-        # TODO verificare se è sempre obbligatorio
-        #        if( empty( $r['doc']['cup'] ) ) {
-        #            dieText('richiesto CUP per emettere fattura PA' );
-        #        }
-                if( empty( $r['doc']['riferimento'] ) ) {
-                    dieText('richiesto riferimento per emettere fattura PA' );
-                }
-            }
-
-        }
-
-        // denominazione fiscale
-        $r['dst']['denominazione_fiscale'] = trim( $r['dst']['nome'] . ' ' . $r['dst']['cognome'] . ' ' . $r['dst']['denominazione'] );
-
-        // recupero i dati della sede destinatario
-        $r['dsi'] = mysqlSelectRow(
-            $cf['mysql']['connection'],
-            'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
-            'comuni.nome AS comune, provincie.sigla AS provincia, '.
-            'stati.iso31661alpha2 AS sigla_stato '.
-            'FROM anagrafica_indirizzi '.
-            'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-            'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
-            'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
-            'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
-            'INNER JOIN stati ON stati.id = regioni.id_stato '.
-            'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
-            'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
-            array(
-                array( 's' => $r['dst']['id'] ),
-                array( 's' => $r['doc']['id_sede_destinatario'] )
-            )
-        );
-
         // debug
-        // print_r( $r['dsi'] );
+        // die( print_r( $r['dst'], true ) );
 
-        // controllo indirizzo
-        if( empty( $r['dsi'] ) ) {
-            dieText('richiesto indirizzo sede destinatario');
+        // se il documento ha un destinatario (sono ammessi documenti a uso interno con solo l'emittente)
+        if( ! empty( $r['dst'] ) ) {
+
+            // tesseramento
+            $r['dst']['numero_tessera'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT max( contratti.codice ) AS tessera
+                    FROM contratti 
+                        INNER JOIN rinnovi ON rinnovi.id_contratto = contratti.id 
+                        INNER JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia 
+                        INNER JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id
+                    WHERE contratti_anagrafica.id_anagrafica = ? 
+                        AND tipologie_contratti.se_tesseramento IS NOT NULL ',
+                array( array( 's' => $r['doc']['id_destinatario'] ) )
+            );
+
+            // se il documento è una fattura, lo SDI è richiesto
+            if( $r['doc']['se_fattura'] ) {
+
+                // codice SDI di default a '0000000' per i privati senza codice SDI
+                if( empty( $r['dst']['codice_sdi'] ) && empty( $r['dst']['partita_iva'] ) ) {
+                    $r['dst']['codice_sdi'] = '0000000';
+                }
+
+                // verifico che il codice SDI risponda al pattern corretto
+                if( ! preg_match( '/[a-zA-Z0-9]+/', $r['dst']['codice_sdi'] ) ) {
+                    dieText('valore non corretto per codice SDI: ' . $r['dst']['codice_sdi'] );
+                }
+
+                // destinatari con PEC
+                if( ! empty( $r['dst']['id_pec_sdi'] ) ) {
+                    $r['dst']['pec_sdi'] =  mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT indirizzo from mail where id = ?',
+                        array( array( 's' => $r['dst']['id_pec_sdi'] ) ) );
+                }
+
+                // controllo CIG
+                if( ! empty( $r['dst']['se_pubblica_amministrazione'] ) ) {
+                    if( empty( $r['doc']['cig'] ) ) {
+                        dieText('richiesto CIG per emettere fattura PA' );
+                    }
+                    # TODO verificare se è sempre obbligatorio
+                    #        if( empty( $r['doc']['cup'] ) ) {
+                    #            dieText('richiesto CUP per emettere fattura PA' );
+                    #        }
+                    if( empty( $r['doc']['riferimento'] ) ) {
+                        dieText('richiesto riferimento per emettere fattura PA' );
+                    }
+                }
+
+            }
+
+            // denominazione fiscale
+            $r['dst']['denominazione_fiscale'] = trim( $r['dst']['nome'] . ' ' . $r['dst']['cognome'] . ' ' . $r['dst']['denominazione'] );
+
+            // recupero i dati della sede destinatario
+            $r['dsi'] = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
+                'comuni.nome AS comune, provincie.sigla AS provincia, '.
+                'stati.iso31661alpha2 AS sigla_stato '.
+                'FROM anagrafica_indirizzi '.
+                'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
+                'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
+                'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
+                'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
+                'INNER JOIN stati ON stati.id = regioni.id_stato '.
+                'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
+                'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
+                array(
+                    array( 's' => $r['dst']['id'] ),
+                    array( 's' => $r['doc']['id_sede_destinatario'] )
+                )
+            );
+
+            // debug
+            // print_r( $r['dsi'] );
+
+            // controllo indirizzo
+            if( empty( $r['dsi'] ) ) {
+                dieText('richiesto indirizzo sede destinatario');
+            }
+
+            // indirizzo fiscale
+            $r['dsi']['indirizzo_fiscale'] = $r['dsi']['tipologia'] . ' ' . $r['dsi']['indirizzo'] . ', ' . $r['dsi']['civico'];
+            $r['dsi']['comune_indirizzo_fiscale'] = $r['dsi']['cap'] . ' ' . $r['dsi']['comune'] . ' ' . $r['dsi']['provincia'];
+
         }
-
-        // indirizzo fiscale
-        $r['dsi']['indirizzo_fiscale'] = $r['dsi']['tipologia'] . ' ' . $r['dsi']['indirizzo'] . ', ' . $r['dsi']['civico'];
-        $r['dsi']['comune_indirizzo_fiscale'] = $r['dsi']['cap'] . ' ' . $r['dsi']['comune'] . ' ' . $r['dsi']['provincia'];
 
         // documenti collegati
         // TODO selezionare in base al ruolo

@@ -44,7 +44,16 @@
         'icon' => NULL,
         'fa' => 'fa-file-pdf-o',
         'title' => 'barcode semplice',
-        'text' => 'stampa l\'etichetta barcode di tutti gli articoli in pdf'
+        'text' => 'stampa il barcode della missione in PDF'
+    );
+
+    $ct['page']['contents']['metro']['pdf'][] = array(
+        'target' => '_blank' ,
+        'url' => '/print/0400.documenti/copertina.missione.pdf?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'] ,
+        'icon' => NULL,
+        'fa' => 'fa-file-pdf-o',
+        'title' => 'copertina missione',
+        'text' => 'stampa la copertina della missione in PDF'
     );
 
     // macro di default
