@@ -33,9 +33,9 @@
     $txa = array( '<a href="?">$cf</a>' );
 
     // scendo nell'array
-    if( isset( $_REQUEST['lvl'] ) && is_array( $_REQUEST['lvl'] ) ) {
-        foreach( $_REQUEST['lvl'] as $lvl ) {
-            $txl['lvl'][] = $lvl;
+    if( isset( $_REQUEST['__lvl__'] ) && is_array( $_REQUEST['__lvl__'] ) ) {
+        foreach( $_REQUEST['__lvl__'] as $lvl ) {
+            $txl['__lvl__'][] = $lvl;
             $txa[] = '<a href="?' . htmlentities( http_build_query( $txl ) ) . '">' . htmlentities( $lvl ) . '</a>';
             if( $lvl === 'NULL' ) { $lvl = NULL; }
             if( $lvl === 'ZERO' ) { $lvl = 0; }
@@ -46,7 +46,7 @@
             }
         }
     } else {
-        $_REQUEST['lvl'] = array();
+        $_REQUEST['__lvl__'] = array();
     }
 
     // output
@@ -66,7 +66,7 @@
             elseif( is_numeric( $key ) && empty( $key ) ) { $keyRef = 'ZERO'; }
             else { $keyRef = $key; }
 
-            $qs['lvl'] = array_merge( $_REQUEST['lvl'], array( $keyRef ) );
+            $qs['__lvl__'] = array_merge( $_REQUEST['__lvl__'], array( $keyRef ) );
 
             if( isset( $print[ $key ] ) && is_array( $print[ $key ] ) ) {
                 $tx .= '<li><a href="?' . htmlentities( http_build_query( $qs ) ) . '">' . ( ( ! is_numeric( $key ) && empty( $key ) ) ? '(vuoto)' : htmlspecialchars( $key ) ) . '</a></li>';

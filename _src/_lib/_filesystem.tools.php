@@ -365,9 +365,17 @@
 
         // valore di ritorno
         if( file_exists( getFullPath( $f ) ) && is_readable( getFullPath( $f ) ) ) {
+
             return fopen( getFullPath( $f ), $m );
+
+        } elseif( ! file_exists( getFullPath( $f ) ) ) {
+
+            return fopen( getFullPath( $f ), FILE_WRITE_OVERWRITE );
+
         } else {
+
             return false;
+
         }
 
     }
@@ -432,7 +440,7 @@
         }
 
         // log
-        logger( 'impossibile scrivere ' . $f, 'filesystem' );
+        logger( 'impossibile scrivere ' . $f, 'filesystem', LOG_ERR );
 
         // restituisco false di default
         return false;

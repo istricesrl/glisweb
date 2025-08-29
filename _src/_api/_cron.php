@@ -18,10 +18,6 @@
      * 
      * [...] /var/log/latest/cron.latest.log -> l'ultima attività di cron (il contenuto di $cf['cron'] relativo all'ultima esecuzione)
      * 
-     * [...] /var/log/task/TASKID.log -> informazioni generali sull'esecuzione del task (il contenuto di $task)
-     * 
-     * [...] /var/log/task/TASKID/MICROTIME.log -> l'attività di un task specifico (il contenuto di $cf['cron']['task'][TASKID][status])
-     * 
      * 
      * esecuzione dei task
      * ===================
@@ -45,6 +41,17 @@
      * 
      * 
      * 
+     * log delle operazioni dei task
+     * -----------------------------
+     * 
+     * 
+     * [...] /var/log/task/TASKID.log -> informazioni generali sull'esecuzione del task (il contenuto di $task)
+     * 
+     * [...] /var/log/task/TASKID/MICROTIME.log -> l'attività di un task specifico (il contenuto di $cf['cron']['task'][TASKID][status])
+     * 
+     * 
+     * 
+     * 
      * esecuzione dei job
      * ==================
      * 
@@ -53,12 +60,28 @@
      * 
      * 
      * 
+     * test dei job
+     * ------------
      * 
      * 
      * 
      * 
      * 
      * 
+     * log delle operazioni dei job
+     * ----------------------------
+     * 
+     * 
+     * [...] /var/log/job/JOBID.log -> informazioni generali sull'esecuzione del job (il contenuto di $job)
+     * 
+     * [...] /var/log/job/JOBID/AVANZAMENTO.MICROTIME.log -> l'attività di un job specifico (il contenuto di $cf['cron']['job'][JOBID][status])
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * TODO documentare
      * 
      * 
      */

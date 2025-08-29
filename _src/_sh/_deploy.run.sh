@@ -25,7 +25,7 @@ if [ -n "$PNOARGS" ]; then
 
     echo "utilizzo: $0 target [opzioni]"
     echo "opzioni:"
-    echo "  --version   il tipo di incremento di versione (major, minor, patch)"
+    echo "  --increment   il tipo di incremento di versione (major, minor, patch)"
     echo "esempi:"
     echo "  $0 test"
     echo "  $0 test --increment patch"

@@ -120,6 +120,7 @@
      * css.*           | i CSS da includere                                         |
      * h1.*            | il valore del tag H1, in chiave la lingua in formato IETF  | come title
      * headers         | gli headers HTTP da lanciare                               |
+     * id_sito         | l'id del sito al quale la pagina appartiene                | tutti i siti
      * js.*            | gli script Javascript da includere                         |
      * macro           | le macro da attivare                                       |
      * menu.*          | la posizione della pagina nei menu del sito                |

@@ -100,6 +100,9 @@ if (isset($_REQUEST['__pagamenti__'])) {
                             // log
                             logger('creo una rata per questa riga', 'cassa');
 
+                            // debug
+                            // die( 'M'.$_REQUEST['__pagamenti__']['fatturazione_id_modalita_pagamento'] );
+
                             // aggiungo il pagamento
                             $idPagamento = mysqlInsertRow(
                                 $cf['mysql']['connection'],
@@ -115,6 +118,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                                     'nome' => 'rata da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
                                     'timestamp_inserimento' => time(),
                                     'id_account_inserimento' => $_SESSION['account']['id'],
+                                    'id_modalita_pagamento' => $_REQUEST['__pagamenti__']['fatturazione_id_modalita_pagamento']
                                     // TODO manca l'id listino
                                     // TODO manca coupon valore
                                     // TODO manca la modalità di pagamento
@@ -255,7 +259,8 @@ if (isset($_REQUEST['__pagamenti__'])) {
                                         'nome' => ((! empty($pagamento['id_pagamento'])) ? 'rata pagata' : 'pagamento diretto') .
                                             ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
                                         'timestamp_inserimento' => time(),
-                                        'id_account_inserimento' => $_SESSION['account']['id']
+                                        'id_account_inserimento' => $_SESSION['account']['id'],
+                                        'id_modalita_pagamento' => $_REQUEST['__pagamenti__']['fatturazione_id_modalita_pagamento']
                                     ),
                                     'pagamenti'
                                 );
@@ -279,6 +284,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                                             ' da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id'],
                                         'timestamp_inserimento' => time(),
                                         'id_account_inserimento' => $_SESSION['account']['id'],
+                                        'id_modalita_pagamento' => $_REQUEST['__pagamenti__']['fatturazione_id_modalita_pagamento']
                                         // TODO manca l'id listino
                                         // TODO manca la modalità di pagamento
                                     ),
@@ -337,6 +343,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                     logger('la riga non è da fare', 'cassa');
                 }
             }
+
         } else {
 
             // log

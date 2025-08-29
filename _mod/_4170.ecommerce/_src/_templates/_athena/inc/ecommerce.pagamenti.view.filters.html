@@ -116,9 +116,9 @@
 	<div class="col-12 col-md-auto">
 		<span class="label-top">modalità</span>
 		<select name="__view__[{{ view.id }}][__filters__][id_modalita_pagamento][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
-			<option value="" {% if request.__view__[ view.id ].__filters__.modalita.EQ == "" %}selected{% endif %}>tutte</option>
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_modalita_pagamento.EQ == "" %}selected{% endif %}>tutte</option>
 			{% for modalita in etc.select.modalita_pagamento %}
-			<option value="{{ modalita.id }}" {% if request.__view__[ view.id ].__filters__['modalita'].EQ == modalita.id %}selected{% endif %}>{{ modalita.__label__ }}</option>
+			<option value="{{ modalita.id }}" {% if request.__view__[ view.id ].__filters__.id_modalita_pagamento.EQ == modalita.id %}selected{% endif %}>{{ modalita.__label__ }}</option>
 			{% endfor %}
 		</select>
 	</div>

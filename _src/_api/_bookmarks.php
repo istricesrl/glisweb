@@ -1,5 +1,14 @@
 <?php
 
+    /**
+     * 
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
+
     // inclusione del framework
     require '../_config.php';
 

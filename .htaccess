@@ -14,6 +14,9 @@
 # rimuovo la navigazione automatica
 Options -Indexes
 
+# disabilito le MultiViews
+Options -MultiViews
+
 ## BLOCCHI DI SICUREZZA
 #
 # Questa sezione ha lo scopo di bloccare richieste potenzialmente dannose sulla base del tipo di file richiesto;
@@ -58,7 +61,7 @@ Options -Indexes
     #
 
     # directory ad accesso vietato
-    RewriteRule ^.git/* - [F,L,NC]
+    RewriteRule ^\.git/* - [F,L,NC]
     RewriteRule ^tmp/* - [F,L,NC]
     RewriteRule ^usr/database/* - [F,L,NC]
     RewriteRule ^usr/test/* - [F,L,NC]
@@ -81,13 +84,13 @@ Options -Indexes
     RewriteCond %{HTTPS} off
     RewriteCond %{DOCUMENT_ROOT}/etc/https -d [OR]
     RewriteCond %{DOCUMENT_ROOT}/etc/https.conf -f
-    RewriteRule .* https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
-    # redirect a WWW
+    # redirect a www
     RewriteCond %{HTTP_HOST} !^www\. [NC]
     RewriteCond %{DOCUMENT_ROOT}/etc/www -d [OR]
     RewriteCond %{DOCUMENT_ROOT}/etc/www.conf -f
-    RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [R=301,L]
+    RewriteRule ^ https://www.%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
 
     # pagina di manutenzione temporanea
     RewriteCond %{REQUEST_FILENAME} !-f
@@ -96,14 +99,17 @@ Options -Indexes
     RewriteRule .* - [R=503,L]
 
     # blocco dell'hotlinking
-    RewriteCond %{HTTP_HOST}@@%{HTTP_REFERER} !^([^@]*)@@(https|http)?://\1/.*
-    RewriteCond %{DOCUMENT_ROOT}/src/img/hotlink.png -f
-    RewriteRule .*\.(gif|jpg|jpeg|png|pdf|webp)$ src/img/hotlink.png [NC]
+    RewriteCond %{REQUEST_URI} !/src/img/hotlink\.png$ [NC]
+    RewriteCond %{HTTP_REFERER} !^$ 
+    RewriteCond %{HTTP_REFERER} !^https?://([^.]+\.)?%{HTTP_HOST}/ [NC]
+    RewriteRule \.(?:gif|jpe?g|png|pdf|webp)$ src/img/hotlink.png [NC,L]
 
     # gestione delle immagini webp
+    RewriteCond %{REQUEST_URI} !\.webp$         [NC]
+    RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{HTTP:Accept} image/webp
-    RewriteCond %{REQUEST_FILENAME}.webp -f
-    RewriteRule ^(.*)$ $1.webp [L]
+    RewriteCond %{REQUEST_FILENAME}\.webp -f
+    RewriteRule ^(.+)$ $1.webp [L]
 
     ## CARTELLE AD ACCESSO DIRETTO
     #
@@ -184,7 +190,7 @@ Options -Indexes
 
     # gestione dell'API di download generica
     # questa regola reindirizza qualunque richiesta diretta al contenuto di var/ all'api _src/_api/_download.php (vedi la documentazione dell'API per i dettagli)
-    RewriteRule ^var/(\s.+)$ _src/_api/_download.php?__download__=$1 [L,QSA]
+    RewriteRule ^var/(.+)$ _src/_api/_download.php?__download__=$1 [B,L,QSA]
 
     # gestione dell'API di download per il mailing
     # questa regola reindirizza qualunque richiesta del tipo mailing/<idMailing>/var/<risorsa>
@@ -193,11 +199,14 @@ Options -Indexes
 
     # proxy OSM
     # questa regola reindirizza le richieste di tipo tiles/<z>/<x>/<y>.png all'API _src/_api/_osm.php (vedi la documentazione relativa per i dettagli)
-    RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+).png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
+    RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+)\.png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
 
     # gestione delle API REST generiche
     # questa regola reindirizza le richieste di tipo api/<entità>[/<id>] a _src/_api/_rest.php (vedi la documentazione del file per i dettagli)
     RewriteRule ^api/([a-zA-Z0-9_\-]+)[\/]*([a-zA-Z0-9\.\-]+)*$ _src/_api/_rest.php?__ws__=$1&__id__=$2 [L,QSA]
+
+    # protezione da loop per l'endpoint pages
+    RewriteRule ^_src/_api/_pages\.php$ - [L]
 
     ## JOB
     #
@@ -381,10 +390,17 @@ Options -Indexes
     RewriteRule ^sitemap.xml var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
     RewriteRule ^sitemap.csv var/sitemap/sitemap.%{HTTP_HOST}.csv [L]
 
-    # gestione delle pagine
-    # questa regola si occupa di erogare le pagine richieste dagli utenti tramite il file _src/_api/_pages.php
+    # gestione delle pagine con indicazione esplicita della lingua
+    # questa regola si occupa di erogare le pagine richieste dagli utenti in formato nomepagina.xx-XX.html
     RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteRule ^([a-zA-Z0-9_\-\/]+)*[\.]*([a-zA-Z0-9_\-\/]+)* _src/_api/_pages.php?__rw__=$1&__lg__=$2 [L,QSA]
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([A-Za-z0-9._\-/]+)\.([a-z]{2}-[A-Z]{2})\.html?$ _src/_api/_pages.php?__rw__=$1&__lg__=$2 [L,QSA,NC]
+
+    # gestione delle pagine senza indicazione esplicita della lingua
+    # questa regola si occupa di erogare tutte le risorse generiche in formato nomefile.estensione o nomefile
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^([A-Za-z0-9._\-/]*[A-Za-z0-9_-])(?:\.[A-Za-z0-9]+)?$ _src/_api/_pages.php?__rw__=$1 [L,QSA,NC]
 
 </IfModule>
 

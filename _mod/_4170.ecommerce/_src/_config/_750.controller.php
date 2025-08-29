@@ -411,7 +411,7 @@
                         foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {
                             // if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] ) ) {
                             if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $key ][ $field ] ) ) {
-                                $item[ $field ] = $model['default'];
+                                $item[ $field ] = $_SESSION['carrello']['articoli'][ $key ][ $field ] = $model['default'];
                             }
                         }
                         // TODO IMPORTANTE nel ciclo qui sopra, oppure a parte qui sotto, accettare il valore di sconto solo se l'utente ha i privilegi appropriati (altrimenti la gente si mette gli sconti da sola)
