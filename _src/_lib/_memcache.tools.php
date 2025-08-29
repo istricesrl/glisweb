@@ -138,8 +138,13 @@
             if( $r === false ) {
                 logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
             } else {
+                logger( 'scrittura effettuata, chiave: ' . $key, 'memcache' );
                 $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), time(), $ttl );
-                logger( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache' );
+                if( $r === false ) {
+                    logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache', LOG_ERR );
+                } else {
+                    logger( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache' );
+                }
             }
 
             return $r;
@@ -220,39 +225,39 @@
      */
     function memcacheRead( $conn, $key, &$err = array() ) {
 
-    memcacheUniqueKey( $key );
+        memcacheUniqueKey( $key );
 
-    if( empty( $conn ) ) {
+        if( empty( $conn ) ) {
 
-        logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
+            logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
 
-        return false;
+            return false;
 
-        } elseif( ! is_object( $conn ) ) {
+            } elseif( ! is_object( $conn ) ) {
 
-        logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
+            logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
 
-        return false;
+            return false;
 
-    } else {
-
-        if( empty( $err ) ) {
-            $err = Memcached::RES_FAILURE;
-        }
-
-        $r = $conn->get( $key );
-
-        $err = $conn->getResultCode();
-
-        if( $r === false ) {
-            logger( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
         } else {
-            logger( 'lettura effettuata, chiave: ' . $key, 'memcache' );
+
+            if( empty( $err ) ) {
+                $err = Memcached::RES_FAILURE;
+            }
+
+            $r = $conn->get( $key );
+
+            $err = $conn->getResultCode();
+
+            if( $r === false ) {
+                logger( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
+            } else {
+                logger( 'lettura effettuata, chiave: ' . $key, 'memcache' );
+            }
+
+            return unserialize( $r );
+
         }
-
-        return unserialize( $r );
-
-    }
 
     }
 
@@ -272,13 +277,18 @@
                 $err = Memcached::RES_FAILURE;
             }
 
-            $k = md5( $f );
+            $k = 'FILE_CACHED_EXISTS_' . md5( $f );
 
             $r = memcacheRead( $m, $k, $err );
 
             if( $r === false ) {
                 $r = fileExists( $f );
+                if( $r === false ) {
+                    $r = -1;
+                }
                 memcacheWrite( $m, $k, $r, $t );
+            } elseif( $r === -1 ) {
+                $r = false;
             }
 
         } else {

@@ -88,7 +88,7 @@
         }
 
         // calcolo la chiave della query
-        $k = md5($q . serialize($p));
+        $k = 'MYSQL_' . md5( $q . serialize($p));
 
         // cerco il valore in cache
         $r = memcacheRead($m, $k);

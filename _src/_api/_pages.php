@@ -576,8 +576,9 @@
      */
 
     // scrittura dell'indice della cache
-    memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
-    // memcacheWrite( $cf['memcache']['connection'], 'CACHE_REGISTRY', $cf['memcache']['registry'] );
+    if( $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' ) ) {
+        memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
+    }
 
     // timer
     timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
