@@ -331,7 +331,7 @@
 
                                                     // conta come done visto che non va trasferito
                                                     $done++;
-                                                    $status['info'][] = 'saltato ' . $to . ' (' . boolean2string( $ftpPut ) . ')';
+                                                    $status['info'][] = 'saltato ' . $to . ' (già aggiornato)';
                                                     logger( ftp_pwd( $ftpConn ) . ' -> saltato -> ' . $to . PHP_EOL, 'details/ftp.'.$base.'.success' );
                                                     $esito = 'SKIPPED';
 

@@ -276,7 +276,9 @@
             $deltaArticoli = array();
 
             // debug
-            // print_r( $_SESSION['carrello']['articoli'] );
+            // die( print_r( $_SESSION['carrello'], true ) );
+            // die( print_r( $_SESSION['carrello']['articoli'], true ) );
+            // die( print_r( $_REQUEST['__carrello__']['__articolo__'], true ) );
 
             // STEP 4 - gestione acquisto singolo articolo
             if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
@@ -387,6 +389,7 @@
 
             // debug
             // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
+            // die( print_r( $_REQUEST['__carrello__']['__articoli__'], true ) );
 
             // integro gli articoli
             // TODO documentare cosa fa questa parte
@@ -398,9 +401,10 @@
 
                 foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
                     // TODO se $key è empty, costruire come id_articolo + id_anagrafica se id_articolo non è vuoto
-                    $rKey = $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL );
+                    $rKey = $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : '' );
                     $key = ( $key != $rKey ) ? $rKey : $key;
                     if( ! empty( $key ) ) {
+                        // die( 'key ' . $key . ' rKey ' . $rKey . PHP_EOL );
                         // $deltaArticoli[ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array(
                         $deltaArticoli[ $key ] = array(
                             'id_articolo' => $item['id_articolo'],
@@ -410,8 +414,9 @@
                         );
                         foreach( $cf['ecommerce']['fields']['articoli'] as $field => $model ) {
                             // if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ][ $field ] ) ) {
+                            // echo 'valuto ' . $field . '<br>' . PHP_EOL;
                             if( ! isset( $item[ $field ] ) && ! isset( $_SESSION['carrello']['articoli'][ $key ][ $field ] ) ) {
-                                $item[ $field ] = $_SESSION['carrello']['articoli'][ $key ][ $field ] = $model['default'];
+                                $item[ $field ] = $model['default'];
                             }
                         }
                         // TODO IMPORTANTE nel ciclo qui sopra, oppure a parte qui sotto, accettare il valore di sconto solo se l'utente ha i privilegi appropriati (altrimenti la gente si mette gli sconti da sola)
@@ -444,6 +449,7 @@
 
             // debug
             // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
+            // die( print_r( $_REQUEST['__carrello__']['__articoli__'], true ) );
 
             // SVUOTAMENTO TOTALE CARRELLO
             if( isset( $_REQUEST['__carrello__']['__svuota__'] ) && ! empty( $_REQUEST['__carrello__']['__svuota__'] ) ) {

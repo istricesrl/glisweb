@@ -3,31 +3,70 @@
     /**
      * gestione delle operazioni pianificate
      * 
-     * 
+     * questa API si occupa di gestire le operazioni pianificate del framework
      * 
      * introduzione
      * ============
+     * Il framework dispone di un potente e flessibile sistema di esecuzione delle operazioni pianificate,
+     * che appoggiandosi al cron di sistema garantisce un'elevatissima affidabilità e buone prestazioni.
+     * Dal lato del sistema, uno script in /etc/cron.d/ che può essere installato anche tramite il comando
+     * _src/_sh/_crontab.install.sh deve richiamare l'API /api/cron del framework ogni minuto. L'API si 
+     * occuperà di controllare sulle tabelle *task* e *job* quali compiti vanno eseguiti e provvederà a 
+     * sbrigarli di conseguenza.
      * 
+     * task e job
+     * ----------
+     * Come accennato, il meccanismo di esecuzione pianificata si articola su due diverse strategie, 
+     * rappresentate rispettivamente dai task e dai job. Da un lato i primi rappresentano un lavoro
+     * puntuale, eseguito ad ogni chiamata senza cognizione del contesto complessivo delle cose da fare;
+     * e di conseguenza la natura stessa del task è quella di coincidere con la singola chiamata.
+     * Dall'altra parte, i job rappresentano lavori pianificati con un inizio e una fine e un'estensione
+     * predeterminata, in quanto hanno cognizione del contesto globale del compito da svolgere.
      * 
+     * Un esempio di task è la gestione delle code della posta; ad ogni chiamata, il task controlla se c'è
+     * almeno una mail da inviare, se sì la invia, dopodiché termina, senza preoccuparsi di quante mail da
+     * inviare ci siano nel complesso (perché è irrilevante dal suo punto di vista). Viceversa, un esempio
+     * di job è l'importazione dell'elenco aggiornato dei comuni italiani; in questo caso, il job prima
+     * scarica l'intero elenco dei comuni, poi pianifica il numero di esecuzioni necessarie per importarlo,
+     * dopodiché ad ogni chiamata successiva esegue una parte del lavoro sapendo quanto ha già fatto e
+     * quanto manca al completamento del compito, infine quando ha terminato l'importazione finisce e
+     * registra la chiusura del procedimento.
      * 
+     * lo script di appoggio in /etc/cron.d/
+     * -------------------------------------
+     * Ad ogni chiamata, l'API _src/_api/_cron.php ricava dalle tabelle *task* e *job* l'elenco delle cose
+     * da fare, utilizzando un meccanismo di lock software basato su token per evitare la concorrenza. Prima
+     * vengono eseguiti i task, e successivamente vengono fatti avanzare i job.
+     * 
+     * Le informazioni rilevanti sul lavoro dell'API vengono salvate rispettivamente sotto le chiavi
+     * $cf['cron']['task'] e $cf['cron']['job'], inoltre un log specifico per la tracciatura degli esiti di
+     * tali lavorazioni è tenuto in var/log/cron/ e specificamente il dettaglio dell'ultima esecuzione è contenuto
+     * in var/log/latest/cron.latest.log.
      * 
      * logging dell'attività di cron
      * -----------------------------
-     * 
-     * [...] /var/log/cron/YYYYMMDDHH.log -> tutta l'attività di cron (il contenuto di $cf['cron'])
-     * 
-     * [...] /var/log/latest/cron.latest.log -> l'ultima attività di cron (il contenuto di $cf['cron'] relativo all'ultima esecuzione)
-     * 
+     * Tutte le attività principali dell'API cron vengono registrate su /var/log/cron/YYYYMMDDHH.log; in pratica,
+     * qui viene registrata tutta l'attività di cron (ovvero il contenuto di $cf['cron']). Il dettaglio dell'ultima
+     * esecuzione di cron si trova invece in var/log/latest/cron.latest.log.
      * 
      * esecuzione dei task
      * ===================
+     * Un task può essere chiamato manualmente in maniera diretta, oppure tramite cron. Nel primo caso è necessario
+     * far puntare il browser (o fare una chiamata Ajax) all'URL del task; ad esempio per chiamare il task
+     * /_src/_api/_task/_memcache.clean.php si accederà all'endpoint /task/memcache.clean (si veda la documentazione
+     * del file .htaccess per ulteriori dettagli sui percorsi e sulla riscrittura degli URL).
      * 
-     * 
-     * 
+     * Per eseguire un task in maniera ricorrente e pianificata, è necessario invece che esso sia presente nella
+     * tabella task, la cui struttura è simile a quella del file /etc/crontab di Linux. Ogni volta che viene chiamata
+     * l'API cron (/api/cron) il framework controlla se ci sono task da eseguire in quel momento, e nel caso
+     * provvede ad eseguirli.
      * 
      * test dei task
      * -------------
-     * 
+     * Il test dei task è facilitato dal fatto che possono essere chiamati manualmente quante volge si vuole per
+     * testarli a fondo prima di iniziare a utilizzarli. Una volta che si è sicuri del buon funzionamento del task
+     * chiamato manualmente, è possibile aggiungerlo alla tabella task con la sua pianificazione. Un esempio di
+     * codice SQL per questo inserimento sarebbe:
      * 
      * ```
      * INSERT INTO `task` (`id`, `minuto`, `ora`, `giorno_del_mese`, `mese`, `giorno_della_settimana`, `settimana`, `task`, `iterazioni`, `delay`, `token`, 
@@ -36,53 +75,54 @@
      *     (1, NULL, NULL, NULL, NULL, NULL, NULL, '_src/_api/_task/_test.cron.php', 1, NULL, NULL, NULL, NULL, NULL, NULL, NULL);
      * ```
      * 
-     * 
-     * 
-     * 
-     * 
+     * Questo task (nell'esempio _src/_api/_task/_test.cron.php) verrà eseguito ogni minuto. Si può verificarlo facilmente
+     * chiamando a mano l'API cron oppure, se è attiva l'esecuzione automatica, basterà tenere sott'occhio i log (vedi sotto).
      * 
      * log delle operazioni dei task
      * -----------------------------
-     * 
-     * 
-     * [...] /var/log/task/TASKID.log -> informazioni generali sull'esecuzione del task (il contenuto di $task)
-     * 
-     * [...] /var/log/task/TASKID/MICROTIME.log -> l'attività di un task specifico (il contenuto di $cf['cron']['task'][TASKID][status])
-     * 
-     * 
-     * 
+     * I log dei task sono raggruppati per ID del task (con riferimento all'ID che il task ha sulla tabella dei task).
+     * Quando un task viene chiamato manualmente è prassi fare riferimento soprattutto all'output JSON che genera, mentre
+     * quando viene eseguito da cron è possibile consultare i log per avere informazioni più dettagliate. I file di
+     * log dei task pianificati sono /var/log/task/TASKID.log (che contiene informazioni generali sull'esecuzione del task)
+     * e /var/log/task/TASKID/MICROTIME.log (che contiene informazioni più dettagliate relative a una specifica esecuzione
+     * del task). In pratica il primo file è un log sintetico e cumulativo, mentre il secondo dettagliato e suddiviso
+     * in piccole parti ognuna relativa a una data esecuzione.
      * 
      * esecuzione dei job
      * ==================
+     * Mentre la chiamata di un task è un evento puntuale, che si esaurisce in sé stesso e non ha memoria delle esecuzioni
+     * precedenti o successive, la chiamata di un job è qualcosa che fa avanzare il job stesso lungo un percorso di
+     * lavoro predeterminato, la cui lunghezza è nota al tempo dell'avvio, e all'interno del quale tutte le esecuzioni
+     * hanno una memoria comune (il workspace del job).
      * 
+     * L'esecuzione manuale di un job richiede l'utilizzo dell'API job (esiste anche la possibilità di creare dei job
+     * standalone, ma è deprecata); di conseguenza, anche il debug di un nuovo job andrà fatto in questo modo. Per eseguire
+     * manualmente un job è necessario prima di tutto inserire una riga nella tabella job specificando il flag se_foreground;
+     * questo farà sì che il cron ignori il job, consentendone l'esecuzione manuale.
      * 
-     * 
-     * 
-     * 
+     * Per eseguire un job in maniera automatica è necessario che il flag se_foreground sia settato a NULL, in modo che
+     * sia il cron ad occuparsi dell'esecuzione.
      * 
      * test dei job
      * ------------
+     * Anche se apparentemente è più complicato, il test dei job funziona in maniera molto simile a quello dei task. Dopo
+     * aver inserito la riga relativa nella tabella dei job, si disporrà dell'ID necessario a chiamare l'API job per
+     * l'esecuzione manuale:
      * 
+     * ```
+     * /api/job/<jobId>
+     * ```
      * 
-     * 
-     * 
-     * 
+     * Per il debug si può fare riferimento sia al JSON di risposta sia alle informazioni che il job scriverà sui file
+     * di log.
      * 
      * log delle operazioni dei job
      * ----------------------------
-     * 
-     * 
-     * [...] /var/log/job/JOBID.log -> informazioni generali sull'esecuzione del job (il contenuto di $job)
-     * 
-     * [...] /var/log/job/JOBID/AVANZAMENTO.MICROTIME.log -> l'attività di un job specifico (il contenuto di $cf['cron']['job'][JOBID][status])
-     * 
-     * 
-     * 
-     * 
-     * 
-     * 
-     * TODO documentare
-     * 
+     * Come per i task, anche i log dei job sono raggruppati per ID del job, e in particolare il file /var/log/job/JOBID.log
+     * rappresenta il log per le informazioni generali, meno dettagliato ma cumulativo di tutte le esecuzioni del job, mentre
+     * il file /var/log/job/JOBID/AVANZAMENTO.MICROTIME.log contiene le informazioni specifiche relative a uno step dato.
+     * Si noti che oltre al tempo in questo caso rileva anche il punto di avanzamento del job (cosa che non aveva invece senso
+     * nell'ambito dei task).
      * 
      */
 

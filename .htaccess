@@ -390,6 +390,9 @@ Options -MultiViews
     RewriteRule ^sitemap.xml var/sitemap/sitemap.%{HTTP_HOST}.xml [L]
     RewriteRule ^sitemap.csv var/sitemap/sitemap.%{HTTP_HOST}.csv [L]
 
+    # regola catch-all per la home page
+    RewriteRule ^/?$ _src/_api/_pages.php [L,QSA]
+
     # gestione delle pagine con indicazione esplicita della lingua
     # questa regola si occupa di erogare le pagine richieste dagli utenti in formato nomepagina.xx-XX.html
     RewriteCond %{REQUEST_FILENAME} !-f
