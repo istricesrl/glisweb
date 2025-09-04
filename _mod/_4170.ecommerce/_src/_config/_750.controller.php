@@ -11,6 +11,9 @@
     // print_r( $_REQUEST['__carrello__'] );
     // error_reporting( E_ALL );
     // ini_set( 'display_errors', TRUE );
+    // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+    // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
+    // die();
 
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
@@ -162,6 +165,11 @@
 
             }
 
+            // debug
+            // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+            // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
+            // die();
+
             // STEP 2 - se non esiste $_SESSION['carrello'] lo creo
             if( ! isset( $_SESSION['carrello']['id'] ) || empty( $_SESSION['carrello']['id'] ) ) {
 
@@ -262,6 +270,11 @@
 
             }
 
+            // debug
+            // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+            // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
+            // die();
+
             // inizializzazione totali carrello
             $_SESSION['carrello']['prezzo_netto_totale']        = 0.0;
             $_SESSION['carrello']['prezzo_lordo_totale']        = 0.0;
@@ -283,12 +296,28 @@
             // STEP 4 - gestione acquisto singolo articolo
             if( isset( $_REQUEST['__carrello__']['__articolo__']['id_articolo'] ) ) {
 
+                $rowKey = $_REQUEST['__carrello__']['__articolo__']['id_articolo'].(
+                    ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) )
+                    ?
+                    $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica']
+                    :
+                    (
+                        ( isset( $_REQUEST['__carrello__']['destinatario_id_anagrafica'] ) )
+                        ?
+                        $_REQUEST['__carrello__']['destinatario_id_anagrafica']
+                        :
+                        NULL
+                    )
+                );
+
+                // die( 'rowKey ' . $rowKey . PHP_EOL );
+
                 // quantità acquistata
                 $_REQUEST['__carrello__']['__articolo__']['quantita'] = ( isset( $_REQUEST['__carrello__']['__articolo__']['quantita'] ) )
                     ? $_REQUEST['__carrello__']['__articolo__']['quantita']
                     : (
-                        ( isset( $_SESSION['carrello']['articoli'][ $_REQUEST['__carrello__']['__articolo__']['id_articolo'].( ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL ) ]['quantita'] ) )
-                        ? ( $_SESSION['carrello']['articoli'][ $_REQUEST['__carrello__']['__articolo__']['id_articolo'].( ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL ) ]['quantita'] + 1 )
+                        ( isset( $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'] ) )
+                        ? ( $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'] + 1 )
                         : 1
                     );
 
@@ -359,7 +388,20 @@
                 */
 
                 // calcolo la chiave
-                $rowKey = $_REQUEST['__carrello__']['__articolo__']['id_articolo'].( ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL );
+                // $rowKey = $_REQUEST['__carrello__']['__articolo__']['id_articolo'].( ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) ) ? $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] : NULL );
+                $rowKey = $_REQUEST['__carrello__']['__articolo__']['id_articolo'].(
+                    ( isset( $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica'] ) )
+                    ?
+                    $_REQUEST['__carrello__']['__articolo__']['destinatario_id_anagrafica']
+                    :
+                    (
+                        ( isset( $_REQUEST['__carrello__']['destinatario_id_anagrafica'] ) )
+                        ?
+                        $_REQUEST['__carrello__']['destinatario_id_anagrafica']
+                        :
+                        NULL
+                    )
+                );
 
                 // aggiunta articolo al carrello
                 // TODO aggiungere anche l'id_coupon se presente
@@ -389,7 +431,11 @@
 
             // debug
             // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
+            // die( print_r( $_SESSION['carrello']['articoli'], true ) );
             // die( print_r( $_REQUEST['__carrello__']['__articoli__'], true ) );
+            // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+            // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
+            // die();
 
             // integro gli articoli
             // TODO documentare cosa fa questa parte
@@ -401,7 +447,17 @@
 
                 foreach( $_REQUEST['__carrello__']['__articoli__'] as $key => &$item ) {
                     // TODO se $key è empty, costruire come id_articolo + id_anagrafica se id_articolo non è vuoto
-                    $rKey = $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : '' );
+                    $rKey = $item['id_articolo'].(
+                        ( isset( $item['destinatario_id_anagrafica'] ) )
+                        ? $item['destinatario_id_anagrafica']
+                        : (
+                            ( isset( $_REQUEST['__carrello__']['destinatario_id_anagrafica'] ) )
+                            ?
+                            $_REQUEST['__carrello__']['destinatario_id_anagrafica']
+                            :
+                            NULL
+                        )
+                    );
                     $key = ( $key != $rKey ) ? $rKey : $key;
                     if( ! empty( $key ) ) {
                         // die( 'key ' . $key . ' rKey ' . $rKey . PHP_EOL );
@@ -445,11 +501,15 @@
                         $_SESSION['carrello']['articoli'][ $key ]['quantita'] = 0;
                     }
                 }
+
             }
 
             // debug
             // echo '<pre>' . print_r( $_REQUEST['__carrello__']['__articoli__'], true ) . '</pre>';
-            // die( print_r( $_REQUEST['__carrello__']['__articoli__'], true ) );
+            // echo '<pre>' . print_r( $_SESSION['carrello']['articoli'], true ) . '</pre>';
+            // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+            // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
+            // die();
 
             // SVUOTAMENTO TOTALE CARRELLO
             if( isset( $_REQUEST['__carrello__']['__svuota__'] ) && ! empty( $_REQUEST['__carrello__']['__svuota__'] ) ) {
@@ -465,13 +525,27 @@
             if( isset( $_SESSION['carrello']['articoli'] ) && is_array( $_SESSION['carrello']['articoli'] ) ) {
 
                 // ciclo sugli articoli
-                foreach( $_SESSION['carrello']['articoli'] as $dati ) {
+                foreach( $_SESSION['carrello']['articoli'] as $rKey => $dati ) {
 
                     // chiave di riga
-                    $rowKey = $dati['id_articolo'].$dati['destinatario_id_anagrafica'];
+                    $rowKey = $dati['id_articolo'].
+                        (
+                            ( isset( $dati['destinatario_id_anagrafica'] ) )
+                            ? $dati['destinatario_id_anagrafica']
+                            : (
+                                ( isset( $_REQUEST['__carrello__']['destinatario_id_anagrafica'] ) )
+                                ? $_REQUEST['__carrello__']['destinatario_id_anagrafica']
+                                : NULL
+                            )
+                        );
 
                     // debug
                     // echo 'valuto la riga ' . $rowKey . PHP_EOL;
+                    // die( print_r( $dati, true ) );
+                    if( empty( $dati['destinatario_id_anagrafica'] ) ) {
+                        // print_r( $_SESSION['carrello'] );
+                        // die( 'destinatario_id_anagrafica vuoto' . PHP_EOL );
+                    }
 
                     // eliminazione articolo dal carrello
                     if( empty( $dati['quantita'] ) && ! empty( $dati['id_articolo'] ) ) {
@@ -488,7 +562,7 @@
                         );
 
                         // debug
-                        // die( 'elimino articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] );
+                        // die( 'elimino articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' rowKey ' . $rowKey . PHP_EOL );
 
                         // log
                         logWrite( 'eliminato articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' dal carrello ' . $_SESSION['carrello']['id'], 'cart' );
@@ -705,6 +779,11 @@
                 }
 
             }
+
+            // debug
+            // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+            // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
+            // die();
 
             // STEP 6 - calcolo coupon
             // TODO aggiungere tabella carrelli_coupon dove aggiungere un numero arbitrario di coupon associandoli al carrello in generale (quelli per riga sono calcolati sopra)

@@ -236,6 +236,11 @@
             // ciclo sui prodotti
             foreach( $carrello['articoli'] as $k => $v ) {
 
+                // ...
+                if( $v['quantita'] == '' || $v['quantita'] <= 0 ) {
+                    $v['quantita'] = 0;
+                }
+
                 // log
                 logger( '-> analizzo l\'articolo ' . $v['id_articolo'] . ' con quantità ' . $v['quantita'] . ' nel carrello ' . $carrello['id'], 'details/carrelli/conteggi/carrello.' . $carrello['id'] . '/articolo.' . $a );
 

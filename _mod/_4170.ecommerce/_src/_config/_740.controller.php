@@ -7,6 +7,9 @@
      * 
      */
 
+    // debug
+    // print_r( $_REQUEST['__carrello__'] );
+
     // TODO verificare che l'utente abbia i privilegi sufficienti per chiudere il carrello
     // NOTA tutto da rifare qui
     if( false ) {
@@ -127,3 +130,8 @@
     }
 
     // die( print_r( $ct['carrello']['documenti'], true ) );
+
+    // debug
+    // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
+    // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
+    // die();
