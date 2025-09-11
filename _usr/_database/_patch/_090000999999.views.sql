@@ -1524,6 +1524,9 @@ CREATE OR REPLACE VIEW `carrelli_view` AS
 	SELECT
 	carrelli.id,
 	carrelli.session,
+	coalesce( carrelli.intestazione_nome, carrelli.destinatario_nome ) AS cliente_nome,
+	coalesce( carrelli.intestazione_cognome, carrelli.destinatario_cognome ) AS cliente_cognome,
+	coalesce( carrelli.intestazione_denominazione, carrelli.destinatario_denominazione ) AS cliente_denominazione,
 	carrelli.destinatario_nome,
 	carrelli.destinatario_cognome,
 	carrelli.destinatario_denominazione,

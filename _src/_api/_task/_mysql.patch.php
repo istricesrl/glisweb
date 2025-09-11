@@ -94,13 +94,13 @@
         // creo la tabella di patch se non esiste
         mysqlQuery(
             $cf['mysql']['connection'],
-            'CREATE TABLE IF NOT EXISTS `__patch__` ('.
-            '    `id` char(12) NOT NULL PRIMARY KEY,'.
-            '    `patch` text COLLATE utf8_unicode_ci,'.
-            '    `timestamp_esecuzione` int(11) DEFAULT NULL,'.
-            '    `token` char(128) DEFAULT NULL,'.
-            '    `note_esecuzione` text'.
-            ') ENGINE=InnoDB DEFAULT CHARSET=utf8;'
+            'CREATE TABLE IF NOT EXISTS `__patch__` (
+                `id` char(12) NOT NULL PRIMARY KEY,
+                `patch` text COLLATE utf8_unicode_ci,
+                `timestamp_esecuzione` int(11) DEFAULT NULL,
+                `token` char(128) DEFAULT NULL,
+                `note_esecuzione` text
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;'
         );
 
         // debug

@@ -69,6 +69,8 @@
         'codice_cliente' => 'codice',
         'cliente' => 'cliente',
         'data_programmazione' => 'programmata',
+        'ora_inizio' => 'ora inizio',
+        'ora_fine' => 'ora fine',
         'ora_inizio_programmazione' => 'ora',
         'ora_fine_programmazione' => 'ora fine',
         'anagrafica_programmazione' => 'assegnata a',
