@@ -25,3 +25,6 @@
         'macro'		        => array( $m . '_src/_inc/_macro/_ricerche.risultati.php' ),
         'parent'		    => array( 'id'		=> NULL )
     );
+
+    // debug
+    // die( print_r( $p, true ) );
