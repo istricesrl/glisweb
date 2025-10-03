@@ -96,6 +96,10 @@
                 array( array( 's' => $id ) )
             );
 
+        } else {
+
+            cleanAttivitaViewStatic( $id );
+
         }
 
     }

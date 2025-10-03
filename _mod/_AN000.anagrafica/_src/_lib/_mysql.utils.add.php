@@ -148,7 +148,9 @@
         } else {
 
             mysqlQuery($cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array(array('s' => $id)));
+
         }
+
     }
 
     /**
