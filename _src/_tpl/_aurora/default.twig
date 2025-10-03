@@ -11,4 +11,4 @@
 {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ] ) | raw ) }}</h2>{% endif %}
 <div>{{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}</div>
 <!-- fine blocco {{ _self }}::main -->
-{% endblock %}
+{% endblock main %}

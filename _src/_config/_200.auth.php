@@ -112,9 +112,12 @@
     // integro i gruppi trovati nel database
     if( is_array( $gruppi ) ) {
         foreach( $gruppi as $gruppo ) {
-            $cf['auth']['groups'][ $gruppo['nome'] ] = array(
-                'id' => $gruppo['id'],
-                'nome' => $gruppo['nome']
+            $cf['auth']['groups'][ $gruppo['nome'] ] = array_replace_recursive(
+                $cf['auth']['groups'][ $gruppo['nome'] ],
+                array(
+                    'id' => $gruppo['id'],
+                    'nome' => $gruppo['nome']
+                )
             );
         }
     }

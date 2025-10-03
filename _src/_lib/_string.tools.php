@@ -327,7 +327,7 @@
      *
      *
      *
-     * TODO commentare
+     * TODO documentare
      *
      */
     function logLvl2string( $l ) {
@@ -385,7 +385,7 @@
      * E_USER_DEPRECATED     |   16384  | errore di obsolescenza generato tramite la funzione trigger_error()
      * E_ALL                 |   32767  | tutti i messaggi di errore
      *
-     * TODO commentare
+     * TODO documentare
      *
      */
     function reportLvl2string( $l ) {

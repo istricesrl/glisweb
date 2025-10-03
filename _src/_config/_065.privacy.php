@@ -25,6 +25,8 @@
      *
      * TODO applicare la strategia della configurazione extra per sito anche ai vari slack, google, criteo, ecc.
      * TODO rimuovere quel brutto codice che fa il controllo della configurazione per sito nei vari slack, google, criteo, ecc.
+     * 
+     * TODO documentare
      *
      *
      */

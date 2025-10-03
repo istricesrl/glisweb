@@ -25,8 +25,8 @@
         <header class="sticky-top">
             <div class="container-fluid">
                 <div class="row">
-                    {% block nav %}{% include 'inc/navbar.twig' %}{% endblock %}
-                    {% block widget %}{% include 'inc/widget.twig' %}{% endblock %}
+                    {% block nav %}{% include 'inc/navbar.twig' %}{% endblock nav %}
+                    {% block widget %}{% include 'inc/widget.twig' %}{% endblock widget %}
                 </div>
             </div>
         </header>
@@ -45,28 +45,28 @@
                     {% if page.subtitle[ localization.language.ietf ] %}{{ page.subtitle[ localization.language.ietf ] | raw }}{% endif %}
                 </div>
             </div>
-            {% endblock %}
+            {% endblock title %}
 
             {# BLOCCO NAVIGAZIONE SECONDARIA #}
-            {% block subnav %}{% include 'inc/subnav.twig' %}{% endblock %}
+            {% block subnav %}{% include 'inc/subnav.twig' %}{% endblock subnav %}
 
             {# BLOCCO CONTENUTO PRINCIPALE #}
-            {% block main %}{% endblock %}
+            {% block main %}{% endblock main %}
 
         </main>
 
         {# BLOCCO FOOTER #}
-        {% block footer %}{% include 'inc/footer.twig' %}{% endblock %}
+        {% block footer %}{% include 'inc/footer.twig' %}{% endblock footer %}
 
         {# CODICE DI CHIUSURA STANDARD DELLA PAGINA #}
         {% include '_inc/_page.close.twig' %}
 
         {# MODAL DELLA PAGINA #}
-        {% block modals %}<!-- nessun modal per pagina specificato -->{% endblock %}
+        {% block modals %}<!-- nessun modal per pagina specificato -->{% endblock modals %}
 
         {# SCRIPT JAVASCRIPT DELLA PAGINA #}
-        {% block javascript %}<!-- nessuno script Javascript per pagina specificato -->{% endblock %}
+        {% block javascript %}<!-- nessuno script Javascript per pagina specificato -->{% endblock javascript %}
 
     </body>
 </html>
-<!-- file esteso: {{ _self }} -->
+<!-- fine file esteso: {{ _self }} -->

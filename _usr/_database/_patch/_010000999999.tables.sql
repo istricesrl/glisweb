@@ -708,6 +708,7 @@ CREATE TABLE `carrelli` (
   `nome` char(64) DEFAULT NULL,
   `id_listino` int(11) DEFAULT NULL,
   `id_zona` int(11) DEFAULT NULL,
+  `id_sito` int(11) DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `fatturazione_id_tipologia_documento` int(11) DEFAULT NULL,
   `fatturazione_id_modalita_pagamento` int(11) DEFAULT NULL,

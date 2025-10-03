@@ -34,14 +34,14 @@
 
         {# BLOCCO MAIN #}
         <main class="container-fluid d-flex flex-fill flex-column p-0">
-            {% block main %}{% endblock %}
+            {% block main %}{% endblock main %}
         </main>
 
         {# CODICE DI CHIUSURA STANDARD DELLA PAGINA #}
         {% include '_inc/_page.close.twig' %}
 
         {# SCRIPT JAVASCRIPT DELLA PAGINA #}
-        {% block javascript %}{% endblock %}
+        {% block javascript %}{% endblock javascript %}
 
     </body>
 </html>

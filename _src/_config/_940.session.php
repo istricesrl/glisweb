@@ -4,6 +4,9 @@
      * integrazione delle informazioni di sessione
      * 
      * 
+     * 
+     * TODO documentare
+     * 
      */
 
     /**

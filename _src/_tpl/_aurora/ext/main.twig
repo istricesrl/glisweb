@@ -17,27 +17,27 @@
 
             {% block header %}
             {% include 'inc/header.twig' %}
-            {% endblock %}
+            {% endblock header %}
 
             {% block nav %}
             {% include 'inc/navbar.twig' %}
-            {% endblock %}
+            {% endblock nav %}
 
         </header>
 
-        <main>{% block main %}<!-- nessun main specificato per la pagina -->{% endblock %}</main>
+        <main>{% block main %}<!-- nessun main specificato per la pagina -->{% endblock main %}</main>
 
         <footer>
             {% block footer %}
             {% include 'inc/footer.twig' %}
-            {% endblock %}
+            {% endblock footer %}
         </footer>
 
         {% include '_inc/_page.close.twig' %}
 
-        {% block modals %}<!-- nessun modal per pagina specificato -->{% endblock %}
+        {% block modals %}<!-- nessun modal per pagina specificato -->{% endblock modals %}
 
-        {% block javascript %}<!-- nessuno script Javascript per pagina specificato -->{% endblock %}
+        {% block javascript %}<!-- nessuno script Javascript per pagina specificato -->{% endblock javascript %}
 
     </body>
 </html>

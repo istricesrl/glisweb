@@ -59,6 +59,7 @@
      * TODO suddividere le configurazioni di log e debug fra test e produzione
      * TODO finire di implementare le varie destinazioni di log
      *
+     * TODO documentare
      *
      *
      */

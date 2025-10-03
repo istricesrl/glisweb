@@ -18,7 +18,7 @@
      * Google Ads, banner su siti terzi, volantini cartacei, eccetera)
      * 
      * 
-     * 
+     * TODO documentare
      * 
      * 
      */

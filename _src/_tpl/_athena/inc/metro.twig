@@ -1,0 +1,76 @@
+{# LIBRERIE #}
+{% import '_lib/_form.twig' as frm %}
+
+{# GESTIONE BACKURL #}
+{% if request.__backurl__ %}
+{% set back = session.backurls[ request.__backurl__ ] %}
+{% else %}
+{% set back = page.parent.path[ localization.language.ietf ] %}
+{% endif %}
+
+{# CONTATORE #}
+{% set cnt = 0 %}
+
+{# TODO DOCUMENTARE #}
+
+<!-- file {{ _self }} -->
+{% for k,m in page.contents.metros %}
+{% if page.contents.metro[ k ] %}
+{% if m.label %}<div class="form-row metro"><div class="col-12"><h3>{{ m.label }}</h3></div></div>{% endif %}
+{% for obj in page.contents.metro[ k ] %}
+    {% if obj.include %}
+    {% include obj.include %}
+    {% else %}
+    {% if cnt == 0 %}<div class="form-row metro">{% endif %}
+	{% if obj.colspan %}{% set colspan = obj.colspan %}{% else %}{% set colspan = 4 %}{% endif %}
+    <div class="col-12 col-md-{{ colspan }}">
+        {% if obj.url %}
+        <a href="{{ obj.host }}{{ obj.url }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
+        {% elseif obj.modal %}
+        <a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
+        {% elseif obj.ws %}
+        {% if obj.confirm %}
+        <a href="#" onclick="if( confirm('sei sicuro?') ){ $(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});}">
+        {% else %}
+        <a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %}{% if obj.wsmethod %}, '{{ obj.wsmethod }}' {% endif %}{% if obj.wsdata %}, '{{ obj.wsdata }}' {% endif %});">
+        {% endif %}
+        {% elseif obj.lws %}
+        <a href="#" onclick="$(this).metroLoopWs('{{ obj.host }}{{ obj.lws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
+        {% endif %}
+            <div class="media">
+                <div class="media-left">
+                    {% if obj.fa %}
+                    <i class="fa {{ obj.fa }}"></i>
+                    {% elseif obj.h4 %}
+                    <h4>{{ obj.h4 }}</h4>
+                    {% else %}
+                    {{ obj.icon }}
+                    {% endif %}
+                </div>
+                <div class="media-body">
+                    <h5 class="media-title">{{ obj.title }}</h5>
+                    <p class="media-text">{{ obj.text }}</p>
+                </div>
+            </div>
+        </a>
+    </div>
+    {% if cnt == 12 or loop.last %}</div>
+	{% set cnt = 0 %}
+	{% else %}
+	{% set cnt = cnt + colspan %}
+    {% endif %}
+    {% endif %}
+{% endfor %}
+{% endif %}
+{% endfor %}
+
+{% if not metro.options.nocontrols %}
+<div class="row view-controls mt-auto no-gutters d-print-none">
+
+	<div class="col-auto mr-1">
+        {{ frm.button( { 'field': { 'text': '<i class="fa fa-rotate-left"></i>', 'type': 'button', 'onclick': 'window.open("' ~ back ~ '","_self")' } } ) }}
+	</div>
+	
+</div>
+{% endif %}
+<!-- fine file {{ _self }} -->

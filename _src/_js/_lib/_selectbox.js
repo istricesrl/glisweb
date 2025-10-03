@@ -2,7 +2,7 @@
     /*
      * tendina intelligente
      *
-     *
+     * TODO documentare
      *
      */
 

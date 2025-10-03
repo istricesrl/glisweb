@@ -36,9 +36,6 @@
 {# MODAL DELLA PAGINA #}
 {% for ruolo,modals in page.contents.modals %}{% for modal in modals %}<!-- modal: {{ modal.schema }} -->{% include modal.schema %}{% endfor %}{% endfor %}
 
-{# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
-{# vedi _src/_inc/_macro/_default.tools.php #}
-
 {# VALIDATORI #}
 <!-- HTML5 W3C validator: https://validator.w3.org/nu/?doc={{ page.url[ localization.language.ietf ] }} -->
 {% for m,s in page.css.template %}

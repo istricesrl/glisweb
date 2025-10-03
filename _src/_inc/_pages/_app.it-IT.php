@@ -1,5 +1,14 @@
 <?php
 
+    /**
+     * definizione delle pagine della web app standard del framework
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
+
     // lingua di questo file
     $l = 'it-IT';
 

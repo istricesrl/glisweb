@@ -1,0 +1,24 @@
+<!-- file {{ _self }} -->
+<div id="bookmarks" class="slide-info">
+    <div class="container" id="list-bookmarks">
+        {% for s in session.__work__ %}
+        <div class="row">
+            <div class="col">
+                <h2>{{ s.label }}</h2>
+            </div>
+        </div>
+        <span class="pb-3">
+            {% for b,d in s.items %}<div class="bookmarks-row-container row">
+                <div class="col"><p>{{ d.label }}</p></div>
+            </div>{% endfor %}
+        </span>
+        <span class="pb-3">
+            {% for l,a in s.actions %}<div class="row">
+            <div class="col">
+                <p><button onclick="window.open('{% if a.url %}{{ a.url }}{% else %}{{ pages[ a.page ].url[ localization.language.ietf ] }}{% endif %}','_self');" class="btn btn-secondary btn-sm btn-block">{{ a.label }}</button></p>
+            </div>
+        </div>{% endfor %}
+        {% endfor %}
+    </div>
+</div>
+<!-- fine file {{ _self }} -->

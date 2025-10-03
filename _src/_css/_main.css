@@ -150,6 +150,12 @@ div.numero-verde div.telefono {
     min-height: 100vh;
 }
 
+.sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 0px;
+}
+
 @keyframes fa-blink {
     0% {
         opacity: 1;

@@ -4,7 +4,7 @@
      * visualizzatore dello stato di funzionamento del framework
      * 
      * 
-     * TODO implementare
+     * TODO finire di implementare
      * TODO documentare
      * 
      */

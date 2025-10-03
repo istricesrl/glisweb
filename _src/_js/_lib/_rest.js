@@ -2,7 +2,7 @@
     /*
      * libreria di funzioni utili per le chiamate REST
      *
-     *
+     * TODO documentare
      *
      */
 

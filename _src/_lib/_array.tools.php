@@ -173,6 +173,7 @@
         if( empty( $s ) ) {
             return array();
         } else {
+            $s = trim( $s, ARRAY_SEPARATOR );
             $s = explode( $c, $s );
             return $s;
         }

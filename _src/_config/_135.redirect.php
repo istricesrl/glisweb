@@ -8,6 +8,8 @@
      * 
      * TODO salvare i redirect in cache farebbe risparmiare tempo
      * 
+     * TODO documentare
+     * 
      * 
      */
 

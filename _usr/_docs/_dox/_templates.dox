@@ -155,26 +155,26 @@
                 <header>
                     {% block header %}
                     {% include 'inc/header.html' %}
-                    {% endblock %}
+                    {% endblock header %}
                 </header>
 
                 <nav>
                     {% block nav %}
                     {% include 'inc/navbar.html' %}
-                    {% endblock %}
+                    {% endblock nav %}
                 </nav>
 
-                <main>{% block main %}{% endblock %}</main>
+                <main>{% block main %}{% endblock main %}</main>
 
                 <footer>
                     {% block footer %}
                     {% include 'inc/footer.html' %}
-                    {% endblock %}
+                    {% endblock footer %}
                 </footer>
 
                 {% include '_inc/_page.close.html' %}
 
-                {% block javascript %}{% endblock %}
+                {% block javascript %}{% endblock javascript %}
 
         </body>
 
@@ -208,7 +208,7 @@
     <div>
         {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
     </div>
-    {% endblock %}
+    {% endblock main %}
     \endcode
 
     Anche qui ci sono alcuni concetti importanti su cui porre l'attenzione:

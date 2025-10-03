@@ -55,6 +55,8 @@
      *
      *
      * TODO implementare bilanciamento del carico
+     * 
+     * TODO documentare
      *
      *
      *

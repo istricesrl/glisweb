@@ -1,0 +1,497 @@
+/**
+ * stili del body
+ * ==============
+ * 
+ * 
+ */
+
+/* stile del body */
+body {
+    background-color: #ffffff;
+    font-family: monospace, FontAwesome;
+    font-size: 0.8em;
+}
+
+/**
+ * stili della pagina di login
+ * ===========================
+ * 
+ * 
+ */
+
+/* stile aggiuntivo del body di login */
+body.login {
+    min-height: 100vh;
+}
+
+/* stile del form di login */
+form.form-login {
+    background-color: rgba( 255, 255, 255, .9 );
+    border: 1px solid #aaaaaa;
+    border-radius: 3px;
+    cursor: move;
+    min-width: 320px;
+    padding: 20px 40px;
+}
+
+/* stile delle etichette dei campi del form di login */
+form.form-login legend {
+    font-size: 1.5em;
+    font-weight: bold;
+    text-align: center;
+}
+
+/**
+ * stili dell'header dell'interfaccia principale
+ * =============================================
+ * 
+ * 
+ */
+
+/* stile dell'header */
+header {
+    background-color: #aaaaaa;
+    height: 45px;
+    z-index: 2530 !important;
+}
+
+/* stile dei link nell'header */
+header a,
+header a:visited {
+    color: #333333;
+    text-decoration: none;
+}
+
+/* stile dei link attivi nell'header */
+header a:hover,
+header a:active {
+    color: #666666;
+    text-decoration: none;
+}
+
+/* stile del breadcrumb nell'header */
+header ol.breadcrumbs {
+    display: block;
+    font-weight: bold;
+    margin: 0px;
+    padding: 0px;
+    font-size: 1.5em;
+    background-color: transparent;
+    display: block !important;
+    margin: 0px;
+    padding: 10px 0px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100%;
+}
+
+/* stile degli elementi del breadcrumb nell'header */
+header ol.breadcrumbs .breadcrumb-item {
+    display: inline-block;
+}
+
+/* stile del separatore tra gli elementi del breadcrumb nell'header */
+header ol.breadcrumbs .breadcrumb-item+.breadcrumb-item::before {
+    display: inline-block;
+    padding-right: .5rem;
+    color: black;
+    content: "/";
+}
+
+/* stile dei bottoni nell'header */
+header .widget .btn {
+    border-radius: 0px;
+    font-size: 1.6em;
+    height: 45px;
+}
+
+/* stile dei bottoni quadrati nell'header */
+header .widget .btn-sqr {
+    width: 45px;
+}
+
+/**
+ * stili dei widget a dropdown dell'header
+ * =======================================
+ * 
+ * 
+ */
+
+/* stile dei widget a dropdown dell'header */
+#info, #jobs, #cart, #alert, #bookmarks {
+    background-color: #555555;
+    color: #ffffff;
+    display: none;
+    padding: 15px;
+    position: absolute;
+    right: 0;
+    top: 45px;
+    z-index: 9000;
+    white-space: nowrap;
+    width: 45%;
+}
+
+/* stile dei titoli dei widget a dropdown dell'header */
+#info h2, #jobs h2, #cart h2, #alert h2, #bookmarks h2 {
+    font-size: 1.6em;
+    margin: 0px;
+}
+
+/* stile dei paragrafi dei widget a dropdown dell'header */
+#info p, #jobs p, #cart p, #alert p, #bookmarks p {
+    margin: 0px;
+    margin-top: 3px;
+    margin-bottom: 3px
+}
+
+/* stile dei link dei widget a dropdown dell'header */
+.slide-info a,
+.slide-info a:visited,
+.slide-info a:hover,
+.slide-info a:active {
+    color: #ffffff;
+}
+
+/**
+ * stili della sidebar
+ * ===================
+ * 
+ * 
+ */
+
+/* stile della sidebar */
+.sidebar {
+    background-color: #cccccc;
+    padding: 0px;
+    min-height: 100vh;
+}
+
+/**
+ * stili del main
+ * ==============
+ * 
+ * 
+ */
+
+/* stile del main */
+main {
+    margin-top: 60px!important;
+    padding-bottom: 15px;
+    z-index: 2500;
+}
+
+/**
+ * stili della barra di navigazione principale
+ * ===========================================
+ * 
+ * 
+ */
+
+/* stile della barra di navigazione principale */
+nav {
+    background-color: #cccccc;
+    background-image: url('../img/sfondo.png');
+    background-position: bottom left;
+    background-repeat: no-repeat;
+    padding-top: 45px;
+    width: 100%;
+}
+
+/* stile degli elenchi della barra di navigazione principale */
+nav ul {
+    list-style-type: none;
+    margin: 0px;
+    padding: 0px;
+}
+
+/* stile degli elementi degli elenchi della barra di navigazione principale */
+nav li.nav-item > a.nav-link,
+nav li.nav-item > a.nav-link:visited {
+    color: #333333;
+    font-weight: bold;
+    transition: background-color 100ms linear;
+}
+
+/* stile degli elementi attivi degli elenchi della barra di navigazione principale */
+nav li.nav-item.current > a.nav-link {
+    background-color: #ffffff;
+    text-decoration: underline;
+}
+
+/* stile degli elementi attivi al passaggio del mouse degli elenchi della barra di navigazione principale */
+nav li.nav-item.active > a.nav-link,
+nav li.nav-item > a.nav-link:hover,
+nav li.nav-item > a.nav-link:active {
+    background-color: #ffffff;
+    text-decoration: underline;
+    transition: background-color 100ms linear;
+}
+
+/* stile dei sottomenu della barra di navigazione principale */
+nav ul ul {
+    background-color: #ffffff;
+    padding-left: 1em;
+}
+
+/* stile dei sottomenu di secondo livello della barra di navigazione principale */
+nav ul ul ul {
+    background-color: #ffffff;
+    padding-left: 1em;
+}
+
+/**
+ * stile della navigazione a tab
+ * =============================
+ *
+ *
+ */
+
+/* stile della navigazione a tab */
+.nav-tabs {
+    border-bottom: 1px solid #dddddd;
+    margin-bottom: 10px;
+}
+
+/* stile della navigazione a tab secondaria */
+.nav-tabs-secondary {
+    margin-bottom: 0px;
+    margin-top: 10px;
+}
+
+/* stile degli elementi della navigazione a tab */
+.nav-tabs .nav-item {
+    cursor: pointer;
+}
+
+/* stile dei link degli elementi della navigazione a tab */
+.nav-tabs .nav-item.nav-icon a.nav-link {
+    font-size: 1.55em;
+    padding: .0em .5em;
+}
+
+/* stile dei link degli elementi della navigazione a tab */
+ul.nav-tabs li.nav-item > a.nav-link,
+ul.nav-tabs li.nav-item > a.nav-link:visited {
+    color: #333333;
+    font-weight: bold;
+    background-color: #eeeeee;
+    border-color: #dddddd #dddddd;
+}
+
+/* stile dei link attivi degli elementi della navigazione a tab */
+ul.nav-tabs li.nav-item > a.nav-link.active {
+    border-color: #dddddd #dddddd #ffffff;
+    background-color: #ffffff!important;
+}
+
+/* stile dei link attivi al passaggio del mouse degli elementi della navigazione a tab */
+ul.nav-tabs li.nav-item.active > a.nav-link,
+ul.nav-tabs li.nav-item > a.nav-link:hover,
+ul.nav-tabs li.nav-item > a.nav-link:active {
+    border-color: #dddddd #dddddd #ffffff;
+    color: #333333;
+    font-weight: bold;
+    background-color: #ffffff;
+}
+
+/**
+ * stili dei form
+ * ==============
+ * 
+ * 
+ */
+
+/* stile delle etichette dei campi dei form */
+.label-top {
+    font-size: .8em;
+    color: #777777;
+    position: absolute;
+    top: -0.75em;
+    left: 2.25em;
+    background-color: white;
+    padding: 0em 0.5em;
+    z-index: 3000;
+    border: 1px solid rgba(206,212,218,1);
+    border-image: linear-gradient(to bottom, rgba(206,212,218,0) 25%,rgba(206,212,218,1) 25%,rgba(206,212,218,1) 75%,rgba(206,212,218,0) 75%);
+    border-image-slice: 1;
+    height: auto;
+}
+
+/* stile delle etichette disabilitate dei campi dei form */
+.label-top-disabled {
+    font-size: .8em;
+    color: #666666;
+    position: absolute;
+    top: -0.75em;
+    left: 2.25em;
+    background-color: #e9ecef;
+    padding: 0em 0.5em;
+    z-index: 3000;
+    border-radius: 3px;
+    border: 1px solid rgba(206,212,218,1);
+    border-image: linear-gradient(180deg, rgba(206,212,218,1) 75%, rgba(255,255,255,0) 75%);
+    border-image-slice: 1;
+}
+
+/* stile dei gruppi di campi dei form */
+.form-group {
+    position: relative;
+    padding: 0em .7em 0em .7em;
+}
+
+/* stile delle colonne dei gruppi di campi dei form */
+.form-group .form-col {
+    position: relative;
+    padding: 0em 0.5em 0em 0.5em;
+    margin-bottom: 1.5em;
+}
+
+/* stile delle legend dei form */
+legend {
+    border-bottom: 1px solid #dddddd;
+    font-weight: bold;
+    font-size: 1.2em;
+    margin: 0px;
+    margin-bottom: 1em;
+}
+
+legend .btn-sm {
+    width: 1.95em;
+    height: 1.95em;
+    border-radius: 1.95em;
+    font-size: 0.5em;
+    font-weight: bolder;
+    padding: 0px;
+    padding-top: 2px;
+    margin-bottom: 3px;
+}
+
+/* stile delle tendine dei form */
+select {
+    cursor: pointer;
+}
+
+.form-control,
+.form-select {
+    font-size: 0.9em;
+    height: 31px;
+}
+
+/* stile dei controlli dei form */
+fieldset.form-controls,
+fieldset.form-controls-free {
+    border-top: 1px solid #dddddd;
+    padding-top: 10px;
+    z-index: 5000;
+}
+
+/* stile dei campi di input dei form con focus */
+.form-control:focus,
+.form-select:focus {
+    border-color: #cccccc;
+    box-shadow: inset 0 1px 1px rgba(64, 64, 64, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
+}
+
+/* stile dei bottoni principali dei form */
+.btn-secondary {
+    border: 0px;
+    background-color: #777777 !important;
+}
+
+/* stile dei bottoni principali dei form al passaggio del mouse */
+.btn-secondary.clicked,
+.btn-secondary:hover,
+.btn-secondary:active,
+.btn-secondary:visited {
+    background-color: #555555 !important;
+}
+
+/**
+ * stili delle tabelle delle view
+ * ==============================
+ *
+ *
+ */
+
+/* stile delle tabelle delle view */
+.view-table {
+    width: 100%;
+    font-size: 1em;
+}
+
+/* stile delle intestazioni e delle celle delle tabelle delle view */
+.view-table th,
+.view-table td {
+    min-height: 31px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.view-table th.table-header-static {
+    padding: 0px 15px;
+}
+
+.view-table.view-table-static th, .view-table td {
+    padding: 5px 15px;
+}
+
+.view-table.small-padding th.table-header-static,
+.view-table.small-padding td {
+    padding: 5px;
+}
+
+/* stile dell'hover delle celle delle tabelle delle view */
+.view-table.clickable tbody tr:hover {
+    background-color: #eeeeee;
+    cursor: pointer;
+}
+
+/* stile delle intestazioni delle tabelle delle view */
+.view-table th {
+    border-bottom: 1px solid #cccccc;
+    padding: 0px 5px;
+}
+
+/* stile delle tendine nelle intestazioni delle tabelle delle view */
+.view-table th select {
+    text-align: center;
+}
+
+/* stile dei link nelle celle delle tabelle delle view */
+.view-table td a:active,
+.view-table td a:hover {
+    color: #000000;
+}
+
+/* stile delle righe delle tabelle delle view */
+.view-table tbody tr {
+    border-bottom: 1px solid #eeeeee;
+}
+
+/* stile dell'ultima riga delle tabelle delle view */
+.view-table tbody tr:last-child {
+    border-bottom: 1px solid #cccccc;
+}
+
+.view-table thead tr th select:hover {
+    background-color: #eeeeee;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.view-table thead tr th select {
+    border: 0px;
+    display: block;
+    font-weight: bold;
+    font-size: .9em;
+    padding: 0px 5px;
+    padding-left: 15px;
+}
+
+.view-table thead tr th select.text-left {
+    padding-left: 5px;
+}
+
+
+

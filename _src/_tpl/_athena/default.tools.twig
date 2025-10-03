@@ -1,0 +1,12 @@
+{# LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+
+{# SCHEMA ESTESO #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO MAIN #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+{% include 'inc/metro.twig' %}
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

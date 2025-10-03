@@ -1,0 +1,148 @@
+{# MACRO GENERICHE PER IL TEMPLATE ATHENA
+    Questo file contiene una libreria di macro Twig specificamente legate al template Athena. Si raccomanda di includere sempre
+    la libreria sotto il prefisso tpl. #}
+
+{# controls() - crea la bottoniera di controllo per il piè di pagina
+    Questa macro crea i bottoni per il salvataggio, la cancellazione e la navigazione dei form. #}
+{% macro controls( page, pages, lang, session, table, request, localization, download, short, etc ) %}
+    <!-- macro {{ _self }}::controls() -->
+
+    {# importazione librerie #}
+    {% import '_lib/_form.twig' as frm %}
+    {% import _self as def %}
+
+    {# gestione del backurl #}
+    {% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ lang ] %}{% endif %}
+
+    {# riga dei bottoni #}
+    <div class="row no-gutters d-print-none">
+
+        {# colonna di sinistra - bottone torna indietro #}
+        <div class="col-auto col-md-5 text-start">
+             {# bottone torna indietro #}
+            {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-rotate-left"></i>', 'type': 'button', 'onclick': 'window.open("' ~ back ~ '","_self")' } } ) }}
+        </div>
+
+        {# colonna centrale - bottone elimina #}
+        <div class="col col-md-2 text-center">
+            {% if request[ table ].id and short != 2 %}
+            {{ def.trashButton( table, '', page, pages, '', lang, request, back ) }}
+            {% endif %}
+        </div>
+
+        {# colonna di destra - bottoni di salvataggio e navigazione #}
+        <div class="col-auto col-md-5">
+            <div class="row">
+                <div class="col text-end">
+                    {% if short == 2 %}
+
+                        {# bottone salva e rimani nella pagina attuale #}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
+
+                    {% elseif request.__backurl__ %}
+
+                        {# bottone torna indietro #}
+                        {% if '?' ~ table ~ '[id]' not in session.backurls[ request.__backurl__ ] %}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-circle-left"></i>', 'onclick': 'submitFormOkay = true; $("#backurl").val(""); $("#form-' ~ table ~ '").attr("action", "' ~ session.backurls[ request.__backurl__ ] ~ '");' } } ) }}
+                        {% endif %}
+
+                        {# costruzione della stringa dei preset #}
+                        {% set presets = '' %}{% for fld,val in etc.preset.fields %}{% set presets = presets ~ '&__preset__[' ~ table ~ '][' ~ fld ~ ']=' ~ val %}{% endfor %}
+
+                        {# bottone salva e rimani nella pagina attuale #}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-arrow-circle-down"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
+
+                    {% else %}
+
+                        {# bottone salva e torna indietro #}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-caret-left"></i><i class="fa fa-floppy-disk"></i>', 'type': 'button', 'onclick': '$("#form-' ~ table ~ '").attr("action", "' ~ page.parent.path[ lang ] ~ '"); submitFormOkay = true;$("#form-' ~ table ~ '").submit();' } } ) }}
+
+                        {# bottone salva e rimani nella pagina attuale #}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-floppy-disk"></i>', 'onclick': 'submitFormOkay = true;' } } ) }}
+
+                        {# bottone scarica #}
+                        {% if download %}
+                        {{ frm.button( { 'field': { 'text': '<i class="fa fa-download"></i>', 'onclick': 'window.open("' ~ download ~ '","_self")' } } ) }}
+                        {% endif %}
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {# TODO fare delle funzioni Js qui per l'onclick dei bottoni anziché scriverci dei papiri dentro #}
+{% endmacro %}
+
+{# TODO DOCUMENTARE #}
+{% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback ) %}
+{% import '_lib/_form.twig' as frm %}
+{% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
+{% if not subtable %}
+    {% set submitOk = 'submitFormOkay = true;' %}
+    {% set subtable = table %}
+    {% set class = ' remove-on-duplicate' %}
+{% else %}
+    {% set query = '?' ~ table ~ '[id]=' ~ request[ table ].id %}
+{% endif %}
+{% if r %}
+    {% set id = r.id %}
+{% else %}
+    {% set id = request[ table ].id %}
+{% endif %}
+{% if not back %}{% set back = page.path[ lang ] ~ query ~ backurl %}{% endif %}
+{% if not rollback %}{% set rollback = page.path[ lang ] ~ '?' ~ table ~ '[id]=' ~ request[ table ].id ~ backurl %}{% endif %}
+{{ frm.button( { 'field': { 'text': '<i class="fa fa-trash"></i>', 'type': 'button', 'onclick': submitOk ~ 'window.open("' ~ pages.delete.path[ lang ] ~ '?__delete__[table]=' ~ subtable ~ '&__delete__[id]=' ~ id ~ '&__delete__[target]=' ~ back|replace({'[': "(", ']': ")"}) ~ '&__delete__[rollback]=' ~ rollback|replace({'[': "(", ']': ")"}) ~ '","_self")' } } ) }}
+{% endmacro %}
+
+{# TODO DOCUMENTARE #}
+{% macro subformLegend( subtable, legend, class, disabled ) %}
+<legend>{% if not disabled %}<button class="btn btn-sm btn-secondary d-print-none" type="button" onclick="duplicate('{{ subtable }}');"><i class="fa fa-plus"></i></button> {% endif %}{{ legend }}</legend>
+{% endmacro %}
+
+{% macro uploader( table, subtable, counter, field, placeholder, etc, request, folder, site, edit, pages, lang, required, class, short, hidden, disabled ) %}
+{% if subtable %}
+    {% set pk = request[ table ][ subtable ][ counter ].id %}
+    {% set nm = table ~ '[' ~ subtable ~ '][' ~ counter ~ '][' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ subtable ~ '_' ~ counter ~ '_' ~ field %}
+    {% set ks = request[ table ][ subtable ]|keys %}
+    {% set vl = request[ table ][ subtable ][ ks[ counter ] ][ field ] %}
+{% else %}
+    {% set pk = request[ table ].id %}
+    {% set nm = table ~ '[' ~ field ~ ']' %}
+    {% set id = table ~ '_' ~ field %}
+    {% set vl = request[ table ][ field ] %}
+{% endif %}
+{% if not folder %}
+    {% if vl %}
+	{% set folder = vl|replace({ (vl|split('/')|last) : '' }) %}
+    {% else %}
+	{% set folder = 'var/contenuti/' %}
+    {% endif %}
+{% endif %}
+<div class="row form-row">
+    <input type="hidden" name="{{ nm }}" id="{{ id }}" value="{{ vl }}" {% if disabled and not pk %}disabled{% endif %}/>
+    <div class="col-auto text-left {{ class }}">
+	{% if vl %}
+	<button title="apri il file in una nuova pagina" class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ site.root }}{{ vl|replace({ ( constant("DIR_BASE") ) : ( site.url[ lang ] ) }) }}','_blank');"><i class="fa fa-external-link"></i></button>
+	{% if edit %}
+    {% if request[ table ][ subtable ][ ks[ counter ] ].id %}
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ pages[ edit ].path[ lang ] }}?{{ subtable }}[id]={{ request[ table ][ subtable ][ ks[ counter ] ].id }}','_blank');"><i class="fa fa-pencil"></i></button>
+    {% endif %}
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="$(this).metroWs('/task/bookmark.add?__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][path]={{ vl }}&__work__[mailattach][items][{{ table ~ '-' ~ request[ table ][ subtable ][ ks[ counter ] ].id }}][label]={{ vl|split("/")|last }}', aggiornaBookmarks );"><i class="fa fa-bookmark-o"></i></button>
+	{% endif %}
+    {% endif %}
+	{% if not hidden %}
+	<input type="file" style="display: none;" class="form-control-file-sm form-control-sm ajax-uploader" name="__{{ id }}_uploader__" id="{{ id }}_uploader" placeholder="{{ label }}" uploader-folder="{{ folder }}" uploader-field="{{ id }}" small>
+	<button title="seleziona il file"  class="btn btn-secondary btn-sm btn-sqr show-on-duplicate" type="button" onclick="$(this).prev('input').trigger('click');"><i class="fa fa-folder-open"></i></button>
+    <button class="btn btn-sm btn-secondary btn-sqr btn-spin hide-on-duplicate" style="display:none;" disabled=""><i class="fa fa-circle-o-notch fa-spin fa-fw"></i></button>
+	{% endif %}
+    </div>
+    {% if vl %}
+    {% if not short %}
+    <div class="col col-form-label remove-on-duplicate text-left" style="overflow: hidden;">
+	{{ vl|split("/")|last }}
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endmacro %}

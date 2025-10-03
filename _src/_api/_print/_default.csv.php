@@ -1,11 +1,23 @@
 <?php
 
-    // inclusione del framework
+	/**
+	 * 
+	 * 
+	 * 
+	 * 
+	 * 
+	 * TODO documentare
+	 * 
+	 * 
+	 */
+
+
+	// inclusione del framework
 	require '../../_config.php';
 
     // inclusione di PHPExcel
-	use PhpOffice\PhpSpreadsheet\Spreadsheet;
-	use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+	// use PhpOffice\PhpSpreadsheet\Spreadsheet;
+	// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 	// debug
 	// die( 'contenuto: '.print_r( $_REQUEST, true ) );

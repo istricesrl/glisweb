@@ -14,8 +14,8 @@
     $l = 'it-IT';
 
     /**
-     * pagine di servizio
-     * ==================
+     * pagine di cancellazione
+     * =======================
      * 
      * 
      * 
@@ -27,7 +27,7 @@
         'title'         => array( $l        => 'cancellazione' ),
         'h1'            => array( $l        => 'cancellazione' ),
         'parent'        => array( 'id'      => NULL ),
-        'template'      => array( 'path'    => '_src/_templates/_athena/', 'schema' => 'delete.html' ),
+        'template'      => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'delete.twig' ),
         'macro'         => array( '_src/_inc/_macro/_delete.php' ),
         'auth'          => array( 'groups'  => array( 'roots', 'staff' ) )
     );

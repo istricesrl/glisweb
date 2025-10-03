@@ -24,6 +24,8 @@
      *
      * TODO i cookie di Google reCAPTCHA sono cookie tecnici o di profilazione?
      * 
+     * TODO documentare
+     * 
      *
      */
 

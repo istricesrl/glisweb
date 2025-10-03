@@ -917,6 +917,8 @@
                 // print_r( $ct['page']['template']['path'] );
                 // print_r( $ct['page']['template']['paths'] );
                 // die( $ct['page']['template']['path'] );
+                // die( DIR_MOD_ATTIVI . $ct['page']['template']['path'] );
+                // die( print_r( array_unique( glob( glob2custom( DIR_MOD_ATTIVI . $ct['page']['template']['path'] ), GLOB_BRACE ) ), true ) );
 
                 // altri file da includere
                 $ct['page']['template']['paths'] = array_replace_recursive(

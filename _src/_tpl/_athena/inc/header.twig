@@ -1,0 +1,85 @@
+{# LIBRERIE #}
+{% import '_lib/_navigation.twig' as nav %}
+{% import '_lib/_form.twig' as frm %}
+
+<!-- file {{ _self }} -->
+<div class="container-fluid">
+    <div class="row">
+
+        {# BRICIOLE DI PANE #}
+        <div class="col d-none d-md-flex justify-content-left align-items-center elliptic">
+            <ol class="breadcrumbs">{{ nav.breadcrumbs( page.template.breadcrumbs, localization.language.ietf ) }}</ol>
+        </div>
+
+        {# WIDGET #}
+        <div class="col-12 col-md-auto d-print-none">
+            <div class="row">
+
+                {# ALERTS #}
+                {% if debug.alert %}
+                <div id="widget-alert" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-alert" onclick="$('.slide-info').not('#alert').slideUp(400,'swing');$('#alert').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-alert').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-bell" aria-hidden="true"></i><span class="alert-number">{{ debug.alert|length }}</span></button>
+                </div>
+                {% endif %}
+
+                {# CONTROLLO SCADENZA SESSIONE #}
+                <div id="widget-session" class="widget col-auto p-0 hidden">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="getws('/report/session.status?renew=1');$(this).parent().fadeOut();" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="sessione in scadenza"><i class="fa fa-clock-o" aria-hidden="true"></i></button>
+                </div>
+
+                {# JOB IN FOREGROUND #}
+                {% if jobs.foreground|length > 0 %}
+                <div id="widget-docs" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-jobs" onclick="$('.slide-info').not('#jobs').slideUp(400,'swing');$('#jobs').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-jobs').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-cog" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                {# ELEMENTI NEL CARRELLO #}
+                <div id="widget-cart" class="widget col-auto p-0" {% if not session.carrello.articoli %}style="display: none;"{% endif %}>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-cart" onclick="$('.slide-info').not('#cart').slideUp(400,'swing');$('#cart').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-cart').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="carrello"><i class="fa fa-shopping-cart" aria-hidden="true"></i></button>
+                </div>
+
+                {# BOOKMARKS #}
+                <div id="widget-bookmarks" class="widget col-auto p-0" {% if not session.__work__ %}style="display: none;"{% endif %}>
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-bookmarks" onclick="$('.slide-info').not('#bookmarks').slideUp(400,'swing');$('#bookmarks').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-bookmarks').removeClass('clicked');$(this).toggleClass('clicked');" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="bookmarks"><i class="fa fa-bookmark" aria-hidden="true"></i></button>
+                </div>
+
+                {# ASSISTENZA #}
+                {% if common.helpdesk %}
+                <div id="widget-docs" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.helpdesk.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via ticket"><i class="fa fa-ticket" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                {# DOCUMENTAZIONE #}
+                {% if common.docs.custom %}
+                <div id="widget-docs" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ common.docs.custom.html.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="manuale utente"><i class="fa fa-question-circle" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                {# CHAT DI ASSISTENZA SU SLACK #}
+                {% if slack.profile.channel.url %}
+                <div id="widget-slack" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm" onclick="window.open( '{{ slack.profile.channel.url }}', '_blank' );" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="assistenza via chat"><i class="fa fa-slack" aria-hidden="true"></i></button>
+                </div>
+                {% endif %}
+
+                {# INFORMAZIONI SUL SISTEMA #}
+                <div id="widget-info" class="widget col-auto p-0">
+                    <button type="button" class="btn btn-secondary btn-sqr btn-sm btn-slider" id="btn-slider-info" onclick="$('.slide-info').not('#info').slideUp(400,'swing');$('#info').slideToggle(400,'swing');$('.btn-slider').not('#btn-slider-info').removeClass('clicked');$(this).toggleClass('clicked');"><i class="fa fa-info-circle" aria-hidden="true"></i></button>
+                </div>
+
+                {# LOGOUT #}
+                {% if session.account.username %}
+                <form class="col-auto p-0 widget" id="form-logout" action="{{ page.path[ localization.language.ietf ] }}" method="post">
+                    <input type="hidden" name="__logout__" value="1">
+                    <button type="submit" class="btn btn-secondary btn-sqr btn-sm" data-toggle="tooltip" data-placement="bottom" data-delay="1000" title="logout"><i class="fa fa-sign-out"></i></button>
+                </form>
+                {% endif %}
+
+            </div>
+        </div>
+    </div>
+</div>
+<!-- fine file {{ _self }} -->
