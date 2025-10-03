@@ -97,3 +97,15 @@
         }
 
     }
+
+    // TODO implementare
+    function emptyAttivitaViewStatic() {
+
+        global $cf;
+
+        return mysqlQuery(
+            $cf['mysql']['connection'],
+            'TRUNCATE attivita_view_static'
+        );
+
+    }

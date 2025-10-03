@@ -65,8 +65,24 @@
 		'lws' => '/task/0200.attivita/attivita.view.static.popolazione',
 		'icon' => NULL,
 		'fa' => 'fa-refresh',
-		'title' => 'ripopola attivita view static',
+		'title' => 'ripopola attività view static',
 		'text' => 'ripopola la view static delle attività'
+	);
+
+	$ct['page']['contents']['metro']['05.static'][] = array(
+		'ws' => '/task/0200.attivita/attivita.view.static.pulizia',
+		'icon' => NULL,
+		'fa' => 'fa-refresh',
+		'title' => 'pulizia attività view static',
+		'text' => 'pulisce la view static delle attività'
+	);
+
+	$ct['page']['contents']['metro']['05.static'][] = array(
+		'ws' => '/task/0200.attivita/attivita.view.static.svuotamento',
+		'icon' => NULL,
+		'fa' => 'fa-trash',
+		'title' => 'svuotamento attività view static',
+		'text' => 'svuota la view static delle attività'
 	);
 
     // tendina mesi

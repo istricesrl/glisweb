@@ -25,6 +25,8 @@
                 ( attivita_view_static.timestamp_inserimento IS NULL OR attivita.timestamp_inserimento > attivita_view_static.timestamp_inserimento )
                 OR
                 ( attivita_view_static.timestamp_aggiornamento IS NULL OR attivita.timestamp_aggiornamento > attivita_view_static.timestamp_aggiornamento )
+                -- OR
+                -- ( greatest( coalesce( attivita.timestamp_inserimento, 0 ), coalesce( attivita.timestamp_aggiornamento, 0 ) ) < unix_timestamp() - 86400 )
 			ORDER BY attivita.id DESC
 			LIMIT 1'
 		);
