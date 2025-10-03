@@ -42,6 +42,8 @@
         // var_dump( $idArticolo );
         // var_dump( $idMatricola );
 
+ini_set('display_errors', 1); ini_set('display_startup_errors', 1); error_reporting(E_ALL);
+
         $mastri = array();
 
         do {
@@ -260,7 +262,7 @@
             $riga['peso'] = $riga['totale'] * $articolo['peso'];
 
             $riga['__label__'] = trim(
-                $riga['categorie'] . ' ' .
+                ( $riga['categorie'] ?? '' ) . ' ' .
                 $riga['articolo'] . ' ' .
                 ( ( ! empty( $riga['matricola'] ) ) ? 'matr. ' . $riga['matricola'] . ' ' : NULL ) .
                 ( ( ! empty( $riga['data_scadenza'] ) ) ? 'scad. ' . $riga['data_scadenza'] . ' ' : NULL ) .
