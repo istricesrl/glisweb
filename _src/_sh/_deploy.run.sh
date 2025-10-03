@@ -281,8 +281,17 @@ else
             ## host di destinazione
             if [ -n "$DST_HOST" -a -n "$SSH_USER" -a -n "$SSH_PRIVATE" -a -n "$SSH_PUBLIC" ]; then
 
+                # porta di destinazione
+                if [ -n "$DST_PORT" ]; then
+                    RPORT="--port=$DST_PORT"
+                    SPORT="-p $DST_PORT"
+                else
+                    RPORT=""
+                    SPORT=""
+                fi
+
                 # comando
-                CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_backup.run.sh"
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_backup.run.sh"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -295,7 +304,7 @@ else
                 # $CMD
 
                 # comando
-                CMD="rsync $EXCLUDE -avuz --checksum --delete -e ssh $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
+                CMD="rsync $EXCLUDE -avuz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -305,10 +314,10 @@ else
                 echo "comando: $CMD"
 
                 # deploy
-                $CMD >> ../DEPLOY.md
+                rsync $EXCLUDE -avuz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> ../DEPLOY.md
 
                 # comando per composer update
-                CMD="ssh -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_composer.update.sh --hard"
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_composer.update.sh --hard"
 
                 # registro dei deploy
                 echo >> ../DEPLOY.md
