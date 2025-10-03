@@ -18,13 +18,25 @@
         $_SESSION['carrello'] = mysqlSelectRow(
             $cf['mysql']['connection'],
 // OK            'SELECT * FROM carrelli WHERE id = ? AND timestamp_inserimento = ? AND ( timestamp_checkout IS NULL OR timestamp_checkout = ? ) AND timestamp_pagamento IS NULL',
-            'SELECT * FROM carrelli WHERE id = ? AND timestamp_inserimento = ? AND ( timestamp_checkout IS NULL OR timestamp_checkout = ? )',
+//            'SELECT * FROM carrelli WHERE id = ? AND timestamp_inserimento = ? AND ( timestamp_checkout IS NULL OR timestamp_checkout = ? )',
+            'SELECT * FROM carrelli WHERE id = ? AND timestamp_inserimento = ?',
             array(
                 array( 's' => $_REQUEST['rc'] ) ,
                 array( 's' => $timestamp ),
-                array( 's' => $checkout )
+//                array( 's' => $checkout )
             )
         );
+
+        $metadati = mysqlQuery( $cf['mysql']['connection'],
+            'SELECT * FROM metadati WHERE id_carrello = ?',
+            array(
+                array( 's' => $_SESSION['carrello']['id'] )
+            )
+        );
+
+        foreach( $metadati as $meta ) {
+            $_SESSION['carrello']['metadati'][ $meta['nome'] ] = $meta['testo'];
+        }
 
         $_SESSION['carrello']['timestamp_checkout'] = NULL;
 
