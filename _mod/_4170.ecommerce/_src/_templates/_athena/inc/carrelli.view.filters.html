@@ -1,5 +1,15 @@
 <div class="form-row view-filters d-print-none">
 
+	<div class="col-4 col-md-auto">
+		<span class="label-top">sito</span>
+		<select name="__view__[{{ view.id }}][__filters__][id_sito][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
+			<option value="" {% if request.__view__[ view.id ].__filters__.id_sito.EQ == "" %}selected{% endif %}>tutti</option>
+			{% for t in etc.select.siti %}
+			<option value="{{ t.id }}" {% if request.__view__[ view.id ].__filters__.id_sito.EQ == t.id %}selected{% endif %}>{{ t.__label__ }}</option>
+			{% endfor %}
+		</select>
+	</div>
+
 	<div class="col-12 col-md-auto">
 		<span class="label-top">conferma</span>
 		<select name="__view__[{{ view.id }}][__filters__][timestamp_checkout][NL]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">

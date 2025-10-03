@@ -165,6 +165,9 @@
 
             }
 
+            $_SESSION['carrello']['id_sito'] = $cf['site']['id'];
+
+
             // debug
             // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
             // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';

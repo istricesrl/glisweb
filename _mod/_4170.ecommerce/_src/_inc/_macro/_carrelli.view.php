@@ -37,6 +37,9 @@
 #	    'gruppi' 	=> 'text-left'
 	);
 
+    // tendina siti
+    $ct['etc']['select']['siti'] = $cf['sites'];
+
     // inclusione filtri speciali
 	$ct['etc']['include']['filters'] = 'inc/carrelli.view.filters.html';
 
@@ -56,4 +59,16 @@
             }
             $row['prezzo_lordo_finale'] = writeCurrency( $row['prezzo_lordo_finale'] );
         }
+
+        if( is_array( $row ) ) {
+            if( ! empty( $row['id_sito'] ) ) {
+                if( isset( $cf['sites'][ $row['id_sito'] ] ) )
+                    $row['id_sito'] = $cf['sites'][ $row['id_sito'] ]['__label__'];
+                else
+                    $row['id_sito'] = 'Sito non definito';
+            } else {
+                $row['id_sito'] = 'Nessun sito';
+            }
+        }
+
 	}
