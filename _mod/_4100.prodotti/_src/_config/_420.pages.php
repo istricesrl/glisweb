@@ -68,6 +68,7 @@
 
         }
 
+        if( isset( $ct['etc']['selettore']['taglie'] ) )
         foreach( $ct['etc']['selettore']['taglie'] as $id_taglia => &$taglia ) {
             $taglia['dettagli'] = mysqlSelectRow(
                 $cf['mysql']['connection'],
@@ -76,6 +77,7 @@
             );
         }
 
+        if( isset( $ct['etc']['selettore']['colori'] ) )
         foreach( $ct['etc']['selettore']['colori'] as $id_colore => &$colore ) {
             $colore['dettagli'] = mysqlSelectRow(
                 $cf['mysql']['connection'],
