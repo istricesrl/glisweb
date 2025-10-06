@@ -1,5 +1,15 @@
 <?php
 
+    /** 
+     * 
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     * 
+     */
+
     // lingua di questo file
 	$l = 'it-IT';
 
