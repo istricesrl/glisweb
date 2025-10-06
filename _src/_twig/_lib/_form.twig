@@ -564,8 +564,8 @@
         {% if vl or ( default and not df ) %}checked{% endif %}>
 
     {# label del checkbox #}
-    {% if placeholder %}
-    <label class="form-check-label text-left" for="{{ id }}">{{ placeholder }}</label>
+    {% if field.placeholder %}
+    <label class="form-check-label text-left" for="{{ id }}">{{ field.placeholder }}</label>
     {% endif %}
 
 {% endmacro checkbox %}

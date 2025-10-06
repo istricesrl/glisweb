@@ -407,6 +407,18 @@ fieldset.form-controls-free {
     background-color: #555555 !important;
 }
 
+label.form-check-label {
+    font-size: .9em;
+}
+
+label.form-check-label {
+    height: auto;
+}
+
+.form-check {
+    margin-top: .5em;
+}
+
 /**
  * stili delle tabelle delle view
  * ==============================

@@ -182,6 +182,15 @@
 						{{ frm.checkbox( table, subtable, etc.sub.prenotabile_online.idx, 'testo', 'prenotabile online', '', '', etc.sub.prenotabile_online.testo ) }}
 					</div>
 				</div>
+				<div class="col-4 col-md-auto col-form-label">
+					<div class="form-check">
+						{% set subtable = 'metadati' %}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'id', '', '', '', etc.sub.non_applicare_sconti.id, 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'id_progetto', '', '', '', '__parent_id__', 'hidden' ) }}
+						{{ frm.input( table, subtable, etc.sub.non_applicare_sconti.idx, 'nome', '', '', '', etc.sub.non_applicare_sconti.nome, 'hidden' ) }}
+						{{ frm.checkbox( table, subtable, etc.sub.non_applicare_sconti.idx, 'testo', 'non scontabile', '', '', etc.sub.non_applicare_sconti.testo ) }}
+					</div>
+				</div>
 			</div>
 
 		</fieldset>
