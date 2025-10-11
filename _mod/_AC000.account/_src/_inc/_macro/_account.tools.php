@@ -19,6 +19,9 @@
 		),
 	    '03.elaborazioni' => array(
 			'label' => 'elaborazioni'
+		),
+	    '05.static' => array(
+			'label' => 'viste statiche'
 		)
 	);
 

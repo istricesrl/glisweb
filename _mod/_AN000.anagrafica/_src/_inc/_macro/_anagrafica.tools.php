@@ -25,6 +25,14 @@
 		)
 	);
 
+    $ct['page']['contents']['metro']['05.static'][] = array(
+        'lws' => '/task/AN000.anagrafica/anagrafica.view.static.popolazione',
+        'icon' => NULL,
+        'fa' => 'fa-refresh',
+        'title' => 'ripopola anagrafica view static',
+        'text' => 'ripopola la view static delle anagrafiche'
+    );
+
 /* TODO reimplementare
 
     // esportazione contatti anagrafica

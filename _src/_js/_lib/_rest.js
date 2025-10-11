@@ -146,8 +146,8 @@
 				request.open( 'GET', ws, true );
 				request.onload = function () {
 				  var data = JSON.parse( this.response );
-				  console.log( data );
-				  if( data.aggiornare != null ) {
+				  console.log( data.aggiornare['id'] );
+				  if( data.aggiornare['id'] != null && data.done != true ) {
 					$.fn.metroLoopWs( ws, callback, icon, el, count+1 );
 				  } else {
 					el.find('.media-left').first().html( icon );

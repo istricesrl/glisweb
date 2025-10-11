@@ -43,7 +43,7 @@
 	$status = array();
 
 	// ...
-	if( ! isset( $_REQUEST['idAnagrafica'] ) ) {
+	if( ! isset( $_REQUEST['id'] ) ) {
 
 		// trovo una riga da aggiornare
 		$status['aggiornare'] = mysqlSelectRow(
@@ -91,11 +91,12 @@
 
         }
 
-    } elseif( isset( $_REQUEST['idAnagrafica'] ) ) {
+    } elseif( isset( $_REQUEST['id'] ) ) {
 
         // scrivo la riga
-        $status['aggiornare']['id'] = $_REQUEST['idAnagrafica'];
+        $status['aggiornare']['id'] = $_REQUEST['id'];
         $status['modalita'] = 'forzata';
+        $status['done'] = true;
 
 	}
 

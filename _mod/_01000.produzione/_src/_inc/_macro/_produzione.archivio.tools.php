@@ -19,6 +19,18 @@
 		),
 	    '03.elaborazioni' => array(
 			'label' => 'elaborazioni'
+		),
+	    '05.static' => array(
+			'label' => 'viste statiche'
 		)
 	);
 
+    if( in_array( "AT000.attivita", $cf['mods']['active']['array'] ) ) {
+        $ct['page']['contents']['metro']['05.static'][] = array(
+            'lws' => '/task/AT000.attivita/attivita.view.static.popolazione',
+            'icon' => NULL,
+            'fa' => 'fa-refresh',
+            'title' => 'ripopola attivita view static',
+            'text' => 'ripopola la view static delle attivita'
+        );
+    }
