@@ -20,7 +20,13 @@
         'table' => 'attivita',
         'open' => array(
             'page' => 'produzione.archivio.attivita.form',
-            'table' => 'attivita'
+            'table' => 'attivita',
+            'preset' => array(
+                'field' => 'id_cliente',
+            )
+        ),
+        'insert' => array(
+            'page' => 'produzione.archivio.attivita.form',
         ),
         'cols' => array(
             'id' => '#',
@@ -58,6 +64,27 @@
             '__label__' => 'ASC'
         ),
     );
+
+    // configurazione pagina
+    $ct['etc'] = array(
+        'include' => array(
+            'insert' => array(
+                array(
+                    'name' => 'insert',
+                    'file' => 'inc/anagrafica.form.attivita.insert.twig',
+                    'fa' => 'fa-plus-circle'
+                ),
+                array(
+                    'name' => 'insert_memo',
+                    'file' => 'inc/anagrafica.form.attivita.insert.promemoria.twig',
+                    'fa' => 'fa-calendar-plus'
+                )
+            )
+        )
+    );
+
+    // tendina tipologie attivita
+    $ct['etc']['select']['tipologie_attivita'] = tendinaTipologieAttivita();
 
     // gestione default
     require DIR_SRC_INC_MACRO . '_default/_default.view.php';

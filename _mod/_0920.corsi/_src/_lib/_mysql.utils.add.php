@@ -73,6 +73,14 @@
             array( array( 's' => $idCorso ) )
         );
 
+        $riga['id_discipline'] = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT group_concat( DISTINCT if( f.id_categoria, f.id_categoria, null ) SEPARATOR " | " ) 
+            FROM progetti_categorie AS f INNER JOIN categorie_progetti AS c ON c.id = f.id_categoria 
+            WHERE f.id_progetto = ? AND c.se_disciplina = 1 GROUP BY f.id_progetto',
+            array( array( 's' => $idCorso ) )
+        );
+
         $riga['livelli'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT group_concat( DISTINCT if( f.id, categorie_progetti_path( f.id_categoria ), null ) SEPARATOR " | " ) 
