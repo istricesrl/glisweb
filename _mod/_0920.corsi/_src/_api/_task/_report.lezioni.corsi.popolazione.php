@@ -28,6 +28,8 @@
                         coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento 
                         OR
                         coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) IS NULL
+                        OR
+                        coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) < from_unixtime( unix_timestamp() - 86400 * 7 )
                     )
                 )
 			    OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL

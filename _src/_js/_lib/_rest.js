@@ -140,7 +140,7 @@
 				if( el == null ) {
 					el = this;
 					var icon = el.find('.media-left').first().html();
-					el.find('.media-left').first().html('<i class="fa fa-circle-o-notch fa-spin">');
+					el.find('.media-left').first().html('<i class="fa fa-circle-notch fa-spin">');
 				}
 				var request = new XMLHttpRequest();
 				request.open( 'GET', ws, true );

@@ -124,7 +124,7 @@
         $cf['mysql']['connection'],
         'SELECT id_coupon FROM carrelli_articoli WHERE id_carrello = ? AND id_coupon IS NOT NULL',
         array(
-            array( 's' => $cf['session']['carrello']['id'] )
+            array( 's' => $cf['session']['carrello']['id'] ?? NULL )
         )
     );
 

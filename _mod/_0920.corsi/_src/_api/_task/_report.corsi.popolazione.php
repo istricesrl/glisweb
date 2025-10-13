@@ -25,6 +25,8 @@
                 ( __report_corsi__.timestamp_inserimento IS NULL OR progetti.timestamp_inserimento > __report_corsi__.timestamp_inserimento )
                 OR
                 ( __report_corsi__.timestamp_aggiornamento IS NULL OR progetti.timestamp_aggiornamento > __report_corsi__.timestamp_aggiornamento )
+                OR
+                ( __report_corsi__.timestamp_aggiornamento < from_unixtime( unix_timestamp() - 86400 * 7 ) )
 			ORDER BY progetti.id DESC
 			LIMIT 1'
 		);
