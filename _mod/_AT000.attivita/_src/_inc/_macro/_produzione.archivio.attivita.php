@@ -27,7 +27,7 @@
 	$ct['view'] = array(
         'table' => 'attivita',
         'open' => array(
-            'page' => 'produzione.archivio.attivita.form',
+            'page' => 'produzione.attivita.form',
             'table' => 'attivita'
         ),
         'cols' => array(

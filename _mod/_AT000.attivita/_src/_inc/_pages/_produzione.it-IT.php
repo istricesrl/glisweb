@@ -16,46 +16,88 @@
     // modulo di questo file
 	$m = DIR_MOD . '_AT000.attivita/';
 
-	// RELAZIONI CON IL MODULO PRODUZIONE
+	/* RELAZIONI CON IL MODULO PRODUZIONE
 	if( in_array( "01000.produzione", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'produzione.archivio', $p['produzione.archivio']['etc']['tabs'], 'produzione.archivio.attivita' );
-	}
+		arrayInsertSeq( 'produzione', $p['produzione']['etc']['tabs'], 'produzione.attivita' );
+		arrayInsertSeq( 'produzione.attivita', $p['produzione']['etc']['tabs'], 'produzione.tipologie.attivita' );
+	}*/
 
     // tools archivio produzione
-	$p['produzione.archivio.attivita'] = array(
+	$p['produzione.attivita.view'] = array(
 		'sitemap'			=> false,
-	    'title'				=> array( $l		=> 'produzione archivio attivita' ),
+	    'title'				=> array( $l		=> 'produzione attivita' ),
 	    'h1'				=> array( $l		=> 'attivita' ),
-	    'parent'			=> array( 'id'		=> 'produzione.archivio' ),
+	    'parent'			=> array( 'id'		=> 'produzione' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.archivio.attivita.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.attivita.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> 'produzione.archivio' )
+	    'etc'				=> array( 'tabs'	=> array(	'produzione.attivita.view',
+                                                            'produzione.tipologie.attivita.view',
+															'produzione.attivita.tools' ) ),
+	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attivita' ),
+																			'priority'	=> '600' ) ) )
 	);
 
     // tools archivio produzione
-	$p['produzione.archivio.attivita.form'] = array(
+	$p['produzione.tipologie.attivita.view'] = array(
 		'sitemap'			=> false,
-	    'title'				=> array( $l		=> 'produzione archivio attivita form' ),
-	    'h1'				=> array( $l		=> 'gestione' ),
-	    'parent'			=> array( 'id'		=> 'produzione.archivio.attivita' ),
-	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'produzione.archivio.attivita.form.twig' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.archivio.attivita.form.php' ),
+	    'title'				=> array( $l		=> 'tipologie attivita' ),
+	    'h1'				=> array( $l		=> 'tipologie' ),
+	    'parent'			=> array( 'id'		=> 'produzione.attivita' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> array(	'produzione.archivio.attivita.form',
-															'produzione.archivio.attivita.form.tools' ) )
+	    'etc'				=> array( 'tabs'	=> 'produzione.attivita.view' )
 	);
 
     // tools archivio produzione
-	$p['produzione.archivio.attivita.form.tools'] = array(
+	$p['produzione.attivita.tools'] = array(
 		'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
-	    'title'				=> array( $l		=> 'azioni produzione archivio attivita form' ),
+	    'title'				=> array( $l		=> 'azioni produzione attivita' ),
 	    'h1'				=> array( $l		=> 'azioni' ),
-	    'parent'			=> array( 'id'		=> 'produzione.archivio.attivita' ),
+	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.archivio.attivita.form.tools.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.attivita.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> array(	'produzione.archivio.attivita.form',
-															'produzione.archivio.attivita.form.tools' ) )
+	    'etc'				=> array( 'tabs'	=> 'produzione.attivita.view' )
 	);
+
+    // tools archivio produzione
+	$p['produzione.attivita.form'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'produzione attivita form' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'produzione.attivita.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.attivita.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'produzione.attivita.form',
+															'produzione.attivita.form.tools' ) )
+	);
+
+    // tools archivio produzione
+	$p['produzione.attivita.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni produzione attivita form' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.attivita.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'produzione.attivita.form' )
+	);
+
+    // tools archivio produzione
+	$p['produzione.tipologie.attivita'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'produzione tipologie attivita' ),
+	    'h1'				=> array( $l		=> 'tipologie attivita' ),
+	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'produzione.attivita.view' )
+	);
+

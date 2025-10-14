@@ -550,7 +550,7 @@
 
     {# campo hidden per il valore reale del campo #}
     <input type="hidden"
-        {% if disabled %}disabled{% endif %}
+        {% if field.disabled %}disabled{% endif %}
         name="{{ nm }}"
         id="{{ id }}"
         class=""
@@ -559,7 +559,7 @@
 
     {# campo checkbox visibile #}
     <input type="checkbox"
-        {% if disabled %}disabled{% endif %}
+        {% if field.disabled %}disabled{% endif %}
         class="form-check-input {{ class }}"
         {% if vl or ( default and not df ) %}checked{% endif %}>
 
@@ -569,3 +569,153 @@
     {% endif %}
 
 {% endmacro checkbox %}
+
+{# checkbox() - crea un campo HTML checkbox
+    Questa macro generica crea un campo HTML checkbox; fa anche da base ad altre funzioni più specifiche e complesse
+    TODO documentare tutte le chiavi e le sotto chiavi possibili dell'array options #}
+{% macro uploader( options ) %}
+
+    {# valori di default #}
+    {% set options = {
+        'form': [],
+        'field': [],
+        'tooltip': [],
+        'request': [],
+        'destination': [],
+        'page': [],
+        'pages': [],
+        'site': [],
+    }|merge( options ) %}
+
+    {# valori di default per l'array form #}
+    {% set form = {
+        'table': '',
+        'subtable': '',
+        'counter': '',
+        'step': ''
+    }|merge( options.form ) %}
+
+    {# valori di default per l'array field #}
+    {% set field = {
+        'default': '',
+        'disabled': '',
+        'class': 'form-control form-control-sm',
+        'placeholder': '',
+        'pattern': '',
+        'required': '',
+        'autofocus': ''
+    }|merge( options.field ) %}
+
+    {# valori di default per l'array tooltip #}
+    {% set tooltip = {
+        'delay': '1000',
+        'placement': 'bottom'
+    }|merge( options.tooltip ) %}
+
+    {# valori di default per l'array request #}
+    {% set destination = {
+        'folder': 'var/contenuti/'
+    }|merge( options.destination ) %}
+
+    {# valori di default per l'array request #}
+    {% set request = {
+    }|merge( options.request ) %}
+
+    {# valori di default per l'array page #}
+    {% set page = {
+    }|merge( options.page ) %}
+
+    {# valori di default per l'array pages #}
+    {% set pages = {
+    }|merge( options.pages ) %}
+
+    {# valori di default per l'array site #}
+    {% set site = {
+    }|merge( options.site ) %}
+
+    {# calcolo valori di base #}
+    {% if form.subtable and form.counter != '' %}
+        {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
+        {% set ks = request[ form.table ][ form.subtable ]|keys %}
+        {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
+    {% elseif form.subtable %}
+        {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ form.subtable ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
+    {% elseif form.counter %}
+        {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ form.counter ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ form.counter ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ field.name ] %}
+    {% else %}
+        {% set nm = form.table ~ '[' ~ field.name ~ ']' %}
+        {% set id = form.table ~ '_' ~ field.name %}
+        {% set vl = request[ form.table ][ field.name ] %}
+        {% set pr = request.__preset__[ form.table ][ field.name ] %}
+    {% endif %}
+
+    {# valore di default o preset #}
+    {% if not vl and pr %}
+        {% set vl = pr %}
+    {% elseif not vl and field.default %}
+        {% set vl = field.default %}
+    {% endif %}
+
+
+
+
+<div class="row form-row">
+
+
+    {# campo hidden per il valore reale del campo #}
+    <input type="hidden"
+        {% if field.disabled %}disabled{% endif %}
+        name="{{ nm }}"
+        id="{{ id }}"
+        class=""
+        {% if default %} default="{{ default }}"{% endif %} 
+        value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
+
+
+
+
+    <div class="col-auto text-left {{ class }}">
+	{% if vl %}
+	<button title="apri il file in una nuova pagina" class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ site.root }}{{ vl|replace({ ( constant("DIR_BASE") ) : ( site.url[ lang ] ) }) }}','_blank');"><i class="fa fa-external-link"></i></button>
+	{% if edit %}
+    {% if request[ form.table ][ subtable ][ ks[ counter ] ].id %}
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="window.open('{{ pages[ edit ].path[ lang ] }}?{{ subtable }}[id]={{ request[ form.table ][ subtable ][ ks[ counter ] ].id }}','_blank');"><i class="fa fa-pencil"></i></button>
+    {% endif %}
+	<button class="btn btn-secondary btn-sm btn-sqr remove-on-duplicate" type="button" onclick="$(this).metroWs('/task/bookmark.add?__work__[mailattach][items][{{ table ~ '-' ~ request[ form.table ][ subtable ][ ks[ counter ] ].id }}][path]={{ vl }}&__work__[mailattach][items][{{ table ~ '-' ~ request[ form.table ][ subtable ][ ks[ counter ] ].id }}][label]={{ vl|split("/")|last }}', aggiornaBookmarks );"><i class="fa fa-bookmark-o"></i></button>
+	{% endif %}
+    {% endif %}
+	{% if not hidden %}
+	<input type="file" style="display: none;" class="form-control-file-sm form-control-sm ajax-uploader" name="__{{ id }}_uploader__" id="{{ id }}_uploader" placeholder="{{ label }}" uploader-folder="{{ destination.folder }}" uploader-field="{{ id }}" small>
+	<button title="seleziona il file"  class="btn btn-secondary btn-sm btn-sqr show-on-duplicate" type="button" onclick="$(this).prev('input').trigger('click');"><i class="fa fa-folder-open"></i></button>
+    <button class="btn btn-sm btn-secondary btn-sqr btn-spin hide-on-duplicate" style="display:none;" disabled=""><i class="fa fa-circle-notch fa-spin fa-fw"></i></button>
+	{% endif %}
+    </div>
+    {% if vl %}
+    {% if not short %}
+    <!-- <div class="col col-form-label remove-on-duplicate text-left" style="overflow: hidden;">
+	{# vl|split("/")|last #}
+    </div> -->
+    {% endif %}
+    {% endif %}
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+{% endmacro uploader %}

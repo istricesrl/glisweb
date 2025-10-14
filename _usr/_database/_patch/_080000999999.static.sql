@@ -218,6 +218,7 @@ CREATE TABLE `attivita_view_static` (
   `indirizzo` text,
   `id_luogo` int(11) DEFAULT NULL,
   `luogo` char(255) DEFAULT NULL,
+  `id_messaggio` int(11) DEFAULT NULL,
   `id_oggetto` int(11) DEFAULT NULL,
   `oggetto` char(255) DEFAULT NULL,
   `data_riferimento` date DEFAULT NULL,
