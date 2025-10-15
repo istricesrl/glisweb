@@ -43,7 +43,7 @@
 		'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'tipologie attivita' ),
 	    'h1'				=> array( $l		=> 'tipologie' ),
-	    'parent'			=> array( 'id'		=> 'produzione.attivita' ),
+	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
@@ -90,14 +90,40 @@
 	);
 
     // tools archivio produzione
-	$p['produzione.tipologie.attivita'] = array(
+	$p['produzione.tipologie.attivita.view'] = array(
 		'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'produzione tipologie attivita' ),
 	    'h1'				=> array( $l		=> 'tipologie attivita' ),
 	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'produzione.attivita.view' )
+	);
+
+    // tools archivio produzione
+	$p['produzione.tipologie.attivita.form'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'produzione tipologie attivita form' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'produzione.tipologie.attivita.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'produzione.tipologie.attivita.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'produzione.tipologie.attivita.form',
+															'produzione.tipologie.attivita.form.tools' ) )
+	);
+
+    // tools archivio produzione
+	$p['produzione.tipologie.attivita.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni produzione tipologie attivita form' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'produzione.tipologie.attivita.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'produzione.tipologie.attivita.form' )
 	);
 

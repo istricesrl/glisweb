@@ -157,7 +157,8 @@
 
         // le entità con suffisso _attivi e _archiviati di default hanno gli stessi permessi dell'entità base
         // TODO fare questa cosa solo se non esiste il permesso esplicito per attivi e archiviati
-        $t = str_replace(array('_attivi', '_archiviati'), '', $t);
+        // NOTA _attivi e _archiviati sono suffissi obsoleti
+        // $t = str_replace(array('_attivi', '_archiviati'), '', $t);
 
         // log
         logger('richiesta di accesso per ' . $t . '/' . $a, 'auth');
@@ -243,7 +244,8 @@
 
         // ...
         // TODO fare questa cosa solo se non esiste il permesso esplicito per attivi e archiviati
-        $t = str_replace(array('_attivi', '_archiviati'), '', $t);
+        // NOTA _attivi e _archiviati sono suffissi obsoleti
+        // $t = str_replace(array('_attivi', '_archiviati'), '', $t);
 
         // log
         logger('richiesta di accesso per ' . $t . '/' . $id . '/' . $a, 'auth');
@@ -391,7 +393,8 @@
 
         // ...
         // TODO fare questa cosa solo se non esiste il permesso esplicito per attivi e archiviati
-        $t = str_replace(array('_attivi', '_archiviati'), '', $t);
+        // NOTA _attivi e _archiviati sono suffissi obsoleti
+        // $t = str_replace(array('_attivi', '_archiviati'), '', $t);
 
         // verifico se l'utente non è root
         if ($_SESSION['account']['username'] == 'root' || in_array('roots', $_SESSION['account']['gruppi'])) {

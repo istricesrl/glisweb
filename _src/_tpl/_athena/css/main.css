@@ -501,7 +501,7 @@ label.form-check-label {
     padding-left: 15px;
 }
 
-.view-table thead tr th select.text-left {
+.view-table thead tr th select.text-start {
     padding-left: 5px;
 }
 

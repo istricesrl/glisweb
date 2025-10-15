@@ -86,3 +86,30 @@
 	    'etc'				=> array( 'tabs'	=> 'account.view' )
 	);
 
+    // gestione account
+	$p['gruppi.form'] = array(
+	    'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'gestione gruppi' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'gruppi.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'gruppi.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_gruppi.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'gruppi.form',
+															// 'gruppi.form.attribuzione',
+															'gruppi.form.tools' ) )
+	);
+
+    // tools account
+	$p['gruppi.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni gruppo' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'gruppi.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_gruppi.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'gruppi.form' )
+	);
+

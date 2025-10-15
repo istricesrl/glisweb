@@ -106,10 +106,10 @@
 				// console.log( this );
 				// console.log( $(this) );
 		
-				// $(el).children('.media-left').first().html('<i class="fa fa-circle-o-notch fa-spin fa-fw">');
-				// el.children('.media-left').first().html('<i class="fa fa-circle-o-notch fa-spin fa-fw">');
+				// $(el).children('.media-left').first().html('<i class="fa fa-circle-notch fa-spin fa-fw">');
+				// el.children('.media-left').first().html('<i class="fa fa-circle-notch fa-spin fa-fw">');
 		
-				e.find('.media-left').first().html('<i class="fa fa-circle-o-notch fa-spin">');
+				e.find('.media-left').first().html('<i class="fa fa-circle-notch fa-spin">');
 		
 				// getws( ws, null, function( d, el ) { console.log( d ); console.log( el ); } );
 		

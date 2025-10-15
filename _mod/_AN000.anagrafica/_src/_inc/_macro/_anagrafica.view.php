@@ -48,13 +48,13 @@
             'id' => 'd-none',
             'nome' => 'd-none',
             'cognome' => 'd-none',
-            '__label__' => 'text-left no-wrap',
+            '__label__' => 'text-start no-wrap',
             'denominazione' => 'd-none',
-            'telefoni' => 'text-left d-none d-md-table-cell',
-            'mail' => 'text-left d-none d-md-table-cell',
+            'telefoni' => 'text-start d-none d-md-table-cell',
+            'mail' => 'text-start d-none d-md-table-cell',
             'id_stato' => 'd-none',
             'id_provincia' => 'd-none',
-            'categorie' => 'text-left',
+            'categorie' => 'text-start',
             NULL => 'no-wrap'
         ),
         'onclick' => array(
