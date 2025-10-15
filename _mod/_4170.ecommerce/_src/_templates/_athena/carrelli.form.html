@@ -1,5 +1,6 @@
 {% import '_bin/_form.html' as frm %}
 {% import 'bin/default.html' as def %}
+{% import 'bin/carrelli.form.sub.html' as sub %}
 
 {% extends "ext/main.html" %}
 
@@ -71,7 +72,7 @@
                 </div>
                 <div class="col-12 col-md">
                     <span class="label-top">città</span>
-                    {{ frm.input( table, '', '', 'intestazione_città', '', '', request ) }}
+                    {{ frm.input( table, '', '', 'intestazione_citta', '', '', request ) }}
                 </div>
             </div>
 
@@ -89,6 +90,30 @@
                     {{ frm.input( table, '', '', 'intestazione_mail', '', '', request ) }}
                 </div>
             </div>
+
+		<div class="form-group form-row">
+		    <div class="col-12">
+				<span class="label-top">note</span>
+				{{ frm.textarea( table, '', '', 'note_fatturazione', '', 3, request ) }}
+		    </div>
+		</div>
+
+		<div class="form-group form-row">
+		    <div class="col-auto">
+			<p><strong>link per il recupero del carrello</strong></p>
+		    </div>
+		    <div class="col">
+			{% set rurl = '' %}
+			{% if request[ table ]['id_sito'] == 33 %}
+			{% set rurl = rurl ~ 'https://www.ebhcconference.org/shopping-cart.en-GB.html?rc=' ~ request[ table ]['id'] ~ '&ti=' ~ etc.timestamp_inserimento %}
+			{% elseif request[ table ]['id_sito'] == 2 %}
+			{% set rurl = rurl ~ 'https://www.sostienigimbe.it/dona-ora?rc=' ~ request[ table ]['id'] ~ '&ti=' ~ etc.timestamp_inserimento %}
+			{% elseif request[ table ]['id_sito'] == 9 %}
+			{% set rurl = rurl ~ 'https://new.gimbeducation.it/carrello?rc=' ~ request[ table ]['id'] ~ '&ti=' ~ etc.timestamp_inserimento %}
+			{% endif %}
+			<a href="{{ rurl }}" target="_blank">{{ rurl }}</a>
+		    </div>
+		</div>
 
         </fieldset>
 
@@ -121,7 +146,7 @@
                 </div>
                 <div class="col-12 col-md">
                     <span class="label-top">città</span>
-                    {{ frm.input( table, '', '', 'destinatario_città', '', '', request ) }}
+                    {{ frm.input( table, '', '', 'destinatario_citta', '', '', request ) }}
                 </div>
             </div>
 
@@ -143,7 +168,39 @@
         </fieldset>
 
         <fieldset>
-            <legend>ciclo di vita dell'ordine - inserimento {{ request[ table ][ 'timestamp_inserimento' ]|date('Y/m/d H:i:s') }}</legend>
+            <legend>valore dell'ordine</legend>
+
+            <div class="form-group form-row">
+                <div class="col-12 col-md">
+                    <span class="label-top">totale netto merce</span>
+                    {{ frm.input( table, '', '', 'prezzo_netto_totale', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">totale lordo merce</span>
+                    {{ frm.input( table, '', '', 'prezzo_lordo_totale', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">sconto percentuale</span>
+                    {{ frm.input( table, '', '', 'sconto_percentuale', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">sconto €</span>
+                    {{ frm.input( table, '', '', 'sconto_valore', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">totale netto finale</span>
+                    {{ frm.input( table, '', '', 'prezzo_netto_finale', '', '', request ) }}
+                </div>
+                <div class="col-12 col-md">
+                    <span class="label-top">totale lordo finale</span>
+                    {{ frm.input( table, '', '', 'prezzo_lordo_finale', '', '', request ) }}
+                </div>
+            </div>
+
+        </fieldset>
+
+        <fieldset>
+            <legend>ciclo di vita dell'ordine - inserimento {{ request[ table ][ 'timestamp_inserimento' ]|date('Y/m/d H:i:s') }} <small>{{ etc.timestamp_inserimento }}</small></legend>
 
             <div class="form-group form-row">
                 <div class="col-12 col-md-auto">
@@ -186,6 +243,10 @@
             </div>
 
         </fieldset>
+
+	    {{ sub.articoli( table, 'carrelli_articoli', 'articoli', site, page, pages, ietf, etc, request, session ) }}
+
+		{{ sub.metadati( table, 'metadati', 'dati aggiuntivi', site, page, pages, ietf, etc, request, session ) }}
 
     {# BOTTONI E COMANDI DEL MODULO #}
     <fieldset class="form-controls mt-auto">
