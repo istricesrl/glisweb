@@ -41,7 +41,7 @@
             </div>
             {% if r.id %}
             <div class="col-auto form-col p-0 pl-1">
-                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['mail.form'].url[ lang ] }}?mail[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.archivio.mail.form'].url[ lang ] }}?mail[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
             </div>
             <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
                 {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}
@@ -98,7 +98,7 @@
             </div>
             {% if r.id %}
             <div class="col-auto form-col p-0 pl-1">
-                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['telefoni.form'].url[ lang ] }}?telefoni[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.archivio.telefoni.form'].url[ lang ] }}?telefoni[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
             </div>
             <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
                 {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}
@@ -169,17 +169,17 @@
                 <span class="label-top">località</span>
                 {{ frm.input({ 'field': { 'name': 'localita', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
             </div>
-            <div class="col col-md-2 form-col">
-                <span class="label-top">comune</span>
-                {{ frm.select({ 'field': { 'name': 'id_comune', 'disabled': disabled }, 'source': { 'api': 'comuni' }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
-            </div>
             <div class="col col-md-1 form-col">
                 <span class="label-top">CAP</span>
                 {{ frm.input({ 'field': { 'name': 'cap', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
             </div>
+            <div class="col col-md-2 form-col">
+                <span class="label-top">comune</span>
+                {{ frm.select({ 'field': { 'name': 'id_comune', 'disabled': disabled }, 'source': { 'api': 'comuni' }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            </div>
             {% if r.id %}
             <div class="col-auto form-col p-0 pl-1">
-                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.indirizzi.form'].url[ lang ] }}?anagrafica_indirizzi[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.archivio.anagrafica.indirizzi.form'].url[ lang ] }}?anagrafica_indirizzi[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
             </div>
             <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
                 {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}
@@ -282,7 +282,7 @@
             </div>
             {% if r.id %}
             <div class="col-auto form-col p-0 pl-1">
-                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['url.form'].url[ lang ] }}?url[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
+                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.archivio.url.form'].url[ lang ] }}?url[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
             </div>
             <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
                 {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}

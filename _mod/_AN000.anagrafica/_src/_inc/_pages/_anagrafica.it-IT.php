@@ -79,7 +79,7 @@
 															// 'anagrafica.form.fornitore',
 															// 'anagrafica.form.collaboratore',
 															// 'anagrafica.form.attivita',
-															'anagrafica.form.immagini',
+															// 'anagrafica.form.immagini',
 															// 'anagrafica.form.video',
 															// 'anagrafica.form.audio',
 															// 'anagrafica.form.file',
@@ -116,19 +116,6 @@
 	    'etc'				=> array( 'tabs'	=> 'anagrafica.form' )
 	);
 
-	// gestione anagrafica form immagini
-	$p['anagrafica.form.immagini'] = array(
-	    'sitemap'			=> false,
-	    'icon'				=> '<i class="fa fa-image" aria-hidden="true"></i>',
-	    'title'				=> array( $l		=> 'immagini' ),
-	    'h1'				=> array( $l		=> 'immagini' ),
-	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
-	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.immagini.twig' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.form.immagini.php' ),
-	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> 'anagrafica.form' )
-	);
-
     // anagrafica archivio
 	$p['anagrafica.archivio'] = array(
 	    'sitemap'			=> false,
@@ -140,9 +127,9 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.archivio',
                                                             'anagrafica.archivio.telefoni.view',
-                                                            'anagrafica.archivio.email.view',
+                                                            'anagrafica.archivio.mail.view',
                                                             'anagrafica.archivio.url.view',
-                                                            'anagrafica.archivio.indirizzi.view',
+                                                            'anagrafica.archivio.anagrafica.indirizzi.view',
                                                             'anagrafica.archivio.tipologie.anagrafica.view',
 															'anagrafica.archivio.tools' ) ),
 	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'archivio' ),
@@ -161,28 +148,106 @@
 	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio' )
 	);
 
-    // anagrafica archivio email
-	$p['anagrafica.archivio.email.view'] = array(
+    // anagrafica archivio telefoni
+	$p['anagrafica.archivio.telefoni.form'] = array(
 		'sitemap'			=> false,
-	    'title'				=> array( $l		=> 'archivio email' ),
-	    'h1'				=> array( $l		=> 'email' ),
+	    'title'				=> array( $l		=> 'gestione archivio telefoni' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.telefoni.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.telefoni.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.telefoni.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.archivio.telefoni.form',
+															'anagrafica.archivio.telefoni.form.tools' ) ),
+	);
+
+    // gestione anagrafica form tools
+	$p['anagrafica.archivio.telefoni.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni archivio anagrafica telefoni' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.telefoni.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.telefoni.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio.telefoni.form' )
+	);
+
+    // anagrafica archivio email
+	$p['anagrafica.archivio.mail.view'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'archivio e-mail' ),
+	    'h1'				=> array( $l		=> 'e-mail' ),
 	    'parent'			=> array( 'id'		=> 'anagrafica.archivio' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.email.view.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.mail.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio' )
 	);
 
-    // anagrafica archivio indirizzi
-	$p['anagrafica.archivio.indirizzi.view'] = array(
+    // anagrafica archivio mail
+	$p['anagrafica.archivio.mail.form'] = array(
 		'sitemap'			=> false,
-	    'title'				=> array( $l		=> 'archivio indirizzi' ),
+	    'title'				=> array( $l		=> 'gestione archivio e-mail' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.mail.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.mail.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.mail.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.archivio.mail.form',
+															'anagrafica.archivio.mail.form.tools' ) ),
+	);
+
+    // gestione anagrafica form tools
+	$p['anagrafica.archivio.mail.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni archivio anagrafica e-mail' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.mail.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.mail.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio.mail.form' )
+	);
+
+    // anagrafica archivio indirizzi
+	$p['anagrafica.archivio.anagrafica.indirizzi.view'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'archivio anagrafica indirizzi' ),
 	    'h1'				=> array( $l		=> 'indirizzi' ),
 	    'parent'			=> array( 'id'		=> 'anagrafica.archivio' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.indirizzi.view.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio' )
+	);
+
+    // anagrafica archivio anagrafica.indirizzi
+	$p['anagrafica.archivio.anagrafica.indirizzi.form'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'gestione archivio e-anagrafica.indirizzi' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.anagrafica.indirizzi.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.anagrafica.indirizzi.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.archivio.anagrafica.indirizzi.form',
+															'anagrafica.archivio.anagrafica.indirizzi.form.tools' ) ),
+	);
+
+    // gestione anagrafica form tools
+	$p['anagrafica.archivio.anagrafica.indirizzi.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni archivio anagrafica e-anagrafica.indirizzi' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.anagrafica.indirizzi.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.anagrafica.indirizzi.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio.anagrafica.indirizzi.form' )
 	);
 
     // anagrafica archivio url
@@ -197,16 +262,68 @@
 	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio' )
 	);
 
+    // anagrafica archivio url
+	$p['anagrafica.archivio.url.form'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'gestione archivio e-url' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.url.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.url.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.url.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.archivio.url.form',
+															'anagrafica.archivio.url.form.tools' ) ),
+	);
+
+    // gestione anagrafica form tools
+	$p['anagrafica.archivio.url.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni archivio anagrafica e-url' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.url.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.url.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio.url.form' )
+	);
+
     // anagrafica archivio tipologie
     $p['anagrafica.archivio.tipologie.anagrafica.view'] = array(
 		'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'archivio tipologie anagrafica' ),
-	    'h1'				=> array( $l		=> 'tipologie' ),
+	    'h1'				=> array( $l		=> 'tipologie anagrafica' ),
 	    'parent'			=> array( 'id'		=> 'anagrafica.archivio' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio' )
+	);
+
+    // anagrafica archivio tipologie.anagrafica
+	$p['anagrafica.archivio.tipologie.anagrafica.form'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'gestione archivio e-tipologie.anagrafica' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.tipologie.anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.tipologie.anagrafica.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.archivio.tipologie.anagrafica.form',
+															'anagrafica.archivio.tipologie.anagrafica.form.tools' ) ),
+	);
+
+    // gestione anagrafica form tools
+	$p['anagrafica.archivio.tipologie.anagrafica.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni archivio anagrafica e-tipologie.anagrafica' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'anagrafica.archivio.tipologie.anagrafica.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.archivio.tipologie.anagrafica.form' )
 	);
 
     // tools anagrafica

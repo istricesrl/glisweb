@@ -670,17 +670,19 @@
 <div class="row form-row">
 
 
+    {% if field.long %}<div class="col text-start {{ class }}">{% endif %}
+
+
     {# campo hidden per il valore reale del campo #}
-    <input type="hidden"
+    <input type="{% if field.long %}text{% else %}hidden{% endif %}"
         {% if field.disabled %}disabled{% endif %}
         name="{{ nm }}"
         id="{{ id }}"
-        class=""
+        class="{% if field.long %}{{ field.class }}{% endif %}"
         {% if default %} default="{{ default }}"{% endif %} 
-        value="{% if vl or ( default and not df ) %}1{% else %}0{% endif %}">
+        value="{% if vl %}{{ vl }}{% endif %}">
 
-
-
+    {% if field.long %}</div>{% endif %}
 
     <div class="col-auto text-start {{ class }}">
 	{% if vl %}

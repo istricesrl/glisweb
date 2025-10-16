@@ -39,7 +39,7 @@
 		logWrite( 'inizio caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'uploader', LOG_NOTICE );
 
 	    // nome del file scritto
-		$collisionCounter = 0;
+		$collisionCounter = time();
 		$targetFolder = ( isset( $_SERVER['HTTP_X_TARGET_FOLDER'] ) ) ? $_SERVER['HTTP_X_TARGET_FOLDER'] : 'tmp/';
 		$targetRelativePath = DIR_BASE . $targetFolder;
 
@@ -54,19 +54,20 @@
 
 		    if( file_exists( $targetFileRelativePath ) ) {
 
-			$collision = true;
+                $collision = true;
 
-			$arrayNomeFile = explode( '.', $fileName );
-			$estensione = array_pop( $arrayNomeFile );
-			$arrayNomeFile[] = $collisionCounter;
-			$arrayNomeFile[] = $estensione;
-			$fileName = implode( '.', $arrayNomeFile );
+                $fileName = str_replace( '.' . $collisionCounter . '.', '.', $fileName );
+                $arrayNomeFile = explode( '.', $fileName );
+                $estensione = array_pop( $arrayNomeFile );
+                $arrayNomeFile[] = $collisionCounter;
+                $arrayNomeFile[] = $estensione;
+                $fileName = implode( '.', $arrayNomeFile );
 
-			$collisionCounter++;
+                $collisionCounter++;
 
 		    } else {
 
-			$collision = false;
+			    $collision = false;
 
 		    } 
 

@@ -1136,6 +1136,9 @@
         ),
         'conversazioni_account' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'tipologie_anagrafica' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
         )
     );
  

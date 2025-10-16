@@ -31,11 +31,15 @@
             '__label__' => 'account',
             'anagrafica' => 'anagrafica',
             'mail' => 'e-mail',
-            'se_attivo' => 'attivo',
             'gruppi' 	=> 'gruppi',
+            'se_attivo' => 'attivo',
         ),
         'class' => array(
             'id' => 'd-none d-md-table-cell',
+            'anagrafica' => 'text-start no-wrap',
+            'mail' => 'text-start no-wrap',
+            'gruppi' => 'text-start no-wrap',
+            '__label__' => 'text-start no-wrap',
         )
     );
 
