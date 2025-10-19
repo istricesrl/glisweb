@@ -28,7 +28,7 @@
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.view',
-															'anagrafica.archiviati.view',
+															'anagrafica.view.archiviate',
 															// 'anagrafica.stats',
 															// 'anagrafica.stampe',
 															'anagrafica.tools' ) ),
@@ -37,14 +37,14 @@
 	);
 
     // tools anagrafica
-	$p['anagrafica.archiviati.view'] = array(
+	$p['anagrafica.view.archiviate'] = array(
 		'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-box-archive" aria-hidden="true"></i>',
-	    'title'				=> array( $l		=> 'anagrafica archiviati' ),
-	    'h1'				=> array( $l		=> 'archiviati' ),
+	    'title'				=> array( $l		=> 'anagrafiche archiviate' ),
+	    'h1'				=> array( $l		=> 'archiviate' ),
 	    'parent'			=> array( 'id'		=> 'anagrafica.view' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
-	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.archiviati.view.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.view.archiviate.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'anagrafica.view' )
 	);

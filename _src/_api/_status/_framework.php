@@ -338,7 +338,7 @@
             echo '[ OK ] connessione memcache su ' . $cf['memcache']['server']['address'] . ':' . $cf['memcache']['server']['port'] . ' presente' . PHP_EOL;
             if( ! empty( $cf['memcache']['stat']['hits'] ) ) {
                 echo '[ -- ] utilizzati ' . $cf['memcache']['stat']['usage'] . ' (' . $cf['memcache']['stat']['percent'] . ')' . PHP_EOL;
-                echo '[ -- ] ' . $cf['memcache']['stat']['hits'] . ' (hit rate ' . $cf['memcache']['stat']['hitrate'] . ' ' . ( ( floatval( $cf['memcache']['stat']['hitrate'] ) > 90.0 ) ? 'OK' : 'NO' ) . ')' . PHP_EOL;
+                echo '[ -- ] ' . $cf['memcache']['stat']['hits'] . ' (hit rate ' . ( $cf['memcache']['stat']['hitrate'] ?? 0 ) . ' ' . ( ( floatval( $cf['memcache']['stat']['hitrate'] ) > 90.0 ) ? 'OK' : 'NO' ) . ')' . PHP_EOL;
             } else {
                 die( '[FAIL] statistiche di memcache non ancora raccolte' . PHP_EOL );
             }

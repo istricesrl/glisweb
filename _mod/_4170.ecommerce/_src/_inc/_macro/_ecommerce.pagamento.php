@@ -5,6 +5,9 @@
 // die( print_r( $_REQUEST, true ) );
 // print_r( $_REQUEST );
 
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
 // checkout carrello
 if (isset($_REQUEST['ck_carrello']) && ! empty($_REQUEST['ck_carrello'])) {
 
@@ -359,7 +362,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                 $nome = 'documento creato automaticamente per il ' .
                     ((! empty($_REQUEST['__pagamenti__']['id_pagamento'])) ? 'pagamento #' . $_REQUEST['__pagamenti__']['id_pagamento'] . ' ' : NULL) .
                     'carrello #' . $_REQUEST['__pagamenti__']['id_carrello'] .  ' ' .
-                    'anagrafica #' . $_REQUEST['__pagamenti__']['id_cliente'] . ' (' . $_REQUEST['__pagamenti__']['destinatario'] . ')';
+                    'anagrafica #' . $_REQUEST['__pagamenti__']['id_cliente'] . ' (' . ( $_REQUEST['__pagamenti__']['destinatario'] ?? '' ) . ')';
                 $sezionale = 'C/' . date('Y');
                 $emittente = trovaIdAziendaGestita();
 
@@ -418,7 +421,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                         // die( print_r( $reparto, true ) );
 
                         // calcolo il netto
-                        $pagamento['importo_netto_totale'] = $pagamento['importo_lordo_finale'] / (100 + $reparto['aliquota']) * 100;
+                        $pagamento['importo_netto_totale'] = ( $pagamento['importo_lordo_finale'] ?? 0 ) / (100 + ( $reparto['aliquota'] ?? 0 ) ) * 100;
 
                         // aggiungo la riga
                         $idRiga = mysqlInsertRow(
@@ -428,12 +431,12 @@ if (isset($_REQUEST['__pagamenti__'])) {
                                 'id_articolo' => $pagamento['id_articolo'],
                                 'id_rinnovo' => ((isset($pagamento['id_rinnovo'])) ? $pagamento['id_rinnovo'] : NULL),
                                 'id_carrelli_articoli' => $pagamento['id'],
-                                'importo_netto_totale' => $pagamento['importo_netto_totale'],
-                                'importo_lordo_totale' => $pagamento['importo_lordo_finale'],
+                                'importo_netto_totale' => $pagamento['importo_netto_totale'] ?? 0,
+                                'importo_lordo_totale' => $pagamento['importo_lordo_finale'] ?? 0,
                                 'id_mastro_provenienza' => $pagamento['id_mastro_provenienza'],
                                 'quantita' => $pagamento['quantita'],
                                 'id_udm' => 1,
-                                'id_reparto' => $reparto['id'],
+                                'id_reparto' => $reparto['id'] ?? 0,
                                 'id_listino' => 1,
                                 'nome' => 'riga automatica da carrello #' . $pagamento['id_carrello'] . ' riga #' . $pagamento['id']
                             ),
@@ -1070,7 +1073,7 @@ if( isset( $ct['etc']['righe'] ) && is_array( $ct['etc']['righe'] ) ) {
             ',
             array_merge(
                 array(array('s' => $v['destinatario_id_anagrafica'])),
-                $cnd
+                ( $cnd ?? [] )
             )
         );
     }

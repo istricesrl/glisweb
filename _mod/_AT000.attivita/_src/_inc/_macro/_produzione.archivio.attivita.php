@@ -62,6 +62,7 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
+            'data_archiviazione' => array( 'NL' => true )
         ),
         '__sort__' => array(
             'data_riferimento' => 'DESC'

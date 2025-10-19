@@ -5,6 +5,9 @@
      * - gestire il checkout diretto (contrassegno e bonifico eccetera)
      */
 
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
     // se esiste un carrello in sessione
     if( isset( $_SESSION['carrello']['id'] ) ) {
 

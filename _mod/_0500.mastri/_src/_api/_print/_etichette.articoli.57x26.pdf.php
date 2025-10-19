@@ -39,7 +39,7 @@
         // die( print_r( $etichette, true ) );
 
         // ...
-        $fntSizeCodice = ( strlen( $codice ) < 12 ) ? 22 : ( ( strlen( $codice ) < 16 ) ? 16 : 14 );
+        // $fntSizeCodice = ( strlen( $codice ) < 12 ) ? 22 : ( ( strlen( $codice ) < 16 ) ? 16 : 14 );
 
         // creazione del PDF
         $pdf = new TCPDF( 'L', 'mm', array( 57, 26 ) );						// portrait, millimetri, A4 (x->210 y->297)
@@ -62,14 +62,17 @@
         // ...
         foreach( $etichette as $etichetta ) {
 
+            // ...
+            $fntSizeCodice = ( strlen( $etichetta['id_articolo'] ) < 12 ) ? 22 : ( ( strlen( $etichetta['id_articolo'] ) < 16 ) ? 16 : 14 );
+
             // aggiunta di una pagina
             $pdf->AddPage();								// richiesto perché si è disattivato l'automatismo
 
             // immagine articolo ( path, x, y, w, h, type, link, align, resize, dpi, palign, ismask, imgmask, border, fitbox )
-            $pdf->image( DIR_BASE . $etichetta['path'], 3, 3, 15, 15, NULL, NULL, 'T', false, 300, '', false, false, 1, true );
+            $pdf->image( DIR_BASE . $etichetta['path'], 3, 3, 15, 15, '', '', 'T', false, 300, '', false, false, 1, true );
 
             // logo Eurosnodi ( path, x, y, w, h, type, link, align, resize, dpi, palign, ismask, imgmask, border, fitbox )
-            $pdf->image( DIR_BASE . 'var/contenuti/logo_Eurosnodi.png', 22.5, 13, 12, 12, NULL, NULL, 'T', false, 300, '', false, false, 1, true );
+            $pdf->image( DIR_BASE . 'var/contenuti/logo_Eurosnodi.png', 22.5, 13, 12, 12, '', '', 'T', false, 300, '', false, false, 1, true );
 
             // codice
             $pdf-> setXY( 3, 2 );

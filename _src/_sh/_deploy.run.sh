@@ -304,6 +304,19 @@ else
                 # $CMD
 
                 # comando
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_lamp.permission.open.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # aggiornamento dei permessi
+                $CMD
+
+                # comando
                 CMD="rsync $EXCLUDE -avuz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
 
                 # registro dei deploy
@@ -329,6 +342,19 @@ else
 
                 # aggiornamento di composer
                 # $CMD
+
+                # comando
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_lamp.permission.secure.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # aggiornamento dei permessi
+                $CMD
 
             else
 

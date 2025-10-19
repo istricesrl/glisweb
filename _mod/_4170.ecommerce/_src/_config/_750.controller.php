@@ -15,6 +15,9 @@
     // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
     // die();
 
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
     // STEP 1 - se esiste un pacchetto dati per __carrello__
 
     // verifico se è presente una richiesta per il modulo ecommerce

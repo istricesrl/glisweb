@@ -12,6 +12,9 @@
     // se esiste un carrello in sessione
     // if( isset( $_SESSION['carrello']['id'] ) ) {
 
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
+
         // inizializzazione esito pagamento
         $ct['etc']['esito'] = NULL;
 

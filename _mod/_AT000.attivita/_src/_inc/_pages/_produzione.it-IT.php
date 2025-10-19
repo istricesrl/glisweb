@@ -33,6 +33,7 @@
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'produzione.attivita.view',
                                                             'produzione.tipologie.attivita.view',
+                                                            'produzione.attivita.view.archiviate',
 															'produzione.attivita.tools' ) ),
 	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'attivita' ),
 																			'priority'	=> '600' ) ) )
@@ -46,6 +47,19 @@
 	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.tipologie.attivita.view.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'produzione.attivita.view' )
+	);
+
+    // tools archivio produzione
+	$p['produzione.attivita.view.archiviate'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'attivita archiviate' ),
+	    'h1'				=> array( $l		=> 'archiviate' ),
+	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.attivita.view.archiviate.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> 'produzione.attivita.view' )
 	);
@@ -73,7 +87,21 @@
 	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.attivita.form.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'produzione.attivita.form',
+                                                            'produzione.attivita.form.archiviazione',
 															'produzione.attivita.form.tools' ) )
+	);
+
+    // tools archivio produzione
+	$p['produzione.attivita.form.archiviazione'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'archiviazione produzione attivita form' ),
+	    'h1'				=> array( $l		=> 'archiviazione' ),
+	    'parent'			=> array( 'id'		=> 'produzione.attivita.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'produzione.attivita.form.archiviazione.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_produzione.attivita.form.archiviazione.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'produzione.attivita.form' )
 	);
 
     // tools archivio produzione
