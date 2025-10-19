@@ -22,6 +22,8 @@
     // tabella gestita
 	$ct['form']['table'] = '__templates__';
 
+    $ct['form']['__filesystem_mode__'] = 1;
+
     // gruppi di controlli
     $ct['page']['contents']['metros'] = array(
         'azioni' => array(
