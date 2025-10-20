@@ -24,7 +24,7 @@
      * logging dell'attività in foreground
      * -----------------------------------
      * 
-     * [...] /var/log/foreground/YYYYMMDDHH.log -> tutta l'attività di foreground (il contenuto di $cf['foreground'])
+     * [...] /var/log/foreground/YYYYMMDDHH.log -> tutta l'attività di foreground (il contenuto di $job)
      * 
      * 
      * 
@@ -95,13 +95,13 @@
     logger( 'chiamata job API', 'foreground' );
 
     // inizializzo l'array del risultato
-    $cf['foreground']['status'] = array();
+    $job['status'] = array();
 
     // status
-    $cf['foreground']['info'][] = 'inizio operazioni in foreground API job';
+    $job['info'][] = 'inizio operazioni in foreground API job';
 
     // chiave di lock
-    $cf['foreground']['token'] = getToken( __FILE__ );
+    $job['token'] = getToken( __FILE__ );
 
     /**
      * esecuzione job
@@ -117,7 +117,7 @@
         // echo "id del job " . $_REQUEST['__id__'];
 
         // status
-        $cf['foreground']['info'][] = 'richiesta lavorazione in foreground del job #' . $_REQUEST['__id__'];
+        $job['info'][] = 'richiesta lavorazione in foreground del job #' . $_REQUEST['__id__'];
 
         // timer
         timerCheck( $cf['speed'], 'inizio lavorazione in foreground del job #' . $_REQUEST['__id__'] );
@@ -130,7 +130,7 @@
             'AND timestamp_completamento IS NULL '.
             'AND token IS NULL ',
             array(
-                array( 's' => $cf['foreground']['token'] ),
+                array( 's' => $job['token'] ),
                 array( 's' => $_REQUEST['__id__'] ),
                 array( 's' => time() )
             )
@@ -140,11 +140,14 @@
         timerCheck( $cf['speed'], 'fine piazzamento lock job' );
 
         // seleziono il job a cui ho applicato il lock
-        $job = mysqlSelectRow(
-            $cf['mysql']['connection'],
-            'SELECT * FROM job WHERE token = ? ',
-            array(
-                array( 's' => $cf['foreground']['token'] )
+        $job = array_replace_recursive(
+            $job,
+            mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM job WHERE token = ? ',
+                array(
+                    array( 's' => $job['token'] )
+                )
             )
         );
 
@@ -158,7 +161,7 @@
             if( isset( $job['workspace'] ) && ! empty( $job['workspace'] ) ) {
 
                 // status
-                $cf['foreground']['info'][] = 'lavoro in foreground il job #' . $job['id'];
+                $job['info'][] = 'lavoro in foreground il job #' . $job['id'];
 
                 // log
                 // logger( 'workspace per il job #' . $job['id'] . print_r( $job['workspace'], true ), 'job' );
@@ -182,7 +185,7 @@
                         require DIR_BASE . $job['job'];
 
                         // ...
-                        $cf['foreground']['job'][ $job['id'] ]['status'] = $status;
+                        $job['status'] = $status;
 
                         // ...
                         $job['timer']['foreground']['end'] = microtime( true );
@@ -207,21 +210,21 @@
                     } else {
 
                         // status
-                        $cf['foreground']['err'][] = 'numero di iterazioni vuoto';
+                        $job['err'][] = 'numero di iterazioni vuoto';
 
                     }
 
                 } else {
 
                     // status
-                    $cf['foreground']['err'][] = 'file non trovato ' . DIR_BASE . $job['job'];
+                    $job['err'][] = 'file non trovato ' . DIR_BASE . $job['job'];
 
                 }
 
             } else {
-
+                die( print_r( $job, true ) );
                 // status
-                $cf['foreground']['err'][] = 'workspace vuoto per il job #' . $_REQUEST['__id__'];
+                $job['err'][] = 'workspace vuoto per il job #' . $_REQUEST['__id__'];
 
                 // log
                 logger( 'workspace vuoto per il job #' . $_REQUEST['__id__'], 'job' );
@@ -229,16 +232,16 @@
             }
 
             // log
-            loggerLatest( print_r( $job, true ), DIR_VAR_LOG_JOB . $job['id'] . '.log' );
+            loggerLatest( print_r( $job, true ), DIR_VAR_LOG_JOB . $_REQUEST['__id__'] . '.log' );
 
         } else {
 
             // status
-            $cf['foreground']['err'][] = 'impossibile ottenere il lock per il job #' . $_REQUEST['__id__'] . ', vado in modalità informazioni sullo stato';
+            $job['err'][] = 'impossibile ottenere il lock per il job #' . $_REQUEST['__id__'] . ', vado in modalità informazioni sullo stato';
 
             // status
-            $cf['foreground'] = array_replace_recursive(
-                $cf['foreground'],
+            $job = array_replace_recursive(
+                $job,
                 mysqlSelectRow(
                     $cf['mysql']['connection'],
                     'SELECT id, totale, corrente, nome, timestamp_apertura, timestamp_esecuzione, timestamp_completamento FROM job WHERE id = ? ',
@@ -249,14 +252,14 @@
             );
 
             // status
-            $cf['foreground']['info'][] = 'informazioni avanzamento lavori per il token ' . $cf['foreground']['token'];
+            $job['info'][] = 'informazioni avanzamento lavori per il token ' . $job['token'];
 
         }
 
     } else {
 
         // status
-        $cf['foreground']['err'][] = 'ID job non specificato';
+        $job['err'][] = 'ID job non specificato';
 
     }
 
@@ -264,4 +267,4 @@
     // echo '<pre>' . print_r( $cf['speed'], true ) . '</pre>';
 
     // output
-    buildJson( $cf['foreground'] );
+    buildJson( array_diff_key( $job, array_flip( array( 'workspace' ) ) ) );

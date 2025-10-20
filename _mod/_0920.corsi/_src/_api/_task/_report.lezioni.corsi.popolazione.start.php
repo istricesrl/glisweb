@@ -22,7 +22,7 @@
         array(
             array( 's' => 'popolazione report lezioni corsi' ),
             array( 's' => '_mod/_0920.corsi/_src/_api/_job/_report.lezioni.corsi.popolazione.php' ),
-            array( 's' => 15 ),
+            array( 's' => 30 ),
             array( 's' => 1 ),
             array( 's' => json_encode( $workspace ) )
         )

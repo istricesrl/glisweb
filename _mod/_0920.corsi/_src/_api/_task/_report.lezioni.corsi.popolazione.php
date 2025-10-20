@@ -21,6 +21,7 @@
 			$cf['mysql']['connection'],
 			'SELECT todo.id FROM todo
 			INNER JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia AND tipologie_todo.id_genitore = 6
+			INNER JOIN progetti ON progetti.id = todo.id_progetto
             LEFT JOIN __report_lezioni_corsi__ ON __report_lezioni_corsi__.id = todo.id
             WHERE (
                 (
@@ -53,12 +54,16 @@
 					'SELECT ' . $table . '.id_todo 
 					FROM ' . $table . ' 
 					LEFT JOIN __report_lezioni_corsi__ ON __report_lezioni_corsi__.id = ' . $table . '.id_todo
+					LEFT JOIN todo ON todo.id = ' . $table . '.id_todo
+					LEFT JOIN progetti ON progetti.id = todo.id_progetto
 					WHERE (
-						coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento 
-						OR
-						coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento ) IS NULL
-					)
-					OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL
+						(
+							coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento 
+							OR
+							coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento ) IS NULL
+						)
+						OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL
+					) AND progetti.id IS NOT NULL
 					LIMIT 1'
 				);
 

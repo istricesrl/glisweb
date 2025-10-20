@@ -1,0 +1,26 @@
+{% import '_bin/_default.html' as cms %}
+{% import '_lib/_translation.twig' as trn %}
+
+{% extends 'ext/main.html' %}
+
+{% block main %}
+
+{% if etc.esito == session.carrello.id %}
+    <h2>{{ trn.tr({ 'w': 'ordine_piazzato', 'l': ietf, 'v': tr.generic }) }}!</h2>
+    {% if session.carrello.provider_pagamento == 'bonifico' %}
+    <p>{{ trn.tr({ 'w': 'per_completare_ordine_fare_bonifico', 'l': ietf, 'v': tr.generic }) }} € <span>{{ session.carrello.prezzo_lordo_finale }}</span> a:</p>
+    <ul>
+        <li>{{ trn.tr({ 'w': 'nome_banca', 'l': ietf, 'v': tr.generic }) }}: <span></span></li>
+        <li>{{ trn.tr({ 'w': 'indirizzo', 'l': ietf, 'v': tr.generic }) }}: <span></span></li>
+        <li>{{ trn.tr({ 'w': 'codice_iban', 'l': ietf, 'v': tr.generic }) }}: <span></span></li>
+        <li>{{ trn.tr({ 'w': 'codice_swift', 'l': ietf, 'v': tr.generic }) }}: <span></span></li>
+        <li>{{ trn.tr({ 'w': 'indica_ordine_nella_causale', 'l': ietf, 'v': tr.generic }) }}: <span>ordine #{{ session.carrello.id }}</span></li>
+    </ul>
+    <p>{{ trn.tr({ 'w': 'invia_contabile_via_mail', 'l': ietf, 'v': tr.generic }) }} <span></span>.</p>
+    {% endif %}
+{% else %}
+    <h2>{{ trn.tr({ 'w': 'errore_conferma_ordine', 'l': ietf, 'v': tr.generic }) }}</h2>
+    <p>{{ trn.tr({ 'w': 'suggerimenti_errore_conferma_ordine', 'l': ietf, 'v': tr.generic }) }}</p>
+{% endif %}
+
+{% endblock %}

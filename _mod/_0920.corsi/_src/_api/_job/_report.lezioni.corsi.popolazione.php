@@ -6,20 +6,20 @@
     if( ! defined( 'CRON_RUNNING' ) && ! defined( 'JOB_RUNNING' ) ) {
 
         // status
-        $job['workspace']['status']['error'][] = 'questo job non supporta la modalità standalone';
+        $status['error'][] = 'questo job non supporta la modalità standalone';
 
         // output
-        buildJson( $job['workspace']['status'] );
+        buildJson( $status );
 
     } elseif( empty( $job['id'] ) ) {
 
         // status
-        $job['workspace']['status']['error'][] = 'ID job non trovato';
+        $status['error'][] = 'ID job non trovato';
 
     } elseif( isset( $job['corrente'] ) && $job['corrente'] > $job['totale'] ) {
 
         // status
-        $job['workspace']['status']['info'][] = 'iterazione a vuoto su job completato';
+        $status['info'][] = 'iterazione a vuoto su job completato';
 
     } else {
 
@@ -33,7 +33,7 @@
             cleanReportLezioniCorsi();
 
             // condizioni aggiuntive
-            $whr = NULL;
+            $whr = '';
             $cnd = array();
 
             // lezioni di uno specifico corso
@@ -41,14 +41,15 @@
                 $whr = 'AND c.id_progetto = ?';
                 $cnd[] = array( 's' => $job['workspace']['id_corso'] );
             } else {
-                $whr = 'LIMIT 1000';
+                // $whr = 'LIMIT 10000';
             }
 
             // inizializzo l'array
             $arr = mysqlSelectColumn(
                 'id',
                 $cf['mysql']['connection'],
-                'SELECT c.id FROM todo AS c LEFT JOIN __report_lezioni_corsi__ AS r ON r.id = c.id
+                'SELECT c.id FROM todo AS c INNER JOIN progetti ON progetti.id = c.id_progetto 
+                LEFT JOIN __report_lezioni_corsi__ AS r ON r.id = c.id
                 WHERE ( r.timestamp_aggiornamento < c.timestamp_aggiornamento OR r.timestamp_aggiornamento IS NULL OR r.id IS NULL )
                 AND c.id_tipologia IN (14, 15, 18) ' . $whr,
                 $cnd
@@ -61,7 +62,15 @@
             $job['corrente'] = 1;
 
             // lista
-            $job['workspace']['lista'] = $arr;
+            // $job['workspace']['lista'] = $arr;
+            memcacheWrite(
+                $cf['memcache']['connection'],
+                '_job_workspace_' . $job['id'] . '_lista',
+                $arr
+            );
+
+            // ...
+            // $job['workspace']['id_lista'] = '_job_workspace_' . $job['id'] . '_lista';
 
             // timestamp di avvio
             if( empty( $job['timestamp_apertura'] ) ) {
@@ -77,13 +86,17 @@
             }
 
             // status
-            $job['workspace']['status']['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
-            $job['workspace']['status']['info'][] = 'righe trovate: ' . $job['totale'];
+            $status['info'][] = 'requisiti formali soddisfatti, inizializzo il job';
+            $status['info'][] = 'righe trovate: ' . $job['totale'];
 
         } else {
 
             // leggo la lista
-            $arr = $job['workspace']['lista'];
+            // $arr = $job['workspace']['lista'];
+            $arr = memcacheRead(
+                $cf['memcache']['connection'],
+                '_job_workspace_' . $job['id'] . '_lista'
+            );
 
             // incremento l'indice di lavoro
             $job['corrente']++;
@@ -120,7 +133,7 @@
             updateReportLezioniCorsi( $row );
 
             // status
-            $job['workspace']['status']['elaborati'][ $row ] = array( 'esito' => 'OK' );
+            $status['elaborati'][ $row ] = array( 'esito' => 'OK' );
 
             // aggiorno i valori di visualizzazione avanzamento
             $jobs = mysqlQuery(
