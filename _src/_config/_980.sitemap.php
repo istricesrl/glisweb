@@ -220,7 +220,7 @@
 
 	    // scrivo la sitemap CSV
 		foreach( $url as $u ) {
-		    fwrite( $csv, $u );
+		    fwrite( $csv, $u . PHP_EOL );
 		}
 
 	    // chiudo la mappa CSV

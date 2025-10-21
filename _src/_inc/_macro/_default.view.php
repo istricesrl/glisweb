@@ -102,7 +102,23 @@
         }
 	}
 
-    // aggiungo le colonne da prelevare
+	// paginazione presettata
+	if( isset( $ct['view']['__pager__'] ) ) {
+		if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__'] ) ) {
+			$_REQUEST['__view__'][ $ct['view']['id'] ]['__pager__'] = $ct['view']['__pager__'];
+		}
+	}
+
+	// modalità di visualizzazione presettata
+	if( isset( $ct['view']['__mode__'] ) ) {
+		if( ! isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__mode__'] ) ) {
+			$_REQUEST['__view__'][ $ct['view']['id'] ]['__mode__'] = $ct['view']['__mode__'];
+		}
+	}
+
+	// die( print_r( $_REQUEST['__view__'][ $ct['view']['id'] ], true ) );
+
+	// aggiungo le colonne da prelevare
 	// $_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = array_keys( $ct['view']['cols'] );
 	// $ct['view']['data']['__fields__'] = array_keys( $ct['view']['cols'] );
 	$_REQUEST['__view__'][ $ct['view']['id'] ]['__fields__'] = arrayTrim( array_diff( array_keys( $ct['view']['cols'] ), $ct['view']['extra']['cols'] ) );

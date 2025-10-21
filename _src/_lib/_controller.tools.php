@@ -106,13 +106,13 @@
                 $t = $v;                                                // impostazione esplicita della tabella del form
             } elseif (strtolower($k)    == '__reset__') {               //
                 $r = string2boolean($v);                                // richiesta esplicita di svuotare $_REQUEST[ $t ]
-            } elseif (strtolower($k)    == '__view_mode__') {           //
+            } elseif (strtolower($k)    == '__view_mode__') {           // obsoleto (vedi sotto)
                 $vm = true;                                             //
-            } elseif (strtolower($k)    == '__forced_view__') {         //
+            } elseif (strtolower($k)    == '__forced_view__') {         // obsoleto (vedi sotto)
                 $fvm = true;                                            //
-            } elseif (strtolower($k)    == '__report_mode__') {         //
+            } elseif (strtolower($k)    == '__report_mode__') {         // obsoleto (vedi sotto)
                 $rm = NULL;                                             //
-            } elseif (strtolower($k)    == '__filesystem_mode__') {     //
+            } elseif (strtolower($k)    == '__filesystem_mode__') {     // obsoleto (vedi sotto)
                 $rm = NULL;                                             //
             } elseif (substr($k, 0, 2)  !== '__') {                     //
 
@@ -140,6 +140,29 @@
             }
         }
 
+        /**
+         * gestione chiavi speciali
+         * ------------------------
+         * 
+         * 
+         */
+
+        // ...
+        if( isset( $i['__mode__'] ) ) {
+            if( isset( $i['__mode__']['__view_mode__'] ) && $i['__mode__']['__view_mode__'] == 1 ){
+                $vm = true;
+            }
+            if( isset( $i['__mode__']['__forced_view__'] ) && $i['__mode__']['__forced_view__'] == 1 ){
+                $fvm = true;
+            }
+            if( isset( $i['__mode__']['__report_mode__'] ) && $i['__mode__']['__report_mode__'] == 1 ){
+                $rm = NULL;
+            }
+            if( isset( $i['__mode__']['__filesystem_mode__'] ) && $i['__mode__']['__filesystem_mode__'] == 1 ){
+                $rm = NULL;
+            }
+        }
+ 
         /**
          * modalità singola e modalità multipla
          * ------------------------------------

@@ -396,11 +396,13 @@
 
     {# autosubmit #}
     {% if field.autosubmit %}
-        {% if autosubmit == 1 %}
+        {% if field.autosubmit == 1 or field.autosubmit == true %}
             {% set onchange = 'submitFormOkay=true; submit();' %}
         {% else %}
-            {% set onchange = autosubmit %}
+            {% set onchange = field.autosubmit %}
         {% endif %}
+    {% elseif field.onchange %}
+        {% set onchange = field.onchange %}
     {% endif %}
 
     {# popolazione da API REST #}
@@ -420,7 +422,7 @@
             {% if field.placeholder %}placeholder="{{ field.placeholder|raw }}"{% endif %}
             {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
             {% if field.required %}required{% endif %} 
-            {% if field.onchange %}onchange="{{ field.onchange }}"{% endif %}
+            {% if onchange %}onchange="{{ onchange }}"{% endif %}
             {% if not field.noempty %}empty{% endif %}>
 
             {# opzione vuota #}

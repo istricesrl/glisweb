@@ -513,6 +513,10 @@ label.form-check-label {
     padding-top: 20px;
 }
 
+.view-filters {
+    margin-top: .5em;
+}
+
 /**
  * stili dell'interfaccia Metro
  * ============================
