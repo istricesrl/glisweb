@@ -32,6 +32,8 @@ if (isset($_REQUEST['ck_carrello']) && ! empty($_REQUEST['ck_carrello'])) {
                 WHERE carrelli_articoli.id_carrello = ?',
         array(array('s' => $_REQUEST['__pagamenti__']['id_carrello']))
     );
+} else {
+
 }
 
 // ...
@@ -74,6 +76,9 @@ if (isset($_REQUEST['__pagamenti__'])) {
 
         // strategia di fatturazione documenti multipli
         if (isset( $_SESSION['carrello']['fatturazione_strategia'] ) && $_SESSION['carrello']['fatturazione_strategia'] == 'MULTIPLA') {
+
+            // debug
+            // die( print_r( $_REQUEST['__pagamenti__'], true ) );
 
             // log
             logger('modalità di fatturazione MULTIPLA', 'cassa');

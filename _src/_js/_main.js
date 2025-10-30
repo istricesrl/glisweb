@@ -395,6 +395,7 @@ $( document ).ready( function() {
     }
     */
 
+    /*
     // ???
     $('.hint-toggle').change( function () {
         $( '.' + $(this).attr('hint-toggle') ).hide();
@@ -403,12 +404,14 @@ $( document ).ready( function() {
 
     // ???
     $('.hint-toggle').change();
+    */
 
     /* sezione form */
 
     // collego il campo hidden per le checkbox
     // NOTA prima per la checkbox vuota settavamo zero, ma incasina i filtri delle viste
     $('input[type=checkbox]').click( function() {
+        console.log( 'checkbox clicked' );
         if( this.checked ) {
             console.log( 'checked' );
             $(this).prev().val('1');
