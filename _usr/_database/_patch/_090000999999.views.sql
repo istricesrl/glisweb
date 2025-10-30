@@ -3659,6 +3659,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		mastri_path( m2.id ) AS mastro_destinazione,
 		documenti_articoli.id_udm,
 		documenti_articoli.quantita,
+        sum( coalesce( sotto_righe.quantita, 0 ) ) AS sotto_righe_quantita,
 		documenti_articoli.id_listino,		
 		documenti_articoli.id_pianificazione,
 		listini.id_valuta,
@@ -3720,6 +3721,9 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		LEFT JOIN udm AS udm_capacita ON udm_capacita.id = articoli.id_udm_capacita
 		LEFT JOIN udm AS udm_durata ON udm_durata.id = articoli.id_udm_durata
 		LEFT JOIN udm AS udm_riga ON udm_riga.id = documenti_articoli.id_udm
+        LEFT JOIN documenti_articoli AS sotto_righe ON sotto_righe.id_genitore = documenti_articoli.id
+    GROUP BY
+        documenti_articoli.id
 ;
 
 -- | 090000012000

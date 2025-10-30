@@ -156,6 +156,16 @@
     }
 
     /**
+     * attivazione dell'account tramite token (tk)
+     * ===========================================
+     *
+     */
+
+    // TODO
+    if( isset( $_REQUEST['tk'] ) ) {
+    }
+
+    /**
      * pulizia e normalizzazione del nome del file
      * ===========================================
      * 

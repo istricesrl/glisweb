@@ -28,6 +28,7 @@
 	    'macro'				=> array( $m . '_src/_inc/_macro/_anagrafica.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> array(	'anagrafica.view',
+                                                            'categorie.anagrafica.view',
 															'anagrafica.view.archiviate',
 															// 'anagrafica.stats',
 															// 'anagrafica.stampe',
@@ -348,10 +349,7 @@
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_categorie.anagrafica.view.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots' ) ),
-	    'etc'				=> array( 'tabs'	=> array(	'categorie.anagrafica.view',
-															'categorie.anagrafica.tools' ) ),
-	    'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'categorie' ),
-																			'priority'	=> '000' ) ) )
+	    'etc'				=> array( 'tabs'	=> 'anagrafica.view' )
 	);
 
     // tools account

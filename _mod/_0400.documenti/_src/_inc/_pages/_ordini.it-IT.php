@@ -118,8 +118,8 @@
 			'title'			=> array( $l		=> 'gestione righe ordini' ),
 			'h1'			=> array( $l		=> 'gestione' ),
 			'parent'		=> array( 'id'		=> 'ordini.magazzini.view' ),
-			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'ordini.magazzini.righe.form.html' ),
-			'macro'			=> array( $m.'_src/_inc/_macro/_ordini.passivi.magazzini.righe.form.php' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'righe.ordini.magazzini.form.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_righe.ordini.passivi.magazzini.form.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'ordini.magazzini.righe.form') )
 		);    

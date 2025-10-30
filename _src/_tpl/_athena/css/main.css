@@ -625,3 +625,15 @@ label.form-check-label {
     font-size: .9em;
     margin: 0px;
 }
+
+/**
+ * stili per CodeMirror
+ * ====================
+ * 
+ * 
+ */
+
+/* stile per CodeMirror */
+.CodeMirror {
+    height: 100% !important;
+}

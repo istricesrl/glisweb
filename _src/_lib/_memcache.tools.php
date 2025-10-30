@@ -139,7 +139,7 @@
                 logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
             } else {
                 logger( 'scrittura effettuata, chiave: ' . $key, 'memcache' );
-                $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), time(), $ttl );
+                $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), serialize( time() ), $ttl );
                 if( $r === false ) {
                     logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache', LOG_ERR );
                 } else {
@@ -190,25 +190,82 @@
      * TODO documentare
      *
      */
-    function memcacheFlush( $conn ) {
+    function memcacheFlush( $conn, $allSites = false ) {
 
-        if( empty( $conn ) ) {
-
-        logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
-
-        return false;
-
-        } elseif( ! is_object( $conn ) ) {
-
-            logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
-
+        if (empty($conn) || !is_object($conn)) {
+            logWrite('connessione al server assente per il flush', 'memcache');
             return false;
+        }
 
-        } else {
+        if (!defined('MEMCACHE_UNIQUE_SEED') || MEMCACHE_UNIQUE_SEED === '') {
+            logWrite('MEMCACHE_UNIQUE_SEED non definito o vuoto', 'memcache');
+            return false;
+        }
 
-            return $conn->flush();
+        if (!method_exists($conn, 'getAllKeys')) {
+            logWrite('getAllKeys non disponibile su questa connessione', 'memcache');
+            return false;
+        }
+
+        $keys = @$conn->getAllKeys();
+
+        if (!is_array($keys) || empty($keys)) {
+            logWrite('getAllKeys fallita o nessuna chiave presente', 'memcache');
+            return false;
+        }
+
+        $prefix    = (string) ( $allSites === false ) ? MEMCACHE_UNIQUE_SEED : strtoupper( str_replace( '.', '_', $allSites ) ) . '_';
+        $prefixLen = strlen($prefix);
+        $batch     = [];
+        $deleted   = 0;
+        $batchSize = 500;
+
+        foreach ($keys as $k) {
+
+            if (!is_string($k)) {
+                continue;
+            }
+
+            if (strpos($k, $prefix) !== false) {
+
+                $batch[] = $k;
+
+                if (count($batch) >= $batchSize) {
+                    if (method_exists($conn, 'deleteMulti')) {
+                        @ $conn->deleteMulti($batch);
+                        $deleted += count($batch);
+                    } else {
+                        foreach ($batch as $bk) {
+                            if (@$conn->delete($bk)) {
+                                $deleted++;
+                            }
+                        }
+                    }
+                    $batch = [];
+                }
+
+            }
 
         }
+
+        if (!empty($batch)) {
+
+            if (method_exists($conn, 'deleteMulti')) {
+                @ $conn->deleteMulti($batch);
+                $deleted += count($batch);
+            } else {
+                foreach ($batch as $bk) {
+                    if (@$conn->delete($bk)) {
+                        $deleted++;
+                    }
+                }
+            }
+
+        }
+
+        logWrite("flush per prefisso '{$prefix}': eliminate {$deleted} chiavi", 'memcache');
+
+        return true;
 
     }
 
@@ -227,37 +284,35 @@
 
         memcacheUniqueKey( $key );
 
-        if( empty( $conn ) ) {
-
-            logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
-
+        // Connessione valida?
+        if (!($conn instanceof Memcached)) {
+            logger('connessione al server assente per leggere la chiave: ' . $key, 'memcache');
+            $err = Memcached::RES_FAILURE;
             return false;
-
-            } elseif( ! is_object( $conn ) ) {
-
-            logger( 'connessione al server assente per leggere la chiave: ' . $key, 'memcache' );
-
-            return false;
-
-        } else {
-
-            if( empty( $err ) ) {
-                $err = Memcached::RES_FAILURE;
-            }
-
-            $r = $conn->get( $key );
-
-            $err = $conn->getResultCode();
-
-            if( $r === false ) {
-                logger( 'impossibile (' . $conn->getResultCode() . ') leggere la chiave: ' . $key, 'memcache' );
-            } else {
-                logger( 'lettura effettuata, chiave: ' . $key, 'memcache' );
-            }
-
-            return unserialize( $r );
-
         }
+
+        // Lettura
+        $value = $conn->get($key);
+        $code  = $conn->getResultCode();
+        $err   = $code;
+
+        if ($code !== Memcached::RES_SUCCESS) {
+            // RES_NOTFOUND, RES_TIMEOUT, ecc.
+            logger('impossibile (' . $code . ') leggere la chiave: ' . $key, 'memcache');
+            return false;
+        }
+
+        // Se è stringa "probabilmente serializzata", prova a deserializzare una sola volta
+        if (is_string($value) && $value !== '' && preg_match('/^(?:a|O|s|i|d|b|N|C):/', $value)) {
+            $un = @unserialize($value);
+            if ($un !== false || $value === 'b:0;') {
+                return $un;
+            }
+        }
+
+        // Valore grezzo (stringa non serializzata, numeri, array già nativo se usi igbinary, bool, ecc.)
+        logger('lettura effettuata, chiave: ' . $key, 'memcache');
+        return $value;
 
     }
 

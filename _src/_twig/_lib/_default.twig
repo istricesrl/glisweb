@@ -117,4 +117,79 @@
         {% if dataAction %}data-action="{{ dataAction }}"{% endif %}>{{ field.text|raw }}
     </button>
 
+    <!-- fine macro {{ _self }}::formButton() -->
 {% endmacro formButton %}
+
+{# TODO commentare #}
+{% macro image( options ) %}
+    <!-- macro {{ _self }}::image() -->
+
+    {# valori di default #}
+    {% set options = {
+        'source': [],
+        'site': [],
+        'page': [],
+        'image': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array source #}
+    {% set source = {
+        'ruolo': '',
+        'ordine': '',
+        'ietf': 'it-IT',
+        'class': 'img-fluid lazyload'
+    }|merge( options.source ) %}
+
+    {# valori di default per l'array site #}
+    {% set site = {
+    }|merge( options.site ) %}
+
+    {# valori di default per l'array page #}
+    {% set page = {
+    }|merge( options.page ) %}
+
+    {# valori di default per l'array image #}
+    {% set image = {
+    }|merge( options.image ) %}
+
+    {# dettagli dell'immagine prelevati dalla pagina #}
+    {% set img = page.contents.images[ source.ruolo ][ source.ordine ] %}
+
+    {# se il path è per lingua #}
+    {% if img.path is iterable %}
+        {% set path = img.path[ source.ietf ] %}
+    {% else %}
+        {% set path = img.path %}
+    {% endif %}
+
+    <picture class="{% if img.class %}{{ img.class }}{% endif %}">
+
+        {% if not img.orientamento or img.path_alternativo or img.orientamento == 'L' %}
+        <source	type="image/webp"
+	        {% if not img.orientamento or img.path_alternativo %}media="(orientation: landscape)"{% endif %}
+	        srcset="{% if image.formats %}{% for w,h in image.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}
+            {% endfor %}{% else %}{% for s in image %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        <source type="{{ img.mimetype[ source.ietf ] }}"
+	        {% if not img.orientamento or img.path_alternativo %}media="(orientation: landscape)"{% endif %}
+	        srcset="{% if image.formats %}{% for w,h in image.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}
+            {% endfor %}{% else %}{% for s in image %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        {% endif %}
+
+        {% if not img.orientamento or img.path_alternativo or img.orientamento == 'L' %}
+        <source type="image/webp"
+	        {% if not img.orientamento or img.path_alternativo %}media="(orientation: portrait)"{% endif %}
+	        srcset="{% if image.formats %}{% for w,h in image.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in image %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        <source
+	        type="{{ img.mimetype[ source.ietf ] }}"
+	        {% if not img.orientamento or img.path_alternativo %}media="(orientation: portrait)"{% endif %}
+	        srcset="{% if image.formats %}{% for w,h in image.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in image %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        {% endif %}
+
+        <img alt="{{ img.h1[ source.ietf ] }}"
+            style="width: 100%;"
+            data-src="{{ site.root }}{{ path|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}" >
+
+    </picture>
+
+    <!-- fine macro {{ _self }}::image() -->
+{% endmacro image %}

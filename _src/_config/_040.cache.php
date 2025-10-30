@@ -102,7 +102,7 @@
      */
 
     // stringa di unicità per sito
-    define( 'MEMCACHE_UNIQUE_SEED'              , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] ) . '_' ) );
+    define( 'MEMCACHE_UNIQUE_SEED'              , strtoupper( str_replace( '.', '_', $cf['site']['fqdn'] . '_' . $cf['sites']['1']['domains'][ SITE_STATUS ] . '_' ) ) );
 
     // server memcache disponibili
     $cf['memcache']['servers']                  = array();

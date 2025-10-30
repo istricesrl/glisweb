@@ -5166,7 +5166,6 @@ CREATE
 
 END;
 
-
 -- | 070000052800
 
 -- tipologie_edifici_path

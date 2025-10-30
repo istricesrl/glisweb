@@ -41,6 +41,7 @@
 		'prodotto' => 'prodotto',
 		'articolo' => 'articolo',
 		'quantita' => 'quantità',
+        'sotto_righe_quantita' => 'q.tà evasa',
 		'udm' => 'udm',
 		'mastro_provenienza' => 'scarico',
 		'mastro_destinazione' => 'carico',
@@ -58,6 +59,7 @@
         'cliente' => 'text-left',
         'emittente' => 'text-left', 
         'data' => 'no-wrap', 
+        'sotto_righe_quantita' => 'text-right',
 #        'tipologia' => 'text-left',
 		'articolo' => 'text-left'
     );
