@@ -42,9 +42,11 @@
         // recupero la __label__ dell'oggetto da cancellare
         // TODO ma questo non ci espone a SQL injection?
         // NOTA ma non è che anche nella controller c'è questo problema? $t viene mai filtrato?
-	    $ct['__delete__']['__label__'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $_REQUEST['__delete__']['table'] . $rm . ' WHERE id = ? LIMIT 1', array(
-		    array( 's' => $_REQUEST['__delete__']['id'] )
-	    ) );
+        if( ! isset( $_REQUEST['__filesystem_mode__'] ) ) {
+            $ct['__delete__']['__label__'] = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT __label__ FROM ' . $_REQUEST['__delete__']['table'] . $rm . ' WHERE id = ? LIMIT 1', array(
+                array( 's' => $_REQUEST['__delete__']['id'] )
+            ) );
+        }
 
         // timer
         timerCheck( $cf['speed'], 'fine recupero dati oggetto da cancellare' );

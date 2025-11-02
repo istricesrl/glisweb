@@ -4,7 +4,7 @@
 
 {# controls() - crea la bottoniera di controllo per il piè di pagina
     Questa macro crea i bottoni per il salvataggio, la cancellazione e la navigazione dei form. #}
-{% macro controls( page, pages, lang, session, table, request, localization, download, short, etc ) %}
+{% macro controls( page, pages, lang, session, table, request, localization, download, short, etc, form ) %}
     <!-- macro {{ _self }}::controls() -->
 
     {# importazione librerie #}
@@ -25,8 +25,11 @@
 
         {# colonna centrale - bottone elimina #}
         <div class="col col-md-2 text-center">
-            {% if request[ table ].id and short != 2 %}
+            {% if request[ table ].id and short != 2 and not form.__filesystem_mode__ %}
             {{ def.trashButton( table, '', page, pages, '', lang, request, back ) }}
+            {% elseif form.__filesystem_mode__ %}
+            <button type="button" class="btn btn-secondary btn-sm btn-sqr" 
+                onclick="window.open('{{ page.path[ lang ] }}?__delete__=1&amp;__template_files__[id]={{ request.__template_files__.id }}&amp;__templates__[id]={{ request.__templates__.id }}','_self')"><i class='fa fa-trash'></i></button>
             {% endif %}
         </div>
 
@@ -74,7 +77,7 @@
 {% endmacro %}
 
 {# TODO DOCUMENTARE #}
-{% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback ) %}
+{% macro trashButton( table, subtable, page, pages, r, lang, request, back, rollback, form ) %}
 {% import '_lib/_form.twig' as frm %}
 {% if request.__backurl__ %}{% set backurl = '&__backurl__=' ~ request.__backurl__ %}{% endif %}
 {% if not subtable %}

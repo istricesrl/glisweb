@@ -146,7 +146,7 @@
             // recupero il prezzo
             $r = mysqlSelectValue(
                 $c,
-                'SELECT coalesce( modalita_spedizione.importo_netto, 0.0 ) * ceil( ? / modalita_spedizione.lotto_spedizione )
+                'SELECT coalesce( modalita_spedizione.importo_netto * ceil( ? / modalita_spedizione.lotto_spedizione ), 0.0 )
                 FROM modalita_spedizione
                 WHERE modalita_spedizione.id_articolo = ? AND modalita_spedizione.id_zona = ?',
                 array(
@@ -155,6 +155,13 @@
                     array( 's' => $z )
                 )
             );
+
+            if( ! is_numeric( $r ) ) {
+
+                // imposto a zero
+                $r = 0.0;
+
+            }
 
             // calcolo le variazioni
             // TODO
@@ -196,20 +203,30 @@
             // recupero il prezzo
             $n = calcolaCostoSpedizioneNettoArticolo( $m, $c, $a, $q, $l, $z, $t );
 
-            // recupero l'eventuale esenzione
-            $ie = mysqlSelectCachedValue( $m, $c,
-                'SELECT id_iva FROM modalita_spedizione WHERE id_articolo = ? AND id_zona = ?',
-                array( array( 's' => $a ), array( 's' => $z ) )
-            );
+            // se $n è un numero
+            if( is_numeric( $n ) ) {
 
-            // ...
-            $i = ( ! empty( $ie ) ) ? $ie : $i;
+                // recupero l'eventuale esenzione
+                $ie = mysqlSelectCachedValue( $m, $c,
+                    'SELECT id_iva FROM modalita_spedizione WHERE id_articolo = ? AND id_zona = ?',
+                    array( array( 's' => $a ), array( 's' => $z ) )
+                );
 
-            // recupero l'aliquota
-            $v = mysqlSelectCachedValue( $m, $c, 'SELECT aliquota FROM iva WHERE id = ?', array( array( 's' => $i ) ) );
+                // ...
+                $i = ( ! empty( $ie ) ) ? $ie : $i;
 
-            // calcolo il lordo
-            $r = $n + ( $n / 100 * $v );
+                // recupero l'aliquota
+                $v = mysqlSelectCachedValue( $m, $c, 'SELECT aliquota FROM iva WHERE id = ?', array( array( 's' => $i ) ) );
+
+                // calcolo il lordo
+                $r = $n + ( $n / 100 * $v );
+
+            } else {
+
+                // imposto a zero
+                $r = 0.0;
+
+            }
 
         } else {
 

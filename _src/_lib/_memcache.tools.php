@@ -305,7 +305,7 @@
         // Se è stringa "probabilmente serializzata", prova a deserializzare una sola volta
         if (is_string($value) && $value !== '' && preg_match('/^(?:a|O|s|i|d|b|N|C):/', $value)) {
             $un = @unserialize($value);
-            if ($un !== false || $value === 'b:0;') {
+            if ($un !== false || $value === 'b:0;' || $value === 'N;') {
                 return $un;
             }
         }

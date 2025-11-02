@@ -493,6 +493,7 @@
     define( 'DIR_SRC_LIB_EXT'                           , DIR_BASE . '_src/_lib/_ext/' );
     define( 'DIR_SRC_SH'                                , DIR_BASE . '_src/_sh/' );
     define( 'DIR_SRC_TEMPLATES'                         , DIR_BASE . '_src/_templates/' );
+    define( 'DIR_SRC_TPL'                               , DIR_BASE . '_src/_tpl/' );
     define( 'DIR_SRC_TWIG'                              , DIR_BASE . '_src/_twig/' );
     define( 'DIR_SRC_TWIG_BIN'                          , DIR_BASE . '_src/_twig/_bin/' );
     define( 'DIR_SRC_TWIG_INC'                          , DIR_BASE . '_src/_twig/_inc/' );

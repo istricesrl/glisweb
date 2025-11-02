@@ -44,11 +44,12 @@ fi
 ## cambio proprietario
 chown -R root:www-data ./$SUB/
 #find ./$SUB/src/templates                                                           -exec chown -R $FTPUSER:www-data {} \;
+#find ./$SUB/src/tpl                                                           -exec chown -R $FTPUSER:www-data {} \;
 #find ./$SUB/tmp                                                                     -exec chown -R www-data:www-data {} \;
 #find ./$SUB/var                                                                     -exec chown -R $FTPUSER:www-data {} \;
 #find ./$SUB/var/cache                                                               -exec chown -R www-data:www-data {} \;
 
-chown -R $FTPUSER:www-data ./$SUB/src/templates
+chown -R $FTPUSER:www-data ./$SUB/src/tpl
 chown -R www-data:www-data ./$SUB/tmp
 chown -R $FTPUSER:www-data ./$SUB/var
 chown -R www-data:www-data ./$SUB/var/cache
@@ -73,12 +74,12 @@ find ./$SUB/                    -name '*.sh'    -not \( -path ".git" -prune \)  
 
 # permessi aggiuntivi per le cartelle
 find ./$SUB/.git/hooks          -type f                                             -exec chmod ug+x {} \;
-find ./$SUB/src/templates       -type d                                             -exec chmod 770 {} \;
+find ./$SUB/src/tpl             -type d                                             -exec chmod 770 {} \;
 find ./$SUB/tmp                 -type d                                             -exec chmod 770 {} \;
 find ./$SUB/var                 -type d                                             -exec chmod 770 {} \;
 
-find ./$SUB/src/templates       -type f                                             -exec chmod 660 {} \;
-find ./$SUB/mod/*/src/templates -type f                                             -exec chmod 660 {} \;
+find ./$SUB/src/tpl             -type f                                             -exec chmod 660 {} \;
+find ./$SUB/mod/*/src/tpl       -type f                                             -exec chmod 660 {} \;
 find ./$SUB/tmp                 -type f                                             -exec chmod 660 {} \;
 find ./$SUB/var                 -type f                                             -exec chmod 660 {} \;
 

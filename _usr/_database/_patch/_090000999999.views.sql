@@ -3603,6 +3603,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 			' del ',
 			documenti.data
 		) AS documento,
+        documenti.codice AS codice_documento,
 		coalesce( documenti_articoli.data, documenti.data ) AS data,
 		documenti_articoli.id_packing_list,
 		documenti_articoli.id_missione,
