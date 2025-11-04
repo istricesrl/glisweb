@@ -29,7 +29,7 @@
             {{ def.trashButton( table, '', page, pages, '', lang, request, back ) }}
             {% elseif form.__filesystem_mode__ %}
             <button type="button" class="btn btn-secondary btn-sm btn-sqr" 
-                onclick="window.open('{{ page.path[ lang ] }}?__delete__=1&amp;__template_files__[id]={{ request.__template_files__.id }}&amp;__templates__[id]={{ request.__templates__.id }}','_self')"><i class='fa fa-trash'></i></button>
+                onclick="window.open('{{ page.path[ lang ] }}?__delete__=1&amp;__template_files__[id]={{ request.__template_files__.id }}&amp;__template_files__[folder]={{ request.__template_files__.folder }}&amp;__templates__[id]={{ request.__templates__.id }}','_self')"><i class='fa fa-trash'></i></button>
             {% endif %}
         </div>
 

@@ -1,13 +1,22 @@
 <?php
 
     /**
+     * pagine del modulo 01000.produzione
      * 
+     * questo file contiene la definizione delle pagine del modulo 'produzione'
      * 
-     * 
-     * 
-     * TODO documentare
-     * 
-     * 
+     * introduzione
+	 * ============
+	 * Il modulo produzione è un modulo contenitore, che fornisce una dashboard e un archivio con le
+	 * rispettive pagine tools, in modo che altri moduli possano inserirvi le proprie sotto pagine.
+	 * 
+	 * pagina						| genitore					| descrizione
+	 * -----------------------------|---------------------------|---------------------
+	 * produzione					| NULL						| dashboard del modulo produzione
+	 * produzione.tools				| produzione				| strumenti per la gestione della produzione
+	 * produzione.archivio			| produzione				| archivio di produzione
+	 * produzione.archivio.tools	| produzione.archivio		| strumenti per la gestione dell'archivio di produzione
+	 * 
      */
 
     // lingua di questo file
@@ -45,7 +54,7 @@
 	    'etc'				=> array( 'tabs'	=> 'produzione' )
 	);
 
-	// dashboard produzione
+	// archivio produzione
 	$p['produzione.archivio'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'archivio produzione' ),

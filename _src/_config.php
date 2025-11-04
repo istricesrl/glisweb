@@ -3,7 +3,7 @@
     /**
      * file di base del framework
      *
-     * questo file costituisce la struttura portante del framework GlisWeb.
+     * questo file costituisce la struttura portante del framework GlisWeb
      * 
      * introduzione
      * ============

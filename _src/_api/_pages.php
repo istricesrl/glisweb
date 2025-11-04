@@ -862,6 +862,9 @@
         // aggiungo all'output l'ID della pagina
         echo PHP_EOL . '<!-- ID pagina: ' . $ct['page']['id'] . ' -->' . PHP_EOL;
 
+        // aggiungo all'output la lingua corrente
+        echo PHP_EOL . '<!-- lingua: ' . $ct['localization']['language']['ietf'] . ' -->' . PHP_EOL;
+
         // aggiungo all'output il percorso del template
         if( ! empty( $ct['page']['template']['path'] ) ) {
             echo PHP_EOL . '<!-- template: ' . $ct['page']['template']['path'] . ' -->' . PHP_EOL;
@@ -1028,7 +1031,7 @@
                 logger( 'tipo di template sconosciuto: ' . $ct['page']['template']['type'], 'template', LOG_CRIT );
 
                 // debug
-                // die( 'tipo di template sconosciuto: ' . $ct['page']['template']['type'] );
+                die( 'tipo di template sconosciuto: ' . $ct['page']['template']['type'] );
 
             break;
 

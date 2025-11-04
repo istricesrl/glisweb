@@ -57,7 +57,7 @@
 			'parent'		=> array( 'id'		=> 'missioni.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'missioni.form.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_missioni.form.php' ),
-			'js'			=> array( 'internal' => array( $m . '_src/_templates/_athena/src/js/missioni.js' ) ),
+			// 'js'			=> array( 'internal' => array( $m . '_src/_templates/_athena/src/js/missioni.js' ) ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> array(	'missioni.form',
 															'missioni.form.contenuto',
