@@ -58,7 +58,11 @@
                 $pid = PREFX_CATEGORIE_NOTIZIE . $pg['id'];
                 $pip = PREFX_CATEGORIE_NOTIZIE . $pg['id_genitore'];
 
-			    // aggiornamento delle pagine
+                if( ! empty( $pg['id_pagina'] ) ) {
+                    $pip = $pg['id_pagina'];
+                }
+
+                // aggiornamento delle pagine
 				if( $pg['timestamp_aggiornamento'] > $cf['contents']['updated'] ) {
 				    $cf['contents']['updated'] = $pg['timestamp_aggiornamento'];
 				}
