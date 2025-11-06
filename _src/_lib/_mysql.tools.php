@@ -95,6 +95,8 @@
 
         // debug
         // var_dump( $r );
+        // var_dump( $q );
+        // var_dump( $k );
         // die();
 
         // se il valore non è stato trovato

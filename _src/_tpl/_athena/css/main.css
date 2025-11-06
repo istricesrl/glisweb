@@ -571,6 +571,7 @@ label.form-check-label {
     border: 1px solid #dddddd;
     border-radius: 5px;
     display: flex;
+    margin-bottom: 1em;
 }
 
 .metro .media-left {
@@ -624,6 +625,37 @@ label.form-check-label {
 .metro p {
     font-size: .9em;
     margin: 0px;
+}
+
+/**
+ * stile dei modal
+ * ===============
+ *
+ */
+
+.modal {
+    z-index: 5100 !important;
+}
+
+.modal p {
+    margin: 0px;
+}
+
+.modal-backdrop {
+    z-index: 5050 !important;
+}
+
+.modal-content {
+    margin: 2px auto;
+}
+
+.modal-dialog {
+    margin: 5em auto;
+}
+
+.modal-title {
+    font-weight: bold;
+    font-size: 1.2em;
 }
 
 /**

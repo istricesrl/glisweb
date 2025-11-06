@@ -65,12 +65,6 @@
         {# CODICE DI CHIUSURA STANDARD DELLA PAGINA #}
         {% include '_inc/_page.close.twig' %}
 
-        {# MODAL DELLA PAGINA #}
-        {% for ruolo,modals in page.contents.modals %}{% for modal in modals %}<!-- modal: {{ modal.schema }} -->{% include modal.schema %}{% endfor %}{% endfor %}
-        {% block modals %}{% endblock modals %}
-        {# TODO: FAR CONFLUIRE IN QUESTO CICLO (page.contents.modals) ANCHE I MODAL DERIVANTI DA METRO E DA ERRORI MYSQL #}
-        {# vedi _src/_inc/_macro/_default.tools.php #}
-
         {# SCRIPT JAVASCRIPT DELLA PAGINA #}
         {% block javascript %}{% endblock javascript %}
 

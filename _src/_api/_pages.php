@@ -1043,6 +1043,7 @@
         logger( 'tipo di template non specificato', 'template' );
 
         // debug
+        var_dump( $ct['page'] );
         die( 'tipo di template non specificato' );
 
     }
