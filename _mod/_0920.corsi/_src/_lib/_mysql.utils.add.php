@@ -271,7 +271,7 @@
 
         if( isset( $riga['id'] ) && ! empty( $riga['id'] ) ) {
 
-            if( empty( $riga['timestamp_aggiornamento'] ) ) {
+            // if( empty( $riga['timestamp_aggiornamento'] ) ) {
                 $riga['timestamp_aggiornamento'] = time();
                 mysqlQuery(
                     $cf['mysql']['connection'],
@@ -281,7 +281,7 @@
                         array( 's' => $riga['id'] )
                     )
                 );
-            }
+            // }
 
             $riga['numero_posti'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
@@ -391,7 +391,7 @@
         );
 
         // ciclo sugli abbonamenti
-        foreach( $abbonamenti as $abbonamento ) {
+        foreach( $abbonamenti as $abbonamento ) { 
 
             // orari in cui è valido l'abbonamento
             $orari = mysqlCachedQuery(
@@ -499,7 +499,7 @@
                 } else {
 
                     $checkCorsi = false;
-
+ 
                 }
 
             } else {
@@ -507,6 +507,9 @@
                 $checkCorsi = false;
 
             }
+
+            // log
+            logger( 'lezione ' . $riga['id'] . ' - abbonamento ' . $abbonamento['id'] . ': checkOrari=' . ( $checkOrari ? 'true' : 'false' ) . ', checkDiscipline=' . ( $checkDiscipline ? 'true' : 'false' ) . ', checkCorsi=' . ( $checkCorsi ? 'true' : 'false' ), 'details/lezioni/corso.' . $riga['id_progetto'] );
 
             // compatibilità generale
             $checkGlobale = $checkOrari && ( $checkDiscipline || $checkCorsi );

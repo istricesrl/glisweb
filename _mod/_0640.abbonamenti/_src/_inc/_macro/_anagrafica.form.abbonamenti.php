@@ -179,12 +179,12 @@
                 } else {
                     $row['pagamento'] = 'ritirato (rimborsati € ' . number_format( $checkCoupon, 2, ',', '.') . ')';
                 }
-            } elseif( $rinnovi['pagato'] == 0 && $rinnovi['pagato_carrelli'] == 0 ) {
+            } elseif( $rinnovi['pagato'] == 0 && isset( $rinnovi['pagato_carrelli'] ) && $rinnovi['pagato_carrelli'] == 0 ) {
                 $row['pagamento'] = 'interamente da pagare € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
-            } elseif( ( $rinnovi['pagato'] < $rinnovi['ordinato'] ) && ( $rinnovi['pagato_carrelli'] < $rinnovi['ordinato'] ) ) {
+            } elseif( ( $rinnovi['pagato'] < $rinnovi['ordinato'] ) && isset( $rinnovi['pagato_carrelli'] ) && ( $rinnovi['pagato_carrelli'] < $rinnovi['ordinato'] ) ) {
                 $row['pagamento'] = 'da pagare € ' . number_format( $rinnovi['ordinato'] - $rinnovi['pagato'], 2, ',', '.') . ' su € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
                 // $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.pagamento']['url'][ LINGUA_CORRENTE ] . '?__pagamenti__[id_cliente]='.$row['id_anagrafica'].'"><span class="media-left"><i class="fa fa-shopping-cart"></i></span></a>';
-            } elseif( ( $rinnovi['pagato'] == $rinnovi['ordinato'] ) || ( $rinnovi['pagato_carrelli'] == $rinnovi['ordinato'] ) ) {
+            } elseif( ( $rinnovi['pagato'] == $rinnovi['ordinato'] ) || ( isset( $rinnovi['pagato_carrelli'] ) && $rinnovi['pagato_carrelli'] == $rinnovi['ordinato'] ) ) {
                 $row['pagamento'] = 'totalmente pagato € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
             }
 
