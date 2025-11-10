@@ -1,0 +1,21 @@
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+<fieldset id="{{ view.id }}-insert" class="view-insert hidden">
+    <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
+    <div class="row form-row form-group d-print-none">
+        <div class="col-12 col-md-2 form-col">
+            <span class="label-top">modulo</span>
+            {# frm.select( view.open.table, '', '', 'modulo', '', etc.select.moduli, '', 16, '', '', '', '', 2  ) #}
+            {{ frm.select({ 'field': { 'name': 'modulo', 'disabled': 2 }, 'source': { 'values': etc.select.moduli }, 'form': form|merge({'table': view.open.table}), 'page': page, 'pages': pages }) }}
+        </div>
+        <div class="col form-col">
+            <span class="label-top">nome</span>
+            {# frm.input( view.open.table, '', '', 'id', '', '', '', '', '', 1, '', 2 ) #}
+            {{ frm.input({ 'field': { 'name': 'id', 'type': 'text', 'disabled': 2 }, 'form': form|merge({'table': view.open.table}), 'page': page }) }}
+        </div>
+        <div class="col-auto ml-auto form-col">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-disk" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>

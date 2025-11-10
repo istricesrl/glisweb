@@ -458,8 +458,22 @@
             // controllo compatibilità discipline
             if( ! empty( $discipline ) ) {
 
+                // cerco il genitore della disciplina
+                $genitoreDisciplina = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id_genitore
+                    FROM categorie_progetti
+                    WHERE id = ?',
+                    array( array( 's' => $riga['id_disciplina'] ) )
+                );
+
+                // ...
+                // print_r( $discipline );
+                // echo( $riga['id_disciplina'] ) . PHP_EOL;
+                // echo( $genitoreDisciplina ) . PHP_EOL;
+
                 // controllo compatibilità discipline
-                if( in_array( $riga['id_disciplina'], $discipline ) ) {
+                if( in_array( $riga['id_disciplina'], $discipline ) || in_array( $genitoreDisciplina, $discipline ) ) {
 
                     $checkDiscipline = true;
 
@@ -468,6 +482,8 @@
                     $checkDiscipline = false;
 
                 }
+
+                // echo 'checkDisciplina: ' . ( $checkDiscipline ? 'true' : 'false' ) . PHP_EOL;
 
             } else {
 

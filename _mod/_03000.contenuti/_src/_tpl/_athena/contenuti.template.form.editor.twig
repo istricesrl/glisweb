@@ -1,0 +1,98 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/contenuti.pagine.form.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+			<input type="hidden" id="file" name="__template_files__[id]" value="{{ request.__template_files__.id }}">
+			<input type="hidden" id="file" name="__template_files__[modulo]" value="{{ request.__template_files__.modulo }}">
+			<input type="hidden" id="file" name="__template_files__[folder]" value="{{ request.__template_files__.folder }}">
+
+            {# MODULO PRINCIPALE #}
+            <fieldset class="d-flex flex-column h-100">
+                <legend>testo della pagina</legend>
+
+                <div class="form-group row h-100">
+                    <div class="col-12 col-md form-col">
+                        {% if request.__template_files__.id %}
+                        {{ frm.textarea({ 'field': { 'name': 'contenuto', 'class': 'form-control form-control-sm form-control-codice CodeMirror' }, 'request': request, 'form': form|merge({ 'table': '__template_files__' }), 'page': page }) }}
+                        {% else %}
+                        <p>Seleziona un file dalla scheda gestione per modificarne il contenuto.</p>
+                        {% endif %}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request, '', '', '', etc, form ) }}
+            </fieldset>
+
+	    </form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('textarea.CodeMirror').forEach(function(textarea) {
+
+        window.editor = CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            {% if ".css" in etc.fileread %}
+            mode: 'css',
+            {% elseif ".js" in etc.fileread %}
+            mode: 'javascript',
+            {% elseif ".xml" in etc.fileread %}
+            mode: 'xml',
+            {% elseif ".json" in etc.fileread %}
+            mode: 'json',
+            {% elseif ".php" in etc.fileread %}
+            mode: 'php',
+            {% elseif ".yaml" in etc.fileread %}
+            mode: 'yaml',
+            {% elseif ".md" in etc.fileread %}
+            mode: 'markdown',
+            {% else %}
+            mode: 'htmlmixed',
+            {% endif %}
+            theme: 'default',
+            tabSize: 4,
+            indentUnit: 4,
+            indentWithTabs: false,
+            electricChars: false,
+            smartIndent: true,
+            lineWrapping: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            autoCloseTags: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+            extraKeys: {
+                'Ctrl-Space': 'autocomplete'
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock javascript %}

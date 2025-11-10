@@ -144,6 +144,17 @@
 
     */
 
+    // manuale d'uso su Github
+    $cf['common']['docs']['user']['html'] = array(
+        'url' => 'https://github.com/istricesrl/glisdev/wiki',
+        'name' => array( 'it-IT' => 'su GitHub' )
+    );
+
+    $cf['common']['bugs']['report'] = array(
+        'url' => 'https://github.com/istricesrl/glisdev/issues',
+        'name' => array( 'it-IT' => 'su GitHub' )
+    );
+
     /* TODO a che epoca risale questa cosa? non sembra essere usata da nessuna parte
 
     // ...

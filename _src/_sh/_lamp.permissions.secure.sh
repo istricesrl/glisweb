@@ -49,6 +49,7 @@ chown -R root:www-data ./$SUB/
 #find ./$SUB/var                                                                     -exec chown -R $FTPUSER:www-data {} \;
 #find ./$SUB/var/cache                                                               -exec chown -R www-data:www-data {} \;
 
+chown -R $FTPUSER:www-data ./$SUB/src/templates
 chown -R $FTPUSER:www-data ./$SUB/src/tpl
 chown -R www-data:www-data ./$SUB/tmp
 chown -R $FTPUSER:www-data ./$SUB/var
