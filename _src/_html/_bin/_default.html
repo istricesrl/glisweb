@@ -7,37 +7,59 @@
 {% if img.path %}
 {% if img.path is iterable %}
 {% set path = img.path[ lang ] %}
+{% set mime = img.mimetype[ lang ] %}
 {% else %}
 {% set path = img.path %}
+{% set mime = img.mimetype %}
 {% endif %}
 {% set path_alternativo = img.path_alternativo %}
 {% set orientamento = img.orientamento %}
-{% set mime = img.mimetype %}
 {% else %}
 {% set path = img %}
 {% set mime = 'image/' ~ path|split('.')|last|replace({'jpg':'jpeg'}) %}
 {% set orientamento = 'L' %}
 {% endif %}
+<!-- orientamento: {{ orientamento }} -->
 <picture class="{% if pictureclass %}{{ pictureclass }}{% endif %}">
     {% if not orientamento or path_alternativo or orientamento == 'L' %}
     <source
-	type="image/webp"
-	{% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
-	srcset="{% if set.formats %}{% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        type="image/webp"
+        {% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
+        srcset="{% if set.formats.l is iterable %}
+            {% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}
+            {% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}"
+    >
     <source
-	type="{{ mime }}"
-	{% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
-	srcset="{% if set.formats %}{% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        type="{{ mime }}"
+        {% if not orientamento or path_alternativo %}media="(orientation: landscape)"{% endif %}
+        srcset="{% if set.formats.l is iterable %}
+            {% for w,h in set.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}
+            {% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}"
+    >
     {% endif %}
     {% if not orientamento or path_alternativo or orientamento == 'P' %}
     <source
-	type="image/webp"
-	{% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
-	srcset="{% if set.formats %}{% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        type="image/webp"
+        {% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
+        srcset="{% if set.formats.p is iterable %}
+            {% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}
+            {% for s in set %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}"
+    >
     <source
-	type="{{ mime }}"
-	{% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
-	srcset="{% if set.formats %}{% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+        type="{{ mime }}"
+        {% if not orientamento or path_alternativo %}media="(orientation: portrait)"{% endif %}
+        srcset="{% if set.formats.p is iterable %}
+            {% for w,h in set.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}
+            {% for s in set %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}"
+    >
     {% endif %}
     <img data-src="{{ site.root }}{{ path|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}" alt="{% if alt %}{{ alt }}{% else %}{{ img.alt }}{% endif %}" class="img-fluid{% if imgclass %} {{ imgclass }}{% endif %} lazyload" style="width: 100%;">
 </picture>

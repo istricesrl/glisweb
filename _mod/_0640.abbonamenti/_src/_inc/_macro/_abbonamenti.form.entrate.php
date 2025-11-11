@@ -108,7 +108,7 @@
     
             $buttons = '';
     
-            $row['data_attivita'] .= ' ' . substr( $row['ora_fine'], 0, 5 );
+            $row['data_attivita'] .= ' ' . substr( $row['ora_fine_programmazione'], 0, 5 );
 
         }
 

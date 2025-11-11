@@ -92,7 +92,7 @@
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_anagrafica.form.default.php';
+	require DIR_MOD . '_0010.anagrafica/_src/_inc/_macro/_anagrafica.form.default.php';
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
     // NOTA come cazzo possono funzionare questi due preset? se li metti prima dell'inclusione della default view non hanno l'id della vista, se li metti dopo

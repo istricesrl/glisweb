@@ -197,5 +197,5 @@
 	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'contenuti.categorie.notizie.form.contenuti.twig' ),
 	    'macro'				=> array( $m . '_src/_inc/_macro/_contenuti.categorie.notizie.form.contenuti.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
-	    'etc'				=> array( 'tabs'	=> 'contenuti.categorie .notizie.form' )
+	    'etc'				=> array( 'tabs'	=> 'contenuti.categorie.notizie.form' )
 	);

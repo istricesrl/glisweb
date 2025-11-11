@@ -87,13 +87,13 @@
 	foreach( range( 1, 52 ) as $w ) {
 	    $ct['etc']['select']['settimane'][] = array( 'id' => $w, '__label__' => $w . ' / ' . substr( int2month( ceil( $w / 4.348125 ) ), 0, 3 ) );
 	}
-
+/*
     $ct['etc']['select']['indirizzi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM indirizzi_view' );
-
+*/
     // tendina luoghi
 	$ct['etc']['select']['luoghi'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],

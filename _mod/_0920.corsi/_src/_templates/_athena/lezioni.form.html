@@ -175,7 +175,7 @@
 					<div class="col-12 col-md">
 						<span class="label-top">indirizzo</span>
 						{% if request[ table ].__reset__ %}{% set default = session.__latest__[ table ].id_indirizzo %}{% else %}{% set default = etc.id_indirizzo %}{% endif %}
-						{{ frm.selectBox( table, '', '', 'id_indirizzo', '', etc.select.indirizzi, request, default, '','','','','indirizzi.form','','indirizzi', 'id_indirizzo' , page, pages, ietf,'indirizzi' ) }}
+						{{ frm.selectBox( table, '', '', 'id_indirizzo', '', '', request, default, '','','','','indirizzi.form','','indirizzi', 'id_indirizzo' , page, pages, ietf,'indirizzi' ) }}
 					</div>
 				</div>
 	
