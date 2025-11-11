@@ -3,13 +3,15 @@
     // lingua di questo file
 	$l = 'it-IT';
 
-    // pagina degli strumenti
+	$m = DIR_MOD . '_0030.strumenti/';
+
+	// pagina degli strumenti
 	$p['strumenti'] 	= array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'strumenti' ),
 	    'h1'			=> array( $l		=> 'strumenti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'strumenti.html' ),
-	    'macro'			=> array( '_src/_inc/_macro/_strumenti.php' ),
+	    'macro'			=> array( $m . '_src/_inc/_macro/_strumenti.php' ),
 	    'parent'		=> array( 'id'		=> NULL ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'			=> array( 'tabs'	=> array(	'strumenti' ) ),
@@ -23,7 +25,7 @@
 	    'title'			=> array( $l		=> 'mail in uscita' ),
 	    'h1'			=> array( $l		=> 'in uscita' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'			=> array( '_src/_inc/_macro/_mail.out.view.php' ),
+	    'macro'			=> array( $m . '_src/_inc/_macro/_mail.out.view.php' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'mail.out.view',
@@ -41,7 +43,7 @@
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.out.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.out.form.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'mail.out.form',
@@ -57,7 +59,7 @@
 		'title'		=> array( $l		=> 'file' ),
 		'h1'		=> array( $l		=> 'file' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.out.form.file.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.file.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.out.form.file.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] )
@@ -70,7 +72,7 @@
 	    'title'		=> array( $l		=> 'strumenti code mail' ),
 	    'h1'		=> array( $l		=> 'strumenti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.out.form.tools.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.out.form.tools.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.form']['etc']['tabs'] )
@@ -82,7 +84,7 @@
 	    'title'		=> array( $l		=> 'mail inviate' ),
 	    'h1'		=> array( $l		=> 'inviate' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.view.php' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
@@ -94,7 +96,7 @@
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'mail.sent.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.form.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.form.php' ),
 	    'parent'		=> array( 'id'		=> 'mail.sent.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'mail.sent.form',
@@ -109,7 +111,7 @@
 		'title'		=> array( $l		=> 'strumenti mail' ),
 		'h1'		=> array( $l		=> 'strumenti mail' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_mail.tools.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_mail.tools.php' ),
 		'parent'		=> array( 'id'		=> 'strumenti' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
@@ -121,7 +123,7 @@
 	    'title'		=> array( $l		=> 'template mail' ),
 		'h1'		=> array( $l		=> 'template' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_template.mail.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.view.php' ),
 		'parent'	=> array( 'id'		=> 'strumenti' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['mail.out.view']['etc']['tabs'] )
@@ -133,7 +135,7 @@
 		'title'		=> array( $l		=> 'gestione' ),
 		'h1'		=> array( $l		=> 'gestione' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.form.php' ),
 		'parent'		=> array( 'id'		=> 'template.mail.view' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'template.mail.form',
@@ -150,7 +152,7 @@
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'template.mail.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.testo.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.testo.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.form.testo.php' ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
@@ -163,7 +165,7 @@
 		'h1'		=> array( $l		=> 'file' ),
 		'parent'		=> array( 'id'		=> 'template.mail.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.mail.form.file.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_template.mail.form.file.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.form.file.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
@@ -176,7 +178,7 @@
 	    'h1'		=> array( $l		=> 'azioni template mail' ),
 		'parent'		=> array( 'id'		=> 'template.mail.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_template.mail.form.tools.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['template.mail.form']['etc']['tabs'] )
 	);
@@ -221,7 +223,7 @@
 	    'title'			=> array( $l		=> 'SMS in uscita' ),
 	    'h1'			=> array( $l		=> 'in uscita' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'			=> array( '_src/_inc/_macro/_sms.out.view.php' ),
+	    'macro'			=> array( $m . '_src/_inc/_macro/_sms.out.view.php' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'auth'			=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'sms.out.view',
@@ -239,7 +241,7 @@
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.out.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.out.form.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.out.form.php' ),
 	    'parent'		=> array( 'id'		=> 'sms.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'sms.out.form',
@@ -254,7 +256,7 @@
 		'title'		=> array( $l		=> 'file' ),
 		'h1'		=> array( $l		=> 'file' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.out.form.file.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.out.form.file.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.out.form.file.php' ),
 	    'parent'		=> array( 'id'		=> 'sms.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['sms.out.form']['etc']['tabs'] )
@@ -267,7 +269,7 @@
 	    'title'		=> array( $l		=> 'strumenti code SMS' ),
 	    'h1'		=> array( $l		=> 'strumenti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.out.form.tools.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.out.form.tools.php' ),
 	    'parent'		=> array( 'id'		=> 'sms.out.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['sms.out.form']['etc']['tabs'] )
@@ -279,7 +281,7 @@
 	    'title'		=> array( $l		=> 'SMS inviati' ),
 	    'h1'		=> array( $l		=> 'inviati' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.sent.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.sent.view.php' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['sms.out.view']['etc']['tabs'] )
@@ -291,7 +293,7 @@
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.sent.form.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.sent.form.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.sent.form.php' ),
 	    'parent'		=> array( 'id'		=> 'sms.sent.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'sms.sent.form',
@@ -306,7 +308,7 @@
 		'title'		=> array( $l		=> 'strumenti SMS' ),
 		'h1'		=> array( $l		=> 'strumenti' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_sms.tools.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_sms.tools.php' ),
 		'parent'		=> array( 'id'		=> 'strumenti' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['sms.out.view']['etc']['tabs'] )
@@ -318,7 +320,7 @@
 	    'title'		=> array( $l		=> 'template SMS' ),
 		'h1'		=> array( $l		=> 'template' ),
 	    'template'	=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_template.sms.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.sms.view.php' ),
 		'parent'	=> array( 'id'		=> 'strumenti' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['sms.out.view']['etc']['tabs'] )
@@ -330,7 +332,7 @@
 		'title'		=> array( $l		=> 'gestione' ),
 		'h1'		=> array( $l		=> 'gestione' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.sms.form.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_template.sms.form.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.sms.form.php' ),
 		'parent'		=> array( 'id'		=> 'template.sms.view' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'template.sms.form',
@@ -347,7 +349,7 @@
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'parent'		=> array( 'id'		=> 'template.sms.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.sms.form.testo.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_template.sms.form.testo.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.sms.form.testo.php' ),
 		'etc'		=> array( 'tabs'	=> $p['template.sms.form']['etc']['tabs'] ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
@@ -360,7 +362,7 @@
 		'h1'		=> array( $l		=> 'file' ),
 		'parent'		=> array( 'id'		=> 'template.sms.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'template.sms.form.file.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_template.sms.form.file.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_template.sms.form.file.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['template.sms.form']['etc']['tabs'] )
 	);
@@ -373,7 +375,7 @@
 	    'h1'		=> array( $l		=> 'azioni template' ),
 		'parent'		=> array( 'id'		=> 'template.sms.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_template.sms.form.tools.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.sms.form.tools.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['template.sms.form']['etc']['tabs'] )
 	);
@@ -384,7 +386,7 @@
 		'title'		=> array( $l		=> 'job' ),
 		'h1'		=> array( $l		=> 'job' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_job.view.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_job.view.php' ),
 		'parent'		=> array( 'id'		=> 'strumenti' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'job.view', 'job.tools' ) ),
@@ -400,7 +402,7 @@
 	    'h1'				=> array( $l		=> 'azioni' ),
 	    'parent'			=> array( 'id'		=> 'job.view' ),
 	    'template'			=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'				=> array( '_src/_inc/_macro/_job.tools.php' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_job.tools.php' ),
 	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'				=> array( 'tabs'	=> $p['job.view']['etc']['tabs'] )
 	);
@@ -411,7 +413,7 @@
 		'title'		=> array( $l		=> 'gestione' ),
 		'h1'		=> array( $l		=> 'gestione' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'job.form.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_job.form.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_job.form.php' ),
 		'parent'		=> array( 'id'		=> 'job.view' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'job.form',
@@ -425,7 +427,7 @@
 		'title'		=> array( $l		=> 'task' ),
 		'h1'		=> array( $l		=> 'task' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.view.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_task.view.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_task.view.php' ),
 		'parent'		=> array( 'id'		=> 'strumenti' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'task.view',) ),
@@ -439,7 +441,7 @@
 		'title'		=> array( $l		=> 'gestione' ),
 		'h1'		=> array( $l		=> 'gestione' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'task.form.html' ),
-		'macro'		=> array( '_src/_inc/_macro/_task.form.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_task.form.php' ),
 		'parent'		=> array( 'id'		=> 'task.view' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'task.form',
@@ -454,7 +456,7 @@
 	    'title'		=> array( $l		=> 'strumenti task' ),
 	    'h1'		=> array( $l		=> 'strumenti' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_task.form.tools.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_task.form.tools.php' ),
 	    'parent'		=> array( 'id'		=> 'task.view' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> $p['task.form']['etc']['tabs'] )
@@ -467,7 +469,7 @@
 	    'title'		=> array( $l		=> 'cron' ),
 	    'h1'		=> array( $l		=> 'cron' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_cron.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_cron.view.php' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gestione cron' ),
@@ -480,7 +482,7 @@
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'cron.gestione.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_cron.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_cron.gestione.php' ),
 	    'parent'		=> array( 'id'		=> 'cron' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'cron_gestione' ) )
@@ -492,7 +494,7 @@
 	    'title'		=> array( $l		=> 'job' ),
 	    'h1'		=> array( $l		=> 'job' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_job.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_job.view.php' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gestione job' ),
@@ -505,7 +507,7 @@
 	    'title'		=> array( $l		=> 'gestione' ),
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'job.gestione.html' ),
-	    'macro'		=> array( '_src/_inc/_macro/_job.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_job.gestione.php' ),
 	    'parent'		=> array( 'id'		=> 'job' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
@@ -517,7 +519,7 @@
 	    'h1'		=> array( $l		=> 'mail in uscita' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.out.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.out.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gestione mail' ),
 									'priority'	=> 100 ) ),
@@ -533,7 +535,7 @@
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'mail.out.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'mail_out' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.out.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.out.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
@@ -544,7 +546,7 @@
 	    'h1'		=> array( $l		=> 'mail inviate' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['mail_out']['etc']['tabs'] )
 	);
@@ -556,7 +558,7 @@
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'mail.sent.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'mail_sent' ),
-	    'macro'		=> array( '_src/_inc/_macro/_mail.sent.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_mail.sent.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
@@ -567,7 +569,7 @@
 	    'h1'		=> array( $l		=> 'template' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
-	    'macro'		=> array( '_src/_inc/_macro/_template.mail.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['mail_out']['etc']['tabs'] )
 	);
@@ -579,7 +581,7 @@
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'template.mail.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'template' ),
-	    'macro'		=> array( '_src/_inc/_macro/_template.mail.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> array(	'template_gestione',
 									'template_gestione_contenuti',
@@ -593,7 +595,7 @@
 	    'h1'		=> array( $l		=> 'testo' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'template.mail.gestione.contenuti.html' ),
 	    'parent'		=> array( 'id'		=> 'template' ),
-	    'macro'		=> array( '_src/_inc/_macro/_template.mail.gestione.php', '_src/_inc/_macro/_template.mail.gestione.contenuti.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.gestione.php', '_src/_inc/_macro/_template.mail.gestione.contenuti.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['template_gestione']['etc']['tabs'] )
 	);
@@ -605,7 +607,7 @@
 	    'h1'		=> array( $l		=> 'allegati' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'template.mail.gestione.allegati.html' ),
 	    'parent'		=> array( 'id'		=> 'template' ),
-	    'macro'		=> array( '_src/_inc/_macro/_template.mail.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_template.mail.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['template_gestione']['etc']['tabs'] )
 	);
@@ -617,7 +619,7 @@
 	    'h1'		=> array( $l		=> 'SMS in uscita' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'view.html' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.out.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.out.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'SMS' ),
 									'priority'	=> 110 ) ),
@@ -632,7 +634,7 @@
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.out.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'sms.out' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.out.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.out.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
@@ -643,7 +645,7 @@
 	    'h1'		=> array( $l		=> 'SMS inviati' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'view.html' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.sent.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.sent.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['sms_out']['etc']['tabs'] )
 	);
@@ -655,7 +657,7 @@
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'sms.sent.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'sms.sent' ),
-	    'macro'		=> array( '_src/_inc/_macro/_sms.sent.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_sms.sent.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
@@ -666,7 +668,7 @@
 	    'h1'		=> array( $l		=> 'log' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'view.html' ),
 	    'parent'		=> array( 'id'		=> 'strumenti' ),
-	    'macro'		=> array( '_src/_inc/_macro/_log.view.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_log.view.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 	    'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'gestione log' ),
 									'priority'	=> 850 ) )
@@ -679,7 +681,7 @@
 	    'h1'		=> array( $l		=> 'gestione' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'log.gestione.html' ),
 	    'parent'		=> array( 'id'		=> 'log' ),
-	    'macro'		=> array( '_src/_inc/_macro/_log.gestione.php' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_log.gestione.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots' ) )
 	);
 
@@ -691,7 +693,7 @@
 		'h1'		=> array( $l		=> 'configurazione' ),
 		'template'	=> array( 'path'	=> '_src/_templates/_standard/', 'schema' => 'configurazione.gestione.html' ),
 		'parent'	=> array( 'id'		=> 'strumenti' ),
-		'macro'		=> array( '_src/_inc/_macro/_configurazione.gestione.php' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_configurazione.gestione.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots' ) ),
 		'etc'		=> array( 'tabs'	=> array(	'configurazione' ) ),
 		'menu'		=> array( 'admin'	=> array(	'label'		=> array( $l => 'configurazione' ),
