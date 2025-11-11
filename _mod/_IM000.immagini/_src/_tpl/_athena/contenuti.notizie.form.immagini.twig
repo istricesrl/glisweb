@@ -1,0 +1,34 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/contenuti.pagine.form.sub.twig' as sub %}
+{% import 'lib/default.form.immagini.sub.twig' as img %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+	        {# SUBFORM IMMAGINI #}
+            {{ img.immagini( form.table, 'immagini', 'immagini collegate', site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}
+        
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
+			</fieldset>
+        
+        </form>
+    </div>
+</section>
+
+{% endblock %}

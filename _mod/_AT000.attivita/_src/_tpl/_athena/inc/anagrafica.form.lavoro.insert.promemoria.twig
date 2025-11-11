@@ -1,0 +1,47 @@
+{# LIBRERIE #}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+<!-- file {{ _self }} -->
+<fieldset id="{{ view.id }}-insert_memo" class="view-insert hidden">
+    <input type="hidden" id="method" name="{{ view.open.table }}[__method__]" value="post" disabled>
+    <input type="hidden" id="timestamp" name="{{ view.open.table }}[timestamp_inserimento]" value="{{ 'now'|date('U') }}" disabled>
+    <input type="hidden" id="account" name="{{ view.open.table }}[id_account_inserimento]" value="{{ account }}" disabled>
+    <input type="hidden" id="id_anagrafica_programmazione" name="{{ view.open.table }}[id_anagrafica_programmazione]" value="{{ request[ form.table ].id }}" disabled>
+    <div class="row form-group d-print-none">
+        <div class="col-12 col-md-2 form-col">
+            <span class="label-top">programmazione</span>
+            {{ frm.input({ 'field': { 'name': 'data_programmazione', 'type': 'date', 'default': now|date("Y-m-d"), 'disabled': true }, 'form': form|merge({'table': view.open.table}), 'page': page }) }}
+        </div>  
+        <div class="col-12 col-md-auto form-col">
+            <span class="label-top">inizio</span>
+            {{ frm.input({ 'field': { 'name': 'ora_inizio_programmazione', 'type': 'time', 'disabled': true }, 'form': form|merge({'table': view.open.table}), 'page': page }) }}
+        </div>
+        <div class="col-12 col-md-auto form-col">
+            <span class="label-top">fine</span>
+             {{ frm.input({ 'field': { 'name': 'ora_fine_programmazione', 'type': 'time', 'disabled': true }, 'form': form|merge({'table': view.open.table}), 'page': page }) }}
+        </div>
+        <div class="col-12 col-md-2 form-col">
+            <span class="label-top">tipologia</span>
+			{{ frm.select({ 'field': { 'name': 'id_tipologia', 'default': 1, 'disabled': true }, 'source': { 'values': etc.select.tipologie_attivita }, 'form': form|merge({'table': view.open.table}), 'page': page, 'pages': pages }) }}
+        </div>
+        <div class="col-12 col-md-2 form-col">
+            <span class="label-top">programmata su</span>
+            {{ frm.select({ 'field': { 'name': 'id_cliente', 'disabled': true }, 'source': { 'api': 'anagrafica' }, 'form': form|merge({'table': view.open.table}), 'page': page, 'pages': pages }) }}
+        </div>
+        <div class="col form-col">
+            <span class="label-top">nome</span>
+            {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text', 'disabled': true }, 'form': form|merge({'table': view.open.table}), 'page': page }) }}
+        </div>
+    </div>
+    <div class="row form-group d-print-none">
+        <div class="col form-col">
+            <span class="label-top">descrizione</span>
+            {{ frm.textarea({ 'field': { 'name': 'note_programmazione', 'rows': 2, 'disabled': true }, 'form': form|merge({'table': view.open.table}), 'page': page }) }}
+        </div>
+        <div class="col-auto ml-auto form-col align-self-end">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-floppy-disk" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>
+<!-- fine file {{ _self }} -->

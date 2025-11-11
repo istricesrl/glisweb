@@ -210,7 +210,7 @@ Options -MultiViews
     RewriteRule ^mailing/([0-9]+)/var/(.+)$ _src/_api/_download.php?__download__=var/$2&__mailing__=$1 [B,L,QSA]
     RewriteRule ^mailing/([0-9]+)/([0-9]+)/var/(.+)$ _src/_api/_download.php?__download__=var/$3&__mailing__=$1&__mailing_dst__=$2 [B,L,QSA]
 
-    # proxy OSM
+    # proxy Open Street Map
     # questa regola reindirizza le richieste di tipo tiles/<z>/<x>/<y>.png all'API _src/_api/_osm.php (vedi la documentazione relativa per i dettagli)
     RewriteRule ^tiles/([0-9]+)/([0-9]+)/([0-9]+)\.png$ _src/_api/_osm.php?z=$1&x=$2&y=$3 [L]
 

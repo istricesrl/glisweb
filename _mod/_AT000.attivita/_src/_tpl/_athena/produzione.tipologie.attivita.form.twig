@@ -1,0 +1,49 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/anagrafica.form.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+			{# SEZIONE GENERALE #}
+			<fieldset>
+				<legend>dati generali <small>{{ legend }}</small></legend>
+
+				{# PRIMA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+						<span class="label-top">genitore</span>
+						{{ frm.select({ 'field': { 'name': 'id_genitore' }, 'source': { 'values': etc.select.tipologie_attivita }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+					</div>
+                    <div class="col form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
+			</fieldset>
+
+		</form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

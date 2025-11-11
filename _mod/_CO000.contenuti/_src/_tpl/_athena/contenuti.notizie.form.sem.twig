@@ -1,0 +1,191 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/contenuti.pagine.form.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SELETTORE LINGUA #}
+            <fieldset>
+                <legend>lingua</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        {{ frm.select({ 'field': { 'name': '__lang__', 'autosubmit': true, 'default': localization.language.id }, 'source': { 'values': tr.languages }, 'request': request, 'form': { 'table': '__view__', 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# DEFINIZIONI SPECIALI #}
+            {% set subtable = form.subtable %}
+
+            {# CICLO SULLE LINGUE #}
+            {% set i = 0 %}
+            {% for l in tr.languages %}
+
+            {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_notizia', 'type': 'hidden', 'default': '__parent_id__' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_lingua', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+
+            {% if request[ form.table ][ subtable ][ i ].id_lingua == session.__view__.__lang__ %}
+
+            {# MODULO PRINCIPALE #}
+            <fieldset>
+                <legend>opzioni URL</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">path custom</span>
+                        {{ frm.input({ 'field': { 'name': 'path_custom', 'type': 'text', 'placeholder': 'alias non canonico (IMPORTANTE iniziare sempre con slash)' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">URL custom</span>
+                        {{ frm.input({ 'field': { 'name': 'url_custom', 'type': 'text', 'placeholder': 'URL custom (per i link interni DEVE iniziare con slash)' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">rewrite custom</span>
+                        {{ frm.input({ 'field': { 'name': 'rewrite_custom', 'type': 'text', 'placeholder': 'rewrite custom (sostituisce il tag title ai fini del rewrite)' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>meta tag</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">tag title</span>
+                        {{ frm.input({ 'field': { 'name': 'title', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-8 form-col">
+                        <span class="label-top">tag keywords</span>
+                        {{ frm.input({ 'field': { 'name': 'keywords', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">tag description</span>
+                        {{ frm.textarea({ 'field': { 'name': 'description', 'rows': 3 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">tag robots</span>
+                        {{ frm.textarea({ 'field': { 'name': 'robots', 'rows': 3 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>OpenGraph protocol</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">OG:type</span>
+                        {{ frm.input({ 'field': { 'name': 'og_type', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-5 form-col">
+                        <span class="label-top">OG:determiner</span>
+                        {{ frm.input({ 'field': { 'name': 'og_determiner', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-5 form-col">
+                        <span class="label-top">OG:title</span>
+                        {{ frm.input({ 'field': { 'name': 'og_title', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">OG:image</span>
+                        {{ frm.input({ 'field': { 'name': 'og_image', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">OG:audio</span>
+                        {{ frm.input({ 'field': { 'name': 'og_audio', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">OG:video</span>
+                        {{ frm.input({ 'field': { 'name': 'og_title', 'type': 'text', 'placeholder': '' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">OG:description</span>
+                        {{ frm.textarea({ 'field': { 'name': 'og_description', 'rows': 3 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {% else %}
+
+            {% for field in ['path_custom','url_custom','rewrite_custom','title','keywords','og_type','og_determiner','og_title','og_image','og_audio','og_video'] %}
+            {{ frm.input({ 'field': { 'name': field, 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {% endfor %}
+
+            <textarea name="robots" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][robots]">{{ request[ form.table ][ subtable ][ i ].robots }}</textarea>
+            <textarea name="description" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][description]">{{ request[ form.table ][ subtable ][ i ].description }}</textarea>
+            <textarea name="og_description" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][og_description]">{{ request[ form.table ][ subtable ][ i ].og_description }}</textarea>
+
+            {% endif %}
+
+            {% set i = i + 1 %}
+
+            {% endfor %}
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+	    </form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('textarea.CodeMirror').forEach(function(textarea) {
+
+        CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            mode: 'htmlmixed',
+            theme: 'default',
+            tabSize: 4,
+            indentUnit: 4,
+            indentWithTabs: false,
+            lineWrapping: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            autoCloseTags: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+            extraKeys: {
+                'Ctrl-Space': 'autocomplete'
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock javascript %}
