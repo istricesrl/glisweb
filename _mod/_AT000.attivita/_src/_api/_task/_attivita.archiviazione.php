@@ -37,7 +37,7 @@
                     'SELECT attivita.id FROM attivita
                         WHERE data_archiviazione IS NULL
                         AND coalesce(data_programmazione, data_attivita) >= ?
-                        AND coalesce(data_programmazione, data_attivita) <  ?',
+                        AND coalesce(data_programmazione, data_attivita) <= ?',
                 array(
                     array( 's' => $_REQUEST['inizio'] ),
                     array( 's' => $_REQUEST['fine'] )

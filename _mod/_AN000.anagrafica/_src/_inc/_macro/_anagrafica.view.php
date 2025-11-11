@@ -101,6 +101,7 @@
 	$ct['etc']['select']['categorie_anagrafica'] = tendinaCategorieAnagrafica();
 
     // tendina tipologie
+    // TODO solo se il modulo attivita è attivo
     $ct['etc']['select']['tipologie_attivita'] = tendinaTipologieAttivita();
 
     // tendina stati
