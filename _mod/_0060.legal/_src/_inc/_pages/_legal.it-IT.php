@@ -3,7 +3,9 @@
     // lingua di questo file
 	$l = 'it-IT';
 
-    // pagina principale
+	$m = DIR_MOD . '_0060.legal/';
+
+	// pagina principale
 	$p['privacy'] = array(
 	    'sitemap'		=> false,
 	    'title'		    => array( $l		=> 'privacy' ),

@@ -1,0 +1,141 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SELETTORE LINGUA #}
+            <fieldset>
+                <legend>lingua</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        {{ frm.select({ 'field': { 'name': '__lang__', 'autosubmit': true, 'default': localization.language.id }, 'source': { 'values': tr.languages }, 'request': request, 'form': { 'table': '__view__', 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# DEFINIZIONI SPECIALI #}
+            {% set subtable = form.subtable %}
+
+            {# CICLO SULLE LINGUE #}
+            {% set i = 0 %}
+            {% for l in tr.languages %}
+
+            {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_pagina', 'type': 'hidden', 'default': '__parent_id__' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_lingua', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+
+            {% if request[ form.table ][ subtable ][ i ].id_lingua == session.__view__.__lang__ %}
+
+            {# MODULO PRINCIPALE #}
+            <fieldset>
+                <legend>contenuti della pagina</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">valore del tag h1</span>
+                        {{ frm.input({ 'field': { 'name': 'h1', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">valore del tag h2</span>
+                        {{ frm.input({ 'field': { 'name': 'h2', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">valore del tag h3</span>
+                        {{ frm.input({ 'field': { 'name': 'h3', 'type': 'text' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">cappello</span>
+                        {{ frm.textarea({ 'field': { 'name': 'cappello', 'rows': 3 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">abstract</span>
+                        {{ frm.textarea({ 'field': { 'name': 'abstract', 'rows': 3 }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="d-flex flex-column h-100">
+                <legend>testo della pagina</legend>
+
+                <div class="form-group row h-100">
+                    <div class="col-12 col-md form-col">
+                        {{ frm.textarea({ 'field': { 'name': 'testo', 'class': 'form-control form-control-sm form-control-codice CodeMirror' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {% else %}
+
+            {% for field in ['h1','h2','h3','cappello','abstract','specifiche'] %}
+            {{ frm.input({ 'field': { 'name': field, 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {% endfor %}
+
+            <textarea name="testo" class="d-none" name="{{form.table}}[{{subtable}}][{{i}}][testo]">{{ request[ form.table ][ subtable ][ i ].testo }}</textarea>
+
+            {% endif %}
+
+            {% set i = i + 1 %}
+
+            {% endfor %}
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+	    </form>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block javascript %}
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('textarea.CodeMirror').forEach(function(textarea) {
+
+        CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            mode: 'htmlmixed',
+            theme: 'default',
+            tabSize: 4,
+            indentUnit: 4,
+            indentWithTabs: false,
+            lineWrapping: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            autoCloseTags: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+            extraKeys: {
+                'Ctrl-Space': 'autocomplete'
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock javascript %}

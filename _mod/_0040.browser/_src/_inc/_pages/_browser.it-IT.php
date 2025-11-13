@@ -13,6 +13,8 @@
     // lingua di questo file
     $l = 'it-IT';
 
+	$m = DIR_MOD . '_0040.browser/';
+
     /**
      * pagine di servizio
      * ==================
@@ -39,6 +41,6 @@
                                             )
                         ),
         'parent'        => array( 'id'      => NULL ),
-        'macro'         => array( '_src/_inc/_macro/_browser.php' ),
+        'macro'         => array( $m . '_src/_inc/_macro/_browser.php' ),
         'auth'          => array( 'groups'  => array( 'roots' ) )
     );

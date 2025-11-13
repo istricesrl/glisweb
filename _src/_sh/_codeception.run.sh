@@ -14,20 +14,24 @@ clear
 RL="../../"
 
 ## directory corrente
-cd $(dirname "$0")
-cd $RL
+cd $(dirname "$0") || exit 1
+cd $RL || exit 1
 
 ## permessi temporanei
 chmod ug+x _src/_lib/_ext/codeception/codeception/codecept 
 
 ## creazione acceptance test
-_src/_lib/_ext/codeception/codeception/codecept run acceptance -c _usr/_test/codeception.yml
+_src/_lib/_ext/codeception/codeception/codecept run acceptance -c _usr/_test/codeception.yml --no-colors --steps
+CODECEPTION_EXIT_CODE=$?
 
 ## permessi temporanei
 chmod ug-x _src/_lib/_ext/codeception/codeception/codecept 
 
 # TODO documentare
 # qui spiegare come vengono eseguiti i test
+
+## codice di uscita
+exit $CODECEPTION_EXIT_CODE
 
 ## NOTA
 #
