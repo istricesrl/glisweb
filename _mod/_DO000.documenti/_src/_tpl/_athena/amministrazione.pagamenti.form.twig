@@ -1,0 +1,138 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+{% import 'lib/anagrafica.form.sub.twig' as sub %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+			<fieldset>
+				<legend>dati generali <small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">documento</span>
+                        {{ frm.select({ 'field': { 'name': 'id_documento' }, 'source': { 'api': 'documenti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md-2 form-col">
+                        <span class="label-top">codice</span>
+                        {{ frm.input({ 'field': { 'name': 'codice', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+				<div class="form-group row">
+					<div class="col-12 form-col">
+						<span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+					</div>
+				</div>
+
+            </fieldset>
+
+			<fieldset>
+				<legend>importo e sconti</legend>
+
+				<div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">importo base</span>
+                        {{ frm.input({ 'field': { 'name': 'importo_lordo_totale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">sconto coupon</span>
+                        {{ frm.input({ 'field': { 'name': 'coupon_valore', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">importo finale</span>
+                        {{ frm.input({ 'field': { 'name': 'importo_lordo_finale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-auto form-col">
+						<span class="label-top">listino</span>
+						{{ frm.select({ 'field': { 'name': 'id_listino' }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+					</div>
+				</div>
+
+            </fieldset>
+
+			<fieldset>
+				<legend>modalità di pagamento e scadenza</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+						<span class="label-top">tipologia</span>
+						{{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_pagamenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+					</div>
+					<div class="col col-md-auto form-col">
+						<span class="label-top">scadenza</span>
+                        {{ frm.input({ 'field': { 'name': 'data_scadenza', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
+					</div>
+                    <div class="col-12 col-md form-col">
+						<span class="label-top">modalità</span>
+						{{ frm.select({ 'field': { 'name': 'id_modalita_pagamento' }, 'source': { 'values': etc.select.modalita_pagamento }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+					</div>
+                    <div class="col-12 col-md form-col">
+						<span class="label-top">IBAN destinazione</span>
+						{{ frm.select({ 'field': { 'name': 'id_iban' }, 'source': { 'values': etc.select.iban }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+					</div>
+                </div>
+
+            </fieldset>
+
+			<fieldset>
+				<legend>debito senza documento</legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">debitore</span>
+                        {{ frm.select({ 'field': { 'name': 'id_debitore' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">creditore</span>
+                        {{ frm.select({ 'field': { 'name': 'id_creditore' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+			<fieldset>
+				<legend>pagamento</legend>
+
+                <div class="form-group row">
+					<div class="col col-md-auto form-col">
+						<span class="label-top">data</span>
+                        {{ frm.input({ 'field': { 'name': 'timestamp_pagamento', 'type': 'datetime-local' }, 'request': request, 'form': form, 'page': page }) }}
+					</div>
+					<div class="col-12 col-md form-col">
+						<span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note_pagamento', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+					</div>
+				</div>
+
+            </fieldset>
+
+			{# BOTTONI E COMANDI DEL MODULO #}
+			<fieldset class="form-controls mt-auto">
+				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
+			</fieldset>
+
+		</form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}
