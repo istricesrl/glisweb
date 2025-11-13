@@ -104,12 +104,12 @@
                 <div class="form-group row">
                     <div class="col col-md form-col">
                         <span class="label-top">emittente</span>
-                        {{ frm.select({ 'field': { 'name': 'id_emittente', 'disabled': disabled }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        {{ frm.select({ 'field': { 'name': 'id_emittente' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     {% if etc.select.id_sedi_emittente is defined %}
                     <div class="col col-md form-col">
                         <span class="label-top">sede emittente</span>
-                        {{ frm.select({ 'field': { 'name': 'id_sede_emittente', 'disabled': disabled }, 'source': { 'values': etc.select.id_sedi_emittente }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        {{ frm.select({ 'field': { 'name': 'id_sede_emittente' }, 'source': { 'values': etc.select.id_sedi_emittente }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     {% endif %}
                 </div>
@@ -122,12 +122,12 @@
                 <div class="form-group row">
                     <div class="col col-md form-col">
                         <span class="label-top">destinatario</span>
-                        {{ frm.select({ 'field': { 'name': 'id_destinatario', 'disabled': disabled }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        {{ frm.select({ 'field': { 'name': 'id_destinatario' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     {% if etc.select.id_sedi_destinatario is defined %}
                     <div class="col col-md form-col">
                         <span class="label-top">sede destinatario</span>
-                        {{ frm.select({ 'field': { 'name': 'id_sede_destinatario', 'disabled': disabled }, 'source': { 'values': etc.select.id_sedi_destinatario }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        {{ frm.select({ 'field': { 'name': 'id_sede_destinatario' }, 'source': { 'values': etc.select.id_sedi_destinatario }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     {% endif %}
                 </div>

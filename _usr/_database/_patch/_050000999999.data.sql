@@ -1797,7 +1797,6 @@ INSERT IGNORE INTO `udm` (`id`, `id_base`, `conversione`, `nome`, `sigla`, `note
 INSERT IGNORE INTO `valute` (`id`, `iso4217`, `html_entity`, `utf8`) VALUES
 (1,	'EUR',	'&#8634;',	'€');
 
-
 -- | 050000100000
 
 -- zone

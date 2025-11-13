@@ -93,7 +93,8 @@
         'placeholder': '',
         'pattern': '',
         'required': '',
-        'autofocus': ''
+        'autofocus': '',
+        'step': ''
     }|merge( options.field ) %}
 
     {# valori di default per l'array tooltip #}
@@ -158,6 +159,7 @@
         {% if field.placeholder %}placeholder="{{ field.placeholder|raw }}"{% endif %}
         {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
         {% if field.pattern %}pattern="{{ field.pattern }}"{% endif %} 
+        {% if field.step %}step="{{ field.step }}"{% endif %}
         {% if field.required %}required{% endif %} 
         {% if field.type == 'password' %}autocomplete="new-password"{% endif %} 
         {% if field.autofocus %}autofocus{% endif %} 

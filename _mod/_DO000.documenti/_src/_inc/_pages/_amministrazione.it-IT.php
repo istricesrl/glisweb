@@ -203,3 +203,43 @@
 	    'etc'				=> array( 'tabs'	=> 'amministrazione.documenti.articoli.form' )
 	);
 
+    // tools archivio amministrazione
+	$p['amministrazione.pagamenti.form'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'amministrazione pagamenti form' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'amministrazione.pagamenti.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'amministrazione.pagamenti.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.pagamenti.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(	'amministrazione.pagamenti.form',
+                                                            'amministrazione.pagamenti.form.stampe',
+															'amministrazione.pagamenti.form.tools' ) )
+	);
+
+    // tools archivio amministrazione
+	$p['amministrazione.pagamenti.form.stampe'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-print" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'amministrazione pagamenti form stampe' ),
+	    'h1'				=> array( $l		=> 'stampe' ),
+	    'parent'			=> array( 'id'		=> 'amministrazione.pagamenti.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.pagamenti.form.stampe.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'amministrazione.pagamenti.form' )
+	);
+
+    // tools archivio amministrazione
+	$p['amministrazione.pagamenti.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni amministrazione pagamenti form' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'amministrazione.pagamenti.view' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.pagamenti.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'amministrazione.pagamenti.form' )
+	);
+
