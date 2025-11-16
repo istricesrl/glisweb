@@ -18,9 +18,9 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			<input type="hidden" id="file" name="__template_files__[id]" value="{{ request.__template_files__.id }}">
-			<input type="hidden" id="file" name="__template_files__[modulo]" value="{{ request.__template_files__.modulo }}">
-			<input type="hidden" id="file" name="__template_files__[folder]" value="{{ request.__template_files__.folder }}">
+            <input type="hidden" id="file" name="__template_files__[id]" value="{{ request.__template_files__.id }}">
+            <input type="hidden" id="file" name="__template_files__[modulo]" value="{{ request.__template_files__.modulo }}">
+            <input type="hidden" id="file" name="__template_files__[folder]" value="{{ request.__template_files__.folder }}">
 
             {# MODULO PRINCIPALE #}
             <fieldset class="d-flex flex-column h-100">
@@ -43,7 +43,7 @@
                 {{ def.controls( page, pages, ietf, session, form.table, request, '', '', '', etc, form ) }}
             </fieldset>
 
-	    </form>
+        </form>
     </div>
 </section>
 

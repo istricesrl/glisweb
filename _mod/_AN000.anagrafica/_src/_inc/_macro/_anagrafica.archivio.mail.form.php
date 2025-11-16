@@ -32,7 +32,7 @@
      */
 
     // tendina PEC
-	$ct['etc']['select']['se_pec'] = tendinaSePec();
+    $ct['etc']['select']['se_pec'] = tendinaSePec();
 
     /**
      * macro di default
@@ -43,8 +43,8 @@
      * 
      */
 
-	// macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.form.php';
+    // macro di default
+    require DIR_SRC_INC_MACRO . '_default/_default.form.php';
 
     /**
      * debug del form
@@ -55,4 +55,4 @@
      */
 
     // debug
-	// print_r( $_REQUEST );
+    // print_r( $_REQUEST );

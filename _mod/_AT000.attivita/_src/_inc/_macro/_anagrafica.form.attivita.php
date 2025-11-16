@@ -16,7 +16,7 @@
     $ct['form']['table'] = 'anagrafica';
 
     // informazioni della vista
-	$ct['view'] = array(
+    $ct['view'] = array(
         'table' => 'attivita',
         'open' => array(
             'page' => 'produzione.archivio.attivita.form',
@@ -90,7 +90,7 @@
     require DIR_SRC_INC_MACRO . '_default/_default.view.php';
 
     // macro di default per l'entità anagrafica
-	require DIR_MOD . '_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.default.php';
+    require DIR_MOD . '_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.default.php';
 
     // macro di default
     require DIR_SRC_INC_MACRO . '_default/_default.form.php';

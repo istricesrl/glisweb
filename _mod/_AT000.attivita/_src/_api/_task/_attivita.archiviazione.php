@@ -1,9 +1,9 @@
 <?php
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../../../../_src/_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        require '../../../../../_src/_config.php';
+    }
 
     // debug
      ini_set('display_errors', 1);
@@ -11,10 +11,10 @@
      error_reporting(E_ALL);
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
-	// ...
-	if( isset( $_REQUEST['id'] ) ) {
+    // ...
+    if( isset( $_REQUEST['id'] ) ) {
 
         $status['esito'] = mysqlQuery(
             $cf['mysql']['connection'],
@@ -76,7 +76,7 @@
 
     }
 
-	// output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    // output
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

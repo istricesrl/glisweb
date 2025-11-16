@@ -1,84 +1,84 @@
 <?php
 
-	/**
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * TODO documentare
-	 * 
-	 * 
-	 */
+    /**
+     * 
+     * 
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     * 
+     */
 
 
-	// inclusione del framework
-	require '../../_config.php';
+    // inclusione del framework
+    require '../../_config.php';
 
     // inclusione di PHPExcel
-	// use PhpOffice\PhpSpreadsheet\Spreadsheet;
-	// use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+    // use PhpOffice\PhpSpreadsheet\Spreadsheet;
+    // use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
-	// debug
-	// die( 'contenuto: '.print_r( $_REQUEST, true ) );
+    // debug
+    // die( 'contenuto: '.print_r( $_REQUEST, true ) );
 
     // controllo autorizzazioni
-	if( true ) {
+    if( true ) {
 
-		$error = array();
+        $error = array();
 
-		$view = ( isset( $_REQUEST['v'] ) ) ? json_decode( $_REQUEST['v'], true ) : array();
+        $view = ( isset( $_REQUEST['v'] ) ) ? json_decode( $_REQUEST['v'], true ) : array();
 
-		$view['__pager__'] = NULL;
+        $view['__pager__'] = NULL;
 
-		if( isset( $ct['view']['__restrict__'] ) ) {
-			$_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];
-		}
+        if( isset( $ct['view']['__restrict__'] ) ) {
+            $_REQUEST['__view__'][ $ct['view']['id'] ]['__restrict__'] = $ct['view']['__restrict__'];
+        }
 
-		$data = array();
+        $data = array();
 
-		if( isset( $view['__report_mode__'] ) ) {
-			$data['__report_mode__'] = $view['__report_mode__'];
-		}
+        if( isset( $view['__report_mode__'] ) ) {
+            $data['__report_mode__'] = $view['__report_mode__'];
+        }
 
-		controller(
-			$cf['mysql']['connection'],
-			$cf['memcache']['connection'],
-			$data,
-			$_REQUEST['t'],
-			METHOD_GET,
-			NULL,
-			$error,
-			$view
-		);
+        controller(
+            $cf['mysql']['connection'],
+            $cf['memcache']['connection'],
+            $data,
+            $_REQUEST['t'],
+            METHOD_GET,
+            NULL,
+            $error,
+            $view
+        );
 
-		// debug
-		// die( print_r( $view, true ) );
+        // debug
+        // die( print_r( $view, true ) );
 
-		if( ! empty( $data ) ) {
+        if( ! empty( $data ) ) {
 
-			$csv[0] = array_keys( $data[0] );
+            $csv[0] = array_keys( $data[0] );
 
-			// die(print_r($data ) );
+            // die(print_r($data ) );
 
-			header('Content-Type: text/csv');
-			header('Content-Disposition: attachment; filename="'.$_REQUEST['t'].'.csv"');
+            header('Content-Type: text/csv');
+            header('Content-Disposition: attachment; filename="'.$_REQUEST['t'].'.csv"');
 
-				$csv = array_merge( $csv, $data );
+                $csv = array_merge( $csv, $data );
 
-			$fp = fopen('php://output', 'wb');
-			foreach ($csv as $line) {fputcsv($fp, $line, ';');}
-			fclose($fp);
+            $fp = fopen('php://output', 'wb');
+            foreach ($csv as $line) {fputcsv($fp, $line, ';');}
+            fclose($fp);
 
-		} else {
-			
-			buildText( 'nessun risultato per la ricerca effettuata' );
-		
-		}
+        } else {
+            
+            buildText( 'nessun risultato per la ricerca effettuata' );
+        
+        }
 
-	} else {
+    } else {
 
-	    // errore
-		buildText( 'non autorizzato' );
+        // errore
+        buildText( 'non autorizzato' );
 
-	}
+    }

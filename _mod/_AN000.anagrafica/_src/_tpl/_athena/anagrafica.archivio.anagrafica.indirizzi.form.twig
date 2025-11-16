@@ -18,60 +18,60 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			{# SEZIONE GENERALE #}
-			<fieldset>
-				<legend>dati generali <small>{{ legend }}</small></legend>
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
 
-				<div class="form-group row">
+                <div class="form-group row">
                     <div class="col col-md form-col">
                         <span class="label-top">anagrafica</span>
                         {{ frm.select({ 'field': { 'name': 'id_anagrafica', 'disabled': disabled }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">ruolo</span>
-						{{ frm.select({ 'field': { 'name': 'id_ruolo' }, 'source': { 'values': etc.select.ruoli_indirizzi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-					<div class="col-12 col-md form-col">
-						<span class="label-top">note</span>
+                        <span class="label-top">ruolo</span>
+                        {{ frm.select({ 'field': { 'name': 'id_ruolo' }, 'source': { 'values': etc.select.ruoli_indirizzi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">note</span>
                         {{ frm.input({ 'field': { 'name': 'note', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                </div>
 
-				<div class="form-group row">
+                <div class="form-group row">
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">tipologia</span>
-						{{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_indirizzi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-					<div class="col-12 col-md form-col">
-						<span class="label-top">indirizzo</span>
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_indirizzi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">indirizzo</span>
                         {{ frm.input({ 'field': { 'name': 'indirizzo', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col-12 col-md-1 form-col">
-						<span class="label-top">civico</span>
+                    </div>
+                    <div class="col-12 col-md-1 form-col">
+                        <span class="label-top">civico</span>
                         {{ frm.input({ 'field': { 'name': 'civico', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col-12 col-md-1 form-col">
-						<span class="label-top">interno</span>
+                    </div>
+                    <div class="col-12 col-md-1 form-col">
+                        <span class="label-top">interno</span>
                         {{ frm.input({ 'field': { 'name': 'interno', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col-12 col-md form-col">
-						<span class="label-top">località</span>
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">località</span>
                         {{ frm.input({ 'field': { 'name': 'localita', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
+                    </div>
                     <div class="col col-md form-col">
                         <span class="label-top">comune</span>
                         {{ frm.select({ 'field': { 'name': 'id_comune', 'disabled': disabled }, 'source': { 'api': 'comuni' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
-				</div>
+                </div>
 
-			</fieldset>
+            </fieldset>
 
-			{# BOTTONI E COMANDI DEL MODULO #}
-			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
-			</fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
 
-		</form>
+        </form>
     </div>
 </section>
 

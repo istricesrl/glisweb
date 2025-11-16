@@ -1,8 +1,8 @@
 <?php
 /*
     // integro le lingue mancanti
-	foreach( array_column( $cf['localization']['languages'], 'id' ) as $l ) {
-	    if(
+    foreach( array_column( $cf['localization']['languages'], 'id' ) as $l ) {
+        if(
             in_array( $ct['form']['subtable'], array( 'contenuti' ) )
             && (
                 ! isset( $_REQUEST[ $ct['form']['table'] ][ $ct['form']['subtable'] ] )
@@ -15,7 +15,7 @@
             $_REQUEST[ $ct['form']['table'] ][ $ct['form']['subtable'] ][]['id_lingua'] = $l;
 
         }
-	}
+    }
 */
 
 // ...

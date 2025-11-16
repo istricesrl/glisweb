@@ -344,7 +344,7 @@ ul.nav-tabs li.nav-item > a.nav-link:active {
 .form-group .form-col {
     position: relative;
     padding: 0em 0.5em 0em 0.5em;
-    margin-bottom: 1.5em;
+    margin-bottom: 1.0em;
 }
 
 /* stile delle legend dei form */
@@ -417,6 +417,10 @@ label.form-check-label {
 
 .form-check {
     margin-top: .5em;
+}
+
+textarea.form-control {
+    padding-top: .5em;
 }
 
 /**

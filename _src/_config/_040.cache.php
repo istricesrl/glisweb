@@ -32,14 +32,14 @@
      *
      * Memcache
      * --------
-     *
+     * Il framework utilizza Memcache per memorizzare i dati delle elaborazioni.
      *
      *
      *
      *
      * Redis
      * -----
-     *
+     * Il framework utilizza Redis per memorizzare i dati delle sessioni.
      * 
      * 
      * 
@@ -54,7 +54,8 @@
      * 
      * cache su disco
      * --------------
-     * 
+     * Il framework implementa un sistema nativo di caching su disco per memorizzare le pagine generate,
+     * le query MySQL e altri dati di grandi dimensioni.
      * 
      * 
      * 

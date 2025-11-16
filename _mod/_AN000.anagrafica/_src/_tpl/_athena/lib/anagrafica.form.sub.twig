@@ -9,15 +9,15 @@
 {% import 'lib/default.twig' as tpl %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
-	{% set require = -1 %}
+    {% set require = -1 %}
     {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
-	{% for i in -1..t %}
-	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
-	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
-	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
-	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
     {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
@@ -33,7 +33,7 @@
             </div>
             <div class="col-auto form-col">
                 <span class="label-top">pec</span>
-				{{ frm.select({ 'field': { 'name': 'se_pec', 'disabled': disabled }, 'source': { 'values': etc.select.se_pec }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'se_pec', 'disabled': disabled }, 'source': { 'values': etc.select.se_pec }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col form-col">
                 <span class="label-top">note</span>
@@ -66,15 +66,15 @@
 {% import 'lib/default.twig' as tpl %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
-	{% set require = -1 %}
+    {% set require = -1 %}
     {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
-	{% for i in -1..t %}
-	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
-	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
-	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
-	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
     {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
@@ -83,14 +83,14 @@
         {{ frm.input({ 'field': { 'name': field, 'type': 'hidden', 'default': '__parent_id__', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         {{ frm.input({ 'field': { 'name': 'id_account_' ~ action, 'type': 'hidden', 'default': account, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         {{ frm.input({ 'field': { 'name': 'timestamp_' ~ action, 'type': 'hidden', 'default': timestamp, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-	    <div class="form-group row">
-	        <div class="col form-col">
+        <div class="form-group row">
+            <div class="col form-col">
                 <span class="label-top">numero</span>
                 {{ frm.input({ 'field': { 'name': 'numero', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-	        </div>
+            </div>
             <div class="col-auto form-col">
                 <span class="label-top">tipo</span>
-				{{ frm.select({ 'field': { 'name': 'id_tipologia', 'disabled': disabled }, 'source': { 'values': etc.select.tipologie_telefoni }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'id_tipologia', 'disabled': disabled }, 'source': { 'values': etc.select.tipologie_telefoni }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col form-col">
                 <span class="label-top">note</span>
@@ -123,19 +123,19 @@
 {% import 'lib/default.twig' as tpl %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
-	{% if request.__preset__.anagrafica_indirizzi %}
-	{% set require = 0 %}
-	{% else %}
-	{% set require = -1 %}
-	{% endif %}
+    {% if request.__preset__.anagrafica_indirizzi %}
+    {% set require = 0 %}
+    {% else %}
+    {% set require = -1 %}
+    {% endif %}
     {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
-	{% for i in -1..t %}
-	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
-	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
-	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
-	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
     {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
@@ -147,11 +147,11 @@
         <div class="form-group row">
             <div class="col-auto form-col">
                 <span class="label-top">ruolo</span>
-				{{ frm.select({ 'field': { 'name': 'id_ruolo', 'disabled': disabled }, 'source': { 'values': etc.select.ruoli_indirizzi }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'id_ruolo', 'disabled': disabled }, 'source': { 'values': etc.select.ruoli_indirizzi }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col-auto form-col">
                 <span class="label-top">tipologia</span>
-				{{ frm.select({ 'field': { 'name': 'id_tipologia', 'disabled': disabled }, 'source': { 'values': etc.select.tipologie_indirizzi }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'id_tipologia', 'disabled': disabled }, 'source': { 'values': etc.select.tipologie_indirizzi }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col form-col">
                 <span class="label-top">indirizzo</span>
@@ -192,7 +192,7 @@
                 {{ frm.button( { 'field': { 'text': '<i class="fa fa-minus"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();' } } ) }}
             </div>
             {% endif %}
-	    </div>
+        </div>
     </div>
     {% endfor %}
 </fieldset>
@@ -204,15 +204,15 @@
 {% import 'lib/default.twig' as tpl %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
-	{% set require = 0 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {% set require = 0 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
     {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
-	{% for i in -1..t %}
-	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
-	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
-	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
-	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
     {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
@@ -224,7 +224,7 @@
         <div class="form-group row">
             <div class="col form-col">
                 <span class="label-top">categoria</span>
-				{{ frm.select({ 'field': { 'name': 'id_categoria', 'required': 1, 'disabled': disabled }, 'source': { 'values': etc.select.categorie_anagrafica }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'id_categoria', 'required': 1, 'disabled': disabled }, 'source': { 'values': etc.select.categorie_anagrafica }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             {% if r.id %}
             <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
@@ -238,7 +238,7 @@
                 {{ frm.button( { 'field': { 'text': '<i class="fa fa-minus"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();' } } ) }}
             </div>
             {% endif %}
-	    </div>
+        </div>
     </div>
     {% endfor %}
 </fieldset>
@@ -250,15 +250,15 @@
 {% import 'lib/default.twig' as tpl %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
-	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
     {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
-	{% for i in -1..t %}
-	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
-	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
-	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
-	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
     {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
@@ -274,7 +274,7 @@
             </div>
             <div class="col-auto form-col">
                 <span class="label-top">tipologia</span>
-				{{ frm.select({ 'field': { 'name': 'id_tipologia', 'disabled': disabled }, 'source': { 'values': etc.select.tipologie_url }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'id_tipologia', 'disabled': disabled }, 'source': { 'values': etc.select.tipologie_url }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col form-col">
                 <span class="label-top">note</span>
@@ -295,7 +295,113 @@
                 {{ frm.button( { 'field': { 'text': '<i class="fa fa-minus"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();' } } ) }}
             </div>
             {% endif %}
-	    </div>
+        </div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}
+
+{# TODO DOCUMENTARE #}
+{% macro iban( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as tpl %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
+    {% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
+    {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = require %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+        {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': field, 'type': 'hidden', 'default': '__parent_id__', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': 'id_account_' ~ action, 'type': 'hidden', 'default': account, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': 'timestamp_' ~ action, 'type': 'hidden', 'default': timestamp, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        <div class="form-group row">
+            <div class="col form-col">
+                <span class="label-top">IBAN</span>
+                {{ frm.input({ 'field': { 'name': 'iban', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
+            <div class="col-auto form-col">
+                <span class="label-top">intestazione</span>
+                {{ frm.input({ 'field': { 'name': 'intestazione', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
+            <div class="col form-col">
+                <span class="label-top">note</span>
+                {{ frm.input({ 'field': { 'name': 'note', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
+            {% if r.id %}
+            <div class="col-auto form-col p-0 pl-1">
+                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.archivio.url.form'].url[ lang ] }}?url[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
+            </div>
+            <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
+                {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}
+            </div>
+            <div class="col-auto form-col text-right show-on-duplicate d-print-none hidden">
+                {{ frm.button( { 'field': { 'text': '<i class="fa fa-trash"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();', 'class': 'btn-secondary btn-sqr show-on-duplicate hidden' } } ) }}
+            </div>
+            {% else %}
+            <div class="col-auto form-col text-right d-print-none">
+                {{ frm.button( { 'field': { 'text': '<i class="fa fa-minus"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();' } } ) }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}
+
+{# TODO DOCUMENTARE #}
+{% macro ateco( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as tpl %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
+    {% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
+    {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = require %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+        {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': field, 'type': 'hidden', 'default': '__parent_id__', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': 'id_account_' ~ action, 'type': 'hidden', 'default': account, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': 'timestamp_' ~ action, 'type': 'hidden', 'default': timestamp, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        <div class="form-group row">
+            <div class="col col-md form-col">
+                <span class="label-top">settore ATECO</span>
+                {{ frm.select({ 'field': { 'name': 'id_settore', 'disabled': disabled }, 'source': { 'api': 'settori' }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            </div>
+            {% if r.id %}
+            <div class="col-auto form-col p-0 pl-1">
+                <button type="button" class="btn btn-sm btn-secondary btn-sqr" onclick="window.open('{{ pages['anagrafica.archivio.url.form'].url[ lang ] }}?url[id]={{ r.id }}&__backurl__={{ page.backurl[ lang ] }}','_self')"><i class="fa fa-pencil"></i></button>
+            </div>
+            <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
+                {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}
+            </div>
+            <div class="col-auto form-col text-right show-on-duplicate d-print-none hidden">
+                {{ frm.button( { 'field': { 'text': '<i class="fa fa-trash"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();', 'class': 'btn-secondary btn-sqr show-on-duplicate hidden' } } ) }}
+            </div>
+            {% else %}
+            <div class="col-auto form-col text-right d-print-none">
+                {{ frm.button( { 'field': { 'text': '<i class="fa fa-minus"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();' } } ) }}
+            </div>
+            {% endif %}
+        </div>
     </div>
     {% endfor %}
 </fieldset>

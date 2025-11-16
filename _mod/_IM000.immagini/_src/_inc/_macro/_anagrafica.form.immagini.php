@@ -13,35 +13,35 @@
      */
 
     // tabella gestita
-	$ct['form']['table'] = 'anagrafica';
+    $ct['form']['table'] = 'anagrafica';
 
     // tendina ruolo immagini
-	$ct['etc']['select']['ruoli_immagini'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
-	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_anagrafica = 1'
-	);
+    $ct['etc']['select']['ruoli_immagini'] = mysqlCachedIndexedQuery(
+        $cf['memcache']['index'],
+        $cf['memcache']['connection'],
+        $cf['mysql']['connection'],
+        'SELECT id, __label__ FROM ruoli_immagini_view WHERE se_anagrafica = 1'
+    );
 
-	$ct['etc']['select']['orientamenti'] = array( 
-	    array( 'id' => NULL, '__label__' => 'automatico' ),
-	    array( 'id' => 'L', '__label__' => 'landscape' ),
-	    array( 'id' => 'P', '__label__' => 'portrait' ),
-	    array( 'id' => 'S', '__label__' => 'square' ),
-	);
+    $ct['etc']['select']['orientamenti'] = array( 
+        array( 'id' => NULL, '__label__' => 'automatico' ),
+        array( 'id' => 'L', '__label__' => 'landscape' ),
+        array( 'id' => 'P', '__label__' => 'portrait' ),
+        array( 'id' => 'S', '__label__' => 'square' ),
+    );
 
     // tendina dei tagli
-	$ct['etc']['select']['tagli'] = array(
-	    array( 'id' => 'START', '__label__' => 'peso iniziale' ),
-	    array( 'id' => 'MIDDLE', '__label__' => 'peso centrale' ),
-	    array( 'id' => 'END', '__label__' => 'peso finale' )
-	);
+    $ct['etc']['select']['tagli'] = array(
+        array( 'id' => 'START', '__label__' => 'peso iniziale' ),
+        array( 'id' => 'MIDDLE', '__label__' => 'peso centrale' ),
+        array( 'id' => 'END', '__label__' => 'peso finale' )
+    );
 
     // tendina lingue
-	$ct['etc']['select']['lingue'] = $cf['localization']['languages'];
+    $ct['etc']['select']['lingue'] = $cf['localization']['languages'];
 
     // macro di default per l'entità anagrafica
-	require DIR_MOD . '_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.default.php';
+    require DIR_MOD . '_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.default.php';
 
-	// macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.form.php';
+    // macro di default
+    require DIR_SRC_INC_MACRO . '_default/_default.form.php';

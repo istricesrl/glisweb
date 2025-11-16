@@ -18,29 +18,29 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			{# SEZIONE GENERALE #}
-			<fieldset>
-				<legend>dati generali <small>{{ legend }}</small></legend>
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
 
-				<div class="form-group row">
+                <div class="form-group row">
                     <div class="col col-md-auto form-col">
                         <span class="label-top">genitore</span>
                         {{ frm.select({ 'field': { 'name': 'id_genitore', 'disabled': disabled }, 'source': { 'values': etc.select.gruppi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
-					<div class="col col-md form-col">
-						<span class="label-top">nome</span>
+                    <div class="col col-md form-col">
+                        <span class="label-top">nome</span>
                         {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                </div>
 
-			</fieldset>
+            </fieldset>
 
-			{# BOTTONI E COMANDI DEL MODULO #}
-			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
-			</fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
 
-		</form>
+        </form>
     </div>
 </section>
 

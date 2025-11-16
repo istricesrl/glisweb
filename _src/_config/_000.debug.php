@@ -8,9 +8,8 @@
      * Il framework GlisWeb mette a disposizione degli sviluppatori e degli utenti un completo e potente ventaglio di
      * strumenti per il debug, il monitoraggio del funzionamento, la risoluzione dei problemi. Fra tutti, il sistema di
      * log è sicuramente il più importante, ed è fondamentale comprenderne il funzionamento per poter utilizzare
-     * il framework al massimo del suo potenziale. La colonna portante del sistema di log è la funzione     logger()
-     * della libreria _log.utils.php, e il suo funzionamento si basa sui dati impostati un questo file e nella sua
-     * controparte custom.
+     * il framework al massimo del suo potenziale. La colonna portante del sistema di log è la funzione core logger()
+     * e il suo funzionamento si basa sui dati impostati in questo file e nella sua controparte custom.
      *
      * livelli di log
      * --------------

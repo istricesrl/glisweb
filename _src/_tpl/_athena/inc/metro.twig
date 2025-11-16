@@ -23,7 +23,7 @@
     {% else %}
     {% if cnt == 0 %}<div class="form-row row metro">{% endif %}
         {% if obj.colspan %}{% set colspan = obj.colspan %}{% else %}{% set colspan = 4 %}{% endif %}
-	    {% set cnt = cnt + colspan %}
+        {% set cnt = cnt + colspan %}
         <div class="col-12 col-md-{{ colspan }}">
             {% if obj.url %}
             <a href="{{ obj.host }}{{ obj.url }}"{% if obj.target %} target="{{ obj.target }}"{% endif %}>
@@ -56,7 +56,7 @@
             </a>
         </div>
     {% if cnt >= 12 or loop.last %}
-	{% set cnt = 0 %}
+    {% set cnt = 0 %}
     </div>
     {% endif %}
     {% endif %}
@@ -67,10 +67,10 @@
 {% if not metro.options.nocontrols and back %}
 <div class="row view-controls mt-auto no-gutters d-print-none">
 
-	<div class="col-auto mr-1">
+    <div class="col-auto mr-1">
         {{ frm.button( { 'field': { 'text': '<i class="fa fa-rotate-left"></i>', 'type': 'button', 'onclick': 'window.open("' ~ back ~ '","_self")' } } ) }}
-	</div>
-	
+    </div>
+    
 </div>
 {% endif %}
 <!-- fine file {{ _self }} -->

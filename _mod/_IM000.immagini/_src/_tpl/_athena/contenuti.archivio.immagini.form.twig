@@ -18,35 +18,35 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			{# SEZIONE GENERALE #}
-			<fieldset>
-				<legend>dati generali <small>{{ legend }}</small></legend>
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
-					<div class="col-12 col-md-1 form-col">
-						<span class="label-top">ordine</span>
+                    <div class="col-12 col-md-1 form-col">
+                        <span class="label-top">ordine</span>
                         {{ frm.input({ 'field': { 'name': 'ordine', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col-12 col-md form-col">
-						<span class="label-top">etichetta</span>
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">etichetta</span>
                         {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
+                    </div>
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">lingua</span>
-						{{ frm.select({ 'field': { 'name': 'id_lingua' }, 'source': { 'values': etc.select.lingue }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
+                        <span class="label-top">lingua</span>
+                        {{ frm.select({ 'field': { 'name': 'id_lingua' }, 'source': { 'values': etc.select.lingue }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">ruolo</span>
-						{{ frm.select({ 'field': { 'name': 'id_ruolo' }, 'source': { 'values': etc.select.ruoli_immagini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
+                        <span class="label-top">ruolo</span>
+                        {{ frm.select({ 'field': { 'name': 'id_ruolo' }, 'source': { 'values': etc.select.ruoli_immagini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">orientamento</span>
-						{{ frm.select({ 'field': { 'name': 'orientamento' }, 'source': { 'values': etc.select.orientamenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
+                        <span class="label-top">orientamento</span>
+                        {{ frm.select({ 'field': { 'name': 'orientamento' }, 'source': { 'values': etc.select.orientamenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">taglio</span>
-						{{ frm.select({ 'field': { 'name': 'taglio' }, 'source': { 'values': etc.select.tagli }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
+                        <span class="label-top">taglio</span>
+                        {{ frm.select({ 'field': { 'name': 'taglio' }, 'source': { 'values': etc.select.tagli }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
                 </div>
 
                 <div class="form-group row">
@@ -57,8 +57,8 @@
 
             </fieldset>
 
-			<fieldset>
-				<legend>immagine alternativa</legend>
+            <fieldset>
+                <legend>immagine alternativa</legend>
 
                 <div class="form-group row">
                     <div class="col form-col">
@@ -68,12 +68,12 @@
 
             </fieldset>
 
-			{# BOTTONI E COMANDI DEL MODULO #}
-			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
-			</fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
 
-		</form>
+        </form>
     </div>
 </section>
 

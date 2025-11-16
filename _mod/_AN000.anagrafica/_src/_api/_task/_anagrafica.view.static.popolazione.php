@@ -1,90 +1,90 @@
 <?php
 
-	/**
-	 * task di aggiornamento della anagrafica_view_static
-	 * 
-	 * Questo task aggiorna la tabella anagrafica_view_static in base al contenuto della tabella anagrafica
-	 * e delle tabelle collegate
-	 * 
-	 * introduzione
-	 * ============
-	 * 
-	 * 
-	 * 
-	 * la funzione updateAnagraficaViewStatic()
-	 * ----------------------------------------
-	 * 
-	 * 
-	 * 
-	 * 
-	 * 
-	 * modalità di utilizzo del task
-	 * -----------------------------
-	 * 
-	 * 
-	 * [...] questo task può essere chiamato come /task/AN000.anagrafica/anagrafica.view.static.popolazione
-	 * e decide lui quale anagrafica sincronizzare, oppure come
-	 * /task/AN000.anagrafica/anagrafica.view.static.popolazione?idAnagrafica=<idAnagrafica>
-	 * e in questo caso l'anagrafica da aggiornare è quella passata come parametro
-	 * 
-	 * 
-	 * TODO documentare
-	 * 
-	 * TODO implementare un sistema di controllo dei permessi
-	 * 
-	 */
+    /**
+     * task di aggiornamento della anagrafica_view_static
+     * 
+     * Questo task aggiorna la tabella anagrafica_view_static in base al contenuto della tabella anagrafica
+     * e delle tabelle collegate
+     * 
+     * introduzione
+     * ============
+     * 
+     * 
+     * 
+     * la funzione updateAnagraficaViewStatic()
+     * ----------------------------------------
+     * 
+     * 
+     * 
+     * 
+     * 
+     * modalità di utilizzo del task
+     * -----------------------------
+     * 
+     * 
+     * [...] questo task può essere chiamato come /task/AN000.anagrafica/anagrafica.view.static.popolazione
+     * e decide lui quale anagrafica sincronizzare, oppure come
+     * /task/AN000.anagrafica/anagrafica.view.static.popolazione?idAnagrafica=<idAnagrafica>
+     * e in questo caso l'anagrafica da aggiornare è quella passata come parametro
+     * 
+     * 
+     * TODO documentare
+     * 
+     * TODO implementare un sistema di controllo dei permessi
+     * 
+     */
 
-	// inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../../../../_src/_config.php';
-	}
+    // inclusione del framework
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        require '../../../../../_src/_config.php';
+    }
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
-	// ...
-	if( ! isset( $_REQUEST['id'] ) ) {
+    // ...
+    if( ! isset( $_REQUEST['id'] ) ) {
 
-		// trovo una riga da aggiornare
-		$status['aggiornare'] = mysqlSelectRow(
-			$cf['mysql']['connection'],
-			'SELECT anagrafica.id FROM anagrafica 
+        // trovo una riga da aggiornare
+        $status['aggiornare'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT anagrafica.id FROM anagrafica 
             LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = anagrafica.id
             WHERE
                 ( anagrafica_view_static.timestamp_inserimento IS NULL OR anagrafica.timestamp_inserimento > anagrafica_view_static.timestamp_inserimento )
                 OR
                 ( anagrafica_view_static.timestamp_aggiornamento IS NULL OR anagrafica.timestamp_aggiornamento > anagrafica_view_static.timestamp_aggiornamento )
-			ORDER BY anagrafica.id DESC
-			LIMIT 1'
-		);
+            ORDER BY anagrafica.id DESC
+            LIMIT 1'
+        );
 
         // verifico le tabelle collegate
-		if( empty( $status['aggiornare'] ) ) {
+        if( empty( $status['aggiornare'] ) ) {
 
-			// ...
-			$aggiornare = array();
+            // ...
+            $aggiornare = array();
 
-			// tabelle collegate
-			foreach( array( 'anagrafica_categorie' ) as $table ) {
+            // tabelle collegate
+            foreach( array( 'anagrafica_categorie' ) as $table ) {
 
-				// trovo una riga da aggiornare
-				$aggiornare[] = mysqlSelectValue(
-					$cf['mysql']['connection'],
-					'SELECT ' . $table . '.id_anagrafica 
-					FROM ' . $table . ' 
-					LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = ' . $table . '.id_anagrafica
-					WHERE ( coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento, 0 ) > anagrafica_view_static.timestamp_aggiornamento 
-					OR anagrafica_view_static.timestamp_aggiornamento IS NULL )
-					LIMIT 1'
-				);
+                // trovo una riga da aggiornare
+                $aggiornare[] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT ' . $table . '.id_anagrafica 
+                    FROM ' . $table . ' 
+                    LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = ' . $table . '.id_anagrafica
+                    WHERE ( coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento, 0 ) > anagrafica_view_static.timestamp_aggiornamento 
+                    OR anagrafica_view_static.timestamp_aggiornamento IS NULL )
+                    LIMIT 1'
+                );
 
-			}
+            }
 
             // status
-			$status['aggiornare']['id'] = max( $aggiornare );
+            $status['aggiornare']['id'] = max( $aggiornare );
             $status['modalita'] = 'categorie';
 
-		} else {
+        } else {
 
             // status
             $status['modalita'] = 'standard';
@@ -98,19 +98,19 @@
         $status['modalita'] = 'forzata';
         $status['done'] = true;
 
-	}
+    }
 
-	// ...
-	if( ! empty( $status['aggiornare']['id'] ) ) {
-		updateAnagraficaViewStatic(
-			$status['aggiornare']['id']
-		);
-	}
+    // ...
+    if( ! empty( $status['aggiornare']['id'] ) ) {
+        updateAnagraficaViewStatic(
+            $status['aggiornare']['id']
+        );
+    }
 
-	// debug
+    // debug
     // print_r( $_REQUEST );
 
-	// output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    // output
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

@@ -74,7 +74,7 @@
     }
 
     // timer
-	timerCheck( $cf['speed'], '-> fine logiche di gestione metadati modulo' );
+    timerCheck( $cf['speed'], '-> fine logiche di gestione metadati modulo' );
 
     // debug
-	// print_r( $ct['page'] );
+    // print_r( $ct['page'] );

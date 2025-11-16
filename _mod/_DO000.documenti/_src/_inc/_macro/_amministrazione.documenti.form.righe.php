@@ -15,7 +15,7 @@
     $ct['form']['table'] = 'documenti';
 
     // informazioni della vista
-	$ct['view'] = array(
+    $ct['view'] = array(
         'table' => 'documenti_articoli',
         'open' => array(
             'page' => 'amministrazione.documenti.articoli.form',
@@ -54,7 +54,7 @@
     );
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.view.php';
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.form.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.form.php';

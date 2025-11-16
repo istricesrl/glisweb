@@ -19,13 +19,13 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-	        {# SUBFORM IMMAGINI #}
+            {# SUBFORM IMMAGINI #}
             {{ img.immagini( form.table, 'immagini', 'immagini collegate', site, page, pages, localization.language.ietf, etc, request, session, 'id_notizia' ) }}
         
-			{# BOTTONI E COMANDI DEL MODULO #}
-			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
-			</fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
         
         </form>
     </div>

@@ -476,7 +476,7 @@ $( document ).ready( function() {
             // console.log('megamenu off ' + id);
             // $(this).children('ul').hide();
             // if( megamenu == 0 ) {
-            //	$('.child-of-' + id ).hide();
+            //    $('.child-of-' + id ).hide();
             // }
             // $('.megamenu li').hide();
         }

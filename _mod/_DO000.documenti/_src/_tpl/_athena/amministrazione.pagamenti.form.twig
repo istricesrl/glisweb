@@ -18,8 +18,8 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			<fieldset>
-				<legend>dati generali <small>{{ legend }}</small></legend>
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
                     <div class="col col-md form-col">
@@ -36,19 +36,19 @@
                     </div>
                 </div>
 
-				<div class="form-group row">
-					<div class="col-12 form-col">
-						<span class="label-top">note</span>
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
                         {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                </div>
 
             </fieldset>
 
-			<fieldset>
-				<legend>importo e sconti</legend>
+            <fieldset>
+                <legend>importo e sconti</legend>
 
-				<div class="form-group row">
+                <div class="form-group row">
                     <div class="col form-col">
                         <span class="label-top">importo base</span>
                         {{ frm.input({ 'field': { 'name': 'importo_lordo_totale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
@@ -62,39 +62,39 @@
                         {{ frm.input({ 'field': { 'name': 'importo_lordo_finale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">listino</span>
-						{{ frm.select({ 'field': { 'name': 'id_listino' }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-				</div>
-
-            </fieldset>
-
-			<fieldset>
-				<legend>modalità di pagamento e scadenza</legend>
-
-                <div class="form-group row">
-                    <div class="col-12 col-md form-col">
-						<span class="label-top">tipologia</span>
-						{{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_pagamenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-					<div class="col col-md-auto form-col">
-						<span class="label-top">scadenza</span>
-                        {{ frm.input({ 'field': { 'name': 'data_scadenza', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-                    <div class="col-12 col-md form-col">
-						<span class="label-top">modalità</span>
-						{{ frm.select({ 'field': { 'name': 'id_modalita_pagamento' }, 'source': { 'values': etc.select.modalita_pagamento }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-                    <div class="col-12 col-md form-col">
-						<span class="label-top">IBAN destinazione</span>
-						{{ frm.select({ 'field': { 'name': 'id_iban' }, 'source': { 'values': etc.select.iban }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
+                        <span class="label-top">listino</span>
+                        {{ frm.select({ 'field': { 'name': 'id_listino' }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
                 </div>
 
             </fieldset>
 
-			<fieldset>
-				<legend>debito senza documento</legend>
+            <fieldset>
+                <legend>modalità di pagamento e scadenza</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_pagamenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">scadenza</span>
+                        {{ frm.input({ 'field': { 'name': 'data_scadenza', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">modalità</span>
+                        {{ frm.select({ 'field': { 'name': 'id_modalita_pagamento' }, 'source': { 'values': etc.select.modalita_pagamento }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">IBAN destinazione</span>
+                        {{ frm.select({ 'field': { 'name': 'id_iban' }, 'source': { 'values': etc.select.iban }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>debito senza documento</legend>
 
                 <div class="form-group row">
                     <div class="col col-md form-col">
@@ -109,28 +109,28 @@
 
             </fieldset>
 
-			<fieldset>
-				<legend>pagamento</legend>
+            <fieldset>
+                <legend>pagamento</legend>
 
                 <div class="form-group row">
-					<div class="col col-md-auto form-col">
-						<span class="label-top">data</span>
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">data</span>
                         {{ frm.input({ 'field': { 'name': 'timestamp_pagamento', 'type': 'datetime-local' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col-12 col-md form-col">
-						<span class="label-top">note</span>
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">note</span>
                         {{ frm.textarea({ 'field': { 'name': 'note_pagamento', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                </div>
 
             </fieldset>
 
-			{# BOTTONI E COMANDI DEL MODULO #}
-			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
-			</fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
 
-		</form>
+        </form>
     </div>
 </section>
 

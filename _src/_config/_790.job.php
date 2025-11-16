@@ -38,7 +38,7 @@
      */
     
     // collegamento a $ct
-	$ct['jobs']['foreground'] = &$cf['jobs']['foreground'];
+    $ct['jobs']['foreground'] = &$cf['jobs']['foreground'];
 
     /**
      * debug del runlevel

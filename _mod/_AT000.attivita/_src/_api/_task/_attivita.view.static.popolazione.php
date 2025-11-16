@@ -1,9 +1,9 @@
 <?php
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../../../../_src/_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        require '../../../../../_src/_config.php';
+    }
 
     // debug
      ini_set('display_errors', 1);
@@ -11,15 +11,15 @@
      error_reporting(E_ALL);
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
-	// ...
-	if( ! isset( $_REQUEST['id'] ) ) {
+    // ...
+    if( ! isset( $_REQUEST['id'] ) ) {
 
-		// trovo una riga da aggiornare
-		$status['aggiornare'] = mysqlSelectRow(
-			$cf['mysql']['connection'],
-			'SELECT attivita.id FROM attivita 
+        // trovo una riga da aggiornare
+        $status['aggiornare'] = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT attivita.id FROM attivita 
             LEFT JOIN attivita_view_static ON attivita_view_static.id = attivita.id
             WHERE
                 ( attivita_view_static.timestamp_inserimento IS NULL OR attivita.timestamp_inserimento > attivita_view_static.timestamp_inserimento )
@@ -27,19 +27,19 @@
                 ( attivita_view_static.timestamp_aggiornamento IS NULL OR attivita.timestamp_aggiornamento > attivita_view_static.timestamp_aggiornamento )
                 -- OR
                 -- ( greatest( coalesce( attivita.timestamp_inserimento, 0 ), coalesce( attivita.timestamp_aggiornamento, 0 ) ) < unix_timestamp() - 86400 )
-			ORDER BY attivita.id DESC
-			LIMIT 1'
-		);
+            ORDER BY attivita.id DESC
+            LIMIT 1'
+        );
 
 /*
-		// ...
-		if( ! empty( $status['aggiornare']['id_mastro_destinazione'] ) ) {
-			updateReportGiacenzaMagazzini(
-				$status['aggiornare']['id_mastro_destinazione'],
-				$status['aggiornare']['id_articolo'],
-				$status['aggiornare']['id_matricola']
-			);
-		}
+        // ...
+        if( ! empty( $status['aggiornare']['id_mastro_destinazione'] ) ) {
+            updateReportGiacenzaMagazzini(
+                $status['aggiornare']['id_mastro_destinazione'],
+                $status['aggiornare']['id_articolo'],
+                $status['aggiornare']['id_matricola']
+            );
+        }
 */
 
     } elseif( isset( $_REQUEST['id'] ) ) {
@@ -49,10 +49,10 @@
         $status['modalita'] = 'forzata';
         $status['done'] = true;
 
-	}
+    }
 
-	// ...
-	if( ! empty( $status['aggiornare']['id'] ) ) {
+    // ...
+    if( ! empty( $status['aggiornare']['id'] ) ) {
         mysqlQuery(
             $cf['mysql']['connection'],
             'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
@@ -74,12 +74,12 @@
                 array( 's' => $status['aggiornare']['id'] )
             )
         );
-	}
+    }
 
-	// debug
+    // debug
     // print_r( $_REQUEST );
 
-	// output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    // output
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

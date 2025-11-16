@@ -49,7 +49,7 @@
      */
     function getToken() {
 
-	    return md5( microtime( true ) * random_int( 0, 10000 ) );
+        return md5( microtime( true ) * random_int( 0, 10000 ) );
 
     }
 

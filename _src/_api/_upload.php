@@ -12,47 +12,47 @@
      */
 
     // inclusione del framework
-	require '../_config.php';
+    require '../_config.php';
 
     // risposta
-	$reply = array();
+    $reply = array();
 
     // log
-	logWrite( 'chiamata API file', 'uploader' );
+    logWrite( 'chiamata API file', 'uploader' );
 
-	// accorcio il path
-	shortPath( $_SERVER['HTTP_X_TARGET_FOLDER'] );
+    // accorcio il path
+    shortPath( $_SERVER['HTTP_X_TARGET_FOLDER'] );
 
-	// verifico che il path sia consentito
-	if( str_starts_with_array( $_SERVER['HTTP_X_TARGET_FOLDER'], array( 'tmp/', 'var/contenuti/' ) ) ) {
+    // verifico che il path sia consentito
+    if( str_starts_with_array( $_SERVER['HTTP_X_TARGET_FOLDER'], array( 'tmp/', 'var/contenuti/' ) ) ) {
 
     // TODO verifico che l'utente possa caricare il file
-	if( true ) {
+    if( true ) {
 
-	    // dati ricevuti dagli header della richiesta ajax
-		$fileName	= $_SERVER['HTTP_X_FILE_NAME'];
-		$fileSize	= $_SERVER['HTTP_X_FILE_SIZE'];
-		$chunkNumber	= $_SERVER['HTTP_X_CHUNK_NUMBER'];
-		$totalChunks	= $_SERVER['HTTP_X_CHUNK_TOTAL'];
+        // dati ricevuti dagli header della richiesta ajax
+        $fileName    = $_SERVER['HTTP_X_FILE_NAME'];
+        $fileSize    = $_SERVER['HTTP_X_FILE_SIZE'];
+        $chunkNumber    = $_SERVER['HTTP_X_CHUNK_NUMBER'];
+        $totalChunks    = $_SERVER['HTTP_X_CHUNK_TOTAL'];
 
-	    // log
-		logWrite( 'inizio caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'uploader', LOG_NOTICE );
+        // log
+        logWrite( 'inizio caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'uploader', LOG_NOTICE );
 
-	    // nome del file scritto
-		$collisionCounter = time();
-		$targetFolder = ( isset( $_SERVER['HTTP_X_TARGET_FOLDER'] ) ) ? $_SERVER['HTTP_X_TARGET_FOLDER'] : 'tmp/';
-		$targetRelativePath = DIR_BASE . $targetFolder;
+        // nome del file scritto
+        $collisionCounter = time();
+        $targetFolder = ( isset( $_SERVER['HTTP_X_TARGET_FOLDER'] ) ) ? $_SERVER['HTTP_X_TARGET_FOLDER'] : 'tmp/';
+        $targetRelativePath = DIR_BASE . $targetFolder;
 
-	    // controllo il percorso
-		checkFolder( $targetFolder );
+        // controllo il percorso
+        checkFolder( $targetFolder );
 
-	    // gestione delle collisioni
-		do {
+        // gestione delle collisioni
+        do {
 
-		    $targetFileRelativePath = $targetRelativePath . $fileName;
-		    $targetFileAbsolutePath = $targetFolder . $fileName;
+            $targetFileRelativePath = $targetRelativePath . $fileName;
+            $targetFileAbsolutePath = $targetFolder . $fileName;
 
-		    if( file_exists( $targetFileRelativePath ) ) {
+            if( file_exists( $targetFileRelativePath ) ) {
 
                 $collision = true;
 
@@ -65,86 +65,86 @@
 
                 $collisionCounter++;
 
-		    } else {
+            } else {
 
-			    $collision = false;
+                $collision = false;
 
-		    } 
+            } 
 
-		} while( $collision == true );
+        } while( $collision == true );
 
-	    // nome e percorso dei chunk
-		$estensioneChunk = '.part' . sprintf( '%04d' , $chunkNumber );
-		$targetFileRelativePathWithChunk = $targetFileRelativePath . $estensioneChunk;
+        // nome e percorso dei chunk
+        $estensioneChunk = '.part' . sprintf( '%04d' , $chunkNumber );
+        $targetFileRelativePathWithChunk = $targetFileRelativePath . $estensioneChunk;
 
-	    // apertura degli stream di input e di output
-		$input = fopen( 'php://input' , 'r' );
-		$output = fopen( $targetFileRelativePathWithChunk , 'w' );
+        // apertura degli stream di input e di output
+        $input = fopen( 'php://input' , 'r' );
+        $output = fopen( $targetFileRelativePathWithChunk , 'w' );
 
-	    // scrittura dati
-		while( $data = fread( $input, 1024 ) ) {
+        // scrittura dati
+        while( $data = fread( $input, 1024 ) ) {
 
-		    fwrite( $output, $data );
-		}
+            fwrite( $output, $data );
+        }
 
-	    // chiusura degli stream di input e di output
-		fclose( $input );
-		fclose( $output );
+        // chiusura degli stream di input e di output
+        fclose( $input );
+        fclose( $output );
 
-	    // dimensione del file scritto
-		$writeData = filesize( $targetFileRelativePathWithChunk );
+        // dimensione del file scritto
+        $writeData = filesize( $targetFileRelativePathWithChunk );
 
-	    // se questo chunk era l'ultimo creo il file completo
-		if( $chunkNumber == $totalChunks ) {
+        // se questo chunk era l'ultimo creo il file completo
+        if( $chunkNumber == $totalChunks ) {
 
-		    // costruisco la lista dei parziali
-			$arrayChunks = glob( $targetFileRelativePath . '.part*' );
+            // costruisco la lista dei parziali
+            $arrayChunks = glob( $targetFileRelativePath . '.part*' );
 
-		    // apro il file base
-			$h = fopen( $targetFileRelativePath , "ab" );
+            // apro il file base
+            $h = fopen( $targetFileRelativePath , "ab" );
 
-		    // riassemblo il file originale...
-			foreach( $arrayChunks as $chunk ) {
+            // riassemblo il file originale...
+            foreach( $arrayChunks as $chunk ) {
 
-			    // apro il chunk
-				$in = fopen( $chunk , "rb" );
+                // apro il chunk
+                $in = fopen( $chunk , "rb" );
 
-				if( $in ) {
-				    while( $buff = fread( $in, 1048576 ) ) {
-					fwrite( $h , $buff );
-				    }
-				}
+                if( $in ) {
+                    while( $buff = fread( $in, 1048576 ) ) {
+                    fwrite( $h , $buff );
+                    }
+                }
 
-				fclose( $in );
-				unlink( $chunk );
+                fclose( $in );
+                unlink( $chunk );
 
-			}
+            }
 
-		    // chiudo il file base
-			fclose( $h );
+            // chiudo il file base
+            fclose( $h );
 
-			// log
-			logWrite( 'completato caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_ERR );
+            // log
+            logWrite( 'completato caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_ERR );
 
-		} else {
+        } else {
 
-			// log
-			logWrite( 'caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_ERR );
+            // log
+            logWrite( 'caricamento file: ' . $fileName . ' chunk ' . $chunkNumber . '/' . $totalChunks, 'details/uploader/'.$fileName, LOG_ERR );
 
-		}
+        }
 
-	    // risposta ajax
-		$reply['debug']				= 'on';
-		$reply['fileSize']			= $fileSize;
-		$reply['writtenData']			= $writeData;
-		$reply['fileUrl']			= $cf['site']['url'].$targetFileAbsolutePath;
-		$reply['filePath']			= $targetFileAbsolutePath;
+        // risposta ajax
+        $reply['debug']                = 'on';
+        $reply['fileSize']            = $fileSize;
+        $reply['writtenData']            = $writeData;
+        $reply['fileUrl']            = $cf['site']['url'].$targetFileAbsolutePath;
+        $reply['filePath']            = $targetFileAbsolutePath;
 
-	}
+    }
 
 } else {
-	$reply['error'][] = 'percorso non consentito: ' . $_SERVER['HTTP_X_TARGET_FOLDER'];
+    $reply['error'][] = 'percorso non consentito: ' . $_SERVER['HTTP_X_TARGET_FOLDER'];
 }
 
     // invio risposta
-	buildJson( $reply );
+    buildJson( $reply );

@@ -18,9 +18,9 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			{# SEZIONE GENERALE #}
-			<fieldset>
-				<legend>dati generali <small>{{ legend }}</small></legend>
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
                     <div class="col col-md form-col">
@@ -28,55 +28,55 @@
                         {{ frm.select({ 'field': { 'name': 'id_documento', 'disabled': disabled }, 'source': { 'api': 'documenti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">tipologia</span>
-						{{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_documenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_documenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
                     <div class="col col-md form-col">
                         <span class="label-top">codice</span>
                         {{ frm.input({ 'field': { 'name': 'codice', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                 </div>
                 <div class="form-group row">
-					<div class="col col-md-auto form-col">
-						<span class="label-top">data</span>
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">data</span>
                         {{ frm.input({ 'field': { 'name': 'data', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
+                    </div>
                     <div class="col col-md form-col">
                         <span class="label-top">descrizione</span>
                         {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                 </div>
 
-				<div class="form-group row">
-					<div class="col-12 form-col">
-						<span class="label-top">note</span>
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
                         {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                </div>
 
-			</fieldset>
+            </fieldset>
 
-			<fieldset>
-				<legend>contenuto della riga</legend>
+            <fieldset>
+                <legend>contenuto della riga</legend>
 
-			</fieldset>
+            </fieldset>
 
-			<fieldset>
-				<legend>valore della riga</legend>
+            <fieldset>
+                <legend>valore della riga</legend>
 
-			</fieldset>
+            </fieldset>
 
-			<fieldset>
-				<legend>attribuzione</legend>
+            <fieldset>
+                <legend>attribuzione</legend>
 
-			</fieldset>
+            </fieldset>
 
-			{# BOTTONI E COMANDI DEL MODULO #}
-			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
-			</fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
 
-		</form>
+        </form>
     </div>
 </section>
 

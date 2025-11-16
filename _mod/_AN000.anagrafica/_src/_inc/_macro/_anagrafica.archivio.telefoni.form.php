@@ -32,7 +32,7 @@
      */
 
     // tendina tipologie telefoni
-	$ct['etc']['select']['tipologie_telefoni'] = tendinaTipologieTelefoni();
+    $ct['etc']['select']['tipologie_telefoni'] = tendinaTipologieTelefoni();
 
     /**
      * macro di default
@@ -43,8 +43,8 @@
      * 
      */
 
-	// macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.form.php';
+    // macro di default
+    require DIR_SRC_INC_MACRO . '_default/_default.form.php';
 
     /**
      * debug del form
@@ -55,4 +55,4 @@
      */
 
     // debug
-	// print_r( $_REQUEST );
+    // print_r( $_REQUEST );

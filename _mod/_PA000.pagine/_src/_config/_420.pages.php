@@ -24,7 +24,7 @@
     error_reporting( E_ALL );
 
     // verifico se è presente una pagina
-	if( isset( $cf['contents']['page']['id'] ) && isset( $cf['localization']['language']['id'] ) ) {
+    if( isset( $cf['contents']['page']['id'] ) && isset( $cf['localization']['language']['id'] ) ) {
 
         if( isset( $cf['contents']['page']['metadati']['lp_offerta'] ) ) {
 
@@ -84,8 +84,8 @@
             
         }
 
-	    // timer
-		timerCheck( $cf['speed'], '-> inizio preparazione contenuti specifici per pagina' );
+        // timer
+        timerCheck( $cf['speed'], '-> inizio preparazione contenuti specifici per pagina' );
 
         // prelevo i contenuti della pagina corrente dal database
         $cnt = mysqlSelectRow(

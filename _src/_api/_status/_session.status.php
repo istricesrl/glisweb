@@ -1,13 +1,13 @@
 <?php
 
     // runlevel da saltare
-    	$cf['runlevels']['run'] = array(
+        $cf['runlevels']['run'] = array(
             '000', '005',
             '010', '015',
             '020', '025',
             '040', '045',
             '050', '055'
-	    );
+        );
 
     // debug
         // session_start();
@@ -19,7 +19,7 @@
 
     // rinnovo sessione
         if( isset( $_REQUEST['renew'] ) ) {
-            $_SESSION['used']			= time();
+            $_SESSION['used']            = time();
         }
 
     // debug

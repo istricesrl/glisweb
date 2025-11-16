@@ -17,10 +17,10 @@
      */
 
     // debug
-	// print_r( $_SESSION );
+    // print_r( $_SESSION );
 
     // tabella della vista
-	$ct['view']['table'] = '__templates__';
+    $ct['view']['table'] = '__templates__';
 
     $ct['view']['data']['__filesystem_mode__'] = 1;
 
@@ -28,17 +28,17 @@
     # $ct['view']['id'] = md5( $ct['view']['table'] );
 
     // pagina per la gestione degli oggetti esistenti
-	$ct['view']['open']['page'] = 'contenuti.template.form';
+    $ct['view']['open']['page'] = 'contenuti.template.form';
 
     // campi della vista
-	$ct['view']['cols'] = array(
-	    'template' => 'template'
-	);
+    $ct['view']['cols'] = array(
+        'template' => 'template'
+    );
 
     // stili della vista
-	$ct['view']['class'] = array(
-	    'template' => 'text-start'
-	);
+    $ct['view']['class'] = array(
+        'template' => 'text-start'
+    );
 
     // elenco template
     $templates = getFilteredDirList( '_src/_tpl/' );
@@ -54,7 +54,7 @@
     }
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.view.php';
 
     // ordinamento
     if( isset( $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['template'] ) && $_REQUEST['__view__'][ $ct['view']['id'] ]['__sort__']['template'] == 'DESC' ) {

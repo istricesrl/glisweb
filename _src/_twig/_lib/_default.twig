@@ -165,24 +165,24 @@
     <picture class="{% if img.class %}{{ img.class }}{% endif %}">
 
         {% if not img.orientamento or img.path_alternativo or img.orientamento == 'L' %}
-        <source	type="image/webp"
-	        {% if not img.orientamento or img.path_alternativo %}media="(orientation: landscape)"{% endif %}
-	        srcset="{% if image.formats %}{% for w,h in image.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}
+        <source    type="image/webp"
+            {% if not img.orientamento or img.path_alternativo %}media="(orientation: landscape)"{% endif %}
+            srcset="{% if image.formats %}{% for w,h in image.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}
             {% endfor %}{% else %}{% for s in image %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
         <source type="{{ img.mimetype[ source.ietf ] }}"
-	        {% if not img.orientamento or img.path_alternativo %}media="(orientation: landscape)"{% endif %}
-	        srcset="{% if image.formats %}{% for w,h in image.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}
+            {% if not img.orientamento or img.path_alternativo %}media="(orientation: landscape)"{% endif %}
+            srcset="{% if image.formats %}{% for w,h in image.formats.l %}{{ site.root }}var/immagini/{{ w }}l/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}
             {% endfor %}{% else %}{% for s in image %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
         {% endif %}
 
         {% if not img.orientamento or img.path_alternativo or img.orientamento == 'L' %}
         <source type="image/webp"
-	        {% if not img.orientamento or img.path_alternativo %}media="(orientation: portrait)"{% endif %}
-	        srcset="{% if image.formats %}{% for w,h in image.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in image %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+            {% if not img.orientamento or img.path_alternativo %}media="(orientation: portrait)"{% endif %}
+            srcset="{% if image.formats %}{% for w,h in image.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in image %}{{ s|replace({'.jpg':'.webp','.jpeg':'.webp','.png':'.webp'}) }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
         <source
-	        type="{{ img.mimetype[ source.ietf ] }}"
-	        {% if not img.orientamento or img.path_alternativo %}media="(orientation: portrait)"{% endif %}
-	        srcset="{% if image.formats %}{% for w,h in image.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in image %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
+            type="{{ img.mimetype[ source.ietf ] }}"
+            {% if not img.orientamento or img.path_alternativo %}media="(orientation: portrait)"{% endif %}
+            srcset="{% if image.formats %}{% for w,h in image.formats.p %}{{ site.root }}var/immagini/{{ w }}p/{{ path|split('/')|last }} {{ w }}w{% if not loop.last %}, {% endif %}{% endfor %}{% else %}{% for s in image %}{{ s }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}">
         {% endif %}
 
         <img alt="{{ img.h1[ source.ietf ] }}"

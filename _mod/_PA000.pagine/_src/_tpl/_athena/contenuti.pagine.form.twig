@@ -18,15 +18,15 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			{# SEZIONE GENERALE #}
-			<fieldset>
-				<legend>dati generali <small>{{ legend }}</small></legend>
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">sito</span>
-						{{ frm.select({ 'field': { 'name': 'id_sito' }, 'source': { 'values': etc.select.siti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
+                        <span class="label-top">sito</span>
+                        {{ frm.select({ 'field': { 'name': 'id_sito' }, 'source': { 'values': etc.select.siti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
                     <div class="col col-md form-col">
                         <span class="label-top">genitore</span>
                         {{ frm.select({ 'field': { 'name': 'id_genitore' }, 'source': { 'api': 'pagine' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
@@ -35,68 +35,68 @@
                         <span class="label-top">nome</span>
                         {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
-				</div>
+                </div>
 
-				<div class="form-group row">
-					<div class="col-12 form-col">
-						<span class="label-top">note</span>
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
                         {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                </div>
 
             </fieldset>
 
-			{# SEZIONE ELABORAZIONE #}
-			<fieldset>
-				<legend>flag di elaborazione</legend>
+            {# SEZIONE ELABORAZIONE #}
+            <fieldset>
+                <legend>flag di elaborazione</legend>
 
-				<div class="form-group row">
-					<div class="col-auto col-form-label form-col">
-						<div class="form-check">
-							{{ frm.checkbox({ 'field': { 'name': 'se_sitemap', 'placeholder': 'sitemap' }, 'request': request, 'form': form, 'page': page }) }}
-						</div>
-					</div>
-					<div class="col-auto col-form-label form-col">
-						<div class="form-check">
-							{{ frm.checkbox({ 'field': { 'name': 'se_cacheable', 'placeholder': 'cacheable' }, 'request': request, 'form': form, 'page': page }) }}
-						</div>
-					</div>
-				</div>
+                <div class="form-group row">
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_sitemap', 'placeholder': 'sitemap' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_cacheable', 'placeholder': 'cacheable' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                </div>
 
             </fieldset>
 
-			{# SEZIONE TEMPLATE #}
-			<fieldset>
-				<legend>template, schema e tema</legend>
+            {# SEZIONE TEMPLATE #}
+            <fieldset>
+                <legend>template, schema e tema</legend>
 
                 <div class="form-group row">
                     <div class="col-12 col-md form-col">
-						<span class="label-top">template</span>
-						{{ frm.select({ 'field': { 'name': 'template', 'autosubmit': true }, 'source': { 'values': etc.select.templates }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-					{% if request[ form.table ].template %}
-					<div class="col-12 col-md form-col">
-						<span class="label-top">schema</span>
-						{{ frm.select({ 'field': { 'name': 'schema_html' }, 'source': { 'values': etc.select.schemi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-					<div class="col-12 col-md form-col">
-						<span class="label-top">tema</span>
-						{{ frm.select({ 'field': { 'name': 'tema_css' }, 'source': { 'values': etc.select.temi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-					{% endif %}
-				</div>
+                        <span class="label-top">template</span>
+                        {{ frm.select({ 'field': { 'name': 'template', 'autosubmit': true }, 'source': { 'values': etc.select.templates }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% if request[ form.table ].template %}
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">schema</span>
+                        {{ frm.select({ 'field': { 'name': 'schema_html' }, 'source': { 'values': etc.select.schemi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">tema</span>
+                        {{ frm.select({ 'field': { 'name': 'tema_css' }, 'source': { 'values': etc.select.temi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% endif %}
+                </div>
 
             </fieldset>
 
             {# SUBFORM PUBBLICAZIONI #}
             {{ sub.pubblicazioni( form.table, 'pubblicazioni', 'pubblicazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_pagina' ) }}
 
-			{# BOTTONI E COMANDI DEL MODULO #}
-			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
-			</fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
 
-		</form>
+        </form>
     </div>
 </section>
 

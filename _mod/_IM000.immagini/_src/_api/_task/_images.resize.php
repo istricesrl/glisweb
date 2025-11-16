@@ -11,20 +11,20 @@
      */
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../../../../_src/_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        require '../../../../../_src/_config.php';
+    }
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
     // status
-	$status['info'][] = 'inizio operazioni di scalatura';
+    $status['info'][] = 'inizio operazioni di scalatura';
 
     // chiave di lock
-	if( ! isset( $status['token'] ) ) {
-	    $status['token'] = getToken( __FILE__ );
-	}
+    if( ! isset( $status['token'] ) ) {
+        $status['token'] = getToken( __FILE__ );
+    }
 
     // se è specificato un ID, forzo la richiesta
     if( isset( $_REQUEST['id'] ) ) {
@@ -57,7 +57,7 @@
             array(
                 array( 's' => $status['token'] )
             )
-	    );
+        );
 
     }
 
@@ -82,45 +82,45 @@
         fullPath( $im1 );
         fullPath( $im2 );
 
-	    // controllo che il file esista
-		if( file_exists( $im1 ) ) {
+        // controllo che il file esista
+        if( file_exists( $im1 ) ) {
 
-		    // se l'immagine non è nella cartella immagini, la copio
-			if( ! file_exists( DIR_VAR_IMMAGINI . basename( $im1 ) ) ) {
-			    copyFile( $im1, DIR_VAR_IMMAGINI . basename( $im1 ) );
-			}
+            // se l'immagine non è nella cartella immagini, la copio
+            if( ! file_exists( DIR_VAR_IMMAGINI . basename( $im1 ) ) ) {
+                copyFile( $im1, DIR_VAR_IMMAGINI . basename( $im1 ) );
+            }
 
-		    // determino le dimensioni dell'immagine
-			$dm = imageSize( $im1 );
+            // determino le dimensioni dell'immagine
+            $dm = imageSize( $im1 );
 
-		    // prelevo l'orientamento dell'immagine
-			$j = $dm['o'];
+            // prelevo l'orientamento dell'immagine
+            $j = $dm['o'];
 
             // ...
             $k = ( $j == 'l' ) ? 'p' : ( ( ( $j == 'p' ) ) ? 'l' : 's' );
 
-		    // array dei formati
-			$ks = array_flip( $cf['image']['formats'][ $j ] );
+            // array dei formati
+            $ks = array_flip( $cf['image']['formats'][ $j ] );
 
-		    // creo la versione webp
-			imageConvert( $im1, 'webp' );
+            // creo la versione webp
+            imageConvert( $im1, 'webp' );
 
-		    // scalo e taglio l'immagine per i vari formati
-			foreach( $cf['image']['formats'][ $j ] as $d1 => $d1a ) {
+            // scalo e taglio l'immagine per i vari formati
+            foreach( $cf['image']['formats'][ $j ] as $d1 => $d1a ) {
 
-			    $dst = DIR_VAR_IMMAGINI . $d1 . $j . '/' . basename( $im1 );
-			    imageResize( $im1, $d1, $dst );
+                $dst = DIR_VAR_IMMAGINI . $d1 . $j . '/' . basename( $im1 );
+                imageResize( $im1, $d1, $dst );
 
                 $webp = imageConvert( $dst, 'webp' );
-			    copyFile( $webp, DIR_VAR_IMMAGINI . basename( $webp ) );
+                copyFile( $webp, DIR_VAR_IMMAGINI . basename( $webp ) );
 
             }
 
-		    // scalo e taglio l'immagine per formati alternativi
+            // scalo e taglio l'immagine per formati alternativi
             // TODO non va bene ! empty() usare file_exists o qualcosa del genere perché $im2 contiene il path base se è vuota
-			if( ! empty( $im2 ) ) {
+            if( ! empty( $im2 ) ) {
 
-			    foreach( $cf['image']['formats'][ $k ] as $d1 => $d1a ) {
+                foreach( $cf['image']['formats'][ $k ] as $d1 => $d1a ) {
 
                     if( ! empty( $im['path_alternativo'] ) ) {
 
@@ -151,9 +151,9 @@
 
                     }
 
-			    }
+                }
 
-			}
+            }
 
             // risultato
             $status = array_replace_recursive(
@@ -199,6 +199,6 @@
     }
 
     // output
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    buildJson( $status );
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        buildJson( $status );
+    }

@@ -12,7 +12,7 @@
      */
 
     // informazioni della vista
-	$ct['view'] = array(
+    $ct['view'] = array(
         'table' => 'pagamenti',
         'open' => array(
             'page' => 'amministrazione.pagamenti.form',
@@ -43,4 +43,4 @@
     );
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.view.php';

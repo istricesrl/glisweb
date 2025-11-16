@@ -31,7 +31,7 @@
             '__label__' => 'account',
             'anagrafica' => 'anagrafica',
             'mail' => 'e-mail',
-            'gruppi' 	=> 'gruppi',
+            'gruppi'     => 'gruppi',
             'se_attivo' => 'attivo',
         ),
         'class' => array(
@@ -44,15 +44,15 @@
     );
 
     // gestione default
-	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.view.php';
 
     // trasformazione icona attivo/inattivo
-	foreach( $ct['view']['data'] as &$row ) {
-		if( is_array( $row ) ) {
-			if( $row['se_attivo'] == 1 ) { 
+    foreach( $ct['view']['data'] as &$row ) {
+        if( is_array( $row ) ) {
+            if( $row['se_attivo'] == 1 ) { 
                 $row['se_attivo'] = '<i class="fa fa-check"></i>';
             } else {
                 $row['se_attivo'] = NULL;
             }
-		}
-	}
+        }
+    }

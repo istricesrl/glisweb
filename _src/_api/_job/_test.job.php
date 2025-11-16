@@ -21,10 +21,10 @@
      */
 
     // inizializzo l'array del risultato
-	$status = array();
+    $status = array();
 
     // inclusione del framework
-	if( defined( 'CRON_RUNNING' ) || defined( 'JOB_RUNNING' ) ) {
+    if( defined( 'CRON_RUNNING' ) || defined( 'JOB_RUNNING' ) ) {
 
         // CUSTOM verifiche formali
         if( isset( $job['corrente'] ) && $job['corrente'] >= $job['totale'] ) {

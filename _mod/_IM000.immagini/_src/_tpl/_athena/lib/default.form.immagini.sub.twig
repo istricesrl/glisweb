@@ -4,15 +4,15 @@
 {% import 'lib/default.twig' as tpl %}
 {% set counter = 0 %}
 <fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
-	{% set require = -1 %}
+    {% set require = -1 %}
     {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
     {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
     {% else %}{% set t = require %}{% endif %}
-	{% for i in -1..t %}
-	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
-	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
-	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
-	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% for i in -1..t %}
+    {% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+    {% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+    {% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+    {% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
     {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
     {% else %}{% set action = 'inserimento' %}{% endif %}
     {% set timestamp = 'now'|date('U') %}
@@ -21,7 +21,7 @@
         {{ frm.input({ 'field': { 'name': field, 'type': 'hidden', 'default': '__parent_id__', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         {{ frm.input({ 'field': { 'name': 'id_account_' ~ action, 'type': 'hidden', 'default': account, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
         {{ frm.input({ 'field': { 'name': 'timestamp_' ~ action, 'type': 'hidden', 'default': timestamp, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-	    <div class="form-group row">
+        <div class="form-group row">
             <div class="col-2 col-md-1 form-col">
                 <span class="label-top">ordine</span>
                 {{ frm.input({ 'field': { 'name': 'ordine', 'type': 'number', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
@@ -32,22 +32,22 @@
             </div>
             <div class="col col-md-auto form-col">
                 <span class="label-top">lingua</span>
-				{{ frm.select({ 'field': { 'name': 'id_lingua', 'disabled': disabled }, 'source': { 'values': etc.select.lingue }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'id_lingua', 'disabled': disabled }, 'source': { 'values': etc.select.lingue }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div> 
             <div class="col col-md-auto form-col">
                 <span class="label-top">ruolo</span>
-				{{ frm.select({ 'field': { 'name': 'id_ruolo', 'disabled': disabled }, 'source': { 'values': etc.select.ruoli_immagini }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'id_ruolo', 'disabled': disabled }, 'source': { 'values': etc.select.ruoli_immagini }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col-auto form-col">
                 <span class="label-top">orientamento</span>
-				{{ frm.select({ 'field': { 'name': 'orientamento', 'disabled': disabled }, 'source': { 'values': etc.select.orientamenti }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'orientamento', 'disabled': disabled }, 'source': { 'values': etc.select.orientamenti }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col-auto form-col">
                 <span class="label-top">taglio</span>
-				{{ frm.select({ 'field': { 'name': 'taglio', 'disabled': disabled }, 'source': { 'values': etc.select.tagli }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+                {{ frm.select({ 'field': { 'name': 'taglio', 'disabled': disabled }, 'source': { 'values': etc.select.tagli }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
             </div>
             <div class="col-auto col-md-auto form-col">
-				{{ frm.uploader({ 'field': { 'name': 'path', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages, 'site': site }) }}
+                {{ frm.uploader({ 'field': { 'name': 'path', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages, 'site': site }) }}
             </div>
             {% if r.id %}
             <div class="col-auto form-col p-0 pl-1">
@@ -64,7 +64,7 @@
                 {{ frm.button( { 'field': { 'text': '<i class="fa fa-minus"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();' } } ) }}
             </div>
             {% endif %}
-    	</div>
+        </div>
     </div>
     {% endfor %}
 </fieldset>

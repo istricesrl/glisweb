@@ -18,55 +18,55 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			{# SEZIONE GENERALE #}
-			<fieldset>
-				<legend>dati generali <small>{{ legend }}</small></legend>
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
 
-				{# PRIMA RIGA DI CAMPI #}
+                {# PRIMA RIGA DI CAMPI #}
                 <div class="form-group row">
                     <div class="col-12 col-md-auto form-col">
-						<span class="label-top">sigla</span>
-						{{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_anagrafica }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-					<div class="col form-col">
-						<span class="label-top">codice</span>
+                        <span class="label-top">sigla</span>
+                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_anagrafica }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">codice</span>
                         {{ frm.input({ 'field': { 'name': 'codice', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col form-col">
-						<span class="label-top">nome</span>
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">nome</span>
                         {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col form-col">
-						<span class="label-top">cognome</span>
+                    </div>
+                    <div class="col form-col">
+                        <span class="label-top">cognome</span>
                         {{ frm.input({ 'field': { 'name': 'cognome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col-auto form-col">
-						<span class="label-top">sesso</span>
-						{{ frm.select({ 'field': { 'name': 'sesso' }, 'source': { 'values': etc.select.sesso }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-				</div>
+                    </div>
+                    <div class="col-auto form-col">
+                        <span class="label-top">sesso</span>
+                        {{ frm.select({ 'field': { 'name': 'sesso' }, 'source': { 'values': etc.select.sesso }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
 
-				{# SECONDA RIGA DI CAMPI #}
-				<div class="form-group row">
-					<div class="col-12 col-md form-col">
-						<span class="label-top">denominazione</span>
+                {# SECONDA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">denominazione</span>
                         {{ frm.input({ 'field': { 'name': 'denominazione', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-					<div class="col-12 col-md-4 form-col">
-						<span class="label-top">soprannome</span>
-						{{ frm.input({ 'field': { 'name': 'soprannome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                    <div class="col-12 col-md-4 form-col">
+                        <span class="label-top">soprannome</span>
+                        {{ frm.input({ 'field': { 'name': 'soprannome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
 
-				{# TERZA RIGA DI CAMPI #}
-				<div class="form-group row">
-					<div class="col-12 form-col">
-						<span class="label-top">note</span>
+                {# TERZA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
                         {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                </div>
 
-	    	</fieldset>
+            </fieldset>
 
             {# SUBFORM INDIRIZZI E-MAIL #}
             {{ sub.mail( form.table, 'mail', 'e-mail', site, page, pages, ietf, etc, request, session, 'id_anagrafica' ) }}
@@ -83,12 +83,12 @@
             {# SUBFORM CATEGORIE #}
             {{ sub.categorie( form.table, 'anagrafica_categorie', 'categorie', site, page, pages, ietf, etc, request, session, 'id_anagrafica' ) }}
 
-			{# BOTTONI E COMANDI DEL MODULO #}
-			<fieldset class="form-controls mt-auto">
-				{{ def.controls( page, pages, ietf, session, form.table, request ) }}
-			</fieldset>
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
 
-		</form>
+        </form>
     </div>
 </section>
 

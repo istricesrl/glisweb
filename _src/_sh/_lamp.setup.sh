@@ -111,6 +111,8 @@ apt-get install -y gradle
 
 ## installazione di mysql
 # apt-get install -y default-mysql-server
+apt-get install -y mariadb-server
+mariadb-secure-installation
 
 ## attivazione del modulo rewrite
 a2enmod rewrite
@@ -131,8 +133,8 @@ phpenmod tidy
 # pear install Net_FTP
 
 ## installazione di adminer
-# apt-get install -y adminer
-# a2enconf adminer
+apt-get install -y adminer
+a2enconf adminer
 
 ## riavvio di Apache
 service apache2 restart

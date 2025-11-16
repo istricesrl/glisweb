@@ -24,7 +24,7 @@
      */
 
     // informazioni della vista
-	$ct['view'] = array(
+    $ct['view'] = array(
         'table' => 'immagini',
         'open' => array(
             'page' => 'contenuti.archivio.immagini.form',
@@ -78,7 +78,7 @@
      */
 
     // macro di default
-	require DIR_SRC_INC_MACRO . '_default/_default.view.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.view.php';
 
     /**
      * elaborazione risultati della vista
@@ -89,8 +89,8 @@
      */
 
     // elaborazione righe
-	foreach( $ct['view']['data'] as &$row ) {
-		if( is_array( $row ) ) {
+    foreach( $ct['view']['data'] as &$row ) {
+        if( is_array( $row ) ) {
 
             $buttons = [];
 

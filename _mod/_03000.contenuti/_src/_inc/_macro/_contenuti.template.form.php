@@ -26,22 +26,22 @@
     // echo 'OUTPUT';
 
     // tabella gestita
-	$ct['form']['table'] =  '__templates__';
+    $ct['form']['table'] =  '__templates__';
 
     $ct['form']['__filesystem_mode__'] = 1;
 
     // tendina tipologie file
-	$ct['etc']['select']['tipologie'] = array( 
-	    array( 'id' => 'twig', '__label__' => 'schemi HTML/Twig' ),
-	    array( 'id' => 'css', '__label__' => 'fogli di stile CSS' ),
-	    array( 'id' => 'js', '__label__' => 'script Javascript' ),
+    $ct['etc']['select']['tipologie'] = array( 
+        array( 'id' => 'twig', '__label__' => 'schemi HTML/Twig' ),
+        array( 'id' => 'css', '__label__' => 'fogli di stile CSS' ),
+        array( 'id' => 'js', '__label__' => 'script Javascript' ),
         array( 'id' => 'json', '__label__' => 'file di dati JSON' ),
         array( 'id' => 'yaml', '__label__' => 'file di dati YAML' ),
         array( 'id' => 'md', '__label__' => 'file di testo Markdown' ),
-	);
+    );
 
     // tendina moduli
-	$ct['etc']['select']['moduli'] = array();
+    $ct['etc']['select']['moduli'] = array();
 
     // aggiungo i moduli attivi
     foreach( $cf['mods']['active']['array'] as $mod ) {
@@ -72,7 +72,7 @@
     );
 
     // inclusione filtri speciali
-	$ct['etc']['include']['filters'] = 'inc/contenuti.template.form.filters.html';
+    $ct['etc']['include']['filters'] = 'inc/contenuti.template.form.filters.html';
 
     // inclusione inserimento rapido
     $ct['etc']['include']['insert'][] = array(
@@ -211,8 +211,8 @@
     }
 
     // macro di default
-	require DIR_MOD . '_03000.contenuti/_src/_inc/_macro/_contenuti.template.form.default.php';
-	require DIR_SRC_INC_MACRO . '_default/_default.form.php';
+    require DIR_MOD . '_03000.contenuti/_src/_inc/_macro/_contenuti.template.form.default.php';
+    require DIR_SRC_INC_MACRO . '_default/_default.form.php';
 
     // debug
     // print_r( $_REQUEST[ $ct['form']['table'] ] );

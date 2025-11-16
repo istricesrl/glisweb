@@ -10,30 +10,30 @@
      */
 
     // debug
-	// header('content-type: text/plain;charset=utf-8');
-	// rksort( $cf );
-	// rksort( $ct );
-	// print_r( $cf );
-	// print_r( $ct );
-	// print_r( $ct['page'] );
-	// print_r( $ct['img'] );
-	// print_r( $ct['site'] );
-	// print_r( $_SESSION );
-	// print_r( $_REQUEST );
-	// print_r( $_SESSION['filter'] );
-	// print_r( $ct['session'] );
-	// print_r( get_included_files() );
-	// print_r( $arrayLibrerie );
-	// print_r( $arrayConfigBaseModuli );
-	// print_r( $arrayConfig );
-	// print_r( $_REQUEST['__signup__'] );
-	// print_r( $cf['speed'] );
-	// print_r( $cf['privacy'] );
-	// print_r( $ct['contatti'] );
-	// print_r( $cf['auth']['permissions']);
-	// print_r( $p['produzione']['etc']['tabs'] );
-	// print_r( $_COOKIE );
-	// die( print_r( $ct['request'] ) );
+    // header('content-type: text/plain;charset=utf-8');
+    // rksort( $cf );
+    // rksort( $ct );
+    // print_r( $cf );
+    // print_r( $ct );
+    // print_r( $ct['page'] );
+    // print_r( $ct['img'] );
+    // print_r( $ct['site'] );
+    // print_r( $_SESSION );
+    // print_r( $_REQUEST );
+    // print_r( $_SESSION['filter'] );
+    // print_r( $ct['session'] );
+    // print_r( get_included_files() );
+    // print_r( $arrayLibrerie );
+    // print_r( $arrayConfigBaseModuli );
+    // print_r( $arrayConfig );
+    // print_r( $_REQUEST['__signup__'] );
+    // print_r( $cf['speed'] );
+    // print_r( $cf['privacy'] );
+    // print_r( $ct['contatti'] );
+    // print_r( $cf['auth']['permissions']);
+    // print_r( $p['produzione']['etc']['tabs'] );
+    // print_r( $_COOKIE );
+    // die( print_r( $ct['request'] ) );
 
     // error_reporting( E_ALL );
     // ini_set( 'display_errors', TRUE );

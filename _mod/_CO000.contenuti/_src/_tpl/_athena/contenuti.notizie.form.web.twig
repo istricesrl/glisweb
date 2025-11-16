@@ -18,59 +18,59 @@
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
-			{# SEZIONE GENERALE #}
-			<fieldset>
-				<legend>dati generali <small>{{ legend }}</small></legend>
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
                     <div class="col-12 col-md form-col">
-						<span class="label-top">sito</span>
-						{{ frm.select({ 'field': { 'name': 'id_sito' }, 'source': { 'values': etc.select.siti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-				</div>
+                        <span class="label-top">sito</span>
+                        {{ frm.select({ 'field': { 'name': 'id_sito' }, 'source': { 'values': etc.select.siti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
 
-				<div class="form-group row">
-					<div class="col-12 form-col">
-						<span class="label-top">note</span>
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
                         {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
-					</div>
-				</div>
+                    </div>
+                </div>
 
             </fieldset>
 
-			{# SEZIONE ELABORAZIONE #}
-			<fieldset>
-				<legend>flag di elaborazione</legend>
+            {# SEZIONE ELABORAZIONE #}
+            <fieldset>
+                <legend>flag di elaborazione</legend>
 
-				<div class="form-group row">
-					<div class="col-auto col-form-label form-col">
-						<div class="form-check">
-							{{ frm.checkbox({ 'field': { 'name': 'se_sitemap', 'placeholder': 'sitemap' }, 'request': request, 'form': form, 'page': page }) }}
-						</div>
-					</div>
-					<div class="col-auto col-form-label form-col">
-						<div class="form-check">
-							{{ frm.checkbox({ 'field': { 'name': 'se_cacheable', 'placeholder': 'cacheable' }, 'request': request, 'form': form, 'page': page }) }}
-						</div>
-					</div>
-				</div>
+                <div class="form-group row">
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_sitemap', 'placeholder': 'sitemap' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                    <div class="col-auto col-form-label form-col">
+                        <div class="form-check">
+                            {{ frm.checkbox({ 'field': { 'name': 'se_cacheable', 'placeholder': 'cacheable' }, 'request': request, 'form': form, 'page': page }) }}
+                        </div>
+                    </div>
+                </div>
 
             </fieldset>
 
-			{# SEZIONE TEMPLATE #}
-			<fieldset>
-				<legend>template, schema e tema</legend>
+            {# SEZIONE TEMPLATE #}
+            <fieldset>
+                <legend>template, schema e tema</legend>
 
                 <div class="form-group row">
                     <div class="col-12 col-md form-col">
-						<span class="label-top">template</span>
-						{{ frm.select({ 'field': { 'name': 'template', 'autosubmit': true }, 'source': { 'values': etc.select.templates }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
-					{% if request[ form.table ].template %}
-					<div class="col-12 col-md form-col">
-						<span class="label-top">schema</span>
-						{{ frm.select({ 'field': { 'name': 'schema_html' }, 'source': { 'values': etc.select.schemi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-					</div>
+                        <span class="label-top">template</span>
+                        {{ frm.select({ 'field': { 'name': 'template', 'autosubmit': true }, 'source': { 'values': etc.select.templates }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% if request[ form.table ].template %}
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">schema</span>
+                        {{ frm.select({ 'field': { 'name': 'schema_html' }, 'source': { 'values': etc.select.schemi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
 					<div class="col-12 col-md form-col">
 						<span class="label-top">tema</span>
 						{{ frm.select({ 'field': { 'name': 'tema_css' }, 'source': { 'values': etc.select.temi }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}

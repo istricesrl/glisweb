@@ -9,27 +9,27 @@
     <input type="hidden" name="__delete__[target]" value="{{ request.__delete__.target ~ backurl }}">
     <input type="hidden" name="{{ request.__delete__.table }}[__method__]" value="delete">
     <input type="hidden" name="{{ request.__delete__.table }}[id]" value="{{ request.__delete__.id }}">
-	<input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
+    <input type="hidden" id="backurl" name="__backurl__" value="{{ request.__backurl__ }}">
 
     <fieldset class="delete w-100">
-	<div class="form-group form-row">
-	    <div class="col-12 text-center">
-		<h2>confermi la cancellazione di</h2>
-		<h1>{% if __delete__.__label__ %}{{ __delete__.__label__ }}{% else %}riga #{{ request.__delete__.id }}{% endif %}</h1>
-		<h2>dalla tabella {{ request.__delete__.table }}</h2>
-	    </div>
-	</div>
+    <div class="form-group form-row">
+        <div class="col-12 text-center">
+        <h2>confermi la cancellazione di</h2>
+        <h1>{% if __delete__.__label__ %}{{ __delete__.__label__ }}{% else %}riga #{{ request.__delete__.id }}{% endif %}</h1>
+        <h2>dalla tabella {{ request.__delete__.table }}</h2>
+        </div>
+    </div>
     </fieldset>
 
     <fieldset class="w-100 form-controls">
-	<div class="form-group row">
-	    <div class="col-6 text-center">
-		<input type="submit" class="btn btn-secondary btn-sm" value="sì">
-	    </div>
-	    <div class="col-6 text-center">
-		<input type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ request.__delete__.rollback ~ backurl }}','_self');" value="no">
-	    </div>
-	</div>
+    <div class="form-group row">
+        <div class="col-6 text-center">
+        <input type="submit" class="btn btn-secondary btn-sm" value="sì">
+        </div>
+        <div class="col-6 text-center">
+        <input type="button" class="btn btn-secondary btn-sm" onclick="window.open('{{ request.__delete__.rollback ~ backurl }}','_self');" value="no">
+        </div>
+    </div>
     </fieldset>
 
 </form>
