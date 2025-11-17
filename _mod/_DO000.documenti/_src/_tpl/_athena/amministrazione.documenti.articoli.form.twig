@@ -2,7 +2,6 @@
 {% import '_lib/_default.twig' as cms %}
 {% import '_lib/_form.twig' as frm %}
 {% import 'lib/default.twig' as def %}
-{% import 'lib/anagrafica.form.sub.twig' as sub %}
 
 {# ESTENSIONE DELLO SCHEMA DI BASE #}
 {% extends 'ext/main.twig' %}
@@ -25,7 +24,7 @@
                 <div class="form-group row">
                     <div class="col col-md form-col">
                         <span class="label-top">documento</span>
-                        {{ frm.select({ 'field': { 'name': 'id_documento', 'disabled': disabled }, 'source': { 'api': 'documenti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                        {{ frm.select({ 'field': { 'name': 'id_documento' }, 'source': { 'api': 'documenti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
                     <div class="col-12 col-md-auto form-col">
                         <span class="label-top">tipologia</span>

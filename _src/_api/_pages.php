@@ -98,6 +98,11 @@
      * 
      */
 
+    // recupero $_SERVER['REDIRECT_URL'] se non esiste
+    if( ! isset( $_SERVER['REDIRECT_URL'] ) ) {
+        $_REQUEST['__rw__'] = $_SERVER['REDIRECT_URL'] = $_SERVER['REQUEST_URI'];
+    }
+
     // tokenizzazione di __rw__
     if( isset( $_REQUEST['__rw__'] ) ) {
         $_REQUEST['__rp__'] = explode( '/', trim( $_REQUEST['__rw__'], '/' ) );
@@ -106,6 +111,8 @@
 
     // debug
     // var_dump( $_REQUEST );
+    // var_dump( $_REQUEST['__rp__'] );
+    // die( print_r( $_REQUEST, true ) );
 
     /**
      * inclusione del framework
@@ -115,7 +122,9 @@
      */
 
     // inclusione del framework
-    require '../_config.php';
+    if( ! defined( 'DIR_BASE' ) ) {
+        require '../_config.php';
+    }
 
     // debug
     // print_r( $ct['page'] );

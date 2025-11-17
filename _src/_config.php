@@ -821,9 +821,11 @@
     }
 
     // controllo che tutti i moduli di Apache necessari siano installati e attivi
-    $cf['apache']['required']['differences'] = array_diff( $cf['apache']['required']['modules'], apache_get_modules() );
-    if( count( $cf['apache']['required']['differences'] ) > 0 ) {
-        die( 'alcuni moduli di PHP necessari non sono installati ('.implode( ', ', $cf['apache']['required']['differences'] ).'), lanciare _lamp.setup.sh' );
+    if( function_exists( 'apache_get_modules' ) != false ) {
+        $cf['apache']['required']['differences'] = array_diff( $cf['apache']['required']['modules'], apache_get_modules() );
+        if( count( $cf['apache']['required']['differences'] ) > 0 ) {
+            die( 'alcuni moduli di Apache necessari non sono installati ('.implode( ', ', $cf['apache']['required']['differences'] ).'), lanciare _lamp.setup.sh' );
+        }
     }
 
     // controllo che le cartelle necessarie al funzionamento del framework esistano

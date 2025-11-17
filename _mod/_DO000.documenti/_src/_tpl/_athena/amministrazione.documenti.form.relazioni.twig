@@ -2,7 +2,7 @@
 {% import '_lib/_default.twig' as cms %}
 {% import '_lib/_form.twig' as frm %}
 {% import 'lib/default.twig' as def %}
-{% import 'lib/anagrafica.form.sub.twig' as sub %}
+{% import 'lib/amministrazione.documenti.form.relazioni.sub.twig' as sub %}
 
 {# ESTENSIONE DELLO SCHEMA DI BASE #}
 {% extends 'ext/main.twig' %}
@@ -17,6 +17,9 @@
 
         {# APERTURA DEL FORM #}
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SUBFORM RELAZIONI #}
+            {{ sub.relazioni( form.table, 'relazioni_documenti', 'relazioni', site, page, pages, localization.language.ietf, etc, request, session, 'id_documento' ) }}
 
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">

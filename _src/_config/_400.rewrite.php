@@ -200,6 +200,9 @@
 
                     } else {
 
+                        // debug
+                        // var_dump( $_REQUEST['__rp__'] );
+
                         // se non è stata trovata alcuna pagina, torno a NULL
                         $cf['parser']['page'] = NULL;
 

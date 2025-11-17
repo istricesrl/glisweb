@@ -319,6 +319,61 @@ CREATE TABLE `corsi_view_static` (
   `__label__` text
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
+-- | 080000010000
+
+CREATE TABLE `documenti_articoli_view_static` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id_genitore` int(11) DEFAULT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `tipologia` char(255) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `id_documento` int(11) DEFAULT NULL,
+  `documento` char(255) DEFAULT NULL,
+  `data` date DEFAULT NULL,
+  `id_packing_list` int(11) DEFAULT NULL,
+  `id_missione` int(11) DEFAULT NULL,
+  `id_emittente` int(11) DEFAULT NULL,
+  `emittente` char(255) DEFAULT NULL,
+  `id_destinatario` int(11) DEFAULT NULL,
+  `destinatario` char(255) DEFAULT NULL,
+  `id_reparto` int(11) DEFAULT NULL,
+  `id_progetto` char(32) DEFAULT NULL,
+  `id_todo` int(11) DEFAULT NULL,
+  `id_attivita` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `udm` char(8) DEFAULT NULL,
+  `articolo` char(255) DEFAULT NULL,
+  `id_prodotto` char(32) DEFAULT NULL,
+  `prodotto` char(255) DEFAULT NULL,
+  `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `mastro_provenienza` text DEFAULT NULL,
+  `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `mastro_destinazione` text DEFAULT NULL,
+  `id_udm` int(11) DEFAULT NULL,
+  `quantita` decimal(9,2) DEFAULT NULL,
+  `id_listino` int(11) DEFAULT NULL,
+  `id_pianificazione` int(11) DEFAULT NULL,
+  `id_valuta` int(11) DEFAULT NULL,
+  `valuta` char(32) DEFAULT NULL,
+  `importo_netto_totale` decimal(16,2) DEFAULT NULL,
+  `sconto_percentuale` decimal(9,2) DEFAULT NULL,
+  `sconto_valore` decimal(9,2) DEFAULT NULL,
+  `id_matricola` int(11) DEFAULT NULL,
+  `matricola` char(255) DEFAULT NULL,
+  `id_rinnovo` int(11) DEFAULT NULL,
+  `id_collo` int(11) DEFAULT NULL,
+  `codice_collo` char(32) DEFAULT NULL,
+  `nome_collo` char(128) DEFAULT NULL,
+  `ordine_collo` int(11) DEFAULT NULL,
+  `data_scadenza` date DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `data_consegna` date DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `__label__` char(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
 -- | 080000015900
 
 -- iscrizioni_view_static

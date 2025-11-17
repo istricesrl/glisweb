@@ -1139,6 +1139,9 @@
         ),
         'tipologie_anagrafica' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'settori' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
         )
     );
  

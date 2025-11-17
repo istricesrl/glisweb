@@ -2166,8 +2166,6 @@ ALTER TABLE `listini_clienti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000018000
 
 -- luoghi
--- tipologia: tabella gestita
--- verifica: 2021-09-24 18:41 Fabio Mosti
 ALTER TABLE `luoghi`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
@@ -2184,14 +2182,11 @@ ALTER TABLE `luoghi`
 -- | 030000018001
 
 -- luoghi
--- tipologia: tabella gestita
 ALTER TABLE `luoghi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000018200
 
 -- macro
--- tipologia: tabella gestita
--- verifica: 2021-09-24 19:32 Fabio Mosti
 ALTER TABLE `macro`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica_pagina` (`id_pagina`,`macro`), 
@@ -2223,14 +2218,11 @@ ALTER TABLE `macro`
 -- | 030000018201
 
 -- macro
--- tipologia: tabella gestita
 ALTER TABLE `macro` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000018600
 
 -- mail
--- tipologia: tabella gestita
--- verifica: 2021-09-27 18:33 Fabio Mosti
 ALTER TABLE `mail`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_anagrafica`,`indirizzo`),
@@ -2243,14 +2235,11 @@ ALTER TABLE `mail`
 -- | 030000018601
 
 -- mail
--- tipologia: tabella gestita
 ALTER TABLE `mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000018800
 
 -- mail_out
--- tipolgia: tabella gestita
--- verifica: 2021-09-28 15:29 Fabio Mosti
 ALTER TABLE `mail_out`
 	ADD PRIMARY KEY (`id`), 
   	ADD UNIQUE KEY `unica` (`id_mail`,`id_mailing`),
@@ -2289,14 +2278,11 @@ ALTER TABLE `mail_sent`
 -- | 030000018901
 
 -- mail_sent
--- tipolgia: tabella gestita
 ALTER TABLE `mail_sent` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000019000
 
 -- mailing
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
 ALTER TABLE `mailing`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`),
@@ -2307,14 +2293,11 @@ ALTER TABLE `mailing`
 -- | 030000019001
 
 -- mailing
--- tipolgia: tabella gestita
 ALTER TABLE `mailing` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000019050
 
 -- mailing_liste
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
 ALTER TABLE `mailing_liste`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_lista`,`id_mailing`),
@@ -2326,14 +2309,11 @@ ALTER TABLE `mailing_liste`
 -- | 030000019051
 
 -- mailing_liste
--- tipolgia: tabella gestita
 ALTER TABLE `mailing_liste` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000019100
 
 -- mailing_mail
--- tipolgia: tabella gestita
--- verifica: 2022-02-07 15:47 Chiara GDL
 ALTER TABLE `mailing_mail`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE `unica_mail` (`id_mailing`, `id_mail`),
@@ -2348,7 +2328,6 @@ ALTER TABLE `mailing_mail`
 -- | 030000019101
 
 -- mailing_mail
--- tipolgia: tabella gestita	
 ALTER TABLE `mailing_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
 
 -- | 030000020200
@@ -2372,8 +2351,6 @@ ALTER TABLE `marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000020600
 
 -- mastri
--- tipologia: tabella gestita
--- verifica: 2021-09-29 11:33 Fabio Mosti
 ALTER TABLE `mastri`
  	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_genitore`,`nome`),
@@ -2390,14 +2367,11 @@ ALTER TABLE `mastri`
 -- | 030000020601
 
 -- mastri
--- tipologia: tabella gestita
 ALTER TABLE `mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021000
 
 -- matricole
--- tipologia: tabella gestita
--- verifica: 2021-12-28 16:20 Chiara GDL
 ALTER TABLE `matricole`
  	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica_scadenza` (`id_articolo`,`data_scadenza`),
@@ -2415,8 +2389,6 @@ ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000021600
 
 -- menu
--- tipologia: tabella gestita
--- verifica: 2021-10-01 09:32 Fabio Mosti
 ALTER TABLE `menu`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_lingua`,`id_pagina`,`menu`,`nome`,`ancora`), 
@@ -2439,14 +2411,11 @@ ALTER TABLE `menu`
 -- | 030000021601
 
 -- menu
--- tipologia: tabella gestita
 ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021700
 
 -- messaggi
--- tipologia: tabella gestita
--- verifica: 2022-04-26 17:32 Chiara GDL
 ALTER TABLE `messaggi`
 	ADD PRIMARY KEY (`id`), 
 	ADD KEY `id_conversazione` (`id_conversazione`), 
@@ -2457,7 +2426,6 @@ ALTER TABLE `messaggi`
 -- | 030000021701
 
 -- messaggi
--- tipologia: tabella gestita
 ALTER TABLE `messaggi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021750
@@ -2474,14 +2442,11 @@ ALTER TABLE `messaggi_account`
 -- | 030000021751
 
 -- messaggi_account
--- tipologia: tabella gestita
 ALTER TABLE `messaggi_account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021800
 
 -- metadati
--- tipologia: tabella gestita
--- verifica: 2021-10-01 10:12 Fabio Mosti
 ALTER TABLE `metadati`
  	ADD PRIMARY KEY (`id`), 
  	ADD UNIQUE KEY `unica_anagrafica` (`id_lingua`,`id_anagrafica`,`nome`), 
@@ -2553,14 +2518,11 @@ ALTER TABLE `metadati`
 -- | 030000021801
 
 -- metadati
--- tipologia: tabella gestita
 ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021810
 
 -- metadati_articoli
--- tipologia: tabella gestita
--- verifica: 2021-10-01 10:12 Fabio Mosti
 ALTER TABLE `metadati_articoli`
  	ADD PRIMARY KEY (`id`), 
  	ADD UNIQUE KEY `unica_articolo` (`id_lingua`,`id_articolo`,`nome`), 
@@ -2571,14 +2533,11 @@ ALTER TABLE `metadati_articoli`
 -- | 030000021811
 
 -- metadati_articoli
--- tipologia: tabella gestita
 ALTER TABLE `metadati_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021820
 
 -- metadati_prodotti
--- tipologia: tabella gestita
--- verifica: 2021-10-01 10:12 Fabio Mosti
 ALTER TABLE `metadati_prodotti`
  	ADD PRIMARY KEY (`id`), 
  	ADD UNIQUE KEY `unica_prodotto` (`id_lingua`,`id_prodotto`,`nome`), 
@@ -2589,14 +2548,11 @@ ALTER TABLE `metadati_prodotti`
 -- | 030000021811
 
 -- metadati_prodotti
--- tipologia: tabella gestita
 ALTER TABLE `metadati_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021900
 
 -- modalita_pagamento
--- tipologia: tabella standard
--- verifica: 2022-01-18 12:06 Chiara GDL
 ALTER TABLE `modalita_pagamento`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `nome` (`nome`,`codice`),
@@ -2605,7 +2561,6 @@ ALTER TABLE `modalita_pagamento`
 -- | 030000021901
 
 -- modalita_pagamento
--- tipologia: tabella standard
 ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021950
@@ -2646,7 +2601,6 @@ ALTER TABLE `notizie`
 -- | 030000022001
 
 -- notizie
--- tipologia: tabella gestita
 ALTER TABLE `notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022100
@@ -2672,8 +2626,6 @@ ALTER TABLE `notizie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000022200
 
 -- notizie_categorie
--- tipologia: tabella gestita
--- verifica: 2021-10-01 12:07 Fabio Mosti
 ALTER TABLE `notizie_categorie`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` (`id_notizia`,`id_categoria`),
@@ -2688,7 +2640,6 @@ ALTER TABLE `notizie_categorie`
 -- | 030000022201
 
 -- notizie_categorie
--- tipologia: tabella gestita
 ALTER TABLE `notizie_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022300
@@ -2713,8 +2664,6 @@ ALTER TABLE `orari` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 -- | 030000022800
 
 -- organizzazioni
--- tipologia: tabella gestita
--- verifica: 2021-05-23 14:39 Fabio Mosti
 ALTER TABLE `organizzazioni`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`id_genitore`,`id_anagrafica`,`id_ruolo`),
@@ -2729,7 +2678,6 @@ ALTER TABLE `organizzazioni`
 -- | 030000022801
 
 -- organizzazioni
--- tipologia: tabella gestita
 ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000023100
@@ -2762,14 +2710,11 @@ ALTER TABLE `pagamenti`
 -- | 030000023101
 
 -- pagamenti
--- tipologia: tabella gestita
 ALTER TABLE `pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000023200
 
 -- pagine
--- tipologia: tabella gestita
--- verifica: 2021-10-04 11:31 Fabio Mosti
 ALTER TABLE `pagine`
 	ADD PRIMARY KEY (`id`),
 	ADD UNIQUE KEY `unica` (`nome`, `id_genitore`),
@@ -2786,14 +2731,11 @@ ALTER TABLE `pagine`
 -- | 030000023201
 
 -- pagine
--- tipologia: tabella gestita
 ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 -- | 030000023500
 
 -- periodi
--- tipologia: tabella di supporto
--- verifica: 2022-05-24 12:57 Chiara GDL
 ALTER TABLE `periodi`
 	ADD PRIMARY KEY (`id`), 
 	ADD UNIQUE KEY `unica` ( `data_inizio`, `data_fine`, `id_contratto`, `nome`, `id_genitore`),
