@@ -35,6 +35,8 @@
     if(file_exists(DIR_BASE.'mod/0400.documenti/src/api/print/fattura.pdf.php')  ){$file = $ct['site']['url'].'mod/0400.documenti/src/api/print/';}
     else {$file =$ct['site']['url'].'_mod/_0400.documenti/_src/_api/_print/_';  }
 
+    if(file_exists(DIR_BASE.'mod/0400.documenti/src/api/print/nota.credito.pdf.php')  ){$filen = $ct['site']['url'].'mod/0400.documenti/src/api/print/';}
+    else {$filen =$ct['site']['url'].'_mod/_0400.documenti/_src/_api/_print/_';  }
 
     if( isset( $_REQUEST[ $ct['form']['table'] ] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_tipologia'] ) ){
 
@@ -76,7 +78,7 @@
 
                 $ct['page']['contents']['metro']['pdf'][] = array(
                     'target' => '_blank' ,
-                    'url' => $file . 'nota.credito.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
+                    'url' => $filen . 'nota.credito.pdf.php?__documento__='.$_REQUEST[ $ct['form']['table'] ]['id'],
                     'icon' => NULL,
                     'fa' => 'fa-file-pdf-o',
                     'title' => 'stampa PDF',

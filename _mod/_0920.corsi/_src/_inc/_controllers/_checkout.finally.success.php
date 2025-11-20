@@ -51,141 +51,163 @@
          * 
          */
 
+        // var_dump( $articoli );
 
         // cerco gli articoli che aggiungono crediti
         foreach( $articoli as $articolo ) {
 
-            // recupero il corso associato
-            $info = mysqlSelectRow(
-                $cf['mysql']['connection'],
-                'SELECT progetti.id, progetti.data_accettazione FROM progetti INNER JOIN prodotti ON prodotti.id = progetti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ?',
-                array(
-                    array( 's' => $articolo['id_articolo'] )
-                )
-            );
+            // ...
+            if( ! empty( $articolo['destinatario_id_anagrafica'] ) ) {
 
-            // debug
-            // print_r( $info );
-            // print_r( $articolo );
-
-            // se c'è un corso cui effettuare l'iscrizione
-            if( ! empty( $info['id'] ) ) {
-
-                // dati del corso associato
-                $corso = $info['id'];
-                $inizio = $info['data_accettazione'];
-/*
-                // recupero il periodo di iscrizione
-                $periodo = mysqlSelectValue(
+                // recupero il corso associato
+                $info = mysqlSelectRow(
                     $cf['mysql']['connection'],
-                    'SELECT testo FROM metadati WHERE id_articolo = ? AND nome = "periodo_iscrizione"',
-                    array(
-                        array( 's' => $articolo['id_articolo'] )
-                    )
-                );
-*/
-
-                // ...
-                $giorni = mysqlSelectValue(
-                    $cf['mysql']['connection'],
-                    'SELECT periodicita.giorni FROM periodicita INNER JOIN articoli ON periodicita.id = articoli.id_periodicita WHERE articoli.id = ?',
+                    'SELECT progetti.id, progetti.data_accettazione FROM progetti INNER JOIN prodotti ON prodotti.id = progetti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ?',
                     array(
                         array( 's' => $articolo['id_articolo'] )
                     )
                 );
 
-                // seleziono l'iscritto, destinatario_id_anagrafica se presente altrimenti intestazione_id_anagrafica
-                $iscritto = ( ! empty( $carrello['destinatario_id_anagrafica'] ) ) ? $carrello['destinatario_id_anagrafica'] : $carrello['intestazione_id_anagrafica'];
+                // debug
+                // print_r( $info );
+                // print_r( $articolo );
 
-                // TODO IMPORTANTE
-                // se la riga di carrello si riferisce ad un rinnovo, allora devo associare il pagamento al rinnovo e non creare un nuovo contratto e un nuovo rinnovo
-                // NOTA probabilmente in quel caso ho id_rinnovo vedi sopra
+                // se c'è un corso cui effettuare l'iscrizione
+                if( ! empty( $info['id'] ) ) {
 
-                // creo il contratto di iscrizione
-                $contratto = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id' => NULL,
-                        'id_tipologia' => 5,
-                        'id_progetto' => $corso,
-                        'nome' => 'iscrizione da carrello #' . $carrello['id'] . ' riga #' . $articolo['id'] . ' del ' . date('d/m/Y')
-                    ),
-                    'contratti'
-                );
-/*
-                // determino la durata dell'iscrizione
-                switch( $periodo ) {
-                    case 'quadrimestrale':
-                        $incremento = '+4 months';
-                        break;
-                    case 'trimestrale':
-                        $incremento = '+3 months';
-                        break;
-                    case 'bimestrale':
-                        $incremento = '+2 months';
-                        break;
-                    case 'mensile':
-                        $incremento = '+1 month';
-                        break;
-                    case 'settimanale':
-                        $incremento = '+1 week';
-                        break;
-                    case 'giornata':
-                        $incremento = '+1 day';
-                        break;
-                    default:
-                        $incremento = NULL;
-                        break;
-                }
-*/
+                    // dati del corso associato
+                    $corso = $info['id'];
+                    $inizio = $info['data_accettazione'];
 
-                // ...
-                $incremento = '+' . $giorni . ' days';
-
-                // creo il rinnovo per il periodo di iscrizione
-                $rinnovo = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id' => NULL,
-                        'id_tipologia' => 1,
-                        'id_contratto' => $contratto,
-                        'note' => 'rinnovo da carrello #' . $carrello['id'] . ' riga #' . $articolo['id'] . ' del ' . date('d/m/Y') . ' per iscrizione #' . $contratto,
-                        'data_inizio' => $inizio,
-                        'data_fine' => date('Y-m-d',strtotime($incremento,strtotime($inizio)))
-                    ),
-                    'rinnovi'
-                );
-
-                // se il carrello è pagato...
-                if( ! empty( $carrello['timestamp_pagamento'] ) ) {
-
-                    // iscrivo la persona alle lezioni
-                    mysqlQuery(
+                    /*
+                    // recupero il periodo di iscrizione
+                    $periodo = mysqlSelectValue(
                         $cf['mysql']['connection'],
-                        'INSERT INTO attivita ( id, id_tipologia, id_anagrafica_programmazione, id_todo, note_programmazione ) SELECT NULL, 15, ?, todo.id, ? FROM todo WHERE todo.id_progetto = ?',
+                        'SELECT testo FROM metadati WHERE id_articolo = ? AND nome = "periodo_iscrizione"',
                         array(
-                            array( 's' => $iscritto ),
-                            array( 's' => 'frequenza da carrello #' . $carrello['id'] . ' riga #' . $articolo['id'] . ' del ' . date('d/m/Y') . ' per iscrizione #' . $contratto ),
-                            array( 's' => $corso )
+                            array( 's' => $articolo['id_articolo'] )
+                        )
+                    );
+                    */
+
+                    // ...
+                    $giorni = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT periodicita.giorni FROM periodicita INNER JOIN articoli ON periodicita.id = articoli.id_periodicita WHERE articoli.id = ?',
+                        array(
+                            array( 's' => $articolo['id_articolo'] )
                         )
                     );
 
-                    // creo la ricevuta
+                    // seleziono l'iscritto, destinatario_id_anagrafica se presente altrimenti intestazione_id_anagrafica
+                    $iscritto = ( ! empty( $carrello['destinatario_id_anagrafica'] ) ) ? $carrello['destinatario_id_anagrafica'] : $carrello['intestazione_id_anagrafica'];
 
-                    // debug
-                    // die('carrello pagato!');
+                    // TODO IMPORTANTE
+                    // se la riga di carrello si riferisce ad un rinnovo, allora devo associare il pagamento al rinnovo e non creare un nuovo contratto e un nuovo rinnovo
+                    // NOTA probabilmente in quel caso ho id_rinnovo vedi sopra
+
+                    // creo il contratto di iscrizione
+                    $contratto = mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'id_tipologia' => 5,
+                            'id_progetto' => $corso,
+                            'nome' => 'iscrizione da carrello #' . $carrello['id'] . ' riga #' . $articolo['id'] . ' del ' . date('d/m/Y')
+                        ),
+                        'contratti'
+                    );
+
+                    var_dump( $iscritto );
+
+                    // associo l'anagrafica al contratto
+                    mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'id_contratto' => $contratto,
+                            'id_anagrafica' => $iscritto,
+                            'id_ruolo' => 29
+                        ),
+                        'contratti_anagrafica'
+                    );
+
+                    /*
+                    // determino la durata dell'iscrizione
+                    switch( $periodo ) {
+                        case 'quadrimestrale':
+                            $incremento = '+4 months';
+                            break;
+                        case 'trimestrale':
+                            $incremento = '+3 months';
+                            break;
+                        case 'bimestrale':
+                            $incremento = '+2 months';
+                            break;
+                        case 'mensile':
+                            $incremento = '+1 month';
+                            break;
+                        case 'settimanale':
+                            $incremento = '+1 week';
+                            break;
+                        case 'giornata':
+                            $incremento = '+1 day';
+                            break;
+                        default:
+                            $incremento = NULL;
+                            break;
+                    }
+                    */
+
+                    // ...
+                    $incremento = '+' . $giorni . ' days';
+
+                    // creo il rinnovo per il periodo di iscrizione
+                    $rinnovo = mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        array(
+                            'id' => NULL,
+                            'id_tipologia' => 1,
+                            'id_contratto' => $contratto,
+                            'note' => 'rinnovo da carrello #' . $carrello['id'] . ' riga #' . $articolo['id'] . ' del ' . date('d/m/Y') . ' per iscrizione #' . $contratto,
+                            'data_inizio' => $inizio,
+                            'data_fine' => date('Y-m-d',strtotime($incremento,strtotime($inizio)))
+                        ),
+                        'rinnovi'
+                    );
+
+                    // se il carrello è pagato...
+                    if( ! empty( $carrello['timestamp_pagamento'] ) ) {
+
+                        // iscrivo la persona alle lezioni
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'INSERT INTO attivita ( id, id_tipologia, id_anagrafica_programmazione, id_todo, note_programmazione ) SELECT NULL, 15, ?, todo.id, ? FROM todo WHERE todo.id_progetto = ?',
+                            array(
+                                array( 's' => $iscritto ),
+                                array( 's' => 'frequenza da carrello #' . $carrello['id'] . ' riga #' . $articolo['id'] . ' del ' . date('d/m/Y') . ' per iscrizione #' . $contratto ),
+                                array( 's' => $corso )
+                            )
+                        );
+
+                        // creo la ricevuta
+
+                        // debug
+                        // die('carrello pagato!');
+
+                    } else {
+
+                        // debug
+                        // die('carrello non pagato!');
+
+                    }
 
                 } else {
 
                     // debug
-                    // die('carrello non pagato!');
+                    // die('nessun corso trovato!');
 
                 }
-
-            } else {
-
-                // debug
-                // die('nessun corso trovato!');
 
             }
 

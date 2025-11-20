@@ -187,7 +187,11 @@
     );
 
     // indirizzo fiscale
-    $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
+    if( ! empty( $dsi ) ) {
+        $dsi['indirizzo_fiscale'] = $dsi['tipologia'] . ' ' . $dsi['indirizzo'] . ', ' . $dsi['civico'];
+    } else {
+        $dsi['indirizzo_fiscale'] = '';
+    }
 
     $sdec['linee'][] = $dst['denominazione_fiscale'];
     $sdec['linee'][] = $dsi['indirizzo_fiscale'];
@@ -201,7 +205,7 @@
 	$sdc = $sdec['linee'];
 
     // oggetto del documento
-	$dobj = 'nota di credito n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
+	$dobj = 'nota di credito n. ' . $doc['numero'] . ' del ' . date( 'd/m/Y', strtotime( $doc['data'] ) );
 
   
     // recupero i dati dell'azienda emittente
@@ -409,7 +413,7 @@ foreach( $doc['iva'] as $iva => $row ) {
 // spazio sotto la tabella IVA
 $pdf->SetY( $pdf->GetY() + $stdsp );
 
-if (strlen($tx[1])>0){
+if (isset($tx[1]) && strlen($tx[1])>0){
 
 	// note per il cliente
 	    $pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione

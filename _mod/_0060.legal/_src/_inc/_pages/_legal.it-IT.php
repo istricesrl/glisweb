@@ -22,3 +22,6 @@
 	    'template'		=> array( 'path'	=> '_src/_templates/_aurora/', 'schema' => 'default.html' ),
 	    'parent'		=> array( 'id'		=> NULL )
 	);
+
+    // debug
+    // die( __FILE__ );

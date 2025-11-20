@@ -243,7 +243,7 @@
 
         // debug
         // echo DIRECTORY_BASE . $folder . '.' . $lingue . '.php' . PHP_EOL;
-        // echo DIRECTORY_BASE . $mods . $folder . '.' . $lingue . '.php' . PHP_EOL;
+        // echo DIR_BASE . $mods . $folder . '.' . $lingue . '.php' . PHP_EOL;
         // print_r( $arrayPagineBase );
         // print_r( $arrayPagineModuli );
         // die( print_r( $arrayPagineBase, true ) . PHP_EOL . print_r( $arrayPagineModuli, true ) );

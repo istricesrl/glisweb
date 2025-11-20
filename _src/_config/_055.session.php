@@ -58,6 +58,10 @@
     ini_set( 'session.cookie_httponly', 1 );
     ini_set( 'session.cookie_secure', 1 );
 
+    // gestione degli header di sessione per la cache
+    session_cache_limiter('');
+    ini_set('session.cache_limiter', '');
+
     // avvio della sessione php
     if( session_start() ) {
 

@@ -1140,7 +1140,7 @@ CREATE OR REPLACE VIEW `__report_iscrizioni_anagrafica__` AS
 	SELECT
 		contratti.id,
 		contratti.id_tipologia,
-    contratti_anagrafica.id_anagrafica,
+        contratti_anagrafica.id_anagrafica,
 		tipologie_contratti.nome AS tipologia,
 		tipologie_contratti.se_abbonamento,
 		tipologie_contratti.se_iscrizione,
