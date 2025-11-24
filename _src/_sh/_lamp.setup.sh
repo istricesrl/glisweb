@@ -109,6 +109,13 @@ apt-get install -y python3-virtualenvwrapper
 apt-get install -y pipenv
 apt-get install -y gradle
 
+## installazione di utility di sistema
+apt-get install -y pwgen
+apt-get install -y rsync
+apt-get install -y unzip
+apt-get install -y wget
+apt-get install -y curl
+
 ## installazione di mysql
 # apt-get install -y default-mysql-server
 apt-get install -y mariadb-server
@@ -122,6 +129,9 @@ a2enmod expires
 
 ## attivazione del modulo headers
 a2enmod headers
+
+## attivazione del modulo ssl
+a2enmod ssl
 
 ## attivazione modulo mysqlnd
 phpenmod mysqlnd

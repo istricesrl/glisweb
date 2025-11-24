@@ -13,12 +13,12 @@
             {% endif %}
                 <div class="media d-flex">
                     <div class="media-left flex-shrink-0">
-                        {{ include( template_from_string( obj.icon ) ) }}
+                        {{ include( template_from_string( obj.icon|default('') ) ) }}
                     </div>
                     <div class="media-body flex-grow-1 ms-3">
                         <h5 class="media-title">{{ obj.h1[ localization.language.ietf ] }}</h5>
                         {% if obj.abstract[ localization.language.ietf ]%}
-                        <p class="media-text">{{ include( template_from_string( obj.abstract[ localization.language.ietf ] ) | raw ) }}</p>
+                        <p class="media-text">{{ include( template_from_string( obj.abstract[ localization.language.ietf ]|default('') ) | raw ) }}</p>
                         {% endif %}
                     </div>
                 </div>

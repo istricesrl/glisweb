@@ -32,7 +32,11 @@
     // die( print_r( $_REQUEST, true ) );
 
     // inclusione del framework
-    require '../_config.php';
+    if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+        require '../_config.php';
+    } else {
+        require INCLUDE_SUBDIR . '_config.php';
+    }
 
     // ...
     if( isset( $_SESSION['account']['username'] ) ) {

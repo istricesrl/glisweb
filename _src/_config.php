@@ -817,34 +817,34 @@
     // controllo che tutti i moduli di PHP necessari siano installati
     $cf['php']['required']['differences'] = array_diff( $cf['php']['required']['extensions'], get_loaded_extensions() );
     if( count( $cf['php']['required']['differences'] ) > 0 ) {
-        die( 'alcuni moduli di PHP necessari non sono installati ('.implode( ', ', $cf['php']['required']['differences'] ).'), lanciare _lamp.setup.sh' );
+        die( 'alcuni moduli di PHP necessari non sono installati ('.implode( ', ', $cf['php']['required']['differences'] ).'), lanciare _lamp.setup.sh o _nginx.setup.sh' );
     }
 
     // controllo che tutti i moduli di Apache necessari siano installati e attivi
     if( function_exists( 'apache_get_modules' ) != false ) {
         $cf['apache']['required']['differences'] = array_diff( $cf['apache']['required']['modules'], apache_get_modules() );
         if( count( $cf['apache']['required']['differences'] ) > 0 ) {
-            die( 'alcuni moduli di Apache necessari non sono installati ('.implode( ', ', $cf['apache']['required']['differences'] ).'), lanciare _lamp.setup.sh' );
+            die( 'alcuni moduli di Apache necessari non sono installati ('.implode( ', ', $cf['apache']['required']['differences'] ).'), lanciare _lamp.setup.sh o _nginx.setup.sh' );
         }
     }
 
     // controllo che le cartelle necessarie al funzionamento del framework esistano
     foreach( array( DIR_VAR, DIR_VAR_LOG, DIR_VAR_SITEMAP, DIR_TMP ) as $folder ) {
         if( checkPath( $folder ) == false ) {
-            die( 'impossibile creare la cartella ' . $folder . ', lanciare _lamp.permissions.open.sh' );
+            die( 'impossibile creare la cartella ' . $folder . ', lanciare _lamp.permissions.open.sh o _nginx.permissions.open.sh' );
         }
     }
 
     // controllo che il framework possa scrivere sulle cartelle necessarie al suo funzionamento
     foreach( array( DIR_VAR, DIR_VAR_LOG, DIR_VAR_SITEMAP, DIR_TMP ) as $folder ) {
         if( ! is_writeable( $folder ) ) {
-            die( 'la cartella ' . $folder . ' non è scrivibile, lanciare _lamp.permissions.secure.sh' );
+            die( 'la cartella ' . $folder . ' non è scrivibile, lanciare _lamp.permissions.secure.sh o _nginx.permissions.secure.sh' );
         }
     }
 
     // controllo che la document root NON sia scrivibile
     if( is_writeable( DIR_BASE ) ) {
-        die( 'la cartella di installazione è scrivibile, lanciare _lamp.permissions.secure.sh' );
+        die( 'la cartella di installazione è scrivibile, lanciare _lamp.permissions.secure.sh o _nginx.permissions.secure.sh' );
     }
 
     // timer

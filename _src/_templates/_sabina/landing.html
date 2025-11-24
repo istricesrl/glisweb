@@ -34,7 +34,7 @@
     <div class="container">
         <div class="row">
             <div class="col">
-                {{ include( template_from_string( page.abstract[ localization.language.ietf ] ) | raw ) }}
+                {{ include( template_from_string( page.abstract[ localization.language.ietf ]|default('') ) | raw ) }}
             </div>
         </div>
     </div>
@@ -51,14 +51,14 @@
         <div class="row">
             <div class="col-12 col-md">
                 {% if page.content[ localization.language.ietf ] %}
-                {{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}
+                {{ include( template_from_string( page.content[ localization.language.ietf ]|default('') ) | raw ) }}
                 {% else %}
                 <!-- testo principale non presente per la lingua {{ localization.language.ietf }} -->
                 {% endif %}
             </div>
             <div class="col-12 col-md">
                 {% if page.specifiche[ localization.language.ietf ] %}
-                {{ include( template_from_string( page.specifiche[ localization.language.ietf ] ) | raw ) }}
+                {{ include( template_from_string( page.specifiche[ localization.language.ietf ]|default('') ) | raw ) }}
                 {% else %}
                 <!-- testo specifiche non presente per la lingua {{ localization.language.ietf }} -->
                 {% endif %}
@@ -83,7 +83,7 @@
                         <h2>{{ art.h1 }}</h2>
                     </div>
                     <div class="card-body">
-                        <p>{{ include( template_from_string( art.specifiche ) | raw ) }}</p>
+                        <p>{{ include( template_from_string( art.specifiche|default('') ) | raw ) }}</p>
                     </div>
                     <div class="card-footer">
                         {% if art.prezzi.BARRATO.prezzo %}<h3 class="prezzo-barrato">{{ art.prezzi.BARRATO.prezzo|number_format(2, ',', '.') }} {{ art.prezzi.BARRATO.utf8 }}</h3>{% endif %}

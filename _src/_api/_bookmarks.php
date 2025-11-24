@@ -62,7 +62,11 @@
      */
 
     // inclusione del framework
-    require '../_config.php';
+    if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+        require '../_config.php';
+    } else {
+        require INCLUDE_SUBDIR . '_config.php';
+    }
 
     // output
     buildJson( ( isset( $_SESSION['__work__'] ) ? $_SESSION['__work__'] : array( 'status' => 'nessun bookmark trovato' ) ) );

@@ -7,7 +7,7 @@
 {# BLOCCO MAIN #}
 {% block main %}
 <!-- blocco {{ _self }}::main -->
-<h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
-<div>{{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}</div>
+<h1>{{ include( template_from_string( page.h1[ localization.language.ietf ]|default('') ) | raw ) }}</h1>
+<div>{{ include( template_from_string( page.content[ localization.language.ietf ]|default('') ) | raw ) }}</div>
 <!-- fine blocco {{ _self }}::main -->
 {% endblock main %}

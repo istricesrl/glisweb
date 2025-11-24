@@ -385,6 +385,95 @@ LEFT JOIN udm ON udm.id = (
 )
 GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, codice_articolo, articolo, conversione, udm;
 
+-- | 100000009874
+
+CREATE OR REPLACE VIEW `__report_dettaglio_packing_ordini__` AS
+SELECT
+  ordine.id_documento,
+  ordine.id_ordine,
+  ordine.codice_prodotto,
+  ordine.prodotto,
+  ordine.codice_articolo,
+  ordine.articolo,
+  sum( ( ordine.quantita_ordinata / coalesce( udm.conversione, 1 ) ) ) AS quantita_ordinata,
+  sum( ( ordine.quantita_evasa / coalesce( udm.conversione, 1 ) ) ) AS quantita_evasa,
+  (
+    sum( ( ordine.quantita_ordinata / coalesce( udm.conversione, 1 ) ) )
+    -
+    sum( ( ordine.quantita_evasa / coalesce( udm.conversione, 1 ) ) )
+  ) AS quantita_da_evadere,
+  udm.sigla AS udm
+FROM (
+  SELECT
+    relazioni_documenti.id_documento,
+    documenti.id AS id_ordine,
+    coalesce(
+      documenti_articoli.id_prodotto,
+      articoli.id_prodotto
+    ) AS codice_prodotto,
+    prodotti.nome AS prodotto,
+    documenti_articoli.id_articolo AS codice_articolo,
+    articoli.nome AS articolo,
+    coalesce( ( documenti_articoli.quantita * coalesce( udm.conversione, 1 ) ), 0 ) AS quantita_ordinata,
+    0 AS quantita_evasa,
+    udm_base.sigla AS udm_base,
+    udm.id AS id_udm
+  FROM documenti
+  LEFT JOIN relazioni_documenti ON relazioni_documenti.id_documento_collegato = documenti.id
+  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+  LEFT JOIN documenti_articoli ON documenti_articoli.id_documento = documenti.id
+  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = coalesce( documenti_articoli.id_prodotto, articoli.id_prodotto )
+  LEFT JOIN udm ON udm.id = documenti_articoli.id_udm
+  LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
+  WHERE tipologie_documenti.se_ordine IS NOT NULL
+  AND relazioni_documenti.id_documento IS NOT NULL
+  AND relazioni_documenti.id_ruolo = 3
+  AND documenti_articoli.id_packing_list IS NULL
+  HAVING codice_prodotto IS NOT NULL
+
+  UNION
+
+  SELECT
+    relazioni_documenti.id_documento,
+    relazioni_documenti.id_documento_collegato AS id_ordine,
+    coalesce(
+      documenti_articoli.id_prodotto,
+      articoli.id_prodotto
+    ) AS codice_prodotto,
+    prodotti.nome AS prodotto,
+    documenti_articoli.id_articolo AS codice_articolo,
+    articoli.nome AS articolo,
+    0 AS quantita_ordinata,
+    sum( coalesce( ( coalesce( articoli.peso, 1 ) * coalesce( udm.conversione, 1 ) * documenti_articoli.quantita ), 0 ) ) AS quantita_evasa,
+    udm_base.sigla AS udm_base,
+    udm.id AS id_udm
+  FROM documenti
+  INNER JOIN relazioni_documenti ON id_documento = documenti.id
+  INNER JOIN documenti AS ordini ON ordini.id = relazioni_documenti.id_documento_collegato
+  LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+  LEFT JOIN tipologie_documenti AS tipologie_ordini ON tipologie_ordini.id = ordini.id_tipologia
+  LEFT JOIN documenti_articoli ON documenti_articoli.id_packing_list = documenti.id
+  LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  LEFT JOIN prodotti ON prodotti.id = coalesce( documenti_articoli.id_prodotto, articoli.id_prodotto )
+  LEFT JOIN udm ON udm.id = articoli.id_udm_peso
+  LEFT JOIN udm AS udm_base ON udm_base.id = udm.id_base
+  WHERE tipologie_documenti.se_trasporto IS NOT NULL
+  AND tipologie_ordini.se_ordine IS NOT NULL
+  AND relazioni_documenti.id_documento_collegato IS NOT NULL
+  AND relazioni_documenti.id_ruolo = 3
+  AND documenti_articoli.id_packing_list IS NOT NULL
+  GROUP BY documenti_articoli.id_documento, relazioni_documenti.id_documento_collegato, documenti_articoli.id_prodotto, documenti_articoli.id_articolo
+  HAVING codice_prodotto IS NOT NULL
+) AS ordine
+LEFT JOIN udm ON udm.id = (
+  SELECT coalesce( max( documenti_articoli.id_udm ), max( articoli.id_udm_peso ) )
+  FROM documenti_articoli LEFT JOIN articoli ON articoli.id = documenti_articoli.id_articolo
+  WHERE documenti_articoli.id_documento IN ( ordine.id_documento, ordine.id_ordine )
+  AND ( documenti_articoli.id_prodotto = ordine.codice_prodotto OR articoli.id = ordine.codice_articolo )
+)
+GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, codice_articolo, articolo, conversione, udm;
+
 -- | 100000015000
 -- __report_giacenza_crediti__
 -- tipologia: report

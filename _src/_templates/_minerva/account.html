@@ -5,7 +5,7 @@
 
 {% block main %}
 {% set table = '__account__' %}
-<h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
+<h1>{{ include( template_from_string( page.h1[ localization.language.ietf ]|default('') ) | raw ) }}</h1>
 <form action="" method="post">
     <fieldset>
         <div class="form-row">

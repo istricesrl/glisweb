@@ -41,8 +41,8 @@
             {% block title %}
             <div class="row">
                 <div class="col">
-                    <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ] ) | raw ) }}</h1>
-                    {% if page.subtitle[ localization.language.ietf ] %}{{ page.subtitle[ localization.language.ietf ] | raw }}{% endif %}
+                    <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ]|default('') ) | raw ) }}</h1>
+                    {% if page.subtitle[ localization.language.ietf ] %}{{ page.subtitle[ localization.language.ietf ]|default('') | raw }}{% endif %}
                 </div>
             </div>
             {% endblock title %}

@@ -13,7 +13,7 @@
 </script>
 
 {# SCRIPT JAVASCRIPT ESTERNI #}
-{% for j in page.js.external %}<script defer src="{{ include( template_from_string( j ) | raw ) }}"></script>{% endfor %}
+{% for j in page.js.external %}<script defer src="{{ include( template_from_string( j|default('') ) | raw ) }}"></script>{% endfor %}
 
 {# SCRIPT JAVASCRIPT INTERNI #}
 {% for j in page.js.internal %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}

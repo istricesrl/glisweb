@@ -18,7 +18,7 @@
                     {% if v.contents.images.card %}{{ cms.picture( v.contents.images.card|first.path, lang, site, set ) }}{% endif %}
                     <div class="card-body">
                         <h5 class="card-title">{{ v.h1[ localization.language.ietf ] }}</h5>
-                        <div class="card-text">{{ include( template_from_string( v.cappello[ localization.language.ietf ] ) | raw ) }}</div>
+                        <div class="card-text">{{ include( template_from_string( v.cappello[ localization.language.ietf ]|default('') ) | raw ) }}</div>
                     </div>
                     {% if v.metadati.card_clickable %}</a>{% endif %}
                 </div>

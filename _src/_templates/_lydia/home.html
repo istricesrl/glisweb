@@ -5,5 +5,5 @@
 
 {% block main %}
 <!-- schema: {{ _self }} / blocco main -->
-<div>{{ include( template_from_string( page.content[ localization.language.ietf ] ) | raw ) }}</div>
+<div>{{ include( template_from_string( page.content[ localization.language.ietf ]|default('') ) | raw ) }}</div>
 {% endblock %}

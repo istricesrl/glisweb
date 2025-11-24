@@ -6233,6 +6233,8 @@ CREATE OR REPLACE VIEW `missioni_view` AS
 			''
 		) AS destinatario,
 		documenti.id_condizione_pagamento,
+        group_concat( DISTINCT d1.codice SEPARATOR ' | ' ) AS documenti_antecedenti,
+        group_concat( DISTINCT d2.codice SEPARATOR ' | ' ) AS documenti_successivi,
 		condizioni_pagamento.codice AS condizione_pagamento,
 		documenti.codice_archivium,
     	documenti.codice_sdi,
@@ -6271,7 +6273,12 @@ CREATE OR REPLACE VIEW `missioni_view` AS
 		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
+        LEFT JOIN relazioni_documenti AS r1 ON r1.id_documento = documenti.id
+        LEFT JOIN documenti AS d1 ON d1.id = r1.id_documento_collegato
+        LEFT JOIN relazioni_documenti AS r2 ON r2.id_documento_collegato = documenti.id
+        LEFT JOIN documenti AS d2 ON d2.id = r2.id_documento
    	WHERE tipologie_documenti.se_missione IS NOT NULL
+    GROUP BY documenti.id
 ;
 
 -- | 090000022700
@@ -8132,7 +8139,7 @@ CREATE OR REPLACE VIEW relazioni_documenti_view AS
 		relazioni_documenti.id_documento_collegato,
 		relazioni_documenti.id_ruolo,
 		ruoli_documenti.nome AS ruolo,
-		concat( relazioni_documenti.id_documento,' - ', relazioni_documenti.id_documento_collegato, concat_ws(' ', ruoli_documenti.nome ) ) AS __label__
+		concat( relazioni_documenti.id_documento, ' ', concat_ws(' ', ruoli_documenti.nome ), ' di ', relazioni_documenti.id_documento_collegato ) AS __label__
 	FROM relazioni_documenti
 		LEFT JOIN ruoli_documenti ON ruoli_documenti.id = relazioni_documenti.id_ruolo
 ;
