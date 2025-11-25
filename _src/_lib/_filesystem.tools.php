@@ -931,7 +931,10 @@
         }
 
         // copio $f1 in $f2
-        if( filter_var( $f1, FILTER_VALIDATE_URL ) ) {
+        if( filter_var( string2url( $f1 ), FILTER_VALIDATE_URL ) ) {
+
+            // ...
+            $f1 = string2url( $f1 );
 
             // log
             logger( 'copio da URL: ' . $f1 . ' su ' . $f2, 'filesystem' );
@@ -963,6 +966,9 @@
             }
 
         } else {
+
+            // debug
+            // die('copyFile: copia locale di ' . $f1 . ' su ' . $f2 );
 
             // prelevo i percorsi completi
             $f1 = getFullPath( $f1 );

@@ -638,3 +638,90 @@
 
     }
 
+    /**
+     * 
+     * 
+     * 
+     * 
+     */
+    function string2url( string $url ): ?string {
+
+        // Trim iniziale
+        $url = trim($url);
+
+        if ($url === '') {
+            return null;
+        }
+
+        // Se è già una URL valida, la restituisco così com'è
+        if (filter_var($url, FILTER_VALIDATE_URL)) {
+            return $url;
+        }
+
+        // Provo a parsare la URL
+        $parts = parse_url($url);
+        if ($parts === false) {
+            return null;
+        }
+
+        // Per avere una URL completa, almeno scheme + host devono esistere
+        if (!isset($parts['scheme'], $parts['host'])) {
+            return null;
+        }
+
+        // Normalizzo il path (encodo ogni segmento)
+        if (isset($parts['path'])) {
+            // evito doppie slash
+            $parts['path'] = preg_replace('#/{2,}#', '/', $parts['path']);
+
+            $segments = explode('/', $parts['path']);
+            $segments = array_map(function($seg) {
+                // lascio vuoto il segmento vuoto (prima dello slash iniziale)
+                return $seg === '' ? '' : rawurlencode($seg);
+            }, $segments);
+
+            $parts['path'] = implode('/', $segments);
+        } else {
+            $parts['path'] = '/';
+        }
+
+        // Normalizzo la query (se esiste) ricostruendola con http_build_query
+        if (isset($parts['query'])) {
+            parse_str($parts['query'], $q);
+            $parts['query'] = http_build_query($q);
+        }
+
+        // Ricostruisco la URL
+        $newUrl  = $parts['scheme'] . '://';
+
+        if (isset($parts['user'])) {
+            $newUrl .= $parts['user'];
+            if (isset($parts['pass'])) {
+                $newUrl .= ':' . $parts['pass'];
+            }
+            $newUrl .= '@';
+        }
+
+        $newUrl .= $parts['host'];
+
+        if (isset($parts['port'])) {
+            $newUrl .= ':' . $parts['port'];
+        }
+
+        $newUrl .= $parts['path'];
+
+        if (!empty($parts['query'])) {
+            $newUrl .= '?' . $parts['query'];
+        }
+
+        if (!empty($parts['fragment'])) {
+            $newUrl .= '#' . $parts['fragment'];
+        }
+
+        // Controllo finale di validità
+        if (filter_var($newUrl, FILTER_VALIDATE_URL)) {
+            return $newUrl;
+        }
+
+        return null;
+    }

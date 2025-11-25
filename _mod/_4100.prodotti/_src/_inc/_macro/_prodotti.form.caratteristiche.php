@@ -34,11 +34,9 @@
     }
 
     // tendina caratteristiche
-	$ct['etc']['select']['caratteristiche'] = mysqlCachedIndexedQuery(
-	    $cf['memcache']['index'],
-	    $cf['memcache']['connection'],
+	$ct['etc']['select']['caratteristiche'] = mysqlQuery(
 	    $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM caratteristiche_view'
+        'SELECT id, __label__ FROM caratteristiche_prodotti_view'
     );
 /*
     // tendina stagioni
