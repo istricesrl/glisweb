@@ -118,7 +118,7 @@
                         'contratti'
                     );
 
-                    var_dump( $iscritto );
+                    // var_dump( $iscritto );
 
                     // associo l'anagrafica al contratto
                     mysqlInsertRow(
@@ -163,7 +163,7 @@
                     $incremento = '+' . $giorni . ' days';
 
                     // creo il rinnovo per il periodo di iscrizione
-                    $rinnovo = mysqlInsertRow(
+                    $idRinnovo = mysqlInsertRow(
                         $cf['mysql']['connection'],
                         array(
                             'id' => NULL,
@@ -176,6 +176,7 @@
                         'rinnovi'
                     );
 
+                    /*
                     // se il carrello è pagato...
                     if( ! empty( $carrello['timestamp_pagamento'] ) ) {
 
@@ -199,6 +200,105 @@
 
                         // debug
                         // die('carrello non pagato!');
+
+                    }
+                    */
+
+                    // aggiorno il carrello
+                    if( ! empty( $idRinnovo ) ) {
+
+                        // log
+                        logger( 'inserito rinnovo: ' . $idRinnovo, 'details/iscrizioni/rinnovi/' . $articolo['destinatario_id_anagrafica'] );
+
+                        // ...
+                        mysqlQuery(
+                            $cf['mysql']['connection'],
+                            'UPDATE carrelli_articoli SET id_rinnovo = ? WHERE id = ?',
+                            array(
+                                array( 's' => $idRinnovo ),
+                                array( 's' => $articolo['id'] )
+                            )
+                        );
+
+                        // ...
+                        if( $cf['corsi']['checkout']['documento']['generazione']['automatica'] === true ) {
+
+                            // log
+                            logger( 'genero il documento per il rinnovo: ' . $idRinnovo, 'details/iscrizioni/documenti/' . $articolo['destinatario_id_anagrafica'] );
+
+                            // ...
+                            $sezionale = 'E/' . date( 'Y' );
+                            $numero = mysqlSelectValue(
+                                $cf['mysql']['connection'],
+                                'SELECT coalesce( max( numero ), 0 ) + 1 FROM documenti WHERE sezionale = ?',
+                                array(
+                                    array( 's' => $sezionale )
+                                )
+                            );
+
+                            // ...
+                            $idDocumento = mysqlInsertRow(
+                                $cf['mysql']['connection'],
+                                array(
+                                    'id_tipologia' => $cf['corsi']['checkout']['documento']['generazione']['id_tipologia'],
+                                    'id_emittente' => trovaIdAziendaGestita(),
+                                    'id_sede_emittente' => trovaIdSedeLegale( trovaIdAziendaGestita() ),
+                                    'id_destinatario' => $articolo['destinatario_id_anagrafica'],
+                                    'id_sede_destinatario' => trovaIdSedeLegale( $articolo['destinatario_id_anagrafica'] ),
+                                    'id_condizione_pagamento' => 2,
+                                    'esigibilita' => 'I',
+                                    'data' => date( 'Y-m-d' ),
+                                    'numero' => $numero,
+                                    'sezionale' => $sezionale,
+                                    'nome' => 'documento generato automaticamente per il carrello #' . $idCarrello
+                                ),
+                                'documenti'
+                            );
+
+                            // ...
+                            if( ! empty( $idDocumento ) ) {
+
+                                // inserisco la riga
+                                $idDocumentiArticoli = mysqlInsertRow(
+                                    $cf['mysql']['connection'],
+                                    array(
+                                        'id_documento' => $idDocumento,
+                                        'id_rinnovo' => $idRinnovo,
+                                        'id_carrelli_articoli' => $articolo['id'],
+                                        'id_articolo' => $articolo['id_articolo'],
+                                        'quantita' => 1,
+                                        'id_udm' => 1,
+                                        'importo_netto_totale' => $articolo['prezzo_lordo_finale'],
+                                        'importo_lordo_totale' => $articolo['prezzo_lordo_finale'],
+                                        'id_listino' => 1,
+                                        'id_reparto' => 5,
+                                        'nome' => 'riga generata automaticamente per il carrello #' . $idCarrello . ' documento #' . $idDocumento
+                                    ),
+                                    'documenti_articoli'
+                                );
+
+                                // inserisco il pagamento
+                                $idPagamento = mysqlInsertRow(
+                                    $cf['mysql']['connection'],
+                                    array(
+                                        'id_documento' => $idDocumento,
+                                        'id_tipologia' => NULL,
+                                        'id_modalita_pagamento' => 24,  // TODO così è fisso a PayPal, rendere dinamico da carrello
+                                        'importo_lordo_finale' => $articolo['prezzo_lordo_finale'],
+                                        'timestamp_pagamento' => time(),
+                                        'provider_pagamento' => $carrello['provider_pagamento'],
+                                        'ordine_pagamento' => $carrello['ordine_pagamento'],
+                                        'codice_pagamento' => $carrello['codice_pagamento'],
+                                        'status_pagamento' => $carrello['status_pagamento'],
+                                        'importo_pagamento' => $carrello['importo_pagamento'],
+                                        'nome' => 'pagamento generato automaticamente per il carrello #' . $idCarrello . ' documento #' . $idDocumento
+                                    ),
+                                    'pagamenti'
+                                );
+
+                            }
+
+                        }
 
                     }
 

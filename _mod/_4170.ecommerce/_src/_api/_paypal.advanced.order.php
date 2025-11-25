@@ -87,6 +87,9 @@
         // print_r( $status );
         // print_r( $error );
 
+        // log
+        // logWrite( print_r( $result, true ), 'details/paypal-advanced/listener/order', LOG_ERR );
+
         buildJson(
             array( 'id' => $result['id'] )
         );
