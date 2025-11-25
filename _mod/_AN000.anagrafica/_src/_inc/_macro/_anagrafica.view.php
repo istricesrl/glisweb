@@ -12,6 +12,10 @@
      * 
      */
 
+    // debug
+    ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
+
     /**
      * configurazione della view
      * =========================
@@ -101,8 +105,9 @@
     $ct['etc']['select']['categorie_anagrafica'] = tendinaCategorieAnagrafica();
 
     // tendina tipologie
-    // TODO solo se il modulo attivita è attivo
-    $ct['etc']['select']['tipologie_attivita'] = tendinaTipologieAttivita();
+    if( function_exists( 'tendinaTipologieAnagrafica' ) ) {
+        $ct['etc']['select']['tipologie_anagrafica'] = tendinaTipologieAnagrafica();
+    }
 
     // tendina stati
     $ct['etc']['select']['stati'] = tendinaStati();

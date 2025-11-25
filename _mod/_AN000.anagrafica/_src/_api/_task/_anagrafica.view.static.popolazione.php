@@ -35,7 +35,7 @@
      */
 
     // inclusione del framework
-    if( ! defined( 'CRON_RUNNING' ) ) {
+    if( ! defined( 'CRON_RUNNING' ) && ! defined( 'DIR_BASE' ) ) {
         require '../../../../../_src/_config.php';
     }
 

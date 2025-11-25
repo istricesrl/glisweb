@@ -54,7 +54,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM tipologie_url_view'
+        'SELECT id, __label__ FROM tipologie_url_view ORDER BY __label__'
     );
 
     // tendina ruoli indirizzi
@@ -62,7 +62,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_indirizzi_view'
+        'SELECT id, __label__ FROM ruoli_indirizzi_view ORDER BY __label__'
     );
 
     // tendina tipologie indirizzi
@@ -70,7 +70,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM tipologie_indirizzi_view'
+        'SELECT id, __label__ FROM tipologie_indirizzi_view ORDER BY __label__'
     );
 
     /**

@@ -101,7 +101,9 @@
     $ct['etc']['select']['categorie_anagrafica'] = tendinaCategorieAnagrafica();
 
     // tendina tipologie
-    $ct['etc']['select']['tipologie_attivita'] = tendinaTipologieAttivita();
+    if( function_exists( 'tendinaTipologieAnagrafica' ) ) {
+        $ct['etc']['select']['tipologie_anagrafica'] = tendinaTipologieAnagrafica();
+    }
 
     // tendina stati
     $ct['etc']['select']['stati'] = tendinaStati();

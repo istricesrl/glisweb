@@ -67,7 +67,9 @@
     // debug
     // print_r( $_REQUEST );
     // print_r( $_GET );
-    // die();
+    // die( '--- gestione delle chiamate alle API REST ---' );
+    ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
 
     // TODO
     if( isset( $_REQUEST['__ws__'] ) ) {
@@ -122,15 +124,15 @@
                         );
                     }
                     $incoming = print_r( $_REQUEST[ $cf['ws']['table'] ], true );
-    /*
-                    $incoming = json_decode( $cf['ws']['input'] , true );
-                    if( is_array( $incoming ) ) {
-                        $_REQUEST[ $cf['ws']['table'] ] = array_replace_recursive(
-                        $_REQUEST[ $cf['ws']['table'] ],
-                        $incoming
-                        );
-                    }
-    */
+                    /*
+                                    $incoming = json_decode( $cf['ws']['input'] , true );
+                                    if( is_array( $incoming ) ) {
+                                        $_REQUEST[ $cf['ws']['table'] ] = array_replace_recursive(
+                                        $_REQUEST[ $cf['ws']['table'] ],
+                                        $incoming
+                                        );
+                                    }
+                    */
                 break;
 
                 case 'application/x-www-form-urlencoded':
@@ -139,7 +141,7 @@
                     $incoming = print_r( $_REQUEST[ $cf['ws']['table'] ], true );
                     break;
                     default:
-        #            $_REQUEST[ $cf['ws']['table'] ] = array();
+                    #            $_REQUEST[ $cf['ws']['table'] ] = array();
                     $incoming = 'formato non riconosciuto: ' . $cf['ws']['incoming'];
 
                 break;
@@ -147,15 +149,15 @@
             }
 
             // debug
-    #        $incoming = $_REQUEST[ $cf['ws']['table'] ];
-    #        echo $cf['ws']['table'] . PHP_EOL;
-    #        die( print_r( $cf['ws'], true ) );
-    #        die( print_r( $_REQUEST, true ) );
+            #        $incoming = $_REQUEST[ $cf['ws']['table'] ];
+            #        echo $cf['ws']['table'] . PHP_EOL;
+            #        die( print_r( $cf['ws'], true ) );
+            #        die( print_r( $_REQUEST, true ) );
 
-    #        // se il metodo è GET i dati dovrebbero arrivare da $_GET e *mai* dal body della richiesta!
-    #        if( $r['method'] == METHOD_GET ) {
-    #            $r['data'] = $_GET;
-    #        }
+            #        // se il metodo è GET i dati dovrebbero arrivare da $_GET e *mai* dal body della richiesta!
+            #        if( $r['method'] == METHOD_GET ) {
+            #            $r['data'] = $_GET;
+            #        }
 
             // faccio convergere l'ID sulla $_REQUEST
             if( isset( $_REQUEST['__id__'] ) && ! empty( $_REQUEST['__id__'] ) ) {
@@ -187,23 +189,32 @@
             // die( 'incoming ' . $cf['ws']['incoming'] . ': ' . $incoming );
             // die( print_r( $cf['ws'], true ) );
 
-            // runlevel da saltare
-            $cf['lvls']['skip'] = array(
-                '130', '135', '140', '145', '190',
-                '300', '310', '320', '330', '340', '345', '360', '365', '370', '380', '385',
-                '400', '420',
-                '520', '525', '550', '555', '580', '585',
-                '610', '615', '620', '625', '640', '645', '650', '655', '660', '665', '680', '685',
-                '770', '775', '780',
-                '920', '925', '950', '960', '980', '990'
-            );
-
-            // debug
-            // print_r( $_REQUEST[ $cf['ws']['table'] ] );
-            // die( print_r( $cf['ws'], true ) );
-
             // inclusione del framework
-            require '../_config.php';
+            if( ! defined( 'DIR_BASE' ) ) {
+
+                // runlevel da saltare
+                $cf['lvls']['skip'] = array(
+                    '130', '135', '140', '145', '190',
+                    '300', '310', '320', '330', '340', '345', '360', '365', '370', '380', '385',
+                    '400', '420',
+                    '520', '525', '550', '555', '580', '585',
+                    '610', '615', '620', '625', '640', '645', '650', '655', '660', '665', '680', '685',
+                    '770', '775', '780',
+                    '920', '925', '950', '960', '980', '990'
+                );
+
+                // debug
+                // print_r( $_REQUEST[ $cf['ws']['table'] ] );
+                // die( print_r( $cf['ws'], true ) );
+
+                // inclusione del framework
+                if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+                    require '../_config.php';
+                } else {
+                    require INCLUDE_SUBDIR . '_config.php';
+                }
+
+            }
 
             // timer
             timerCheck( $cf['speed'], 'inizio eleborazione API REST' );
@@ -283,6 +294,9 @@
 
     } else {
 
+        // debug
+        // print_r( $_REQUEST );
+        
         // risposta con errore
         http_response_code( 400 );
 

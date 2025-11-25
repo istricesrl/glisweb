@@ -40,7 +40,7 @@
             AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) 
             AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) 
             AND tipologie_pubblicazioni.se_pubblicato = 1 
-            GROUP BY pagine.id ',
+            GROUP BY pagine.id, pubblicazioni.ordine ',
             array(
                 array( 's' => SITE_CURRENT ),
                 array( 's' => time() ),

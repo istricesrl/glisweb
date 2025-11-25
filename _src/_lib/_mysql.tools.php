@@ -218,63 +218,71 @@
             // echo $q . PHP_EOL;
 
             // in base al tipo di comando eseguo la query
-            switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
+            try {
 
-                case 'SELECT':
-                case 'SHOW':
-                    $r = mysqlFetchResult(mysqli_query($c, $q));
-                    break;
+                switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
 
-                case 'CALL':
-                    $r = mysqli_query($c, $q);
-                    break;
+                    case 'SELECT':
+                    case 'SHOW':
+                        $r = mysqlFetchResult(mysqli_query($c, $q));
+                        break;
 
-                case 'SET':
-                    $r = mysqli_query($c, $q);
-                    break;
+                    case 'CALL':
+                        $r = mysqli_query($c, $q);
+                        break;
 
-                case 'BEGIN':
-                case 'START':
-                    $r = mysqli_begin_transaction($c);
-                    break;
+                    case 'SET':
+                        $r = mysqli_query($c, $q);
+                        break;
 
-                case 'ROLLBACK':
-                    $r = mysqli_rollback($c);
-                    break;
+                    case 'BEGIN':
+                    case 'START':
+                        $r = mysqli_begin_transaction($c);
+                        break;
 
-                case 'COMMIT':
-                    $r = mysqli_commit($c);
-                    break;
+                    case 'ROLLBACK':
+                        $r = mysqli_rollback($c);
+                        break;
 
-                case 'LOCK':
-                case 'UNLOCK':
-                    $r = mysqli_query($c, $q);
-                    break;
+                    case 'COMMIT':
+                        $r = mysqli_commit($c);
+                        break;
 
-                case 'ALTER':
-                case 'CREATE':
-                case 'DROP':
-                case 'OPTIMIZE':
-                    $r = mysqli_query($c, $q);
-                    break;
+                    case 'LOCK':
+                    case 'UNLOCK':
+                        $r = mysqli_query($c, $q);
+                        break;
 
-                case 'INSERT':
-                    mysqli_query($c, $q);
-                    $r = mysqli_insert_id($c);
-                    break;
+                    case 'ALTER':
+                    case 'CREATE':
+                    case 'DROP':
+                    case 'OPTIMIZE':
+                        $r = mysqli_query($c, $q);
+                        break;
 
-                case 'REPLACE':
-                case 'UPDATE':
-                case 'DELETE':
-                case 'TRUNCATE':
-                    mysqli_query($c, $q);
-                    $r = mysqli_affected_rows($c);
-                    break;
+                    case 'INSERT':
+                        mysqli_query($c, $q);
+                        $r = mysqli_insert_id($c);
+                        break;
 
-                default:
-                    logger('comando MySQL sconosciuto: ' . current(explode(' ', str_replace("\n", ' ', $q))), 'mysql', LOG_ERR);
-                    return false;
-                    break;
+                    case 'REPLACE':
+                    case 'UPDATE':
+                    case 'DELETE':
+                    case 'TRUNCATE':
+                        mysqli_query($c, $q);
+                        $r = mysqli_affected_rows($c);
+                        break;
+
+                    default:
+                        logger('comando MySQL sconosciuto: ' . current(explode(' ', str_replace("\n", ' ', $q))), 'mysql', LOG_ERR);
+                        return false;
+                        break;
+                }
+
+            } catch (Exception $ex) {
+                logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q, 'mysql', LOG_ERR);
+                logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q . ((! empty($p)) ? '§dati -> ' . print_l($p) : ''), 'details/mysql/query', LOG_ERR);
+                return false;
             }
 
             // cronometro
@@ -374,88 +382,91 @@
 
         } else {
 
-            // cronometro
-            $tStart = timerNow();
+            try {
 
-            // preparo la query...
-            $pq = mysqli_prepare($c, $q);
+                // cronometro
+                $tStart = timerNow();
 
-            // se la preparazione dello statement è andata a buon fine...
-            if ($pq !== false) {
+                // preparo la query...
+                $pq = mysqli_prepare($c, $q);
 
-                // se ci sono dei parametri da bindare...
-                if (is_array($params) && count($params)) {
+                // se la preparazione dello statement è andata a buon fine...
+                if ($pq !== false) {
 
-                    // preparazione dei parametri per il bind
-                    $aParams[0] = $pq;
-                    $aParams[1] = '';
-                    foreach ($params as $key => $val) {
-                        $type = current(array_keys($val));
-                        $aParams[1] .= $type;
-                        $aParams[] = &$params[$key][$type];
-                        if (($type == 'i' || $type == 'd') && empty($params[$key][$type])) {
-                            $params[$key][$type] = NULL;
+                    // se ci sono dei parametri da bindare...
+                    if (is_array($params) && count($params)) {
+
+                        // preparazione dei parametri per il bind
+                        $aParams[0] = $pq;
+                        $aParams[1] = '';
+                        foreach ($params as $key => $val) {
+                            $type = current(array_keys($val));
+                            $aParams[1] .= $type;
+                            $aParams[] = &$params[$key][$type];
+                            if (($type == 'i' || $type == 'd') && empty($params[$key][$type])) {
+                                $params[$key][$type] = NULL;
+                            }
+                            if (is_array($params[$key][$type])) {
+                                die('passare solo stringhe come parametri della query: ' . PHP_EOL . $q . PHP_EOL . PHP_EOL . 'oggetto malformato: ' . print_r($val, true));
+                            }
                         }
-                        if (is_array($params[$key][$type])) {
-                            die('passare solo stringhe come parametri della query: ' . PHP_EOL . $q . PHP_EOL . PHP_EOL . 'oggetto malformato: ' . print_r($val, true));
-                        }
+
+                        // bind dei parametri
+                        call_user_func_array('mysqli_stmt_bind_param', $aParams);
                     }
 
-                    // bind dei parametri
-                    call_user_func_array('mysqli_stmt_bind_param', $aParams);
-                }
-
-                // esecuzione dello statement
-                try {
+                    // esecuzione dello statement
                     $xStatement = mysqli_stmt_execute($pq);
-                } catch (Exception $e) {
-                    logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q, 'mysql', LOG_ERR);
-                    logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante l\'esecuzione della query: ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql/query', LOG_ERR);
+
+                    // cronometro
+                    $tElapsed = sprintf('%0.11f', timerDiff($tStart));
+
+                    // log
+                    if ($tElapsed > 0.5) {
+                        logger($q . ' -> TEMPO ' . str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi', 'speed', LOG_ERR);
+                        logger(str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query');
+                    }
+
+                    // log
+                    logger(md5($q) . ' -> OK', 'mysql');
+
+                    // valore di ritorno a seconda del tipo di query
+                    switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
+
+                        case 'SELECT':
+                            return mysqlFetchPreparedResult($pq);
+                            break;
+
+                        case 'INSERT':
+                            $id = mysqli_stmt_insert_id($pq);
+                            return ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
+                            break;
+
+                        case 'REPLACE':
+                        case 'UPDATE':
+                        case 'DELETE':
+                        case 'TRUNCATE':
+                        default:
+                            return mysqli_stmt_affected_rows($pq);
+                            break;
+
+                    }
+
+                } else {
+
+                    // log
+                    logger(__FUNCTION__ . '() fallita la preparazione della query: ' . $q, 'mysql', LOG_ERR);
+
+                    // restituisco false
                     return false;
                 }
 
-                // cronometro
-                $tElapsed = sprintf('%0.11f', timerDiff($tStart));
-
-                // log
-                if ($tElapsed > 0.5) {
-                    logger($q . ' -> TEMPO ' . str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi', 'speed', LOG_ERR);
-                    logger(str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query');
-                }
-
-                // log
-                logger(md5($q) . ' -> OK', 'mysql');
-
-                // valore di ritorno a seconda del tipo di query
-                switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
-
-                    case 'SELECT':
-                        return mysqlFetchPreparedResult($pq);
-                        break;
-
-                    case 'INSERT':
-                        $id = mysqli_stmt_insert_id($pq);
-                        return ((! empty($id)) ? $id : ((isset($params['id']['s'])) ? $params['id']['s'] : NULL));
-                        break;
-
-                    case 'REPLACE':
-                    case 'UPDATE':
-                    case 'DELETE':
-                    case 'TRUNCATE':
-                    default:
-                        return mysqli_stmt_affected_rows($pq);
-                        break;
-
-                }
-
-            } else {
-
-                // log
-                logger(__FUNCTION__ . '() fallita la preparazione della query: ' . $q, 'mysql', LOG_ERR);
-
-                // restituisco false
+            } catch (Exception $ex) {
+                logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante la preparazione della query: ' . $q, 'mysql', LOG_ERR);
+                logger(__FUNCTION__ . '() errore ' . mysqli_error($c) . ' durante la preparazione della query: ' . $q . ((! empty($params)) ? '§dati -> ' . print_l($params) : ''), 'details/mysql/query', LOG_ERR);
                 return false;
             }
+
         }
 
         // restituisco false di default

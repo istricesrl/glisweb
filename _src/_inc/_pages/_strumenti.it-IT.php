@@ -23,6 +23,7 @@
     // pagina principale
     $p['strumenti'] = array(
         'sitemap'       => false,
+        'cacheable'     => false,
         'title'         => array( $l        => 'strumenti' ),
         'h1'            => array( $l        => 'strumenti' ),
         'template'      => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),

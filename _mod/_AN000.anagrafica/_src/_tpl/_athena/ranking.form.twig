@@ -22,13 +22,16 @@
                 <legend>dati generali <small>{{ legend }}</small></legend>
 
                 <div class="form-group row">
-                    <div class="col col-md form-col">
-                        <span class="label-top">genitore</span>
-                        {{ frm.select({ 'field': { 'name': 'id_genitore' }, 'source': { 'values': etc.select.tipologie_anagrafica }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-                    </div>
-                    <div class="col-12 col-md form-col">
+                    <div class="col form-col">
                         <span class="label-top">nome</span>
-                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
+                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
                 </div>
 
@@ -43,4 +46,5 @@
     </div>
 </section>
 
+<!-- fine blocco {{ _self }}::main -->
 {% endblock main %}

@@ -9,6 +9,10 @@
      *
      */
 
+    // debug
+    ini_set( 'display_errors', 1 );
+    error_reporting( E_ALL );
+
     // gruppi di controlli
     $ct['page']['contents']['metros'] = array(
         '01.esportazioni' => array(

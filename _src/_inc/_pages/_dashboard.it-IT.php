@@ -23,9 +23,10 @@
     // pagina principale
     $p['dashboard'] = array(
         'sitemap'       => false,
+        'cacheable'     => false,
         'title'         => array( $l        => 'admin' ),
         'h1'            => array( $l        => 'dashboard' ),
-        'template'      => array( 'path'    => '_src/_templates/_athena/', 'schema' => 'dashboard.html' ),
+        'template'      => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'dashboard.twig' ),
         'parent'        => array( 'id'      => NULL ),
         'macro'         => array( '_src/_inc/_macro/_dashboard.php' ),
         'auth'          => array( 'groups'  => array( 'roots', 'staff' ) ),
@@ -36,11 +37,12 @@
     // tools dashboard
     $p['dashboard.tools'] = array(
         'sitemap'       => false,
+        'cacheable'     => false,
         'icon'          => '<i class="fa fa-cogs" aria-hidden="true"></i>',
         'title'         => array( $l        => 'azioni' ),
         'h1'            => array( $l        => 'azioni' ),
         'parent'        => array( 'id'      => 'dashboard' ),
-        'template'      => array( 'path'    => '_src/_templates/_athena/', 'schema' => 'default.tools.html' ),
+        'template'      => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
         'macro'         => array( '_src/_inc/_macro/_dashboard.tools.php' ),
         'auth'          => array( 'groups'  => array( 'roots', 'staff' ) ),
         'etc'           => array( 'tabs'    => $p['dashboard']['etc']['tabs'] )

@@ -122,6 +122,9 @@
                 // per ogni lingua attiva
                 foreach( $cf['localization']['languages'] as $lk => $lv ) {
 
+                    // debug
+                    // echo ' - ' . $lk . PHP_EOL;
+
                     // defaults
                     if( ! isset( $v['title'][ $lk ] ) ) { $v['title'][ $lk ] = NULL; }
                     if( ! isset( $v['h1'][ $lk ] ) ) { $v['h1'][ $lk ] = NULL; }
@@ -129,12 +132,17 @@
                     // stabilisco quale chiave usare per il rewrite
                     if( ! isset( $v['rewrited'] ) || ! is_array( $v['rewrited'] ) || ! array_key_exists( $lk, $v['rewrited'] ) ) {
                         $v['rewrited'][ $lk ] = string2rewrite(
-                        ( isset( $v['custom'][ $lk ] ) && ! empty( $v['custom'][ $lk ] ) )
-                        ?
-                        $v['custom'][ $lk ]
-                        :
-                        $v['title'][ $lk ]
+                            ( isset( $v['custom'][ $lk ] ) && ! empty( $v['custom'][ $lk ] ) )
+                            ?
+                            $v['custom'][ $lk ]
+                            :
+                            $v['title'][ $lk ]
                         );
+                    } else {
+
+                        // debug
+                        // echo ' -- forced rewrite: ' . $v['rewrited'][ $lk ] . PHP_EOL;
+
                     }
 
                     // inserisco la pagina corrente nell'indice

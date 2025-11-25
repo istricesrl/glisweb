@@ -134,14 +134,17 @@
      */
     function build( $content, $type = MIME_TEXT_PLAIN, $encoding = ENCODING_UTF8, $headers = array() ) {
 
-    // invio gli headers
+        // invio gli headers
         buildHeaders( $headers );
 
-    // invio l'header per il contenuto
+        // invio l'header per il contenuto
         buildContentHeader( $type, $encoding );
 
-    // invio l'output
+        // invio l'output
         echo $content;
+
+        // debug
+        // var_dump( headers_list() );
 
     }
 
@@ -155,6 +158,7 @@
         // invio gli headers
         foreach( $headers as $header => $value ) {
             if( is_string( $header ) ) {
+                // removeheader( $header );
                 header( $header . ': ' . $value );
             } else {
                 header( $value );

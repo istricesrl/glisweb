@@ -29,6 +29,8 @@
 
         if( ! empty( $t ) ) {
 
+            // echo 'string2rewrite input: ' . $t . PHP_EOL;
+
             $t = trim( $t );
 
             if( function_exists( 'mb_strtolower' ) ) {
@@ -109,6 +111,10 @@
             $t = riduciCaratteriDoppi( $t, URL_WORD_SEPARATOR );
 
             $t = trim( $t, URL_WORD_SEPARATOR );
+
+        } else {
+
+            // echo 'string2rewrite input vuoto' . PHP_EOL;
 
         }
 

@@ -103,11 +103,21 @@
             $p = $p['id'];
         }
 
+        // debug
+        // var_dump($p);
+        // var_dump($cf);
+        // var_dump('GLOBALS_has_cf', array_key_exists('cf', $GLOBALS));
+        // var_dump('cf_is_array_and_count', is_array($GLOBALS['cf'] ?? null) ? count($GLOBALS['cf']) : 'no');
+        // var_dump(spl_object_id($GLOBALS['cf']));
+
         // pagina su cui lavorare
         if(isset($cf['contents']['pages'][$p])) {
 
             // scorciatoia
             $pag = $cf['contents']['pages'][$p];
+
+            // debug
+            // var_dump($pag['auth']['groups'], $_SESSION['account']['gruppi']);
 
             // controllo
             if(! isset($pag['auth']['groups'])) {

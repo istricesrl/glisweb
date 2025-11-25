@@ -126,6 +126,11 @@
      * 
      */
 
+    // debug
+    ini_set( 'display_errors', 1 );
+    ini_set( 'display_startup_errors', 1 );
+    error_reporting( E_ALL );
+
     /**
      * configurazioni generali
      * =======================
@@ -137,7 +142,11 @@
     define( 'CRON_RUNNING', true );
 
     // inclusione del framework
-    require '../_config.php';
+    if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+        require '../_config.php';
+    } else {
+        require INCLUDE_SUBDIR . '_config.php';
+    }
 
     // log
     logger( 'chiamata cron API', 'cron' );
@@ -453,4 +462,14 @@
     loggerLatest( print_r( $cf['cron'], true ), FILE_LATEST_CRON );
 
     // output
-    buildJson( $cf['cron'] );
+    buildJson(
+        $cf['cron'], 
+        ENCODING_UTF8,
+        array(
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+            'Pragma' => 'no-cache',
+            'Expires' => '0',
+            'X-Cache-Lifetime' => '0',
+            'X-Proxy-Cache' => 'BYPASS',
+        )
+    );

@@ -44,6 +44,7 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
+            '__label__' => array( 'NN' => true )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'

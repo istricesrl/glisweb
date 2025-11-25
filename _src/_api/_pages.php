@@ -88,6 +88,9 @@
     // var_dump( $_REQUEST );
     // die( print_r( $_REQUEST, true ) );
     // echo 'DEBUG';
+    // echo('SCRIPT_FILENAME='.($_SERVER['SCRIPT_FILENAME'] ?? ''));
+    // echo('REQUEST_URI='.($_SERVER['REQUEST_URI'] ?? ''));
+    // echo('INCLUDED='.print_r(get_included_files(), true));
 
     /**
      * tokenizzazione di __rw__
@@ -122,8 +125,10 @@
      */
 
     // inclusione del framework
-    if( ! defined( 'DIR_BASE' ) ) {
+    if( ! defined( 'INCLUDE_SUBDIR' ) ) {
         require '../_config.php';
+    } else {
+        require INCLUDE_SUBDIR . '_config.php';
     }
 
     // debug
@@ -415,6 +420,11 @@
 
     // log
     loggerLatest( 'inizio controllo permessi' );
+
+    // debug
+    // var_dump( $cf );
+    // var_dump('before_call_count', is_array($cf) ? count($cf) : 'no');
+    // var_dump(spl_object_id($GLOBALS['cf']));
 
     // switch dello schema in caso di permessi insufficienti
     if( getPagePermission( $ct['page'] ) !== true ) {
@@ -1140,6 +1150,62 @@
     loggerLatest( 'fine gestione parametri di una lettera' );
 
     /**
+     * controllo della cache
+     * =====================
+     * 
+     * 
+     * sub vcl_backend_response {
+     * 
+     *     if (beresp.http.X-GlisWeb-No-Cache == "true") {
+     *         set beresp.ttl = 0s;
+     *         set beresp.uncacheable = true;
+     *         unset beresp.http.Cache-Control;
+     *         unset beresp.http.Expires;
+     *         unset beresp.http.Pragma;
+     *         unset beresp.http.X-Cache-Lifetime;
+     *         unset beresp.http.X-Cache-Tags;
+     *         return (deliver);
+     *     }
+     * 
+     *     set beresp.grace = 3d;
+     * 
+     *     [...]
+     * 
+     * }
+     * 
+     * 
+     * 
+     */
+
+    // rimuovo tutti gli header legati alla cache
+    header_remove('Pragma');
+    header_remove('Expires');
+    header_remove('Cache-Control');
+    header_remove('X-Cache-Lifetime');
+    header_remove('X-GlisWeb-No-Cache');
+    header_remove('X-GlisWeb-Cacheable');
+    header_remove('X-Proxy-Cache');
+
+    $ttl = ( isset( $cf['cache']['profile']['ttl'] ) ) ? intval( $cf['cache']['profile']['ttl'] ) : 3600;
+
+    // cache del buffer
+    if( ! isset( $cf['session']['account']['username'] ) && isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
+        echo '<!-- pagina cacheable -->' . PHP_EOL;
+        header('Cache-Control: public, max-age=' . $ttl . ', s-maxage=' . $ttl);
+        header('Expires: ' . gmdate('D, d M Y H:i:s', time() + $ttl) . ' GMT');
+        header('Pragma: cache');
+        header('X-Cache-Lifetime: ' . $ttl);
+        header('X-GlisWeb-Cacheable: true');
+    } else {
+        echo '<!-- pagina NON cacheable -->' . PHP_EOL;
+        header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0, s-maxage=0');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('X-Proxy-Cache: BYPASS');
+        header('X-GlisWeb-No-Cache: true');
+    }
+
+    /**
      * pulizia dell'output
      * ===================
      * 
@@ -1199,18 +1265,20 @@
             echo '<!-- expire: ' . date( 'Y/m/d H:i:s', FILE_CACHE_PAGE_LIMIT ) . ' -->'    . PHP_EOL;
             echo '<!-- file: ' . basename( FILE_CACHE_PAGE ) . ' -->'                . PHP_EOL;
         } else {
-            header( 'X-Proxy-Cache: BYPASS' );
-            header( 'X-GlisWeb-No-Cache: true' );
             echo PHP_EOL . '<!-- pagina senza autorizzazione al caching -->' . PHP_EOL;
         }
         echo PHP_EOL . '<!-- sessione: ' . session_id() . ' -->' . PHP_EOL;
-
 
         // timer
         timerCheck( $cf['speed'], 'fine gestione cache statica delle pagine' );
 
         // log
         loggerLatest( 'fine gestione cache statica delle pagine' );
+
+    } else {
+
+        // debug
+        echo PHP_EOL . '<!-- cache delle pagine disabilitata -->' . PHP_EOL;
 
     }
 
@@ -1234,6 +1302,14 @@
 
     }
 
+    // debug
+    foreach( headers_list() as $header ) {
+        echo '<!-- header: ' . $header . ' -->' . PHP_EOL;
+    }
+
+    // debug
+    echo '<!-- timestamp: ' . date( 'Y-m-d H:i:s' ) . ' -->' . PHP_EOL;
+
     // fine del buffer
     ob_end_flush();
 
@@ -1245,6 +1321,8 @@
 
     // debug
     // print_r( $ct['page']['css'] );
+    // var_dump(headers_list());
+    // var_dump( $cf['session']['accout'] );
 
     /**
      * chiusura del monitoraggio tempi

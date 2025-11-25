@@ -2,6 +2,7 @@
 {% import '_lib/_default.twig' as cms %}
 {% import '_lib/_form.twig' as frm %}
 {% import 'lib/default.twig' as def %}
+{% import 'lib/anagrafica.form.sub.twig' as sub %}
 
 {# ESTENSIONE DELLO SCHEMA DI BASE #}
 {% extends 'ext/main.twig' %}
@@ -19,18 +20,7 @@
 
             {# SEZIONE GENERALE #}
             <fieldset>
-                <legend>dati generali <small>{{ legend }}</small></legend>
-
-                <div class="form-group row">
-                    <div class="col col-md form-col">
-                        <span class="label-top">genitore</span>
-                        {{ frm.select({ 'field': { 'name': 'id_genitore' }, 'source': { 'values': etc.select.tipologie_anagrafica }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
-                    </div>
-                    <div class="col-12 col-md form-col">
-                        <span class="label-top">nome</span>
-                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text', 'required': 1 }, 'request': request, 'form': form, 'page': page }) }}
-                    </div>
-                </div>
+                <legend>dati collaboratore</legend>
 
             </fieldset>
 
@@ -43,4 +33,5 @@
     </div>
 </section>
 
+<!-- fine blocco {{ _self }}::main -->
 {% endblock main %}

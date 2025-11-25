@@ -22,7 +22,7 @@
         return mysqlCachedQuery(
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM categorie_anagrafica_view'
+            'SELECT id, __label__ FROM categorie_anagrafica_view ORDER BY __label__ ASC'
         );
 
     }
@@ -40,7 +40,7 @@
             $cf['memcache']['index'],
             $cf['memcache']['connection'],
             $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM anagrafica_view_static'
+            'SELECT id, __label__ FROM anagrafica_view_static ORDER BY __label__ ASC',
         );
 
     }

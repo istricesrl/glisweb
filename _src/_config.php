@@ -663,7 +663,7 @@
      */
 
     // stringa di inizializzazione
-    $latestLogHeader = date( 'Y-m-d H:i:s' ) . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . $_SERVER['REDIRECT_URL'] . ' -> ' .$_SERVER['REQUEST_URI'] . PHP_EOL;
+    $latestLogHeader = date( 'Y-m-d H:i:s' ) . ' ' . $_SERVER['REMOTE_ADDR'] . ' ' . ( $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ) . ' -> ' . $_SERVER['REQUEST_URI'] . PHP_EOL;
 
     // inizializzazione del file cron.latest.log
     loggerLatest( $latestLogHeader, FILE_LATEST_CRON, 'w+' );
@@ -685,7 +685,7 @@
      */
 
     // registrazione dell'accesso al framework con PID di Apache
-    logger( 'PID: ' . getmypid() . ' da ' . $_SERVER['REMOTE_ADDR'] . ' ' . $_SERVER['REDIRECT_URL'] . ' -> ' . $_SERVER['REQUEST_URI'], 'access' );
+    logger( 'PID: ' . getmypid() . ' da ' . $_SERVER['REMOTE_ADDR'] . ' ' . ( $_SERVER['REDIRECT_URL'] ?? $_SERVER['REQUEST_URI'] ) . ' -> ' . $_SERVER['REQUEST_URI'], 'access' );
 
     /**
      * inizializzazione dell'array di configurazione principale
@@ -817,7 +817,7 @@
     // controllo che tutti i moduli di PHP necessari siano installati
     $cf['php']['required']['differences'] = array_diff( $cf['php']['required']['extensions'], get_loaded_extensions() );
     if( count( $cf['php']['required']['differences'] ) > 0 ) {
-        die( 'alcuni moduli di PHP necessari non sono installati ('.implode( ', ', $cf['php']['required']['differences'] ).'), lanciare _lamp.setup.sh o _nginx.setup.sh' );
+        die( 'alcuni moduli di PHP necessari non sono installati ('.implode( ', ', $cf['php']['required']['differences'] ).'), lanciare _lamp.setup.sh' );
     }
 
     // controllo che tutti i moduli di Apache necessari siano installati e attivi
