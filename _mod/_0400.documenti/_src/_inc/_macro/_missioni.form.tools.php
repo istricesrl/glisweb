@@ -67,11 +67,29 @@
             'UPDATE documenti_articoli SET id_missione = ' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' WHERE id_documento = ' . $_REQUEST['__ordine__']
         );
 
+        mysqlQuery( 
+            $cf['mysql']['connection'],
+            'INSERT INTO relazioni_documenti ( id_documento, id_documento_collegato, id_ruolo ) VALUES ( ?, ?,  4 )',
+            array(
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                array( 's' => $_REQUEST['__ordine__'] )
+            )
+        );
+
     } elseif( isset( $_REQUEST['__codice_ordine__'] ) && ! empty( $_REQUEST['__codice_ordine__'] ) ) {
 
         mysqlQuery( 
             $cf['mysql']['connection'],
             'UPDATE documenti_articoli SET id_missione = ' . $_REQUEST[ $ct['form']['table'] ]['id'] . ' WHERE id_documento = (SELECT id FROM documenti WHERE codice = "' . $_REQUEST['__codice_ordine__'] . '" LIMIT 1)'
+        );
+
+        mysqlQuery( 
+            $cf['mysql']['connection'],
+            'INSERT INTO relazioni_documenti ( id_documento, id_documento_collegato, id_ruolo ) VALUES ( ?, (SELECT id FROM documenti WHERE codice = ? LIMIT 1),  4 )',
+            array(
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] ),
+                array( 's' => $_REQUEST['__codice_ordine__'] )
+            )
         );
 
     }

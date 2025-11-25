@@ -37,6 +37,8 @@
 #        'destinatario' => 'destinatario',
         'nome' => 'nome',
 #        '__label__' => 'nome',
+        'documenti_antecedenti' => 'evade',
+        'documenti_successivi' => 'controllo',
         'timestamp_chiusura' => 'chiusura',
     );
 

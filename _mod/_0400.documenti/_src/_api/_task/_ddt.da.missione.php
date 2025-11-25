@@ -75,18 +75,19 @@
                     $cf['mysql']['connection'],
                     array(
                         'id_documento' => $idDocumento,
-                        'id_documento_collegato' => $riga['id_documento'],
+                        'id_documento_collegato' => $_REQUEST['missione'],
                         'id_ruolo' => 3
                     ),
                     'relazioni_documenti'
                 );
 
+                // TODO ma questa che relazione è?!?
                 mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
                         'id_documento' => $idDocumento,
                         'id_documento_collegato' => $riga['id_documento'],
-                        'id_ruolo' => 4
+                        'id_ruolo' => 3
                     ),
                     'relazioni_documenti'
                 );
@@ -94,10 +95,10 @@
             } else {
 
                 // status
-                $status['info'][] = 'trovato DDT #' . $riga['ddt'][0]['id'] . ' per il documento ' . $riga['id_documento'];
+                $status['info'][] = 'trovato DDT #' . $riga['ddt'][0]['id_documento_collegato'] . ' per il documento ' . $riga['id_documento'];
 
                 // ...
-                $idDocumento = $riga['ddt'][0]['id'];
+                $idDocumento = $riga['ddt'][0]['id_documento_collegato'];
 
             }
 
@@ -125,7 +126,7 @@
     }
 
     // debug
-     die( print_r( $status, true ) );
+    // die( print_r( $status, true ) );
 
     // output
 	if( ! defined( 'CRON_RUNNING' ) ) {
