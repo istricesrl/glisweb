@@ -42,6 +42,9 @@
      * Il framework utilizza Redis per memorizzare i dati delle sessioni.
      * 
      * 
+     * [...]
+     * maxmemory <N>gb
+     * maxmemory-policy allkeys-lru
      * 
      * 
      * 
