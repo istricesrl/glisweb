@@ -145,7 +145,7 @@
                             } catch (mysqli_sql_exception $e) {
 
                                 // ...
-                                die( 'timezone MySQL non installate, usa il comando: apt-get install tzdata && mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql' );
+                                die( 'timezone MySQL non installate, usa il comando: apt-get install tzdata && mysql_tzinfo_to_sql /usr/share/zoneinfo | mysql -u root -p mysql OPPURE mariadb-tzinfo-to-sql /usr/share/zoneinfo | mysql -u root -p mysql' );
 
                             }                    
 
