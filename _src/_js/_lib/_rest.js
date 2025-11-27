@@ -137,6 +137,7 @@
             }
         
             $.fn.metroLoopWs = function( ws, callback = null, icon = null, el = null, count = 0 ) {
+                console.log( 'loop count: ' + count );
                 if( el == null ) {
                     el = this;
                     var icon = el.find('.media-left').first().html();

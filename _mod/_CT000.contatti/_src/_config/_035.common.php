@@ -1,14 +1,10 @@
 <?php
 
     /**
-     * applicazione delle configurazioni di uso comune
-     *
-     *
-     *
-     *
+     * 
+     * 
      * TODO documentare
-     *
-     *
+     * 
      */
 
     /**
@@ -19,8 +15,8 @@
      */
 
     // configurazione extra
-    if( isset( $cx['common'] ) ) {
-        $cf['common'] = array_replace_recursive( $cf['common'], $cx['common'] );
+    if( isset( $cx['contatti'] ) ) {
+        $cf['contatti'] = array_replace_recursive( $cf['contatti'], $cx['contatti'] );
     }
 
     /**
@@ -31,7 +27,7 @@
      */
 
     // collegamento all'array $ct
-    $ct['common'] = &$cf['common'];
+    $ct['contatti'] = &$cf['contatti'];
 
     /**
      * debug del runlevel
@@ -41,5 +37,5 @@
      */
 
     // debug
-    // dieText( print_r( $cf['common'], true ) );
+    // dieText( print_r( $cf['contatti'], true ) );
     // echo 'OUTPUT';

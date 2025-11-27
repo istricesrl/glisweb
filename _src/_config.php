@@ -1037,6 +1037,27 @@
     timerCheck( $cf['speed'], 'fine scansione dei moduli attivi' );
 
     /**
+     * configurazione dei moduli attivi
+     * ================================
+     * 
+     */
+
+    // inclusione configurazione moduli
+    foreach( $cf['mods']['active']['array'] as $modulo ) {
+
+        if( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) ) ) {
+            $cm = yaml_parse( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) ) );
+            $cx = array_replace_recursive( $cx, $cm );
+            $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.yaml' );
+        } elseif( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ) ) {
+            $cm = json_decode( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ), true );
+            $cx = array_replace_recursive( $cx, $cm );
+            $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.json' );
+        }
+
+    }
+
+    /**
      * inclusione dei file di libreria
      * ===============================
      * La strategia di inclusione dei files di libreria (contenenti costanti e funzioni) è molto
