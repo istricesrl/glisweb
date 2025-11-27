@@ -68,3 +68,49 @@
         return $result;
 
     }
+
+    /**
+     * 
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
+    function reCaptchaVerifyFormV3( &$v, $k = false ) {
+
+        // verifico la challenge reCAPTCHA
+        if( isset( $v['__recaptcha_token__'] ) && isset( $k ) && ! empty( $k ) ) {
+
+            // registro il valore di bot
+            $bot = reCaptchaVerifyV3( $v['__recaptcha_token__'], $k );
+
+            // integrazione dei dati
+            $v['__spam__']['score'] = $bot;
+
+            // pulisco il modulo
+            unset( $v['__recaptcha_token__'] );
+
+            // punteggio di spam
+            $v['__spam__']['check'] = ( $bot > 0.1 ) ? true : false;
+
+        } elseif( ! isset( $v['__recaptcha_token__'] ) && isset( $k ) && ! empty( $k ) ) {
+
+            // integrazione dei dati
+            $v['__spam__']['score'] = 0;
+            $v['__spam__']['status'] = 'token non ricevuto';
+
+            // punteggio di spam
+            $v['__spam__']['check'] = false;
+
+        } else {
+
+            // integrazione dei dati
+            $v['__spam__']['score'] = 1;
+            $v['__spam__']['status'] = 'reCAPTCHA non configurato';
+
+            // punteggio di spam
+            $v['__spam__']['check'] = true;
+
+        }
+
+    }

@@ -2,8 +2,13 @@
 
     // inclusione del framework
     if( ! defined( 'CRON_RUNNING' ) ) {
-        require '../../../../../_src/_config.php';
+        if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+            require '../../../../../_src/_config.php';
+        } else {
+            require INCLUDE_SUBDIR . '_config.php';
+        }
     }
+
 
     // debug
      ini_set('display_errors', 1);

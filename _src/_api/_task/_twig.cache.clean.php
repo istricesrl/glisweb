@@ -12,9 +12,13 @@
      */
 
     // inclusione del framework
-	if( ! defined( 'CRON_RUNNING' ) ) {
-	    require '../../_config.php';
-	}
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+            require '../../_config.php';
+        } else {
+            require INCLUDE_SUBDIR . '_config.php';
+        }
+    }
 
     // inizializzo l'array del risultato
 	$status = array();
