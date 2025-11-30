@@ -4,10 +4,7 @@
      *
      *
      *
-     *
-     * @todo commentare
-     *
-     * @file
+     * TODO documentare
      *
      */
 
@@ -24,7 +21,7 @@
 	$status = array();
 
     // faccio il flush della cache
-	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES, false );
+	$status['esito'] = recursiveDelete( DIR_VAR_CACHE_PAGES, true );
 
     // headers
 	// header( 'Access-Control-Allow-Origin: *' );

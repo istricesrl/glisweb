@@ -84,6 +84,11 @@
         arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.immagini' );
     }
 
+    // RELAZIONI CON IL MODULO VIDEO
+    if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.video' );
+    }
+
     // tools archivio produzione
     $p['contenuti.pagine.form.menu'] = array(
         'sitemap'            => false,

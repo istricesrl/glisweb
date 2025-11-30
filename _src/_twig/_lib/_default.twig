@@ -193,3 +193,76 @@
 
     <!-- fine macro {{ _self }}::image() -->
 {% endmacro image %}
+
+{# TODO documentare #}
+{% macro video( options ) %}
+    <!-- macro {{ _self }}::image() -->
+
+    {# valori di default #}
+    {% set options = {
+        'source': [],
+        'site': [],
+        'page': []
+    }|merge( options ) %}
+
+    {# valori di default per l'array source #}
+    {% set source = {
+        'ruolo': '',
+        'ordine': '',
+        'ietf': 'it-IT',
+        'class': ''
+    }|merge( options.source ) %}
+
+    {# valori di default per l'array site #}
+    {% set site = {
+    }|merge( options.site ) %}
+
+    {# valori di default per l'array page #}
+    {% set page = {
+    }|merge( options.page ) %}
+
+    {# dettagli del video prelevati dalla pagina #}
+    {% set video = page.contents.video[ source.ruolo ][ source.ordine ] %}
+
+    {# se il path è per lingua #}
+    {% if video.path is iterable %}
+        {% set path = video.path[ source.ietf ] %}
+    {% else %}
+        {% set path = video.path %}
+    {% endif %}
+
+    {% if page.contents.video[ source.ruolo ][ source.ordine ].id_embed == 3 %}
+
+    {% if not page.contents.video[ source.ruolo ][ source.ordine ].ratio %}
+    {% set rt = '16x9' %}
+    {% else %}
+    {% set rt = page.contents.video[ source.ruolo ][ source.ordine ].ratio %}
+    {% endif %}
+
+    <!-- YOUTUBE -->
+    <div class="ratio ratio-{{ rt }}">
+        <iframe
+            width="100%"
+            src="https://www.youtube.com/embed/{{ page.contents.video[ source.ruolo ][ source.ordine ].codice_embed }}"
+            title="YouTube video player"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    {% elseif page.contents.video[ role ][ num ].id_embed == 2 %}
+
+    <!-- VIMEO -->
+
+    {% else %}
+
+    <!-- HTML5 VIDEO PLAYER -->
+    <video controls width="100%" {% if autoplay %}autoplay muted{% endif %} {% if loop %}loop{% endif %}>
+        <source src="{{ site.root }}{{ page.contents.video[ source.ruolo ][ source.ordine ].path }}" type="video/mp4">
+    </video>
+
+    {% endif %}
+
+    <!-- fine macro {{ _self }}::image() -->
+{% endmacro video %}

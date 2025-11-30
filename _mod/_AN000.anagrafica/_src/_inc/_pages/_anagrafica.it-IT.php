@@ -167,6 +167,7 @@
                                                             'anagrafica.archivio.telefoni.view',
                                                             'anagrafica.archivio.mail.view',
                                                             'anagrafica.archivio.url.view',
+                                                            'anagrafica.archivio.iban.view',
                                                             'anagrafica.archivio.anagrafica.indirizzi.view',
                                                             'anagrafica.archivio.tipologie.anagrafica.view',
                                                             'anagrafica.archivio.tools' ) ),
@@ -324,6 +325,44 @@
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.url.form.tools.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'anagrafica.archivio.url.form' )
+    );
+
+    // anagrafica archivio iban
+    $p['anagrafica.archivio.iban.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio iban' ),
+        'h1'                => array( $l        => 'iban' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.iban.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio' )
+    );
+
+    // anagrafica archivio iban
+    $p['anagrafica.archivio.iban.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione archivio e-iban' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.iban.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.iban.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.iban.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.iban.form',
+                                                            'anagrafica.archivio.iban.form.tools' ) ),
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.archivio.iban.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni archivio anagrafica e-iban' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.iban.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.iban.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.iban.form' )
     );
 
     // anagrafica archivio tipologie

@@ -113,7 +113,7 @@
 {# TODO documentare #}
 {% macro tabs( page, pages, lang, etc, form, request ) %}
 {% if pages[ page.id ].etc.tabs %}
-<section class="row d-print-none">
+<section class="row d-print-none mb-3">
     <div class="col-12 d-block d-md-none div-tabs">
         <select class="form-select form-select-sm select-tabs" onchange="window.open( $('option:selected',this).attr('href'), '_self' );">
             {% for t in pages[ page.id ].etc.tabs %}

@@ -74,7 +74,7 @@
     // ricerca metadato per la durata in mesi dell'abbonamento
     if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
         foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
-            if( $m['nome'] == 'durata_mesi' ) {
+            if( isset( $m['nome'] ) && $m['nome'] == 'durata_mesi' ) {
                 $ct['etc']['sub']['durata_mesi'] = $m;
                 $ct['etc']['sub']['durata_mesi']['idx'] = $k;
             }
@@ -90,7 +90,7 @@
     // ricerca metadato per il numero di accessi dell'abbonamento
     if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
         foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
-            if( $m['nome'] == 'minimo_iscritti' ) {
+            if( isset( $m['nome'] ) && $m['nome'] == 'minimo_iscritti' ) {
                 $ct['etc']['sub']['minimo_iscritti'] = $m;
                 $ct['etc']['sub']['minimo_iscritti']['idx'] = $k;
             }
@@ -106,7 +106,7 @@
     // ricerca metadato per il numero di accessi dell'abbonamento
     if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
         foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
-            if( $m['nome'] == 'numero_accessi' ) {
+            if( isset( $m['nome'] ) && $m['nome'] == 'numero_accessi' ) {
                 $ct['etc']['sub']['numero_accessi'] = $m;
                 $ct['etc']['sub']['numero_accessi']['idx'] = $k;
             }
@@ -122,7 +122,7 @@
     // ricerca metadato per il numero di accessi dell'abbonamento
     if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
         foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
-            if( $m['nome'] == 'numero_lezioni' ) {
+            if( isset( $m['nome'] ) && $m['nome'] == 'numero_lezioni' ) {
                 $ct['etc']['sub']['numero_lezioni'] = $m;
                 $ct['etc']['sub']['numero_lezioni']['idx'] = $k;
             }

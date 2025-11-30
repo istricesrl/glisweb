@@ -36,7 +36,7 @@
         $ct['page']['contents']['metro']['04.cache'][] = array(
         'ws' => 'task/memcache.clean',
         'icon' => NULL,
-        'fa' => 'fa-regular fa-clock',
+        'fa' => 'fa-solid fa-boxes-stacked',
         'title' => 'aggiornamento memcache',
         'text' => 'forza il flush della cache dati'
         );
@@ -47,7 +47,7 @@
         $ct['page']['contents']['metro']['04.cache'][] = array(
         'ws' => 'task/twig.cache.clean',
         'icon' => NULL,
-        'fa' => 'fa-recycle',
+        'fa' => 'fa-eraser',
         'title' => 'aggiornamento cache di Twig',
         'text' => 'cancella la cache dei template'
         );
@@ -58,7 +58,7 @@
         $ct['page']['contents']['metro']['04.cache'][] = array(
         'ws' => 'task/pages.cache.clean',
         'icon' => NULL,
-        'fa' => 'fa-eraser',
+        'fa' => 'fa-recycle',
         'title' => 'aggiornamento cache pagine',
         'text' => 'cancella la cache statica delle pagine'
         );
@@ -69,7 +69,7 @@
         $ct['page']['contents']['metro']['04.cache'][] = array(
             'ws' => 'task/sitemap.clean',
             'icon' => NULL,
-            'fa' => 'fa-regular fa-file-code',
+            'fa' => 'fa-solid fa-signs-post',
             'title' => 'pulizia delle sitemap',
             'text' => 'forza la cancellazione delle sitemap'
         );

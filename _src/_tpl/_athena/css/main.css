@@ -240,6 +240,15 @@ nav ul ul ul {
     padding-left: 1em;
 }
 
+#form-language select,
+#form-multisite select,
+#form-navigation select {
+    border: 0px;
+    border-radius: 0px;
+    cursor: pointer;
+    height: 45px;
+}
+
 /**
  * stile della navigazione a tab
  * =============================
@@ -250,7 +259,7 @@ nav ul ul ul {
 /* stile della navigazione a tab */
 .nav-tabs {
     border-bottom: 1px solid #dddddd;
-    margin-bottom: 10px;
+    /* margin-bottom: 10px; */
 }
 
 /* stile della navigazione a tab secondaria */
@@ -384,6 +393,31 @@ fieldset.form-controls-free {
     border-top: 1px solid #dddddd;
     padding-top: 10px;
     z-index: 5000;
+}
+
+fieldset.form-controls button {
+    height: 31px;
+    padding: 3px;
+    width: 31px;
+}
+
+@media (max-width: 991.98px) {
+
+    form.form-main,
+    form.form-filtro {
+        padding-bottom: 40px;
+    }
+
+    .view-controls,
+    fieldset.form-controls {
+        position: fixed;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 5000;
+        padding: 10px 15px;
+        background-color: #eeeeee;
+    }
 }
 
 /* stile dei campi di input dei form con focus */
