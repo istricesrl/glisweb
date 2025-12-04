@@ -474,6 +474,29 @@ LEFT JOIN udm ON udm.id = (
 )
 GROUP BY id_documento, id_ordine, codice_prodotto, prodotto, codice_articolo, articolo, conversione, udm;
 
+-- | 100000009875
+
+CREATE OR REPLACE VIEW `__report_dettaglio_missioni_ordini__` AS
+    SELECT documenti_articoli.id,
+        documenti.id AS id_ordine,
+        documenti_articoli.id_tipologia,
+        documenti_articoli.id_articolo,
+        documenti.id_emittente,
+        documenti.id_destinatario,
+        documenti_articoli.quantita,
+        documenti_articoli.id_genitore,
+        sum( righe_evasione.quantita ) AS quantita_evasione,
+        group_concat( righe_evasione.id SEPARATOR '|' ) AS righe_evasione
+    FROM documenti_articoli 
+    LEFT JOIN documenti
+        ON documenti.id = documenti_articoli.id_documento
+    LEFT JOIN documenti_articoli AS righe_evasione 
+        ON righe_evasione.id_genitore = documenti_articoli.id AND righe_evasione.id_missione = documenti_articoli.id_missione
+    WHERE documenti_articoli.id_genitore IS NULL
+    AND documenti_articoli.id_tipologia = 7
+    GROUP BY documenti_articoli.id
+;
+
 -- | 100000015000
 -- __report_giacenza_crediti__
 -- tipologia: report

@@ -16,29 +16,13 @@
     // recupero i dati del documento
 	$doc = mysqlSelectRow(
         $cf['mysql']['connection'],
-	    'SELECT documenti.*,  '.
-	    'tipologie_documenti.codice AS codice_tipologia '.
-	    'FROM documenti '.
-	    'INNER JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia '.
-	    'WHERE documenti.id = ?',
-	    array( array( 's' => $_REQUEST['__documento__'] ) )
+	    'SELECT colli.*, documenti.id_emittente, documenti.id_destinatario
+        FROM colli 
+        LEFT JOIN documenti_articoli ON documenti_articoli.id_collo = colli.id
+        LEFT JOIN documenti ON documenti.id = documenti_articoli.id_packing_list
+        WHERE colli.id = ?',
+	    array( array( 's' => $_REQUEST['__collo__'] ) )
 	);
-
-    // annoto l'attività di stampa
-    if( isset( $cnf['estensione'] ) ) {
-        $idAttivitaStampa = mysqlInsertRow(
-            $cf['mysql']['connection'],
-            array(
-                'id_tipologia' => ( ( $cnf['estensione'] == 'pdf' ) ? 23 : ( ( $cnf['estensione'] == 'xml' ) ? 24 : 22 ) ),
-                'id_documento' => $_REQUEST['__documento__'],
-                'data_attivita' => date('Y-m-d'),
-                'nome' => 'stampa documento',
-                'ora_inizio' => date( 'H:i:s' ),
-                'ora_fine' => date( 'H:i:s' )
-            ),
-            'attivita'
-        );
-    }
 
     // inizializzo il totale
     $doc['tot']['importo_netto_totale'] = 0;
@@ -48,15 +32,17 @@
     // carico le righe del documento
     $doc['righe']['grezze'] = mysqlQuery(
         $cf['mysql']['connection'],
-        'SELECT documenti_articoli_view.*, articoli.peso, count(agg.id) AS aggregate, '.
-        'udm.sigla AS udm FROM documenti_articoli_view '.
-        'LEFT JOIN udm ON udm.id = documenti_articoli_view.id_udm '.
-        'LEFT JOIN documenti_articoli_view AS agg ON agg.id_genitore = documenti_articoli_view.id LEFT JOIN articoli ON articoli.id = documenti_articoli_view.id_articolo '.
-        'WHERE documenti_articoli_view.id_packing_list = ? GROUP BY documenti_articoli_view.id
-		 ORDER BY documenti_articoli_view.ordine_collo, documenti_articoli_view.id_articolo',
+        'SELECT documenti_articoli_view.*, articoli.peso, count(agg.id) AS aggregate, 
+        udm.sigla AS udm FROM documenti_articoli_view 
+        LEFT JOIN udm ON udm.id = documenti_articoli_view.id_udm 
+        LEFT JOIN documenti_articoli_view AS agg ON agg.id_genitore = documenti_articoli_view.id LEFT JOIN articoli ON articoli.id = documenti_articoli_view.id_articolo 
+        WHERE documenti_articoli_view.id_collo = ? GROUP BY documenti_articoli_view.id
+		ORDER BY documenti_articoli_view.ordine_collo, documenti_articoli_view.id_articolo',
         array( array( 's' => $doc['id'] ) )
     );
 
+    // debug
+    // die( print_r( $doc, true ) );
 
 	// organizzo le righe in base al bancale
 	foreach( $doc['righe']['grezze'] as $row ) {
@@ -104,7 +90,8 @@
     // denominazione fiscale
     $src['denominazione_fiscale'] = trim( $src['nome'] . ' ' . $src['cognome'] . ' ' . $src['denominazione'] );
 
-
+    // debug
+    // die( print_r( $src, true ) );
 
     // recupero i dati della sede dell'emittente
     $sri = mysqlSelectRow(
@@ -179,7 +166,9 @@
 
     $sdec['linee'][] = $dst['denominazione_fiscale'];
     $sdec['linee'][] = $dsi['indirizzo_fiscale'];
-	$sdec['linee'][] = ( $dsi['cap'] ?? '' ) . ' ' . ( $dsi['comune'] ?? '' ) . ( ( ! empty($dsi['provincia']) ) ? ' (' . $dsi['provincia'] . ') ' : ' ' ) . ( $dsi['sigla_stato'] ?? '' );
+    if( isset( $dsi['cap'] ) && ! empty( $dsi['cap'] ) ) {
+	    $sdec['linee'][] = $dsi['cap'] . ' ' . $dsi['comune'] . ( ( ! empty($dsi['provincia']) ) ? ' (' . $dsi['provincia'] . ') ' : ' ' ) . $dsi['sigla_stato'];
+    }
     $sdec['linee'][] = 'P.IVA ' . $dst['partita_iva'];
 	if( isset($dst['codice_fiscale']) && ! empty( $dst['codice_fiscale'] ) ) {
 	$sdec['linee'][] = 'cod.fisc. ' . $dst['codice_fiscale'];
@@ -194,7 +183,7 @@
 
     // oggetto del documento
 	// $dobj = 'DDT n. ' . $doc['numero'] . ' del ' . strftime( '%d %B %Y', strtotime( $doc['data'] ) );
-    $dobj = $doc['nome'];
+    $dobj = $doc['nome'] . ' - collo #' . $doc['codice'];
   
     // recupero i dati dell'azienda emittente
 	$emittente = mysqlSelectRow( $cf['mysql']['connection'],
@@ -354,10 +343,10 @@
 
 		// intestazione tabella di dettaglio
 		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-		$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-		$pdf->Cell( $col * 2, 0, 'peso netto', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+#		$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 3, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+		$pdf->Cell( $col * 8, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+#		$pdf->Cell( $col * 2, 0, 'peso netto', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
 		$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 
 		// contatore delle eventuali righe aggregate per generare l'eventuale allegato "dettaglio aggregate"
@@ -366,46 +355,50 @@
 		// tabella di dettaglio
 		$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
 		foreach( $righe as $row ) {
-			$trh = $pdf->GetStringHeight( $col * 6,$row['articolo'] , false, true, '', 'B' );				// 
+			$trh = $pdf->GetStringHeight( $col * 8,$row['articolo'] , false, true, '', 'B' );				// 
 		$pdf->SetFont( $fnt, '', $fnts );
 			// controllo se la riga di dettaglio entra nella parte rimanente del foglio
 			if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){
 				$pdf->AddPage(); 
 				// intestazione tabella nel nuovo foglio
 				$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
-				$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
-				$pdf->Cell( $col * 2, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-				$pdf->Cell( $col * 6, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
-				$pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
+#				$pdf->Cell( $col * 1, 0, 'num.', $brdh, 0, 'L' );				// larghezza, altezza, testo, bordo, newline, allineamento
+				$pdf->Cell( $col * 3, 0, 'cod.', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+				$pdf->Cell( $col * 8, 0, 'descrizione', $brdh, 0, 'L' );			// larghezza, altezza, testo, bordo, newline, allineamento
+#				$pdf->Cell( $col * 2, 0, 'peso', $brdh, 0, 'R' );			// larghezza, altezza, testo, bordo, newline, allineamento
 				$pdf->Cell( $col * 1, 0, 'q.tà', $brdh, 1, 'R' );				// larghezza, altezza, testo, bordo, newline, allineamento
 						// reimposto il font
 				$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
 
 										}
-			if( substr(( $row['nome'] ?? '' ),0,1) === '*' ){$pdf->SetFillColor(230, 230, 230);} 
+			if( isset( $row['nome'] ) && substr($row['nome'],0,1) === '*' ){$pdf->SetFillColor(230, 230, 230);} 
 			else {	    $pdf->SetFillColor(255, 255, 255);}
 			// $pdf->MultiCell( $col * 4, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
 
 			// scrivo in grassetto le righe che sono aggregazioni di righe
 			if($row['aggregate']>0 ){	$pdf->SetFont( $fnt, 'B', $fnts ); }
 
-	//	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
-	$pdf->Cell( $col * 1, $trh, $row['ordine_collo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->Cell( $col * 2, $trh, $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
-	$pdf->MultiCell( $col * 6, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
-	$pdf->Cell( $col * 2, $trh, ($row['peso']*$row['quantita']) . ' kg', $brdc, 0, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+            $row['articolo'] = trim( str_replace( $row['id_articolo'], '', $row['articolo'] ), ' /' );
+
+            //	    if( $row['nome'][0] === '*' ){$pdf->SetFillColor(255, 0, 0);} 
+#	$pdf->Cell( $col * 1, $trh, $row['ordine_collo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->Cell( $col * 3, $trh, $row['id_articolo'], $brdc, 0, 'L', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
+	$pdf->MultiCell( $col * 8, $lh,$row['articolo'], $brdc, 'L', 1, 0 );					// w, h, testo, bordo, allineamento, riempimento, newline
+#	$pdf->Cell( $col * 2, $trh, ($row['peso']*$row['quantita']) . ' kg', $brdc, 0, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 	$pdf->Cell( $col * 1, $trh, $row['quantita'], $brdc, 1, 'R', 1, '', 0, 1, 'T', 'T' );	// larghezza, altezza, testo, bordo, newline, allineamento
 
 			$countAggregate += $row['aggregate'];
 			$pesoNettoMerce += ($row['peso']*$row['quantita']);
-			$doc['bancali']['ordinati'][$row['id_collo']]['peso_netto_merce'] += ($row['peso']*$row['quantita']);
+            if( isset( $doc['bancali']['ordinati'][$row['id_collo']] ) ) {
+			    $doc['bancali']['ordinati'][$row['id_collo']]['peso_netto_merce'] += ($row['peso']*$row['quantita']);
+            }
 
 		}
 
 	// spazio sotto la tabella di dettaglio
 	$pdf->SetY( $pdf->GetY() + $stdsp );
 
-
+/*
 
 		// intestazione tabella di dettaglio
 		$pdf->SetFont( $fnt, 'B', $fnts );						// font, stile, dimensione
@@ -421,7 +414,7 @@
 
 		if( isset( $_REQUEST['__bancali__'] ) ) {
 		$dett = array( $doc['bancali']['ordinati'][$righe[0]['id_collo']] );
-		} else {
+		} elseif( isset( $doc['bancali']['ordinati'] ) ) {
 		$dett = $doc['bancali']['ordinati'];
 		}
 
@@ -429,18 +422,20 @@
 
 $pesoLordoMerce = 0;
 
-		foreach( $dett as $row ) {
-			$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
-			$pdf->Cell( $col * 1, $lh, $row['ordine'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-#			$pdf->Cell( $col * 3, $lh, $row['codice'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $row['larghezza'] . ' cm', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $row['lunghezza'] . ' cm', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $row['altezza'] . ' cm', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $doc['bancali']['ordinati'][$row['id']]['peso_netto_merce'] . ' kg', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 2, $lh, $row['peso'] . ' kg', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
-			$pdf->Cell( $col * 1, $lh, ($row['larghezza']*$row['lunghezza']*$row['altezza'])/100000, $brdc, 1, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento			
-$pesoLordoMerce += $row['peso'];
-		}
+        if( isset( $dett ) && is_array( $dett ) ) {
+            foreach( $dett as $row ) {
+                $pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
+                $pdf->Cell( $col * 1, $lh, $row['ordine'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+    #			$pdf->Cell( $col * 3, $lh, $row['codice'], $brdc, 0, 'L', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 2, $lh, $row['larghezza'] . ' cm', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 2, $lh, $row['lunghezza'] . ' cm', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 2, $lh, $row['altezza'] . ' cm', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 2, $lh, $doc['bancali']['ordinati'][$row['id']]['peso_netto_merce'] . ' kg', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 2, $lh, $row['peso'] . ' kg', $brdc, 0, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento
+                $pdf->Cell( $col * 1, $lh, ($row['larghezza']*$row['lunghezza']*$row['altezza'])/100000, $brdc, 1, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento			
+    $pesoLordoMerce += $row['peso'];
+            }
+        }
 
 		if( ! isset( $_REQUEST['__bancali__'] ) ) {
 			$pdf->SetFont( $fnt, '', $fnts );						// font, stile, dimensione
@@ -454,7 +449,9 @@ $pesoLordoMerce += $row['peso'];
 			$pdf->Cell( $col * 1, $lh, '', '', 1, 'R', 1 );	// larghezza, altezza, testo, bordo, newline, allineamento			
 		}
 
-	// spazio sotto la tabella IVA
+    */
+
+    // spazio sotto la tabella IVA
 	$pdf->SetY( $pdf->GetY() + $stdsp );
 
 	if (isset($tx[1]) && strlen($tx[1])>0){
