@@ -389,6 +389,34 @@
             array( array( 's' => $r['doc']['id'] ) )
         );
 
+        foreach( $r['doc']['pagamenti'] as &$pagamento ) {
+
+            $pagamento['dettagli_coupon'] = mysqlSelectrow(
+                $cf['mysql']['connection'],
+                'SELECT * FROM coupon WHERE id = ?',
+                array( array( 's' => $pagamento['id_coupon'] ) )
+            );
+
+            if( isset( $pagamento['dettagli_coupon']['causale_id_contratto'] ) ) {
+                $pagamento['dettagli_contratto'] = mysqlSelectrow(
+                    $cf['mysql']['connection'],
+                    'SELECT contratti.* FROM contratti 
+                    WHERE contratti.id = ?',
+                    array( array( 's' => $pagamento['dettagli_coupon']['causale_id_contratto'] ) )
+                );
+            }
+
+            if( isset( $pagamento['dettagli_contratto']['id_progetto'] ) ) {
+                $pagamento['dettagli_progetto'] = mysqlSelectrow(
+                    $cf['mysql']['connection'],
+                    'SELECT __report_corsi__.* FROM __report_corsi__ 
+                    WHERE __report_corsi__.id = ?',
+                    array( array( 's' => $pagamento['dettagli_contratto']['id_progetto'] ) )
+                );
+            }
+
+        }
+
         // debug
         /*
         $r['doc']['pagamenti'] = array(
