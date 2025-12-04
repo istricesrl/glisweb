@@ -182,6 +182,9 @@
                         // verifico se la configurazione prevede l'invio di una mail
                         if( isset( $cnf['mail'] ) ) {
 
+                            // debug
+                            // print_r( $cf['mail']['tpl'] );
+
                             // log
                             logWrite( 'invio ' . count( $cnf['mail'] ) . ' mail per il blocco ' . $k, ' contatti' );
 

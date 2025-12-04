@@ -325,6 +325,7 @@ try {
 			// TODO
 
     } catch( \Exception $e ) {
+	echo '<pre>' . print_r( $t ) . '</pre>';
         die( $e->getMessage() );
     }
 

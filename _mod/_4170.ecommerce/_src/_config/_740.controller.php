@@ -129,9 +129,8 @@
 
     }
 
-    // die( print_r( $ct['carrello']['documenti'], true ) );
-
     // debug
+    // die( print_r( $ct['carrello']['documenti'], true ) );
     // echo '<pre>' . print_r( $_SESSION['carrello'], true ) . '</pre>';
     // echo '<pre>' . print_r( $_REQUEST['__carrello__'], true ) . '</pre>';
     // die();

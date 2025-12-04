@@ -486,16 +486,7 @@ ini_set("display_errors", 1);
                             }
                             // TODO IMPORTANTE nel ciclo qui sopra, oppure a parte qui sotto, accettare il valore di sconto solo se l'utente ha i privilegi appropriati (altrimenti la gente si mette gli sconti da sola)
                             // echo '<pre>' . print_r( $item, true ) . '</pre>';
-                            /*
-                            if( isset( $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] ) ) {
-                                $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = array_replace_recursive(
-                                    $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ],
-                                    $item
-                                );
-                            } else {
-                                $_SESSION['carrello']['articoli'][ $item['id_articolo'].( ( isset( $item['destinatario_id_anagrafica'] ) ) ? $item['destinatario_id_anagrafica'] : NULL ) ] = $item;
-                            }
-                            */
+
                             if( isset( $_SESSION['carrello']['articoli'][ $key ] ) ) {
                                 $_SESSION['carrello']['articoli'][ $key ] = array_replace_recursive(
                                     $_SESSION['carrello']['articoli'][ $key ],

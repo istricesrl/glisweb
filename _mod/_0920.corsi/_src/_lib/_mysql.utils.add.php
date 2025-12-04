@@ -391,7 +391,7 @@
         );
 
         // ciclo sugli abbonamenti
-        foreach( $abbonamenti as $abbonamento ) { 
+        foreach( $abbonamenti as $abbonamento ) {
 
             // orari in cui è valido l'abbonamento
             $orari = mysqlCachedQuery(
@@ -515,7 +515,7 @@
                 } else {
 
                     $checkCorsi = false;
- 
+
                 }
 
             } else {

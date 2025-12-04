@@ -55,14 +55,14 @@
 
             foreach( $ct['etc']['metadati'] as $metadato => $dettagli ) {
 
-                // ...
+                // metadato di default per sconto secondo corso
                 $ct['etc']['sub'][ $metadato ] = array(
                     // 'idx' => ( ( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) ? count( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) + 1 : $sidx++ ),
                     'idx' => $sidx++,
                     'nome' => $metadato 
                 );
         
-                // ...
+                // ricerca metadato per sconto secondo corso
                 if( isset( $_REQUEST[ $ct['form']['table'] ]['metadati'] ) ) {
                     foreach( $_REQUEST[ $ct['form']['table'] ]['metadati'] as $k => $m ) {
                         if( isset( $m['nome'] ) && $m['nome'] == $metadato ) {

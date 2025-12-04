@@ -81,7 +81,6 @@
                     'relazioni_documenti'
                 );
 
-                // TODO ma questa che relazione è?!?
                 mysqlInsertRow(
                     $cf['mysql']['connection'],
                     array(
