@@ -1,0 +1,11 @@
+body {
+    font-size: 1.0em;
+}
+
+header, nav {
+    display: none;
+}
+
+#cookie {
+    display: none;
+}

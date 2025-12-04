@@ -21,7 +21,7 @@
         fullPath( $f );
 
     // se il file da processare esiste
-        if( file_exists( $f ) ) {
+        if( file_exists( $f ) && is_readable( $f ) ) {
 
         // debug
             // echo $f . PHP_EOL;

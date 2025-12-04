@@ -1,0 +1,48 @@
+{# CODICE DELLA PAGINA #}
+<!-- file esteso: {{ _self }} -->
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.twig' %}
+
+    </head>
+
+    <body class="d-flex flex-column h-100">
+
+        {% include '_inc/_page.open.twig' %}
+
+        <header>
+            <div class="container">
+
+                {% block nav %}
+                {% include 'inc/navbar.twig' %}
+                {% endblock nav %}
+
+            </div>
+        </header>
+
+        <main>
+            <div class="container">
+                {% block main %}<!-- nessun main specificato per la pagina -->{% endblock main %}
+            </div>
+        </main>
+
+        <footer class="footer mt-auto py-3 bg-light">
+            <div class="container">
+                {% block footer %}
+                {% include 'inc/footer.twig' %}
+                {% endblock footer %}
+            </div>
+        </footer>
+
+        {% include '_inc/_page.close.twig' %}
+
+        {% block modals %}<!-- nessun modal per pagina specificato -->{% endblock modals %}
+
+        {% block javascript %}<!-- nessuno script Javascript per pagina specificato -->{% endblock javascript %}
+
+    </body>
+</html>
+<!-- file esteso: {{ _self }} -->

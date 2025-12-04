@@ -12,14 +12,14 @@
      */
 
     // tabella gestita
-    $ct['form']['table'] = 'video';
+    $ct['form']['table'] = 'immagini';
 
-    // tendina ruolo video
-    $ct['etc']['select']['ruoli_video'] = mysqlCachedIndexedQuery(
+    // tendina ruolo immagini
+    $ct['etc']['select']['ruoli_immagini'] = mysqlCachedIndexedQuery(
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_video_view ORDER BY __label__'
+        'SELECT id, __label__ FROM ruoli_immagini_view ORDER BY __label__'
     );
 
     $ct['etc']['select']['orientamenti'] = array( 
