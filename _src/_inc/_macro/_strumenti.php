@@ -36,7 +36,7 @@
         $ct['page']['contents']['metro']['04.cache'][] = array(
         'ws' => 'task/memcache.clean',
         'icon' => NULL,
-        'fa' => 'fa-solid fa-boxes-stacked',
+        'fa' => 'fa-eraser',
         'title' => 'aggiornamento memcache',
         'text' => 'forza il flush della cache dati'
         );
@@ -47,7 +47,7 @@
         $ct['page']['contents']['metro']['04.cache'][] = array(
         'ws' => 'task/twig.cache.clean',
         'icon' => NULL,
-        'fa' => 'fa-eraser',
+        'fa' => 'fa-regular fa-trash-can',
         'title' => 'aggiornamento cache di Twig',
         'text' => 'cancella la cache dei template'
         );
@@ -58,7 +58,7 @@
         $ct['page']['contents']['metro']['04.cache'][] = array(
         'ws' => 'task/pages.cache.clean',
         'icon' => NULL,
-        'fa' => 'fa-recycle',
+        'fa' => 'fa-regular fa-trash-can',
         'title' => 'aggiornamento cache pagine',
         'text' => 'cancella la cache statica delle pagine'
         );
@@ -69,7 +69,7 @@
         $ct['page']['contents']['metro']['04.cache'][] = array(
             'ws' => 'task/sitemap.clean',
             'icon' => NULL,
-            'fa' => 'fa-solid fa-signs-post',
+            'fa' => 'fa-regular fa-trash-can',
             'title' => 'pulizia delle sitemap',
             'text' => 'forza la cancellazione delle sitemap'
         );
@@ -80,7 +80,7 @@
             'ws' => 'task/tmp.clean',
             'confirm' => true,
             'icon' => NULL,
-            'fa' => 'fa-hourglass-end',
+            'fa' => 'fa-regular fa-trash-can',
             'title' => 'pulizia dei file temporanei',
             'text' => 'svuota la cartella dei file temporanei'
         );
@@ -91,7 +91,7 @@
         $ct['page']['contents']['metro']['06.logs'][] = array(
             'ws' => 'task/log.clean',
             'icon' => NULL,
-            'fa' => 'fa-trash',
+            'fa' => 'fa-regular fa-trash-can',
             'title' => 'pulizia dei log',
             'text' => 'cancella i log base del framework'
         );
@@ -99,7 +99,7 @@
             'ws' => 'task/log.clean?hard=1',
             'confirm' => true,
             'icon' => NULL,
-            'fa' => 'fa-trash-arrow-up',
+            'fa' => 'fa-trash-can',
             'title' => 'pulizia totale dei log',
             'text' => 'cancella tutti i log del framework'
         );

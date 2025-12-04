@@ -60,7 +60,7 @@
      * TODO finire di fare tutti gli esempi
      * TODO fare gli esempi con tutte le varie opzioni di __info__
      *
-     * @file
+     * 
      *
      */
 

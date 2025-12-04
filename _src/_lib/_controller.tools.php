@@ -20,7 +20,7 @@
      * TODO documentare
      *
      */
-    function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = NULL) {
+    function controller($c, $mc, &$d, $t, $a = METHOD_GET, $p = NULL, &$e = array(), &$i = array(), &$pi = array(), &$ci = array(), $timer = array()) {
 
         /**
          * inizializzazione delle variabili
@@ -372,7 +372,7 @@
                 }
 
                 /*
-                * @todo IMPORTANTE
+                * TODO IMPORTANTE
                 * implementare filtri che implichino una JOIN con filtro sulla tabella di JOIN
                 * ad es. cercare sull'anagrafica quelli che hanno un'associazione con la categoria clienti
                 * sulla tabella anagrafica_categorie (adesso la cosa è gestita maldestramente con LK)

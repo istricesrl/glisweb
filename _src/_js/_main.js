@@ -123,7 +123,7 @@ $.fn.hasAttr = function( name ) {
  * 
  * @return      void
  * 
- * @todo l'implementazione attuale funziona solo col disabled, farla per tutti gli attributi
+ * TODO l'implementazione attuale funziona solo col disabled, farla per tutti gli attributi
  * 
  */
 $.fn.toggleAttribute = function( a ) {
@@ -153,7 +153,7 @@ $.fn.toggleAttribute = function( a ) {
  * 
  * @return      void
  * 
- * @todo l'implementazione attuale funziona solo col disabled, farlo per tutti
+ * TODO l'implementazione attuale funziona solo col disabled, farlo per tutti
  * 
  */
 $.fn.setAttribute = function( a ) {
@@ -178,7 +178,7 @@ $.fn.setAttribute = function( a ) {
  * 
  * @return      void
  * 
- * @todo l'implementazione attuale funziona solo col disabled, farlo per tutti
+ * TODO l'implementazione attuale funziona solo col disabled, farlo per tutti
  * 
  */
 $.fn.unsetAttribute = function( a ) {

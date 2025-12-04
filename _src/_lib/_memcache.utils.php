@@ -7,13 +7,13 @@
      *
      *
      *
-     * @file
+     * 
      *
      */
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
     function memcacheCleanFromIndex( $k ) {

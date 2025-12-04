@@ -12,9 +12,9 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
-     * @file
+     * 
      *
      */
 
