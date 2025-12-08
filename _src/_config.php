@@ -646,6 +646,10 @@
     // costanti per l'I/O
     define( 'PHP_INPUT'                                 , 'php://input' );
 
+    // costanti per gli ambienti di lavoro
+    define( 'RUNNING_ON_LINUX'                          , 'LINUX' );
+    define( 'RUNNING_ON_WINDOWS'                        , 'WINDOWS' );
+
     /**
      * inizializzazione dei log latest
      * ===============================
@@ -773,7 +777,7 @@
      */
 
     // versione di PHP richiesta
-    $cf['php']['required']['version'] = '7.0.0';       // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
+    $cf['php']['required']['version'] = '7.0.0';        // rilasciata il 26 settembre 2019, fine supporto il 28 novembre 2022
 
     // versione di PHP suggerita
     $cf['php']['preferred']['version'] = '8.2.0';       // rilasciata l'8 dicembre 2022
@@ -797,6 +801,7 @@
         'core',                                         // modulo core
         'mod_deflate',                                  // necessario per la compressione gzip
         'mod_expires',                                  // necessario per la gestione della cache lato client
+        'mod_filter',                                   // necessario per la gestione dei filtri di output
         'mod_headers',                                  // necessario per la gestione degli header HTTP
         'mod_rewrite',                                  // necessario per il rewrite degli URL
         'mod_ssl'                                       // necessario per la gestione delle connessioni sicure
@@ -808,6 +813,15 @@
      * Verifico che tutti i requisiti minimi per il funzionamento del framework siano soddisfatti.
      * 
      */
+
+    // valorizzazione dell'ambiente corrente
+    if (PHP_OS_FAMILY === 'Windows') {
+        define( 'RUNNING_ON', RUNNING_ON_WINDOWS );
+    } elseif (PHP_OS_FAMILY === 'Linux') {
+        define( 'RUNNING_ON', RUNNING_ON_LINUX );
+    } else {
+        die( 'sistema operativo non supportato: ' . PHP_OS_FAMILY );
+    }
 
     // controllo che la versione di PHP installata sia uguale o superiore a quella richiesta
     if( version_compare( PHP_VERSION, $cf['php']['required']['version'], '<' ) ) {
@@ -843,7 +857,7 @@
     }
 
     // controllo che la document root NON sia scrivibile
-    if( is_writeable( DIR_BASE ) ) {
+    if( is_writeable( DIR_BASE ) && RUNNING_ON === RUNNING_ON_LINUX ) {
         die( 'la cartella di installazione è scrivibile, lanciare _lamp.permissions.secure.sh o _nginx.permissions.secure.sh' );
     }
 

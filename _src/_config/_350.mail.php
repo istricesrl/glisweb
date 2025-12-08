@@ -155,10 +155,10 @@
             // ciclo sui contenuti
             foreach( $cnts as $cnt ) {
                 $cf['mail']['tpl'][ $tpl['ruolo'] ][ $cnt['ietf'] ] = array(
-                'from' => array( $cnt['mittente_nome'] => $cnt['mittente_mail'] ),
-                'to' => array( $cnt['destinatario_nome'] => $cnt['destinatario_mail'] ),
-                'to_cc' => array( $cnt['destinatario_cc_nome'] => $cnt['destinatario_cc_mail'] ),
-                'to_bcc' => array( $cnt['destinatario_ccn_nome'] => $cnt['destinatario_ccn_mail'] ),
+                'from' => array( $cnt['mittente_nome'] => $cnt['mittente_mail'] ), // unserialize( $cnt['mittente_mail'] ),
+                'to' => array( $cnt['destinatario_nome'] => $cnt['destinatario_mail'] ), // unserialize( $cnt['destinatario_mail'] ),
+                'to_cc' => array( $cnt['destinatario_cc_nome'] => $cnt['destinatario_cc_mail'] ), // unserialize( $cnt['destinatario_cc_mail'] ),
+                'to_bcc' => array( $cnt['destinatario_ccn_nome'] => $cnt['destinatario_ccn_mail'] ), // unserialize( $cnt['destinatario_ccn_mail'] ),
                 'oggetto' => $cnt['cappello'],
                 'testo' => $cnt['testo']
                 );

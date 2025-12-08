@@ -55,4 +55,6 @@
     // die( print_r( $arrayDizionariModuli, true ) ); 
     // echo DIR_ETC_DICTIONARIES . '_*.{' . LINGUE_ATTIVE . '}.php' . PHP_EOL;
     // echo DIR_MOD_ATTIVI_ETC_LOC . '_*.{' . LINGUE_ATTIVE . '}.php' . PHP_EOL;
+    // var_dump( defined('GLOB_BRACE') );
     // echo 'OUTPUT';
+    // die();
