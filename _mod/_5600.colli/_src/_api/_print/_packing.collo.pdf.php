@@ -355,7 +355,7 @@
 		// tabella di dettaglio
 		$pdf->SetFont( $fnt, '', $fnts );										// font, stile, dimensione
 		foreach( $righe as $row ) {
-			$trh = $pdf->GetStringHeight( $col * 8,$row['articolo'] , false, true, '', 'B' );				// 
+			$trh = $pdf->GetStringHeight( $col * 9,$row['articolo'] , false, true, '', 'B' );				// 
 		$pdf->SetFont( $fnt, '', $fnts );
 			// controllo se la riga di dettaglio entra nella parte rimanente del foglio
 			if(($pdf->GetY()+$trh ) > ($pdf-> GetPageHeight() -15) ){

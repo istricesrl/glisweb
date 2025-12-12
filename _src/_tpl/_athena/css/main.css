@@ -707,3 +707,15 @@ textarea.form-control {
 .CodeMirror {
     height: 100% !important;
 }
+
+/**
+ * stili per le tooltip
+ * ====================
+ *
+ *
+ */
+
+/* stile per le tooltip */
+.custom-tooltip {
+    z-index: 6000;
+}

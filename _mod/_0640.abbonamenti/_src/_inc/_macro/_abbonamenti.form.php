@@ -55,7 +55,7 @@
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
-	    'SELECT id, __label__ FROM corsi_view '
+	    'SELECT id, __label__ FROM corsi_view WHERE date(now()) BETWEEN data_accettazione AND data_chiusura ORDER BY __label__ ASC'
     );
 
     // tendina categorie progetti

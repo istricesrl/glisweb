@@ -16,7 +16,7 @@
     // modulo di questo file
     $m = DIR_MOD . '_IM000.immagini/';
 
-    // RELAZIONI CON IL MODULO contenuti
+    // RELAZIONI CON IL MODULO CONTENUTI
     if( in_array( "03000.contenuti", $cf['mods']['active']['array'] ) ) {
         arrayInsertSeq( 'contenuti.archivio', $p['contenuti.archivio']['etc']['tabs'], 'contenuti.archivio.immagini.view' );
     }

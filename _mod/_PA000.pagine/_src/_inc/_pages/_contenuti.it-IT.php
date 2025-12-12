@@ -68,7 +68,6 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.pagine.form',
-                                                            'contenuti.pagine.form.menu',
                                                             'contenuti.pagine.form.archiviazione',
                                                             'contenuti.pagine.form.tools' ) )
     );
@@ -77,6 +76,7 @@
     if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.sem' );
         arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.contenuti' );
+        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.menu' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI

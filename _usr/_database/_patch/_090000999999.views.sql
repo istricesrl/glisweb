@@ -2441,7 +2441,17 @@ CREATE OR REPLACE VIEW `contratti_view` AS
 		max( licenze.postazioni ) AS postazioni,
 		group_concat( DISTINCT tipologie_licenze.nome SEPARATOR ', ' ) AS tipologia_licenza,
 		group_concat( DISTINCT concat_ws( ' ', licenze.codice, tipologie_licenze.nome, licenze.nome ) SEPARATOR ' | ' ) AS dettagli_licenze,
-		concat_ws( ' ', tipologie_contratti.nome, contratti.nome, group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), NULL )  SEPARATOR ', ' ) ) AS __label__
+		concat_ws( 
+			' ', 
+			tipologie_contratti.nome, 
+			contratti.nome, 
+			progetti.nome,
+			concat( 'dal ', coalesce( date_format( min(rinnovi.data_inizio), '%d/%m/%Y' ), '-' ) ),
+			concat( 'al ', coalesce( date_format( max(rinnovi.data_fine), '%d/%m/%Y' ), '-' ) ),
+			group_concat( 
+				DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ), NULL )  SEPARATOR ', ' 
+			) 
+		) AS __label__
 	FROM contratti
         LEFT JOIN tipologie_contratti ON tipologie_contratti.id = contratti.id_tipologia
         LEFT JOIN progetti ON progetti.id = contratti.id_progetto
@@ -6506,6 +6516,199 @@ CREATE OR REPLACE VIEW `ordini_passivi_view` AS
 	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
 ;
 
+-- | 090000022400
+
+-- offerte_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `offerte_view`;
+
+-- | 090000022401
+
+-- offerte_view
+-- tipologia: vista virtuale
+-- verifica: 2022-01-28 14:25 chiara gdl
+CREATE OR REPLACE VIEW `offerte_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.id_causale,
+		documenti.porto,
+		documenti.id_trasportatore,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			documenti.nome,
+			' ',
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+   	WHERE tipologie_documenti.se_offerta IS NOT NULL
+;
+
+-- | 090000022410
+
+-- offerte_attive_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `offerte_attive_view`;
+
+-- | 090000022411
+
+-- offerte_attive_view
+-- tipologia: vista virtuale
+-- verifica: 2022-01-28 14:25 chiara gdl
+CREATE OR REPLACE VIEW `offerte_attive_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.codice,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.id_causale,
+		documenti.porto,
+		documenti.id_trasportatore,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			documenti.nome,
+			' ',
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+   	WHERE tipologie_documenti.se_offerta IS NOT NULL
+	   AND anagrafica_check_gestita( a1.id ) IS NOT NULL
+;
+
+-- | 090000022420
+
+-- offerte_passive_view
+-- tipologia: vista virtuale
+DROP TABLE IF EXISTS `offerte_passive_view`;
+
+-- | 090000022421
+
+-- offerte_passive_view
+-- tipologia: vista virtuale
+-- verifica: 2022-01-28 14:25 chiara gdl
+CREATE OR REPLACE VIEW `offerte_passive_view` AS
+    SELECT
+		documenti.id,
+		documenti.id_tipologia,
+		tipologie_documenti.nome AS tipologia,
+		documenti.codice,
+		documenti.numero,
+		documenti.sezionale,
+		documenti.data,
+		documenti.nome,
+		documenti.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
+		documenti.id_destinatario,
+		coalesce( a2.denominazione , concat( a2.cognome, ' ', a2.nome ), '' ) AS destinatario,
+		documenti.id_mastro_provenienza,
+		m1.nome AS mastro_provenienza,
+		documenti.id_mastro_destinazione,
+		m2.nome AS mastro_destinazione,
+		documenti.id_causale,
+		documenti.porto,
+		documenti.id_trasportatore,
+		documenti.id_account_inserimento,
+		documenti.id_account_aggiornamento,
+		concat(
+			documenti.nome,
+			' ',
+			tipologie_documenti.sigla,
+			' ',
+			documenti.numero,
+			'/',
+			year( documenti.data ),
+			' del ',
+			documenti.data,
+			' per ',
+			coalesce(
+				a2.denominazione,
+				concat(
+					a2.cognome,
+					' ',
+					a2.nome
+				),
+				''
+			)
+		) AS __label__
+    FROM documenti
+		LEFT JOIN anagrafica AS a1 ON a1.id = documenti.id_emittente
+		LEFT JOIN anagrafica AS a2 ON a2.id = documenti.id_destinatario
+		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
+		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
+   	WHERE tipologie_documenti.se_offerta IS NOT NULL
+	   AND anagrafica_check_gestita( a2.id ) IS NOT NULL
+;
+
 -- | 090000022800
 
 -- organizzazioni_view
@@ -8905,15 +9108,29 @@ CREATE OR REPLACE VIEW `rinnovi_view` AS
 		rinnovi.id_pianificazione,
 		rinnovi.id_account_inserimento,
 		rinnovi.id_account_aggiornamento,
-		concat('rinnovo ', rinnovi.id, ' dal ',CONCAT_WS('-',rinnovi.data_inizio),' al ',CONCAT_WS('-',rinnovi.data_fine)) AS __label__
+		concat_ws(
+			' ',
+			'rinnovo',
+			rinnovi.id,
+			progetti.nome,
+			'dal',
+			rinnovi.data_inizio,
+			'al',
+			rinnovi.data_fine,
+			coalesce( 
+				anagrafica.denominazione,
+				concat( anagrafica.cognome, ' ', anagrafica.nome )
+			)
+		) AS __label__
 	FROM rinnovi
 		LEFT JOIN tipologie_rinnovi ON tipologie_rinnovi.id = rinnovi.id_tipologia
 		LEFT JOIN contratti ON contratti.id = rinnovi.id_contratto 
+		LEFT JOIN contratti_anagrafica ON contratti_anagrafica.id_contratto = contratti.id AND contratti_anagrafica.id_ruolo = 29
+		LEFT JOIN anagrafica ON anagrafica.id = contratti_anagrafica.id_anagrafica
 		LEFT JOIN licenze ON licenze.id = rinnovi.id_licenza 
-		LEFT JOIN progetti ON progetti.id = rinnovi.id_progetto
+		LEFT JOIN progetti ON progetti.id = coalesce( rinnovi.id_progetto, contratti.id_progetto )
 	GROUP BY rinnovi.id
 	;
-
 
 -- | 090000031550
 

@@ -2746,7 +2746,6 @@ CREATE TABLE `orari` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
 -- | 010000022800
 
 -- organizzazioni

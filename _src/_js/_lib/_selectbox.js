@@ -240,8 +240,8 @@
 
             } else {
 
-            // svuoto la lista
-            $( lista ).empty();
+                // svuoto la lista
+                $( lista ).empty();
 
                 // TODO appendo alla lista un <li> per ogni <option> della select
                 select.find('option').each( function( idx, el ) {
@@ -250,7 +250,18 @@
                 // $( el ).prop( 'selected', false );
                 // console.log( opzione + ' -> ' + valore );
                 // TODO filtro le opzioni in base al opzione del campo input
-                if( opzione.toLowerCase().indexOf( filtro.toLowerCase() ) >= 0 ) {
+
+                // tokenizzo il filtro per spazio
+                var filtro_tokenized = filtro.split( ' ' );
+                var match = 0;
+                filtro_tokenized.forEach( function( token ) {
+                    if( opzione.toLowerCase().indexOf( token.toLowerCase() ) >= 0 ) {
+                        match++;
+                    }
+                });
+
+                // se tutti i token sono stati trovati
+                if( match == filtro_tokenized.length ) {
                     // console.log( opzione + ' -> ' + filtro );
                     if( valore == currvalue ) {
                         var classe = ' class="selected"';
@@ -260,6 +271,7 @@
                     var li = '<li value="' + valore + '"' + classe + '>' + opzione + '</li>';
                     lista.append( li );
                 }
+
                 });
 
                 // TODO bind dell'evento click sulle opzioni per il cambio del valore della select

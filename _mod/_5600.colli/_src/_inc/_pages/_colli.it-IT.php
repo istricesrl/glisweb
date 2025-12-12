@@ -57,14 +57,28 @@
         'js'			=> array( 'internal' => array( $m . '_src/_templates/_athena/src/js/colli.js' ) ),
         'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
         'etc'			=> array( 'tabs'	=> array(	'colli.form',
-                                                        'colli.form.contenuto',
-                                                        'colli.form.evasione',
+                                                        // 'colli.form.contenuto',
+                                                        // 'colli.form.evasione',
                                                         'colli.form.righe',
-                                                        'colli.form.chiusura',
-                                                        'colli.form.invio',
+                                                        // 'colli.form.chiusura',
+                                                        // 'colli.form.invio',
                                                         'colli.form.stampe',
-                                                        'colli.form.tools' ) )
-    );        
+                                                        // 'colli.form.tools' 
+                                                    )
+                                )
+    );
+
+	// stampe colli
+	$p['colli.form.righe'] = array(
+	    'sitemap'		=> false,
+	    'title'		=> array( $l		=> 'righe collo' ),
+	    'h1'		=> array( $l		=> 'righe' ),
+	    'parent'		=> array( 'id'		=> 'colli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'colli.form.righe.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_colli.form.righe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['colli.form']['etc']['tabs'] )
+	);
 
 	// stampe colli
 	$p['colli.form.stampe'] = array(

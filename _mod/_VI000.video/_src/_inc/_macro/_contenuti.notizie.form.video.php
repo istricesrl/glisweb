@@ -20,7 +20,7 @@
         $cf['memcache']['index'],
         $cf['memcache']['connection'],
         $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_video_view WHERE se_pagine = 1 ORDER BY __label__ ASC '
+        'SELECT id, __label__ FROM ruoli_video_view WHERE se_notizie = 1 ORDER BY __label__ ASC '
     );
 
     $ct['etc']['select']['embed'] = array( 

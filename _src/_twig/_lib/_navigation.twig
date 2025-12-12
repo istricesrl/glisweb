@@ -132,9 +132,29 @@
             {% for t in pages[ page.id ].etc.tabs %}
             {% if pages[ t ].icon %}
             {% if pages[ t ].onclick %}
-            <li class="nav-item nav-icon d-flex align-items-stretch"><a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" href="{{ pages[  pages[ t ].onclick[ lang ] ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}" target="{{  pages[ t ].target  }}">{{ pages[ t ].icon|raw }}</a></li>
+            <li class="nav-item nav-icon d-flex align-items-stretch">
+                <a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" 
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-delay="1000"
+                    data-bs-placement="top"
+                    data-bs-title="{{ pages[ t ].h1[ lang ]|striptags|trim }}"
+                    href="{{ pages[  pages[ t ].onclick[ lang ] ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}" target="{{  pages[ t ].target  }}">
+                    {{ pages[ t ].icon|raw }}
+                </a>
+            </li>
             {% else %}
-            <li class="nav-item nav-icon d-flex align-items-stretch"><a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">{{ pages[ t ].icon|raw }}</a></li>
+            <li class="nav-item nav-icon d-flex align-items-stretch">
+                <a class="nav-link {% if t == page.id %}active{% endif %} d-flex align-items-center" 
+                    data-bs-toggle="tooltip" data-bs-placement="top"
+                    data-bs-custom-class="custom-tooltip"
+                    data-bs-delay='{"show":2000,"hide":0}'
+                    data-bs-placement="top"
+                    data-bs-title="{{ pages[ t ].h1[ lang ]|striptags|trim }}"
+                    href="{{ pages[ t ].path[ lang ]}}{% if request[ form.table ].id %}?{{ form.table }}[id]={{ request[ form.table ].id }}{% endif %}{% if request.__backurl__ %}{% if request[ form.table ].id %}&{% else %}?{% endif %}__backurl__={{ request.__backurl__ }}{% endif %}">
+                    {{ pages[ t ].icon|raw }}
+                </a>
+            </li>
             {% endif %}
             {% endif %}
             {% endfor %}

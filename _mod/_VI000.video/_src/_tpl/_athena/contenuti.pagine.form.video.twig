@@ -2,8 +2,7 @@
 {% import '_lib/_default.twig' as cms %}
 {% import '_lib/_form.twig' as frm %}
 {% import 'lib/default.twig' as def %}
-{% import 'lib/contenuti.pagine.form.sub.twig' as sub %}
-{% import 'lib/default.form.video.sub.twig' as img %}
+{% import 'lib/default.form.video.sub.twig' as vid %}
 
 {# ESTENSIONE DELLO SCHEMA DI BASE #}
 {% extends 'ext/main.twig' %}
@@ -20,7 +19,7 @@
         {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
 
             {# SUBFORM video #}
-            {{ img.video( form.table, 'video', 'video collegati', site, page, pages, localization.language.ietf, etc, request, session, 'id_pagina' ) }}
+            {{ vid.video( form.table, 'video', 'video collegati', site, page, pages, localization.language.ietf, etc, request, session, 'id_pagina' ) }}
         
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">

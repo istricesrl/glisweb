@@ -387,6 +387,8 @@ $( document ).ready( function() {
     });
 
     /* sezione tooltip e hint */
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]')
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl))
 
     /*
     // faccio il bind della funzione tooltip() ai campi con l'attributo data-toggle impostato a tooltip

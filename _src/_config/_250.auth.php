@@ -1142,6 +1142,18 @@
         ),
         'settori' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'offerte' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'righe_offerte' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'offerte_attive' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'righe_offerte_attive' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
         )
     );
  

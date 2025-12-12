@@ -27,7 +27,7 @@
     $ct['view'] = array(
         'table' => 'documenti',
         'open' => array(
-            'page' => 'amministrazione.documenti.form',
+            'page' => 'amministrazione.archivio.documenti.form',
             'table' => 'documenti'
         ),
         'cols' => array(
@@ -56,7 +56,6 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array( 'NL' => true )
         ),
         '__sort__' => array(
             'data' => 'DESC'

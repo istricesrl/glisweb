@@ -1030,8 +1030,9 @@
 
         // intestazione tabella righe
         $pdf->Cell( $etc['pag']['spacer']['col'] * 3, 0, 'collocazione', $etc['tbl']['celle']['intestazione'], '', 'C' );
+        $pdf->Cell( $etc['pag']['spacer']['col'] * 1, 0, 'codice', $etc['tbl']['celle']['intestazione'], '', 'C' );
         $pdf->Cell( $etc['pag']['spacer']['col'] * 6, 0, 'descrizione', $etc['tbl']['celle']['intestazione'], 0, 'L' );
-        $pdf->Cell( $etc['pag']['spacer']['col'] * 3, 0, 'q.tà', $etc['tbl']['celle']['intestazione'], 1, 'R' );
+        $pdf->Cell( $etc['pag']['spacer']['col'] * 2, 0, 'q.tà', $etc['tbl']['celle']['intestazione'], 1, 'R' );
 
         // stile riga tabella
         $pdf->SetFont( $etc['fnt']['base']['family'], $etc['fnt']['base']['style'], $etc['fnt']['base']['size'] );
@@ -1047,8 +1048,9 @@
 
             // riga della tabella
             $pdf->Cell( $etc['pag']['spacer']['col'] * 3, $trh, $row['collocazione_breve'], $etc['tbl']['celle']['dati'], 0, 'C', false, '', 0, false, 'T', 'T' );
+            $pdf->Cell( $etc['pag']['spacer']['col'] * 1, $trh, $row['id_articolo'], $etc['tbl']['celle']['dati'], 0, 'C', false, '', 0, false, 'T', 'T' );
             $pdf->MultiCell( $etc['pag']['spacer']['col'] * 6, $trh, $row['descrizione'], $etc['tbl']['celle']['dati'], 'L', false, 0 );
-            $pdf->Cell( $etc['pag']['spacer']['col'] * 3, $trh, $row['qta_da_prelevare'], $etc['tbl']['celle']['dati'], 1, 'R', false, '', 0, false, 'T', 'T' );
+            $pdf->Cell( $etc['pag']['spacer']['col'] * 2, $trh, $row['qta_da_prelevare'], $etc['tbl']['celle']['dati'], 1, 'R', false, '', 0, false, 'T', 'T' );
 
         }
 
