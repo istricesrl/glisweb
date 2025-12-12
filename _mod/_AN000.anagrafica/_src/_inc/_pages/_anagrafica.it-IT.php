@@ -80,6 +80,7 @@
                                                             'anagrafica.form.cliente',
                                                             'anagrafica.form.fornitore',
                                                             'anagrafica.form.collaboratore',
+                                                            'anagrafica.form.produttore',
                                                             // 'anagrafica.form.attivita',
                                                             // 'anagrafica.form.immagini',
                                                             // 'anagrafica.form.video',
@@ -124,6 +125,18 @@
         'parent'            => array( 'id'        => 'anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.collaboratore.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.collaboratore.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // gestione anagrafica form tools
+    $p['anagrafica.form.produttore'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'anagrafica form produttore' ),
+        'h1'                => array( $l        => 'produttore' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.produttore.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.produttore.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'anagrafica.form' )
     );

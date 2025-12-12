@@ -985,21 +985,21 @@
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC . 'shadow.json' );
 
     // lettura del file di configurazione aggiuntivi YAML o JSON
-    foreach( $cf['config']['files'] as $type => $files ) {
-        foreach( $files as $file ) {
-            if( file_exists( $file ) ) {
+    foreach( $cf['config']['files'] as $type => $configFiles ) {
+        foreach( $configFiles as $configFile ) {
+            if( file_exists( $configFile ) ) {
                 switch( $type ) {
                     case 'yaml':
-                        $cj = yaml_parse( file_get_contents( $file ) );
+                        $cj = yaml_parse( file_get_contents( $configFile ) );
                     break;
                     case 'json':
-                        $cj = json_decode( file_get_contents( $file ), true );
+                        $cj = json_decode( file_get_contents( $configFile ), true );
                     break;
                 }
                 if( empty( $cj ) ) {
-                    die( 'file di configurazione ' . $file . ' danneggiato' );
+                    die( 'file di configurazione ' . $configFile . ' danneggiato' );
                 } else {
-                    $cf['config']['read'][] = $file;
+                    $cf['config']['read'][] = $configFile;
                     $cx = array_replace_recursive( $cx, $cj );
                 }
             }
@@ -1223,10 +1223,10 @@
     sort( $cf['runlevel']['files'] );
 
     // inclusione dei files dei runlevels
-    foreach( $cf['runlevel']['files'] as $file ) {
+    foreach( $cf['runlevel']['files'] as $runLvlFile ) {
 
         // controparte locale
-        $locale = path2custom( $file );
+        $locale = path2custom( $runLvlFile );
 
         // calcolo runlevel
         $lvls = explode( '.', basename( $locale ) );
@@ -1236,13 +1236,13 @@
         if( ! in_array( $lvl, $cf['lvls']['skip'] ) ) {
 
             // inclusione file standard
-            if( is_readable( $file ) ) {                
-                loggerLatest( 'inizio: ' . $file );
-                require $file;
-                timerCheck( $cf['speed'], $file );
-                loggerLatest( 'completato: ' . $file );
+            if( is_readable( $runLvlFile ) ) {                
+                loggerLatest( 'inizio: ' . $runLvlFile );
+                require $runLvlFile;
+                timerCheck( $cf['speed'], $runLvlFile );
+                loggerLatest( 'completato: ' . $runLvlFile );
             } else {
-                loggerLatest( 'impossibile leggere il file ' . $file );
+                loggerLatest( 'impossibile leggere il file ' . $runLvlFile );
             }
 
             // inclusione file locale
@@ -1258,7 +1258,7 @@
             }
 
             // controparte moduli
-            $moduli = glob( str_replace( DIR_BASE, DIR_MOD_ATTIVI, $file ), GLOB_BRACE );
+            $moduli = glob( str_replace( DIR_BASE, DIR_MOD_ATTIVI, $runLvlFile ), GLOB_BRACE );
 
             // inclusione controparte moduli
             foreach( $moduli as $modulo ) {

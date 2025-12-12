@@ -5578,6 +5578,7 @@ CREATE OR REPLACE VIEW `marchi_view` AS
 	SELECT
 		marchi.id,
 		marchi.nome,
+		marchi.data_archiviazione,
 		marchi.nome AS __label__
 	FROM marchi
 ;
@@ -6745,14 +6746,12 @@ CREATE OR REPLACE VIEW `organizzazioni_view` AS
 -- | 090000023100
 
 -- pagamenti_view
--- tipologia: tabella gestita
 DROP TABLE IF EXISTS `pagamenti_view`;
 
 -- | 090000023101
 
 -- pagamenti_view
 -- tipologia: tabella gestita
--- verifica: 2022-01-07 16:00 Chiara GDL
 CREATE OR REPLACE VIEW `pagamenti_view` AS
 	SELECT
 		pagamenti.id,
@@ -6777,10 +6776,26 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		) AS documento,
 		tipologie_documenti.id AS id_tipologia_documento,
 		group_concat( DISTINCT carrelli_articoli.id_articolo SEPARATOR '|' ) AS id_articoli,
-		group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ) AS id_categorie_progetti,
-		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ) AS categorie_progetti,
-		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ) AS id_aree,
-		group_concat( DISTINCT aree.nome ) AS aree,
+
+		coalesce( 
+group_concat( DISTINCT categorie_progetti.id SEPARATOR '|' ),
+group_concat( DISTINCT discipline_abbonamento.testo SEPARATOR '|' )
+) AS id_categorie_progetti,
+
+coalesce(
+		group_concat( DISTINCT categorie_progetti.nome SEPARATOR '|' ),
+		group_concat( DISTINCT categorie_progetti_abbonamento.nome SEPARATOR '|' )
+) AS categorie_progetti,
+
+coalesce(
+		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti.id ) ),
+		group_concat( DISTINCT categorie_progetti_path_find_ancestor( categorie_progetti_abbonamento.id ) ) 
+) AS id_aree,
+
+coalesce(
+		group_concat( DISTINCT aree.nome ),
+		group_concat( DISTINCT aree_abbonamento.nome ) 
+) AS aree,
 		group_concat( DISTINCT concat( pagamenti.id_coupon, ':', pagamenti.coupon_valore ) SEPARATOR '|' ) AS dettagli_coupon,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
@@ -6824,6 +6839,8 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN iban ON iban.id = pagamenti.id_iban
 		LEFT JOIN coupon ON coupon.id = pagamenti.id_coupon
 		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
+
+
 		-- LEFT JOIN progetti ON progetti.id = contratti.id_progetto
 		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
 		LEFT JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
@@ -6832,6 +6849,13 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
 		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
 		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
+
+LEFT JOIN tipologie_contratti AS tipologie_contratti_abbonamento ON tipologie_contratti_abbonamento.id_prodotto = prodotti.id
+LEFT JOIN metadati AS discipline_abbonamento ON discipline_abbonamento.id_tipologia_contratti = tipologie_contratti_abbonamento.id AND discipline_abbonamento.nome = 'abbonamento|discipline'
+
+LEFT JOIN categorie_progetti AS categorie_progetti_abbonamento ON ( categorie_progetti_abbonamento.id = discipline_abbonamento.testo AND categorie_progetti_abbonamento.se_disciplina = 1 )
+LEFT JOIN categorie_progetti AS aree_abbonamento ON aree_abbonamento.id = categorie_progetti_path_find_ancestor( categorie_progetti_abbonamento.id )
+
 --	WHERE
 --		tipologie_documenti.se_fattura = 1
 --		OR

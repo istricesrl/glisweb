@@ -30,6 +30,7 @@
     $seDipendente = ( empty( $_REQUEST['anagrafica']['se_dipendente'] ) )           ? false : true;
     $seInterinale = ( empty( $_REQUEST['anagrafica']['se_interinale'] ) )           ? false : true;
     $seCollaboratore = ( empty( $_REQUEST['anagrafica']['se_collaboratore'] ) )     ? false : true;
+    $seProduttore = ( empty( $_REQUEST['anagrafica']['se_produttore'] ) )           ? false : true;
     $seGestita = ( empty( $_REQUEST['anagrafica']['se_gestita'] ) )                 ? false : true;
 
     if( max( [ $seCliente, $seLead, $seProspect ] ) != true ) {
@@ -64,6 +65,13 @@
         $ct['page']['etc']['tabs'] = array_diff(
             $ct['page']['etc']['tabs'],
             ['anagrafica.form.contratti']
+        );
+    }
+
+    if( max( [ $seProduttore ] ) != true ) {
+        $ct['page']['etc']['tabs'] = array_diff(
+            $ct['page']['etc']['tabs'],
+            ['anagrafica.form.produttore']
         );
     }
 

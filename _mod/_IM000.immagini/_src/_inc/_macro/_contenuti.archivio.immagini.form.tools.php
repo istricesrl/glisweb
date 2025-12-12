@@ -39,7 +39,6 @@
         'text' => 'forza la scalatura di questa immagine'
     );
 
-
     // gestione default
     require DIR_SRC_INC_MACRO . '_default/_default.tools.php';
 
