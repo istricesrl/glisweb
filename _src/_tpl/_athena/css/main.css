@@ -457,6 +457,10 @@ textarea.form-control {
     padding-top: .5em;
 }
 
+input[type="number"] {
+    text-align: right;
+}
+
 /**
  * stili delle tabelle delle view
  * ==============================

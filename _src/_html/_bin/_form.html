@@ -26,7 +26,6 @@
 {{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, '', '', noempty, class, 1 ) }}
 {% endmacro %}
 
-{# macro selectRequired( table, subtable, counter, field, placeholder, etc, request, default, autosubmit, noempty, class, disabled, onchange ) #}
 {% macro selectRequired( table, subtable, counter, field, placeholder, etc, request, default, noempty, class, disabled, onchange ) %}
 {% import _self as frm %}
 {{ frm.select( table, subtable, counter, field, placeholder, etc, request, default, '', 1, noempty, class, disabled, onchange ) }}

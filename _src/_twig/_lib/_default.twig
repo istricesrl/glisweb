@@ -210,7 +210,9 @@
         'ruolo': '',
         'ordine': '',
         'ietf': 'it-IT',
-        'class': ''
+        'class': '',
+        'width': '100%',
+        'height': ''
     }|merge( options.source ) %}
 
     {# valori di default per l'array site #}
@@ -242,7 +244,8 @@
     <!-- YOUTUBE -->
     <div class="ratio ratio-{{ rt }}">
         <iframe
-            width="100%"
+            width="{{ source.height }}"
+            {% if source.height %}height="{{ source.height }}"{% endif %}
             src="https://www.youtube.com/embed/{{ page.contents.video[ source.ruolo ][ source.ordine ].codice_embed }}"
             title="YouTube video player"
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
