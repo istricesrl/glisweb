@@ -44,15 +44,18 @@
 
     // stili della vista
     $ct['view']['class'] = array(
-        'nome' => 'text-left',
+        'nome' => 'text-left no-wrap',
 #        'numero' => 'text-left',
+        'codice' => 'no-wrap',
         'data' => 'no-wrap', 
-        '__label__' => 'text-left',
-        'nome' => 'text-left',
-        'destinatario' => 'text-left',
-        'emittente' => 'text-left',
-        'tipologia' => 'text-left',
+        '__label__' => 'text-left no-wrap',
+        'nome' => 'text-left no-wrap',
+        'destinatario' => 'text-left no-wrap',
+        'emittente' => 'text-left no-wrap',
+        'tipologia' => 'text-left no-wrap',
         'totale' => 'text-right',
+        'documenti_antecedenti' => 'text-left',
+        'documenti_successivi' => 'text-left',
         'timestamp_chiusura' => 'no-wrap',
     );
 
@@ -81,6 +84,6 @@
 
     foreach( $ct['view']['data'] as $key => &$row ) {
 
-        $row['timestamp_chiusura'] = date( 'Y-m-d H:i', $row['timestamp_chiusura']);
+        // $row['timestamp_chiusura'] = date( 'Y-m-d H:i', $row['timestamp_chiusura']);
 
 	}
