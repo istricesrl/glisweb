@@ -45,19 +45,26 @@
                         <span class="label-top">indirizzo</span>
                         {{ frm.input({ 'field': { 'name': 'indirizzo', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
-                    <div class="col-12 col-md-1 form-col">
+                    <div class="col-12 col-md-2 form-col">
                         <span class="label-top">civico</span>
                         {{ frm.input({ 'field': { 'name': 'civico', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
-                    <div class="col-12 col-md-1 form-col">
+                    <div class="col-12 col-md-2 form-col">
                         <span class="label-top">interno</span>
                         {{ frm.input({ 'field': { 'name': 'interno', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">CAP</span>
+                        {{ frm.input({ 'field': { 'name': 'cap', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>                    
                     <div class="col-12 col-md form-col">
                         <span class="label-top">località</span>
                         {{ frm.input({ 'field': { 'name': 'localita', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
                     </div>
-                    <div class="col col-md form-col">
+                    <div class="col-12 col-md form-col">
                         <span class="label-top">comune</span>
                         {{ frm.select({ 'field': { 'name': 'id_comune', 'disabled': disabled }, 'source': { 'api': 'comuni' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
                     </div>
