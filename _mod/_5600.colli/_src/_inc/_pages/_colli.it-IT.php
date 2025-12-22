@@ -60,8 +60,8 @@
                                                         // 'colli.form.contenuto',
                                                         // 'colli.form.evasione',
                                                         'colli.form.righe',
-                                                        // 'colli.form.chiusura',
-                                                        // 'colli.form.invio',
+                                                        'colli.form.chiusura',
+                                                        'colli.form.invio',
                                                         'colli.form.stampe',
                                                         // 'colli.form.tools' 
                                                     )
@@ -76,6 +76,32 @@
 	    'parent'		=> array( 'id'		=> 'colli.view' ),
 	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'colli.form.righe.html' ),
 	    'macro'		=> array( $m . '_src/_inc/_macro/_colli.form.righe.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['colli.form']['etc']['tabs'] )
+	);
+
+	// stampe colli
+	$p['colli.form.chiusura'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-check" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'chiusura collo' ),
+	    'h1'		=> array( $l		=> 'chiusura' ),
+	    'parent'		=> array( 'id'		=> 'colli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'colli.form.chiusura.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_colli.form.chiusura.php' ),
+	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'		=> array( 'tabs'	=> $p['colli.form']['etc']['tabs'] )
+	);
+
+	// stampe colli
+	$p['colli.form.invio'] = array(
+	    'sitemap'		=> false,
+		'icon'		=> '<i class="fa fa-truck" aria-hidden="true"></i>',
+	    'title'		=> array( $l		=> 'invio collo' ),
+	    'h1'		=> array( $l		=> 'invio' ),
+	    'parent'		=> array( 'id'		=> 'colli.view' ),
+	    'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'colli.form.invio.html' ),
+	    'macro'		=> array( $m . '_src/_inc/_macro/_colli.form.invio.php' ),
 	    'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 	    'etc'		=> array( 'tabs'	=> $p['colli.form']['etc']['tabs'] )
 	);

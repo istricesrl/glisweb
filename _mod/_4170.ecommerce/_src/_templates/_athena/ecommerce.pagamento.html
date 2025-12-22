@@ -73,7 +73,7 @@
                             <!-- <td>{{ '%0.2f'|format( r.coupon_valore ) }}</td> -->
                             <td class="text-right">
                                 {% if not r.id_pagamento %}
-                                <input class="form-control form-control-sm text-right" type="decimal" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
+                                <input class="form-control form-control-sm text-right" type="number" step="0.01" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
                                 {% else %}
                                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}">
                                 <p>{{ r.totale_lordo_da_pagare }} €</p>
