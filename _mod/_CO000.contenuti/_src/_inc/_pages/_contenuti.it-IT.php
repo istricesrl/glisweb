@@ -109,6 +109,19 @@
         'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
     );
 
+    // gestione pagine form contenuti
+    $p['contenuti.pagine.form.javascript'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-brands fa-square-js" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'javascript' ),
+        'h1'                => array( $l        => 'javascript' ),
+        'parent'            => array( 'id'        => 'contenuti.pagine.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.javascript.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.javascript.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
+    );
+
     // gestione notizie form contenuti
     $p['contenuti.notizie.form.web'] = array(
         'sitemap'            => false,

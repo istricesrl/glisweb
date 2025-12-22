@@ -43,7 +43,7 @@
             'data_archiviazione' => array( 'NL' => true )
         ),
         '__sort__' => array(
-            'id' => 'DESC'
+            '__label__' => 'DESC'
         ),
     );
 

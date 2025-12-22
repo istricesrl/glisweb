@@ -55,10 +55,23 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_amministrazione.archivio.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'amministrazione.archivio',
+														'amministrazione.archivio.reparti.view',
 														'amministrazione.archivio.tools'
 														 ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'archivio' ),
 																		'priority'	=> '9900' ) ) )														
+	);
+
+    // tools archivio amministrazione
+	$p['amministrazione.archivio.reparti.view'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'reparti' ),
+	    'h1'				=> array( $l		=> 'reparti' ),
+	    'parent'			=> array( 'id'		=> 'amministrazione.archivio' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.archivio.reparti.view.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'amministrazione.archivio' )
 	);
 
     // tools archivio amministrazione

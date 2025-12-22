@@ -18,11 +18,6 @@
     // modulo di questo file
     $m = DIR_MOD . '_VI000.video/';
 
-    // RELAZIONI CON IL MODULO ANAGRAFICA
-    if( in_array( "AN000.anagrafica", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'anagrafica.form.archiviazione', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.video' );
-    }
-
     // gestione anagrafica form video
     $p['anagrafica.form.video'] = array(
         'sitemap'            => false,

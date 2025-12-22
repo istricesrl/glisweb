@@ -18,11 +18,6 @@
     // modulo di questo file
     $m = DIR_MOD . '_IM000.immagini/';
 
-    // RELAZIONI CON IL MODULO ANAGRAFICA
-    if( in_array( "AN000.anagrafica", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'anagrafica.form.archiviazione', $p['anagrafica.form']['etc']['tabs'], 'anagrafica.form.immagini' );
-    }
-
     // gestione anagrafica form immagini
     $p['anagrafica.form.immagini'] = array(
         'sitemap'            => false,

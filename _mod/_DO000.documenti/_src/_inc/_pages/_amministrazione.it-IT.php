@@ -168,7 +168,34 @@
         'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'amministrazione.archivio.documenti.articoli.form',
+                                                            'amministrazione.archivio.documenti.articoli.form.aggregate',
+                                                            'amministrazione.archivio.documenti.articoli.form.stampe',
                                                             'amministrazione.archivio.documenti.articoli.form.tools' ) )
+    );
+
+    // tools archivio amministrazione
+    $p['amministrazione.archivio.documenti.articoli.form.aggregate'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'amministrazione archivio documenti articoli form aggregate' ),
+        'h1'                => array( $l        => 'righe aggregate' ),
+        'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'amministrazione.archivio.documenti.articoli.form.aggregate.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.aggregate.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.articoli.form' )
+    );
+
+    // tools archivio amministrazione
+    $p['amministrazione.archivio.documenti.articoli.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'amministrazione archivio documenti articoli form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'amministrazione.archivio.documenti.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.archivio.documenti.articoli.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'amministrazione.archivio.documenti.articoli.form' )
     );
 
     // tools archivio amministrazione

@@ -12,3 +12,12 @@
 <div>{{ include( template_from_string( page.content[ localization.language.ietf ]|default('') ) | raw ) }}</div>
 <!-- fine blocco {{ _self }}::main -->
 {% endblock main %}
+
+{# BLOCCO JAVASCRIPT #}
+{% block javascript %}
+<!-- blocco {{ _self }}::javascript -->
+<script type="text/javascript">
+    {{ include( template_from_string( page.javascript|default('') ) | raw ) }}
+</script>
+<!-- fine blocco {{ _self }}::javascript -->
+{% endblock javascript %}
