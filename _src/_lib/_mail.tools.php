@@ -8,9 +8,9 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
-     * @file
+     * 
      *
      */
 
@@ -28,7 +28,7 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
      */
     function sendMail( $host, $from, $to, $oggetto, $corpo, $cc = array(), $bcc = array(), $attach = array(), $headers = array(), $user = NULL, $pasw = NULL, $port = 25, $dkim_domain = NULL, $dkim_pasw = NULL ) {
@@ -92,14 +92,15 @@
 		}
 
 	    // configurazione dell'oggetto mail
-	    $mail->IsHTML			= true;
+	    // $mail->IsHTML			= true;
 	    $mail->CharSet			= 'UTF-8';
 		$mail->Encoding			= 'base64';
 
         // mittente della mail
         $fromName               = current( array_keys( $from ) );
         $fromMail               = current( $from );
-        $fromDomain             = end( explode( '@', $fromMail ) );
+        $expDomain              = explode( '@', $fromMail );
+        $fromDomain             = end( $expDomain );
 
         // mittente
 	    $mail->SetFrom( $fromMail, $fromName );
@@ -146,8 +147,10 @@
 		}
 
         // headers
-        foreach( $headers as $hKey => $hVal ) {
-            $mail->addCustomHeader( $hKey, $hVal );    
+        if( is_array( $headers ) ) {
+            foreach( $headers as $hKey => $hVal ) {
+                $mail->addCustomHeader( $hKey, $hVal );    
+            }
         }
 
         // DKIM
@@ -160,15 +163,15 @@
                 $mail->DKIM_passphrase = $dkimPassw;
                 $mail->DKIM_identity = $mail->From;
                 logWrite( 'DKIM: ' . $fromDomain . ' : ' . $dkimPassw, 'dkim', LOG_DEBUG );
-                logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG );
+                logWrite( 'DKIM: ' . print_r( $from, true ) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG );
                 logWrite( 'DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG );
-                logWrite( 'DKIM: ' . readFromFile( $mail->DKIM_private ), 'dkim', LOG_DEBUG );
+                logWrite( 'DKIM: ' . readFromFile( $mail->DKIM_private, FILE_READ_AS_STRING ), 'dkim', LOG_DEBUG );
             } else {
                 logWrite( 'DKIM: ' . print_r( $from, true ) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE );
                 logWrite( 'DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE );
             }
         } else {
-            logWrite( 'DKIM: ' . $from . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR );
+            logWrite( 'DKIM: ' . print_r( $from, true ) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR );
         }
 
 	    // invio
@@ -197,7 +200,7 @@
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
      */
     function queueMailFromTemplate( $c, $t, $d, $timestamp_invio, $to, $l = 'it-IT', $to_cc = array(), $to_bcc = array(), $attach = array(), $headers = array(), $server = NULL ) {
@@ -374,7 +377,7 @@ try {
      *
      *
      *
-     * @todo finire di documentare
+     * TODO finire di documentare
      *
      */
     function queueMail( $c, $timestamp_invio, $mittente, $destinatari, $oggetto, $corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL ) {
@@ -442,15 +445,15 @@ try {
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */
 	function mailString2array( $t ) {
 
 		$ar0 = array();
 
-		$t = str_replace( ',', ';', $t );
-		$ar1 = explode( ';', $t );
+		$t = str_replace( ',', ';', $t ?? '' );
+		$ar1 = explode( ';', $t ?? '' );
 
 		foreach( $ar1 as $ds ) {
 
@@ -478,7 +481,7 @@ try {
 
     /**
      *
-     * @todo documentare
+     * TODO documentare
      *
      */	
 	function array2mailString( $a ) {

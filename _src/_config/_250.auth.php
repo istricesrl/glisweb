@@ -1154,6 +1154,9 @@
         ),
         'righe_offerte_attive' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'marchi' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
         )
     );
  
