@@ -38,3 +38,4 @@
         'menu'            => array( 'app-icons' => array(    '' => array( 'label' => array( $l => '<i class="fa fa-user" aria-hidden="true"></i>' ), 'priority'    => '900', 'visualizza' => SHOW_ALWAYS ) ) )
     );
 
+    // die( print_r( $p, true ) );
