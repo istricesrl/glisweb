@@ -39,6 +39,7 @@ h4, h5 {
 
 p {
     line-height: 1.5em;
+    margin-bottom: 1em;
 }
 
 header p, footer p {
@@ -51,6 +52,11 @@ footer p {
 
 li {
     line-height: 1.5em;
+    margin-bottom: 1em;
+}
+
+nav li {
+    margin: 0em;
 }
 
 dd {
