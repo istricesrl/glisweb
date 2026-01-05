@@ -9,6 +9,17 @@
      *
      */
 
+	// filtro per anno
+	if( isset( $_REQUEST['y'] ) && ! empty( $_REQUEST['y'] ) ) {
+
+	    $ct['page']['metadati']['filtro_anno'] = $_REQUEST['y'];
+
+	} else {
+
+	    $ct['page']['metadati']['filtro_anno'] = date( 'Y' );
+
+	}
+
     // seleziono le sottocategorie
 	if( isset( $ct['page']['metadati']['id_categoria_notizie'] ) && ! empty( $ct['page']['metadati']['id_categoria_notizie'] ) ) {
 
@@ -42,11 +53,12 @@
 			INNER JOIN pubblicazioni ON pubblicazioni.id_notizia = contenuti.id_notizia 
 			LEFT JOIN immagini ON ( immagini.id_notizia = notizie.id AND immagini.id_ruolo = 4 ) 
 			LEFT JOIN contenuti AS contenuti_immagine ON ( contenuti_immagine.id_immagine = immagini.id AND contenuti.id_lingua = contenuti.id_lingua ) 
-			WHERE notizie_categorie.id_categoria = ? 
+			WHERE notizie_categorie.id_categoria = ? AND YEAR( from_unixtime( pubblicazioni.timestamp_inizio ) ) = ?
 			GROUP BY notizie.id ORDER BY pubblicazioni.timestamp_inizio DESC',
 		    array(
 			array( 's' => $cf['localization']['language']['id'] ),
-			array( 's' => $ct['page']['metadati']['id_categoria_notizie'] )
+			array( 's' => $ct['page']['metadati']['id_categoria_notizie'] ),
+			array( 's' => $ct['page']['metadati']['filtro_anno'] )
 		    )
 		);
 
