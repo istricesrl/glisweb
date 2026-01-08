@@ -9,6 +9,10 @@ header, main, footer {
     padding: 0em !important;
 }
 
+main {
+    padding-bottom: 1em !important;
+}
+
 header, footer {
     background-color: #f2f2f2;
 }
@@ -23,6 +27,7 @@ h1, h2, h3, h4, h5 {
 
 h1 {
     font-size: 2.25em;
+    text-align: center;
 }
 
 h2 {
@@ -81,6 +86,36 @@ a.breadcrumb-link, a.breadcrumb-link:visited {
 a.breadcrumb-link:active, a.breadcrumb-link:hover {
     color: #666666;
     text-decoration: underline;
+}
+
+a.area-link, a.area-link:visited {
+    display: block;
+    text-decoration: none!important;
+    padding: 0.5em;
+    margin-bottom: 1em;
+    border-left: 10px solid #666666;
+}
+
+a.area-link:active, a.area-link:hover {
+    display: block;
+    background-color: #eeeeee;
+    text-decoration: none!important;
+}
+
+a.box-link, a.box-link:visited {
+    display: block;
+    text-decoration: none!important;
+    background-color: #666666; 
+    padding: 1em; 
+    border: 5px solid #ffffff;
+    color: #ffffff;
+}
+
+a.box-link:active, a.box-link:hover {
+    display: block;
+    background-color: #cccccc;
+    color: #666666;
+    text-decoration: none!important;
 }
 
 .img-fluid {

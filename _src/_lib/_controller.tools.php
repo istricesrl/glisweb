@@ -354,7 +354,7 @@
                             $like = "%$tks%";
                             $cond = array();
                             foreach (preg_filter('/^/', "$t$rm.", $i['__fields__']) as $field) {
-                                $cond[] = $field . ' LIKE ?';
+                                $cond[] = $field . ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? ' =' : ' LIKE' ) . ' ?';
                                 $vs[] = array('s' => $like);
                             }
                             $whr[] = '(' . implode(' OR ', $cond) . ')';
@@ -975,3 +975,39 @@
         }
 
     }
+
+    /**
+     * TODO documentare
+     */
+    function isFieldNumeric( $m, $c, $table, $field ) {
+
+        $field = preg_replace('/^.*\./', '', $field);
+
+        $numericTypes = [
+            'int','tinyint','smallint','mediumint','bigint',
+            'decimal','float','double','bit'
+        ];
+
+        $textTypes = [
+            'char','varchar','text','tinytext','mediumtext','longtext'
+        ];
+
+        $type = mysqlSelectCachedValue( $m, $c,
+            'SELECT DATA_TYPE
+            FROM INFORMATION_SCHEMA.COLUMNS
+            WHERE TABLE_SCHEMA = DATABASE()
+            AND TABLE_NAME = ? AND COLUMN_NAME = ?',
+            array(
+                array( 's' => $table ),
+                array( 's' => $field )
+            )
+        );
+
+        if( in_array( $type, $numericTypes, true ) ) {
+            return true;
+        } else {
+            return false;
+        }
+
+    }
+

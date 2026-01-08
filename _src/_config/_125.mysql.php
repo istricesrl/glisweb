@@ -134,7 +134,7 @@
                             }
 
                             // collation
-                            mysqlQuery( $cn, 'SET collation_connection = utf8_general_ci' );
+                            mysqlQuery( $cn, 'SET NAMES utf8mb4 COLLATE utf8mb4_general_ci;' );
 
                             // timezone
                             try {
