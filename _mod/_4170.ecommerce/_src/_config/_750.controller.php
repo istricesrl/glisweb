@@ -239,7 +239,7 @@ ini_set("display_errors", 1);
                             'valuta_utf8' => NULL,
                             'se_login' => NULL,
                             'arrotonda_prezzo_finale' => NULL,
-                            'timestamp_inserimento' => NULL
+                            'timestamp_aggiornamento' => time()
                         )
                     ),
                     'carrelli'
@@ -984,7 +984,7 @@ ini_set("display_errors", 1);
                         'valuta_utf8' => NULL,
                         'se_login' => NULL,
                         'arrotonda_prezzo_finale' => NULL,
-                        'timestamp_inserimento' => NULL
+                        'timestamp_aggiornamento' => time()
                     )
                 ),
                 'carrelli'
