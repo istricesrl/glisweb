@@ -37,7 +37,7 @@
             {% for l in tr.languages %}
 
             {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
-            {{ frm.input({ 'field': { 'name': 'id_pagina', 'type': 'hidden', 'default': '__parent_id__' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            {{ frm.input({ 'field': { 'name': 'id_categoria_notizie', 'type': 'hidden', 'default': '__parent_id__' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
             {{ frm.input({ 'field': { 'name': 'id_lingua', 'type': 'hidden' }, 'request': request, 'form': { 'table': form.table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
 
             {% if request[ form.table ][ subtable ][ i ].id_lingua == session.__view__.__lang__ %}

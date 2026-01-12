@@ -105,7 +105,7 @@
 			// ...
 			$ct['page']['contents']['notizie'][ $k ]['persone'] = mysqlQuery(
 				$cf['mysql']['connection'],
-				'SELECT anagrafica.id, anagrafica.nome, anagrafica.cognome, ruoli_anagrafica.id, ruoli_anagrafica.nome AS ruolo
+				'SELECT anagrafica.id, anagrafica.nome, anagrafica.cognome, ruoli_anagrafica.id AS id_ruolo, ruoli_anagrafica.nome AS ruolo
 				FROM notizie_anagrafica
 				INNER JOIN anagrafica ON anagrafica.id = notizie_anagrafica.id_anagrafica
 				INNER JOIN ruoli_anagrafica ON ruoli_anagrafica.id = notizie_anagrafica.id_ruolo
@@ -113,7 +113,26 @@
 				array( array( 's' => $v['id'] ) )
 			);
 
-		}
+            foreach( $ct['page']['contents']['notizie'][ $k ]['persone'] as &$persona ) {
+
+                // foto profilo
+                $persona['avatar'] = basename( mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT immagini.path AS immagine
+                    FROM immagini
+                    WHERE immagini.id_ruolo = 10 AND immagini.id_anagrafica = ? LIMIT 1',
+                    array( array( 's' => $persona['id'] ) )
+                ) );
+
+                $persona['urls'] = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'SELECT url.* FROM url WHERE url.id_anagrafica = ?',
+                    array( array( 's' => $persona['id'] ) )
+                );
+
+            }
+
+        }
 
 		// debug
 		// print_r( $ct['page']['contents']['categorie_notizie'] );

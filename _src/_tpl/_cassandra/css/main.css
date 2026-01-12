@@ -1,6 +1,6 @@
 body {
     font-family: monospace;
-    font-size: 1.25em;
+    font-size: 1em;
     margin: 0.0em;
     padding: 0.0em;
 }
@@ -32,10 +32,12 @@ h1 {
 
 h2 {
     font-size: 1.5em;
+    text-align: center;
 }
 
 h3 {
     font-size: 1.25em;
+    font-weight: bold;
 }
 
 h4, h5 {
@@ -43,7 +45,7 @@ h4, h5 {
 }
 
 p {
-    line-height: 1.5em;
+    line-height: 1.75em;
     margin-bottom: 1em;
 }
 
@@ -70,12 +72,13 @@ dd {
 }
 
 a, a:visited {
-    color: #333333;
+    color: #aa0000 !important;
+    font-weight: bold !important;
     text-decoration: none !important;
 }
 
 a:active, a:hover {
-    color: #333333;
+    color: #aa0000 !important;
     text-decoration: underline !important;
 }
 
@@ -90,6 +93,9 @@ a.breadcrumb-link:active, a.breadcrumb-link:hover {
 
 a.area-link, a.area-link:visited {
     display: block;
+    background-color: #eeeeee;
+    color: #000000 !important;
+    font-weight: normal !important;
     text-decoration: none!important;
     padding: 0.5em;
     margin-bottom: 1em;
@@ -98,7 +104,9 @@ a.area-link, a.area-link:visited {
 
 a.area-link:active, a.area-link:hover {
     display: block;
-    background-color: #eeeeee;
+    color: #000000 !important;
+    font-weight: normal !important;
+    background-color: #cccccc;
     text-decoration: none!important;
 }
 
@@ -108,13 +116,13 @@ a.box-link, a.box-link:visited {
     background-color: #666666; 
     padding: 1em; 
     border: 5px solid #ffffff;
-    color: #ffffff;
+    color: #ffffff !important;
 }
 
 a.box-link:active, a.box-link:hover {
     display: block;
     background-color: #cccccc;
-    color: #666666;
+    color: #666666 !important;
     text-decoration: none!important;
 }
 
@@ -122,3 +130,6 @@ a.box-link:active, a.box-link:hover {
     width: 100%;
 }
 
+table.table {
+    font-size: 0.8em
+}
