@@ -2435,6 +2435,7 @@ CREATE OR REPLACE VIEW `contratti_view` AS
         coalesce( min(rinnovi.data_inizio), '-' ) AS data_inizio,
         coalesce( max(rinnovi.data_fine), '-' ) AS data_fine,
 		group_concat( DISTINCT coalesce( proponente.denominazione , concat( proponente.cognome, ' ', proponente.nome ) )  SEPARATOR ', ' ) AS proponenti,
+		group_concat( DISTINCT contraente.id SEPARATOR ', ' ) AS id_contraenti,
 		group_concat( DISTINCT contraente.codice  SEPARATOR ', ' ) AS codici_contraenti,
 		group_concat( DISTINCT coalesce( contraente.denominazione , concat( contraente.cognome, ' ', contraente.nome ) )  SEPARATOR ', ' ) AS contraenti,
 		group_concat( DISTINCT licenze.codice SEPARATOR ', ' ) AS licenze,
