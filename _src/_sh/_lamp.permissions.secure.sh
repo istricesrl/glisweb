@@ -44,7 +44,7 @@ fi
 ## cambio proprietario
 chown -R root:www-data ./$SUB/
 #find ./$SUB/src/templates                                                           -exec chown -R $FTPUSER:www-data {} \;
-#find ./$SUB/src/tpl                                                           -exec chown -R $FTPUSER:www-data {} \;
+#find ./$SUB/src/tpl                                                                 -exec chown -R $FTPUSER:www-data {} \;
 #find ./$SUB/tmp                                                                     -exec chown -R www-data:www-data {} \;
 #find ./$SUB/var                                                                     -exec chown -R $FTPUSER:www-data {} \;
 #find ./$SUB/var/cache                                                               -exec chown -R www-data:www-data {} \;
