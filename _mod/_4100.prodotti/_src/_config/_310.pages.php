@@ -69,6 +69,9 @@ if( $cf['contents']['cached'] === false ) {
                 $pip = $pg['id_pagina'];
             }
 
+            // ...
+            $cf['contents']['reverse']['prodotti'][ $pg['id'] ] = $pid;
+
             // aggiornamento delle pagine
             if ($pg['timestamp_aggiornamento'] > $cf['contents']['updated']) {
                 $cf['contents']['updated'] = $pg['timestamp_aggiornamento'];
@@ -85,9 +88,6 @@ if( $cf['contents']['cached'] === false ) {
 
             // valuto se i dati in cache sono ancora validi
             if ($pg['timestamp_aggiornamento'] > $age || empty($pgc)) {
-
-                // ...
-                $cf['contents']['reverse']['prodotti'][ $pg['id'] ] = $pid;
 
                 // blocco dati principale
                 $cf['contents']['pages'][$pid] = array(

@@ -78,7 +78,7 @@
         $cf['contents']['shortcuts']        = array();
 
         // inizializzo l'array di risoluzione inversa
-        $cf['contents']['reverse']          = array();
+        // $cf['contents']['reverse']          = array();
 
         // preparo le pagine
         foreach( $cf['contents']['pages'] as $k => &$v ) {
