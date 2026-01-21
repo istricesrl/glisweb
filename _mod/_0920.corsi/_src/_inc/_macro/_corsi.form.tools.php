@@ -58,6 +58,14 @@
         'text' => 'forza l\'aggiornamento del report lezioni per questo corso'
     );
 
+	$ct['page']['contents']['metro']['cache'][] = array(
+		'ws' => $base . 'report.lezioni.corsi.svuotamento?idCorso=' . $_REQUEST[ $ct['form']['table'] ]['id'],
+		'icon' => NULL,
+		'fa' => 'fa-trash',
+		'title' => 'svuotamento report lezioni corsi',
+		'text' => 'svuota il report delle lezioni per questo corso'
+	);
+
 	// macro di default
 	require DIR_SRC_INC_MACRO . '_default.form.php';
     require DIR_SRC_INC_MACRO . '_default.tools.php';
