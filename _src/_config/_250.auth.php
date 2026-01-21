@@ -1157,6 +1157,9 @@
         ),
         'marchi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'mastri_articoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
         )
     );
  

@@ -30,7 +30,7 @@
          */
 
         // log
-        logWrite("$t/$a", 'controller');
+        logWrite("avvio controller per $t/$a", 'controller');
 
         // timer
         timerCheck( $timer, '-> -> inizio lavoro controller per ' . $t . '/' . $a );
@@ -97,7 +97,10 @@
 
             // valutazione di $v
             if (is_array($v) && substr($k, 0, 2) !== '__') {            // nel caso il valore sia un subform, viene
+
+                logWrite("subform rilevato: $k/$a", 'controller');
                 $s[$k] = $v;                                            // passato così com'è per la ricorsione
+
             } elseif (strtolower($k)    == '__firma__') {               //
                 $f = $v;                                                // firma per bypassare il controllo permessi
             } elseif (strtolower($k)    == '__method__') {              //
@@ -205,8 +208,11 @@
         // controllo modalità singola / modalità multipla
         if (count($ks) == 0 && count($s) > 0) {
 
+            logWrite("subform rilevati: " . implode(', ', array_keys($s)), 'controller');
+
             // elaborazione subform
             foreach ($s as $x => $y) {
+                logWrite("elaborazione subform: $x", 'controller');
                 controller($c, $mc, $y, $t, $a, NULL, $e, $i[$t][$x], $i['__auth__']);
             }
 
@@ -914,10 +920,16 @@
 
         } else {
 
+            // log
+            logWrite("permessi insufficienti per gestire $t/$a", 'controller');
+
             // restituisco 401 unauthorized
             $i['__status__'] = 401;
 
         }
+
+        // log
+        logWrite("esito finale per $t/$a: " . $i['__status__'], 'controller');
 
         // restituzione di 200 per default
         return $i['__status__'] ?? 200;

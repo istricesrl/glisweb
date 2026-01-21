@@ -2477,6 +2477,23 @@ CREATE TABLE IF NOT EXISTS `mastri` (
   `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- | 010000020700
+
+-- mastri_articoli
+CREATE TABLE IF NOT EXISTS `mastri_articoli` (
+  `id` int(11) NOT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `codice` char(64) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `id_mastro` int(11) DEFAULT NULL,
+  `id_articolo` char(32) DEFAULT NULL,
+  `note` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000021000
 
 -- matricole
@@ -3894,6 +3911,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (
   `se_acquisti` tinyint(1) DEFAULT NULL,
   `se_ordini` tinyint(1) DEFAULT NULL,
   `se_helpdesk` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000034870
+
+-- ruoli_mastri
+-- tipologia: tabella standard
+CREATE TABLE IF NOT EXISTS `ruoli_mastri` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(128) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `se_xml` tinyint(1) DEFAULT NULL,
+  `se_commerciale` tinyint(1) DEFAULT NULL,
+  `se_produzione` tinyint(1) DEFAULT NULL,
+  `se_amministrazione` tinyint(1) DEFAULT NULL,
+  `se_acquisti` tinyint(1) DEFAULT NULL,
+  `se_ordini` tinyint(1) DEFAULT NULL,
+  `se_logistica` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000034900

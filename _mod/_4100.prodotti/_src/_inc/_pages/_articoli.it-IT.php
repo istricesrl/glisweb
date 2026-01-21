@@ -77,7 +77,8 @@
 
 	// RELAZIONI CON IL MODULO MASTRI
 	if( in_array( "0500.mastri", $cf['mods']['active']['array'] ) ) {
-		arrayInsertSeq( 'articoli.form.caratteristiche', $p['articoli.form']['etc']['tabs'], 'articoli.form.giacenze' );
+		arrayInsertSeq( 'articoli.form.caratteristiche', $p['articoli.form']['etc']['tabs'], 'articoli.form.logistica' );
+		arrayInsertSeq( 'articoli.form.giacenze', $p['articoli.form']['etc']['tabs'], 'articoli.form.giacenze' );
 	}
 
 /*
@@ -102,6 +103,18 @@
 		'parent'		=> array( 'id'		=> 'articoli.view' ),
 		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.caratteristiche.html' ),
 		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.caratteristiche.php' ),
+		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
+	);
+
+	// gestione articoli caratteristiche
+	$p['articoli.form.logistica'] = array(
+		'sitemap'		=> false,
+		'title'		=> array( $l		=> 'logistica' ),
+		'h1'		=> array( $l		=> 'logistica' ),
+		'parent'		=> array( 'id'		=> 'articoli.view' ),
+		'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'articoli.form.logistica.html' ),
+		'macro'		=> array( $m . '_src/_inc/_macro/_articoli.form.logistica.php' ),
 		'auth'		=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'		=> array( 'tabs'	=> $p['articoli.form']['etc']['tabs'] )
 	);

@@ -299,6 +299,11 @@
                 // timer
                 timerCheck( $cf['speed'], '-> fine elaborazione blocco ' . $k );
 
+            } else {
+
+                // log
+                // logWrite( 'blocco dati ricevuto ma non autorizzato: ' . $k . '/' . $_SERVER['REQUEST_METHOD'], 'controller' );
+
             }
 
         }

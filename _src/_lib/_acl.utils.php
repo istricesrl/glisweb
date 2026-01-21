@@ -171,10 +171,13 @@
         // $t = str_replace(array('_attivi', '_archiviati'), '', $t);
 
         // log
-        logger('richiesta di accesso per ' . $t . '/' . $a, 'auth');
+        logger('richiesta di permessi per ' . $t . '/' . $a, 'auth');
 
         // controllo permessi
         if (isset($_SESSION['account']['permissions'][$t])) {
+
+            // log
+            logger('permessi settati in SESSION per ' . $t, 'auth', LOG_INFO);
 
             // passaggio ricorsivo dei permessi
             $i['__auth__'] = $_SESSION['account']['permissions'][$t];
@@ -258,7 +261,7 @@
         // $t = str_replace(array('_attivi', '_archiviati'), '', $t);
 
         // log
-        logger('richiesta di accesso per ' . $t . '/' . $id . '/' . $a, 'auth');
+        logger('richiesta di diritti per ' . $t . '/' . $id . '/' . $a, 'auth');
 
         // passaggio ricorsivo dei permessi
         $i['__auth__'] = $_SESSION['account']['permissions'][$t];

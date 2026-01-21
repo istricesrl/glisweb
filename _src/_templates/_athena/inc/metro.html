@@ -4,6 +4,21 @@
 
 {% set cnt = 0 %}
 
+{% if etc.errors %}
+<div class="form-row metro">
+    <div class="col-12"><h3>errori</h3></div>
+    <div class="col-12">
+        <div class="alert alert-danger" role="alert">
+            <ul>
+            {% for e in etc.errors %}
+                <li>{{ e }}</li>
+            {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endif %}
+
 {% for k,m in page.contents.metros %}
 {% if page.contents.metro[ k ] %}
 {% if m.label %}<div class="form-row metro"><div class="col-12"><h3>{{ m.label }}</h3></div></div>{% endif %}

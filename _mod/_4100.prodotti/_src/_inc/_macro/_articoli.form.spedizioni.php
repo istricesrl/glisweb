@@ -72,10 +72,12 @@
 	require DIR_SRC_INC_MACRO . '_default.form.php';
 
     // operazioni sui dati
-	foreach( $ct['view']['data'] as &$row ) {
-		if( is_array( $row ) ) {
+    if( is_array( $ct['view']['data'] ) ) {
+        foreach( $ct['view']['data'] as &$row ) {
+            if( is_array( $row ) ) {
 
-            $row['importo_netto'] = writeCurrency( $row['importo_netto'] );
+                $row['importo_netto'] = writeCurrency( $row['importo_netto'] );
 
+            }
         }
     }
