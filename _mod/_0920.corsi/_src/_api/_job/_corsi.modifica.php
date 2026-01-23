@@ -180,6 +180,18 @@
                     'prezzi'
                 );
 
+                // TODO modifico l'inizio delle preiscrizioni
+
+                // TODO modifico l'inizio delle iscrizioni
+
+                // TODO modifico la fine delle iscrizioni
+
+                // TODO modifico se prenotabile online
+
+                // TODO modifico se non scontabile
+
+                // TODO modifico se iscrizioni online
+
             } else {
 
                 // ...

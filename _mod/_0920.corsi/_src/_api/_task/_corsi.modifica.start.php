@@ -36,7 +36,13 @@
 				'prezzo' => $_REQUEST['prezzo'],
 				'periodo_prezzi' => $_REQUEST['periodo_prezzi'],
 				'id_istruttore' => $_REQUEST['id_istruttore'],
-				'iscritti_max' => $_REQUEST['iscritti_max']
+				'iscritti_max' => $_REQUEST['iscritti_max'],
+				'preiscrizioni_dal' => $_REQUEST['preiscrizioni_dal'],
+				'iscrizioni_dal' => $_REQUEST['iscrizioni_dal'],
+				'iscrizioni_al' => $_REQUEST['iscrizioni_al'],
+				'se_prenotabile_online' => $_REQUEST['se_prenotabile_online'],
+				'se_non_scontabile' => $_REQUEST['se_non_scontabile'],
+				'se_iscrizioni_online' => $_REQUEST['se_iscrizioni_online']
 			),
 			'lista' => array()
 		);

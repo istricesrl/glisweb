@@ -14,6 +14,12 @@
 		var iscritti_max = $('#__modifica___iscritti_max').val();
 		var periodo_prezzi = $('#__modifica___periodo_prezzi').val();
 		var id_istruttore = $('#__modifica___id_istruttore').val();
+		var preiscrizioni_dal = $('#__modifica___preiscrizioni_dal').val();
+		var iscrizioni_dal = $('#__modifica___iscrizioni_dal').val();
+		var iscrizioni_al = $('#__modifica___iscrizioni_al').val();
+		var se_prenotabile_online = $('input[name="__modifica___se_prenotabile_online_checkbox"]').is(':checked') ? '1' : '0';
+		var se_non_scontabile = $('input[name="__modifica___se_non_scontabile_checkbox"]').is(':checked') ? '1' : '0';
+		var se_iscrizioni_online = $('input[name="__modifica___se_iscrizioni_online_checkbox"]').is(':checked') ? '1' : '0';
 
 		getws('/task/0920.corsi/corsi.modifica.start?'
 			+'periodo_partenza='+periodo_partenza
@@ -27,6 +33,12 @@
 			+'&iscritti_max='+iscritti_max
 			+'&periodo_prezzi='+periodo_prezzi
 			+'&id_istruttore='+id_istruttore
+			+'&preiscrizioni_dal='+preiscrizioni_dal
+			+'&iscrizioni_dal='+iscrizioni_dal
+			+'&iscrizioni_al='+iscrizioni_al
+			+'&se_prenotabile_online='+se_prenotabile_online
+			+'&se_non_scontabile='+se_non_scontabile
+			+'&se_iscrizioni_online='+se_iscrizioni_online
 		);
 
 		$('#modifica_corsi').modal('toggle');
@@ -136,6 +148,37 @@
 							<option value="{{ tipologia.id }}">{{ tipologia.__label__ }}</option>
 							{% endfor %}
 						</select>
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col">
+						<span class="label-top">preiscrizioni</span>
+						{{ frm.date( '__duplicazione__', '', '', 'preiscrizioni_dal', '', '', '' ) }}
+					</div>
+					<div class="col">
+						<span class="label-top">iscrizioni</span>
+						{{ frm.date( '__duplicazione__', '', '', 'iscrizioni_dal', '', '', '' ) }}
+					</div>
+					<div class="col">
+						<span class="label-top">fino al</span>
+						{{ frm.date( '__duplicazione__', '', '', 'iscrizioni_al', '', '', '' ) }}
+					</div>
+				</div>
+				<div class="form-row">
+					<div class="col pt-2">
+						<input type="hidden" id="__duplicazione___se_prenotabile_online" name="__duplicazione___se_prenotabile_online" value="">
+						<input type="checkbox" name="__duplicazione___se_prenotabile_online_checkbox">
+						<label for="__duplicazione___se_prenotabile_online_checkbox" style="height: 10px">prenotabile online</label>
+					</div>
+					<div class="col pt-2">
+						<input type="hidden" id="__duplicazione___se_non_scontabile" name="__duplicazione___se_non_scontabile" value="">
+						<input type="checkbox" name="__duplicazione___se_non_scontabile_checkbox">
+						<label for="__duplicazione___se_non_scontabile_checkbox" style="height: 10px">non scontabile</label>
+					</div>
+					<div class="col pt-2">
+						<input type="hidden" id="__duplicazione___se_iscrizioni_online" name="__duplicazione___se_iscrizioni_online" value="">
+						<input type="checkbox" name="__duplicazione___se_iscrizioni_online_checkbox">
+						<label for="__duplicazione___se_iscrizioni_online_checkbox" style="height: 10px">iscrizioni online</label>
 					</div>
 				</div>
 			</div>

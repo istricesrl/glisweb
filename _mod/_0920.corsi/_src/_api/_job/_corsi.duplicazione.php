@@ -62,6 +62,9 @@
 
         }
 
+        // timer
+        timerCheck( $job['workspace']['status']['timer'], 'fine attività iniziali' );
+
         // operazioni di chiusura
         if( empty( $job['totale'] ) || $job['corrente'] > $job['totale'] ) {
 
@@ -479,7 +482,7 @@
                 }
 
                 // debug
-                echo 'fine elaborazione lezione ' . $dataLezione . '<br>';
+                // echo 'fine elaborazione lezione ' . $dataLezione . '<br>';
 
             }
 

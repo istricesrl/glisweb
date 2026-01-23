@@ -59,7 +59,7 @@
 		// die();
 
 		// codici richiesti esplicitamente
-		if( ! empty( trim( $_REQUEST['codici'] ) ) ) {
+		if( ! empty( $_REQUEST['codici'] ) ) {
 			$workspace['lista'] = array_replace_recursive(
 				$workspace['lista'],
 				array_map( 'trim', explode( ',', $_REQUEST['codici'] ) )
@@ -78,15 +78,13 @@
 			$whr[] = array( 's' => $_REQUEST['disciplina'] );
 		}
 
-		$workspace['query'] = 'SELECT progetti.* FROM progetti ' . $ljn . ' WHERE id_periodo = ?' . $cnd;
-
 		// codici ricavati da periodo e categoria
 		$workspace['lista'] = array_replace_recursive(
 			$workspace['lista'],
 			mysqlSelectColumn(
 				'id',
 				$cf['mysql']['connection'],
-				$workspace['query'],
+				'SELECT progetti.* FROM progetti ' . $ljn . ' WHERE id_periodo = ?' . $cnd,
 				$whr
 			)
 		);

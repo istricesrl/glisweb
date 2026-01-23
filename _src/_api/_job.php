@@ -159,7 +159,7 @@
         timerCheck( $cf['speed'], 'fine selezione job pinnato' );
 
         // se ho trovato il job da eseguire
-        if( is_array( $job ) && ! empty( $job ) ) {
+        if( is_array( $job ) && isset( $job['id'] ) ) {
 
             // se il job è stato correttamente recuperato dal database
             if( isset( $job['workspace'] ) && ! empty( $job['workspace'] ) ) {
@@ -226,12 +226,12 @@
                 }
 
             } else {
-                die( print_r( $job, true ) );
+
                 // status
-                $job['err'][] = 'workspace vuoto per il job #' . $_REQUEST['__id__'];
+                $job['err'][] = 'workspace vuoto per il job #' . $_REQUEST['__id__'] . ' (' . $job['id'] . ')';
 
                 // log
-                logger( 'workspace vuoto per il job #' . $_REQUEST['__id__'], 'job' );
+                logger( 'workspace vuoto per il job #' . $_REQUEST['__id__'] . ' (' . $job['id'] . ')', 'job' );
 
             }
 
