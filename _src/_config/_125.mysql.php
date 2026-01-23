@@ -165,7 +165,10 @@
                         }
 
                     } catch( \Exception $e ) {
-                        die( 'Impossibile connettersi al server MySQL ' . $server . ': ' . $e->getMessage() );
+
+                        // die( 'Impossibile connettersi al server MySQL ' . $server . ': ' . $e->getMessage() );
+                        logger( 'impossibile connettersi al server MySQL ' . $server . ': ' . $e->getMessage(), 'mysql', LOG_ERR );
+
                     }
 
                     // debug

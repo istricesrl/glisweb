@@ -73,7 +73,9 @@
     // file di configurazione
     foreach( $cf['config']['files'] as $type => $files ) {
         foreach( $files as $file ) {
-            echo '[ -- ] file di configurazione ' . $type . ' trovato: ' . shortPath( $file ) . PHP_EOL;
+            if( file_exists( $file ) ) {
+                echo '[ -- ] file di configurazione ' . $type . ' trovato: ' . shortPath( $file ) . PHP_EOL;
+            }
         }
     }
 
