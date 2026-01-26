@@ -28,6 +28,7 @@
 
         // ciclo sui moduli __contatti__
         foreach ($_REQUEST['__contatti__'] as $k => &$v) {
+            if(isset($cf['contatti'][$k])) {
 
             // log
             logWrite('blocco contatti ricevuto per ' . $k, 'contatti');
@@ -247,6 +248,7 @@
                 }
             }
 
+        }
         } else {
             // ie('SPAM detected');
         }

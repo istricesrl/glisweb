@@ -2273,7 +2273,9 @@ CREATE OR REPLACE VIEW contatti_view AS
         contatti.utm_term,
         contatti.utm_content,
 		contatti.nome,
-		contatti.timestamp_contatto,
+		contatti.form,
+		contatti.timestamp_inserimento,
+		from_unixtime( contatti.timestamp_inserimento, '%Y-%m-%d %H:%i' ) AS data_ora_contatto,
 		contatti.id_account_inserimento,
 		contatti.id_account_aggiornamento,
 		concat(
