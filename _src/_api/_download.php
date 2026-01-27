@@ -55,6 +55,10 @@
     // debug
     // print_r( $_GET );
     // print_r( $_REQUEST );
+    // die();
+    ini_set('display_errors', 1);
+    ini_set('display_startup_errors', 1);
+    error_reporting(E_ALL);
 
     // variabile generale per il comportamento
     $authorized = false;
@@ -187,22 +191,37 @@
      * 
      */
 
-    // verifico se il file esiste
-    if( ! file_exists( DIR_BASE . $_REQUEST['__download__'] ) ) {
+    clearstatcache(true, DIR_BASE . $_REQUEST['__download__']);
 
-        // header
-        http_response_code( 404 );
-        header( 'content-type: text/plain' );
-
-        // messaggio di errore
-        die( DIR_BASE . $_REQUEST['__download__'] . ' non esiste' );
-
+    if (!is_file(DIR_BASE . $_REQUEST['__download__'])) {
+        http_response_code(404);
+        header('Content-Type: text/plain; charset=utf-8');
+        die("File non trovato: " . DIR_BASE . $_REQUEST['__download__']);
     }
 
-    // determino il mime type
-    $finfo = finfo_open( FILEINFO_MIME );
-    $mimetype = finfo_file( $finfo, DIR_BASE . $_REQUEST['__download__'] );
-    finfo_close( $finfo );
+    if (!is_readable(DIR_BASE . $_REQUEST['__download__'])) {
+        http_response_code(403);
+        header('Content-Type: text/plain; charset=utf-8');
+        die("File non leggibile da PHP: " . DIR_BASE . $_REQUEST['__download__']);
+    }
+
+    $size = filesize(DIR_BASE . $_REQUEST['__download__']);
+    if ($size === false || $size === 0) {
+        http_response_code(500);
+        header('Content-Type: text/plain; charset=utf-8');
+        die("File vuoto (per PHP) o size non disponibile: " . DIR_BASE . $_REQUEST['__download__']);
+    }
+
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mimetype = $finfo->file(DIR_BASE . $_REQUEST['__download__']) ?: 'application/octet-stream';
+
+    // debug
+    // die( print_r( $finfo, true ) );
+    // var_dump( DIR_BASE . $_REQUEST['__download__'] );
+    // var_dump(filesize(DIR_BASE . $_REQUEST['__download__']));
+    // var_dump( $mimetype );
+    // var_dump( $finfo );
+    // die();
 
     // verifico se il file è associato a oggetti del database
     $check = mysqlSelectRow(
@@ -257,11 +276,20 @@
      * 
      */
 
+    // debug
+    // var_dump( $authorized );
+    // die();
+
     // restituzione contenuto
     if( $authorized === true ) {
 
         // header
         header( 'content-type: ' . $mimetype );
+
+        // debug
+        // var_dump( $mimetype );
+        // var_dump( DIR_BASE . $_REQUEST['__download__'] );
+        // die();
 
         // download
         echo file_get_contents( DIR_BASE . $_REQUEST['__download__'] );
