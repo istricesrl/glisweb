@@ -6768,6 +6768,10 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.note_pagamento,
 		pagamenti.id_documento,
 		pagamenti.id_carrelli_articoli,
+        carrelli_articoli.id_articolo,
+        prodotti.id AS id_prodotto,
+        prodotti.nome AS prodotto,
+        contratti.id AS id_contratto,
         concat(
 			tipologie_documenti.sigla,
 			' ',
