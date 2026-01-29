@@ -72,6 +72,7 @@
                     anagrafica.sesso,
                     anagrafica.codice_fiscale,
                     anagrafica.partita_iva,
+                    anagrafica.id_ranking,
                     ranking.nome AS ranking,
                     anagrafica.recapiti,
                     anagrafica.anno_nascita,
@@ -145,6 +146,7 @@
                 $riga,
                 'anagrafica_view_static'
             );
+
         } else {
 
             mysqlQuery($cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array(array('s' => $id)));

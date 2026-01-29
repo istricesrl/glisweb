@@ -55,9 +55,13 @@
             'SELECT anagrafica.id FROM anagrafica 
             LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = anagrafica.id
             WHERE
-                ( anagrafica_view_static.timestamp_inserimento IS NULL OR anagrafica.timestamp_inserimento > anagrafica_view_static.timestamp_inserimento )
+                ( anagrafica_view_static.timestamp_inserimento IS NULL 
+                    OR 
+                    anagrafica.timestamp_inserimento > anagrafica_view_static.timestamp_inserimento )
                 OR
-                ( anagrafica_view_static.timestamp_aggiornamento IS NULL OR anagrafica.timestamp_aggiornamento > anagrafica_view_static.timestamp_aggiornamento )
+                ( anagrafica_view_static.timestamp_aggiornamento IS NULL 
+                    OR 
+                    anagrafica.timestamp_aggiornamento > anagrafica_view_static.timestamp_aggiornamento )
             ORDER BY anagrafica.id DESC
             LIMIT 1'
         );
