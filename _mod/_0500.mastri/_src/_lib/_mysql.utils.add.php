@@ -191,7 +191,12 @@
             // TODO fare meglio poi con placeholders
             $riga['carico'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT coalesce( sum( documenti_articoli.quantita ), 0 ) FROM documenti_articoli WHERE id_articolo = ? AND id_mastro_destinazione = ? '.((!empty($idMatricola))?'AND id_matricola = '.$idMatricola:NULL).' GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola',
+                'SELECT coalesce( sum( documenti_articoli.quantita ), 0 ) 
+                FROM documenti_articoli 
+                WHERE id_articolo = ? 
+                AND id_mastro_destinazione = ? '.((!empty($idMatricola))?'
+                AND id_matricola = '.$idMatricola:NULL).' 
+                GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola',
                 array(
                     array( 's' => $idArticolo ),
                     array( 's' => $mastro )
@@ -205,7 +210,12 @@
             // TODO fare meglio poi con placeholders
             $riga['scarico'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
-                'SELECT coalesce( sum( documenti_articoli.quantita ), 0 ) FROM documenti_articoli WHERE id_articolo = ? AND id_mastro_provenienza = ? '.((!empty($idMatricola))?'AND id_matricola = '.$idMatricola:NULL).' GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola',
+                'SELECT coalesce( sum( documenti_articoli.quantita ), 0 ) 
+                FROM documenti_articoli 
+                WHERE id_articolo = ? 
+                AND id_mastro_provenienza = ? '.((!empty($idMatricola))?'
+                AND id_matricola = '.$idMatricola:NULL).' 
+                GROUP BY documenti_articoli.id_articolo, documenti_articoli.id_matricola',
                 array(
                     array( 's' => $idArticolo ),
                     array( 's' => $mastro )
@@ -245,7 +255,8 @@
                 $riga['note_aggiornamento'] .= 'SELECT sum( coalesce( totale, 0.0 ) ) AS t 
                 FROM __report_giacenza_magazzini__ 
                 WHERE id_mastro IN (' . implode( ',', $magazziniFigli ) . ')
-                AND id_articolo = ? '.( ( ! empty( $idMatricola ) ) ? ' AND id_matricola = ' . $idMatricola : NULL );
+                AND id_articolo = ? '.( ( ! empty( $idMatricola ) ) ? ' 
+                AND id_matricola = ' . $idMatricola : NULL );
 
                 if( ! empty( $riga['totale_figli'] ) ) {
                     $giacenzaFigli = ' (nei figli ' . $riga['totale_figli'] . ')';

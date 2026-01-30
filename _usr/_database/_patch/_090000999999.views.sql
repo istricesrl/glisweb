@@ -7330,17 +7330,18 @@ CREATE OR REPLACE VIEW `prodotti_caratteristiche_view` AS
 		prodotti_caratteristiche.id_prodotto,
 		prodotti_caratteristiche.id_caratteristica,
 		prodotti_caratteristiche.id_lingua,
-		caratteristiche.nome AS caratteristica,
+		caratteristiche_prodotti.nome AS caratteristica,
+		prodotti_caratteristiche.valore AS valore,
 		prodotti_caratteristiche.ordine,
 		prodotti_caratteristiche.id_account_inserimento,
 		prodotti_caratteristiche.id_account_aggiornamento,
 		concat(
 			prodotti_caratteristiche.id_prodotto,
 			' / ',
-			caratteristiche.nome
+			caratteristiche_prodotti.nome
 		) AS __label__
 	FROM prodotti_caratteristiche
-		LEFT JOIN caratteristiche ON caratteristiche.id = prodotti_caratteristiche.id_caratteristica
+		LEFT JOIN caratteristiche_prodotti ON caratteristiche_prodotti.id = prodotti_caratteristiche.id_caratteristica
 ;
 
 -- | 090000026400

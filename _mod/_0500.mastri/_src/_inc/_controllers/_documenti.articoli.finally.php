@@ -37,20 +37,36 @@
             // ...
             if( isset( $befores['id_articolo'] ) ) {
                 if( isset( $befores['id_mastro_destinazione'] ) && ! empty( $befores['id_mastro_destinazione'] ) ) {
-                    updateReportGiacenzaMagazzini( $befores['id_mastro_destinazione'], $befores['id_articolo'], ( ( isset( $befores['id_matricola'] ) && ! empty( $befores['id_matricola'] ) ) ? $befores['id_matricola'] : NULL ) );
+                    updateReportGiacenzaMagazzini( 
+                        $befores['id_mastro_destinazione'], 
+                        $befores['id_articolo'], 
+                        ( ( isset( $befores['id_matricola'] ) && ! empty( $befores['id_matricola'] ) ) ? $befores['id_matricola'] : NULL )
+                    );
                 }
                 if( isset( $befores['id_mastro_provenienza'] ) && ! empty( $befores['id_mastro_provenienza'] ) ) {
-                    updateReportGiacenzaMagazzini( $befores['id_mastro_provenienza'], $befores['id_articolo'], ( ( isset( $befores['id_matricola'] ) && ! empty( $befores['id_matricola'] ) ) ? $befores['id_matricola'] : NULL ) );
+                    updateReportGiacenzaMagazzini( 
+                        $befores['id_mastro_provenienza'], 
+                        $befores['id_articolo'], 
+                        ( ( isset( $befores['id_matricola'] ) && ! empty( $befores['id_matricola'] ) ) ? $befores['id_matricola'] : NULL )
+                    );
                 }
             }
 
             // ...
             if( isset( $afters['id_articolo'] ) ) {
                 if( isset( $afters['id_mastro_destinazione'] ) && ! empty( $afters['id_mastro_destinazione'] ) ) {
-                    updateReportGiacenzaMagazzini( $afters['id_mastro_destinazione'], $afters['id_articolo'], ( ( isset( $afters['id_matricola'] ) && ! empty( $afters['id_matricola'] ) ) ? $afters['id_matricola'] : NULL ) );
+                    updateReportGiacenzaMagazzini( 
+                        $afters['id_mastro_destinazione'], 
+                        $afters['id_articolo'], 
+                        ( ( isset( $afters['id_matricola'] ) && ! empty( $afters['id_matricola'] ) ) ? $afters['id_matricola'] : NULL )
+                    );
                 }
                 if( isset( $afters['id_mastro_provenienza'] ) && ! empty( $afters['id_mastro_provenienza'] ) ) {
-                    updateReportGiacenzaMagazzini( $afters['id_mastro_provenienza'], $afters['id_articolo'], ( ( isset( $afters['id_matricola'] ) && ! empty( $afters['id_matricola'] ) ) ? $afters['id_matricola'] : NULL ) );
+                    updateReportGiacenzaMagazzini( 
+                        $afters['id_mastro_provenienza'], 
+                        $afters['id_articolo'], 
+                        ( ( isset( $afters['id_matricola'] ) && ! empty( $afters['id_matricola'] ) ) ? $afters['id_matricola'] : NULL )
+                    );
                 }
             }
 
