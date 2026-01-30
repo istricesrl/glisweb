@@ -207,6 +207,7 @@ DROP TABLE IF EXISTS `__report_corsi__`;
 CREATE TABLE `__report_corsi__` (
   `id` char(255) NOT NULL,
   `id_periodo` int(11) DEFAULT NULL,
+  `periodo` char(255) DEFAULT NULL,
   `tipologia` char(255) DEFAULT NULL,
   `nome` char(255) DEFAULT NULL,
   `fasce` char(255) DEFAULT NULL,
