@@ -491,3 +491,23 @@
     function pdfFormCalcX( $info, $cols ) {
         return $info['style']['page']['ml'] + ( $info['form']['column']['width'] * $cols );
     }
+
+    /**
+     * 
+     * @todo documentare
+     * 
+     */
+    function pdfOutput( $pdf, $dobj ) {
+
+        // output
+        if( isset( $_REQUEST['d'] ) ) {
+            $pdf->Output($dobj.'.pdf' , 'D' );					// invia l'output al browser per il download diretto
+        } elseif( isset( $_REQUEST['f'] ) ) {
+            $pdf->Output( $dobj.'.pdf','F' );				// salva il file localmente
+        } elseif( isset( $_REQUEST['fi'] ) ) {
+            $pdf->Output( $dobj.'.pdf', 'FI' );				// salva il file localmente e invia l'output al browser
+        } else {
+            $pdf->Output($dobj.'.pdf');								// invia l'output al browser
+        }
+
+    }
