@@ -12,12 +12,16 @@
 
         $riga = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT progetti.id, progetti.id_periodo, tipologie_progetti.nome AS tipologia, progetti.nome, progetti.timestamp_inserimento, progetti.timestamp_aggiornamento, progetti.data_accettazione, progetti.data_chiusura, 
+            'SELECT progetti.id, progetti.id_periodo, periodi.nome AS periodo, tipologie_progetti.nome AS tipologia, 
+            progetti.nome, progetti.timestamp_inserimento, progetti.timestamp_aggiornamento, 
+            progetti.data_accettazione, progetti.data_chiusura, 
             if(
                 progetti.data_accettazione > CURRENT_DATE(), "futuro",
                 if( ( progetti.data_chiusura > CURRENT_DATE() OR progetti.data_chiusura IS NULL ), "attivo", "concluso" )
             ) AS stato
-            FROM progetti LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia 
+            FROM progetti 
+            LEFT JOIN tipologie_progetti ON tipologie_progetti.id = progetti.id_tipologia 
+            LEFT JOIN periodi ON periodi.id = progetti.id_periodo
             WHERE progetti.id = ?',
             array( array( 's' => $idCorso ) )
         );
@@ -99,6 +103,8 @@
             array( array( 's' => $idCorso ) )
         );
 
+        $riga['periodo'] = 'dal ' . ( ! empty( $riga['data_accettazione'] ) ? date( 'd/m/Y', strtotime( $riga['data_accettazione'] ) ) : '-' ) . ' al ' . ( ! empty( $riga['data_chiusura'] ) ? date( 'd/m/Y', strtotime( $riga['data_chiusura'] ) ) : '-' );
+
         $dettagli['orari'] = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT
@@ -161,6 +167,7 @@
         $riga['__label__'] = implode( ' ', array(
             $riga['id'],
             $riga['id_periodo'],
+            $riga['periodo'],
             $riga['nome'],
             $riga['fasce'],
             $riga['discipline'],

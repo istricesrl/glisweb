@@ -17,11 +17,11 @@
     {% set meta = 'abbonamento|discipline' %}
     {% if loop.first or r.nome == meta %}
     <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
-	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'id_tipologia_contratti', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'nome', '', '', request, meta, 'hidden', '', '', disabled ) }}
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
+	{{ frm.input( table, subtable, i, 'id_tipologia_contratti', '', '', '', '__parent_id__', 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
+	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
+	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
+	{{ frm.input( table, subtable, i, 'nome', '', '', request, meta, 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
 	<div class="form-group form-row">
 	    <div class="col">
             <span class="label-top">categoria</span>
@@ -65,11 +65,11 @@
     {% set meta = 'abbonamento|corsi' %}
     {% if loop.first or r.nome == meta %}
     <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
-	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'id_tipologia_contratti', '', '', '', '__parent_id__', 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden', '', '', disabled ) }}
-	{{ frm.input( table, subtable, i, 'nome', '', '', request, meta, 'hidden', '', '', disabled ) }}
+	{{ frm.input( table, subtable, i, 'id', '', '', request, '', 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
+	{{ frm.input( table, subtable, i, 'id_tipologia_contratti', '', '', '', '__parent_id__', 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
+	{{ frm.input( table, subtable, i, 'id_account_' ~ action, '', '', '', account, 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
+	{{ frm.input( table, subtable, i, 'timestamp_' ~ action, '', '', '', timestamp, 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
+	{{ frm.input( table, subtable, i, 'nome', '', '', request, meta, 'hidden', '', 'protect-value-on-duplicate', disabled ) }}
 	<div class="form-group form-row">
 	    <div class="col">
             <span class="label-top">categoria</span>

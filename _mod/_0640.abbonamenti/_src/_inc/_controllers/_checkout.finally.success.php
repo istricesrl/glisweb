@@ -29,7 +29,11 @@
             // recupero l'abbonamento associato
             $info = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                'SELECT tipologie_contratti.id FROM tipologie_contratti INNER JOIN prodotti ON prodotti.id = tipologie_contratti.id_prodotto INNER JOIN articoli ON articoli.id_prodotto = prodotti.id WHERE articoli.id = ?',
+                'SELECT tipologie_contratti.id 
+                FROM tipologie_contratti 
+                INNER JOIN prodotti ON prodotti.id = tipologie_contratti.id_prodotto 
+                INNER JOIN articoli ON articoli.id_prodotto = prodotti.id 
+                WHERE articoli.id = ? AND tipologie_contratti.se_abbonamento = 1',
                 array(
                     array( 's' => $articolo['id_articolo'] )
                 )
@@ -134,6 +138,7 @@
 
                     // ...
                     if( $cf['abbonamenti']['checkout']['documento']['generazione']['automatica'] === true ) {
+                    // if( true ) {
 
                         // log
                         logger( 'genero il documento per il rinnovo: ' . $idRinnovo, 'details/abbonamenti/documenti/' . $articolo['destinatario_id_anagrafica'] );
