@@ -28,11 +28,13 @@
     $ct['form']['table'] = 'articoli';
 
     // tendina prodotti
+    /*
 	$ct['etc']['select']['prodotti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
         $cf['mysql']['connection'], 
         'SELECT id, __label__ FROM prodotti_view' );
+        */
 
     // tendina colori
 	$ct['etc']['select']['colori'] = mysqlCachedIndexedQuery(

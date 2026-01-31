@@ -614,4 +614,22 @@
      * @todo documentare
      * 
      */
-    function cleanReportMovimentiMagazzini() {}
+    function cleanReportMovimentiMagazzini( $id = NULL) {
+
+        global $cf;
+
+        $query = 'DELETE FROM __report_movimenti_magazzini__ ';
+        $params = array();
+
+        if( ! empty( $id ) ) {
+            $query .= ' WHERE id = ? ';
+            $params[] = array( 's' => $id );
+        }
+
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            $query,
+            $params
+        );
+
+    }

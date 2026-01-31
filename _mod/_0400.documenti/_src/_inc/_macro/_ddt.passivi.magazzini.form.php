@@ -39,12 +39,14 @@
 	);
 	
     // tendina mittenti
+    /*
 	$ct['etc']['select']['id_emittenti'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
+    */
 
 	// tendina coupon
 	$ct['etc']['select']['coupon'] = mysqlCachedIndexedQuery(
@@ -55,12 +57,14 @@
 	);
 
     // tendina destinatari
+    /*
 	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
 	    $cf['memcache']['connection'],
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
+    */
 
     // tendina indirizzi mittenti
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){
