@@ -34,6 +34,7 @@
     // print_r( $p['produzione']['etc']['tabs'] );
     // print_r( $_COOKIE );
     // die( print_r( $ct['request'] ) );
+    // die( print_r( $ct['page']['js'], true ) );
 
     // error_reporting( E_ALL );
     // ini_set( 'display_errors', TRUE );

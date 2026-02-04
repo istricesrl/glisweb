@@ -84,7 +84,7 @@
                         array(
                             'id_contratto' => $idTesseramento,
                             'id_anagrafica' => $articolo['destinatario_id_anagrafica'],
-                            'id_ruolo' => 34
+                            'id_ruolo' => 33
                         ),
                         'contratti_anagrafica'
                     );

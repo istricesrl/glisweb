@@ -376,6 +376,12 @@ legend .btn-sm {
     margin-bottom: 3px;
 }
 
+legend small {
+    font-weight: normal;
+    font-size: 0.8em;
+    color: #777777;
+}
+
 /* stile delle tendine dei form */
 select {
     cursor: pointer;
@@ -722,4 +728,16 @@ input[type="number"] {
 /* stile per le tooltip */
 .custom-tooltip {
     z-index: 6000;
+}
+
+/**
+ * stili per Trumbowyg
+ * ===================
+ * 
+ * 
+ */
+
+/* altezza del box */
+.trumbowyg-box {
+    height: 100%;
 }
