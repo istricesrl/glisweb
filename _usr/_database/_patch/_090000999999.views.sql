@@ -6803,6 +6803,9 @@ coalesce(
 		group_concat( DISTINCT aree.nome ),
 		group_concat( DISTINCT aree_abbonamento.nome ) 
 ) AS aree,
+
+tipologie_contratti_abbonamento.id AS id_tipologia_contratto_abbonamento,
+
 		group_concat( DISTINCT concat( pagamenti.id_coupon, ':', pagamenti.coupon_valore ) SEPARATOR '|' ) AS dettagli_coupon,
 		pagamenti.id_mastro_provenienza,
 		m1.nome AS mastro_provenienza,
