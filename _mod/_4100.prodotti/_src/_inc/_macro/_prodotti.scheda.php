@@ -54,7 +54,64 @@
 		    )
 		);
 */
-	}
+
+        $ct['page']['contents']['caratteristiche'] = array();
+
+        $caratteristiche = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT caratteristiche_prodotti.*, prodotti_caratteristiche.valore FROM prodotti_caratteristiche
+            LEFT JOIN caratteristiche_prodotti ON ( caratteristiche_prodotti.id = prodotti_caratteristiche.id_caratteristica )
+            WHERE prodotti_caratteristiche.id_prodotto = ? AND caratteristiche_prodotti.id_genitore IS NULL ',
+            array(
+                array( 's' => $ct['page']['metadati']['id_prodotto'] )
+            )
+        );
+
+        // die( print_r( $caratteristiche, true ) );
+
+        foreach( $caratteristiche as $k => $c ) {
+
+            $ct['page']['contents']['caratteristiche'][ $c['id'] ] = $c;
+
+        }
+
+        // die( print_r( $ct['page']['contents']['caratteristiche'], true ) );
+
+        $figli = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT caratteristiche_prodotti.*, prodotti_caratteristiche.valore FROM prodotti_caratteristiche
+            INNER JOIN caratteristiche_prodotti ON ( caratteristiche_prodotti.id = prodotti_caratteristiche.id_caratteristica )
+            WHERE prodotti_caratteristiche.id_prodotto = ? AND caratteristiche_prodotti.id_genitore IS NOT NULL ',
+            array(
+                array( 's' => $ct['page']['metadati']['id_prodotto'] )
+            )
+        );
+
+        // die( print_r( $figli, true ) );
+
+        foreach( $figli as $k => $c ) {
+
+            if( ! empty( $c['id_genitore'] ) ) {
+                $ct['page']['contents']['caratteristiche'][ $c['id_genitore'] ] = mysqlSelectRow(
+                    $cf['mysql']['connection'],
+                    'SELECT * FROM caratteristiche_prodotti WHERE id = ? ',
+                    array(
+                        array( 's' => $c['id_genitore'] )
+                    )
+                );
+            }
+
+        }
+
+        foreach( $figli as $k => $c ) {
+            if( ! empty( $c['id_genitore'] ) ) {
+                $ct['page']['contents']['caratteristiche'][ $c['id_genitore'] ]['caratteristiche'][ $c['id'] ] = $c;
+            }
+        }
+
+        // die( print_r( $ct['page']['contents']['caratteristiche'], true ) );
+
+    }
 
     // debug
     // print_r( $ct['page']['contents']['recensioni'] );

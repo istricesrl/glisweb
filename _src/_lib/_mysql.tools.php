@@ -964,7 +964,7 @@
             $r['id'] = mysqlSelectValue($c, $uQuery . implode(' AND ', $uConds));
 
             // debug
-            // var_dump( $uQuery );
+            // var_dump( $uQuery . implode(' AND ', $uConds) );
             // var_dump( $r['id'] );
 
             logger($t . '( dopo controllo di unicità )' . PHP_EOL . print_r($r, true), 'mysql/insertrow.' . $t);
