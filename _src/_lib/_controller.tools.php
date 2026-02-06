@@ -358,10 +358,11 @@
                     foreach (explode(' ', $i['__search__']) as $tks) {
                         if (!empty($tks)) {
                             $like = "%$tks%";
+                            $equal = "$tks";
                             $cond = array();
                             foreach (preg_filter('/^/', "$t$rm.", $i['__fields__']) as $field) {
                                 $cond[] = $field . ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? ' =' : ' LIKE' ) . ' ?';
-                                $vs[] = array('s' => $like);
+                                $vs[] = array('s' => ( ( isFieldNumeric( $mc, $c, $t, $field) ) ? $equal : $like ) );
                             }
                             $whr[] = '(' . implode(' OR ', $cond) . ')';
                         }
@@ -506,6 +507,9 @@
 
                 // log
                 logWrite("view mode / eseguo ($a) la query: $q", 'controller');
+
+                // debug
+                // echo $q;
 
                 // TODO il valore di ritorno dipende da eventuali errori
                 $i['__status__'] = 200;
@@ -1015,7 +1019,7 @@
             )
         );
 
-        if( in_array( $type, $numericTypes, true ) ) {
+        if( in_array( strtolower( $type ?? '' ), $numericTypes, true ) ) {
             return true;
         } else {
             return false;
