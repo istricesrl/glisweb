@@ -53,7 +53,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM coupon_view'
 	);
-
+/*
     // tendina destinatari
 	$ct['etc']['select']['id_destinatari'] = mysqlCachedIndexedQuery(
 	    $cf['memcache']['index'],
@@ -61,7 +61,7 @@
 	    $cf['mysql']['connection'],
 	    'SELECT id, __label__ FROM anagrafica_view_static'
 	);
-
+*/
     // tendina indirizzi mittenti
     if( isset( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_emittente'] ) ){
 	    $ct['etc']['select']['id_sedi_emittente'] = mysqlCachedIndexedQuery(
@@ -83,6 +83,17 @@
 	        $cf['mysql']['connection'],
 	        'SELECT indirizzi_view.id, __label__ FROM indirizzi_view LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id  WHERE anagrafica_indirizzi.id_anagrafica = ?',
             array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario'] ) )
+	    );
+	}
+
+	// tendina indirizzi destinatari spedizione
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_destinatario_spedizione'] ) && ! empty( $_REQUEST[ $ct['form']['table'] ]['id_destinatario_spedizione'] ) ){
+	    $ct['etc']['select']['id_sedi_destinatario_spedizione'] = mysqlCachedIndexedQuery(
+	        $cf['memcache']['index'],
+	        $cf['memcache']['connection'],
+	        $cf['mysql']['connection'],
+	        'SELECT indirizzi_view.id, __label__ FROM indirizzi_view LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi_view.id  WHERE anagrafica_indirizzi.id_anagrafica = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario_spedizione'] ) )
 	    );
 	}
 

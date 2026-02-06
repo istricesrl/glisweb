@@ -57,5 +57,16 @@
         );
     } 
 
+    // tendina indirizzi destinatari spedizione
+    if( isset( $_REQUEST[ $ct['form']['table'] ]['id_destinatario_spedizione'] ) && !empty( $_REQUEST[ $ct['form']['table'] ]['id_destinatario_spedizione'] ) ){
+        $ct['etc']['select']['id_sedi_destinatario_spedizione'] = mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT anagrafica_indirizzi_view.id, __label__ FROM anagrafica_indirizzi_view WHERE anagrafica_indirizzi_view.id_anagrafica = ?',
+            array( array( 's' => $_REQUEST[ $ct['form']['table'] ]['id_destinatario_spedizione'] ) )
+        );
+    } 
+
     // macro di default
     require DIR_SRC_INC_MACRO . '_default/_default.form.php';

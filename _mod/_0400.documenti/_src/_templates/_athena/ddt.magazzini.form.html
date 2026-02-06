@@ -115,6 +115,20 @@
 					{% endif %}
 				</div>
 
+				<legend>dati spedizione</legend>
+				<div class="form-group form-row">
+					<div class="col-12 col-md">
+						<span class="label-top">destinatario spedizione</span>
+						{{ frm.selectBox( table, '', '', 'id_destinatario_spedizione', '', etc.select.id_destinatari_spedizione, request,  etc.ordine.id_emittente, '','1','','','anagrafica.form','anagrafica.form','anagrafica', 'id_destinatario' , page, pages, ietf, 'anagrafica' ) }}
+					</div>
+					{% if request[ table ].id %}
+					<div class="col-12 col-md-8">
+						<span class="label-top">sede destinatario spedizione</span>
+						{{ frm.selectBox( table, '', '', 'id_sede_destinatario_spedizione', '', etc.select.id_sedi_destinatario_spedizione, request, '', '','','','','indirizzi.form','indirizzi.form','indirizzi', 'id_sede_destinatario' , page, pages, ietf ) }}
+					</div>
+					{% endif %}
+				</div>
+
             </fieldset>
 
             {% if request.__ordine_da_evadere__ %}

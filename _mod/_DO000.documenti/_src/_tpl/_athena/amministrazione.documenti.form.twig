@@ -133,6 +133,35 @@
 
             </fieldset>
 
+            <fieldset>
+                <legend>dati spedizione</legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">spedire presso</span>
+                        {{ frm.select({ 'field': { 'name': 'id_destinatario_spedizione' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% if etc.select.id_sedi_destinatario_spedizione is defined %}
+                    <div class="col col-md form-col">
+                        <span class="label-top">sede di spedizione</span>
+                        {{ frm.select({ 'field': { 'name': 'id_sede_destinatario_spedizione' }, 'source': { 'values': etc.select.id_sedi_destinatario_spedizione }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-6 form-col">
+                        <span class="label-top">note spedizione interne</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note_spedizione', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-6 form-col">
+                        <span class="label-top">note consegna per il corriere</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note_consegna', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, form.table, request ) }}
