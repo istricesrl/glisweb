@@ -105,7 +105,7 @@
         // mittente
 	    $mail->SetFrom( $fromMail, $fromName );
 	    $mail->AddReplyTo( $fromMail, $fromName );
-        $mail->Sender = $fromMail;
+	    $mail->Sender = $fromMail;
 
 	    // oggetto
 	    $mail->Subject			= $oggetto;
@@ -126,12 +126,16 @@
 
 	    // destinatari CC
 	    foreach( $cc as $destName => $destAddress ) {
+		if( ! empty( $destAddress ) ) {
 			$mail->AddCC( trim( $destAddress ), trim( $destName ) );
+		}
 	    }
 
 	    // destinatari BCC
 	    foreach( $bcc as $destName => $destAddress ) {
+		if( ! empty( $destAddress ) ) {
 			$mail->AddBCC( trim( $destAddress ), trim( $destName ) );
+		}
 	    }
 
 	    // allegati

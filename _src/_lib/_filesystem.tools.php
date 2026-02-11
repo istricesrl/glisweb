@@ -1296,6 +1296,9 @@
         // inizializzo l'array
         $t = array();
 
+        // ...
+        checkFolder( $d );
+
         // ciclo sul contenuto
         foreach( getFolderIterator( $d ) as $f ) {
             if( $f->isDir() ) {
