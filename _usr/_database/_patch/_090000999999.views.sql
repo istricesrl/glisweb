@@ -5304,7 +5304,7 @@ CREATE OR REPLACE VIEW `magazzini_view` AS
 		tipologie_mastri.se_magazzino,
 		tipologie_mastri.se_conto,
 		tipologie_mastri.se_registro,
-		mastri_path( mastri.id ) AS __label__
+		concat_ws( ' ', mastri.codice, mastri_path( mastri.id ) ) AS __label__
 	FROM mastri
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
 		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzi
@@ -5624,7 +5624,7 @@ CREATE OR REPLACE VIEW `mastri_view` AS
 		tipologie_mastri.se_magazzino,
 		tipologie_mastri.se_conto,
 		tipologie_mastri.se_registro,
-		mastri_path( mastri.id ) AS __label__
+		concat_ws( ' ', mastri.codice, mastri_path( mastri.id ) ) AS __label__
 	FROM mastri
 		LEFT JOIN tipologie_mastri ON tipologie_mastri.id = mastri.id_tipologia
 		LEFT JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id = mastri.id_anagrafica_indirizzi

@@ -64,6 +64,10 @@
 				<span class="label-top">tipologia</span>
 				{{ frm.selectRequired( table, '', '', 'id_tipologia', '', etc.select.tipologie_documenti, request, etc.id_tipologia ) }}
 			</div>	
+			<div class="col-1">
+				<span class="label-top remove-after-duplicate">ordine</span>
+				{{ frm.input( table, '', '', 'ordine', '', '', request ) }}
+			</div>
 			<div class="col">
 				<span class="label-top remove-after-duplicate">descrizione</span>
 				{{ frm.input( table, '', '', 'nome', '', '', request ) }}

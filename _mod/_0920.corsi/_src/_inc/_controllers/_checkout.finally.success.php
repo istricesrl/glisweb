@@ -269,8 +269,10 @@
                                         'id_articolo' => $articolo['id_articolo'],
                                         'quantita' => 1,
                                         'id_udm' => 1,
-                                        'importo_netto_totale' => $articolo['prezzo_lordo_finale'],
-                                        'importo_lordo_totale' => $articolo['prezzo_lordo_finale'],
+                                        'importo_netto_totale' => $articolo['prezzo_netto_totale'],
+                                        'importo_lordo_totale' => $articolo['prezzo_lordo_totale'],
+                                        'sconto_valore' => $articolo['coupon_valore'],
+                                        'importo_lordo_finale' => $articolo['prezzo_lordo_finale'],
                                         'id_listino' => 1,
                                         'id_reparto' => 5,
                                         'nome' => 'riga generata automaticamente per il carrello #' . $idCarrello . ' documento #' . $idDocumento
@@ -286,6 +288,9 @@
                                         'id_carrelli_articoli' => $articolo['id'],
                                         'id_tipologia' => NULL,
                                         'id_modalita_pagamento' => 24,  // TODO così è fisso a PayPal, rendere dinamico da carrello
+                                        'id_coupon' => $articolo['id_coupon'],
+                                        'coupon_valore' => $articolo['coupon_valore'],
+                                        'importo_lordo_totale' => $articolo['prezzo_lordo_totale'],
                                         'importo_lordo_finale' => $articolo['prezzo_lordo_finale'],
                                         'timestamp_pagamento' => time(),
                                         'provider_pagamento' => $carrello['provider_pagamento'],
