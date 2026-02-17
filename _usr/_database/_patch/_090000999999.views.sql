@@ -2069,6 +2069,10 @@ CREATE OR REPLACE VIEW colli_view AS
 		colli.volume,
 		colli.id_udm_volume,
 		colli.nome,
+        colli.id_mastro,
+        mastri_path( colli.id_mastro ) AS mastro,
+        colli.id_anagrafica,
+        a2.denominazione AS anagrafica,
 		group_concat( DISTINCT anagrafica.denominazione SEPARATOR '|' ) AS destinatari,
 		colli.id_account_inserimento,
 		colli.id_account_aggiornamento,
@@ -2081,6 +2085,7 @@ CREATE OR REPLACE VIEW colli_view AS
 		LEFT JOIN documenti_articoli ON documenti_articoli.id_collo = colli.id
 		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_packing_list
 		LEFT JOIN anagrafica ON anagrafica.id = documenti.id_destinatario
+		LEFT JOIN anagrafica AS a2 ON a2.id = colli.id_anagrafica
 	GROUP BY colli.id
 	;
 

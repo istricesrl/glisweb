@@ -1,0 +1,228 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-lg-auto form-col">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_documenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>                
+                    <div class="col-12 col-sm-10 col-lg form-col">
+                        <span class="label-top">documento</span>
+                        {{ frm.select({ 'field': { 'name': 'id_documento' }, 'source': { 'api': 'documenti' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-sm-2 col-lg-2 form-col">
+                        <span class="label-top">codice</span>
+                        {{ frm.input({ 'field': { 'name': 'codice', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">data</span>
+                        {{ frm.input({ 'field': { 'name': 'data', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">descrizione</span>
+                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>contenuto della riga</legend>
+
+                <div class="form-group row">
+                    <div class="col col-md-2 form-col">
+                        <span class="label-top">quantità</span>
+                        {{ frm.input({ 'field': { 'name': 'quantita', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">udm</span>
+                        {{ frm.select({ 'field': { 'name': 'id_udm' }, 'source': { 'values': etc.select.udm }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">articolo</span>
+                        {{ frm.select({ 'field': { 'name': 'id_articolo' }, 'source': { 'api': 'articoli' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">specifiche</span>
+                        {{ frm.input({ 'field': { 'name': 'specifiche', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>costi della riga</legend>
+
+               <div class="form-group row">
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">costo/pz.</span>
+                        {{ frm.input({ 'field': { 'name': 'costo_netto_unitario', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">costo tot.</span>
+                        {{ frm.input({ 'field': { 'name': 'costo_netto_totale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">note costi</span>
+                        {{ frm.input({ 'field': { 'name': 'note_costi', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>                    
+                </div>
+
+            </fieldset>            
+
+            <fieldset>
+                <legend>valore della riga</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">€/pz.</span>
+                        {{ frm.input({ 'field': { 'name': 'prezzo_netto_unitario', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">sc. %</span>
+                        {{ frm.input({ 'field': { 'name': 'sconto_percentuale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>  
+                    <div class="col-12 col-md-2 form-col">
+                        <span class="label-top">sc. €</span>
+                        {{ frm.input({ 'field': { 'name': 'sconto_valore', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>                                                          
+                    <div class="col-12 col-md-3 form-col">
+                        <span class="label-top">reparto</span>
+                        {{ frm.select({ 'field': { 'name': 'id_reparto' }, 'source': { 'values': etc.select.reparti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md-3 form-col">
+                        <span class="label-top">listino</span>
+                        {{ frm.select({ 'field': { 'name': 'id_listino' }, 'source': { 'values': etc.select.listini }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div> 
+                </div> 
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">€ tot merce</span>
+                        {{ frm.input({ 'field': { 'name': 'prezzo_netto_totale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">€ tot fisso</span>
+                        {{ frm.input({ 'field': { 'name': 'importo_netto_totale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">€ tot lordo</span>
+                        {{ frm.input({ 'field': { 'name': 'importo_lordo_totale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">€ tot finale</span>
+                        {{ frm.input({ 'field': { 'name': 'importo_lordo_finale', 'type': 'number', 'step': '0.01' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div> 
+
+            </fieldset>
+
+            <fieldset>
+                <legend>attribuzione</legend>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}
+
+{% block javascript %}
+<script>
+
+    var id_reparto = 0.0;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        id_reparto = $('#documenti_articoli_id_reparto').val();
+        $('#documenti_articoli_costo_netto_unitario').on('keyup', function() {
+            calcolaCosti();
+        });
+        $('#documenti_articoli_quantita').on('keyup', function() {
+            calcolaCosti();
+            calcolaImporti();
+        });
+        $('#documenti_articoli_sconto_percentuale').on('keyup', function() {
+            calcolaImporti();
+        });
+        $('#documenti_articoli_sconto_valore').on('keyup', function() {
+            calcolaImporti();
+        });
+    });
+
+    function calcolaCosti() {
+        console.log('calcolaCosti');
+        let costo_unitario = parseFloat($('#documenti_articoli_costo_netto_unitario').val()) || 0;
+        let quantita = parseFloat($('#documenti_articoli_quantita').val()) || 0;
+        let costo_totale = costo_unitario * quantita;
+        $('#documenti_articoli_costo_netto_totale').val(costo_totale.toFixed(2));
+    }
+
+    function calcolaImporti() {
+        console.log('calcolaImporti');
+        let prezzo_unitario = parseFloat($('#documenti_articoli_prezzo_netto_unitario').val()) || 0;
+        let quantita = parseFloat($('#documenti_articoli_quantita').val()) || 0;
+        let prezzo_totale = prezzo_unitario * quantita;
+        $('#documenti_articoli_prezzo_netto_totale').val(prezzo_totale.toFixed(2));
+        if( $('#documenti_articoli_importo_netto_totale').val() == '' ) {
+            $('#documenti_articoli_importo_netto_totale').val(prezzo_totale.toFixed(2));
+        }
+        $.ajax({
+            url: '/api/reparti/' + id_reparto,
+            method: 'GET',
+            headers: {
+                accept: 'application/json'
+            },
+            success: function(data) {
+                console.log(data);
+                let base_imponibile = $('#documenti_articoli_importo_netto_totale').val() || 0;
+                let aliquota_iva = parseFloat(data.iva) || 0;
+                let importo_lordo_totale = base_imponibile * (1 + (aliquota_iva / 100));
+                console.log('importo_lordo_totale: ' + importo_lordo_totale);
+                $('#documenti_articoli_importo_lordo_totale').val(importo_lordo_totale.toFixed(2));
+                if( $('#documenti_articoli_sconto_percentuale').val() != '' && $('#documenti_articoli_sconto_valore').val() == '' ) {
+                    $('#documenti_articoli_sconto_valore').val( (importo_lordo_totale * (parseFloat($('#documenti_articoli_sconto_percentuale').val()) / 100)).toFixed(2) );
+                }
+                let sconto_valore = parseFloat($('#documenti_articoli_sconto_valore').val()) || 0;
+                let importo_lordo_finale = importo_lordo_totale - sconto_valore;
+                $('#documenti_articoli_importo_lordo_finale').val(importo_lordo_finale.toFixed(2));
+            }
+        });
+    }
+
+</script>
+{% endblock javascript %}

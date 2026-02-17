@@ -1,0 +1,146 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>dati generali <small>{{ legend }}</small></legend>
+
+                {# PRIMA RIGA DI CAMPI #}
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">tipologia</span>
+                        {{ frm.select({ 'field': { 'name': 'id_tipologia' }, 'source': { 'values': etc.select.tipologie_documenti }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">data</span>
+                        {{ frm.input({ 'field': { 'name': 'data', 'type': 'date' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md-1 form-col">
+                        <span class="label-top">numero</span>
+                        {{ frm.input({ 'field': { 'name': 'numero', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md-1 form-col">
+                        <span class="label-top">sezionale</span>
+                        {{ frm.input({ 'field': { 'name': 'sezionale', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">codice</span>
+                        {{ frm.input({ 'field': { 'name': 'codice', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">nome</span>
+                        {{ frm.input({ 'field': { 'name': 'nome', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-12 form-col">
+                        <span class="label-top">note</span>
+                        {{ frm.textarea({ 'field': { 'name': 'note', 'rows': 3 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>riferimenti di fatturazione</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">condizioni pagamento</span>
+                        {{ frm.select({ 'field': { 'name': 'id_condizione_pagamento' }, 'source': { 'values': etc.select.condizioni_pagamento }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    <div class="col-12 col-md-auto form-col">
+                        <span class="label-top">esigibilità</span>
+                        {{ frm.select({ 'field': { 'name': 'esigibilita' }, 'source': { 'values': etc.select.esigibilita }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>riferimenti per la pubblica amministrazione</legend>
+
+                <div class="form-group row">
+                    <div class="col col-md-2 form-col">
+                        <span class="label-top">CIG</span>
+                        {{ frm.input({ 'field': { 'name': 'cig', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md-2 form-col">
+                        <span class="label-top">CUP</span>
+                        {{ frm.input({ 'field': { 'name': 'cup', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col col-md form-col">
+                        <span class="label-top">documento di riferimento</span>
+                        {{ frm.input({ 'field': { 'name': 'riferimento', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>dati emittente</legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">emittente</span>
+                        {{ frm.select({ 'field': { 'name': 'id_emittente' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% if etc.select.id_sedi_emittente is defined %}
+                    <div class="col col-md form-col">
+                        <span class="label-top">sede emittente</span>
+                        {{ frm.select({ 'field': { 'name': 'id_sede_emittente' }, 'source': { 'values': etc.select.id_sedi_emittente }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% endif %}
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>dati destinatario</legend>
+
+                <div class="form-group row">
+                    <div class="col col-md form-col">
+                        <span class="label-top">destinatario</span>
+                        {{ frm.select({ 'field': { 'name': 'id_destinatario' }, 'source': { 'api': 'anagrafica' }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% if etc.select.id_sedi_destinatario is defined %}
+                    <div class="col col-md form-col">
+                        <span class="label-top">sede destinatario</span>
+                        {{ frm.select({ 'field': { 'name': 'id_sede_destinatario' }, 'source': { 'values': etc.select.id_sedi_destinatario }, 'request': request, 'form': form, 'page': page, 'pages': pages }) }}
+                    </div>
+                    {% endif %}
+                </div>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}

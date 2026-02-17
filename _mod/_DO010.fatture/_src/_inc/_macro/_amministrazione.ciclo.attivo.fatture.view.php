@@ -27,7 +27,7 @@
     $ct['view'] = array(
         'table' => 'documenti',
         'open' => array(
-            'page' => 'amministrazione.archivio.documenti.form',
+            'page' => 'amministrazione.ciclo.attivo.fatture.form',
             'table' => 'documenti'
         ),
         'cols' => array(
@@ -56,7 +56,8 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'data_archiviazione' => array( 'NN' => true )
+            'data_archiviazione' => array( 'NL' => true ),
+            'id_tipologia' => array( 'IN' => '1|2' )
         ),
         '__sort__' => array(
             'data' => 'DESC'
@@ -66,6 +67,9 @@
     /**
      * configurazione della pagina
      * ===========================
+     * 
+     * 
+     * 
      * 
      */
 

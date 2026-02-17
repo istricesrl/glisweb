@@ -1,0 +1,123 @@
+{# IMPORTAZIONE LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+{# ESTENSIONE DELLO SCHEMA DI BASE #}
+{% extends 'ext/main.twig' %}
+
+{# BLOCCO PRINCIPALE DELLA PAGINA #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+
+{# MODULO PRINCIPALE #}
+<section class="row flex-fill">
+    <div class="col-md-12 d-flex flex-column">
+
+        {# APERTURA DEL FORM #}
+        {{ frm.openForm({ 'form': form, 'page': page, 'session': session, 'request': request }) }}
+
+            {# SEZIONE GENERALE #}
+            <fieldset>
+                <legend>mittente</legend>
+
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">mittente</span>
+                        {{ frm.input({ 'field': { 'name': 'mittente', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>destinatari</legend>
+
+                <div class="form-group row">
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">destinatari</span>
+                        {{ frm.textarea({ 'field': { 'name': 'destinatari', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">destinatari CC</span>
+                        {{ frm.textarea({ 'field': { 'name': 'destinatari_cc', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                    <div class="col-12 col-md form-col">
+                        <span class="label-top">destinatari BCC</span>
+                        {{ frm.textarea({ 'field': { 'name': 'destinatari_bcc', 'rows': 2 }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset class="d-flex flex-column h-100">
+                <legend>contenuto della mail</legend>
+
+                <div class="form-group row">
+                    <div class="col form-col">
+                        <span class="label-top">oggetto</span>
+                        {{ frm.input({ 'field': { 'name': 'oggetto', 'type': 'text' }, 'request': request, 'form': form, 'page': page }) }}
+                    </div>
+                </div>
+
+                <div class="form-group row h-100">
+                    <div class="col-12 col-md form-col">
+                        {{ frm.textarea({ 'field': { 'name': 'corpo', 'class': 'form-control form-control-sm form-control-codice CodeMirror' }, 'request': request, 'form': { 'table': form.table }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            <fieldset>
+                <legend>dati di invio</legend>
+
+                <div class="form-group row">
+                    <div class="col col-md-auto form-col">
+                        <span class="label-top">invio</span>
+                        {{ frm.input({ 'field': { 'name': 'timestamp_invio', 'type': 'datetime-local' }, 'request': request, 'form': { 'table': form.table }, 'page': page }) }}
+                    </div>
+                </div>
+
+            </fieldset>
+
+            {# BOTTONI E COMANDI DEL MODULO #}
+            <fieldset class="form-controls mt-auto">
+                {{ def.controls( page, pages, ietf, session, form.table, request ) }}
+            </fieldset>
+
+        </form>
+    </div>
+</section>
+
+<!-- fine blocco {{ _self }}::main -->
+{% endblock main %}
+
+{% block javascript %}
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+
+    document.querySelectorAll('textarea.CodeMirror').forEach(function(textarea) {
+
+        CodeMirror.fromTextArea(textarea, {
+            lineNumbers: true,
+            mode: 'htmlmixed',
+            theme: 'default',
+            tabSize: 4,
+            indentUnit: 4,
+            indentWithTabs: false,
+            lineWrapping: true,
+            matchBrackets: true,
+            autoCloseBrackets: true,
+            autoCloseTags: true,
+            foldGutter: true,
+            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
+            extraKeys: {
+                'Ctrl-Space': 'autocomplete'
+            }
+        });
+
+    });
+
+});
+</script>
+{% endblock javascript %}

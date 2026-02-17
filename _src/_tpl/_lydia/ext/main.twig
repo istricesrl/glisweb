@@ -1,0 +1,99 @@
+{# LIBRERIE #}
+{% import '_lib/_navigation.twig' as nav %}
+{% import '_lib/_default.twig' as cms %}
+
+{# CODICE DELLA PAGINA #}
+<!-- file esteso: {{ _self }} -->
+<!DOCTYPE html>
+<html lang="{{ localization.language.ietf }}">
+
+    <head>
+
+        {% include '_inc/_page.head.twig' %}
+
+    </head>
+
+    <body>
+
+        {% include '_inc/_page.open.twig' %}
+
+        <header>
+            <div class="container">
+                <div class="row">
+                    {% block header %}{% include 'inc/header.twig' %}{% endblock %}
+                    {% block nav %}{% include 'inc/navbar.twig' %}{% endblock %}
+                </div>
+            </div>
+        </header>
+
+        <div class="sticky-top">
+            <div class="categorie container-megamenu">
+                <div class="container">
+                    <div class="row categorie">
+                        {% block categorie %}{% include 'inc/categorie.twig' %}{% endblock %}
+                        {% block search %}{% include 'inc/search.twig' %}{% endblock %}
+                    </div>
+                </div>
+                {% if page.template.menu.mega %}
+                <div class="container-fluid">
+                    <div class="row megamenu">
+                        {% block megamenu %}{% include 'inc/megamenu.twig' %}{% endblock %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            <div class="sottomenu">
+                <div class="container">
+                    <div class="row sottomenu">
+                        {% block sottomenu %}{% include 'inc/sottomenu.twig' %}{% endblock %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% block carousel %}{% include 'inc/carousel.twig' %}{% endblock %}
+        {% block jumbotron %}{% include 'inc/jumbotron.twig' %}{% endblock %}
+
+        <main>
+            <div class="container">
+                <div class="row mb-3">
+                    <div class="col">
+                        {% if page.parent.id %}
+                        <p class="mb-0">sei qui > {% block breadcrumbs %}{% include 'inc/breadcrumbs.twig' %}{% endblock %}</p>
+                        {% endif %}
+                        <h1>{{ include( template_from_string( page.h1[ localization.language.ietf ]|default('') ) | raw ) }}</h1>
+                        {% if page.h2[ localization.language.ietf ] %}<h2>{{ include( template_from_string( page.h2[ localization.language.ietf ]|default('') ) | raw ) }}</h2>{% endif %}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        {% block main %}{% endblock %}
+                    </div>
+                </div>
+                {% block gallery %}{% include 'inc/gallery.twig' %}{% endblock %}
+            </div>
+        </main>
+
+        <footer class="mt-auto">
+            <div class="container">
+                <div class="row">
+                    {% block footersx %}{% include 'inc/footer.1.twig' %}{% endblock %}
+                </div>
+            </div>
+        </footer>
+
+        <footer>
+            <div class="container">
+                <div class="row">
+                    {% block footerdx %}{% include 'inc/footer.2.twig' %}{% endblock %}
+                </div>
+            </div>
+        </footer>
+
+        {% include '_inc/_page.close.twig' %}
+
+        {% block javascript %}{% endblock %}
+
+    </body>
+</html>
+<!-- fine file esteso: {{ _self }} -->

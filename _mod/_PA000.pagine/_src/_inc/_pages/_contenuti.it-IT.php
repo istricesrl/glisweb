@@ -76,18 +76,20 @@
     if( in_array( "CO000.contenuti", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.sem' );
         arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.contenuti' );
-        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.javascript' );
         arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.menu' );
+        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.javascript' );
+        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.macro' );
+        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.immagini' );
+        arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.immagini' );
     }
 
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'contenuti.pagine.form.archiviazione', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.video' );
+        arrayInsertBefore( 'contenuti.pagine.form.metadati', $p['contenuti.pagine.form']['etc']['tabs'], 'contenuti.pagine.form.video' );
     }
 
     // tools archivio produzione
@@ -129,3 +131,19 @@
         'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
     );
 
+    // RELAZIONI CON IL MODULO CONTENUTI
+    if( in_array( "03000.contenuti", $cf['mods']['active']['array'] ) ) {
+        arrayInsertSeq( 'contenuti.archivio.contenuti.view', $p['contenuti.archivio']['etc']['tabs'], 'contenuti.archivio.menu.view' );
+    }
+
+    // tools archivio contenuti
+    $p['contenuti.archivio.menu.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'menu' ),
+        'h1'                => array( $l        => 'menu' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.menu.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.archivio' )
+    );

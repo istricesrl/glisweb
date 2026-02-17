@@ -1,0 +1,61 @@
+{# TODO DOCUMENTARE #}
+{% macro pubblicazioni( table, subtable, legend, site, page, pages, lang, etc, request, session, field ) %}
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as tpl %}
+{% set counter = 0 %}
+<fieldset id="{{ subtable ~ legend|replace({' ': '_', '\'': '_' }) }}">
+	{% set require = -1 %}{# normalmente è -1 ma si può settare a 0 per richiedere almeno 1 riga, 1 per 2, eccetera #}
+    {{ tpl.subformLegend( subtable ~ legend|replace({' ': '_', '\'': '_' }), legend ) }}
+    {% if request[ table ][ subtable ]|length and request[ table ][ subtable ] is iterable %}{% set t = request[ table ][ subtable ]|length - 1 %}
+    {% else %}{% set t = require %}{% endif %}
+	{% for i in -1..t %}
+	{% set r = request[ table ][ subtable ][ request[ table ][ subtable ]|keys[ i ] ] %}
+	{% if loop.first %}{% set disabled = 1 %}{% set dClasses = ' hidden show-on-duplicate' %}
+	{% else %}{% set disabled = null %}{% set dClasses = null %}{% endif %}
+	{% if session.account.id %}{% set account = session.account.id %}{% else %}{% set account = '__null__' %}{% endif %}
+    {% if request[ table ][ subtable ][ i ].id %}{% set action = 'aggiornamento' %}
+    {% else %}{% set action = 'inserimento' %}{% endif %}
+    {% set timestamp = 'now'|date('U') %}
+    <div id="{{ subtable }}_{{ i }}" class="form-sub{{ dClasses }}">
+        {{ frm.input({ 'field': { 'name': 'id', 'type': 'hidden', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': field, 'type': 'hidden', 'default': '__parent_id__', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': 'id_account_' ~ action, 'type': 'hidden', 'default': account, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        {{ frm.input({ 'field': { 'name': 'timestamp_' ~ action, 'type': 'hidden', 'default': timestamp, 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+        <div class="form-group row">
+            <div class="col col-md-1 form-col">
+                <span class="label-top">ordine</span>
+                {{ frm.input({ 'field': { 'name': 'ordine', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
+            <div class="col-auto form-col">
+                <span class="label-top">tipologia</span>
+				{{ frm.select({ 'field': { 'name': 'id_tipologia', 'disabled': disabled }, 'source': { 'values': etc.select.tipologie_pubblicazioni }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page, 'pages': pages }) }}
+            </div>
+            <div class="col col-md-auto form-col">
+                <span class="label-top">inizio</span>
+                {{ frm.input({ 'field': { 'name': 'timestamp_inizio', 'type': 'datetime-local', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
+            <div class="col col-md-auto form-col">
+                <span class="label-top">fine</span>
+                {{ frm.input({ 'field': { 'name': 'timestamp_fine', 'type': 'datetime-local', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
+            <div class="col col-md form-col">
+                <span class="label-top">note</span>
+                {{ frm.input({ 'field': { 'name': 'note', 'type': 'text', 'disabled': disabled }, 'request': request, 'form': { 'table': table, 'subtable': subtable, 'counter': i }, 'page': page }) }}
+            </div>
+            {% if r.id %}
+            <div class="col-auto form-col text-right remove-on-duplicate d-print-none">
+                {{ tpl.trashButton( table, subtable, page, pages, r, lang, request ) }}
+            </div>
+            <div class="col-auto form-col text-right show-on-duplicate d-print-none hidden">
+                {{ frm.button( { 'field': { 'text': '<i class="fa fa-trash"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();', 'class': 'btn-secondary btn-sqr show-on-duplicate hidden' } } ) }}
+            </div>
+            {% else %}
+            <div class="col-auto form-col text-right d-print-none">
+                {{ frm.button( { 'field': { 'text': '<i class="fa fa-minus"></i>', 'type': 'button', 'onclick': '$( this ).closest( ".form-sub" ).remove();' } } ) }}
+            </div>
+            {% endif %}
+	    </div>
+    </div>
+    {% endfor %}
+</fieldset>
+{% endmacro %}

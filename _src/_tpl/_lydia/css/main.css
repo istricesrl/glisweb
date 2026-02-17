@@ -1,0 +1,247 @@
+body {
+    font-family: monospace;
+    margin: 0px;
+}
+
+main {
+    padding: 0.5em;
+    padding-bottom: 1.5em;
+}
+
+div.categorie {
+    background-color: #cccccc;
+    padding: 0em;
+}
+
+div.categorie nav {
+    padding: 0em;
+}
+
+.form-control {
+    margin-bottom: .75em;
+}
+
+.form-control:focus {
+    border-color: #aaaaaa;
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075), 0 0 8px rgba(128, 128, 128, 0.6);
+}
+
+footer {
+    margin: 0em;
+}
+
+footer > .container > .row > .col {
+    min-height: 3em;
+}
+
+footer:first-of-type {
+    background-color: #cccccc;
+    color: #000000;
+}
+
+footer:last-of-type {
+    background-color: #aaaaaa;
+    color: #000000;
+}
+
+footer p {
+    margin: 0em;
+    font-size: 0.8em;
+}
+
+h1, h2, h3, h4, h5 {
+    margin: 0em;
+    font-weight: bold;
+}
+
+h1 {
+    font-size: 2em;
+    margin-bottom: .25em;
+}
+
+h2 {
+    font-size: 1.5em;
+}
+
+h3 {
+    font-size: 1em;
+}
+
+h4, h5 {
+    font-size: 1em;
+}
+
+header {
+    background: #ffffff;
+    color: #666666;
+}
+
+header > .container > .row {
+    min-height: 3em;
+}
+
+header .logo img {
+    height: 5em;
+}
+
+header nav.navbar {
+    background-color: #ffffff;
+    padding: 0em;
+}
+
+main > .container > .row {
+    margin-top: 0.5em;
+}
+
+div.jumbotron {
+    min-height: 24em;
+}
+
+a, a:visited {
+    color: #666666;
+}
+
+a:active, a:hover {
+    color: #666666;
+    text-decoration: underline !important;
+}
+
+footer a, a:visited {
+    color: #666666;
+}
+
+footer a:active, a:hover {
+    color: #111111;
+    text-decoration: underline !important;
+}
+
+div.breadcrumbs {
+    background-color: #ffffff;
+    border-bottom: 1px solid #cccccc;
+    font-size: .9em;
+}
+
+div.breadcrumbs p {
+    margin: 5px 0px;
+}
+
+a.breadcrumb-link, a.breadcrumb-link:visited {
+    color: #aaaaaa;
+}
+
+a.breadcrumb-link:active, a.breadcrumb-link:hover {
+    color: #aaaaaa;
+    text-decoration: underline;
+}
+
+div.search-box {
+    padding: 0.5em;
+}
+
+.nav-icons a.nav-link {
+    font-size: 1.25em;
+}
+
+a.nav-link {
+    padding: 0.5em 0em;
+}
+
+a.nav-link, a.nav-link:visited {
+    color: #aaaaaa;
+}
+
+a.nav-link:active, a.nav-link:hover {
+    color: #aaaaaa;
+    text-decoration: underline;
+}
+
+nav ul {
+    list-style-type: none;
+}
+
+nav ul ul {
+    list-style-type: none;
+    display: flex;
+    flex-direction: row;
+    padding: 0em;
+}
+
+div.sottomenu {
+    background-color: #eeeeee;
+    text-align: left;
+    font-size: 0.8em;;
+    padding: 0px;
+}
+
+div.megamenu {
+    background-color: #eeeeee;
+}
+
+div.megamenu nav {
+    padding: 0px;
+}
+
+div.megamenu ul.navbar-nav ul {
+    list-style-type: none;
+}
+
+@media( min-width: 576px ) {
+    div.megamenu {
+        position: absolute;
+        width: 100%;
+    }
+    div.megamenu ul ul li.nav-item {
+        display: none;
+    }
+}
+
+.label-top {
+    font-size: .75em;
+    margin: 0em;
+}
+
+form.carrello div.form-row {
+    margin: .5em 0em;
+}
+
+div.row-privacy {
+    font-size: .75em;
+}
+
+div.row-privacy a {
+    font-weight: bold;
+}
+
+div.row-privacy .form-check-input {
+    padding-bottom: .5em;
+}
+
+legend {
+    font-size: 1.2em;
+}
+
+table {
+    font-size: .85em;
+}
+
+@media (max-width: 576px) {
+    .nav-icons a.nav-link {
+        margin-left: .75em;
+    }
+}
+
+@media (min-width: 576px) {
+    
+}
+
+@media (min-width: 768px) {
+    
+}
+
+@media (min-width: 992px) {
+    
+}
+
+@media (min-width: 1200px) {
+    
+}

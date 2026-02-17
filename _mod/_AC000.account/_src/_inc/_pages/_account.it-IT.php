@@ -57,8 +57,20 @@
         'macro'                => array( $m . '_src/_inc/_macro/_account.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots' ) ),
         'etc'                => array( 'tabs'    => array(    'account.form',
-                                                            // 'account.form.attribuzione',
+                                                            'account.form.attribuzione',
                                                             'account.form.tools' ) )
+    );
+
+    // gestione account attribuzione
+    $p['account.form.attribuzione'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'account form attribuzione' ),
+        'h1'                => array( $l        => 'attribuzione' ),
+        'parent'            => array( 'id'        => 'account.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'account.form.attribuzione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_account.form.attribuzione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots' ) ),
+        'etc'                => array( 'tabs'    => 'account.form')
     );
 
     // tools account

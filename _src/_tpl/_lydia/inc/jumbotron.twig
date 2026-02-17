@@ -1,0 +1,9 @@
+{# LIBRERIE #}
+{% import '_lib/_navigation.twig' as nav %}
+{% import '_lib/_default.twig' as cms %}
+
+<!-- file {{ _self }} -->
+{% if page.contents.images.jumbotron|length > 0 %}
+{{ cms.jumbotron( page, localization.language.ietf, site, 'jumbotronId' ) }}
+{% endif %}
+<!-- fine file {{ _self }} -->

@@ -39,6 +39,7 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(   'contenuti.archivio.contenuti.form',
                                                             'contenuti.archivio.contenuti.form.testo',
+                                                            'contenuti.archivio.contenuti.form.wysiwyg',
                                                             'contenuti.archivio.contenuti.form.tools' ) )
     );
 
@@ -50,6 +51,26 @@
         'parent'            => array( 'id'        => 'contenuti.archivio.contenuti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.contenuti.form.testo.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.contenuti.form.testo.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.archivio.contenuti.form' )
+    );
+
+    // gestione pagine form contenuti
+    $p['contenuti.archivio.contenuti.form.wysiwyg'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'WYSIWYG' ),
+        'h1'                => array( $l        => 'WYSIWYG' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.contenuti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.contenuti.form.wysiwyg.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.contenuti.form.wysiwyg.php' ),
+        'js'            => array( 'external' => array(
+            'https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/trumbowyg.min.js',
+            'https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/plugins/table/trumbowyg.table.min.js'
+        ) ),
+        'css'            => array( 'external' => array( 'all' => array(
+            'https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/ui/trumbowyg.min.css',
+            'https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.27.3/plugins/table/ui/trumbowyg.table.min.css'
+        ) ) ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.archivio.contenuti.form' )
     );
@@ -118,6 +139,32 @@
         'parent'            => array( 'id'        => 'contenuti.pagine.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.javascript.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.javascript.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
+    );
+
+    // gestione pagine form contenuti
+    $p['contenuti.pagine.form.macro'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-brands fa-php" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'macro' ),
+        'h1'                => array( $l        => 'macro' ),
+        'parent'            => array( 'id'        => 'contenuti.pagine.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.macro.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.macro.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
+    );
+
+    // gestione pagine form contenuti
+    $p['contenuti.pagine.form.metadati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-tags" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'metadati' ),
+        'h1'                => array( $l        => 'metadati' ),
+        'parent'            => array( 'id'        => 'contenuti.pagine.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.pagine.form.metadati.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.form.metadati.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.pagine.form' )
     );

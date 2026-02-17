@@ -1,0 +1,39 @@
+<?php
+
+    /**
+     *
+     *
+     *
+     *
+     * TODO commentare
+     *
+     *
+     */
+
+    // inclusione del framework
+    if( ! defined( 'CRON_RUNNING' ) ) {
+        if( ! defined( 'INCLUDE_SUBDIR' ) ) {
+            require '../../../../../_src/_config.php';
+        } else {
+            require INCLUDE_SUBDIR . '_config.php';
+        }
+    }
+
+    // inizializzo l'array del risultato
+	$status = array();
+
+    // log
+	logWrite( 'richiesta di pulizia della coda delle mail inviate', 'mail', LOG_DEBUG );
+
+    // svuoto la coda
+	if( mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM mail_sent' ) ) {
+	    mysqlQuery( $cf['mysql']['connection'], 'OPTIMIZE TABLE mail_sent' );
+	    $status['__status__'] = 'OK';
+	} else {
+	    $status['__status__'] = 'NO';
+	}
+
+    // output
+	if( ! defined( 'CRON_RUNNING' ) ) {
+	    buildJson( $status );
+	}

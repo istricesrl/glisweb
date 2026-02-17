@@ -1,0 +1,14 @@
+{# LIBRERIE #}
+{% import '_lib/_default.twig' as cms %}
+{% import '_lib/_form.twig' as frm %}
+{% import '_lib/_privacy.twig' as prv %}
+
+{# SCHEMA ESTESO #}
+{% extends "ext/main.twig" %}
+
+{# BLOCCO MAIN #}
+{% block main %}
+<!-- blocco {{ _self }}::main -->
+{% include 'inc/login.twig' %}
+<!-- fine blocco {{ _self }}::main -->
+{% endblock %}
