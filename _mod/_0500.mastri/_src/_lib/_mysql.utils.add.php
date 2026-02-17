@@ -490,6 +490,7 @@
 
             if( ! empty( $mastro ) ) {
                 $riga['mastro_provenienza'] = $mastro['nome'];
+                $riga['codice_mastro_provenienza'] = $mastro['codice'];
             }
 
         }
@@ -510,6 +511,7 @@
 
             if( ! empty( $mastro ) ) {
                 $riga['mastro_destinazione'] = $mastro['nome'];
+                $riga['codice_mastro_destinazione'] = $mastro['codice'];
             }
 
         }

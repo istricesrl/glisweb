@@ -873,8 +873,10 @@ CREATE TABLE `__report_movimenti_magazzini__` (
   `emittente` char(255) DEFAULT NULL,
   `destinatario` char(255) DEFAULT NULL,
   `id_mastro_provenienza` int(11) DEFAULT NULL,
+  `codice_mastro_provenienza` char(255) DEFAULT NULL,
   `mastro_provenienza` char(255) DEFAULT NULL,
   `id_mastro_destinazione` int(11) DEFAULT NULL,
+  `codice_mastro_destinazione` char(255) DEFAULT NULL,
   `mastro_destinazione` char(255) DEFAULT NULL,
   `quantita` decimal(9,2) DEFAULT NULL,
   `quantita_movimento` decimal(16,2) DEFAULT NULL,
@@ -1273,6 +1275,7 @@ CREATE OR REPLACE VIEW `__report_iscrizioni_anagrafica__` AS
 		progetti.nome AS progetto,
     categorie_progetti.id AS id_disciplina_progetto,
     categorie_progetti.nome AS disciplina_progetto,
+    m1.testo AS non_applicare_sconti,
 		rinnovi.data_inizio,
 		rinnovi.data_fine,
 		rinnovi.codice,
@@ -1289,6 +1292,7 @@ CREATE OR REPLACE VIEW `__report_iscrizioni_anagrafica__` AS
 		LEFT JOIN progetti ON progetti.id = coalesce( rinnovi.id_progetto, contratti.id_progetto ) 
     LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id
     LEFT JOIN categorie_progetti ON categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina IS NOT NULL
+    LEFT JOIN metadati AS m1 ON m1.id_progetto = progetti.id AND m1.nome = 'non_applicare_sconti' 
   WHERE tipologie_contratti.se_iscrizione IS NOT NULL
     GROUP BY contratti.id, contratti_anagrafica.id_anagrafica, rinnovi.id, progetti.id
 ;
