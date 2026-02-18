@@ -480,7 +480,8 @@
                 $cf['memcache']['connection'],
                 $cf['mysql']['connection'],
                 'SELECT mastri.id,
-                    mastri_path( mastri.id ) AS nome
+                    mastri_path( mastri.id ) AS nome,
+                    mastri.codice
                 FROM mastri
                 WHERE id = ? ',
                 array(
@@ -501,7 +502,8 @@
                 $cf['memcache']['connection'],
                 $cf['mysql']['connection'],
                 'SELECT mastri.id,
-                    mastri_path( mastri.id ) AS nome
+                    mastri_path( mastri.id ) AS nome,
+                    mastri.codice
                 FROM mastri
                 WHERE id = ? ',
                 array(
