@@ -725,3 +725,24 @@
 
         return null;
     }
+
+    /**
+     * 
+     * TODO documentare
+     *
+     */
+    function convertISO8601Duration($duration) {
+        if(!$duration) return null;
+
+        $interval = new DateInterval($duration);
+
+        $hours = $interval->h;
+        $minutes = $interval->i;
+        $seconds = $interval->s;
+
+        if($hours > 0) {
+            return sprintf('%02d:%02d:%02d', $hours, $minutes, $seconds);
+        } else {
+            return sprintf('%02d:%02d', $minutes, $seconds);
+        }
+    }

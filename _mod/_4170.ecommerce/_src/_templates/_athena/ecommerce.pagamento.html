@@ -65,7 +65,7 @@
                                     <option></option>
                                     {% for coupon in etc.coupon[k] %}
                                     {# if coupon.id_anagrafica == r.destinatario_id_anagrafica or coupon.id_anagrafica == '' #}
-                                    <option value="{{ coupon.id }}"{% if coupon.id == r.id_coupon %} selected{% endif %}>{{ coupon.id }} {{ '%0.2f'|format(coupon.sconto_fisso) }} €</option>
+                                    <option value="{{ coupon.id }}"{% if coupon.id == r.id_coupon %} selected{% endif %}>{{ '%0.2f'|format(coupon.sconto_fisso) }} € {{ coupon.id }}</option>
                                     {# endif #}
                                     {% endfor %}
                                 </select>

@@ -63,3 +63,18 @@
      * 
      * 
      */
+
+    function yt_api_get($url, $timeoutSec = 5) {
+    $ch = curl_init($url);
+    curl_setopt_array($ch, [
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_CONNECTTIMEOUT => $timeoutSec,
+        CURLOPT_TIMEOUT => $timeoutSec,
+    ]);
+    $body = curl_exec($ch);
+    $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $err  = curl_error($ch);
+    curl_close($ch);
+
+    return [$code, $body, $err];
+}
