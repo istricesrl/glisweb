@@ -33,6 +33,8 @@ ini_set("display_errors", 1);
             'carrelli'
         );
 
+        // die( var_dump( $ct['etc']['esito'] ) );
+
         // controller post checkout
         $cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_checkout.finally.success.php' ), GLOB_BRACE );
 
