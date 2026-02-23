@@ -10,12 +10,12 @@
      * Il modulo produzione è un modulo contenitore, che fornisce una dashboard e un archivio con le
      * rispettive pagine tools, in modo che altri moduli possano inserirvi le proprie sotto pagine.
      * 
-     * pagina                        | genitore                    | descrizione
+     * pagina                       | genitore                  | descrizione
      * -----------------------------|---------------------------|---------------------
-     * produzione                    | NULL                        | dashboard del modulo produzione
-     * produzione.tools                | produzione                | strumenti per la gestione della produzione
-     * produzione.archivio            | produzione                | archivio di produzione
-     * produzione.archivio.tools    | produzione.archivio        | strumenti per la gestione dell'archivio di produzione
+     * produzione                   | NULL                      | dashboard del modulo produzione
+     * produzione.tools             | produzione                | strumenti per la gestione della produzione
+     * produzione.archivio          | produzione                | archivio di produzione
+     * produzione.archivio.tools    | produzione.archivio       | strumenti per la gestione dell'archivio di produzione
      * 
      */
 

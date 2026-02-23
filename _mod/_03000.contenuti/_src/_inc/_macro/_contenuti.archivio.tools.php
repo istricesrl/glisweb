@@ -1,11 +1,11 @@
 <?php
 
     /**
+     * macro della pagina strumenti dell'archivio dei contenuti
      *
-     *
-     *
-     * TODO implementare
-     * TODO documentare
+     * Questa macro definisce i tools disponibili per l'archivio dei contenuti. È pensata soprattutto per la customizzazione
+     * e per le implementazioni future.
+     * 
      *
      */
 

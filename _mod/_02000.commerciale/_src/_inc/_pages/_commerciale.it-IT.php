@@ -11,16 +11,16 @@
      * rispettive pagine tools, oltre a una sotto pagina per il ciclo attivo e una per il ciclo passivo,
      * in modo che altri moduli possano inserirvi le proprie sotto pagine.
      * 
-     * pagina                            | genitore                    | descrizione
-     * ---------------------------------|---------------------------|---------------------
-     * commerciale                        | NULL                        | dashboard del modulo commerciale
-     * commerciale.tools                | commerciale                | strumenti per la gestione del commerciale
-     * commerciale.archivio                | commerciale                | archivio commerciale
-     * commerciale.archivio.tools        | commerciale.archivio        | strumenti per la gestione dell'archivio commerciale
-     * commerciale.ciclo.attivo            | commerciale                | ciclo attivo commerciale
-     * commerciale.ciclo.attivo.tools    | commerciale.ciclo.attivo    | strumenti per la gestione del ciclo attivo commerciale
-     * commerciale.ciclo.passivo        | commerciale                | ciclo passivo commerciale
-     * commerciale.ciclo.passivo.tools    | commerciale.ciclo.passivo    | strumenti per la gestione del ciclo passivo commerciale
+     * pagina                           | genitore                      | descrizione
+     * ---------------------------------|-------------------------------|---------------------
+     * commerciale                      | NULL                          | dashboard del modulo commerciale
+     * commerciale.tools                | commerciale                   | strumenti per la gestione del commerciale
+     * commerciale.archivio             | commerciale                   | archivio commerciale
+     * commerciale.archivio.tools       | commerciale.archivio          | strumenti per la gestione dell'archivio commerciale
+     * commerciale.ciclo.attivo         | commerciale                   | ciclo attivo commerciale
+     * commerciale.ciclo.attivo.tools   | commerciale.ciclo.attivo      | strumenti per la gestione del ciclo attivo commerciale
+     * commerciale.ciclo.passivo        | commerciale                   | ciclo passivo commerciale
+     * commerciale.ciclo.passivo.tools  | commerciale.ciclo.passivo     | strumenti per la gestione del ciclo passivo commerciale
      * 
      */
 

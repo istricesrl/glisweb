@@ -28,6 +28,7 @@
     // tabella gestita
     $ct['form']['table'] =  '__templates__';
 
+    // filesystem mode
     $ct['form']['__filesystem_mode__'] = 1;
 
     // tendina tipologie file
@@ -54,6 +55,7 @@
     // tabella della vista
     $ct['view']['table'] = '__template_files__';
 
+    // filesystem mode
     $ct['view']['data']['__filesystem_mode__'] = 1;
 
     // campi della vista
