@@ -250,7 +250,7 @@
         'fatturazione_strategia'                => array( 'type' => 'string',   'default' => 'SINGOLA', 'values' => array( 'SINGOLA', 'MULTIPLA', NULL ) ),
         // 'spam_check'                            => array( 'type' => 'float',    'default' => NULL ),
         // 'spam_score'                            => array( 'tipe' => 'int',      'default' => NULL ),
-        'note_fatturazione'                         => array( 'type' => 'string',   'default' => NULL ),
+        // 'note_fatturazione'                         => array( 'type' => 'string',   'default' => NULL ),
         'codice_coupon'                         => array( 'type' => 'string',   'default' => NULL ),
         'timestamp_checkout'                    => array( 'tipe' => 'int',      'default' => NULL ),
     );
