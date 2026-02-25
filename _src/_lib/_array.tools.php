@@ -293,8 +293,12 @@
      * 
      */
     function removeFromArray( &$a, $e ) {
-        if( ! is_array( $e ) ) { $e = array( $e ); }
-        $a = array_diff( $a, $e );
+        if( is_array( $a ) ) {
+            if( ! is_array( $e ) ) { $e = array( $e ); }
+            $a = array_diff( $a, $e );
+        } else {
+            $a = [];
+        }
     }
 
     /**

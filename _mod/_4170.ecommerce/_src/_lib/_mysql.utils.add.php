@@ -149,3 +149,40 @@
 
     }
 
+    function checkRigaCarrelloPerFlagNonScontabile( $riga ) {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT max( testo ) FROM metadati_articoli WHERE nome = "non_applicare_sconti" AND id_articolo = ?',
+            array(
+                array( 's' => $riga['id_articolo'] )
+            )
+        );
+
+    }
+
+    function checkRigaCarrelloPerQuadrimestraleCompleto( $riga ) {
+
+        global $cf;
+
+        $rinnovo = trovaDettagliRinnovo($riga['id_rinnovo']);
+
+        if(isset($rinnovo['id_periodicita']) && $rinnovo['id_periodicita'] != 6) {
+            return false;
+        } else {
+            return true;
+        }
+
+    }
+
+    function checkScontoApplicatoSuRigaCarrello( $riga ) {
+
+        // print_r( $riga );
+
+        $sconto = $riga['sconto_percentuale'] ?? null;
+
+        return !empty($sconto);
+
+    }
