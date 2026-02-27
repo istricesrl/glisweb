@@ -2060,6 +2060,7 @@ CREATE OR REPLACE VIEW colli_view AS
 		colli.id_documento,
 		colli.ordine,
 		colli.codice,
+        colli.raggruppamento,
 		colli.larghezza,
 		colli.lunghezza,
 		colli.altezza,

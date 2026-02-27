@@ -235,7 +235,7 @@ echo $twig->render('index.html', ['name' => 'Fabien']);
 // die( print_r( $t, true ) );
 
 if( empty( $t[ $l ]['from'] ) ) {
-	die( 'mittente non settato, impossibile accodare la mail' );
+	die( 'mittente non settato, impossibile accodare la mail (template ' . print_r( $t, true ) . ')' );
 }
 
 try {

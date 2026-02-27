@@ -1105,6 +1105,7 @@ CREATE TABLE `colli` (
   `id_documento` int(11) DEFAULT NULL,
   `ordine` int(11) DEFAULT NULL,
   `codice` char(32) DEFAULT NULL,
+  `raggruppamento` char(32) DEFAULT NULL,
   `larghezza` decimal(7,2) DEFAULT NULL,
   `lunghezza` decimal(7,2) DEFAULT NULL,
   `altezza` decimal(7,2) DEFAULT NULL,
