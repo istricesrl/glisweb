@@ -61,11 +61,11 @@
                             <td>{{ '%0.2f'|format( r.totale_lordo_pagato ) }}</td>
                             <td>{{ '%0.2f'|format( r.totale_lordo_rateizzato ) }}</td>
                             <td>
-                                <select class="form-control form-control-sm" id="" name="__pagamenti__[righe][{{ loop.index0 }}][id_coupon]">
+                                <select class="form-control form-control-sm" id="" onchange="ricalcolaTotaleDaPagare('totaleDaPagareRiga{{ loop.index0 }}', $(this).find(':selected').attr('amount'))" name="__pagamenti__[righe][{{ loop.index0 }}][id_coupon]">
                                     <option></option>
                                     {% for coupon in etc.coupon[k] %}
                                     {# if coupon.id_anagrafica == r.destinatario_id_anagrafica or coupon.id_anagrafica == '' #}
-                                    <option value="{{ coupon.id }}"{% if coupon.id == r.id_coupon %} selected{% endif %}>{{ '%0.2f'|format(coupon.sconto_fisso) }} € {{ coupon.id }}</option>
+                                    <option amount="{{ coupon.sconto_fisso }}" value="{{ coupon.id }}"{% if coupon.id == r.id_coupon %} selected{% endif %}>{{ '%0.2f'|format(coupon.sconto_fisso) }} € {{ coupon.id }}</option>
                                     {# endif #}
                                     {% endfor %}
                                 </select>
@@ -73,7 +73,7 @@
                             <!-- <td>{{ '%0.2f'|format( r.coupon_valore ) }}</td> -->
                             <td class="text-right">
                                 {% if not r.id_pagamento %}
-                                <input class="form-control form-control-sm text-right" type="number" step="0.01" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
+                                <input class="form-control form-control-sm text-right" type="number" step="0.01" id="totaleDaPagareRiga{{ loop.index0 }}" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
                                 {% else %}
                                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}">
                                 <p>{{ r.totale_lordo_da_pagare }} €</p>
@@ -204,4 +204,17 @@
         </form>
     </div>
 </section>
+{% endblock %}
+
+{% block javascript %}
+<script>
+function ricalcolaTotaleDaPagare(idCampoImporto, sconto) {
+    let totale = parseFloat($('#' + idCampoImporto).val());
+    let scontoFisso = parseFloat(sconto);
+    if (!isNaN(scontoFisso)) {
+        totale = totale - scontoFisso;
+    }
+    $('#' + idCampoImporto).val(totale.toFixed(2));
+}
+</script>
 {% endblock %}
