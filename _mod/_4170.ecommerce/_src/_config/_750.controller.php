@@ -529,256 +529,258 @@ ini_set("display_errors", 1);
 
                 // ciclo sugli articoli
                 foreach( $_SESSION['carrello']['articoli'] as $rKey => $dati ) {
+                    if( isset( $dati['id_articolo'] ) && ! empty( $dati['id_articolo'] ) ) {
 
-                    // chiave di riga
-                    $rowKey = $dati['id_articolo'].
-                        (
-                            ( isset( $dati['destinatario_id_anagrafica'] ) )
-                            ? $dati['destinatario_id_anagrafica']
-                            : (
-                                ( isset( $_REQUEST['__carrello__']['destinatario_id_anagrafica'] ) )
-                                ? $_REQUEST['__carrello__']['destinatario_id_anagrafica']
-                                : NULL
-                            )
-                        );
-
-                    // debug
-                    // echo 'valuto la riga ' . $rowKey . PHP_EOL;
-                    // die( print_r( $dati, true ) );
-                    if( empty( $dati['destinatario_id_anagrafica'] ) ) {
-                        // print_r( $_SESSION['carrello'] );
-                        // die( 'destinatario_id_anagrafica vuoto' . PHP_EOL );
-                    }
-
-                    // eliminazione articolo dal carrello
-                    if( empty( $dati['quantita'] ) && ! empty( $dati['id_articolo'] ) ) {
-
-                        // elimino l'articolo
-                        // TODO questa cancellazione elimina tutte le righe con l'articolo per qualunque destinatario_id_anagrafica, bisogna sistemarla ma questo richiede modifiche all'interfaccia
-                        mysqlQuery(
-                            $cf['mysql']['connection'],
-                            'DELETE FROM carrelli_articoli WHERE id_articolo = ? AND id_carrello = ?',
-                            array(
-                                array( 's' => $dati['id_articolo'] ),
-                                array( 's' => $_SESSION['carrello']['id'] )
-                            )
-                        );
+                        // chiave di riga
+                        $rowKey = $dati['id_articolo'].
+                            (
+                                ( isset( $dati['destinatario_id_anagrafica'] ) )
+                                ? $dati['destinatario_id_anagrafica']
+                                : (
+                                    ( isset( $_REQUEST['__carrello__']['destinatario_id_anagrafica'] ) )
+                                    ? $_REQUEST['__carrello__']['destinatario_id_anagrafica']
+                                    : NULL
+                                )
+                            );
 
                         // debug
-                        // die( 'elimino articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' rowKey ' . $rowKey . PHP_EOL );
+                        // echo 'valuto la riga ' . $rowKey . PHP_EOL;
+                        // die( print_r( $dati, true ) );
+                        if( empty( $dati['destinatario_id_anagrafica'] ) ) {
+                            // print_r( $_SESSION['carrello'] );
+                            // die( 'destinatario_id_anagrafica vuoto' . PHP_EOL );
+                        }
 
-                        // log
-                        logWrite( 'eliminato articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' dal carrello ' . $_SESSION['carrello']['id'], 'cart' );
+                        // eliminazione articolo dal carrello
+                        if( empty( $dati['quantita'] ) && ! empty( $dati['id_articolo'] ) ) {
 
-                        // aggiorno la riga dell'articolo
-                        unset( $_SESSION['carrello']['articoli'][ $rowKey ] );
-
-                    } else { 
-
-                        // debug
-                        // print_r( $dati );
-
-                        // aggiorno la riga dell'articolo
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello']                 = $_SESSION['carrello']['id'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo']                 = $dati['id_articolo'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva']                      = $dati['id_iva'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino']                  = $dati['id_listino'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['quantita']                    = $dati['quantita'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica']  = $dati['destinatario_id_anagrafica'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo']                  = $dati['id_rinnovo'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon']                   = $dati['id_coupon'] ?? NULL;
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_percentuale']          = $dati['coupon_percentuale'] ?? NULL;
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore']               = $dati['coupon_valore'] ?? NULL;
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale']          = $dati['sconto_percentuale'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore']               = $dati['sconto_valore'];
-
-                        // TODO aggiungere colonne coupon_percentuale e coupon_valore e id_coupon
-                        // TODO qui va valorizzata solo la colonna id_coupon, le colonne del valore vanno calcolate sotto
-
-                        // normalizzazione valori numerici
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] = ( isset( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) ) ? str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) : 0.0;
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] = ( isset( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ) ) ? str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ) : 0.0;
-
-                        // TODO qui calcolare coupon_percentuale e coupon_valore
-
-                        // timer
-                        timerCheck( $cf['speed'], '-> inizio ricerca descrizione articolo ' . $dati['id_articolo'] );
-
-                        // trovo la descrizione dell'articolo
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'] = implode( ' / ',
-                            trimArray(
+                            // elimino l'articolo
+                            // TODO questa cancellazione elimina tutte le righe con l'articolo per qualunque destinatario_id_anagrafica, bisogna sistemarla ma questo richiede modifiche all'interfaccia
+                            mysqlQuery(
+                                $cf['mysql']['connection'],
+                                'DELETE FROM carrelli_articoli WHERE id_articolo = ? AND id_carrello = ?',
                                 array(
-                                    mysqlSelectCachedValue(
-                                        $cf['memcache']['connection'],
-                                        $cf['mysql']['connection'],
-                                        'SELECT __label__ FROM anagrafica_view_static WHERE id = ?',
-                                        array(
-                                            array( 's' => $dati['destinatario_id_anagrafica'] )
-                                        )
-                                    ),
-                                    mysqlSelectCachedValue(
-                                        $cf['memcache']['connection'],
-                                        $cf['mysql']['connection'],
-                                        'SELECT nome FROM articoli_view WHERE id = ?',
-                                        array(
-                                            array( 's' => $dati['id_articolo'] )
+                                    array( 's' => $dati['id_articolo'] ),
+                                    array( 's' => $_SESSION['carrello']['id'] )
+                                )
+                            );
+
+                            // debug
+                            // die( 'elimino articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' rowKey ' . $rowKey . PHP_EOL );
+
+                            // log
+                            logWrite( 'eliminato articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' dal carrello ' . $_SESSION['carrello']['id'], 'cart' );
+
+                            // aggiorno la riga dell'articolo
+                            unset( $_SESSION['carrello']['articoli'][ $rowKey ] );
+
+                        } else { 
+
+                            // debug
+                            // print_r( $dati );
+
+                            // aggiorno la riga dell'articolo
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello']                 = $_SESSION['carrello']['id'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo']                 = $dati['id_articolo'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva']                      = $dati['id_iva'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino']                  = $dati['id_listino'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['quantita']                    = $dati['quantita'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica']  = $dati['destinatario_id_anagrafica'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo']                  = $dati['id_rinnovo'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon']                   = $dati['id_coupon'] ?? NULL;
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_percentuale']          = $dati['coupon_percentuale'] ?? NULL;
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore']               = $dati['coupon_valore'] ?? NULL;
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale']          = $dati['sconto_percentuale'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore']               = $dati['sconto_valore'];
+
+                            // TODO aggiungere colonne coupon_percentuale e coupon_valore e id_coupon
+                            // TODO qui va valorizzata solo la colonna id_coupon, le colonne del valore vanno calcolate sotto
+
+                            // normalizzazione valori numerici
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] = ( isset( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) ) ? str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) : 0.0;
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] = ( isset( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ) ) ? str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ) : 0.0;
+
+                            // TODO qui calcolare coupon_percentuale e coupon_valore
+
+                            // timer
+                            timerCheck( $cf['speed'], '-> inizio ricerca descrizione articolo ' . $dati['id_articolo'] );
+
+                            // trovo la descrizione dell'articolo
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'] = implode( ' / ',
+                                trimArray(
+                                    array(
+                                        mysqlSelectCachedValue(
+                                            $cf['memcache']['connection'],
+                                            $cf['mysql']['connection'],
+                                            'SELECT __label__ FROM anagrafica_view_static WHERE id = ?',
+                                            array(
+                                                array( 's' => $dati['destinatario_id_anagrafica'] )
+                                            )
+                                        ),
+                                        mysqlSelectCachedValue(
+                                            $cf['memcache']['connection'],
+                                            $cf['mysql']['connection'],
+                                            'SELECT nome FROM articoli_view WHERE id = ?',
+                                            array(
+                                                array( 's' => $dati['id_articolo'] )
+                                            )
                                         )
                                     )
                                 )
-                            )
-                        );
+                            );
 
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prodotto'] = mysqlSelectCachedValue(
-                            $cf['memcache']['connection'],
-                            $cf['mysql']['connection'],
-                            'SELECT prodotto FROM articoli_view WHERE id = ?',
-                            array( array( 's' => $dati['id_articolo'] ) )
-                        );
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prodotto'] = mysqlSelectCachedValue(
+                                $cf['memcache']['connection'],
+                                $cf['mysql']['connection'],
+                                'SELECT prodotto FROM articoli_view WHERE id = ?',
+                                array( array( 's' => $dati['id_articolo'] ) )
+                            );
 
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['categorie'] = mysqlSelectCachedValue(
-                            $cf['memcache']['connection'],
-                            $cf['mysql']['connection'],
-                            'SELECT categorie FROM articoli_view WHERE id = ?',
-                            array( array( 's' => $dati['id_articolo'] ) )
-                        );
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['categorie'] = mysqlSelectCachedValue(
+                                $cf['memcache']['connection'],
+                                $cf['mysql']['connection'],
+                                'SELECT categorie FROM articoli_view WHERE id = ?',
+                                array( array( 's' => $dati['id_articolo'] ) )
+                            );
 
-                        // timer
-                        timerCheck( $cf['speed'], '-> inizio calcolo prezzi per articolo ' . $dati['id_articolo'] );
+                            // timer
+                            timerCheck( $cf['speed'], '-> inizio calcolo prezzi per articolo ' . $dati['id_articolo'] );
 
-                        // trovo il prezzo base dell'articolo
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticoloCarrello(
-                            $dati['id_articolo'],
-                            $_SESSION['carrello'],
-                            $rowKey
-                        );
+                            // trovo il prezzo base dell'articolo
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] = calcolaPrezzoNettoArticoloCarrello(
+                                $dati['id_articolo'],
+                                $_SESSION['carrello'],
+                                $rowKey
+                            );
 
-                        // timer
-                        timerCheck( $cf['speed'], '-> fine calcolo prezzo netto articolo #' . $dati['id_articolo'] );
+                            // timer
+                            timerCheck( $cf['speed'], '-> fine calcolo prezzo netto articolo #' . $dati['id_articolo'] );
 
-                        // debug
-                        // die( print_r( $_SESSION['carrello'], true ) );
+                            // debug
+                            // die( print_r( $_SESSION['carrello'], true ) );
 
-                        // trovo il prezzo lordo dell'articolo
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] = calcolaPrezzoLordoArticoloCarrello(
-                            $dati['id_articolo'],
-                            $_SESSION['carrello'],
-                            $rowKey
-                        );
+                            // trovo il prezzo lordo dell'articolo
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] = calcolaPrezzoLordoArticoloCarrello(
+                                $dati['id_articolo'],
+                                $_SESSION['carrello'],
+                                $rowKey
+                            );
 
-                        // timer
-                        timerCheck( $cf['speed'], '-> fine calcolo prezzo lordo articolo #' . $dati['id_articolo'] );
+                            // timer
+                            timerCheck( $cf['speed'], '-> fine calcolo prezzo lordo articolo #' . $dati['id_articolo'] );
 
-                        // debug
-                        // die( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] );
+                            // debug
+                            // die( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] );
 
-                        // trovo i prezzi totali
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] * $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] * $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'];
+                            // trovo i prezzi totali
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] * $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] * $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'];
 
-                        // TODO calcolo e applico lo sconto per riga
-                        if( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) && is_numeric( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) && $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] > 0.0 ) {
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] / 100 * $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'];
+                            // TODO calcolo e applico lo sconto per riga
+                            if( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) && is_numeric( $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ) && $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] > 0.0 ) {
+                                $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] / 100 * $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'];
+                            }
+
+                            // calcolo e applico le spese di spedizione nette per riga
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] = calcolaCostoSpedizioneNettoArticolo(
+                                $cf['memcache']['connection'],
+                                $cf['mysql']['connection'],
+                                $dati['id_articolo'],
+                                $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'],
+                                ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $_SESSION['carrello']['id_listino'] ),
+                                $_SESSION['carrello']['id_zona'] ?? NULL
+                            );
+
+                            // calcolo e applico le spese di spedizione lorde per riga
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] = calcolaCostoSpedizioneLordoArticolo(
+                                $cf['memcache']['connection'],
+                                $cf['mysql']['connection'],
+                                $dati['id_articolo'],
+                                $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'],
+                                ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $_SESSION['carrello']['id_listino'] ),
+                                $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
+                                $_SESSION['carrello']['id_zona'] ?? NULL
+                            );
+
+                            // TODO calcolo e applico il coupon per riga
+                            // se è presente un id_coupon
+                            // valorizzare i campi coupon_percentuale e coupon_valore
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] = calcolaValoreCouponPerRiga(
+                                $cf['mysql']['connection'],
+                                $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'],
+                                $_SESSION['carrello']['articoli'][ $rowKey ]['id'],
+                                ( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] )
+                            );
+
+                            // debug
+                            // echo 'valore calcolato ' . $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] . ' per il coupon ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'] . PHP_EOL;
+
+                            // TODO trovo i prezzi finali
+                            // TODO calcolare correttamente lo sconto sul netto
+                            // TODO aggiungere al calcolo il valore del coupon per riga
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] - $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'];
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] - $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'];
+
+                            // aggiorno la riga
+                            // TODO aggiungere i campi id_coupon, coupon_percentuale e coupon_valore
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['id'] = mysqlInsertRow(
+                                $cf['mysql']['connection'],
+                                array(
+                                    'id_carrello'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'],
+                                    'id_articolo'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'],
+                                    'descrizione'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'],
+                                    'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica'],
+                                    'id_mastro_provenienza'         => $_SESSION['carrello']['articoli'][ $rowKey ]['id_mastro_provenienza'],
+                                    'id_rinnovo'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'],
+                                    'id_iva'                        => $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
+                                    'id_listino'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'],
+                                    'id_coupon'                     => $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'],
+                                    'quantita'                      => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'] ?? '' ),
+                                    'prezzo_netto_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] ?? '' ),
+                                    'prezzo_lordo_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] ?? '' ),
+                                    'prezzo_netto_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] ?? '' ),
+                                    'prezzo_lordo_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] ?? '' ),
+                                    'costo_spedizione_netto'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] ?? '' ),
+                                    'costo_spedizione_lordo'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] ?? '' ),
+                                    'sconto_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ?? '' ),
+                                    'sconto_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ?? '' ),
+                                    'coupon_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_percentuale'] ?? '' ),
+                                    'coupon_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] ?? '' ),
+                                    'prezzo_netto_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] ?? '' ),
+                                    'prezzo_lordo_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] ?? '' )
+                                ),
+                                'carrelli_articoli',
+                                true,
+                                false,
+                                array(
+                                    'id_carrello',
+                                    'id_articolo',
+                                    'destinatario_id_anagrafica'
+                                )
+                            );
+
+                            // arrotondo il prezzo finale
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'], 2 );
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'], 2 );
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'], 2 );
+                            $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'], 2 );
+
+                            // incremento i totali carrello
+                            $_SESSION['carrello']['prezzo_netto_totale'] += $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'];
+                            $_SESSION['carrello']['prezzo_lordo_totale'] += $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'];
+                            $_SESSION['carrello']['prezzo_netto_finale'] += $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'];
+                            $_SESSION['carrello']['prezzo_lordo_finale'] += $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'];
+
+                            // debug
+                            // echo $_SESSION['carrello']['prezzo_lordo_finale'] . PHP_EOL;
+                            // die( print_r( $_SESSION['carrello'] ) );
+
+                            // log
+                            logWrite( 'aggiornato articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' nel carrello ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'], 'cart' );
+
                         }
 
-                        // calcolo e applico le spese di spedizione nette per riga
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] = calcolaCostoSpedizioneNettoArticolo(
-                            $cf['memcache']['connection'],
-                            $cf['mysql']['connection'],
-                            $dati['id_articolo'],
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'],
-                            ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $_SESSION['carrello']['id_listino'] ),
-                            $_SESSION['carrello']['id_zona'] ?? NULL
-                        );
-
-                        // calcolo e applico le spese di spedizione lorde per riga
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] = calcolaCostoSpedizioneLordoArticolo(
-                            $cf['memcache']['connection'],
-                            $cf['mysql']['connection'],
-                            $dati['id_articolo'],
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'],
-                            ( ( ! empty( $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] ) ) ? $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'] : $_SESSION['carrello']['id_listino'] ),
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
-                            $_SESSION['carrello']['id_zona'] ?? NULL
-                        );
-
-                        // TODO calcolo e applico il coupon per riga
-                        // se è presente un id_coupon
-                        // valorizzare i campi coupon_percentuale e coupon_valore
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] = calcolaValoreCouponPerRiga(
-                            $cf['mysql']['connection'],
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'],
-                            $_SESSION['carrello']['articoli'][ $rowKey ]['id'],
-                            ( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] )
-                        );
-
-                        // debug
-                        // echo 'valore calcolato ' . $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] . ' per il coupon ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'] . PHP_EOL;
-
-                        // TODO trovo i prezzi finali
-                        // TODO calcolare correttamente lo sconto sul netto
-                        // TODO aggiungere al calcolo il valore del coupon per riga
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] - $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'];
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] + $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] - $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] - $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'];
-
-                        // aggiorno la riga
-                        // TODO aggiungere i campi id_coupon, coupon_percentuale e coupon_valore
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['id'] = mysqlInsertRow(
-                            $cf['mysql']['connection'],
-                            array(
-                                'id_carrello'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'],
-                                'id_articolo'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'],
-                                'descrizione'                   => $_SESSION['carrello']['articoli'][ $rowKey ]['descrizione'],
-                                'destinatario_id_anagrafica'    => $_SESSION['carrello']['articoli'][ $rowKey ]['destinatario_id_anagrafica'],
-                                'id_mastro_provenienza'         => $_SESSION['carrello']['articoli'][ $rowKey ]['id_mastro_provenienza'],
-                                'id_rinnovo'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_rinnovo'],
-                                'id_iva'                        => $_SESSION['carrello']['articoli'][ $rowKey ]['id_iva'],
-                                'id_listino'                    => $_SESSION['carrello']['articoli'][ $rowKey ]['id_listino'],
-                                'id_coupon'                     => $_SESSION['carrello']['articoli'][ $rowKey ]['id_coupon'],
-                                'quantita'                      => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['quantita'] ?? '' ),
-                                'prezzo_netto_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_unitario'] ?? '' ),
-                                'prezzo_lordo_unitario'         => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_unitario'] ?? '' ),
-                                'prezzo_netto_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] ?? '' ),
-                                'prezzo_lordo_totale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] ?? '' ),
-                                'costo_spedizione_netto'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_netto'] ?? '' ),
-                                'costo_spedizione_lordo'        => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['costo_spedizione_lordo'] ?? '' ),
-                                'sconto_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_percentuale'] ?? '' ),
-                                'sconto_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['sconto_valore'] ?? '' ),
-                                'coupon_percentuale'            => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_percentuale'] ?? '' ),
-                                'coupon_valore'                 => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['coupon_valore'] ?? '' ),
-                                'prezzo_netto_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] ?? '' ),
-                                'prezzo_lordo_finale'           => str_replace( ',', '.', $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] ?? '' )
-                            ),
-                            'carrelli_articoli',
-                            true,
-                            false,
-                            array(
-                                'id_carrello',
-                                'id_articolo',
-                                'destinatario_id_anagrafica'
-                            )
-                        );
-
-                        // arrotondo il prezzo finale
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'], 2 );
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'], 2 );
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'], 2 );
-                        $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'] = round( $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'], 2 );
-
-                        // incremento i totali carrello
-                        $_SESSION['carrello']['prezzo_netto_totale'] += $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_totale'];
-                        $_SESSION['carrello']['prezzo_lordo_totale'] += $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_totale'];
-                        $_SESSION['carrello']['prezzo_netto_finale'] += $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_netto_finale'];
-                        $_SESSION['carrello']['prezzo_lordo_finale'] += $_SESSION['carrello']['articoli'][ $rowKey ]['prezzo_lordo_finale'];
-
-                        // debug
-                        // echo $_SESSION['carrello']['prezzo_lordo_finale'] . PHP_EOL;
-                        // die( print_r( $_SESSION['carrello'] ) );
-
-                        // log
-                        logWrite( 'aggiornato articolo ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_articolo'] . ' nel carrello ' . $_SESSION['carrello']['articoli'][ $rowKey ]['id_carrello'], 'cart' );
-
                     }
-
                 }
 
             }
