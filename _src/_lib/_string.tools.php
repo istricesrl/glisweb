@@ -746,3 +746,46 @@
             return sprintf('%02d:%02d', $minutes, $seconds);
         }
     }
+
+    /**
+     * 
+     * TODO documentare
+     * 
+     * 
+     * 
+     * 
+     */
+    function safe_unserialize($value) {
+
+    // Se non è una stringa non può essere serializzata
+    if (!is_string($value)) {
+        return $value;
+    }
+
+    $value = trim($value);
+
+    // Caso speciale: false serializzato
+    if ($value === 'b:0;') {
+        return false;
+    }
+
+    // Lunghezza minima plausibile
+    if (strlen($value) < 4) {
+        return $value;
+    }
+
+    // Deve iniziare con un tipo valido di serialize
+    if (!preg_match('/^[aOsbid]:/', $value)) {
+        return $value;
+    }
+
+    // Tentativo di unserialize sicuro (no oggetti)
+    $result = @unserialize($value, ['allowed_classes' => false]);
+
+    // Se fallisce, restituisco il valore originale
+    if ($result === false && $value !== 'b:0;') {
+        return $value;
+    }
+
+    return $result;
+}

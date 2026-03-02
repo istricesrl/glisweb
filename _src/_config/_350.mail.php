@@ -152,13 +152,15 @@
                 array( array( 's' => $tpl['id'] ) )
             );
 
+            // die( print_r( $cnts, true ) );
+
             // ciclo sui contenuti
             foreach( $cnts as $cnt ) {
                 $cf['mail']['tpl'][ $tpl['ruolo'] ][ $cnt['ietf'] ] = array(
-                    'from' => unserialize( $cnt['mittente_mail'] ),
-                    'to' => unserialize( $cnt['destinatari_mail'] ),
-                    'to_cc' => unserialize( $cnt['destinatari_cc_mail'] ),
-                    'to_bcc' => unserialize( $cnt['destinatari_bcc_mail'] ),
+                    'from' => safe_unserialize( $cnt['mittente_mail'] ?? '' ),
+                    'to' => safe_unserialize( $cnt['destinatari_mail'] ?? '' ),
+                    'to_cc' => safe_unserialize( $cnt['destinatari_cc_mail'] ?? '' ),
+                    'to_bcc' => safe_unserialize( $cnt['destinatari_bcc_mail'] ?? '' ),
                     'oggetto' => $cnt['cappello'],
                     'testo' => $cnt['testo']
                 );

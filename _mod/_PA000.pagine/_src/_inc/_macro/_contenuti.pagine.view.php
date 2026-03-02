@@ -41,7 +41,8 @@
         ),
         'class' => array(
             'id' => 'd-none',
-            '__label__' => 'no-wrap text-start',
+            'id_sito' => 'no-wrap text-start',
+            '__label__' => 'text-start',
             'template' => 'no-wrap text-start',
             'schema_html' => 'no-wrap text-start',
             'tema_css' => 'no-wrap text-start',
@@ -80,6 +81,7 @@
 
     // tendina siti
     $ct['etc']['select']['siti'] = $cf['sites'];
+    arraySortBy( ['__label__'], $ct['etc']['select']['siti'] );
 
     /**
      * macro di default

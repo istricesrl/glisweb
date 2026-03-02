@@ -1011,6 +1011,7 @@
 
                 // estensioni
                 $twig->addExtension( new \Twig\Extension\StringLoaderExtension() );
+                $twig->addExtension( new \Twig\Extension\DebugExtension() );
 
                 // timer
                 timerCheck( $cf['speed'], '-> -> estensioni Twig' );

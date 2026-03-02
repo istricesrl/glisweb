@@ -974,15 +974,39 @@
      * 
      */
 
-    // file di configurazione da considerare nell'ordine
+    // file di configurazione YAML da considerare nell'ordine
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'config.yaml' );
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'shadow.yaml' );
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC . 'config.yaml' );
     $cf['config']['files']['yaml'][]    = path2custom( DIR_SRC . 'shadow.yaml' );
+
+    // file aggiuntivi YAML
+    $yamlConfigFiles = array_merge(
+        glob( path2custom( DIR_SRC_CONFIG_EXT . 'config.*.yaml' ) ),
+        glob( path2custom( DIR_SRC . 'config.*.yaml' ) )
+    );
+    if( is_array( $yamlConfigFiles ) ) {
+        foreach( $yamlConfigFiles as $yamlConfigFile ) {
+            $cf['config']['files']['yaml'][] = $yamlConfigFile;
+        }
+    }
+
+    // file di configurazione JSON da considerare nell'ordine
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'config.json' );
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC_CONFIG_EXT . 'shadow.json' );
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC . 'config.json' );
     $cf['config']['files']['json'][]    = path2custom( DIR_SRC . 'shadow.json' );
+
+    // file aggiuntivi JSON
+    $jsonConfigFiles = array_merge(
+        glob( path2custom( DIR_SRC_CONFIG_EXT . 'config.*.json' ) ),
+        glob( path2custom( DIR_SRC . 'config.*.json' ) )
+    );
+    if( is_array( $jsonConfigFiles ) ) {
+        foreach( $jsonConfigFiles as $jsonConfigFile ) {
+            $cf['config']['files']['json'][] = $jsonConfigFile;
+        }
+    }
 
     // lettura del file di configurazione aggiuntivi YAML o JSON
     foreach( $cf['config']['files'] as $type => $configFiles ) {
