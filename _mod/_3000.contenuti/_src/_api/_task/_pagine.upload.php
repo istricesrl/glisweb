@@ -70,6 +70,9 @@
                             // oggetti collegati
                             foreach( array( 'contenuti', 'menu', 'immagini', 'file', 'metadati', 'macro', 'pubblicazioni', 'video' ) as $entita ) {
 
+                                // status
+                                $status['info'][] = 'procedo con l\'inserimento di ' . $entita;
+
                                 // recupero le entità da inserire
                                 $ents = mysqlQuery(
                                     $cf['mysql']['connection'],
@@ -86,6 +89,13 @@
                                         $ent,
                                         $entita
                                     );
+
+                                    // status
+                                    if( ! empty( $xId ) ) {
+                                        $status['info'][] = 'inserito ' . $entita . ' ' . $xId;
+                                    } else {
+                                        $status['err'][] = 'impossibile inserire ' . $entita . ' per la pagina ' . $_REQUEST['id'];
+                                    }
 
                                     // copia file
                                     if( in_array( $entita, array( 'immagini', 'file', 'video' ) ) ) {
@@ -177,7 +187,7 @@
 
                                 // ...
                                 $ftpSrv = $cf['ftp']['servers'][ $cf['ftp']['profiles'][ $_REQUEST['target'] ]['servers'][0] ];
-/*
+                                /*
                                 // ...
                                 $toFtp = array_merge(
                                     mysqlSelectColumn( 'path', $cf['mysql']['connection'], 'SELECT path FROM immagini WHERE id_pagina = ?', array( array( 's' => $_REQUEST['id'] ) ) )
@@ -205,7 +215,7 @@
                                         getRecursiveFileList( path2custom( DIR_MOD . '_' . $mod . '/' . $template ), true )
                                     );
                                 }
-*/
+                                */
                                 // debug
                                 // die( $template );
                                 // die( print_r( $toFtp, true ) );
