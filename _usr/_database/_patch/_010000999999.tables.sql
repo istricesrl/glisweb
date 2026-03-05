@@ -3093,6 +3093,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_url` (                  --
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000056900
+
+-- tipologie_veicoli
+-- tipologia: tabella assistita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di veicoli
+--
+-- questa tabella contiene le tipologie di veicoli
+--
+CREATE TABLE IF NOT EXISTS `tipologie_veicoli` (             --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_genitore` int(11) DEFAULT NULL,                         -- chiave esterna per la tipologia genitore
+  `ordine` int(11) DEFAULT NULL,                              -- ordine di visualizzazione
+  `nome` char(64) DEFAULT NULL,                               -- nome della tipologia
+  `html_entity` char(8) DEFAULT NULL,                         -- entità HTML per l'icona della tipologia
+  `font_awesome` char(16) DEFAULT NULL,                       -- icona Font Awesome per la tipologia
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito la tipologia
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000060000
 
 -- todo
@@ -3207,6 +3230,33 @@ CREATE TABLE IF NOT EXISTS `valute` (
   `iso4217` char(3) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `utf8` char(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000064000
+
+-- veicoli
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella base
+-- funzione: contiene i veicoli del sistema
+--
+-- questa tabella contiene i veicoli del sistema, con le informazioni relative alla targa, alla marca, al modello, 
+-- al nome e alla descrizione del veicolo
+--
+CREATE TABLE IF NOT EXISTS `veicoli` (
+  `id` int(11) NOT NULL,
+  `id_tipologia` int(11) DEFAULT NULL,
+  `targa` char(16) DEFAULT NULL,
+  `modello` char(64) DEFAULT NULL,
+  `id_costruttore` int(11) DEFAULT NULL,
+  `nome` char(255) DEFAULT NULL,
+  `descrizione` text DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,
+  `note_archiviazione` text DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000065000

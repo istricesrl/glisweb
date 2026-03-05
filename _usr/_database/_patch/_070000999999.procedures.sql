@@ -4157,4 +4157,140 @@ CREATE
 
 END;
 
+-- | 070000056900
+
+-- tipologie_veicoli_path
+DROP FUNCTION IF EXISTS `tipologie_veicoli_path`;
+
+-- | 070000056901
+
+-- tipologie_veicoli_path
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_veicoli_path`( `p1` INT( 11 ) ) RETURNS TEXT CHARSET utf8 COLLATE utf8_general_ci
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole ottenere il path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_veicoli_path( <id> ) AS path
+
+		DECLARE path text DEFAULT '';
+		DECLARE step char( 255 ) DEFAULT '';
+		DECLARE separatore varchar( 8 ) DEFAULT ' > ';
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_veicoli.id_genitore,
+				tipologie_veicoli.nome
+			FROM tipologie_veicoli
+			WHERE tipologie_veicoli.id = p1
+			INTO p1, step;
+
+			IF( p1 IS NULL ) THEN
+				SET separatore = '';
+			END IF;
+
+			SET path = concat( separatore, step, path );
+
+		END WHILE;
+
+		RETURN path;
+
+END;
+
+-- | 070000056910
+
+-- tipologie_veicoli_path_check
+DROP FUNCTION IF EXISTS `tipologie_veicoli_path_check`;
+
+-- | 070000056911
+
+-- tipologie_veicoli_path_check
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_veicoli_path_check`( `p1` INT( 11 ), `p2` INT( 11 ) ) RETURNS TINYINT( 1 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole verificare il path
+		-- p2 int( 11 ) -> l'id dell'oggetto da cercare nel path
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_veicoli_path_check( <id1>, <id2> ) AS check
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			IF( p1 = p2 ) THEN
+				RETURN 1;
+			END IF;
+
+			SELECT
+				tipologie_veicoli.id_genitore
+			FROM tipologie_veicoli
+			WHERE tipologie_veicoli.id = p1
+			INTO p1;
+
+		END WHILE;
+
+		RETURN 0;
+
+END;
+
+-- | 070000056920
+
+-- tipologie_veicoli_path_find_ancestor
+DROP FUNCTION IF EXISTS `tipologie_veicoli_path_find_ancestor`;
+
+-- | 070000056921
+
+-- tipologie_veicoli_path_find_ancestor
+CREATE
+	DEFINER = CURRENT_USER()
+	FUNCTION `tipologie_veicoli_path_find_ancestor`( `p1` INT( 11 ) ) RETURNS INT( 11 )
+	NOT DETERMINISTIC
+	READS SQL DATA
+	SQL SECURITY DEFINER
+	BEGIN
+
+		-- PARAMETRI
+		-- p1 int( 11 ) -> l'id dell'oggetto per il quale si vuole trovare il progenitore
+
+		-- DIPENDENZE
+		-- nessuna
+
+		-- TEST
+		-- SELECT tipologie_veicoli_path_find_ancestor( <id1> ) AS check
+
+		DECLARE p2 int( 11 ) DEFAULT NULL;
+
+		WHILE ( p1 IS NOT NULL ) DO
+
+			SELECT
+				tipologie_veicoli.id_genitore,
+				tipologie_veicoli.id
+			FROM tipologie_veicoli
+			WHERE tipologie_veicoli.id = p1
+			INTO p1, p2;
+
+		END WHILE;
+
+		RETURN p2;
+
+END;
+
 -- | FINE FILE

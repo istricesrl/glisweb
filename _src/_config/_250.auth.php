@@ -101,6 +101,9 @@
             CONTROL_FULL => array( 'roots' ),
             METHOD_GET => array( 'staff', 'users', 'guests' )
         ),
+        'veicoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
 
         // TODO l'ordine alfabetico arriva fin qui
 
