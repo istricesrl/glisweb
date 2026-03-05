@@ -85,6 +85,9 @@
     // URL sorgente al netto della query string
     $cf['uri']['base'] = strtok( $_SERVER['REQUEST_URI'], '?' );
 
+    // query string
+    $cf['uri']['query'] = ( isset( $_SERVER['QUERY_STRING'] ) && ! empty( $_SERVER['QUERY_STRING'] ) ) ? '?' . $_SERVER['QUERY_STRING'] : '';
+
     // debug
     // var_dump( $cf['uri']['base'] );
     // var_dump( $cf['redirect']['index'][ SITE_CURRENT ] );
@@ -94,6 +97,11 @@
 
         // oggetto redirect
         $cf['redirect']['found'] = $cf['redirect']['index'][ SITE_CURRENT ][ $cf['uri']['base'] ];
+
+        // se devo portarmi dietro la query string
+        if( isset( $cf['redirect']['found']['se_query_string'] ) && $cf['redirect']['found']['se_query_string'] == 1 ) {
+            $cf['redirect']['found']['destinazione'] .= $cf['uri']['query'];
+        }
 
         // log
         logger( 'reindirizzamento ' . $cf['redirect']['found']['codice_stato_http'] . ' da ' . $cf['uri']['base'] . ' a ' . $cf['redirect']['found']['destinazione'], 'redirect' );
@@ -128,6 +136,10 @@
 
         // fine dell'esecuzione del framework
         exit;
+
+    } else {
+
+        // die( 'url ' . $cf['uri']['base'] . ' non trovato tra i redirect' );
 
     }
 

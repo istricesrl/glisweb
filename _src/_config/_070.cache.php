@@ -31,7 +31,7 @@
      */
 
     // se è attiva la cache delle pagine
-    if( isset( $cf['cache']['profile']['pages'] ) && $cf['cache']['profile']['pages'] === true ) {
+    if( isset( $cf['cache']['profile']['pages'] ) && ! empty( $cf['cache']['profile']['pages'] ) ) {
 
         // file per la cache della pagina corrente
         $cachefile = DIR_VAR_CACHE_PAGES . md5(

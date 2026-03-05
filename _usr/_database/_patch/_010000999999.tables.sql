@@ -2208,6 +2208,7 @@ CREATE TABLE IF NOT EXISTS `redirect` (                       --
   `codice_stato_http` int(11) DEFAULT NULL,                   -- codice di stato HTTP del redirect
   `sorgente` char(255) DEFAULT NULL,                          -- sorgente del redirect
   `destinazione` char(255) DEFAULT NULL,                      -- destinazione del redirect
+  `se_query_string` tinyint(1) DEFAULT NULL,                  -- se tenere la query string nel redirect
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il redirect
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il redirect

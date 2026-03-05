@@ -1875,6 +1875,7 @@ CREATE OR REPLACE VIEW redirect_view AS                       --
     redirect.codice_stato_http,                               --
     redirect.sorgente,                                        --
     redirect.destinazione,                                    --
+    redirect.se_query_string,                                 --
     redirect.id_account_inserimento,                          --
     redirect.id_account_aggiornamento,                        --
     concat_ws(                                                --

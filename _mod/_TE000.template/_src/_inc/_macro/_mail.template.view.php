@@ -30,8 +30,8 @@
             NULL => 'azioni'
         ),
         'class' => array(
-            'nome' => 'text-left',
-            '__label__' => 'text-left',
+            'nome' => 'text-start',
+            '__label__' => 'text-start',
             NULL => 'no-wrap'
         ),
         'onclick' => array(

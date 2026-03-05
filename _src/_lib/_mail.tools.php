@@ -240,6 +240,12 @@ if( empty( $t[ $l ]['from'] ) ) {
 
 try {
 
+// retrocompatibilità
+if( ! is_array($t[ $l ]['from']) ) {
+    $t[ $l ]['from'] = array( $t[ $l ]['from'] => $t[ $l ]['from'] );
+}
+
+
 		    // avvio di Twig
 			$twig = new \Twig\Environment( new Twig\Loader\ArrayLoader( $t[ $l ] ) );
 			$from = new \Twig\Environment( new Twig\Loader\ArrayLoader( array( 'nome' => array_key_first( $t[ $l ]['from'] ), 'mail' => reset( $t[ $l ]['from'] ) ) ) );

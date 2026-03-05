@@ -70,7 +70,7 @@
     if( ! empty( $cf['mysql']['connection'] ) ) {
         $cf['redirect']['src']['db'] = mysqlQuery(
             $cf['mysql']['connection'],
-            'SELECT id,id_sito,codice_stato_http,sorgente,destinazione FROM redirect_view'
+            'SELECT id,id_sito,codice_stato_http,sorgente,destinazione,se_query_string FROM redirect_view'
         );
     }
 
