@@ -1161,6 +1161,12 @@
         'marchi' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         ),
+        'tipologie_veicoli' => array(
+            CONTROL_FULL => array( 'roots','staff' )
+        ),
+        'mastri_tipologie_veicoli' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
         'mastri_articoli' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
         )

@@ -40,6 +40,8 @@
     // log
     logger( 'dati in ingresso: ' . print_r( $dati, true ), 'details/paypal-advanced/order-api' );
 
+    // die( print_r( $dati, true ) );
+
     // se il pagamento è vuoto provo a crearlo al volo
     if( ! isset( $dati['id'] ) || empty( $dati['id'] ) ) {
 
@@ -158,6 +160,8 @@
                 )
             )
         );
+
+        // die( print_r( $order, true ) );
 
         // creo l'ordine
         $result = restCall(

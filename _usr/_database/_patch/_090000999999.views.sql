@@ -1485,6 +1485,27 @@ CREATE OR REPLACE VIEW `marchi_view` AS
 	LEFT JOIN anagrafica AS produttori ON produttori.id = marchi.id_produttore
 ;
 
+-- | 090000020800
+
+-- mastri_tipologie_veicoli_view
+CREATE OR REPLACE VIEW `mastri_tipologie_veicoli_view` AS
+    SELECT
+        mastri_tipologie_veicoli.id,
+        mastri_tipologie_veicoli.id_mastro,
+        mastri_path( mastri_tipologie_veicoli.id_mastro ) AS mastro,
+        mastri_tipologie_veicoli.id_tipologia,
+        veicoli.targa AS veicolo,
+        mastri_tipologie_veicoli.id_account_inserimento,
+        mastri_tipologie_veicoli.id_account_aggiornamento,
+        concat_ws(
+            ' / ',
+            mastri_path( mastri_tipologie_veicoli.id_mastro ),
+            veicoli.targa
+        ) AS __label__
+    FROM mastri_tipologie_veicoli
+    LEFT JOIN veicoli ON veicoli.id = mastri_tipologie_veicoli.id_tipologia
+;
+
 -- | 090000021600
 
 -- menu_view
@@ -2440,6 +2461,23 @@ CREATE OR REPLACE VIEW `tipologie_url_view` AS                --
 	FROM tipologie_url                                        --
 ;                                                             --
 
+-- | 090000056900
+
+-- tipologie_veicoli_view
+CREATE OR REPLACE VIEW `tipologie_veicoli_view` AS                --
+	SELECT                                                    --
+		tipologie_veicoli.id,                                     --
+		tipologie_veicoli.id_genitore,                            --
+		tipologie_veicoli.ordine,                                 --
+		tipologie_veicoli.nome,                                   --
+		tipologie_veicoli.html_entity,                            --
+		tipologie_veicoli.font_awesome,                           --
+		tipologie_veicoli.id_account_inserimento,                 --
+		tipologie_veicoli.id_account_aggiornamento,               --
+		tipologie_veicoli_path( tipologie_veicoli.id ) AS __label__   -- etichetta per le tendine e le liste
+	FROM tipologie_veicoli                                        --
+;                                                             --
+
 -- | 090000062000
 
 -- udm_view
@@ -2512,13 +2550,12 @@ CREATE OR REPLACE VIEW veicoli_view AS
         veicoli.data_archiviazione,
         veicoli.id_account_inserimento,
         veicoli.id_account_aggiornamento,
-        concat(
-            coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ), '' ),
+        concat_ws(
             ' - ',
+            coalesce( a1.denominazione, concat( a1.cognome, ' ', a1.nome ) ),
+            veicoli.nome,
             veicoli.modello,
-            ' (',
-            veicoli.targa,
-            ')'
+            veicoli.targa
         ) AS __label__
     FROM veicoli
         LEFT JOIN anagrafica AS a1 ON a1.id = veicoli.id_costruttore

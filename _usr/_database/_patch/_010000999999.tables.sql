@@ -1617,6 +1617,28 @@ CREATE TABLE IF NOT EXISTS `mastri` (                           --
   `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
+-- | 010000020800
+
+-- mastri_veicoli
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella di relazione
+-- funzione: contiene la relazione molti a molti tra mastri e veicoli
+--
+-- questa tabella contiene la relazione molti a molti tra mastri e veicoli, con le chiavi esterne per il mastro
+-- e per il veicolo e le note sull'associazione
+--
+CREATE TABLE IF NOT EXISTS `mastri_tipologie_veicoli` (                         --
+    `id` int(11) NOT NULL,                                        -- chiave primaria
+    `id_mastro` int(11) DEFAULT NULL,                                  -- chiave esterna per il mastro
+    `id_tipologia` int(11) DEFAULT NULL,                                  -- chiave esterna per il veicolo
+    `note` text DEFAULT NULL,                                     -- note sull'associazione
+    `id_account_inserimento` int(11) DEFAULT NULL,                -- chiave esterna per l'account che ha inserito l'associazione
+    `timestamp_inserimento` int(11) DEFAULT NULL,                 -- timestamp di inserimento
+    `id_account_aggiornamento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha aggiornato l'associazione
+    `timestamp_aggiornamento` int(11) DEFAULT NULL                -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
 -- | 010000021000
 
 -- matricole

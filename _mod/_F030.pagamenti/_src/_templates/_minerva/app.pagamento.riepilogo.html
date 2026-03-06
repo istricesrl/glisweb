@@ -10,7 +10,7 @@ _mod/_F030.pagamenti/_src/_inc/_macro/_pagamento.riepilogo.php #}
 {% block main %}
 
 {# pagamento tramite PayPal Advanced Checkout #}
-{% if etc.pagamento.provider == 'paypal-advanced' %}
+{% if etc.pagamento.provider_pagamento == 'paypal-advanced' %}
 
 {% if etc.pagamento.client_token %}
 
@@ -92,7 +92,7 @@ _mod/_F030.pagamenti/_src/_inc/_macro/_pagamento.riepilogo.php #}
 {% endif %}
 
 {# PAGAMENTO TRAMITE NEXI #}
-{% if etc.pagamento.provider == 'nexi' %}
+{% if etc.pagamento.provider_pagamento == 'nexi' %}
 {% endif %}
 
 {% endblock %}

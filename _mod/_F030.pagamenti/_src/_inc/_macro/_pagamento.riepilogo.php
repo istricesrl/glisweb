@@ -43,6 +43,8 @@
         );
     }
 
+    // die( print_r( $ct['etc']['pagamento'], true ) );
+
     // dati del pagamento
     // TODO ricavare questi dati da memcache a partire da $_REQUEST['token_pagamento']
     /*
@@ -65,7 +67,7 @@
      */
 
     // se il provider scelto è paypal-advanced
-    if( $ct['etc']['pagamento']['provider'] == 'paypal-advanced' ) {
+    if( $ct['etc']['pagamento']['provider_pagamento'] == 'paypal-advanced' ) {
 
         // imposto il token
         $ct['etc']['pagamento']['client_token'] = paypalAdvancedGetClientToken( $cf['paypal']['profile'] );

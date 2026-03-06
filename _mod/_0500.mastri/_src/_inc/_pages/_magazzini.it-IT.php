@@ -45,6 +45,7 @@
 			'etc'			=> array( 'tabs'	=> array(	'magazzini.form',
                                                             'magazzini.form.giacenze',
                                                             'magazzini.form.movimenti',
+                                                            'magazzini.form.veicoli',
                                                             'magazzini.form.stampe',
                                                             'magazzini.form.tools' ) )
 		);
@@ -69,6 +70,18 @@
 			'parent'		=> array( 'id'		=> 'magazzini.view' ),
 			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'magazzini.form.movimenti.html' ),
 			'macro'			=> array( $m.'_src/_inc/_macro/_magazzini.form.movimenti.php' ),
+			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+			'etc'			=> array( 'tabs'	=> $p['magazzini.form']['etc']['tabs'] )
+		);
+
+		// vista veicoli magazzini
+		$p['magazzini.form.veicoli'] = array(
+			'sitemap'		=> false,
+			'title'			=> array( $l		=> 'veicoli' ),
+			'h1'			=> array( $l		=> 'veicoli' ),
+			'parent'		=> array( 'id'		=> 'magazzini.view' ),
+			'template'		=> array( 'path'	=> '_src/_templates/_athena/', 'schema' => 'magazzini.form.veicoli.html' ),
+			'macro'			=> array( $m.'_src/_inc/_macro/_magazzini.form.veicoli.php' ),
 			'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 			'etc'			=> array( 'tabs'	=> $p['magazzini.form']['etc']['tabs'] )
 		);
