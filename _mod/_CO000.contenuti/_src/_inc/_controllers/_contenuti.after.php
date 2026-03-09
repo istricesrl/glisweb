@@ -28,7 +28,7 @@
 
                         if( in_array( $vKey, array( 'mittente_mail', 'destinatari_mail', 'destinatari_cc_mail', 'destinatari_bcc_mail' ) ) ) {
                             if( ! empty( $vVal ) ) {
-                                $d[ $vKey ] = array2mailString( unserialize( $vVal ) ) ;
+                                $d[ $vKey ] = array2mailString( safe_unserialize( $vVal ) ) ;
                             }
                         }
 
@@ -44,7 +44,7 @@
 
                             if( in_array( $vKey, array( 'mittente_mail', 'destinatari_mail', 'destinatari_cc_mail', 'destinatari_bcc_mail' ) ) ) {
                                 if( ! empty( $vVal ) ) {
-                                    $row[ $vKey ] = array2mailString( unserialize( $vVal ) ) ;
+                                    $row[ $vKey ] = array2mailString( safe_unserialize( $vVal ) ) ;
                                 }
                             }
 
