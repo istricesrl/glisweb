@@ -1222,7 +1222,7 @@
      */
 
     // fine del buffer
-    $html = ob_get_clean();
+    $html = ob_get_contents();
 
     // debug
     // die( $html );
