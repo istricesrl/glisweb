@@ -314,6 +314,10 @@ CREATE OR REPLACE VIEW `articoli_view` AS
 		group_concat( DISTINCT categorie_prodotti_path( prodotti_categorie.id_categoria ) SEPARATOR ' | ' ) AS categorie,
 		group_concat( DISTINCT concat_ws( ' ', listini.nome, valute.iso4217, format( prezzi.prezzo, 2, 'it_IT' ) ) SEPARATOR ' | ' ) AS prezzi,
         coalesce( articoli.data_archiviazione, prodotti.data_archiviazione ) AS data_archiviazione,
+		articoli.id_account_inserimento,                      --
+		articoli.timestamp_inserimento,                       --
+		articoli.id_account_aggiornamento,                    --
+		articoli.timestamp_aggiornamento,                     --
 		concat_ws(
 			' ',
             articoli.ean,

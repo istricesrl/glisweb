@@ -1222,7 +1222,7 @@
      */
 
     // fine del buffer
-    $html = ob_get_contents();
+    $html = ob_get_clean();
 
     // debug
     // die( $html );
@@ -1262,7 +1262,7 @@
 
         // cache del buffer
         if( isset( $ct['page']['cacheable'] ) && $ct['page']['cacheable'] === true ) {
-            writeToFile( ob_get_contents(), DIR_VAR_CACHE_PAGES . basename( FILE_CACHE_PAGE ) );
+            writeToFile( $tidy, DIR_VAR_CACHE_PAGES . basename( FILE_CACHE_PAGE ) );
             echo '<!-- pagina con autorizzazione al caching -->'                . PHP_EOL;
             if( FILE_CACHE_PAGE_TIME === NULL ) {
                 echo '<!-- page cached for the first time -->'                    . PHP_EOL;

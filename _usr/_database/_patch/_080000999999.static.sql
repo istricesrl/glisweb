@@ -96,6 +96,10 @@ CREATE TABLE IF NOT EXISTS `articoli_view_static` (
   `categorie` char(255) DEFAULT NULL,
   `prezzi` char(255) DEFAULT NULL,
   `data_archiviazione` date DEFAULT NULL,                     --
+  `id_account_inserimento` int(11) DEFAULT NULL,              --
+  `timestamp_inserimento` int(11) DEFAULT NULL,               --
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            --
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,             --
   `__label__` text,                                           --
   UNIQUE KEY `codice` (`codice`)                              --
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;

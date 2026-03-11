@@ -330,7 +330,8 @@
             $cf['mysql']['connection'],
             'SELECT documenti_articoli.id_articolo, sum( quantita ) AS quantita,
                 concat_ws( " ", prodotti.nome, articoli.nome ) AS descrizione,
-                group_concat( concat_ws( " - ", concat( documenti.sezionale, year( documenti.data ), documenti.numero ), concat( documenti_articoli.quantita, "x" ), documenti_articoli.nome ) SEPARATOR "|" ) AS documenti
+                group_concat( concat_ws( " - ", 
+                concat( documenti.sezionale, year( documenti.data ), documenti.numero ), concat( documenti_articoli.quantita, "x" ), documenti_articoli.nome ) SEPARATOR "|" ) AS documenti
             FROM documenti_articoli 
             INNER JOIN articoli ON articoli.id = documenti_articoli.id_articolo
             INNER JOIN prodotti ON prodotti.id = articoli.id_prodotto
@@ -367,6 +368,17 @@
             $row['collocazione_breve'] = mysqlSelectValue(
                 $cf['mysql']['connection'],
                 'SELECT codice FROM __report_giacenza_magazzini__ WHERE id_articolo = ? AND totale_proprio > 0',
+                array( 
+                    array( 's' => $row['id_articolo'] )
+                )
+            );
+
+            $row['veicolo'] = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT coalesce( tipologie_veicoli_path( mastri_tipologie_veicoli.id_tipologia ), "-" ) AS veicolo
+                FROM __report_giacenza_magazzini__ 
+                INNER JOIN mastri_tipologie_veicoli ON mastri_tipologie_veicoli.id_mastro = __report_giacenza_magazzini__.id_mastro
+                WHERE __report_giacenza_magazzini__.id_articolo = ? AND totale_proprio > 0',
                 array( 
                     array( 's' => $row['id_articolo'] )
                 )
