@@ -89,9 +89,13 @@
                         $macro = DIR_BASE . '_mod/_0300.contatti/_src/_inc/_macro/' . $macro;
                         $macroLocal = path2custom($macro);
                         if (file_exists($macroLocal)) {
+                            logWrite('controller locale trovata per il blocco ' . $k . ': ' . $macroLocal, 'contatti');
                             require $macroLocal;
                         } elseif (file_exists($macro)) {
+                            logWrite('controller standard trovata per il blocco ' . $k . ': ' . $macro, 'contatti');
                             require $macro;
+                        } else {
+                            logWrite('file della controller non trovato per il blocco ' . $k . ': ' . $macro, 'contatti');
                         }
                     }
                 } else {
