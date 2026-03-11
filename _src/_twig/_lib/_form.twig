@@ -112,7 +112,7 @@
     }|merge( options.page ) %}
 
     {# calcolo valori di base #}
-    {% if form.subtable and ( form.counter != '' or form.counter is matches('/^\\d+$/') ) %}
+    {% if form.subtable and ( form.counter != '' or form.counter matches('/^\\d+$/') ) %}
         {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set ks = request[ form.table ][ form.subtable ]|keys %}

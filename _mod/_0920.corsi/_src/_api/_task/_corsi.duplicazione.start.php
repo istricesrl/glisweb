@@ -66,7 +66,10 @@
 			);
 		}
 
-		// condizioni base
+        // debug
+        // die( print_r( $workspace, true ) );
+
+        // condizioni base
 		$whr = array(
 			array( 's' => $_REQUEST['periodo_partenza'] )
 		);
