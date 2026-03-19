@@ -44,7 +44,7 @@
 */
 		$status['aggiornare'] = mysqlSelectRow(
 			$cf['mysql']['connection'],
-			'SELECT todo.id FROM todo ORDER BY todo.timestamp_aggiornamento_report_corsi ASC, todo.id DESC LIMIT 1'
+			'SELECT todo.id FROM todo ORDER BY todo.timestamp_aggiornamento_report_corsi ASC DESC LIMIT 1'
 		);
 
 		// debug
