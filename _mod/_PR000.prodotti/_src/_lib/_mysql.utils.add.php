@@ -15,12 +15,28 @@
             )
         );
 
+        $riga = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT * FROM articoli_view WHERE id = ?',
+            array(
+                array( 's' => $id )
+            )
+        );
+
+        if( empty( $riga['timestamp_aggiornamento'] ) ) {
+            $riga['timestamp_aggiornamento'] = time();
+        }
+
+        if( empty( $riga['timestamp_inserimento'] ) ) {
+            $riga['timestamp_inserimento'] = time();
+        }
+
         if( ! empty( $articolo['id'] ) ) {
 
-            mysqlQuery( $cf['mysql']['connection'],
-                'REPLACE INTO articoli_view_static 
-                SELECT * FROM articoli_view WHERE id = ?',
-                array( array( 's' => $id ) )
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                $riga,
+                'articoli_view_static'
             );
 
             logger( 'view statica aggiornata per l\'articolo id: ' . $id, 'articoli' );

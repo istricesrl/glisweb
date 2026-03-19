@@ -124,31 +124,4 @@
 {% endblock %}
 
 {% block javascript %}
-<script>
-window.addEventListener('DOMContentLoaded', function() {
-
-    document.querySelectorAll('textarea.CodeMirror').forEach(function(textarea) {
-
-        CodeMirror.fromTextArea(textarea, {
-            lineNumbers: true,
-            mode: 'htmlmixed',
-            theme: 'default',
-            tabSize: 4,
-            indentUnit: 4,
-            indentWithTabs: false,
-            lineWrapping: true,
-            matchBrackets: true,
-            autoCloseBrackets: true,
-            autoCloseTags: true,
-            foldGutter: true,
-            gutters: ['CodeMirror-linenumbers', 'CodeMirror-foldgutter'],
-            extraKeys: {
-                'Ctrl-Space': 'autocomplete'
-            }
-        });
-
-    });
-
-});
-</script>
 {% endblock javascript %}

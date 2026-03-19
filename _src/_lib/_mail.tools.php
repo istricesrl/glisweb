@@ -102,108 +102,120 @@
         // mittente della mail
         $fromName               = current(array_keys($from));
         $fromMail               = current($from);
-        $expDomain              = explode('@', $fromMail);
-        $fromDomain             = end($expDomain);
 
-        // mittente
-        $mail->SetFrom($fromMail, $fromName);
-        $mail->AddReplyTo($fromMail, $fromName);
-        $mail->Sender = $fromMail;
+        // se la mail mittente è un indirizzo e-mail corretto
+        if (filter_var($fromMail, FILTER_VALIDATE_EMAIL) === true) {
 
-        // oggetto
-        $mail->Subject            = $oggetto;
+            $expDomain              = explode('@', $fromMail);
+            $fromDomain             = end($expDomain);
 
-        // creo il testo in plain text
-        $text = new \Html2Text\Html2Text($corpo);
+            // mittente
+            $mail->SetFrom($fromMail, $fromName);
+            $mail->AddReplyTo($fromMail, $fromName);
+            $mail->Sender = $fromMail;
 
-        // corpo alternativo
-        $mail->AltBody            = wordwrap($text->getText());
+            // oggetto
+            $mail->Subject            = $oggetto;
 
-        // corpo del messaggio
-        $mail->MsgHTML($corpo);
+            // creo il testo in plain text
+            $text = new \Html2Text\Html2Text($corpo);
 
-        // destinatari
-        foreach ($to as $destName => $destAddress) {
-            $mail->AddAddress(trim($destAddress), trim($destName));
-        }
+            // corpo alternativo
+            $mail->AltBody            = wordwrap($text->getText());
 
-        // destinatari CC
-        foreach ($cc as $destName => $destAddress) {
-            if (! empty($destAddress)) {
-                $mail->AddCC(trim($destAddress), trim($destName));
+            // corpo del messaggio
+            $mail->MsgHTML($corpo);
+
+            // destinatari
+            foreach ($to as $destName => $destAddress) {
+                $mail->AddAddress(trim($destAddress), trim($destName));
             }
-        }
 
-        // destinatari BCC
-        foreach ($bcc as $destName => $destAddress) {
-            if (! empty($destAddress)) {
-                $mail->AddBCC(trim($destAddress), trim($destName));
-            }
-        }
-
-        // allegati
-        if (is_array($attach)) {
-            foreach ($attach as $vAtch) {
-                fullPath($vAtch);
-                if (file_exists($vAtch) && is_readable($vAtch)) {
-                    $mail->AddAttachment($vAtch, basename($vAtch));
-                } else {
-                    logWrite('impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT);
+            // destinatari CC
+            foreach ($cc as $destName => $destAddress) {
+                if (! empty($destAddress)) {
+                    $mail->AddCC(trim($destAddress), trim($destName));
                 }
             }
-        }
 
-        // headers
-        if (is_array($headers)) {
-            foreach ($headers as $hKey => $hVal) {
-                $mail->addCustomHeader($hKey, $hVal);
+            // destinatari BCC
+            foreach ($bcc as $destName => $destAddress) {
+                if (! empty($destAddress)) {
+                    $mail->AddBCC(trim($destAddress), trim($destName));
+                }
             }
-        }
 
-        // DKIM
-        if (! empty($fromDomain)) {
-            if (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem')) {
-                $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key')) ? readFromFile(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key') : $dkim_pasw;
-                $mail->DKIM_domain = $fromDomain;
-                $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
-                $mail->DKIM_selector = 'glisweb';
-                $mail->DKIM_passphrase = $dkimPassw;
-                $mail->DKIM_identity = $mail->From;
-                logWrite('DKIM: ' . $fromDomain . ' : ' . $dkimPassw, 'dkim', LOG_DEBUG);
-                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG);
-                logWrite('DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG);
-                logWrite('DKIM: ' . readFromFile($mail->DKIM_private, FILE_READ_AS_STRING), 'dkim', LOG_DEBUG);
+            // allegati
+            if (is_array($attach)) {
+                foreach ($attach as $vAtch) {
+                    fullPath($vAtch);
+                    if (file_exists($vAtch) && is_readable($vAtch)) {
+                        $mail->AddAttachment($vAtch, basename($vAtch));
+                    } else {
+                        logWrite('impossibile allegare ' . $vAtch . ' (file non trovato o non leggibile)', 'mail', LOG_CRIT);
+                    }
+                }
+            }
+
+            // headers
+            if (is_array($headers)) {
+                foreach ($headers as $hKey => $hVal) {
+                    $mail->addCustomHeader($hKey, $hVal);
+                }
+            }
+
+            // DKIM
+            if (! empty($fromDomain)) {
+                if (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem')) {
+                    $dkimPassw = (file_exists(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key')) ? readFromFile(DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.password.key') : $dkim_pasw;
+                    $mail->DKIM_domain = $fromDomain;
+                    $mail->DKIM_private = DIR_BASE . 'etc/secret/' . $fromDomain . '/dkim.private.pem';
+                    $mail->DKIM_selector = 'glisweb';
+                    $mail->DKIM_passphrase = $dkimPassw;
+                    $mail->DKIM_identity = $mail->From;
+                    logWrite('DKIM: ' . $fromDomain . ' : ' . $dkimPassw, 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . $mail->DKIM_domain . ' ' . $mail->DKIM_selector . ' ' . $mail->DKIM_identity, 'dkim', LOG_DEBUG);
+                    logWrite('DKIM: ' . readFromFile($mail->DKIM_private, FILE_READ_AS_STRING), 'dkim', LOG_DEBUG);
+                } else {
+                    logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE);
+                    logWrite('DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
+                }
             } else {
-                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_NOTICE);
-                logWrite('DKIM: ' . $fromDomain . ' file etc/secret/' . $fromDomain . '/dkim.private.pem non trovato', 'dkim', LOG_NOTICE);
+                logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR);
             }
+
+            // invio
+            $status = $mail->Send();
+
+            // log
+            if ($status == false) {
+                logWrite(
+                    'errore phpmailer, status: ' . $status . ' ' .
+                        $mail->ErrorInfo . ' sending: ' . $oggetto . ' via: ' . $host . ':' . $port .
+                        ' to: ' . serialize($to),
+                    'mail',
+                    LOG_CRIT
+                );
+            } else {
+                logWrite(
+                    'messaggio inviato con successo, phpmailer status: ' . $status . ' ' .
+                        $mail->ErrorInfo . ' sending: ' . $oggetto . ' from: ' . $fromName . ' ' . $fromMail .
+                        ' via: ' . $host . ':' . $port . ' to: ' . serialize($to),
+                    'mail'
+                );
+            }
+
+            // restituzione risultato
+            return $status;
+
         } else {
-            logWrite('DKIM: ' . print_r($from, true) . ' -> ' . $fromName . ' -> ' . $fromDomain . ' -> ' . $fromDomain . ' non impostato', 'dkim', LOG_ERR);
+
+            logWrite('indirizzo mail mittente non valido: ' . $fromMail, 'mail', LOG_CRIT);
+            return false;
+
         }
 
-        // invio
-        $status = $mail->Send();
-
-        // log
-        if ($status == false) {
-            logWrite(
-                'errore phpmailer, status: ' . $status . ' ' .
-                    $mail->ErrorInfo . ' sending: ' . $oggetto . ' via: ' . $host . ':' . $port .
-                    ' to: ' . serialize($to),
-                'mail',
-                LOG_CRIT
-            );
-        } else {
-            logWrite(
-                'messaggio inviato con successo, phpmailer status: ' . $status . ' ' .
-                    $mail->ErrorInfo . ' sending: ' . $oggetto . ' from: ' . $fromName . ' ' . $fromMail .
-                    ' via: ' . $host . ':' . $port . ' to: ' . serialize($to),
-                'mail'
-            );
-        }
-
-        // restituzione risultato
-        return $status;
     }
 
     /**

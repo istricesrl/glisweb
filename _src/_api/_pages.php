@@ -252,7 +252,7 @@
         }
 
         // debug
-        // print_r( $ct['page'] );
+        // die( print_r( $ct['page'], true ) );
         // print_r( $ct['page']['template'] );
         // var_dump( $ct['page']['template']['yaml'] );
         // die('lettura file YAML del template completata');

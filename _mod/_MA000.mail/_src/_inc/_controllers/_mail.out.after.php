@@ -27,7 +27,7 @@
 				    foreach( $d as $vKey => $vVal ) {
 
                         if( in_array( $vKey, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
-                            $d[ $vKey ] = array2mailString( unserialize( $vVal ) ) ;
+                            $d[ $vKey ] = array2mailString( safe_unserialize( $vVal ) ) ;
                         }
         
 						/*	if( in_array( $vKey, array( 'allegati' ) ) && !empty( $d[ 'allegati' ]) ) {
@@ -53,7 +53,7 @@
 					    foreach( $row as $vKey => $vVal ) {
 
                             if( in_array( $vKey, array( 'mittente', 'destinatari', 'destinatari_cc', 'destinatari_bcc' ) ) ) {
-                                $row[ $vKey ] = array2mailString( unserialize( $vVal ) ) ;
+                                $row[ $vKey ] = array2mailString( safe_unserialize( $vVal ) ) ;
                             }
 
 					    }

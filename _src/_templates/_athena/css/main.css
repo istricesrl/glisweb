@@ -1115,3 +1115,18 @@ div.combobox-container > .spinner-border {
   .CodeMirror-lines {
     font-size: 1.2em;
 }
+
+.cm-meta {
+    color: #7a3;
+    font-weight: bold;
+}
+
+.cm-keyword {
+    color: #a52a2a;
+    font-weight: bold;
+}
+
+.cm-comment {
+    color: #888;
+    font-style: italic;
+}
