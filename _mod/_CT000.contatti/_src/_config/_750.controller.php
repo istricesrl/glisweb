@@ -81,27 +81,32 @@
                     // attivo la controller del modulo se è specificata
                     if( isset( $cf['contatti'][ $k ]['controller'] ) ) {
 
-                        // se esiste la controller custom
-                        if( file_exists( path2custom( DIR_BASE . $cf['contatti'][ $k ]['controller'] ) ) ) {
+                        // inclusione delle controller
+                        foreach( $cf['contatti'][ $k ]['controller'] as $controller ) {
 
-                            // la includo
-                            require path2custom( DIR_BASE . $cf['contatti'][ $k ]['controller'] );
+                            // se esiste la controller custom
+                            if( file_exists( path2custom( DIR_BASE . $controller ) ) ) {
 
-                            // log
-                            logger( 'inclusa controller custom per modulo contatti ' . $k . ': ' . path2custom( DIR_BASE . $cf['contatti'][ $k ]['controller'] ), 'contatti' );
+                                // la includo
+                                require path2custom( DIR_BASE . $controller );
 
-                        } elseif( file_exists( DIR_BASE . $cf['contatti'][ $k ]['controller'] ) ) {
+                                // log
+                                logger( 'inclusa controller custom per modulo contatti ' . $k . ': ' . path2custom( DIR_BASE . $controller ), 'contatti' );
 
-                            // la includo
-                            require DIR_BASE . $cf['contatti'][ $k ]['controller'];
+                            } elseif( file_exists( DIR_BASE . $controller ) ) {
 
-                            // log
-                            logger( 'inclusa controller standard per modulo contatti ' . $k . ': ' . DIR_BASE . $cf['contatti'][ $k ]['controller'], 'contatti' );
+                                // la includo
+                                require DIR_BASE . $controller;
 
-                        } else {
+                                // log
+                                logger( 'inclusa controller standard per modulo contatti ' . $k . ': ' . DIR_BASE . $controller, 'contatti' );
 
-                            // log
-                            logger( 'controller per modulo contatti ' . $k . ' specificata ma non trovata: ' . DIR_BASE . $cf['contatti'][ $k ]['controller'], 'contatti', LOG_ERR );
+                            } else {
+
+                                // log
+                                logger( 'controller per modulo contatti ' . $k . ' specificata ma non trovata: ' . DIR_BASE . $controller, 'contatti', LOG_ERR );
+
+                            }
 
                         }
 
