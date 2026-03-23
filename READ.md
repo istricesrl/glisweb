@@ -2,6 +2,29 @@
 Questo file serve per orientarsi all'interno del framework GlisWeb; si tratta di una sorta di guida
 generale, da tenere sotto mano mentre si studia il framework.
 
+## architettura generale
+Il framework GlisWeb, come ogni web application, risponde su chiamata e termina l'esecuzione inviando l'output al
+richiedente. Quando il framework riceve una chiamata, questa viene gestita in primo luogo dal file /.htaccess (su
+Apache) o dal file /index.php (su Nginx).
+
+L'esecuzione viene a quel punto passata a una API in grado di gestire la richiesta; ad esempio, se viene richiesta
+una pagina web, l'esecuzione passerà a /_src/_api/_pages.php (vedi sotto).
+
+Una volta passata l'esecuzione all'API di competenza, questa si occuperà innanzitutto di fare il bootstrap del framework
+includendo il file /_src/_config.php (si veda la documentazione del file per maggiori dettagli) il quale provvede a:
+
+- dichiarare le funzioni core
+- includere i file di configurazione
+- includere le librerie
+- predisporre l'ambiente
+- eseguire i runlevel
+
+Il funzionamento di /_src/_config.php è troppo complicato per essere riassunto qui, ma leggere questo file dovrebbe essere
+il primo passo per chi vuole studiare il funzionamento del framework.
+
+Una volta che l'esecuzione del kernel del framework è terminata, il controllo torna all'API chiamante che ha facoltà di
+eseguire tutte le operazioni che vuole prima di terminare inviando l'output al richiedente.
+
 ## descrizione dei file
 In questa sezione tutti i file e le cartelle del framework sono riportati in ordine logico, per dare un'idea dell'insieme.
 Ogni file contiene poi i commenti dettagliati sul proprio funzionamento.
@@ -772,28 +795,77 @@ In questo file vengono dichiarate le pagine relative alle fatture per il modulo 
 In questo file vengono dichiarate le pagine relative alle offerte per il modulo commerciale.
 
 ### /_mod/_FI000.file/_src/_inc/_controllers/_file.before.php
+Questa controller viene innescata al before per ogni elaborazione della tabella file.
+
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.form.php
+Questa è la macro della pagina di gestione dei file nell'archivio contenuti.
+
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.form.tools.php
+Questa è la macro della pagina degli strumenti della gestione dei file nell'archivio contenuti.
+
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.view.php
+Questa è la macro della vista dei file nell'archivio contenuti.
+
 ### /_mod/_FI000.file/_src/_inc/_macro/_mail.out.form.file.php
+Questa è la macro di gestione dei file nella gestione delle mail in uscita.
+
 ### /_mod/_FI000.file/_src/_inc/_macro/_mail.sent.form.file.php
+Questa è la macro di gestione dei file nella gestione delle mail inviate.
+
 ### /_mod/_FI000.file/_src/_inc/_macro/_mail.template.form.file.php
+Questa è la macro della gestione file associati a un template mail.
+
 ### /_mod/_FI000.file/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono definite le pagine del modulo file relative ai contenuti.
+
 ### /_mod/_FI000.file/_src/_inc/_pages/_mail.it-IT.php
+In questo file vengono definite le pagine del modulo file relative alle mail.
+
 ### /_mod/_IM000.immagini/_src/_api/_task/_images.resize.php
+Questo task seleziona un'immagine e la ridimensiona. Il framework supporta un meccanismo di scalatura automatica delle immagini
+piuttosto sofisticato, oltre a un sistema per la conversione delle immagini in formato webp. Per maggiori dettagli sulla gestione
+delle immagini da parte del framework si veda, oltre alla documentazione di questo file, anche quella dei file
+/_src/_config/_360.image.php e /_src/_config/_365.image.php.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_anagrafica.form.immagini.php
+Questa è la macro della scheda di gestione immagini dell'anagrafica.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.articoli.form.immagini.php
+Questa è la macro della scheda di gestione immagini della pagina di gestione articoli.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.categorie.prodotti.form.immagini.php
+Questa è la macro della scheda di gestione immagini della pagina di gestione delle categorie prodotti.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.prodotti.form.immagini.php
+Questa è la macro della scheda di gestione immagini della pagina di gestione dei prodotti.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.form.php
+Questa è la macro della pagina di gestione immagini dell'archivio contenuti.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.form.tools.php
+Questa è la macro della scheda strumenti della pagina di gestione immagini dell'archivio contenuti.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.archivio.immagini.view.php
+Questa è la macro della vista immagini dell'archivio contenuti.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.categorie.notizie.form.immagini.php
+Questa è la macro della scheda di gestione immagini della pagina di gestione delle categorie notizie.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.notizie.form.immagini.php
+Questa è la macro della scheda immagini della pagina di gestione delle notizie.
+
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_contenuti.pagine.form.immagini.php
+Questa è la macro della scheda immagini della pagina di gestione dei contenuti.
+
 ### /_mod/_IM000.immagini/_src/_inc/_pages/_anagrafica.it-IT.php
+In questo file vengono definite le pagine relative alle immagini per l'anagrafica.
+
 ### /_mod/_IM000.immagini/_src/_inc/_pages/_catalogo.it-IT.php
+In questo file vengono definite le pagine relative alle immagini per il catalogo.
+
 ### /_mod/_IM000.immagini/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono definite le pagine relative alle immagini per i contenuti.
+
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.out.php
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.sent.php
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.resend.php

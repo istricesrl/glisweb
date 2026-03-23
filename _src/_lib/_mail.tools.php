@@ -104,7 +104,7 @@
         $fromMail               = current($from);
 
         // se la mail mittente è un indirizzo e-mail corretto
-        if (filter_var($fromMail, FILTER_VALIDATE_EMAIL) === true) {
+        if (filter_var($fromMail, FILTER_VALIDATE_EMAIL)) {
 
             $expDomain              = explode('@', $fromMail);
             $fromDomain             = end($expDomain);

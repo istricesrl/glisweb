@@ -1,14 +1,7 @@
 <?php
 
     /**
-     * macro form anagrafica
-     *
-     *
-     *
-     * -# definizione della tabella del modulo
-     * -# popolazione delle tendine
-     *
-     *
+     * macro del form di gestione dei contenuti dei template
      *
      *
      *

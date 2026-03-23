@@ -985,6 +985,8 @@
         glob( path2custom( DIR_SRC_CONFIG_EXT . 'config.*.yaml' ) ),
         glob( path2custom( DIR_SRC . 'config.*.yaml' ) )
     );
+
+    // se sono presenti file YAML aggiuntivi
     if( is_array( $yamlConfigFiles ) ) {
         foreach( $yamlConfigFiles as $yamlConfigFile ) {
             $cf['config']['files']['yaml'][] = $yamlConfigFile;
@@ -1002,6 +1004,8 @@
         glob( path2custom( DIR_SRC_CONFIG_EXT . 'config.*.json' ) ),
         glob( path2custom( DIR_SRC . 'config.*.json' ) )
     );
+
+    // se sono presenti file JSON aggiuntivi
     if( is_array( $jsonConfigFiles ) ) {
         foreach( $jsonConfigFiles as $jsonConfigFile ) {
             $cf['config']['files']['json'][] = $jsonConfigFile;

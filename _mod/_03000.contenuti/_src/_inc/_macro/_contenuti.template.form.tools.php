@@ -4,7 +4,6 @@
      *
      *
      *
-     * TODO implementare
      * TODO documentare
      *
      */

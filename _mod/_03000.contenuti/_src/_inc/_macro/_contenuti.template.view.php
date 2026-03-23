@@ -12,7 +12,6 @@
      *
      *
      * TODO documentare
-     * TODO finire di implementare
      *
      */
 

@@ -41,6 +41,7 @@
 
                 // log
                 logger( 'blocco contatti ricevuto per ' . $k, 'contatti' );
+                writeToFile( print_r( $v, true ), DIR_VAR_SPOOL . 'contatti/' . $k . '.' . time() . '.log', LOG_ERR );
 
                 // verifica anti spam
                 reCaptchaVerifyFormV3( $v, $cf['google']['profile']['recaptcha']['keys']['private'] ?? false );
