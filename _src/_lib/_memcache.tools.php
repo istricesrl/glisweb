@@ -68,14 +68,14 @@
      * TODO documentare
      *
      */
-    function memcacheUniqueKey( &$k ) {
+    function memcacheUniqueKey(&$k)
+    {
 
-        if( strpos( $k, MEMCACHE_UNIQUE_SEED ) === false ) {
+        if (strpos($k, MEMCACHE_UNIQUE_SEED) === false) {
             $k = MEMCACHE_UNIQUE_SEED . $k;
         }
 
         return $k;
-
     }
 
     /**
@@ -83,14 +83,14 @@
      * TODO documentare
      *
      */
-    function memcacheAddKeyAgeSuffix( $k ) {
+    function memcacheAddKeyAgeSuffix($k)
+    {
 
-        if( substr( $k, -4 ) != '_AGE' ) {
+        if (substr($k, -4) != '_AGE') {
             $k .= '_AGE';
         }
 
         return $k;
-
     }
 
     /**
@@ -98,10 +98,10 @@
      * TODO documentare
      *
      */
-    function memcacheGetKeyAge( $conn, $key ) {
+    function memcacheGetKeyAge($conn, $key)
+    {
 
-        return memcacheRead( $conn, memcacheAddKeyAgeSuffix( $key ) );
-
+        return memcacheRead($conn, memcacheAddKeyAgeSuffix($key));
     }
 
     /**
@@ -113,44 +113,44 @@
      * TODO documentare
      *
      */
-    function memcacheWrite( $conn, $key, $data, $ttl = MEMCACHE_DEFAULT_TTL ) {
+    function memcacheWrite($conn, $key, $data, $ttl = MEMCACHE_DEFAULT_TTL)
+    {
 
-        memcacheUniqueKey( $key );
+        memcacheUniqueKey($key);
 
-        if( empty( $conn ) ) {
+        if (empty($conn)) {
 
-            logger( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
-
-            return false;
-
-        } elseif( ! is_object( $conn ) ) {
-
-            logger( 'connessione al server assente per scrivere la chiave: ' . $key, 'memcache' );
+            logger('connessione al server assente per scrivere la chiave: ' . $key, 'memcache');
 
             return false;
+        } elseif (! is_object($conn)) {
 
+            logger('connessione al server assente per scrivere la chiave: ' . $key, 'memcache');
+
+            return false;
         } else {
 
-            $conn->setOption( Memcached::OPT_COMPRESSION, true );
+            $conn->setOption(Memcached::OPT_COMPRESSION, true);
 
-            $r = $conn->set( $key, serialize( $data ), $ttl );
+            $r = $conn->set($key, serialize($data), $ttl);
 
-            if( $r === false ) {
-                logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR );
+            if ($r === false) {
+                logger('impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR);
             } else {
-                logger( 'scrittura effettuata, chiave: ' . $key, 'memcache' );
-                $r = $conn->set( memcacheAddKeyAgeSuffix( $key ), serialize( time() ), $ttl );
-                if( $r === false ) {
-                    logger( 'impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache', LOG_ERR );
-                } else {
-                    logger( 'scrittura effettuata, chiave: ' . memcacheAddKeyAgeSuffix( $key ), 'memcache' );
+                $idxKey = '__INDEX__';
+                $m = memcacheRead($conn, memcacheUniqueKey($idxKey));
+                if (!is_array($m)) {
+                    $m = [];
+                }
+                $m[$key] = array('time' => time(), 'ttl' => $ttl);
+                $r = $conn->set(memcacheUniqueKey($idxKey), serialize($m), $ttl);
+                if ($r === false) {
+                    logger('impossibile (' . $conn->getResultCode() . ') aggiornare l\'indice dopo aver scritto la chiave: ' . $key, 'memcache', LOG_ERR);
                 }
             }
 
             return $r;
-
         }
-
     }
 
     /**
@@ -158,28 +158,25 @@
      * TODO documentare
      *
      */
-    function memcacheDelete( $conn, $key, &$err = array() ) {
+    function memcacheDelete($conn, $key, &$err = array())
+    {
 
-        memcacheUniqueKey( $key );
+        memcacheUniqueKey($key);
 
-        if( empty( $conn ) ) {
+        if (empty($conn)) {
 
-        logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
-
-        return false;
-
-        } elseif( ! is_object( $conn ) ) {
-
-            logWrite( 'connessione al server assente per eliminare la chiave: ' . $key, 'memcache' );
+            logWrite('connessione al server assente per eliminare la chiave: ' . $key, 'memcache');
 
             return false;
+        } elseif (! is_object($conn)) {
 
+            logWrite('connessione al server assente per eliminare la chiave: ' . $key, 'memcache');
+
+            return false;
         } else {
 
-            return $conn->delete( $key );
-
+            return $conn->delete($key);
         }
-
     }
 
     /**
@@ -190,7 +187,8 @@
      * TODO documentare
      *
      */
-    function memcacheFlush($conn, $allSites = false) {
+    function memcacheFlush($conn, $allSites = false)
+    {
 
         // validazione connessione
         if (!is_object($conn)) {
@@ -204,202 +202,89 @@
             return false;
         }
 
-        // getAllKeys obbligatorio per questa implementazione
-        if (!method_exists($conn, 'getAllKeys')) {
-            logWrite('getAllKeys non disponibile su questa connessione', 'memcache');
-            return false;
-        }
-
-        // recupero chiavi
+        // recupero indice chiavi
         try {
-            $keys = $conn->getAllKeys();
-        } catch (\Throwable $e) {
-            logWrite('eccezione in getAllKeys(): ' . $e->getMessage(), 'memcache');
-            return false;
-        }
+            $idxKey = '__INDEX__';
+            $indexKey = memcacheUniqueKey($idxKey);
+            $m = memcacheRead($conn, $indexKey);
 
-        if (!is_array($keys)) {
-            logWrite('getAllKeys() non ha restituito un array', 'memcache');
+            if (!is_array($m)) {
+                $m = [];
+            }
+
+            $keys = array_keys($m);
+        } catch (\Throwable $e) {
+            logWrite('eccezione in memcacheRead(): ' . $e->getMessage(), 'memcache', LOG_ERR);
             return false;
         }
 
         if (empty($keys)) {
-            logWrite('getAllKeys() non ha restituito alcuna chiave', 'memcache');
+            logWrite('flush: nessuna chiave presente nell\'indice', 'memcache');
             return true;
         }
 
-        /*
-        * MODALITÀ DI MATCH
-        *
-        * 1) $allSites === false
-        *    -> flush per seed corrente
-        *       match: chiave che INIZIA con MEMCACHE_UNIQUE_SEED
-        *
-        * 2) $allSites è una stringa (es. "istricesrl.com")
-        *    -> flush "per dominio"
-        *       match:
-        *          - chiave che INIZIA con DOMAIN_TOKEN
-        *          - oppure chiave che contiene _DOMAIN_TOKEN
-        *
-        * Questo perché nel tuo caso reale esistono chiavi tipo:
-        * BERNISPA_ISTRICESRL_COM_ISTRICESRL_COM_MYSQL_xxxxx
-        * quindi "ISTRICESRL_COM_" non è necessariamente all'inizio.
-        */
-
-        $mode        = 'seed';
-        $seedPrefix  = (string) MEMCACHE_UNIQUE_SEED;
-        $seedLen     = strlen($seedPrefix);
-        $domainToken = null;
-
-        if ($allSites !== false) {
-            $mode = 'domain';
-            $domainToken = strtoupper(str_replace('.', '_', (string) $allSites)) . '_';
+        $toDelete = [];
+        foreach ($keys as $key) {
+            if ($allSites || strpos($key, MEMCACHE_UNIQUE_SEED) === 0) {
+                $toDelete[] = $key;
+            }
         }
 
-        $batch       = [];
-        $batchSize   = 500;
+        if (empty($toDelete)) {
+            logWrite('flush: nessuna chiave compatibile con il filtro selezionato', 'memcache');
+            return true;
+        }
 
-        $totalKeys   = count($keys);
-        $validKeys   = 0;
-        $matched     = 0;
-        $deleted     = 0;
-        $failed      = 0;
+        $total = count($toDelete);
+        $deleted = 0;
+        $notFound = 0;
+        $failed = 0;
 
-        // funzione di match centralizzata
-        $matchesKey = function ($key) use ($mode, $seedPrefix, $seedLen, $domainToken) {
+        foreach ($toDelete as $key) {
+            $del = $conn->delete($key);
 
-            if (!is_string($key) || $key === '') {
-                return false;
-            }
+            if ($del === false) {
+                $errCode = $conn->getResultCode();
 
-            if ($mode === 'seed') {
-                return ($seedLen > 0 && strncmp($key, $seedPrefix, $seedLen) === 0);
-            }
-
-            // mode === 'domain'
-            // match se:
-            // - la chiave inizia esattamente con il token di dominio
-            // - oppure contiene "_TOKEN" da qualche parte (tipico caso sottodominio + dominio)
-            return (
-                strpos($key, $domainToken) === 0 ||
-                strpos($key, '_' . $domainToken) !== false
-            );
-        };
-
-        // cancellazione batch con conteggio reale
-        $deleteBatch = function(array $keysToDelete) use ($conn, &$deleted, &$failed) {
-
-            if (empty($keysToDelete)) {
-                return;
-            }
-
-            // Tentativo con deleteMulti, ma senza fidarsi ciecamente del risultato
-            if (method_exists($conn, 'deleteMulti')) {
-                try {
-                    $result = $conn->deleteMulti($keysToDelete);
-
-                    // Caso migliore: array di risultati per singola chiave
-                    if (is_array($result)) {
-                        foreach ($keysToDelete as $k) {
-                            $ok = isset($result[$k]) ? (bool) $result[$k] : false;
-                            if ($ok) {
-                                $deleted++;
-                            } else {
-                                $failed++;
-                            }
-                        }
-                        return;
-                    }
-
-                    // Se torna true/false globale, non ci fidiamo abbastanza:
-                    // ripassiamo singolarmente per avere un conteggio vero.
-                } catch (\Throwable $e) {
-                    logWrite('eccezione in deleteMulti(): ' . $e->getMessage(), 'memcache');
-                    // fallback al delete singolo
-                }
-            }
-
-            // fallback o verifica reale
-            foreach ($keysToDelete as $k) {
-                try {
-                    $ok = $conn->delete($k);
-                    if ($ok) {
-                        $deleted++;
-                    } else {
-                        $failed++;
-                    }
-                } catch (\Throwable $e) {
+                // Memcached::RES_NOTFOUND = 16
+                if (
+                    (defined('Memcached::RES_NOTFOUND') && $errCode === Memcached::RES_NOTFOUND)
+                    || $errCode === 16
+                ) {
+                    logWrite('chiave già assente (' . $errCode . '): ' . $key, 'memcache');
+                    $notFound++;
+                } else {
+                    logWrite('impossibile (' . $errCode . ') eliminare la chiave: ' . $key, 'memcache', LOG_ERR);
                     $failed++;
-                    logWrite("eccezione in delete('{$k}'): " . $e->getMessage(), 'memcache');
                 }
-            }
-        };
-
-        // ciclo principale
-        foreach ($keys as $k) {
-
-            if (!is_string($k) || $k === '') {
-                continue;
+            } else {
+                logWrite('chiave eliminata: ' . $key, 'memcache');
+                $deleted++;
             }
 
-            $validKeys++;
-
-            if (!$matchesKey($k)) {
-                continue;
-            }
-
-            $matched++;
-            $batch[] = $k;
-
-            if (count($batch) >= $batchSize) {
-                $deleteBatch($batch);
-                $batch = [];
-            }
+            // pulizia indice locale
+            unset($m[$key]);
         }
 
-        // coda finale
-        if (!empty($batch)) {
-            $deleteBatch($batch);
+        // aggiorno l'indice
+        try {
+            // qui assumo che memcacheWrite() gestisca correttamente la serializzazione
+            memcacheWrite($conn, $indexKey, $m);
+        } catch (\Throwable $e) {
+            logWrite('eccezione nell\'aggiornamento dell\'indice: ' . $e->getMessage(), 'memcache', LOG_ERR);
+            $failed++;
         }
 
-        // info client memcache/memcached se disponibili
-        $resultInfo = '';
-        if (method_exists($conn, 'getResultCode') && method_exists($conn, 'getResultMessage')) {
-            try {
-                $resultInfo = ' resultCode=' . $conn->getResultCode() . ' resultMessage=' . $conn->getResultMessage();
-            } catch (\Throwable $e) {
-                // niente
-            }
-        }
+        logWrite(
+            'flush completato: processate ' . $total .
+                ', eliminate ' . $deleted .
+                ', già assenti ' . $notFound .
+                ', errori reali ' . $failed,
+            'memcache',
+            $failed > 0 ? LOG_ERR : LOG_INFO
+        );
 
-        // log finale
-        if ($mode === 'seed') {
-            logWrite(
-                "memcacheFlush mode=seed seed='{$seedPrefix}' totalKeys={$totalKeys} validKeys={$validKeys} matched={$matched} deleted={$deleted} failed={$failed}{$resultInfo}",
-                'memcache'
-            );
-        } else {
-            logWrite(
-                "memcacheFlush mode=domain domain='{$allSites}' token='{$domainToken}' totalKeys={$totalKeys} validKeys={$validKeys} matched={$matched} deleted={$deleted} failed={$failed}{$resultInfo}",
-                'memcache'
-            );
-        }
-
-        /*
-        * Semantica del return:
-        * - false se ci sono state chiavi matchate ma nessuna è stata cancellata e ci sono fallimenti
-        * - true negli altri casi
-        *
-        * In pratica:
-        * - nessuna chiave da cancellare -> true
-        * - alcune cancellate -> true
-        * - tutte fallite -> false
-        */
-        if ($matched > 0 && $deleted === 0 && $failed > 0) {
-            return false;
-        }
-
-        return true;
+        return ($failed === 0);
     }
 
     /**
@@ -413,9 +298,10 @@
      * TODO documentare
      *
      */
-    function memcacheRead( $conn, $key, &$err = array() ) {
+    function memcacheRead($conn, $key, &$err = array())
+    {
 
-        memcacheUniqueKey( $key );
+        memcacheUniqueKey($key);
 
         // Connessione valida?
         if (!($conn instanceof Memcached)) {
@@ -446,7 +332,6 @@
         // Valore grezzo (stringa non serializzata, numeri, array già nativo se usi igbinary, bool, ecc.)
         logger('lettura effettuata, chiave: ' . $key, 'memcache');
         return $value;
-
     }
 
     /**
@@ -457,36 +342,34 @@
      * TODO documentare
      *
      */
-    function fileCachedExists( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = array() ) {
+    function fileCachedExists($m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = array())
+    {
 
-        if( ! empty( $m ) ) {
+        if (! empty($m)) {
 
-            if( empty( $err ) ) {
+            if (empty($err)) {
                 $err = Memcached::RES_FAILURE;
             }
 
-            $k = 'FILE_CACHED_EXISTS_' . md5( $f );
+            $k = 'FILE_CACHED_EXISTS_' . md5($f);
 
-            $r = memcacheRead( $m, $k, $err );
+            $r = memcacheRead($m, $k, $err);
 
-            if( $r === false ) {
-                $r = fileExists( $f );
-                if( $r === false ) {
+            if ($r === false) {
+                $r = fileExists($f);
+                if ($r === false) {
                     $r = -1;
                 }
-                memcacheWrite( $m, $k, $r, $t );
-            } elseif( $r === -1 ) {
+                memcacheWrite($m, $k, $r, $t);
+            } elseif ($r === -1) {
                 $r = false;
             }
-
         } else {
 
-            $r = fileExists( $f );
-
+            $r = fileExists($f);
         }
 
         return $r;
-
     }
 
     /**
@@ -499,29 +382,27 @@
      * TODO documentare
      *
      */
-    function fileGetCachedContents( $m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = array() ) {
+    function fileGetCachedContents($m, $f, $t = MEMCACHE_DEFAULT_TTL, &$err = array())
+    {
 
-        if( ! empty( $m ) ) {
+        if (! empty($m)) {
 
-            if( empty( $err ) ) {
+            if (empty($err)) {
                 $err = Memcached::RES_FAILURE;
             }
 
-            $k = md5( $f );
+            $k = md5($f);
 
-            $r = memcacheRead( $m, $k, $err );
+            $r = memcacheRead($m, $k, $err);
 
-            if( empty( $r ) || $r === false ) {
-                $r = file_get_contents( $f );
-                memcacheWrite( $m, $k, $r, $t );
+            if (empty($r) || $r === false) {
+                $r = file_get_contents($f);
+                memcacheWrite($m, $k, $r, $t);
             }
-
         } else {
 
-            $r = file_get_contents( $f );
-
+            $r = file_get_contents($f);
         }
 
         return $r;
-
     }
