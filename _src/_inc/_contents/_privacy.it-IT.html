@@ -1,4 +1,4 @@
-{% if privacy.titolare %}
+{% if privacy.persone.titolare %}
 <h2>informativa resa ai sensi degli artt. 13 e 14 del GDPR 2016/679</h2>
 
 <p>In questa pagina vengono descritte le modalità e le finalità di gestione dei dati personali di coloro
@@ -11,11 +11,11 @@ eventualmente raggiunti dall'utente navigando verso di essi tramite link esterni
 <h3>titolare del trattamento dei dati</h3>
 
 <p>La consultazione di questo sito e l'utilizzo degli eventuali servizi da esso erogati può comportare, come meglio sotto dettagliato,
-il trattamento dei dati personali forniti dagli utenti da parte del titolare del trattamento, <strong>{{ privacy.titolare.denominazione }}</strong>,
-avente sede in <strong>{{ privacy.titolare.citta }} ({{ privacy.titolare.provincia }})</strong>, <strong>{{ privacy.titolare.indirizzo }}</strong>,
-partita IVA <strong>{{ privacy.titolare.piva }}</strong>, codice fiscale <strong>{{ privacy.titolare.cf }}</strong>. Il titolare può essere contattato telefonicamente
-al numero <strong><a href="tel:{{ privacy.titolare.telefono }}">{{ privacy.titolare.telefono }}</a></strong> oppure via mail
-all'indirizzo <strong><a href="mailto:{{ privacy.titolare.mail }}">{{ privacy.titolare.mail }}</a></strong>.</p>
+il trattamento dei dati personali forniti dagli utenti da parte del titolare del trattamento, <strong>{{ privacy.persone.titolare.denominazione }}</strong>,
+avente sede in <strong>{{ privacy.persone.titolare.citta }} ({{ privacy.persone.titolare.provincia }})</strong>, <strong>{{ privacy.persone.titolare.indirizzo }}</strong>,
+partita IVA <strong>{{ privacy.persone.titolare.piva }}</strong>, codice fiscale <strong>{{ privacy.persone.titolare.cf }}</strong>. Il titolare può essere contattato telefonicamente
+al numero <strong><a href="tel:{{ privacy.persone.titolare.telefono }}">{{ privacy.persone.titolare.telefono }}</a></strong> oppure via mail
+all'indirizzo <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong>.</p>
 
 {% if privacy.dpo %}
 <h3>data protection officer</h3>
@@ -38,7 +38,7 @@ oppure via mail all'indirizzo <strong><a href="mailto:{{ privacy.dpo.mail }}">{{
     </li>
     {% endfor %}
 </ul>
-<p>Un elenco dettagliato degli incaricati del trattamento dei dati può essere richiesto via mail all'indirizzo <strong><a href="mailto:{{ privacy.titolare.mail }}">{{ privacy.titolare.mail }}</a></strong>.</p>
+<p>Un elenco dettagliato degli incaricati del trattamento dei dati può essere richiesto via mail all'indirizzo <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong>.</p>
 {% endif %}
 
 <h3>base giuridica del trattamento</h3>
@@ -128,9 +128,9 @@ vengono fornite contestualmente alla richiesta del consenso nei moduli del sito 
 </ul>
 <p>Le richieste di esercizio dei diritti sopra indicati vanno rivolte senza particolari formalità, ai seguenti recapiti:</p>
 <ul>
-    {% if privacy.titolare.mail %}<li>via mail, all'indirizzo <strong><a href="mailto:{{ privacy.titolare.mail }}">{{ privacy.titolare.mail }}</a></strong></li>{% endif %}
-    {% if privacy.titolare.telefono %}<li>telefonicamente al numero <strong><a href="tel:{{ privacy.titolare.telefono }}">{{ privacy.titolare.telefono }}</a></strong></li>{% endif %}
-    <li>tramite posta ordinaria scrivendo a <strong>{{ privacy.titolare.denominazione }}, {{ privacy.titolare.indirizzo }}, {{ privacy.titolare.cap }} {{ privacy.titolare.citta }} ({{ privacy.titolare.provincia }})</strong></li>
+    {% if privacy.persone.titolare.mail %}<li>via mail, all'indirizzo <strong><a href="mailto:{{ privacy.persone.titolare.mail }}">{{ privacy.persone.titolare.mail }}</a></strong></li>{% endif %}
+    {% if privacy.persone.titolare.telefono %}<li>telefonicamente al numero <strong><a href="tel:{{ privacy.persone.titolare.telefono }}">{{ privacy.persone.titolare.telefono }}</a></strong></li>{% endif %}
+    <li>tramite posta ordinaria scrivendo a <strong>{{ privacy.persone.titolare.denominazione }}, {{ privacy.persone.titolare.indirizzo }}, {{ privacy.persone.titolare.cap }} {{ privacy.persone.titolare.citta }} ({{ privacy.persone.titolare.provincia }})</strong></li>
 </ul>
 
 <h2>cookie e altri sistemi di tracciamento</h2>

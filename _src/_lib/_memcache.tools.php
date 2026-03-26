@@ -137,7 +137,7 @@
             if ($r === false) {
                 logger('impossibile (' . $conn->getResultCode() . ') scrivere la chiave: ' . $key, 'memcache', LOG_ERR);
             } else {
-                $idxKey = '__INDEX__';
+                $idxKey = 'CACHE_INDEX';
                 $m = memcacheRead($conn, memcacheUniqueKey($idxKey));
                 if (!is_array($m)) {
                     $m = [];
@@ -204,7 +204,7 @@
 
         // recupero indice chiavi
         try {
-            $idxKey = '__INDEX__';
+            $idxKey = 'CACHE_INDEX';
             $indexKey = memcacheUniqueKey($idxKey);
             $m = memcacheRead($conn, $indexKey);
 

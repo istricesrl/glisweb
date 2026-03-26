@@ -601,12 +601,12 @@
      */
 
     // scrittura dell'indice della cache
-    if( $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' ) ) {
-        memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
-    }
+    // if( $cf['memcache']['index'] !== memcacheRead( $cf['memcache']['connection'], 'CACHE_INDEX' ) ) {
+    //     memcacheWrite( $cf['memcache']['connection'], 'CACHE_INDEX', $cf['memcache']['index'] );
+    // }
 
     // timer
-    timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
+    // timerCheck( $cf['speed'], 'fine salvataggio indice cache' );
 
     /**
      * ricerca delle favicons
