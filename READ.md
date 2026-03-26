@@ -1821,7 +1821,8 @@ un esempio di configurazione minimale potrebbe essere il seguente:
 ```
 contatti:
   nomemodulo:
-    controller: "_mod/_CT000.contatti/_src/_inc/_controllers/_form/_nomemodulo.php"
+    controller: 
+        - "_mod/_CT000.contatti/_src/_inc/_controllers/_form/_nomemodulo.php"
 ```
 
 ## FAQ

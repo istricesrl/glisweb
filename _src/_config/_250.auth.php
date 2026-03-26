@@ -1169,6 +1169,12 @@
         ),
         'mastri_articoli' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'consensi_anagrafica' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
+        'consensi_contatti' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
         )
     );
  

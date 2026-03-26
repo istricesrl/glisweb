@@ -749,7 +749,8 @@ CREATE TABLE IF NOT EXISTS `condizioni_pagamento` (
 -- e alle note
 --
 CREATE TABLE IF NOT EXISTS `consensi` (                       --
-  `id` char(64) NOT NULL,                                     -- chiave primaria
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `codice` char(64) NOT NULL,                                 -- codice
   `nome` char(255) DEFAULT NULL,                              -- nome del consenso
   `note` text DEFAULT NULL,                                   -- note sul consenso
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
@@ -761,7 +762,7 @@ CREATE TABLE IF NOT EXISTS `consensi` (                       --
 -- TODO documentare meglio questa tabella con riferimenti al codice
 --
 
--- | 010000006500
+-- | 010000006300
 
 -- consensi_moduli
 -- tipologia: tabella assistita
@@ -785,6 +786,54 @@ CREATE TABLE `consensi_moduli` (                              --
   `note` text DEFAULT NULL,                                   -- note sul consenso
   `pagina` char(32) DEFAULT NULL,                             -- ID della pagina che contiene l'informativa relativa al consenso, se presente
   `se_richiesto` tinyint(1) DEFAULT NULL,                     -- flag che indica se il consenso è richiesto
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000006400
+
+-- consensi_anagrafica
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: specifica quali consensi sono stati acquisiti per ogni anagrafica presente nel sistema
+-- 
+-- questa tabella contiene i consensi che vanno chiesti per ogni anagrafica acquisita, e va a integrare le informazioni già
+-- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
+-- ulteriori approfondimenti
+--
+CREATE TABLE `consensi_anagrafica` (                              --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_consenso` int(11) DEFAULT NULL,                         -- chiave esterna per il consenso
+  `id_anagrafica` int(11) DEFAULT NULL,                      -- chiave esterna per l'anagrafica
+  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
+  `note` text DEFAULT NULL,                                   -- note sul consenso
+  `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
+  `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
+  `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso
+  `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000006500
+
+-- consensi_contatti
+-- tipologia: tabella gestita
+-- rango: tabella secondaria
+-- struttura: tabella base
+-- funzione: specifica quali consensi sono stati acquisiti per ogni contatto acquisito
+-- 
+-- questa tabella contiene i consensi che sono stati acquisiti per ogni contatto acquisito, e va a integrare le informazioni già
+-- presenti nei file di configurazione; questo viene effettuato nel file _src/_config/_180.privacy.php al quale si rimanda per
+-- ulteriori approfondimenti
+--
+CREATE TABLE `consensi_contatti` (                              --
+  `id` int(11) NOT NULL,                                      -- chiave primaria
+  `id_consenso` int(11) DEFAULT NULL,                         -- chiave esterna per il consenso
+  `id_contatto` int(11) DEFAULT NULL,                         -- chiave esterna per il contatto
+  `modulo` char(32) DEFAULT NULL,                             -- ID del modulo cui si riferisce il consenso
+  `note` text DEFAULT NULL,                                   -- note sul consenso
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il consenso
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il consenso

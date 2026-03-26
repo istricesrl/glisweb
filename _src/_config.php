@@ -1089,12 +1089,20 @@
 
         if( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) ) ) {
             $cm = yaml_parse( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) ) );
-            $cx = array_replace_recursive( $cx, $cm );
-            $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.yaml' );
+            if( is_array( $cm ) ) {
+                $cx = array_replace_recursive( $cx, $cm );
+                $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.yaml' );
+            } else {
+                die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) . ' danneggiato' );
+            }
         } elseif( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ) ) {
             $cm = json_decode( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ), true );
-            $cx = array_replace_recursive( $cx, $cm );
-            $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.json' );
+            if( is_array( $cm ) ) {
+                $cx = array_replace_recursive( $cx, $cm );
+                $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.json' );
+            } else {
+                die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.json' ) . ' danneggiato' );
+            }
         }
 
     }

@@ -1,0 +1,46 @@
+{# MACRO PER LA GESTIONE DELLA PRIVACY 
+    Questo file contiene macro utili per la creazione di codice HTML relativo alla privacy, ad esempio per la creazione di checkbox
+    per i consensi da prestare, per la creazione di banner, per la creazione di moduli di consenso, eccetera. È consigliabile per mantenere
+    la consistenza fra le pagine di importarlo sempre come 'prv' quindi {% import '_bin/_privacy.html' as prv %} #}
+
+{# checkConsensi() - genera le checkbox per i consensi relativi a un modulo dato 
+    Questa macro genera le checkbox per i consensi relativi a un modulo dato. I consensi da generare devono essere passati alla macro
+    attraverso la variabile items che deve avere la sotto chiave consensi #}
+{% macro checkConsensi( key, modulo, items, ietf, tr, pages, class, rclass ) %}
+<!-- macro {{ _self }}::checkConsensi() -->
+{% if not class %}{% set class = 'col-12 col-md-10 offset-md-2' %}{% endif %}
+{% if not rclass %}{% set rclass = 'form-group form-row' %}{% endif %}
+{% if not ietf %}{% set ietf = 'it-IT' %}{% endif %}
+{% if items.consensi is iterable %}
+{% for codice,check in items.consensi|sort((a, b) => a.ordine <=> b.ordine) %}
+{% if check.label[ ietf ] %}
+{% set nm = key ~ '[' ~ modulo ~ '][__privacy__][' ~ codice ~ ']' %}
+{% set id = key ~ '_' ~ modulo ~ '_privacy_' ~ codice %}
+<div class="{{ rclass }} row-privacy">
+    <div class="{{ class }}">
+		<div class="form-check">
+			<input type="hidden" id="{{ id }}" name="{{ nm }}" value="0">
+			<input class="form-check-input" id="{{ id }}_checkbox" type="checkbox" {% if check.required %}required{% endif %}>
+			<label class="form-check-label text-left" for="{{ id }}_checkbox">
+			{{ tr.generic[ check.action ][ ietf ] }}
+			{% if check.page %}<a href="{{ pages[ check.page ].url[ ietf ] }}" target="_blank">{% endif %}{{ check.label[ ietf ] | raw }}{% if check.page %}</a>{% endif %}
+			({% if check.required %}{{ tr.generic.obbligatorio[ ietf ] | raw }}{% else %}{{ tr.generic.facoltativo[ ietf ] | raw }}{% endif %})
+			</label>
+		</div>
+    </div>
+</div>
+{% else %}
+<!-- il consenso {{ codice }} non ha una label per la lingua {{ ietf }} -->
+{% endif %}
+{% else %}
+<div class="{{ rclass }} row-privacy">
+    <div class="{{ class }}">
+		<p>nessun consenso richiesto per questo modulo</p>
+    </div>
+</div>
+{% endfor %}
+{% else %}
+<!-- nessun consenso configurato per questo modulo -->
+{% endif %}
+<!-- fine macro {{ _self }}::checkConsensi() -->
+{% endmacro %}

@@ -1,11 +1,19 @@
 <?php
 
     /**
+     * configurazioni per la privacy
      *
-     *
-     *
-     *
-     *
+     * in questo file vengono settate le configurazioni di default per la privacy, che vanno poi
+     * specificate in custom per essere compliant con la normativa vigente
+     * 
+     * introduzione
+     * ============
+     * Le configurazioni per la privacy sono divise in tre macro aree:
+     * 
+     * - dati dei soggetti coinvolti
+     * - dati dei cookie
+     * - dati dei consensi relativi ai moduli
+     * 
      *
      *
      *
@@ -34,15 +42,27 @@
     // ini_set( 'display_errors', TRUE );
     // echo 'OUTPUT';
 
+    // inizializzazione
+    $cf['privacy'] = array();
+
     /**
-     * variabili generali per la privacy
-     * =================================
+     * dati delle persone coinvolte
+     * ============================
+     * Le persone coinvolte sono il titolare del trattamento, i responsabili del trattamento, gli incaricati del trattamento,
+     * il data protection officer (DPO) ed eventuali soggetti terzi coinvolti.
      * 
      * 
      */
 
-    // inizializzazione
-    $cf['privacy'] = array();
+    // dati del titolare del trattamento
+    $cf['privacy']['persone']['titolare'] = array();
+
+    /**
+     * dati dei cookie
+     * ===============
+     * 
+     * 
+     */
 
     // dichiarazione dell'uso di cookie propri tecnici (cookie di sessione)
     $cf['privacy']['cookie']['propri']['tecnici'] = array(
@@ -60,6 +80,41 @@
             'descrizione' => array( 'it-IT' => 'cookie per la gestione dei consensi della privacy, viene eliminato alla chiusura del browser' ),
             'conservazione' => array( 'it-IT' => 'fino alla chiusura del browser' ),
         ),
+    );
+
+    /**
+     * dati dei moduli e dei consensi
+     * ==============================
+     * 
+     * 
+     * 
+     */
+
+    // modulo di default
+    $cf['privacy']['moduli']['default'] = array(
+        'titolo' => array(
+            'it-IT' => 'modulo di adesione alla newsletter',
+            'en-GB' => 'form for joining the newsletter'
+        ),
+        'descrizione' => array(
+            'it-IT' => 'Questo modulo può essere utilizzato dagli utenti per aderire alla newsletter.',
+            'en-GB' => 'This form can be used by users to join the newsletter.'
+        ),
+        'consensi' => array(
+            'PRIVACY_POLICY' => array(
+                'informativa' => array(
+                    'it-IT' => 'richiesta adesione alla newsletter',
+                    'en-GB' => 'request to join the newsletter'
+                ),
+                'label' => array(
+                    'it-IT' => 'la privacy e cookie policy del sito',
+                    'en-GB' => 'privacy and cookie policy of the site'
+                ),
+                'action' => 'letto_e_accetto',
+                'page' => 'privacy',
+                'required' => true
+            )
+        )
     );
 
     /**

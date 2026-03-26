@@ -51,7 +51,7 @@
             'data_archiviazione' => array('NL' => true)
         ),
         '__sort__' => array(
-            '__label__' => 'ASC'
+            'data_ora_contatto' => 'DESC'
         ),
     );
 

@@ -209,7 +209,7 @@
     echo '-------------------' . PHP_EOL;
 
     // titolare privacy
-    if( empty( $cf['privacy']['titolare'] ) ) {
+    if( empty( $cf['privacy']['persone']['titolare'] ) ) {
         echo '[FAIL] titolare del trattamento dei dati non impostato' . PHP_EOL;
     } else {
         echo '[ OK ] titolare del trattamento dei dati impostato' . PHP_EOL;

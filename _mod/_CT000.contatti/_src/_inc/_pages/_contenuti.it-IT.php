@@ -69,6 +69,7 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.contatti.form',
                                                             'contenuti.contatti.form.dati',
+                                                            'contenuti.contatti.form.privacy',
                                                             'contenuti.contatti.form.archiviazione',
                                                             'contenuti.contatti.form.tools' ) )
     );
@@ -81,6 +82,19 @@
         'parent'            => array( 'id'        => 'contenuti.contatti.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.contatti.form.dati.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.contatti.form.dati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.contatti.form' )
+    );
+
+    // tools archivio produzione
+    $p['contenuti.contatti.form.privacy'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-user-shield" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'privacy contenuti contatti form' ),
+        'h1'                => array( $l        => 'privacy' ),
+        'parent'            => array( 'id'        => 'contenuti.contatti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.contatti.form.privacy.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.contatti.form.privacy.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.contatti.form' )
     );

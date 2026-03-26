@@ -100,6 +100,7 @@
                                                             // 'anagrafica.form.file',
                                                             // 'anagrafica.form.metadati',
                                                             'anagrafica.form.relazioni',
+                                                            'anagrafica.form.privacy',
                                                             'anagrafica.form.archiviazione',
                                                             // 'anagrafica.form.stats',
                                                             'anagrafica.form.stampe',
@@ -173,6 +174,19 @@
         'parent'            => array( 'id'        => 'anagrafica.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.relazioni.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.relazioni.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.form' )
+    );
+
+    // tools archivio amministrazione
+    $p['anagrafica.form.privacy'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-user-shield" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'amministrazione fatture attive form privacy' ),
+        'h1'                => array( $l        => 'privacy' ),
+        'parent'            => array( 'id'        => 'anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.form.privacy.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.form.privacy.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'anagrafica.form' )
     );
