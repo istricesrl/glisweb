@@ -40,6 +40,8 @@
             serialize( $_REQUEST ) .
             ( ( isset( $_SESSION['__view__'] ) ) ? serialize( $_SESSION['__view__'] ) : NULL ) .
             ( ( isset( $_SESSION['carrello']['spedizione_id_stato'] ) ) ? $_SESSION['carrello']['spedizione_id_stato'] : NULL ) .
+            ( ( isset( $_SESSION['account']['id'] ) ) ? $_SESSION['account']['id'] : NULL ) .
+            ( ( isset( $_REQUEST['__login__'] ) ) ? serialize( $_REQUEST['__login__'] ) : NULL ) .
             ( ( isset( $_COOKIE['privacy'] ) ) ? $_COOKIE['privacy'] : NULL )
         );
 
