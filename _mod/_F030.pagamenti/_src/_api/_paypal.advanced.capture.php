@@ -88,22 +88,6 @@
         // URL di ritorno
         if( $result['purchase_units'][0]['payments']['captures'][0]['status'] == 'COMPLETED' ) {
 
-            // dati di pagamento
-            $payment = array(
-                'id'						=> $pagamento['id'],
-                'timestamp_pagamento'		=> time(),
-                'codice_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['id'],
-                'importo_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['amount']['value'],
-                'status_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['status']
-            );
-
-            // registro il pagamento
-            $paymentId = mysqlInsertRow(
-                $cf['mysql']['connection'],
-                $payment,
-                'pagamenti'
-            );
-
             // controller post checkout
             $cnts = glob( glob2custom( DIR_MOD_ATTIVI . '_src/_inc/_controllers/_pagamento.finally.success.php' ), GLOB_BRACE );
 
@@ -113,13 +97,102 @@
             // log
             appendToFile( 'controller post pagamento trovate: ' . print_r( $cnts, true ), $fileRicevuta );
 
-            // inclusione delle controller post checkout
-            foreach( $cnts as $cnt ) {
-                require $cnt;
+            // controllo se ci sono pagamenti figli
+            $childPayments = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT * FROM pagamenti WHERE id_genitore = ?',
+                array( array( 's' => $pagamento['id'] ) )
+            );
+
+            if( empty( $childPayments ) ) {
+
+                // log
+                appendToFile( 'nessun pagamento figlio trovato', $fileRicevuta );
+
+                // dati di pagamento
+                $payment = array(
+                    'id'						=> $pagamento['id'],
+                    'timestamp_pagamento'		=> time(),
+                    'codice_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['id'],
+                    'importo_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['amount']['value'],
+                    'status_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['status']
+                );
+
+                // registro il pagamento
+                $paymentId = mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    $payment,
+                    'pagamenti'
+                );
+
+                // inclusione delle controller post checkout
+                foreach( $cnts as $cnt ) {
+                    require $cnt;
+                }
+
+            } else {
+
+                // log
+                appendToFile( 'pagamenti figli trovati: ' . print_r( $childPayments, true ), $fileRicevuta );
+
+                // registro il pagamento per ogni pagamento figlio
+                foreach( $childPayments as $childPayment ) {
+
+                    // dati di pagamento
+                    $payment = array(
+                        'id'						=> $childPayment['id'],
+                        'id_genitore'				=> NULL,
+                        'timestamp_pagamento'		=> time(),
+                        'codice_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['id'],
+                        'importo_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['amount']['value'],
+                        'status_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['status']
+                    );
+
+                    // registro il pagamento
+                    $paymentId = mysqlInsertRow(
+                        $cf['mysql']['connection'],
+                        $payment,
+                        'pagamenti'
+                    );
+
+                    // log
+                    appendToFile( 'registrato pagamento figlio (' . $paymentId . '): ' . print_r( $childPayment, true ), $fileRicevuta );
+
+                    // ...
+                    $dettagli = $childPayment;
+                    $dettagli['tipologia'] = 'pagamento';
+                    $dettagli['id_carrello'] = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id_carrello FROM carrelli_articoli WHERE id = ?',
+                        array( array( 's' => $childPayment['id_carrelli_articoli'] ) )
+                    );
+
+                    // inclusione delle controller post checkout
+                    foreach( $cnts as $cnt ) {
+                        require $cnt;
+                    }
+
+                }
+
+                // ...
+                $dettagli['success'] = $_SESSION['master_payment']['success'];
+
             }
 
             // log
             logWrite( 'pagamento effettuato con successo: ' . $_REQUEST['id'], 'paypal', LOG_INFO );
+
+            // ...
+            memcacheDelete( $cf['memcache']['connection'], $pagamento['token_pagamento'] );
+
+            // se il pagamento originario era un master, lo elimino
+            if( ! empty( $childPayments ) ) {
+                mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'DELETE FROM pagamenti WHERE id = ?',
+                    array( array( 's' => $pagamento['id'] ) )
+                );
+            }
 
             // URL di redirect in caso di successo
             // TODO leggere dal pagamento?
