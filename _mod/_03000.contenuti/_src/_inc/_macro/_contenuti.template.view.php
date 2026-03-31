@@ -1,17 +1,12 @@
 <?php
 
     /**
+     * macro della vista dei template
+     *
+     * Questa macro imposta la vista dei template. Si noti che la vista opera in __filesystem_mode__. La tabella
+     * __templates__ è una tabella virtuale che rappresenta i file presenti nel filesystem.
      *
      *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * TODO documentare
      *
      */
 
@@ -21,6 +16,7 @@
     // tabella della vista
     $ct['view']['table'] = '__templates__';
 
+    // filesystem mode
     $ct['view']['data']['__filesystem_mode__'] = 1;
 
     // id della vista

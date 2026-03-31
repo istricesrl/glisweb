@@ -305,6 +305,7 @@
         'etc'                => array( 'tabs'    => array(    'catalogo.articoli.form',
                                                             'catalogo.articoli.form.caratteristiche',
                                                             'catalogo.articoli.form.distinta',
+                                                            'catalogo.articoli.form.barcode',
                                                             'catalogo.articoli.form.relazioni',
                                                             'catalogo.articoli.form.archiviazione',
                                                             'catalogo.articoli.form.tools' ) )
@@ -312,12 +313,12 @@
 
     // RELAZIONI CON IL MODULO IMMAGINI
     if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'catalogo.articoli.form.relazioni', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.immagini' );
+        arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.immagini' );
     }
 
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
-        arrayInsertBefore( 'catalogo.articoli.form.relazioni', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
+        arrayInsertBefore( 'catalogo.articoli.form.barcode', $p['catalogo.articoli.form']['etc']['tabs'], 'catalogo.articoli.form.video' );
     }
 
     // tools archivio produzione
@@ -328,6 +329,19 @@
         'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
         'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.caratteristiche.twig' ),
         'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.caratteristiche.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
+    );
+
+    // tools archivio produzione
+    $p['catalogo.articoli.form.barcode'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-barcode" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'catalogo articoli form barcode' ),
+        'h1'                => array( $l        => 'barcode' ),
+        'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.barcode.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.barcode.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
     );

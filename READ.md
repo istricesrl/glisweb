@@ -2098,7 +2098,8 @@ docker exec -it <containerId> bash
 ```
 
 #### posso lanciare il container di Glisweb su Flatcar Linux?
-TODO documentare
+Per un'introduzione veloce a Flatcar Linux si veda https://github.com/the-linux-nerd/esempi-linux/blob/master/distribuzioni/flatcar.md.
+Una volta che avrete una Flatcar funzionante, potrete lanciare normalmente da Docker l'immagine del framework (vedi la relativa FAQ).
 
 #### come creo una patch per il database?
 Una patch per il database è un file contenente uno o più comandi SQL, opportunamente commentati per far capire al framework come deve considerarli.
@@ -2182,6 +2183,14 @@ google:
 #### come funziona l'aggiornamento dei report di magazzino?
 Di base l'aggiornamento dei report di magazzino viene attivata dalla controller su documenti_articoli nel modulo mastri. In pratica ogni volta che
 una riga di documento viene salvata, le relative informazioni di magazzino vengono aggiornate.
+
+#### come vengono salvate le preferenze di privacy degli utenti?
+Le preferenze relative ai cookie vengono salvate in un cookie tecnico (vedi /_src/_config/_060.privacy.php e /_src/_config/_065.privacy.php) mentre
+i consensi ai trattamenti dei dati e l'accettazione delle policy del sito vengono salvate nel database, e in particolare nella tabella
+consensi_anagrafica.
+
+Se si studia il codice del file /_mod/_CT000.contatti/_src/_config/_750.controller.php e quello della funzione associazioneConsensiContatto() si
+vedrà esattamente dove i consensi prestati con i vari moduli presenti sul sito vengono intercettati, e come vengono poi salvati.
 
 ### template Athena
 Questa sezione contiene domande specificamente relative all'utilizzo del template Athena.

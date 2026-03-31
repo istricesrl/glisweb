@@ -1,12 +1,32 @@
 <?php
 
     /**
+     * pagine del modulo 03000.contenuti
      * 
+     * Questo file contiene la definizione delle pagine del modulo "contenuti".
      * 
+     * introduzione
+     * ============
+     * Il modulo contenuti è un modulo contenitore, che fornisce una dashboard e un archivio con le
+     * rispettive pagine tools, in modo che altri moduli possano inserirvi le proprie sotto pagine.
      * 
+     * pagina                           | genitore                  | descrizione
+     * ---------------------------------|---------------------------|---------------------
+     * contenuti                        | NULL                      | dashboard contenuti
+     * contenuti.tools                  | contenuti                 | tools contenuti
+     * contenuti.archivio               | contenuti                 | archivio contenuti
+     * contenuti.archivio.tools         | contenuti.archivio        | tools archivio contenuti
      * 
-     * TODO documentare
+     * Il modulo contiene inoltre le pagine di gestione dei template, che forniscono un'interfaccia 
+     * per la creazione e la gestione dei template.
      * 
+     * pagina                           | genitore                  | descrizione
+     * ---------------------------------|---------------------------|---------------------
+     * contenuti.template.view          | contenuti                 | visualizzazione template contenuti
+     * contenuti.template.tools         | contenuti.template.view   | tools della vista template contenuti
+     * contenuti.template.form          | contenuti.template.view   | form di gestione template contenuti
+     * contenuti.template.form.editor   | contenuti.template.view   | editor del form di gestione template
+     * contenuti.template.form.tools    | contenuti.template.view   | tools del form di gestione template
      * 
      */
 
@@ -29,10 +49,10 @@
                                                         'contenuti.tools'
                                                          ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'contenuti' ),
-                                                                        'priority'    => '3000' ) ) )                                                        
+                                                                        'priority'    => '9000' ) ) )                                                        
     );
 
-    // tools contenuti
+    // tools della dashboard contenuti
     $p['contenuti.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -45,7 +65,7 @@
         'etc'                => array( 'tabs'    => 'contenuti' )
     );
 
-    // dashboard contenuti
+    // archivio contenuti
     $p['contenuti.archivio'] = array(
         'sitemap'        => false,
         'title'            => array( $l        => 'archivio contenuti' ),
@@ -74,7 +94,7 @@
         'etc'                => array( 'tabs'    => 'contenuti.archivio' )
     );
 
-    // dashboard contenuti
+    // vista template contenuti
     $p['contenuti.template.view'] = array(
         'sitemap'        => false,
         'title'            => array( $l        => 'template contenuti' ),
@@ -90,7 +110,7 @@
                                                                         'priority'    => '9000' ) ) )                                                        
     );
 
-    // tools template contenuti
+    // tools della vista template contenuti
     $p['contenuti.template.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -103,7 +123,7 @@
         'etc'                => array( 'tabs'    => 'contenuti.template.view' )
     );
 
-    // tools template contenuti
+    // form di gestione template
     $p['contenuti.template.form'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'gestione template' ),
@@ -118,7 +138,7 @@
                                                         ) )
     );
 
-    // tools template contenuti
+    // editor della gestione template
     $p['contenuti.template.form.editor'] = array(
         'sitemap'            => false,
         'title'                => array( $l        => 'editor template' ),
@@ -130,7 +150,7 @@
         'etc'                => array( 'tabs'    => 'contenuti.template.form' )
     );
 
-    // tools template contenuti
+    // tools della gestione template
     $p['contenuti.template.form.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',

@@ -1,12 +1,21 @@
 <?php
 
     /**
+     * pagine del modulo 04000.catalogo
      * 
+     * Questo file contiene la definizione delle pagine del modulo "catalogo".
      * 
+     * introduzione
+     * ============
+     * Il modulo catalogo è un modulo contenitore, che fornisce una dashboard e un archivio con le 
+     * rispettive pagine tools, in modo che altri moduli possano inserirvi le proprie sotto pagine.
      * 
-     * 
-     * TODO documentare
-     * 
+     * pagina                           | genitore                  | descrizione
+     * ---------------------------------|---------------------------|---------------------
+     * catalogo                         | NULL                      | dashboard catalogo
+     * catalogo.tools                   | catalogo                  | tools catalogo
+     * catalogo.archivio                | catalogo                  | archivio catalogo
+     * catalogo.archivio.tools          | catalogo.archivio         | tools archivio catalogo
      * 
      */
 
@@ -32,7 +41,7 @@
                                                                         'priority'    => '4000' ) ) )                                                        
     );
 
-    // tools catalogo
+    // tools della dashboard catalogo
     $p['catalogo.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -45,7 +54,7 @@
         'etc'                => array( 'tabs'    => 'catalogo' )
     );
 
-    // dashboard catalogo
+    // archivio catalogo
     $p['catalogo.archivio'] = array(
         'sitemap'        => false,
         'title'            => array( $l        => 'archivio catalogo' ),
@@ -61,7 +70,7 @@
                                                                         'priority'    => '4900' ) ) )                                                        
     );
 
-    // tools archivio catalogo
+    // tools dell'archivio catalogo
     $p['catalogo.archivio.tools'] = array(
         'sitemap'            => false,
         'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',

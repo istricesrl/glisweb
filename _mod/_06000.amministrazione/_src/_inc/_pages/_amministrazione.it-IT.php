@@ -1,13 +1,40 @@
 <?php
 
     /**
-     * 
-     * 
-     * 
-     * 
-     * TODO documentare
-     * 
-     * 
+     * pagine del modulo 06000.amministrazione
+	 * 
+	 * Questo file contiene la definizione delle pagine del modulo "amministrazione".
+	 * 
+	 * introduzione
+	 * ============
+	 * Il modulo amministrazione è un modulo contenitore, che fornisce una dashboard e un archivio con le 
+	 * rispettive pagine tools, in modo che altri moduli possano inserirvi le proprie sotto pagine.
+	 * 
+	 * pagina                           | genitore                  | descrizione
+	 * ---------------------------------|---------------------------|---------------------
+	 * amministrazione                  | NULL                      | dashboard amministrazione
+	 * amministrazione.tools            | amministrazione           | tools amministrazione
+	 * amministrazione.archivio         | amministrazione           | archivio amministrazione
+	 * amministrazione.archivio.tools   | amministrazione.archivio  | tools archivio amministrazione
+	 * 
+	 * Il modulo contiene inoltre le pagine di gestione dei reparti:
+	 * 
+	 * pagina                         					| genitore              					| descrizione
+	 * -------------------------------------------------|-------------------------------------------|---------------------
+	 * amministrazione.archivio.reparti.view 			| amministrazione.archivio      			| vista reparti
+	 * amministrazione.archivio.reparti.form 			| amministrazione.archivio      			| form reparti
+	 * amministrazione.archivio.reparti.form.tools 		| amministrazione.archivio     				| tools form reparti
+	 * 
+	 * Infine il modulo prevede le pagine per la gestione dei cicli attivo e passivo:
+	 * 
+	 * pagina                         					| genitore              					| descrizione
+	 * -------------------------------------------------|-------------------------------------------|---------------------
+	 * amministrazione.ciclo.attivo 					| amministrazione      						| dashboard ciclo attivo
+	 * amministrazione.ciclo.attivo.tools 				| amministrazione.ciclo.attivo 				| tools ciclo attivo
+	 * amministrazione.ciclo.passivo 					| amministrazione      						| dashboard ciclo passivo
+	 * amministrazione.ciclo.passivo.tools 				| amministrazione.ciclo.passivo 			| tools ciclo passivo
+
+	 * 
      */
 
     // lingua di questo file
@@ -32,7 +59,7 @@
 																		'priority'	=> '6000' ) ) )														
 	);
 
-    // tools amministrazione
+    // tools della dashboard amministrazione
 	$p['amministrazione.tools'] = array(
 		'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -45,7 +72,7 @@
 	    'etc'				=> array( 'tabs'	=> 'amministrazione' )
 	);
 
-	// dashboard amministrazione
+	// archivio amministrazione
 	$p['amministrazione.archivio'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'archivio amministrazione' ),
@@ -62,7 +89,7 @@
 																		'priority'	=> '9900' ) ) )														
 	);
 
-    // tools archivio amministrazione
+    // vista dell'archivio reparti
 	$p['amministrazione.archivio.reparti.view'] = array(
 		'sitemap'			=> false,
 	    'title'				=> array( $l		=> 'reparti' ),
@@ -74,7 +101,34 @@
 	    'etc'				=> array( 'tabs'	=> 'amministrazione.archivio' )
 	);
 
-    // tools archivio amministrazione
+	// form di gestione reparto
+	$p['amministrazione.archivio.reparti.form'] = array(
+		'sitemap'			=> false,
+	    'title'				=> array( $l		=> 'gestione reparto' ),
+	    'h1'				=> array( $l		=> 'gestione' ),
+	    'parent'			=> array( 'id'		=> 'amministrazione.archivio' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.form.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.archivio.reparti.form.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> array(
+														'amministrazione.archivio.reparti.form'
+		) )
+	);
+
+	// tools della gestione reparto
+	$p['amministrazione.archivio.reparti.form.tools'] = array(
+		'sitemap'			=> false,
+		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
+	    'title'				=> array( $l		=> 'azioni gestione reparto' ),
+	    'h1'				=> array( $l		=> 'azioni' ),
+	    'parent'			=> array( 'id'		=> 'amministrazione.archivio' ),
+	    'template'			=> array( 'path'	=> '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+	    'macro'				=> array( $m . '_src/_inc/_macro/_amministrazione.archivio.reparti.form.tools.php' ),
+	    'auth'				=> array( 'groups'	=> array(	'roots', 'staff' ) ),
+	    'etc'				=> array( 'tabs'	=> 'amministrazione.archivio.reparti.form' )
+	);
+
+	// tools dell'archivio amministrazione
 	$p['amministrazione.archivio.tools'] = array(
 		'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -87,7 +141,7 @@
 	    'etc'				=> array( 'tabs'	=> 'amministrazione.archivio' )
 	);
 
-	// dashboard amministrazione
+	// dashboard del ciclo attivo dell'amministrazione
 	$p['amministrazione.ciclo.attivo'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'amministrazione ciclo attivo' ),
@@ -103,7 +157,7 @@
 																		'priority'	=> '1100' ) ) )														
 	);
 
-    // tools archivio amministrazione
+    // tools del ciclo attivo dell'amministrazione
 	$p['amministrazione.ciclo.attivo.tools'] = array(
 		'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',
@@ -116,7 +170,7 @@
 	    'etc'				=> array( 'tabs'	=> 'amministrazione.ciclo.attivo' )
 	);
 
-	// dashboard amministrazione
+	// dashboard del ciclo passivo dell'amministrazione
 	$p['amministrazione.ciclo.passivo'] = array(
 	    'sitemap'		=> false,
 	    'title'			=> array( $l		=> 'amministrazione ciclo passivo' ),
@@ -132,7 +186,7 @@
 																		'priority'	=> '2100' ) ) )														
 	);
 
-    // tools archivio amministrazione
+    // tools del ciclo passivo dell'amministrazione
 	$p['amministrazione.ciclo.passivo.tools'] = array(
 		'sitemap'			=> false,
 		'icon'				=> '<i class="fa fa-cogs" aria-hidden="true"></i>',

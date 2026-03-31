@@ -3,10 +3,9 @@
     /**
      * macro del form di gestione dei contenuti dei template
      *
-     *
-     *
-     *
-     * TODO documentare
+     * Questa macro imposta la pagina di gestione dei contenuti dei template. Si noti che la pagina
+     * opera in __filesystem_mode__. La tabella __templates__ è una tabella virtuale che rappresenta
+     * i file presenti nel filesystem.
      *
      * 
      *
