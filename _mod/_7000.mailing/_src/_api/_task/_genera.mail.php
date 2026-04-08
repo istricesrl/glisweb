@@ -180,7 +180,7 @@
 		foreach( $cnts as $cnt ) {
 			$cnt['testo'] = path2url( $cnt['testo'], 1, $row['id'], $row['id_mail'] );
 			$tpl[ $cnt['ietf'] ] = array(
-			'from' => array( $cnt['mittente_nome'] => $cnt['mittente_mail'] ),
+			'from' => safe_unserialize( $cnt['mittente_mail'] ),
 			'to' => array(),
 			'to_cc' => array(),
 			'to_bcc' => array(),

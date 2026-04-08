@@ -1095,6 +1095,15 @@
             } else {
                 die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.yaml' ) . ' danneggiato' );
             }
+            if( file_exists( path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) ) ) {
+                $cm = yaml_parse( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) ) );
+                if( is_array( $cm ) ) {
+                    $cx = array_replace_recursive( $cx, $cm );
+                    $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' );
+                } else {
+                    die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/shadow.yaml' ) . ' danneggiato' );
+                }
+            }
         } elseif( file_exists( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ) ) {
             $cm = json_decode( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/config.json' ) ), true );
             if( is_array( $cm ) ) {
@@ -1102,6 +1111,15 @@
                 $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/config.json' );
             } else {
                 die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/config.json' ) . ' danneggiato' );
+            }
+            if( file_exists( path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) ) ) {
+                $cm = json_decode( file_get_contents( path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) ), true );
+                if( is_array( $cm ) ) {
+                    $cx = array_replace_recursive( $cx, $cm );
+                    $cf['config']['read'][] = path2custom( DIR_MOD . $modulo . '/src/shadow.json' );
+                } else {
+                    die( 'file di configurazione ' . path2custom( DIR_MOD . $modulo . '/src/shadow.json' ) . ' danneggiato' );
+                }
             }
         }
 
