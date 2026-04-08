@@ -2,7 +2,7 @@
 {% import '_lib/_default.twig' as cms %}
 {% import '_lib/_form.twig' as frm %}
 {% import 'lib/default.twig' as def %}
-{% import 'lib/default.form.file.sub.twig' as img %}
+{% import 'lib/default.form.file.sub.twig' as sub %}
 
 {# ESTENSIONE DELLO SCHEMA DI BASE #}
 {% extends 'ext/main.twig' %}
@@ -20,7 +20,7 @@
 
             {# SUBFORM FILE #}
             <!-- TEST -->
-            {{ img.file( form.table, 'file', 'file collegati', site, page, pages, localization.language.ietf, etc, request, session, 'id_mail_out' ) }}
+            {{ sub.file( form.table, 'file', 'file collegati', site, page, pages, localization.language.ietf, etc, request, session, 'id_mail_out' ) }}
         
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">

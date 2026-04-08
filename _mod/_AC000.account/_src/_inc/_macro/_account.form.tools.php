@@ -1,11 +1,13 @@
 <?php
 
     /**
+     * macro per la scheda strumenti del form di gestione account
+     * 
+     * Questa macro imposta gli strumenti disponibili nella relativa scheda del form di gestione account.
+     * Si presta ad essere personalizzata in custom.
      *
      *
      *
-     *
-     * TODO documentare
      *
      */
     
@@ -25,7 +27,7 @@
         ),
     );
 
-/* TODO reimplementare
+    /* TODO reimplementare
 
     // ...
     if( ! empty( $_REQUEST['account']['id_mail'] ) ) {
@@ -38,7 +40,7 @@
         );
     }
 
-*/
+    */
 
     // debug
     // print_r($_REQUEST);

@@ -1,10 +1,10 @@
 <?php
 
     /**
+     * macro del form di gestione dei gruppi
+     * 
+     * Questa macro imposta il form di gestione dei gruppi.
      *
-     *
-     *
-     * TODO documentare
      *
      *
      */

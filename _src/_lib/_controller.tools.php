@@ -16,7 +16,43 @@
     define('ROW_UNMODIFIED', 'INVARIATO');
 
     /**
-     *
+     * 
+     * 
+     * 
+     * 
+     * 
+     * introduzione
+     * ============
+     * 
+     * 
+     * 
+     * 
+     * modalità view
+     * =============
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * modalità modifica
+     * =================
+     * 
+     * 
+     * 
+     * 
+     * punti di inclusione delle controller
+     * ------------------------------------
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
+     * 
      * TODO documentare
      *
      */

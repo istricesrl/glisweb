@@ -1,11 +1,12 @@
 <?php
 
     /**
-     *
+     * macro della pagina strumenti della dashboard del catalogo
+     * 
+     * Questa macro serve da base per le customizzazioni.
      *
      *
      * TODO implementare
-     * TODO documentare
      *
      */
 
@@ -21,4 +22,3 @@
             'label' => 'elaborazioni'
         )
     );
-

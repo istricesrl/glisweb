@@ -1,10 +1,11 @@
 <?php
 
     /**
+     * macro della scheda attribuzione del form di gestione degli account
+     * 
+     * Questa macro gestisce la scheda attribuzione del form di gestione degli account.
      *
      *
-     *
-     * TODO documentare
      *
      *
      */

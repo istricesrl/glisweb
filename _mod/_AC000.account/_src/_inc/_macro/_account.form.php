@@ -1,10 +1,12 @@
 <?php
 
     /**
+     * macro del form di gestione degli account
      *
-     *
-     *
-     * TODO documentare
+     * Questa macro gestisce il form di gestione degli account.
+     * 
+     * 
+     * 
      * TODO filtrare la tendina dei gruppi in base all'account connesso
      *
      *

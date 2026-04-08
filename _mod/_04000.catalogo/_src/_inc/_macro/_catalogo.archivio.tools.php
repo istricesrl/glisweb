@@ -1,11 +1,11 @@
 <?php
 
     /**
+     * macro della pagina strumenti dell'archivio del catalogo
      *
-     *
+     * Questa macro serve da base per le customizzazioni.
      *
      * TODO implementare
-     * TODO documentare
      *
      */
 

@@ -1,13 +1,12 @@
 <?php
 
     /**
-     * macro anagrafica view
+     * macro della view reparti dell'archivio dell'amministrazione
+     * 
+     * Questa macro imposta la vista dei reparti dell'amministrazione.
      * 
      * 
      * 
-     * 
-     * 
-     * TODO documentare
      * 
      * 
      */

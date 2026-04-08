@@ -3,9 +3,9 @@
     /**
      * macro account view
      *
+     * Questa macro imposta la vista account.
      *
      *
-     * TODO documentare
      *
      */
 
@@ -14,7 +14,6 @@
      * =========================
      * 
      * 
-     * TODO documentare
      * TODO fare una tabella con tutte le chiavi possibili spiegate
      * 
      * 

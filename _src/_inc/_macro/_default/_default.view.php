@@ -3,7 +3,48 @@
     /**
      * macro di default per la gestione delle viste
      *
+     * introduzione
+     * ============
+     * 
+     * 
+     * il backurl
+     * ----------
+     * 
+     * 
+     * 
+     * configurazione della vista
+     * --------------------------
+     * 
+     * 
+     * chiave                           | descrizione
+     * ---------------------------------|------------------------------------------------
+     * view.etc.__force_backurl__       | se impostato forza un backurl specifico per la vista
+     * view.id                          | ID della vista (default: md5 di page.id + view.table + site + id del form se presente)
+     * view.insert.page                 | pagina di inserimento (default: view.open.page)
+     * view.open.field                  | campo di gestione della vista (default: id)
+     * view.open.table                  | tabella di gestione della vista (default: view.table)
+     * view.open.page                   | pagina di gestione della vista
+     * view.cols                        | colonne della vista (campo => etichetta)
+     * view.class                       | classi CSS per le colonne (campo => classi)
+     * view.extra.cols                  | colonne extra da prelevare ma non visualizzare
+     * view.__filters__                 | filtri presettati della vista
+     * view.__restrict__                | restrizioni fisse della vista
+     * view.__sort__                    | ordinamenti presettati della vista (campo => direzione)
+     * view.__pager__                   | paginazione della vista (page => numero pagina, rows => righe per pagina)
+     * view.data.__report_mode__        | modalità report della vista
+     * view.data.__filesystem_mode__    | modalità filesystem della vista
+     * view.table                       | tabella della vista
+     * view.footer.cols                 | configurazione del footer della vista (campo => configurazione colonna)
+     * view.footer.cols[].function      | funzione di aggregazione per la colonna del footer (es. SUM)
+     * view.footer.cols[].value         | valore aggregato per la colonna del footer
+     * view.data                        | dati prelevati per la vista
+     * 
      *
+     *
+     * La logica dei filtri [...]
+     * 
+     * 
+     * 
      *
      * TODO documentare
      *

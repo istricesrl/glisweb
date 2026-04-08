@@ -1,11 +1,13 @@
 <?php
 
     /**
-     * controller pre query per la tabella account
+     * controller before (pre query) per la tabella account
+     *
+     * Questa controller viene invocata prima di ogni query relativa alla tabella account. In particolare, si occupa di
+     * gestire il valore del campo password, in modo da fare l'hash quando si scrive la password e da eliminare la 
+     * password dai dati letti.
      *
      *
-     *
-     * TODO documentare
      *
      */
 

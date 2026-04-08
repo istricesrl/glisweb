@@ -1,13 +1,12 @@
 <?php
 
     /**
-     * macro anagrafica view
+     * macro gruppi view
+     * 
+     * Questa macro imposta la view dei gruppi.
      * 
      * 
      * 
-     * 
-     * 
-     * TODO documentare
      * 
      * 
      */
@@ -15,10 +14,6 @@
     /**
      * configurazione della view
      * =========================
-     * 
-     * 
-     * TODO documentare
-     * TODO fare una tabella con tutte le chiavi possibili spiegate
      * 
      * 
      */

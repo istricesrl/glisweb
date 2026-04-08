@@ -1,13 +1,13 @@
 <?php
 
     /**
+     * controller finally per l'anagrafica
+     *
+     * Questa controller viene invocata alla fine di tutte le operazioni sull'anagrafica.
+     * Il suo scopo principale è quello di aggiornare la view statica dell'anagrafica dopo
+     * ogni operazione di modifica (POST, PUT, REPLACE, UPDATE, DELETE).
      *
      *
-     *
-     *
-     *
-     * TODO documentare
-     * TODO qui spiegare il meccanismo delle controller e rimandare alla funzione controller()
      *
      *
      */

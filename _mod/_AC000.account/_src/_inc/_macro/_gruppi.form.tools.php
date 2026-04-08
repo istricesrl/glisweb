@@ -1,10 +1,11 @@
 <?php
 
     /**
+     * macro della scheda strumenti del form di gestione dei gruppi
+     * 
+     * Questa macro imposta la scheda strumenti del form di gestione dei gruppi.
      *
      *
-     *
-     * TODO documentare
      *
      *
      */

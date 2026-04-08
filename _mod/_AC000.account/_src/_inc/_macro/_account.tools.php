@@ -1,11 +1,11 @@
 <?php
 
     /**
+     * macro della scheda strumenti della vista account
      *
+     * Questa macro imposta gli strumenti disponibili per la vista account.
+     * 
      *
-     *
-     *
-     * TODO documentare
      *
      */
 
@@ -25,7 +25,8 @@
         )
     );
 
-/*
+    /* TODO reimplementare
+
     // esportazione contatti anagrafica
     $ct['page']['contents']['metro']['esportazioni'][] = array(
         'modal' => array( 'id' => 'esporta_per_mail', 'include' => 'inc/anagrafica.tools.modal.mailchimp.html' ),
@@ -43,26 +44,27 @@
         'title' => 'esportazione indirizzario',
         'text' => 'esporta gli indirizzi dei contatti anagrafici in formato CSV'
     );
-*/
+    */
 
-/* TODO reimplementare
-    // importazione account
-    $ct['page']['contents']['metro']['importazioni'][] = array(
-        'modal' => array( 'id' => 'importa_account', 'include' => 'inc/account.tools.modal.import.html' ),
-        'icon' => NULL,
-        'fa' => 'fa-upload',
-        'title' => 'importazione account',
-        'text' => 'importa account in formato CSV'
-    );
-*/
+    /* TODO reimplementare
+        // importazione account
+        $ct['page']['contents']['metro']['importazioni'][] = array(
+            'modal' => array( 'id' => 'importa_account', 'include' => 'inc/account.tools.modal.import.html' ),
+            'icon' => NULL,
+            'fa' => 'fa-upload',
+            'title' => 'importazione account',
+            'text' => 'importa account in formato CSV'
+        );
+    */
 
-/*
-    // categorie anagrafica
-    $ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
-        $cf['memcache']['connection'],
-        $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM categorie_anagrafica_view'
-    );
-*/
+    /*
+        // categorie anagrafica
+        $ct['etc']['select']['categorie_anagrafica'] = mysqlCachedQuery(
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'],
+            'SELECT id, __label__ FROM categorie_anagrafica_view'
+        );
+    */
+
     // gestione default
     require DIR_SRC_INC_MACRO . '_default/_default.tools.php';

@@ -1,13 +1,27 @@
 <?php
 
     /**
-     * definizione delle pagine per la gestione dell'anagrafica
+     * definizione delle pagine per la gestione degli account
+     * 
+     * In questo file vengono definite tutte le pagine relative alla gestione degli account.
+     * 
+     * pagina                           | genitore                  | descrizione
+     * ---------------------------------|---------------------------|---------------------
+     * account.view                     | anagrafica.view           | vista account
+     * account.tools                    | account.view              | strumenti account
+     * account.form                     | account.view              | gestione account
+     * account.form.attribuzione        | account.view              | gestione account attribuzione
+     * account.form.tools               | account.view              | strumenti gestione account
+     * 
+     * Vengono inoltre definite le pagine per la gestione dei gruppi:
+     * 
+     * pagina                           | genitore                  | descrizione
+     * ---------------------------------|---------------------------|---------------------
+     * gruppi.view                      | account.view              | vista gruppi
+     * gruppi.form                      | gruppi.view               | gestione gruppi
+     * gruppi.form.tools                | gruppi.view               | strumenti gestione gruppi
      * 
      * 
-     * 
-     * 
-     * 
-     * TODO documentare
      * TODO finire di mettere tutte le schede dell'anagrafica
      * 
      */

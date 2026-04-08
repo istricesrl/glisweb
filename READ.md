@@ -867,58 +867,166 @@ In questo file vengono definite le pagine relative alle immagini per il catalogo
 In questo file vengono definite le pagine relative alle immagini per i contenuti.
 
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.out.php
+Questo task pulisce la coda delle mail in uscita.
+
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.sent.php
+Questo task pulisce la coda delle mail inviate.
+
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.resend.php
+Questo task riaccoda per l'invio una mail già inviata.
+
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.send.php
+Questo task elabora la coda delle mail in uscita, inviando il primo messaggio in lista.
+
 ### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.after.php
+Questa è la controller che interviene dopo l'elaborazione di ogni oggetto della coda delle mail in uscita.
+
 ### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.before.php
+Questa è la controller che viene eseguita prima dell'elaborazione di ogni oggetto della coda delle mail in uscita.
+
 ### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.out.finally.php
+Questa controller viene eseguita alla fine di tutte le elaborazioni della coda delle mail in uscita.
+
 ### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.after.php
+Questa controller viene eseguita dopo l'elaborazione di ogni oggetto della coda delle mail inviate.
+
 ### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.before.php
+Questa controller viene eseguita prima di ogni elaborazione della coda delle mail inviate.
+
 ### /_mod/_MA000.mail/_src/_inc/_controllers/_mail.sent.finally.php
+Questa controller viene eseguita alla fine delle elaborazioni di ogni oggetto della coda delle mail inviate.
+
 ### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.form.php
+Questa è la macro del modulo di gestione delle mail in uscita.
+
 ### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.form.tools.php
+Questa è la macro della scheda tools del modulo di gestione delle mail in uscita.
+
 ### /_mod/_MA000.mail/_src/_inc/_macro/_mail.out.view.php
+Questa è la macro della view delle mail in uscita.
+
 ### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.form.php
+Questa è la macro del modulo di gestione delle mail inviate.
+
 ### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.form.tools.php
+Questa è la macro della scheda tools del modulo di gestione delle mail inviate.
+
 ### /_mod/_MA000.mail/_src/_inc/_macro/_mail.sent.view.php
+Questa è la macro della view delle mail inviate.
+
 ### /_mod/_MA000.mail/_src/_inc/_macro/_mail.tools.php
+Questa è la macro della scheda strumenti della coda delle mail inviate.
+
 ### /_mod/_MA000.mail/_src/_inc/_pages/_mail.it-IT.php
+In questo file vengono definite le pagine del modulo mail.
+
 ### /_mod/_NO000.notizie/_src/_config/_030.common.php
+In questo file vengono definite le variabili comuni e le costanti di base del modulo notizie.
+
 ### /_mod/_NO000.notizie/_src/_config/_035.common.php
+In questo file le configurazioni comuni del modulo notizie vengono integrate con le configurazioni da file.
+
 ### /_mod/_NO000.notizie/_src/_config/_310.pages.php
+Questo file si occupa di caricare i dati relativi all'albero delle categorie di notizie e delle notizie nell'albero generale
+dei contenuti del sito.
+
 ### /_mod/_NO000.notizie/_src/_config/_420.pages.php
+In questo file vengono caricati i dati specifici della categoria di notizie o della notizia correntemente visualizzata.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione delle categorie di notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.php
+Questa è la macro della pagina di gestione delle categorie di notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione delle categorie di notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.tools.php
+Questa è la macro della scheda strumenti della vista delle categorie di notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.view.archiviate.php
+Questa è la macro della view delle categorie di notizie archiviate.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.categorie.notizie.view.php
+Questa è la macro della view delle categorie di notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione delle notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.php
+Questa è la macro del modulo di gestione delle notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione delle notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.tools.php
+Questa è la macro della scheda strumenti della view delle notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.view.archiviate.php
+Questa è la macro della view delle notizie archiviate.
+
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.view.php
+Questa è la macro della view delle notizie.
+
 ### /_mod/_NO000.notizie/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono definite le pagine relative ai contenuti del modulo notizie.
+
 ### /_mod/_NO000.notizie/_src/_lib/_mysql.utils.add.php
+Questa è una libreria di funzioni aggiuntive per MySQL del modulo notizie.
+
 ### /_mod/_PA000.pagine/_src/_config/_310.pages.php
+In questo file la struttura delle pagine viene caricata nell'albero dei contenuti del sito.
+
 ### /_mod/_PA000.pagine/_src/_config/_420.pages.php
+In questo file vengono caricati i dati specifici della pagina corrente.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.archivio.menu.view.php
+Questa è la macro della view dei menu dell'archivio contenuti.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione delle pagine.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.menu.php
+Questa è la macro della scheda menu del modulo di gestione delle pagine.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.php
+Questa è la macro del modulo di gestione delle pagine.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione delle pagine.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.tools.php
+QUesta è la macro della scheda strumenti della view delle pagine.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.view.archiviate.php
+Questa è la macro della view delle pagine archiviate.
+
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.view.php
+Questa è la macro della view delle pagine.
+
 ### /_mod/_PA000.pagine/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono deifinite le pagine relative alla gestione delle pagine.
+
 ### /_mod/_PA000.pagine/_src/_lib/_mysql.utils.add.php
+Questa è una libreria di funzioni MySQL aggiuntive del modulo pagine.
+
 ### /_mod/_PR000.prodotti/_src/_config/_030.common.php
+In questo file vengono definite le variabili comuni del modulo prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_config/_035.common.php
+In questo file la configurazione comune del modulo prodotti viene integrata con la configurazione letta da file.
+
 ### /_mod/_PR000.prodotti/_src/_config/_310.pages.php
+In questo file l'albero delle categorie dei prodotti e dei prodotti viene integrato con l'albero generale dei
+contenuti del sito.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_controllers/_articoli.finally.php
+Questa controller viene eseguita alla fine di ogni gruppo di elaborazioni della tabella articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gesitmà
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.caratteristiche.php
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.distinta.php
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.php

@@ -1,11 +1,12 @@
 <?php
 
     /**
-     *
+     * macro della pagina strumenti della dashboard dell'archivio dell'amministrazione
+      * 
+      * Questa macro serve da base per le customizzazioni.
      *
      *
      * TODO implementare
-     * TODO documentare
      *
      */
 
