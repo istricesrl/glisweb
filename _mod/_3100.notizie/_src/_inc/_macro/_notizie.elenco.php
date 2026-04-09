@@ -122,7 +122,7 @@
                     FROM immagini
                     WHERE immagini.id_ruolo = 10 AND immagini.id_anagrafica = ? LIMIT 1',
                     array( array( 's' => $persona['id'] ) )
-                ) );
+                ) ?? '' );
 
                 $persona['urls'] = mysqlQuery(
                     $cf['mysql']['connection'],

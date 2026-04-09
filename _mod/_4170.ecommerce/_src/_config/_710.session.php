@@ -49,7 +49,13 @@
             'carrelli'
         );
 
-        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT * FROM carrelli_articoli WHERE id_carrello = ?',
+        $articoli = mysqlQuery( $cf['mysql']['connection'], 'SELECT carrelli_articoli.*, 
+	    articoli.nome AS articolo, prodotti.nome AS prodotto, categorie_prodotti_path( prodotti_categorie.id_categoria ) AS categorie
+	    FROM carrelli_articoli 
+	    LEFT JOIN articoli ON articoli.id = carrelli_articoli.id_articolo 
+	    LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto 
+	    LEFT JOIN prodotti_categorie ON prodotti_categorie.id_prodotto = prodotti.id
+	    WHERE id_carrello = ?',
             array(
                 array( 's' => $_SESSION['carrello']['id'] )
             )
