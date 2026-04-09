@@ -1025,57 +1025,151 @@ contenuti del sito.
 Questa controller viene eseguita alla fine di ogni gruppo di elaborazioni della tabella articoli.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.archiviazione.php
-Questa è la macro della scheda archiviazione del modulo di gesitmà
+Questa è la macro della scheda archiviazione del modulo di gestione degli articoli.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.caratteristiche.php
+Questa è la macro della scheda caratteristiche del modulo di gestione degli articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.distinta.php
+Questa è la macro della scheda distinta base del modulo di gestione degli articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.php
+Questa è la macro del modulo di gestione degli articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.relazioni.php
+Questa è la macro della scheda relazioni del modulo di gestione articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.articoli.view.php
+Questa è la macro della vista articoli.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.php
+Questa è la macro del modulo di gestione categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.prodotti.php
+Questa è la macro della scheda prodotti del modulo di gestione categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.tools.php
+Questa è la macro della scheda strumenti della vista prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.archiviati.php
+Questa è la macro della vista delle categorie prodotti archiviate.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.categorie.prodotti.view.php
+Questa è la macro della vista categorie prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.php
+Questa è la macro del modulo di gestione marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.tools.php
+Questa è la macro della scheda strumenti della vista marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.view.archiviati.php
+Questa è la macro della vista marchi archiviati.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.view.php
+Questa è la macro della vista marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.archiviazione.php
+Questa è la macro della scheda archiviazione del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.articoli.php
+Questa è la macro della scheda articoli del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.caratteristiche.php
+Questa è la macro della scheda caratteristiche del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.categorie.php
+Questa è la macro della scheda categorie del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.php
+Questa è la macro del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.relazioni.php
+Questa è la macro della scheda relazioni del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.tools.php
+Questa è la macro della scheda strumenti della vista prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.view.archiviati.php
+Questa è la macro della vista prodotti archiviati.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.view.php
+Questa è la macro della vista prodotti.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_pages/_catalogo.it-IT.php
+Questa è la macro della dashboard catalogo.
+
 ### /_mod/_PR000.prodotti/_src/_lib/_mysql.utils.add.php
+Questa è una libreria aggiuntiva di funzioni per MySQL relative ai prodotti.
+
 ### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.form.php
+Questa è la macro del modulo di gestione dei template mail.
+
 ### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione template mail.
+
 ### /_mod/_TE000.template/_src/_inc/_macro/_mail.template.view.php
+Questa è la macro della vista template mail.
+
 ### /_mod/_TE000.template/_src/_inc/_pages/_mail.it-IT.php
-### /_mod/_TE000.template/_src/tpl/athena/mail.template.form.twig
+In questo file vengono definite le pagine relative alla gestione dei template mail.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_anagrafica.form.video.php
+Questa è la macro della scheda video del modulo di gestione anagrafica.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.articoli.form.video.php
+Questa è la macro della scheda video del modulo di gestione articoli.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.categorie.prodotti.form.video.php
+Questa è la macro della scheda video del modulo di gestione categorie prodotti.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.prodotti.form.video.php
+Questa è la macro della scheda video del modulo di gestione prodotti.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.form.php
+Questa è la macro del modulo di gestione video.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.form.tools.php
+Questa è la macro della scheda strumenti del modulo di gestione video.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.archivio.video.view.php
+Questa è la macro della vista video.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.categorie.notizie.form.video.php
+Questa è la macro della scheda video del modulo di gestione categorie notizie.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.notizie.form.video.php
+Questa è la macro della scheda video del modulo di gestione notizie.
+
 ### /_mod/_VI000.video/_src/_inc/_macro/_contenuti.pagine.form.video.php
+Questa è la macro della scheda video del modulo di gestione pagine.
+
 ### /_mod/_VI000.video/_src/_inc/_pages/_anagrafica.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative all'anagrafica.
+
 ### /_mod/_VI000.video/_src/_inc/_pages/_catalogo.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative al catalogo prodotti e articoli.
+
 ### /_mod/_VI000.video/_src/_inc/_pages/_contenuti.it-IT.php
+In questo file vengono dichiarate le pagine di gestione dei video relative ai contenuti.
 
 ### /_src/_config.php
 Questo file costituisce il kernel del framework; è ampiamente documentato quindi si rimanda al sorgente per gli approfondimenti, in breve
@@ -2353,3 +2447,8 @@ poi reindirizzati a una pagina HTTPS si perde il cookie di sessione e questo obb
 effettivamente il problema che riscontrate è questo, monitorate il cookie di sessione dalla scheda applicazione dei tools
 per gli sviluppatori di Chrome o Firefox; se notate che il cookie appare e scompare randomicamente ogni volta che cambiate
 pagina, allora il problema è questo. Sinceratevi che la versione HTTPS del sito sia configurata correttamente.
+
+#### il framework dà errore 500 su tutte le pagine
+Questo problema può essere originato da una molteplicità di fattori, ma in primo luogo è d'uopo controllare che non siano per
+qualche ragione stati cambiati inavvertitamente dei permessi. Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e
+provare di nuovo ad accedere alle pagine.
