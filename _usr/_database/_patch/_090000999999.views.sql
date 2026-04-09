@@ -1600,6 +1600,58 @@ CREATE OR REPLACE VIEW `menu_view` AS                           --
 		LEFT JOIN pagine ON pagine.id = menu.id_pagina         	--
 ;                                                               --
 
+-- | 090000021800
+
+-- metadati_view
+CREATE OR REPLACE VIEW `metadati_view` AS
+	SELECT
+		metadati.id,
+		metadati.id_lingua,
+		lingue.ietf,
+		metadati.id_anagrafica,
+		metadati.id_account,
+		metadati.id_pagina,
+		metadati.id_prodotto,
+		metadati.id_articolo,
+		metadati.id_categoria_prodotti,
+		metadati.id_notizia,
+		metadati.id_annuncio,
+		metadati.id_categoria_notizie,
+		metadati.id_categoria_annunci,
+		metadati.id_risorsa,
+		metadati.id_categoria_risorse,
+		metadati.id_immagine,
+		metadati.id_video,
+		metadati.id_audio,
+		metadati.id_file,
+		metadati.id_documento,
+		metadati.id_documenti_articoli,
+		metadati.id_progetto,
+		metadati.id_categoria_progetti,
+		metadati.id_indirizzo,
+		metadati.id_edificio,
+		metadati.id_immobile,
+		metadati.id_contratto,
+        metadati.id_valutazione,
+        metadati.id_rinnovo,
+        metadati.id_tipologia_attivita,
+		metadati.id_banner,
+		metadati.id_pianificazione,
+		metadati.id_tipologia_todo,
+		metadati.id_tipologia_contratti,
+		metadati.id_account_inserimento,
+		metadati.id_account_aggiornamento,
+		metadati.nome,
+		metadati.testo,
+		concat(
+			metadati.nome,
+			':',
+			metadati.testo
+		) AS __label__
+	FROM metadati
+		LEFT JOIN lingue ON lingue.id = metadati.id_lingua
+;
+
 -- | 090000021900
 
 -- modalita_pagamento
@@ -1813,7 +1865,33 @@ CREATE OR REPLACE VIEW `prodotti_view` AS
 	GROUP BY prodotti.id
 ;
 
--- | 090000027001
+-- | 090000026400
+
+-- prodotti_categorie_view
+CREATE OR REPLACE VIEW `prodotti_categorie_view` AS
+	SELECT
+		prodotti_categorie.id,
+		prodotti_categorie.id_prodotto,
+		prodotti.nome AS prodotto,
+		prodotti_categorie.id_categoria,
+		categorie_prodotti_path( prodotti_categorie.id_categoria ) AS categoria,
+		prodotti_categorie.id_ruolo,
+		ruoli_prodotti.nome AS ruolo,
+		prodotti_categorie.ordine,
+		prodotti_categorie.id_account_inserimento,
+		prodotti_categorie.id_account_aggiornamento,
+		concat_ws(
+			' ',
+			prodotti_categorie.id_prodotto,
+			ruoli_prodotti.nome,
+			categorie_prodotti_path( prodotti_categorie.id_categoria )
+		) AS __label__
+	FROM prodotti_categorie
+		LEFT JOIN ruoli_prodotti ON ruoli_prodotti.id = prodotti_categorie.id_ruolo
+		LEFT JOIN prodotti ON prodotti.id = prodotti_categorie.id_prodotto
+;
+
+-- | 090000027000
 
 -- progetti_view
 CREATE OR REPLACE VIEW `progetti_view` AS
@@ -2148,6 +2226,18 @@ CREATE OR REPLACE VIEW ruoli_indirizzi_view AS				  --
 			ruoli_indirizzi.id ) AS __label__			  	  -- etichetta per le tendine e le liste
 	FROM ruoli_indirizzi									  --
 ;                                                             --
+
+-- | 090000035000
+
+-- ruoli_prodotti_view
+CREATE OR REPLACE VIEW ruoli_prodotti_view AS
+	SELECT
+		ruoli_prodotti.id,
+		ruoli_prodotti.id_genitore,
+		ruoli_prodotti.nome,
+	 	ruoli_prodotti_path( ruoli_prodotti.id ) AS __label__
+	FROM ruoli_prodotti
+;
 
 -- | 090000035200
 

@@ -351,6 +351,17 @@ INSERT IGNORE INTO `ruoli_indirizzi` (`id`, `nome`, `html_entity`, `font_awesome
 (4,	'residenza',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    NULL),
 (5,	'domicilio',	    '&#xf015;',	    '',     NULL,	NULL,	1,	    1);
 
+-- | 050000035000
+
+-- ruoli_prodotti
+INSERT INTO `ruoli_prodotti` (`id`, `id_genitore`, `nome`, `html_entity`, `font_awesome`) VALUES
+(1,	NULL,	'prodotto',	NULL,	NULL),
+(2,	NULL,	'principale',	NULL,	NULL),
+(3,	NULL,	'suggerito',	NULL,	NULL),
+(4,	NULL,	'accessorio',	NULL,	NULL),
+(5,	NULL,	'consumabile',	NULL,	NULL),
+(6,	NULL,	'bundle',	NULL,	NULL);
+
 -- | 050000035200
 
 -- ruoli_video

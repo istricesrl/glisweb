@@ -2536,6 +2536,25 @@ CREATE TABLE IF NOT EXISTS `ruoli_mail` (                     --
   `se_helpdesk` tinyint(1) DEFAULT NULL                       -- se l'indirizzo mail è di tipo helpdesk
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
 
+-- | 010000035000
+
+-- ruoli_prodotti
+-- tipologia: tabella standard
+-- rango: tabella secondaria
+-- struttura: tabella ricorsiva
+-- funzione: contiene i ruoli dei prodotti
+--
+-- questa tabella contiene i ruoli dei prodotti, con le informazioni relative al nome, alle entità HTML
+-- e Font Awesome associate e ai vari tipi di prodotto
+-- 
+CREATE TABLE IF NOT EXISTS `ruoli_prodotti` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 -- | 010000035200
 
 -- ruoli_video
