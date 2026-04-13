@@ -826,7 +826,7 @@ ini_set("display_errors", 1);
                 $couponOk = true;
 
                 // se il coupon è vincolato
-                if( $coupon['se_vincolato'] == 1 ) {
+                if( isset($coupon['se_vincolato']) && $coupon['se_vincolato'] == 1 ) {
 
                     // recupero i vincoli di articolo
                     $vincoliArticolo = mysqlQuery(

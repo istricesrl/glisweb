@@ -1,93 +1,115 @@
 <?php
 
-    /**
-     * libreria per l'invio di SMS tramite Skebby
-     *
-     *
-     * https://developers.skebby.it/
-     *
-     *
-     * @todo finire di documentare
-     *
-     * @file
-     *
-     */
+/**
+ * libreria per l'invio di SMS tramite Skebby
+ *
+ *
+ * https://developers.skebby.it/
+ *
+ *
+ * @todo finire di documentare
+ *
+ * @file
+ *
+ */
 
-    /**
-     *
-     *
-     *
-     * @todo finire di documentare
-     *
-     */
-    function skebbySend( $testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type = 'TI', $url = 'https://api.skebby.it/API/v1.0/REST/' ) {
+/**
+ *
+ *
+ *
+ * @todo finire di documentare
+ *
+ */
+function skebbySend($testo, $to, $user = NULL, $pasw = NULL, $from = NULL, $type = 'TI', $url = 'https://api.skebby.it/API/v1.0/REST/')
+{
 
 	// risultato
-	    $result = false;
+	$result = false;
 
 	// autenticazione
-	    $auth = restCall(
+	$auth = restCall(
 		// $url . 'login?username=' . $user . '&password=' . $pasw,
-        $url . 'login',
+		$url . 'login',
 		METHOD_GET,
 		NULL,
 		'application/json',
 		'text/plain',
 		$status,
-        array(),
-        $user,
-        $pasw
-	    );
+		array(),
+		$user,
+		$pasw
+	);
 
 	// ricavo i parametri per l'autenticazione
-	    $auths = explode( ';', $auth );
+	$auths = explode(';', $auth);
 
 	// debug
-	    // var_dump( $status );
-	    // echo $url . PHP_EOL;
-	    // print_r( $auths );
+	// print_r($from);
+
+	// se il mittente è in formato [ nome => numero ] prendo solo il numero
+	if (is_array($from)) {
+		$sender = reset($from);
+		if( empty( $sender ) ) {
+			$keys = array_keys( $from );
+			$sender = reset($keys);
+		}
+	} else {
+		$sender = $from;
+	}
+
+	// debug
+	// var_dump( $status );
+	// var_dump( $auth );
+	// echo $url . PHP_EOL;
+	// print_r( $auths );
+	// var_dump( $user );
+	// var_dump( $pasw );
 
 	// se ho l'autenticazione
-	    if( $status == 200 ) {
+	if ($status == 200) {
 
 		// log
-		    logWrite( 'autenticazione su Skebby effettuata con successo: ' . $auth, 'skebby' );
+		logWrite('autenticazione su Skebby effettuata con successo: ' . $auth, 'skebby');
 
-        // elimino da $to tutti i caratteri non numerici
-            foreach( $to as $key => $value ) {
-                $to[ $key ] = preg_replace( '/[^0-9]/', '', $value );
-            }
+		// elimino da $to tutti i caratteri non numerici
+		foreach ($to as $key => $value) {
+			$to[$key] = preg_replace('/[^0-9]/', '', $value);
+		}
 
-        // aggiungo +39 all'inizio di ogni elemento in $to se manca
-            foreach( $to as $key => $value ) {
-                if( substr( $value, 0, 4 ) == '0039' ) {
-                    $to[ $key ] = '+' . substr( $value, 2 );
-                }
-                if( substr( $value, 0, 3 ) != '+39' ) {
-                    $to[ $key ] = '+39' . $value;
-                }
-            }
+		// aggiungo +39 all'inizio di ogni elemento in $to se manca
+		foreach ($to as $key => $value) {
+			if (substr($value, 0, 4) == '0039') {
+				$to[$key] = '+' . substr($value, 2);
+			}
+			if (substr($value, 0, 3) != '+39') {
+				$to[$key] = '+39' . $value;
+			}
+		}
 
-        // dati
-		    $dati = array(
+		$recipient = array_values($to);
+
+		// dati
+		$dati = array(
 			'returnCredits' => true,
-			'recipient' => $to,
+			'recipient' => $recipient,
 			'message' => $testo,
 			'message_type' => $type,
-			'sender' => $from
-		    );
+			'sender' => $sender
+		);
+
+		// print_r($dati);
 
 		// headers
-		    $headers = array(
+		$headers = array(
 			'user_key' => $auths[0],
 			'Session_key' => $auths[1]
-		    );
+		);
 
 		// log
-        logWrite( 'invio SMS a: ' . implode( ',', $to ) . ' da: ' . $from . PHP_EOL . print_r( $dati, true), 'skebby' );
+		logWrite('invio SMS a: ' . implode(',', $to) . ' da: ' . $sender . PHP_EOL . print_r($dati, true), 'skebby');
 
 		// invio
-		    $result = restCall(
+		$result = restCall(
 			$url . 'sms',
 			METHOD_POST,
 			$dati,
@@ -95,33 +117,32 @@
 			'application/json',
 			$status,
 			$headers
-		    );
+		);
 
 		// log
-		    logWrite( 'esito invio: ' . print_r( $result, true ), 'skebby' );
+		logWrite('esito invio: ' . print_r($result, true), 'skebby');
 
 		// debug
-		    // var_dump( json_decode( $status, true ) );
+		// var_dump( json_decode( $status, true ) );
+		// var_dump($status);
+		// var_dump($result);
 
 		// risultato
-		    if( $result['result'] == 'OK' ) {
+		if (isset( $result['result']) && $result['result'] == 'OK') {
 			return true;
-		    } else {
-			logWrite( 'fallito invio: ' . print_r( $result, true ), 'skebby', LOG_CRIT );
+		} else {
+			logWrite('fallito invio: ' . print_r($result, true), 'skebby', LOG_CRIT);
 			return false;
-		    }
-
-        } else {
+		}
+	} else {
 
 		// log
-		    logWrite( 'errore di autenticazione su Skebby: ' . $auth, 'skebby', LOG_CRIT );
+		logWrite('errore di autenticazione su Skebby: ' . $auth, 'skebby', LOG_CRIT);
 
 		// risultato
-		    return false;
-
-	    }
+		return false;
+	}
 
 	// risultato
-	    return $result;
-
-    }
+	return $result;
+}

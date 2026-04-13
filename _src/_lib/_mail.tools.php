@@ -512,4 +512,5 @@
         }
 
         return implode(', ', $ar);
+
     }

@@ -121,3 +121,21 @@
     }
 
     // NOTA la funzione processSmsQueue() non esiste in quanto l'elaborazione della coda viene fatta direttamente nel task
+
+    function array2smsString($a)
+    {
+
+        $ar = array();
+
+        if (is_array($a)) {
+            foreach ($a as $k => $m) {
+
+                $ar[] = $k . ' <' . $m . '>';
+            }
+        } else {
+            $ar[] = $a;
+        }
+
+        return implode(', ', $ar);
+
+    }

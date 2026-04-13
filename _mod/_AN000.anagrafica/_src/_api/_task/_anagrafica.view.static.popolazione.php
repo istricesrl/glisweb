@@ -8,27 +8,26 @@
      * 
      * introduzione
      * ============
-     * 
-     * 
+     * La tabella anagrafica è fra le tabelle che in molti scenari tendono a riempirsi con un volume considerevole
+     * di dati; per questo beneficia di una vista statica. Questo rende le operazioni di lettura molto più veloci,
+     * ma richiede un sistema di aggiornamento della vista statica. Questo task si occupa proprio di questo, e può essere
+     * chiamato in modalità standard, in cui decide lui quale anagrafica aggiornare, oppure in modalità forzata,
+     * in cui viene passato l'ID dell'anagrafica da aggiornare.
      * 
      * la funzione updateAnagraficaViewStatic()
      * ----------------------------------------
-     * 
-     * 
-     * 
-     * 
+     * La chiave del sistema di aggiornamento è la funzione updateAnagraficaViewStatic(); questo task serve soprattutto
+     * a determinare quale anagrafica aggiornare, ma è la funzione updateAnagraficaViewStatic() che si occupa di
+     * effettuare l'aggiornamento vero e proprio. Per maggiori dettagli su questa funzione, si rimanda alla sua documentazione.
      * 
      * modalità di utilizzo del task
      * -----------------------------
+     * Questo task può essere chiamato in vari modi; se viene chiamato senza parametri, decide lui quale anagrafica aggiornare,
+     * verificando la tabella anagrafica e le tabelle collegate; se viene chiamato con il parametro idAnagrafica, aggiorna l'anagrafica
+     * specificata.
      * 
-     * 
-     * [...] questo task può essere chiamato come /task/AN000.anagrafica/anagrafica.view.static.popolazione
-     * e decide lui quale anagrafica sincronizzare, oppure come
+     * La chiamata standard è /task/AN000.anagrafica/anagrafica.view.static.popolazione mentre la chiamata forzata è
      * /task/AN000.anagrafica/anagrafica.view.static.popolazione?idAnagrafica=<idAnagrafica>
-     * e in questo caso l'anagrafica da aggiornare è quella passata come parametro
-     * 
-     * 
-     * TODO documentare
      * 
      * TODO implementare un sistema di controllo dei permessi
      * 

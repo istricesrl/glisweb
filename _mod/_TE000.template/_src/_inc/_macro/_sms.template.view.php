@@ -38,7 +38,7 @@
             NULL => 'event.stopPropagation();'
         ),
         '__restrict__' => array(
-            'se_mail' => array( 'EQ' => true )
+            'se_sms' => array( 'EQ' => true )
         ),
         '__sort__' => array(
             '__label__' => 'ASC'
