@@ -60,7 +60,7 @@ else
         if [ ! -d "$SRC_PATH" ]; then
 
             # informazioni
-            echo "cartella sorgente non esistente, impossibile effettuare il deploy"
+            echo "cartella sorgente ($SRC_PATH) non esistente, impossibile effettuare il deploy"
 
             # uscita
             exit 1

@@ -223,6 +223,9 @@ Questa è la macro della pagina degli strumenti dell'archivio del modulo produzi
 ### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.php
 Questa è la macro della dashboard del modulo produzione.
 
+### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.stampe.php
+Questa è la macro della scheda stampe della dashboard del modulo produzione.
+
 ### /_mod/_01000.produzione/_src/_inc/_macro/_produzione.tools.php
 Questa è la macro della pagina degli strumenti della dashboard del modulo produzione.
 
@@ -249,6 +252,9 @@ Questa è la macro della pagina strumenti del ciclo passivo del modulo commercia
 
 ### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.php
 Questa è la macro della dashboard del modulo commerciale.
+
+### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.stampe.php
+Questa è la macro della scheda stampe della dashboard del modulo commerciale.
 
 ### /_mod/_02000.commerciale/_src/_inc/_macro/_commerciale.tools.php
 Questa è la macro della pagina strumenti della dashboard del modulo commerciale.
@@ -301,11 +307,41 @@ Questa è la macro della pagina degli strumenti dell'archivio del catalogo.
 ### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.php
 Questa è la macro della dashboard del modulo catalogo.
 
+### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.stampe.php
+Questa è la macro della scheda stampe della dashboard del modulo catalogo.
+
 ### /_mod/_04000.catalogo/_src/_inc/_macro/_catalogo.tools.php
 Questa è la macro della pagina degli strumenti della dashboard del modulo catalogo.
 
 ### /_mod/_04000.catalogo/_src/_inc/_pages/_catalogo.it-IT.php
 Qui vengono definite le pagine del modulo catalogo.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.php
+Questa è la macro della dashboard del modulo logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.archivio.php
+Questa è la macro della dashboard dell'archivio logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.archivio.tools.php
+Questa è la macro della scheda strumenti dell'archivio logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.ciclo.attivo.php
+Questa è la macro della dashboard del ciclo attivo della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.ciclo.attivo.tools.php
+Questa è la macro della scheda strumenti della dashboard del ciclo attivo della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.ciclo.passivo.php
+Questa è la macro della dashboard del ciclo passivo della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.ciclo.passivo.tools.php
+Questa è la macro della scheda strumenti della daashboard del ciclo passivo della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_macro/_logistica.tools.php
+Questa è la macro della scheda strumenti della dashboard della logistica.
+
+### /_mod/_05000.logistica/_src/_inc/_pages/_logistica.it-IT.php
+In questo file vengono definite le pagine del modulo logistica.
 
 ### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.archivio.php
 Questa è la macro dell'archivio dell'amministrazione.
@@ -331,6 +367,9 @@ Questa è la macro della pagina degli strumenti del ciclo passivo dell'amministr
 ### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.php
 Questa è la macro della dashbaord dell'amministrazione.
 
+### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.stampe.php
+Questa è la macro della scheda stampe della dashboard dell'amministrazione.
+
 ### /_mod/_06000.amministrazione/_src/_inc/_macro/_amministrazione.tools.php
 Questa è la macro della pagina degli strumenti della dashboard dell'amministrazione.
 
@@ -345,6 +384,9 @@ Questa è la macro del form di gestione degli account.
 
 ### /_mod/_AC000.account/_src/_inc/_macro/_account.form.attribuzione.php
 Questa è la macro della scheda attribuzione del form di gestione degli account.
+
+### /_mod/_AC000.account/_src/_inc/_macro/_account.form.stampe.php
+Questa è la macro della scheda stame del form di gestione degli account.
 
 ### /_mod/_AC000.account/_src/_inc/_macro/_account.form.tools.php
 Questa è la macro della pagina strumenti del form di gestione degli account.
@@ -450,6 +492,9 @@ Questa è la macro della scheda fornitore della gestione anagrafica.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.php
 Questa è la macro della pagina di gestione anagrafica.
+
+### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.privacy.php
+Questa è la macro della scheda privacy del modulo di gestione anagrafica.
 
 ### /_mod/_AN000.anagrafica/_src/_inc/_macro/_anagrafica.form.produttore.php
 Questa è la macro della scheda produttore della pagina di gestione anagrafica.
@@ -582,6 +627,15 @@ Questa è la macro della scheda di gestione SEM/SMM della pagina di gestione del
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.categorie.prodotti.form.web.php
 Questa è la macro della scheda di gestione web della pagina di gestione delle categorie prodotti.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.marchi.form.contenuti.php
+Questa è la macro della scheda contenuti del form di gestione dei marchi.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.marchi.form.sem.php
+Questa è la macro della scheda SEM/SMM del form di gestione dei marchi.
+
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.marchi.form.web.php
+Questa è la macro della scheda web del form di gestione dei marchi.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_catalogo.prodotti.form.contenuti.php
 Questa è la macro della scheda di gestione contenuti della pagina di gestione prodotti.
@@ -806,6 +860,9 @@ Questa è la macro della pagina degli strumenti della gestione dei file nell'arc
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.view.php
 Questa è la macro della vista dei file nell'archivio contenuti.
 
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.pagine.form.file.php
+Questa è la macro della scheda file del modulo di gestione delle pagine.
+
 ### /_mod/_FI000.file/_src/_inc/_macro/_mail.out.form.file.php
 Questa è la macro di gestione dei file nella gestione delle mail in uscita.
 
@@ -835,6 +892,9 @@ Questa è la macro della scheda di gestione immagini della pagina di gestione ar
 
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.categorie.prodotti.form.immagini.php
 Questa è la macro della scheda di gestione immagini della pagina di gestione delle categorie prodotti.
+
+### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.marchi.form.immagini.php
+Questa è la macro della scheda immagini del modulo di gestione marchi.
 
 ### /_mod/_IM000.immagini/_src/_inc/_macro/_catalogo.prodotti.form.immagini.php
 Questa è la macro della scheda di gestione immagini della pagina di gestione dei prodotti.
@@ -1072,6 +1132,9 @@ Questa è la macro della scheda archiviazione del modulo di gestione marchi.
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.php
 Questa è la macro del modulo di gestione marchi.
 
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.prodotti.php
+Questa è la macro della scheda prodotti del modulo di gestione marchi.
+
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.marchi.form.tools.php
 Questa è la macro della scheda strumenti del modulo di gestione marchi.
 
@@ -1104,6 +1167,9 @@ Questa è la macro della scheda relazioni del modulo di gestione prodotti.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.form.tools.php
 Questa è la macro della scheda strumenti del modulo di gestione prodotti.
+
+### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.stampe.php
+Questa è la macro della scheda stampe della vista prodotti.
 
 ### /_mod/_PR000.prodotti/_src/_inc/_macro/_catalogo.prodotti.tools.php
 Questa è la macro della scheda strumenti della vista prodotti.
@@ -1252,6 +1318,9 @@ framework, il loro scopo e altre informazioni utili. Per accedere al report util
 Questo report innesca l'importazione dei file presenti in /var/spool/import/todo/*/ e /var/spool/import, e restituisce un report dettagliato delle
 operazioni svolte. Normalmente l'importazione dei file è svolta dall'API cron, ma questo report può essere fondamentale per lo sviluppo, il test
 e il debug dei nuovi tracciati di importazione. Per accedere al report utilizzare il percorso /report/import.
+
+### /_src/_api/_report/_memcache.php
+Questo report mostra il contenuto dell'indice di memcache.
 
 ### /_src/_api/_status/_cf.php
 Questa API di stato restituisce il contenuto, navigabile, dell'array $cf. Tutti i dati sensibili sono censurati tramite la funzione core array2censored()
@@ -1722,6 +1791,12 @@ e in particolare vengono cercati questi file:
 Dal momento che la creazione di così tante icone può risultare tediosa, è possibile avvalersi di strumenti come https://www.favicon-generator.org/ in
 attesa che il framework implementi una propria gestione della scalatura delle favicon.
 
+### /_src/_inc/_contents/_affiliazioni.it-IT.html
+Questo file contiene il testo della pagina standard di divulgazione delle affiliazioni.
+
+### /_src/_inc/_contents/_privacy.it-IT.html
+Questo file contiene il testo della pagina standard dell'informativa privacy e cookie.
+
 ### /_src/_inc/_controllers/_default.after.php
 Questa controller viene eseguita dopo ogni ciclo di lavoro della funzione controller().
 
@@ -1783,6 +1858,15 @@ Questo file contiene la dichiarazione delle pagine della dashboard del CMS.
 
 ### /_src/_inc/_pages/_delete.it-IT.php
 Questo file contiene la dichiarazione della pagina di cancellazione del CMS.
+
+### /_src/_inc/_pages/_legal.en-GB.php
+Questo file contiene la dichiarazione delle pagine legali in inglese.
+
+### /_src/_inc/_pages/_legal.fr-FR.php
+Questo file contiene la dichiarazione delle pagine legali in francese.
+
+### /_src/_inc/_pages/_legal.it-IT.php
+Questo file contiene la dichiarazione delle pagine legali.
 
 ### /_src/_inc/_pages/_null.it-IT.php
 Questo file contiene la dichiarazione della pagina NULL utilizzata per l'errore HTTP 404.
@@ -1868,6 +1952,9 @@ Questa libreria contiene funzioni di varia utilità basate su MySQL.
 ### /_src/_lib/_output.tools.php
 Questa libreria contiene funzioni per l'output.
 
+### /_src/_lib/_privacy.utils.php
+Questa libreria contiene funzioni per la privacy.
+
 ### /_src/_lib/_random.tools.php
 Questa libreria contiene funzioni utili per la generazione di dati casuali.
 
@@ -1917,6 +2004,34 @@ nella cartella /etc/deploy/; il nome del file va specificato al netto dell'esten
 ```
 ./_src/_sh/_deploy.run.sh stable
 ```
+
+La truttura dei file properties necessari per lo script di deploy è piuttosto semplice, si tratta sostanzialmente
+di un elenco di coppie chiave/valore. Le chiavi da compilare possono variare leggermente a seconda del tipo di deploy che
+si desidera configurare, la seguente tabella riporta le più comuni:
+
+chiave                      | descrizione                                                   
+----------------------------|-----------------------------------------------------------------------------------------------------
+PRJ_NAME                    | nome del progetto                                             
+SRC_FOLDER                  | percorso assoluto della cartella del progetto sorgente        
+SRC_STAGE                   | stage del progetto sorgente                                   
+DST_FOLDER                  | percorso assoluto della cartella del progetto destinazione    
+DST_STAGE                   | stage del progetto destinazione                               
+GIT_BRANCH                  | nome della branch Git di cui effettuare il deploy             
+DST_HOST                    | nome host del server di destinazione (per i deploy remoti)    
+DST_CMD                     | comando da usare per la copia (rsync,lftp,scp)                
+FTP_USER                    | utente FTP (per i deploy via FTP)                             
+FTP_PASSWORD                | password FTP (per i deploy via FTP)                           
+SET_EXCLUDE                 | file e cartelle da escludere dal deploy (separati da spazi)
+SSH_USER                    | utente SSH (per i deploy via SSH/rsync)
+SSH_PRIVATE                 | percorso della chiave privata (per i deploy via SSH/rsync)
+SSH_PUBLIC                  | percorso della chiave pubblica (per i deploy via SSH/rsync)
+DST_PORT                    | porta di destinazione (se applicabile)
+GCP_INSTANCE                | istanza GCP da usare come destinazione per il deploy
+GCP_PROJECT                 | progetto GCP da usare come destinazione per il deploy
+GCP_ZONE                    | zona GCP da usare come destinazione per il deploy
+
+Per ulteriori informazioni sul meccanismo di deploy del framework si vedano il codice e la documentazione dello 
+script /_src/_sh/_deploy.run.sh.
 
 ### /_src/_sh/_doxygen.build.sh
 Questo script compila la documentazione tramite Doxygen. Il framework è ampiamente documentato con commenti che Doxygen è in
@@ -2394,7 +2509,7 @@ consensi_anagrafica.
 Se si studia il codice del file /_mod/_CT000.contatti/_src/_config/_750.controller.php e quello della funzione associazioneConsensiContatto() si
 vedrà esattamente dove i consensi prestati con i vari moduli presenti sul sito vengono intercettati, e come vengono poi salvati.
 
-### template Athena
+### domande sul template Athena
 Questa sezione contiene domande specificamente relative all'utilizzo del template Athena.
 
 #### qual è la struttura base di una pagina di tipo form?
@@ -2439,7 +2554,7 @@ Le pagine di tipo form possono essere create a partire da questa struttura base:
 {% endblock main %}
 ```
 
-### problemi frequenti
+### domande sui problemi frequenti
 
 #### il framework mi chiede di rifare il login a ogni pagina che visito, perché?
 Questo problema si manifesta solitamente quando SSL non è configurato correttamente; accedendo a una pagina HTTP e venendo
@@ -2452,3 +2567,10 @@ pagina, allora il problema è questo. Sinceratevi che la versione HTTPS del sito
 Questo problema può essere originato da una molteplicità di fattori, ma in primo luogo è d'uopo controllare che non siano per
 qualche ragione stati cambiati inavvertitamente dei permessi. Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e
 provare di nuovo ad accedere alle pagine.
+
+## glossario
+
+### macro
+Nel gergo del framework una macro è un file contenente codice tipicamente associato a una pagina, che viene eseguito
+dopo l'esecuzione principale del kernel del framework e prima del rendering della pagina. Per ulteriori dettagli si
+vedano il codice e la documentazione del file /_src/_api/_pages.php.
