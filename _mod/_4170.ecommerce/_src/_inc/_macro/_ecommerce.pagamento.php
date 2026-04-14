@@ -213,8 +213,25 @@ if (isset($_REQUEST['__pagamenti__'])) {
                             // print_r( $pagamento );
                             // die( print_r( $reparto, true ) );
 
+                            // calcolo il valore del coupon
+                            $pagamento['coupon_valore'] = (! empty($pagamento['id_coupon'])) ? calcolaValoreCouponPerPagamento(
+                                $cf['mysql']['connection'],
+                                $pagamento['id_coupon'],
+                                $pagamento['id'],
+                                $pagamento['importo_lordo_totale']
+                            ) : 0.0;
+
+                            // calcolo il netto
+                            // $pagamento['importo_lordo_finale'] = $pagamento['importo_lordo_totale'] - $pagamento['coupon_valore'];
+                            // $pagamento['importo_lordo_finale'] = $pagamento['importo_lordo_totale'] + $pagamento['coupon_valore'];
+                            $pagamento['importo_lordo_totale'] += $pagamento['coupon_valore'];
+
                             // calcolo il netto
                             $pagamento['importo_netto_totale'] = $pagamento['importo_lordo_totale'] / (100 + $reparto['aliquota']) * 100;
+
+                            $pagamento['importo_lordo_finale'] = $pagamento['importo_lordo_totale'] - $pagamento['coupon_valore'];
+
+                            // die( print_r( $pagamento, true ) );
 
                             // aggiungo la riga
                             $idRiga = mysqlInsertRow(
@@ -234,17 +251,6 @@ if (isset($_REQUEST['__pagamenti__'])) {
                                 ),
                                 'documenti_articoli'
                             );
-
-                            // calcolo il valore del coupon
-                            $pagamento['coupon_valore'] = (! empty($pagamento['id_coupon'])) ? calcolaValoreCouponPerPagamento(
-                                $cf['mysql']['connection'],
-                                $pagamento['id_coupon'],
-                                $pagamento['id'],
-                                $pagamento['importo_lordo_totale']
-                            ) : 0.0;
-
-                            // calcolo il netto
-                            $pagamento['importo_lordo_finale'] = $pagamento['importo_lordo_totale'] - $pagamento['coupon_valore'];
 
                             // debug
                             // die( 'segno pagato il pagamento ' . $pagamento['id_pagamento'] );
