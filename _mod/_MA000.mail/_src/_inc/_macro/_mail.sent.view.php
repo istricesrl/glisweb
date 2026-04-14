@@ -26,8 +26,8 @@
             'id' => '#',
             'timestamp_invio' => 'invio',
             'destinatari' => 'destinatari',
-            'destinatari_cc' => 'destinatari CC',
-            'destinatari_bcc' => 'destinatari BCC',
+            'destinatari_cc' => 'CC',
+            'destinatari_bcc' => 'BCC',
             'oggetto' => 'oggetto'
         ),
         'class' => array(

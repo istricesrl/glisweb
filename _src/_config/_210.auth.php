@@ -640,7 +640,7 @@
                         $cf['auth']['status'] = LOGIN_ERR_WRONG_PW;
 
                         // log
-                        logger( 'impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'] . '/' . $_REQUEST['__login__']['pasw'], 'auth', LOG_ERR );
+                        logger( 'PASSWORD ERRATA, impossibile effettuare il login via database per ' . $_REQUEST['__login__']['user'] . '/' . $_REQUEST['__login__']['pasw'], 'auth', LOG_ERR );
 
                     }
 
