@@ -106,3 +106,43 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.categorie.prodotti.form' )
     );
+
+    
+    // gestione marchi form catalogo
+    $p['catalogo.marchi.form.web'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-brands fa-chrome" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'gestione web' ),
+        'h1'                => array( $l        => 'web' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.web.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.web.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
+
+    // gestione marchi form catalogo
+    $p['catalogo.marchi.form.sem'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-brands fa-google" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'seo/sem' ),
+        'h1'                => array( $l        => 'SEO/SEM' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.sem.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.sem.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );
+
+    // gestione marchi form contenuti
+    $p['catalogo.marchi.form.contenuti'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-regular fa-file-lines" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'catalogo' ),
+        'h1'                => array( $l        => 'catalogo' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.contenuti.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.contenuti.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );

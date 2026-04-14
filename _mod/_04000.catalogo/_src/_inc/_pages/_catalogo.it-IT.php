@@ -35,10 +35,24 @@
         'macro'            => array( $m . '_src/_inc/_macro/_catalogo.php' ),
         'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'            => array( 'tabs'    => array(    'catalogo',
+                                                        'catalogo.stampe',
                                                         'catalogo.tools'
                                                          ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'catalogo' ),
                                                                         'priority'    => '4000' ) ) )                                                        
+    );
+
+    // catalogo stampe
+    $p['catalogo.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'catalogo stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'catalogo' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo' )
     );
 
     // tools della dashboard catalogo

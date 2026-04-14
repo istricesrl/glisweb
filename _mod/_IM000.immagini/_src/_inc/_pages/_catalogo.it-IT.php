@@ -55,3 +55,16 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
     );
+
+    // gestione catalogo.marchi form immagini
+    $p['catalogo.marchi.form.immagini'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-image" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'immagini' ),
+        'h1'                => array( $l        => 'immagini' ),
+        'parent'            => array( 'id'        => 'catalogo.marchi.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.marchi.form.immagini.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.marchi.form.immagini.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.marchi.form' )
+    );

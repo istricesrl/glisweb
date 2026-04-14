@@ -53,11 +53,25 @@
 	    'macro'			=> array( $m . '_src/_inc/_macro/_amministrazione.php' ),
 		'auth'			=> array( 'groups'	=> array(	'roots', 'staff' ) ),
 		'etc'			=> array( 'tabs'	=> array(	'amministrazione',
+														'amministrazione.stampe',
 														'amministrazione.tools'
 														 ) ),
 		'menu'				=> array( 'admin'	=> array(	'' => 	array(	'label'		=> array( $l => 'amministrazione' ),
 																		'priority'	=> '6000' ) ) )														
 	);
+
+    // amministrazione stampe
+    $p['amministrazione.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'amministrazione stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'amministrazione' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_amministrazione.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'amministrazione' )
+    );
 
     // tools della dashboard amministrazione
 	$p['amministrazione.tools'] = array(

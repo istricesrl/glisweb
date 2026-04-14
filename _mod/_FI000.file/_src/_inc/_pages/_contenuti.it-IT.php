@@ -75,7 +75,7 @@
     // gestione pagine form file
     $p['contenuti.pagine.form.file'] = array(
         'sitemap'            => false,
-        'icon'                => '<i class="fa fa-image" aria-hidden="true"></i>',
+        'icon'                => '<i class="fa-regular fa-folder-open" aria-hidden="true"></i>',
         'title'                => array( $l        => 'file' ),
         'h1'                => array( $l        => 'file' ),
         'parent'            => array( 'id'        => 'contenuti.pagine.view' ),

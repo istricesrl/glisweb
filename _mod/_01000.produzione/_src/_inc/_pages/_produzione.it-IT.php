@@ -35,10 +35,24 @@
         'macro'            => array( $m . '_src/_inc/_macro/_produzione.php' ),
         'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'            => array( 'tabs'    => array(    'produzione',
+                                                        'produzione.stampe',
                                                         'produzione.tools'
                                                          ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'produzione' ),
                                                                         'priority'    => '1000' ) ) )                                                        
+    );
+
+    // anagrafica form stampe
+    $p['produzione.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'produzione stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'produzione' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_produzione.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'produzione' )
     );
 
     // tools produzione

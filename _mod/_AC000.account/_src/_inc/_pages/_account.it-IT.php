@@ -72,6 +72,7 @@
         'auth'                => array( 'groups'    => array(    'roots' ) ),
         'etc'                => array( 'tabs'    => array(    'account.form',
                                                             'account.form.attribuzione',
+                                                            'account.form.stampe',
                                                             'account.form.tools' ) )
     );
 
@@ -86,6 +87,20 @@
         'auth'                => array( 'groups'    => array(    'roots' ) ),
         'etc'                => array( 'tabs'    => 'account.form')
     );
+
+    // account form stampe
+    $p['account.form.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'account form stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'account.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_account.form.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'account.form' )
+    );
+
 
     // tools account
     $p['account.form.tools'] = array(

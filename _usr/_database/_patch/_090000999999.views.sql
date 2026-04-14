@@ -1306,6 +1306,7 @@ CREATE OR REPLACE VIEW `immagini_view` AS                       --
 		immagini.id_prodotto,                                   --
 		immagini.id_articolo,                                   --
 		immagini.id_categoria_prodotti,                         --
+		immagini.id_marchio,                         --
 		immagini.id_risorsa,                                    --
 		immagini.id_categoria_risorse,                          --
 		immagini.id_notizia,                                    --
@@ -2198,6 +2199,7 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
 		ruoli_immagini.se_prodotti,                             --
 		ruoli_immagini.se_articoli,                             --
 		ruoli_immagini.se_categorie_prodotti,                   --
+		ruoli_immagini.se_marchi,                   --
 		ruoli_immagini.se_notizie,                              --
 		ruoli_immagini.se_categorie_notizie,                    --
 		ruoli_immagini.se_risorse,                              --

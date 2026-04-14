@@ -40,10 +40,24 @@
         'macro'            => array( $m . '_src/_inc/_macro/_commerciale.php' ),
         'auth'            => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'            => array( 'tabs'    => array(    'commerciale',
+                                                        'commerciale.stampe',
                                                         'commerciale.tools'
                                                          ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'commerciale' ),
                                                                         'priority'    => '2000' ) ) )                                                        
+    );
+
+    // commerciale stampe
+    $p['commerciale.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'commerciale stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'commerciale' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_commerciale.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'commerciale' )
     );
 
     // tools commerciale
