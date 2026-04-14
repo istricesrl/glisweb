@@ -1,11 +1,16 @@
 <?php
 
     /**
-     * macro form anagrafica
-     *
-     *
-     * TODO documentare
-     *
+     * macro form anagrafica archivio anagrafica indirizzi
+     * 
+     * Questa è la macro del modulo di gestione degli indirizzi dell'anagrafica. La tabella anagrafica_indirizzi
+     * contiene gli indirizzi associati ad un'anagrafica.
+     * 
+     * La tabella anagrafica_indirizzi contiene già tutte le colonne necessarie per registrare un indirizzo completo,
+     * tuttavia negli scenari in cui è possibile che si verifichino forti duplicazioni di indirizzi bisogna valutare
+     * di ricorrere alla tabella indirizzi, e usare anagrafica_indirizzi come tabella di associazione tra anagrafica
+     * e indirizzo.
+     * 
      */
 
     /**
@@ -32,20 +37,10 @@
      */
 
     // tendina ruoli indirizzi
-    $ct['etc']['select']['ruoli_indirizzi'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'],
-        $cf['memcache']['connection'],
-        $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM ruoli_indirizzi_view'
-    );
+    $ct['etc']['select']['ruoli_indirizzi'] = tendinaRuoliIndirizzi();
 
     // tendina tipologie indirizzi
-    $ct['etc']['select']['tipologie_indirizzi'] = mysqlCachedIndexedQuery(
-        $cf['memcache']['index'],
-        $cf['memcache']['connection'],
-        $cf['mysql']['connection'],
-        'SELECT id, __label__ FROM tipologie_indirizzi_view'
-    );
+    $ct['etc']['select']['tipologie_indirizzi'] = tendinaTipologieIndirizzi();
 
     /**
      * macro di default
