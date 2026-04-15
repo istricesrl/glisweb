@@ -51,44 +51,6 @@
      * TODO documentare
      * 
      */
-    function tendinaRuoliIndirizzi() {
-
-        global $cf;
-
-        return mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM ruoli_indirizzi_view ORDER BY __label__ ASC',
-        );
-
-    }
-
-    /**
-     * 
-     * 
-     * TODO documentare
-     * 
-     */
-    function tendinaTipologieIndirizzi() {
-
-        global $cf;
-
-        return mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'], 
-            'SELECT id, __label__ FROM tipologie_indirizzi_view ORDER BY __label__ ASC',
-        );
-
-    }
-
-    /**
-     * 
-     * 
-     * TODO documentare
-     * 
-     */
     function updateAnagraficaViewStatic($id)
     {
 
@@ -132,7 +94,7 @@
             )
         );
 
-        // print_r( $riga );
+        // die( print_r( $riga, true ) );
 
         if (! empty($riga['id'])) {
 
@@ -256,6 +218,18 @@
         if ($tCat > $riga['timestamp_aggiornamento']) {
             $riga['timestamp_aggiornamento'] = $tCat;
         }
+
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE anagrafica_categorie SET timestamp_aggiornamento = ? WHERE id = ?',
+            array(
+                array('s' => $riga['timestamp_aggiornamento']),
+                array('s' => $riga['id'])
+            )
+        );
+
+        // die( 'updateAnagraficaViewStaticCategorie: ' . $riga['id'] . ' - ' . $riga['timestamp_aggiornamento'] );
+
     }
 
     /**

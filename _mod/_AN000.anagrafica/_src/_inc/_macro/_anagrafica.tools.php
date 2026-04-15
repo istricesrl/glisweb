@@ -90,7 +90,7 @@
         'title' => 'ripopola anagrafica view static',
         'text' => 'ripopola la view static dell\'anagrafica'
     );
-
+*/
     $ct['page']['contents']['metro']['05.static'][] = array(
         'ws' => '/task/anagrafica.view.static.pulizia',
         'icon' => NULL,
@@ -98,7 +98,7 @@
         'title' => 'pulizia anagrafica view static',
         'text' => 'pulisce la view static dell\'anagrafica'
     );
-
+/*
     $ct['page']['contents']['metro']['05.static'][] = array(
         'ws' => '/task/anagrafica.view.static.svuotamento',
         'icon' => NULL,

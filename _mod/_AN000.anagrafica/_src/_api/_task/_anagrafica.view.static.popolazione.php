@@ -79,6 +79,7 @@
                     $cf['mysql']['connection'],
                     'SELECT ' . $table . '.id_anagrafica 
                     FROM ' . $table . ' 
+                    INNER JOIN anagrafica ON anagrafica.id = ' . $table . '.id_anagrafica
                     LEFT JOIN anagrafica_view_static ON anagrafica_view_static.id = ' . $table . '.id_anagrafica
                     WHERE ( coalesce( ' . $table . '.timestamp_aggiornamento, ' . $table . '.timestamp_inserimento, 0 ) > anagrafica_view_static.timestamp_aggiornamento 
                     OR anagrafica_view_static.timestamp_aggiornamento IS NULL )
