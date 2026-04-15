@@ -51,6 +51,44 @@
      * TODO documentare
      * 
      */
+    function tendinaRuoliIndirizzi() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM ruoli_indirizzi_view ORDER BY __label__ ASC',
+        );
+
+    }
+
+    /**
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
+    function tendinaTipologieIndirizzi() {
+
+        global $cf;
+
+        return mysqlCachedIndexedQuery(
+            $cf['memcache']['index'],
+            $cf['memcache']['connection'],
+            $cf['mysql']['connection'], 
+            'SELECT id, __label__ FROM tipologie_indirizzi_view ORDER BY __label__ ASC',
+        );
+
+    }
+
+    /**
+     * 
+     * 
+     * TODO documentare
+     * 
+     */
     function updateAnagraficaViewStatic($id)
     {
 
