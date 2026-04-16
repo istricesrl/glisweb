@@ -1725,6 +1725,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.note,
 		pagamenti.note_pagamento,
 		pagamenti.id_documento,
+		pagamenti.id_carrello,
 		pagamenti.id_carrelli_articoli,
         concat(
 			tipologie_documenti.sigla,

@@ -1923,6 +1923,7 @@ CREATE TABLE IF NOT EXISTS `pagamenti` (
   `note_pagamento` text DEFAULT NULL,
   `id_documento` int(11) DEFAULT NULL,
   `id_rinnovo` int(11) DEFAULT NULL,
+  `id_carrello` int(11) DEFAULT NULL,
   `id_carrelli_articoli` int(11) DEFAULT NULL,
   `id_creditore` int(11) DEFAULT NULL,
   `id_debitore` int(11) DEFAULT NULL,

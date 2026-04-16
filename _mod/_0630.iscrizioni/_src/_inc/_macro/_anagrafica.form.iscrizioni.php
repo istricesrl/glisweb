@@ -153,6 +153,7 @@
                 sum( documenti_articoli.importo_lordo_totale ) AS pagato
                 FROM rinnovi
                 LEFT JOIN documenti_articoli ON documenti_articoli.id_rinnovo = rinnovi.id
+                -- LEFT JOIN pagamenti ON pagamenti.id_documento = documenti_articoli.id_documento
                 WHERE rinnovi.id_contratto = ?
                 GROUP BY rinnovi.id
                 ORDER BY rinnovi.data_fine DESC',
@@ -166,6 +167,7 @@
                 FROM rinnovi
                 LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id
                 LEFT JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello
+                -- LEFT JOIN pagamenti ON pagamenti.id_carrelli_articoli = carrelli_articoli.id
                 WHERE rinnovi.id_contratto = ? AND carrelli.timestamp_pagamento IS NOT NULL
                 GROUP BY rinnovi.id
                 ORDER BY rinnovi.data_fine DESC',
