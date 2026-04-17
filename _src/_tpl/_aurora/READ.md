@@ -1,10 +1,8 @@
-TEMPLATE AURORA
-===============
+# documentazione del template Aurora
 Questo è un template molto semplice, che può essere usato per piccoli siti oppure a scopo didattico. Può anche essere utile in
 scenari applicativi in cui è necessario presentare le informazioni in modo sintetico senza particolari digressioni grafiche.
 
-FILE DEL TEMPLATE
-=================
+# file del template
 Il template Aurora è composto da pochi file con compiti semplici.
 
 file                                    | descrizione

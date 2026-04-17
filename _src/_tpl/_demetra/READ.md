@@ -1,17 +1,12 @@
-TEMPLATE DEMETRA
-================
+# documentazione del template Demetra
 
-FILE DEL TEMPLATE
-=================
+# file del template
 
-UTILIZZO DEL TEMPLATE
-=====================
+# utilizzo del template
 
-pagine view
------------
+## pagine view
 
-pagine form
------------
+## pagine form
 Le pagine form servono a manipolare una specifica entità e le sue entità collegate, ad esempio un'anagrafica con i suoi
 numeri di telefono, le mail, eccetera. Come solito, anche le pagine form sono composte da una macro che setta i parametri
 di funzionamento della pagina e un template che li rappresenta all'utente. Nella macro è importante configurare alcuni
