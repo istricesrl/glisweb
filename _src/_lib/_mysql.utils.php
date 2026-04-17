@@ -62,6 +62,21 @@
         );
     }
 
+    function tendinaAziendeGestita()
+    {
+
+        global $cf;
+
+        return mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT anagrafica_view_static.id, anagrafica_view_static.__label__ 
+            FROM anagrafica_view_static 
+            INNER JOIN anagrafica_categorie ON anagrafica_view_static.id = anagrafica_categorie.id_anagrafica 
+            WHERE anagrafica_categorie.id_categoria = ?',
+            array(array('s' => 5))
+        );
+    }
+
     function trovaIdSedeLegale($idAnagrafica)
     {
 
