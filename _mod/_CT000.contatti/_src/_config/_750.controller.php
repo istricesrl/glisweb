@@ -41,7 +41,9 @@
 
                 // log
                 logger( 'blocco contatti ricevuto per ' . $k, 'contatti' );
-                writeToFile( print_r( $v, true ), DIR_VAR_SPOOL . 'contatti/' . $k . '.' . time() . '.log', LOG_ERR );
+
+                // spool
+                writeToFile( print_r( $v, true ), DIR_VAR_SPOOL . 'contatti/' . $k . '.' . time() . '.log' );
 
                 // verifica anti spam
                 reCaptchaVerifyFormV3( $v, $cf['google']['profile']['recaptcha']['keys']['private'] ?? false );
@@ -112,34 +114,35 @@
 
                         }
 
+                        // salvo la riga sulla tabella contatti
+                        // TODO non è ridondante questa cosa? serve davvero sia prima che dopo l'inclusione della controller?
+                        $v['__id_contatto__'] = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id_tipologia' => 4,
+                                'id_anagrafica' => $v['__id_anagrafica__'],
+                                'id_sito' => $v['__sito__']['id'],
+                                'utm_id' => $cf['session']['utm']['utm_id'] ?? NULL,
+                                'utm_source' => $cf['session']['utm']['utm_source'] ?? NULL,
+                                'utm_medium' => $cf['session']['utm']['utm_medium'] ?? NULL,
+                                'utm_campaign' => $cf['session']['utm']['utm_campaign'] ?? NULL,
+                                'utm_term' => $cf['session']['utm']['utm_term'] ?? NULL,
+                                'utm_content' => $cf['session']['utm']['utm_content'] ?? NULL,
+                                'nome' => 'contatto ricevuto da form web il ' . date( 'd/m/Y H:i:s', time() ),
+                                'modulo' => $v['__modulo__'],
+                                'yaml' => yaml_emit( $v ),
+                                'timestamp_contatto' => $v['__timestamp_contatto__'],
+                                'timestamp_inserimento' => time(),
+                            ),
+                            'contatti'
+                        );
+
                     } else {
 
                         // log
                         logger( 'nessuna controller specificata per modulo contatti ' . $k, 'contatti' );
 
                     }
-
-                    // salvo la riga sulla tabella contatti
-                    $v['__id_contatto__'] = mysqlInsertRow(
-                        $cf['mysql']['connection'],
-                        array(
-                            'id_tipologia' => 4,
-                            'id_anagrafica' => $v['__id_anagrafica__'],
-                            'id_sito' => $v['__sito__']['id'],
-                            'utm_id' => $cf['session']['utm']['utm_id'] ?? NULL,
-                            'utm_source' => $cf['session']['utm']['utm_source'] ?? NULL,
-                            'utm_medium' => $cf['session']['utm']['utm_medium'] ?? NULL,
-                            'utm_campaign' => $cf['session']['utm']['utm_campaign'] ?? NULL,
-                            'utm_term' => $cf['session']['utm']['utm_term'] ?? NULL,
-                            'utm_content' => $cf['session']['utm']['utm_content'] ?? NULL,
-                            'nome' => 'contatto ricevuto da form web il ' . date( 'd/m/Y H:i:s', time() ),
-                            'modulo' => $v['__modulo__'],
-                            'yaml' => yaml_emit( $v ),
-                            'timestamp_contatto' => $v['__timestamp_contatto__'],
-                            'timestamp_inserimento' => time(),
-                        ),
-                        'contatti'
-                    );
 
                     // associo i consensi prestati al contatto appena inserito
                     associazioneConsensiContatto( $v );

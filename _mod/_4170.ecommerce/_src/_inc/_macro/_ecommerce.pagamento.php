@@ -33,7 +33,6 @@ if (isset($_REQUEST['ck_carrello']) && ! empty($_REQUEST['ck_carrello'])) {
         array(array('s' => $_REQUEST['__pagamenti__']['id_carrello']))
     );
 } else {
-
 }
 
 // ...
@@ -75,7 +74,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
         }
 
         // strategia di fatturazione documenti multipli
-        if (isset( $_SESSION['carrello']['fatturazione_strategia'] ) && $_SESSION['carrello']['fatturazione_strategia'] == 'MULTIPLA') {
+        if (isset($_SESSION['carrello']['fatturazione_strategia']) && $_SESSION['carrello']['fatturazione_strategia'] == 'MULTIPLA') {
 
             // debug
             // die( print_r( $_REQUEST['__pagamenti__'], true ) );
@@ -357,7 +356,6 @@ if (isset($_REQUEST['__pagamenti__'])) {
                     logger('la riga non è da fare', 'cassa');
                 }
             }
-
         } else {
 
             // log
@@ -373,7 +371,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                 $nome = 'documento creato automaticamente per il ' .
                     ((! empty($_REQUEST['__pagamenti__']['id_pagamento'])) ? 'pagamento #' . $_REQUEST['__pagamenti__']['id_pagamento'] . ' ' : NULL) .
                     'carrello #' . $_REQUEST['__pagamenti__']['id_carrello'] .  ' ' .
-                    'anagrafica #' . $_REQUEST['__pagamenti__']['id_cliente'] . ' (' . ( $_REQUEST['__pagamenti__']['destinatario'] ?? '' ) . ')';
+                    'anagrafica #' . $_REQUEST['__pagamenti__']['id_cliente'] . ' (' . ($_REQUEST['__pagamenti__']['destinatario'] ?? '') . ')';
                 $sezionale = 'C/' . date('Y');
                 $emittente = trovaIdAziendaGestita();
 
@@ -432,7 +430,7 @@ if (isset($_REQUEST['__pagamenti__'])) {
                         // die( print_r( $reparto, true ) );
 
                         // calcolo il netto
-                        $pagamento['importo_netto_totale'] = ( $pagamento['importo_lordo_finale'] ?? 0 ) / (100 + ( $reparto['aliquota'] ?? 0 ) ) * 100;
+                        $pagamento['importo_netto_totale'] = ($pagamento['importo_lordo_finale'] ?? 0) / (100 + ($reparto['aliquota'] ?? 0)) * 100;
 
                         // aggiungo la riga
                         $idRiga = mysqlInsertRow(
@@ -733,6 +731,9 @@ if (isset($_REQUEST['__pagamenti__'])) {
                         'WHERE documenti_articoli.id_carrelli_articoli = ? AND pagamenti.timestamp_pagamento IS NOT NULL',
                     array(array('s' => $riga['id_carrelli_articoli']))
                 );
+
+                // die(print_r($riga, true));
+
             } else {
 
                 // log
@@ -789,6 +790,20 @@ if (isset($_REQUEST['__pagamenti__'])) {
                         'WHERE documenti_articoli.id_carrelli_articoli = ? AND pagamenti.timestamp_pagamento IS NOT NULL',
                     array(array('s' => $riga['id']))
                 );
+
+                // totale già pagato
+                $riga['totale_lordo_pagato'] = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT sum( pagamenti.importo_lordo_totale ) ' .
+                        'FROM pagamenti ' .
+                        'INNER JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli ' .
+                        'WHERE pagamenti.id_carrelli_articoli = carrelli_articoli.id AND carrelli_articoli.id_carrello = ? AND pagamenti.timestamp_pagamento IS NOT NULL',
+                    array(array('s' => $riga['id_carrello']))
+                );
+
+                // var_dump($riga['id_carrello']);
+                // die( print_r( $riga, true ) );
+
             }
 
             // totale rateizzato
@@ -1044,8 +1059,8 @@ $ct['etc']['default']['fatturazione_strategia'] = (
     );
 */
 
-if( isset( $ct['etc']['righe'] ) && is_array( $ct['etc']['righe'] ) ) {
-    foreach( $ct['etc']['righe'] as $k => $v ) {
+if (isset($ct['etc']['righe']) && is_array($ct['etc']['righe'])) {
+    foreach ($ct['etc']['righe'] as $k => $v) {
 
         $idFamiliari = mysqlSelectColumn(
             'id_familiare',
@@ -1059,32 +1074,32 @@ if( isset( $ct['etc']['righe'] ) && is_array( $ct['etc']['righe'] ) ) {
             )
         );
 
-        if( is_array( $idFamiliari ) && count( $idFamiliari ) > 0 ) {
+        if (is_array($idFamiliari) && count($idFamiliari) > 0) {
             $whr = $cnd = array();
-            foreach( $idFamiliari as $familiare ) {
+            foreach ($idFamiliari as $familiare) {
                 $whr[] = '?';
                 $cnd[] = array('s' => $familiare);
             }
-            $whr = 'OR coupon.id_anagrafica IN ( ' . implode( ',', $whr ) . ' )';
+            $whr = 'OR coupon.id_anagrafica IN ( ' . implode(',', $whr) . ' )';
         } else {
             $whr = '';
         }
 
-        $ct['etc']['coupon'][ $k ] = mysqlQuery(
+        $ct['etc']['coupon'][$k] = mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, 
                 coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
                 FROM coupon 
                 LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
                 WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= unix_timestamp(NOW()) ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= unix_timestamp(NOW()) )
-                AND ( coupon.id_anagrafica IS NULL OR coupon.id_anagrafica = ? '.$whr.' )
+                AND ( coupon.id_anagrafica IS NULL OR coupon.id_anagrafica = ? ' . $whr . ' )
                 GROUP BY coupon.id
                 HAVING utilizzato < coupon.sconto_fisso
                 ORDER BY coupon.id 
             ',
             array_merge(
                 array(array('s' => $v['destinatario_id_anagrafica'])),
-                ( $cnd ?? [] )
+                ($cnd ?? [])
             )
         );
     }

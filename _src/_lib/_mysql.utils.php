@@ -560,7 +560,7 @@
         // echo 'civico: ' . $civico . PHP_EOL;
 
         // trovo la parte nominale
-        $nominale = ucwords(trim(str_replace(array($tipologia, $civico), NULL, $indirizzo)));
+        $nominale = ucwords(trim(str_replace(array($tipologia, $civico), '', $indirizzo)));
 
         // individuazione numeri romani
         $regexp = '/\b([IVLXCDM]{1,3}[LVCD]{0,1}[IXMC]{0,3})\b/';
@@ -665,8 +665,6 @@
         // aggiorno le viste statiche
         updateAnagraficaViewStatic($destinazione);
         cleanAnagraficaViewStatic();
-
-        updateAttivitaViewStatic();
 
         // mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO anagrafica_view_static SELECT * FROM anagrafica_view WHERE id = ?', array( array( 's' => $destinazione ) ) );
         // mysqlQuery( $cf['mysql']['connection'], 'DELETE FROM anagrafica_view_static WHERE id = ?', array( array( 's' => $sorgente ) ) );
@@ -877,76 +875,11 @@
      * TODO documentare
      * 
      */
-    function tendinaSesso() {
-
-        return array( 
-            array( 'id' => '-', '__label__' => '-' ),
-            array( 'id' => 'M', '__label__' => 'uomo' ),
-            array( 'id' => 'F', '__label__' => 'donna' ),
-        );
-
-    }
-
-    /**
-     * 
-     * TODO documentare
-     * 
-     */
     function tendinaSiNo() {
 
         return array(
             array( 'id' => 0, '__label__' => 'no' ),
             array( 'id' => 1, '__label__' => 'si' )
-        );
-
-    }
-
-    /**
-     * 
-     * TODO documentare
-     * 
-     */
-    function tendinaSePec() {
-
-        return array(
-            array( 'id' => 0, '__label__' => 'mail' ),
-            array( 'id' => 1, '__label__' => 'PEC' )
-        );
-
-    }
-
-    /**
-     * 
-     * TODO documentare
-     * 
-     */
-    function tendinaTipologieAnagrafica() {
-
-        global $cf;
-
-        return mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM tipologie_anagrafica_view ORDER BY __label__ ASC'
-        );
-
-    }
-
-    /**
-     * 
-     * TODO documentare
-     * 
-     */
-    function tendinaTipologieTelefoni() {
-
-        global $cf;
-
-        return mysqlCachedIndexedQuery(
-            $cf['memcache']['index'],
-            $cf['memcache']['connection'],
-            $cf['mysql']['connection'],
-            'SELECT id, __label__ FROM tipologie_telefoni_view'
         );
 
     }

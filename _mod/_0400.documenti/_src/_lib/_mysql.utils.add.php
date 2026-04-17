@@ -311,6 +311,8 @@
 
         }
 
+        // die( print_r( $r['doc']['tot'], true ) );
+
         // formattazione totali
         if( ! empty( $r['doc']['tot'] ) ){
             foreach( $r['doc']['tot'] as &$tot ) {
@@ -400,6 +402,28 @@
             'WHERE pagamenti.id_documento = ?',
             array( array( 's' => $r['doc']['id'] ) )
         );
+
+        if( empty( $r['doc']['pagamenti'] ) ) {
+            foreach( $r['doc']['righe'] as &$riga ) {
+                $r['doc']['pagamenti'] = mysqlQuery(
+                    $cf['mysql']['connection'],
+                    'SELECT pagamenti.nome, modalita_pagamento.codice AS codice_pagamento, modalita_pagamento.nome AS modalita, '.
+                    'date_format( data_scadenza, "%d/%m/%Y" ) AS data_italiana, '.
+                    'date_format( data_scadenza, "%Y-%m-%d" ) AS data_standard, '.
+                    'pagamenti.importo_lordo_totale, pagamenti.coupon_valore, pagamenti.id_coupon, '.
+                    'pagamenti.importo_lordo_finale, iban.iban AS iban '.
+                    'FROM pagamenti '.
+                    'LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento '.
+                    'LEFT JOIN iban ON iban.id = pagamenti.id_iban '.
+                    'LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli '.
+                    'LEFT JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello '.
+                    'WHERE carrelli_articoli.id_rinnovo = ?',
+                    array( array( 's' => $riga['id_rinnovo'] ) )
+                );
+            }
+        }
+
+        // die( print_r( $r['doc']['pagamenti_carrelli'], true ) );
 
         foreach( $r['doc']['pagamenti'] as &$pagamento ) {
 

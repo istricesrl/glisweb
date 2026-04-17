@@ -150,10 +150,11 @@
             $documenti = mysqlSelectRow(
                 $cf['mysql']['connection'],
                 'SELECT rinnovi.*, 
-                sum( documenti_articoli.importo_lordo_totale ) AS pagato
+                sum( documenti_articoli.importo_lordo_totale ) AS pagato,
+                sum( pagamenti.coupon_valore ) AS pagato_coupon
                 FROM rinnovi
                 LEFT JOIN documenti_articoli ON documenti_articoli.id_rinnovo = rinnovi.id
-                -- LEFT JOIN pagamenti ON pagamenti.id_documento = documenti_articoli.id_documento
+                LEFT JOIN pagamenti ON pagamenti.id_documento = documenti_articoli.id_documento
                 WHERE rinnovi.id_contratto = ?
                 GROUP BY rinnovi.id
                 ORDER BY rinnovi.data_fine DESC',
@@ -163,11 +164,12 @@
             $carrelliPagati = mysqlSelectRow(
                 $cf['mysql']['connection'],
                 'SELECT rinnovi.*, 
-                sum( carrelli_articoli.prezzo_lordo_finale ) AS pagato_carrelli
+                sum( carrelli_articoli.prezzo_lordo_finale ) AS pagato_carrelli,
+                sum( pagamenti.coupon_valore ) AS pagato_coupon_carrelli
                 FROM rinnovi
                 LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id
                 LEFT JOIN carrelli ON carrelli.id = carrelli_articoli.id_carrello
-                -- LEFT JOIN pagamenti ON pagamenti.id_carrelli_articoli = carrelli_articoli.id
+                LEFT JOIN pagamenti ON pagamenti.id_carrelli_articoli = carrelli_articoli.id
                 WHERE rinnovi.id_contratto = ? AND carrelli.timestamp_pagamento IS NOT NULL
                 GROUP BY rinnovi.id
                 ORDER BY rinnovi.data_fine DESC',
@@ -177,9 +179,11 @@
             $carrelli = mysqlSelectRow(
                 $cf['mysql']['connection'],
                 'SELECT rinnovi.*, 
-                sum( carrelli_articoli.prezzo_lordo_finale ) AS ordinato
+                sum( carrelli_articoli.prezzo_lordo_finale ) AS ordinato,
+                sum( pagamenti.coupon_valore ) AS pagato_coupon
                 FROM rinnovi
                 LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id
+                LEFT JOIN pagamenti ON pagamenti.id_carrelli_articoli = carrelli_articoli.id
                 WHERE rinnovi.id_contratto = ?
                 GROUP BY rinnovi.id
                 ORDER BY rinnovi.data_fine DESC',
@@ -187,14 +191,18 @@
             );
 
             $rinnovi = array_merge( $documenti, $carrelli, $carrelliPagati );
+
             if( ! isset( $rinnovi['pagato_carrelli'] ) ) {
                 $rinnovi['pagato_carrelli'] = 0;
             }
+
             if( ! isset( $rinnovi['ordinato'] ) ) {
                 $rinnovi['ordinato'] = 0;
             }
 
+            // die( print_r( $documenti, true ) );
             // die( print_r( $carrelliPagati, true ) );
+            // die( print_r( $carrelli, true ) );
             // die( print_r( $rinnovi, true ) );
 
             if( empty( $rinnovi ) ) {
@@ -215,10 +223,10 @@
                 }
             } elseif( $rinnovi['pagato'] == 0 && $rinnovi['pagato_carrelli'] == 0 ) {
                 $row['pagamento'] = 'interamente da pagare € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
-            } elseif( ( $rinnovi['pagato'] < $rinnovi['ordinato'] ) && ( $rinnovi['pagato_carrelli'] < $rinnovi['ordinato'] ) ) {
+            } elseif( ( ( $rinnovi['pagato'] + $rinnovi['pagato_coupon'] ) < $rinnovi['ordinato'] ) && ( $rinnovi['pagato_carrelli'] < $rinnovi['ordinato'] ) ) {
                 $row['pagamento'] = 'da pagare € ' . number_format( $rinnovi['ordinato'] - $rinnovi['pagato'], 2, ',', '.') . ' su € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
                 // $row[ NULL ] =  '<a href="' . $cf['contents']['pages']['ecommerce.pagamento']['url'][ LINGUA_CORRENTE ] . '?__pagamenti__[id_cliente]='.$row['id_anagrafica'].'"><span class="media-left"><i class="fa fa-shopping-cart"></i></span></a>';
-            } elseif( ( $rinnovi['pagato'] == $rinnovi['ordinato'] ) || ( $rinnovi['pagato_carrelli'] == $rinnovi['ordinato'] ) ) {
+            } elseif( ( ( $rinnovi['pagato'] + $rinnovi['pagato_coupon'] ) == $rinnovi['ordinato'] ) || ( $rinnovi['pagato_carrelli'] == $rinnovi['ordinato'] ) ) {
                 $row['pagamento'] = 'totalmente pagato € ' . number_format( $rinnovi['ordinato'], 2, ',', '.');
             }
 
