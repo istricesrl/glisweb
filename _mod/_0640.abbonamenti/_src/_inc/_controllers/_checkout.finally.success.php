@@ -172,6 +172,9 @@
                             'documenti'
                         );
 
+                        // log
+                        logger( 'documento generato: ' . $idDocumento . ' per il socio #' . $articolo['destinatario_id_anagrafica'], 'details/iscrizioni/documenti/attribuzione/' . $articolo['destinatario_id_anagrafica'] );
+
                         // ...
                         if( ! empty( $idDocumento ) ) {
 

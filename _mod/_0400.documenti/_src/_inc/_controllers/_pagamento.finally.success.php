@@ -22,6 +22,11 @@
             array( array( 's' => $dettagli['id_carrelli_articoli'] ) )
         );
 
+        // se è settata un'anagrafica per la riga, prendo quella
+        if( ! empty( $dettagliCarrelliArticoli['destinatario_id_anagrafica'] ) ) {
+            $idDebitore = $dettagliCarrelliArticoli['destinatario_id_anagrafica'];
+        }
+
         // genero il numero di documento
         $numero = generaProssimoNumeroDocumento(
             $idTipologia,

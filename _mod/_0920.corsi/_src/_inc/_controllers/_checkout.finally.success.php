@@ -56,6 +56,9 @@
         // cerco gli articoli che aggiungono crediti
         foreach( $articoli as $articolo ) {
 
+            // log
+            logger( 'processo l\'articolo #' . $articolo['id'] . ' del carrello #' . $idCarrello . ' per il socio #' . $articolo['destinatario_id_anagrafica'], 'details/iscrizioni/articoli/' . $articolo['destinatario_id_anagrafica'] );
+
             // ...
             if( ! empty( $articolo['destinatario_id_anagrafica'] ) ) {
 
@@ -255,6 +258,9 @@
                                 ),
                                 'documenti'
                             );
+
+                            // log
+                            logger( 'documento generato: ' . $idDocumento . ' per il socio #' . $articolo['destinatario_id_anagrafica'], 'details/iscrizioni/documenti/attribuzione/' . $articolo['destinatario_id_anagrafica'] );
 
                             // ...
                             if( ! empty( $idDocumento ) ) {
