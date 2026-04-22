@@ -62,12 +62,12 @@
         );
     }
 
-    function tendinaAziendeGestita()
+    function tendinaAziendeGestite()
     {
 
         global $cf;
 
-        return mysqlSelectValue(
+        return mysqlQuery(
             $cf['mysql']['connection'],
             'SELECT anagrafica_view_static.id, anagrafica_view_static.__label__ 
             FROM anagrafica_view_static 
