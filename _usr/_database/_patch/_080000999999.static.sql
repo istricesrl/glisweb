@@ -11,6 +11,7 @@
 -- anagrafica_view_static
 CREATE TABLE IF NOT EXISTS `anagrafica_view_static` (         --
   `id` int(11) PRIMARY KEY NOT NULL,                          --
+  `id_tipologia` int(11) PRIMARY KEY NOT NULL,                --
   `tipologia` char(32) DEFAULT NULL,                          --
   `codice` char(32) DEFAULT NULL,                             --
   `riferimento` char(32) DEFAULT NULL,                        --

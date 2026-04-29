@@ -615,10 +615,10 @@ CREATE OR REPLACE VIEW `caratteristiche_view` AS
 		caratteristiche.nome,
 		caratteristiche.html_entity,
 		caratteristiche.font_awesome,
+		caratteristiche.se_prodotti,
+		caratteristiche.se_articoli,
 		caratteristiche.se_immobili,
 		caratteristiche.se_categorie_prodotti,
-		caratteristiche.se_prodotto,
-		caratteristiche.se_articolo,
 		caratteristiche.id_account_inserimento,
 		caratteristiche.id_account_aggiornamento,
 		caratteristiche_path(
@@ -1202,6 +1202,7 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_prodotto,
 		file.id_articolo,
 		file.id_categoria_prodotti,
+		file.id_marchio,
 		file.id_todo,
 		file.id_pagina,
 		file.id_template,
@@ -1388,8 +1389,13 @@ CREATE OR REPLACE VIEW `listini_view` AS
 	SELECT
 		listini.id,
 		listini.id_valuta,
+		listini.id_tipologia,
+		tipologie_listini_path( listini.id_tipologia ) AS tipologia,
 		valute.iso4217 AS valuta,
+		listini.id_emittente,
+		coalesce( a1.denominazione , concat( a1.cognome, ' ', a1.nome ), '' ) AS emittente,
 		listini.nome,
+		listini.data_archiviazione,
 		listini.id_account_inserimento,
 		listini.id_account_aggiornamento,
 		concat(
@@ -1399,6 +1405,7 @@ CREATE OR REPLACE VIEW `listini_view` AS
 		) AS __label__
 	FROM listini
 		LEFT JOIN valute ON valute.id = listini.id_valuta
+		LEFT JOIN anagrafica AS a1 ON a1.id = listini.id_emittente
 ;
 
 -- | 090000018200
@@ -1724,7 +1731,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		pagamenti.nome,
 		pagamenti.note,
 		pagamenti.note_pagamento,
-		coalesce( pagamenti.id_documento, carrelli.id_documento, documenti_articoli.id_documento ) AS id_documento,
+		pagamenti.id_documento,
 		pagamenti.id_carrello,
 		pagamenti.id_carrelli_articoli,
         concat(
@@ -1779,10 +1786,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN mastri AS m2 ON m2.id = pagamenti.id_mastro_destinazione
 		LEFT JOIN listini ON listini.id = pagamenti.id_listino
 		LEFT JOIN modalita_pagamento ON modalita_pagamento.id = pagamenti.id_modalita_pagamento
-		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
-		LEFT JOIN carrelli ON carrelli.id = pagamenti.id_carrello
-		LEFT JOIN documenti_articoli ON documenti_articoli.id_carrelli_articoli = carrelli_articoli.id
-		LEFT JOIN documenti ON documenti.id = coalesce( pagamenti.id_documento, carrelli.id_documento, documenti_articoli.id_documento )
+		LEFT JOIN documenti ON documenti.id = pagamenti.id_documento
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN anagrafica AS a1 ON a1.id = coalesce( documenti.id_emittente, pagamenti.id_creditore )
 		LEFT JOIN anagrafica AS a2 ON a2.id = coalesce( documenti.id_destinatario, pagamenti.id_debitore )
@@ -1790,6 +1794,7 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN coupon ON coupon.id = pagamenti.id_coupon
 		LEFT JOIN contratti ON contratti.id = coupon.causale_id_contratto
 		-- LEFT JOIN progetti ON progetti.id = contratti.id_progetto
+		LEFT JOIN carrelli_articoli ON carrelli_articoli.id = pagamenti.id_carrelli_articoli
 		LEFT JOIN articoli ON articoli.id = carrelli_articoli.id_articolo
 		LEFT JOIN prodotti ON prodotti.id = articoli.id_prodotto
 		LEFT JOIN progetti ON IF( prodotti.id IS NOT NULL, progetti.id_prodotto = prodotti.id, progetti.id = contratti.id_progetto )
@@ -2174,6 +2179,7 @@ CREATE OR REPLACE VIEW ruoli_file_view AS
 		ruoli_file.se_prodotti,
 		ruoli_file.se_articoli,
 		ruoli_file.se_categorie_prodotti,
+		ruoli_file.se_marchi,
 		ruoli_file.se_notizie,
 		ruoli_file.se_categorie_notizie,
 		ruoli_file.se_risorse,
@@ -2259,6 +2265,7 @@ CREATE OR REPLACE VIEW ruoli_video_view AS
 		ruoli_video.se_prodotti,
 		ruoli_video.se_articoli,
 		ruoli_video.se_categorie_prodotti,
+		ruoli_video.se_marchi,
 		ruoli_video.se_notizie,
 		ruoli_video.se_categorie_notizie,
 		ruoli_video.se_risorse,
@@ -2491,6 +2498,23 @@ CREATE OR REPLACE VIEW `tipologie_indirizzi_view` AS          --
         ) AS __label__                                        -- etichetta per le tendine e le liste
 	FROM tipologie_indirizzi                                  --
 ;                                                             --
+
+-- | 090000053600
+
+-- tipologie_listini_view
+CREATE OR REPLACE VIEW `tipologie_listini_view` AS
+	SELECT
+		tipologie_listini.id,
+		tipologie_listini.id_genitore,
+		tipologie_listini.ordine,
+		tipologie_listini.nome,
+		tipologie_listini.html_entity,
+		tipologie_listini.font_awesome,
+		tipologie_listini.id_account_inserimento,
+		tipologie_listini.id_account_aggiornamento,
+		tipologie_listini_path( tipologie_listini.id ) AS __label__
+	FROM tipologie_listini
+;
 
 -- | 090000053800
 
@@ -2727,6 +2751,7 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.id_prodotto,
 		video.id_articolo,
 		video.id_categoria_prodotti,
+		video.id_marchio,
 		video.id_risorsa,
 		video.id_categoria_risorse,
 		video.id_notizia,
