@@ -376,6 +376,12 @@ Questa è la macro della pagina degli strumenti della dashboard dell'amministraz
 ### /_mod/_06000.amministrazione/_src/_inc/_pages/_amministrazione.it-IT.php
 Qui vengono definite le pagine del modulo amministrazione.
 
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.archivio.php
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.archivio.tools.php
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.php
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.tools.php
+non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_pages/_acquisti.it-IT.php
+
 ### /_mod/_AC000.account/_src/_inc/_controllers/_account.before.php
 Questa controller viene eseguita al before di ogni elaborazione dell'entità account.
 
@@ -667,6 +673,8 @@ Questa è la macro della pagina di gestione dei contenuti delle categorie di not
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.menu.php
 Questa è la pagina di gestione dei menu delle categorie di notizie.
 
+non presente in READ.md: /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.metadati.php
+
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.sem.php
 Questa è la macro della pagina di gestione SEM/SMM delle categorie di notizie.
 
@@ -675,6 +683,8 @@ Questa è la pagina di gestione dei contenuti web delle categorie di notizie.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.contenuti.php
 Questa è la macro della pagina di gestione dei contenuti delle notizie.
+
+non presente in READ.md: /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.metadati.php
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.sem.php
 Questa è la macro della pagina di gestione SEM/SMM delle notizie.
@@ -708,6 +718,8 @@ Qui vengono definite le pagine del modulo contenuti.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_pages/_mail.it-IT.php
 Questo file contiene la dichiarazione delle pagine di gestione contenuti dei template mail.
+
+non presente in READ.md: /_mod/_CT000.contatti/READ.md
 
 ### /_mod/_CT000.contatti/_src/_config/_030.common.php
 In questo file vengono definiti i moduli di contatto standard del framework.
@@ -851,6 +863,8 @@ In questo file vengono dichiarate le pagine relative alle offerte per il modulo 
 ### /_mod/_FI000.file/_src/_inc/_controllers/_file.before.php
 Questa controller viene innescata al before per ogni elaborazione della tabella file.
 
+non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_catalogo.marchi.form.file.php
+
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.form.php
 Questa è la macro della pagina di gestione dei file nell'archivio contenuti.
 
@@ -859,6 +873,9 @@ Questa è la macro della pagina degli strumenti della gestione dei file nell'arc
 
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.view.php
 Questa è la macro della vista dei file nell'archivio contenuti.
+
+non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_contenuti.categorie.notizie.form.file.php
+non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_contenuti.notizie.form.file.php
 
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.pagine.form.file.php
 Questa è la macro della scheda file del modulo di gestione delle pagine.
@@ -871,6 +888,8 @@ Questa è la macro di gestione dei file nella gestione delle mail inviate.
 
 ### /_mod/_FI000.file/_src/_inc/_macro/_mail.template.form.file.php
 Questa è la macro della gestione file associati a un template mail.
+
+non presente in READ.md: /_mod/_FI000.file/_src/_inc/_pages/_catalogo.it-IT.php
 
 ### /_mod/_FI000.file/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono definite le pagine del modulo file relative ai contenuti.
@@ -925,6 +944,19 @@ In questo file vengono definite le pagine relative alle immagini per il catalogo
 
 ### /_mod/_IM000.immagini/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono definite le pagine relative alle immagini per i contenuti.
+
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.stampe.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.tools.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.view.archiviati.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.view.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.form.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.stampe.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.tools.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.view.archiviati.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.view.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_pages/_acquisti.it-IT.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_pages/_catalogo.it-IT.php
+non presente in READ.md: /_mod/_LI000.listini/_src/_lib/_mysql.utils.add.php
 
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.out.php
 Questo task pulisce la coda delle mail in uscita.
@@ -1029,6 +1061,9 @@ Questa è la macro della view delle notizie archiviate.
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.view.php
 Questa è la macro della view delle notizie.
 
+non presente in READ.md: /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.tipologie.notizie.form.php
+non presente in READ.md: /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.tipologie.notizie.view.php
+
 ### /_mod/_NO000.notizie/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono definite le pagine relative ai contenuti del modulo notizie.
 
@@ -1064,6 +1099,8 @@ Questa è la macro della view delle pagine archiviate.
 
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.view.php
 Questa è la macro della view delle pagine.
+
+non presente in READ.md: /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.redirect.view.php
 
 ### /_mod/_PA000.pagine/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono deifinite le pagine relative alla gestione delle pagine.
@@ -1206,6 +1243,8 @@ Questa è la macro della scheda video del modulo di gestione articoli.
 
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.categorie.prodotti.form.video.php
 Questa è la macro della scheda video del modulo di gestione categorie prodotti.
+
+non presente in READ.md: /_mod/_VI000.video/_src/_inc/_macro/_catalogo.marchi.form.video.php
 
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.prodotti.form.video.php
 Questa è la macro della scheda video del modulo di gestione prodotti.
@@ -2575,6 +2614,9 @@ Le cause più comuni sono a) mancano i permessi per l'entità che vuoi visualizz
 oppure b) manca la view corrispondente all'entità che vuoi visualizzare (controlla il database) infine c) verifica di non star
 includendo nella configurazione delle colonne nomi di campi che mancano nella view (questo causerebbe un errore MySQL che
 puoi trovare nei log).
+
+#### aprendo le pagine del framework ottengo un errore 500, perché?
+
 
 ## glossario
 

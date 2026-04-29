@@ -464,7 +464,20 @@
         'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'anagrafica.archivio.tipologie.anagrafica.form',
+                                                            'anagrafica.archivio.tipologie.anagrafica.form.anagrafiche',
                                                             'anagrafica.archivio.tipologie.anagrafica.form.tools' ) ),
+    );
+
+    //  anagrafica archivio tipologie.anagrafica form anagrafiche
+    $p['anagrafica.archivio.tipologie.anagrafica.form.anagrafiche'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'archivio e-tipologie.anagrafica form anagrafiche' ),
+        'h1'                => array( $l        => 'anagrafiche' ),
+        'parent'            => array( 'id'        => 'anagrafica.archivio.tipologie.anagrafica.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'anagrafica.archivio.tipologie.anagrafica.form.anagrafiche.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_anagrafica.archivio.tipologie.anagrafica.form.anagrafiche.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'anagrafica.archivio.tipologie.anagrafica.form' )
     );
 
     // gestione anagrafica form tools

@@ -26,6 +26,7 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.notizie.view',
+                                                            'contenuti.tipologie.notizie.view',
                                                             'contenuti.notizie.view.archiviate',
                                                             'contenuti.notizie.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'notizie' ),
@@ -77,6 +78,7 @@
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.web' );
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.sem' );
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.contenuti' );
+        arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
@@ -89,31 +91,10 @@
         arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.video' );
     }
 
-    // tools archivio produzione
-    $p['contenuti.notizie.form.archiviazione'] = array(
-        'sitemap'            => false,
-        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'archiviazione contenuti notizie form' ),
-        'h1'                => array( $l        => 'archiviazione' ),
-        'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.notizie.form.archiviazione.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.form.archiviazione.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
-    );
-
-    // tools archivio produzione
-    $p['contenuti.notizie.form.tools'] = array(
-        'sitemap'            => false,
-        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
-        'title'                => array( $l        => 'azioni contenuti notizie form' ),
-        'h1'                => array( $l        => 'azioni' ),
-        'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
-        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
-        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.form.tools.php' ),
-        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
-        'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
-    );
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.notizie.form.archiviazione', $p['contenuti.notizie.form']['etc']['tabs'], 'contenuti.notizie.form.file' );
+    }
 
     // tools archivio produzione
     $p['contenuti.notizie.form.archiviazione'] = array(
@@ -140,6 +121,57 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
     );
+
+    // tools archivio produzione
+    $p['contenuti.notizie.form.archiviazione'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-box-archive" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'archiviazione contenuti notizie form' ),
+        'h1'                => array( $l        => 'archiviazione' ),
+        'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.notizie.form.archiviazione.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.form.archiviazione.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
+    );
+
+    // tools archivio produzione
+    $p['contenuti.notizie.form.tools'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-cogs" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'azioni contenuti notizie form' ),
+        'h1'                => array( $l        => 'azioni' ),
+        'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.notizie.form.tools.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.notizie.form' )
+    );
+
+    // scheda tipologie notizie
+    $p['contenuti.tipologie.notizie.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'tipologie notizie' ),
+        'h1'                => array( $l        => 'tipologie' ),
+        'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.tipologie.notizie.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.notizie.view' )
+    );
+
+    // contenuti tipologie notizie form
+    $p['contenuti.tipologie.notizie.form'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'gestione contenuti tipologie notizie' ),
+        'h1'                => array( $l        => 'gestione' ),
+        'parent'            => array( 'id'        => 'contenuti.tipologie.notizie.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.tipologie.notizie.form.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.tipologie.notizie.form.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => array(    'contenuti.tipologie.notizie.form' ) ),
+    );
+
 
     // tools archivio produzione
     $p['contenuti.categorie.notizie.view'] = array(
@@ -203,6 +235,7 @@
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.sem' );
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.contenuti' );
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.menu' );
+        arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.metadati' );
     }
 
     // RELAZIONI CON IL MODULO IMMAGINI
@@ -213,6 +246,11 @@
     // RELAZIONI CON IL MODULO VIDEO
     if( in_array( "VI000.video", $cf['mods']['active']['array'] ) ) {
         arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.video' );
+    }
+
+    // RELAZIONI CON IL MODULO FILE
+    if( in_array( "FI000.file", $cf['mods']['active']['array'] ) ) {
+        arrayInsertBefore( 'contenuti.categorie.notizie.form.archiviazione', $p['contenuti.categorie.notizie.form']['etc']['tabs'], 'contenuti.categorie.notizie.form.file' );
     }
 
     // tools archivio produzione

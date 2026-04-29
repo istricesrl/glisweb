@@ -498,6 +498,13 @@
                                                 $vs[] = array('s' => $svi);
                                             }
                                             break;
+                                        case 'NI':
+                                            $sva = explode('|', $sv);
+                                            $whr[] = "$fc NOT IN (" . implode(',', array_fill(0, count($sva), '?')) . ")";
+                                            foreach ($sva as $svi) {
+                                                $vs[] = array('s' => $svi);
+                                            }
+                                            break;
                                         case 'BT':
                                             $sva = explode('|', $sv);
                                             $whr[] = "$fc BETWEEN ? AND ?";

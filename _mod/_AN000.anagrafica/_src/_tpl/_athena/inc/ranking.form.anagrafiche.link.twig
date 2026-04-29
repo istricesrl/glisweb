@@ -1,0 +1,16 @@
+{% import '_lib/_form.twig' as frm %}
+{% import 'lib/default.twig' as def %}
+
+<!-- file {{ _self }} -->
+<fieldset id="{{ view.id }}-insert" class="view-insert hidden">
+    <div class="form-group row d-print-none">
+        <div class="col-12 col-md form-col">
+            <span class="label-top">anagrafica</span>
+            {{ frm.select({ 'field': { 'name': 'id_anagrafica', 'disabled': true }, 'source': { 'api': 'anagrafica' }, 'form': { 'table': '__link_anagrafica__' }, 'page': page, 'pages': pages }) }}
+        </div>
+        <div class="col-auto form-col">
+            <button type="submit" disabled class="btn btn-sqr btn-sm btn-secondary" onclick="submitFormOkay = true;"><i class="fa fa-link" style="padding-left:3px;"></i></button>
+        </div>
+    </div>
+</fieldset>
+<!-- fine file {{ _self }} -->

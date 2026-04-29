@@ -26,6 +26,7 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.pagine.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'contenuti.pagine.view',
+                                                            'contenuti.redirect.view',
                                                             'contenuti.pagine.view.archiviate',
                                                             'contenuti.pagine.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'pagine' ),
@@ -151,4 +152,16 @@
         'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.menu.view.php' ),
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.archivio' )
+    );
+
+    // tools archivio contenuti
+    $p['contenuti.redirect.view'] = array(
+        'sitemap'            => false,
+        'title'                => array( $l        => 'redirect' ),
+        'h1'                => array( $l        => 'redirect' ),
+        'parent'            => array( 'id'        => 'contenuti' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.view.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.redirect.view.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.pagine.view' )
     );

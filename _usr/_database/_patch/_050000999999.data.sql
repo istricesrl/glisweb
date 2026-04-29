@@ -157,7 +157,7 @@ INSERT IGNORE INTO `lingue` (`id`, `nome`, `note`, `iso6391alpha2`, `iso6393alph
 
 -- listini
 INSERT INTO `listini` (`id`, `id_genitore`, `id_tipologia`, `id_valuta`, `codice`, `sconto_su_genitore`, `se_default_su_genitore`, `nome`, `note`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
-(1,	NULL,	NULL,	1,	NULL,	NULL,	NULL,	'DEFAULT',	NULL,	NULL,	NULL,	NULL,	NULL);
+(1,	NULL,	1,	1,	NULL,	NULL,	NULL,	'DEFAULT',	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000021900
 
@@ -560,6 +560,12 @@ INSERT IGNORE INTO `tipologie_notizie` (`id`, `id_genitore`, `ordine`, `nome`, `
 (1,	NULL,	NULL,	'notizia',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (2,	NULL,	NULL,	'blog post',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL),
 (3,	NULL,	NULL,	'articolo',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
+
+-- | 050000054600
+
+-- tipologie_listini
+INSERT INTO `tipologie_listini` (`id`, `id_genitore`, `ordine`, `nome`, `html_entity`, `font_awesome`, `id_account_inserimento`, `timestamp_inserimento`, `id_account_aggiornamento`, `timestamp_aggiornamento`) VALUES
+(1,	NULL,	NULL,	'STANDARD',	NULL,	NULL,	NULL,	NULL,	NULL,	NULL);
 
 -- | 050000054600
 

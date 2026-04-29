@@ -519,6 +519,8 @@ input[type="number"] {
 }
 
 /* stile dei link nelle celle delle tabelle delle view */
+.view-table td a,
+.view-table td a:visited,
 .view-table td a:active,
 .view-table td a:hover {
     color: #000000;

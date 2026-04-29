@@ -451,10 +451,9 @@ CREATE TABLE IF NOT EXISTS `caratteristiche` (
   `font_awesome` char(24) DEFAULT NULL,
   `html_entity` char(8) DEFAULT NULL,
   `se_prodotti` tinyint(1) DEFAULT NULL,
+  `se_articoli` tinyint(1) DEFAULT NULL,
   `se_immobili` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
-  `se_prodotto` tinyint(1) DEFAULT NULL,
-  `se_articolo` tinyint(1) DEFAULT NULL,
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1231,6 +1230,7 @@ CREATE TABLE IF NOT EXISTS `file` (                           --
   `id_prodotto` int(11) DEFAULT NULL,                        -- chiave esterna per il prodotto a cui è associato il file
   `id_articolo` int(11) DEFAULT NULL,                        -- chiave esterna per l'articolo a cui è associato il file
   `id_categoria_prodotti` int(11) DEFAULT NULL,               -- chiave esterna per la categoria di prodotti a cui è associato il file
+  `id_marchio` int(11) DEFAULT NULL,               -- chiave esterna per il marchio a cui è associato il file
   `id_todo` int(11) DEFAULT NULL,                             -- chiave esterna per la todo a cui è associato il file
   `id_pagina` int(11) DEFAULT NULL,                           -- chiave esterna per la pagina a cui è associato il file
   `id_template` int(11) DEFAULT NULL,                         -- chiave esterna per il template a cui è associato il file
@@ -1476,8 +1476,11 @@ CREATE TABLE IF NOT EXISTS `listini` (
   `codice` char(64) DEFAULT NULL,
   `sconto_su_genitore` decimal(5,2) DEFAULT NULL,
   `se_default_su_genitore` tinyint(1) DEFAULT NULL,
+  `id_emittente` int(11) DEFAULT NULL,
   `nome` char(64) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `data_archiviazione` date DEFAULT NULL,                     -- data di archiviazione
+  `note_archiviazione` text DEFAULT NULL,                     -- note di archiviazione
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
@@ -1852,6 +1855,21 @@ CREATE TABLE IF NOT EXISTS `notizie` (
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,
   `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- | 010000022100
+
+-- notizie_anagrafica
+CREATE TABLE IF NOT EXISTS `notizie_anagrafica` (
+  `id` int(11) NOT NULL,
+  `id_notizia` int(11) DEFAULT NULL,
+  `id_anagrafica` int(11) DEFAULT NULL,
+  `id_ruolo` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,	
+  `id_account_inserimento` int(11) DEFAULT NULL,	
+  `timestamp_aggiornamento` int(11) DEFAULT NULL,	
+  `id_account_aggiornamento` int(11) DEFAULT NULL	
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000022200
@@ -2450,6 +2468,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_file` (
   `se_prodotti` tinyint(1) DEFAULT NULL,
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
@@ -2583,6 +2602,7 @@ CREATE TABLE IF NOT EXISTS `ruoli_video` (
   `se_prodotti` tinyint(1) DEFAULT NULL,
   `se_articoli` tinyint(1) DEFAULT NULL,
   `se_categorie_prodotti` tinyint(1) DEFAULT NULL,
+  `se_marchi` tinyint(1) DEFAULT NULL,
   `se_notizie` tinyint(1) DEFAULT NULL,
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,
   `se_risorse` tinyint(1) DEFAULT NULL,
@@ -2965,6 +2985,29 @@ CREATE TABLE IF NOT EXISTS `tipologie_indirizzi` (            --
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato la tipologia
   `timestamp_aggiornamento` int(11) DEFAULT NULL              -- timestamp di aggiornamento 
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                         --
+
+-- | 010000053600
+
+-- tipologie_listini
+-- tipologia: tabella gestita
+-- rango: tabella principale
+-- struttura: tabella ricorsiva
+-- funzione: contiene le tipologie di listini
+--
+-- questa tabella contiene le tipologie di listini, con le informazioni relative al nome e alle icone associate
+--
+CREATE TABLE IF NOT EXISTS `tipologie_listini` (
+  `id` int(11) NOT NULL,
+  `id_genitore` int(11) DEFAULT NULL,
+  `ordine` int(11) DEFAULT NULL,
+  `nome` char(32) DEFAULT NULL,
+  `html_entity` char(8) DEFAULT NULL,
+  `font_awesome` char(16) DEFAULT NULL,
+  `id_account_inserimento` int(11) DEFAULT NULL,
+  `timestamp_inserimento` int(11) DEFAULT NULL,
+  `id_account_aggiornamento` int(11) DEFAULT NULL,
+  `timestamp_aggiornamento` int(11) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- | 010000053800
 
@@ -3378,6 +3421,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `id_prodotto` int(11) DEFAULT NULL,
   `id_articolo` int(11) DEFAULT NULL,
   `id_categoria_prodotti` int(11) DEFAULT NULL,
+  `id_marchio` int(11) DEFAULT NULL,
   `id_risorsa` int(11) DEFAULT NULL,
   `id_categoria_risorse` int(11) DEFAULT NULL,
   `id_notizia` int(11) DEFAULT NULL,

@@ -88,7 +88,7 @@
     // gestione pagine form file
     $p['contenuti.notizie.form.file'] = array(
         'sitemap'            => false,
-        'icon'                => '<i class="fa fa-image" aria-hidden="true"></i>',
+        'icon'                => '<i class="fa-regular fa-folder-open" aria-hidden="true"></i>',
         'title'                => array( $l        => 'file' ),
         'h1'                => array( $l        => 'file' ),
         'parent'            => array( 'id'        => 'contenuti.notizie.view' ),
@@ -101,7 +101,7 @@
     // gestione pagine form file
     $p['contenuti.categorie.notizie.form.file'] = array(
         'sitemap'            => false,
-        'icon'                => '<i class="fa fa-image" aria-hidden="true"></i>',
+        'icon'                => '<i class="fa-regular fa-folder-open" aria-hidden="true"></i>',
         'title'                => array( $l        => 'file' ),
         'h1'                => array( $l        => 'file' ),
         'parent'            => array( 'id'        => 'contenuti.categorie.notizie.view' ),

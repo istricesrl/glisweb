@@ -459,6 +459,10 @@
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
         ),
+        'tipologie_listini' => array(
+            CONTROL_FULL => array('roots'),
+            CONTROL_FILTERED => array('staff')
+        ),
         'sconti_articoli' => array(
             CONTROL_FULL => array('roots'),
             CONTROL_FILTERED => array('staff')
@@ -1175,7 +1179,10 @@
         ),
         'consensi_contatti' => array(
             CONTROL_FULL => array( 'roots', 'staff' )
-        )
+        ),
+        'tipologie_notizie' => array(
+            CONTROL_FULL => array( 'roots', 'staff' )
+        ),
     );
  
     // debug
