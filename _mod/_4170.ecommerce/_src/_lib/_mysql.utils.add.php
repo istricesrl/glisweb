@@ -153,6 +153,21 @@
 
         global $cf;
 
+        // i tesseramenti non sono mai scontabili
+        $idTesseramento = mysqlSelectValue(
+            $cf['mysql']['connection'],
+            'SELECT tipologie_rinnovi.id FROM tipologie_rinnovi
+                LEFT JOIN articoli ON articoli.id_tipologia_rinnovo = tipologie_rinnovi.id
+                WHERE articoli.id = ? AND tipologie_rinnovi.se_tesseramenti IS NOT NULL',
+            array(
+                array( 's' => $riga['id_articolo'] )
+            )
+        );
+
+        if( ! empty( $idTesseramento ) ) {
+            return true;
+        }
+
         return mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT max( testo ) FROM metadati_articoli WHERE nome = "non_applicare_sconti" AND id_articolo = ?',

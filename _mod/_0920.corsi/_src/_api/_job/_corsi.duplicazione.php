@@ -307,6 +307,31 @@
 
             }
 
+            // vecchie certificazioni
+            $job['corso']['certificazioni'] = mysqlQuery(
+                $cf['mysql']['connection'],
+                'SELECT * FROM progetti_certificazioni WHERE id_progetto = ?',
+                array( array( 's' => $job['riga'] ) )
+            );
+
+            // elaboro le certificazioni
+            foreach( $job['corso']['certificazioni'] as &$certificazione ) {
+
+                // azzero l'ID
+                $certificazione['id'] = NULL;
+
+                // trasformo il riferimento
+                $certificazione['id_progetto'] = $job['corso']['id'];
+
+                // inserisco la certificazione
+                mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    $certificazione,
+                    'progetti_certificazioni'
+                );
+
+            }
+
             // metto il nuovo corso in relazione col vecchio
             mysqlInsertRow(
                 $cf['mysql']['connection'],
@@ -355,6 +380,13 @@
             // debug
             // die( print_r( $lezioni, true ) );
 
+            if( empty( $lezioni ) ) {
+
+                // status
+                $job['corso']['lezioni'] = array();
+
+            } else {
+
             // trovo il giorno della settimana della prima lezione
             $dowPrimaLezione = date( 'l', strtotime( $lezioni[0]['data_programmazione'] ) );
 
@@ -368,8 +400,7 @@
             if( date( 'l', strtotime( $job['corso']['data_accettazione'] ) ) == $dowPrimaLezione ) {
                 $dataPrimaLezione = $job['corso']['data_accettazione'];
             } else {
-                // TODO first o next?
-                $dataPrimaLezione = date( 'Y-m-d', strtotime( $job['corso']['data_accettazione'] . ' first ' . $dowPrimaLezione ) );
+                $dataPrimaLezione = date( 'Y-m-d', strtotime( 'next ' . $dowPrimaLezione, strtotime( $job['corso']['data_accettazione'] ) ) );
             }
 
             // inizio dalla data della prima lezione
@@ -494,7 +525,7 @@
             $job['corso']['lezioni'][ $dataLezione ][] = 'inizio a valutare se il corso è da allungare a partire da ' . $dataLezione;
 
             // se ci sono da aggiungere delle lezioni...
-            while( $dataLezione <= $job['corso']['data_chiusura'] ) {
+            while( ! empty( $intervalli ) && $dataLezione <= $job['corso']['data_chiusura'] ) {
 
                 // ...
                 // TODO cercare di iniiare dal giorno della settimana corrispondente all'intervallo
@@ -561,6 +592,8 @@
             // debug
             // print_r( $job );
             // die( 'fine aggiunta lezioni in coda al corso' );
+
+            } // end if( ! empty( $lezioni ) )
 
             // scrivo la riga
             updateReportCorsi( $job['corso']['id'] );

@@ -144,7 +144,7 @@
                         'id_genitore'				=> NULL,
                         'timestamp_pagamento'		=> time(),
                         'codice_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['id'],
-                        'importo_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['amount']['value'],
+                        'importo_pagamento'			=> $childPayment['importo_lordo_finale'],
                         'status_pagamento'			=> $result['purchase_units'][0]['payments']['captures'][0]['status']
                     );
 

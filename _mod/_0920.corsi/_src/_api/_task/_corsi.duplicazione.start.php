@@ -64,33 +64,35 @@
 				$workspace['lista'],
 				array_map( 'trim', explode( ',', $_REQUEST['codici'] ) )
 			);
-		}
+		} else {
 
-        // debug
-        // die( print_r( $workspace, true ) );
+            // debug
+            // die( print_r( $workspace, true ) );
 
-        // condizioni base
-		$whr = array(
-			array( 's' => $_REQUEST['periodo_partenza'] )
-		);
+            // condizioni base
+            $whr = array(
+                array( 's' => $_REQUEST['periodo_partenza'] )
+            );
 
-		// disciplina
-		if( ! empty( $_REQUEST['disciplina'] ) ) {
-			$ljn = ' LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id';
-			$cnd = ' AND progetti_categorie.id_categoria = ?';
-			$whr[] = array( 's' => $_REQUEST['disciplina'] );
-		}
+            // disciplina
+            if( ! empty( $_REQUEST['disciplina'] ) ) {
+                $ljn = ' LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = progetti.id';
+                $cnd = ' AND progetti_categorie.id_categoria = ?';
+                $whr[] = array( 's' => $_REQUEST['disciplina'] );
+            }
 
-		// codici ricavati da periodo e categoria
-		$workspace['lista'] = array_replace_recursive(
-			$workspace['lista'],
-			mysqlSelectColumn(
-				'id',
-				$cf['mysql']['connection'],
-				'SELECT progetti.* FROM progetti ' . $ljn . ' WHERE id_periodo = ?' . $cnd,
-				$whr
-			)
-		);
+            // codici ricavati da periodo e categoria
+            $workspace['lista'] = array_replace_recursive(
+                $workspace['lista'],
+                mysqlSelectColumn(
+                    'id',
+                    $cf['mysql']['connection'],
+                    'SELECT progetti.* FROM progetti ' . ( $ljn ?? '' ) . ' WHERE id_periodo = ?' . ( $cnd ?? '' ),
+                    $whr
+                )
+            );
+
+        }
 
 		// codici esclusi
 		if( ! empty( $_REQUEST['esclusi'] ) ) {
