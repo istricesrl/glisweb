@@ -33,7 +33,7 @@
 		<select name="__view__[{{ view.id }}][__filters__][provider_pagamento][EQ]" onchange="$('#pager').val('0'); submit();" class="form-control form-control-sm">
 			<option value="" {% if request.__view__[ view.id ].__filters__.provider_pagamento.EQ == "" %}selected{% endif %}>tutti</option>
 			{% for provider in ecommerce.profile.provider %}
-			<option value="{{ provider.id }}" {% if request.__view__[ view.id ].__filters__.provider_pagamento.EQ == provider.id %}selected{% endif %}>{{ provider.__label__ }}</option>
+			<option value="{{ provider.id }}" x-filter-value="{{ request.__view__[ view.id ].__filters__.provider_pagamento.EQ }}" {% if request.__view__[ view.id ].__filters__.provider_pagamento.EQ == provider.id %}selected{% endif %}>{{ provider.__label__ }}</option>
 			{% endfor %}
 		</select>
 	</div>

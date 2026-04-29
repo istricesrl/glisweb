@@ -224,7 +224,7 @@ anonimi da quelli identificativi.</p>
 <p>Questa tabella riporta l'elenco di tutti i cookie analitici di terze parti utilizzati dal sito:</p>
 <table class="table">
 	<thead>
-		<tr class="nowrap">
+		<tr class="">
 			<th>provenienza</th>
 			<th>nome cookie</th>
 			<th>finalità</th>
@@ -237,7 +237,7 @@ anonimi da quelli identificativi.</p>
 	<tbody>
 		{% for cookie, dettagli in privacy.cookie.terzi.analitici %}
 		<tr>
-			<td class="nowrap"><strong>{{ dettagli.nome[ localization.language.ietf ] }}<br>{{ dettagli.titolare[ localization.language.ietf ] }}</strong></td>
+			<td class=""><strong>{{ dettagli.nome[ localization.language.ietf ] }}<br>{{ dettagli.titolare[ localization.language.ietf ] }}</strong></td>
 			<td>{% for id in dettagli.id %}{{ id }}{% if not loop.last %}, {% endif %}{% endfor %}</td>
 			<td>{{ dettagli.motivazione[ localization.language.ietf ]|raw }}</td>
 			<td><a href="{{ dettagli.policy[ localization.language.ietf ] }}" target="_blank">{{ dettagli.policy[ localization.language.ietf ] }}</a></td>

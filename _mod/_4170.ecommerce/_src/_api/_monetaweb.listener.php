@@ -161,7 +161,7 @@
                     appendToFile( 'url: ' . $cf['contents']['pages'][ $redirect ]['url'][ LINGUA_CORRENTE ], $fileRicevuta );
 
                     // log
-					logWrite( 'pagamento effettuato con successo per il carrello ' . $_REQUEST['codTrans'], 'monetaweb', LOG_INFO );
+					logWrite( 'pagamento effettuato con successo per il carrello ' . $idCarrello, 'monetaweb', LOG_INFO );
 
                 break;
 

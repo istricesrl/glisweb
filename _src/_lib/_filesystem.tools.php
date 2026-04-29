@@ -363,20 +363,27 @@
         // creo il percorso se non esiste
         checkFolder( dirname( $f ) );
 
-        // valore di ritorno
+        // apro il file
         if( file_exists( getFullPath( $f ) ) && is_readable( getFullPath( $f ) ) ) {
 
-            return fopen( getFullPath( $f ), $m );
+            $h = fopen( getFullPath( $f ), $m );
 
         } elseif( ! file_exists( getFullPath( $f ) ) ) {
 
-            return fopen( getFullPath( $f ), FILE_WRITE_OVERWRITE );
+            $h = fopen( getFullPath( $f ), FILE_WRITE_OVERWRITE );
 
         } else {
 
             return false;
 
         }
+
+        // acquisisco il lock esclusivo
+        if( $h ) {
+            flock( $h, LOCK_EX );
+        }
+
+        return $h;
 
     }
 
@@ -393,7 +400,8 @@
      */
     function closeFile( $h ) {
 
-        // valore di ritorno
+        // rilascio il lock e chiudo il file
+        flock( $h, LOCK_UN );
         return fclose( $h );
 
     }
