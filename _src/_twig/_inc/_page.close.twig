@@ -33,6 +33,9 @@
 {# CODICE DI CHIUSURA PER SMARTSUPP #}
 {% if smartsupp.key %}{% include '_inc/_smartsupp.twig' %}{% endif %}
 
+{# CODICE DI CHIUSURA PER EMAILABLE #}
+{% if emailable.profile.apikey %}{% include '_inc/_emailable.close.twig' %}{% endif %}
+
 {# MODAL DELLA PAGINA #}
 {% for ruolo,modals in page.contents.modals %}{% for modal in modals %}<!-- modal: {{ modal.schema }} -->{% include modal.schema %}{% endfor %}{% endfor %}
 

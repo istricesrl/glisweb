@@ -1,0 +1,152 @@
+{# FILE PER LA GESTIONE DEL CONTROLLO DELLE E-MAIL CON EMAILABLE #}
+
+<script>
+async function verificaEmailCampo(idCampo) {
+
+    const apiKey = "{{ emailable.profile.apikey }}";
+
+    const campo = document.getElementById(idCampo);
+
+    if (!campo) {
+        throw new Error('Campo non trovato: ' + idCampo);
+    }
+
+    const email = campo.value.trim();
+
+    if (!email) {
+        return {
+            valida: false,
+            messaggio: 'Email vuota',
+            dati: null
+        };
+    }
+
+    const url = new URL('https://api.emailable.com/v1/verify');
+    url.searchParams.set('email', email);
+    url.searchParams.set('api_key', apiKey);
+    url.searchParams.set('timeout', '5');
+
+    try {
+        const response = await fetch(url.toString());
+        const data = await response.json();
+
+        // 249 = verifica lenta, la documentazione consiglia di riprovare
+        if (response.status === 249) {
+            return {
+                valida: false,
+                riprovare: true,
+                messaggio: 'Verifica troppo lenta, riprovare tra poco',
+                dati: data
+            };
+        }
+
+        if (!response.ok) {
+            return {
+                valida: false,
+                messaggio: data.message || 'Errore durante la verifica',
+                status: response.status,
+                dati: data
+            };
+        }
+
+        const valida = data.state === 'deliverable';
+
+        return {
+            valida: valida,
+            stato: data.state,
+            score: data.score,
+            motivo: data.reason,
+            suggerimento: data.did_you_mean,
+            messaggio: valida ? 'Email valida' : 'Email non valida o non sicura',
+            dati: data
+        };
+
+    } catch (error) {
+        return {
+            valida: false,
+            messaggio: 'Errore di rete durante la verifica',
+            errore: error.message,
+            dati: null
+        };
+    }
+}
+
+function setupEmailableValidation(campoId, formId) {
+    const campo = document.getElementById(campoId);
+    const form  = document.getElementById(formId);
+    if (!campo || !form) return;
+    if (campo.dataset.emailableInit) return;
+    campo.dataset.emailableInit = '1';
+
+    const feedback = document.createElement('div');
+    feedback.style.cssText = 'font-size:.875rem;margin-top:.25rem;margin-bottom:.75rem;min-height:1.25rem;';
+    campo.insertAdjacentElement('afterend', feedback);
+
+    let emailValida = null;
+
+    campo.addEventListener('blur', async function () {
+        const val = campo.value.trim();
+        if (!val) { feedback.innerHTML = ''; emailValida = null; return; }
+
+        feedback.style.color = '#6c757d';
+        feedback.innerHTML = 'Verifica email in corso&hellip;';
+
+        const ris = await verificaEmailCampo(campoId);
+
+        if (ris.riprovare || ris.errore) {
+            feedback.innerHTML = '';
+            emailValida = true;
+            return;
+        }
+
+        if (ris.valida) {
+            feedback.style.color = '#28a745';
+            feedback.innerHTML = '&#10003; Email valida';
+            emailValida = true;
+        } else {
+            feedback.style.color = '#dc3545';
+            let msg = ris.messaggio;
+            if (ris.suggerimento) {
+                msg += '. Intendevi <a href="#" class="emailable-suggerimento">' + ris.suggerimento + '</a>?';
+            }
+            feedback.innerHTML = msg;
+            emailValida = false;
+            const link = feedback.querySelector('.emailable-suggerimento');
+            if (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    campo.value = ris.suggerimento;
+                    campo.dispatchEvent(new Event('blur'));
+                });
+            }
+        }
+    });
+
+    form.addEventListener('submit', function (e) {
+        if (emailValida === false) {
+            e.preventDefault();
+            feedback.style.color = '#dc3545';
+            campo.focus();
+        }
+    });
+
+    const nativeSubmit = HTMLFormElement.prototype.submit.bind(form);
+    form.submit = function () {
+        if (emailValida === false) {
+            feedback.style.color = '#dc3545';
+            campo.focus();
+            return;
+        }
+        nativeSubmit();
+    };
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('input[type="email"]').forEach(function(emailField) {
+        if (!emailField.id) return;
+        var form = emailField.closest('form');
+        if (!form || !form.id) return;
+        setupEmailableValidation(emailField.id, form.id);
+    });
+});
+</script>

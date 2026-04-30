@@ -42,3 +42,21 @@
 
     // link al profilo corrente
     $cf['zucchetti']['profile'] = &$cf['zucchetti']['profiles'][ SITE_STATUS ];
+
+    /**
+     * sezione Emailable
+     * =================
+     *
+     *
+     */
+
+    // configurazione extra
+    if( isset( $cx['emailable'] ) ) {
+        $cf['emailable'] = array_replace_recursive( $cf['emailable'], $cx['emailable'] );
+    }
+
+    // collegamento all'array $ct
+    $ct['emailable'] = &$cf['emailable'];
+
+    // link al profilo corrente
+    $cf['emailable']['profile'] = &$cf['emailable']['profiles'][ SITE_STATUS ];

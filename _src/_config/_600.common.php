@@ -31,3 +31,15 @@
     $cf['zucchetti']['profiles'][ DEVELOPEMENT ] =
     $cf['zucchetti']['profiles'][ TESTING ]      =
     $cf['zucchetti']['profiles'][ PRODUCTION ]   = array();
+
+    /**
+     * sezione Emailable
+     * =================
+     * 
+     * 
+     */
+
+    // profili di funzionamento
+    $cf['emailable']['profiles'][ DEVELOPEMENT ] =
+    $cf['emailable']['profiles'][ TESTING ]      =
+    $cf['emailable']['profiles'][ PRODUCTION ]   = array();
