@@ -598,6 +598,19 @@
             // scrivo la riga
             updateReportCorsi( $job['corso']['id'] );
 
+            // avvio il popolamento del report lezioni per il nuovo corso
+            mysqlQuery(
+                $cf['mysql']['connection'],
+                'INSERT INTO job ( nome, job, iterazioni, se_foreground, workspace ) VALUES ( ?, ?, ?, ?, ? )',
+                array(
+                    array( 's' => 'aggiornamento report lezioni corso duplicato #' . $job['corso']['id'] ),
+                    array( 's' => '_mod/_0920.corsi/_src/_api/_job/_report.lezioni.corsi.popolazione.php' ),
+                    array( 's' => 2000 ),
+                    array( 's' => 0 ),
+                    array( 's' => json_encode( array( 'id_corso' => $job['corso']['id'] ) ) )
+                )
+            );
+
             // aggiorno i valori di visualizzazione avanzamento
             $jobs = mysqlQuery(
                 $cf['mysql']['connection'],

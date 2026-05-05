@@ -652,6 +652,7 @@
 
                         // compongo la query
                         $q = "INSERT INTO $t (" . implode(',', $ks) . ") VALUES (" . implode(',', array_fill(0, count($ks), '?')) . ") ";
+                        $vks = [];
                         foreach ($ks as $k) {
                             $vks[] = "$k=VALUES($k)";
                         }

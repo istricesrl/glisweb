@@ -44,8 +44,15 @@
 */
 		$status['aggiornare'] = mysqlSelectRow(
 			$cf['mysql']['connection'],
-			// 'SELECT todo.id FROM todo ORDER BY todo.timestamp_aggiornamento_report_corsi ASC DESC LIMIT 1'
-			'SELECT todo.id FROM todo ORDER BY todo.timestamp_aggiornamento_report_corsi ASC LIMIT 1'
+			'SELECT todo.id FROM todo
+			INNER JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia AND tipologie_todo.id_genitore = 6
+			LEFT JOIN __report_lezioni_corsi__ ON __report_lezioni_corsi__.id = todo.id
+			WHERE (
+				coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento
+				OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL
+			) AND todo.id_progetto IS NOT NULL
+			ORDER BY todo.id DESC
+			LIMIT 1'
 		);
 
 		// debug

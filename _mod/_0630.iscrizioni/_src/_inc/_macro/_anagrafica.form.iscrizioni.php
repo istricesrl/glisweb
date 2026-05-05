@@ -176,14 +176,15 @@
                 array( array( 's' => $row['id_contratto'] ) )
             );
 
+            // NOTE: rimosso LEFT JOIN pagamenti per evitare moltiplicazione di sum(prezzo_lordo_finale)
+            // quando esistono più pagamenti per lo stesso id_carrelli_articoli (es. rate pagate insieme).
+            // pagato_coupon è già calcolato da $documenti tramite il link documento→pagamento.
             $carrelli = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                'SELECT rinnovi.*, 
-                sum( carrelli_articoli.prezzo_lordo_finale ) AS ordinato,
-                sum( pagamenti.coupon_valore ) AS pagato_coupon
+                'SELECT rinnovi.*,
+                sum( carrelli_articoli.prezzo_lordo_finale ) AS ordinato
                 FROM rinnovi
                 LEFT JOIN carrelli_articoli ON carrelli_articoli.id_rinnovo = rinnovi.id
-                LEFT JOIN pagamenti ON pagamenti.id_carrelli_articoli = carrelli_articoli.id
                 WHERE rinnovi.id_contratto = ?
                 GROUP BY rinnovi.id
                 ORDER BY rinnovi.data_fine DESC',

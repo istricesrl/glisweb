@@ -78,63 +78,70 @@ function setupEmailableValidation(campoId, formId) {
     if (campo.dataset.emailableInit) return;
     campo.dataset.emailableInit = '1';
 
-    const feedback = document.createElement('div');
-    feedback.style.cssText = 'font-size:.875rem;margin-top:.25rem;margin-bottom:.75rem;min-height:1.25rem;';
-    campo.insertAdjacentElement('afterend', feedback);
-
     let emailValida = null;
 
-    campo.addEventListener('blur', async function () {
-        const val = campo.value.trim();
-        if (!val) { feedback.innerHTML = ''; emailValida = null; return; }
+    function setStato(stato) {
+        switch (stato) {
+            case 'errore':
+                campo.style.backgroundColor = '#f8d7da';
+                campo.style.borderColor     = '#dc3545';
+                break;
+            case 'ok':
+            default:
+                campo.style.backgroundColor = '';
+                campo.style.borderColor     = '';
+        }
+    }
 
-        feedback.style.color = '#6c757d';
-        feedback.innerHTML = 'Verifica email in corso&hellip;';
+    async function runValidazione() {
+        const val = campo.value.trim();
+        if (!val) { emailValida = null; setStato(null); return; }
 
         const ris = await verificaEmailCampo(campoId);
 
         if (ris.riprovare || ris.errore) {
-            feedback.innerHTML = '';
             emailValida = true;
+            setStato(null);
             return;
         }
 
         if (ris.valida) {
-            feedback.style.color = '#28a745';
-            feedback.innerHTML = '&#10003; Email valida';
             emailValida = true;
+            setStato('ok');
         } else {
-            feedback.style.color = '#dc3545';
-            let msg = ris.messaggio;
-            if (ris.suggerimento) {
-                msg += '. Intendevi <a href="#" class="emailable-suggerimento">' + ris.suggerimento + '</a>?';
-            }
-            feedback.innerHTML = msg;
             emailValida = false;
-            const link = feedback.querySelector('.emailable-suggerimento');
-            if (link) {
-                link.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    campo.value = ris.suggerimento;
-                    campo.dispatchEvent(new Event('blur'));
-                });
-            }
+            setStato('errore');
         }
-    });
+    }
+
+    campo.addEventListener('blur', runValidazione);
 
     form.addEventListener('submit', function (e) {
         if (emailValida === false) {
             e.preventDefault();
-            feedback.style.color = '#dc3545';
+            setStato('errore');
             campo.focus();
+        } else if (emailValida === null && campo.value.trim()) {
+            e.preventDefault();
+            runValidazione().then(function () {
+                if (emailValida !== false) form.submit();
+                else campo.focus();
+            });
         }
     });
 
     const nativeSubmit = HTMLFormElement.prototype.submit.bind(form);
     form.submit = function () {
         if (emailValida === false) {
-            feedback.style.color = '#dc3545';
+            setStato('errore');
             campo.focus();
+            return;
+        }
+        if (emailValida === null && campo.value.trim()) {
+            runValidazione().then(function () {
+                if (emailValida !== false) nativeSubmit();
+                else campo.focus();
+            });
             return;
         }
         nativeSubmit();

@@ -373,6 +373,25 @@
 
         // die( $corpo );
 
+        // rimuovo destinatari con indirizzo vuoto/non valido
+        $destinatari = array_filter((array)$destinatari, function($email) { return !empty(trim((string)$email)); });
+
+        if (empty($destinatari)) {
+            $bt = array_map(
+                function($f) { return ($f['file'] ?? '?') . ':' . ($f['line'] ?? '?') . ' ' . ($f['function'] ?? '?'); },
+                debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 8)
+            );
+            logWrite(
+                'mail scartata: destinatari vuoti dopo elaborazione template.'
+                . ' to_originale=' . json_encode($to)
+                . ' template_type=' . ($t['type'] ?? '?')
+                . ' oggetto=' . ($oggetto ?? '')
+                . ' backtrace=' . implode(' | ', $bt),
+                'mail', LOG_ERR
+            );
+            return null;
+        }
+
         // ...
         $corpo = path2url($corpo);
 
@@ -408,6 +427,24 @@
      */
     function queueMail($c, $timestamp_invio, $mittente, $destinatari, $oggetto, $corpo, $destinatari_cc = array(), $destinatari_bcc = array(), $allegati = array(), $headers = array(), $server = NULL)
     {
+
+        // guard: blocco accodamento se nessun destinatario valido
+        $destinatari_validi = array_filter((array)$destinatari, function($email) { return !empty(trim((string)$email)); });
+        if (empty($destinatari_validi)) {
+            $bt = array_map(
+                function($f) { return ($f['file'] ?? '?') . ':' . ($f['line'] ?? '?') . ' ' . ($f['function'] ?? '?'); },
+                debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 8)
+            );
+            logWrite(
+                'queueMail bloccata: nessun destinatario valido.'
+                . ' destinatari=' . json_encode($destinatari)
+                . ' mittente=' . json_encode($mittente)
+                . ' oggetto=' . $oggetto
+                . ' backtrace=' . implode(' | ', $bt),
+                'mail', LOG_ERR
+            );
+            return null;
+        }
 
         // inserimento della mail in coda
         $id = mysqlQuery(

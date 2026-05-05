@@ -112,7 +112,7 @@
     }|merge( options.page ) %}
 
     {# calcolo valori di base #}
-    {% if form.subtable and form.counter != '' %}
+    {% if form.subtable and form.counter ~ '' != '' %}
         {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set ks = request[ form.table ][ form.subtable ]|keys %}
@@ -123,7 +123,7 @@
         {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ field.name %}
         {% set vl = request[ form.table ][ form.subtable ][ field.name ] %}
         {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
-    {% elseif form.counter %}
+    {% elseif form.counter ~ '' != '' %}
         {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set vl = request[ form.table ][ form.counter ][ field.name ] %}
@@ -220,7 +220,7 @@
         {% set ks = request[ form.table ][ form.subtable ]|keys %}
         {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
         {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
-    {% elseif form.counter %}
+    {% elseif form.counter ~ '' != '' %}
         {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set vl = request[ form.table ][ form.counter ][ field.name ] %}
@@ -378,7 +378,7 @@
         {% set ks = request[ form.table ][ form.subtable ]|keys %}
         {% set vl = request[ form.table ][ form.subtable ][ ks[ form.counter ] ][ field.name ] %}
         {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
-    {% elseif form.counter %}
+    {% elseif form.counter ~ '' != '' %}
         {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set vl = request[ form.table ][ form.counter ][ field.name ] %}
@@ -523,7 +523,7 @@
     }|merge( options.page ) %}
 
     {# calcolo valori di base #}
-    {% if form.subtable and form.counter != '' %}
+    {% if form.subtable and form.counter ~ '' != '' %}
         {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set ks = request[ form.table ][ form.subtable ]|keys %}
@@ -534,7 +534,7 @@
         {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ field.name %}
         {% set vl = request[ form.table ][ form.subtable ][ field.name ] %}
         {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
-    {% elseif form.counter %}
+    {% elseif form.counter ~ '' != '' %}
         {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set vl = request[ form.table ][ form.counter ][ field.name ] %}
@@ -639,7 +639,7 @@
     }|merge( options.site ) %}
 
     {# calcolo valori di base #}
-    {% if form.subtable and form.counter != '' %}
+    {% if form.subtable and form.counter ~ '' != '' %}
         {% set nm = form.table ~ '[' ~ form.subtable ~ '][' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set ks = request[ form.table ][ form.subtable ]|keys %}
@@ -650,7 +650,7 @@
         {% set id = form.table ~ '_' ~ form.subtable ~ '_' ~ field.name %}
         {% set vl = request[ form.table ][ form.subtable ][ field.name ] %}
         {% set pr = request.__preset__[ form.table ][ form.subtable ][ field.name ] %}
-    {% elseif form.counter %}
+    {% elseif form.counter ~ '' != '' %}
         {% set nm = form.table ~ '[' ~ form.counter ~ '][' ~ field.name ~ ']' %}
         {% set id = form.table ~ '_' ~ form.counter ~ '_' ~ field.name %}
         {% set vl = request[ form.table ][ form.counter ][ field.name ] %}
