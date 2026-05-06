@@ -144,7 +144,7 @@
                         logger( 'genero il documento per il rinnovo: ' . $idRinnovo, 'details/tesseramenti/documenti/' . $articolo['destinatario_id_anagrafica'] );
 
                         // ...
-                        $sezionale = 'E/' . date( 'Y' );
+                        $sezionale = $cf['tesseramenti']['checkout']['documento']['generazione']['sezionale'];
                         $numero = mysqlSelectValue(
                             $cf['mysql']['connection'],
                             'SELECT coalesce( max( numero ), 0 ) + 1 FROM documenti WHERE sezionale = ?',

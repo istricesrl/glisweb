@@ -244,7 +244,7 @@
     <!-- YOUTUBE -->
     <div class="ratio ratio-{{ rt }}">
         <iframe
-            width="{{ source.height }}"
+            {% if source.width %}width="{{ source.width }}"{% endif %}
             {% if source.height %}height="{{ source.height }}"{% endif %}
             src="https://www.youtube.com/embed/{{ page.contents.video[ source.ruolo ][ source.ordine ].codice_embed }}"
             title="YouTube video player"
@@ -261,7 +261,10 @@
     {% else %}
 
     <!-- HTML5 VIDEO PLAYER -->
-    <video controls width="100%" {% if autoplay %}autoplay muted{% endif %} {% if loop %}loop{% endif %}>
+    <video controls
+        {% if source.width %}width="{{ source.width }}"{% endif %}
+        {% if source.height %}height="{{ source.height }}"{% endif %}
+        {% if autoplay %}autoplay muted{% endif %} {% if loop %}loop{% endif %}>
         <source src="{{ site.root }}{{ page.contents.video[ source.ruolo ][ source.ordine ].path }}" type="video/mp4">
     </video>
 

@@ -193,12 +193,12 @@
 
             $rinnovi = array_merge( $documenti, $carrelli, $carrelliPagati );
 
-            if( ! isset( $rinnovi['pagato_carrelli'] ) ) {
-                $rinnovi['pagato_carrelli'] = 0;
-            }
-
-            if( ! isset( $rinnovi['ordinato'] ) ) {
-                $rinnovi['ordinato'] = 0;
+            // default a 0 per tutte le chiavi usate dalla logica sotto, in modo da evitare
+            // "Undefined array key" su PHP 8 quando le query non trovano dati per il contratto
+            foreach( array( 'pagato', 'pagato_coupon', 'pagato_carrelli', 'pagato_coupon_carrelli', 'ordinato' ) as $k ) {
+                if( ! isset( $rinnovi[ $k ] ) || $rinnovi[ $k ] === NULL ) {
+                    $rinnovi[ $k ] = 0;
+                }
             }
 
             // die( print_r( $documenti, true ) );
