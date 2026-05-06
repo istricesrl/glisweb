@@ -15,7 +15,6 @@
      *
      * TODO reimplementare il TTL per la durata massima delle sessioni
      * TODO reimplementare il TTL per la durata massima dell'inattività delle sessioni
-     * TODO documentare
      *
      *
      *
@@ -24,8 +23,13 @@
     /**
      * sistema di salvataggio delle sessioni
      * =====================================
-     * 
-     * 
+     * In questa sezione viene scelto il backend di salvataggio delle sessioni in base alla
+     * configurazione disponibile: se è configurata una connessione Redis viene usato Redis (opzione
+     * preferita, l'unica compatibile con un ambiente containerizzato e orchestrato); in caso contrario,
+     * se è configurata una connessione Memcache viene usato Memcache; come ultimo fallback si lascia
+     * il salvataggio su file gestito da Apache. Il tipo di backend scelto viene esposto nella costante
+     * SESSION_TYPE per essere ispezionato nei runlevel successivi.
+     *
      */
 
     // backend per il salvataggio delle sessioni
@@ -71,8 +75,9 @@
     /**
      * debug del runlevel
      * ==================
-     * 
-     * 
+     * In questa sezione sono presenti, commentate, delle righe utili per il debug di questo runlevel,
+     * fra cui la possibilità di stampare il save handler scelto e l'array di configurazione di Memcache.
+     *
      */
 
     // debug

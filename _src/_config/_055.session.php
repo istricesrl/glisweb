@@ -3,17 +3,12 @@
     /**
      * file di applicazione della configurazione della sessione PHP
      *
-     * In questo file vengono applicate le configurazioni delle sessioni PHP.
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * TODO documentare
-     *
-     *
+     * In questo file vengono applicate le policy di sessione (durata massima, sicurezza dei cookie,
+     * lazy write) e viene avviata la sessione PHP. La sessione viene poi collegata agli array $cf
+     * e $ct tramite puntatore in modo che i dati di sessione siano disponibili sia internamente al
+     * framework sia al template manager. Questo runlevel segue il 050 che ha già scelto il backend di
+     * salvataggio (Redis, Memcache o Apache), quindi qui ci si concentra solo sull'apertura della
+     * sessione e sull'integrazione con il resto del framework.
      *
      */
 
@@ -26,8 +21,10 @@
     /**
      * dichiarazione delle costanti
      * ============================
-     * 
-     * 
+     * In questa sezione viene definita la costante SESSION_LIMIT che esprime in secondi la durata
+     * massima della sessione (default 3600 = 1 ora). La costante viene definita solo se non è già
+     * stata dichiarata altrove, in modo da consentirne la sovrascrittura da custom.
+     *
      */
 
     // costante per la durata massima della sessione
@@ -38,8 +35,13 @@
     /**
      * avvio della sessione
      * ====================
-     * 
-     * 
+     * In questa sezione vengono applicate le policy della sessione e viene avviata. Si controlla
+     * preventivamente che l'output non sia già iniziato (in caso contrario session_start() fallirebbe
+     * silenziosamente); si imposta lazy_write a 0 per scrivere immediatamente sui backend di rete;
+     * si applicano le policy di sicurezza sui cookie (HttpOnly, Secure). Una volta avviata la
+     * sessione viene registrato il session_id e, se la sessione è appena nata, viene salvato il
+     * timestamp di creazione in $_SESSION['used'] (utile per il TTL).
+     *
      */
 
     // controllo output
@@ -97,8 +99,10 @@
     /**
      * connessione della sessione a $cf e $ct
      * ======================================
-     * 
-     * 
+     * I dati di sessione vengono collegati per riferimento all'array $cf e da qui all'array $ct,
+     * in modo che siano disponibili sia internamente al framework sia al template manager senza
+     * doverli copiare.
+     *
      */
 
     // connetto i dati della sessione all'array $cf
@@ -110,8 +114,9 @@
     /**
      * debug del runlevel
      * ==================
-     * 
-     * 
+     * In questa sezione sono presenti, commentate, delle righe utili per il debug di questo runlevel,
+     * fra cui la stampa del session_id e dell'intero array $cf['session'].
+     *
      */
 
     // debug

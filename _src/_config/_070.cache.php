@@ -3,18 +3,19 @@
     /**
      * utilizzo della cache statica delle pagine
      *
+     * Quando la cache delle pagine è abilitata (profilo cache 'pages' attivo), questo runlevel intercetta
+     * la richiesta prima che venga eseguito il codice di rendering e, se esiste un file di cache valido
+     * per la richiesta corrente, ne restituisce direttamente il contenuto evitando l'intero stack del
+     * framework. La chiave di cache è un hash MD5 calcolato a partire da: nome del server, URI richiesta,
+     * parametri $_REQUEST, vista corrente in sessione, stato di spedizione del carrello, id account
+     * loggato, parametri di login e cookie privacy — in modo che varianti significative della stessa
+     * pagina abbiano file di cache distinti.
      *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     *
-     * TODO documentare
-     * TODO documentare i commenti che si trovano in fondo alla pagina quando viene letta o non letta dalla cache
+     * Quando la pagina viene servita dalla cache, in coda al contenuto vengono aggiunti dei commenti
+     * HTML diagnostici che riportano data di scrittura del file di cache (cached:), data di scadenza
+     * effettiva (expire:), URL della pagina (page:) e nome del file di cache (file:). Questi commenti
+     * permettono di verificare al volo, leggendo l'HTML della pagina, se è stata servita dalla cache
+     * e quando scadrà.
      *
      *
      *
@@ -26,8 +27,13 @@
     /**
      * recupero della cache dei contenuti statici
      * ==========================================
-     * 
-     * 
+     * Se il profilo cache 'pages' è attivo, viene calcolata la chiave del file di cache per la
+     * richiesta corrente, definita la costante FILE_CACHE_PAGE con il path del file e le costanti
+     * FILE_CACHE_PAGE_LIMIT (timestamp di scadenza, fra 18 e 24 ore fa con jitter casuale per evitare
+     * stampede di rigenerazione) e FILE_CACHE_PAGE_TIME (timestamp di scrittura del file, se esiste).
+     * Se il file esiste e non è scaduto viene servito al client insieme ai commenti HTML diagnostici
+     * e l'esecuzione termina con die().
+     *
      */
 
     // se è attiva la cache delle pagine
@@ -68,8 +74,8 @@
     /**
      * debug del runlevel
      * ==================
-     * 
-     * 
+     * In questa sezione sono presenti, commentate, delle righe utili per il debug di questo runlevel.
+     *
      */
 
     // debug

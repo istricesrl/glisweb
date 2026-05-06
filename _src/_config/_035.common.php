@@ -3,19 +3,23 @@
     /**
      * applicazione delle configurazioni di uso comune
      *
+     * logica di applicazione delle configurazioni
+     * ===========================================
+     * Questo runlevel segue l'inclusione del runlevel 030, quindi recepisce eventuali modifiche alla
+     * configurazione di quel runlevel eventualmente fatte in custom; inoltre recepisce eventuali direttive
+     * presenti nei file di configurazione JSON/YAML.
      *
-     *
-     *
-     * TODO documentare
-     *
+     * Per rendere disponibile la configurazione di uso comune al template manager viene collegato
+     * $ct['common'] a &$cf['common'].
      *
      */
 
     /**
      * integrazione della configurazione da file Json/Yaml
      * ===================================================
-     * 
-     * 
+     * In questa sezione vengono recepite le eventuali direttive presenti nei file di configurazione
+     * JSON/YAML integrandole con l'array $cf['common'].
+     *
      */
 
     // configurazione extra
@@ -26,8 +30,8 @@
     /**
      * collegamento di $ct a $cf tramite puntatore
      * ===========================================
-     * 
-     * 
+     * Questa scorciatoia rende disponibili le informazioni di uso comune al template manager.
+     *
      */
 
     // collegamento all'array $ct
@@ -36,8 +40,8 @@
     /**
      * debug del runlevel
      * ==================
-     * 
-     * 
+     * In questa sezione sono presenti, commentate, delle righe utili per il debug di questo runlevel.
+     *
      */
 
     // debug

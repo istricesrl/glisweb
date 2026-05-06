@@ -60,6 +60,13 @@ require         | codeception/module-phpbrowser | *                 |
 require         | codeception/module-asserts    | *                 |
 suggest         | twig/extra-bundle             | *                 |
 
+### /_etc/_claude/_claude.framework.md
+Istruzioni operative per Claude Code distribuite con il framework. Contiene le regole fondamentali per lavorare correttamente sul codice
+(hard link, convenzione `_*`, come trovare le credenziali di database e degli altri servizi) e una sintesi dell'architettura. Il file non
+viene caricato automaticamente da Claude Code: ogni progetto deve importarlo esplicitamente nel proprio `CLAUDE.md` con la direttiva
+`@_etc/_claude/_claude.framework.md`, seguita dalle istruzioni specifiche del progetto che sovrascrivono quelle del framework in caso
+di conflitto.
+
 ### /_etc/_current.release e /_etc/_current.version
 Il framework viene versionato con due diverse numerazioni, le release che seguono la classica notazione a tre stage (major.minor.bugfix)
 e le versioni che sono numerate progressivamente con una timestamp (ad es. 20240502225937). La ragione di questa distinzione è che le
@@ -376,11 +383,20 @@ Questa è la macro della pagina degli strumenti della dashboard dell'amministraz
 ### /_mod/_06000.amministrazione/_src/_inc/_pages/_amministrazione.it-IT.php
 Qui vengono definite le pagine del modulo amministrazione.
 
-non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.archivio.php
-non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.archivio.tools.php
-non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.php
-non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.tools.php
-non presente in READ.md: /_mod/_06400.acquisti/_src/_inc/_pages/_acquisti.it-IT.php
+### /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.archivio.php
+Questa è la macro dell'archivio del modulo acquisti.
+
+### /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.archivio.tools.php
+Questa è la macro della pagina degli strumenti dell'archivio del modulo acquisti.
+
+### /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.php
+Questa è la macro della dashboard del modulo acquisti.
+
+### /_mod/_06400.acquisti/_src/_inc/_macro/_acquisti.tools.php
+Questa è la macro della pagina degli strumenti della dashboard del modulo acquisti.
+
+### /_mod/_06400.acquisti/_src/_inc/_pages/_acquisti.it-IT.php
+In questo file vengono definite le pagine del modulo acquisti.
 
 ### /_mod/_AC000.account/_src/_inc/_controllers/_account.before.php
 Questa controller viene eseguita al before di ogni elaborazione dell'entità account.
@@ -673,7 +689,8 @@ Questa è la macro della pagina di gestione dei contenuti delle categorie di not
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.menu.php
 Questa è la pagina di gestione dei menu delle categorie di notizie.
 
-non presente in READ.md: /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.metadati.php
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.metadati.php
+Questa è la macro della pagina di gestione dei metadati delle categorie di notizie.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.categorie.notizie.form.sem.php
 Questa è la macro della pagina di gestione SEM/SMM delle categorie di notizie.
@@ -684,7 +701,8 @@ Questa è la pagina di gestione dei contenuti web delle categorie di notizie.
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.contenuti.php
 Questa è la macro della pagina di gestione dei contenuti delle notizie.
 
-non presente in READ.md: /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.metadati.php
+### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.metadati.php
+Questa è la macro della pagina di gestione dei metadati delle notizie.
 
 ### /_mod/_CO000.contenuti/_src/_inc/_macro/_contenuti.notizie.form.sem.php
 Questa è la macro della pagina di gestione SEM/SMM delle notizie.
@@ -719,7 +737,10 @@ Qui vengono definite le pagine del modulo contenuti.
 ### /_mod/_CO000.contenuti/_src/_inc/_pages/_mail.it-IT.php
 Questo file contiene la dichiarazione delle pagine di gestione contenuti dei template mail.
 
-non presente in READ.md: /_mod/_CT000.contatti/READ.md
+### /_mod/_CT000.contatti/READ.md
+Questo file contiene la documentazione del modulo contatti: logica generale dei form con prefisso __ct__,
+configurazione delle controller e dei consensi privacy, integrazione con reCAPTCHA, log degli invii in var/spool/contatti
+e gestione del front-end (approccio pagina unica o pagina + thank-you page).
 
 ### /_mod/_CT000.contatti/_src/_config/_030.common.php
 In questo file vengono definiti i moduli di contatto standard del framework.
@@ -863,7 +884,8 @@ In questo file vengono dichiarate le pagine relative alle offerte per il modulo 
 ### /_mod/_FI000.file/_src/_inc/_controllers/_file.before.php
 Questa controller viene innescata al before per ogni elaborazione della tabella file.
 
-non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_catalogo.marchi.form.file.php
+### /_mod/_FI000.file/_src/_inc/_macro/_catalogo.marchi.form.file.php
+Questa è la macro della scheda file del form di gestione dei marchi del catalogo.
 
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.form.php
 Questa è la macro della pagina di gestione dei file nell'archivio contenuti.
@@ -874,8 +896,11 @@ Questa è la macro della pagina degli strumenti della gestione dei file nell'arc
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.archivio.file.view.php
 Questa è la macro della vista dei file nell'archivio contenuti.
 
-non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_contenuti.categorie.notizie.form.file.php
-non presente in READ.md: /_mod/_FI000.file/_src/_inc/_macro/_contenuti.notizie.form.file.php
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.categorie.notizie.form.file.php
+Questa è la macro della scheda file del form di gestione delle categorie di notizie.
+
+### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.notizie.form.file.php
+Questa è la macro della scheda file del form di gestione delle notizie.
 
 ### /_mod/_FI000.file/_src/_inc/_macro/_contenuti.pagine.form.file.php
 Questa è la macro della scheda file del modulo di gestione delle pagine.
@@ -889,7 +914,8 @@ Questa è la macro di gestione dei file nella gestione delle mail inviate.
 ### /_mod/_FI000.file/_src/_inc/_macro/_mail.template.form.file.php
 Questa è la macro della gestione file associati a un template mail.
 
-non presente in READ.md: /_mod/_FI000.file/_src/_inc/_pages/_catalogo.it-IT.php
+### /_mod/_FI000.file/_src/_inc/_pages/_catalogo.it-IT.php
+In questo file vengono definite le pagine del modulo file relative al catalogo.
 
 ### /_mod/_FI000.file/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono definite le pagine del modulo file relative ai contenuti.
@@ -945,18 +971,52 @@ In questo file vengono definite le pagine relative alle immagini per il catalogo
 ### /_mod/_IM000.immagini/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono definite le pagine relative alle immagini per i contenuti.
 
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.stampe.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.tools.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.view.archiviati.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.view.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.form.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.stampe.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.tools.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.view.archiviati.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.view.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_pages/_acquisti.it-IT.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_inc/_pages/_catalogo.it-IT.php
-non presente in READ.md: /_mod/_LI000.listini/_src/_lib/_mysql.utils.add.php
+### /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.stampe.php
+Questa è la macro della scheda stampe dei listini di acquisto.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.tools.php
+Questa è la macro della pagina degli strumenti dei listini di acquisto.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.view.archiviati.php
+Questa è la macro della view dei listini di acquisto archiviati.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_acquisti.listini.acquisto.view.php
+Questa è la macro della view dei listini di acquisto.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.form.php
+Questa è la macro del form di gestione dei listini di vendita del catalogo.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.form.archiviazione.php
+Questa è la macro della scheda archiviazione del form di gestione dei listini di vendita del catalogo.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.form.stampe.php
+Questa è la macro della scheda stampe del form di gestione dei listini di vendita del catalogo; configura
+il metro di stampa PDF e include le macro di default.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.form.tools.php
+Questa è la macro della pagina degli strumenti del form di gestione dei listini di vendita del catalogo;
+configura i metro per esportazioni, importazioni, elaborazioni, viste statiche e gestione account.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.stampe.php
+Questa è la macro della scheda stampe dei listini di vendita del catalogo.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.tools.php
+Questa è la macro della pagina degli strumenti dei listini di vendita del catalogo.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.view.archiviati.php
+Questa è la macro della view dei listini di vendita archiviati del catalogo.
+
+### /_mod/_LI000.listini/_src/_inc/_macro/_catalogo.listini.vendita.view.php
+Questa è la macro della view dei listini di vendita del catalogo.
+
+### /_mod/_LI000.listini/_src/_inc/_pages/_acquisti.it-IT.php
+In questo file vengono definite le pagine del modulo listini relative agli acquisti.
+
+### /_mod/_LI000.listini/_src/_inc/_pages/_catalogo.it-IT.php
+In questo file vengono definite le pagine del modulo listini relative al catalogo.
+
+### /_mod/_LI000.listini/_src/_lib/_mysql.utils.add.php
+Questa è una libreria di funzioni MySQL aggiuntive per il modulo listini.
 
 ### /_mod/_MA000.mail/_src/_api/_task/_mail.queue.clean.out.php
 Questo task pulisce la coda delle mail in uscita.
@@ -1061,8 +1121,11 @@ Questa è la macro della view delle notizie archiviate.
 ### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.notizie.view.php
 Questa è la macro della view delle notizie.
 
-non presente in READ.md: /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.tipologie.notizie.form.php
-non presente in READ.md: /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.tipologie.notizie.view.php
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.tipologie.notizie.form.php
+Questa è la macro della pagina di gestione delle tipologie delle notizie.
+
+### /_mod/_NO000.notizie/_src/_inc/_macro/_contenuti.tipologie.notizie.view.php
+Questa è la macro della view delle tipologie delle notizie.
 
 ### /_mod/_NO000.notizie/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono definite le pagine relative ai contenuti del modulo notizie.
@@ -1100,7 +1163,8 @@ Questa è la macro della view delle pagine archiviate.
 ### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.pagine.view.php
 Questa è la macro della view delle pagine.
 
-non presente in READ.md: /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.redirect.view.php
+### /_mod/_PA000.pagine/_src/_inc/_macro/_contenuti.redirect.view.php
+Questa è la macro della view dei redirect.
 
 ### /_mod/_PA000.pagine/_src/_inc/_pages/_contenuti.it-IT.php
 In questo file vengono deifinite le pagine relative alla gestione delle pagine.
@@ -1244,7 +1308,8 @@ Questa è la macro della scheda video del modulo di gestione articoli.
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.categorie.prodotti.form.video.php
 Questa è la macro della scheda video del modulo di gestione categorie prodotti.
 
-non presente in READ.md: /_mod/_VI000.video/_src/_inc/_macro/_catalogo.marchi.form.video.php
+### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.marchi.form.video.php
+Questa è la macro della scheda video del form di gestione dei marchi del catalogo.
 
 ### /_mod/_VI000.video/_src/_inc/_macro/_catalogo.prodotti.form.video.php
 Questa è la macro della scheda video del modulo di gestione prodotti.
@@ -2106,6 +2171,13 @@ Questo script normalizza i permessi per l'ambiente Nginx.
 Questo script genera l'hash di una password in modo che possa essere utilizzata nella configurazione o nel database del
 framework.
 
+### /_src/_sh/_smoke.curl.sh
+Questo script è un helper per smoke test interattivi della web app via curl: gestisce un cookie jar in var/tmp/, esegue
+login con credenziali da variabili d'ambiente (TEST_USER, TEST_PASS) e offre sub-comandi get/post/status/check per
+verificare codici HTTP e pattern nell'HTML. Pensato per uso non interattivo (chiamate ripetute, output parseabile);
+i campi del form di login (`__login__[user]`, `__login__[pasw]`) e l'URL di default (`/login.it-IT.html`) sono
+sovrascrivibili tramite variabili d'ambiente (SMOKE_BASE_URL, SMOKE_LOGIN_PATH).
+
 ### /_src/_sh/_test.import.sh
 Questo script genera dei file di test in /var/spool/import/todo e /var/spool/import per il test del sistema di importazione
 file; si veda /_src/_config/_740.controller.php per i dettagli e /_src/_api/_report/_import.php per i test del sistema.
@@ -2114,9 +2186,138 @@ file; si veda /_src/_config/_740.controller.php per i dettagli e /_src/_api/_rep
 Questa libreria viene utilizzata dagli script shell del framework per svolgere alcuni compiti base come la gestione degli
 argomenti da linea di comando.
 
+### /_src/_twig/_inc/_ads.head.twig
+Questo file include il tag `<script>` per Google Ads nel `<head>`; configura il tracciamento base tramite
+`gtag('config', ...)` e, se presente `google.ads.profile.conversion`, dichiara la funzione JavaScript
+`gtag_report_conversion()` per il tracciamento delle conversioni.
+
 ### /_src/_twig/_inc/_analytics.head.twig
 Questo file include il codice per Google Analytics posto che l'utente abbia prestato il consenso oppure che Analytics sia
 configurato in modalità anonimizzazione IP.
+
+### /_src/_twig/_inc/_chartjs.script.twig
+Questo file include il tag `<script>` per l'inizializzazione dei grafici Chart.js; itera su `page.contents.chartjs`
+e per ogni grafico definito genera il codice di inizializzazione con tipi, dataset, colori e opzioni. Viene incluso
+condizionalmente da `_page.close.twig` solo se `page.contents.chartjs` è valorizzato.
+
+### /_src/_twig/_inc/_clarity.head.twig
+Questo file include il tag `<script>` di Microsoft Clarity nel `<head>`, condizionato alla presenza dell'ID di
+tracking in `microsoft.profile.clarity.id`.
+
+### /_src/_twig/_inc/_cookie.overlay.twig
+Questo file genera l'overlay HTML per la richiesta di consenso ai cookie di terze parti analitici non anonimi;
+viene incluso alla fine del `<body>` da `_page.close.twig`. Per ogni cookie ancora privo di consenso mostra
+nome, motivazione, durata di conservazione e luogo del trattamento, con pulsanti per accettare o rifiutare
+individualmente o in blocco. L'overlay non viene mostrato sulla pagina privacy né se tutti i consensi sono
+già stati espressi.
+
+### /_src/_twig/_inc/_csp.head.twig
+Questo file è predisposto per la generazione del meta tag `Content-Security-Policy` nel `<head>` a partire
+dall'array `page.csp`. Il codice è attualmente commentato e non ancora attivo.
+
+### /_src/_twig/_inc/_facebook.head.twig
+Questo file include il tag `<script>` del Pixel di Facebook nel `<head>`, condizionato alla presenza di
+`facebook.profile.pixel.id` e al consenso dell'utente (`privacy.cookie.terzi.analitici.Facebook.consenso`).
+
+### /_src/_twig/_inc/_facebook.noscript.twig
+Questo file include il tag `<noscript>` del Pixel di Facebook (immagine di tracking 1×1 px), condizionato
+alle stesse verifiche di `_facebook.head.twig`; viene incluso subito dopo l'apertura del `<body>` tramite
+`_page.open.twig`.
+
+### /_src/_twig/_inc/_gtm.head.twig
+Questo file include il tag `<script>` di Google Tag Manager nel `<head>`, condizionato alla presenza di
+`google.profile.gtm.property` e al consenso dell'utente o alla modalità anonima (`google.profile.gtm.anonymous`).
+
+### /_src/_twig/_inc/_gtm.noscript.twig
+Questo file include il tag `<noscript>` di Google Tag Manager (iframe di fallback), condizionato alle stesse
+verifiche di `_gtm.head.twig`; viene incluso subito dopo l'apertura del `<body>` tramite `_page.open.twig`.
+
+### /_src/_twig/_inc/_hotjar.head.twig
+Questo file include il tag `<script>` di Hotjar nel `<head>`, condizionato alla presenza dell'ID di tracking
+in `hotjar.profile.id`.
+
+### /_src/_twig/_inc/_opengraph.head.twig
+Questo file genera i meta tag Open Graph nel `<head>` (og:title, og:type, og:url, og:description, og:image,
+og:audio, og:video, og:determiner); viene incluso da `_page.head.twig`. Per og:title usa `page.og_title` se
+presente, altrimenti ricade su `page.h1`; per og:url usa il canonico se definito in `page.canonical`.
+
+### /_src/_twig/_inc/_page.close.twig
+Questo file raccoglie tutte le operazioni standard da eseguire prima della chiusura del tag `<body>`: inclusione
+dell'overlay cookie, dichiarazione della variabile JavaScript globale `siteRoot`, caricamento differito degli
+script JS esterni, interni e del template, e inclusione condizionale dei codici di chiusura per Facebook
+Messenger, Criteo, Chart.js, Smartsupp ed Emailable. Gestisce infine i modal di pagina e inserisce nei commenti
+i link ai validatori W3C e agli strumenti di test di Google.
+
+### /_src/_twig/_inc/_page.head.twig
+Questo file raccoglie tutte le operazioni standard da eseguire all'interno del tag `<head>`: inclusione
+nell'ordine di GTM, Analytics e Ads; meta tag standard (charset, viewport, keywords, description, robots);
+favicon; link canonico; tag title; meta tag Open Graph; fogli CSS in tutte le varianti (esterno, preload,
+cached, interno, template, custom); e codici di tracking di Facebook, Hotjar e Microsoft Clarity. È il punto
+di inclusione centrale per tutto ciò che riguarda il `<head>` della pagina e va incluso all'inizio del tag.
+
+### /_src/_twig/_inc/_page.open.twig
+Questo file raccoglie le operazioni standard da eseguire subito dopo l'apertura del tag `<body>`: gestione del
+tag `<noscript>` per i CSS in preload e inclusione dei tag noscript di Google Tag Manager e del Pixel di
+Facebook tramite i rispettivi file dedicati.
+
+### /_src/_twig/_inc/_paypal.head.twig
+Questo file include il tag `<script>` per il PayPal Advanced Checkout, condizionato alla presenza del client
+token in `ct.etc.client_token`; carica l'SDK PayPal con i componenti `buttons` e `hosted-fields`.
+
+### /_src/_twig/_inc/_recaptcha.close.twig
+Questo file è predisposto per l'inclusione del codice reCAPTCHA v2 esplicito con callback. Il codice è
+attualmente commentato in quanto il framework utilizza reCAPTCHA v3 tramite la macro `formButton()` definita
+in `/_src/_twig/_lib/_default.twig`.
+
+### /_src/_twig/_lib/_default.twig
+Libreria di macro generiche per la rappresentazione dei contenuti; va importata nei template con il prefisso
+`cms` (es. `{% import '_lib/_default.twig' as cms %}`). Contiene:
+- `formButton()`: genera un bottone di invio form integrato con Google reCAPTCHA v3; gestisce il token di
+  verifica, la validazione HTML5 e la logica di submit tramite callback; supporta bottoni multipli nella stessa
+  pagina tramite il parametro `dup`.
+- `image()`: genera un tag `<picture>` responsive con supporto WebP, lazy loading e sorgenti multiple per
+  orientamento landscape/portrait; recupera i metadati dell'immagine da `page.contents.images`.
+- `video()`: genera il codice di embedding per video YouTube (con aspect ratio configurabile), Vimeo o player
+  HTML5 nativo; recupera i dati del video da `page.contents.video`.
+
+### /_src/_twig/_lib/_form.twig
+Libreria di macro per la creazione di form compatibili con il sistema controller del framework; va importata
+con il prefisso `frm` (es. `{% import '_lib/_form.twig' as frm %}`). Contiene:
+- `openForm()` e `closeForm()`: aprono e chiudono un form standard inserendo automaticamente i campi hidden
+  necessari al framework (id, method, reset, timestamp, account, backurl).
+- `input()`, `textarea()`, `checkbox()`: generano i rispettivi campi HTML gestendo nome, id, valore corrente,
+  preset, default, disabled (con campo hidden associato), placeholder, required, tooltip.
+- `select()`: genera una selectbox statica oppure, se `source.api` è valorizzato, una inputbox con popolamento
+  dinamico via API REST; supporta autosubmit, controlli di modifica e aggiunta.
+- `button()`: genera un pulsante HTML generico con supporto tooltip.
+- `uploader()`: genera un campo per l'upload di file tramite AJAX con pulsante di selezione e anteprima.
+
+### /_src/_twig/_lib/_navigation.twig
+Libreria di macro per la generazione degli elementi di navigazione; va importata con il prefisso `nav`
+(es. `{% import '_lib/_navigation.twig' as nav %}`). Contiene:
+- `menu()`: genera voci `<li>` per un menu di navigazione strutturato, con supporto ricorsivo ai sottomenu,
+  gestione delle classi active/current e dell'ancora.
+- `selectMenu()`, `lineMenu()`: varianti del menu rispettivamente in selectbox e in linea.
+- `tabs()`: genera la navigazione a schede per le pagine del CMS, con versione select per mobile e versione
+  `<ul>` per desktop; supporta schede con icona e tooltip.
+- `sheets()`: genera la navigazione a bottoni fra le schede di un form.
+- `breadcrumbs()`, `lineBreadcrumbs()`: generano le briciole di pane rispettivamente come `<li>` e come link
+  in linea con separatore configurabile.
+- `flags()`: genera un menu per il cambio lingua con immagini delle bandiere.
+
+### /_src/_twig/_lib/_privacy.twig
+Libreria di macro per la gestione della privacy nei template; va importata con il prefisso `prv`
+(es. `{% import '_lib/_privacy.twig' as prv %}`). Contiene:
+- `checkConsensi()`: genera le checkbox di consenso privacy relative a un modulo contatti, a partire dalla
+  configurazione dei consensi in `$cf`; supporta consensi obbligatori e facoltativi, link a pagina informativa
+  o URL esterna, e classi CSS personalizzabili.
+
+### /_src/_twig/_lib/_translation.twig
+Libreria di macro per il sistema di traduzione dei microcontenuti; va importata con il prefisso `trn`
+(es. `{% import '_lib/_translation.twig' as trn %}`). Contiene:
+- `tr()`: traduce un microcontenuto attingendo all'array `$ct['tr']` in base alla chiave `w` e alla lingua
+  `l`; emette un messaggio di errore esplicito se il token o la lingua sono assenti.
+- `trw()`: wrapper di `tr()` che restituisce l'output trimmato degli spazi.
 
 ### /_usr/_database/_patch/_010000999999.tables.sql
 Questo file contiene le patch base necessarie alla creazione delle tabelle nel database del framework; per ulteriori informazioni
