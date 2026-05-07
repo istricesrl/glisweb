@@ -148,6 +148,15 @@
         // nome del file di ricevuta
         $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'details/paypal-advanced/pagamenti.' . sprintf( '%08d', $dati['id'] ) . '.log';
 
+        // cintura di sicurezza: importi <= 0 (pagamento già coperto, es. da coupon) non vanno mandati a PayPal
+        if( ( float ) ( $dati['importo_lordo_finale'] ?? 0 ) <= 0 ) {
+            logger( 'salto creazione ordine PayPal per pagamento #' . $dati['id'] . ' perché importo_lordo_finale <= 0', 'details/paypal-advanced/order-api' );
+            buildJson(
+                array( 'id' => null, 'skipped' => 'zero_amount' )
+            );
+            return;
+        }
+
         // dati dell'ordine
         $order = array(
             'intent' => 'CAPTURE',

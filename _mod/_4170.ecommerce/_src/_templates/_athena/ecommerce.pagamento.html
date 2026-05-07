@@ -73,7 +73,7 @@
                             <!-- <td>{{ '%0.2f'|format( r.coupon_valore ) }}</td> -->
                             <td class="text-right">
                                 {% if not r.id_pagamento %}
-                                <input class="form-control form-control-sm text-right" type="number" step="0.01" id="totaleDaPagareRiga{{ loop.index0 }}" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" required>
+                                <input class="form-control form-control-sm text-right" type="number" step="0.01" id="totaleDaPagareRiga{{ loop.index0 }}" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" data-original-amount="{{ r.totale_lordo_da_pagare }}" required>
                                 {% else %}
                                 <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}">
                                 <p>{{ r.totale_lordo_da_pagare }} €</p>
@@ -209,12 +209,15 @@
 {% block javascript %}
 <script>
 function ricalcolaTotaleDaPagare(idCampoImporto, sconto) {
-    let totale = parseFloat($('#' + idCampoImporto).val());
+    let campo = $('#' + idCampoImporto);
+    // parto sempre dal valore originale per evitare accumulo se l'operatore cambia coupon più volte
+    let originale = parseFloat(campo.attr('data-original-amount'));
+    if (isNaN(originale)) originale = parseFloat(campo.val());
     let scontoFisso = parseFloat(sconto);
-    if (!isNaN(scontoFisso)) {
-        totale = totale - scontoFisso;
-    }
-    $('#' + idCampoImporto).val(totale.toFixed(2));
+    let totale = originale - (isNaN(scontoFisso) ? 0 : scontoFisso);
+    // clamp a zero: il coupon non può portare il "da pagare" sotto zero
+    if (totale < 0) totale = 0;
+    campo.val(totale.toFixed(2));
 }
 </script>
 {% endblock %}
