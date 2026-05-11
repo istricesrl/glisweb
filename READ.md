@@ -2805,11 +2805,6 @@ effettivamente il problema che riscontrate è questo, monitorate il cookie di se
 per gli sviluppatori di Chrome o Firefox; se notate che il cookie appare e scompare randomicamente ogni volta che cambiate
 pagina, allora il problema è questo. Sinceratevi che la versione HTTPS del sito sia configurata correttamente.
 
-#### il framework dà errore 500 su tutte le pagine
-Questo problema può essere originato da una molteplicità di fattori, ma in primo luogo è d'uopo controllare che non siano per
-qualche ragione stati cambiati inavvertitamente dei permessi. Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e
-provare di nuovo ad accedere alle pagine.
-
 #### ho creato una pagina view ma non appaiono dati, perché?
 Le cause più comuni sono a) mancano i permessi per l'entità che vuoi visualizzare (controlla /_src/_config/_250.auth.php)
 oppure b) manca la view corrispondente all'entità che vuoi visualizzare (controlla il database) infine c) verifica di non star
