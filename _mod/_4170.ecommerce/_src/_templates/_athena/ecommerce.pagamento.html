@@ -73,10 +73,10 @@
                             <!-- <td>{{ '%0.2f'|format( r.coupon_valore ) }}</td> -->
                             <td class="text-right">
                                 {% if not r.id_pagamento %}
-                                <input class="form-control form-control-sm text-right" type="number" step="0.01" id="totaleDaPagareRiga{{ loop.index0 }}" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}" data-original-amount="{{ r.totale_lordo_da_pagare }}" required>
+                                <input class="form-control form-control-sm text-right" type="number" step="0.01" id="totaleDaPagareRiga{{ loop.index0 }}" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ max(0, r.totale_lordo_da_pagare) }}" data-original-amount="{{ max(0, r.totale_lordo_da_pagare) }}" required>
                                 {% else %}
-                                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ r.totale_lordo_da_pagare }}">
-                                <p>{{ r.totale_lordo_da_pagare }} €</p>
+                                <input type="hidden" name="__pagamenti__[righe][{{ loop.index0 }}][importo_lordo_totale]" value="{{ max(0, r.totale_lordo_da_pagare) }}">
+                                <p>{{ max(0, r.totale_lordo_da_pagare) }} €</p>
                                 {% endif %}
                             </td>
                             <td class="no-wrap">
