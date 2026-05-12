@@ -41,8 +41,10 @@ async function verificaEmailCampo(idCampo) {
         }
 
         if (!response.ok) {
+            // errori di servizio (quota/rate limit/5xx/etc.): non bloccare il flusso
             return {
                 valida: false,
+                errore: true,
                 messaggio: data.message || 'Errore durante la verifica',
                 status: response.status,
                 dati: data
@@ -121,12 +123,6 @@ function setupEmailableValidation(campoId, formId) {
             e.preventDefault();
             setStato('errore');
             campo.focus();
-        } else if (emailValida === null && campo.value.trim()) {
-            e.preventDefault();
-            runValidazione().then(function () {
-                if (emailValida !== false) form.submit();
-                else campo.focus();
-            });
         }
     });
 
@@ -135,13 +131,6 @@ function setupEmailableValidation(campoId, formId) {
         if (emailValida === false) {
             setStato('errore');
             campo.focus();
-            return;
-        }
-        if (emailValida === null && campo.value.trim()) {
-            runValidazione().then(function () {
-                if (emailValida !== false) nativeSubmit();
-                else campo.focus();
-            });
             return;
         }
         nativeSubmit();
