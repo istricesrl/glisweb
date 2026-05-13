@@ -145,12 +145,12 @@
 
                         // ...
                         $sezionale = $cf['abbonamenti']['checkout']['documento']['generazione']['sezionale'];
-                        $numero = mysqlSelectValue(
-                            $cf['mysql']['connection'],
-                            'SELECT coalesce( max( numero ), 0 ) + 1 FROM documenti WHERE sezionale = ?',
-                            array(
-                                array( 's' => $sezionale )
-                            )
+                        // NOTA `documenti.numero` è char(32): un max() puro confronta lessicograficamente
+                        // e dopo il 9 ritorna sempre '9' → duplicati col conseguente UPSERT su UNIQUE (id_tipologia,numero,sezionale).
+                        $numero = generaProssimoNumeroDocumento(
+                            $cf['abbonamenti']['checkout']['documento']['generazione']['id_tipologia'],
+                            $sezionale,
+                            trovaIdAziendaGestita()
                         );
 
                         // ...
