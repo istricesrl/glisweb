@@ -105,13 +105,22 @@ find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log"
 # (su `var/` si esclude di nuovo `var/log` per non descendervi)
 find ./$SUB/.git/hooks          -type f                                                                                                 -exec chmod ug+x {} +
 find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 770 {} +
+find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 770 {} +
+find ./$SUB/mod/*/src/templates -type d                                                                                                 -exec chmod 770 {} + 2>/dev/null
 find ./$SUB/tmp                 -type d                                                                                                 -exec chmod 770 {} +
 find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type d                                  -exec chmod 770 {} +
 
 find ./$SUB/src/tpl             -type f                                                                                                 -exec chmod 660 {} +
+find ./$SUB/src/templates       -type f                                                                                                 -exec chmod 660 {} +
 find ./$SUB/mod/*/src/tpl       -type f                                                                                                 -exec chmod 660 {} +
+find ./$SUB/mod/*/src/templates -type f                                                                                                 -exec chmod 660 {} + 2>/dev/null
 find ./$SUB/tmp                 -type f                                                                                                 -exec chmod 660 {} +
 find ./$SUB/var                 -path "./$SUB/var/log" -prune                               -o -type f                                  -exec chmod 660 {} +
+
+# var/log è pruned dai find sopra per non resettare i ~90% dei file del deploy
+# che vivono lì; ma la dir radice stessa deve comunque essere scrivibile dal
+# framework runtime (Apache/PHP-FPM) altrimenti non può creare nuovi log file.
+[ -d "./$SUB/var/log" ] && chmod 770 ./$SUB/var/log
 
 # informazioni
 echo "permessi modificati"
