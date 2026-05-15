@@ -110,3 +110,30 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'contenuti.categorie.notizie.form' )
     );
+
+    // gestione pagine form immagini
+    $p['contenuti.archivio.file.form.immagini'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-image" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'immagini' ),
+        'h1'                => array( $l        => 'immagini' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.file.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.file.form.immagini.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.file.form.immagini.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.archivio.file.form' )
+    );
+
+        // archivio video form immagini
+    $p['contenuti.archivio.video.form.immagini'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-image" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'immagini' ),
+        'h1'                => array( $l        => 'immagini' ),
+        'parent'            => array( 'id'        => 'contenuti.archivio.video.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'contenuti.archivio.video.form.immagini.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_contenuti.archivio.video.form.immagini.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'contenuti.archivio.video.form' )
+    );
+

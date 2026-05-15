@@ -1,0 +1,17 @@
+@_etc/_claude/_claude.framework.md
+
+# {{PROJECT_NAME}}
+
+## Contesto progetto
+<!-- domini di produzione, staging, sviluppo; pubblico di riferimento; stato (es. in sviluppo / produzione) -->
+
+## Convenzioni specifiche
+<!-- override puntuali rispetto al framework: librerie custom in src/lib/, moduli attivi in mod/, ecc. -->
+
+## Note operative
+<!--
+- credenziali aggiuntive di servizi esterni (oltre a quelle in src/shadow.yaml)
+- integrazioni con piattaforme terze (CMS, fornitori dati, ecc.)
+- procedure di deploy specifiche del progetto
+- contatti referenti (tecnico, business)
+-->

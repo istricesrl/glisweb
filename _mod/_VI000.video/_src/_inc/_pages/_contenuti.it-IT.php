@@ -59,6 +59,11 @@
                                                             'contenuti.archivio.video.form.tools' ) )
     );
 
+    // RELAZIONI CON IL MODULO IMMAGINI
+    if( in_array( "IM000.immagini", $cf['mods']['active']['array'] ) ) {
+        arrayInsertSeq( 'contenuti.archivio.video.form', $p['contenuti.archivio.video.form']['etc']['tabs'], 'contenuti.archivio.video.form.immagini' );
+    }
+
     // tools archivio contenuti
     $p['contenuti.archivio.video.form.tools'] = array(
         'sitemap'            => false,

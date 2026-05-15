@@ -55,6 +55,34 @@
         'etc'                => array( 'tabs'    => 'catalogo.prodotti.form' )
     );
 
+    // gestione prodotti form metadati
+    $p['catalogo.prodotti.form.metadati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-tags" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'metadati' ),
+        'h1'                => array( $l        => 'metadati' ),
+        'parent'            => array( 'id'        => 'catalogo.prodotti.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.prodotti.form.metadati.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.prodotti.form.metadati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.prodotti.form' )
+    );
+      
+      
+    // gestione pagine form contenuti
+    $p['catalogo.articoli.form.metadati'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-solid fa-tags" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'metadati' ),
+        'h1'                => array( $l        => 'metadati' ),
+        'parent'            => array( 'id'        => 'catalogo.articoli.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'catalogo.articoli.form.metadati.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_catalogo.articoli.form.metadati.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'catalogo.articoli.form' )
+    );
+      
+
     // gestione prodotti form catalogo
     $p['catalogo.categorie.prodotti.form.web'] = array(
         'sitemap'            => false,

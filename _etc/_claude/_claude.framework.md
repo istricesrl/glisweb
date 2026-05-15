@@ -160,6 +160,24 @@ Le librerie esterne (Composer) si trovano in `_src/_lib/_ext/`, non in `vendor/`
 - Macro Twig in `_src/_twig/_lib/`, sempre importate con prefisso fisso: `cms`, `frm`, `nav`, `prv`, `trn`.
 - Traduzioni in `_etc/_dictionaries/_generic.<lang>-<COUNTRY>.conf`, esposte ai template come `$ct['tr']`.
 
+### Caching locale di CSS e JS esterni
+
+Le risorse remote dichiarate in `page.css.external` e `page.js.external` (file `etc/template.yaml` o
+`etc/template.conf` del template) vengono cachate automaticamente su filesystem dal framework durante il
+rendering della pagina (`_src/_api/_pages.php`):
+
+- Path locale: `var/cache/css/<host>/<path>` e `var/cache/js/<host>/<path>` (creati on-demand alla prima
+  richiesta della pagina, con permessi `www-data:www-data` se la dir esiste già; per i CSS vengono cachate
+  anche le risorse riferite via `url(...)` — font, immagini).
+- Lo URL cachato viene spostato in `page.css.cached` (multilivello per media) o `page.js.cached` (flat) e
+  rimosso da `external`. I template `_inc/_page.head.twig` e `_inc/_page.close.twig` emettono i tag
+  `<link>` / `<script defer>` puntando alla copia locale (`{{ site.root }}{{ ... }}`).
+- Le URL contenenti marker Twig (`{{`, `{%`, `{#`) non vengono cachate (per i JS sono pre-renderizzate
+  runtime via `include(template_from_string(...))`, p.es. recaptcha con site key dinamica) e restano in
+  `external`.
+- **Nessun TTL o refresh automatico**: per aggiornare/invalidare una risorsa si cancella manualmente il
+  file in `var/cache/css/` o `var/cache/js/`, oppure si usa una URL versionata (`bootstrap@5.3.2/...`).
+
 ### Moduli (`_mod/` e `mod/`)
 
 Un modulo `_mod/_XXXXX.name/` è attivo solo se esiste la directory corrispondente in `mod/`. Ogni modulo replica

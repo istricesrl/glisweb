@@ -1259,6 +1259,7 @@ CREATE TABLE IF NOT EXISTS `file` (                           --
   `nome` char(255) DEFAULT NULL,                              -- nome del file
   `path` char(255) DEFAULT NULL,                              -- percorso del file
   `url` char(255) DEFAULT NULL,                               -- URL del file
+  `note` text DEFAULT NULL,                                   -- note sul file
   `id_account_inserimento` int(11) DEFAULT NULL,              -- chiave esterna per l'account che ha inserito il file
   `timestamp_inserimento` int(11) DEFAULT NULL,               -- timestamp di inserimento
   `id_account_aggiornamento` int(11) DEFAULT NULL,            -- chiave esterna per l'account che ha aggiornato il file
@@ -1348,6 +1349,7 @@ CREATE TABLE IF NOT EXISTS `immagini` (                       --
   `id_file` int(11) DEFAULT NULL,                             -- chiave esterna per il file a cui è associata l'immagine
   `id_banner` int(11) DEFAULT NULL,                           -- chiave esterna per il banner a cui è associata l'immagine
   `id_contatto` int(11) DEFAULT NULL,                           -- chiave esterna per il contatto a cui è associata l'immagine
+  `id_video` int(11) DEFAULT NULL,                            -- chiave esterna per il video a cui è associata l'immagine
   `id_lingua` int(11) DEFAULT NULL,                           -- chiave esterna per la lingua dell'immagine
   `nome` char(255) DEFAULT NULL,                              -- nome dell'immagine
   `orientamento` enum('L','P','S') DEFAULT NULL,              -- orientamento dell'immagine: L=landscape, P=portrait, S=square
@@ -2506,7 +2508,9 @@ CREATE TABLE IF NOT EXISTS `ruoli_immagini` (                   --
   `se_categorie_notizie` tinyint(1) DEFAULT NULL,               -- se categorie notizie
   `se_risorse` tinyint(1) DEFAULT NULL,                         -- se risorse
   `se_categorie_risorse` tinyint(1) DEFAULT NULL,               -- se categorie risorse
-  `se_immobili` tinyint(1) DEFAULT NULL                         -- se immobili
+  `se_immobili` tinyint(1) DEFAULT NULL,                         -- se immobili
+  `se_file` tinyint(1) DEFAULT NULL,                         -- se immobili
+  `se_video` tinyint(1) DEFAULT NULL                            -- se video
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;                           --
 
 -- | 010000034800
@@ -3445,6 +3449,7 @@ CREATE TABLE IF NOT EXISTS `video` (
   `target` char(255) DEFAULT NULL,
   `orientamento` enum('L','P','S') DEFAULT NULL,
   `ratio` char(8) DEFAULT NULL,
+  `note` text DEFAULT NULL,                                  
   `id_account_inserimento` int(11) DEFAULT NULL,
   `timestamp_inserimento` int(11) DEFAULT NULL,
   `id_account_aggiornamento` int(11) DEFAULT NULL,

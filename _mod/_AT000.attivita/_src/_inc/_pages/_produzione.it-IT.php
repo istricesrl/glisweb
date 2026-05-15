@@ -33,6 +33,7 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => array(    'produzione.attivita.view',
                                                             'produzione.tipologie.attivita.view',
+                                                            'produzione.attivita.stampe',
                                                             'produzione.attivita.view.archiviate',
                                                             'produzione.attivita.tools' ) ),
         'menu'                => array( 'admin'    => array(    '' =>     array(    'label'        => array( $l => 'attivita' ),
@@ -50,6 +51,20 @@
         'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
         'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
     );
+
+    // produzione attivita view stampe
+    $p['produzione.attivita.stampe'] = array(
+        'sitemap'            => false,
+        'icon'                => '<i class="fa fa-print" aria-hidden="true"></i>',
+        'title'                => array( $l        => 'produzione attivita stampe' ),
+        'h1'                => array( $l        => 'stampe' ),
+        'parent'            => array( 'id'        => 'produzione.attivita.view' ),
+        'template'            => array( 'path'    => '_src/_tpl/_athena/', 'schema' => 'default.tools.twig' ),
+        'macro'                => array( $m . '_src/_inc/_macro/_produzione.attivita.stampe.php' ),
+        'auth'                => array( 'groups'    => array(    'roots', 'staff' ) ),
+        'etc'                => array( 'tabs'    => 'produzione.attivita.view' )
+    );
+
 
     // tools archivio produzione
     $p['produzione.attivita.view.archiviate'] = array(

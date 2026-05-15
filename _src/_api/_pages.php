@@ -168,17 +168,18 @@
      * css.external             | un array contenente i percorsi dei file CSS esterni (ossia quelli che vengono caricati da un URL esterno)
      * css.internal             | un array contenente i percorsi dei file CSS interni (ossia quelli che vengono prelevati dal framework)
      * css.template             | un array contenente i percorsi dei file CSS interni (ossia quelli che vengono prelevati dalla cartella del template)
+     * css.cached               | un array contenente i percorsi dei file CSS esterni in cache locale (popolato automaticamente dal framework)
      * js.external              | un array contenente i percorsi dei file Js esterni (ossia quelli che vengono caricati da un URL esterno)
      * js.internal              | un array contenente i percorsi dei file Js interni (ossia quelli che vengono prelevati dal framework)
      * js.template              | un array contenente i percorsi dei file Js interni (ossia quelli che vengono prelevati dalla cartella del template)
-     * 
+     * js.cached                | un array contenente i percorsi dei file Js esterni in cache locale (popolato automaticamente dal framework)
+     *
      * TODO controllare che questa tabella sia aggiornata
-     * 
-     * TODO i CSS andrebbero ulteriormente suddivisi per media (screen, print, eccetera) mentre per i JavaScript sarebbe utile specificare
-     * altri parametri come la firma (per i Js esterni), il caricamento differito, eccetera. Si può quindi pensare di affiancare al file
-     * di configurazione in formato INI un file di configurazione in formato JSON o YAML che consenta di specificare le informazioni in
-     * modo più strutturato e che si possa sovrapporre in maniera lineare con l'array $cf. In prospettiva si potrebbe poi rendere
-     * deprecato l'utilizzo del file INI in favore del JSON o dello YAML.
+     *
+     * TODO per i JavaScript esterni sarebbe utile specificare altri parametri come la firma (SRI) e il caricamento differito (async/defer
+     * configurabili). Si può quindi pensare di affiancare al file di configurazione in formato INI un file di configurazione in formato JSON
+     * o YAML che consenta di specificare le informazioni in modo più strutturato e che si possa sovrapporre in maniera lineare con l'array
+     * $cf. In prospettiva si potrebbe poi rendere deprecato l'utilizzo del file INI in favore del JSON o dello YAML.
      * 
      */
 
@@ -811,10 +812,11 @@
     /**
      * caching locale delle risorse esterne
      * ====================================
-     * 
-     * 
-     * 
-     * 
+     *
+     * Per ogni risorsa CSS/JS dichiarata in page.css.external / page.js.external il framework scarica il
+     * contenuto in DIR_VAR_CACHE/<tipo>/<host>/<path>, lo serve dal filesystem locale e sposta l'URL
+     * dall'array external all'array cached. I CSS estraggono anche le risorse riferite via url(); i JS
+     * cachano solo il file principale. Le URL contenenti marker Twig ({{, {%, {#) non vengono cachate.
      */
 
     // caching locale dei CSS esterni
@@ -842,6 +844,27 @@
                             unset( $ct['page']['css']['external'][ $media ][ $sheet ] );
                         }
                     }
+                }
+            }
+        }
+    }
+
+    // caching locale dei JS esterni
+    if( isset( $ct['page']['js']['external'] ) && is_array( $ct['page']['js']['external'] ) ) {
+        foreach( $ct['page']['js']['external'] as $idx => $js ) {
+            // le URL contenenti espressioni Twig sono dinamiche e vengono renderizzate da _page.close.twig: non cachabili
+            if( strpos( $js, '{{' ) !== false || strpos( $js, '{%' ) !== false || strpos( $js, '{#' ) !== false ) {
+                continue;
+            }
+            $cachefile = DIR_VAR_CACHE . 'js/' . str_replace( array( 'http://', 'https://' ), '', $js );
+            if( ! file_exists( $cachefile ) ) {
+                $content = file_get_contents( $js );
+                writeToFile( $content, $cachefile );
+            } else {
+                $content = readStringFromFile( $cachefile );
+                if( ! empty( $content ) ) {
+                    $ct['page']['js']['cached'][] = shortPath( $cachefile );
+                    unset( $ct['page']['js']['external'][ $idx ] );
                 }
             }
         }

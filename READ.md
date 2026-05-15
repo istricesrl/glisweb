@@ -2244,9 +2244,9 @@ presente, altrimenti ricade su `page.h1`; per og:url usa il canonico se definito
 ### /_src/_twig/_inc/_page.close.twig
 Questo file raccoglie tutte le operazioni standard da eseguire prima della chiusura del tag `<body>`: inclusione
 dell'overlay cookie, dichiarazione della variabile JavaScript globale `siteRoot`, caricamento differito degli
-script JS esterni, interni e del template, e inclusione condizionale dei codici di chiusura per Facebook
-Messenger, Criteo, Chart.js, Smartsupp ed Emailable. Gestisce infine i modal di pagina e inserisce nei commenti
-i link ai validatori W3C e agli strumenti di test di Google.
+script JS in cache, esterni, interni e del template, e inclusione condizionale dei codici di chiusura per
+Facebook Messenger, Criteo, Chart.js, Smartsupp ed Emailable. Gestisce infine i modal di pagina e inserisce
+nei commenti i link ai validatori W3C e agli strumenti di test di Google.
 
 ### /_src/_twig/_inc/_page.head.twig
 Questo file raccoglie tutte le operazioni standard da eseguire all'interno del tag `<head>`: inclusione
@@ -2812,6 +2812,9 @@ includendo nella configurazione delle colonne nomi di campi che mancano nella vi
 puoi trovare nei log).
 
 #### aprendo le pagine del framework ottengo un errore 500, perché?
+Un errore 500 (Internal Server Error) può essere dovuto a molteplici fattori. Per trovare la causa, occorre cercare nei log e isolare il punto di rottura, tuttavia è consigliabile, prima di tutto, escludere che il problema sia dovuto ai permessi dei file (file non leggibili, cartelle non scrivibili). Lanciare lo script /_src/_sh/_lamp.permissions.secure.sh e provare di nuovo ad accedere alle pagine. 
+A questo punto, se il problema persiste, il passo successivo è controllare i log del server Apache e i log del framework (file var/log/latest/run.latest.log) e cercare stack trace, errori PHP, richieste fallite.
+Nel caso in cui l'errore non abbia generato un log, occorre indagare più a fondo e procedere per passaggi successivi, seguendo a ritroso l'ordine di esecuzione del framework. Esaminare i run levels (cartella: _src/_config/) e il file _src/_config.php, inserendo una riga di debug, fino a trovare il punto di rottura.  
 
 
 ## glossario

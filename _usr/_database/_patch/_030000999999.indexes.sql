@@ -815,6 +815,7 @@ ALTER TABLE `immagini`
 	ADD KEY `id_progetto` (`id_progetto`),
 	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
 	ADD KEY `id_banner` (`id_banner`), 
+	ADD KEY `id_video` (`id_video`), 
 	ADD KEY `path` (`path`), 
 	ADD KEY `path_alternativo` (`path_alternativo`), 
 	ADD KEY `token` (`token`), 
