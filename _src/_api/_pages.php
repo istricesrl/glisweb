@@ -797,7 +797,9 @@
                     }
                 }
             }
+            unset( $js );
         }
+        unset( $rJs );
     }
 
     // timer
@@ -821,29 +823,30 @@
 
     // caching locale dei CSS esterni
     if( isset( $ct['page']['css']['external'] ) && is_array( $ct['page']['css']['external'] ) ) {
-        foreach( $ct['page']['css']['external'] as $media => $sheets ) {
-            if( is_array( $sheets ) ) {
-                foreach( $sheets as $sheet => $css ) {
-                    $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
-                    if( ! file_exists( $cachefile ) ) {
-                        $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
-                        $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
-                        $content = file_get_contents( $css );
-                        writeToFile( $content, $cachefile );
-                        $extRes = preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
-                        foreach( $matches[1] as $match ) {
-                            $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
-                            $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
-                            $content = file_get_contents( $res );
-                            writeToFile( $content, $cachefile );
-                        }
-                    } else {
-                        $content = readStringFromFile( $cachefile );
-                        if( ! empty( $content ) ) {
-                            $ct['page']['css']['cached'][ $media ][] = shortPath( $cachefile );
-                            unset( $ct['page']['css']['external'][ $media ][ $sheet ] );
-                        }
+        foreach( $ct['page']['css']['external'] as $idx => $css ) {
+            // le URL contenenti espressioni Twig sono dinamiche e vengono renderizzate da _page.head.twig: non cachabili
+            if( strpos( $css, '{{' ) !== false || strpos( $css, '{%' ) !== false || strpos( $css, '{#' ) !== false ) {
+                continue;
+            }
+            $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
+            if( ! file_exists( $cachefile ) ) {
+                $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
+                $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
+                $content = file_get_contents( $css );
+                writeToFile( $content, $cachefile );
+                preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
+                foreach( $matches[1] as $match ) {
+                    $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
+                    $resCache = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
+                    if( ! file_exists( $resCache ) ) {
+                        writeToFile( file_get_contents( $res ), $resCache );
                     }
+                }
+            } else {
+                $content = readStringFromFile( $cachefile );
+                if( ! empty( $content ) ) {
+                    $ct['page']['css']['cached'][] = shortPath( $cachefile );
+                    unset( $ct['page']['css']['external'][ $idx ] );
                 }
             }
         }
