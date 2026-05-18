@@ -144,6 +144,12 @@ Options -MultiViews
     # questa regola gestisce l'accesso diretto alle risorse CSS esterne in cache
     RewriteRule ^var/cache/css/* - [L,NC]
 
+    # cache delle risorse JS esterne
+    # gemella della regola CSS: senza questa whitelist i .js cachati cadono nella catch-all
+    # ^var/(.+)$ → _src/_api/_download.php e vengono serviti con Content-Type text/plain,
+    # che i browser moderni rifiutano di eseguire come script (rompe CKEditor, jQuery, ecc.)
+    RewriteRule ^var/cache/js/* - [L,NC]
+
     ## SCORCIATOIE
     #
     # Queste regole hanno il solo scopo di accorciare il percorso verso determinati URL, per semplificare il lavoro degli utenti.
