@@ -1235,16 +1235,15 @@ CREATE OR REPLACE VIEW `file_view` AS
 		file.id_account_inserimento,
 		file.id_account_aggiornamento,
 		concat(
-			coalesce(ruoli_file.nome, 'nessun ruolo'),
+			ruoli_file.nome,
 			' # ',
-			coalesce(file.ordine, '§'),
+			file.ordine,
 			' / ',
-			coalesce(file.nome, 'nessun nome'),
+			file.nome,
 			' / ',
 			coalesce(
 				file.path,
-				file.url,
-				'nessun path'
+				file.url
 			)
 		) AS __label__
 	FROM file
@@ -1324,7 +1323,6 @@ CREATE OR REPLACE VIEW `immagini_view` AS                       --
         immagini.id_valutazione,                                --
 		immagini.id_banner,                                     --
         immagini.id_rinnovo,                                    --
-        immagini.id_video,                                    --
 		immagini.id_lingua,                                     --
 		lingue.nome AS lingua,                                  --
 		immagini.id_ruolo,                                      --
@@ -1806,7 +1804,9 @@ CREATE OR REPLACE VIEW `pagamenti_view` AS
 		LEFT JOIN categorie_progetti ON ( categorie_progetti.id = progetti_categorie.id_categoria AND categorie_progetti.se_disciplina = 1 )
 		LEFT JOIN categorie_progetti AS aree ON aree.id = categorie_progetti_path_find_ancestor( categorie_progetti.id )
 		LEFT JOIN tipologie_contratti AS tc_abb ON tc_abb.id_prodotto = prodotti.id AND tc_abb.se_abbonamento = 1
-		LEFT JOIN categorie_progetti AS cp_disc ON cp_disc.id = tc_abb.id_categoria_progetti AND cp_disc.se_disciplina = 1
+		-- la disciplina dell'abbonamento è memorizzata come metadati 'abbonamento|discipline' (multi-valore), non su tipologie_contratti.id_categoria_progetti
+		LEFT JOIN metadati AS m_abb_disc ON m_abb_disc.id_tipologia_contratti = tc_abb.id AND m_abb_disc.nome = 'abbonamento|discipline'
+		LEFT JOIN categorie_progetti AS cp_disc ON cp_disc.id = CAST( m_abb_disc.testo AS UNSIGNED ) AND cp_disc.se_disciplina = 1
 		LEFT JOIN categorie_progetti AS aree_abb ON aree_abb.id = categorie_progetti_path_find_ancestor( cp_disc.id )
 --	WHERE
 --		tipologie_documenti.se_fattura = 1
@@ -2221,8 +2221,6 @@ CREATE OR REPLACE VIEW ruoli_immagini_view AS                   --
 		ruoli_immagini.se_risorse,                              --
 		ruoli_immagini.se_categorie_risorse,                    --
 		ruoli_immagini.se_immobili,                             --
-		ruoli_immagini.se_file,                             --
-		ruoli_immagini.se_video,                             --
 	 	ruoli_immagini_path(                                    --
             ruoli_immagini.id ) AS __label__                    -- etichetta per le tendine e le liste
 	FROM ruoli_immagini                                         --
@@ -2786,7 +2784,6 @@ CREATE OR REPLACE VIEW `video_view` AS
 		video.target,
 		video.orientamento,
 		video.ratio,
-		video.note,
 		video.id_account_inserimento,
 		video.id_account_aggiornamento,
 		concat(
