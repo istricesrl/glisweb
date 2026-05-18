@@ -10,8 +10,12 @@
     var siteRoot = '{{ site.root }}';
 </script>
 
-{% for j in page.js.cached %}<script defer src="{{ site.root }}{{ j }}"></script>
-{% endfor %}
+{# Fix 2026-05-18: aggiunto loop page.js.cached (allineato a _page.close.twig).
+   Pre-fix le pagine athena (che usano _page.close.html) perdevano gli script
+   esterni appena entravano in cache: il loop external era vuoto perché il caching
+   loop in _pages.php sposta gli item da external a cached. Le tendine
+   intelligenti sparivano perché jQuery non veniva più caricato. #}
+{% for j in page.js.cached %}<script defer src="{{ site.root }}{{ j }}"></script>{% endfor %}
 
 {% for j in page.js.external %}<script defer src="{{ include( template_from_string( j|default('') ) | raw ) }}"></script>{% endfor %}
 
