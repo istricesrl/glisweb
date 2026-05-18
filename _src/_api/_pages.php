@@ -854,11 +854,29 @@
     }
 
     // caching locale dei JS esterni
+    // Skip-list per pacchetti multi-file che si rompono se serviti da una basePath
+    // diversa da quella della CDN originale: librerie come CKEditor 4 autocalcolano
+    // CKEDITOR.basePath dall'URL del proprio <script src> e da lì fetchano
+    // config.js, lang/<lingua>.js, skins/<skin>/editor.css, plugins/... Il caching
+    // sposterebbe solo il file principale in var/cache/js/cdn.ckeditor.com/...
+    // generando 404 sugli asset accessori e impedendo l'init dell'editor (verificato
+    // 2026-05-18 sulle pagine CMS di gimbe.istricesrl.it). Gli URL che matchano
+    // restano in page.js.external e vengono serviti direttamente dalla CDN.
+    $jsCacheSkipPrefixes = array(
+        'cdn.ckeditor.com/',
+    );
     if( isset( $ct['page']['js']['external'] ) && is_array( $ct['page']['js']['external'] ) ) {
         foreach( $ct['page']['js']['external'] as $idx => $js ) {
             // le URL contenenti espressioni Twig sono dinamiche e vengono renderizzate da _page.close.twig: non cachabili
             if( strpos( $js, '{{' ) !== false || strpos( $js, '{%' ) !== false || strpos( $js, '{#' ) !== false ) {
                 continue;
+            }
+            // skip pacchetti multi-file (vedi commento sopra)
+            $jsHost = str_replace( array( 'http://', 'https://' ), '', $js );
+            foreach( $jsCacheSkipPrefixes as $prefix ) {
+                if( strpos( $jsHost, $prefix ) === 0 ) {
+                    continue 2;
+                }
             }
             $cachefile = DIR_VAR_CACHE . 'js/' . str_replace( array( 'http://', 'https://' ), '', $js );
             if( ! file_exists( $cachefile ) ) {
