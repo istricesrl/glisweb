@@ -822,31 +822,39 @@
      */
 
     // caching locale dei CSS esterni
+    // I CSS in $ct['page']['css'][$tier] possono avere DUE strutture:
+    //  - nested  [media => [url, ...]]   tipica dei template.yaml (es. _src/_tpl/_athena)
+    //  - piatta  [idx => url]            tipica dei template.conf INI (es. _src/_templates/_athena)
+    // Il template .twig e l'HTML legacy iterano la struttura nested; per i template INI piatti
+    // il caching CSS resta inattivo (gli URL restano in external e vengono serviti dai CDN).
     if( isset( $ct['page']['css']['external'] ) && is_array( $ct['page']['css']['external'] ) ) {
-        foreach( $ct['page']['css']['external'] as $idx => $css ) {
-            // le URL contenenti espressioni Twig sono dinamiche e vengono renderizzate da _page.head.twig: non cachabili
-            if( strpos( $css, '{{' ) !== false || strpos( $css, '{%' ) !== false || strpos( $css, '{#' ) !== false ) {
-                continue;
-            }
-            $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
-            if( ! file_exists( $cachefile ) ) {
-                $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
-                $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
-                $content = file_get_contents( $css );
-                writeToFile( $content, $cachefile );
-                preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
-                foreach( $matches[1] as $match ) {
-                    $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
-                    $resCache = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
-                    if( ! file_exists( $resCache ) ) {
-                        writeToFile( file_get_contents( $res ), $resCache );
-                    }
+        foreach( $ct['page']['css']['external'] as $media => $sheets ) {
+            if( ! is_array( $sheets ) ) { continue; }
+            foreach( $sheets as $sheet => $css ) {
+                // le URL contenenti espressioni Twig sono dinamiche e vengono renderizzate da _page.head.twig: non cachabili
+                if( strpos( $css, '{{' ) !== false || strpos( $css, '{%' ) !== false || strpos( $css, '{#' ) !== false ) {
+                    continue;
                 }
-            } else {
-                $content = readStringFromFile( $cachefile );
-                if( ! empty( $content ) ) {
-                    $ct['page']['css']['cached'][] = shortPath( $cachefile );
-                    unset( $ct['page']['css']['external'][ $idx ] );
+                $cachefile = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $css );
+                if( ! file_exists( $cachefile ) ) {
+                    $baseUrl = parse_url( $css, PHP_URL_SCHEME ) . '://' . parse_url( $css, PHP_URL_HOST );
+                    $basePath = dirname( parse_url( $css, PHP_URL_PATH ) );
+                    $content = file_get_contents( $css );
+                    writeToFile( $content, $cachefile );
+                    preg_match_all( '/url\([\"\']{0,1}([a-zA-Z0-9\.\-\/]+)[\"\']{0,1}\)/', $content, $matches );
+                    foreach( $matches[1] as $match ) {
+                        $res = $baseUrl . simplifyPath( $basePath . '/' . $match );
+                        $resCache = DIR_VAR_CACHE . 'css/' . str_replace( array( 'http://', 'https://' ), '', $res );
+                        if( ! file_exists( $resCache ) ) {
+                            writeToFile( file_get_contents( $res ), $resCache );
+                        }
+                    }
+                } else {
+                    $content = readStringFromFile( $cachefile );
+                    if( ! empty( $content ) ) {
+                        $ct['page']['css']['cached'][ $media ][] = shortPath( $cachefile );
+                        unset( $ct['page']['css']['external'][ $media ][ $sheet ] );
+                    }
                 }
             }
         }

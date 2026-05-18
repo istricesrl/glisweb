@@ -30,8 +30,8 @@
     
     {% include '_inc/_opengraph.head.html' %}
     
-    {% for c in page.css.cached %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="screen">
-    {% endfor %}
+    {% for m,s in page.css.cached %}{% for c in s %}<link rel="stylesheet" href="{{ site.root }}{{ c }}" media="{{ m }}">
+    {% endfor %}{% endfor %}
 
     {% for c in page.css.external %}<link rel="stylesheet" href="{{ c }}" media="screen">{% endfor %}
     
