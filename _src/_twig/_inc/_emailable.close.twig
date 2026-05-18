@@ -51,12 +51,16 @@ async function verificaEmailCampo(idCampo) {
             };
         }
 
-        const valida = data.state === 'deliverable';
+        // whitelist: deliverable + catch-all (accept_all) — questi ultimi
+        // non sono verificabili al 100% ma il dominio accetta posta, quindi
+        // preferiamo non bloccare l'utente
+        const valida = data.state === 'deliverable' || data.accept_all === true;
 
         return {
             valida: valida,
             stato: data.state,
             score: data.score,
+            acceptAll: data.accept_all,
             motivo: data.reason,
             suggerimento: data.did_you_mean,
             messaggio: valida ? 'Email valida' : 'Email non valida o non sicura',
