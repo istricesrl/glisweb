@@ -790,7 +790,11 @@
                     break;
                 }
                 if( strpos( $js, '.min.js' ) === false ) {
-                    $new = str_replace( '.js', '.min.js', $js );
+                    // Fix 2026-05-18: anchored su `.js` finale (fine path o prima di ?query).
+                    // Pre-fix str_replace greedy corrompeva URL tipo cdn.jsdelivr.net/npm/chart.js
+                    // → cdn.min.jsdelivr.net/npm/chart.min.js (host distrutto), generando 404 e
+                    // file cache da 1 byte che servivano <script> vuoti.
+                    $new = preg_replace( '/\.js($|\?)/', '.min.js$1', $js );
                     if( fileCachedExists( $cf['memcache']['connection'], $pre . $new ) ) {
                         logger( $new . ' trovato, consolidarlo nella configurazione', 'speed', LOG_WARNING );
                         $js = $new;
@@ -885,11 +889,17 @@
             }
             $cachefile = DIR_VAR_CACHE . 'js/' . str_replace( array( 'http://', 'https://' ), '', $js );
             if( ! file_exists( $cachefile ) ) {
-                $content = file_get_contents( $js );
-                writeToFile( $content, $cachefile );
+                $content = @file_get_contents( $js );
+                // Fix 2026-05-18: scrivi in cache solo se il fetch ha portato contenuto reale.
+                // Pre-fix un 404/DNS-fail produceva file da 0-1 byte che al request successivo
+                // passavano il check `! empty($content)` (es. "\n") e venivano serviti come
+                // <script> vuoti, mascherando rotture in pagina.
+                if( $content !== false && strlen( trim( $content ) ) > 0 ) {
+                    writeToFile( $content, $cachefile );
+                }
             } else {
                 $content = readStringFromFile( $cachefile );
-                if( ! empty( $content ) ) {
+                if( ! empty( trim( $content ) ) ) {
                     $ct['page']['js']['cached'][] = shortPath( $cachefile );
                     unset( $ct['page']['js']['external'][ $idx ] );
                 }
