@@ -7,6 +7,59 @@ description: Bootstrap, configurazione e uso quotidiano di progetti basati sul f
 
 Aiuta Claude a riconoscere, inizializzare e usare correttamente un progetto basato sul framework PHP **glisweb**.
 
+## ⚠ Regola fondamentale: governance cliente vs upstream
+
+Esistono **due ruoli distinti** per i progetti glisweb, e il workflow per modificare il framework è
+profondamente diverso fra i due:
+
+| Ruolo | Cosa è | Dove |
+|---|---|---|
+| **Progetto cliente** (usa il framework) | La stragrande maggioranza dei progetti. Le `_*` sono framework standard, NON si modificano direttamente. Le modifiche custom vanno in `src/`, `mod/`, `var/`. | Tutto tranne i due path qui sotto. |
+| **Progetto upstream** (sviluppa il framework) | Solo `glisweb.istricesrl.it` (composer `istricesrl/glisweb`) e `glisdev.istricesrl.com`. Qui le `_*` SONO il sorgente principale e si modificano direttamente. | `/var/www/glisweb.istricesrl.it/` e `/var/www/glisdev.istricesrl.com/`. |
+
+**Dai progetti cliente è VIETATO modificare direttamente glisweb o glisdev** (file, git, hard link,
+permessi, qualsiasi cosa). Anche se si ha accesso SSH/filesystem ai deploy upstream — non si fa.
+
+Se da un progetto cliente serve correggere il framework standard, il workflow è:
+
+1. **Modificare localmente** nel progetto cliente. Per quasi tutti i casi: creare un override custom senza
+   underscore (es. `src/lib/example.php` per estendere `_src/_lib/_example.php`, vedi tabella overrides nel
+   manuale framework). Per fix urgenti che toccano davvero un file `_*`, modificarlo *nel progetto cliente
+   stesso*, lì localmente.
+2. **Sincronizzazione notturna**: un job notturno raccoglie le divergenze del progetto cliente rispetto al
+   framework standard e genera un *disallineamento* che confluisce in `glisweb.istricesrl.it`.
+3. **Valutazione**: su `glisweb` un manutentore del framework valuta il disallineamento. Se la modifica è
+   generalizzabile, entra nel codice standard del framework; altrimenti resta una customizzazione del solo
+   progetto cliente (e va consolidata in `src/`/`mod/` del cliente).
+4. **Redistribuzione**: le modifiche accettate vengono committate nel framework e ridistribuite ai
+   progetti cliente al successivo aggiornamento (`composer update` + `_src/_sh/_gw.upgrade.sh` o
+   equivalente).
+
+**Anti-pattern da NON fare mai, da un progetto cliente:**
+
+- SSH/edit/git su `/var/www/glisweb.istricesrl.it/` o `/var/www/glisdev.istricesrl.com/` per "anticipare"
+  un fix che vorresti veder ridistribuito. Bypassi la valutazione, e rischi di propagare modifiche non
+  validate a tutti gli altri progetti cliente.
+- Aprire PR o push diretti verso i repo upstream del framework "perché ho una fix urgente". Il canale
+  corretto è comunque il disallineamento — i manutentori del framework hanno strumenti per fast-track.
+- Toccare gli hard link fra `glisweb` e `glisdev` da un progetto cliente. La gestione degli hard link è
+  competenza esclusiva dei manutentori upstream.
+
+**Come capire in che ruolo sei:**
+
+```bash
+# Sei nel progetto upstream se composer name è quello del framework
+grep -q '"name": "istricesrl/glisweb"' composer.json && echo "UPSTREAM" || echo "CLIENTE"
+
+# In alternativa, controlla il path della cwd:
+pwd | grep -qE '/var/www/(glisweb\.istricesrl\.it|glisdev\.istricesrl\.com)' \
+  && echo "UPSTREAM" || echo "CLIENTE"
+```
+
+Se il check dice **CLIENTE**, applica questa regola in modo assoluto: nessuna modifica all'upstream, per
+nessun motivo. Se dice **UPSTREAM**, vedi sezione "Modalità B — Operatività" e il manuale framework per
+le specificità della valutazione disallineamenti e del rispetto degli hard link fra glisweb e glisdev.
+
 ## 1. Come capire il contesto
 
 Prima di qualsiasi azione, controlla cosa esiste nella cwd (oppure nel `--target` indicato dall'utente):
@@ -98,6 +151,9 @@ ispeziona direttamente `_src/_config.php` per il bootstrap.
 
 ## 5. Anti-pattern da evitare assolutamente
 
+- **Da un progetto cliente, NON modificare mai direttamente `/var/www/glisweb.istricesrl.it/` o
+  `/var/www/glisdev.istricesrl.com/`.** Le fix al framework vanno passate per il flusso disallineamenti —
+  vedi la "Regola fondamentale" in cima a questo file.
 - **Non modificare mai un file `_*` senza prima un `stat` e dopo un `stat` di verifica.** Il framework potrebbe
   essere hard-linked con un'altra istanza (oldstable). Vedi sezione hard link in `_claude.framework.md`.
 - **Non committare `shadow.*` files.** Contengono credenziali. Sono già coperti dal `.gitignore` del framework
