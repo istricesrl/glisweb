@@ -609,6 +609,37 @@
                     }
                 }
 
+                /**
+                 * Fix 2026-05-22: guardia anti-riga-vuota per i sottomoduli
+                 * ---------------------------------------------------------
+                 * Evita l'INSERT di una NUOVA riga (senza id) priva di contenuto reale, tipico delle
+                 * righe di sottomodulo aggiunte col pulsante "+" e salvate vuote (telefoni/mail/indirizzi).
+                 * La mappa $GLOBALS['cf']['controller']['campi_contenuto'][$t] (popolata in
+                 * src/config/730.controller.php) elenca i campi-contenuto della tabella: se è una nuova
+                 * riga in inserimento e TUTTI quei campi sono vuoti/NULL, la riga è "vuota" e non va creata.
+                 * Tabelle non mappate -> comportamento invariato. Annullo $a così nessun ramo dello switch
+                 * di composizione/esecuzione costruisce o esegue una query (coerente con la riga ~771).
+                 */
+                $campiContenuto = $GLOBALS['cf']['controller']['campi_contenuto'][ $t ] ?? null;
+                if(
+                    is_array( $campiContenuto ) && count( $campiContenuto )
+                    && empty( $d['id'] )
+                    && in_array( strtoupper( $a ), array( METHOD_POST, METHOD_REPLACE, METHOD_UPDATE ), true )
+                ) {
+                    $rigaVuota = true;
+                    foreach( $campiContenuto as $campoContenuto ) {
+                        $valoreContenuto = $vs[ $campoContenuto ]['s'] ?? null;
+                        if( $valoreContenuto !== null && $valoreContenuto !== '' ) {
+                            $rigaVuota = false;
+                            break;
+                        }
+                    }
+                    if( $rigaVuota ) {
+                        logWrite( "riga sottomodulo '$t' senza contenuto reale: INSERT saltato", 'controller' );
+                        $a = '';
+                    }
+                }
+
                 // composizione della query in base all'azione richiesta
                 switch (strtoupper($a)) {
 
