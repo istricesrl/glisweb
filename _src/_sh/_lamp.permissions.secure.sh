@@ -104,6 +104,8 @@ find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log"
 # permessi aggiuntivi per le cartelle scrivibili dal framework
 # (su `var/` si esclude di nuovo `var/log` per non descendervi)
 find ./$SUB/.git/hooks          -type f                                                                                                 -exec chmod ug+x {} +
+# i git hook versionati in .githooks/ (cartella di core.hooksPath) vanno mantenuti eseguibili: il find generico sopra li porta a 640
+find ./$SUB/.githooks           -type f                                                                                                 -exec chmod ug+x {} + 2>/dev/null
 find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 770 {} +
 find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 770 {} +
 find ./$SUB/mod/*/src/templates -type d                                                                                                 -exec chmod 770 {} + 2>/dev/null

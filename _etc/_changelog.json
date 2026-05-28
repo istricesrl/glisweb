@@ -1,0 +1,14 @@
+[
+  {
+    "titolo": "Merge branch 'develop'",
+    "testo": "con questo importante commit la versione di sviluppo, testata e arricchita di molte funzionalità, viene riportata sul ramo master",
+    "timestamp": "2026-04-19T10:52:20+02:00",
+    "url": "https://github.com/istricesrl/glisdev"
+  },
+  {
+    "titolo": "debug sistema di gestione automatica del changelog",
+    "testo": "con questa modifica viene ulteriormente stabilizzato il meccanismo di generazione automatica del changelog",
+    "timestamp": "2026-04-19T10:47:01+02:00",
+    "url": "https://github.com/istricesrl/glisdev"
+  }
+]

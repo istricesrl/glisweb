@@ -6,9 +6,26 @@
 # La struttura è descritta in _etc/_claude/_claude.framework.md.
 
 sites:
-  PROD: ["www.{{PROJECT_NAME}}.example"]
-  TEST: ["test.{{PROJECT_NAME}}.example"]
-  DEV:  ["{{PROJECT_NAME}}.local"]
+  1:
+    __label__: "{{PROJECT_NAME}}"
+    name:
+      it-IT: "{{PROJECT_NAME}}"
+    protocols:
+      DEV:  "http"
+      TEST: "https"
+      PROD: "https"
+    hosts:
+      DEV:  "{{PROJECT_NAME}}"
+      TEST: "test"
+      PROD: "www"
+    domains:
+      DEV:  "local"
+      TEST: "{{PROJECT_NAME}}.example"
+      PROD: "{{PROJECT_NAME}}.example"
+    homes:
+      DEV:  "home"
+      TEST: "home"
+      PROD: "home"
 
 mysql:
   servers:

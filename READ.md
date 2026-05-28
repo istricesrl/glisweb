@@ -25,6 +25,166 @@ il primo passo per chi vuole studiare il funzionamento del framework.
 Una volta che l'esecuzione del kernel del framework è terminata, il controllo torna all'API chiamante che ha facoltà di
 eseguire tutte le operazioni che vuole prima di terminare inviando l'output al richiedente.
 
+## quick start
+Hai scompattato GlisWeb nella document root e configurato il web server (su Apache il routing parte da
+`/.htaccess`, su Nginx da `/index.php`): e adesso cosa fai? Per prima cosa installa le dipendenze con
+`composer update` (finiscono in `_src/_lib/_ext/`) e, in fase di sviluppo, apri i permessi con
+`sudo _src/_sh/_lamp.permissions.open.sh`. La regola d'oro è che tutto ciò che personalizzi vive in `src/`,
+`mod/` e `var/` (le cartelle senza underscore), mentre i file `_*` sono standard del framework e non vanno
+mai modificati. I cinque passi seguenti portano un'installazione appena scompattata fino a un sito con pagine,
+database, CMS e moduli. In alternativa ai passi manuali descritti qui, la skill `glisweb` distribuita col
+framework automatizza il bootstrap di un nuovo progetto: `bash .claude/skills/glisweb/bootstrap.sh`.
+
+### creare il config.json
+La configurazione del sito si scrive in `src/config.json` (oppure `src/config.yaml`: il kernel legge
+indifferentemente entrambi i formati e ne fonde il contenuto, vedi `/_src/_config.php`). È il primo file da
+creare, perché il framework, dopo aver determinato il sito corrente confrontando l'host della richiesta con
+quelli dichiarati, termina l'esecuzione con `die( 'sito non trovato...' )` se nessun sito combacia (vedi
+`/_src/_config/_015.site.php`). Le credenziali NON vanno qui: per quelle si usa `src/shadow.json` (o
+`src/shadow.yaml`), che è escluso dal repository tramite `.gitignore`.
+
+Una configurazione minima che dichiara un sito raggiungibile in sviluppo all'indirizzo `miosito.local` è la
+seguente:
+
+```json
+{
+    "sites": {
+        "1": {
+            "__label__": "il mio sito",
+            "name":      { "it-IT": "Il mio sito" },
+            "protocols": { "DEV": "http",    "TEST": "https",        "PROD": "https" },
+            "hosts":     { "DEV": "miosito", "TEST": "test",         "PROD": "www" },
+            "domains":   { "DEV": "local",   "TEST": "miosito.test", "PROD": "miosito.com" },
+            "homes":     { "DEV": "home",    "TEST": "home",         "PROD": "home" }
+        }
+    },
+    "debug": { "DEV": { "log": { "lvl": 7 } } }
+}
+```
+
+I siti sono indicizzati per id (qui `1`); le chiavi dell'array `name` definiscono le **lingue attive** del
+sito (dichiarando un nome in una lingua si rende il sito disponibile in quella lingua). Le chiavi
+`protocols`, `hosts`, `domains` e `homes` hanno una voce per ciascuno stato di deploy (`DEV`, `TEST`,
+`PROD`). Il sito corrente viene individuato concatenando host e dominio: con `hosts.DEV` uguale a `miosito` e
+`domains.DEV` uguale a `local` il sito risponde su `miosito.local` (in sviluppo è sufficiente aggiungere
+`127.0.0.1 miosito.local` al proprio `/etc/hosts`); quando l'host è `www` il framework fa combaciare
+automaticamente sia `www.dominio` sia `dominio`. La chiave `homes` indica l'identificativo della pagina home,
+che verrà creata al passo successivo. Per associare al sito host o domini aggiuntivi esiste la chiave
+`alias.domains`.
+
+Le credenziali, infine, si tengono separate in `src/shadow.json` (mai committato):
+
+```json
+{ "mysql": { "servers": { "main": { "username": "glisweb", "password": "********" } } } }
+```
+
+### creare la tua prima pagina
+Le pagine si dichiarano in file PHP collocati in `src/inc/pages/<nome>.<lingua>.php`; ciascun file popola
+l'array `$p`, dove ogni chiave è l'identificativo di una pagina. All'avvio il framework raccoglie tutti questi
+file (vedi `/_src/_config/_310.pages.php`) e ne unisce le definizioni nell'albero dei contenuti. Per
+pubblicare la home page, crea `src/inc/pages/site.it-IT.php` con una pagina il cui id sia `home`, lo stesso
+indicato in `homes`:
+
+```php
+<?php
+    $l = 'it-IT';
+    $p['home'] = array(
+        'sitemap'   => true,
+        'cacheable' => true,
+        'title'     => array( $l => 'Il mio sito' ),
+        'h1'        => array( $l => 'Benvenuto!' ),
+        'content'   => array( $l => '<p>La mia prima pagina con GlisWeb.</p>' ),
+        'template'  => array( 'path' => '_src/_tpl/_aurora/', 'schema' => 'default.twig' ),
+        'parent'    => array( 'id' => NULL ),
+        'menu'      => array( 'main' => array( '' => array( 'label' => array( $l => 'home' ), 'priority' => '010' ) ) )
+    );
+```
+
+Le chiavi `title`, `h1` e `content` sono indicizzate per lingua; `content` accetta direttamente l'HTML della
+pagina (in alternativa si può tenere il testo in un file statico `src/inc/contents/home.it-IT.html`). La
+chiave `template.path` punta alla cartella di un tema (`_src/_tpl/_aurora/` è uno dei temi pubblici, mentre
+`_src/_tpl/_athena/` è il tema dell'area di amministrazione) e `template.schema` allo schema Twig da usare.
+`parent.id => NULL` indica una pagina di primo livello, mentre `menu.main` la inserisce nel menu principale
+del sito. Una pagina senza chiave `id_sito` compare su tutti i siti gestiti dall'installazione; specificando
+`id_sito` la si limita a un sito preciso. La home, essendo indicata in `homes`, viene servita alla radice del
+sito (`/`); le altre pagine rispondono invece a URL del tipo `/<riferimento>.it-IT.html`, dove il riferimento
+è derivato automaticamente dal titolo.
+
+### collegare un database
+Il database è **opzionale**: in sua assenza il framework parte regolarmente e serve le pagine statiche
+(`/_src/_config/_125.mysql.php` si limita a registrare un avviso nei log e prosegue). Serve quando si vogliono
+contenuti dinamici o utenti del CMS letti dal database. Per connetterlo, aggiungi a `src/config.json` i dati
+non sensibili del server:
+
+```json
+{
+    "mysql": {
+        "servers": {
+            "main": { "address": "127.0.0.1", "port": "3306", "db": "ilmiosito" }
+        },
+        "profiles": {
+            "DEV": { "servers": ["main"] }, "TEST": { "servers": ["main"] }, "PROD": { "servers": ["main"] }
+        }
+    }
+}
+```
+
+Username e password vanno in `src/shadow.json` (come mostrato al primo passo). La connessione viene aperta in
+`/_src/_config/_125.mysql.php` leggendo `address`, `username`, `password` e `db`; i `profiles` stabiliscono,
+per ciascuno stato di deploy, quali server connettere. L'handle della connessione resta disponibile in
+`$cf['mysql']['connection']` e le query si eseguono tramite `mysqlQuery()` (vedi `/_src/_lib/_mysql.tools.php`).
+Per verificare l'esito della connessione e delle query dell'ultima richiesta si consulta
+`var/log/latest/mysql.latest.log`.
+
+### esplorare il CMS
+GlisWeb include un'interfaccia di amministrazione pronta all'uso. Il login avviene su `/login.it-IT.html` (il
+modulo invia in POST i campi `__login__[user]` e `__login__[pasw]`) e la dashboard si trova su
+`/dashboard.it-IT.html`, riservata ai gruppi `roots` e `staff` (vedi `/_src/_inc/_pages/_dashboard.it-IT.php`).
+Di default esiste l'account `root` (dichiarato in `/_src/_config/_200.auth.php`): per usarlo, imposta la sua
+password come hash MD5 in `src/shadow.json`, sotto `auth.accounts.root.password`. I gruppi predefiniti sono
+`roots` (amministratori), `staff` e `users`; una volta connesso il database, gli utenti possono provenire
+anche da lì.
+
+Per provare il login senza browser si usa lo smoke test incluso:
+
+```bash
+TEST_USER=root TEST_PASS=********  _src/_sh/_smoke.curl.sh login
+_src/_sh/_smoke.curl.sh status /dashboard.it-IT.html
+```
+
+Buona parte delle schermate del CMS è fornita dai moduli (passo successivo): attivando moduli come
+`*.pagine` e `*.contenuti` la dashboard si arricchisce delle relative funzioni di gestione.
+
+### attivare i moduli
+I moduli sono pacchetti di funzionalità opzionali che vivono in `_mod/_<CODICE.nome>/` e sono **disattivi** di
+default. Per attivarne uno si crea la cartella corrispondente, **senza** il prefisso underscore, dentro `mod/`:
+ad esempio `mod/PA000.pagine/` attiva il modulo `_mod/_PA000.pagine/`. Il framework individua i moduli attivi
+con due strategie alternative (vedi `/_src/_config.php`): l'elenco esplicito `mods.active.array` nei file di
+configurazione, oppure l'auto-discovery delle sottocartelle presenti in `mod/`. Per dichiararli esplicitamente:
+
+```json
+{ "mods": { "active": { "array": ["AN000.anagrafica", "PA000.pagine", "CO000.contenuti"] } } }
+```
+
+In alternativa basta creare la cartella, ad esempio `mkdir mod/PA000.pagine`. Fra i moduli distribuiti col
+framework (elenco completo in `_mod/`) ci sono, fra gli altri: anagrafica, contatti, contenuti, pagine,
+prodotti, listini, magazzino, documenti, fatture, immagini, file, notizie, account, utenti, template, video e
+mailing. Ogni modulo rispecchia la struttura base del framework (`_src/_config/`, `_src/_lib/`, `_src/_inc/`,
+`_src/_tpl/`) e i suoi file di runlevel vengono inclusi subito dopo quelli base in ciascuna passata.
+L'attivazione richiede solo la presenza della cartella; alcuni moduli, però, si aspettano poi tabelle dedicate
+nel database o proprie chiavi di configurazione.
+
+### normalizzare i permessi
+Una volta completata la configurazione, normalizza i permessi del deploy con
+`sudo _src/_sh/_lamp.permissions.secure.sh`: lo script ripristina lo standard `root:www-data` su file e
+cartelle e blocca i permessi per la produzione (i file creati a mano possono infatti restare con owner o
+permessi non corretti). In sviluppo, se hai bisogno di scrivere liberamente sull'albero, puoi tornare ai
+permessi aperti con `sudo _src/_sh/_lamp.permissions.open.sh` e rieseguire `secure.sh` prima di andare in
+produzione.
+
+Per approfondire, la skill `glisweb` automatizza il bootstrap di un progetto cliente, mentre
+`_etc/_claude/_claude.framework.md` raccoglie le regole operative complete del framework.
+
 ## descrizione dei file
 In questa sezione tutti i file e le cartelle del framework sono riportati in ordine logico, per dare un'idea dell'insieme.
 Ogni file contiene poi i commenti dettagliati sul proprio funzionamento.

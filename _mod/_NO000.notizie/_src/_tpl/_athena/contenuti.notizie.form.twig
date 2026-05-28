@@ -46,6 +46,10 @@
             {# SUBFORM CATEGORIE #}
             {{ sub.categorie( form.table, 'notizie_categorie', 'categorie', site, page, pages, ietf, etc, request, session, 'id_notizia' ) }}
 
+            {# SUBFORM PERSONE #}
+            {{ sub.persone( form.table, 'notizie_anagrafica', 'persone', site, page, pages, ietf, etc, request, session, 'id_notizia' ) }}
+
+
             {# BOTTONI E COMANDI DEL MODULO #}
             <fieldset class="form-controls mt-auto">
                 {{ def.controls( page, pages, ietf, session, form.table, request ) }}

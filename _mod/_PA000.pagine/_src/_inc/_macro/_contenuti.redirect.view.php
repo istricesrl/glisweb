@@ -27,7 +27,7 @@
     $ct['view'] = array(
         'table' => 'redirect',
         'open' => array(
-            'page' => 'redirect.form',
+            'page' => 'contenuti.redirect.form',
             'table' => 'redirect'
         ),
         'cols' => array(

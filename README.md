@@ -1,112 +1,160 @@
-# GlisWeb - framework per le applicazioni web
-Questo è il framework GlisWeb, sviluppato a partire da una base di codice originariamente scritto da Fabio Mosti
-<fabio.mosti@istricesrl.it> e Emiliano Volta all'inizio degli anni 2000, riordinato in un unico framework da
-Fabio Mosti fra il 2000 e il 2005, e costantemente aggiornato fino alla versione attuale mantenuta in collaborazione
-con il team di Istrice srl.
+come installare GlisWeb
+=======================
+Questa procedura descrive come installare il framework GlisWeb per lo sviluppo di progetti con
+il framework; per sviluppare il framework invece leggere la sezione *installare il framework per
+contribuire*.
 
-Grazie ai suoi vent'anni di storia, GlisWeb può garantire una stabilità e una robustezza senza pari, pur
-essendo aggiornato alle più recenti conquiste delle tecnologie web. Modernità e tradizione si fondono in uno
-strumento rigoroso ed elegante, grazie al quale è possibile realizzare con semplicità progetti estremamente
-complessi.
+Per iniziare un nuovo progetto che utilizza il framework GlisWeb, accedete via SSH al
+vostro server e scaricate lo zip del repository nella document root:
 
-GlisWeb è un framework leggero, ampiamente personalizzabile, pensato per realizzare siti e web application
-nativamente rispettose degli standard e delle migliori pratiche vigenti nel mondo del web.
+```
+wget https://github.com/istricesrl/glisdev/archive/refs/heads/develop.zip
+```
 
-# installazione
-GlisWeb può essere installato per due finalità distinte, per utilizzarlo nella realizzazione di un proprio progetto
-oppure per contribuire allo sviluppo del framework. Poiché il primo caso è il più comune, iniziamo da quello.
+una volta scaricato il file, scompattatelo:
 
-## installazione per lo sviluppo di nuovi progetti
-Potete installare GlisWeb semplicemente clonando il repository nella document root del vostro server web
-(o del vostro sito se il server gestisce più siti); potete anche scaricare il sorgente e caricarlo sul vostro
-server via FTP se utilizzate un hosting condiviso che non vi dà la possibilità di lanciare comandi via SSH.
-È importante che nell'installazione e nel successivo uso del framework non alteriate né rimuoviate i file
-LICENSE.md e README.md che fanno parte integrante del framework stesso e ne garantiscono la circolazione
-come software Open Source.
+```
+bsdtar --strip-components=1 -xf develop.zip
+rm -f develop.zip
+```
 
-### installazione tramite Git Clone
-Se avete modo di utilizzare Git sulla macchina in cui volete installare il framework, è sufficiente clonare il
-repository https://github.com/istricesrl/glisweb nella document root del sito, dopodiché lanciare composer update
-per installare le dipendenze. Successivamente potrete replicare la procedura per aggiornare l'intallazione quando
-dovesse rendersi necessario.
+Per iniziare a lavorare con il framework è necessario creare un file di configurazione minimale
+in */src/config.yaml*; prima di iniziare assicurarsi di avere a portata di mano i dati di connessione
+al database e l'hash della password di root (potete generarlo usando */_src/_sh/_password.hash.sh*):
 
-### installazione tramite FTP
-Il framework non include le dipendenze installate con composer, per cui se dovete utilizzare FTP per installarlo
-allora dovrete scaricare le dipendenze prima di effettuare l'upload. Scaricate GlisWeb in formato ZIP e scompattatelo,
-o clonate il repository, dopodiché lanciate composer localmente nella cartella dove si trova il file composer.json.
-Quando l'installazione delle librerie sarà completata, potrete installare il framework sul vostro server tramite FTP.
+```
+sites:
+  1:
+    __label__: "nome del tuo sito"
+    name:
+      it-IT: "nome del tuo sito"
+    protocols:
+      DEV: "https"
+    hosts: 
+      DEV: "nome host del tuo sito"
+    domains:
+      DEV: "dominio del tuo sito"
+    homes:
+      DEV: 1
+auth:
+  accounts:
+    root:
+      password: "hash md5 della password di root"
+mysql:
+  servers:
+    default:
+      address: "indirizzo del tuo server MySQL"
+      port: "porta del tuo server MySQL"
+      username: "nome utente per l'accesso al database"
+      password: "password per l'accesso al database"
+      db: "nome del database"
+  profiles:
+    DEV:
+      servers:
+        - "default"
+mods:
+  active:
+    array:
+      - "AN000.anagrafica"
+      - "03000.contenuti"
+      - "PA000.pagine"
+      - "CO000.contenuti"
+```
 
-Una volta completato l'upload, utilizzate l'interfaccia fornita dal vostro provider per eseguire gli script SQL
-allegati al framework (in _usr/_database/, eseguite prima mysql.schema.sql e poi mysql.data.sql) in modo da creare le
-tabelle necessarie al suo funzionamento.
+A questo punto il framework è raggiungibile tramite web, ma non configurato. Per vedere la situazione
+e verificare che sia tutto ok aprite un browser su *http://nomesito/status*; se è andato tutto a buon fine,
+vedrete un report sullo stato del framework; altrimenti una serie di errori parlanti vi guiderà
+al completamento dell'installazione.
 
-### installazione tramite console o SSH
-Se potete accedere via SSH al server su cui volete installare GlisWeb, allora l'installazione risulterà più lineare.
-Sarà sufficiente scaricare il framework come sopra, ma direttamente nella document root del sito su cui volete
-installarlo, installare le dipendenze con composer e lanciare lo script shell allegato al framework
-(_src/_sh/_mysql.install.sh) per caricare il database. Lo script è interattivo e vi chiederà i dati del server
-di database per eseguire gli script SQL allegati al framework.
+Gli step che saranno più frequentemente richiesti in questa fase sono la sistemazione dei permessi
+(per la quale è necessario lanciare */_src/_sh/_lamp.permissions.secure.sh* o */_src/_sh/_nginx.permissions.secure.sh*)
+e l'esecuzione di *composer update*. Si noti che l'esecuzione di */_src/_sh/_nginx.permissions.secure.sh*
+richiede la presenza, nella cartella che contiene la document root del sito, di un file *nginxuser.conf*
+contenente il nome utente al quale assegnare la proprietà del sito.
 
-Se avete appena installato (o non avete ancora installato) i server web e database, potreste trovare utile lo script di
-setup dell'ambiente (_src/_sh/_lamp.setup.sh) che vi aiuterà a installare e configurare i servizi necessari
-a far funzionare GlisWeb.
+Quando è tutto in ordine, prima di procedere con il login è opportuno lanciare il task di popolazione del database
+accedendo all'indirizzo *http://nomesito/task/mysql.patch*.
 
-Un esempio di sequenza di comandi per l'installazione potrebbe essere la seguente, come più ampiamente illustrato nella
-documentazione ufficiale per gli sviluppatori all'indirizzo https://glisweb.istricesrl.it/docs/:
+Una volta che tutto funziona, è possibile accedere al CMS del framework all'indirizzo *http://nomesito/admin*.
 
-    cd /var/www/html
-    wget https://github.com/istricesrl/glisweb/archive/develop.zip
-    unzip develop.zip
-    mv -f ./glisweb-develop/{.,}* ./
-    rmdir glisweb-develop
-    rm -rf .github
-    rm -f .gitignore
-    rm -f develop.zip
-    _src/_sh/_lamp.permissions.reset.sh
-    _src/_sh/_mysql.install.sh
-    _src/_sh/_gw.config.sh base
-    composer update
+installazione su CloudPanel (https://www.cloudpanel.io/)
+--------------------------------------------------------
+Per rendere il framework pienamente funzionante su CloudPanel è necessario apportare una modifica al file
+di configurazione del Virtual Host di Nginx, in particolare è necessario modificare la sezione server (8080)
+come segue:
 
-Un video sull'installazione di GlisWeb è anche disponibile a questo indirizzo https://youtu.be/xzERaj20HJA:
+```
+server {
+  listen 8080;
+  listen [::]:8080;
+  server_name www.fabiomosti.it www1.fabiomosti.it;
+  {{root}}
 
-[![Watch the video](https://img.youtube.com/vi/xzERaj20HJA/maxresdefault.jpg)](https://youtu.be/xzERaj20HJA)
+  include /etc/nginx/global_settings;
 
-Se sul server che state utilizzando è installato il progetto Calabash (https://github.com/istricesrl/calabash)
-potete installare GlisWeb semplicemente lanciando dalla document root del progetto il comando:
+  index index.php;
 
-    va.glisweb.install.sh .
+  location / {
+    rewrite ^ /index.php?$query_string last;
+  }
 
-Se desiderate la versione di sviluppo utilizzate:
+  # Esegui solo index.php (opzionale ma consigliato)
+  location = /index.php {
+    include fastcgi_params;
+    fastcgi_intercept_errors on;
+    fastcgi_index index.php;
+    fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+    fastcgi_read_timeout 3600;
+    fastcgi_send_timeout 3600;
+    fastcgi_param HTTPS "on";
+    fastcgi_param SERVER_PORT 443;
+    fastcgi_pass 127.0.0.1:{{php_fpm_port}};
+    fastcgi_param PHP_VALUE "{{php_settings}}";
+  }
 
-    va.glisweb.install.sh . develop
+  # Blocca l’esecuzione di qualsiasi altro .php (consigliato)
+  location ~ \.php$ {
+    return 404;
+  }
+}
+```
 
-L'aggiornamento delle librerie con Composer sarà già stato effettuato dallo script.
+inoltre se la sezione server (80) del sito web contiene un blocco come questo, rimuoverlo:
 
-## installazione per contribuire al progetto
-Se desiderate contribuire al progetto GlisWeb e siete in possesso di una chiave valida per il repository, potete seguire queste
-istruzioni per installare il framework in modalità sviluppatore. Per prima cosa procuratevi il progetto Calabash (vedi sopra)
-e installate il framework con il comando:
+```
+if (-f $request_filename) {
+    break;
+}
+```
 
-    va.glisweb.clone.sh /percorso/document/root
+in quanto farebbe servire i file statici direttamente senza passare per il front controller.
 
-Vi verrà chiesto se volete fare il setup dell'ambiente LAMP, se sul vostro computer non è già installato l'ambiente LAMP potete
-rispondere di sì e lo script provvederà a installarlo e configurarlo per voi. Successivamente, la procedura vi chiederà anche se
-desiderate creare un database per il framework, e infine vi proporrà di avviare la configurazione guidata.
+Infine è necessario aggiungere alla configurazione di Varnish (nel blocco vcl_backend_response)
+la seguente configurazione:
 
-# configurazione
-Potete iniziare rapidamente a configurare il deploy appena installato prelevando e personalizzando i file di esempio
-che trovate in _usr/_config/_json/, è sufficiente utilizzarli come base per creare un unico file src/config.json che
-verrà letto automaticamente dal framework. Per qualsiasi dubbio fate riferimento alla documentazione in _usr/_docs/
-oppure se preferite potete fare il build con Doxigen dei file (utilizzando lo scritp _src/_sh/_doxygen.build.sh) in modo
-da poterli visualizzare via web, aggiungendo all'URL del vostro deploy il path _usr/_docs/_build/html/.
+```
+if (beresp.http.X-GlisWeb-No-Cache == "true") {
+    set beresp.ttl = 0s;
+    set beresp.uncacheable = true;
+    unset beresp.http.Cache-Control;
+    unset beresp.http.Expires;
+    unset beresp.http.Pragma;
+    unset beresp.http.X-Cache-Lifetime;
+    unset beresp.http.X-Cache-Tags;
+    return (deliver);
+}
+```
 
-# utilizzo
-Utilizzare GlisWeb è semplice e intuitivo! Una guida per gli utenti è in fase di sviluppo ed è disponibile a questo
-indirizzo http://s-url.it/gliswebdocs inoltre stiamo pubblicando una serie di video tutorial su questa playlist di YouTube
-http://s-url.it/gliswebvideos.
+per fare in modo che GlisWeb possa governare la cache di Varnish. Senza questa configurazione, è necessario
+disattivare Varnish per assicurarsi un comportamento corretto del framework.
 
-## esempi
-Ricordate che numerosi esempi e file utili sono a disposizione nella cartella _usr/_examples/, che è un'ottima base di
-partenza per iniziare a capire come funziona GlisWeb. Alcuni degli strumenti che troverete in questa cartella vi saranno
-molto utili anche quando sarete divenuti più esperti!
+Se si hanno problemi con php8.5 e i moduli, tornare a php8.4 dopo aver lanciato _nginx.setup.sh.
 
+installazione su XAMPP
+----------------------
+Per installare il framework su XAMPP è sufficiente scaricare lo zip del codice e scompattarlo nella document root; se
+viene richiesta l'installazione di moduli di PHP aggiuntivi scaricateli da https://pecl.php.net/packages.php.
+
+installare il framework per contribuire
+---------------------------------------
+Questa sezione è attualmente in aggiornamento.
