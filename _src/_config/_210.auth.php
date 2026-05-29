@@ -367,7 +367,7 @@
             if( in_array( $_REQUEST['__login__']['user'], array_keys( $cf['auth']['accounts'] ) ) ) {
 
                 // se la password combacia
-                if( $cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ]['password'] == $_REQUEST['__login__']['pasw'] ) {
+                if( is_string( $cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ]['password'] ) && hash_equals( $cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ]['password'], (string)( $_REQUEST['__login__']['pasw'] ?? '' ) ) ) {
 
                     // attribuzione dell'account
                     $_SESSION['account'] = &$cf['auth']['accounts'][ $_REQUEST['__login__']['user'] ];
@@ -670,6 +670,34 @@
 
             // se il login è andato a buon fine
             if( $cf['auth']['status'] == LOGIN_SUCCESS ) {
+
+                // anti session fixation: ai login interattivi rigenero l'id di sessione mantenendo i dati di $_SESSION;
+                // i login stateless (JWT, API, HTTP Basic) si ripetono ad ogni richiesta quindi NON vanno rigenerati
+                if( ! defined( 'LOGIN_VIA_API' ) && ! defined( 'LOGIN_VIA_HTTP_HEADER' ) && empty( $_REQUEST['j'] ) ) {
+
+                    // id precedente, esposto agli hook custom per il re-point/merge dei dati legati al vecchio id
+                    $cf['session']['regenerate']['old_id'] = session_id();
+
+                    // rigenerazione dell'id (true = elimina il vecchio record di sessione sul backend)
+                    session_regenerate_id( true );
+
+                    // riallineo l'id usato dall'indice multisito e dal resto del framework
+                    $_SESSION['id'] = session_id();
+                    $cf['session']['regenerate']['new_id'] = $_SESSION['id'];
+
+                    // log
+                    logger( 'rigenerato id di sessione al login: ' . $cf['session']['regenerate']['old_id'] . ' -> ' . $cf['session']['regenerate']['new_id'], 'auth', LOG_NOTICE );
+
+                    // hook custom: i progetti possono ridirezionare o fondere i dati legati al vecchio id di sessione
+                    // (es. carrelli) creando src/inc/macro/session.regenerate.php (o nei moduli); dispongono di
+                    // $cf['session']['regenerate']['old_id'] e ['new_id']
+                    $arrayMacroBase   = glob( glob2custom( DIR_SRC_INC_MACRO . '_session.regenerate.php' ), GLOB_BRACE );
+                    $arrayMacroModuli = glob( glob2custom( DIR_MOD_ATTIVI_SRC_INC_MACRO . '_session.regenerate.php' ), GLOB_BRACE );
+                    foreach( array_unique( array_merge( $arrayMacroBase, $arrayMacroModuli ) ) as $fileMacro ) {
+                        require $fileMacro;
+                    }
+
+                }
 
                 // generazione stringa JWT per il login corrente (da usare per il login via JWT)
                 if( ! empty( $cf['auth']['jwt']['secret'] ) ) {

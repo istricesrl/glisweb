@@ -68,8 +68,8 @@
     // print_r( $_REQUEST );
     // print_r( $_GET );
     // die( '--- gestione delle chiamate alle API REST ---' );
-    ini_set( 'display_errors', 1 );
-    error_reporting( E_ALL );
+    // ini_set( 'display_errors', 1 );
+    // error_reporting( E_ALL );
 
     // TODO
     if( isset( $_REQUEST['__ws__'] ) ) {

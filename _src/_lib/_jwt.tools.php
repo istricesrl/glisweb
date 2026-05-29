@@ -108,7 +108,7 @@
         
         $sg = cleanJwt( base64_encode( hash_hmac( 'sha256', $hp, $s, true ) ) );
         
-        if($sg == $rs) {
+        if( hash_equals( $sg, (string) $rs ) ) {
             return true;
         }
 

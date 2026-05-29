@@ -57,6 +57,7 @@
 
     // policy di sicurezza
     // ini_set( 'session.cookie_samesite', 'strict' );
+    ini_set( 'session.cookie_samesite', 'Lax' );
     ini_set( 'session.cookie_httponly', 1 );
     ini_set( 'session.cookie_secure', 1 );
 

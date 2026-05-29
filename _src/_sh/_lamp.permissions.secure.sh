@@ -53,6 +53,12 @@ chown -R $FTPUSER:www-data ./$SUB/src/templates
 chown -R $FTPUSER:www-data ./$SUB/src/tpl
 chown -R www-data:www-data ./$SUB/tmp
 chown -R $FTPUSER:www-data ./$SUB/var
+# Il chown sopra cambia owner anche ai file in var/log/ creati da www-data
+# (umask 0022 → mode 644). Da quel momento www-data resta solo nel gruppo e
+# non può più appendere ai log esistenti (mode 644 = no write per gruppo),
+# causando warning ricorrenti "fopen ... Permesso negato" su loggerLatest().
+# Forziamo 660 sui file di log per ripristinare la scrivibilità di gruppo.
+find ./$SUB/var/log -type f -exec chmod 660 {} +
 chown -R www-data:www-data ./$SUB/var/cache
 
 ## cartella .git
@@ -104,8 +110,6 @@ find ./$SUB/                    \( -path "./$SUB/.git" -o -path "./$SUB/var/log"
 # permessi aggiuntivi per le cartelle scrivibili dal framework
 # (su `var/` si esclude di nuovo `var/log` per non descendervi)
 find ./$SUB/.git/hooks          -type f                                                                                                 -exec chmod ug+x {} +
-# i git hook versionati in .githooks/ (cartella di core.hooksPath) vanno mantenuti eseguibili: il find generico sopra li porta a 640
-find ./$SUB/.githooks           -type f                                                                                                 -exec chmod ug+x {} + 2>/dev/null
 find ./$SUB/src/tpl             -type d                                                                                                 -exec chmod 770 {} +
 find ./$SUB/src/templates       -type d                                                                                                 -exec chmod 770 {} +
 find ./$SUB/mod/*/src/templates -type d                                                                                                 -exec chmod 770 {} + 2>/dev/null

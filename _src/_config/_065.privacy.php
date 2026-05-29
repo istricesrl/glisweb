@@ -53,7 +53,7 @@
 
     // recupero i consensi dai cookie
     if( isset( $_COOKIE['privacy'] ) ) {
-        $cf['privacy']['cookie'] = array_replace_recursive( $cf['privacy']['cookie'], unserialize( $_COOKIE['privacy'] ) );
+        $cf['privacy']['cookie'] = array_replace_recursive( $cf['privacy']['cookie'], unserialize( $_COOKIE['privacy'], array( 'allowed_classes' => false ) ) ?: array() );
     }
 
     /**
@@ -107,7 +107,13 @@
             )
         );
         */
-        setcookie( 'privacy', serialize( $consensi ) );
+        setcookie( 'privacy', serialize( $consensi ), array(
+            'expires'  => time() + 60*60*24*30,
+            'path'     => '/',
+            'secure'   => ! empty( $_SERVER['HTTPS'] ),
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ) );
         // setcookie( 'controllo', 'controllo' );
         // print_r( $cf['privacy']['cookie'] );
 

@@ -304,7 +304,7 @@ else
                 # $CMD
 
                 # comando
-                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_lamp.permission.open.sh"
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.open.sh"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -344,7 +344,7 @@ else
                 # $CMD
 
                 # comando
-                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_lamp.permission.secure.sh"
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.secure.sh"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md

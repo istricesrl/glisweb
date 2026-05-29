@@ -238,9 +238,26 @@ controllare status code e pattern nell'HTML su pagine pubbliche e su area riserv
 - URL di login per default: `/login.it-IT.html` (la pagina è dinamica, server-renderizzata da `_src/_api/_pages.php`).
 - Il backend confronta contro `$cf['auth']['accounts']` (config) o la vista MySQL `account_view` (fallback).
 - A login riuscito viene popolato `$_SESSION['account']`; il cookie di sessione è il `PHPSESSID` standard di PHP, con
-  `cookie_secure=1` (richiede HTTPS) e `cookie_httponly=1`. Storage sessioni: Redis → Memcached → file system.
+  `cookie_secure=1` (richiede HTTPS), `cookie_httponly=1` e `cookie_samesite=Lax`. Storage sessioni: Redis → Memcached → file system.
+- **Ai login interattivi l'id di sessione viene rigenerato** (`session_regenerate_id(true)`, anti session fixation): i dati
+  di `$_SESSION` vengono mantenuti e `$_SESSION['id']` riallineato al nuovo id. I login **stateless** (JWT via `j`, API via
+  `_user.php`, HTTP Basic) NON rigenerano l'id.
 - File rilevanti: `_src/_config/_210.auth.php` (logica di autenticazione), `_src/_config/_050.session.php`
   (configurazione sessione), `_src/_api/_user.php` (endpoint REST per login JSON).
+
+### Dati di sessione persistiti su DB e rigenerazione dell'id
+
+Poiché l'id di sessione viene rigenerato al login, **non salvare il session id (`session_id()`) in una tabella** come
+chiave di collegamento: dopo la rigenerazione la riga resterebbe orfana. La convenzione del framework è l'opposto —
+**tenere in `$_SESSION` l'id dell'entità** (es. `$_SESSION['id_carrello']`), perché i dati di `$_SESSION` sopravvivono
+alla rigenerazione e il legame regge senza alcun `UPDATE`. Il carrello "attivo", ad esempio, vive già in
+`$_SESSION['carrello']`.
+
+Se un progetto deve comunque mantenere su DB un riferimento al session id (o fondere un'entità anonima nell'account al
+login), può agganciarsi alla rigenerazione creando una macro custom `src/inc/macro/session.regenerate.php` (oppure
+`mod/<modulo>/src/inc/macro/session.regenerate.php`): viene inclusa subito dopo la rigenerazione e dispone di
+`$cf['session']['regenerate']['old_id']` e `$cf['session']['regenerate']['new_id']` per ridirezionare
+(`UPDATE ... SET id_sessione = <new> WHERE id_sessione = <old>`) o fondere i dati.
 
 Per usare lo script servono `TEST_USER` e `TEST_PASS` come variabili d'ambiente (mai committarle in
 `config.yaml`/`shadow.yaml` se non già previsto dal progetto). Il cookie jar finisce in `var/tmp/` (path già coperto
