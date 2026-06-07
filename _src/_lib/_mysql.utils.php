@@ -541,6 +541,15 @@
 
     function inserisciIndirizzo($indirizzo, $cap, $comune, $provincia, $localita = NULL, $stato = NULL, $idComune = NULL, $idProvincia = NULL, $idStato = NULL)
     {
+        // Fix 2026-05-29: evita strtolower(null)/trim(null) (PHP 8) e righe indirizzi vuote quando manca la residenza
+        $indirizzo = (string) $indirizzo;
+        $cap       = (string) $cap;
+        $comune    = (string) $comune;
+        $provincia = (string) $provincia;
+        $localita  = (string) $localita;
+        $stato     = (string) $stato;
+        if( '' === $indirizzo . $cap . $comune . $provincia . $localita . $stato ) return null;
+
 
         // dati globali
         global $cf;

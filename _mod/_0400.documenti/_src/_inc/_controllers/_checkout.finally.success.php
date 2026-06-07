@@ -78,49 +78,122 @@
 
                 }
 
-                // TODO inserisco la mail dell'anagrafica
-                $idMail = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id_anagrafica' => $idAnagrafica,
-                        'indirizzo' => $carrello['intestazione_mail']
-                    ),
-                    'mail'
-                );
+                /**
+                 * Fix 2026-05-28: guardia anti-riga-fantasma su mail/telefoni/indirizzi.
+                 * Questo blocco girava incondizionatamente ad ogni checkout: per un'anagrafica
+                 * esistente (intestazione_id_anagrafica valorizzata) creava una mail, un telefono e
+                 * un indirizzo+pivot anche quando i campi intestazione_* erano vuoti -> righe vuote
+                 * "fantasma" (con audit NULL perché mysqlInsertRow non passa da controller()), e
+                 * comunque duplicati ad ogni acquisto. Ora ogni INSERT parte solo se il dato
+                 * corrispondente è valorizzato, con dedup sul contatto già presente.
+                 */
 
-                // TODO inserisco il telefono dell'anagrafica
-                $idTel = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id_anagrafica' => $idAnagrafica,
-                        'id_tipologia' => 2,
-                        'numero' => $carrello['intestazione_mail']
-                    ),
-                    'telefoni'
-                );
+                // inserisco la mail dell'anagrafica solo se valorizzata e non già presente
+                $idMail = NULL;
+                if( ! empty( $carrello['intestazione_mail'] ) ) {
+                    $idMail = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id FROM mail WHERE id_anagrafica = ? AND indirizzo = ? LIMIT 1',
+                        array(
+                            array( 's' => $idAnagrafica ),
+                            array( 's' => $carrello['intestazione_mail'] )
+                        )
+                    );
+                    if( empty( $idMail ) ) {
+                        $idMail = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id_anagrafica' => $idAnagrafica,
+                                'indirizzo' => $carrello['intestazione_mail']
+                            ),
+                            'mail'
+                        );
+                    }
+                }
 
-                // TODO inserisco l'indirizzo
-                $idIndirizzo = inserisciIndirizzo(
-                    $carrello['intestazione_indirizzo'],
-                    $carrello['intestazione_cap'],
-                    $carrello['intestazione_citta'],
-                    NULL,
-                    NULL,
-                    NULL,
-                    NULL,
-                    $carrello['intestazione_id_provincia']
-                );
+                // inserisco il cellulare dell'anagrafica solo se valorizzato e non già presente
+                // (correzione: il numero va preso da intestazione_mobile, non da intestazione_mail)
+                $idTel = NULL;
+                if( ! empty( $carrello['intestazione_mobile'] ) ) {
+                    $idTel = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT id FROM telefoni WHERE id_anagrafica = ? AND numero = ? AND id_tipologia = 2 LIMIT 1',
+                        array(
+                            array( 's' => $idAnagrafica ),
+                            array( 's' => $carrello['intestazione_mobile'] )
+                        )
+                    );
+                    if( empty( $idTel ) ) {
+                        $idTel = mysqlInsertRow(
+                            $cf['mysql']['connection'],
+                            array(
+                                'id_anagrafica' => $idAnagrafica,
+                                'id_tipologia' => 2,
+                                'numero' => $carrello['intestazione_mobile']
+                            ),
+                            'telefoni'
+                        );
+                    }
+                }
 
-                // TODO associo l'indirizzo all'anagrafica
-                $idIndirizzoAnagrafica = mysqlInsertRow(
-                    $cf['mysql']['connection'],
-                    array(
-                        'id_anagrafica' => $idAnagrafica,
-                        'id_indirizzo' => $idIndirizzo,
-                        'id_ruolo' => 1
-                    ),
-                    'anagrafica_indirizzi'
-                );
+                // indirizzo di fatturazione: lo creo solo se l'intestazione lo specifica.
+                // $idIndirizzo è usato a valle come id_sede_destinatario del documento: quando manca
+                // un indirizzo in intestazione riuso la residenza già presente dell'anagrafica (o NULL),
+                // senza mai creare un indirizzo vuoto.
+                $idIndirizzo = NULL;
+                if( ! empty( $carrello['intestazione_indirizzo'] ) ) {
+
+                    // inserisco l'indirizzo
+                    $idIndirizzo = inserisciIndirizzo(
+                        $carrello['intestazione_indirizzo'],
+                        $carrello['intestazione_cap'],
+                        $carrello['intestazione_citta'],
+                        NULL,
+                        NULL,
+                        NULL,
+                        NULL,
+                        $carrello['intestazione_id_provincia']
+                    );
+
+                    // associo l'indirizzo all'anagrafica (dedup: niente pivot doppio)
+                    if( ! empty( $idIndirizzo ) ) {
+                        $idIndirizzoAnagrafica = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT id FROM anagrafica_indirizzi WHERE id_anagrafica = ? AND id_indirizzo = ? LIMIT 1',
+                            array(
+                                array( 's' => $idAnagrafica ),
+                                array( 's' => $idIndirizzo )
+                            )
+                        );
+                        if( empty( $idIndirizzoAnagrafica ) ) {
+                            $idIndirizzoAnagrafica = mysqlInsertRow(
+                                $cf['mysql']['connection'],
+                                array(
+                                    'id_anagrafica' => $idAnagrafica,
+                                    'id_indirizzo' => $idIndirizzo,
+                                    'id_ruolo' => 1
+                                ),
+                                'anagrafica_indirizzi'
+                            );
+                        }
+                    }
+
+                } else {
+
+                    // nessun indirizzo in intestazione: riuso la residenza non vuota dell'anagrafica
+                    $idIndirizzo = mysqlSelectValue(
+                        $cf['mysql']['connection'],
+                        'SELECT indirizzi.id FROM indirizzi
+                            INNER JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi.id
+                            WHERE anagrafica_indirizzi.id_anagrafica = ?
+                              AND ( COALESCE( indirizzi.indirizzo, "" ) <> "" OR COALESCE( indirizzi.localita, "" ) <> "" OR COALESCE( indirizzi.cap, "" ) <> "" OR COALESCE( indirizzi.civico, "" ) <> "" )
+                            ORDER BY indirizzi.id DESC LIMIT 1',
+                        array(
+                            array( 's' => $idAnagrafica )
+                        )
+                    );
+
+                }
 
                 // se è settata una strategia di default
                 if( ! isset( $carrello['fatturazione_strategia'] ) || empty( $carrello['fatturazione_strategia'] ) ) {

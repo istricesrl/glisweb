@@ -154,7 +154,6 @@
     <input type="{{ field.type }}" name="{{ nm }}" id="{{ id }}" class="{{ field.class }}" value="{{ vl|raw }}"
         {% if field.default %}default="{{ field.default }}"{% endif %} 
         {% if pr %}preset="{{ pr }}"{% endif %} 
-        {% if form.step %}step="{{ form.step }}"{% endif %}
         {% if field.disabled %}disabled{% endif %} 
         {% if field.placeholder %}placeholder="{{ field.placeholder|raw }}"{% endif %}
         {% if tooltip.title %}title="{{ tooltip.title|raw }}" data-toggle="tooltip" data-placement="{{ tooltip.placement }}" data-delay="{{ tooltip.delay }}"{% endif %}
