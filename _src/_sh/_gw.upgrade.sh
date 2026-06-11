@@ -80,10 +80,23 @@ else
         unzip -qq ./$BRANCHZIP.zip
 
         # elimino il vecchio framework
+        # NOTA: ./_* comprende anche il vendor _src/_lib/_ext (escluso dal backup):
+        # lo metto da parte per non lasciare il sito senza dipendenze se composer fallisce
+        if [ -d ./_src/_lib/_ext ]; then
+            rm -rf ../_ext.prev
+            cp -a ./_src/_lib/_ext ../_ext.prev
+        fi
         rm -rf ./_*
 
         # installo la nuova versione
         cp -rf ./glisweb-$BRANCHDIR/{.[!.],}* ./
+
+        # ripristino il vendor salvato (il rm -rf ./_* lo aveva eliminato): cosi'
+        # l'autoload esiste gia' anche prima di lanciare composer
+        if [ -d ../_ext.prev ]; then
+            rm -rf ./_src/_lib/_ext
+            mv ../_ext.prev ./_src/_lib/_ext
+        fi
 
         # elimino la vecchia cartella
         rm -rf ./glisweb-$BRANCHDIR
@@ -94,8 +107,19 @@ else
             cp -f ./_usr/_deploy/_git/.gitignore ./.gitignore
         fi
 
-        # aggiorno composer
-        composer update -n
+        # aggiorno composer (Composer 2); se fallisce mantengo il vendor precedente
+        # gia' ripristinato sopra, cosi' il sito non resta mai senza dipendenze
+        export COMPOSER_ALLOW_SUPERUSER=1
+        if composer update -n; then
+            echo "composer update ok"
+        else
+            echo "ATTENZIONE: composer update fallito, mantengo il vendor precedente"
+        fi
+
+        # verifica che l'autoload sia presente: se manca il framework non parte
+        if [ ! -f ./_src/_lib/_ext/autoload.php ]; then
+            echo "ERRORE: ./_src/_lib/_ext/autoload.php mancante dopo l'aggiornamento"
+        fi
 
         ## permessi
         ./_src/_sh/_lamp.permissions.secure.sh
@@ -107,7 +131,7 @@ else
         clear
 
         ## conferma
-        # TODO verificare davvero che sia andato tutto bene
+        # la verifica di autoload qui sopra segnala eventuali fallimenti di composer
         echo "aggiornamento del framework effettuato con successo"
 
         # se esistono disallineamenti da controllare

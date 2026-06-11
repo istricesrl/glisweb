@@ -42,7 +42,12 @@ apt-get install -y python3-certbot-apache
 apt-get install -y php
 
 ## installazione di composer
-apt-get install -y composer
+# NOTA: il pacchetto apt fornisce Composer 1, dismesso da Packagist dal 2025-09-01.
+# Installo Composer 2 (linea LTS) dall'installer ufficiale in /usr/local/bin, che ha
+# precedenza su /usr/bin nel PATH (anche in cron).
+php -r "copy('https://getcomposer.org/installer','/tmp/composer-setup.php');"
+php /tmp/composer-setup.php --2.2 --install-dir=/usr/local/bin --filename=composer
+rm -f /tmp/composer-setup.php
 
 ## installazione degli strumenti di sviluppo
 apt-get install -y php-common
