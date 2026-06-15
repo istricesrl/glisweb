@@ -51,10 +51,11 @@ async function verificaEmailCampo(idCampo) {
             };
         }
 
-        // whitelist: deliverable + catch-all (accept_all) — questi ultimi
-        // non sono verificabili al 100% ma il dominio accetta posta, quindi
-        // preferiamo non bloccare l'utente
-        const valida = data.state === 'deliverable' || data.accept_all === true;
+        // fail-open: blocchiamo SOLO la mail esplicitamente non recapitabile.
+        // 'risky'/'unknown' (es. Yahoo/Outlook, che i server classificano spesso
+        // come risky pur essendo caselle valide) passano: preferiamo non bloccare
+        // l'utente piuttosto che rifiutare un indirizzo buono.
+        const valida = data.state !== 'undeliverable';
 
         return {
             valida: valida,

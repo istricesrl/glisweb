@@ -120,6 +120,9 @@
             )
         );
 
+        // Fix 2026-06-11: il filtro "escludi aziende gestite" era `a.se_gestita IS NULL`, ma le checkbox
+        // non spuntate del framework scrivono 0 (non NULL): le categorie reali (socio, ...) hanno se_gestita=0
+        // e venivano escluse → conteggio iscritti vuoto, colonna "posti" NULL. Robusto: escludi solo se_gestita=1.
         $riga['posti_disponibili'] = mysqlSelectValue(
             $cf['mysql']['connection'],
             'SELECT concat( coalesce( count( DISTINCT ca.id_anagrafica ), 0 ), " / ", coalesce( max( m.testo ), "∞" ) )
@@ -129,7 +132,7 @@
             LEFT JOIN anagrafica_categorie AS ac ON ac.id_anagrafica = ca.id_anagrafica 
             LEFT JOIN categorie_anagrafica AS a ON a.id = ac.id_categoria
             WHERE m.id_progetto = ?
-            AND a.se_gestita IS NULL
+            AND coalesce( a.se_gestita, 0 ) <> 1
             AND m.nome = "iscritti_max"
             GROUP BY m.id_progetto',
             array( array( 's' => $idCorso ) )
