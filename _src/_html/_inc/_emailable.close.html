@@ -118,6 +118,7 @@ function setupEmailableValidation(campoId, formId) {
         } else {
             emailValida = false;
             setStato('errore');
+            logEmailableScartata(campo.value.trim(), formId, ris);
         }
     }
 
@@ -140,6 +141,25 @@ function setupEmailableValidation(campoId, formId) {
         }
         nativeSubmit();
     };
+}
+
+function logEmailableScartata(email, formId, ris) {
+    try {
+        fetch('/api/emailable.scarti', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email:        email,
+                stato:        ris.stato || null,
+                motivo:       ris.motivo || null,
+                score:        (typeof ris.score !== 'undefined') ? ris.score : null,
+                suggerimento: ris.suggerimento || null,
+                form:         formId || null,
+                pagina:       window.location.href
+            }),
+            keepalive: true
+        }).catch(function () { /* fail-open: il log non deve mai bloccare il flusso */ });
+    } catch (e) { /* no-op */ }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
