@@ -270,7 +270,72 @@ function formatDate( date ) {
  * @return      void
  * 
  */
+/**
+ * normalizza una data al formato ISO 'YYYY-MM-DDTHH:mm'.
+ *
+ * Converte un valore in formato italiano d/m/Y[ H:i[:s]] nel formato ISO
+ * usato dai campi datetime-local. Lascia invariati i valori già ISO, numerici
+ * (timestamp unix) o non riconosciuti. Serve a evitare che un valore italiano
+ * (tipico quando datetime-local degrada a input testo) arrivi al server, dove
+ * strtotime() lo leggerebbe all'americana (m/d) scambiando giorno e mese.
+ *
+ * @param       string      v           il valore da normalizzare
+ *
+ * @return      string                  il valore in ISO, o invariato
+ *
+ */
+function glisTimestampToIso( v ) {
+
+    v = ( '' + v ).trim();
+
+    if( v === '' )
+        return v;
+
+    // già ISO / datetime-local (YYYY-MM-DD...)
+    if( /^\d{4}-\d{2}-\d{2}/.test( v ) )
+        return v;
+
+    // formato italiano d/m/Y [H:i[:s]]
+    var m = v.match( /^(\d{1,2})\/(\d{1,2})\/(\d{4})(?:[ T](\d{1,2}):(\d{2})(?::(\d{2}))?)?/ );
+    if( m ) {
+        var dd = ( '0' + m[1] ).slice( -2 ),
+            mm = ( '0' + m[2] ).slice( -2 ),
+            hh = ( '0' + ( m[4] || '0' ) ).slice( -2 ),
+            mi = ( '0' + ( m[5] || '0' ) ).slice( -2 );
+        return m[3] + '-' + mm + '-' + dd + 'T' + hh + ':' + mi;
+    }
+
+    // formato non riconosciuto: lascio invariato (il server ha comunque il proprio guard)
+    return v;
+
+}
+
+/**
+ * normalizza a ISO tutti i campi timestamp_* di un form.
+ *
+ * @param       object      form        l'oggetto form (DOM)
+ *
+ * @return      void
+ *
+ */
+function glisNormalizeTimestampFields( form ) {
+
+    if( ! form )
+        return;
+
+    var ins = form.querySelectorAll( 'input[name*="timestamp_"]' );
+    for( var i = 0; i < ins.length; i++ ) {
+        var iso = glisTimestampToIso( ins[i].value );
+        if( iso !== ins[i].value )
+            ins[i].value = iso;
+    }
+
+}
+
 function checkAndSubmit( form ) {
+
+    // hardening: normalizzo i campi data timestamp_* prima del submit nativo
+    glisNormalizeTimestampFields( form );
 
     if( $( form )[0].checkValidity() ) {
         form.submit();

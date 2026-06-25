@@ -286,6 +286,16 @@
 
 		$('.warning-if-changed').on( 'keyup change', function() { formChanged = true; } );
 
+		// hardening campi data: normalizzo i timestamp_* (eventuale formato italiano d/m/Y) a ISO
+		// prima che arrivino al server. Copre i browser dove datetime-local degrada a input testo.
+		$( document ).on( 'change blur', 'input[name*="timestamp_"]', function() {
+		    var iso = glisTimestampToIso( this.value );
+		    if( iso !== this.value ) this.value = iso;
+		});
+		$( document ).on( 'submit', 'form.form-main', function() {
+		    glisNormalizeTimestampFields( this );
+		});
+
 		if( typeof CKEDITOR !== 'undefined' && CKEDITOR != null ) {
 		    for( var i in CKEDITOR.instances) {
 			CKEDITOR.instances[i].on('change', function() { formChanged = true; } );
