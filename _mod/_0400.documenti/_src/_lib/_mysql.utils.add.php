@@ -498,17 +498,16 @@
         // recupero i dati della sede dell'emittente
         $r['sri'] = mysqlSelectRow(
             $cf['mysql']['connection'],
-            'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
+            'SELECT tipologie_indirizzi.nome AS tipologia, anagrafica_indirizzi.indirizzo, anagrafica_indirizzi.civico, anagrafica_indirizzi.cap, '.
             'comuni.nome AS comune, provincie.sigla AS provincia, '.
             'stati.iso31661alpha2 AS sigla_stato '.
             'FROM anagrafica_indirizzi '.
-            'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-            'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
+            'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
             'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
             'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
             'INNER JOIN stati ON stati.id = regioni.id_stato '.
-            'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
-            'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
+            'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = anagrafica_indirizzi.id_tipologia '.
+            'WHERE anagrafica_indirizzi.id_anagrafica = ? AND anagrafica_indirizzi.id = ?',
             array(
                 array( 's' => $r['src']['id'] ),
                 array( 's' => $r['doc']['id_sede_emittente'] )
@@ -604,17 +603,16 @@
             // recupero i dati della sede destinatario
             $r['dsi'] = mysqlSelectRow(
                 $cf['mysql']['connection'],
-                'SELECT tipologie_indirizzi.nome AS tipologia, indirizzi.indirizzo, indirizzi.civico, indirizzi.cap, '.
+                'SELECT tipologie_indirizzi.nome AS tipologia, anagrafica_indirizzi.indirizzo, anagrafica_indirizzi.civico, anagrafica_indirizzi.cap, '.
                 'comuni.nome AS comune, provincie.sigla AS provincia, '.
                 'stati.iso31661alpha2 AS sigla_stato '.
                 'FROM anagrafica_indirizzi '.
-                'INNER JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo '.
-                'INNER JOIN comuni ON comuni.id = indirizzi.id_comune '.
+                'INNER JOIN comuni ON comuni.id = anagrafica_indirizzi.id_comune '.
                 'INNER JOIN provincie ON provincie.id = comuni.id_provincia '.
                 'INNER JOIN regioni ON regioni.id = provincie.id_regione '.
                 'INNER JOIN stati ON stati.id = regioni.id_stato '.
-                'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = indirizzi.id_tipologia '.
-                'WHERE anagrafica_indirizzi.id_anagrafica = ? AND indirizzi.id = ?',
+                'LEFT JOIN tipologie_indirizzi ON tipologie_indirizzi.id = anagrafica_indirizzi.id_tipologia '.
+                'WHERE anagrafica_indirizzi.id_anagrafica = ? AND anagrafica_indirizzi.id = ?',
                 array(
                     array( 's' => $r['dst']['id'] ),
                     array( 's' => $r['doc']['id_sede_destinatario'] )
