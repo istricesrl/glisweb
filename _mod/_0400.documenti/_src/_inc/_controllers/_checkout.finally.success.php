@@ -137,10 +137,16 @@
                 }
 
                 // indirizzo di fatturazione: lo creo solo se l'intestazione lo specifica.
-                // $idIndirizzo è usato a valle come id_sede_destinatario del documento: quando manca
-                // un indirizzo in intestazione riuso la residenza già presente dell'anagrafica (o NULL),
-                // senza mai creare un indirizzo vuoto.
+                // Quando manca un indirizzo in intestazione riuso la residenza già presente
+                // dell'anagrafica (o NULL), senza mai creare un indirizzo vuoto.
+                //
+                // Fix 2026-07-10: a valle serve $idSedeDestinatario, cioè un `anagrafica_indirizzi.id`.
+                // Prima veniva passato $idIndirizzo (un `indirizzi.id`): dalla migrazione del 2026-07-10
+                // `documenti.id_sede_destinatario` ha FK su `anagrafica_indirizzi`, quindi l'INSERT del
+                // documento fallirebbe (o punterebbe alla riga sbagliata). Questo ramo non ha ancora
+                // prodotto documenti in produzione (0 su 46 carrelli), ma la trappola era attiva.
                 $idIndirizzo = NULL;
+                $idSedeDestinatario = NULL;
                 if( ! empty( $carrello['intestazione_indirizzo'] ) ) {
 
                     // inserisco l'indirizzo
@@ -176,14 +182,22 @@
                                 'anagrafica_indirizzi'
                             );
                         }
+
+                        // la riga pivot è appena nata (o esisteva senza copia inline): allineo le
+                        // colonne inline che il PDF della ricevuta legge da anagrafica_indirizzi
+                        if( function_exists( 'sincronizzaIndirizzoInline' ) ) {
+                            sincronizzaIndirizzoInline( $idIndirizzo );
+                        }
+
+                        $idSedeDestinatario = $idIndirizzoAnagrafica;
                     }
 
                 } else {
 
                     // nessun indirizzo in intestazione: riuso la residenza non vuota dell'anagrafica
-                    $idIndirizzo = mysqlSelectValue(
+                    $idSedeDestinatario = mysqlSelectValue(
                         $cf['mysql']['connection'],
-                        'SELECT indirizzi.id FROM indirizzi
+                        'SELECT anagrafica_indirizzi.id FROM indirizzi
                             INNER JOIN anagrafica_indirizzi ON anagrafica_indirizzi.id_indirizzo = indirizzi.id
                             WHERE anagrafica_indirizzi.id_anagrafica = ?
                               AND ( COALESCE( indirizzi.indirizzo, "" ) <> "" OR COALESCE( indirizzi.localita, "" ) <> "" OR COALESCE( indirizzi.cap, "" ) <> "" OR COALESCE( indirizzi.civico, "" ) <> "" )
@@ -237,7 +251,7 @@
                                     'id_emittente' => $cf['ecommerce']['profile']['fatturazione']['merchant'],
                                     'id_sede_emittente' => $idSedeEmittente,
                                     'id_destinatario' => $idAnagrafica,
-                                    'id_sede_destinatario' => $idIndirizzo,
+                                    'id_sede_destinatario' => $idSedeDestinatario,
                                     'id_condizione_pagamento' => 2,
                                     'esigibilita' => 'I',
                                     'riferimento' => 'carrello #' . $carrello['id'],

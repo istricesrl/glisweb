@@ -642,14 +642,20 @@
         logger( 'aggiorno il report della compatibilità fra lezioni e tipologie abbonamenti per la lezione ' . $idLezione, 'details/lezioni/' . $idLezione );
 
         // dettagli della lezione
+        // Fix 2026-07-10: la LEFT JOIN su progetti_categorie non filtrava se_disciplina, e senza
+        // ORDER BY la prima riga restituita era quella con id_categoria piu' basso (spesso una
+        // categoria non-disciplina come 9058 ADULTI). La lezione risultava quindi in una disciplina
+        // inesistente e nessun abbonamento veniva mai riconosciuto compatibile.
         $lezione = mysqlSelectCachedRow(
             $cf['memcache']['connection'],
             $cf['mysql']['connection'],
-            'SELECT todo.id, todo.data_programmazione, todo.ora_inizio_programmazione, todo.ora_fine_programmazione, 
+            'SELECT todo.id, todo.data_programmazione, todo.ora_inizio_programmazione, todo.ora_fine_programmazione,
             todo.timestamp_inserimento, todo.timestamp_aggiornamento, todo.id_progetto, progetti_categorie.id_categoria AS id_disciplina
             FROM todo
             LEFT JOIN progetti_categorie ON progetti_categorie.id_progetto = todo.id_progetto
-            WHERE todo.id = ?',
+                AND progetti_categorie.id_categoria IN ( SELECT id FROM categorie_progetti WHERE se_disciplina = 1 )
+            WHERE todo.id = ?
+            ORDER BY progetti_categorie.id ASC',
             array( array( 's' => $idLezione ) )
         );
 

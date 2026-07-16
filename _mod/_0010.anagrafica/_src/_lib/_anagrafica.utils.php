@@ -83,9 +83,15 @@
 */
 
 		// prelevo la riga
+		// Fix 2026-07-10: alias esplicito su `anagrafica_indirizzi.id`. Con `SELECT *`
+		// su un JOIN, la colonna `id` di ruoli_indirizzi sovrascrive quella di
+		// anagrafica_indirizzi nell'array associativo: $r['id'] valeva l'id del RUOLO.
 		$r = mysqlSelectRow(
 			$cf['mysql']['connection'],
-			'SELECT * FROM anagrafica_indirizzi '.
+			'SELECT anagrafica_indirizzi.*, '.
+			'anagrafica_indirizzi.id AS id_anagrafica_indirizzi, '.
+			'ruoli_indirizzi.se_sede_legale '.
+			'FROM anagrafica_indirizzi '.
 			'LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo '.
 			'WHERE anagrafica_indirizzi.id_anagrafica = ? '.
 			'ORDER BY ruoli_indirizzi.se_sede_legale DESC '.
@@ -94,6 +100,12 @@
 				array( 's' => $id )
 			)
 		);
+
+		// Fix 2026-07-10: l'id della sede è quello di `anagrafica_indirizzi`, ed è ciò
+		// che anagraficaGetIdSedeLegale() scrive in `documenti.id_sede_*` (FK migrata
+		// su anagrafica_indirizzi il 2026-07-10). Va conservato prima che il blocco
+		// sottostante rimpiazzi $r con la riga di `indirizzi_view`, che ha un altro id.
+		$idSedeAnagraficaIndirizzi = isset( $r['id_anagrafica_indirizzi'] ) ? $r['id_anagrafica_indirizzi'] : null;
 /*
 		die(print_r($r,true));
 
@@ -121,6 +133,11 @@
 			'SELECT * FROM indirizzi_view WHERE id = ?',
 			array( array( 's' => $r['id_indirizzo'] ) )
 		);
+
+		// Fix 2026-07-10: `indirizzi_view.id` è l'id di `indirizzi`; ripristino l'id
+		// della sede (anagrafica_indirizzi) che i chiamanti scrivono in documenti.id_sede_*.
+		// I campi indirizzo/civico/cap/comune/sigla restano quelli arricchiti dalla view.
+		$r['id'] = $idSedeAnagraficaIndirizzi;
 
 		// riassemblaggio dell'indirizzo per linee (ad es. per le buste)
 			if( empty($r['indirizzo']) || empty($r['civico']) || empty($r['cap']) || empty($r['comune']) || empty($r['sigla']) ){

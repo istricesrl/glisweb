@@ -273,6 +273,13 @@
                             'anagrafica_indirizzi'
                         );
 
+                        // Fix 2026-07-10: allineo la copia inline dell'indirizzo su
+                        // anagrafica_indirizzi (il job non passa da controller(), quindi il
+                        // finally `src/inc/controllers/indirizzi.finally.php` non scatta).
+                        if( function_exists( 'sincronizzaIndirizzoInline' ) ) {
+                            sincronizzaIndirizzoInline( $idIndirizzo );
+                        }
+
                         // status
                         if( empty( $idAssociazioneIndirizzo ) ) {
                             $job['status']['error'][] = 'indirizzo #' . $idIndirizzo . ' ' . 

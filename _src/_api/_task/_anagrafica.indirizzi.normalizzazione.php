@@ -223,7 +223,14 @@
                 ),
                 'anagrafica_indirizzi'
             );
-    
+
+            // Fix 2026-07-10: la riga nasce con l'indirizzo inline a NULL, ma dalla migrazione
+            // del 2026-07-10 è da lì che il modulo documenti legge la sede. Qui non passa
+            // controller(), quindi il finally `src/inc/controllers/indirizzi.finally.php` non scatta.
+            if( function_exists( 'sincronizzaIndirizzoInline' ) ) {
+                sincronizzaIndirizzoInline( $status['inserimenti']['id_indirizzo'] );
+            }
+
         } else {
 
             $status['considerazioni'][ $indirizzo['id'] ][] = 'indirizzo non associabile per mancanza di anagrafica';

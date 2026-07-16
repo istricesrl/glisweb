@@ -82,12 +82,18 @@
 
         global $cf;
 
+        // Fix 2026-07-10: ritorna `anagrafica_indirizzi.id`, non `id_indirizzo`.
+        // Il valore alimenta solo `documenti.id_sede_emittente` / `id_sede_destinatario`,
+        // che dalla migrazione del 2026-07-10 hanno FK su `anagrafica_indirizzi` (prima
+        // su `indirizzi`). Le query di lettura del modulo documenti, dall'upgrade
+        // framework del 27/06, filtrano su `anagrafica_indirizzi.id` e leggono
+        // l'indirizzo inline da quella tabella.
         return mysqlSelectValue(
             $cf['mysql']['connection'],
-            'SELECT id_indirizzo 
-                FROM anagrafica_indirizzi 
-                WHERE id_anagrafica = ? 
-                AND anagrafica_indirizzi.id_ruolo IN ( 1, 4 ) 
+            'SELECT id
+                FROM anagrafica_indirizzi
+                WHERE id_anagrafica = ?
+                AND anagrafica_indirizzi.id_ruolo IN ( 1, 4 )
                 LIMIT 1',
             array(array('s' => $idAnagrafica))
         );
