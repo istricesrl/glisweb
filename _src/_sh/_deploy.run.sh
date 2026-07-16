@@ -290,6 +290,13 @@ else
                     SPORT=""
                 fi
 
+                # utente per gli script che sul target richiedono i privilegi di root
+                # (apertura e chiusura dei permessi): se non è indicato nel file properties
+                # si usa l'utente del deploy
+                if [ -z "$SSH_ADMIN" ]; then
+                    SSH_ADMIN="$SSH_USER"
+                fi
+
                 # comando
                 CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_backup.run.sh"
 
@@ -304,7 +311,7 @@ else
                 # $CMD
 
                 # comando
-                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.open.sh"
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.open.sh"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -315,6 +322,12 @@ else
 
                 # aggiornamento dei permessi
                 $CMD
+
+                # se i permessi non si aprono l'rsync scrive su cartelle in sola lettura e non copia
+                # nulla: non è fatale di per sé (potrebbero essere già aperti) ma va detto
+                if [ $? -ne 0 ]; then
+                    echo "ATTENZIONE: apertura dei permessi su $DST_HOST fallita (utente $SSH_ADMIN): se il deploy non copia i file è questo il motivo"
+                fi
 
                 # comando
                 CMD="rsync $EXCLUDE -avuz --checksum --delete -e \"ssh $SPORT -i $SSH_PRIVATE\" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH"
@@ -328,6 +341,9 @@ else
 
                 # deploy
                 rsync $EXCLUDE -avuz --checksum --delete -e "ssh $SPORT -i $SSH_PRIVATE" $SRC_PATH/ $SSH_USER@$DST_HOST:$DST_PATH >> ../DEPLOY.md
+
+                # esito del deploy
+                RSYNC_STATUS=$?
 
                 # comando per composer update
                 CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_composer.update.sh --hard"
@@ -344,7 +360,7 @@ else
                 # $CMD
 
                 # comando
-                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.secure.sh"
+                CMD="ssh $SPORT -i $SSH_PRIVATE $SSH_ADMIN@$DST_HOST $DST_PATH/_src/_sh/_lamp.permissions.secure.sh"
 
                 # registro dei deploy
                 echo "$CMD" >> ../DEPLOY.md
@@ -355,6 +371,23 @@ else
 
                 # aggiornamento dei permessi
                 $CMD
+
+                # i permessi vanno richiusi sempre, anche se il deploy è fallito: se non ci si
+                # riesce il target resta scrivibile dal gruppo e la cosa va urlata
+                if [ $? -ne 0 ]; then
+                    echo "ERRORE: chiusura dei permessi su $DST_HOST fallita (utente $SSH_ADMIN): il target è rimasto con i permessi aperti, intervenire a mano con _lamp.permissions.secure.sh"
+                    exit 1
+                fi
+
+                # se il deploy è fallito lo dico e esco con errore: prima si finiva sempre con
+                # esito positivo anche quando rsync non aveva copiato nulla
+                if [ $RSYNC_STATUS -ne 0 ]; then
+                    echo "ERRORE: deploy su $DST_HOST fallito (rsync esito $RSYNC_STATUS), i file NON sono stati copiati o lo sono stati solo in parte"
+                    exit 1
+                fi
+
+                # informazioni
+                echo "deploy completato su $DST_HOST"
 
             else
 

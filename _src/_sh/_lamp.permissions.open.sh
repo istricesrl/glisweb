@@ -38,9 +38,13 @@ cd $RP
 echo "lavoro su: $(pwd)"
 
 ## cambio permessi (silenzioso)
-find . -type d          -not \( -path ".git" -prune \)      -exec chmod 775 {} \;
-find . -type f          -not \( -path ".git" -prune \)      -exec chmod 664 {} \;
-find . -name '*.sh'     -not \( -path ".git" -prune \)      -exec chmod 775 {} \;
+# NOTA il perimetro è la cartella del deploy (./$SUB/), come in _lamp.permissions.secure.sh: lavorare
+# su tutta la cartella principale significherebbe ciclare anche sui backup e su quanto altro le sta
+# accanto. NOTA i find usano -exec + (un solo chmod ogni N file) e non -exec \; (un chmod per file):
+# su un albero da centinaia di migliaia di file la differenza è fra secondi e ore.
+find ./$SUB/            -path "./$SUB/.git" -prune  -o -type d       -exec chmod 775 {} +
+find ./$SUB/            -path "./$SUB/.git" -prune  -o -type f       -exec chmod 664 {} +
+find ./$SUB/            -path "./$SUB/.git" -prune  -o -name '*.sh'  -exec chmod 775 {} +
 
 ## cambio proprietario
-sudo chown -R www-data:www-data *
+chown -R www-data:www-data ./$SUB/
