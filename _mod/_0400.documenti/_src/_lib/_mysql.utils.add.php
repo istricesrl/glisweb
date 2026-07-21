@@ -711,3 +711,220 @@
         return $r;
 
     }
+
+    /**
+     * genera il DDT di controllo per gli ordini associati a una missione
+     *
+     * E' la logica dietro al pulsante "abilita controllo" della scheda missione e dietro al task
+     * pianificato ddt.da.missioni.chiuse.php. "Abilitare il controllo" non e' un flag: significa
+     * creare i documenti DDT (id_tipologia 4) con le loro righe, che sono cio' che le maschere a
+     * valle trovano da controllare. Prima del DDT non c'e' nulla da controllare, dopo si'.
+     *
+     * Per ogni riga di lista di prelievo agganciata alla missione si crea (se non c'e' gia') un DDT
+     * per il documento di origine, lo si lega alla missione e alla lista con una relazione di ruolo
+     * 3, e vi si aggiunge la riga.
+     *
+     * La funzione e' idempotente e fail-forward: ogni passo e' una INSERT IGNORE con una chiave
+     * deterministica, quindi rilanciarla non duplica nulla e, se muore a meta', il giro successivo
+     * completa il lavoro. Le chiavi di idempotenza sono:
+     *   - testata : documenti.codice = 'DDT-' . <codice lista>            (UNIQUE)
+     *   - riga    : documenti_articoli.codice = 'DDT-R-' . <codice riga>  (UNIQUE)
+     *   - legami  : relazioni_documenti UNIQUE( id_documento, id_documento_collegato, id_ruolo )
+     *
+     * NOTA sulla quantita': la riga del DDT riporta la quantita' ORDINATA della riga di lista, non
+     * quella realmente prelevata (che sarebbe la somma delle righe figlie con id_genitore
+     * valorizzato e id_tipologia 4). Su una missione chiusa e completa i due valori coincidono, ma
+     * src/inc/macro/chiusura.missione.php:65-67 si limita ad avvisare quando le quantita' non
+     * tornano e non impedisce la chiusura: su una missione chiusa parziale il DDT sovradichiara la
+     * merce. Scelta deliberata di non cambiarlo qui.
+     *
+     * @param   integer $idMissione     documenti.id della missione (id_tipologia 34)
+     * @param   boolean $forza          genera il DDT anche se la missione non e' chiusa; e' la
+     *                                  valvola del pulsante manuale, il cron non la usa mai
+     *
+     * @return  array                   lo status dell'elaborazione ( info, err, ddt )
+     *
+     */
+    function creaDdtDaMissione( $idMissione, $forza = false ) {
+
+        global $cf;
+
+        // inizializzo l'array del risultato
+        $status = array( 'info' => array(), 'err' => array(), 'ddt' => array() );
+
+        // il documento deve esistere ed essere davvero una missione
+        $missione = mysqlSelectRow(
+            $cf['mysql']['connection'],
+            'SELECT id, codice, timestamp_chiusura FROM documenti WHERE id = ? AND id_tipologia = 34 LIMIT 1',
+            array(
+                array( 's' => $idMissione )
+            )
+        );
+
+        if( empty( $missione['id'] ) ) {
+            $status['err'][] = 'il documento #' . $idMissione . ' non esiste o non e\' una missione';
+            return $status;
+        }
+
+        // la missione deve essere chiusa: "missione completata" significa timestamp_chiusura
+        // valorizzato, che e' cio' che scrive src/inc/macro/missione.php alla chiusura del
+        // prelievo. Senza questa guardia il cron genererebbe DDT per missioni ancora in corso.
+        if( empty( $missione['timestamp_chiusura'] ) && $forza !== true ) {
+            $status['err'][] = 'la missione ' . $missione['codice'] . ' non e\' chiusa: DDT non generato';
+            return $status;
+        }
+
+        // seleziono le righe di lista agganciate alla missione
+        $righe = mysqlQuery(
+            $cf['mysql']['connection'],
+            'SELECT * FROM documenti_articoli WHERE id_missione = ? AND id_documento IS NOT NULL',
+            array(
+                array( 's' => $idMissione )
+            )
+        );
+
+        if( empty( $righe ) ) {
+            $status['err'][] = 'la missione ' . $missione['codice'] . ' non ha righe: DDT non generato';
+            return $status;
+        }
+
+        // per ogni riga della missione...
+        foreach( $righe as $riga ) {
+
+            // senza codice riga non c'e' chiave di idempotenza: due righe a codice vuoto
+            // collasserebbero entrambe su 'DDT-R-' (UNIQUE) sovrascrivendosi a vicenda
+            if( empty( $riga['codice'] ) ) {
+                $status['err'][] = 'la riga #' . $riga['id'] . ' non ha codice: saltata';
+                continue;
+            }
+
+            // seleziono l'ordine originale della riga
+            $ordine = mysqlSelectRow(
+                $cf['mysql']['connection'],
+                'SELECT id, codice, id_emittente FROM documenti WHERE id = ? LIMIT 1',
+                array(
+                    array( 's' => $riga['id_documento'] )
+                )
+            );
+
+            if( empty( $ordine['id'] ) || empty( $ordine['codice'] ) ) {
+                $status['err'][] = 'la riga #' . $riga['id'] . ' punta al documento #' . $riga['id_documento'] . ', che non esiste o non ha codice: saltata';
+                continue;
+            }
+
+            // verifico se c'e' gia' un DDT associato come evasione al documento di questa riga.
+            // NOTA: la relazione di ruolo 3 tiene il DDT in id_documento e la lista (o la missione)
+            // in id_documento_collegato, quindi la si interroga dal lato collegato. Cercare
+            // 'WHERE id_documento = <id lista>' non trova mai nulla.
+            $idDocumento = mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT relazioni_documenti.id_documento FROM relazioni_documenti
+                INNER JOIN documenti ON documenti.id = relazioni_documenti.id_documento AND documenti.id_tipologia = 4
+                WHERE relazioni_documenti.id_documento_collegato = ? AND relazioni_documenti.id_ruolo = 3 LIMIT 1',
+                array(
+                    array( 's' => $riga['id_documento'] )
+                )
+            );
+
+            // se non c'e' un DDT associato, lo creo
+            if( empty( $idDocumento ) ) {
+
+                // status
+                $status['info'][] = 'creo il DDT per il documento ' . $ordine['codice'];
+
+                // creo il DDT. INSERT IGNORE e non upsert: sul duplicato il default di
+                // mysqlInsertRow riscriverebbe data, nome ed emittente di un DDT magari gia'
+                // lavorato o chiuso in smistamento.
+                mysqlInsertRow(
+                    $cf['mysql']['connection'],
+                    array(
+                        'codice' => 'DDT-' . $ordine['codice'],
+                        'id_tipologia' => 4,
+                        'id_emittente' => trovaIdAziendaGestita(),
+                        'id_destinatario' => $ordine['id_emittente'],
+                        'data' => date('Y-m-d'),
+                        'nome' => 'DDT generato automaticamente da missione ' . $missione['codice'] . ' per ordine ' . $ordine['codice'],
+                    ),
+                    'documenti',
+                    false
+                );
+
+                // rileggo per codice: su duplicato la INSERT IGNORE restituisce insert_id = 0
+                $idDocumento = mysqlSelectValue(
+                    $cf['mysql']['connection'],
+                    'SELECT id FROM documenti WHERE codice = ? AND id_tipologia = 4 LIMIT 1',
+                    array(
+                        array( 's' => 'DDT-' . $ordine['codice'] )
+                    )
+                );
+
+            } else {
+
+                // status
+                $status['info'][] = 'trovato il DDT #' . $idDocumento . ' per il documento ' . $ordine['codice'];
+
+            }
+
+            // senza il DDT la riga sarebbe orfana ( id_documento NULL )
+            if( empty( $idDocumento ) ) {
+                $status['err'][] = 'il DDT ' . 'DDT-' . $ordine['codice'] . ' non e\' stato creato ne\' ritrovato: riga saltata';
+                continue;
+            }
+
+            // lego il DDT alla missione e alla lista di prelievo
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id_documento' => $idDocumento,
+                    'id_documento_collegato' => $missione['id'],
+                    'id_ruolo' => 3
+                ),
+                'relazioni_documenti',
+                false
+            );
+
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'id_documento' => $idDocumento,
+                    'id_documento_collegato' => $riga['id_documento'],
+                    'id_ruolo' => 3
+                ),
+                'relazioni_documenti',
+                false
+            );
+
+            // il codice riga e' la chiave di idempotenza e documenti_articoli.codice e' char(32):
+            // oltre i 32 caratteri MySQL troncherebbe in silenzio, facendo collidere sull'indice
+            // UNIQUE due righe diverse
+            $codiceRiga = 'DDT-R-' . $riga['codice'];
+
+            if( strlen( $codiceRiga ) > 32 ) {
+                $status['err'][] = 'il codice ' . $codiceRiga . ' supera i 32 caratteri: riga saltata';
+                continue;
+            }
+
+            // aggiungo la riga al DDT. Sta fuori dall'if perche' deve coprire anche le righe
+            // agganciate alla missione dopo la prima generazione del DDT.
+            mysqlInsertRow(
+                $cf['mysql']['connection'],
+                array(
+                    'codice' => $codiceRiga,
+                    'id_documento' => $idDocumento,
+                    'quantita' => $riga['quantita'],
+                    'id_articolo' => $riga['id_articolo'],
+                    'id_tipologia' => 4,
+                    'note' => 'riga generata automaticamente da missione ' . $missione['codice'] . ' per ordine ' . $ordine['codice'],
+                ),
+                'documenti_articoli',
+                false
+            );
+
+            // status
+            $status['ddt'][ $ordine['codice'] ] = $idDocumento;
+
+        }
+
+        return $status;
+
+    }
