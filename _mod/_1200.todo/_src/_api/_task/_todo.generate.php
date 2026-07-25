@@ -91,6 +91,11 @@
 
                     $inserite = 0;
 
+                    // Fix 2026-07-24: id delle righe create, per il refresh set-based delle view statiche
+                    // a valle del ciclo (vedi blocco "refresh view statiche" dopo il foreach).
+                    $idTodoCreate = array();
+                    $idAttivitaCreate = array();
+
                     $resp = mysqlSelectValue( $cf['mysql']['connection'], 'SELECT id_anagrafica FROM progetti_anagrafica WHERE se_sostituto IS NULL AND id_ruolo = 16 AND id_progetto = ?', array( array( 's' => $_REQUEST['progetto'] ) ) );
 
                     if( ! empty( $_REQUEST['__a__'] )  ) {
@@ -142,17 +147,82 @@
                                 )
                             );
 
-                            mysqlQuery( $cf['mysql']['connection'], 'CALL todo_view_static( ? )', array( array( 's' => $todo['id'] ) ) );
-                            logWrite( 'aggiornata view statica  per id #' . $todo['id'], 'speed' );
-                            
+                            // Fix 2026-07-24: le `CALL todo_view_static( ? )` / `CALL attivita_view_static( ? )`
+                            // che stavano qui aggiornavano le view statiche UNA RIGA ALLA VOLTA dentro il ciclo.
+                            // Accumulo gli id e faccio un refresh unico dopo il foreach (vedi sotto).
+                            $idTodoCreate[] = intval( $todo['id'] );
+
                             if( $attivita['id'] ){
-                                mysqlQuery( $cf['mysql']['connection'], 'CALL attivita_view_static( ? )', array( array( 's' => $attivita['id'] ) ) );
-                                logWrite( 'aggiornata view statica  per id #' . $attivita['id'], 'speed' );
+                                $idAttivitaCreate[] = intval( $attivita['id'] );
                             }
 
                         }
-                        
-            
+
+
+                    }
+
+                    /**
+                     * refresh view statiche (set-based)
+                     * =================================
+                     *
+                     * Fix 2026-07-24: prima qui si eseguiva una `CALL todo_view_static( i )` per OGNI data
+                     * generata, dentro il ciclo. Ogni chiamata esegue
+                     * `INSERT INTO todo_view_static SELECT * FROM todo_view WHERE id = i` e:
+                     *
+                     *  - prende un WRITE LOCK sull'intera `todo_view_static`, che è MyISAM (lock di tabella,
+                     *    non di riga): finché dura, ogni lettura della tabella resta appesa in
+                     *    "Waiting for table level lock";
+                     *  - apre le 15 tabelle sottostanti a `todo_view`, moltiplicate per il numero di date.
+                     *
+                     * Con una generazione da ~40 date si osservavano 2-3 secondi per singola todo (log
+                     * `todo.err`), tabella lockata per minuti e connessioni accumulate fino a saturare
+                     * `max_connections` del server MySQL condiviso, bloccando tutti i siti ospitati.
+                     *
+                     * Ora si fa UNA sola query per view, sui soli id appena creati. NB: refresh incrementale
+                     * e non `TRUNCATE` + rebuild completo, perché `todo` ha ~2,3 milioni di righe mentre
+                     * `todo_view_static` ne contiene ~26.000: un rebuild completo materializzerebbe l'intera
+                     * tabella tenendo il lock MyISAM per tutta la durata, cioè esattamente il problema che
+                     * questo fix rimuove.
+                     *
+                     * `REPLACE INTO` (e non `INSERT`) perché `todo_view_static` ha PRIMARY KEY su `id`: così
+                     * il refresh è idempotente e ripetibile. Le colonne di view e view statica coincidono per
+                     * numero, nome e ordine (verificato), quindi `SELECT *` è sicuro.
+                     */
+                    if( ! empty( $idTodoCreate ) ) {
+
+                        // il lock evita che due refresh si sovrappongano sulla stessa view statica; è
+                        // per-connessione e le connessioni non sono persistenti, quindi non resta appeso
+                        $lockRefresh = mysqlSelectValue(
+                            $cf['mysql']['connection'],
+                            'SELECT GET_LOCK( concat( database(), ".view_static.refresh" ), 30 )'
+                        );
+
+                        if( ! empty( $lockRefresh ) ) {
+
+                            mysqlQuery(
+                                $cf['mysql']['connection'],
+                                'REPLACE INTO todo_view_static SELECT * FROM todo_view WHERE id IN ( ' . implode( ', ', $idTodoCreate ) . ' )'
+                            );
+                            logWrite( 'aggiornata view statica todo per ' . count( $idTodoCreate ) . ' id', 'speed' );
+
+                            if( ! empty( $idAttivitaCreate ) ) {
+                                mysqlQuery(
+                                    $cf['mysql']['connection'],
+                                    'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id IN ( ' . implode( ', ', $idAttivitaCreate ) . ' )'
+                                );
+                                logWrite( 'aggiornata view statica attivita per ' . count( $idAttivitaCreate ) . ' id', 'speed' );
+                            }
+
+                            mysqlQuery( $cf['mysql']['connection'], 'SELECT RELEASE_LOCK( concat( database(), ".view_static.refresh" ) )' );
+
+                        } else {
+
+                            // le todo sono comunque state create: segnalo che le view statiche restano indietro
+                            $status['err'][] = 'refresh delle view statiche saltato: lock non acquisito entro 30s';
+                            logWrite( 'refresh view statiche saltato: lock non acquisito', 'speed', LOG_ERR );
+
+                        }
+
                     }
 
                     $status['__status__'] = 'OK';

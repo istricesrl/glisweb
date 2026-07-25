@@ -162,10 +162,71 @@
     $cf['cron']['token'] = getToken( __FILE__ );
 
     /**
+     * Fix 2026-07-24: durata massima di un run, in secondi.
+     *
+     * Il cron di sistema chiama questa API ogni minuto: il tetto sta sotto al minuto così ogni run
+     * fa in tempo a chiudersi e a liberare il lock prima che parta il successivo. Sovrascrivibile
+     * da `src/config.json` (chiave `cron.durata_massima`).
+     */
+    if( empty( $cf['cron']['durata_massima'] ) ) {
+        $cf['cron']['durata_massima'] = 45;
+    }
+
+    /**
+     * Fix 2026-07-24: guardia anti-sovrapposizione dei run di cron.
+     *
+     * Il lock applicato su `task.token` non basta a impedire run concorrenti: `timestamp_esecuzione`
+     * viene scritto solo ALLA FINE del task (vedi UPDATE più sotto), quindi durante l'esecuzione resta
+     * fermo al run precedente. Dopo 10 minuti la query di "recupero dei task fermi" azzera il token
+     * anche se il run è ancora vivo, e il run successivo riparte in parallelo. Con task che durano più
+     * di 10 minuti se ne accumula uno nuovo ogni 10 minuti, ciascuno con la propria connessione MySQL e
+     * ~190 tabelle aperte: su un server condiviso questo satura `table_open_cache` e `max_connections`,
+     * bloccando tutti i siti ospitati (incidente del 2026-07-24).
+     *
+     * GET_LOCK è per-connessione e le connessioni qui NON sono persistenti (`mysqli_real_connect` senza
+     * prefisso `p:` in `_src/_config/_125.mysql.php`): se il processo muore il lock si libera da solo,
+     * quindi non può restare appeso. Il nome è costruito con `database()` perché GET_LOCK ha visibilità
+     * di ISTANZA: su mysql03 convivono più siti e un nome fisso li bloccherebbe a vicenda.
+     */
+    $cf['cron']['lock'] = mysqlSelectValue(
+        $cf['mysql']['connection'],
+        'SELECT GET_LOCK( concat( database(), ".cron" ), 0 )'
+    );
+
+    // se un altro run è ancora in corso esco senza eseguire nulla: il prossimo minuto ritenta
+    if( empty( $cf['cron']['lock'] ) ) {
+
+        // log
+        logger( 'run di cron già in corso: esco senza eseguire task e job', 'cron', LOG_WARNING );
+        loggerLatest( 'run di cron già in corso: esecuzione saltata', FILE_LATEST_CRON );
+
+        // status
+        $cf['cron']['status']['saltato'] = date( 'Y-m-d H:i:s' );
+        $cf['cron']['info'][] = 'run precedente ancora in esecuzione, esecuzione saltata';
+
+        // output
+        buildJson(
+            $cf['cron'],
+            ENCODING_UTF8,
+            array(
+                'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, s-maxage=0',
+                'Pragma' => 'no-cache',
+                'Expires' => '0',
+                'X-Cache-Lifetime' => '0',
+                'X-Proxy-Cache' => 'BYPASS',
+            )
+        );
+
+        // chiusura esplicita: `build()` termina già lo script, questo è solo un presidio
+        exit;
+
+    }
+
+    /**
      * esecuzione task
      * ===============
-     * 
-     * 
+     *
+     *
      */
 
     // provo a recuperare i task fermi
@@ -245,6 +306,31 @@
 
                     // iterazioni del task
                     for( $iter = 0; $iter < $task['iterazioni']; $iter++ ) {
+
+                        /**
+                         * Fix 2026-07-24: tetto di durata del run.
+                         *
+                         * `max_execution_time` è 0 (illimitato), quindi un task lento può tenere occupato
+                         * il run — e con esso il lock di cui sopra — per ore, di fatto fermando tutti gli
+                         * altri task (mail e SMS in coda compresi). Osservato il 2026-07-24: un singolo run
+                         * ancora vivo dopo 46 minuti, perché il task 6 esegue una SELECT da 7-15s per
+                         * ciascuna delle sue 12 iterazioni.
+                         *
+                         * Superata la soglia si interrompono le iterazioni residue e si passa al task
+                         * successivo: i task sono incrementali (lavorano su una riga per iterazione), quindi
+                         * il run del minuto dopo riprende da dove si era arrivati senza perdere lavoro.
+                         */
+                        if( ( time() - $cf['cron']['time'] ) >= $cf['cron']['durata_massima'] ) {
+
+                            // log
+                            logger( 'raggiunta la durata massima del run (' . $cf['cron']['durata_massima'] . 's): interrompo il task ' . $task['id'] . ' alla iterazione #' . $iter, 'cron', LOG_WARNING );
+
+                            // status
+                            $cf['cron']['task'][ $task['id'] ]['info'][] = 'interrotto per durata massima del run alla iterazione #' . $iter . ' di ' . $task['iterazioni'];
+
+                            break;
+
+                        }
 
                         // ...
                         logger( 'iterazione #' . $iter . ' di ' . $task['iterazioni'] . ' per il task ' . $task['id'] . ' -> ' . $task['task'], 'cron' );
@@ -385,6 +471,27 @@
                 if( ! empty( $job['iterazioni'] ) ) {
 
                     for( $iter = 0; $iter < $job['iterazioni']; $iter++ ) {
+
+                        /**
+                         * Fix 2026-07-24: stesso tetto di durata applicato ai task (vedi sopra).
+                         *
+                         * Qui è anche più necessario: i job hanno `iterazioni` molto alte (2000 per i
+                         * `report.lezioni.corsi.popolazione`) e restano aperti finché non arrivano a
+                         * completamento, quindi un singolo run può occupare il server per ore. Il job non
+                         * viene chiuso: mantiene il suo token, e il run successivo riprende da dove era
+                         * arrivato.
+                         */
+                        if( ( time() - $cf['cron']['time'] ) >= $cf['cron']['durata_massima'] ) {
+
+                            // log
+                            logger( 'raggiunta la durata massima del run (' . $cf['cron']['durata_massima'] . 's): interrompo il job ' . $job['id'] . ' alla iterazione #' . $iter, 'cron', LOG_WARNING );
+
+                            // status
+                            $cf['cron']['job'][ $job['id'] ]['info'][] = 'interrotto per durata massima del run alla iterazione #' . $iter . ' di ' . $job['iterazioni'];
+
+                            break;
+
+                        }
 
                         // ...
                         logger( 'iterazione #' . $iter . ' di ' . $job['iterazioni'] . ' per il job ' . $job['id'] . ' -> ' . $job['job'], 'cron' );

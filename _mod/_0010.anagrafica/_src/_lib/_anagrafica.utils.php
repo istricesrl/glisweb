@@ -297,6 +297,18 @@
                         : (trim(implode(' ', array($riga['nome'], $riga['cognome']))))
                     )
                 )
+                // Fix 2026-07-22: data di nascita nelle tendine anagrafica (solo persone fisiche con data completa)
+                .
+                (
+                    (
+                        empty($riga['denominazione'])
+                        && (! empty($riga['giorno_nascita']))
+                        && (! empty($riga['mese_nascita']))
+                        && (! empty($riga['anno_nascita']))
+                    )
+                    ? ' (' . $riga['data_nascita'] . ')'
+                    : NULL
+                )
             );
 
             mysqlInsertRow(
