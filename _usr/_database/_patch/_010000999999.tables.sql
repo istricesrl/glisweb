@@ -687,6 +687,7 @@ CREATE TABLE `colli` (
   `id_udm_volume` int(11) DEFAULT NULL,
   `nome` char(128) DEFAULT NULL,
   `note` text DEFAULT NULL,
+  `pezzi` int(11) DEFAULT NULL,
   `timestamp_chiusura`	int(11) DEFAULT NULL,
   `note_chiusura`	text DEFAULT NULL,
   `timestamp_spedizione`	int(11) DEFAULT NULL,

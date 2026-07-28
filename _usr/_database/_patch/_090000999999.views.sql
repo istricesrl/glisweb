@@ -951,6 +951,44 @@ CREATE OR REPLACE VIEW contenuti_view AS                        --
             ON lingue.id = contenuti.id_lingua                  --
 ;                                                               --
 
+-- | 090000009750
+
+-- colli_view
+CREATE OR REPLACE VIEW `colli_view` AS
+	SELECT
+		colli.id,
+		colli.id_documento,
+		colli.ordine,
+		colli.codice,
+		colli.raggruppamento,
+		colli.larghezza,
+		colli.lunghezza,
+		colli.altezza,
+		colli.id_udm_dimensioni,
+		colli.peso,
+		colli.id_udm_peso,
+		colli.volume,
+		colli.id_udm_volume,
+		colli.nome,
+		colli.id_mastro,
+		mastri_path( colli.id_mastro ) AS mastro,
+		colli.id_anagrafica,
+		a2.denominazione AS anagrafica,
+		GROUP_CONCAT( DISTINCT anagrafica.denominazione SEPARATOR '|' ) AS destinatari,
+		colli.id_account_inserimento,
+		colli.id_account_aggiornamento,
+		colli.timestamp_chiusura,
+		IF( colli.timestamp_chiusura IS NOT NULL AND colli.timestamp_chiusura > 0,
+			'<i class="fa fa-check text-success"></i>', '' ) AS chiuso,    -- indicatore collo chiuso
+		CONCAT_WS( ' ', colli.codice, tipologie_colli_path( colli.id_tipologia ), colli.nome ) AS __label__
+	FROM colli
+		LEFT JOIN documenti_articoli ON documenti_articoli.id_collo = colli.id
+		LEFT JOIN documenti ON documenti.id = documenti_articoli.id_packing_list
+		LEFT JOIN anagrafica ON anagrafica.id = documenti.id_destinatario
+		LEFT JOIN anagrafica a2 ON a2.id = colli.id_anagrafica
+	GROUP BY colli.id
+;
+
 -- | 090000009800
 
 -- documenti_view
