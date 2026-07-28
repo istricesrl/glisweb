@@ -53,7 +53,11 @@ else
         tar $EXC -czf ../backup.$( date '+%Y%m%d%H%M%S' ).tar.gz .
 
         # salvo i disallineamenti rispetto alla versione correntemente installata
-        for f in $( find ./_* -newer ./var/latest.upgrade.conf ); do
+        # NOTA: ./_* copre solo le cartelle con underscore; il cp del framework qui sotto
+        # sovrascrive anche i dotfile e i file di root, che vanno controllati esplicitamente.
+        # Esclusi .gitignore e .githooks: sui deploy client sono legittimamente diversi dal
+        # framework (il .gitignore arriva da _usr/_deploy/_git/).
+        for f in $( find ./_* ./.claude ./.github ./.htaccess ./composer.json -newer ./var/latest.upgrade.conf 2>/dev/null ); do
             if [ -f $f ]; then
                 echo "$f è disallineato"
                 mkdir -p $cartellaDisallineamenti

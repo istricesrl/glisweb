@@ -29,7 +29,11 @@ else
 
     echo "calcolo i disallineamenti rispetto alla versione installata del framework"
 
-    for f in $( find ./_* -newer ./var/latest.upgrade.conf ); do
+    # NOTA: ./_* copre solo le cartelle con underscore; l'aggiornamento sovrascrive anche
+    # i dotfile e i file di root del framework, che vanno quindi controllati esplicitamente.
+    # Esclusi .gitignore e .githooks: sui deploy client sono legittimamente diversi dal
+    # framework (il .gitignore arriva da _usr/_deploy/_git/).
+    for f in $( find ./_* ./.claude ./.github ./.htaccess ./composer.json -newer ./var/latest.upgrade.conf 2>/dev/null ); do
         if [ -f $f ]; then
             echo "$f è disallineato"
             mkdir -p ../disallineamenti.$( date '+%Y%m%d%H%M%S' )/
