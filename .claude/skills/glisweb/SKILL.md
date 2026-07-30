@@ -1,6 +1,6 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5.
 ---
 
 # Skill `glisweb`
@@ -134,12 +134,112 @@ Riferimenti tipici a `_claude.framework.md`:
 Se quel file non è presente nel framework che stai usando, fallback su `READ.md` nella root del framework e
 ispeziona direttamente `_src/_config.php` per il bootstrap.
 
-## 4. Mappa rapida task → file
+## 4. Configurazione multi-ambiente: `profiles` / `profile`
+
+`_claude.framework.md` documenta l'**ordine di lettura** dei file di configurazione e la forma dei profili
+MySQL. Qui c'è la convenzione per **scriverne di nuovi**, che è la parte che si sbaglia più spesso.
+
+### 4.1 I file di configurazione sono artefatti di deploy
+
+`src/config.yaml` / `src/config.json` vengono copiati **identici** su DEV, TEST e PROD. Ne segue una regola
+senza eccezioni: **non possono contenere un valore che vale per un ambiente solo.** Un valore misurato su un
+ambiente (un id, una soglia, un endpoint interno) messo lì nudo è un bug latente che esplode al primo deploy,
+in silenzio e sull'ambiente sbagliato.
+
+Quando un valore cambia da ambiente ad ambiente si mette sotto un ramo per ambiente — è quello che fanno già
+`mysql`, `memcache`, `redis`, `google`, `microsoft`, `teamsystem`, `zucchetti`, `emailable`, `sites`:
+
+```yaml
+<ns>:
+  profiles:
+    DEV:  { ... }
+    TEST: { ... }
+    PROD: { ... }
+```
+
+Le chiavi sono i valori delle costanti `DEVELOPEMENT` / `TESTING` / `PRODUCTION` (`'DEV'` / `'TEST'` /
+`'PROD'`, definite in `_src/_config/_000.debug.php`). Il ramo attivo si sceglie con `SITE_STATUS`.
+
+### 4.2 La coppia di runlevel `N0` / `N5`
+
+Un namespace a profili **non sta mai in un file solo**: sta in due runlevel accoppiati, con ruoli distinti.
+Non è una convenzione estetica — è come il framework separa la dichiarazione dall'attivazione, e permette al
+progetto di inserirsi in mezzo.
+
+| File | Ruolo | Cosa contiene |
+|---|---|---|
+| `_NNN0.<nome>.php` | **dichiarazione** | solo i default, un ramo per profilo. Niente merge, niente link, niente logica |
+| `_NNN5.<nome>.php` | **attivazione** | merge di `$cx`, collegamento a `$ct`, link al profilo corrente, e tutto ciò che *consuma* il profilo |
+
+```php
+// runlevel N0 — dichiarazione
+$cf['<ns>']['profiles'][ DEVELOPEMENT ] =
+$cf['<ns>']['profiles'][ TESTING ]      =
+$cf['<ns>']['profiles'][ PRODUCTION ]   = array( /* default identici per tutti */ );
+
+// runlevel N5 — attivazione
+if( isset( $cx['<ns>'] ) ) {
+    $cf['<ns>'] = array_replace_recursive( $cf['<ns>'], $cx['<ns>'] );
+}
+$ct['<ns>']            = &$cf['<ns>'];
+$cf['<ns>']['profile'] = &$cf['<ns>']['profiles'][ SITE_STATUS ];
+// ...e poi il consumo: in _125.mysql.php è la connessione ai server del profilo
+```
+
+Esempi da leggere prima di scriverne uno nuovo: `_120`/`_125` (mysql), `_040`/`_045` (cache), `_110`/`_115`
+(google), `_160`/`_165` (microsoft), `_600`/`_605` (teamsystem, zucchetti, emailable).
+
+**Da qui in poi il codice legge sempre da `$cf['<ns>']['profile']`**, mai da `$cf['<ns>']['<chiave>']`. Se
+trovi codice che legge la seconda forma su un namespace a profili, è un bug: sta ignorando l'ambiente.
+
+**Ordine di inclusione** (il loop dei runlevel in `_src/_config.php` fa `glob()` sui soli file standard, poi
+`sort()`, e ricava la controparte custom con `path2custom()`):
+
+```
+_N0 standard  →  N0 custom  →  _N5 standard  →  N5 custom
+```
+
+Quando `_N5` fa il merge i default del progetto (dichiarati in `N0` custom) ci sono già, e un `N5` custom può
+contare sul profilo già agganciato. **Servono i gemelli standard per entrambi**: un file in `src/config/`
+senza `_src/_config/_<stesso nome>.php` non viene incluso mai, silenziosamente. Se il namespace è di progetto,
+i due file standard esistono lo stesso e sono quasi vuoti — sono ganci.
+
+Se i profili li dichiara il progetto e non lo standard (namespace project-specific), nel `_N5` standard
+condiziona il link, o creerai un profilo vuoto per il solo effetto del riferimento:
+
+```php
+if( isset( $cf['<ns>']['profiles'][ SITE_STATUS ] ) ) {
+    $cf['<ns>']['profile'] = &$cf['<ns>']['profiles'][ SITE_STATUS ];
+}
+```
+
+### 4.3 I valori di lavoro non sono configurazione
+
+Distinta dalla regola sui profili, e altrettanto importante: **quello che si ricalcola, si sposta o va
+misurato sul database dell'ambiente non va nei file di configurazione.** Soglie, cutoff, cursori, ultimi id
+lavorati, timestamp dell'ultima esecuzione: quella roba sta in **`var/spool/<qualcosa>/`**.
+
+`var/` è escluso dal deploy, quindi il valore resta locale all'ambiente **per costruzione** — non serve
+ricordarsi di non spedirlo, non c'è il modo di farlo. Nei file di configurazione restano solo gli
+**interruttori** e i parametri stabili.
+
+Forma tipica: un file per valore, con dentro il solo numero, letto nel runlevel `N5` (è consumo del profilo).
+File assente o non parsabile = valore NULL = funzione ferma, che è la posizione sicura: su un ambiente nuovo
+la cosa parte spenta senza che nessuno debba ricordarsene. Definisci la cartella come costante accanto alle
+altre `DIR_VAR_SPOOL_*` in `_src/_config.php`, non con un `define()` inline nel runlevel.
+
+**Euristica**: se per scrivere quel valore hai dovuto interrogare il database di quell'ambiente, non è
+configurazione — è spool.
+
+## 5. Mappa rapida task → file
 
 | Cosa vuoi fare | Dove agire |
 |---|---|
 | Cambiare credenziali DB | `src/shadow.yaml` (mai `config.yaml`) |
-| Aggiungere/modificare un runlevel custom | `src/config/NNN.factory.php` |
+| Aggiungere/modificare un runlevel custom | `src/config/NNN.<nome>.php` (serve il gemello standard `_src/_config/_NNN.<nome>.php`) |
+| Aggiungere un namespace di configurazione a profili | coppia `N0`/`N5`, vedi §4.2 — mai un file solo |
+| Valore che cambia da ambiente ad ambiente | ramo `profiles.<DEV\|TEST\|PROD>` in `config.yaml`/`config.json`, letto da `$cf['<ns>']['profile']` |
+| Valore di lavoro (soglia, cutoff, cursore, ultimo id) | `var/spool/<qualcosa>/`, **mai** nei file di configurazione |
 | Override di una libreria standard | `src/lib/<nome>.php` (replace), `.add.php` (append) |
 | Override di un template Twig | `src/twig/<nome>.twig` |
 | Attivare un modulo standard | creare la cartella `mod/<nome>/` corrispondente a `_mod/_<nome>/` |
@@ -149,7 +249,7 @@ ispeziona direttamente `_src/_config.php` per il bootstrap.
 | Vedere l'ultima richiesta HTTP | `var/log/latest/run.latest.log` |
 | Vedere le query MySQL dell'ultima richiesta | `var/log/latest/mysql.latest.log` |
 
-## 5. Anti-pattern da evitare assolutamente
+## 6. Anti-pattern da evitare assolutamente
 
 - **Da un progetto cliente, NON modificare mai direttamente `/var/www/glisweb.istricesrl.it/` o
   `/var/www/glisdev.istricesrl.com/`.** Le fix al framework vanno passate per il flusso disallineamenti —
@@ -160,11 +260,19 @@ ispeziona direttamente `_src/_config.php` per il bootstrap.
   e dovrebbero esserlo anche dal `.gitignore` del progetto cliente.
 - **Non mettere credenziali in `config.yaml`.** Quel file è committato — usa `shadow.yaml` per ogni cosa
   sensibile.
+- **Non mettere in `config.yaml`/`config.json` un valore valido per un ambiente solo.** Quei file si deployano
+  identici ovunque: se il valore cambia fra DEV/TEST/PROD va sotto `profiles`, se è un valore di lavoro va in
+  `var/spool/`. Vedi §4 — è l'errore più costoso perché non dà alcun segnale finché non deploy.
+- **Non schiacciare dichiarazione e attivazione in un unico runlevel.** Un namespace a profili sta nella coppia
+  `N0`/`N5`. Il sintomo tipico di averlo sbagliato è ritrovarsi un `define()` inline o un `if( !defined(...) )`
+  dentro un file che dovrebbe solo dichiarare default.
+- **Non leggere `$cf['<ns>']['<chiave>']` su un namespace a profili.** Si legge da `$cf['<ns>']['profile']`,
+  altrimenti stai ignorando `SITE_STATUS` e leggendo l'ambiente sbagliato.
 - **Non rinominare/spostare i file `_*` del framework.** Servono al kernel per l'auto-discovery dei custom.
 - **Non duplicare le regole del framework** in `CLAUDE.md` del progetto: limitati a override e contesto
   progetto-specifico, lascia il manuale operativo a `_claude.framework.md`.
 
-## 6. Coesistenza con `CLAUDE.md` del progetto
+## 7. Coesistenza con `CLAUDE.md` del progetto
 
 Il template `CLAUDE.md.template` (copiato dal bootstrap) ha come prima riga:
 
@@ -177,7 +285,7 @@ progetto cliente. Se sei in una sessione con `CLAUDE.md` già attivo, il file fr
 **non richiamarlo né rileggerlo**, basta consultarlo per riferimento. Se stai facendo bootstrap di un nuovo
 progetto, il `CLAUDE.md` non esiste ancora — in quel caso leggi `_claude.framework.md` manualmente con `Read`.
 
-## 7. Note sulla skill stessa
+## 8. Note sulla skill stessa
 
 - Questa skill è distribuita **dentro al repository del framework** (cartella `.claude/skills/glisweb/`). È
   l'unica cartella senza prefisso underscore che è versionata di proposito — deroga consapevole alla regola

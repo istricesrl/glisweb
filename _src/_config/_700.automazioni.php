@@ -12,19 +12,15 @@
      * file standard e ricava la controparte custom con path2custom(), quindi un file custom privo di
      * gemello standard non verrebbe mai incluso.
      *
+     * Come tutti i namespace a profili (mysql, memcache, redis, google, teamsystem...) la configurazione
+     * e' divisa in due file, secondo la convenzione dei runlevel accoppiati:
+     *
+     *   _700 (questo)  dichiarazione: si costruisce l'array dei default, un ramo per profilo
+     *   _705           attivazione: merge di src/config.json, collegamento a $ct, link al profilo corrente
+     *
      * Runlevel 700 = importazione, elaborazione ed esportazione dei dati.
      *
      */
 
     // namespace delle automazioni pianificate
     $cf['automazioni'] = array();
-
-    /**
-     * collegamento di $ct a $cf tramite puntatore
-     * ===========================================
-     *
-     *
-     */
-
-    // collegamento a $ct
-    $ct['automazioni'] = &$cf['automazioni'];
