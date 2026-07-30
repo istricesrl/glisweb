@@ -35,6 +35,8 @@
 
 {% if emailable.profile.apikey %}{% include '_inc/_emailable.close.html' %}{% endif %}
 
+{% if google.profile.recaptcha.keys.public %}{% include '_inc/_recaptcha.carrello.html' %}{% endif %}
+
 <!-- HTML5 W3C validator: https://validator.w3.org/nu/?doc={{ page.url[ localization.language.ietf ] }} -->
 {% for c in page.css.template %}
 <!-- CSS3 W3C validator: https://jigsaw.w3.org/css-validator/validator?uri={{ site.url }}{{ page.template.path }}{{ c }} -->

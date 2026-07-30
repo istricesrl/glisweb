@@ -28,6 +28,16 @@
     $cf['ecommerce']['pages']['successo']			= 'carrello.successo';		                        // pagina di atterraggio per il pagamento avvenuto con successo presso provider esterni di pagamento
     $cf['ecommerce']['pages']['errore']			    = 'carrello.fallimento';		                    // pagina di atterraggio per gli errori dei provider esterni di pagamento
 
+    // antispam del carrello
+    // Con false ( default ) una richiesta priva di token reCAPTCHA passa: non è una prova di bot
+    // e bloccarla interrompe gli acquisti veri che arrivano da form non protetti. Con true la
+    // richiesta senza token viene respinta, ma SOLO se reCAPTCHA è configurato sul sito e solo
+    // per gli utenti non abilitati a scrivere sui carrelli ( il gestionale resta sempre escluso ).
+    // Da attivare unicamente dopo aver verificato nei log ( var/log/cart.err.* ) che le richieste
+    // con status "token non ricevuto" siano sparite: lo snippet _inc/_recaptcha.carrello garantisce
+    // il token su ogni form che spedisce campi __carrello__.
+    $cf['ecommerce']['antispam']['richiedi_token']   = false;
+
     // configurazioni di default
     // NOTA i default per i campi del carrello sono in 035 commons
     // $cf['ecommerce']['defaults']['cassa']['id_tipologia_documento']     = 8;                         // tipologia di documento da generare di default in cassa

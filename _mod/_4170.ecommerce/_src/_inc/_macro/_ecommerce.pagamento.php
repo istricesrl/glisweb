@@ -1054,7 +1054,7 @@ $ct['etc']['default']['fatturazione_strategia'] = (
         $cf['mysql']['connection'],
         'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica, coupon.id 
         FROM coupon 
-        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= unix_timestamp(NOW()) ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= unix_timestamp(NOW()) )
         ORDER BY coupon.id '
     );
 */
@@ -1114,7 +1114,7 @@ die( 'SELECT coupon.id, coupon.sconto_fisso, coupon.id_anagrafica,
                 coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
                 FROM coupon 
                 LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
-                WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+                WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= unix_timestamp(NOW()) ) AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= unix_timestamp(NOW()) )
                 AND ( coupon.id_anagrafica IS NULL OR coupon.id_anagrafica = ? '.$whr.' )
                 GROUP BY coupon.id
                 HAVING utilizzato < coupon.sconto_fisso

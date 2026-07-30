@@ -88,9 +88,14 @@
                     contactForm.submit();
                 } else {
                     console.log( 'form non valido' );
-                    grecaptcha.reset();
+                    // il token è monouso e vale 2 minuti: se non si fa il submit bisogna
+                    // azzerare il widget, altrimenti al clic successivo riparte lo stesso token
+                    // e Google risponde timeout-or-duplicate. reset() senza argomento azzera
+                    // solo il primo widget, quindi con più bottoni protetti sulla stessa pagina
+                    // vanno scorsi tutti
+                    try { var widget = document.querySelectorAll('.g-recaptcha'); for( var i = 0; i < widget.length; i++ ) { try { grecaptcha.reset( i ); } catch( e ) {} } } catch( e ) {}
                     contactForm.reportValidity();
-                } 
+                }
                 console.log('invocata protezione reCAPTCHA');
             }
         </script>

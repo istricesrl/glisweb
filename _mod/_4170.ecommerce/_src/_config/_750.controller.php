@@ -34,7 +34,7 @@ ini_set("display_errors", 1);
 
         // log
         // logWrite('esito del controllo antispam: ' . $spamScore . '/' . (($spamCheck == true) ? 'OK' : 'NO'), 'cart');
-        logWrite('esito del controllo antispam: ' . $spam['score'] . '/' . (($spam['check'] == true) ? 'OK' : 'NO'), 'cart');
+        logWrite('esito del controllo antispam: ' . ( ( $spam['score'] === NULL ) ? 'n/d' : $spam['score'] ) . '/' . (($spam['check'] == true) ? 'OK' : 'NO') . ' (' . ( $spam['status'] ?? 'senza dettaglio' ) . ')', 'cart', LOG_ERR);
 
         // debug
         // var_dump( $spamScore );
@@ -822,35 +822,24 @@ ini_set("display_errors", 1);
                 // debug
                 // die( print_r( $coupon, true ) );
 
+                // verifico se il coupon può essere utilizzato con questo carrello: date di
+                // validità, esistenza del codice, uso singolo per persona, vincoli di articolo
+                $esitoCoupon = verificaValiditaCoupon(
+                    $cf['mysql']['connection'],
+                    $coupon,
+                    $_SESSION['carrello']['id_coupon'],
+                    $_SESSION['carrello']
+                );
+
                 // ...
-                $couponOk = true;
+                $couponOk = $esitoCoupon['ok'];
 
-                // se il coupon è vincolato
-                if( isset($coupon['se_vincolato']) && $coupon['se_vincolato'] == 1 ) {
+                // motivo dell'eventuale scarto, a disposizione del template per il messaggio
+                // all'utente; NON va messo in $_SESSION['carrello'], che viene salvato a
+                // database chiave per chiave ( ogni chiave diventa una colonna della INSERT )
+                $_SESSION['coupon']['errore'] = $esitoCoupon['errore'];
 
-                    // recupero i vincoli di articolo
-                    $vincoliArticolo = mysqlQuery(
-                        $cf['mysql']['connection'],
-                        'SELECT * FROM coupon_articoli WHERE id_coupon = ? ORDER BY coupon_articoli.gruppo_alternative ASC',
-                        array( array( 's' => $_SESSION['carrello']['id_coupon'] ) )
-                    );
-
-                    // ...
-                    $arrayAlternative = array();
-
-                    // per ogni articolo vincolato controllo che sia nel carrello
-                    foreach( $vincoliArticolo as $vincolo ) {
-
-                        // ...
-                        $arrayAlternative[ $vincolo['gruppo_alternative'] ][] = $vincolo['id_articolo'];
-
-                    }
-
-                    // per ogni gruppo, controllo che abbia almeno un membro nel carrello
-
-                }
-
-                // TODO verifico se il coupon può essere utilizzato con questo carrello
+                // ...
                 if( $couponOk ) {
 
                     // TODO aggiungo il coupon alla carrelli_coupon per id_carrello ed eventualmente anche per id_carrelli_articoli
@@ -891,6 +880,9 @@ ini_set("display_errors", 1);
                     // debug
                     // die( 'coupon ' . $_SESSION['carrello']['id_coupon'] . ' non utilizzabile' );
 
+                    // log
+                    logWrite( 'coupon ' . $_SESSION['carrello']['id_coupon'] . ' rifiutato (' . $esitoCoupon['errore'] . ') per il carrello ' . $_SESSION['carrello']['id'], 'cart', LOG_ERR );
+
                     // rimuovo il coupon inutilizzabile
                     $_SESSION['carrello']['id_coupon'] =
                     $_SESSION['carrello']['sconto_valore_coupon'] =
@@ -899,6 +891,9 @@ ini_set("display_errors", 1);
                 }
 
             } else {
+
+                // nessun coupon inserito: azzero anche l'eventuale messaggio di scarto precedente
+                $_SESSION['coupon']['errore'] = NULL;
 
                 // rimuovo il coupon inutilizzabile
                 $_SESSION['carrello']['id_coupon'] =

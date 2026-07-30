@@ -144,12 +144,30 @@ else
             # elimino i disallineamenti già risolti
             for disallineamento in $( find $cartellaDisallineamenti -type f ); do
 
+                # file corrispondente nella versione appena installata
+                originale=$( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" )
+
                 # debug
                 echo "faccio il diff di $disallineamento"
-                echo "file originale: $( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" )"
+                echo "file originale: $originale"
 
-                # faccio il diff del file disallineato rispetto al file standard
-                diff -u $( echo $disallineamento | sed -e "s@$cartellaDisallineamenti@@" ) $disallineamento > $disallineamento.diff
+                if [ -f "$originale" ]; then
+
+                    # faccio il diff del file disallineato rispetto al file standard
+                    diff -u "$originale" "$disallineamento" > $disallineamento.diff
+
+                else
+
+                    # il file non esiste a monte: è un'aggiunta locale, non una modifica.
+                    # NOTA senza questo ramo diff scriverebbe l'errore su stderr ( che sotto cron
+                    # si perde ) e lascerebbe un .diff VUOTO, indistinguibile da "nessuna
+                    # differenza": un file nuovo verrebbe scambiato per un disallineamento già
+                    # risolto e non verrebbe mai promosso. Con /dev/null il file compare per
+                    # intero come aggiunta.
+                    echo "  NOTA: $originale non esiste a monte, è un file nuovo"
+                    diff -u /dev/null "$disallineamento" > $disallineamento.diff
+
+                fi
 
             done
 

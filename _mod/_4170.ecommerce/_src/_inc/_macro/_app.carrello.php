@@ -59,8 +59,8 @@
             coalesce( sum( pagamenti.coupon_valore ), 0 ) AS utilizzato, ( coupon.sconto_fisso - coalesce( sum( pagamenti.coupon_valore ), 0 ) ) AS residuo
         FROM coupon 
         LEFT JOIN pagamenti ON coupon.id = pagamenti.id_coupon
-        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() )
-        AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= unix_timestamp( NOW() ) )
+        AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= unix_timestamp( NOW() ) )
         AND ( coupon.id_anagrafica = ? OR coupon.id_anagrafica IS NULL )
         GROUP BY coupon.id
         HAVING utilizzato < coupon.sconto_fisso
@@ -71,6 +71,14 @@
         )
     );
     */
+
+    // esito della validazione del coupon inserito dall'utente, valorizzato dal controller al
+    // runlevel 750; è un flash: si legge una volta sola, così il messaggio sopravvive al redirect
+    // dopo il POST e sparisce al caricamento successivo.
+    // NOTA la chiave è coupon_errore e non coupon.errore perché $ct['etc']['coupon'] qui sotto
+    // ospita già l'elenco dei coupon disponibili
+    $ct['etc']['coupon_errore'] = isset( $_SESSION['coupon']['errore'] ) ? $_SESSION['coupon']['errore'] : NULL;
+    unset( $_SESSION['coupon']['errore'] );
 
     $ct['etc']['coupon']['disponibili'] = mysqlQuery(
         $cf['mysql']['connection'],
@@ -107,8 +115,8 @@
             WHERE id_coupon IS NOT NULL
 
             ) AS t ON coupon.id = t.id
-        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= NOW() )
-        AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= NOW() )
+        WHERE ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= unix_timestamp( NOW() ) )
+        AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= unix_timestamp( NOW() ) )
         AND ( coupon.id_anagrafica = ? OR coupon.id_anagrafica IS NULL )
         GROUP BY t.id 
         HAVING residuo > 0

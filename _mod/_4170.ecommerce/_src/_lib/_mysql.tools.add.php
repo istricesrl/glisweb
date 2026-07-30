@@ -247,15 +247,21 @@
      */
     function calcolaValoreCouponPerRiga( $c, $coupon, $id, $limit ) {
 
-        // recupero il valore del coupon
+        // recupero il valore del coupon, solo se è nella sua finestra di validità
+        // ( NULL su timestamp_inizio / timestamp_fine significa nessun limite ): senza questo
+        // filtro un coupon scaduto continuava a scontare le righe del carrello
         $r = mysqlSelectValue(
             $c,
-            'SELECT coalesce( coupon.sconto_fisso, 0 ) 
-            FROM coupon 
-            WHERE coupon.id = ? 
+            'SELECT coalesce( coupon.sconto_fisso, 0 )
+            FROM coupon
+            WHERE coupon.id = ?
+            AND ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= ? )
+            AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= ? )
             LIMIT 1',
             array(
-                array( 's' => $coupon )
+                array( 's' => $coupon ),
+                array( 's' => time() ),
+                array( 's' => time() )
             )
         );
 
@@ -311,15 +317,20 @@
      */
     function calcolaValoreCouponPerPagamento( $c, $coupon, $id, $limit ) {
 
-        // recupero il valore del coupon
+        // recupero il valore del coupon, solo se è nella sua finestra di validità
+        // ( NULL su timestamp_inizio / timestamp_fine significa nessun limite )
         $r = mysqlSelectValue(
             $c,
-            'SELECT coalesce( coupon.sconto_fisso, 0 ) 
-            FROM coupon 
-            WHERE coupon.id = ? 
+            'SELECT coalesce( coupon.sconto_fisso, 0 )
+            FROM coupon
+            WHERE coupon.id = ?
+            AND ( coupon.timestamp_inizio IS NULL OR coupon.timestamp_inizio <= ? )
+            AND ( coupon.timestamp_fine IS NULL OR coupon.timestamp_fine >= ? )
             LIMIT 1',
             array(
-                array( 's' => $coupon )
+                array( 's' => $coupon ),
+                array( 's' => time() ),
+                array( 's' => time() )
             )
         );
 

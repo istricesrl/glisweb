@@ -42,6 +42,9 @@
 {# CODICE DI CHIUSURA PER EMAILABLE #}
 {% if emailable.profile.apikey %}{% include '_inc/_emailable.close.twig' %}{% endif %}
 
+{# GARANZIA DEL TOKEN reCAPTCHA SUI FORM DEL CARRELLO #}
+{% if google.profile.recaptcha.keys.public %}{% include '_inc/_recaptcha.carrello.twig' %}{% endif %}
+
 {# MODAL DELLA PAGINA #}
 {% for ruolo,modals in page.contents.modals %}{% for modal in modals %}<!-- modal: {{ modal.schema }} -->{% include modal.schema %}{% endfor %}{% endfor %}
 
