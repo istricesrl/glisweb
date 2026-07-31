@@ -42,11 +42,22 @@
 			LIMIT 1'
 		);
 */
+		// Fix 2026-07-29 (Polisportiva Masi): aggiunto `cast( todo.id as char )` nella ON del LEFT
+		// JOIN. `todo.id` è int mentre `__report_lezioni_corsi__.id` è char(255): senza cast MySQL
+		// converte a numero la PK del report, che diventa inutilizzabile, e il join degenera in una
+		// scansione completa del report per ogni riga di todo. Il caso peggiore è proprio quello a
+		// regime (nessuna riga da aggiornare): si scorre tutto todo e per ognuna si scansiona tutto
+		// il report. EXPLAIN: da `ALL` a `eq_ref` su PRIMARY. Misurato con 32k righe di todo e 32k
+		// di report: query interrotta dopo 140 s senza completare, contro 0,5 s con il cast, a
+		// parità di risultato.
+		// Stesso difetto nei due blocchi commentati sopra e sotto (righe 28 e 75): se si riattivano,
+		// va aggiunto lì lo stesso cast.
+		// NB: modifica a un file FRAMEWORK, sarà persa al prossimo `_gw.upgrade.sh`.
 		$status['aggiornare'] = mysqlSelectRow(
 			$cf['mysql']['connection'],
 			'SELECT todo.id FROM todo
 			INNER JOIN tipologie_todo ON tipologie_todo.id = todo.id_tipologia AND tipologie_todo.id_genitore = 6
-			LEFT JOIN __report_lezioni_corsi__ ON __report_lezioni_corsi__.id = todo.id
+			LEFT JOIN __report_lezioni_corsi__ ON __report_lezioni_corsi__.id = cast( todo.id as char )
 			WHERE (
 				coalesce( todo.timestamp_aggiornamento, todo.timestamp_inserimento ) > __report_lezioni_corsi__.timestamp_aggiornamento
 				OR __report_lezioni_corsi__.timestamp_aggiornamento IS NULL

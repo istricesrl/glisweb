@@ -44,12 +44,21 @@
                 // $whr = 'LIMIT 10000';
             }
 
+            // Fix 2026-07-29 (Polisportiva Masi): aggiunto `cast( c.id as char )` nella ON del LEFT
+            // JOIN. `todo.id` è int mentre `__report_lezioni_corsi__.id` è char(255): senza cast
+            // MySQL converte a numero la PK del report, che diventa inutilizzabile, e il join
+            // degenera in una scansione completa del report per ogni riga di todo.
+            // EXPLAIN: da `ALL` a `eq_ref` su PRIMARY. Misurato con 32k righe di todo e 32k di
+            // report: query interrotta dopo 140 s senza completare, contro 0,5 s con il cast, a
+            // parità di risultato.
+            // NB: modifica a un file FRAMEWORK, sarà persa al prossimo `_gw.upgrade.sh`.
+
             // inizializzo l'array
             $arr = mysqlSelectColumn(
                 'id',
                 $cf['mysql']['connection'],
-                'SELECT c.id FROM todo AS c INNER JOIN progetti ON progetti.id = c.id_progetto 
-                LEFT JOIN __report_lezioni_corsi__ AS r ON r.id = c.id
+                'SELECT c.id FROM todo AS c INNER JOIN progetti ON progetti.id = c.id_progetto
+                LEFT JOIN __report_lezioni_corsi__ AS r ON r.id = cast( c.id as char )
                 WHERE ( r.timestamp_aggiornamento < c.timestamp_aggiornamento OR r.timestamp_aggiornamento IS NULL OR r.id IS NULL )
                 AND c.id_tipologia IN (14, 15, 18) ' . $whr,
                 $cnd
