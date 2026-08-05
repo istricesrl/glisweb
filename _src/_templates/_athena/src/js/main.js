@@ -346,6 +346,9 @@
 			var jobId = $( this ).attr('job-id');
 			var pgBar = $( this );
 
+			// Fix 2026-08-03: giri di attesa concessi dopo l'ultima riga lavorata, vedi sotto
+			var attese = 0;
+
 			fgSliders[ jobId ] = setInterval( function() {
 
 				getws( '/job/' + jobId, null, function( d ) {
@@ -369,7 +372,30 @@
 					var container = pgBar.closest('.foreground-job-container');
 					var parent = pgBar.closest('.progress');
 
-					if( d.corrente >= d.totale ) {
+					/*
+					 * Fix 2026-08-03: il poller si fermava a `corrente >= totale`, cioè appena
+					 * lavorata l'ultima riga, quando però il job NON è ancora chiuso: ogni file
+					 * di job scrive `timestamp_completamento` in un'iterazione successiva, quella
+					 * in cui `corrente > totale`. Non chiamandola più, il job restava aperto
+					 * finché il cron non lo portava in background (`_cron.php`, soglia di 10
+					 * minuti) e lo chiudeva lui. Casi reali sul DB: job #751 (6 righe lavorate in
+					 * pochi secondi, chiuso 10,8 minuti dopo), #641 e #637, tutti con
+					 * `se_foreground` girato a NULL dal recupero del cron. Effetto collaterale
+					 * altrettanto fastidioso: `result.label` — l'unico riepilogo che l'operatore
+					 * vede a fine barra — viene valorizzato proprio dall'iterazione di chiusura,
+					 * quindi non compariva quasi mai.
+					 *
+					 * Ora si continua a interrogare finché il job non si dichiara chiuso, con tre
+					 * uscite di sicurezza per non restare a poll infinito: il job non è più
+					 * lavorabile (`id` assente), ha superato il totale (l'iterazione di chiusura
+					 * è passata), oppure sono trascorsi troppi giri dopo la fine del lavoro.
+					 */
+					var lavoroFinito = ( ! d.totale ) || ( d.corrente >= d.totale );
+					var chiuso = ( ! d.id ) || ( !! d.timestamp_completamento ) || ( d.corrente > d.totale );
+
+					if( lavoroFinito && ! chiuso ) { attese++; }
+
+					if( chiuso || ( lavoroFinito && attese > 5 ) ) {
 
 						clearInterval( fgSliders[ jobId ] );
 
