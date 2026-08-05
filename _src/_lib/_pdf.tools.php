@@ -511,3 +511,83 @@
         }
 
     }
+
+    /**
+     * risolve le misure di un'etichetta scalandole sul formato in uso
+     *
+     * Le API di stampa delle etichette dichiarano le misure del proprio contenuto ( margini, altezze, corpi
+     * dei caratteri ) calibrate su un formato di riferimento, e ricevono da $cf['etichette'][ <etichetta> ]
+     * il formato del supporto effettivamente montato sulla stampante; questa funzione applica al contenuto
+     * i fattori di scala fra i due formati, in modo che cambiare il formato in configurazione basti a
+     * riproporzionare la stampa senza toccare il codice.
+     *
+     * Le misure verticali scalano con l'altezza, quelle orizzontali e i corpi dei caratteri con la larghezza
+     * ( il testo si sviluppa in orizzontale, quindi è la larghezza a dire quanto può essere grande ).
+     * Se formato e riferimento coincidono i fattori valgono 1 e le misure tornano identiche a quelle dichiarate.
+     *
+     * L'array in ingresso ha la forma dichiarata nel runlevel 370:
+     *
+     *     array(
+     *         'formato'     => array( 65, 56 ),
+     *         'riferimento' => array(
+     *             'formato'     => array( 57, 32 ),
+     *             'verticali'   => array( 'margine' => 2, 'barcode' => 18 ),
+     *             'orizzontali' => array(),
+     *             'caratteri'   => array( 'testo' => 10 )
+     *         )
+     *     )
+     *
+     * Una misura dichiarata accanto al formato, nel gruppo in cui compare nel riferimento, viene presa come
+     * valore assoluto e non viene scalata: è la via per forzare una singola misura da configurazione.
+     *
+     * @param array $etichetta la configurazione dell'etichetta
+     *
+     * @return array le misure risolte, nella stessa struttura a gruppi ( formato, verticali, orizzontali, caratteri )
+     *
+     */
+    function scalaEtichetta( $etichetta ) {
+
+        // gruppi di misure e dimensione del formato con cui scalano ( 0 = larghezza, 1 = altezza )
+        $gruppi = array( 'verticali' => 1, 'orizzontali' => 0, 'caratteri' => 0 );
+
+        // riferimento su cui sono calibrate le misure
+        $riferimento = ( isset( $etichetta['riferimento'] ) ) ? $etichetta['riferimento'] : array();
+
+        // formato del supporto in uso, che in assenza di indicazioni è quello di riferimento
+        $formato = ( isset( $etichetta['formato'] ) ) ? $etichetta['formato'] : $riferimento['formato'];
+
+        // fattori di scala
+        $k = array(
+            0 => ( $riferimento['formato'][0] > 0 ) ? $formato[0] / $riferimento['formato'][0] : 1,
+            1 => ( $riferimento['formato'][1] > 0 ) ? $formato[1] / $riferimento['formato'][1] : 1
+        );
+
+        // misure risolte, che conservano le chiavi dell'etichetta che non sono misure ( es. l'allineamento )
+        $misure = $etichetta;
+        unset( $misure['riferimento'] );
+        $misure['formato'] = $formato;
+
+        // per ogni gruppo di misure
+        foreach( $gruppi as $gruppo => $dimensione ) {
+
+            // misure del gruppo
+            $misure[ $gruppo ] = array();
+
+            // scala delle misure di riferimento
+            if( isset( $riferimento[ $gruppo ] ) ) {
+                foreach( $riferimento[ $gruppo ] as $chiave => $valore ) {
+                    $misure[ $gruppo ][ $chiave ] = $valore * $k[ $dimensione ];
+                }
+            }
+
+            // misure forzate da configurazione, che valgono così come sono
+            if( isset( $etichetta[ $gruppo ] ) ) {
+                $misure[ $gruppo ] = array_replace( $misure[ $gruppo ], $etichetta[ $gruppo ] );
+            }
+
+        }
+
+        // ...
+        return $misure;
+
+    }
