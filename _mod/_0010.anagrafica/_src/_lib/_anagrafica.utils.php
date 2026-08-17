@@ -401,16 +401,32 @@
 
         $indirizzi = mysqlSelectRow(
             $cf['mysql']['connection'],
+            /**
+             * Fix 2026-08-05: `id_stato` e `id_provincia` restavano NULL per chiunque.
+             *
+             * La condizione `anagrafica_indirizzi.indirizzo IS NULL` è rimasta dalla migrazione del
+             * 2026-07-10, quella che ha portato la copia inline dell'indirizzo su
+             * `anagrafica_indirizzi`: da allora le righe con l'indirizzo valorizzato sono 51.608 su
+             * 51.812, quindi il filtro escludeva praticamente tutto e la query non tornava mai una
+             * riga. Le due colonne alimentano i filtri stato/provincia delle viste anagrafica, e ci
+             * sono viste che impostano `id_stato = 1` come filtro di default: con la colonna a NULL
+             * restituivano una griglia vuota.
+             *
+             * Il comune si prende ora dalla copia inline quando c'è, e da `indirizzi` come ripiego;
+             * l'ordinamento preferisce una riga che risolva davvero un comune.
+             *
+             * File di framework, non c'è modo di sovrascrivere la funzione da `mod/` perché non è
+             * sotto guardia `function_exists()`: la modifica va rimessa dopo ogni `_gw.upgrade.sh`.
+             */
             'SELECT regioni.id_stato, comuni.id_provincia
                 FROM anagrafica_indirizzi
                     LEFT JOIN indirizzi ON indirizzi.id = anagrafica_indirizzi.id_indirizzo
-                    LEFT JOIN comuni ON comuni.id = indirizzi.id_comune
+                    LEFT JOIN comuni ON comuni.id = coalesce( anagrafica_indirizzi.id_comune, indirizzi.id_comune )
                     LEFT JOIN provincie ON provincie.id = comuni.id_provincia
                     LEFT JOIN regioni ON regioni.id = provincie.id_regione
                     LEFT JOIN ruoli_indirizzi ON ruoli_indirizzi.id = anagrafica_indirizzi.id_ruolo
-                WHERE anagrafica_indirizzi.id_anagrafica = ? 
-                AND anagrafica_indirizzi.indirizzo IS NULL
-                ORDER BY ruoli_indirizzi.se_sede_legale DESC
+                WHERE anagrafica_indirizzi.id_anagrafica = ?
+                ORDER BY ( comuni.id IS NULL ) ASC, ruoli_indirizzi.se_sede_legale DESC
                 LIMIT 1 ',
             array(
                 array('s' => $id)
