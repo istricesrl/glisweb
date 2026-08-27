@@ -52,6 +52,19 @@ Per personalizzare un file standard, creare il corrispondente senza underscore i
 
 ---
 
+## Backup: mai dentro la document root
+
+La document root è `<progetto>/dev/`. **Nessun backup ci va dentro**, nemmeno in `dev/var/`: né copie di
+sicurezza prima di una modifica, né file di appoggio, né scarti. Vanno in **`<progetto>/var/<identificativo>/`**,
+un livello sopra la document root, col nome originale del file (l'identificativo è la data, o `data-motivo`).
+
+Rusco da non lasciare mai in giro: `*.bak`, `*.old`, `*.orig`, `*.save`, `*~`, `nome.php.bak.<data>`.
+
+Non è ordine, è sicurezza. Il `.htaccess` nega le estensioni pericolose con un `FilesMatch` **ancorato alla
+fine del nome**, quindi `pagina.php.bak.20260827` non fa match e Apache lo serve in chiaro. Verificato:
+`zz.test.php.bak` → 403, `zz.test.php.bak.20260827` → **200 col contenuto**. Proprio la convenzione di
+mettere la data in fondo, che sembra più ordinata, è quella che aggira la protezione.
+
 ## Cose da fare: `TODO.md` e `burndown.md`
 
 Il backlog del progetto sta in `TODO.md`, nella **root del deploy** (il livello che contiene `dev/`), non

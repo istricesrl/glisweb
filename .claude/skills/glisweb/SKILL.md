@@ -1,6 +1,6 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md o il burndown.md di un progetto, e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md o il burndown.md di un progetto, e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
 ---
 
 # Skill `glisweb`
@@ -113,6 +113,43 @@ pwd | grep -qE '/var/www/(glisweb\.istricesrl\.it|glisdev\.istricesrl\.com)' \
 Se il check dice **CLIENTE**, applica questa regola in modo assoluto: nessuna modifica all'upstream, per
 nessun motivo. Se dice **UPSTREAM**, vedi sezione "Modalità B — Operatività" e il manuale framework per
 le specificità della valutazione disallineamenti e del rispetto degli hard link fra glisweb e glisdev.
+
+## ⚠ Regola fondamentale: nessun backup dentro la document root
+
+La document root di un progetto è `<progetto>/dev/` (o il ramo deployato). **Non ci va mai un backup**:
+né una copia di sicurezza prima di una modifica, né un file di appoggio, né uno scarto — e nemmeno dentro
+`dev/var/`, che è comunque sotto la document root.
+
+I backup vanno in **`<progetto>/var/<identificativo>/`**, un livello **sopra** la document root,
+conservando il nome originale del file e, se serve a distinguerlo, il suo percorso relativo:
+
+```
+<progetto>/
+├── var/
+│   └── 20260827-pulizia/          <- identificativo: data, o data-motivo
+│       └── composer.json          <- nome originale, non composer.json.bak
+└── dev/                           <- document root: qui dentro niente backup
+```
+
+Sono da considerare rusco, ovunque nell'albero: `*.bak`, `*.old`, `*.orig`, `*.save`, `*~`,
+`nome.php.bak.<data>`. Se ne trovi, spostali in `var/<identificativo>/` — non lasciarli dove sono.
+
+**Perché non è una questione di ordine ma di sicurezza.** Il `.htaccess` del framework nega l'accesso alle
+estensioni pericolose con un `FilesMatch` **ancorato alla fine del nome**:
+
+```apache
+<FilesMatch "(?i)\.(bak|blt|cfg|conf|config|...|sql|sqlite|swp|templ|trace|twig)$">
+    Deny from all
+</FilesMatch>
+```
+
+Un file chiamato `pagina.php.bak.20260827` finisce per `.20260827`, non fa match, e Apache lo serve in
+chiaro: è codice sorgente pubblico. Verificato il 2026-08-27 su un deploy reale — `zz.test.php.bak`
+risponde **403**, `zz.test.php.bak.20260827` risponde **200 con il contenuto**. La convenzione di
+aggiungere la data in coda al nome, che sembra più ordinata, è proprio quella che aggira la protezione.
+
+Dentro `dev/var/` il download API del framework para il colpo (`400 richiesta bloccata`), ma è una rete di
+sicurezza, non un permesso: il posto giusto resta sopra la document root.
 
 ## 1. Come capire il contesto
 
