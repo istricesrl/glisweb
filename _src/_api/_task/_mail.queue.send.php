@@ -120,10 +120,13 @@
 		// la firma DKIM segue il dominio e in ogni dominio può essercene più d'una, ognuna identificata da un selettore diverso
 
 		// ricavo il dominio di invio
-		// NOTA fin qui va bene
+		// NOTA il mittente arriva da unserialize() di una colonna della coda: quando il valore
+		// serializzato non e' un array (in coda si trovano righe con 'N;', cioe' NULL) array_shift()
+		// solleva un warning e l'explode successivo non ha un indice 1. Senza dominio la firma DKIM
+		// non si applica, che e' gia' il comportamento previsto dal ramo else qui sotto.
 		$mittente = unserialize( $mail['mittente'] );
-		$dominio = explode( '@', array_shift( $mittente ) );
-		$dominio = $dominio[1];
+		$dominio = ( is_array( $mittente ) && ! empty( $mittente ) ) ? explode( '@', array_shift( $mittente ) ) : array();
+		$dominio = ( isset( $dominio[1] ) ) ? $dominio[1] : '';
 
 		// debug
 		// print_r( unserialize( $mail['mittente'] ) );

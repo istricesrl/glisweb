@@ -17,6 +17,17 @@
                 <legend>dati carrello <small>#{{ session.carrello.id }}</small></legend>
                 {# DATI DI INTESTAZIONE DEL CARRELLO #}
                 <div class="form-row">
+                    <div class="col-12">
+                        <label class="label-top">sito</label>
+                        <select class="form-control form-control-sm" id="id_sito" name="__carrello__[id_sito]" required>
+                        <option value=""{% if not session.carrello.id_sito %} selected{% endif %}>&mdash; seleziona il sito &mdash;</option>
+                        {% for sito in etc.siti %}
+                        <option value="{{ sito.id }}"{% if sito.id == session.carrello.id_sito %} selected{% endif %}>{{ sito.__label__ }}</option>
+                        {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
                     <div class="col">
                         <label class="label-top">cliente</label>
 						{{ frm.selectBox( '__carrello__', '', '', 'intestazione_id_anagrafica', '', '', '', session.carrello.intestazione_id_anagrafica, '', 1, '', '', '', '', 'anagrafica', 'intestazione_id_anagrafica', page, pages, ietf, 'anagrafica' ) }}
@@ -256,15 +267,189 @@
                         <input class="btn btn-secondary btn-sm btn-block" type="button" value="vai al pagamento" onclick="$('#ts_checkout').val( Math.floor( Date.now() / 1000 ) );$('#carrello').attr('action','{{ pages['ecommerce.pagamento'].url[ localization.language.ietf ] }}?__pagamenti__[id_carrello]={{ session.carrello.id }}');$('#carrello').submit();">
                     </div>
                 </div>
+
+                {# FINALIZZAZIONE DELL'ORDINE ( rispecchia il checkout del sito: registra il pagamento,
+                   trasmette l'iscrizione al gestionale e invia la mail di conferma, sul sito del carrello ) #}
+                <div class="form-row mt-3">
+                    <div class="col-12">
+                        <p class="mb-1"><strong>finalizza l'ordine</strong> <small class="text-muted">&mdash; registra il pagamento, trasmette l'iscrizione al gestionale e invia la mail di conferma</small></p>
+                    </div>
+                </div>
+                {# selettore del metodo: mostra solo i flussi disponibili sul deploy #}
+                <div class="form-row">
+                    <div class="col-12 col-md-6">
+                        <label class="label-top">metodo di pagamento</label>
+                        <select class="form-control form-control-sm" id="metodo_pagamento" onchange="mostraPannelloPagamento();">
+                            <option value="offline">pagamento offline (contanti / bonifico)</option>
+                            {% if etc.client_token and ecommerce.profile.provider['paypal-advanced'].client_id %}
+                            <option value="paypal">carta di credito / PayPal</option>
+                            {% endif %}
+                            {% if ecommerce.profile.provider['monetaweb'].available and ecommerce.profile.provider['monetaweb'].init_api %}
+                            <option value="monetaweb">carta di credito (Monetaweb / Nexi)</option>
+                            {% endif %}
+                            {% if etc.recupero.url %}
+                            <option value="recupero">link di pagamento per il cliente</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                </div>
+
+                {# PANNELLO OFFLINE ( contanti / bonifico ) #}
+                <div id="pannello-offline">
+                    <div class="form-row">
+                        <div class="col-12 col-md-5">
+                            <label class="label-top">tipo di pagamento offline</label>
+                            <select class="form-control form-control-sm" id="metodo_offline">
+                                <option value="contanti">contanti</option>
+                                <option value="bonifico">bonifico</option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-md-7 d-flex align-items-end">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" id="btn-finalizza-offline" onclick="finalizzaOffline();">finalizza (pagamento offline)</button>
+                        </div>
+                    </div>
+                </div>
+
+                {# PANNELLO ONLINE PayPal Advanced ( carta / PayPal in-page ) - solo se il provider e' configurato.
+                   Riusa la stessa macchina del front-end: _paypal.js -> paypal.advanced.order/capture -> finally.success. #}
+                {% if etc.client_token and ecommerce.profile.provider['paypal-advanced'].client_id %}
+                <div id="pannello-paypal" hidden>
+                    <div class="form-row">
+                        <div class="col-12">
+                            <p class="text-muted mb-2"><small>inserisci la carta o il PayPal del cliente. Al pagamento l'ordine viene registrato, trasmesso al gestionale e inviata la mail di conferma.</small></p>
+                            <script> var return_url = "{{ page.path[ localization.language.ietf ] }}"; </script>
+                            <script src="https://www.paypal.com/sdk/js?components=buttons,hosted-fields&currency=EUR&disable-funding=sofort,mybank&client-id={{ ecommerce.profile.provider['paypal-advanced'].client_id }}" data-client-token="{{ etc.client_token }}"></script>
+                            <div id="paypal-button-container" class="paypal-button-container"></div>
+                            <script src="/_src/_js/_lib/_paypal.js"></script>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# PANNELLO ONLINE Monetaweb / Nexi ( redirect alla pagina hosted del provider ) - solo se disponibile #}
+                {% if ecommerce.profile.provider['monetaweb'].available and ecommerce.profile.provider['monetaweb'].init_api %}
+                <div id="pannello-monetaweb" hidden>
+                    <div class="form-row">
+                        <div class="col-12">
+                            <p class="text-muted mb-2"><small>si viene portati alla pagina sicura del provider per inserire la carta del cliente; al pagamento l'ordine viene registrato, trasmesso al gestionale e inviata la mail di conferma.</small></p>
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-primary btn-sm btn-block" id="btn-monetaweb" onclick="pagaMonetaweb();">paga con carta (Monetaweb / Nexi)</button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                {# PANNELLO LINK DI RECUPERO ( il cliente paga sul sito pubblico ) - solo se risolvibile #}
+                {% if etc.recupero.url %}
+                <div id="pannello-recupero" hidden>
+                    <div class="form-row">
+                        <div class="col-12">
+                            <p class="text-muted mb-2"><small>copia il link e invialo al cliente: lo apre sul sito, ritrova il carrello e paga online. Il pagamento chiude l'ordine come un acquisto normale.</small></p>
+                        </div>
+                        <div class="col-12 col-md-9">
+                            <input type="text" class="form-control form-control-sm" id="link-recupero" value="{{ etc.recupero.url }}" readonly onclick="this.select();">
+                        </div>
+                        <div class="col-12 col-md-3 d-flex align-items-end">
+                            <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="copiaLinkRecupero();">copia link</button>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <div class="form-row"><div class="col-12"><div id="esito-finalizza"></div></div></div>
+
+                <script>
+                // mostra il pannello del metodo scelto; passando a PayPal salva prima il carrello
+                // ( il runlevel 750 persiste i dati correnti ) cosi' l'ordine PayPal usa l'importo giusto
+                function mostraPannelloPagamento() {
+                    var m = document.getElementById('metodo_pagamento').value;
+                    var off = document.getElementById('pannello-offline');
+                    var pp = document.getElementById('pannello-paypal');
+                    var rec = document.getElementById('pannello-recupero');
+                    var mw = document.getElementById('pannello-monetaweb');
+                    if( off ) { off.hidden = ( m !== 'offline' ); }
+                    if( pp ) { pp.hidden = ( m !== 'paypal' ); if( m === 'paypal' ) { salvaCarrelloPerPagamento(); } }
+                    if( mw ) { mw.hidden = ( m !== 'monetaweb' ); }
+                    if( rec ) { rec.hidden = ( m !== 'recupero' ); }
+                }
+                function pagaMonetaweb() {
+                    var btn = document.getElementById('btn-monetaweb');
+                    var esito = document.getElementById('esito-finalizza');
+                    var lbl = btn.innerHTML; btn.disabled = true; btn.innerHTML = 'connessione al provider\u2026'; esito.innerHTML = '';
+                    // salvo prima i dati correnti del carrello ( runlevel 750 ), poi avvio il pagamento
+                    var dati = new FormData(document.getElementById('carrello'));
+                    dati.append('return_url', window.location.pathname);
+                    fetch('/api/4170.ecommerce/cassa.monetaweb.init', { method: 'POST', body: dati, credentials: 'same-origin' })
+                        .then(function(r){ return r.json(); })
+                        .then(function(d){
+                            if( d && d.redirecturl ) { window.location = d.redirecturl; }
+                            else { esito.innerHTML = '<div class="alert alert-warning p-2 mb-0">avvio pagamento non riuscito: ' + ((d && d.errore) ? d.errore : 'errore sconosciuto') + '</div>'; btn.disabled = false; btn.innerHTML = lbl; }
+                        })
+                        .catch(function(){ esito.innerHTML = '<div class="alert alert-danger p-2 mb-0">errore di rete durante l\'avvio del pagamento</div>'; btn.disabled = false; btn.innerHTML = lbl; });
+                }
+                function copiaLinkRecupero() {
+                    var campo = document.getElementById('link-recupero');
+                    campo.select();
+                    if( navigator.clipboard && navigator.clipboard.writeText ) { navigator.clipboard.writeText(campo.value); }
+                    else { try { document.execCommand('copy'); } catch(e) {} }
+                }
+                function salvaCarrelloPerPagamento() {
+                    var dati = new FormData(document.getElementById('carrello'));
+                    fetch('{{ page.path[ localization.language.ietf ] }}', { method: 'POST', body: dati, credentials: 'same-origin' });
+                }
+                document.addEventListener('DOMContentLoaded', mostraPannelloPagamento);
+
+                function finalizzaOffline() {
+                    var metodo = document.getElementById('metodo_offline').value;
+                    if( ! confirm('Confermi la finalizzazione con pagamento ' + metodo + '?\nVerranno registrati il pagamento e l\'iscrizione sul gestionale e inviata la mail di conferma al cliente.') ) { return; }
+                    var btn = document.getElementById('btn-finalizza-offline');
+                    var esito = document.getElementById('esito-finalizza');
+                    var lbl = btn.innerHTML;
+                    btn.disabled = true; btn.innerHTML = 'finalizzazione in corso\u2026'; esito.innerHTML = '';
+                    // invio i campi correnti del carrello: il runlevel 750 li salva prima che l'endpoint finalizzi
+                    var dati = new FormData(document.getElementById('carrello'));
+                    dati.append('metodo', metodo);
+                    fetch('/api/4170.ecommerce/cassa.finalizza', { method: 'POST', body: dati, credentials: 'same-origin' })
+                        .then(function(r){ return r.json(); })
+                        .then(function(d){
+                            if( d && d.esito === 'ok' ) {
+                                esito.innerHTML = '<div class="alert alert-success p-2 mb-0">ordine #' + d.id_carrello + ' finalizzato (' + d.metodo + '). Iscrizione trasmessa e mail di conferma inviata.</div>';
+                                setTimeout(function(){ window.location = '{{ page.path[ localization.language.ietf ] }}'; }, 2500);
+                            } else {
+                                esito.innerHTML = '<div class="alert alert-warning p-2 mb-0">finalizzazione non riuscita: ' + ((d && d.errore) ? d.errore : 'errore sconosciuto') + '</div>';
+                                btn.disabled = false; btn.innerHTML = lbl;
+                            }
+                        })
+                        .catch(function(){
+                            esito.innerHTML = '<div class="alert alert-danger p-2 mb-0">errore di rete durante la finalizzazione</div>';
+                            btn.disabled = false; btn.innerHTML = lbl;
+                        });
+                }
+                </script>
             </fieldset>
         </form>
         {% else %}
+        {# CARRELLO NON ANCORA APERTO: si sceglie prima il sito, poi si aggiungono gli articoli.
+           Selezionando il sito il carrello viene creato ( il controller lo apre gia' con id_sito )
+           e la pagina passa al form completo. #}
+        <form id="nuovo-carrello" action="" method="post">
         <fieldset>
-            <legend>apri un carrello o aggiungi un articolo per iniziare</legend>
-            {# TODO QUI MOSTRARE I CARRELLI DA CATTURARE #}
-            {# TODO QUI MOSTRARE IL CAMPO RICERCA PER I CARRELLI NON PAGATI #}
-            <p>nessun carrello aperto</p>
+            <legend>nuovo carrello</legend>
+            <div class="form-row">
+                <div class="col-12 col-md-4">
+                    <label class="label-top">sito</label>
+                    <select class="form-control form-control-sm" id="id_sito" name="__carrello__[id_sito]" required onchange="this.form.submit()">
+                        <option value="" selected>&mdash; seleziona il sito &mdash;</option>
+                        {% for sito in etc.siti %}
+                        <option value="{{ sito.id }}">{{ sito.__label__ }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <p class="text-muted mt-2"><small>scegli il sito del carrello per iniziare, poi aggiungi gli articoli dalla ricerca</small></p>
         </fieldset>
+        </form>
         {% endif %}
     </div>
     <div class="col-md-2 d-flex flex-column">

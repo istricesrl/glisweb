@@ -100,8 +100,12 @@
         $mail->Encoding            = 'base64';
 
         // mittente della mail
-        $fromName               = current(array_keys($from));
-        $fromMail               = current($from);
+        // NOTA come per i destinatari piu' sotto, $from arriva da unserialize() di una colonna
+        // della coda e puo' non essere un array: senza guardia array_keys()/current() sollevano
+        // un warning. Con la guardia $fromMail resta vuoto e il filter_var() qui sotto scarta la
+        // mail, che e' gia' il comportamento previsto.
+        $fromName               = is_array($from) ? current(array_keys($from)) : '';
+        $fromMail               = is_array($from) ? current($from) : '';
 
         // se la mail mittente è un indirizzo e-mail corretto
         if (filter_var($fromMail, FILTER_VALIDATE_EMAIL)) {
@@ -127,21 +131,32 @@
             $mail->MsgHTML($corpo);
 
             // destinatari
-            foreach ($to as $destName => $destAddress) {
-                $mail->AddAddress(trim($destAddress), trim($destName));
+            // NOTA il chiamante (_src/_api/_task/_mail.queue.send.php) passa qui il risultato di
+            // unserialize() su una colonna della coda: quando il valore serializzato non e' un
+            // array il foreach solleva "Invalid argument supplied for foreach()". In coda si
+            // trovano davvero valori 'N;' (NULL serializzato) su destinatari_bcc. Gli allegati e
+            // gli header erano gia' protetti da is_array(): qui si allinea il resto.
+            if (is_array($to)) {
+                foreach ($to as $destName => $destAddress) {
+                    $mail->AddAddress(trim($destAddress), trim($destName));
+                }
             }
 
             // destinatari CC
-            foreach ($cc as $destName => $destAddress) {
-                if (! empty($destAddress)) {
-                    $mail->AddCC(trim($destAddress), trim($destName));
+            if (is_array($cc)) {
+                foreach ($cc as $destName => $destAddress) {
+                    if (! empty($destAddress)) {
+                        $mail->AddCC(trim($destAddress), trim($destName));
+                    }
                 }
             }
 
             // destinatari BCC
-            foreach ($bcc as $destName => $destAddress) {
-                if (! empty($destAddress)) {
-                    $mail->AddBCC(trim($destAddress), trim($destName));
+            if (is_array($bcc)) {
+                foreach ($bcc as $destName => $destAddress) {
+                    if (! empty($destAddress)) {
+                        $mail->AddBCC(trim($destAddress), trim($destName));
+                    }
                 }
             }
 

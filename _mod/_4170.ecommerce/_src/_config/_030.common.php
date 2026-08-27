@@ -225,6 +225,41 @@
      * 
      */
 
+    /**
+     * link per il recupero del carrello
+     * =================================
+     * La scheda del carrello nel backend espone un link che consente di riaprire quel carrello sul sito
+     * che lo ha generato: il link punta alla pagina del carrello e porta in querystring l'ID del carrello
+     * e il suo timestamp di inserimento, che al runlevel 710 vengono usati per riprendere in sessione il
+     * carrello abbandonato.
+     *
+     * L'URL della pagina viene risolto in cascata:
+     *
+     * 1. dal metadato del carrello indicato in $cf['ecommerce']['recovery']['metadata'], quando presente:
+     *    è la pagina esatta dalla quale il carrello è nato, quindi è la fonte più precisa e non richiede
+     *    alcuna configurazione;
+     * 2. dalla pagina configurata per il sito del carrello in $cf['ecommerce']['recovery']['pages'],
+     *    montata sull'URL del sito nell'ambiente corrente ricavato da $cf['sites'].
+     *
+     * Se nessuna delle due strade produce un URL il link non viene esposto e la scheda riporta il motivo.
+     * Si noti che la seconda strada funziona solo per i carrelli che hanno un sito associato: il campo
+     * id_sito viene valorizzato in automatico per i carrelli creati dal front end (runlevel 750), mentre
+     * per quelli creati dal backend va scelto nella scheda.
+     *
+     */
+
+    // metadato del carrello che contiene l'URL della pagina di provenienza
+    $cf['ecommerce']['recovery']['metadata']    = 'url_pagina';
+
+    // pagina del carrello per sito, come path relativo alla radice del sito: id_sito => path
+    $cf['ecommerce']['recovery']['pages']       = array();
+
+    // nomi dei parametri di querystring letti al runlevel 710
+    $cf['ecommerce']['recovery']['parameters']  = array(
+        'cart'                                  => 'rc',
+        'timestamp'                             => 'ti'
+    );
+
     // campi di base del carrello
     // TODO aggiungere $cf['utm']['fields'] ai campi del carrello
     // TODO aggiungere campi per i coupon

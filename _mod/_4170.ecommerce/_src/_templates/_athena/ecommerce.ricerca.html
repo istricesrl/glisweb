@@ -23,7 +23,7 @@
                     <input type="text" id="ricerca" class="form-control form-control-sm" id="__aggiungi_{{ loop.index }}__" value="">
                 </div>
                 <div class="col-12 col-md-auto">
-                    <button onclick="window.open('{{ pages['ecommerce.carrello'].path[ localization.language.ietf ] }}?__carrello__[__articolo__][id_mastro_provenienza]={{ risultato.id_mastro_provenienza }}&__carrello__[__articolo__][id_articolo]={{ risultato.id }}&__carrello__[__articolo__][quantita]='+$('#__aggiungi_{{ loop.index }}__').val(),'_self');" class="btn btn-secondary btn-sm btn-block">aggiungi</button>
+                    <button onclick="window.open('{{ pages['ecommerce.carrello'].path[ localization.language.ietf ] }}?__carrello__[id_sito]=&__carrello__[__articolo__][id_mastro_provenienza]={{ risultato.id_mastro_provenienza }}&__carrello__[__articolo__][id_articolo]={{ risultato.id }}&__carrello__[__articolo__][quantita]='+$('#__aggiungi_{{ loop.index }}__').val(),'_self');" class="btn btn-secondary btn-sm btn-block">aggiungi</button>
                 </div>
                 {% if 'E300.modula' in mods.active.array %}
                 <div class="col-12 col-md-auto">
@@ -187,7 +187,7 @@
                 // $('#command_output').append( $('<p>').text(data) );
                 // $('#test_modula').modal('toggle');
                 $('#command_output_row').removeClass('d-none');
-                window.open('{{ pages["ecommerce.carrello"].path[ localization.language.ietf ] }}?__carrello__[__articolo__][id_mastro_provenienza]='+magazzino+'&__carrello__[__articolo__][id_articolo]='+articolo+'&__carrello__[__articolo__][quantita]='+quantita,'_self');
+                window.open('{{ pages["ecommerce.carrello"].path[ localization.language.ietf ] }}?__carrello__[id_sito]=&__carrello__[__articolo__][id_mastro_provenienza]='+magazzino+'&__carrello__[__articolo__][id_articolo]='+articolo+'&__carrello__[__articolo__][quantita]='+quantita,'_self');
             }
         });
 

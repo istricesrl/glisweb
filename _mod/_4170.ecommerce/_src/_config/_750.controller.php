@@ -168,7 +168,21 @@ ini_set("display_errors", 1);
 
             }
 
-            $_SESSION['carrello']['id_sito'] = $cf['site']['id'];
+            // id_sito del carrello. Tre casi, distinti dal campo __carrello__[id_sito]:
+            // 1) valore esplicito ( selettore della cassa nel back end ) -> si usa quel sito;
+            // 2) campo assente ( front end: i template pubblici non lo inviano ) -> il sito si
+            //    deduce dal sito corrente della richiesta, perche chi compra da un sito pubblico
+            //    ordina per quel sito e non c'e' nulla da chiedere;
+            // 3) campo presente ma vuoto ( marcatore degli "aggiungi" della cassa ) -> non si fa
+            //    nulla di proposito: non si deduce il sito corrente ( che nel back end e' il sito
+            //    del pannello, senza senso come sito del carrello: cosi la cassa resta obbligata a
+            //    chiederlo ) e non si cancella un sito gia' scelto ( aggiungere articoli dopo aver
+            //    scelto il sito lo conserva ).
+            if( isset( $_REQUEST['__carrello__']['id_sito'] ) && $_REQUEST['__carrello__']['id_sito'] !== '' ) {
+                $_SESSION['carrello']['id_sito'] = intval( $_REQUEST['__carrello__']['id_sito'] );
+            } elseif( ! isset( $_REQUEST['__carrello__']['id_sito'] ) && empty( $_SESSION['carrello']['id_sito'] ) ) {
+                $_SESSION['carrello']['id_sito'] = $cf['site']['id'];
+            }
 
 
             // debug
