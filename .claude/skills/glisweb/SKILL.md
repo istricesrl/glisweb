@@ -25,6 +25,35 @@ profondamente diverso fra i due:
 | **Progetto cliente** (usa il framework) | La stragrande maggioranza dei progetti. Le `_*` sono framework standard, NON si modificano direttamente. Le modifiche custom vanno in `src/`, `mod/`, `var/`. | Tutto tranne i due path qui sotto. |
 | **Progetto upstream** (sviluppa il framework) | Solo `glisweb.istricesrl.it` (composer `istricesrl/glisweb`) e `glisdev.istricesrl.com`. Qui le `_*` SONO il sorgente principale e si modificano direttamente. | `/var/www/glisweb.istricesrl.it/` e `/var/www/glisdev.istricesrl.com/`. |
 
+### Perché glisweb e glisdev condividono gli inode
+
+I due deploy upstream **non sono due copie**: la gran parte dei loro file è lo **stesso file**, condiviso
+via hard link (stesso inode). `glisdev.istricesrl.com` è la versione instabile su cui si lavora,
+`glisweb.istricesrl.it` è quella distribuita. I link esistono per impedire che le due divergano in un
+**fork involontario**: una modifica fatta da una parte è già dall'altra, perché è lo stesso file su disco.
+
+Alla data del 2026-08-27: **1115 file condivisi**, 22 presenti in entrambi ma deliberatamente **non**
+linkati — lì il fork è voluto. I non linkati sono di due tipi:
+
+- *identità della singola istanza*: `_etc/_current.version`, `_etc/_current.release`, `composer.lock`,
+  `.gitignore`, `src/config.json`, `etc/secret/**` (chiavi DKIM), `.github/FUNDING.yml`, `usr/docker/Dockerfile`;
+- *lavoro in corso divergente*: alcuni `_src/_tpl/*/etc/template.yaml` e `src/js/main.js`, qualche pagina
+  di `_mod/`, una patch SQL.
+
+**Come si rompono i link senza accorgersene.** Git non modifica i file sul posto: li sostituisce. Un
+`git checkout`, `merge`, `reset --hard`, `pull` o `stash` che tocchi un file condiviso ne crea uno nuovo e
+**spezza il link**, silenziosamente. Da quel momento le due copie divergono e nessuno se ne accorge finché
+non si nota che una correzione non è arrivata dall'altra parte.
+
+Le contromisure, in ordine di preferenza:
+
+1. modificare i file **sul posto** (un editor che tronca e riscrive lo stesso inode va bene; `sed -i`
+   **no**, crea un temporaneo e rinomina);
+2. per aggiornare un branch remoto, spingere il ref senza toccare la working copy —
+   `git push origin <branch>:<destinazione>` per un fast-forward, invece di `checkout` + `merge` + `push`;
+3. dopo qualunque operazione git su questi due deploy, **verificare** con
+   `/usr/local/sbin/verifica-hardlink-glisweb.sh` e ricreare i link eventualmente persi.
+
 **Dai progetti cliente è VIETATO modificare direttamente glisweb o glisdev** (file, git, hard link,
 permessi, qualsiasi cosa). Anche se si ha accesso SSH/filesystem ai deploy upstream — non si fa.
 
