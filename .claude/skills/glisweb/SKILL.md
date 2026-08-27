@@ -28,31 +28,48 @@ profondamente diverso fra i due:
 ### Perché glisweb e glisdev condividono gli inode
 
 I due deploy upstream **non sono due copie**: la gran parte dei loro file è lo **stesso file**, condiviso
-via hard link (stesso inode). `glisdev.istricesrl.com` è la versione instabile su cui si lavora,
-`glisweb.istricesrl.it` è quella distribuita. I link esistono per impedire che le due divergano in un
-**fork involontario**: una modifica fatta da una parte è già dall'altra, perché è lo stesso file su disco.
+via hard link. `glisdev.istricesrl.com` è la versione instabile su cui si lavora, `glisweb.istricesrl.it`
+quella distribuita. I link esistono per impedire che le due divergano in un **fork involontario**: una
+modifica fatta da una parte è già dall'altra, perché è lo stesso file su disco.
 
-Alla data del 2026-08-27: **1115 file condivisi**, 22 presenti in entrambi ma deliberatamente **non**
-linkati — lì il fork è voluto. I non linkati sono di due tipi:
+La regola di cosa si condivide segue la solita convenzione dell'underscore: **le cartelle di framework
+(`_src/`, `_mod/`, `_etc/`, `_usr/`) sono condivise**, quelle di istanza (`src/`, `mod/`, `etc/`, `usr/`,
+`var/`, `tmp/`) no, insieme a `composer.lock`, `.gitignore`, `_etc/_current.version`,
+`_etc/_current.release`, `_src/_lib/_ext`, `_usr/_docs/_html|_pdf`, `_usr/_examples`, `_usr/_test`. Dentro
+l'area condivisa resta un pugno di file deliberatamente forkati, quelli su cui il lavoro in corso è
+divergente. Al 2026-08-27: **1115 file condivisi, 13 forkati**.
 
-- *identità della singola istanza*: `_etc/_current.version`, `_etc/_current.release`, `composer.lock`,
-  `.gitignore`, `src/config.json`, `etc/secret/**` (chiavi DKIM), `.github/FUNDING.yml`, `usr/docker/Dockerfile`;
-- *lavoro in corso divergente*: alcuni `_src/_tpl/*/etc/template.yaml` e `src/js/main.js`, qualche pagina
-  di `_mod/`, una patch SQL.
+### Gli strumenti per il lavoro in parallelo
 
-**Come si rompono i link senza accorgersene.** Git non modifica i file sul posto: li sostituisce. Un
-`git checkout`, `merge`, `reset --hard`, `pull` o `stash` che tocchi un file condiviso ne crea uno nuovo e
-**spezza il link**, silenziosamente. Da quel momento le due copie divergono e nessuno se ne accorge finché
-non si nota che una correzione non è arrivata dall'altra parte.
+Stanno nella root di `glisdev.istricesrl.com` e si lanciano da lì. **Sono questi gli strumenti da usare:
+non scriverne altri.**
 
-Le contromisure, in ordine di preferenza:
+| comando | cosa fa |
+|---|---|
+| `./sync-glisweb.sh` | inventario. Scrive `sync-glisweb.log` con l'elenco dei file **non** condivisi (`find -links 1`, più una lista di esclusioni) e di quelli condivisi. È il modo per accorgersi di un link rotto |
+| `./sync-add.sh <path>` | aggiunge un singolo file all'insieme condiviso, linkandolo da glisweb |
+| `./sync-tpl.sh` · `./sync-mod.sh <modulo>` · `./sync-bkg.sh` · `./sync-flags.sh` | `sync-add` in blocco su interi sottoalberi (template, un modulo, immagini di sfondo, bandiere) |
+| `./resync.sh` | riporta in sincronia i file elencati in `resync.txt` facendo vincere la versione di **glisdev**: la sposta su glisweb e rilinka |
+| `./resync-da-glisweb.sh` | stessa lista, ma fa vincere **glisweb**: cancella la copia di glisdev e rilinka |
 
-1. modificare i file **sul posto** (un editor che tronca e riscrive lo stesso inode va bene; `sed -i`
-   **no**, crea un temporaneo e rinomina);
-2. per aggiornare un branch remoto, spingere il ref senza toccare la working copy —
-   `git push origin <branch>:<destinazione>` per un fast-forward, invece di `checkout` + `merge` + `push`;
-3. dopo qualunque operazione git su questi due deploy, **verificare** con
-   `/usr/local/sbin/verifica-hardlink-glisweb.sh` e ricreare i link eventualmente persi.
+Il flusso è: si forka un file semplicemente modificandolo in modo che perda il link, ci si lavora, e quando
+è pronto lo si mette in `resync.txt` e si lancia lo script che fa vincere il lato giusto.
+
+### Come si rompono i link senza accorgersene
+
+Git non modifica i file sul posto: li sostituisce. Un `git checkout`, `merge`, `reset --hard`, `pull` o
+`stash` che tocchi un file condiviso ne crea uno nuovo e **spezza il link**, in silenzio. Lo stesso fa
+`sed -i`, che scrive un temporaneo e rinomina (verificato). Un editor che tronca e riscrive lo stesso
+inode invece va bene.
+
+Quindi:
+
+1. modificare i file **sul posto**;
+2. per aggiornare un branch remoto quando è un fast-forward, spingere il ref senza toccare la working
+   copy — `git push origin <branch>:<destinazione>` invece di `checkout` + `merge` + `push`;
+3. **dopo qualunque operazione git su questi due deploy, lanciare `./sync-glisweb.sh`** e confrontare
+   l'elenco dei non condivisi con quello che ci si aspetta; se un file è finito lì per sbaglio,
+   rimetterlo in sincronia con `resync.sh` o `resync-da-glisweb.sh`.
 
 **Dai progetti cliente è VIETATO modificare direttamente glisweb o glisdev** (file, git, hard link,
 permessi, qualsiasi cosa). Anche se si ha accesso SSH/filesystem ai deploy upstream — non si fa.
