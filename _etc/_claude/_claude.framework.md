@@ -52,6 +52,45 @@ Per personalizzare un file standard, creare il corrispondente senza underscore i
 
 ---
 
+## Cose da fare: `TODO.md` e `burndown.md`
+
+Il backlog del progetto sta in `TODO.md`, nella **root del deploy** (il livello che contiene `dev/`), non
+dentro `dev/`. Accanto c'è `burndown.md`, che è **generato**: non si modifica a mano, lo riscrive ogni notte
+`/etc/cron.daily/burndown`.
+
+Li gestisce [avanzamenti-todo](https://github.com/the-linux-nerd/avanzamenti-todo), che conta le voci con
+espressioni **ancorate a inizio riga**. Le regole che seguono non sono questioni di stile: se non le rispetti
+i conteggi sbagliano in silenzio, e te ne accorgi settimane dopo guardando una curva che non torna.
+
+### I quattro marcatori
+
+| marcatore | significato | stato |
+|---|---|---|
+| `- [ ]` | da fare | aperta |
+| `- [?]` | da fare, ma prima serve un approfondimento | aperta |
+| `- [v]` | fatta | chiusa |
+| `- [x]` | scartata, tenuta solo per memoria storica | chiusa |
+
+`[ ]` e `[?]` contano entrambe nel residuo. **Non esistono altri marcatori**: se ne incontri uno diverso
+(`[y]`, `[X]`, `[-]`, …) è un errore, normalizzalo a uno dei quattro invece di inventare uno stato nuovo.
+
+### Come si scrive una voce
+
+- una voce per riga, che **inizia a colonna 1** con `- ` seguito dal marcatore e da uno spazio;
+- niente indentazione: una sotto-voce rientrata non viene contata;
+- il `- ` iniziale non è facoltativo — una riga che inizia direttamente con `[ ]` sfugge al conteggio;
+- se devi **citare** un marcatore dentro una frase o un esempio, non metterlo a inizio riga, o verrà
+  contato come una cosa da fare.
+
+### Come si aggiorna
+
+- le voci si raggruppano in sezioni datate, con l'intestazione `AAAA-MM-GG [HH:MM] TITOLO` sottolineata
+  da `=`; le voci nuove vanno in fondo, in una sezione con la data di oggi;
+- quando un lavoro finisce, si cambia il marcatore in `[v]`: **non si cancella la riga**, la storia serve;
+- quando un lavoro si abbandona, `[x]`, sempre senza cancellare;
+- una riga `SAL PIANIFICATA <data>` viene raccolta nel cruscotto `/root/avanzamenti.sh` fra le prossime
+  scadenze (funzione disponibile, oggi non usata da nessun progetto).
+
 ## Come trovare le credenziali del database (e degli altri servizi)
 
 Le credenziali non sono in un unico file: il bootstrap le assembla leggendo più file in sequenza e fondendoli con

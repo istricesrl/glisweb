@@ -1,11 +1,19 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md o il burndown.md di un progetto, e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md.
 ---
 
 # Skill `glisweb`
 
 Aiuta Claude a riconoscere, inizializzare e usare correttamente un progetto basato sul framework PHP **glisweb**.
+
+## Cose da fare
+
+Il backlog di un progetto sta in `TODO.md` nella root del deploy, il `burndown.md` accanto è generato e non
+si tocca a mano. I marcatori validi sono quattro — `- [ ]` da fare, `- [?]` da approfondire, `- [v]` fatta,
+`- [x]` scartata — e i conteggi sono ancorati a inizio riga, quindi il `- ` iniziale e l'assenza di
+indentazione non sono dettagli stilistici. La regola completa sta nella sezione **"Cose da fare"** di
+`_etc/_claude/_claude.framework.md`, che è la fonte autorevole: leggila prima di modificare un `TODO.md`.
 
 ## ⚠ Regola fondamentale: governance cliente vs upstream
 
