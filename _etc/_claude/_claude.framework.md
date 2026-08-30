@@ -12,6 +12,39 @@ sovrascrivono eventualmente ciò che è definito qui.
 
 ---
 
+## REGOLA D'ORO: non inventare, riusa i pattern esistenti
+
+**Non si inventa MAI niente se nel framework c'è già implementato qualcosa di simile.** La coerenza interna del
+progetto è ESSENZIALE e i pattern di sviluppo devono RIPETERSI IL PIÙ POSSIBILE: si riusano i pattern esistenti,
+oppure — se c'è davvero da creare qualcosa di nuovo — lo si fa **a partire da quelli**, rispettando lo stile e la
+struttura del resto del codice.
+
+Viene prima di ogni altra regola di questo file e vale per tutto: nomi, forma dei file, ordine dei runlevel,
+firme delle funzioni, struttura dei template, formattazione, commenti, messaggi di log.
+
+**Cercare il precedente è un passo obbligatorio, non un'ottimizzazione.** Prima di scrivere una riga nuova:
+
+```bash
+grep -rn "<parola chiave>" _src/_lib/ _mod/ src/ mod/ | head -30   # esiste già qualcosa che fa una cosa simile?
+ls _src/_lib/ _src/_config/ _mod/ _src/_twig/                      # com'è fatto e come si chiama il suo tipo?
+```
+
+Poi si aprono **due o tre esempi esistenti dello stesso tipo** e se ne copia la forma. "Simile" non vuol dire che
+faccia la stessa cosa: vuol dire che è dello **stesso tipo** — un altro runlevel, un'altra libreria di quel gruppo,
+un altro modulo, un'altra pagina, un altro script di `_src/_sh/`, un altro job. Se non si trova niente di simile,
+quasi sempre vuol dire che non si è cercato abbastanza: è raro che un'esigenza sia senza precedenti qui dentro.
+
+**La forma dell'esistente comanda, anche quando non piace.** Se il framework usa `array( … )` non si scrive
+`[ … ]`; se mette gli spazi dentro le parentesi si mettono; se i file di un certo tipo si chiamano in un certo
+modo, il nuovo si chiama così. Una soluzione più elegante ma diversa dalle altre venti è **peggiore** di una
+identica alle altre venti — leggere e manutenere venti varianti dello stesso pattern costa più di qualunque
+guadagno locale.
+
+**Se un pattern esistente non regge**, non si devia in silenzio: lo si dice all'utente, si spiega perché, e si
+propone la variante minima che se ne discosta. La deroga è una decisione, non un effetto collaterale.
+
+---
+
 ## Regola fondamentale: non rompere mai i file standard
 
 I file e le cartelle il cui nome inizia con `_` sono **file standard del framework** — non vanno mai modificati

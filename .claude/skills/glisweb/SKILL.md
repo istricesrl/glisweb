@@ -1,11 +1,50 @@
 ---
 name: glisweb
-description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md o il burndown.md di un progetto, e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
+description: Bootstrap, configurazione e uso quotidiano di progetti basati sul framework PHP glisweb. Attivare quando si rileva _src/_config.php + _etc/_claude/_claude.framework.md nella cwd, quando l'utente chiede di "creare/inizializzare un progetto glisweb", "scaricare il framework glisweb", "aggiungere CLAUDE.md a un progetto glisweb", oppure quando si lavora in una directory con cartelle _src/, _mod/, _usr/ con convenzione underscore-prefix tipica di glisweb. Attivare anche prima di toccare src/config.yaml o src/config.json, di aggiungere una chiave di configurazione o un runlevel custom, o di gestire un valore che cambia fra DEV/TEST/PROD: la sezione "Configurazione multi-ambiente" contiene la convenzione profiles/profile e la coppia di runlevel N0/N5. Attivare inoltre prima di toccare il TODO.md o il burndown.md di un progetto, e quando l'utente parla di "todo", "cose da fare", "backlog", "task aperti", "avanzamento" o "burndown": i quattro marcatori ([ ] da fare, [?] da approfondire, [v] fatta, [x] scartata) e le regole di scrittura da cui dipendono i conteggi stanno nella sezione "Cose da fare" di _etc/_claude/_claude.framework.md. Attivare sempre prima di scrivere codice nuovo — una libreria, un modulo, un runlevel, un template, una query, uno script: vale la REGOLA D'ORO in cima al file, non si inventa niente se nel framework esiste già un pattern simile, lo si riusa. Attivare infine prima di creare un backup o una copia di sicurezza di un file di progetto: i backup non vanno mai dentro la document root ma in <progetto>/var/<identificativo>/, e un nome tipo file.php.bak.<data> aggira il FilesMatch del .htaccess ed espone il sorgente.
 ---
 
 # Skill `glisweb`
 
 Aiuta Claude a riconoscere, inizializzare e usare correttamente un progetto basato sul framework PHP **glisweb**.
+
+## ⚠ REGOLA D'ORO DEL PROGETTO: non inventare, riusa i pattern esistenti
+
+**Non si inventa MAI niente se nel framework c'è già implementato qualcosa di simile.** La coerenza interna
+del progetto è ESSENZIALE e i pattern di sviluppo devono RIPETERSI IL PIÙ POSSIBILE: si riusano i pattern
+esistenti, oppure — se c'è davvero da creare qualcosa di nuovo — lo si fa **a partire da quelli**, rispettando
+lo stile e la struttura del resto del codice.
+
+Viene prima di ogni altra regola operativa di questo file, e vale per tutto: nomi, forma dei file, ordine dei
+runlevel, firme delle funzioni, struttura dei template, formattazione, commenti, messaggi di log.
+
+**Prima di scrivere una riga nuova, cerca il precedente.** È un passo obbligatorio, non un'ottimizzazione:
+
+```bash
+# c'è già una libreria/funzione che fa una cosa simile?
+grep -rn "<parola chiave>" _src/_lib/ _mod/ src/ mod/ | head -30
+
+# come si chiama e com'è fatto qualcosa dello stesso tipo?
+ls _src/_lib/ _src/_config/ _mod/ _src/_twig/
+```
+
+Poi apri **due o tre esempi esistenti dello stesso tipo** e copiane la forma. Gli esempi canonici per i casi
+più frequenti sono già citati in questo file: la coppia `N0`/`N5` per un namespace di configurazione (§4.2),
+la tabella overrides per estendere una libreria standard (§5), `_mod/_<nome>/` per un modulo.
+
+**La forma dell'esistente comanda, anche quando non ti piace.** Se il framework usa `array( … )` non scrivi
+`[ … ]`; se usa uno spazio dentro le parentesi lo usi anche tu; se i file di un certo tipo si chiamano in un
+certo modo, il tuo si chiama così. Una soluzione più elegante ma diversa dalle altre venti è **peggiore** di
+una identica alle altre venti: il costo di leggere e manutenere venti varianti di uno stesso pattern supera
+qualsiasi guadagno locale.
+
+**Cosa vale come "qualcosa di simile".** Non deve fare la stessa cosa, deve essere dello **stesso tipo**: un
+altro runlevel, un'altra libreria di quel gruppo, un altro modulo, un'altra pagina, un altro script di `_sh/`,
+un altro job. Se non trovi nulla di simile, quasi sempre significa che non hai cercato abbastanza — è raro che
+un'esigenza sia davvero senza precedenti in questo framework.
+
+**Se un pattern esistente non va bene**, non deviare in silenzio: dillo all'utente, spiega perché il pattern
+non regge in quel caso e proponi la variante minima che se ne discosta. La deroga è una decisione, non un
+effetto collaterale.
 
 ## Cose da fare
 
@@ -342,6 +381,10 @@ configurazione — è spool.
 
 ## 6. Anti-pattern da evitare assolutamente
 
+- **Non scrivere niente di nuovo senza aver prima cercato il precedente nel framework.** Una libreria, un
+  runlevel, un modulo, un template o uno script inventati da zero mentre ne esistevano venti dello stesso tipo
+  sono un errore anche se funzionano — vedi la REGOLA D'ORO in cima a questo file. Il sintomo è un file che non
+  somiglia a nessuno dei suoi vicini: nome fuori convenzione, stile diverso, struttura diversa.
 - **Da un progetto cliente, NON modificare mai direttamente `/var/www/glisweb.istricesrl.it/` o
   `/var/www/glisdev.istricesrl.com/`.** Le fix al framework vanno passate per il flusso disallineamenti —
   vedi la "Regola fondamentale" in cima a questo file.
