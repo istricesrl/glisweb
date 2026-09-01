@@ -16,9 +16,22 @@ src/py/*/*/share/
 src/py/*/*/lib64
 tmp/
 var/
-.gitignore
-.htaccess
-composer.*
+# artefatti standard della root del deploy: ancorati con lo slash
+# iniziale, altrimenti il pattern matcha a qualsiasi profondita e si
+# porta via anche file custom del progetto (un README di un
+# sottoprogetto, un .htaccess di cartella, il .gitignore di un tool).
+/.gitignore
+/.htaccess
+/composer.*
+# robots.* e sitemap.* restano NON ancorati di proposito: oltre ai file
+# di root coprono etc/robots/ e etc/sitemap/, che sono generati da
+# _src/_config/_980.sitemap.php e non vanno versionati.
 robots.*
 sitemap.*
-*.md
+/*.md
+
+# hook spediti dal framework nello zip: si elencano per nome e non come
+# cartella, perche .githooks/ puo contenere anche hook propri del progetto
+# cliente, che vanno versionati. Qui stanno solo i nomi che lo zip sovrascrive.
+.githooks/commit-msg
+.githooks/post-commit

@@ -358,9 +358,16 @@
             if ($r === false) {
                 $r = fileExists($f);
                 if ($r === false) {
-                    $r = -1;
+                    // il sentinella -1 distingue "il file non esiste" da un miss di
+                    // memcache, che memcacheRead segnala anch'esso con false. Va scritto
+                    // in cache ma NON restituito: -1 e' truthy, e restituirlo faceva
+                    // credere al chiamante che il file esistesse. Effetto pratico: la
+                    // prima richiesta dopo ogni flush emetteva URL .min.js e .min.css di
+                    // file inesistenti, con script 404 in pagina (fix 2026-08-30)
+                    memcacheWrite($m, $k, -1, $t);
+                } else {
+                    memcacheWrite($m, $k, $r, $t);
                 }
-                memcacheWrite($m, $k, $r, $t);
             } elseif ($r === -1) {
                 $r = false;
             }
