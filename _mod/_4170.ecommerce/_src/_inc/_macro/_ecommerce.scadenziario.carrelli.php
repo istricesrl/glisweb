@@ -62,14 +62,28 @@
     // macro di default
 	require DIR_SRC_INC_MACRO . '_default.view.php';
 
-    // elaborazione dati
+    /**
+     * Fix 2026-09-01: si formattano solo le colonne che la vista ha davvero selezionato.
+     *
+     * `scaduto` e' commentata fra le `cols` qui sopra, quindi la query della vista non la
+     * restituisce: `$row['scaduto']` non esiste e in PHP 8 ogni riga produceva un
+     * `Notice: Undefined index: scaduto` stampato dentro la tabella dello scadenziario.
+     *
+     * Il ciclo scriveva anche la chiave mancante, aggiungendo a ogni riga una colonna vuota che
+     * la vista non sa rendere. Ciclare sull'elenco e saltare le chiavi assenti rende il blocco
+     * indifferente a quali colonne siano attive: commentarne una in `cols` non richiede piu' di
+     * ricordarsi di commentarla anche qui.
+     */
+    $importi = array( 'pagato', 'rateizzato', 'scaduto', 'sospeso' );
+
 	foreach( $ct['view']['data'] as &$row ) {
 		if( is_array( $row ) ) {
 
-            $row['pagato'] = writeCurrency( $row['pagato'] );
-            $row['rateizzato'] = writeCurrency( $row['rateizzato'] );
-            $row['scaduto'] = writeCurrency( $row['scaduto'] );
-            $row['sospeso'] = writeCurrency( $row['sospeso'] );
+            foreach( $importi as $importo ) {
+                if( array_key_exists( $importo, $row ) ) {
+                    $row[ $importo ] = writeCurrency( $row[ $importo ] );
+                }
+            }
 
         }
     }

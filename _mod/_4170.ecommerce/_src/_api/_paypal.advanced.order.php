@@ -32,11 +32,52 @@
         // nome del file di ricevuta
         $fileRicevuta = DIR_VAR_SPOOL_PAYMENT . 'paypal/' . sprintf( '%08d', $_SESSION['carrello']['id'] ) . '.log';
 
+        /**
+         * Fix 2026-09-01: identificativi nostri dentro l'ordine PayPal.
+         *
+         * L'ordine viaggiava con il solo importo. Chi paga con **carta** (Advanced Checkout,
+         * flusso guest) non ha un conto PayPal, quindi nel dettaglio della transazione PayPal
+         * non compare nessun dato del pagante e in segreteria diventa impossibile abbinare
+         * l'incasso alla persona: si vede solo "Pagamenti diretti con carta", l'importo e
+         * "non e' presente un indirizzo di spedizione". Col conto PayPal il problema non si
+         * pone perche' i dati del titolare arrivano da PayPal.
+         *
+         * La soluzione sta dalla nostra parte: `custom_id` e `invoice_id` tornano nel dettaglio
+         * transazione, nell'export CSV e nei webhook, e `description` e' quello che il pagante
+         * legge. `reference_id` serve a ritrovare la purchase unit in fase di capture.
+         *
+         * `invoice_id` NON viene valorizzato di proposito: PayPal lo vuole univoco sull'account
+         * e rifiuta un ordine il cui invoice_id appartiene a un pagamento gia' completato, cosa
+         * che succederebbe a ogni ritentativo sullo stesso carrello. `custom_id` non ha questo
+         * vincolo ed e' altrettanto visibile nell'export.
+         */
+
+        // riferimenti nostri da allegare all'ordine
+        $riferimenti = array( 'carrello:' . $_SESSION['carrello']['id'] );
+
+        if( ! empty( $_SESSION['carrello']['intestazione_id_anagrafica'] ) ) {
+            $riferimenti[] = 'anagrafica:' . $_SESSION['carrello']['intestazione_id_anagrafica'];
+        }
+
+        if( ! empty( $_SESSION['carrello']['intestazione_id_account'] ) ) {
+            $riferimenti[] = 'account:' . $_SESSION['carrello']['intestazione_id_account'];
+        }
+
+        // descrizione leggibile: la vede il pagante e finisce nel dettaglio transazione
+        $descrizione = ( isset( $cf['site']['name'][ $cf['localization']['language']['ietf'] ] ) )
+            ? $cf['site']['name'][ $cf['localization']['language']['ietf'] ]
+            : $cf['site']['fqdn'];
+
+        $descrizione .= ' - ordine ' . $_SESSION['carrello']['id'];
+
         // dati dell'ordine
         $order = array(
             'intent' => 'CAPTURE',
             'purchase_units' => array(
                 array(
+                    'reference_id' => (string) $_SESSION['carrello']['id'],
+                    'custom_id' => substr( implode( '|', $riferimenti ), 0, 127 ),
+                    'description' => substr( $descrizione, 0, 127 ),
                     'amount' => array(
                         'currency_code' => 'EUR',
                         'value' => number_format( ( float) $_SESSION['carrello']['prezzo_lordo_finale'], 2, '.', '' )

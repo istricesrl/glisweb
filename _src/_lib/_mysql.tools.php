@@ -454,8 +454,19 @@
 
                 } else {
 
-                    // log
-                    logger(__FUNCTION__ . '() fallita la preparazione della query: ' . $q, 'mysql', LOG_ERR);
+                    /**
+                     * Fix 2026-09-01: nel log ci va anche l'errore di MySQL.
+                     *
+                     * Quando mysqli_prepare() torna false senza sollevare eccezione questo ramo
+                     * scriveva solo il testo della query, e il motivo del rifiuto restava ignoto:
+                     * per scoprire che una query era un 1064 (errore di sintassi) bisognava
+                     * riprodurla a mano fuori dal framework. Siccome mysqlSelectRow() e
+                     * mysqlSelectValue() non distinguono "query fallita" da "nessuna riga", una
+                     * query malformata si traveste da dato mancante e il log è l'unico posto in cui
+                     * la differenza si vede: senza il codice di errore non serve a niente.
+                     * Il ramo catch() qui sotto lo faceva già, questo no.
+                     */
+                    logger(__FUNCTION__ . '() errore ' . mysqli_errno($c) . ' ' . mysqli_error($c) . ' nella preparazione della query: ' . $q, 'mysql', LOG_ERR);
 
                     // restituisco false
                     return false;

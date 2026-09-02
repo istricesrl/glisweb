@@ -437,7 +437,29 @@
     if( getPagePermission( $ct['page'] ) !== true ) {
         $loginSchema = ( file_exists( DIR_BASE . $ct['page']['template']['path'] . 'login.twig' ) ) ? 'login.twig' : 'login.html';
         $ct['page']['template']['schema'] = ( isset( $ct['page']['template']['login'] ) ) ? $ct['page']['template']['login'] : $loginSchema;
-    } 
+
+        /**
+         * Fix 2026-09-01: a permessi insufficienti non si eseguono nemmeno le macro.
+         *
+         * Fin qui il controllo cambiava soltanto lo SCHEMA — la pagina veniva renderizzata con
+         * `login.html` invece che col suo template — ma poi il flusso tirava dritto e poco piu'
+         * sotto includeva comunque tutte le macro della pagina. Una pagina riservata eseguiva
+         * quindi per intero il proprio codice anche per un anonimo.
+         *
+         * Il sintomo visibile sono i notice delle macro che danno per scontata la sessione
+         * autenticata (tipicamente `$_SESSION['account']['id_anagrafica']` letto senza guardia),
+         * stampati sopra il form di login. Il problema vero e' che fra quelle macro ce ne sono
+         * che SCRIVONO: cambiano password, toccano il carrello, creano righe. Non eseguirle e'
+         * la cosa giusta a prescindere dal messaggio a video, ed e' anche quello che si aspetta
+         * chi legge `auth.groups` sulla pagina.
+         *
+         * Le pagine pubbliche non sono toccate: `getPagePermission()` ritorna `true` quando la
+         * pagina non dichiara `auth.groups`. Lo schema di login non legge da `$ct` niente che
+         * venga dalle macro, quindi la pagina resa e' identica a prima, meno i notice.
+         */
+        $ct['page']['macro'] = array();
+
+    }
 
     // switch dello schema in caso di schema non specificato
     if( ! isset( $ct['page']['template']['schema'] ) ) {
