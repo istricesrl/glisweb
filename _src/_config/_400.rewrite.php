@@ -112,12 +112,24 @@
     /**
      * NOTA
      * la possibilità di specificare p consente di simulare una pagina su un'altra a fini di test
-     * 
+     *
+     * Il valore di p viene accettato solo se corrisponde a una pagina esistente. Senza questo
+     * controllo una p inesistente arriva fino in fondo come pagina corrente, il che significa
+     * pagina vuota e quindi percorso del template vuoto: _src/_api/_pages.php non trova il file
+     * di configurazione del template e chiude con un die(), cioè con un HTTP 200 che stampa il
+     * percorso assoluto del framework sul disco. Sono i bot che cercano webshell a trovarcisi
+     * (/sym.php?p=, /ws55.php?p=): quello che devono ricevere è una 404, che è esattamente dove
+     * si finisce ignorando la p e lasciando fare il parsing dell'URL.
+     *
      */
 
     // forzatura della pagina corrente per one-char parameter debug
-    if( isset( $_REQUEST['p'] ) && ! empty( isset( $_REQUEST['p'] ) ) ) {
-        $_REQUEST['__pg__'] = $_REQUEST['p'];
+    if( isset( $_REQUEST['p'] ) && ! empty( $_REQUEST['p'] ) ) {
+        if( ! empty( $cf['contents']['pages'] ) && array_key_exists( $_REQUEST['p'], $cf['contents']['pages'] ) ) {
+            $_REQUEST['__pg__'] = $_REQUEST['p'];
+        } else {
+            logger( 'pagina ' . $_REQUEST['p'] . ' non trovata, parametro p ignorato', 'rewrite', LOG_NOTICE );
+        }
     }
 
     /**
