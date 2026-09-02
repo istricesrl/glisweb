@@ -162,8 +162,11 @@
 
     }
 
-    // TODO la forzatura del nome del sito nel <title> dev'essere opzionale
-    if( ! empty( TITLE_SEPARATOR ) ) {
+    // il nome del sito viene anteposto al titolo di pagina, a meno che il sito non chieda
+    // di non farlo con metadati.noSiteNameInTitle: la chiave esisteva già nei config di
+    // alcuni siti ma nessuno la leggeva, e il titolo usciva col marchio due volte quando
+    // anche il titolo a database se lo portava dietro
+    if( ! empty( TITLE_SEPARATOR ) && empty( $cf['site']['metadati']['noSiteNameInTitle'] ) ) {
         $ct['page']['title'][ LINGUA_CORRENTE ] = $cf['site']['name'][ LINGUA_CORRENTE ] . TITLE_SEPARATOR . $ct['page']['title'][ LINGUA_CORRENTE ];
     }
 
