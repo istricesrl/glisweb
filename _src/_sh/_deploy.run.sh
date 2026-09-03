@@ -386,28 +386,110 @@ else
                     exit 1
                 fi
 
+                # invalidazione delle cache della destinazione
+                deploy-invalidate-caches "$DST_PATH" "ssh $SPORT -i $SSH_PRIVATE $SSH_USER@$DST_HOST"
+
                 # informazioni
                 echo "deploy completato su $DST_HOST"
 
             else
 
-                # comando
+                # Fix 2026-09-02: il deploy LOCALE ora esegue davvero, come quello remoto.
+                #
+                # Fin qui questo ramo — quello che si prende quando sorgente e destinazione sono
+                # sulla stessa macchina, cioe' senza DST_HOST — stampava i comandi e li lasciava
+                # commentati. Lo script terminava con "exit 0" senza aver copiato niente, quindi
+                # sembrava funzionare: chi lo lanciava restava convinto di aver fatto il deploy.
+                # Il ramo remoto (ssh) qui sopra era invece completo da tempo, e da li' e' preso
+                # lo schema: backup, permessi aperti, rsync, permessi richiusi, controllo esito.
+                #
+                # I permessi vanno aperti prima e richiusi dopo per lo stesso motivo del ramo
+                # remoto: con i permessi sicuri le cartelle di destinazione sono in sola lettura
+                # e rsync non copia nulla, fallendo in modo poco evidente.
+
+                # backup della destinazione prima di sovrascriverla
                 CMD="$DST_PATH/_src/_sh/_backup.run.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
 
                 # informazioni
                 echo "comando: $CMD"
 
                 # backup
-                # $CMD
+                if [ -x "$DST_PATH/_src/_sh/_backup.run.sh" ]; then
+                    $CMD
+                else
+                    echo "ATTENZIONE: $DST_PATH/_src/_sh/_backup.run.sh non disponibile, deploy senza backup della destinazione"
+                fi
 
                 # comando
-                CMD="rsync -avz --delete $EXCLUDE $SRC_PATH/ $DST_PATH"
+                CMD="$DST_PATH/_src/_sh/_lamp.permissions.open.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # apertura dei permessi
+                $CMD
+
+                # se i permessi non si aprono l'rsync scrive su cartelle in sola lettura e non
+                # copia nulla: non e' fatale di per se' (potrebbero essere gia' aperti) ma va detto
+                if [ $? -ne 0 ]; then
+                    echo "ATTENZIONE: apertura dei permessi su $DST_PATH fallita: se il deploy non copia i file e' questo il motivo"
+                fi
+
+                # comando
+                CMD="rsync $EXCLUDE -avuz --checksum --delete $SRC_PATH/ $DST_PATH"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
 
                 # informazioni
                 echo "comando: $CMD"
 
                 # deploy
-                # $CMD
+                rsync $EXCLUDE -avuz --checksum --delete $SRC_PATH/ $DST_PATH >> ../DEPLOY.md
+
+                # esito del deploy
+                RSYNC_STATUS=$?
+
+                # comando
+                CMD="$DST_PATH/_src/_sh/_lamp.permissions.secure.sh"
+
+                # registro dei deploy
+                echo "$CMD" >> ../DEPLOY.md
+                echo >> ../DEPLOY.md
+
+                # informazioni
+                echo "comando: $CMD"
+
+                # chiusura dei permessi
+                $CMD
+
+                # i permessi vanno richiusi sempre, anche se il deploy e' fallito: se non ci si
+                # riesce la destinazione resta scrivibile dal gruppo e la cosa va urlata
+                if [ $? -ne 0 ]; then
+                    echo "ERRORE: chiusura dei permessi su $DST_PATH fallita: la destinazione e' rimasta con i permessi aperti, intervenire a mano con _lamp.permissions.secure.sh"
+                    exit 1
+                fi
+
+                # se il deploy e' fallito lo dico e esco con errore
+                if [ $RSYNC_STATUS -ne 0 ]; then
+                    echo "ERRORE: deploy su $DST_PATH fallito (rsync esito $RSYNC_STATUS), i file NON sono stati copiati o lo sono stati solo in parte"
+                    exit 1
+                fi
+
+                # invalidazione delle cache della destinazione
+                deploy-invalidate-caches "$DST_PATH"
+
+                # informazioni
+                echo "deploy completato su $DST_PATH"
 
             fi
 
