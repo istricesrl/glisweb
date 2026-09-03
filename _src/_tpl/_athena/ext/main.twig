@@ -65,6 +65,9 @@
         {# CODICE DI CHIUSURA STANDARD DELLA PAGINA #}
         {% include '_inc/_page.close.twig' %}
 
+        {# MODAL DELLA PAGINA #}
+        {% block modals %}<!-- nessun modal per pagina specificato -->{% endblock modals %}
+
         {# SCRIPT JAVASCRIPT DELLA PAGINA #}
         {% block javascript %}{% endblock javascript %}
 

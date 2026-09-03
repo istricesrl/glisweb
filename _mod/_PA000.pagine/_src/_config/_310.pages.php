@@ -136,17 +136,20 @@
     } else {
         
         // recupero la timestamp di aggiornamento più recente
-        $cf['contents']['updated'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT max( pagine.timestamp_aggiornamento ) AS updated FROM pagine 
-            INNER JOIN pubblicazioni ON pubblicazioni.id_pagina = pagine.id 
-            WHERE pagine.id_sito = ? 
-            AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) 
-            AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
-            array(
-                array( 's' => SITE_CURRENT ),
-                array( 's' => time() ),
-                array( 's' => time() )
+        $cf['contents']['updated'] = max(
+            $cf['contents']['updated'],
+            mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT max( pagine.timestamp_aggiornamento ) AS updated FROM pagine 
+                INNER JOIN pubblicazioni ON pubblicazioni.id_pagina = pagine.id 
+                WHERE pagine.id_sito = ? 
+                AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) 
+                AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+                array(
+                    array( 's' => SITE_CURRENT ),
+                    array( 's' => time() ),
+                    array( 's' => time() )
+                )
             )
         );
         

@@ -288,19 +288,22 @@
     } else {
         
 	    // recupero la timestamp di aggiornamento più recente
-		$cf['contents']['updated'] = mysqlSelectValue(
-            $cf['mysql']['connection'],
-            'SELECT max( categorie_notizie.timestamp_aggiornamento ) AS updated FROM categorie_notizie '.
-            'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_notizie = categorie_notizie.id '.
-            'WHERE categorie_notizie.id_sito = ? '.
-            'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
-            'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
-            array(
-                array( 's' => SITE_CURRENT ),
-                array( 's' => time() ),
-                array( 's' => time() )
+		$cf['contents']['updated'] = max(
+		    $cf['contents']['updated'],
+		    mysqlSelectValue(
+                $cf['mysql']['connection'],
+                'SELECT max( categorie_notizie.timestamp_aggiornamento ) AS updated FROM categorie_notizie '.
+                'INNER JOIN pubblicazioni ON pubblicazioni.id_categoria_notizie = categorie_notizie.id '.
+                'WHERE categorie_notizie.id_sito = ? '.
+                'AND ( pubblicazioni.timestamp_inizio IS NULL OR pubblicazioni.timestamp_inizio < ? ) '.
+                'AND ( pubblicazioni.timestamp_fine IS NULL OR pubblicazioni.timestamp_fine > ? ) ',
+                array(
+                    array( 's' => SITE_CURRENT ),
+                    array( 's' => time() ),
+                    array( 's' => time() )
+                )
             )
-        );
+		);
         
         // debug
         // echo $cf['contents']['updated'] . PHP_EOL;

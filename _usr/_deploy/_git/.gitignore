@@ -35,3 +35,10 @@ sitemap.*
 # cliente, che vanno versionati. Qui stanno solo i nomi che lo zip sovrascrive.
 .githooks/commit-msg
 .githooks/post-commit
+
+# skill Claude Code spedite dal framework nello zip: l'upgrade notturno le
+# riscrive, quindi versionarle vorrebbe dire un diff spurio a ogni giro. Vale
+# lo stesso criterio di .githooks/ qui sopra: si ignora solo il ramo che lo zip
+# sovrascrive, non tutta .claude/, perche il progetto cliente puo averci dentro
+# skill proprie o un settings.json suoi, che vanno versionati.
+.claude/skills/glisweb/

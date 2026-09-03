@@ -28,13 +28,16 @@
     if( ! empty( $cf['memcache']['connection'] ) ) {
 
         // cache della timestamp di aggiornamento
-        // memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
+        // NOTA questa scrittura deve avvenire ANCHE quando la cache è calda: il gate di _300.pages.php
+        // decide se rigenerare confrontando CONTENTS_PAGES_CACHED con CONTENTS_PAGES_UPDATED leggendoli
+        // entrambi da memcache; se CONTENTS_PAGES_UPDATED viene riscritto solo a cache fredda resta
+        // congelato al valore del primo build e la struttura delle pagine non si invalida mai più
+        memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
 
         // cache delle pagine
         if( $cf['contents']['cached'] === false ) {
 
             // scrittura della cache
-            memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_UPDATED, $cf['contents']['updated'] );
             memcacheWrite( $cf['memcache']['connection'], CONTENTS_PAGES_KEY, $cf['contents']['pages'] );
             memcacheWrite( $cf['memcache']['connection'], CONTENTS_TREE_KEY, $cf['contents']['tree'] );
             memcacheWrite( $cf['memcache']['connection'], CONTENTS_INDEX_KEY, $cf['contents']['index'] );
