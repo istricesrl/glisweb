@@ -244,6 +244,69 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
     GROUP BY anagrafica_indirizzi.id                          --
 ;                                                             --
 
+-- | 090000001000
+
+-- anagrafica_view
+-- estratta dal database e dichiarata qui il 2026-08-28: non era mai stata nei patch,
+-- mentre anagrafica_view_static lo era gia'. E' quell'asimmetria ad aver permesso
+-- alle due di divergere, rompendo la REPLACE che tiene allineata la statica.
+CREATE OR REPLACE VIEW `anagrafica_view` AS
+	SELECT
+		`anagrafica`.`id` AS `id`,
+		`anagrafica`.`id_tipologia` AS `id_tipologia`,
+		`tipologie_anagrafica`.`nome` AS `tipologia`,
+		`anagrafica`.`codice` AS `codice`,
+		`anagrafica`.`riferimento` AS `riferimento`,
+		`anagrafica`.`nome` AS `nome`,
+		`anagrafica`.`cognome` AS `cognome`,
+		`anagrafica`.`denominazione` AS `denominazione`,
+		`anagrafica`.`soprannome` AS `soprannome`,
+		`anagrafica`.`sesso` AS `sesso`,
+		`anagrafica`.`codice_fiscale` AS `codice_fiscale`,
+		`anagrafica`.`partita_iva` AS `partita_iva`,
+		`anagrafica`.`id_ranking` AS `id_ranking`,
+		`ranking`.`nome` AS `ranking`,
+		`anagrafica`.`recapiti` AS `recapiti`,
+		NULL AS `id_stato`,
+		NULL AS `id_provincia`,
+		max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,
+		max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,
+		max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,
+		max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,
+		max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,
+		max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,
+		max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,
+		max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,
+		max(`categorie_anagrafica`.`se_commerciale`) AS `se_commerciale`,
+		max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,
+		max(`categorie_anagrafica`.`se_gestita`) AS `se_gestita`,
+		max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,
+		max(`categorie_anagrafica`.`se_notizie`) AS `se_notizie`,
+		group_concat(distinct `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) separator ' | ') AS `categorie`,
+		group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,
+		group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,
+		`anagrafica`.`anno_nascita` AS `anno_nascita`,
+		`anagrafica`.`mese_nascita` AS `mese_nascita`,
+		`anagrafica`.`giorno_nascita` AS `giorno_nascita`,
+		concat_ws('-',`anagrafica`.`anno_nascita`,lpad(`anagrafica`.`mese_nascita`,2,'0'),lpad(`anagrafica`.`giorno_nascita`,2,'0')) AS `data_nascita`,
+		`anagrafica`.`id_comune_nascita` AS `id_comune_nascita`,
+		`anagrafica`.`data_archiviazione` AS `data_archiviazione`,
+		`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,
+		`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,
+		`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,
+		`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,
+		concat_ws(' ',`anagrafica`.`codice`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__`
+	FROM
+		((((((`anagrafica`
+		left join `tipologie_anagrafica` on(`tipologie_anagrafica`.`id` = `anagrafica`.`id_tipologia`))
+		left join `ranking` on(`ranking`.`id` = `anagrafica`.`id_ranking`))
+		left join `anagrafica_categorie` on(`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))
+		left join `categorie_anagrafica` on(`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))
+		left join `telefoni` on(`telefoni`.`id_anagrafica` = `anagrafica`.`id`))
+		left join `mail` on(`mail`.`id_anagrafica` = `anagrafica`.`id`))
+		group by `anagrafica`.`id`
+;
+
 -- | 090000001300
 
 -- articoli_view
@@ -531,6 +594,7 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 		attivita.timestamp_inserimento,                       --
 		attivita.id_account_aggiornamento,                    --
 		attivita.timestamp_aggiornamento,                     --
+		attivita.timestamp_archiviazione,                     --
 		attivita.data_archiviazione,                          --
 		concat(                                               --
 			attivita.nome,                                    --
