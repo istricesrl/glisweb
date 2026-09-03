@@ -1115,6 +1115,8 @@ CREATE TABLE IF NOT EXISTS `documenti` (                      --
   `id_destinatario_spedizione` int(11) DEFAULT NULL,          -- chiave esterna per l'anagrafica destinataria della spedizione
   `id_sede_destinatario_spedizione` int(11) DEFAULT NULL,     -- chiave esterna per la sede dell'anagrafica destinataria della spedizione
   `note_spedizione` text DEFAULT NULL,                        -- note per la spedizione
+  `numero_colli` int(11) DEFAULT NULL,                        -- numero di colli che compongono la spedizione
+  `numero_pallet` int(11) DEFAULT NULL,                       -- numero di pallet che compongono la spedizione
   `id_condizione_pagamento` int(11) DEFAULT NULL,             -- chiave esterna per la condizione di pagamento
   `esigibilita`	enum('I','D','S') DEFAULT NULL,               -- esigibilità del documento
   `codice_archivium` char(64) DEFAULT NULL ,                  -- codice per Archivium

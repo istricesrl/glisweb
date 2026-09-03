@@ -14,6 +14,15 @@
      * e il contenuto viene riscalato di conseguenza. Vedi _src/_config/_370.etichette.php per la convenzione
      * e scalaEtichetta() in _src/_lib/_pdf.tools.php per il calcolo.
      *
+     * Al posto della tipologia si può stampare un'intestazione scelta in base al prefisso del codice del
+     * collo, dichiarandola sempre nel config.json del progetto:
+     *
+     *     "etichette": { "colli": { "intestazioni": { "BOC": "controllo spedizioni", "BOR": "ricevimento merci" } } }
+     *
+     * Il confronto è sul prefisso, senza distinzione fra maiuscole e minuscole, e a parità di corrispondenza
+     * vince il prefisso più lungo; un codice che non corrisponde a nessuna voce porta il nome della tipologia,
+     * che è il comportamento storico ed è quello che si ha lasciando la mappa vuota.
+     *
      * @file
      *
      */
@@ -25,6 +34,7 @@
         'formato'       => array( 57, 32 ),
         'allineamento'  => 'alto',
         'massimo'       => 500,
+        'intestazioni'  => array(),
         'riferimento'   => array(
             'formato'       => array( 57, 32 ),
             'verticali'     => array(

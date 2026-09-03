@@ -153,7 +153,22 @@
                 $pdf->SetY( $etichetta['verticali']['margine'] );
             }
 
-           $pdf-> Cell( $pdf->getPageWidth(), '', $collo['tipologia'] , '', 1 ,'C' );
+            // intestazione dell'etichetta: di norma è il nome della tipologia di collo, ma un progetto può
+            // sostituirla in base al prefisso del codice ( $cf['etichette']['colli']['intestazioni'] ), che
+            // qui distingue i colli in uscita da quelli in ingresso; senza corrispondenze resta la tipologia
+            $intestazione = $collo['tipologia'];
+            $prefisso = '';
+            if( isset( $etichetta['intestazioni'] ) && is_array( $etichetta['intestazioni'] ) ) {
+                foreach( $etichetta['intestazioni'] as $chiave => $testo ) {
+                    if( strncasecmp( $collo['codice'], $chiave, strlen( $chiave ) ) == 0 && strlen( $chiave ) > strlen( $prefisso ) ) {
+                        $intestazione = $testo;
+                        $prefisso = $chiave;
+                    }
+                }
+            }
+
+            // intestazione
+            $pdf->Cell( $pdf->getPageWidth(), '', $intestazione, '', 1, 'C' );
 
             // define barcode style
             // NB: con fitwidth TCPDF restringe la larghezza a quella effettiva del barcode ma lascia la x
