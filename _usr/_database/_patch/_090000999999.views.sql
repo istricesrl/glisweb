@@ -244,69 +244,6 @@ CREATE OR REPLACE VIEW anagrafica_indirizzi_view AS           --
     GROUP BY anagrafica_indirizzi.id                          --
 ;                                                             --
 
--- | 090000001000
-
--- anagrafica_view
--- estratta dal database e dichiarata qui il 2026-08-28: non era mai stata nei patch,
--- mentre anagrafica_view_static lo era gia'. E' quell'asimmetria ad aver permesso
--- alle due di divergere, rompendo la REPLACE che tiene allineata la statica.
-CREATE OR REPLACE VIEW `anagrafica_view` AS
-	SELECT
-		`anagrafica`.`id` AS `id`,
-		`anagrafica`.`id_tipologia` AS `id_tipologia`,
-		`tipologie_anagrafica`.`nome` AS `tipologia`,
-		`anagrafica`.`codice` AS `codice`,
-		`anagrafica`.`riferimento` AS `riferimento`,
-		`anagrafica`.`nome` AS `nome`,
-		`anagrafica`.`cognome` AS `cognome`,
-		`anagrafica`.`denominazione` AS `denominazione`,
-		`anagrafica`.`soprannome` AS `soprannome`,
-		`anagrafica`.`sesso` AS `sesso`,
-		`anagrafica`.`codice_fiscale` AS `codice_fiscale`,
-		`anagrafica`.`partita_iva` AS `partita_iva`,
-		`anagrafica`.`id_ranking` AS `id_ranking`,
-		`ranking`.`nome` AS `ranking`,
-		`anagrafica`.`recapiti` AS `recapiti`,
-		NULL AS `id_stato`,
-		NULL AS `id_provincia`,
-		max(`categorie_anagrafica`.`se_prospect`) AS `se_prospect`,
-		max(`categorie_anagrafica`.`se_lead`) AS `se_lead`,
-		max(`categorie_anagrafica`.`se_cliente`) AS `se_cliente`,
-		max(`categorie_anagrafica`.`se_fornitore`) AS `se_fornitore`,
-		max(`categorie_anagrafica`.`se_produttore`) AS `se_produttore`,
-		max(`categorie_anagrafica`.`se_collaboratore`) AS `se_collaboratore`,
-		max(`categorie_anagrafica`.`se_interno`) AS `se_interno`,
-		max(`categorie_anagrafica`.`se_esterno`) AS `se_esterno`,
-		max(`categorie_anagrafica`.`se_commerciale`) AS `se_commerciale`,
-		max(`categorie_anagrafica`.`se_concorrente`) AS `se_concorrente`,
-		max(`categorie_anagrafica`.`se_gestita`) AS `se_gestita`,
-		max(`categorie_anagrafica`.`se_amministrazione`) AS `se_amministrazione`,
-		max(`categorie_anagrafica`.`se_notizie`) AS `se_notizie`,
-		group_concat(distinct `categorie_anagrafica_path`(`categorie_anagrafica`.`id`) separator ' | ') AS `categorie`,
-		group_concat(distinct `telefoni`.`numero` separator ' | ') AS `telefoni`,
-		group_concat(distinct `mail`.`indirizzo` separator ' | ') AS `mail`,
-		`anagrafica`.`anno_nascita` AS `anno_nascita`,
-		`anagrafica`.`mese_nascita` AS `mese_nascita`,
-		`anagrafica`.`giorno_nascita` AS `giorno_nascita`,
-		concat_ws('-',`anagrafica`.`anno_nascita`,lpad(`anagrafica`.`mese_nascita`,2,'0'),lpad(`anagrafica`.`giorno_nascita`,2,'0')) AS `data_nascita`,
-		`anagrafica`.`id_comune_nascita` AS `id_comune_nascita`,
-		`anagrafica`.`data_archiviazione` AS `data_archiviazione`,
-		`anagrafica`.`id_account_inserimento` AS `id_account_inserimento`,
-		`anagrafica`.`timestamp_inserimento` AS `timestamp_inserimento`,
-		`anagrafica`.`id_account_aggiornamento` AS `id_account_aggiornamento`,
-		`anagrafica`.`timestamp_aggiornamento` AS `timestamp_aggiornamento`,
-		concat_ws(' ',`anagrafica`.`codice`,coalesce(`anagrafica`.`soprannome`,`anagrafica`.`denominazione`,concat_ws(' ',coalesce(`anagrafica`.`cognome`,''),coalesce(`anagrafica`.`nome`,'')),'')) AS `__label__`
-	FROM
-		((((((`anagrafica`
-		left join `tipologie_anagrafica` on(`tipologie_anagrafica`.`id` = `anagrafica`.`id_tipologia`))
-		left join `ranking` on(`ranking`.`id` = `anagrafica`.`id_ranking`))
-		left join `anagrafica_categorie` on(`anagrafica_categorie`.`id_anagrafica` = `anagrafica`.`id`))
-		left join `categorie_anagrafica` on(`categorie_anagrafica`.`id` = `anagrafica_categorie`.`id_categoria`))
-		left join `telefoni` on(`telefoni`.`id_anagrafica` = `anagrafica`.`id`))
-		left join `mail` on(`mail`.`id_anagrafica` = `anagrafica`.`id`))
-		group by `anagrafica`.`id`
-;
-
 -- | 090000001300
 
 -- articoli_view
@@ -594,7 +531,6 @@ CREATE OR REPLACE VIEW `attivita_view` AS                     --
 		attivita.timestamp_inserimento,                       --
 		attivita.id_account_aggiornamento,                    --
 		attivita.timestamp_aggiornamento,                     --
-		attivita.timestamp_archiviazione,                     --
 		attivita.data_archiviazione,                          --
 		concat(                                               --
 			attivita.nome,                                    --
@@ -1135,7 +1071,7 @@ CREATE OR REPLACE VIEW `documenti_view` AS
         LEFT JOIN anagrafica AS a3 ON a3.id = documenti.id_destinatario_spedizione
 		LEFT JOIN tipologie_documenti ON tipologie_documenti.id = documenti.id_tipologia
 		LEFT JOIN condizioni_pagamento ON condizioni_pagamento.id = documenti.id_condizione_pagamento
-		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienzagggggggggggg
+		LEFT JOIN mastri AS m1 ON m1.id = documenti.id_mastro_provenienza
 		LEFT JOIN mastri AS m2 ON m2.id = documenti.id_mastro_destinazione
 		LEFT JOIN pagamenti ON pagamenti.id_documento = documenti.id
         LEFT JOIN relazioni_documenti AS r1 ON r1.id_documento = documenti.id
@@ -1158,6 +1094,7 @@ CREATE OR REPLACE VIEW `documenti_articoli_view` AS
 		tipologie_documenti.nome AS tipologia,
 		documenti_articoli.ordine,
 		documenti_articoli.id_documento,
+		documenti.codice AS codice_documento,
         concat(
 			tipologie_documenti.sigla,
 			' ',
@@ -2922,3 +2859,31 @@ CREATE OR REPLACE VIEW test_view AS                           --
 ;                                                             --
 
 -- | FINE FILE
+
+-- | 090000999200
+
+-- __report_evasione_ordini__
+-- Stato di avanzamento delle consegne, un DDT per riga: data, cliente e stato ricavato
+-- dall'ultima attivita' collegata al documento. Grana: il documento.
+-- NB: esiste anche __report_evasione_righe_ordini__, che risponde a una domanda diversa
+-- ( di questo ordine cosa manca ) con grana di riga. I due nomi si somigliano perche' fino
+-- al 2026-09-01 erano lo stesso nome su database diversi, con due definizioni incompatibili.
+CREATE OR REPLACE VIEW `__report_evasione_ordini__` AS with a as (select `attivita`.`id_documento` AS `id_documento`,`attivita`.`id_tipologia` AS `id_tipologia`,row_number() over ( partition by `attivita`.`id_documento` order by `attivita`.`data_attivita` desc) AS `rank` from `attivita`)select `documenti`.`data` AS `data`,`anagrafica`.`codice` AS `codice`,concat_ws(' ',`anagrafica`.`nome`,`anagrafica`.`cognome`,`anagrafica`.`denominazione`) AS `cliente`,coalesce(`tipologie_attivita`.`nome`,'ancora da iniziare') AS `stato` from (((`documenti` join `anagrafica` on(`anagrafica`.`id` = `documenti`.`id_destinatario`)) left join `a` on(`a`.`id_documento` = `documenti`.`id` and `a`.`rank` = 1)) left join `tipologie_attivita` on(`tipologie_attivita`.`id` = `a`.`id_tipologia`)) where `documenti`.`id_tipologia` = 4 group by `documenti`.`id`
+;
+
+-- | 090000999201
+
+-- __report_evasione_righe_ordini__
+-- Evasione riga per riga: quanto e' stato ordinato, quanto evaso, quanto resta, con l'unita'
+-- di misura. Grana: la riga d'ordine.
+CREATE OR REPLACE VIEW `__report_evasione_righe_ordini__` AS select `ordine`.`id_documento` AS `id_documento`,`ordine`.`id_ordine` AS `id_ordine`,`ordine`.`codice_prodotto` AS `codice_prodotto`,`ordine`.`prodotto` AS `prodotto`,sum(`ordine`.`quantita_ordinata` / `udm`.`conversione`) AS `quantita_ordinata`,sum(`ordine`.`quantita_evasa` / `udm`.`conversione`) AS `quantita_evasa`,sum(`ordine`.`quantita_ordinata` / `udm`.`conversione`) - sum(`ordine`.`quantita_evasa` / `udm`.`conversione`) AS `quantita_da_evadere`,`udm`.`sigla` AS `udm` from ((select `relazioni_documenti`.`id_documento` AS `id_documento`,`documenti`.`id` AS `id_ordine`,coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`) AS `codice_prodotto`,`prodotti`.`nome` AS `prodotto`,`documenti_articoli`.`id_articolo` AS `codice_articolo`,coalesce(`documenti_articoli`.`quantita` * `udm`.`conversione`,0) AS `quantita_ordinata`,0 AS `quantita_evasa`,`udm_base`.`sigla` AS `udm_base`,`udm`.`id` AS `id_udm` from (((((((`documenti` left join `relazioni_documenti` on(`relazioni_documenti`.`id_documento_collegato` = `documenti`.`id`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id_documento` = `documenti`.`id`)) left join `articoli` on(`articoli`.`id` = `documenti_articoli`.`id_articolo`)) left join `prodotti` on(`prodotti`.`id` = coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`))) left join `udm` on(`udm`.`id` = `documenti_articoli`.`id_udm`)) left join `udm` `udm_base` on(`udm_base`.`id` = `udm`.`id_base`)) where `tipologie_documenti`.`se_ordine` is not null having `codice_prodotto` is not null union select `relazioni_documenti`.`id_documento` AS `id_documento`,`relazioni_documenti`.`id_documento_collegato` AS `id_ordine`,coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`) AS `codice_prodotto`,`prodotti`.`nome` AS `prodotto`,`documenti_articoli`.`id_articolo` AS `codice_articolo`,0 AS `quantita_ordinata`,coalesce(`articoli`.`peso` * `udm`.`conversione` * `documenti_articoli`.`quantita`,0) AS `quantita_evasa`,`udm_base`.`sigla` AS `udm_base`,`udm`.`id` AS `id_udm` from (((((((`documenti` join `relazioni_documenti` on(`relazioni_documenti`.`id_documento` = `documenti`.`id`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id_documento` = `documenti`.`id`)) left join `articoli` on(`articoli`.`id` = `documenti_articoli`.`id_articolo`)) left join `prodotti` on(`prodotti`.`id` = coalesce(`documenti_articoli`.`id_prodotto`,`articoli`.`id_prodotto`))) left join `udm` on(`udm`.`id` = `articoli`.`id_udm_peso`)) left join `udm` `udm_base` on(`udm_base`.`id` = `udm`.`id_base`)) where `tipologie_documenti`.`se_trasporto` is not null having `codice_prodotto` is not null) `ordine` left join `udm` on(`udm`.`id` = (select coalesce(max(`documenti_articoli`.`id_udm`),max(`articoli`.`id_udm_peso`)) from (`documenti_articoli` left join `articoli` on(`articoli`.`id` = `ordine`.`codice_articolo`)) where `documenti_articoli`.`id_documento` in (`ordine`.`id_documento`,`ordine`.`id_ordine`) and (`documenti_articoli`.`id_prodotto` = `ordine`.`codice_prodotto` or `articoli`.`id` = `ordine`.`codice_articolo`)))) group by `ordine`.`id_documento`,`ordine`.`id_ordine`,`ordine`.`codice_prodotto`,`ordine`.`prodotto`,`udm`.`conversione`,`udm`.`sigla`
+;
+
+-- | 090000999210
+
+-- todo_view
+-- Le sei colonne che vengono da `istruzioni` ( id_documento .. istruzione ) erano il motivo per
+-- cui questa vista aveva 40 colonne su connor e 34 altrove: vedi 2026090105.
+CREATE OR REPLACE VIEW `todo_view` AS select `todo`.`id` AS `id`,`todo`.`id_tipologia` AS `id_tipologia`,`tipologie_todo`.`nome` AS `tipologia`,`todo`.`codice` AS `codice`,`tipologie_todo`.`se_agenda` AS `se_agenda`,`todo`.`id_anagrafica` AS `id_anagrafica`,coalesce(`a1`.`denominazione`,concat(`a1`.`cognome`,' ',`a1`.`nome`),'') AS `anagrafica`,`todo`.`id_cliente` AS `id_cliente`,coalesce(`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`),'') AS `cliente`,`todo`.`id_indirizzo` AS `id_indirizzo`,concat_ws(' ',`indirizzi`.`indirizzo`,`indirizzi`.`civico`,`indirizzi`.`cap`,`indirizzi`.`localita`,`comuni`.`nome`,`provincie`.`sigla`) AS `indirizzo`,`todo`.`id_luogo` AS `id_luogo`,`luoghi_path`(`todo`.`id_luogo`) AS `luogo`,`todo`.`timestamp_apertura` AS `timestamp_apertura`,`todo`.`data_scadenza` AS `data_scadenza`,`todo`.`ora_scadenza` AS `ora_scadenza`,`todo`.`data_programmazione` AS `data_programmazione`,`todo`.`ora_inizio_programmazione` AS `ora_inizio_programmazione`,`todo`.`ora_fine_programmazione` AS `ora_fine_programmazione`,`todo`.`anno_programmazione` AS `anno_programmazione`,`todo`.`settimana_programmazione` AS `settimana_programmazione`,`todo`.`ore_programmazione` AS `ore_programmazione`,`todo`.`data_chiusura` AS `data_chiusura`,`todo`.`nome` AS `nome`,`todo`.`id_contatto` AS `id_contatto`,`todo`.`id_progetto` AS `id_progetto`,`progetti`.`nome` AS `progetto`,group_concat(distinct if(`d`.`id`,`categorie_progetti_path`(`d`.`id`),NULL) separator ' | ') AS `discipline`,`todo`.`id_documento` AS `id_documento`,concat(`tipologie_documenti`.`sigla`,' ',concat_ws('/',`documenti`.`numero`,`documenti`.`sezionale`),' del ',`documenti`.`data`) AS `documento`,`todo`.`id_documenti_articoli` AS `id_documenti_articoli`,concat(`documenti_articoli`.`data`,' / ',`tipologie_documenti`.`sigla`,' / ',`documenti_articoli`.`quantita`,' x ',`documenti_articoli`.`id_articolo`) AS `documenti_articoli`,`todo`.`id_istruzione` AS `id_istruzione`,concat(`istruzioni`.`id_tipologia`,coalesce(`istruzioni`.`id_prodotto`,`istruzioni`.`id_articolo`),`istruzioni`.`nome`) AS `istruzione`,`todo`.`id_pianificazione` AS `id_pianificazione`,`todo`.`id_immobile` AS `id_immobile`,`todo`.`data_archiviazione` AS `data_archiviazione`,`todo`.`id_account_inserimento` AS `id_account_inserimento`,`todo`.`id_account_aggiornamento` AS `id_account_aggiornamento`,concat(`todo`.`nome`,coalesce(concat(' per ',`a2`.`denominazione`,concat(`a2`.`cognome`,' ',`a2`.`nome`)),''),coalesce(concat(' su ',`todo`.`id_progetto`,' ',`progetti`.`nome`),'')) AS `__label__` from ((((((((((((((`todo` left join `anagrafica` `a1` on(`a1`.`id` = `todo`.`id_anagrafica`)) left join `anagrafica` `a2` on(`a2`.`id` = `todo`.`id_cliente`)) left join `indirizzi` on(`indirizzi`.`id` = `todo`.`id_indirizzo`)) left join `comuni` on(`comuni`.`id` = `indirizzi`.`id_comune`)) left join `provincie` on(`provincie`.`id` = `comuni`.`id_provincia`)) left join `tipologie_todo` on(`tipologie_todo`.`id` = `todo`.`id_tipologia`)) left join `progetti` on(`progetti`.`id` = `todo`.`id_progetto`)) left join `progetti_categorie` on(`progetti_categorie`.`id_progetto` = `progetti`.`id`)) left join `categorie_progetti` `d` on(`d`.`id` = `progetti_categorie`.`id_categoria` and `d`.`se_disciplina` = 1)) left join `documenti` on(`documenti`.`id` = `todo`.`id_documento`)) left join `tipologie_documenti` on(`tipologie_documenti`.`id` = `documenti`.`id_tipologia`)) left join `documenti_articoli` on(`documenti_articoli`.`id` = `todo`.`id_documenti_articoli`)) left join `tipologie_documenti` `tipologie_documenti_articoli` on(`tipologie_documenti_articoli`.`id` = `documenti_articoli`.`id_tipologia`)) left join `istruzioni` on(`istruzioni`.`id` = `todo`.`id_istruzione`)) group by `todo`.`id`
+;
+

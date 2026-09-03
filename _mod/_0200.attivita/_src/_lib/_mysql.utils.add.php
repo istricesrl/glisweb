@@ -63,10 +63,7 @@
                 )
             );
 
-            mysqlQuery( $cf['mysql']['connection'],
-                'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
-                array( array( 's' => $id ) )
-            );
+            refreshStaticView( $cf['mysql']['connection'], 'attivita', $id );
 
         }
 

@@ -65,9 +65,9 @@
 {% endfor %}
 
 {% if not metro.options.nocontrols and back %}
-<div class="row view-controls mt-auto no-gutters d-print-none">
+<div class="row view-controls mt-auto g-0 d-print-none">
 
-    <div class="col-auto mr-1">
+    <div class="col-auto me-1">
         {{ frm.button( { 'field': { 'text': '<i class="fa fa-rotate-left"></i>', 'type': 'button', 'onclick': 'window.open("' ~ back ~ '","_self")' } } ) }}
     </div>
     

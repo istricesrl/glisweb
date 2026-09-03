@@ -199,17 +199,11 @@
 
                         if( ! empty( $lockRefresh ) ) {
 
-                            mysqlQuery(
-                                $cf['mysql']['connection'],
-                                'REPLACE INTO todo_view_static SELECT * FROM todo_view WHERE id IN ( ' . implode( ', ', $idTodoCreate ) . ' )'
-                            );
+                            refreshStaticView( $cf['mysql']['connection'], 'todo', $idTodoCreate );
                             logWrite( 'aggiornata view statica todo per ' . count( $idTodoCreate ) . ' id', 'speed' );
 
                             if( ! empty( $idAttivitaCreate ) ) {
-                                mysqlQuery(
-                                    $cf['mysql']['connection'],
-                                    'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id IN ( ' . implode( ', ', $idAttivitaCreate ) . ' )'
-                                );
+                                refreshStaticView( $cf['mysql']['connection'], 'attivita', $idAttivitaCreate );
                                 logWrite( 'aggiornata view statica attivita per ' . count( $idAttivitaCreate ) . ' id', 'speed' );
                             }
 

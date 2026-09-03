@@ -160,7 +160,7 @@
             var p11 = $( '<div>', { "class" : "col-1" } );
             var p12 = $( '<div>', { "class" : "col-2" } );
             var p13 = $( '<div>', { "class" : "col" } );
-            var p14 = $( '<div>', { "class" : "col-2 text-right" } );
+            var p14 = $( '<div>', { "class" : "col-2 text-end" } );
 
             var p111 = $( '<p>' ).text( articolo.quantita + 'x' );
             var p121 = $( '<p>' ).text( articolo.id_articolo );

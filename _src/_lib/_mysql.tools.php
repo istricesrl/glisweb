@@ -454,19 +454,8 @@
 
                 } else {
 
-                    /**
-                     * Fix 2026-09-01: nel log ci va anche l'errore di MySQL.
-                     *
-                     * Quando mysqli_prepare() torna false senza sollevare eccezione questo ramo
-                     * scriveva solo il testo della query, e il motivo del rifiuto restava ignoto:
-                     * per scoprire che una query era un 1064 (errore di sintassi) bisognava
-                     * riprodurla a mano fuori dal framework. Siccome mysqlSelectRow() e
-                     * mysqlSelectValue() non distinguono "query fallita" da "nessuna riga", una
-                     * query malformata si traveste da dato mancante e il log è l'unico posto in cui
-                     * la differenza si vede: senza il codice di errore non serve a niente.
-                     * Il ramo catch() qui sotto lo faceva già, questo no.
-                     */
-                    logger(__FUNCTION__ . '() errore ' . mysqli_errno($c) . ' ' . mysqli_error($c) . ' nella preparazione della query: ' . $q, 'mysql', LOG_ERR);
+                    // log
+                    logger(__FUNCTION__ . '() fallita la preparazione della query: ' . $q, 'mysql', LOG_ERR);
 
                     // restituisco false
                     return false;
@@ -1139,6 +1128,111 @@
         } else {
             return false;
         }
+    }
+
+    /**
+     * aggiorna una vista statica dalla vista che la alimenta
+     *
+     * Le viste statiche sono tabelle materializzate: si tengono aggiornate ricopiandoci dentro
+     * la vista omonima. Storicamente lo si faceva con
+     *
+     *     REPLACE INTO <t>_view_static SELECT * FROM <t>_view WHERE id = ?
+     *
+     * che ha due difetti gravi, entrambi gia' costati incidenti in produzione:
+     *
+     * 1. SELECT * accoppia le colonne PER POSIZIONE, quindi appena vista e statica divergono di
+     *    una colonna la query fallisce con ERROR 1136 ( Column count doesn't match value count );
+     * 2. nessuno ne controllava l'esito, quindi il fallimento era MUTO: la riga finiva nella
+     *    tabella di partenza e non nella statica, e siccome ogni elenco legge la statica quando
+     *    esiste ( vedi getStaticView ), il sintomo era "l'elenco non si aggiorna piu'" - senza
+     *    alcun errore da nessuna parte, e a giorni di distanza dalla migrazione che l'aveva causato.
+     *
+     * Questa funzione elenca le colonne esplicitamente e usa solo quelle presenti da entrambe le
+     * parti: una colonna aggiunta alla vista e non ancora alla statica smette di essere un guasto
+     * e diventa un avviso nel log. L'esito viene controllato.
+     *
+     * @param mysqli $c  connessione
+     * @param string $t  nome della tabella ( senza suffissi: 'anagrafica', non 'anagrafica_view' )
+     * @param mixed  $i  id della riga da aggiornare, un array di id, oppure NULL per l'intera vista
+     *
+     * @return bool true se l'aggiornamento e' andato a buon fine
+     */
+    function refreshStaticView($c, $t, $i = null)
+    {
+
+        // le colonne di vista e statica cambiano solo con una migrazione: si leggono una volta
+        // per richiesta e si tengono qui
+        static $colonne = array();
+
+        $view   = $t . '_view';
+        $static = $t . '_view_static';
+
+        if (! isset($colonne[$t])) {
+
+            $cols = array();
+            foreach (array($view, $static) as $oggetto) {
+                $cols[$oggetto] = mysqlSelectColumn(
+                    'COLUMN_NAME',
+                    $c,
+                    'SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = database() AND TABLE_NAME = ? ORDER BY ORDINAL_POSITION',
+                    array(array('s' => $oggetto))
+                );
+            }
+
+            // solo le colonne che esistono da entrambe le parti
+            $comuni = array_values(array_intersect($cols[$view], $cols[$static]));
+            $manca  = array_diff($cols[$view], $cols[$static]);
+
+            if (! empty($manca)) {
+                logger(
+                    'la vista ' . $view . ' ha colonne che ' . $static . ' non ha ( ' . implode(', ', $manca) . ' ): '
+                    . 'la statica va allineata, per ora quelle colonne non vengono copiate',
+                    'mysql',
+                    LOG_WARNING
+                );
+            }
+
+            $colonne[$t] = $comuni;
+        }
+
+        if (empty($colonne[$t])) {
+            logger('impossibile aggiornare ' . $static . ': nessuna colonna in comune con ' . $view, 'mysql', LOG_ERR);
+            return false;
+        }
+
+        $campi = '`' . implode('`, `', $colonne[$t]) . '`';
+        $sql   = 'REPLACE INTO `' . $static . '` ( ' . $campi . ' ) SELECT ' . $campi . ' FROM `' . $view . '`';
+        $args  = array();
+
+        if (is_array($i)) {
+
+            // elenco di id: un segnaposto per ciascuno
+            $i = array_values(array_filter($i, 'strlen'));
+            if (empty($i)) {
+                return true;
+            }
+            $sql .= ' WHERE id IN ( ' . implode(', ', array_fill(0, count($i), '?')) . ' )';
+            foreach ($i as $uno) {
+                $args[] = array('s' => $uno);
+            }
+
+        } elseif (! is_null($i)) {
+            $sql .= ' WHERE id = ?';
+            $args = array(array('s' => $i));
+        }
+
+        $esito = mysqlQuery($c, $sql, $args);
+
+        if (! empty(mysqli_errno($c))) {
+            logger(
+                'aggiornamento di ' . $static . ' fallito: ' . mysqli_error($c),
+                'mysql',
+                LOG_ERR
+            );
+            return false;
+        }
+
+        return (bool) $esito;
     }
 
     function getStaticViewExtension($m, $c, $t)

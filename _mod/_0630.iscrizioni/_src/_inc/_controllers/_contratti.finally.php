@@ -28,7 +28,7 @@
             // view statica naturale
             // mysqlQuery( $c, 'CALL iscrizioni_view_static( ? )', array( array( 's' => $d['id'] ) ) );
             // print_r( mysqlQuery( $c, 'SELECT * FROM iscrizioni_view WHERE id = ?', array( array( 's' => $d['id'] ) ) ) );
-            mysqlQuery( $c, 'REPLACE INTO iscrizioni_view_static SELECT * FROM iscrizioni_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            refreshStaticView( $c, 'iscrizioni', $d['id'] );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'static' );
 
         break;

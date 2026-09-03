@@ -24,7 +24,7 @@ ALTER TABLE `account`
 -- | 030000000101
 
 -- account
-ALTER TABLE `account` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `account` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000000120
 
@@ -41,7 +41,7 @@ ALTER TABLE `account_gruppi`
 -- | 030000000121
 
 -- account_gruppi
-ALTER TABLE `account_gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `account_gruppi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000000130
 
@@ -58,7 +58,7 @@ ALTER TABLE `account_gruppi_attribuzione`
 -- | 030000000131
 
 -- account_gruppi_attribuzione
-ALTER TABLE `account_gruppi_attribuzione` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `account_gruppi_attribuzione` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000000400
 
@@ -93,7 +93,7 @@ ALTER TABLE `anagrafica`
 -- | 030000000401
 
 -- anagrafica
-ALTER TABLE `anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;	
+ALTER TABLE `anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;	
 
 -- | 030000000500
 
@@ -110,7 +110,7 @@ ALTER TABLE `anagrafica_categorie`
 -- | 030000000501
 
 -- anagrafica_categorie
-ALTER TABLE `anagrafica_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `anagrafica_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000000900
 
@@ -130,7 +130,7 @@ ALTER TABLE `anagrafica_indirizzi`
 -- | 030000000901
 
 -- anagrafica_indirizzi
-ALTER TABLE `anagrafica_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `anagrafica_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000001300
 
@@ -154,7 +154,7 @@ ALTER TABLE `articoli`
 -- | 030000001301
 
 -- articoli
-ALTER TABLE `articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 
 -- | 030000001700
@@ -172,7 +172,7 @@ ALTER TABLE `asset`
 -- | 030000001701
 
 -- asset
-ALTER TABLE `asset` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `asset` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000001800
 
@@ -217,7 +217,7 @@ ALTER TABLE `attivita`
 -- | 030000001801
 
 -- attivita
-ALTER TABLE `attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `attivita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000002900
 
@@ -230,7 +230,7 @@ ALTER TABLE `caratteristiche`
 -- | 030000002901
 
 -- caratteristiche
-ALTER TABLE `caratteristiche` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `caratteristiche` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000003050
 
@@ -252,7 +252,7 @@ ALTER TABLE `carrelli_articoli`
 -- | 030000003051
 
 -- carrelli_articoli
-ALTER TABLE `carrelli_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `carrelli_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000003100
 
@@ -283,7 +283,7 @@ ALTER TABLE `categorie_anagrafica`
 -- | 030000003101
 
 -- categorie_anagrafica
-ALTER TABLE `categorie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `categorie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000003700
 
@@ -299,7 +299,7 @@ ALTER TABLE `categorie_notizie`
 -- | 030000003701
 
 -- categorie-notizie
-ALTER TABLE `categorie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `categorie_notizie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000003900
 
@@ -315,7 +315,7 @@ ALTER TABLE `categorie_prodotti`
 -- | 030000003901
 
 -- categorie_prodotti
-ALTER TABLE `categorie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `categorie_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000004300
 
@@ -341,7 +341,7 @@ ALTER TABLE `categorie_progetti`
 -- | 030000004301
 
 -- categorie_progetti
-ALTER TABLE `categorie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `categorie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000005050
 
@@ -358,7 +358,7 @@ ALTER TABLE `colli`
 -- | 030000005051
 
 -- colli
-ALTER TABLE `colli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `colli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000005300
 
@@ -373,7 +373,7 @@ ALTER TABLE `comuni`
 -- | 030000005301
 
 -- comuni
-ALTER TABLE `comuni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `comuni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006000
 
@@ -384,7 +384,7 @@ ALTER TABLE `condizioni_pagamento`
 -- | 030000006001
 
 -- condizioni_pagamento
-ALTER TABLE `condizioni_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `condizioni_pagamento` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006200
 
@@ -418,7 +418,7 @@ ALTER TABLE `consensi_moduli`
 -- | 030000006301
 
 -- consensi_moduli
-ALTER TABLE `consensi_moduli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `consensi_moduli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006400
 
@@ -436,7 +436,7 @@ ALTER TABLE `consensi_anagrafica`
 -- | 030000006401
 
 -- consensi_anagrafica
-ALTER TABLE `consensi_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `consensi_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006500
 
@@ -454,7 +454,7 @@ ALTER TABLE `consensi_contatti`
 -- | 030000006501
 
 -- consensi_contatti
-ALTER TABLE `consensi_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `consensi_contatti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006700
 
@@ -480,7 +480,7 @@ ALTER TABLE `contatti`
 -- | 030000006701
 
 -- contatti
-ALTER TABLE `contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `contatti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000006900
 
@@ -521,7 +521,7 @@ ALTER TABLE `contenuti`
 -- | 030000006901
 
 -- contenuti
-ALTER TABLE `contenuti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `contenuti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 
 -- | 030000007100
@@ -535,7 +535,7 @@ ALTER TABLE `continenti`
 -- | 030000007101
 
 -- continenti
-ALTER TABLE `continenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `continenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000007200
 
@@ -554,7 +554,7 @@ ALTER TABLE `contratti`
 -- | 030000007201
 
 -- contratti
-ALTER TABLE `contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `contratti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000007800
 
@@ -576,7 +576,7 @@ ALTER TABLE `corrispondenza`
 -- | 030000007801
 
 -- corrispondenza
-ALTER TABLE `corrispondenza` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `corrispondenza` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000008000
 
@@ -590,7 +590,7 @@ ALTER TABLE `coupon`
 -- | 030000008001
 
 -- coupon
-ALTER TABLE `coupon` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `coupon` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000009800
 
@@ -623,7 +623,7 @@ ALTER TABLE `documenti`
 -- | 030000009801
 
 -- documenti
-ALTER TABLE `documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000010000
 
@@ -670,7 +670,7 @@ ALTER TABLE `documenti_articoli`
 -- | 030000010001
 
 -- documenti_articoli
-ALTER TABLE `documenti_articoli` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `documenti_articoli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015000
 
@@ -743,7 +743,7 @@ ALTER TABLE `file`
 -- | 030000015001
 
 -- file
-ALTER TABLE `file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `file` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015200
 
@@ -760,7 +760,7 @@ ALTER TABLE `gruppi`
 -- | 030000015201
 
 -- gruppi
-ALTER TABLE `gruppi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `gruppi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015400
 
@@ -774,7 +774,7 @@ ALTER TABLE `iban`
 -- | 030000015401
 
 -- iban
-ALTER TABLE `iban` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `iban` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015600
 
@@ -839,7 +839,7 @@ ALTER TABLE `immagini`
 -- | 030000015601
 
 -- immagini
-ALTER TABLE `immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `immagini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000015800
 
@@ -857,7 +857,7 @@ ALTER TABLE `indirizzi`
 -- | 030000015801
 
 -- indirizzi
-ALTER TABLE `indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000016200
 
@@ -875,7 +875,7 @@ ALTER TABLE `job`
 -- | 030000016201
 
 -- job
-ALTER TABLE `job` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `job` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000016800
 
@@ -891,7 +891,7 @@ ALTER TABLE `lingue`
 -- | 030000016801
 
 -- lingue
-ALTER TABLE `lingue` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `lingue` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000017200
 
@@ -907,7 +907,7 @@ ALTER TABLE `listini`
 -- | 030000017201
 
 -- listini
-ALTER TABLE `listini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `listini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000018200
 
@@ -933,7 +933,7 @@ ALTER TABLE `macro`
 -- | 030000018201
 
 -- macro
-ALTER TABLE `macro` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `macro` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000018600
 
@@ -950,7 +950,7 @@ ALTER TABLE `mail`
 -- | 030000018601
 
 -- mail
-ALTER TABLE `mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000018800
 
@@ -965,7 +965,7 @@ ALTER TABLE `mail_out`
 -- | 030000018801
 
 -- mail_out
-ALTER TABLE `mail_out` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `mail_out` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000018900
 
@@ -980,7 +980,7 @@ ALTER TABLE `mail_sent`
 -- | 030000018901
 
 -- mail_sent
-ALTER TABLE `mail_sent` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `mail_sent` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000020200
 
@@ -994,7 +994,7 @@ ALTER TABLE `marchi`
 -- | 030000020201
 
 -- marchi
-ALTER TABLE `marchi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `marchi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000020600
 
@@ -1015,7 +1015,7 @@ ALTER TABLE `mastri`
 -- | 030000020601
 
 -- mastri
-ALTER TABLE `mastri` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `mastri` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021000
 
@@ -1031,7 +1031,7 @@ ALTER TABLE `matricole`
 -- | 030000021001
 
 -- matricole
-ALTER TABLE `matricole` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `matricole` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021600
 
@@ -1051,7 +1051,7 @@ ALTER TABLE `menu`
 -- | 030000021601
 
 -- menu
-ALTER TABLE `menu` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `menu` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021800
 
@@ -1102,7 +1102,7 @@ ALTER TABLE `metadati`
 -- | 030000021801
 
 -- metadati
-ALTER TABLE `metadati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `metadati` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000021900
 
@@ -1113,7 +1113,7 @@ ALTER TABLE `modalita_pagamento`
 -- | 030000021901
 
 -- modalita_pagamento
-ALTER TABLE `modalita_pagamento` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `modalita_pagamento` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022000
 
@@ -1128,7 +1128,7 @@ ALTER TABLE `notizie`
 -- | 030000022001
 
 -- notizie
-ALTER TABLE `notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `notizie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022200
 
@@ -1144,7 +1144,7 @@ ALTER TABLE `notizie_categorie`
 -- | 030000022201
 
 -- notizie_categorie
-ALTER TABLE `notizie_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `notizie_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000022800
 
@@ -1163,7 +1163,7 @@ ALTER TABLE `organizzazioni`
 -- | 030000022801
 
 -- organizzazioni
-ALTER TABLE `organizzazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `organizzazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000023100
 
@@ -1189,7 +1189,7 @@ ALTER TABLE `pagamenti`
 -- | 030000023101
 
 -- pagamenti
-ALTER TABLE `pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000023200
 
@@ -1210,7 +1210,7 @@ ALTER TABLE `pagine`
 -- | 030000023201
 
 -- pagine
-ALTER TABLE `pagine` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pagine` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000023600
 
@@ -1221,7 +1221,7 @@ ALTER TABLE `periodicita`
 -- | 030000023601
 
 -- periodicita
-ALTER TABLE `periodicita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `periodicita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000025000
 
@@ -1238,7 +1238,7 @@ ALTER TABLE `prezzi`
 -- | 030000025001
 
 -- prezzi
-ALTER TABLE `prezzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `prezzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000026000
 
@@ -1256,7 +1256,7 @@ ALTER TABLE `prodotti`
 -- | 030000026001
 
 -- prodotti
-ALTER TABLE `prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000026400
 
@@ -1272,7 +1272,7 @@ ALTER TABLE `prodotti_categorie`
 -- | 030000026401
 
 -- prodotti_categorie
-ALTER TABLE `prodotti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `prodotti_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000027000
 
@@ -1302,7 +1302,7 @@ ALTER TABLE `progetti`
 -- | 030000027001
 
 -- progetti
-ALTER TABLE `progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000027400
 
@@ -1320,7 +1320,7 @@ ALTER TABLE `progetti_categorie`
 -- | 030000027401
 
 -- progetti_categorie
-ALTER TABLE `progetti_categorie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `progetti_categorie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000028000
 
@@ -1338,7 +1338,7 @@ ALTER TABLE `provincie`
 -- | 030000028001
 
 -- provincie
-ALTER TABLE `provincie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `provincie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000028400
 
@@ -1366,7 +1366,7 @@ ALTER TABLE `pubblicazioni`
 -- | 030000028401
 
 -- pubblicazioni
-ALTER TABLE `pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `pubblicazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000028600
 
@@ -1386,7 +1386,7 @@ ALTER TABLE `ranking`
 -- | 030000028601
 
 -- ranking
-ALTER TABLE `ranking` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ranking` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000028900
 
@@ -1407,7 +1407,7 @@ ALTER TABLE `recensioni`
 -- | 030000028901
 
 -- recensioni
-ALTER TABLE `recensioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `recensioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000029400
 
@@ -1423,7 +1423,7 @@ ALTER TABLE `redirect`
 -- | 030000029401
 
 -- redirect
-ALTER TABLE `redirect` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `redirect` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000029800
 
@@ -1434,7 +1434,7 @@ ALTER TABLE `regimi`
 -- | 030000029801
 
 -- regimi
-ALTER TABLE `regimi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `regimi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000030200
 
@@ -1449,7 +1449,7 @@ ALTER TABLE `regioni`
 -- | 030000030201
 
 -- regioni
-ALTER TABLE `regioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `regioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000030400
 
@@ -1465,7 +1465,7 @@ ALTER TABLE `relazioni_documenti`
 -- | 030000030401
 
 -- relazioni_documenti
-ALTER TABLE `relazioni_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `relazioni_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034300
 
@@ -1477,7 +1477,7 @@ ALTER TABLE `ruoli_documenti`
 -- | 030000034301
 
 -- ruoli_documenti
-ALTER TABLE `ruoli_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ruoli_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034400
 
@@ -1489,7 +1489,7 @@ ALTER TABLE `ruoli_file`
 -- | 030000034401
 
 -- ruoli_file
-ALTER TABLE `ruoli_file` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ruoli_file` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034600
 
@@ -1501,7 +1501,7 @@ ALTER TABLE `ruoli_immagini`
 -- | 030000034601
 
 -- ruoli_immagini
-ALTER TABLE `ruoli_immagini` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ruoli_immagini` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034800
 
@@ -1519,7 +1519,7 @@ ALTER TABLE `ruoli_indirizzi`
 -- | 030000034801
 
 -- ruoli_indirizzi
-ALTER TABLE `ruoli_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ruoli_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000034850
 
@@ -1533,7 +1533,7 @@ ALTER TABLE `ruoli_mail`
 -- | 030000034851
 
 -- ruoli_mail
-ALTER TABLE `ruoli_mail` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ruoli_mail` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000035200
 
@@ -1545,7 +1545,7 @@ ALTER TABLE `ruoli_video`
 -- | 030000035201
 
 -- ruoli_video
-ALTER TABLE `ruoli_video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `ruoli_video` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000037000
 
@@ -1557,7 +1557,7 @@ ALTER TABLE `settori`
 -- | 030000037001
 
 -- settori
-ALTER TABLE `settori` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `settori` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000042000
 
@@ -1573,7 +1573,7 @@ ALTER TABLE `stati`
 -- | 030000042001
 
 -- stati
-ALTER TABLE `stati` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `stati` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000042500
 
@@ -1588,7 +1588,7 @@ ALTER TABLE `step`
 -- | 030000042501
 
 -- step
-ALTER TABLE `step` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `step` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000043000
 
@@ -1613,7 +1613,7 @@ ALTER TABLE `task`
 -- | 030000043001
 
 -- task
-ALTER TABLE `task` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `task` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000043600
 
@@ -1631,7 +1631,7 @@ ALTER TABLE `telefoni`
 -- | 030000043601
 
 -- telefoni
-ALTER TABLE `telefoni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `telefoni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000044000
 
@@ -1646,7 +1646,7 @@ ALTER TABLE `template`
 -- | 030000044001
 
 -- template
-ALTER TABLE `template` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `template` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000050000
 
@@ -1668,7 +1668,7 @@ ALTER TABLE `tipologie_anagrafica`
 -- | 030000050001
 
 -- tipologie_anagrafica
-ALTER TABLE `tipologie_anagrafica` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000050400
 
@@ -1693,7 +1693,7 @@ ALTER TABLE `tipologie_attivita`
 -- | 030000050401
 
 -- tipologie_attivita
-ALTER TABLE `tipologie_attivita` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_attivita` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000050800
 
@@ -1707,7 +1707,7 @@ ALTER TABLE `tipologie_contatti`
 -- | 030000050801
 
 -- tipologie_contatti
-ALTER TABLE `tipologie_contatti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_contatti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000050900
 
@@ -1739,7 +1739,7 @@ ALTER TABLE `tipologie_contratti`
 -- | 030000050901
 
 -- tipologie_contratti
-ALTER TABLE `tipologie_contratti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_contratti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000051000
 
@@ -1756,7 +1756,7 @@ ALTER TABLE `tipologie_corrispondenza`
 -- | 030000051001
 
 -- tipologie_corrispondenza
-ALTER TABLE `tipologie_corrispondenza` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_corrispondenza` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000052600
 
@@ -1785,7 +1785,7 @@ ALTER TABLE `tipologie_documenti`
 -- | 030000052601
 
 -- tipologie_documenti
-ALTER TABLE `tipologie_documenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_documenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000053000
 
@@ -1803,7 +1803,7 @@ ALTER TABLE `tipologie_indirizzi`
 -- | 030000053001
 
 -- tipologie_indirizzi
-ALTER TABLE `tipologie_indirizzi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_indirizzi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000053800
 
@@ -1817,7 +1817,7 @@ ALTER TABLE `tipologie_notizie`
 -- | 030000053801
 
 -- tipologie_notizie
-ALTER TABLE `tipologie_notizie` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_notizie` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000054000
 
@@ -1831,7 +1831,7 @@ ALTER TABLE `tipologie_pagamenti`
 -- | 030000054001
 
 -- tipologie_pagamenti
-ALTER TABLE `tipologie_pagamenti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_pagamenti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000054600
 
@@ -1845,7 +1845,7 @@ ALTER TABLE `tipologie_prodotti`
 -- | 030000054601
 
 -- tipologie_prodotti
-ALTER TABLE `tipologie_prodotti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_prodotti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000055000
 
@@ -1859,7 +1859,7 @@ ALTER TABLE `tipologie_progetti`
 -- | 030000055001
 
 -- tipologie_progetti
-ALTER TABLE `tipologie_progetti` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_progetti` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000055400
 
@@ -1873,7 +1873,7 @@ ALTER TABLE `tipologie_pubblicazioni`
 -- | 030000055401
 
 -- tipologie_pubblicazioni
-ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_pubblicazioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000055700
 
@@ -1887,7 +1887,7 @@ ALTER TABLE `tipologie_rinnovi`
 -- | 030000055701
 
 -- tipologie_rinnovi
-ALTER TABLE `tipologie_rinnovi` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_rinnovi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000056200
 
@@ -1905,7 +1905,7 @@ ALTER TABLE `tipologie_telefoni`
 -- | 030000056201
 
 -- tipologie_telefoni
-ALTER TABLE `tipologie_telefoni` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_telefoni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000056600
 
@@ -1929,7 +1929,7 @@ ALTER TABLE `tipologie_todo`
 -- | 030000056601
 
 -- tipologie_todo
-ALTER TABLE `tipologie_todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_todo` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000056800
 
@@ -1947,7 +1947,7 @@ ALTER TABLE `tipologie_url`
 -- | 030000056801
 
 -- tipologie_url
-ALTER TABLE `tipologie_url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `tipologie_url` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000060000
 
@@ -1976,7 +1976,7 @@ ALTER TABLE `todo`
 -- | 030000060001
 
 -- todo
-ALTER TABLE `todo` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `todo` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000062000
 
@@ -1988,7 +1988,7 @@ ALTER TABLE `udm`
 -- | 030000062001
 
 -- udm
-ALTER TABLE `udm` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `udm` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000062600
 
@@ -2006,7 +2006,7 @@ ALTER TABLE `url`
 -- | 030000062601
 
 -- url
-ALTER TABLE `url` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `url` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000063000
 
@@ -2017,7 +2017,7 @@ ALTER TABLE `valute`
 -- | 030000063001
 
 -- valute
-ALTER TABLE `valute` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `valute` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000065000
 
@@ -2051,7 +2051,7 @@ ALTER TABLE `video`
 -- | 030000065001
 
 -- video
-ALTER TABLE `video` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `video` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | 030000999000
 
@@ -2062,6 +2062,158 @@ ALTER TABLE `test`
 -- | 030000999001
 
 -- test
-ALTER TABLE `test` MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `test` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
 
 -- | FINE FILE
+
+-- | 030000999010
+
+-- ruoli_anagrafica
+-- NB: senza questa PRIMARY KEY il vincolo notizie_anagrafica.id_ruolo -> ruoli_anagrafica.id
+-- non si puo' creare ( errno 150 ), e la ricostruzione dai patch si ferma li'.
+ALTER TABLE `ruoli_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_genitore` (`id_genitore`);
+
+-- | 030000999011
+
+-- ruoli_anagrafica
+ALTER TABLE `ruoli_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999012
+
+-- notizie_anagrafica
+ALTER TABLE `notizie_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_notizia` (`id_notizia`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`);
+
+-- | 030000999013
+
+-- notizie_anagrafica
+ALTER TABLE `notizie_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999002
+
+-- carrelli
+ALTER TABLE `carrelli`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`codice`),
+	ADD UNIQUE KEY `session` (`session`),
+	ADD KEY `id_listino` (`id_listino`),
+	ADD KEY `fatturazione_id_tipologia_documento` (`fatturazione_id_tipologia_documento`),
+	ADD KEY `intestazione_id_provincia` (`intestazione_id_provincia`),
+	ADD KEY `intestazione_id_tipologia_anagrafica` (`intestazione_id_tipologia_anagrafica`),
+	ADD KEY `intestazione_id_anagrafica` (`intestazione_id_anagrafica`),
+	ADD KEY `intestazione_id_account` (`intestazione_id_account`),
+	ADD KEY `intestazione_id_comune` (`intestazione_id_comune`),
+	ADD KEY `intestazione_id_stato` (`intestazione_id_stato`),
+	ADD KEY `destinatario_id_provincia` (`destinatario_id_provincia`),
+	ADD KEY `destinatario_id_stato` (`destinatario_id_stato`),
+	ADD KEY `destinatario_id_tipologia_anagrafica` (`destinatario_id_tipologia_anagrafica`),
+	ADD KEY `destinatario_id_anagrafica` (`destinatario_id_anagrafica`),
+	ADD KEY `destinatario_id_account` (`destinatario_id_account`),
+	ADD KEY `ordine_pagamento` (`ordine_pagamento`),
+	ADD KEY `utm_id` (`utm_id`),
+	ADD KEY `utm_source` (`utm_source`),
+	ADD KEY `utm_medium` (`utm_medium`),
+	ADD KEY `utm_campaign` (`utm_campaign`),
+	ADD KEY `utm_term` (`utm_term`),
+	ADD KEY `utm_content` (`utm_content`),
+	ADD KEY `id_reseller` (`id_reseller`),
+	ADD KEY `id_affiliato` (`id_affiliato`),
+	ADD KEY `id_affiliazione` (`id_affiliazione`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_listino`,`prezzo_netto_totale`,`prezzo_lordo_totale`,`sconto_percentuale`,`sconto_valore`,`prezzo_netto_finale`,`prezzo_lordo_finale`,`provider_checkout`,`timestamp_checkout`,`provider_pagamento`,`timestamp_pagamento`,`codice_pagamento`,`status_pagamento`,`importo_pagamento`,`intestazione_id_anagrafica`);
+
+-- | 030000999102
+
+-- carrelli
+ALTER TABLE `carrelli` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999003
+
+-- rinnovi
+ALTER TABLE `rinnovi`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica_codice` (`codice`),
+	ADD UNIQUE KEY `unica_contratto` (`id_contratto`,`id_tipologia_contratto`,`codice`,`data_inizio`,`data_fine`),
+	ADD UNIQUE KEY `unica_progetto` (`id_progetto`,`codice`,`data_inizio`,`data_fine`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_periodicita` (`id_periodicita`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_licenza` (`id_licenza`),
+	ADD KEY `id_progetto` (`id_progetto`),
+	ADD KEY `id_tipologia_contratto` (`id_tipologia_contratto`),
+	ADD KEY `id_categoria_progetti` (`id_categoria_progetti`),
+	ADD KEY `indice` (`id_contratto`,`id_tipologia`,`id_licenza`,`id_progetto`,`id_categoria_progetti`,`data_inizio`,`data_fine`,`codice`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `rinnovi_ibfk_08_nofollow` (`id_pianificazione`);
+
+-- | 030000999103
+
+-- rinnovi
+ALTER TABLE `rinnovi` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999003
+
+-- contratti_anagrafica
+ALTER TABLE `contratti_anagrafica`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `unica` (`id_contratto`,`id_anagrafica`,`id_ruolo`),
+	ADD KEY `id_contratto` (`id_contratto`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_ruolo` (`id_ruolo`),
+	ADD KEY `ordine` (`ordine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id`,`id_contratto`,`id_anagrafica`,`id_ruolo`,`ordine`);
+
+-- | 030000999103
+
+-- contratti_anagrafica
+ALTER TABLE `contratti_anagrafica` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999004
+
+-- licenze
+ALTER TABLE `licenze`
+	ADD PRIMARY KEY (`id`),
+	ADD UNIQUE KEY `codice` (`codice`),
+	ADD KEY `id_anagrafica` (`id_anagrafica`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `nome` (`nome`),
+	ADD KEY `giorni_validita` (`giorni_validita`),
+	ADD KEY `giorni_rinnovo` (`giorni_rinnovo`),
+	ADD KEY `timestamp_distribuzione` (`timestamp_distribuzione`),
+	ADD KEY `timestamp_inizio` (`timestamp_inizio`),
+	ADD KEY `timestamp_fine` (`timestamp_fine`),
+	ADD KEY `id_account_inserimento` (`id_account_inserimento`),
+	ADD KEY `id_account_aggiornamento` (`id_account_aggiornamento`),
+	ADD KEY `indice` (`id_anagrafica`,`id_tipologia`,`id_rivenditore`,`codice`,`postazioni`,`nome`,`giorni_validita`,`giorni_rinnovo`,`timestamp_distribuzione`,`timestamp_inizio`,`timestamp_fine`),
+	ADD KEY `licenze_ibfk_03_nofollow` (`id_rivenditore`);
+
+-- | 030000999104
+
+-- licenze
+ALTER TABLE `licenze` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+
+-- | 030000999020
+
+-- istruzioni
+ALTER TABLE `istruzioni`
+	ADD PRIMARY KEY (`id`),
+	ADD KEY `id_tipologia` (`id_tipologia`),
+	ADD KEY `id_prodotto` (`id_prodotto`),
+	ADD KEY `id_articolo` (`id_articolo`);
+
+-- | 030000999021
+
+-- istruzioni
+ALTER TABLE `istruzioni` MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT;
+

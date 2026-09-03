@@ -483,7 +483,7 @@
 
                             // status
                             if( ! empty( $idAttivita ) ) {
-                                mysqlQuery( $cf['mysql']['connection'], 'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?', array( array( 's' => $idAttivita ) ) );
+                                refreshStaticView( $cf['mysql']['connection'], 'attivita', $idAttivita );
                                 $job['status']['info'][] = 'attività inserita con ID ' . $idAttivita . ' per la riga ' . $job['corrente'];
                                 $job['status']['info'][] = 'aggiornata view statica per ID ' . $idAttivita . ' per la riga ' . $job['corrente'];
                             } else {

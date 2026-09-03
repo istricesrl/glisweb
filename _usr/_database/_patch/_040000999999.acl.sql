@@ -9,10 +9,10 @@
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 17:39 Fabio Mosti
 CREATE TABLE IF NOT EXISTS`__acl_anagrafica__` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_entita` int(11) NOT NULL,
-  `id_gruppo` int(11) DEFAULT NULL,
-  `id_account` int(11) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_entita` bigint(20) NOT NULL,
+  `id_gruppo` bigint(20) DEFAULT NULL,
+  `id_account` bigint(20) DEFAULT NULL,
   `permesso` char(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unica` (`id_entita`,`id_gruppo`),
@@ -30,10 +30,10 @@ CREATE TABLE IF NOT EXISTS`__acl_anagrafica__` (
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 17:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_entita` int(11) NOT NULL,
-  `id_gruppo` int(11) DEFAULT NULL,
-  `id_account` int(11) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_entita` bigint(20) NOT NULL,
+  `id_gruppo` bigint(20) DEFAULT NULL,
+  `id_account` bigint(20) DEFAULT NULL,
   `permesso` char(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unica` (`id_entita`,`id_gruppo`),
@@ -51,10 +51,10 @@ CREATE TABLE IF NOT EXISTS `__acl_attivita__` (
 -- tipologia: tabella gestita
 -- verifica: 2021-05-28 17:45 Fabio Mosti
 CREATE TABLE IF NOT EXISTS `__acl_pagine__` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_entita` int(11) NOT NULL,
-  `id_gruppo` int(11) DEFAULT NULL,
-  `id_account` int(11) DEFAULT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `id_entita` bigint(20) NOT NULL,
+  `id_gruppo` bigint(20) DEFAULT NULL,
+  `id_account` bigint(20) DEFAULT NULL,
   `permesso` char(8) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `unica` (`id_entita`,`id_gruppo`),

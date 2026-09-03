@@ -6,7 +6,7 @@
         {% if obj.icon %}
         <div class="col-12 col-md-{% if page.etc.subnav.colsize %}{{ page.etc.subnav.colsize }}{% else %}4{% endif %}">
             {% if obj.modal %}
-            <a href="#" data-toggle="modal" data-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#{{ obj.modal.id }}" onclick="{{ obj.modal.onclick }}">
             {% elseif obj.ws %}
             <a href="#" onclick="$(this).metroWs('{{ obj.host }}{{ obj.ws }}'{% if obj.callback %}, {{ obj.callback }} {% endif %});">
             {% elseif obj.path[ localization.language.ietf ] %}

@@ -27,7 +27,7 @@
 
             // view statica naturale
             // mysqlQuery( $c, 'CALL documenti_articoli_view_static( ? )', array( array( 's' => $d['id'] ) ) );
-            mysqlQuery( $c, 'REPLACE INTO documenti_articoli_view_static SELECT * FROM documenti_articoli_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            refreshStaticView( $c, 'documenti_articoli', $d['id'] );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
 
         break;

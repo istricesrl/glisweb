@@ -245,6 +245,49 @@ $(document).ready(function () {
 
     });
 
+    // campi obbligatori in alternativa: e' sufficiente che ne sia compilato uno del gruppo.
+    // ogni campo del gruppo elenca nell'attributo gli id degli altri; finche' il gruppo e'
+    // interamente vuoto restano tutti required, appena uno viene compilato il vincolo cade
+    $('input[required-alternative]').each(function () {
+
+        // il valore di un campo numerico puo' cambiare anche senza tastiera ( spinner del
+        // browser, incolla, lettura da terminale ), quindi qui il solo keyup non basta
+        $(this).on('keyup change input', function () {
+
+            // il gruppo e' il campo corrente piu' quelli elencati nell'attributo
+            var campi = ['#' + $(this).attr('id')];
+
+            $.each($(this).attr('required-alternative').split(','), function (i, campo) {
+
+                campi.push('#' + $.trim(campo));
+
+            });
+
+            // verifico se almeno un campo del gruppo e' compilato
+            var compilato = false;
+
+            $.each(campi, function (i) {
+
+                if ($(campi[i]).val()) {
+
+                    compilato = true;
+
+                }
+
+            });
+
+            // se il gruppo e' soddisfatto nessun campo del gruppo e' piu' obbligatorio,
+            // altrimenti tornano obbligatori tutti e il form non passa la validazione
+            $.each(campi, function (i) {
+
+                $(campi[i]).attr('required', !compilato);
+
+            });
+
+        });
+
+    });
+
     // campi che devono essere uguali
     $('input[required-equals]').each(function () {
 

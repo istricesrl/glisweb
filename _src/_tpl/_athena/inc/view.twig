@@ -111,7 +111,7 @@
             <tfoot>
                 <tr>
                     {% for col in view.footer.cols %}
-                    <td colspan="{{ col.colspan }}" class="text-right">{{ col.label }}</td>
+                    <td colspan="{{ col.colspan }}" class="text-end">{{ col.label }}</td>
                     <td>{{ col.value }}</td>
                     {% endfor %}
                 </tr>
@@ -126,10 +126,10 @@
 
     {# CONTROLLI DELLA VISTA #}
     <fieldset class="form-controls mt-auto">
-        <div class="row no-gutters d-print-none">
+        <div class="row g-0 d-print-none">
 
             {% if form.table %}
-            <div class="col-auto mr-1">
+            <div class="col-auto me-1">
                 {{ frm.button({ "field": { "type": "button", "text": '<i class="fa fa-undo"></i>', "class": "btn btn-secondary btn-sqr btn-sm", "onclick": "window.open('" ~ back ~ "','_self');" } }) }}
             </div>
             {% endif %}
@@ -199,7 +199,7 @@
             {% endif %}
 
             {% if form.table %}
-            <div class="col-auto ml-1">
+            <div class="col-auto ms-1">
                 {% if session.__view__[ view.id ].__filesystem_mode__ %}
 
                     {# bottone salva e rimani nella pagina attuale #}

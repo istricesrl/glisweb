@@ -11,7 +11,7 @@
                 <div class="col-1"><p>{{ articolo.quantita }}x</p></div>
                 <div class="col-2"><p>{{ articolo.id_articolo }}</p></div>
                 <div class="col"><p>{{ articolo.descrizione }}</p></div>
-                <div class="col-2 text-right"><p>{{ '%0.2f'|format(articolo.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</p></div>
+                <div class="col-2 text-end"><p>{{ '%0.2f'|format(articolo.prezzo_lordo_finale) }} {{ session.carrello.valuta_utf8 }}</p></div>
             </div>{% endfor %}
         </span>
         <div class="row">

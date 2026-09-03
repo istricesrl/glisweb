@@ -52,13 +52,7 @@
 
 	// ...
 	if( ! empty( $status['aggiornare']['id'] ) ) {
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
-            array(
-                array( 's' => $status['aggiornare']['id'] )
-            )
-        );
+        refreshStaticView( $cf['mysql']['connection'], 'attivita', $status['aggiornare']['id'] );
         mysqlQuery(
             $cf['mysql']['connection'],
             'UPDATE attivita_view_static SET timestamp_inserimento = unix_timestamp() WHERE id = ? AND timestamp_inserimento IS NULL',

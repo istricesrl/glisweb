@@ -245,6 +245,76 @@ Le librerie esterne (Composer) si trovano in `_src/_lib/_ext/`, non in `vendor/`
 - Macro Twig in `_src/_twig/_lib/`, sempre importate con prefisso fisso: `cms`, `frm`, `nav`, `prv`, `trn`.
 - Traduzioni in `_etc/_dictionaries/_generic.<lang>-<COUNTRY>.conf`, esposte ai template come `$ct['tr']`.
 
+### Bootstrap: migrazione BS4 -> BS5 a metà (stato al 2026-09-01)
+
+Il framework è **in mezzo al guado** fra Bootstrap 4 e Bootstrap 5, e i due mondi convivono. La
+versione la dichiara **ogni template** in `etc/template.yaml`/`template.conf` (`css.external`/
+`js.external`), non è globale. Prima di toccare classi Bootstrap in un file, **guarda che versione
+carica il template che lo usa**: convertire le classi di un template ancora su BS4 lo rompe, perché
+i nomi BS5 (`ms-`, `me-`, `text-end`, `btn-close`, `g-0`) in BS4 non esistono, e viceversa.
+
+Stato dei **template di pagina** standard:
+
+- **già su BS5** (`bootstrap@5.3.2`): `_src/_tpl/_athena`, `_src/_tpl/_cassandra`, `_src/_tpl/_minerva`,
+  `_src/_templates/_minerva`. Su questi la conversione del markup residuo BS4 è **corretta e sicura**
+  (le classi BS4 rimaste erano no-op silenziosi). Fatta il 2026-09-01.
+- **ancora su BS4** (`bootstrap/4.5.2`): tutti gli altri (`_src/_tpl/_arianna`, `_lydia`, e quasi tutto
+  `_src/_templates/_*`: arianna, athena, caterina, eleonora, hellen, julia, lucia, lucrezia, monica,
+  olga, sabina, sylvia, vladyslava, yana). Migrarli **non è un rinomina-e-vai**: serve bumpare la
+  versione a BS5 *e* convertire tutto il markup *e* rifare il collaudo visivo del template, uno per uno.
+
+Tabella di conversione (BS4 morto in BS5 -> BS5): `ml-*`/`mr-*`->`ms-*`/`me-*`, `pl-*`/`pr-*`->`ps-*`/`pe-*`,
+`text-left`/`text-right`->`text-start`/`text-end`, `no-gutters`->`g-0`, `float-left`/`float-right`->
+`float-start`/`float-end`, `font-weight-*`->`fw-*`, `.close`->`.btn-close`, `.badge-X`->`.text-bg-X`,
+`.media`/`.media-body`->flex utilities, `data-toggle`/`data-target`/`data-dismiss`->`data-bs-*`.
+
+Due trappole imparate convertendo:
+- **`form-row` NON si tocca**: è morto in BS5, ma nel markup sta sempre come `class="form-row row"`
+  (`row` porta il flex, quindi funziona), e dei CSS di progetto ci **agganciano selettori**
+  (es. `.form-row.row.d-flex`). Rimuoverlo per "pulizia" rompe quei selettori senza guadagno.
+- **il livello condiviso è congelato**: gli include comuni `_src/_twig/` e `_src/_html/`, e i template
+  di modulo `_mod/*/_src/_templates/`, sono usati da **tutti** i progetti insieme, quindi da template
+  sia BS4 sia BS5. Lì le classi BS4 **non si possono convertire** finché esiste anche un solo template
+  di pagina su BS4: è questo che tiene ferma la migrazione. Si sblocca solo quando **tutti** i template
+  di pagina sono passati a BS5; allora si migrano in blocco condivisi e moduli.
+
+I **tooltip** in BS5 (`data-bs-toggle="tooltip"`) vanno **inizializzati via JS**: il solo attributo non
+li accende (il `title` nativo del browser sì). Nei template non sono inizializzati, quindi la conversione
+degli attributi è corretta ma non "accende" i tooltip da sola.
+
+### Validazione dei form lato client (`_src/_js/_lib/_form.js`)
+
+Oltre all'attributo HTML5 `required`, il framework mette a disposizione tre attributi che esprimono vincoli
+**fra campi diversi**. Sono tutti gestiti in `_src/_js/_lib/_form.js` (caricato via `js.internal` del template)
+e valgono per i tag `<input>`; il valore è sempre un elenco di **id** separati da virgola.
+
+| Attributo | Significato |
+|---|---|
+| `also-required` | se il campo è valorizzato, i campi elencati diventano `required` (e da `disabled` tornano attivi); se lo si svuota tornano opzionali e disabilitati |
+| `required-equals` | i campi elencati devono avere tutti lo stesso valore, altrimenti `setCustomValidity( 'i campi non corrispondono' )` |
+| `required-alternative` | i campi del gruppo sono obbligatori **in alternativa**: finché sono tutti vuoti restano tutti `required`, appena uno viene compilato il vincolo cade su tutto il gruppo |
+
+`required-alternative` si dichiara su **ogni** campo del gruppo, elencando gli id degli altri, e i campi partono
+`required` nel markup — così il vincolo regge anche a JavaScript spento (degrada in "obbligatori tutti", non in
+"obbligatori nessuno"):
+
+```html
+<input type="number" id="numero_colli"  name="…[numero_colli]"  required required-alternative="numero_pallet">
+<input type="number" id="numero_pallet" name="…[numero_pallet]" required required-alternative="numero_colli">
+```
+
+Tre cose da sapere:
+
+- **servono gli `id`**: tutti e tre gli attributi risolvono i campi con `$( '#' + id )`, il `name` non basta.
+- **è solo lato client.** Nessuno dei tre ha una controparte PHP: il backend deve comunque accettare (o
+  rifiutare esplicitamente) la richiesta con i campi mancanti, perché una POST costruita a mano li scavalca.
+- `required-alternative` ascolta `keyup change input` e non il solo `keyup` come gli altri due, perché su un
+  campo `number` il valore cambia anche con lo spinner del browser, incollando o da lettore di barcode.
+
+Attenzione al **caching del browser**: i JS interni sono emessi da `_inc/_page.close.twig` senza query di
+versione, quindi dopo una modifica a `_form.js` i client già aperti continuano a usare la copia vecchia finché
+non fanno un reload forzato.
+
 ### Caching locale di CSS e JS esterni
 
 Le risorse remote dichiarate in `page.css.external` e `page.js.external` (file `etc/template.yaml` o

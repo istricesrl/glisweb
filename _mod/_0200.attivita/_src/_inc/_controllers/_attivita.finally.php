@@ -27,7 +27,7 @@
 
             // view statica naturale
             // mysqlQuery( $c, 'CALL attivita_view_static( ? )', array( array( 's' => $d['id'] ) ) );
-            mysqlQuery( $c, 'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?', array( array( 's' => $d['id'] ) ) );
+            refreshStaticView( $c, 'attivita', $d['id'] );
             logWrite( 'aggiornata view statica ' . $t . ' per id #' . $d['id'], 'speed' );
 
             // aggiornamento report lezioni

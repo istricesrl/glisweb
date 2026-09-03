@@ -45,13 +45,7 @@
                 )
             );
         }
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
-            array(
-                array( 's' => $_REQUEST['__chiudi___id_attivita'] )
-            )
-        );
+        refreshStaticView( $cf['mysql']['connection'], 'attivita', $_REQUEST['__chiudi___id_attivita'] );
     } elseif( isset( $_REQUEST['__archivia___id_attivita'] ) ) {
         mysqlQuery(
             $cf['mysql']['connection'],
@@ -61,13 +55,7 @@
                 array( 's' => $_REQUEST['__archivia___id_attivita'] )
             )
         );
-        mysqlQuery(
-            $cf['mysql']['connection'],
-            'REPLACE INTO attivita_view_static SELECT * FROM attivita_view WHERE id = ?',
-            array(
-                array( 's' => $_REQUEST['__archivia___id_attivita'] )
-            )
-        );
+        refreshStaticView( $cf['mysql']['connection'], 'attivita', $_REQUEST['__archivia___id_attivita'] );
     }
 
     // tabella della vista

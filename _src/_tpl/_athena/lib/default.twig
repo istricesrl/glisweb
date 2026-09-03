@@ -15,7 +15,7 @@
     {% if request.__backurl__ %}{% set back = session.backurls[ request.__backurl__ ] %}{% else %}{% set back = page.parent.path[ lang ] %}{% endif %}
 
     {# riga dei bottoni #}
-    <div class="row no-gutters d-print-none">
+    <div class="row g-0 d-print-none">
 
         {# colonna di sinistra - bottone torna indietro #}
         <div class="col-auto col-md-5 text-start">

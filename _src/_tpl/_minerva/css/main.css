@@ -352,3 +352,78 @@ table.app-table tfoot tr {
 table.app-table tfoot tr td {
     border-bottom: none;
 }
+
+/* ============================================================================
+   USABILITÀ TABLET (2026-09-01)
+   Il template è nato per Bootstrap 4 ma viene servito Bootstrap 5.3, quindi le
+   utility di spaziatura/allineamento della navbar erano diventate no-op ( vedi
+   i template inc/navbar.twig e inc/subnav.twig, migrati a ms-/me-/text-end e
+   data-bs-* ). Qui si sistema il resto lato CSS, sui viewport da tablet.
+   Le regole sono in coda di proposito: sovrascrivono per cascata quelle sopra
+   senza doverle riscrivere, e a parità di selettore restano identiche dove il
+   comportamento era già corretto ( così gli altri progetti su Minerva non
+   cambiano aspetto dove non serve ).
+   ============================================================================ */
+
+/* i pulsanti-icona dell'header ( appicons, carrello, logout ) erano quadrati
+   2em con padding orizzontale 0.75em: il glyph FontAwesome restava più largo
+   dello spazio interno e veniva tagliato sul lato destro. Li centriamo in
+   flex e azzeriamo il padding, così il glyph sta sempre dentro al quadrato. */
+header nav.navbar-light ul.icons li.nav-item > a.nav-link,
+header .btn-sqr {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    line-height: 1;
+    flex: 0 0 auto;
+}
+
+/* un filo d'aria a destra: senza gutter l'ultimo pulsante ( logout ) restava a
+   filo del bordo del viewport e sembrava tagliato anche quando non lo era. */
+header nav.navbar-light .icons,
+header .col-auto.d-flex {
+    padding-right: .35em;
+}
+
+/* l'header a 1.8em rendeva voci e icone enormi su tablet, mandando la barra a
+   ridosso dei bordi. 1.5em resta ben leggibile a distanza di braccio ma lascia
+   respiro. La navbar non deve mai produrre scroll orizzontale. */
+header {
+    font-size: 1.5em;
+}
+header nav.navbar {
+    flex-wrap: nowrap;
+    overflow-x: hidden;
+}
+
+/* voci di menu: su tablet il tap target conta più della compattezza. Diamo
+   un'area cliccabile piena e verticalmente centrata. */
+header nav.navbar-light li.nav-item > a.nav-link {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+/* login: a width:20% ( min 280px ) la casella su tablet restava strettissima e
+   l'input, affiancato alla label, veniva compresso a metà ( il placeholder
+   "username" si tagliava ). La rendiamo fluida con un tetto leggibile: piena su
+   schermi piccoli, centrata e non oltre 420px sui grandi. */
+.form-login {
+    width: 100%;
+    max-width: 420px;
+    min-width: 0;
+}
+
+/* griglie tabellari dell'app ( le righe .form-row.row.d-flex che emulano una
+   tabella, es. "stato evasione LP" in packing ): le intestazioni lunghe
+   ( "controllati", "controllare" ) in colonne strette col-md-1 debordavano
+   dalla colonna e si sovrapponevano a quella accanto, perché un flex item ha
+   min-width:auto e non scende sotto la larghezza del contenuto. min-width:0 +
+   overflow-wrap fanno andare a capo il testo DENTRO la colonna. Scoperto sul
+   tablet in portrait. Colpisce solo le righe con d-flex ( le griglie ), non i
+   normali form a input+bottone che usano solo "form-row row". */
+main .form-row.row.d-flex > [class*="col-"] {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
