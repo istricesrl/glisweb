@@ -1,0 +1,38 @@
+#!/usr/bin/env bash
+
+## HOOK PER L'AGGIORNAMENTO AUTOMATICO DELLA VERSIONE
+#
+# la versione del framework e' un timestamp YYYYMMDDHHmmss in _etc/_current.version:
+# viene rigenerata ad ogni commit e aggiunta al commit stesso
+#
+# questo hook serve allo sviluppo dello standard (glisdev e glisweb), non ai
+# progetti che usano il framework; e' attivo solo dove e' stato installato con
+# .githooks/install.sh, che imposta core.hooksPath
+#
+
+set -euo pipefail
+
+VERS="$(date '+%Y%m%d%H%M%S')"
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+GITNAME="$(basename "$(git remote get-url origin 2>/dev/null || echo 'senza-remote')")"
+
+echo "repository: $GITNAME"
+echo "branch: $BRANCH"
+echo "version: $VERS"
+
+## scrittura della versione e inclusione nel commit corrente
+echo "$VERS" > _etc/_current.version
+git add _etc/_current.version
+
+echo "aggiornamento della versione effettuato con successo"
+
+exit 0
+
+## NOTA
+#
+# la release (_etc/_current.release) resta manuale: si aggiorna a mano quando si
+# crea un ramo di rilascio, vedi CLAUDE.md sezione "Versioning"
+#
+# la versione qui scritta viene confrontata a runtime da _src/_config/_030.common.php
+# con quella pubblicata su https://glisweb.istricesrl.it/current.version
+#

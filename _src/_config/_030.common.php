@@ -49,11 +49,12 @@
      * II           | minor release           | retrocompatibile con la stessa major release
      * III          | patch release           | retrocompatibile con la stessa major e minor release
      * 
-     * La versione invece viene incrementata automaticamente ogni volta che si effettua un push su una qualunque branch del
-     * repository, e indica pertanto in linea di massima quando il codice è stato aggiornato l'ultima volta; la versione può essere
-     * vista come un indicatore del livello di patch dell'installazione corrente. La versione è un numero intero formato dalla
-     * data corrente in formato YYYYMMDDHHIISS (anno, mese, giorno, ora, minuti, secondi) e come detto sopra viene incrementato
-     * automaticamente tramite uno script che viene eseguito ad ogni push e salvata nel file _etc/_current.version.
+     * La versione invece viene incrementata automaticamente ad ogni commit su una qualunque branch del repository di sviluppo
+     * del framework, e indica pertanto in linea di massima quando il codice è stato aggiornato l'ultima volta; la versione può
+     * essere vista come un indicatore del livello di patch dell'installazione corrente. La versione è un numero intero formato
+     * dalla data corrente in formato YYYYMMDDHHIISS (anno, mese, giorno, ora, minuti, secondi), viene scritta nel file
+     * _etc/_current.version dal git hook .githooks/pre-commit ed è quindi presente solo dove quell'hook è stato installato
+     * con .githooks/install.sh (chi sviluppa il framework, non i progetti che lo usano).
      *
      *
      *

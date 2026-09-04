@@ -158,3 +158,23 @@ viene richiesta l'installazione di moduli di PHP aggiuntivi scaricateli da https
 installare il framework per contribuire
 ---------------------------------------
 Questa sezione è attualmente in aggiornamento.
+
+Chi lavora al framework, e non a un progetto che lo usa, deve attivare una volta sola i git hook di sviluppo
+nella propria copia di lavoro:
+
+```
+bash .githooks/install.sh
+```
+
+Gli hook sono versionati in */.githooks/*, ma git li cerca in */.git/hooks/* finché non gli si indica il
+percorso: lo script imposta *core.hooksPath* (configurazione locale del clone, non viaggia col repository) e
+rimette il bit di esecuzione, senza il quale git li salterebbe senza dire nulla. Da quel momento ogni commit
+rigenera */_etc/_current.version*, e i commit sul ramo *master* aggiornano */_etc/_changelog.json* a partire
+dal messaggio di commit, di cui la prima riga viene divisa sul carattere § in titolo e testo:
+
+```
+git commit -m "titolo della modifica § descrizione estesa della modifica"
+```
+
+Lo stato dell'installazione si verifica con `bash .githooks/install.sh --check`. Nei progetti che usano il
+framework gli hook non vanno installati.

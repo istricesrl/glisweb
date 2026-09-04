@@ -189,6 +189,13 @@ Per approfondire, la skill `glisweb` automatizza il bootstrap di un progetto cli
 In questa sezione tutti i file e le cartelle del framework sono riportati in ordine logico, per dare un'idea dell'insieme.
 Ogni file contiene poi i commenti dettagliati sul proprio funzionamento.
 
+### /.githooks/pre-commit, /.githooks/commit-msg, /.githooks/post-commit e /.githooks/install.sh
+Git hook versionati, utili a chi sviluppa il framework e non ai progetti che lo usano. Il pre-commit rigenera
+/_etc/_current.version ad ogni commit; commit-msg e post-commit alimentano /_etc/_changelog.json a partire dal messaggio di
+commit, ma solo sul ramo master. Git cerca gli hook in /.git/hooks/ salvo diversa indicazione e salta in silenzio quelli
+privi del bit di esecuzione: per questo gli hook vanno attivati una volta per copia di lavoro con
+`bash .githooks/install.sh`, che imposta `core.hooksPath` e ripristina i permessi.
+
 ### /.gitignore
 Questo file (il cui contenuto cambia fra sviluppo del framework e sviluppo dei progetti) impedisce che vengano caricati
 nel repository Git del framework (o del progetto) file inutili o potenzialmente sensibili.
@@ -220,6 +227,13 @@ require         | codeception/module-phpbrowser | *                 |
 require         | codeception/module-asserts    | *                 |
 suggest         | twig/extra-bundle             | *                 |
 
+### /_etc/_changelog.json
+Changelog del framework in formato JSON, generato automaticamente dagli hook /.githooks/commit-msg e /.githooks/post-commit
+dai commit fatti sul ramo master: la prima riga del messaggio viene divisa sul carattere § in titolo e testo, e la voce
+viene inserita in testa all'array con il timestamp e la URL del repository. Il post-commit riscrive poi il commit con
+`git commit --amend` per includervi il file aggiornato, quindi su un master già pubblicato la riscrittura va gestita
+di conseguenza.
+
 ### /_etc/_claude/_claude.framework.md
 Istruzioni operative per Claude Code distribuite con il framework. Contiene le regole fondamentali per lavorare correttamente sul codice
 (hard link, convenzione `_*`, come trovare le credenziali di database e degli altri servizi) e una sintesi dell'architettura. Il file non
@@ -232,32 +246,36 @@ Il framework viene versionato con due diverse numerazioni, le release che seguon
 e le versioni che sono numerate progressivamente con una timestamp (ad es. 20240502225937). La ragione di questa distinzione è che le
 versioni vengono incrementate quotidianamente, mentre le release di rado, solo quando numerose versioni si sono accumulate.
 
-L'aggiornamento della versione è fatto automaticamente tramite un git hook (/.git/hooks/pre-commit) ad ogni commit sul repository di
-sviluppo del framework:
+L'aggiornamento della versione è fatto automaticamente dal git hook /.githooks/pre-commit ad ogni commit sul repository di
+sviluppo del framework. Gli hook sono versionati in /.githooks/, ma `core.hooksPath` è configurazione locale della copia di
+lavoro e non viaggia col repository: finché non si esegue `bash .githooks/install.sh` git continua a cercare gli hook in
+/.git/hooks/ e la versione resta ferma senza che nulla lo segnali.
 
 ```
-#!/bin/bash
+#!/usr/bin/env bash
 
-BRANCH=`git rev-parse --abbrev-ref HEAD`
-VERS=$(date '+%Y%m%d%H%M%S')
-GITNAME=`basename $(git remote get-url origin)`
+set -euo pipefail
 
-echo "repository: "$GITNAME
+VERS="$(date '+%Y%m%d%H%M%S')"
+BRANCH="$(git rev-parse --abbrev-ref HEAD)"
+GITNAME="$(basename "$(git remote get-url origin 2>/dev/null || echo 'senza-remote')")"
 
-if [ -n "$( echo $GITNAME | grep 'glisweb' )" ]; then
+echo "repository: $GITNAME"
+echo "branch: $BRANCH"
+echo "version: $VERS"
 
-echo "branch: "$BRANCH
-echo "version: "$VERS
+echo "$VERS" > _etc/_current.version
+git add _etc/_current.version
 
-    echo $VERS > _etc/_current.version
-    git add _etc/_current.version
-
-    echo "aggiornamento della versione effettuato con successo"
-
-fi
+echo "aggiornamento della versione effettuato con successo"
 ```
 
-La versione invece viene modificata a mano quando si crea una nuova release branch.
+La versione così scritta viene confrontata a runtime da /_src/_config/_030.common.php con quella pubblicata su
+https://glisweb.istricesrl.it/current.version, che l'.htaccess della istanza distribuita serve dal proprio
+/_etc/_current.version; il confronto è quello che /_src/_api/_status/_framework.php riporta come installazione
+aggiornata, obsoleta o di sviluppo.
+
+La release invece viene modificata a mano quando si crea una nuova release branch.
 
 ### /_etc/_current.version
 Vedi /_etc/_current.release.
