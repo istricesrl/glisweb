@@ -239,20 +239,29 @@
             $fields = array( $fields );
         }
 
+        // NB: gli elementi da confrontare sono $x e $y, non $a e $b. I valori dei campi vanno
+        // in variabili DIVERSE dagli elementi: assegnandoli a $a e $b - com'era prima - il primo
+        // campo sovrascriveva gli elementi con due stringhe, e dal secondo campo in poi
+        // $a[ $field ] non esisteva piu'. L'ordinamento a piu' campi promesso qui sopra non e'
+        // quindi mai avvenuto: si ordinava sul primo campo e basta.
+        //
+        // Un campo assente o NULL vale come vuoto e finisce in coda ( in ordine ascendente ),
+        // che e' il comportamento documentato. Prima passava per isset(), che su un valore NULL
+        // e' false: si cadeva nel ramo "return 0", cioe' l'elemento risultava uguale a tutti gli
+        // altri. Con un comparatore incoerente usort() non ordina, rimescola - ed e' il caso
+        // tipico di una colonna che arriva dal database con dei NULL.
         usort( $array,
-            function( $a, $b ) use ( $fields, $direction ) {
+            function( $x, $y ) use ( $fields, $direction ) {
                 $direction = ( $direction == ARRAY_SORT_ASC ) ? -1 : 1;
                 foreach( $fields as $field ) {
-                    if( isset( $a[ $field ] ) && isset( $b[ $field ] ) ) {
-                        $a = strtolower( $a[ $field ] );
-                        $b = strtolower( $b[ $field ] );
-                        if ( empty( $a ) && ! empty( $b ) ) return -1 * $direction;
-                        if ( ! empty( $a ) && empty(  $b ) ) return 1 * $direction;
-                        if ( $a > $b ) return -1 * $direction;
-                        if ( $a < $b ) return 1 * $direction;
-                    } else { return 0; }
+                    $a = ( isset( $x[ $field ] ) ) ? strtolower( $x[ $field ] ) : '';
+                    $b = ( isset( $y[ $field ] ) ) ? strtolower( $y[ $field ] ) : '';
+                    if ( empty( $a ) && ! empty( $b ) ) return -1 * $direction;
+                    if ( ! empty( $a ) && empty(  $b ) ) return 1 * $direction;
+                    if ( $a > $b ) return -1 * $direction;
+                    if ( $a < $b ) return 1 * $direction;
                 }
-                if ( $a == $b ) { return 0; }
+                return 0;
             }
         );
 

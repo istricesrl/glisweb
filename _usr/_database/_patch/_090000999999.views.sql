@@ -1596,22 +1596,40 @@ CREATE OR REPLACE VIEW `marchi_view` AS
 -- | 090000020800
 
 -- mastri_tipologie_veicoli_view
+-- la tabella associa a un mastro una TIPOLOGIA di veicolo, non un veicolo: il join era su
+-- `veicoli` e faceva combaciare l'id_tipologia con un id di veicolo, restituendo una targa a
+-- caso o NULL ( e la maschera, che riempie la tendina da tipologie_veicoli, scriveva altro )
+-- la colonna `tipologie` porta su OGNI riga l'elenco completo delle tipologie associate a quel
+-- mastro, separate da virgola: serve agli elenchi, dove interessa sapere con che mezzi si arriva
+-- a una collocazione senza doverne leggere le righe una per una. La grana della vista resta
+-- quella della tabella ( una riga per associazione, GROUP BY sulla chiave primaria ) perche' il
+-- controller standard fa SELECT * FROM <tabella>_view WHERE id = ? per caricare il record
 CREATE OR REPLACE VIEW `mastri_tipologie_veicoli_view` AS
     SELECT
         mastri_tipologie_veicoli.id,
         mastri_tipologie_veicoli.id_mastro,
         mastri_path( mastri_tipologie_veicoli.id_mastro ) AS mastro,
         mastri_tipologie_veicoli.id_tipologia,
-        veicoli.targa AS veicolo,
+        tipologie_veicoli_path( mastri_tipologie_veicoli.id_tipologia ) AS tipologia,
+        group_concat(
+            DISTINCT tipologie_veicoli_path( altre.id_tipologia )
+            ORDER BY tipologie_veicoli_path( altre.id_tipologia )
+            SEPARATOR ', '
+        ) AS tipologie,
         mastri_tipologie_veicoli.id_account_inserimento,
         mastri_tipologie_veicoli.id_account_aggiornamento,
         concat_ws(
             ' / ',
             mastri_path( mastri_tipologie_veicoli.id_mastro ),
-            veicoli.targa
+            group_concat(
+                DISTINCT tipologie_veicoli_path( altre.id_tipologia )
+                ORDER BY tipologie_veicoli_path( altre.id_tipologia )
+                SEPARATOR ', '
+            )
         ) AS __label__
     FROM mastri_tipologie_veicoli
-    LEFT JOIN veicoli ON veicoli.id = mastri_tipologie_veicoli.id_tipologia
+    LEFT JOIN mastri_tipologie_veicoli AS altre ON altre.id_mastro = mastri_tipologie_veicoli.id_mastro
+    GROUP BY mastri_tipologie_veicoli.id
 ;
 
 -- | 090000021600

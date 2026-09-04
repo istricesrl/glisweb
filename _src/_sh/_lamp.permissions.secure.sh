@@ -62,12 +62,18 @@ find ./$SUB/var/log -type f -exec chmod 660 {} +
 chown -R www-data:www-data ./$SUB/var/cache
 
 ## cartella .git
-if [ -d ".git" ]; then
+# NB: il test va fatto sul percorso completo. Qui siamo nella cartella SUPERIORE al deploy
+# ( piu' sopra c'e' `cd $RP` ), quindi `[ -d ".git" ]` guardava <sito>/.git, che non esiste
+# quasi mai: il ramo non entrava e .git restava root:www-data come tutto il resto, cioe'
+# leggibile dal gruppo di Apache. Non e' un buco - il .htaccess nega .git - ma il codice non
+# faceva quello che dice, e il prune dei find piu' sotto da' per scontato che questo chown
+# sia avvenuto.
+if [ -d "./$SUB/.git" ]; then
     chown -R root:root ./$SUB/.git
 fi
 
 ## cartella .github
-if [ -d ".github" ]; then
+if [ -d "./$SUB/.github" ]; then
     chown -R root:root ./$SUB/.github
 fi
 

@@ -941,7 +941,7 @@
                     glob(path2custom($cb . $cn), GLOB_BRACE),
                     glob(path2custom($cm . $cn), GLOB_BRACE)
                 );
-                logWrite(print_r($ct, true), 'controllers/' . $t, LOG_ERR);
+                // logWrite(print_r($ct, true), 'controllers/' . $t, LOG_ERR);	// debug disattivato: dump a ogni controller, saturava var/log/controllers/*.err
                 foreach ($ct as $f) {
                     require $f;
                     timerCheck( $timer, '-> -> fine elaborazione di ' . $f );
