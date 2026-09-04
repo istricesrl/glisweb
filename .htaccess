@@ -57,7 +57,9 @@ Options -MultiViews
     # Per ovvi motivi viene impedito l'accesso alla cartella .git/; vengono inoltre bloccate la cartella tmp/, che può contenere file di importazione o di
     # elaborazione o comunque file contenenti dati riservati. L'accesso alla cartella usr/ è limitato perché può contenere codice involontariamente pericoloso
     # o materiale riservato. Lo stesso discorso a maggior ragione vale per la cartella var/ e soprattutto per alcune sue sottocartelle come la var/log/,
-    # la delicatissima var/spool/, la var/session/ nel caso si gestiscano lì le sessioni, e la var/work/.
+    # la delicatissima var/spool/, la var/session/ nel caso si gestiscano lì le sessioni, e la var/work/. Anche la var/contenuti/upload/ è bloccata:
+    # è la cartella in cui le modali di importazione del back-end depositano i file caricati dall'utente, che contengono dati anagrafici e commerciali e non
+    # devono essere scaricabili da chi ne indovina il nome; il blocco per estensione non basta, perché il .csv non è fra le estensioni negate.
     #
 
     # directory ad accesso vietato
@@ -65,6 +67,7 @@ Options -MultiViews
     RewriteRule ^tmp/* - [F,L,NC]
     RewriteRule ^usr/database/* - [F,L,NC]
     RewriteRule ^usr/test/* - [F,L,NC]
+    RewriteRule ^var/contenuti/upload/* - [F,L,NC]
     RewriteRule ^var/log/* - [F,L,NC]
     RewriteRule ^var/session/* - [F,L,NC]
     RewriteRule ^var/spool/* - [F,L,NC]
