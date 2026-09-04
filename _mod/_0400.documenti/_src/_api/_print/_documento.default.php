@@ -37,10 +37,67 @@
     // debug
     // die( print_r( $dati, true ) );
     
+    /**
+     * Fix 2026-09-03: si autorizzano anche i FAMILIARI, il token deve essere non vuoto, e gli
+     * indici mancanti non generano più notice.
+     *
+     * Segnalazione della segreteria: "Lopane Roberta che ha fatto l'iscrizione online oggi non
+     * riesce a stampare le ricevute dall'app, io da gestionale le vedo bene, stesso problema ce
+     * l'hanno detto anche altri". Tre difetti distinti, tutti su queste righe.
+     *
+     * 1. LA APP MOSTRA PIÙ DI QUANTO LA STAMPA AUTORIZZI. L'elenco ricevute dell'area soci
+     *    ( `src/inc/macro/app.documenti.php` ) filtra per `$_SESSION['__settings__']['id_anagrafica']`,
+     *    cioè per il familiare scelto nella tendina della navbar; il controllo qui sotto invece
+     *    confrontava il destinatario con `$_SESSION['account']['id_anagrafica']`, cioè con
+     *    l'intestatario dell'account. Un genitore vedeva in elenco le ricevute del figlio e
+     *    cliccando "stampa" si sentiva rispondere "autorizzazioni insufficienti". Tutti i
+     *    destinatari dei documenti che non si stampavano — Lopane compresa — sono persone SENZA
+     *    account: le ricevute stanno in capo a loro, l'accesso è di un familiare.
+     *    L'insieme autorizzato è ora lo stesso che la app consente di selezionare, cioè
+     *    `$_SESSION['account']['relazioni']`, con la stessa guardia dei 50 già usata in
+     *    `src/config/220.auth.php`: il ramo "login da root" del runlevel 210 riempie `relazioni`
+     *    con TUTTA l'anagrafica, e senza il tetto questo diventerebbe un permesso in bianco.
+     *
+     * 2. IL TOKEN VUOTO AUTORIZZAVA QUALUNQUE DOCUMENTO. `documenti.token` è NULL su tutti e 1320
+     *    i documenti di questo deploy, e la condizione era `$_REQUEST['t'] != $dati['doc']['token']`:
+     *    con `t=` in querystring il confronto debole fra stringa vuota e NULL è FALSO, quindi la
+     *    catena di AND cadeva e la stampa passava. Verificato da anonimo il 03/09. Adesso servono
+     *    entrambi i valori non vuoti e il confronto è con `hash_equals()`.
+     *
+     * 3. I NOTICE ROMPEVANO IL PDF. Con `$_SESSION['groups']` o `$_SESSION['account']` non
+     *    valorizzati, queste due righe stampavano "Undefined index" nel corpo della risposta; da
+     *    lì in poi TCPDF non può più mandare il file e muore con "Some data has already been
+     *    output, can't send PDF file". È il motivo per cui il socio, invece di un messaggio
+     *    leggibile, si ritrovava un file di poche centinaia di byte che il lettore PDF rifiuta.
+     *
+     * NB: file FRAMEWORK, condiviso da tutti i progetti GlisWeb e riscritto da `_gw.upgrade.sh`,
+     * che gira da cron.daily: questa patch vive un giorno e va portata upstream.
+     */
+    $anagraficheAutorizzate = array();
+
+    if( ! empty( $_SESSION['account']['id_anagrafica'] ) ) {
+
+        $anagraficheAutorizzate[] = (string) $_SESSION['account']['id_anagrafica'];
+
+        if( ! empty( $_SESSION['account']['relazioni'] )
+            && is_array( $_SESSION['account']['relazioni'] )
+            && count( $_SESSION['account']['relazioni'] ) <= 50 ) {
+            foreach( array_keys( $_SESSION['account']['relazioni'] ) as $idFamiliare ) {
+                $anagraficheAutorizzate[] = (string) $idFamiliare;
+            }
+        }
+
+    }
+
+    $autorizzatoAlDocumento =
+           in_array( 'roots', array_keys( ( isset( $_SESSION['groups'] ) && is_array( $_SESSION['groups'] ) ) ? $_SESSION['groups'] : array() ), true )
+        || ( ! empty( $dati['doc']['id_destinatario'] )
+             && in_array( (string) $dati['doc']['id_destinatario'], $anagraficheAutorizzate, true ) )
+        || ( ! empty( $_REQUEST['t'] ) && ! empty( $dati['doc']['token'] )
+             && hash_equals( (string) $dati['doc']['token'], (string) $_REQUEST['t'] ) );
+
     // verifico l'identità dell'utente
-    if( ! in_array( 'roots', array_keys( $_SESSION['groups'] ) )
-        && ( $dati['doc']['id_destinatario'] != $_SESSION['account']['id_anagrafica'] )
-        && ( ! isset( $_REQUEST['t'] ) || $_REQUEST['t'] != $dati['doc']['token'] ) ) {
+    if( ! $autorizzatoAlDocumento ) {
 
         // ...
         dieText('autorizzazioni insufficienti a visualizzare il documento');
