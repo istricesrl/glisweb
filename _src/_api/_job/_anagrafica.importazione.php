@@ -211,6 +211,7 @@
                             array(
                                 'indirizzo' => $job['riga']['indirizzo'],
                                 'civico' => $job['riga']['civico'],
+                                'cap' => ( ( isset( $job['riga']['cap'] ) ) ? $job['riga']['cap'] : NULL ),
                                 'id_comune' => $idComune,
                                 'localita' => ( ( isset( $job['riga']['localita'] ) ) ? $job['riga']['localita'] : NULL )
                             ),
@@ -220,6 +221,7 @@
                             array(
                                 'indirizzo',
                                 'civico',
+                                'cap',
                                 'id_comune',
                                 'localita'
                             )
@@ -237,6 +239,7 @@
                             array(
                                 'indirizzo' => $job['riga']['indirizzo'],
                                 'civico' => $job['riga']['civico'],
+                                'cap' => ( ( isset( $job['riga']['cap'] ) ) ? $job['riga']['cap'] : NULL ),
                                 'id_comune' => NULL,
                                 'localita' => $job['riga']['comune']
                             ),
@@ -246,6 +249,7 @@
                             array(
                                 'indirizzo',
                                 'civico',
+                                'cap',
                                 'id_comune',
                                 'localita'
                             )
