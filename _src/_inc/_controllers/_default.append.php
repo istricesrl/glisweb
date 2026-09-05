@@ -29,6 +29,21 @@
      * Il testo libero non viene toccato: la condizione chiede che il valore resti un numero anche
      * togliendo le virgole, quindi una nota tipo "macchina 12,5 tonnellate" passa intatta.
      *
+     * LA STRINGA VUOTA DIVENTA NULL
+     * -----------------------------
+     * mysqlInsertRow() la stringa vuota la converte in NULL da sempre, con empty2null(); controller()
+     * no, e la scrive tale e quale. La stessa scrittura fatta per due strade diverse finiva quindi
+     * in archivio in due modi diversi, e la differenza non e' cosmetica: in MySQL due stringhe vuote
+     * fanno CONFLITTO su un indice unico, due NULL no. Un campo lasciato in bianco su un form che
+     * fa parte di una chiave unica faceva quindi collassare righe che dovevano restare distinte, e
+     * l'errore non si vedeva perche' la scrittura falliva in silenzio.
+     *
+     * Il confronto e' $vs[...]['s'] === '' e non empty2null(): empty() considera vuota anche la
+     * stringa "0", e un campo numerico che vale zero e' un valore, non un campo in bianco. La
+     * conversione sta qui in append, e non dentro controller(), perche' qui si e' certi di essere
+     * su una scrittura: lo stesso array di valori serve anche a comporre le WHERE delle letture,
+     * dove trasformare '' in NULL cambierebbe il risultato delle ricerche.
+     *
      * La regola applicata è la stessa di _default.before.php, copiata identica: si tocca solo ciò
      * che resta un numero anche togliendo le virgole, e ci si limita a sostituire la virgola con il
      * punto. Essendo idempotente, rifarla su valori già normalizzati non ha alcun effetto.
@@ -57,6 +72,11 @@
                 // nei numeri sostituisco la , con il .
                     if(( ! empty( $vVal['s'] ) && is_numeric( str_replace( ',', '', $vVal['s'] ) ) ) ) {
                         $vs[ $vKey ]['s'] = str_replace(',','.',$vs[ $vKey ]['s']);
+                    }
+
+                // la stringa vuota diventa NULL
+                    if( $vs[ $vKey ]['s'] === '' ) {
+                        $vs[ $vKey ]['s'] = NULL;
                     }
 		    }
 

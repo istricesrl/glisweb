@@ -56,7 +56,19 @@
 
         $token = md5( time() );
         $attach = 'tmp/documento.' . $_REQUEST[ $ct['form']['table'] ]['id'] . '.pdf';
-        mysqlQuery( $cf['mysql']['connection'], 'UPDATE documenti SET token = ?', array( array( 's' => $token ) ) );
+
+        // il token e' la chiave d'accesso usa e getta con cui il generatore del PDF viene chiamato
+        // senza sessione, e va scritto SOLO sul documento che si sta inviando: senza la clausola
+        // WHERE la UPDATE lo riscriveva su tutte le righe di documenti, e il token di un preventivo
+        // diventava una chiave valida per scaricare qualunque altro documento dell'archivio
+        mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE documenti SET token = ? WHERE id = ?',
+            array(
+                array( 's' => $token ),
+                array( 's' => $_REQUEST[ $ct['form']['table'] ]['id'] )
+            )
+        );
 
         $x = restCall(
             $cf['site']['url'] . 'print/0400.documenti/documento.pdf',

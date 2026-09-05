@@ -26,15 +26,58 @@
         // status
         $job['workspace']['status']['error'][] = 'questo job richiede un file su cui lavorare';
 
+        // UN JOB CHE NON PUO' PARTIRE VA CHIUSO, non lasciato in coda
+        //
+        // Fino a qui i tre rami qui sotto scrivevano l'errore e basta: timestamp_completamento
+        // restava vuoto, il job non usciva mai dalla coda e il cron lo ripescava ogni minuto
+        // per sempre, riscrivendo lo stesso errore nel log. Il file di lavorazione viene
+        // deciso quando il job viene accodato: se non c'e' adesso non comparira' dopo, quindi
+        // riprovare all'infinito non serve a niente.
+        $jobs = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
+            array(
+                array( 's' => time() ),
+                array( 's' => $job['id'] )
+            )
+        );
+
+        // debug
+        logWrite( 'job ' . $job['id'] . ' chiuso con errore: questo job richiede un file su cui lavorare', 'job', LOG_ERR );
+
     } elseif( ! file_exists( DIR_BASE . $job['workspace']['file'] ) ) {
 
         // status
         $job['workspace']['status']['error'][] = 'impossibile trovare il file ' . $job['workspace']['file'];
 
+        $jobs = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
+            array(
+                array( 's' => time() ),
+                array( 's' => $job['id'] )
+            )
+        );
+
+        // debug
+        logWrite( 'job ' . $job['id'] . ' chiuso con errore: impossibile trovare il file ' . $job['workspace']['file'] . '', 'job', LOG_ERR );
+
     } elseif( ! is_readable( DIR_BASE . $job['workspace']['file'] ) ) {
 
         // status
         $job['workspace']['status']['error'][] = 'impossibile leggere il file ' . $job['workspace']['file'];
+
+        $jobs = mysqlQuery(
+            $cf['mysql']['connection'],
+            'UPDATE job SET timestamp_completamento = ? WHERE id = ?',
+            array(
+                array( 's' => time() ),
+                array( 's' => $job['id'] )
+            )
+        );
+
+        // debug
+        logWrite( 'job ' . $job['id'] . ' chiuso con errore: impossibile leggere il file ' . $job['workspace']['file'] . '', 'job', LOG_ERR );
 
     } else {
 

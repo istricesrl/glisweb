@@ -4,7 +4,7 @@
     function importa_prodotti() {
 	var data = $('#__upload_____prodotti__').val();
 	getws('/task/4100.prodotti/prodotti.importazione.start?file='+data);
-	$('#importa_contatti').modal('toggle');
+	$('#importa_prodotti').modal('toggle');
 	location.reload();
     }
 </script>

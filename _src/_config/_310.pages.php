@@ -258,6 +258,27 @@
         // debug
         // die( print_r( $arrayPagine, true ) );
 
+        // file delle pagine gia' inclusi in questa passata
+        //
+        // SERVE, e non e' prudenza generica: lo stesso file puo' finire nell'elenco per piu' strade
+        // e verrebbe incluso piu' volte. Un file di pagine di MODULO CUSTOM, per esempio
+        // mod/0400.documenti/src/inc/pages/offerte.it-IT.php, entra TRE volte:
+        //
+        // -# la glob dei moduli lo trova da sola, perche' il criterio {,_} accetta sia i percorsi
+        //    con underscore sia quelli senza;
+        // -# viene incluso come controparte custom del file standard omonimo;
+        // -# quando tocca a lui, path2custom() di un percorso che gli underscore non ce li ha gia'
+        //    restituisce IL PERCORSO STESSO, file_exists() dice di si', e il file include se stesso
+        //    una seconda volta nella stessa iterazione.
+        //
+        // Finche' un file di pagine si limita ad ASSEGNARE $p[...] non se ne accorge nessuno, perche'
+        // riassegnare lo stesso valore tre volte non cambia niente. Ma appena un file custom
+        // AGGIUNGE qualcosa a una struttura gia' esistente - una linguetta nell'elenco dei tab con
+        // arrayInsertSeq(), che e' il modo documentato per farlo - quella cosa viene aggiunta tre
+        // volte. Trovato il 04/09/2026 su Lughese: la scheda di invio delle offerte compariva
+        // TRE VOLTE nella barra delle linguette.
+        $inclusi = array();
+
         // inclusione dei files delle pagine
         foreach( $arrayPagine as $pagina ) {
 
@@ -269,11 +290,17 @@
                 $cf['contents']['updated'] = $ts;
             }
 
-            // includo il file delle pagine
-            require $pagina;
+            // includo il file delle pagine, una volta sola
+            if( ! isset( $inclusi[ $pagina ] ) ) {
 
-            // log
-            loggerLatest( 'incluso file delle pagine ' . $pagina );
+                $inclusi[ $pagina ] = true;
+
+                require $pagina;
+
+                // log
+                loggerLatest( 'incluso file delle pagine ' . $pagina );
+
+            }
 
             // se esiste la versione custom del file...
             if( file_exists( path2custom( $pagina ) ) ) {
@@ -286,11 +313,17 @@
                     $cf['contents']['updated'] = $ts;
                 }
 
-                // includo il file delle pagine custom
-                require path2custom( $pagina );
+                // includo il file delle pagine custom, una volta sola
+                if( ! isset( $inclusi[ path2custom( $pagina ) ] ) ) {
 
-                // log
-                loggerLatest( 'incluso file delle pagine custom ' . path2custom( $pagina ) );
+                    $inclusi[ path2custom( $pagina ) ] = true;
+
+                    require path2custom( $pagina );
+
+                    // log
+                    loggerLatest( 'incluso file delle pagine custom ' . path2custom( $pagina ) );
+
+                }
 
             }
 

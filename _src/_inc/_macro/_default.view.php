@@ -274,6 +274,21 @@
 				}
 			}
 		}
+
+        // il riferimento va sciolto SUBITO dopo il ciclo
+        //
+        // $row qui sopra e' preso per riferimento, e in PHP a fine ciclo resta agganciato all'ultimo
+        // elemento di $ct['view']['data']. Chiunque piu' avanti riusi il nome $row - una macro di
+        // modulo, un custom di progetto, un altro ciclo in questo stesso file - non scrive nella sua
+        // variabile ma SOVRASCRIVE L'ULTIMA RIGA DELLA VISTA, e la sostituisce con una copia della
+        // penultima. Il sintomo e' un elenco in cui l'ultima riga e' un doppione di quella prima e
+        // una riga vera sparisce, senza nessun errore da nessuna parte.
+        //
+        // Trovato il 04/09/2026 su Lughese: una macro di progetto che riordinava le righe d'offerta
+        // con un proprio foreach su $row si e' vista sparire l'ultima riga e comparire due volte la
+        // penultima. Il difetto pero' e' qui, non li'.
+		unset( $row );
+
 	}	
 
     // debug

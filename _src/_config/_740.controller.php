@@ -210,16 +210,12 @@
             // elaboro i dati
             if( ! isset( $_REQUEST[ $table ] ) ) {
 
-                // ...
-                $fd = DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' . basename( $f );
-
-                // archivio il file importato
-                moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
-
-                // status
-                $cf['import']['info'][] = 'archiviato file ' . basename( $f ) . ' in ' . DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/';
-
-                foreach( csvFile2array( $fd, NULL ) as $riga ) {
+                // il file si legge DOVE STA, senza spostarlo prima: l'archiviazione e' in fondo al
+                // ciclo. Spostandolo qui, una qualsiasi interruzione durante la lettura - un CSV
+                // malformato, la memoria esaurita, un fatal - lasciava il file gia' in done/ e le
+                // righe non ancora accodate sparivano senza lasciare traccia, con il cron che alla
+                // passata dopo non trovava piu' niente da rifare
+                foreach( csvFile2array( $f, NULL ) as $riga ) {
 
                     // TODO
                     // non c'è modo di far confluire questi dati nella controller della request
@@ -277,17 +273,26 @@
 
                 }
 
+                // archivio il file solo adesso, che tutte le sue righe sono state accodate
+                //
+                // ATTENZIONE, quello che questo spostamento NON copre: la scrittura vera sul
+                // database avviene piu' avanti nella richiesta, quando la controller() elabora
+                // $_REQUEST, quindi un timeout in QUELLA fase perde comunque le righe. Coprirlo
+                // del tutto vuol dire archiviare dopo che la controller ha finito, che e' un
+                // altro punto del ciclo di vita della richiesta. Qui si chiude la finestra della
+                // lettura, che e' quella che si puo' chiudere senza spostare l'archiviazione
+                // fuori da questo runlevel.
+                moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
+
+                // status
+                $cf['import']['info'][] = 'archiviato file ' . basename( $f ) . ' in ' . DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/';
+
             } else {
 
+                // il file NON viene archiviato: resta nello spool e il cron ci riprova
                 logWrite( 'collisione di tabelle: ' . $table, 'import', LOG_ERR );
 
             }
-
-            // elimino il file importato
-            // deleteFile( $f );
-
-            // archivio il file importato
-            // moveFile( $f, DIR_VAR_SPOOL_IMPORT_DONE . date( 'YmdHis' ) . '/' );
 
             // debug
             // die( 'sposto' . $f . ' in ' . DIR_VAR_SPOOL_IMPORT_DONE );

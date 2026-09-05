@@ -427,8 +427,41 @@
                         logger(str_pad($tElapsed, 21, ' ', STR_PAD_LEFT) . ' secondi -> ' . $q . PHP_EOL, 'slow/mysql/query');
                     }
 
-                    // log
-                    logger(md5($q) . ' -> OK', 'mysql');
+                    // ESITO DELL'ESECUZIONE
+                    //
+                    // mysqli_stmt_execute() restituisce false quando la query non e' andata, ma
+                    // fino a qui il valore veniva raccolto in $xStatement e mai guardato: si
+                    // scriveva "-> OK" nel log anche su una scrittura fallita, e il chiamante si
+                    // ritrovava un insert_id che valeva 0 senza nessun modo di accorgersene. Da
+                    // qui nascono i guasti piu' difficili da diagnosticare del framework: una
+                    // colonna che manca, un valore che il tipo non accetta, una chiave unica che
+                    // scatta, e la pagina risponde 200 con il log che dice che e' filato tutto
+                    // liscio mentre in archivio non c'e' niente.
+                    //
+                    // Qui si logga e basta, senza cambiare il valore di ritorno: cambiarlo
+                    // vorrebbe dire toccare il comportamento di ogni chiamante del framework, e
+                    // non e' una decisione da prendere dentro questa funzione. L'errore adesso
+                    // pero' si vede, ed e' il minimo perche' sia diagnosticabile.
+                    //
+                    // Si usa logger() e non logWrite(): questa e' una libreria "tools", che per
+                    // convenzione non dipende da $cf, mentre logWrite() sta in _log.utils.php.
+                    // Tutto il resto del file logga cosi'.
+                    if ($xStatement === false) {
+
+                        logger(
+                            $q . PHP_EOL
+                            . 'parametri: ' . print_r($params, true) . PHP_EOL
+                            . 'errore (' . mysqli_stmt_errno($pq) . ') ' . mysqli_stmt_error($pq),
+                            'mysql',
+                            LOG_ERR
+                        );
+
+                    } else {
+
+                        // log
+                        logger(md5($q) . ' -> OK', 'mysql');
+
+                    }
 
                     // valore di ritorno a seconda del tipo di query
                     switch (current(explode(' ', str_replace("\n", ' ', trim($q))))) {
